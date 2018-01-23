@@ -1,0 +1,9 @@
+I:\FLUVIAL\4352024_33_Conformite_digues_BM\6_Reglementaire\61_Calculs\Basedonnees\201710_Begles\BD_Begles_ind4.sqlite
+C:\000_testdigue\testBM\BD_Begles_ind3.sqlite
+C:\000_testdigue\testBM\BD_Begles_ind0.sqlite
+C:\000_testdigue\testBM\BD_Begles_ind0_JRS - Copie.sqlite
+c:\000_testdigue\testdbase.sqlite
+PVR_test.diguebebe@localhost:None;postgres;PVR
+PVR_test.exportbm@localhost:5432;postgres;PVR
+PVR_test.digue@localhost:5432;postgres;PVR
+PVR_test.digue@localhost:None;postgres;PVR

@@ -1,0 +1,4 @@
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###id_tcobjetressource;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_tcressource;       INT;            INTEGER;                                              Ressource(id_ressource)
+###id_tcoobjet;       INT;            INTEGER;                                              Objet(id_objet)

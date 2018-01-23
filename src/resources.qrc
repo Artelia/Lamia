@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/plugins/InspectionDigueV2" >
+        <file>icons/icon.png</file>
+        <file>icons/profil_digue.png</file>
+        <file>icons/Add_48x48.png</file>
+        <file>icons/Delete_48x48.png</file>
+        <file>icons/select.png</file>
+        <file>icons/Zoom_48x48.png</file>
+        <file>icons/Copy_48x48.png</file>
+        <file>icons/add_elements2.png</file>
+        <file>icons/save.png</file>
+        <file>icons/Find_32x32.png</file>
+        <file>icons/magic-wand.png</file>
+        <file>icons/mActionCapturePoint.svg</file>
+        <file>icons/mActionCaptureLine.svg</file>
+        <file>icons/mActionCapturePolygon.svg</file>
+        <file>icons/mActionAddNodesItem1.svg</file>
+        <file>icons/mActionAddNodesItemGPS.svg</file>
+    </qresource>
+</RCC>

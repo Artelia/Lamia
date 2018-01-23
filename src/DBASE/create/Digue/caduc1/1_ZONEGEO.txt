@@ -1,0 +1,6 @@
+# SELECT ZONEGEO.*, OBJET.DateCreation, OBJET.DateDestruction  FROM ZONEGEO, OBJET WHERE ZONEGEO.IdObjet = OBJET.ID
+# Nom_champ             TypePostGis              TypeSpatialite                            Option
+###ID;                SERIAL PRIMARY KEY;        INTEGER PRIMARY KEY AUTOINCREMENT
+###Nom;               VARCHAR(255);              TEXT
+###IdObjet;           INT;                       INTEGER;                                  OBJET(ID)
+###geom;              MULTIPOLYGON

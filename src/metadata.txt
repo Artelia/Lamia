@@ -1,0 +1,40 @@
+# This file contains metadata for your plugin. Since 
+# version 2.0 of QGIS this is the proper way to supply 
+# information about a plugin. The old method of 
+# embedding metadata in __init__.py will 
+# is no longer supported since version 2.0.
+
+# This file should be included when you package your plugin.# Mandatory items:
+
+[general]
+name=InspectionDigueV2
+qgisMinimumVersion=2.14
+qgisMaximumVersion=3.99
+description=a voir
+version=0.1
+author=ARTELIA
+email=patrice.verchere@arteliagroup.com
+
+about=toto
+
+tracker=reg
+repository=erg
+# End of mandatory metadata
+
+# Recommended items:
+
+# Uncomment the following line and add your changelog:
+changelog=
+    0.1 : beta release
+# Tags are comma separated with spaces allowed
+tags=digue
+
+homepage=Non
+category=Plugins
+icon=icons/icon.png
+# experimental flag
+experimental=False
+
+# deprecated flag (applies to the whole plugin, not just a single version)
+deprecated=False
+

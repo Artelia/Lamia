@@ -1,0 +1,18 @@
+# SELECT OBSERVATION.*, OBJET.DateCreation, OBJET.DateDestruction FROM OBSERVATION,OBJET WHERE OBSERVATION.IdObjet = OBJET.ID
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###ID;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###Date;                DATE;            TEXT
+###SOURCE;                VARCHAR(255);            TEXT
+###NOMBRE;                 INT ;                   INTEGER 
+###URGENCE;                VARCHAR(255);            TEXT
+/;                          
+0 : faible urgence;         0
+1 : pas de grande urgence;  1
+2 : urgence moyen terme;    2
+3 : urgent ;                3
+###EVOLUTION;                VARCHAR(255);            TEXT
+###COMMENTAIRE;                VARCHAR(255);            TEXT
+###SUITE;                VARCHAR(255);            TEXT
+###IdObjet;             INT ;                   INTEGER ;                               OBJET(ID)
+###LkPrestation;        INT ;                   INTEGER ;                               PRESTATION(ID)
+###LkDesordre;INT ;                   INTEGER;                                         DESORDRE(ID)

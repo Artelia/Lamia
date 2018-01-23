@@ -1,0 +1,3 @@
+# Nom_champ   TypePostGis   TypeSpatialite   Option  Referecens/foreignkey
+###ID;SERIAL PRIMARY KEY;INTEGER PRIMARY KEY AUTOINCREMENT
+###Type;VARCHAR(255) ;TEXT

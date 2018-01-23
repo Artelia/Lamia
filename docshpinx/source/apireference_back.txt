@@ -1,0 +1,20 @@
+API Reference
+=============
+
+Contents:
+
+.. toctree::
+    :maxdepth: 2
+
+
+.. automodule::  src
+    
+.. automodule:: src
+    
+
+.. autoclass:: InspectionDigue
+   :members: __init__
+   
+   
+.. autoclass:: src.InspectionDigue
+   :members: 

@@ -1,0 +1,9 @@
+# SELECT PROFILTRAVERS.*, OBJET.DateCreation, OBJET.DateDestruction FROM PROFILTRAVERS,OBJET WHERE PROFILTRAVERS.IdObjet = OBJET.ID
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###ID;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###Date;                DATE;                   TEXT
+###DefaultPT;           VARCHAR(255);           TEXT
+###IdObjet;             INT ;                   INTEGER ;                               OBJET(ID)
+###IdSys;            INT ;                   INTEGER;                                DESCRIPTIONSYSTEME(ID)
+###LkTroncon;           INT ;                   INTEGER ;                               TRONCON(ID)
+###geom;                LINESTRING

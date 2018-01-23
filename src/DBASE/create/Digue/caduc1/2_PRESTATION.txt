@@ -1,0 +1,8 @@
+# SELECT PRESTATION.*, OBJET.DateCreation, OBJET.DateDestruction FROM PRESTATION, OBJET WHERE PRESTATION.IdObjet = OBJET.ID
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###ID;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###Nom;                VARCHAR(255);            TEXT
+###Date;                DATE ;                  TEXT
+###MOA;                DATE ;                  TEXT
+###MOE;                DATE ;                  TEXT
+###IdObjet;             INT ;                   INTEGER ;                               OBJET(ID)
