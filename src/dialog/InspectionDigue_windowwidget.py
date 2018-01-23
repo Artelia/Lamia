@@ -147,6 +147,13 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.actionExport_shapefile.triggered.connect(self.exportShapefile)
         self.actionImport.triggered.connect(self.importObjet)
 
+        if self.dbase.dbasetype == 'postgis':
+            self.actionMode_hors_ligne_Reconnexion.setDisabled(False)
+        else:
+            self.actionMode_hors_ligne_Reconnexion.setDisabled(True)
+        self.actionMode_hors_ligne_Reconnexion.triggered.connect(self.modeHorsLigne)
+
+
         self.pushButton_zoomFeature.clicked.connect(self.zoomToFeature)
         self.pushButton_selectfeat.clicked.connect(self.selectFeature)
         self.action_Repertoire_photo.triggered.connect(self.setImageDir)
@@ -216,7 +223,7 @@ class InspectiondigueWindowWidget(QMainWindow):
     """
     def loadTools(self, filetype=None):
 
-    
+
         import glob, inspect, importlib
 
         self.unloadTools()
@@ -235,33 +242,33 @@ class InspectiondigueWindowWidget(QMainWindow):
                             tempobjt = obj(self.dbase, self)
                             if tempobjt.CAT is not None:
                                 self.tools.append(tempobjt)
-                                
+
                         except Exception as e:
                             #self.errorMessage('Error importing tool - ' + str(x) + ' : ' + str(e))
                             print('moduletemp',e)
-                                
-                        
-                        
+
+
+
                 if False:
                     try:
                         moduletemp = importlib.import_module('.' + str(x), 'InspectionDigue.tools')
                         for name, obj in inspect.getmembers(moduletemp, inspect.isclass):
                             if moduletemp.__name__ == obj.__module__:
-                            
+
                                 print('obj',self.tools,obj, self.dbase,self )
                                 self.tools.append(obj(self.dbase, self, qgis.utils.iface.mapCanvas() ))
-                            
-                            
+
+
                                 if False:
-                                    
+
                                     try:  # case obj has NAME
                                         istool = obj.NAME
                                         #print(obj, istool)
                                         if filetype is None and istool is not None:
-                                        
+
                                             print('obj',self.tools,obj, self.dbase,self )
                                             self.tools.append(obj(self.dbase, self))
-                                        
+
                                         else:   # specific software tool
                                             try:    # case obj has SOFTWARE
                                                 print('obj',x,obj.CAT,obj.NAME)
@@ -287,7 +294,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                         #self.errorMessage('Error importing tool - ' + str(x) + ' : ' + str(e))
                         print('moduletemp',e)
             #self.normalMessage('Tools loaded')
-            
+
         if False:
             if  False:
                 from ..tools.InspectionDigue_troncons_tool import tronconsTool
@@ -348,7 +355,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                 # self.errorMessage('Eror unloading tools : ', e)
                 print('Eror unloading tools : ', e)
         pass
-            
+
     # **********************************************************************************************
     # ********************************    MENU    ********************************************
     # **********************************************************************************************
@@ -462,7 +469,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                     self.dbase.createDbase(crs=crsnumber, type=type, dbasetype='postgis', dbname=nom, schema=schema,
                                            user=user, host=adresse, password=password, dbaseressourcesdirectory=resdir,
                                            port=port)
-            
+
     def openFileFromMenu(self, action):
         """
         pass
@@ -498,7 +505,7 @@ class InspectiondigueWindowWidget(QMainWindow):
         for telem in self.dbase.recentsdbase:
             self.menuBases_recentes.addAction(telem)
         self.menuBases_recentes.triggered.connect(self.openFileFromMenu)
-        
+
     def DBaseLoaded(self):
         if self.debug: self.dbase.logger.info('InspectiondigueWindowWidget - Dbase loaded')
         self.gpsutil.setCRS(self.dbase.qgiscrs)
@@ -772,7 +779,7 @@ class InspectiondigueWindowWidget(QMainWindow):
     #**********************************************************************************************
     #********************************    Tree widget    ********************************************
     #**********************************************************************************************
-    
+
     def zoomToFeature(self):
         wdg = self.stackedWidgetTool.currentWidget()
         wdg.zoomToFeature()
@@ -780,15 +787,15 @@ class InspectiondigueWindowWidget(QMainWindow):
     def copyFeature(self):
         wdg = self.stackedWidgetTool.currentWidget()
         wdg.copyFeature()
-        
+
     def addFeature(self):
         wdg = self.stackedWidgetTool.currentWidget()
         wdg.addFeature()
-    
+
     def deleteToFeature(self):
         wdg = self.stackedWidgetTool.currentWidget()
         wdg.deleteFeature()
-    
+
     def selectFeature(self):
         if False:
             if self.pointEmitter is None:
@@ -826,7 +833,7 @@ class InspectiondigueWindowWidget(QMainWindow):
             self.canvas.mapToolSet.connect(self.toolsetChanged)
             self.canvas.setMapTool(self.pointEmitter)
 
-    
+
     def selectPickedFeature(self, point):
         # print('select',point.x(), point.y())
 
@@ -869,7 +876,7 @@ class InspectiondigueWindowWidget(QMainWindow):
             if True:
                 self.pointEmitter.canvasClicked.disconnect()
                 self.canvas.mapToolSet.disconnect(self.toolsetChanged)
-        
+
     def setImageDir(self):
         file = self.qfiledlg.getExistingDirectory(self, "Select Directory",self.dbase.imagedirectory, QFileDialog.ShowDirsOnly)
         if file:
@@ -1056,6 +1063,10 @@ class InspectiondigueWindowWidget(QMainWindow):
                     self.worker.error.connect(self.printError)
                     self.worker.message.connect(self.printMessage)
                     self.worker.run()
+
+
+    def modeHorsLigne(self):
+        self.horsligne = not self.horsligne
 
 
 

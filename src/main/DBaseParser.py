@@ -28,7 +28,7 @@ class DBaseParser(QtCore.QObject):
     errorMessage = QtCore.pyqtSignal(str)
 
 
-    
+
     def __init__(self,canvas):
         """
         Init func
@@ -70,6 +70,7 @@ class DBaseParser(QtCore.QObject):
         # spatialite spec
         self.spatialitefile = None
         # postgis spec
+        self.horsligne=False
         self.pghost = None
         self.pgdb = None
         self.pguser = None
@@ -101,7 +102,7 @@ class DBaseParser(QtCore.QObject):
         self.logger.info('qgisversion : %s', str(self.qgisversion_int))
 
     """
-    
+
     def renderStarts(self):
         # print('digue render')
         if self.dbasetype == 'spatialite':
@@ -794,7 +795,7 @@ class DBaseParser(QtCore.QObject):
         except :
             pass
         self.recentDBaseChanged.emit()
-        
+
     def _AddDbaseInRecentsDBase(self, spatialitefile=None, host='localhost',
                                 port=None, dbname=None, schema=None, user=None, password=None):
         """
@@ -844,7 +845,7 @@ class DBaseParser(QtCore.QObject):
             if 'datecreation' in fieldnames:
                 self.dbasetables[tablename]['layerqgis'].setSubsetString(subsetstring)
                 self.dbasetables[tablename]['layerqgis'].triggerRepaint()
-        
+
     def reInitDBase(self):
         if self.dbasetables is not None:
             for layername in self.dbasetables.keys():
