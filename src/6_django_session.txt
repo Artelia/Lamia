@@ -1,0 +1,5 @@
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###session_key ;                VARCHAR(40);            TEXT;   NOT NULL
+###session_data ;                TEXT;            TEXT;   NOT NULL
+###expire_date ;                TIMESTAMP WITH TIME ZONE;            DATE;   NOT NULL
+
