@@ -4,3 +4,6 @@
 #############
 
 *.py[cod]
+src/config/recentprojects.txt
+src/test/00_test_main.py
+src/test/01_test_creation.py
