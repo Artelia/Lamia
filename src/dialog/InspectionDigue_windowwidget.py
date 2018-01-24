@@ -441,11 +441,14 @@ class InspectiondigueWindowWidget(QMainWindow):
             crs = self.crsselector.crs().authid()
             crsnumber = int(crs.split(':')[1])
         # ressources directory
-        resdir = self.qfiledlg.getExistingDirectory(self, "Selectionner le reperoire des ressources")
-        if resdir:
-            resdir = str(resdir)
+        if dbtype == 'postgis':
+            resdir = self.qfiledlg.getExistingDirectory(self, "Selectionner le reperoire des ressources")
+            if resdir:
+                resdir = str(resdir)
+            else:
+                return
         else:
-            return
+            resdir = None
 
         # dialogs finished - reinit base
         self.dbase.reInitDBase()
@@ -751,7 +754,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                 i += 1
                 if progress is not None: progress.setValue(i)
 
-            if True:
+            if False:
                 try:
                     from ..toolpostpro.InspectionDigue_path_tool import PathTool
                     self.pathtool = PathTool(dbase=self.dbase,

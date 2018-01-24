@@ -71,9 +71,11 @@ class InfraLineaireTool(AbstractInspectionDigueTool):
 
         self.photowdg = Label()
         self.userwdg.tabWidget.widget(0).layout().addWidget(self.photowdg)
-
-        self.propertieswdgPROFILLONG = PathTool(dbase=self.dbase, parentwidget=self)
-        self.userwdg.tabWidget.widget(1).layout().addWidget(self.propertieswdgPROFILLONG.plotWdg)
+        if False:
+            self.propertieswdgPROFILLONG = PathTool(dbase=self.dbase, parentwidget=self)
+            self.userwdg.tabWidget.widget(1).layout().addWidget(self.propertieswdgPROFILLONG.plotWdg)
+        else:
+            self.propertieswdgPROFILLONG = None
 
         # ****************************************************************************************
         # child widgets
@@ -136,14 +138,16 @@ class InfraLineaireTool(AbstractInspectionDigueTool):
                 self.photowdg.clear()
 
             #profil
-            self.propertieswdgPROFILLONG.activateMouseTracking(0)
-            self.propertieswdgPROFILLONG.rubberbandtrack.hide()
-            self.propertieswdgPROFILLONG.rubberBand.reset(self.dbase.dbasetables['Infralineaire']['layer'].geometryType())
-            currentgeom = self.currentFeature.geometry().asPolyline()
-            self.propertieswdgPROFILLONG.computePath(list(currentgeom[0]), list(currentgeom[-1]))
-            self.propertieswdgPROFILLONG.activateMouseTracking(2)
-            self.propertieswdgPROFILLONG.rubberbandtrack.hide()
-            self.propertieswdgPROFILLONG.rubberBand.reset(self.dbase.dbasetables['Infralineaire']['layer'].geometryType())
+            if self.propertieswdgPROFILLONG is not None:
+                self.propertieswdgPROFILLONG.activateMouseTracking(0)
+                self.propertieswdgPROFILLONG.rubberbandtrack.hide()
+                self.propertieswdgPROFILLONG.rubberBand.reset(self.dbase.dbasetables['Infralineaire']['layer'].geometryType())
+                currentgeom = self.currentFeature.geometry().asPolyline()
+                self.propertieswdgPROFILLONG.computePath(list(currentgeom[0]), list(currentgeom[-1]))
+                self.propertieswdgPROFILLONG.activateMouseTracking(2)
+                self.propertieswdgPROFILLONG.rubberbandtrack.hide()
+                self.propertieswdgPROFILLONG.rubberBand.reset(self.dbase.dbasetables['Infralineaire']['layer'].geometryType())
+
 
 
 

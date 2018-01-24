@@ -1,3 +1,5 @@
+C://000_testdigue//tesvalentin//test02.sqlite
+C://000_testdigue//tesvalentin//test01.sqlite
 I:\FLUVIAL\4352024_33_Conformite_digues_BM\6_Reglementaire\61_Calculs\Basedonnees\201710_Begles\BD_Begles_ind4.sqlite
 C:\000_testdigue\testBM\BD_Begles_ind3.sqlite
 C:\000_testdigue\testBM\BD_Begles_ind0.sqlite

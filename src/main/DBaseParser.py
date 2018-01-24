@@ -188,8 +188,16 @@ class DBaseParser(QtCore.QObject):
         # create dbasedict
         self._createDBDictionary(type)
         # manage ressource directory
-        if not os.path.isdir(dbaseressourcesdirectory):
-            os.makedirs(dbaseressourcesdirectory)
+        if False:
+            if not os.path.isdir(dbaseressourcesdirectory):
+                os.makedirs(dbaseressourcesdirectory)
+        if True:
+            if dbaseressourcesdirectory is None and dbasetype == 'spatialite':
+                dbaseressourcesdirectory = os.path.join(os.path.dirname(file),'DBspatialite')
+
+            if not os.path.isdir(dbaseressourcesdirectory):
+                os.makedirs(dbaseressourcesdirectory)
+
         # sql file contains output of dbase creation script
         sqlfile = os.path.join(dbaseressourcesdirectory, 'sqlcreation.txt')
         openedsqlfile = open(sqlfile, u'w')
@@ -280,17 +288,18 @@ class DBaseParser(QtCore.QObject):
                 if self.dbasetables[dbname]['order'] == order:
                     if self.dbasetype == 'spatialite':
                         sql = self._generateSpatialiteCreationSQL(dbname, self.dbasetables[dbname], crs)
+                        print(sql['main'])
                         openedsqlfile.write(sql['main'] + '\n')
                     elif dbasetype == 'postgis':
                         sql = self._generatePostGisCreationSQL(dbname, self.dbasetables[dbname], crs)
-                        # print(sql['main'])
+                        print(sql['main'])
                         openedsqlfile.write(sql['main'] + '\n')
                     self.query(sql['main'])
                     self.commit()
                     if 'other' in sql.keys():
                         for sqlother in sql['other']:
                             openedsqlfile.write(sqlother + '\n')
-                            # print(sqlother)
+                            print(sqlother)
                             self.query(sqlother)
                             self.commit()
 

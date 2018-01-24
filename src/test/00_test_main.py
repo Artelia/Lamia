@@ -4,7 +4,7 @@ import os
 import qgis
 import qgis.gui
 import shutil
-from InspectionDigueV2.src.dialog.InspectionDigue_windowwidget import InspectiondigueWindowWidget
+from Lamia.src.dialog.InspectionDigue_windowwidget import InspectiondigueWindowWidget
 
 
 def testCoreParserValue(canvas, loadfile=True, typedb="spatialite"):

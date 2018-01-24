@@ -10,7 +10,7 @@ from pyspatialite import dbapi2 as db
 from qgis.PyQt import QtGui
 
 from InspectionDigueV2.src.dialog.InspectionDigue_dockwidget import InspectiondigueDockWidget
-from InspectionDigueV2.src.dialog.InspectionDigue_windowwidget import InspectiondigueWindowWidget
+from Lamia.src.dialog.InspectionDigue_windowwidget import InspectiondigueWindowWidget
 
 
 
@@ -20,15 +20,16 @@ def testDbaseCreation(canvas, typedb="spatialite"):
     crs = 3945
 
     if typedb == "spatialite":
-        spatialitefile = 'C:\\000_testimportBM\\BD_BM_ind4.sqlite'
-        spatialitedir = 'C://000_testimportBM//BDspatialite'
+        spatialitefile = 'C://000_testdigue//tesvalentin//test02.sqlite'
+        #spatialitedir = 'C://000_testimportBM//BDspatialite'
 
         #shutil.rmtree('c://000_testdigue//BDspatialite')
 
         originalfile = os.path.join(os.path.dirname(__file__), '..', 'DBASE', 'DBase_ind0.sqlite')
         shutil.copyfile(originalfile, spatialitefile)
 
-        wind.dbase.createDbase(file=spatialitefile, crs=crs, type='Digue', dbaseressourcesdirectory=spatialitedir)
+        #wind.dbase.createDbase(file=spatialitefile, crs=crs, type='Digue', dbaseressourcesdirectory=spatialitedir)
+        wind.dbase.createDbase(file=spatialitefile, crs=crs, type='Digue')
 
     elif typedb == "postgis":
         wind.dbase.createDbase(crs=crs, type='Digue', dbasetype='postgis', dbname='PVR_test', schema='diguebebe',
