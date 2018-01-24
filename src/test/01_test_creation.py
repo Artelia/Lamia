@@ -20,7 +20,7 @@ def testDbaseCreation(canvas, typedb="spatialite"):
     crs = 3945
 
     if typedb == "spatialite":
-        spatialitefile = 'C://000_testdigue//tesvalentin//test02.sqlite'
+        spatialitefile = 'C://000_testdigue//tesvalentin//test03.sqlite'
         #spatialitedir = 'C://000_testimportBM//BDspatialite'
 
         #shutil.rmtree('c://000_testdigue//BDspatialite')

@@ -97,7 +97,7 @@
         </property>
         <widget class="QWidget" name="tab">
          <attribute name="title">
-          <string>Désordre</string>
+          <string>Observation</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout" columnstretch="0">
           <property name="margin">

@@ -1,5 +1,5 @@
-#DJAN  SELECT Observation.*, Objet.datecreation, Objet.datedestruction, Objet.commentaire, Objet.libelle  FROM Observation INNER JOIN Objet ON Observation.id_observation = Objet.id_objet
-#QGIS  SELECT Observation.*, Objet.datecreation, Objet.datedestruction  FROM Observation INNER JOIN Objet ON Observation.id_observation = Objet.id_objet
+#DJAN  SELECT Observation.*, Objet.datecreation, Objet.datedestruction, Objet.commentaire, Objet.libelle  FROM Observation INNER JOIN Objet ON Observation.id_objet = Objet.id_objet
+#QGIS  SELECT Observation.*, Objet.datecreation, Objet.datedestruction  FROM Observation INNER JOIN Objet ON Observation.id_objet = Objet.id_objet
 # Nom_champ             TypePostGis              TypeSpatialite                          Option
 ###id_observation;      SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
 ###dateobservation;                DATE;            TEXT

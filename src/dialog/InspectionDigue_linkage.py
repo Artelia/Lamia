@@ -142,23 +142,33 @@ class LinkageDialog(QDialog, FORM_CLASS):
 
                 #bug qgis
                 #curfeatview = self.widget.dbasetable['layerview'].getFeatures(qgis.core.QgsFeatureRequest(self.widget.currentFeature.id())).next()
+                """
                 if self.widget.dbasetable['layerqgis'].isSpatial():
                     curfeatviewidsource = self.widget.dbasetable['layerqgis'].getFeatures(qgis.core.QgsFeatureRequest(self.widget.currentFeature.id())).next()[self.currentlinkage['idsource']]
+                    sql = "SELECT " +self.currentlinkage['idsource'] + "FROM
                 else:
-                    #sql = "SELECT lk_prestation FROM Ressource WHERE Ressource.id_ressource = " + str(feat['id_ressource'])
-                    sql = "SELECT " +self.currentlinkage['idsource'] + " FROM " +self.widget.dbasetablename + "_view  "
-                    sql += " WHERE id_" + self.widget.dbasetablename  + " = " + str(self.widget.currentFeature.id())
-                    query = self.widget.dbase.query(sql)
+                """
+                #sql = "SELECT lk_prestation FROM Ressource WHERE Ressource.id_ressource = " + str(feat['id_ressource'])
+                #sql = "SELECT " +self.currentlinkage['idsource'] + " FROM " +self.widget.dbasetablename + "_view  "
+                sql = "SELECT " + self.currentlinkage['idsource'] + " FROM " + self.widget.dbasetablename
+                sql += " WHERE id_" + self.widget.dbasetablename  + " = " + str(self.widget.currentFeature.id())
+                query = self.widget.dbase.query(sql)
+
+
+                if False:
                     curfeatviewidsource = [row[0] for row in query][0]
                     if curfeatviewidsource is None:
                         curfeatviewidsource = 'NULL'
 
-                sql = "SELECT " + self.currentlinkage['iddest'] + " FROM " + self.currenttype
-                sql += " WHERE " + self.currentlinkage['iddest'] + " = " + str(curfeatviewidsource)
-                query = self.widget.dbase.query(sql)
+                    sql = "SELECT " + self.currentlinkage['iddest'] + " FROM " + self.currenttype
+                    sql += " WHERE " + self.currentlinkage['iddest'] + " = " + str(curfeatviewidsource)
+                    query = self.widget.dbase.query(sql)
+
+
+
                 ids = [row[0] for row in query]
                 self.addrow()
-                if len(ids)> 0 :
+                if len(ids)> 0 and not self.widget.isAttributeNull(ids[0]):
                     self.tableWidget.setItem(0,0,QTableWidgetItem( str(ids[0])))
                 else :
                     self.tableWidget.setItem(0,0,QTableWidgetItem( ''))

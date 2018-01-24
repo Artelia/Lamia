@@ -86,10 +86,10 @@ class DBaseParser(QtCore.QObject):
         formatter = logging.Formatter("%(asctime)s -- %(name)s -- %(levelname)s -- %(funcName)s -- %(message)s")
         self.logger = logging.getLogger("Lamia")
         self.logger.setLevel(logging.DEBUG)             # DEBUG INFO WARNING
-        stream_handler = logging.StreamHandler()
-        stream_handler.setFormatter(formatter)
-        stream_handler.setLevel(logging.DEBUG)
-        self.logger.addHandler(stream_handler)
+        self.stream_handler = logging.StreamHandler()
+        self.stream_handler.setFormatter(formatter)
+        self.stream_handler.setLevel(logging.DEBUG)
+        self.logger.addHandler(self.stream_handler)
 
 
         self._readRecentDBase()
@@ -288,18 +288,18 @@ class DBaseParser(QtCore.QObject):
                 if self.dbasetables[dbname]['order'] == order:
                     if self.dbasetype == 'spatialite':
                         sql = self._generateSpatialiteCreationSQL(dbname, self.dbasetables[dbname], crs)
-                        print(sql['main'])
+                        # print(sql['main'])
                         openedsqlfile.write(sql['main'] + '\n')
                     elif dbasetype == 'postgis':
                         sql = self._generatePostGisCreationSQL(dbname, self.dbasetables[dbname], crs)
-                        print(sql['main'])
+                        # print(sql['main'])
                         openedsqlfile.write(sql['main'] + '\n')
                     self.query(sql['main'])
                     self.commit()
                     if 'other' in sql.keys():
                         for sqlother in sql['other']:
                             openedsqlfile.write(sqlother + '\n')
-                            print(sqlother)
+                            # print(sqlother)
                             self.query(sqlother)
                             self.commit()
 
@@ -907,7 +907,6 @@ class DBaseParser(QtCore.QObject):
 
         self.dbasetables = None
 
-        logging.shutdown()
 
 
     def updateQgsCoordinateTransformFromLayerToCanvas(self):

@@ -100,4 +100,5 @@ Indefini;                            IND;               ['AUT']
 ###gravite ;               VARCHAR(255);             TEXT
 ###priorite ;               VARCHAR(255);             TEXT
 ###risques ;               VARCHAR(255);             TEXT
+###lk_descriptionsystem;    INT ;                  INTEGER;                            Descriptionsystem(id_descriptionsystem)
 ###geom;                LINESTRING

@@ -274,7 +274,8 @@ class AbstractInspectionDigueTool(QWidget):
 
         # connect signals of inherited widget
         if self.windowdialog is not None:
-            self.windowdialog.MaintreeWidget.itemClicked.connect(self.onActivationRaw)
+            #self.windowdialog.MaintreeWidget.itemClicked.connect(self.onActivationRaw)
+            self.windowdialog.MaintreeWidget.currentItemChanged.connect(self.onActivationRaw)
 
 
     def unloadWidgetinMainTree(self):
@@ -657,19 +658,39 @@ class AbstractInspectionDigueTool(QWidget):
         connect ElemtreeWidget click to featureSelected
         TODO : display or not the layer
         """
-        # print('onActivationRaw', self.dbasetablename, param1,param1 == self.qtreewidgetitem)
+        # print('onActivationRaw', param1, param2)
+        #print('onActivationRaw', self.dbasetablename, param1,param1 == self.qtreewidgetitem)
 
         if self.debug: self.dbase.logger.debug('onActivationRaw started')
 
-        if isinstance(param1, QTreeWidgetItem):    # signal from treeWidget_utils
-            if param1 == self.qtreewidgetitem:
+        if isinstance(param1, QTreeWidgetItem) and (isinstance(param2, QTreeWidgetItem) or param2 is None):    # signal from treeWidget_utils
+            # print('onActivationRaw', param1.text(0), param2.text(0))
+
+            if param2 == self.qtreewidgetitem:
+                try:
+                    self.linkedtreewidget.currentItemChanged.disconnect()
+                except:
+                    pass
+
+                self.onDesactivationRaw()
+                # inherited class call
+                self.postOnDesactivation()
+
+            if param1 == self.qtreewidgetitem :
                 # print('onActivationRaw ',self.dbasetablename, self.windowdialog, self.parentWidget )
                 # disconnect other tools
-                for tablename in self.dbase.dbasetables.keys():
-                    if 'widget' in self.dbase.dbasetables[tablename].keys():
-                        wdg = self.dbase.dbasetables[tablename]['widget']
+                if False:
+                    if True:
+                        for tablename in self.dbase.dbasetables.keys():
+                            if 'widget' in self.dbase.dbasetables[tablename].keys():
+                                wdg = self.dbase.dbasetables[tablename]['widget']
+                                try:
+                                    wdg.linkedtreewidget.currentItemChanged.disconnect(wdg.featureSelected)
+                                except:
+                                    pass
+                    if False:
                         try:
-                            wdg.linkedtreewidget.currentItemChanged.disconnect(wdg.featureSelected)
+                            wdg.linkedtreewidget.currentItemChanged.disconnect()
                         except:
                             pass
 
@@ -710,12 +731,15 @@ class AbstractInspectionDigueTool(QWidget):
                 if qgis.utils.iface is not None and self.dbasetable is not None and self.dbasetable['showinqgis']:
                     qgis.utils.iface.setActiveLayer(self.dbasetable['layerqgis'])
 
+
                 # Specific method
                 self.postOnActivation()
+            """
             else:
                 self.onDesactivationRaw()
                 # inherited class call
                 self.postOnDesactivation()
+            """
 
 
     def postOnActivation(self):
@@ -924,10 +948,14 @@ class AbstractInspectionDigueTool(QWidget):
         """
         clear LinkedTreeWidget and linked combobox
         """
-
+        # print('clear')
         if self.linkedtreewidget is not None and isinstance(self.linkedtreewidget, QTreeWidget):
-            for i in range(self.linkedtreewidget.invisibleRootItem().childCount()):
-                self.linkedtreewidget.invisibleRootItem().removeChild(self.linkedtreewidget.invisibleRootItem().child(0))
+            if False:
+                for i in range(self.linkedtreewidget.invisibleRootItem().childCount()):
+                    self.linkedtreewidget.invisibleRootItem().removeChild(self.linkedtreewidget.invisibleRootItem().child(0))
+            if True:
+                self.linkedtreewidget.takeTopLevelItem(0)
+
         self.comboBox_featurelist.clear()
 
     def loadIds(self):
