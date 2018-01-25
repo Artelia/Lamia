@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/plugins/InspectionDigueV2" >
+    <qresource prefix="/plugins/Lamia" >
         <file>icons/icon.png</file>
         <file>icons/profil_digue.png</file>
         <file>icons/Add_48x48.png</file>

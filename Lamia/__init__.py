@@ -3,7 +3,7 @@
 MainModule core
 """
 
-from .InspectionDigue import *
+from .Lamia import *
 
 
 # noinspection PyPep8Naming
@@ -13,5 +13,5 @@ def classFactory(iface):  # pylint: disable=invalid-name
     :param iface: A QGIS interface instance.
     :type iface: QgsInterface
     """
-    from .InspectionDigue import InspectionDigue
-    return InspectionDigue(iface)
+    from .Lamia import Lamia
+    return Lamia(iface)

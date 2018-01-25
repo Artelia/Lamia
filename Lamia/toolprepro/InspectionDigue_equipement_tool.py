@@ -11,7 +11,7 @@ from .InspectionDigue_photos_tool import PhotosTool
 from .InspectionDigue_croquis_tool import CroquisTool
 import os
 import datetime
-import logging
+
 
 
 
@@ -77,8 +77,6 @@ class EquipementTool(AbstractInspectionDigueTool):
 
         self.propertieswdgCROQUIS = CroquisTool(dbase=self.dbase, parentwidget=self)
         self.dbasechildwdg.append(self.propertieswdgCROQUIS)
-
-        if self.debug: self.dbase.logger.debug('EquipementTool - init finished')
 
 
     def changeCategorie(self,int):

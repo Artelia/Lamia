@@ -1,0 +1,4 @@
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###id                 INT;                     INTEGER;    INTEGER PRIMARY KEY AUTOINCREMENT
+###app_label ;                VARCHAR(100);            TEXT;   NOT NULL
+###model ;                VARCHAR(100);            TEXT;   NOT NULL

@@ -15,16 +15,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout" stretch="0">
-    <property name="leftMargin">
-     <number>3</number>
-    </property>
-    <property name="topMargin">
-     <number>3</number>
-    </property>
-    <property name="rightMargin">
-     <number>3</number>
-    </property>
-    <property name="bottomMargin">
+    <property name="margin">
      <number>3</number>
     </property>
     <item>
@@ -76,16 +67,7 @@
            <property name="spacing">
             <number>6</number>
            </property>
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
+           <property name="margin">
             <number>0</number>
            </property>
            <item>
@@ -110,16 +92,7 @@
                <property name="spacing">
                 <number>0</number>
                </property>
-               <property name="leftMargin">
-                <number>0</number>
-               </property>
-               <property name="topMargin">
-                <number>0</number>
-               </property>
-               <property name="rightMargin">
-                <number>0</number>
-               </property>
-               <property name="bottomMargin">
+               <property name="margin">
                 <number>0</number>
                </property>
                <item>
@@ -198,16 +171,7 @@
                <property name="spacing">
                 <number>0</number>
                </property>
-               <property name="leftMargin">
-                <number>0</number>
-               </property>
-               <property name="topMargin">
-                <number>0</number>
-               </property>
-               <property name="rightMargin">
-                <number>0</number>
-               </property>
-               <property name="bottomMargin">
+               <property name="margin">
                 <number>0</number>
                </property>
                <item>
@@ -237,8 +201,8 @@
                      <string/>
                     </property>
                     <property name="icon">
-                     <iconset>
-                      <normaloff>:/plugins/InspectionDigueV2/icons/Zoom_48x48.png</normaloff>:/plugins/InspectionDigueV2/icons/Zoom_48x48.png</iconset>
+                     <iconset resource="../resources.qrc">
+                      <normaloff>:/plugins/Lamia/icons/Zoom_48x48.png</normaloff>:/plugins/Lamia/icons/Zoom_48x48.png</iconset>
                     </property>
                    </widget>
                   </item>
@@ -248,8 +212,8 @@
                      <string/>
                     </property>
                     <property name="icon">
-                     <iconset>
-                      <normaloff>:/plugins/InspectionDigueV2/icons/select.png</normaloff>:/plugins/InspectionDigueV2/icons/select.png</iconset>
+                     <iconset resource="../resources.qrc">
+                      <normaloff>:/plugins/Lamia/icons/select.png</normaloff>:/plugins/Lamia/icons/select.png</iconset>
                     </property>
                    </widget>
                   </item>
@@ -305,8 +269,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>255</width>
-             <height>506</height>
+             <width>233</width>
+             <height>520</height>
             </rect>
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -320,16 +284,7 @@
                 <property name="spacing">
                  <number>0</number>
                 </property>
-                <property name="leftMargin">
-                 <number>0</number>
-                </property>
-                <property name="topMargin">
-                 <number>0</number>
-                </property>
-                <property name="rightMargin">
-                 <number>0</number>
-                </property>
-                <property name="bottomMargin">
+                <property name="margin">
                  <number>0</number>
                 </property>
                 <item>
@@ -403,16 +358,7 @@
                 <property name="spacing">
                  <number>0</number>
                 </property>
-                <property name="leftMargin">
-                 <number>0</number>
-                </property>
-                <property name="topMargin">
-                 <number>0</number>
-                </property>
-                <property name="rightMargin">
-                 <number>0</number>
-                </property>
-                <property name="bottomMargin">
+                <property name="margin">
                  <number>0</number>
                 </property>
                </layout>
@@ -435,7 +381,7 @@
      <x>0</x>
      <y>0</y>
      <width>576</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -665,6 +611,7 @@
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+ </resources>
  <connections/>
 </ui>
