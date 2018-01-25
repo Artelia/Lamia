@@ -1,6 +1,5 @@
 # Nom_champ             TypePostGis              TypeSpatialite                          Option
-###id                 INT;                     INTEGER;    INTEGER PRIMARY KEY AUTOINCREMENT
-###app ;                VARCHAR(255);            TEXT;   NOT NULL
-###name ;                VARCHAR(255);            TEXT;   NOT NULL
-###applied ;                TIMESTAMP WITH TIME ZONE;            DATE;   NOT NULL
-
+###id;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###app ;                VARCHAR(255);            TEXT
+###name ;                VARCHAR(255);            TEXT
+###applied ;                TIMESTAMP WITH TIME ZONE;            DATE

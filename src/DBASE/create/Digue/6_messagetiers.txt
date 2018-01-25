@@ -1,14 +1,14 @@
 #DJAN SELECT  Messagetiers.* , Objet.datecreation, Objet.datedestruction, Objet.commentaire, Objet.libelle FROM Messagetiers INNER JOIN OBJET ON Messagetiers.id_objet = Objet.id_objet
 #QGIS SELECT  Messagetiers.* , Objet.datecreation, Objet.datedestruction FROM Messagetiers INNER JOIN OBJET ON Messagetiers.id_objet = Messagetiers.id_objet
 # Nom_champ             TypePostGis              TypeSpatialite                          Option
-###id_messagetiers                 INT;                     INTEGER;    INTEGER PRIMARY KEY AUTOINCREMENT
+###id_messagetiers;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
 ###pub_date ;                TIMESTAMP WITH TIME ZONE;            DATE
-###objet ;                VARCHAR(200);            TEXT;   NOT NULL
-###sender ;                VARCHAR(75);            TEXT;   NOT NULL
-###text ;                TEXT;            TEXT;   NOT NULL
-###destinataire ;                VARCHAR(255);            TEXT;   NOT NULL
-###id_objet                 INT;                     INTEGER;    NOT NULL
-###lu;                BOOLEAN;            INTEGER;    NOT NULL
+###objet ;                VARCHAR(200);            TEXT
+###sender ;                VARCHAR(75);            TEXT
+###text ;                TEXT;            TEXT
+###destinataire ;                VARCHAR(255);            TEXT
+###id_objet;                 INT;                     INTEGER;    Objet(id_objet)
+###lu;                BOOLEAN;            INTEGER
 /;
 True;1
 False;0

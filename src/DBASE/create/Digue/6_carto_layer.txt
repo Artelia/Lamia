@@ -1,8 +1,8 @@
-#DJAN SELECT  Layer.* , Objet.datecreation, Objet.datedestruction, Objet.commentaire, Objet.libelle FROM Layer INNER JOIN OBJET ON Layer.id_objet = Objet.id_objet
-#QGIS SELECT  Layer.* , Objet.datecreation, Objet.datedestruction FROM Layer INNER JOIN OBJET ON Layer.id_objet = Layer.id_objet
+#DJAN SELECT  carto_layer.* , Objet.datecreation, Objet.datedestruction, Objet.commentaire, Objet.libelle FROM carto_layer INNER JOIN OBJET ON carto_layer.id_objet = Objet.id_objet
+#QGIS SELECT  carto_layer.* , Objet.datecreation, Objet.datedestruction FROM carto_layer INNER JOIN OBJET ON carto_layer.id_objet = carto_layer.id_objet
 # Nom_champ             TypePostGis              TypeSpatialite                          Option
-###id_layer                 INT;                     INTEGER;    INTEGER PRIMARY KEY AUTOINCREMENT
-###id_objet                 INT;                     INTEGER;    NOT NULL
-###name ;                VARCHAR(200);            TEXT;   NOT NULL
-###ref ;                VARCHAR(200);            TEXT;   NOT NULL
-###store ;                VARCHAR(255);            TEXT;   NOT NULL
+###id_layer;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_objet;                 INT;                     INTEGER;    Objet(id_objet)
+###name ;                VARCHAR(200);            TEXT
+###ref ;                VARCHAR(200);            TEXT
+###store ;                VARCHAR(255);            TEXT
