@@ -1,7 +1,7 @@
 # Nom_champ             TypePostGis              TypeSpatialite                          Option
 ###id_tcobjetintervenant;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
 ###id_tcintervenant;       INT;            INTEGER;                                              Intervenant(id_intervenant)
-###id_tcoobjet;       INT;            INTEGER;                                              Objet(id_objet)
+###id_tcobjet;       INT;            INTEGER;                                              Objet(id_objet)
 ###fonction;                VARCHAR(255);            TEXT
 /;
 Maitre d ouvrage;MOA
