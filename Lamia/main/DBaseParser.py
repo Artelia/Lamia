@@ -15,7 +15,9 @@ except ImportError:
 import psycopg2
 import glob
 from collections import OrderedDict
+
 import logging
+#logger = logging.getLogger("Lamia")
 
 
 class DBaseParser(QtCore.QObject):
@@ -83,13 +85,18 @@ class DBaseParser(QtCore.QObject):
         # the QgsCoordinateTransform var
         self.xform = None
         #debug
-        formatter = logging.Formatter("%(asctime)s -- %(name)s -- %(levelname)s -- %(funcName)s -- %(message)s")
-        self.logger = logging.getLogger("Lamia")
-        self.logger.setLevel(logging.DEBUG)             # DEBUG INFO WARNING
-        self.stream_handler = logging.StreamHandler()
-        self.stream_handler.setFormatter(formatter)
-        self.stream_handler.setLevel(logging.DEBUG)
-        self.logger.addHandler(self.stream_handler)
+        if False:
+            formatter = logging.Formatter("%(asctime)s -- %(name)s -- %(levelname)s -- %(funcName)s -- %(message)s")
+            self.logger = logging.getLogger("Lamia")
+            self.logger.setLevel(logging.DEBUG)             # DEBUG INFO WARNING
+            self.stream_handler = logging.StreamHandler()
+            self.stream_handler.setFormatter(formatter)
+            self.stream_handler.setLevel(logging.DEBUG)
+            self.logger.addHandler(self.stream_handler)
+        if False:
+            logging.basicConfig(level=logging.DEBUG)
+            logging.info('popo')
+
 
 
         self._readRecentDBase()
@@ -99,7 +106,9 @@ class DBaseParser(QtCore.QObject):
             self.qgisversion_int = qgis.utils.QGis.QGIS_VERSION_INT
         except AttributeError:  #qgis 3
             self.qgisversion_int = qgis.utils.Qgis.QGIS_VERSION_INT
-        self.logger.info('qgisversion : %s', str(self.qgisversion_int))
+
+        #logger.info('qgisversion : %s', str(self.qgisversion_int))
+        #logging.getLogger("Lamia").info('qgisversion : %s', str(self.qgisversion_int))
 
     """
 
@@ -436,6 +445,7 @@ class DBaseParser(QtCore.QObject):
             self.dbasetables[tablename]['order'] = int(temp[0])
             self.dbasetables[tablename]['fields'] = OrderedDict()
             self.dbasetables[tablename]['showinqgis'] = False
+            self.dbasetables[tablename]['widget'] = []
 
             file = open(filename, 'r')
             compt = 0

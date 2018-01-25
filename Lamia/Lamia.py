@@ -39,7 +39,7 @@ Created on 29 July 2012
 """
 
 
-class InspectionDigue:
+class Lamia:
     """
     QGIS Plugin Implementation
 
@@ -68,7 +68,7 @@ class InspectionDigue:
         locale_path = os.path.join(
             self.plugin_dir,
             'i18n',
-            'InspectionDigueV2{}.qm'.format(locale))
+            'Lamia{}.qm'.format(locale))
 
         if os.path.exists(locale_path):
             self.translator = QTranslator()
@@ -79,10 +79,10 @@ class InspectionDigue:
 
         # Declare instance attributes
         self.actions = []
-        self.menu = self.tr(u'&InspectionDigueV2')
+        self.menu = self.tr(u'&Lamia')
         # TODO: We are going to let the user set this up in a future iteration
-        self.toolbar = self.iface.addToolBar(u'InspectionDigueV2')
-        self.toolbar.setObjectName(u'InspectionDigueV2')
+        self.toolbar = self.iface.addToolBar(u'Lamia')
+        self.toolbar.setObjectName(u'Lamia')
 
         #print "** INITIALIZING InspectionDigue"
 
@@ -100,7 +100,7 @@ class InspectionDigue:
         
         """
         # noinspection PyTypeChecker,PyArgumentList,PyCallByClass
-        return QCoreApplication.translate('InspectionDigueV2', message)
+        return QCoreApplication.translate('Lamia', message)
 
 
     def add_action(
@@ -149,10 +149,10 @@ class InspectionDigue:
         Create the menu entries and toolbar icons inside the QGIS GUI
         """
 
-        icon_path = ':/plugins/InspectionDigueV2/icons/icon.png'
+        icon_path = ':/plugins/Lamia/icons/icon.png'
         self.add_action(
             icon_path,
-            text=self.tr(u'InspectionDigueV2'),
+            text=self.tr(u'Lamia'),
             callback=self.run,
             parent=self.iface.mainWindow())
 
@@ -185,7 +185,7 @@ class InspectionDigue:
 
         for action in self.actions:
             self.iface.removePluginMenu(
-                self.tr(u'&InspectionDigueV2'),
+                self.tr(u'&Lamia'),
                 action)
             self.iface.removeToolBarIcon(action)
         # remove the toolbar

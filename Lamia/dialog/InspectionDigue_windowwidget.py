@@ -5,17 +5,26 @@ from qgis.PyQt import QtGui, uic, QtCore
 from qgis.PyQt.QtCore import pyqtSignal
 try:
     from qgis.PyQt.QtGui import (QDockWidget, QMainWindow, QFileDialog, QLabel, QInputDialog,
-                                 QComboBox,QTableWidgetItem,QProgressBar)
+                                 QComboBox,QTableWidgetItem,QProgressBar,QApplication)
 except ImportError:
     from qgis.PyQt.QtWidgets import (QDockWidget, QMainWindow, QFileDialog, QLabel, QInputDialog,
-                                     QComboBox,QTableWidgetItem, QProgressBar)
+                                     QComboBox,QTableWidgetItem, QProgressBar,QApplication)
 
 # other libs import
 import os
 import qgis
 import shutil
 import datetime
+import sys
 import logging
+logger = logging.getLogger("Lamia")
+logger.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s :: %(levelname)s :: %(module)s :: %(funcName)s :: %(message)s')
+stream_handler = logging.StreamHandler(sys.stdout)
+stream_handler.setLevel(logging.DEBUG)
+stream_handler.setFormatter(formatter)
+logger.addHandler(stream_handler)
+debugtime = False
 
 # plugin import
 from ..main.DBaseParser import DBaseParser
@@ -85,8 +94,7 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.printrapportdialog = ImpressionRapportDialog()
         self.exportshapefiledialog = ExportShapefileDialog()
         self.importobjetdialog =ImportObjetDialog()
-        # debug
-        self.debug = True
+
 
 
         if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
@@ -175,6 +183,7 @@ class InspectiondigueWindowWidget(QMainWindow):
             self.dbase.imagedirectory = os.path.normpath(QtCore.QSettings().value("InspectionDigue/picturepath"))
         else:
             self.dbase.imagedirectory = None
+
 
     def setWorkingDate(self):
         """
@@ -510,7 +519,7 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.menuBases_recentes.triggered.connect(self.openFileFromMenu)
 
     def DBaseLoaded(self):
-        if self.debug: self.dbase.logger.info('InspectiondigueWindowWidget - Dbase loaded')
+        # logger.info('InspectiondigueWindowWidget - Dbase loaded')
         self.gpsutil.setCRS(self.dbase.qgiscrs)
         self.dbase.updateWorkingDate()
         printtime = False
@@ -526,6 +535,8 @@ class InspectiondigueWindowWidget(QMainWindow):
         else:
             progress = None
 
+        if debugtime: logger.debug(' progress bar done %s', str(round(time.clock() - timestart, 3)))
+
 
         if self.dbase.type.lower() == 'digue':
             # *************************************************************************************************
@@ -537,23 +548,22 @@ class InspectiondigueWindowWidget(QMainWindow):
                                                                              dialog = self,
                                                                              linkedtreewidget = self.ElemtreeWidget,
                                                                              gpsutil = self.gpsutil)
-                #self.logger.debug('InfraLineaireTool',round(time.clock() - timestart, 3))
 
-                if self.debug: self.dbase.logger.debug('InspectiondigueWindowWidget - InfraLineaireTool %s',
-                                                       str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug('InfraLineaireTool %s', str(round(time.clock() - timestart, 3)))
                 #if printtime : print('InfraLineaireTool',round(time.clock() - timestart, 3))
                 i += 1
-                if progress is not None: progress.setValue(i)
+                self.setLoadingProgressBar(progress, i)
+
             if True:
                 from ..toolprepro.InspectionDigue_tronconemprise_tool import TronconEmpriseTool
                 self.dbase.dbasetables['Infralinemprise']['widget'] = TronconEmpriseTool(dbase=self.dbase,
                                                                                   dialog=self,
                                                                                   linkedtreewidget=self.ElemtreeWidget,
                                                                                     gpsutil = self.gpsutil)
-                if self.debug: self.dbase.logger.debug('InspectiondigueWindowWidget - TronconEmpriseTool %s',
-                                                       str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug('TronconEmpriseTool %s', str(round(time.clock() - timestart, 3)))
                 i += 1
-                if progress is not None: progress.setValue(i)
+                self.setLoadingProgressBar(progress, i)
+
             if True:
                 from ..toolprepro.InspectionDigue_equipement_tool import EquipementTool
                 self.dbase.dbasetables['Equipement']['widget'] = EquipementTool(dbase=self.dbase,
@@ -569,10 +579,9 @@ class InspectiondigueWindowWidget(QMainWindow):
                     pass
                 for childwdg in parentwdg.dbasechildwdg:
                     parentwdg.currentFeatureChanged.connect(childwdg.loadChildFeatureinWidget)
-                if self.debug: self.dbase.logger.debug('InspectiondigueWindowWidget - EquipementTool %s',
-                                                       str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug('EquipementTool %s', str(round(time.clock() - timestart, 3)))
                 i += 1
-                if progress is not None: progress.setValue(i)
+                self.setLoadingProgressBar(progress, i)
 
             if True:
                 from ..toolprepro.InspectionDigue_profil_tool import ProfilTool
@@ -580,8 +589,9 @@ class InspectiondigueWindowWidget(QMainWindow):
                                                                         dialog=self,
                                                                         linkedtreewidget=self.ElemtreeWidget,
                                                                         gpsutil=self.gpsutil)
-                if self.debug: self.dbase.logger.debug('InspectiondigueWindowWidget - ProfilTool %s',
-                                                       str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug(' ProfilTool %s', str(round(time.clock() - timestart, 3)))
+                i += 1
+                self.setLoadingProgressBar(progress, i)
 
             if True:
                 from ..toolprepro.InspectionDigue_noeud_tool import NoeudTool
@@ -589,10 +599,9 @@ class InspectiondigueWindowWidget(QMainWindow):
                                                                         dialog=self,
                                                                         linkedtreewidget=self.ElemtreeWidget,
                                                                         gpsutil=self.gpsutil)
-                if self.debug: self.dbase.logger.debug('InspectiondigueWindowWidget - NoeudTool %s',
-                                                       str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug('NoeudTool %s', str(round(time.clock() - timestart, 3)))
                 i += 1
-                if progress is not None: progress.setValue(i)
+                self.setLoadingProgressBar(progress, i)
 
             # *************************************************************************************************
             # Ressource ***************************
@@ -602,70 +611,63 @@ class InspectiondigueWindowWidget(QMainWindow):
                                                                         dialog=self,
                                                                         linkedtreewidget= self.ElemtreeWidget,
                                                                         gpsutil=self.gpsutil)]
-                if self.debug: self.dbase.logger.debug('InspectiondigueWindowWidget - PhotosTool %s',
-                                                       str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug('PhotosTool %s', str(round(time.clock() - timestart, 3)))
                 i += 1
-                if progress is not None: progress.setValue(i)
+                self.setLoadingProgressBar(progress, i)
             if True:
                 from ..toolprepro.InspectionDigue_croquis_tool import CroquisTool
                 self.dbase.dbasetables['Photo']['widget'].append( CroquisTool(dbase=self.dbase,
                                                                               dialog=self,
                                                                               linkedtreewidget=self.ElemtreeWidget,
                                                                               gpsutil=self.gpsutil) )
-                if self.debug: self.dbase.logger.debug('InspectiondigueWindowWidget - CroquisTool %s',
-                                                       str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug('CroquisTool %s', str(round(time.clock() - timestart, 3)))
                 i += 1
-                if progress is not None: progress.setValue(i)
+                self.setLoadingProgressBar(progress, i)
             if True:
                 from ..toolprepro.InspectionDigue_rapport_tool import RapportTool
                 self.dbase.dbasetables['Rapport']['widget'] = RapportTool(dbase=self.dbase,
                                                                           dialog=self,
                                                                           linkedtreewidget=self.ElemtreeWidget,
                                                                           gpsutil=self.gpsutil)
-                if self.debug: self.dbase.logger.debug('InspectiondigueWindowWidget - RapportTool %s',
-                                                       str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug('RapportTool %s',  str(round(time.clock() - timestart, 3)))
                 i += 1
-                if progress is not None: progress.setValue(i)
+                self.setLoadingProgressBar(progress, i)
             if True:
                 from ..toolprepro.InspectionDigue_raster_tool import RasterTool
                 self.dbase.dbasetables['Rasters']['widget'] = RasterTool(dbase=self.dbase,
                                                                          dialog=self,
                                                                          linkedtreewidget=self.ElemtreeWidget,
                                                                          gpsutil=self.gpsutil)
-                if self.debug: self.dbase.logger.debug('InspectiondigueWindowWidget - RasterTool %s',
-                                                       str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug('RasterTool %s', str(round(time.clock() - timestart, 3)))
                 i += 1
-                if progress is not None: progress.setValue(i)
+                self.setLoadingProgressBar(progress, i)
             if True:
                 from ..toolprepro.InspectionDigue_topographie_tool import TopographieTool
                 self.dbase.dbasetables['Topographie']['widget'] = TopographieTool(dbase=self.dbase,
                                                                                   dialog=self,
                                                                                   linkedtreewidget=self.ElemtreeWidget,
                                                                                   gpsutil=self.gpsutil)
-                if self.debug: self.dbase.logger.debug('InspectiondigueWindowWidget - TopographieTool %s',
-                                                       str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug('TopographieTool %s',  str(round(time.clock() - timestart, 3)))
                 i += 1
-                if progress is not None: progress.setValue(i)
+                self.setLoadingProgressBar(progress, i)
             if True:
                 from ..toolprepro.InspectionDigue_graphique_tool import GraphiqueTool
                 self.dbase.dbasetables['Graphique']['widget'] = GraphiqueTool(dbase=self.dbase,
                                                                               dialog=self,
                                                                               linkedtreewidget=self.ElemtreeWidget,
                                                                               gpsutil=self.gpsutil)
-                if self.debug: self.dbase.logger.debug('InspectiondigueWindowWidget - GraphiqueTool %s',
-                                                       str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug('GraphiqueTool %s',  str(round(time.clock() - timestart, 3)))
                 i += 1
-                if progress is not None: progress.setValue(i)
+                self.setLoadingProgressBar(progress, i)
             if True:
                 from ..toolprepro.InspectionDigue_pointtopo_tool import PointtopoTool
                 self.dbase.dbasetables['Pointtopo']['widget'] = PointtopoTool(dbase=self.dbase,
                                                                               dialog=self,
                                                                               linkedtreewidget=self.ElemtreeWidget,
                                                                               gpsutil=self.gpsutil)
-                if self.debug: self.dbase.logger.debug('InspectiondigueWindowWidget - PointtopoTool %s',
-                                                       str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug('PointtopoTool %s', str(round(time.clock() - timestart, 3)))
                 i += 1
-                if progress is not None: progress.setValue(i)
+                self.setLoadingProgressBar(progress, i)
 
             # *************************************************************************************************
             # Desordre  ***************************
@@ -675,10 +677,9 @@ class InspectiondigueWindowWidget(QMainWindow):
                                                                             dialog=self,
                                                                             linkedtreewidget=self.ElemtreeWidget,
                                                                             gpsutil=self.gpsutil)
-                if self.debug: self.dbase.logger.debug('InspectiondigueWindowWidget - DesordreTool %s',
-                                                       str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug('DesordreTool %s',  str(round(time.clock() - timestart, 3)))
                 i += 1
-                if progress is not None: progress.setValue(i)
+                self.setLoadingProgressBar(progress, i)
 
             if True:
                 from ..toolprepro.InspectionDigue_observation_tool import ObservationTool
@@ -686,10 +687,9 @@ class InspectiondigueWindowWidget(QMainWindow):
                                                                                   dialog=self,
                                                                                   linkedtreewidget=self.ElemtreeWidget,
                                                                                   gpsutil=self.gpsutil)
-                if self.debug: self.dbase.logger.debug('InspectiondigueWindowWidget - ObservationTool %s',
-                                                       str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug('ObservationTool %s',  str(round(time.clock() - timestart, 3)))
                 i += 1
-                if progress is not None: progress.setValue(i)
+                self.setLoadingProgressBar(progress, i)
 
             # *************************************************************************************************
             # Autre ***************************
@@ -699,30 +699,27 @@ class InspectiondigueWindowWidget(QMainWindow):
                                                                           dialog=self,
                                                                           linkedtreewidget=self.ElemtreeWidget,
                                                                           gpsutil=self.gpsutil)
-                if self.debug: self.dbase.logger.debug('InspectiondigueWindowWidget - ZonegeoTool %s',
-                                                       str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug('ZonegeoTool %s',str(round(time.clock() - timestart, 3)))
                 i += 1
-                if progress is not None: progress.setValue(i)
+                self.setLoadingProgressBar(progress, i)
             if True:
                 from ..toolprepro.InspectionDigue_marche_tool import MarcheTool
                 self.dbase.dbasetables['Marche']['widget'] = MarcheTool(dbase=self.dbase,
                                                                         dialog=self,
                                                                         linkedtreewidget=self.ElemtreeWidget,
                                                                         gpsutil=self.gpsutil)
-                if self.debug: self.dbase.logger.debug('InspectiondigueWindowWidget - MarcheTool %s',
-                                                       str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug('MarcheTool %s', str(round(time.clock() - timestart, 3)))
                 i += 1
-                if progress is not None: progress.setValue(i)
+                self.setLoadingProgressBar(progress, i)
             if True:
                 from ..toolprepro.InspectionDigue_intervenant_tool import IntervenantTool
                 self.dbase.dbasetables['Intervenant']['widget'] = IntervenantTool(dbase=self.dbase,
                                                                                   dialog=self,
                                                                                   linkedtreewidget=self.ElemtreeWidget,
                                                                                   gpsutil=self.gpsutil)
-                if self.debug: self.dbase.logger.debug('InspectiondigueWindowWidget - IntervenantTool %s',
-                                                       str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug('IntervenantTool %s',  str(round(time.clock() - timestart, 3)))
                 i += 1
-                if progress is not None: progress.setValue(i)
+                self.setLoadingProgressBar(progress, i)
 
             # *************************************************************************************************
             # Base  ***************************
@@ -743,16 +740,15 @@ class InspectiondigueWindowWidget(QMainWindow):
             # *************************************************************************************************
             # PostPro  ***************************
 
-            if True:
+            if False:
                 from ..toolpostpro.InspectionDigue_synth_zonegeo_tool import SyntheseZonegeoTool
                 self.synthesezonegeotool = SyntheseZonegeoTool(dbase=self.dbase,
                                                                dialog=self,
                                                                linkedtreewidget=self.ElemtreeWidget)
                 self.tools.append(self.synthesezonegeotool)
-                if self.debug: self.dbase.logger.debug('InspectiondigueWindowWidget - SyntheseZonegeoTool %s',
-                                                       str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug('SyntheseZonegeoTool %s',   str(round(time.clock() - timestart, 3)))
                 i += 1
-                if progress is not None: progress.setValue(i)
+                self.setLoadingProgressBar(progress, i)
 
             if False:
                 try:
@@ -761,14 +757,13 @@ class InspectiondigueWindowWidget(QMainWindow):
                                                                    dialog=self,
                                                                    linkedtreewidget=self.ElemtreeWidget)
                     self.tools.append(self.pathtool)
-                    if self.debug: self.dbase.logger.debug('InspectiondigueWindowWidget - PathTool %s',
-                                                           str(round(time.clock() - timestart, 3)))
+                    if debugtime: logger.debug('PathTool %s',  str(round(time.clock() - timestart, 3)))
 
                     if not os.path.isfile(self.pathtool.dbasetablename):
                         filepath = open(self.pathtool.dbasetablename,'w')
                         filepath.close()
                     i += 1
-                    if progress is not None: progress.setValue(i)
+                    self.setLoadingProgressBar(progress, i)
                 except:
                     pass
 
@@ -776,8 +771,7 @@ class InspectiondigueWindowWidget(QMainWindow):
 
         self.applyVisualMode()
 
-        if self.debug: self.dbase.logger.debug('InspectiondigueWindowWidget - applyVisualMode %s',
-                                              str(round(time.clock() - timestart, 3)))
+        if debugtime: logger.debug('applyVisualMode %s',str(round(time.clock() - timestart, 3)))
 
     #**********************************************************************************************
     #********************************    Tree widget    ********************************************
@@ -1071,5 +1065,8 @@ class InspectiondigueWindowWidget(QMainWindow):
     def modeHorsLigne(self):
         self.horsligne = not self.horsligne
 
+    def setLoadingProgressBar(self, progressbar, val):
+        if progressbar is not None: progressbar.setValue(val)
+        QApplication.processEvents()
 
 

@@ -25,6 +25,7 @@ import shutil
 import datetime
 import time
 import logging
+debugtime = False
 
 
 class AbstractInspectionDigueTool(QWidget):
@@ -40,9 +41,8 @@ class AbstractInspectionDigueTool(QWidget):
         @param linkedtreewidget  : the treewidget it interacts with
         @param parent : the parent widget (TODO : the same as dialog)
         """
-        printtime = False
-        # print(self.__class__)
         timestart = time.clock()
+        if debugtime: logging.getLogger('Lamia').debug('Start init %s', str(round(time.clock() - timestart, 3)))
 
         super(AbstractInspectionDigueTool, self).__init__(parent)
         uipath = os.path.join(os.path.dirname(__file__), '..', 'dialog', 'InspectionDigue_propertieswidget.ui')
@@ -99,7 +99,11 @@ class AbstractInspectionDigueTool(QWidget):
         # show only inside feature mapcanvas  in linkedtreewidget
         self.windowsonlyfeature = 0
         #  the child widgets
-        self.dbasechildwdg = []
+        #whildwdg change
+        if True:
+            self.dbasechildwdg = []
+        else:
+            self.dbasechildwdg = {}
         # user widget
         self.linkuserwdg = None
         # wile saving new feature
@@ -163,24 +167,13 @@ class AbstractInspectionDigueTool(QWidget):
 
         # *******************************************************
         # load tools - must be kept in this order
-        if printtime: print('abstract1', round(time.clock() - timestart, 3))
+        if debugtime: logging.getLogger('Lamia').debug('before initTool %s', str(round(time.clock() - timestart, 3)))
         self.initTool()
-        if printtime: print('abstract2', round(time.clock() - timestart, 3))
+        if debugtime: logging.getLogger('Lamia').debug('After initTool %s', str(round(time.clock() - timestart, 3)))
         # *******************************************************
         # Post inittool things
         # widget connection
 
-        # debug - if logger is not created id child class
-        """
-        if self.logger is None:
-            formatter = logging.Formatter("%(asctime)s -- %(name)s -- %(funcName)s -- %(levelname)s -- %(message)s")
-            self.logger = logging.getLogger(__name__)
-            self.logger.setLevel(logging.INFO)             # DEBUG INFO WARNING
-            stream_handler = logging.StreamHandler()
-            stream_handler.setFormatter(formatter)
-            stream_handler.setLevel(logging.DEBUG)
-            self.logger.addHandler(stream_handler)
-        """
 
 
         if self.dbasetablename is not None :
@@ -191,11 +184,14 @@ class AbstractInspectionDigueTool(QWidget):
                 self.dbasetable = self.dbase.dbasetables[self.dbasetablename]
             self.changePropertiesWidget()
             self.initWidgets()
+        #childwdg change
+        if True:
+            for childwdg in self.dbasechildwdg:
+                self.currentFeatureChanged.connect(childwdg.loadChildFeatureinWidget)
 
-        for childwdg in self.dbasechildwdg:
-            self.currentFeatureChanged.connect(childwdg.loadChildFeatureinWidget)
 
-        if printtime: print('abstract3', round(time.clock() - timestart, 3))
+        if debugtime: logging.getLogger('Lamia').debug('end init %s', str(round(time.clock() - timestart, 3)))
+
 
     # ******************************************************************************************************************
     # **********************************    Init methods        ********************************************************
@@ -230,8 +226,18 @@ class AbstractInspectionDigueTool(QWidget):
         elif self.dbase.visualmode == 2:
             self.groupBox_properties.layout().addWidget(self.tableWidget)
 
-        for childwdg in self.dbasechildwdg:
-            childwdg.changePropertiesWidget()
+        #dbasechildwdg change
+        if True:
+            for childwdg in self.dbasechildwdg:
+                childwdg.changePropertiesWidget()
+        else:
+            for childwdgname in self.dbasechildwdg.keys():
+                chldwdg = self.getDBaseChildWidget(childwdgname)
+                if chldwdg:
+                    chldwdg.changePropertiesWidget()
+
+
+
 
         if self.dbase.visualmode in self.visualmode:
             self.loadWidgetinMainTree()
@@ -661,16 +667,11 @@ class AbstractInspectionDigueTool(QWidget):
         # print('onActivationRaw', param1, param2)
         #print('onActivationRaw', self.dbasetablename, param1,param1 == self.qtreewidgetitem)
 
-        if self.debug: self.dbase.logger.debug('onActivationRaw started')
 
         if isinstance(param1, QTreeWidgetItem) and (isinstance(param2, QTreeWidgetItem) or param2 is None):    # signal from treeWidget_utils
             # print('onActivationRaw', param1.text(0), param2.text(0))
 
             if param2 == self.qtreewidgetitem:
-                try:
-                    self.linkedtreewidget.currentItemChanged.disconnect()
-                except:
-                    pass
 
                 self.onDesactivationRaw()
                 # inherited class call
@@ -700,9 +701,18 @@ class AbstractInspectionDigueTool(QWidget):
                 # add child widget
                 if True:  # TODO
                     self.windowdialog.tabWidget_childs.clear()
-                    for childwdg in self.dbasechildwdg:
-                        if childwdg.NAME is not None:
-                            self.windowdialog.tabWidget_childs.addTab(childwdg, childwdg.NAME)
+                    #childwdg change
+                    if True:
+                        for childwdg in self.dbasechildwdg:
+                            if childwdg.NAME is not None:
+                                self.windowdialog.tabWidget_childs.addTab(childwdg, childwdg.NAME)
+                    else:
+                        for childwdgname in self.dbasechildwdg.keys():
+                            chldwdg = self.getDBaseChildWidget(childwdgname)
+                            print(chldwdg)
+                            if chldwdg and childwdg.NAME:
+                                self.windowdialog.tabWidget_childs.addTab(chldwdg,
+                                                                          chldwdg.NAME)
 
                 # manage widget display
                 if self.windowdialog is not None :
@@ -750,7 +760,6 @@ class AbstractInspectionDigueTool(QWidget):
         pass
 
     def onDesactivationRaw(self):
-        if self.debug: self.dbase.logger.debug('onDesactivationRaw started')
         # reinit
         self.currentFeature = None
         if self.dbasetable is not None and 'layerqgis' in self.dbasetable.keys():
@@ -847,7 +856,6 @@ class AbstractInspectionDigueTool(QWidget):
         load features in self.linkedtreewidget
         called whenever the list need to be reinitialized (ex : click in maintreewidget,...)
         """
-        if self.debug: self.dbase.logger.debug('loadFeaturesinTreeWdg started')
         self.disconnectIdsGui()
 
         # clear treewidget
@@ -960,7 +968,6 @@ class AbstractInspectionDigueTool(QWidget):
 
     def loadIds(self):
 
-        if self.debug: self.dbase.logger.debug('loadIds started')
         ids = []
         if self.dbasetable is not None:
             strid = 'id_' + self.dbasetablename.lower()
@@ -1046,8 +1053,9 @@ class AbstractInspectionDigueTool(QWidget):
         Action when a feature is selected somewhere
         @param item : if none, add new feature else show properties of id selected
         """
-        if self.debug: self.dbase.logger.debug('featureSelected started')
         # print('featureSelected',self.dbasetablename, self.sender().objectName(),item)
+
+        # logging.getLogger("Lamia").debug('featureSelected ' + self.dbasetablename)
 
         if self.parentWidget is None and self.dbasetable is not None:
             self.dbasetable['layer'].removeSelection()
@@ -2042,7 +2050,10 @@ class AbstractInspectionDigueTool(QWidget):
         else:
             feat = self.getLayerFeatureById(self.dbasetablename,fid )
         # point2 = xform.transform(feat.geometry().centroid().asPoint())
-        point2 = self.dbase.xform.transform(feat.geometry().centroid().asPoint())
+        if feat.geometry().centroid() is not None:
+            point2 = self.dbase.xform.transform(feat.geometry().centroid().asPoint())
+        else:
+            point2 = self.dbase.xform.transform(feat.geometry().vertexAt(0) )
         self.canvas.setCenter(point2)
         self.canvas.refresh()
 
@@ -2255,3 +2266,16 @@ class AbstractInspectionDigueTool(QWidget):
             return self.dbase.dbasetables[layername]['layer'].getFeatures(qgis.core.QgsFeatureRequest(fid)).next()
         else:
             return self.dbase.dbasetables[layername]['layer'].getFeature(fid)
+
+    def getDBaseChildWidget(self,keywidget):
+        wdg = self.dbasechildwdg[keywidget]
+        print(self.dbasechildwdg)
+        print(keywidget, wdg, isinstance(wdg,list))
+        print(self.dbase.dbasetables['Photo']['widget'])
+
+        if isinstance(wdg,list) and len(wdg)>0:
+            return wdg[self.dbasechildwdg[keywidget][1]]
+        elif not isinstance(wdg,list) and wdg is not None:
+            return wdg
+        else:
+            return None

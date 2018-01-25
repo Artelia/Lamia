@@ -17,8 +17,9 @@ from .InspectionDigue_profil_tool import ProfilTool
 from ..toolpostpro.InspectionDigue_path_tool import PathTool
 import os
 import datetime
-
-
+import logging
+import time
+debugtime = False
 
 
 
@@ -30,6 +31,9 @@ class InfraLineaireTool(AbstractInspectionDigueTool):
     def initTool(self):
         # ****************************************************************************************
         # Main spec
+        timestart = time.clock()
+        if debugtime: logging.getLogger('Lamia').debug('Start init %s',str(round(time.clock() - timestart, 3)))
+
         self.CAT = 'Description'
         self.NAME = 'Troncon'
         self.dbasetablename = 'Infralineaire'
@@ -69,8 +73,9 @@ class InfraLineaireTool(AbstractInspectionDigueTool):
 
         self.userwdg.pushButton_defineinter.clicked.connect(self.manageLinkage)
 
-        self.photowdg = Label()
-        self.userwdg.tabWidget.widget(0).layout().addWidget(self.photowdg)
+        if True:
+            self.photowdg = Label()
+            self.userwdg.tabWidget.widget(0).layout().addWidget(self.photowdg)
         if False:
             self.propertieswdgPROFILLONG = PathTool(dbase=self.dbase, parentwidget=self)
             self.userwdg.tabWidget.widget(1).layout().addWidget(self.propertieswdgPROFILLONG.plotWdg)
@@ -79,28 +84,36 @@ class InfraLineaireTool(AbstractInspectionDigueTool):
 
         # ****************************************************************************************
         # child widgets
-        self.dbasechildwdg=[]
-        self.propertieswdgPHOTOGRAPHIE = PhotosTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
-        self.dbasechildwdg.append(self.propertieswdgPHOTOGRAPHIE)
-        self.propertieswdgRAPPORT = RapportTool(dbase=self.dbase, parentwidget=self)
-        self.dbasechildwdg.append(self.propertieswdgRAPPORT)
-        self.propertieswdgTRONCONEMPRISE = TronconEmpriseTool(dbase=self.dbase, parentwidget=self)
-        self.dbasechildwdg.append(self.propertieswdgTRONCONEMPRISE)
-        self.propertieswdgCROQUIS = CroquisTool(dbase=self.dbase, parentwidget=self)
-        self.dbasechildwdg.append(self.propertieswdgCROQUIS)
+        self.dbasechildwdg = []
+        if True:
+            self.dbasechildwdg=[]
+            self.propertieswdgPHOTOGRAPHIE = PhotosTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
+            self.dbasechildwdg.append(self.propertieswdgPHOTOGRAPHIE)
+            self.propertieswdgRAPPORT = RapportTool(dbase=self.dbase, parentwidget=self)
+            self.dbasechildwdg.append(self.propertieswdgRAPPORT)
+            self.propertieswdgTRONCONEMPRISE = TronconEmpriseTool(dbase=self.dbase, parentwidget=self)
+            self.dbasechildwdg.append(self.propertieswdgTRONCONEMPRISE)
+            self.propertieswdgCROQUIS = CroquisTool(dbase=self.dbase, parentwidget=self)
+            self.dbasechildwdg.append(self.propertieswdgCROQUIS)
 
-        self.propertieswdgPROFIL = ProfilTool(dbase=self.dbase, parentwidget=self)
-        self.dbasechildwdg.append(self.propertieswdgPROFIL)
+            self.propertieswdgPROFIL = ProfilTool(dbase=self.dbase, parentwidget=self)
+            self.dbasechildwdg.append(self.propertieswdgPROFIL)
+
+        if False:
+            self.dbasechildwdg = [self.dbase.dbasetables['Photo']['widget'],
+                                  self.dbase.dbasetables['Rapport']['widget']]
+
+        if False:
+            self.dbasechildwdg = {'photo': [self.dbase.dbasetables['Photo']['widget'], 0]
+                                  }
 
 
-
-
-        if self.debug: self.dbase.logger.debug('InfraLineaireTool - init finished')
 
         if False:
             self.propertieswdgPROFILTRAVERS = ProfilTraversTool(dbase=self.dbase, parentwidget=self)
             self.dbasechildwdg.append(self.propertieswdgPROFILTRAVERS)
 
+        if debugtime: logging.getLogger('Lamia').debug('End init %s', str(round(time.clock() - timestart, 3)))
 
     def postOnActivation(self):
         pass
