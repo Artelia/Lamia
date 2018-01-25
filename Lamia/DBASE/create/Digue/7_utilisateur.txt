@@ -1,0 +1,4 @@
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###id_utilisateur;                   SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id;                 INT;                     INTEGER
+###lk_projet;                 INT;                     INTEGER;    Projet(id_projet)
