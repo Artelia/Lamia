@@ -29,10 +29,10 @@ debugtime = False
 
 
 class AbstractInspectionDigueTool(QWidget):
-    
+
     saveFeatureSignal = QtCore.pyqtSignal()
     currentFeatureChanged = QtCore.pyqtSignal()
-    
+
     def __init__(self, dbase=None, dialog=None, linkedtreewidget=None, gpsutil=None, parentwidget=None, parent=None):
         """
         Abstract class for working on table
@@ -196,7 +196,7 @@ class AbstractInspectionDigueTool(QWidget):
     # ******************************************************************************************************************
     # **********************************    Init methods        ********************************************************
     # ******************************************************************************************************************
-        
+
     def initTool(self):
         """!
         Abstract method - must be implemented
@@ -763,7 +763,10 @@ class AbstractInspectionDigueTool(QWidget):
         # reinit
         self.currentFeature = None
         if self.dbasetable is not None and 'layerqgis' in self.dbasetable.keys():
-            self.dbasetable['layerqgis'].removeSelection()
+            try :
+                self.dbasetable['layerqgis'].removeSelection()
+            except RuntimeError:
+                pass
 
 
         if self.rubberBand is not None:
@@ -779,7 +782,7 @@ class AbstractInspectionDigueTool(QWidget):
 
 
 
-        
+
     def postOnDesactivation(self):
         """!
         Abstract method - must be implemented

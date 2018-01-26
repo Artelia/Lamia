@@ -24,7 +24,7 @@ ca fout la merde....
 
 
 class GraphiqueTool(AbstractInspectionDigueTool):
-    
+
     def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
         super(GraphiqueTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
 
@@ -43,7 +43,7 @@ class GraphiqueTool(AbstractInspectionDigueTool):
                                            'idsource' : 'id_ressource',
                                        'idtcsource' : 'id_tcressource',
                                            'iddest' : 'id_objet',
-                                       'idtcdest' : 'id_tcoobjet',
+                                       'idtcdest' : 'id_tcobjet',
                                            'desttable' : ['Profil']},
                             'Marche': {'tabletc': None,
                                            'idsource': 'lk_marche',
@@ -287,7 +287,7 @@ class GraphiqueTool(AbstractInspectionDigueTool):
         if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
             if self.parentWidget.dbasetablename == 'Profil':
                 currentparentlinkfield = self.parentWidget.currentFeature['id_objet']
-                sql = "INSERT INTO Tcobjetressource(id_tcoobjet, id_tcressource) VALUES(" +  str(currentparentlinkfield) + ", " +  str(idres) + ");"
+                sql = "INSERT INTO Tcobjetressource(id_tcobjet, id_tcressource) VALUES(" +  str(currentparentlinkfield) + ", " +  str(idres) + ");"
                 # print('createparent',sql)
 
                 query = self.dbase.query(sql)

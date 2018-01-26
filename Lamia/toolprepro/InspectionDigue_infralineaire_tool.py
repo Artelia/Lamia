@@ -27,7 +27,7 @@ class InfraLineaireTool(AbstractInspectionDigueTool):
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
         super(InfraLineaireTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
-        
+
     def initTool(self):
         # ****************************************************************************************
         # Main spec
@@ -44,7 +44,7 @@ class InfraLineaireTool(AbstractInspectionDigueTool):
         # self.magicfunctionENABLED = True
         self.linkagespec = {'Tcobjetintervenant' : {'tabletc' : 'Tcobjetintervenant',
                                               'idsource' : 'id_objet',
-                                            'idtcsource' : 'id_tcoobjet',
+                                            'idtcsource' : 'id_tcobjet',
                                            'iddest' : 'id_intervenant',
                                            'idtcdest' : 'id_tcintervenant',
                                            'desttable' : ['Intervenant']}
@@ -131,7 +131,7 @@ class InfraLineaireTool(AbstractInspectionDigueTool):
             if True:
                 sql = "SELECT Tcobjetintervenant.fonction, Intervenant.nom,Intervenant.societe  FROM Tcobjetintervenant "
                 sql += " INNER JOIN Intervenant ON Tcobjetintervenant.id_tcintervenant = Intervenant.id_intervenant "
-                sql += "WHERE id_tcoobjet = " + str(self.currentFeature['id_objet'])
+                sql += "WHERE id_tcobjet = " + str(self.currentFeature['id_objet'])
             query = self.dbase.query(sql)
             result = "\n".join([str(row) for row in query])
             self.userwdg.textBrowser_intervenants.clear()

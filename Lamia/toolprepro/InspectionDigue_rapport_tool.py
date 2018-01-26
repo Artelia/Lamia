@@ -13,7 +13,7 @@ import datetime
 
 
 class RapportTool(AbstractInspectionDigueTool):
-    
+
     def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
         super(RapportTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
 
@@ -32,7 +32,7 @@ class RapportTool(AbstractInspectionDigueTool):
                                            'idsource' : 'id_ressource',
                                        'idtcsource' : 'id_tcressource',
                                            'iddest' : 'id_objet',
-                                       'idtcdest' : 'id_tcoobjet',
+                                       'idtcdest' : 'id_tcobjet',
                                            'desttable' : ['Infralineaire','Equipement']},
                             'Marche': {'tabletc': None,
                                            'idsource': 'lk_marche',

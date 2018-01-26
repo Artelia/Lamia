@@ -16,7 +16,7 @@ class IntervenantTool(AbstractInspectionDigueTool):
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
         super(IntervenantTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
-        
+
     def initTool(self):
         # ****************************************************************************************
         # Main spec
@@ -33,7 +33,7 @@ class IntervenantTool(AbstractInspectionDigueTool):
                                               'idsource' : 'id_intervenant',
                                             'idtcsource' : 'id_tcintervenant',
                                            'iddest' : 'id_objet',
-                                           'idtcdest' : 'id_tcoobjet',
+                                           'idtcdest' : 'id_tcobjet',
                                            'desttable' : ['Infralineaire','Prestation']}
                                             }
         # self.pickTable = None
@@ -90,7 +90,7 @@ class IntervenantTool(AbstractInspectionDigueTool):
                 if ok:
                     fonctionvalue = self.dbase.getConstraintRawValueFromText(self.tablename,'fonction',item)
                     currentparentlinkfield = self.parentWidget.currentFeature['id_objet']
-                    sql = "INSERT INTO Tcobjetintervenant(id_tcintervenant, id_tcoobjet,fonction) VALUES( " + str(idintervenant + "," + currentparentlinkfield + "," + fonctionvalue + ");")
+                    sql = "INSERT INTO Tcobjetintervenant(id_tcintervenant, id_tcobjet,fonction) VALUES( " + str(idintervenant + "," + currentparentlinkfield + "," + fonctionvalue + ");")
                     #sql = "UPDATE OBSERVATION SET LkDesordre = " + str(currentparentlinkfield) + " WHERE id = " + str(idobservation) + ";"
                     query = self.dbase.query(sql)
                     self.dbase.commit()
