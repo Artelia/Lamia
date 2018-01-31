@@ -7,13 +7,15 @@ from qgis.PyQt import QtGui, uic, QtCore, QtXml
 from collections import OrderedDict
 import datetime
 import decimal
+import numpy as np
 
 class exportShapefileWorker(AbstractWorker):
 
-    def __init__(self, dbase, reporttype, pdffile):
+    def __init__(self, dbase, windowdialog, reporttype, pdffile):
         AbstractWorker.__init__(self)
         self.dbase = dbase
         self.reporttype = reporttype
+        self.windowdialog = windowdialog
         self.pdffile = pdffile
 
     def work(self):
@@ -32,25 +34,29 @@ class exportShapefileWorker(AbstractWorker):
 
         if self.reporttype == 'Infralineaire':
 
-            champs = [['Objet', 'datecreation'],
+            champs = [['Objet', 'datecreation'],                    #0
                       ['Objet', 'datedestruction'],
                       ['Objet', 'commentaire'],
                       ['Objet', 'libelle'],
                       ['Descriptionsystem', 'importancestrat'],
-                      ['Descriptionsystem', 'etatfonct'],
+                      ['Descriptionsystem', 'etatfonct'],                    #5
                       ['Descriptionsystem', 'datederniereobs'],
                       ['Descriptionsystem', 'qualitegeoloc'],
                       ['Descriptionsystem', 'parametres'],
                       ['Descriptionsystem', 'listeparametres'],
-                      ['Infralineaire', 'id_infralineaire'],
+                      ['Infralineaire', 'id_infralineaire'],                    #10
                       ['Infralineaire', 'description1'],
                       ['Infralineaire', 'description2'],
                       ['Infralineaire', 'lk_noeud1'],
                       ['Infralineaire', 'lk_noeud2'],
+                      ['Infralineaire', 'lk_photo'],                    #15
+                      ['Infralineaire', 'lk_profil'],
                       ['Infralineaire', 'id_objet'],
                       ['Infralineaire', 'id_descriptionsystem']]
 
             fieldslinear = self.getFieldsfromList(champs)
+
+
 
             sql = "SELECT "
             sql += ', '.join([str(field[0])+'.'+str(field[1]) for field in champs])
@@ -66,10 +72,103 @@ class exportShapefileWorker(AbstractWorker):
                 sql += ' AND CASE WHEN Objet.datedestruction IS NOT NULL  '
                 sql += 'THEN Objet.dateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE 1 END'
             sql += ";"
-            print(sql)
+            # print(sql)
             query = self.dbase.query(sql)
             result = [row for row in query]
-            print(len(result), result[0])
+
+            #donnees profil
+            if True:
+                fieldslinear.append(qgis.core.QgsField('Hauteur', QtCore.QVariant.Double))
+                fieldslinear.append(qgis.core.QgsField('Largeurcrete', QtCore.QVariant.Double))
+                fieldslinear.append(qgis.core.QgsField('LargeurAubarede', QtCore.QVariant.Double))
+                champs += [[],[],[]]
+                # print('champs',champs)
+                for i, row in enumerate(result):
+                    largcrete = -1
+                    largfrancbord = -1
+                    hauteurdigue = -1
+                    lkprofil  = row[16]
+                    if lkprofil is not None:
+                        sql = "SELECT id_graphique, typegraphique FROM Graphique  WHERE id_ressource = " + str(lkprofil)
+                        query = self.dbase.query(sql)
+                        resultrow = [row1 for row1 in query]
+                        if len(resultrow)>0 and resultrow[0][1] == 'PTR':
+                            sql = "SELECT * FROM Graphiquedata WHERE id_graphique = " + str(resultrow[0][0])
+                            sql += " ORDER BY id_graphiquedata"
+                            query = self.dbase.query(sql)
+                            resultrow = [list(row2) for row2 in query]
+                            # row : [id, None, dx, dz, None, position, type1, type2, None, 1]
+                            npresultrow = np.array(resultrow)
+                            #largeur crete
+                            index = np.where(npresultrow[:,5] == 'CRE')
+                            largcrete = np.sum(npresultrow[:,2][index])
+                            #hauteur
+                            minindex = int(np.amin(index))
+                            hauteurdigue = np.sum(npresultrow[0:minindex, 3])
+                            #francbord
+                            index = np.where(npresultrow[:,5] == 'FRB')
+                            largfrancbord = np.sum(npresultrow[:,2][index])
+                            # print(hauteurdigue, largcrete, largfrancbord)
+
+                    result[i] = list(result[i])[:-1] + [hauteurdigue, largcrete, largfrancbord] + list(result[i])[-1:]
+
+
+            #niveau protection surete
+            if True:
+                fieldslinear.append(qgis.core.QgsField('niv_pro_am', QtCore.QVariant.Double))
+                fieldslinear.append(qgis.core.QgsField('niv_pro_av', QtCore.QVariant.Double))
+                fieldslinear.append(qgis.core.QgsField('niv_sur_am', QtCore.QVariant.Double))
+                fieldslinear.append(qgis.core.QgsField('niv_sur_av', QtCore.QVariant.Double))
+                champs += [[], [], [],[]]
+
+                profiletraverstool = self.windowdialog.pathtool
+                profiletraverstool.computeNXGraph()
+
+                for i, row in enumerate(result):
+                    niv_pro_am = None
+                    niv_pro_av = None
+                    niv_sur_am = None
+                    niv_sur_av = None
+
+                    #currentgeom = self.currentFeature.geometry().asPolyline()
+                    currentgeom = qgis.core.QgsGeometry.fromWkt(row[-1]).asPolyline()
+                    profiletraverstool.computePath(list(currentgeom[0]), list(currentgeom[-1]))
+                    datas = profiletraverstool.getGraphData()
+
+                    for graphname in datas.keys():
+                        if 'NIV' in graphname:
+                            niv_pro_am = round(datas[graphname]['y'][0],2)
+                            niv_pro_av = round(datas[graphname]['y'][-1],2)
+
+                    result[i] = list(result[i])[:-1] + [niv_pro_am, niv_pro_av, niv_sur_am, niv_sur_av] + list(result[i])[-1:]
+
+                profiletraverstool.rubberBand.reset(1)
+
+
+
+            # gestionnaire
+            if True:
+                fieldslinear.append(qgis.core.QgsField('Gestionnaire', QtCore.QVariant.String))
+                champs += [[]]
+
+                for i, row in enumerate(result):
+                    gestionnaire = ''
+                    idobjet = row[17]
+                    sql = "SELECT Tcobjetintervenant.fonction, Intervenant.nom,Intervenant.societe  FROM Tcobjetintervenant "
+                    sql += " INNER JOIN Intervenant ON Tcobjetintervenant.id_tcintervenant = Intervenant.id_intervenant "
+                    sql += "WHERE id_tcoobjet = " + str(idobjet)
+                    query = self.dbase.query(sql)
+                    resultges = [row1 for row1 in query]
+                    for interv in resultges:
+                        if interv[0] == 'GES':
+                            gestionnaire = interv[2] + ' - ' + interv[1]
+                    result[i] = list(result[i])[:-1] + [gestionnaire] + list(result[i])[-1:]
+
+
+
+
+            #process shapefile
+            # print(len(result), result[0])
             self.fillShapefile(self.pdffile, qgis.core.QGis.WKBLineString, fieldslinear, champs, result)
 
 
@@ -494,27 +593,29 @@ class exportShapefileWorker(AbstractWorker):
                                                 # qgis.core.QGis.WKBPoint,
                                                 # qgis.core.QGis.WKBLineString,
                                                 self.dbase.qgiscrs)
+
         for row in result:
             feat = qgis.core.QgsFeature(fields)
             if row[-1] is not None:
                 feat.setGeometry(qgis.core.QgsGeometry.fromWkt(row[-1]))
             else:
                 continue
-            # print(row)
             # print(feat.geometry().exportToWkt())
             for i, field in enumerate(champs):
-                # print(field)
-                if row[i] is not None and row[i] != 'NULL' and row[i] != 'None':
-                    if 'Cst' in self.dbase.dbasetables[field[0]]['fields'][field[1]].keys():
-                        feat[i] = self.dbase.getConstraintTextFromRawValue(field[0], field[1], row[i])
-                    else:
-                        if isinstance(row[i], datetime.date):
-                            value = str(row[i])
-                        elif isinstance(row[i], decimal.Decimal):
-                            value = float(row[i])
+                if len(field)>0:       #come from simple db
+                    if row[i] is not None and row[i] != 'NULL' and row[i] != 'None':
+                        if 'Cst' in self.dbase.dbasetables[field[0]]['fields'][field[1]].keys():
+                            feat[i] = self.dbase.getConstraintTextFromRawValue(field[0], field[1], row[i])
                         else:
-                            value = row[i]
-                        feat[i] = value
+                            if isinstance(row[i], datetime.date):
+                                value = str(row[i])
+                            elif isinstance(row[i], decimal.Decimal):
+                                value = float(row[i])
+                            else:
+                                value = row[i]
+                            feat[i] = value
+                else:   #computed field
+                    feat[i] = row[i]
             writer.addFeature(feat)
 
         del writer

@@ -52,6 +52,7 @@ class PathTool(AbstractInspectionDigueTool):
         self.dbasetablename = os.path.join(os.path.dirname(__file__), '..', 'config', fielpathname + '.txt')
 
         self.nxgraph = None
+        self.indexnoeuds = None
         # self.rubberbandpath
         self.rubberBand = qgis.gui.QgsRubberBand(self.canvas,self.dbase.dbasetables['Infralineaire']['layer'].geometryType())
         self.rubberBand.setWidth(5)
@@ -261,6 +262,17 @@ class PathTool(AbstractInspectionDigueTool):
                 datas[dataname]['x'] = xysorted[:,0]
                 datas[dataname]['y'] = xysorted[:, 1]
 
+                #adapt to geomfinal
+                totallengeom = self.geomfinal.length()
+                # print(totallengeom, datas[dataname]['x'],datas[dataname]['y'])
+                if 0 not in datas[dataname]['x']:
+                    datas[dataname]['x'] = np.insert(datas[dataname]['x'], 0, 0)
+                    datas[dataname]['y'] = np.insert(datas[dataname]['y'], 0, datas[dataname]['y'][0])
+                if totallengeom not in datas[dataname]['x']:
+                    datas[dataname]['x'] = np.append(datas[dataname]['x'], totallengeom)
+                    datas[dataname]['y'] = np.append(datas[dataname]['y'],  datas[dataname]['y'][-1])
+                #print(totallengeom, datas[dataname]['x'], datas[dataname]['y'])
+
 
 
 
@@ -318,68 +330,72 @@ class PathTool(AbstractInspectionDigueTool):
 
         point1 = np.array(point1)
         point2 = np.array(point2)
+        if self.indexnoeuds is not None:
+            dist1 = np.linalg.norm(self.indexnoeuds - point1,axis = 1)
+            index = np.where(dist1 == np.amin(dist1))
+            networkpoint1 = index[0][0]
+            dist2 = np.linalg.norm(self.indexnoeuds - point2,axis = 1)
+            index = np.where(dist2  == np.amin(dist2))
+            networkpoint2 = index[0][0]
 
-        dist1 = np.linalg.norm(self.indexnoeuds - point1,axis = 1)
-        index = np.where(dist1 == np.amin(dist1))
-        networkpoint1 = index[0][0]
-        dist2 = np.linalg.norm(self.indexnoeuds - point2,axis = 1)
-        index = np.where(dist2  == np.amin(dist2))
-        networkpoint2 = index[0][0]
+            try:
+                shortestpathedges = networkx.shortest_path(self.nxgraph, networkpoint1, networkpoint2)
+                # print('shortestpathedges', shortestpathedges)
+            except networkx.exception.NetworkXNoPath:
+                #print('no path')
+                self.userwdg.label_pathids.setText('Pas de chemin')
+                return
 
-        try:
-            shortestpathedges = networkx.shortest_path(self.nxgraph, networkpoint1, networkpoint2)
-            # print('shortestpathedges', shortestpathedges)
-        except networkx.exception.NetworkXNoPath:
-            #print('no path')
-            self.userwdg.label_pathids.setText('Pas de chemin')
-            return
+            shortestids=[]
+            for i in range(len(shortestpathedges)-1):
+                singlepath = [shortestpathedges[i], shortestpathedges[i + 1]]
+                reverse = 0 #not reverse
+                index = np.where(np.all(self.infralinfaces == singlepath, axis=1))[0]
+                if len(index) == 0:
+                    index = np.where(np.all(self.reverseinfralinfaces == singlepath, axis=1))[0]
+                    reverse = 1
+                shortestids.append([self.ids[index[0]],reverse])
+            shortestids = np.array(shortestids)
 
-        shortestids=[]
-        for i in range(len(shortestpathedges)-1):
-            singlepath = [shortestpathedges[i], shortestpathedges[i + 1]]
-            reverse = 0 #not reverse
-            index = np.where(np.all(self.infralinfaces == singlepath, axis=1))[0]
-            if len(index) == 0:
-                index = np.where(np.all(self.reverseinfralinfaces == singlepath, axis=1))[0]
-                reverse = 1
-            shortestids.append([self.ids[index[0]],reverse])
-        shortestids = np.array(shortestids)
+            geomfinalnodes = []
+            for id, reverse in shortestids:
+                # print(id, reverse)
+                feat = self.getLayerFeatureById('Infralineaire', id)
+                geom = feat.geometry()
+                nodes = geom.asPolyline()
+                if reverse:
+                    nodes.reverse()
+                    #geom = qgis.core.QgsGeometry.fromPolyline(nodes)
+                geomfinalnodes += nodes
 
-        geomfinalnodes = []
-        for id, reverse in shortestids:
-            # print(id, reverse)
-            feat = self.getLayerFeatureById('Infralineaire', id)
-            geom = feat.geometry()
-            nodes = geom.asPolyline()
-            if reverse:
-                nodes.reverse()
-                #geom = qgis.core.QgsGeometry.fromPolyline(nodes)
-            geomfinalnodes += nodes
+            geom = qgis.core.QgsGeometry.fromPolyline(geomfinalnodes)
+            xform = qgis.core.QgsCoordinateTransform(self.dbase.qgiscrs ,self.canvas.mapSettings().destinationCrs())
+            #success = qgis.core.QgsGeometry.fromPoint(pointfromcanvas).transform(xform)
+            geomforrubberband = qgis.core.QgsGeometry(geom)
+            geomforrubberband.transform(xform)
+            # print(geomforrubberband.asPolyline())
+            self.rubberBand.addGeometry(geomforrubberband, None)
 
-        geom = qgis.core.QgsGeometry.fromPolyline(geomfinalnodes)
-        xform = qgis.core.QgsCoordinateTransform(self.dbase.qgiscrs ,self.canvas.mapSettings().destinationCrs())
-        #success = qgis.core.QgsGeometry.fromPoint(pointfromcanvas).transform(xform)
-        geomforrubberband = qgis.core.QgsGeometry(geom)
-        geomforrubberband.transform(xform)
-        # print(geomforrubberband.asPolyline())
-        self.rubberBand.addGeometry(geomforrubberband, None)
+            self.geomfinalnodes = geomfinalnodes
+            self.geomfinal = qgis.core.QgsGeometry.fromPolyline(geomfinalnodes)
+            self.geomfinalids = shortestids[:,0]
 
-        self.geomfinalnodes = geomfinalnodes
-        self.geomfinal = qgis.core.QgsGeometry.fromPolyline(geomfinalnodes)
-        self.geomfinalids = shortestids[:,0]
+            # print('self.geomfinalnodes',self.geomfinalnodes)
+            # print('self.geomfinal', self.geomfinal)
+            # print('self.geomfinalids', self.geomfinalids)
+            self.userwdg.label_pathids.setText(str(list(self.geomfinalids)))
 
-        # print('self.geomfinalnodes',self.geomfinalnodes)
-        # print('self.geomfinal', self.geomfinal)
-        # print('self.geomfinalids', self.geomfinalids)
-        self.userwdg.label_pathids.setText(str(list(self.geomfinalids)))
+            self.rubberBand.show()
 
-        self.rubberBand.show()
-
-        self.computeGraph()
+            self.computeGraph()
 
 
     def postOnActivation(self):
         # print('post path activ')
+        self.computeNXGraph()
+
+
+    def computeNXGraph(self):
         self.nxgraph = networkx.Graph()
 
         #get noeuds
@@ -396,25 +412,26 @@ class PathTool(AbstractInspectionDigueTool):
             sql += 'THEN Objet.dateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE 1 END'
 
         query = self.dbase.query(sql)
-        rawpoints = np.array([[[float(elem1) for elem1 in row[1].split('(')[1][:-1].split(' ')],
-                            [float(elem2) for elem2 in row[2].split('(')[1][:-1].split(' ')]] for row in query])
-        self.ids = np.array([row[0] for row in query])
+        if len(query)>0:
+            rawpoints = np.array([[[float(elem1) for elem1 in row[1].split('(')[1][:-1].split(' ')],
+                                [float(elem2) for elem2 in row[2].split('(')[1][:-1].split(' ')]] for row in query])
+            self.ids = np.array([row[0] for row in query])
 
-        pointstemp = np.append(rawpoints[:,0], rawpoints[:,1] ,axis = 0)
+            pointstemp = np.append(rawpoints[:,0], rawpoints[:,1] ,axis = 0)
 
-        pointstemp1 = np.array([str(row) for row in pointstemp])
+            pointstemp1 = np.array([str(row) for row in pointstemp])
 
-        points, index1, index2 = np.unique(pointstemp1, return_index=True,  return_inverse=True)
+            points, index1, index2 = np.unique(pointstemp1, return_index=True,  return_inverse=True)
 
-        pointsarr = pointstemp[index1]
+            pointsarr = pointstemp[index1]
 
-        index2bis = np.transpose(np.reshape(index2, (2,-1)))
+            index2bis = np.transpose(np.reshape(index2, (2,-1)))
 
-        self.nxgraph.add_edges_from([(edge[0], edge[1]) for edge in index2bis])
+            self.nxgraph.add_edges_from([(edge[0], edge[1]) for edge in index2bis])
 
-        self.indexnoeuds = pointsarr
-        self.infralinfaces = index2bis
-        self.reverseinfralinfaces = np.flip(self.infralinfaces,1)
+            self.indexnoeuds = pointsarr
+            self.infralinfaces = index2bis
+            self.reverseinfralinfaces = np.flip(self.infralinfaces,1)
 
 
 

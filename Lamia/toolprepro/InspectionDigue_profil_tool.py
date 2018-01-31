@@ -55,6 +55,14 @@ class ProfilTool(AbstractInspectionDigueTool):
 
         self.userwdg.comboBox_type.currentIndexChanged.connect(self.changeType)
 
+
+        # ****************************************************************************************
+        # parent widgets
+        if self.parentWidget is not None and 'lk_profil' in self.dbase.dbasetables[self.parentWidget.dbasetablename]['fields'].keys():
+            self.userwdg.pushButton_setasdefault.clicked.connect(self.setAsDefault)
+        else:
+            self.userwdg.pushButton_setasdefault.setParent(None)
+
         # ****************************************************************************************
         # child widgets
         if True:
@@ -63,6 +71,8 @@ class ProfilTool(AbstractInspectionDigueTool):
             #self.userwdg.tabWidget.widget(0).layout().addWidget(self.propertieswdgCROQUIS)
             self.userwdg.frame_cr.layout().addWidget(self.propertieswdgCROQUIS)
             self.dbasechildwdg.append(self.propertieswdgCROQUIS)
+
+
 
         if True:
             self.propertieswdgGRAPH = GraphiqueTool(dbase=self.dbase, parentwidget=self)
@@ -86,6 +96,21 @@ class ProfilTool(AbstractInspectionDigueTool):
 
     def postOnDesactivation(self):
         pass
+
+    def setAsDefault(self):
+        if self.parentWidget.currentFeature is not None:
+            if self.userwdg.stackedWidget.currentIndex() == 0:
+                currentwdg = self.propertieswdgCROQUIS
+            elif self.userwdg.stackedWidget.currentIndex() == 1:
+                currentwdg = self.propertieswdgGRAPH
+
+            if currentwdg.currentFeature is not None:
+                idressource = currentwdg.currentFeature['id_ressource']
+                idparentfeature=self.parentWidget.currentFeature['id_objet']
+                # print('setDefaultPhoto',idphoto,idparentfeature)
+                sql = "UPDATE " + str(self.parentWidget.dbasetablename) + " SET  lk_profil = " + str(idressource) + " WHERE id_objet = " + str(idparentfeature) + ";"
+                query = self.dbase.query(sql)
+                self.dbase.commit()
 
     def changeType(self,comboint):
         if 'Croquis' in self.userwdg.comboBox_type.currentText():

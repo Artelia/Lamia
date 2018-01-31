@@ -276,7 +276,10 @@ class LinkageDialog(QDialog, FORM_CLASS):
                     if self.tableWidget.cellWidget(row,column) is not None:
                         wdg = self.tableWidget.cellWidget(row,column)
                         if isinstance(wdg, QComboBox):
-                            rowvalues.append("'" + self.widget._getConstraintRawValueFromText(self.currenttype,self.headerlist[column], wdg.currentText()) + "'")
+                            #rowvalues.append("'" + self.widget._getConstraintRawValueFromText(self.currenttype,self.headerlist[column], wdg.currentText()) + "'")
+                            rowvalues.append("'" + self.widget.dbase.getConstraintRawValueFromText(self.currenttype,
+                                                                                              self.headerlist[column],
+                                                                                              wdg.currentText()) + "'")
                     elif self.tableWidget.item(row,column) is not None:
                         if self.tableWidget.item(row,column).text() == '':
                             valuetoset = 'NULL'

@@ -135,7 +135,8 @@ class PointtopoTool(AbstractInspectionDigueTool):
                 self.dbase.query(sql)
                 self.dbase.commit()
 
-
+    def deleteParentFeature(self):
+        return True
 
 
     def postSaveFeature(self, boolnewfeature):

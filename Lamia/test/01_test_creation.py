@@ -10,7 +10,7 @@ from pyspatialite import dbapi2 as db
 from qgis.PyQt import QtGui
 
 from InspectionDigueV2.src.dialog.InspectionDigue_dockwidget import InspectiondigueDockWidget
-from Lamia.src.dialog.InspectionDigue_windowwidget import InspectiondigueWindowWidget
+from Lamia.Lamia.dialog.InspectionDigue_windowwidget import InspectiondigueWindowWidget
 
 
 
@@ -20,7 +20,7 @@ def testDbaseCreation(canvas, typedb="spatialite"):
     crs = 3945
 
     if typedb == "spatialite":
-        spatialitefile = 'C://000_testdigue//tesvalentin//test03.sqlite'
+        spatialitefile = 'C://000_testdigue//temp//test01.sqlite'
         #spatialitedir = 'C://000_testimportBM//BDspatialite'
 
         #shutil.rmtree('c://000_testdigue//BDspatialite')

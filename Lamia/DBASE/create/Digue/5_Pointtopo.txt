@@ -9,6 +9,7 @@
 Crete;CRE 
 Terrain naturel cote terre ;TNT
 Niveau de protection;NIV
+Niveau de surete;SUR
 Autre;AUT 
 ###x;                NUMERIC;            REAL
 ###y;                NUMERIC;            REAL

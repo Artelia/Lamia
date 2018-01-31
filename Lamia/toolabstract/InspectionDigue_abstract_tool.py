@@ -1460,6 +1460,15 @@ class AbstractInspectionDigueTool(QWidget):
             # self.currentFeature = self.dbasetable['layer'].getFeatures(qgis.core.QgsFeatureRequest(self.currentFeature.id())).next()
             self.currentFeature = self.getLayerFeatureById(self.dbasetablename, self.currentFeature.id())
 
+            # update datemodification
+            if self.dbasetable is not None and 'id_objet' in self.dbasetable['fields'].keys() :
+                idobjet = self.currentFeature['id_objet']
+                datemodif = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
+                sql = "UPDATE Objet SET datemodification = '" + datemodif + "'  WHERE id_objet = " + str(idobjet) + ";"
+                print(sql)
+                self.dbase.query(sql)
+                self.dbase.commit()
+
             # then reload with saved attributes
             if self.savingnewfeature:
                 self.loadFeaturesinTreeWdg()
@@ -1657,9 +1666,14 @@ class AbstractInspectionDigueTool(QWidget):
         if reply == QMessageBox.Yes:
             # self.windowdialog.errorMessage("pas encore disponible")
             if self.deleteParentFeature():
-                idobjet = self.currentFeature['id_objet']
-                sql = "DELETE FROM  " + self.dbasetablename + " WHERE id_objet = " + str(idobjet) + ";"
-                self.dbase.query(sql)
+                if False:
+                    idobjet = self.currentFeature['id_objet']
+                    sql = "DELETE FROM  " + self.dbasetablename + " WHERE id_objet = " + str(idobjet) + ";"
+                    self.dbase.query(sql)
+                if True:
+                    fetid = self.currentFeature.id()
+                    sql = "DELETE FROM  " + self.dbasetablename + " WHERE id_" + self.dbasetablename + " = " + str(fetid) + ";"
+                    self.dbase.query(sql)
 
             else:
                 self.windowdialog.errorMessage("pas encore disponible")

@@ -15,6 +15,7 @@ from .InspectionDigue_profil_tool import ProfilTool
 # from ..InspectionDigue_graphique_tool import GraphiqueTool
 # from .InspectionDigue_profiltravers_tool  import ProfilTraversTool
 from ..toolpostpro.InspectionDigue_path_tool import PathTool
+from .InspectionDigue_graphique_tool  import GraphiqueTool
 import os
 import datetime
 import logging
@@ -76,9 +77,19 @@ class InfraLineaireTool(AbstractInspectionDigueTool):
         if True:
             self.photowdg = Label()
             self.userwdg.tabWidget.widget(0).layout().addWidget(self.photowdg)
-        if False:
+        if True:
+            self.croquisprofilwdg = Label()
+            self.userwdg.stackedWidget_profiltravers.widget(0).layout().addWidget(self.croquisprofilwdg)
+
+            self.graphprofil = GraphiqueTool(dbase=self.dbase, parentwidget=self)
+            self.userwdg.stackedWidget_profiltravers.widget(1).layout().addWidget(self.graphprofil.pyqtgraphwdg)
+            #self.userwdg.frame_graph.layout().addWidget(self.pyqtgraphwdg)
+
+
+
+        if True:
             self.propertieswdgPROFILLONG = PathTool(dbase=self.dbase, parentwidget=self)
-            self.userwdg.tabWidget.widget(1).layout().addWidget(self.propertieswdgPROFILLONG.plotWdg)
+            self.userwdg.tabWidget.widget(2).layout().addWidget(self.propertieswdgPROFILLONG.plotWdg)
         else:
             self.propertieswdgPROFILLONG = None
 
@@ -150,7 +161,48 @@ class InfraLineaireTool(AbstractInspectionDigueTool):
             else:
                 self.photowdg.clear()
 
-            #profil
+            if True:
+                #profil travers
+                lkressourceprofile = self.currentFeature['lk_profil']
+                if not self.isAttributeNull(lkressourceprofile):
+                    sql = "SELECT Ressource.file FROM Photo INNER JOIN Ressource ON Photo.id_ressource = Ressource.id_ressource WHERE Photo.id_ressource = "
+                    sql += str(lkressourceprofile)
+                    query = self.dbase.query(sql)
+                    result = [row for row in query]
+                    if len(result)>0:
+                        self.userwdg.stackedWidget_profiltravers.setCurrentIndex(0)
+                        filephoto = result[0][0]
+                        completefilephoto = self.completePathOfFile(filephoto)
+                        self.showImageinLabelWidget(self.croquisprofilwdg, completefilephoto)
+                    else:
+                        self.croquisprofilwdg.clear()
+
+                    sql = "SELECT id_graphique FROM Graphique  WHERE id_ressource = " + str(lkressourceprofile)
+                    query = self.dbase.query(sql)
+                    result = [row for row in query]
+                    if len(result) > 0:
+                        self.userwdg.stackedWidget_profiltravers.setCurrentIndex(1)
+                        idgraphique = result[0][0]
+                        self.graphprofil.featureSelected(idgraphique,True)
+                else:
+                    self.userwdg.stackedWidget_profiltravers.setCurrentIndex(0)
+                    self.croquisprofilwdg.clear()
+
+
+
+                if not self.isAttributeNull(lkphoto):
+                    sql = "SELECT Ressource.file FROM Photo INNER JOIN Ressource ON Photo.id_ressource = Ressource.id_ressource WHERE Photo.id_objet = "
+                    sql += str(self.currentFeature['lk_photo'])
+                    query = self.dbase.query(sql)
+                    result = [row for row in query]
+                    filephoto = result[0][0]
+                    completefilephoto = self.completePathOfFile(filephoto)
+                    self.showImageinLabelWidget(self.photowdg, completefilephoto)
+                else:
+                    self.photowdg.clear()
+
+
+            #profil long
             if self.propertieswdgPROFILLONG is not None:
                 self.propertieswdgPROFILLONG.activateMouseTracking(0)
                 self.propertieswdgPROFILLONG.rubberbandtrack.hide()
