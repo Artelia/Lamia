@@ -16,7 +16,7 @@ class ZonegeoTool(AbstractInspectionDigueTool):
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
         super(ZonegeoTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
-        
+
     def initTool(self):
         # ****************************************************************************************
         # Main spec
@@ -32,7 +32,7 @@ class ZonegeoTool(AbstractInspectionDigueTool):
                                               'idsource' : 'id_zonegeo',
                                             'idtcsource' : 'id_tczonegeo',
                                            'iddest' : 'id_objet',
-                                           'idtcdest' : 'id_tcoobjet',
+                                           'idtcdest' : 'id_tcobjet',
                                            'desttable' : ['Infralineaire']}}
         # self.pickTable = None
 

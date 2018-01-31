@@ -33,7 +33,7 @@ class MarcheTool(AbstractInspectionDigueTool):
         # self.magicfunctionENABLED = True
         self.linkagespec = {'Tcobjetintervenant' : {'tabletc' : 'Tcobjetintervenant',
                                               'idsource' : 'id_objet',
-                                            'idtcsource' : 'id_tcoobjet',
+                                            'idtcsource' : 'id_tcobjet',
                                            'iddest' : 'id_intervenant',
                                            'idtcdest' : 'id_tcintervenant',
                                            'desttable' : ['Intervenant']}
@@ -89,7 +89,7 @@ class MarcheTool(AbstractInspectionDigueTool):
         else:
             sql = "SELECT Tcobjetintervenant.fonction, Intervenant.nom,Intervenant.societe  FROM Tcobjetintervenant "
             sql += " INNER JOIN Intervenant ON Tcobjetintervenant.id_tcintervenant = Intervenant.id_intervenant "
-            sql += "WHERE id_tcoobjet = " + str(self.currentFeature['id_objet'])
+            sql += "WHERE id_tcobjet = " + str(self.currentFeature['id_objet'])
             query = self.dbase.query(sql)
             result = "\n".join([str(row) for row in query])
             self.userwdg.textBrowser_intervenants.clear()

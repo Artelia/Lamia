@@ -304,18 +304,18 @@ class exportShapefileWorker(AbstractWorker):
             """
             spatialite
             SELECT Observation.*, MAX(Observation.dateobservation)
-            FROM Observation 
-            INNER JOIN Desordre ON Observation.lk_desordre = Desordre.id_desordre 
+            FROM Observation
+            INNER JOIN Desordre ON Observation.lk_desordre = Desordre.id_desordre
             INNER JOIN Objet ON Objet.id_objet = Observation.id_objet
-            GROUP BY Observation.lk_desordre 
+            GROUP BY Observation.lk_desordre
             """
 
             """
             postgis
             # SET search_path TO digue ,public;
             SELECT DISTINCT ON (Observation.lk_desordre ) Observation.*
-            FROM Observation 
-            INNER JOIN Desordre ON Observation.lk_desordre = Desordre.id_desordre 
+            FROM Observation
+            INNER JOIN Desordre ON Observation.lk_desordre = Desordre.id_desordre
             INNER JOIN Objet ON Objet.id_objet = Observation.id_objet
             ORDER BY Observation.lk_desordre, Observation.dateobservation DESC;
             """
@@ -423,18 +423,18 @@ class exportShapefileWorker(AbstractWorker):
             """
             spatialite
             SELECT Observation.*, MAX(Observation.dateobservation)
-            FROM Observation 
-            INNER JOIN Desordre ON Observation.lk_desordre = Desordre.id_desordre 
+            FROM Observation
+            INNER JOIN Desordre ON Observation.lk_desordre = Desordre.id_desordre
             INNER JOIN Objet ON Objet.id_objet = Observation.id_objet
-            GROUP BY Observation.lk_desordre 
+            GROUP BY Observation.lk_desordre
             """
 
             """
             postgis
             # SET search_path TO digue ,public;
             SELECT DISTINCT ON (Observation.lk_desordre ) Observation.*
-            FROM Observation 
-            INNER JOIN Desordre ON Observation.lk_desordre = Desordre.id_desordre 
+            FROM Observation
+            INNER JOIN Desordre ON Observation.lk_desordre = Desordre.id_desordre
             INNER JOIN Objet ON Objet.id_objet = Observation.id_objet
             ORDER BY Observation.lk_desordre, Observation.dateobservation DESC;
             """
@@ -532,7 +532,7 @@ class exportShapefileWorker(AbstractWorker):
                      ['Ressource', 'file','fichier'],
                      ['Ressource', 'description'],
                      # ['Ressource', 'lk_objet'],
-                     ['Tcobjetressource', 'id_tcoobjet','lk_objet']]
+                     ['Tcobjetressource', 'id_tcobjet','lk_objet']]
 
 
             fieldslinear = self.getFieldsfromList(champs)
@@ -543,9 +543,9 @@ class exportShapefileWorker(AbstractWorker):
             linearname = os.path.join(dir, name + '.shp')
 
             """
-            SELECT * FROM Photo  
-            INNER JOIN Ressource ON Ressource.id_ressource = Photo.id_ressource 
-            INNER JOIN Objet ON Objet.id_objet = Photo.id_objet 
+            SELECT * FROM Photo
+            INNER JOIN Ressource ON Ressource.id_ressource = Photo.id_ressource
+            INNER JOIN Objet ON Objet.id_objet = Photo.id_objet
             LEFT JOIN Tcobjetressource ON Tcobjetressource.id_tcressource = Ressource.id_ressource
             """
 

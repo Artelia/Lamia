@@ -19,7 +19,7 @@ class CroquisTool(AbstractInspectionDigueTool):
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None, parentwidget=None, parent=None):
         super(CroquisTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil, parentwidget, parent=parent)
-        
+
     def initTool(self):
         # ****************************************************************************************
         # Main spec
@@ -35,7 +35,7 @@ class CroquisTool(AbstractInspectionDigueTool):
                                               'idsource' : 'id_ressource',
                                             'idtcsource' : 'id_tcressource',
                                            'iddest' : 'id_objet',
-                                           'idtcdest' : 'id_tcoobjet',
+                                           'idtcdest' : 'id_tcobjet',
                                            'desttable' : ['Profil','Infralineaire','Observation','Equipement']} }
         # self.pickTable = None
 
@@ -131,14 +131,14 @@ class CroquisTool(AbstractInspectionDigueTool):
 
         if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
             currentparentlinkfield = self.parentWidget.currentFeature['id_objet']
-            sql = "INSERT INTO Tcobjetressource(id_tcoobjet, id_tcressource) VALUES(" + str(currentparentlinkfield) + ", " + str(idres) + ");"
+            sql = "INSERT INTO Tcobjetressource(id_tcobjet, id_tcressource) VALUES(" + str(currentparentlinkfield) + ", " + str(idres) + ");"
             query = self.dbase.query(sql)
             self.dbase.commit()
 
             if False:
                 if self.parentWidget.dbasetablename == 'Equipement':
                     currentparentlinkfield = self.parentWidget.currentFeature['id_objet']
-                    sql = "INSERT INTO Tcobjetressource(id_tcoobjet, id_tcressource) VALUES(" +  str(currentparentlinkfield) + ", " +  str(idres) + ");"
+                    sql = "INSERT INTO Tcobjetressource(id_tcobjet, id_tcressource) VALUES(" +  str(currentparentlinkfield) + ", " +  str(idres) + ");"
                     print('createparent',sql)
                     query = self.dbase.query(sql)
                     self.dbase.commit()
@@ -146,14 +146,14 @@ class CroquisTool(AbstractInspectionDigueTool):
                 elif self.parentWidget.dbasetablename == 'Observation':
                     currentparentlinkfield = self.parentWidget.currentFeature['id_objet']
                     #sql = "UPDATE PHOTO SET LkObjet = " + str(currentparentlinkfield) + " WHERE id = " + str(idphoto) + ";"
-                    sql = "INSERT INTO Tcobjetressource(id_tcoobjet, id_tcressource) VALUES(" + str(currentparentlinkfield) + ", " + str(idres) + ");"
+                    sql = "INSERT INTO Tcobjetressource(id_tcobjet, id_tcressource) VALUES(" + str(currentparentlinkfield) + ", " + str(idres) + ");"
                     query = self.dbase.query(sql)
                     self.dbase.commit()
 
                 elif self.parentWidget.dbasetablename == 'Profil':
                     currentparentlinkfield = self.parentWidget.currentFeature['id_objet']
                     #sql = "UPDATE PHOTO SET LkObjet = " + str(currentparentlinkfield) + " WHERE id = " + str(idphoto) + ";"
-                    sql = "INSERT INTO Tcobjetressource(id_tcoobjet, id_tcressource) VALUES(" + str(currentparentlinkfield) + ", " + str(idres) + ");"
+                    sql = "INSERT INTO Tcobjetressource(id_tcobjet, id_tcressource) VALUES(" + str(currentparentlinkfield) + ", " + str(idres) + ");"
                     query = self.dbase.query(sql)
                     self.dbase.commit()
 
@@ -232,7 +232,7 @@ class ScribbleMainWindow(QMainWindow):
 
     def saveImage(self,file):
         self.scribbleArea.saveImage(file,"png")
-        
+
     def clear(self):
         self.scribbleArea.clearImage()
 

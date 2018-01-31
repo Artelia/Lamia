@@ -15,7 +15,7 @@ import glob
 
 
 class PhotosTool(AbstractInspectionDigueTool):
-    
+
     def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
         super(PhotosTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
 
@@ -34,7 +34,7 @@ class PhotosTool(AbstractInspectionDigueTool):
                                               'idsource' : 'id_ressource',
                                             'idtcsource' : 'id_tcressource',
                                            'iddest' : 'id_objet',
-                                           'idtcdest' : 'id_tcoobjet',
+                                           'idtcdest' : 'id_tcobjet',
                                            'desttable' : ['Infralineaire','Observation','Equipement']},
                             'Marche' :{'tabletc' : None,
                                               'idsource' : 'lk_marche',
@@ -118,9 +118,12 @@ class PhotosTool(AbstractInspectionDigueTool):
     def lastPhoto(self):
         if self.dbase.imagedirectory is not None:
             list_of_files = glob.glob(self.dbase.imagedirectory + "\*.jpg")
-            latest_file = max(list_of_files, key=os.path.getctime)
-            self.userwdg.lineEdit_file.setText(os.path.normpath(latest_file))
-            self.showImageinLabelWidget(self.photowdg , self.userwdg.lineEdit_file.text())
+            try :
+                latest_file = max(list_of_files, key=os.path.getctime)
+                self.userwdg.lineEdit_file.setText(os.path.normpath(latest_file))
+                self.showImageinLabelWidget(self.photowdg , self.userwdg.lineEdit_file.text())
+            except ValueError:
+                pass
 
     def openPhoto(self):
         filepath = self.completePathOfFile(self.userwdg.lineEdit_file.text())
@@ -175,14 +178,14 @@ class PhotosTool(AbstractInspectionDigueTool):
 
         if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
             currentparentlinkfield = self.parentWidget.currentFeature['id_objet']
-            sql = "INSERT INTO Tcobjetressource(id_tcoobjet, id_tcressource) VALUES(" + str(currentparentlinkfield) + ", " + str(idres) + ");"
+            sql = "INSERT INTO Tcobjetressource(id_tcobjet, id_tcressource) VALUES(" + str(currentparentlinkfield) + ", " + str(idres) + ");"
             query = self.dbase.query(sql)
             self.dbase.commit()
 
             if False:
                 if self.parentWidget.dbasetablename == 'Infralineaire':
                     currentparentlinkfield = self.parentWidget.currentFeature['id_objet']
-                    sql = "INSERT INTO Tcobjetressource(id_tcoobjet, id_tcressource) VALUES(" +  str(currentparentlinkfield) + ", " +  str(idres) + ");"
+                    sql = "INSERT INTO Tcobjetressource(id_tcobjet, id_tcressource) VALUES(" +  str(currentparentlinkfield) + ", " +  str(idres) + ");"
                     print('createparent',sql)
 
                     query = self.dbase.query(sql)
@@ -190,7 +193,7 @@ class PhotosTool(AbstractInspectionDigueTool):
 
                 if self.parentWidget.dbasetablename == 'Equipement':
                     currentparentlinkfield = self.parentWidget.currentFeature['id_objet']
-                    sql = "INSERT INTO Tcobjetressource(id_tcoobjet, id_tcressource) VALUES(" +  str(currentparentlinkfield) + ", " +  str(idres) + ");"
+                    sql = "INSERT INTO Tcobjetressource(id_tcobjet, id_tcressource) VALUES(" +  str(currentparentlinkfield) + ", " +  str(idres) + ");"
                     print('createparent',sql)
                     query = self.dbase.query(sql)
                     self.dbase.commit()
@@ -198,7 +201,7 @@ class PhotosTool(AbstractInspectionDigueTool):
                 elif self.parentWidget.dbasetablename == 'Observation':
                     currentparentlinkfield = self.parentWidget.currentFeature['id_objet']
                     #sql = "UPDATE PHOTO SET LkObjet = " + str(currentparentlinkfield) + " WHERE id = " + str(idphoto) + ";"
-                    sql = "INSERT INTO Tcobjetressource(id_tcoobjet, id_tcressource) VALUES(" + str(currentparentlinkfield) + ", " + str(idres) + ");"
+                    sql = "INSERT INTO Tcobjetressource(id_tcobjet, id_tcressource) VALUES(" + str(currentparentlinkfield) + ", " + str(idres) + ");"
                     query = self.dbase.query(sql)
                     self.dbase.commit()
 

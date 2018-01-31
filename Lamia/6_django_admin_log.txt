@@ -1,9 +1,0 @@
-# Nom_champ             TypePostGis              TypeSpatialite                          Option
-###id                 INT;                     INTEGER;    INTEGER PRIMARY KEY AUTOINCREMENT
-###action_time ;                TIMESTAMP WITH TIME ZONE;            DATE; NOT NULL
-###user_id                 INT;                     INTEGER;    NOT NULL
-###object_id ;                TEXT;            TEXT;   NOT NULL
-###object_repr ;                VARCHAR(200);            TEXT;   NOT NULL
-###action_flag                 INT;                     INTEGER;    NOT NULL
-###change_message ;                TEXT;            TEXT;   NOT NULL
-###content_type_id                 INT;                     INTEGER

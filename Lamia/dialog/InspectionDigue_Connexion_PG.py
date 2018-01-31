@@ -10,10 +10,10 @@
         copyright            : (C) 2015 by Artelia
         email                : patrice.Verchere@arteliagroup.com
  ***************************************************************************/
- 
+
  ***************************************************************************/
  Implementation of QgsPluginLayer class, used to show selafin res
- 
+
 Versions :
 Impl
 0.0 : debut
@@ -28,7 +28,7 @@ try:
     from qgis.PyQt.QtGui import QDialog
 except:
     from qgis.PyQt.QtWidgets import QDialog
-    
+
 import os
 
 #FORM_CLASS, _ = uic.loadUiType(os.path.join(os.path.dirname(__file__), 'InspectionDigue_Connexion_PG.ui'))
@@ -67,7 +67,7 @@ class ConnexionPGDialog(QDialog):
         self.doubleSpinBox_x.setValue(self.xtranslate)
         self.doubleSpinBox_y.setValue(self.ytranslate)
     """
-        
+
     def dialogIsFinished(self):
         """
         return level list
@@ -81,6 +81,5 @@ class ConnexionPGDialog(QDialog):
                     self.lineEdit_user.text(),
                     self.lineEdit_password.text())
         else:
-            return (None,None,None,None,None)
-            
-            
+            return (None,None,None,None,None,None)
+

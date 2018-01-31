@@ -20,7 +20,7 @@ ca fout la merde....
 
 
 class TopographieTool(AbstractInspectionDigueTool):
-    
+
     def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
         super(TopographieTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
 
@@ -39,7 +39,7 @@ class TopographieTool(AbstractInspectionDigueTool):
                                            'idsource' : 'id_ressource',
                                        'idtcsource' : 'id_tcressource',
                                            'iddest' : 'id_objet',
-                                       'idtcdest' : 'id_tcoobjet',
+                                       'idtcdest' : 'id_tcobjet',
                                            'desttable' : ['Infralineaire']},
                             'Marche': {'tabletc': None,
                                            'idsource': 'lk_marche',

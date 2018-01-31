@@ -289,6 +289,9 @@ class DBaseParser(QtCore.QObject):
             # res = self.PGiscursor.execute(sql)
             self.query(sql)
             self.commit()
+            sql = 'GRANT ALL ON SCHEMA '+self.pgschema+' TO vadjango'
+            self.query(sql)
+            self.commit()
 
         # ***************************************************************************************
         # Tables creation
@@ -303,6 +306,7 @@ class DBaseParser(QtCore.QObject):
                         sql = self._generatePostGisCreationSQL(dbname, self.dbasetables[dbname], crs)
                         # print(sql['main'])
                         openedsqlfile.write(sql['main'] + '\n')
+                    print(sql['main'])
                     self.query(sql['main'])
                     self.commit()
                     if 'other' in sql.keys():
@@ -320,6 +324,7 @@ class DBaseParser(QtCore.QObject):
         # ***************************************************************************************
         # view creation
         for dbname in self.dbasetables:
+            print(dbname)
             viewnames={}
             if 'djangoviewsql' in self.dbasetables[dbname].keys():
                 viewnames['djangoviewsql'] = str(dbname) + '_django'
@@ -436,10 +441,26 @@ class DBaseParser(QtCore.QObject):
         createfilesdir = os.path.join(os.path.dirname(__file__), '..', 'DBASE', 'create', self.type)
 
         for filename in glob.glob(os.path.join(createfilesdir, '*.txt')):
+            print(filename)
             basename = os.path.basename(filename).split('.')[0]
             temp = basename.split('_')
             if len(temp) == 1:  # non table file
                 continue
+            elif len(temp) == 3:  # underscore in the name
+                temp[1]+='_'
+                temp[1]+=temp[2]
+            elif len(temp) == 4:  # underscore in the name
+                temp[1]+='_'
+                temp[1]+=temp[2]
+                temp[1]+='_'
+                temp[1]+=temp[3]
+            elif len(temp) == 5:  # underscore in the name
+                temp[1]+='_'
+                temp[1]+=temp[2]
+                temp[1]+='_'
+                temp[1]+=temp[3]
+                temp[1]+='_'
+                temp[1]+=temp[4]
             tablename = temp[1]
             self.dbasetables[tablename] = {}
             self.dbasetables[tablename]['order'] = int(temp[0])

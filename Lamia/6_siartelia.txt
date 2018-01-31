@@ -1,2 +1,0 @@
-# Nom_champ             TypePostGis              TypeSpatialite                          Option
-###id_siartelia                 INT;                     INTEGER;    INTEGER PRIMARY KEY AUTOINCREMENT

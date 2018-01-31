@@ -603,14 +603,7 @@ def plot_pca(data):
 
 Liste modifs :
 
-inspetionDigues_Connexion_PG.py, line 84 :
-            return (None,None,None,None,None,None)
 
-inspectionDigue_abstract_tool, line 714 :
-            try :
-                self.dbasetable['layerqgis'].removeSelection()
-            except RuntimeError:
-                pass
 
 line 1996 : !!!!!!!!!! POSSIBLE : ALLER CHERCHER UN PARENT ET SE CENTRER SUR SA POSITION
         if feat.geometry() != None:
@@ -619,21 +612,3 @@ line 1996 : !!!!!!!!!! POSSIBLE : ALLER CHERCHER UN PARENT ET SE CENTRER SUR SA 
         else :
             pass
 
-inspectionDigue_photos_tool, line 103 :
-            try :
-                latest_file = max(list_of_files, key=os.path.getctime)
-                self.userwdg.lineEdit_file.setText(os.path.normpath(latest_file))
-                self.showImageinLabelWidget(self.photowdg , self.userwdg.lineEdit_file.text())
-            except ValueError:
-                pass
-
-DBaseParser.py, line 411:
-            elif len(temp) == 3:  # underscore in the name
-                temp[1]+=temp[2]
-            elif len(temp) == 4:  # underscore in the name
-                temp[1]+=temp[2]
-                temp[1]+=temp[3]
-            elif len(temp) == 5:  # underscore in the name
-                temp[1]+=temp[2]
-                temp[1]+=temp[3]
-                temp[1]+=temp[4]
