@@ -22,6 +22,7 @@ Genie-civil;        GCI;        ['DIG']
 Voirie;             VOI;        ['DIG']
 Autre;              AUT;        ['DIG']
 ###lk_photo;        INT ;                       INTEGER
+###lk_profil;        INT ;                       INTEGER
 ###lk_noeud1;        INT ;                       INTEGER;                            Noeud(id_noeud)
 ###lk_noeud2;        INT ;                       INTEGER;                            Noeud(id_noeud)
 ###geom;                LINESTRING

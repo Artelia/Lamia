@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>471</width>
-    <height>589</height>
+    <width>249</width>
+    <height>469</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -99,9 +99,29 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2"/>
      </widget>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>Profil en travers</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_6">
+       <item>
+        <widget class="QStackedWidget" name="stackedWidget_profiltravers">
+         <property name="currentIndex">
+          <number>0</number>
+         </property>
+         <widget class="QWidget" name="page">
+          <layout class="QVBoxLayout" name="verticalLayout_7"/>
+         </widget>
+         <widget class="QWidget" name="page_2">
+          <layout class="QVBoxLayout" name="verticalLayout_8"/>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
      <widget class="QWidget" name="tab_2">
       <attribute name="title">
-       <string>Profil</string>
+       <string>Profil en long</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_5"/>
      </widget>

@@ -741,7 +741,7 @@ class InspectiondigueWindowWidget(QMainWindow):
             # *************************************************************************************************
             # PostPro  ***************************
 
-            if False:
+            if True:
                 from ..toolpostpro.InspectionDigue_synth_zonegeo_tool import SyntheseZonegeoTool
                 self.synthesezonegeotool = SyntheseZonegeoTool(dbase=self.dbase,
                                                                dialog=self,
@@ -751,7 +751,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                 i += 1
                 self.setLoadingProgressBar(progress, i)
 
-            if False:
+            if True:
                 try:
                     from ..toolpostpro.InspectionDigue_path_tool import PathTool
                     self.pathtool = PathTool(dbase=self.dbase,
@@ -980,7 +980,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                 self.thread.started.connect(self.worker.run)
                 self.thread.start()
             if True:
-                self.worker = exportShapefileWorker(self.dbase, tabletype, pdffile)
+                self.worker = exportShapefileWorker(self.dbase, self, tabletype, pdffile)
                 self.worker.finished.connect(self.exportPDFFinished)
                 self.worker.error.connect(self.printError)
                 self.worker.message.connect(self.printMessage)
@@ -1243,7 +1243,10 @@ class InspectiondigueWindowWidget(QMainWindow):
         return
 
     def setLoadingProgressBar(self, progressbar, val):
-        if progressbar is not None: progressbar.setValue(val)
+        if progressbar is not None:
+            progressbar.setValue(val)
+        else:
+            logger.info('Chargement %s', str(val))
         QApplication.processEvents()
 
 

@@ -4,7 +4,7 @@ import os
 import qgis
 import qgis.gui
 import shutil
-from InspectionDigueV2.src.dialog.InspectionDigue_windowwidget import InspectiondigueWindowWidget
+from Lamia.Lamia.dialog.InspectionDigue_windowwidget import InspectiondigueWindowWidget
 
 
 def testRapport(canvas, loadfile=True, typedb="spatialite",tabletype=None, pdffile=None ):
@@ -21,7 +21,8 @@ def testRapport(canvas, loadfile=True, typedb="spatialite",tabletype=None, pdffi
             # path = os.path.normpath('C://000_testimportBM//BD_BM_ind3.sqlite')
             #path = os.path.normpath('C://001_travail_BM//BD_SIJALAG_ind0_travail2.sqlite')
             #path = os.path.normpath('I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201710_Begles//BD_Begles_ind0.sqlite')
-            path = os.path.normpath('C://000_testdigue//testBM//BD_Begles_ind0.sqlite')
+            # path = os.path.normpath('C://000_testdigue//temp//test01.sqlite')
+            path = os.path.normpath( 'I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201708_SIJALAG//BD_SIJALAG_ind4.sqlite')
             wind.dbase.loadQgisVectorLayers(path)
 
         elif typedb == "postgis":
