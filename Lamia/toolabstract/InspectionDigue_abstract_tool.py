@@ -1001,8 +1001,8 @@ class AbstractInspectionDigueTool(QWidget):
                         sqltemp += str(self.parentWidget.currentFeature[linkagetemp['iddest']])
                         # print(sqltemp)
                         query = self.dbase.query(sqltemp)
-                        idstemp = [str(row[0]) for row in query]
-                        if len(idstemp) > 0:
+                        if not query == None :
+                            idstemp = [str(row[0]) for row in query]
                             idssql = '(' + ','.join(idstemp) + ')'
                             sql += " AND " + linkagetemp['idsource'] + " IN " + idssql
                         else:
@@ -1238,7 +1238,10 @@ class AbstractInspectionDigueTool(QWidget):
                                 # parentfeat = self.dbase.dbasetables[tablename]['layer'].getFeatures(qgis.core.QgsFeatureRequest(parendid)).next()
                                 parentfeat = self.getLayerFeatureById(tablename, parendid)
                                 workingfeat = parentfeat
-                            valuetoset = workingfeat[field]
+                            try :
+                                valuetoset = workingfeat[field]
+                            except :
+                                valuetoset = None
                         else:
                             valuetoset = value
 

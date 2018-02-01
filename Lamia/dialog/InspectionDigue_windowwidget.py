@@ -156,9 +156,10 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.actionImport.triggered.connect(self.importObjet)
 
         if self.dbase.dbasetype == 'postgis':
-            self.actionMode_hors_ligne_Reconnexion.setDisabled(False)
+            self.actionMode_hors_ligne_Reconnexion.setEnabled(True)
         else:
-            self.actionMode_hors_ligne_Reconnexion.setDisabled(True)
+            #self.actionMode_hors_ligne_Reconnexion.setEnabled(True)
+            self.actionMode_hors_ligne_Reconnexion.setEnabled(True)
         self.actionMode_hors_ligne_Reconnexion.triggered.connect(self.modeHorsLigne)
 
 
@@ -1063,7 +1064,177 @@ class InspectiondigueWindowWidget(QMainWindow):
 
 
     def modeHorsLigne(self):
-        self.horsligne = not self.horsligne
+        if not self.dbase.horsligne:
+
+
+            #1)Create a spatialite db
+
+            # reinit base
+
+            # create database
+            #spatialitefile = self.qfiledlg.getSaveFileName(self, 'InspectionDigue_local', '', '*.sqlite')
+            local_db = open('../local/DB_local.sqlite', 'a').close()
+            #Create the folder to stock the new pictures
+            local_folder='../local/local_data'
+            if not os.path.exists(local_folder):
+                os.makedirs(local_folder)
+
+            if self.dbase.dbasetype=='spatialite':
+                self.offLineConn = self.dbase.connSLITE
+                self.offLineCursor = self.dbase.SLITEcursor
+                self.dbase.offLineType = 'spatialite'
+            else:
+                self.offLineConn = self.dbase.connPGis
+                self.offLineCursor = self.dbase.PGiscursor
+                self.dbase.offLineType = 'postgis'
+
+
+            if local_db:
+                self.dbase.createDbase(file=local_db, crs=self.dbase.crsnumber, type='digue', dbasetype='spatialite',
+                                       dbaseressourcesdirectory=local_folder)
+
+                self.dbase.dbasetype = 'spatialite'
+
+            #2)Add items from the file to the spatialite database
+
+            for order in range(10):
+                for dbname in self.dbase.dbasetables:
+                    if self.dbase.dbasetables[dbname]['order'] == order:
+
+                        sql = "SELECT * FROM "+ str(dbname)
+
+                        if self.dbase.offLineType == 'spatialite' :
+                            try:
+                                query = self.dbase.offLineCursor.execute(sql)
+                                returnquery = list(query)
+                                self.commit()
+                            except OperationalError as e:
+                                print('error query', e)
+                                return None
+                        else :
+                            self.PGiscursor.execute(sql)
+                            if sql.strip()[0:6] == 'SELECT':
+                                try:
+                                    rows = self.PGiscursor.fetchall()
+                                    returnquery = list(rows)
+                                    self.commit()
+                                except psycopg2.ProgrammingError as e:
+                                    print('error query', e)
+                                    return None
+
+
+                        for result in returnquery:
+                            sql = 'INSRERT INTO ' +  str(dbname) +  ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + 'VALUE'+ str(result)
+                            print(sql)
+                            self.dbase.query(sql)
+                            self.dbase
+
+            self.dbase.horsligne = not self.dbase.horsligne
+            self.date_deconnexion = datetime.datetime.now()
+            return
+
+
+
+        if self.dbase.horsligne:
+            #1) Connect to database
+            if self.offLineType=='postgis':
+                self.offLineConn, self.dbase.connSLITE = self.dbase.connSLITE , self.offLineConn
+                self.offLineCursor, self.dbase.SLITEcursor = self.dbase.SLITEcursor, self.offLineCursor
+                self.dbase.offLineType = 'spatialite'
+            else:
+                self.offLineConn, self.dbase.connPGis =self.dbase.connPGis, self.offLineConn
+                self.offLineCursor, self.dbase.PGiscursor = self.dbase.PGiscursor, self.offLineCursor
+                self.dbasetype='postgis'
+            else :
+
+                self.dbasetype='spatialite'
+
+            #2)Confront the two databases
+            #Table to get the correspondances between local ids and ids in the original database
+            switch_id={}
+
+            for order in range(10):
+                for dbname in self.dbase.dbasetables:
+                    if self.dbase.dbasetables[dbname]['order'] == order:
+                        switch_id[dbname]=[]
+
+                        #Get the data of the table in both database
+                        sql = "SELECT * FROM "+ str(dbname) + ' WHERE datecreation > ' + str(self.dbase.date_deconnexion) + ' OR datemodification > ' + str(self.dbase.date_deconnexion)
+
+                        try:
+                            query = self.dbase.offLineCursor.execute(sql)
+                            local_data = list(query)
+                            self.commit()
+                        except OperationalError as e:
+                            print('error query', e)
+                            return None
+
+                        original_data = self.dbase.query(sql)
+
+                        #conpare the datasets
+
+
+
+                        for item in local_date :
+                            id_local = item[self.dbase.dbasetables[dbname].index('id_'+str(dbname))]
+
+                            #Get the proper id to use when updating the database
+                            for field in self.dbase.dbasetables[dbname]['fields'].keys() :
+                                position = self.dbase.dbasetables[dbname]['fields'][field]
+                                field = field.lower()
+
+                                if 'lk_' in field or 'id_' in field:
+                                    field = field[3:]
+
+                                if field in switch_id :
+                                    for tuple_coresp in switch_id[field] :
+                                        if tuple_coresp[0]==item[pos]:
+                                            item[pos]=tuple_coresp[1]
+                                            break
+
+                            #New items : date de creation > date de début offline
+                            if item[self.dbase.dbasetables[dbname].index('datecreation')]>self.dbase.date_deconnexion:
+
+
+                                sql = 'INSRERT INTO ' +  str(dbname) +  ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ' VALUE '+ str(item) + ' RETURNING id_'+str(dbname)
+                                id_res= self.dbase.query(sql)
+
+                                switch_id[dbname]+=[(item[self.dbase.dbasetables[dbname].index('id_'+str(dbname))],id_res)]
+
+                            #Else : the data has been modified
+                            else :
+                                #Get the item version from the server to compare. Id should be the same as it was created before the deconection
+                                original = None
+                                for item_online in original_data:
+                                    if item_online[self.dbase.dbasetables[dbname].index('id_'+str(dbname))] == id_local:
+                                        original=item_online
+                                        break
+
+                                #If last modification on the server is before the deconnection -> inject
+                                if original[self.dbase.dbasetables[dbname].index('datemodification')]<self.dbase.date_deconnexion:
+
+                                    sql = 'UPDATE '+ str(dbname)+ ' SET '+ ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ' VALUE '+ str(item) + ' WHERE id_'+str(dbname)+' = 'id_local
+                                    self.dbase.query(sql)
+                                else :
+
+                                    print('conflit')
+                                #Else, user has to choose the data to keep
+                                #3)Correct the conflicts
+
+                            #Add the new id fit in a tuple
+
+
+
+            #4) Copy the static files
+            for file in os.listdir(local_folder):
+                shutil.copyfile(file,self.dbase.imagedirectory)
+
+        self.dbase.horsligne = not self.dbase.horsligne
+        self.offLineConn = None
+        self.offLineCursor = None
+        self.dbase.offLineType = None
+
+        return
 
     def setLoadingProgressBar(self, progressbar, val):
         if progressbar is not None:
