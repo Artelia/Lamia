@@ -47,7 +47,6 @@ class DBaseParser(QtCore.QObject):
         self.type = None
         # spatialite or postgis
         self.dbasetype = None
-        self.offLineType = None     # Offline Database type
         self.pghost = None
         self.pgdb = None
         self.pguser = None
@@ -65,19 +64,15 @@ class DBaseParser(QtCore.QObject):
         self.hauteurperche = 2.0
         # the current prestation id
         self.currentprestationid = None
-        #Offline information
-        self.horsligne=False
-        self.date_deconnexion = None
         # connextion var
         self.connSLITE = None      # spatialite connection
         self.SLITEcursor = None     # spatialite cursor
         self.connPGis = None        # postgis connection
         self.PGiscursor = None      # postgis cursor
-        self.offLineConn = None     # Offline connection
-        self.offLineCursor = None   # Offline cursor
         # spatialite spec
         self.spatialitefile = None
         # postgis spec
+        self.horsligne=False
         self.pghost = None
         self.pgdb = None
         self.pguser = None
@@ -234,7 +229,6 @@ class DBaseParser(QtCore.QObject):
         elif dbasetype == 'postgis':
             self.dbasetype = 'postgis'
             self.pghost = host
-            self.actionMode_hors_ligne_Reconnexion.setEnabled(True)
             self.pgdb = dbname
             self.pguser = user
             self.pgpassword = password
@@ -330,7 +324,7 @@ class DBaseParser(QtCore.QObject):
         # ***************************************************************************************
         # view creation
         for dbname in self.dbasetables:
-            print(dbname)
+            # print(dbname)
             viewnames={}
             if 'djangoviewsql' in self.dbasetables[dbname].keys():
                 viewnames['djangoviewsql'] = str(dbname) + '_django'
@@ -447,6 +441,7 @@ class DBaseParser(QtCore.QObject):
         createfilesdir = os.path.join(os.path.dirname(__file__), '..', 'DBASE', 'create', self.type)
 
         for filename in glob.glob(os.path.join(createfilesdir, '*.txt')):
+            # print(filename)
             basename = os.path.basename(filename).split('.')[0]
             temp = basename.split('_')
             if len(temp) == 1:  # non table file
