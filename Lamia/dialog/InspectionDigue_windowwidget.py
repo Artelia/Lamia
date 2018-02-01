@@ -1145,9 +1145,10 @@ class InspectiondigueWindowWidget(QMainWindow):
                 self.offLineConn, self.dbase.connPGis =self.dbase.connPGis, self.offLineConn
                 self.offLineCursor, self.dbase.PGiscursor = self.dbase.PGiscursor, self.offLineCursor
                 self.dbasetype='postgis'
+            """
             else :
-
                 self.dbasetype='spatialite'
+            """
 
             #2)Confront the two databases
             #Table to get the correspondances between local ids and ids in the original database
@@ -1196,7 +1197,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                             if item[self.dbase.dbasetables[dbname].index('datecreation')]>self.dbase.date_deconnexion:
 
 
-                                sql = 'INSRERT INTO ' +  str(dbname) +  ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ' VALUE '+ str(item) + ' RETURNING id_'+str(dbname)
+                                sql = 'INSERT INTO ' +  str(dbname) +  ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ' VALUE '+ str(item) + ' RETURNING id_'+str(dbname)
                                 id_res= self.dbase.query(sql)
 
                                 switch_id[dbname]+=[(item[self.dbase.dbasetables[dbname].index('id_'+str(dbname))],id_res)]
@@ -1213,7 +1214,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                                 #If last modification on the server is before the deconnection -> inject
                                 if original[self.dbase.dbasetables[dbname].index('datemodification')]<self.dbase.date_deconnexion:
 
-                                    sql = 'UPDATE '+ str(dbname)+ ' SET '+ ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ' VALUE '+ str(item) + ' WHERE id_'+str(dbname)+' = 'id_local
+                                    sql = 'UPDATE '+ str(dbname)+ ' SET '+ ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ' VALUE '+ str(item) + ' WHERE id_'+str(dbname)+' = ' + str(id_local)
                                     self.dbase.query(sql)
                                 else :
 
