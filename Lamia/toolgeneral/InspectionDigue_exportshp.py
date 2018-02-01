@@ -81,12 +81,14 @@ class exportShapefileWorker(AbstractWorker):
                 fieldslinear.append(qgis.core.QgsField('Hauteur', QtCore.QVariant.Double))
                 fieldslinear.append(qgis.core.QgsField('Largeurcrete', QtCore.QVariant.Double))
                 fieldslinear.append(qgis.core.QgsField('LargeurAubarede', QtCore.QVariant.Double))
-                champs += [[],[],[]]
+                fieldslinear.append(qgis.core.QgsField('Des_prof', QtCore.QVariant.String))
+                champs += [[],[],[],[]]
                 # print('champs',champs)
                 for i, row in enumerate(result):
                     largcrete = -1
                     largfrancbord = -1
                     hauteurdigue = -1
+                    description = ''
                     lkprofil  = row[16]
                     if lkprofil is not None:
                         sql = "SELECT id_graphique, typegraphique FROM Graphique  WHERE id_ressource = " + str(lkprofil)
@@ -96,9 +98,9 @@ class exportShapefileWorker(AbstractWorker):
                             sql = "SELECT * FROM Graphiquedata WHERE id_graphique = " + str(resultrow[0][0])
                             sql += " ORDER BY id_graphiquedata"
                             query = self.dbase.query(sql)
-                            resultrow = [list(row2) for row2 in query]
+                            resultrow2 = [list(row2) for row2 in query]
                             # row : [id, None, dx, dz, None, position, type1, type2, None, 1]
-                            npresultrow = np.array(resultrow)
+                            npresultrow = np.array(resultrow2)
                             #largeur crete
                             index = np.where(npresultrow[:,5] == 'CRE')
                             largcrete = np.sum(npresultrow[:,2][index])
@@ -109,8 +111,23 @@ class exportShapefileWorker(AbstractWorker):
                             index = np.where(npresultrow[:,5] == 'FRB')
                             largfrancbord = np.sum(npresultrow[:,2][index])
                             # print(hauteurdigue, largcrete, largfrancbord)
+                            #description
+                            listdescr = ['dX;dZ;Partie;Type1;Type2']
+                            for elem in resultrow2:
+                                listdescr += [';'.join([str(round(elem[2],1)),
+                                                         str(round(elem[3],1)),
+                                                         self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index1', elem[5]),
+                                                        self.dbase.getConstraintTextFromRawValue('Graphiquedata','index2', elem[6]),
+                                                         self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7])])]
+                            description = '\n'.join(listdescr)
+                            if False:
+                                print(listdescr)
 
-                    result[i] = list(result[i])[:-1] + [hauteurdigue, largcrete, largfrancbord] + list(result[i])[-1:]
+                                print(description)
+                                return
+
+
+                    result[i] = list(result[i])[:-1] + [hauteurdigue, largcrete, largfrancbord,description] + list(result[i])[-1:]
 
 
             #niveau protection surete

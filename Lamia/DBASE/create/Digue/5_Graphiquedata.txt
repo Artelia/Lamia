@@ -46,7 +46,7 @@ Seuil, deversoir;       SEU
 Zone de dissipation;    ZPD
 Zone urbanisee;         ZUR
 ###index3;                VARCHAR(255);            TEXT
-/;
+/;                                  
 Acier;                  ACI
 Bentonite-ciment;       BEC
 Beton;                  BET
@@ -80,6 +80,8 @@ Silts;                  SIL
 Terre vegetale;         TEV
 Tuyau drain;            TUY
 Tout venant brut;       TVB
-Revetement vegetalise;  VET
+Vegetalise enherbe;  VET
+Vegetalise arbustif;  VEA
+Vegetalise boise;  VEB
 ###index4;                VARCHAR(255);            TEXT
 ###id_graphique;       INT;            INTEGER;                                              Graphique(id_graphique)

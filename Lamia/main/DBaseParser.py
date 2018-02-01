@@ -324,7 +324,7 @@ class DBaseParser(QtCore.QObject):
         # ***************************************************************************************
         # view creation
         for dbname in self.dbasetables:
-            print(dbname)
+            # print(dbname)
             viewnames={}
             if 'djangoviewsql' in self.dbasetables[dbname].keys():
                 viewnames['djangoviewsql'] = str(dbname) + '_django'
@@ -441,7 +441,7 @@ class DBaseParser(QtCore.QObject):
         createfilesdir = os.path.join(os.path.dirname(__file__), '..', 'DBASE', 'create', self.type)
 
         for filename in glob.glob(os.path.join(createfilesdir, '*.txt')):
-            print(filename)
+            # print(filename)
             basename = os.path.basename(filename).split('.')[0]
             temp = basename.split('_')
             if len(temp) == 1:  # non table file
