@@ -1066,29 +1066,8 @@ class InspectiondigueWindowWidget(QMainWindow):
     def modeHorsLigne(self):
         if not self.dbase.horsligne:
 
-            """
-            #1) Copy the data of the database in  a file
-            local_db =open('../local/DBpostgis_backup', 'a')
-            for layer in self.dbase.dbasetables.keys():
-                if '_' in layer or 'bdd' in layer or 'messagetiers' in layer or 'siartelia' in layer or 'projet' in layer or 'utilisateur' in layer :
-                    #List a completer avec les autres tables à ne pas importer en local
-                    pass
-                else :
-                    print(layer)
-                    local_db.write(str(layer)+'\n')
-                    sql = 'SELECT * FROM '+ str(layer)
-                    query = self.dbase.SLITEcursor.execute(sql)
-                    returnquery = list(query)
-                    print(returnquery)
-                    for row in returnquery:
-                        print(row)
-                        local_db.write(str(row))
-                        local_db.write('\n')
 
-            local_db.close()
-            """
-
-            #2)Create a spatialite db
+            #1)Create a spatialite db
 
             # reinit base
 
@@ -1116,7 +1095,7 @@ class InspectiondigueWindowWidget(QMainWindow):
 
                 self.dbase.dbasetype = 'spatialite'
 
-            #3)Add items from the file to the spatialite database
+            #2)Add items from the file to the spatialite database
 
             for order in range(10):
                 for dbname in self.dbase.dbasetables:
@@ -1180,7 +1159,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                         switch_id[dbname]=[]
 
                         #Get the data of the table in both database
-                        sql = "SELECT * FROM "+ str(dbname) + ' WHERE date_creation > ' + str(self.dbase.date_deconnexion) + ' OR date_modification > ' + str(self.dbase.date_deconnexion)
+                        sql = "SELECT * FROM "+ str(dbname) + ' WHERE datecreation > ' + str(self.dbase.date_deconnexion) + ' OR datemodification > ' + str(self.dbase.date_deconnexion)
 
                         try:
                             query = self.dbase.offLineCursor.execute(sql)
@@ -1197,22 +1176,24 @@ class InspectiondigueWindowWidget(QMainWindow):
 
 
                         for item in local_date :
+                            id_local = item[self.dbase.dbasetables[dbname].index('id_'+str(dbname))]
+
+                            #Get the proper id to use when updating the database
+                            for field in self.dbase.dbasetables[dbname]['fields'].keys() :
+                                position = self.dbase.dbasetables[dbname]['fields'][field]
+                                field = field.lower()
+
+                                if 'lk_' in field or 'id_' in field:
+                                    field = field[3:]
+
+                                if field in switch_id :
+                                    for tuple_coresp in switch_id[field] :
+                                        if tuple_coresp[0]==item[pos]:
+                                            item[pos]=tuple_coresp[1]
+                                            break
+
                             #New items : date de creation > date de début offline
-                            if item[self.dbase.dbasetables[dbname].index('date_creation')]>self.dbase.date_deconnexion:
-
-                                #Get the id to use
-                                for field in self.dbase.dbasetables[dbname]['fields'].keys() :
-                                    position = self.dbase.dbasetables[dbname]['fields'][field]
-                                    field = field.lower()
-
-                                    if 'lk_' in field or 'id_' in field:
-                                        field = field[3:]
-
-                                    if field in switch_id :
-                                        for tuple_coresp in switch_id[field] :
-                                            if tuple_coresp[0]==item[pos]:
-                                                item[pos]=tuple_coresp[1]
-                                                break
+                            if item[self.dbase.dbasetables[dbname].index('datecreation')]>self.dbase.date_deconnexion:
 
 
                                 sql = 'INSRERT INTO ' +  str(dbname) +  ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ' VALUE '+ str(item) + ' RETURNING id_'+str(dbname)
@@ -1222,8 +1203,21 @@ class InspectiondigueWindowWidget(QMainWindow):
 
                             #Else : the data has been modified
                             else :
-                                #If last modification on the server is before the deconnection -> inject
+                                #Get the item version from the server to compare. Id should be the same as it was created before the deconection
+                                original = None
+                                for item_online in original_data:
+                                    if item_online[self.dbase.dbasetables[dbname].index('id_'+str(dbname))] == id_local:
+                                        original=item_online
+                                        break
 
+                                #If last modification on the server is before the deconnection -> inject
+                                if original[self.dbase.dbasetables[dbname].index('datemodification')]<self.dbase.date_deconnexion:
+
+                                    sql = 'UPDATE '+ str(dbname)+ ' SET '+ ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ' VALUE '+ str(item) + ' WHERE id_'+str(dbname)+' = 'id_local
+                                    self.dbase.query(sql)
+                                else :
+
+                                    print('conflit')
                                 #Else, user has to choose the data to keep
                                 #3)Correct the conflicts
 
