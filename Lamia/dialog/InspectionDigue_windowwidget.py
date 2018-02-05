@@ -29,6 +29,7 @@ debugtime = False
 # plugin import
 from ..main.DBaseParser import DBaseParser
 from .InspectionDigue_Connexion_PG import ConnexionPGDialog
+from .InspectionDigue_ConflitHorsLigne import ConflitHorsLigne
 from .InspectionDigue_impression_rapport import ImpressionRapportDialog
 from .InspectionDigue_exportShapefile import ExportShapefileDialog
 from .InspectionDigue_Import import ImportObjetDialog
@@ -1200,6 +1201,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                                 sql = 'INSERT INTO ' +  str(dbname) +  ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ' VALUE '+ str(item) + ' RETURNING id_'+str(dbname)
                                 id_res= self.dbase.query(sql)
 
+                                #Add the new id fit in a tuple
                                 switch_id[dbname]+=[(item[self.dbase.dbasetables[dbname].index('id_'+str(dbname))],id_res)]
 
                             #Else : the data has been modified
@@ -1217,12 +1219,13 @@ class InspectiondigueWindowWidget(QMainWindow):
                                     sql = 'UPDATE '+ str(dbname)+ ' SET '+ ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ' VALUE '+ str(item) + ' WHERE id_'+str(dbname)+' = ' + str(id_local)
                                     self.dbase.query(sql)
                                 else :
-
+                                    #Else, user has to choose the data to keep
+                                    #3)Correct the conflict
                                     print('conflit')
-                                #Else, user has to choose the data to keep
-                                #3)Correct the conflicts
-
-                            #Add the new id fit in a tuple
+                                    ecrase = ConflitHorsLigne(item, original)
+                                    if ecrase :
+                                        sql = 'UPDATE '+ str(dbname)+ ' SET '+ ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ' VALUE '+ str(item) + ' WHERE id_'+str(dbname)+' = ' + str(id_local)
+                                        self.dbase.query(sql)
 
 
 
