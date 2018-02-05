@@ -42,7 +42,7 @@ class AbstractInspectionDigueTool(QWidget):
         @param parent : the parent widget (TODO : the same as dialog)
         """
         timestart = time.clock()
-        if debugtime: logging.getLogger('Lamia').debug('Start init %s', str(round(time.clock() - timestart, 3)))
+        if debugtime: logging.getLogger('Lamia').debug('Start init %.3f', time.clock() - timestart)
 
         super(AbstractInspectionDigueTool, self).__init__(parent)
         uipath = os.path.join(os.path.dirname(__file__), '..', 'dialog', 'InspectionDigue_propertieswidget.ui')
@@ -72,8 +72,6 @@ class AbstractInspectionDigueTool(QWidget):
         # self.linkageids = None
         # data for datas in config file
         self.dbasefiledata = None
-        # debug
-        self.debug = False
 
         # ***** Ui var
         #  Name used for rool tree in main qtreewidget - must be implemented
@@ -100,12 +98,16 @@ class AbstractInspectionDigueTool(QWidget):
         self.windowsonlyfeature = 0
         #  the child widgets
         #whildwdg change
-        if True:
-            self.dbasechildwdg = []
-        else:
-            self.dbasechildwdg = {}
+        self.dbasechildwdg = []
+        self.dbasechildwdgfield = None
+        self.dbasechildwdgdesktop = None
         # user widget
-        self.linkuserwdg = None
+        self.userwdgfield = None
+        self.linkuserwdgfield = None
+        self.userwdgdesktop = None
+        self.linkuserwdgdesktop = None
+        self.userwdg = None             #current userwdg
+        self.linkuserwdg = None             #current linkuserwdg
         # wile saving new feature
         self.savingnewfeature = False
         #  The main qfiledialog
@@ -167,12 +169,17 @@ class AbstractInspectionDigueTool(QWidget):
 
         # *******************************************************
         # load tools - must be kept in this order
-        if debugtime: logging.getLogger('Lamia').debug('before initTool %s', str(round(time.clock() - timestart, 3)))
+        if debugtime: logging.getLogger('Lamia').debug('before initTool %.3f', time.clock() - timestart)
         self.initTool()
-        if debugtime: logging.getLogger('Lamia').debug('After initTool %s', str(round(time.clock() - timestart, 3)))
+        if debugtime: logging.getLogger('Lamia').debug('After initTool %.3f', time.clock() - timestart)
         # *******************************************************
         # Post inittool things
         # widget connection
+        if self.userwdgfield is not None:
+            self.userwdg = self.userwdgfield
+            self.linkuserwdg = self.linkuserwdgfield
+        if self.dbasechildwdgfield is not None:
+            self.dbasechildwdg = self.dbasechildwdgfield
 
 
 
@@ -183,6 +190,10 @@ class AbstractInspectionDigueTool(QWidget):
             if self.dbasetablename in self.dbase.dbasetables.keys():
                 self.dbasetable = self.dbase.dbasetables[self.dbasetablename]
             self.changePropertiesWidget()
+            # connect signals of inherited widget
+            if self.windowdialog is not None:
+                self.windowdialog.MaintreeWidget.currentItemChanged.connect(self.onActivationRaw)
+
             self.initWidgets()
         #childwdg change
         if True:
@@ -190,7 +201,7 @@ class AbstractInspectionDigueTool(QWidget):
                 self.currentFeatureChanged.connect(childwdg.loadChildFeatureinWidget)
 
 
-        if debugtime: logging.getLogger('Lamia').debug('end init %s', str(round(time.clock() - timestart, 3)))
+        if debugtime: logging.getLogger('Lamia').debug('end init %.3f', time.clock() - timestart)
 
 
     # ******************************************************************************************************************
@@ -218,13 +229,31 @@ class AbstractInspectionDigueTool(QWidget):
 
         if self.groupBox_properties.layout().count() > 0:
             self.groupBox_properties.layout().itemAt(0).widget().setParent(None)
+        if False:
+            if self.dbase.visualmode in [0, 1, 4]:
+                if self.userwdg is not None:
+                    self.groupBox_properties.layout().addWidget(self.userwdg)
+        else:
+            if self.dbase.visualmode in [0, 1, 4]:
+                if self.dbase.visualmode == 0 :
+                    if self.userwdgfield is not None :
+                        self.userwdg = self.userwdgfield
+                        self.linkuserwdg = self.linkuserwdgfield
+                    if self.dbasechildwdgfield is not None:
+                        self.dbasechildwdg = self.dbasechildwdgfield
+                elif self.dbase.visualmode in [1,4] :
+                    if self.userwdgdesktop is not None :
+                        self.userwdg = self.userwdgdesktop
+                        self.linkuserwdg = self.linkuserwdgdesktop
+                    if self.dbasechildwdgdesktop is not None:
+                        self.dbasechildwdg = self.dbasechildwdgdesktop
 
-        if self.dbase.visualmode in [0, 1, 4]:
-            if self.userwdg is not None:
-                self.groupBox_properties.layout().addWidget(self.userwdg)
+                if self.userwdg is not None:
+                    self.groupBox_properties.layout().addWidget(self.userwdg)
 
-        elif self.dbase.visualmode == 2:
-            self.groupBox_properties.layout().addWidget(self.tableWidget)
+
+            elif self.dbase.visualmode == 2:
+                self.groupBox_properties.layout().addWidget(self.tableWidget)
 
         #dbasechildwdg change
         if True:
@@ -237,12 +266,20 @@ class AbstractInspectionDigueTool(QWidget):
                     chldwdg.changePropertiesWidget()
 
 
-
-
         if self.dbase.visualmode in self.visualmode:
             self.loadWidgetinMainTree()
         else:
             self.unloadWidgetinMainTree()
+
+        #reload state
+        if self.linkedtreewidget is not None:
+            tempitem = self.linkedtreewidget.currentItem()
+            if tempitem is not None and self.windowdialog.MaintreeWidget.currentItem() == self.qtreewidgetitem:
+                tempitemid = int(tempitem.text(0))
+                self.onActivationRaw(self.windowdialog.MaintreeWidget.currentItem())
+                self.comboBox_featurelist.setCurrentIndex(self.comboBox_featurelist.findText(str(tempitemid)))
+
+
 
     def loadWidgetinMainTree(self):
         """!
@@ -278,10 +315,6 @@ class AbstractInspectionDigueTool(QWidget):
                 wdgitem.addChild(self.qtreewidgetitem)
             wdgitem.setExpanded(True)
 
-        # connect signals of inherited widget
-        if self.windowdialog is not None:
-            #self.windowdialog.MaintreeWidget.itemClicked.connect(self.onActivationRaw)
-            self.windowdialog.MaintreeWidget.currentItemChanged.connect(self.onActivationRaw)
 
 
     def unloadWidgetinMainTree(self):
@@ -664,55 +697,23 @@ class AbstractInspectionDigueTool(QWidget):
         connect ElemtreeWidget click to featureSelected
         TODO : display or not the layer
         """
-        # print('onActivationRaw', param1, param2)
-        #print('onActivationRaw', self.dbasetablename, param1,param1 == self.qtreewidgetitem)
-
+        debug = False
+        # if debug: logging.getLogger("Lamia").debug('start')
 
         if isinstance(param1, QTreeWidgetItem) and (isinstance(param2, QTreeWidgetItem) or param2 is None):    # signal from treeWidget_utils
-            # print('onActivationRaw', param1.text(0), param2.text(0))
+            # if debug: logging.getLogger("Lamia").debug('step 1 %s %s, %s', param1.text(0),param1 == self.qtreewidgetitem, param2)
 
             if param2 == self.qtreewidgetitem:
-
                 self.onDesactivationRaw()
-                # inherited class call
                 self.postOnDesactivation()
 
             if param1 == self.qtreewidgetitem :
-                # print('onActivationRaw ',self.dbasetablename, self.windowdialog, self.parentWidget )
-                # disconnect other tools
-                if False:
-                    if True:
-                        for tablename in self.dbase.dbasetables.keys():
-                            if 'widget' in self.dbase.dbasetables[tablename].keys():
-                                wdg = self.dbase.dbasetables[tablename]['widget']
-                                try:
-                                    wdg.linkedtreewidget.currentItemChanged.disconnect(wdg.featureSelected)
-                                except:
-                                    pass
-                    if False:
-                        try:
-                            wdg.linkedtreewidget.currentItemChanged.disconnect()
-                        except:
-                            pass
-
+                if debug: logging.getLogger("Lamia").debug('step 2 %s %s', param1.text(0), param2)
                 # manage display in canvas
                 self._checkLayerVisibility()
 
                 # add child widget
-                if True:  # TODO
-                    self.windowdialog.tabWidget_childs.clear()
-                    #childwdg change
-                    if True:
-                        for childwdg in self.dbasechildwdg:
-                            if childwdg.NAME is not None:
-                                self.windowdialog.tabWidget_childs.addTab(childwdg, childwdg.NAME)
-                    else:
-                        for childwdgname in self.dbasechildwdg.keys():
-                            chldwdg = self.getDBaseChildWidget(childwdgname)
-                            print(chldwdg)
-                            if chldwdg and childwdg.NAME:
-                                self.windowdialog.tabWidget_childs.addTab(chldwdg,
-                                                                          chldwdg.NAME)
+                self.loadChildWidgets()
 
                 # manage widget display
                 if self.windowdialog is not None :
@@ -727,9 +728,8 @@ class AbstractInspectionDigueTool(QWidget):
                         if self.windowdialog.stackedWidget_main.widget(1).layout().count() > 0:
                             self.windowdialog.stackedWidget_main.widget(1).layout().itemAt(0).widget().setParent(None)
                         self.windowdialog.stackedWidget_main.widget(1).layout().addWidget(self)
-                        # self.windowdialog.MaintabWidget.setCurrentIndex(0)
 
-                # if self.dbase.dbasefile is not None:
+                # load feature in bottom qtreewidget
                 if (self.dbasetable is not None
                         or (self.dbasetablename is not None and os.path.isfile(self.dbasetablename))):
                     self.loadFeaturesinTreeWdg()
@@ -738,19 +738,28 @@ class AbstractInspectionDigueTool(QWidget):
                     else:
                         self.initFeatureProperties(None)
 
+                #change active layer in canvas
                 if qgis.utils.iface is not None and self.dbasetable is not None and self.dbasetable['showinqgis']:
                     qgis.utils.iface.setActiveLayer(self.dbasetable['layerqgis'])
 
-
                 # Specific method
                 self.postOnActivation()
-            """
-            else:
-                self.onDesactivationRaw()
-                # inherited class call
-                self.postOnDesactivation()
-            """
 
+    def loadChildWidgets(self):
+        if True:  # TODO
+            self.windowdialog.tabWidget_childs.clear()
+            # childwdg change
+            if True:
+                for childwdg in self.dbasechildwdg:
+                    if childwdg.NAME is not None:
+                        self.windowdialog.tabWidget_childs.addTab(childwdg, childwdg.NAME)
+            else:
+                for childwdgname in self.dbasechildwdg.keys():
+                    chldwdg = self.getDBaseChildWidget(childwdgname)
+                    print(chldwdg)
+                    if chldwdg and childwdg.NAME:
+                        self.windowdialog.tabWidget_childs.addTab(chldwdg,
+                                                                  chldwdg.NAME)
 
     def postOnActivation(self):
         """!
@@ -830,6 +839,8 @@ class AbstractInspectionDigueTool(QWidget):
         pass
 
         """
+        debug = False
+        if debug: logging.getLogger("Lamia").debug('Start %s',self.dbasetablename)
 
         self.loadFeaturesinTreeWdg()
 
@@ -853,22 +864,18 @@ class AbstractInspectionDigueTool(QWidget):
 
 
 
-    # def loadFeaturesinTreeWdg(self,notintreeview = False):
     def loadFeaturesinTreeWdg(self):
         """!
         load features in self.linkedtreewidget
         called whenever the list need to be reinitialized (ex : click in maintreewidget,...)
         """
+        debug = False
         self.disconnectIdsGui()
+
+        if debug: logging.getLogger("Lamia").debug('Start %s %s', self.dbasetablename,self.parentWidget)
 
         # clear treewidget
         self._clearLinkedTreeWidget()
-
-        if False:
-            print('loadFeaturesinTreeWdg',
-                  self.dbasetablename,
-                  # self.linkedtreewidget,
-                  self.parentWidget)
 
         # mise en forme du linkedtreewidget et definition du "parentitem" qui correspond au nom de la table
         parentitem = None
@@ -1056,38 +1063,37 @@ class AbstractInspectionDigueTool(QWidget):
         Action when a feature is selected somewhere
         @param item : if none, add new feature else show properties of id selected
         """
+        debug = False
         # print('featureSelected',self.dbasetablename, self.sender().objectName(),item)
 
-        # logging.getLogger("Lamia").debug('featureSelected ' + self.dbasetablename)
+        if debug: logging.getLogger("Lamia").debug('start %s %s %s', self.dbasetablename, type(item), str(itemisid))
 
+        # ************** init thing *********************************
+        # remove selection in canvas
         if self.parentWidget is None and self.dbasetable is not None:
             self.dbasetable['layer'].removeSelection()
-
-        # remove new entry if exists
+        # init thing
         self.disconnectIdsGui()
-
         self.beforesavingFeature = None
+        # reinit current feature
+        self.currentFeature = None
+        # remove new entry if exists
+        res = self.comboBox_featurelist.findText(self.newentrytext)
+        if res >= 0:
+            if self.linkedtreewidget is not None:
+                itemintree = self.linkedtreewidget.findItems(self.newentrytext, QtCore.Qt.MatchExactly | QtCore.Qt.MatchRecursive, 0)[0]
+                self.linkedtreewidget.invisibleRootItem().removeChild(itemintree)
+            self.comboBox_featurelist.removeItem(self.comboBox_featurelist.count()-1)
 
-        if True:
-            res = self.comboBox_featurelist.findText(self.newentrytext)
-            if res >= 0:
-                if self.linkedtreewidget is not None:
-                    itemintree = self.linkedtreewidget.findItems(self.newentrytext, QtCore.Qt.MatchExactly | QtCore.Qt.MatchRecursive, 0)[0]
-                    self.linkedtreewidget.invisibleRootItem().removeChild(itemintree)
-                self.comboBox_featurelist.removeItem(self.comboBox_featurelist.count()-1)
-
-        # print('featsel', item.text(0), self.dbasetablename)
-        # get id selected and link treewidget and combobox
-
+        # ************** get id selected and link treewidget and combobox *********************************
         if isinstance(item, QTreeWidgetItem) and item.parent() is not None:
             # print('featsel',item.parent().text(0),self.dbasetablename)
-            if item.parent().text(0) == self.dbasetablename:
-                # item.setExpanded(True)
+            if item.parent().text(0) == self.dbasetablename:    # treewdgitem has no parent
                 id = int(item.text(0))
                 if self.windowdialog is not None:
                     self.windowdialog.MaintabWidget.setCurrentIndex(0)
                 self.comboBox_featurelist.setCurrentIndex(self.comboBox_featurelist.findText(str(id)))
-            elif item.parent().text(0) in [wdg.dbasetablename for wdg in self.dbasechildwdg]:
+            elif item.parent().text(0) in [wdg.dbasetablename for wdg in self.dbasechildwdg]:   # treewdgitem has parent : child item
                 childindex = [wdg.dbasetablename for wdg in self.dbasechildwdg].index(item.parent().text(0))
                 if self.windowdialog is not None:
                     self.windowdialog.MaintabWidget.setCurrentIndex(1)
@@ -1095,7 +1101,6 @@ class AbstractInspectionDigueTool(QWidget):
                 id = item.text(0)
                 childcomboindex = self.dbasechildwdg[childindex].comboBox_featurelist.findText(str(id))
                 self.dbasechildwdg[childindex].comboBox_featurelist.setCurrentIndex(childcomboindex)
-                # self.dbasechildwdg[childindex].
                 self.connectIdsGui()
                 return
             elif item.text(0) in [wdg.dbasetablename for wdg in self.dbasechildwdg]:
@@ -1110,28 +1115,18 @@ class AbstractInspectionDigueTool(QWidget):
             else:
                 self.connectIdsGui()
                 return
-
         elif isinstance(item, QTreeWidgetItem) and item.parent() is None:
             try:
                 id = int(item.text(0))
             except ValueError:      # item text is not an id
                 self.connectIdsGui()
                 return
-            if False:
-                try:
-                    id = int(item.text(0))
-                except ValueError:      # case item text is real text
-                    self.connectIdsGui()
-                    return
-
-        elif isinstance(item, int) and not itemisid:
-            # print('feat',self.dbasetablename,item)
+        elif isinstance(item, int) and not itemisid:        #feature selected with combobox
             id = int(self.comboBox_featurelist.itemText(item))
             if self.linkedtreewidget is not None and isinstance(self.linkedtreewidget, QTreeWidget):
                 parentitem = self.linkedtreewidget.findItems(self.dbasetablename, QtCore.Qt.MatchExactly | QtCore.Qt.MatchRecursive, 0)[0]
                 indexchild = [parentitem.child(i).text(0) for i in range(parentitem.childCount())].index(str(id))
                 itemtodisplay = parentitem.child(indexchild)
-                # itemtodisplay = self.linkedtreewidget.findItems(str(id), QtCore.Qt.MatchExactly | QtCore.Qt.MatchRecursive, 0)[0]
                 self.linkedtreewidget.setCurrentItem(itemtodisplay)
         elif isinstance(itemisid, bool) and itemisid:
             id = item
@@ -1141,26 +1136,15 @@ class AbstractInspectionDigueTool(QWidget):
         else:
             id = None
 
-        # print('id',self.dbasetablename, id)
-
-        # reinit current feature
-        self.currentFeature = None
-
-        # print('featureSelected id',id)
-
-        # gui things when selected
-        if self.dbasetable is not None:
+        # **************** gui things when selected ***************************************************************
+        if self.dbasetable is not None:                             #widget has dbasetable linked
             if id is not None:        # item clicked in treewidget
-                # id = int(item.text(0))
-                # self.currentFeature = self.dbasetable['layer'].getFeatures(qgis.core.QgsFeatureRequest(id)).next()
                 self.currentFeature = self.getLayerFeatureById(self.dbasetablename, id)
-                # self.currentFeatureChanged.emit()
                 if self.parentWidget is None:
                     if int(str(self.dbase.qgisversion_int)[0:3]) < 218:
                         self.dbasetable['layerqgis'].setSelectedFeatures([self.currentFeature.id()])
                     else:
                         self.dbasetable['layerqgis']. selectByIds([self.currentFeature.id()])
-
                 if self.linkagespec is not None:
                     self.pushButton_linkage.setEnabled(True)
 
@@ -1169,16 +1153,13 @@ class AbstractInspectionDigueTool(QWidget):
                     itemtemp = QTreeWidgetItem([self.newentrytext])
                     self.linkedtreewidget.addTopLevelItems([itemtemp])
                     self.linkedtreewidget.setCurrentItem(itemtemp)
-
                 self.comboBox_featurelist.addItem(self.newentrytext)
                 self.comboBox_featurelist.setCurrentIndex(self.comboBox_featurelist.findText(self.newentrytext))
                 self.groupBox_properties.setEnabled(True)
                 self.groupBox_geom.setEnabled(True)
-
                 if self.linkagespec is not None:
                     self.pushButton_linkage.setEnabled(False)
-        elif self.dbasetablename is not None and os.path.isfile(self.dbasetablename):
-            print('feat file',id)
+        elif self.dbasetablename is not None and os.path.isfile(self.dbasetablename): #widget has file linked
             if id is not None:  # item clicked in treewidget
                 for i, wdg in enumerate(self.linkuserwdg[self.dbasetablename]):
                     self.currentFeature = [id] + self.dbasefiledata[id]
@@ -1188,19 +1169,17 @@ class AbstractInspectionDigueTool(QWidget):
                     itemtemp = QTreeWidgetItem([self.newentrytext])
                     self.linkedtreewidget.addTopLevelItems([itemtemp])
                     self.linkedtreewidget.setCurrentItem(itemtemp)
-
                 self.comboBox_featurelist.addItem(self.newentrytext)
                 self.comboBox_featurelist.setCurrentIndex(self.comboBox_featurelist.findText(self.newentrytext))
                 self.groupBox_properties.setEnabled(True)
                 self.groupBox_geom.setEnabled(True)
 
         # init raw table with attributes
-        # print('abstr post init')
         self.initFeatureProperties(self.currentFeature)
         self.postInitFeatureProperties(self.currentFeature)
 
+        # signals
         self.currentFeatureChanged.emit()
-
         self.connectIdsGui()
 
     def createParentFeature(self):
