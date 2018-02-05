@@ -50,10 +50,6 @@ class InspectiondigueWindowWidget(QMainWindow):
     the main window widget
     """
     closingPlugin = pyqtSignal()
-    # debug
-    #logger = logging.getLogger(__name__)
-    #logger.setLevel(logging.DEBUG)  # DEBUG INFO WARNING ERROR CRITICAL
-    # logging.basicConfig( level=logging.DEBUG)
 
 
     def __init__(self, canvas, dockwgt=None, parent=None):
@@ -521,10 +517,8 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.menuBases_recentes.triggered.connect(self.openFileFromMenu)
 
     def DBaseLoaded(self):
-        # logger.info('InspectiondigueWindowWidget - Dbase loaded')
         self.gpsutil.setCRS(self.dbase.qgiscrs)
         self.dbase.updateWorkingDate()
-        printtime = False
         timestart = time.clock()
 
         if qgis.utils.iface is not None:
@@ -537,7 +531,7 @@ class InspectiondigueWindowWidget(QMainWindow):
         else:
             progress = None
 
-        if debugtime: logger.debug(' progress bar done %s', str(round(time.clock() - timestart, 3)))
+        if debugtime: logger.debug(' progress bar done %.3f', time.clock() - timestart)
 
 
         if self.dbase.type.lower() == 'digue':
@@ -551,8 +545,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                                                                              linkedtreewidget = self.ElemtreeWidget,
                                                                              gpsutil = self.gpsutil)
 
-                if debugtime: logger.debug('InfraLineaireTool %s', str(round(time.clock() - timestart, 3)))
-                #if printtime : print('InfraLineaireTool',round(time.clock() - timestart, 3))
+                if debugtime: logger.debug('InfraLineaireTool %.3f', time.clock() - timestart)
                 i += 1
                 self.setLoadingProgressBar(progress, i)
 
@@ -562,7 +555,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                                                                                   dialog=self,
                                                                                   linkedtreewidget=self.ElemtreeWidget,
                                                                                     gpsutil = self.gpsutil)
-                if debugtime: logger.debug('TronconEmpriseTool %s', str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug('TronconEmpriseTool %.3f', time.clock() - timestart)
                 i += 1
                 self.setLoadingProgressBar(progress, i)
 
@@ -581,7 +574,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                     pass
                 for childwdg in parentwdg.dbasechildwdg:
                     parentwdg.currentFeatureChanged.connect(childwdg.loadChildFeatureinWidget)
-                if debugtime: logger.debug('EquipementTool %s', str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug('EquipementTool %.3f', time.clock() - timestart)
                 i += 1
                 self.setLoadingProgressBar(progress, i)
 
@@ -591,7 +584,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                                                                         dialog=self,
                                                                         linkedtreewidget=self.ElemtreeWidget,
                                                                         gpsutil=self.gpsutil)
-                if debugtime: logger.debug(' ProfilTool %s', str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug(' ProfilTool %.3f', time.clock() - timestart)
                 i += 1
                 self.setLoadingProgressBar(progress, i)
 
@@ -601,7 +594,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                                                                         dialog=self,
                                                                         linkedtreewidget=self.ElemtreeWidget,
                                                                         gpsutil=self.gpsutil)
-                if debugtime: logger.debug('NoeudTool %s', str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug('NoeudTool %.3f', time.clock() - timestart)
                 i += 1
                 self.setLoadingProgressBar(progress, i)
 
@@ -613,7 +606,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                                                                         dialog=self,
                                                                         linkedtreewidget= self.ElemtreeWidget,
                                                                         gpsutil=self.gpsutil)]
-                if debugtime: logger.debug('PhotosTool %s', str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug('PhotosTool %.3f', time.clock() - timestart)
                 i += 1
                 self.setLoadingProgressBar(progress, i)
             if True:
@@ -622,7 +615,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                                                                               dialog=self,
                                                                               linkedtreewidget=self.ElemtreeWidget,
                                                                               gpsutil=self.gpsutil) )
-                if debugtime: logger.debug('CroquisTool %s', str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug('CroquisTool %.3f', time.clock() - timestart)
                 i += 1
                 self.setLoadingProgressBar(progress, i)
             if True:
@@ -631,7 +624,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                                                                           dialog=self,
                                                                           linkedtreewidget=self.ElemtreeWidget,
                                                                           gpsutil=self.gpsutil)
-                if debugtime: logger.debug('RapportTool %s',  str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug('RapportTool %.3f', time.clock() - timestart)
                 i += 1
                 self.setLoadingProgressBar(progress, i)
             if True:
@@ -640,7 +633,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                                                                          dialog=self,
                                                                          linkedtreewidget=self.ElemtreeWidget,
                                                                          gpsutil=self.gpsutil)
-                if debugtime: logger.debug('RasterTool %s', str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug('RasterTool %.3f', time.clock() - timestart)
                 i += 1
                 self.setLoadingProgressBar(progress, i)
             if True:
@@ -649,7 +642,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                                                                                   dialog=self,
                                                                                   linkedtreewidget=self.ElemtreeWidget,
                                                                                   gpsutil=self.gpsutil)
-                if debugtime: logger.debug('TopographieTool %s',  str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug('TopographieTool %.3f', time.clock() - timestart)
                 i += 1
                 self.setLoadingProgressBar(progress, i)
             if True:
@@ -658,7 +651,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                                                                               dialog=self,
                                                                               linkedtreewidget=self.ElemtreeWidget,
                                                                               gpsutil=self.gpsutil)
-                if debugtime: logger.debug('GraphiqueTool %s',  str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug('GraphiqueTool %.3f', time.clock() - timestart)
                 i += 1
                 self.setLoadingProgressBar(progress, i)
             if True:
@@ -667,7 +660,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                                                                               dialog=self,
                                                                               linkedtreewidget=self.ElemtreeWidget,
                                                                               gpsutil=self.gpsutil)
-                if debugtime: logger.debug('PointtopoTool %s', str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug('PointtopoTool %.3f', time.clock() - timestart)
                 i += 1
                 self.setLoadingProgressBar(progress, i)
 
@@ -679,7 +672,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                                                                             dialog=self,
                                                                             linkedtreewidget=self.ElemtreeWidget,
                                                                             gpsutil=self.gpsutil)
-                if debugtime: logger.debug('DesordreTool %s',  str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug('DesordreTool %.3f', time.clock() - timestart)
                 i += 1
                 self.setLoadingProgressBar(progress, i)
 
@@ -689,7 +682,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                                                                                   dialog=self,
                                                                                   linkedtreewidget=self.ElemtreeWidget,
                                                                                   gpsutil=self.gpsutil)
-                if debugtime: logger.debug('ObservationTool %s',  str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug('ObservationTool %.3f', time.clock() - timestart)
                 i += 1
                 self.setLoadingProgressBar(progress, i)
 
@@ -701,7 +694,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                                                                           dialog=self,
                                                                           linkedtreewidget=self.ElemtreeWidget,
                                                                           gpsutil=self.gpsutil)
-                if debugtime: logger.debug('ZonegeoTool %s',str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug('ZonegeoTool %.3f', time.clock() - timestart)
                 i += 1
                 self.setLoadingProgressBar(progress, i)
             if True:
@@ -710,7 +703,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                                                                         dialog=self,
                                                                         linkedtreewidget=self.ElemtreeWidget,
                                                                         gpsutil=self.gpsutil)
-                if debugtime: logger.debug('MarcheTool %s', str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug('MarcheTool %.3f', time.clock() - timestart)
                 i += 1
                 self.setLoadingProgressBar(progress, i)
             if True:
@@ -719,7 +712,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                                                                                   dialog=self,
                                                                                   linkedtreewidget=self.ElemtreeWidget,
                                                                                   gpsutil=self.gpsutil)
-                if debugtime: logger.debug('IntervenantTool %s',  str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug('IntervenantTool %.3f', time.clock() - timestart)
                 i += 1
                 self.setLoadingProgressBar(progress, i)
 
@@ -748,7 +741,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                                                                dialog=self,
                                                                linkedtreewidget=self.ElemtreeWidget)
                 self.tools.append(self.synthesezonegeotool)
-                if debugtime: logger.debug('SyntheseZonegeoTool %s',   str(round(time.clock() - timestart, 3)))
+                if debugtime: logger.debug('SyntheseZonegeoTool %.3f', time.clock() - timestart)
                 i += 1
                 self.setLoadingProgressBar(progress, i)
 
@@ -759,7 +752,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                                                                    dialog=self,
                                                                    linkedtreewidget=self.ElemtreeWidget)
                     self.tools.append(self.pathtool)
-                    if debugtime: logger.debug('PathTool %s',  str(round(time.clock() - timestart, 3)))
+                    if debugtime: logger.debug('PathTool %.3f', time.clock() - timestart)
 
                     if not os.path.isfile(self.pathtool.dbasetablename):
                         filepath = open(self.pathtool.dbasetablename,'w')
@@ -771,9 +764,9 @@ class InspectiondigueWindowWidget(QMainWindow):
 
             if progress is not None: qgis.utils.iface.messageBar().clearWidgets()
 
-        self.applyVisualMode()
+        # self.applyVisualMode()
 
-        if debugtime: logger.debug('applyVisualMode %s',str(round(time.clock() - timestart, 3)))
+        if debugtime: logger.debug('applyVisualMode %.3f', time.clock() - timestart)
 
     #**********************************************************************************************
     #********************************    Tree widget    ********************************************
@@ -1421,7 +1414,7 @@ class InspectiondigueWindowWidget(QMainWindow):
         if progressbar is not None:
             progressbar.setValue(val)
         else:
-            logger.info('Chargement %s', str(val))
+            logger.info('Chargement %d', val )
         QApplication.processEvents()
 
 

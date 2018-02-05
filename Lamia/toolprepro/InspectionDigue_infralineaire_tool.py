@@ -59,56 +59,82 @@ class InfraLineaireTool(AbstractInspectionDigueTool):
         pass
 
         # ****************************************************************************************
-        # userui
-        self.userwdg = UserUI()
+        #   userui Field
+        self.userwdgfield = UserUIField()
 
-        self.linkuserwdg = {'Infralineaire': {'linkfield': 'id_infralineaire',
-                                              'widgets': {'description1':self.userwdg.comboBox_type,
-                                                          'description2': self.userwdg.comboBox_contitution}},
+        self.linkuserwdgfield = {'Infralineaire': {'linkfield': 'id_infralineaire',
+                                              'widgets': {'description1':self.userwdgfield.comboBox_type,
+                                                          'description2': self.userwdgfield.comboBox_contitution}},
                             'Objet': {'linkfield': 'id_objet',
-                                      'widgets': {'libelle': self.userwdg.lineEdit_nom,
-                                                   'commentaire': self.userwdg.textBrowser_comm}},
+                                      'widgets': {'libelle': self.userwdgfield.lineEdit_nom,
+                                                   'commentaire': self.userwdgfield.textBrowser_comm}},
+                            'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
+                                                  'widgets': {}}}
+
+        # ****************************************************************************************
+        # userui Desktop
+        self.userwdgdesktop = UserUI()
+
+        self.linkuserwdgdesktop = {'Infralineaire': {'linkfield': 'id_infralineaire',
+                                              'widgets': {'description1':self.userwdgdesktop.comboBox_type,
+                                                          'description2': self.userwdgdesktop.comboBox_contitution}},
+                            'Objet': {'linkfield': 'id_objet',
+                                      'widgets': {'libelle': self.userwdgdesktop.lineEdit_nom,
+                                                   'commentaire': self.userwdgdesktop.textBrowser_comm}},
                             'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
                                                   'widgets': {}}}
 
 
-        self.userwdg.pushButton_defineinter.clicked.connect(self.manageLinkage)
+        self.userwdgdesktop.pushButton_defineinter.clicked.connect(self.manageLinkage)
 
         if True:
             self.photowdg = Label()
-            self.userwdg.tabWidget.widget(0).layout().addWidget(self.photowdg)
+            self.userwdgdesktop.tabWidget.widget(0).layout().addWidget(self.photowdg)
         if True:
             self.croquisprofilwdg = Label()
-            self.userwdg.stackedWidget_profiltravers.widget(0).layout().addWidget(self.croquisprofilwdg)
+            self.userwdgdesktop.stackedWidget_profiltravers.widget(0).layout().addWidget(self.croquisprofilwdg)
 
             self.graphprofil = GraphiqueTool(dbase=self.dbase, parentwidget=self)
-            self.userwdg.stackedWidget_profiltravers.widget(1).layout().addWidget(self.graphprofil.pyqtgraphwdg)
+            self.userwdgdesktop.stackedWidget_profiltravers.widget(1).layout().addWidget(self.graphprofil.pyqtgraphwdg)
             #self.userwdg.frame_graph.layout().addWidget(self.pyqtgraphwdg)
 
 
 
         if True:
             self.propertieswdgPROFILLONG = PathTool(dbase=self.dbase, parentwidget=self)
-            self.userwdg.tabWidget.widget(2).layout().addWidget(self.propertieswdgPROFILLONG.plotWdg)
+            self.userwdgdesktop.tabWidget.widget(2).layout().addWidget(self.propertieswdgPROFILLONG.plotWdg)
         else:
             self.propertieswdgPROFILLONG = None
 
+
+
+
+
+
+
+
         # ****************************************************************************************
         # child widgets
-        self.dbasechildwdg = []
+        self.dbasechildwdgfield = []
+        self.dbasechildwdgdesktop = []
         if True:
             self.dbasechildwdg=[]
             self.propertieswdgPHOTOGRAPHIE = PhotosTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
-            self.dbasechildwdg.append(self.propertieswdgPHOTOGRAPHIE)
+            self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
+            self.dbasechildwdgdesktop.append(self.propertieswdgPHOTOGRAPHIE)
+
             self.propertieswdgRAPPORT = RapportTool(dbase=self.dbase, parentwidget=self)
-            self.dbasechildwdg.append(self.propertieswdgRAPPORT)
+            self.dbasechildwdgdesktop.append(self.propertieswdgRAPPORT)
+
             self.propertieswdgTRONCONEMPRISE = TronconEmpriseTool(dbase=self.dbase, parentwidget=self)
-            self.dbasechildwdg.append(self.propertieswdgTRONCONEMPRISE)
+            self.dbasechildwdgdesktop.append(self.propertieswdgTRONCONEMPRISE)
+
             self.propertieswdgCROQUIS = CroquisTool(dbase=self.dbase, parentwidget=self)
-            self.dbasechildwdg.append(self.propertieswdgCROQUIS)
+            self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+            self.dbasechildwdgdesktop.append(self.propertieswdgCROQUIS)
 
             self.propertieswdgPROFIL = ProfilTool(dbase=self.dbase, parentwidget=self)
-            self.dbasechildwdg.append(self.propertieswdgPROFIL)
+            self.dbasechildwdgdesktop.append(self.propertieswdgPROFIL)
 
         if False:
             self.dbasechildwdg = [self.dbase.dbasetables['Photo']['widget'],
@@ -135,33 +161,35 @@ class InfraLineaireTool(AbstractInspectionDigueTool):
 
 
     def postInitFeatureProperties(self, feat):
+        debug = False
+        if debug: logging.getLogger("Lamia").debug('Start ')
+
         if self.currentFeature is None:
             pass
         else:
-            #intervenants
-            if True:
+            if self.userwdg == self.userwdgdesktop:
+                # intervenants
                 sql = "SELECT Tcobjetintervenant.fonction, Intervenant.nom,Intervenant.societe  FROM Tcobjetintervenant "
                 sql += " INNER JOIN Intervenant ON Tcobjetintervenant.id_tcintervenant = Intervenant.id_intervenant "
                 sql += "WHERE id_tcobjet = " + str(self.currentFeature['id_objet'])
-            query = self.dbase.query(sql)
-            result = "\n".join([str(row) for row in query])
-            self.userwdg.textBrowser_intervenants.clear()
-            self.userwdg.textBrowser_intervenants.append(result)
-
-            #photo
-            lkphoto = self.currentFeature['lk_photo']
-            if not self.isAttributeNull(lkphoto):
-                sql = "SELECT Ressource.file FROM Photo INNER JOIN Ressource ON Photo.id_ressource = Ressource.id_ressource WHERE Photo.id_objet = "
-                sql += str(self.currentFeature['lk_photo'])
                 query = self.dbase.query(sql)
-                result = [row for row in query]
-                filephoto = result[0][0]
-                completefilephoto = self.completePathOfFile(filephoto)
-                self.showImageinLabelWidget(self.photowdg, completefilephoto)
-            else:
-                self.photowdg.clear()
+                result = "\n".join([str(row) for row in query])
+                self.userwdgdesktop.textBrowser_intervenants.clear()
+                self.userwdgdesktop.textBrowser_intervenants.append(result)
 
-            if True:
+                #photo
+                lkphoto = self.currentFeature['lk_photo']
+                if not self.isAttributeNull(lkphoto):
+                    sql = "SELECT Ressource.file FROM Photo INNER JOIN Ressource ON Photo.id_ressource = Ressource.id_ressource WHERE Photo.id_objet = "
+                    sql += str(self.currentFeature['lk_photo'])
+                    query = self.dbase.query(sql)
+                    result = [row for row in query]
+                    filephoto = result[0][0]
+                    completefilephoto = self.completePathOfFile(filephoto)
+                    self.showImageinLabelWidget(self.photowdg, completefilephoto)
+                else:
+                    self.photowdg.clear()
+
                 #profil travers
                 lkressourceprofile = self.currentFeature['lk_profil']
                 if not self.isAttributeNull(lkressourceprofile):
@@ -170,7 +198,7 @@ class InfraLineaireTool(AbstractInspectionDigueTool):
                     query = self.dbase.query(sql)
                     result = [row for row in query]
                     if len(result)>0:
-                        self.userwdg.stackedWidget_profiltravers.setCurrentIndex(0)
+                        self.userwdgdesktop.stackedWidget_profiltravers.setCurrentIndex(0)
                         filephoto = result[0][0]
                         completefilephoto = self.completePathOfFile(filephoto)
                         self.showImageinLabelWidget(self.croquisprofilwdg, completefilephoto)
@@ -181,11 +209,11 @@ class InfraLineaireTool(AbstractInspectionDigueTool):
                     query = self.dbase.query(sql)
                     result = [row for row in query]
                     if len(result) > 0:
-                        self.userwdg.stackedWidget_profiltravers.setCurrentIndex(1)
+                        self.userwdgdesktop.stackedWidget_profiltravers.setCurrentIndex(1)
                         idgraphique = result[0][0]
                         self.graphprofil.featureSelected(idgraphique,True)
                 else:
-                    self.userwdg.stackedWidget_profiltravers.setCurrentIndex(0)
+                    self.userwdgdesktop.stackedWidget_profiltravers.setCurrentIndex(0)
                     self.croquisprofilwdg.clear()
 
 
@@ -202,16 +230,16 @@ class InfraLineaireTool(AbstractInspectionDigueTool):
                     self.photowdg.clear()
 
 
-            #profil long
-            if self.propertieswdgPROFILLONG is not None:
-                self.propertieswdgPROFILLONG.activateMouseTracking(0)
-                self.propertieswdgPROFILLONG.rubberbandtrack.hide()
-                self.propertieswdgPROFILLONG.rubberBand.reset(self.dbase.dbasetables['Infralineaire']['layer'].geometryType())
-                currentgeom = self.currentFeature.geometry().asPolyline()
-                self.propertieswdgPROFILLONG.computePath(list(currentgeom[0]), list(currentgeom[-1]))
-                self.propertieswdgPROFILLONG.activateMouseTracking(2)
-                self.propertieswdgPROFILLONG.rubberbandtrack.hide()
-                self.propertieswdgPROFILLONG.rubberBand.reset(self.dbase.dbasetables['Infralineaire']['layer'].geometryType())
+                #profil long
+                if self.propertieswdgPROFILLONG is not None:
+                    self.propertieswdgPROFILLONG.activateMouseTracking(0)
+                    self.propertieswdgPROFILLONG.rubberbandtrack.hide()
+                    self.propertieswdgPROFILLONG.rubberBand.reset(self.dbase.dbasetables['Infralineaire']['layer'].geometryType())
+                    currentgeom = self.currentFeature.geometry().asPolyline()
+                    self.propertieswdgPROFILLONG.computePath(list(currentgeom[0]), list(currentgeom[-1]))
+                    self.propertieswdgPROFILLONG.activateMouseTracking(2)
+                    self.propertieswdgPROFILLONG.rubberbandtrack.hide()
+                    self.propertieswdgPROFILLONG.rubberBand.reset(self.dbase.dbasetables['Infralineaire']['layer'].geometryType())
 
 
 
@@ -270,7 +298,7 @@ class InfraLineaireTool(AbstractInspectionDigueTool):
     def showImageinLabelWidget(self,wdg,savedfile):
         file = self.completePathOfFile(savedfile)
         if os.path.isfile(file):
-            wdg.clear()
+            #wdg.clear()
             wdg.setPixmap(file)
         else:
             wdg.clear()
@@ -290,6 +318,12 @@ class UserUI(QWidget):
     def __init__(self, parent=None):
         super(UserUI, self).__init__(parent=parent)
         uipath = os.path.join(os.path.dirname(__file__), 'InfralineaireToolUser.ui')
+        uic.loadUi(uipath, self)
+
+class UserUIField(QWidget):
+    def __init__(self, parent=None):
+        super(UserUIField, self).__init__(parent=parent)
+        uipath = os.path.join(os.path.dirname(__file__), 'InfralineaireFieldToolUser.ui')
         uic.loadUi(uipath, self)
 
 class Label(QLabel):
