@@ -157,6 +157,10 @@ class exportShapefileWorker(AbstractWorker):
                             niv_pro_am = round(datas[graphname]['y'][0],2)
                             niv_pro_av = round(datas[graphname]['y'][-1],2)
 
+                        if 'SUR' in graphname:
+                            niv_sur_am = round(datas[graphname]['y'][0],2)
+                            niv_sur_av = round(datas[graphname]['y'][-1],2)
+
                     result[i] = list(result[i])[:-1] + [niv_pro_am, niv_pro_av, niv_sur_am, niv_sur_av] + list(result[i])[-1:]
 
                 profiletraverstool.rubberBand.reset(1)
@@ -173,7 +177,7 @@ class exportShapefileWorker(AbstractWorker):
                     idobjet = row[17]
                     sql = "SELECT Tcobjetintervenant.fonction, Intervenant.nom,Intervenant.societe  FROM Tcobjetintervenant "
                     sql += " INNER JOIN Intervenant ON Tcobjetintervenant.id_tcintervenant = Intervenant.id_intervenant "
-                    sql += "WHERE id_tcoobjet = " + str(idobjet)
+                    sql += "WHERE id_tcobjet = " + str(idobjet)
                     query = self.dbase.query(sql)
                     resultges = [row1 for row1 in query]
                     for interv in resultges:

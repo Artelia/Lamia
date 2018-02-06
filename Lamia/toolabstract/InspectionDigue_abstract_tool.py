@@ -195,11 +195,12 @@ class AbstractInspectionDigueTool(QWidget):
                 self.windowdialog.MaintreeWidget.currentItemChanged.connect(self.onActivationRaw)
 
             self.initWidgets()
+        """
         #childwdg change
         if True:
             for childwdg in self.dbasechildwdg:
                 self.currentFeatureChanged.connect(childwdg.loadChildFeatureinWidget)
-
+        """
 
         if debugtime: logging.getLogger('Lamia').debug('end init %.3f', time.clock() - timestart)
 
@@ -226,52 +227,58 @@ class AbstractInspectionDigueTool(QWidget):
         pass
 
     def changePropertiesWidget(self):
+        """
+        Function called when visual mode is changed
+        """
 
+        # clear groupBox_properties
         if self.groupBox_properties.layout().count() > 0:
             self.groupBox_properties.layout().itemAt(0).widget().setParent(None)
-        if False:
-            if self.dbase.visualmode in [0, 1, 4]:
-                if self.userwdg is not None:
-                    self.groupBox_properties.layout().addWidget(self.userwdg)
-        else:
-            if self.dbase.visualmode in [0, 1, 4]:
-                if self.dbase.visualmode == 0 :
-                    if self.userwdgfield is not None :
-                        self.userwdg = self.userwdgfield
-                        self.linkuserwdg = self.linkuserwdgfield
-                    if self.dbasechildwdgfield is not None:
-                        self.dbasechildwdg = self.dbasechildwdgfield
-                elif self.dbase.visualmode in [1,4] :
-                    if self.userwdgdesktop is not None :
-                        self.userwdg = self.userwdgdesktop
-                        self.linkuserwdg = self.linkuserwdgdesktop
-                    if self.dbasechildwdgdesktop is not None:
-                        self.dbasechildwdg = self.dbasechildwdgdesktop
 
-                if self.userwdg is not None:
-                    self.groupBox_properties.layout().addWidget(self.userwdg)
+        # disconnect currentFeatureChanged signal to dbasechildwdg
+        for childwdg in self.dbasechildwdg:
+            try:
+                self.currentFeatureChanged.disconnect(childwdg.loadChildFeatureinWidget)
+            except:
+                pass
 
+        # load propoer widget
+        if self.dbase.visualmode in [0, 1, 4]:
+            # define self.userwdg, self.linkuserwdg and self.dbasechildwdg
+            if self.dbase.visualmode == 0:
+                if self.userwdgfield is not None:
+                    self.userwdg = self.userwdgfield
+                    self.linkuserwdg = self.linkuserwdgfield
+                if self.dbasechildwdgfield is not None:
+                    self.dbasechildwdg = self.dbasechildwdgfield
+            elif self.dbase.visualmode in [1,4]:
+                if self.userwdgdesktop is not None:
+                    self.userwdg = self.userwdgdesktop
+                    self.linkuserwdg = self.linkuserwdgdesktop
+                if self.dbasechildwdgdesktop is not None:
+                    self.dbasechildwdg = self.dbasechildwdgdesktop
+            # load userwdg
+            if self.userwdg is not None:
+                self.groupBox_properties.layout().addWidget(self.userwdg)
 
-            elif self.dbase.visualmode == 2:
-                self.groupBox_properties.layout().addWidget(self.tableWidget)
+        elif self.dbase.visualmode == 2:
+            self.groupBox_properties.layout().addWidget(self.tableWidget)
 
-        #dbasechildwdg change
-        if True:
-            for childwdg in self.dbasechildwdg:
-                childwdg.changePropertiesWidget()
-        else:
-            for childwdgname in self.dbasechildwdg.keys():
-                chldwdg = self.getDBaseChildWidget(childwdgname)
-                if chldwdg:
-                    chldwdg.changePropertiesWidget()
+        # reconnect currentFeatureChanged signal to dbasechildwdg
+        for childwdg in self.dbasechildwdg:
+            self.currentFeatureChanged.connect(childwdg.loadChildFeatureinWidget)
 
+        # dbasechildwdg change
+        for childwdg in self.dbasechildwdg:
+            childwdg.changePropertiesWidget()
 
+        # load the widgets in main tree
         if self.dbase.visualmode in self.visualmode:
             self.loadWidgetinMainTree()
         else:
             self.unloadWidgetinMainTree()
 
-        #reload state
+        # reload state (feature selected before changes)
         if self.linkedtreewidget is not None:
             tempitem = self.linkedtreewidget.currentItem()
             if tempitem is not None and self.windowdialog.MaintreeWidget.currentItem() == self.qtreewidgetitem:
@@ -279,17 +286,15 @@ class AbstractInspectionDigueTool(QWidget):
                 self.onActivationRaw(self.windowdialog.MaintreeWidget.currentItem())
                 self.comboBox_featurelist.setCurrentIndex(self.comboBox_featurelist.findText(str(tempitemid)))
 
-
-
     def loadWidgetinMainTree(self):
-        """!
+        """
         Called on the widget creation in windowsdialog
         DO:
         load the widget in the main stacked widget
         call onActivationRaw when qtreewidgetitem is clicked in MaintreeWidget
         """
-        # add qtreewidget item in MaintreeWidget
 
+        # add qtreewidget item in MaintreeWidget
         if self.windowdialog is not None and self.parentWidget is None:
             arb = [self.CAT, self.NAME]
             if self.qtreewidgetitem is None:
@@ -375,26 +380,34 @@ class AbstractInspectionDigueTool(QWidget):
                         wdg.addItems([str(description[0]) for description in dbasetable['fields'][field]['Cst']])
                         self.tableWidget.setCellWidget(rowPosition, 1, wdg)
 
-                        if (tablename in self.linkuserwdg.keys()
-                                and field in self.linkuserwdg[tablename]['widgets'].keys()
-                                and isinstance(self.linkuserwdg[tablename]['widgets'][field],QComboBox)):
-                            # if self.linkuserwdg[] is not None and field in self.linkuserwdg.keys():
-                            templist = [str(description[0]) for description in dbasetable['fields'][field]['Cst']]
-                            self.linkuserwdg[tablename]['widgets'][field].addItems(templist)
+                        linkuserwdglist = []
+                        if self.linkuserwdgfield is not None and self.linkuserwdgdesktop is not None:
+                            linkuserwdglist.append(self.linkuserwdgfield)
+                            linkuserwdglist.append(self.linkuserwdgdesktop)
+                        else :
+                            linkuserwdglist.append(self.linkuserwdg)
 
-                        if 'ParFldCst' in dbasetable['fields'][field].keys():
-                            # listfieldname = [fieldname for fieldname in dbasetable['fields'].keys()]
-                            listfieldname = [self.tableWidget.item(row, 0).text() for row in range(self.tableWidget.rowCount())]
-                            indexparentfield = listfieldname.index(tablename + '.' + dbasetable['fields'][field]['ParFldCst'])
-                            nameparenttalbe, nameparentfield = listfieldname[indexparentfield].split('.')
-                            # print('indexparentfield', indexparentfield)
-                            comboparent = self.tableWidget.cellWidget(indexparentfield, 1)
-                            comboparent.currentIndexChanged.connect(self.comboparentValueChanged)
-                            # userwidget
-                            if (tablename in self.linkuserwdg.keys() and 'widgets' in self.linkuserwdg[tablename].keys()
-                                    and nameparentfield in self.linkuserwdg[tablename]['widgets'].keys()
-                                    and isinstance(self.linkuserwdg[tablename]['widgets'][nameparentfield], QComboBox)):
-                                self.linkuserwdg[tablename]['widgets'][nameparentfield].currentIndexChanged.connect(self.comboparentValueChanged)
+                        for linkuserwdg in linkuserwdglist:
+                            if (tablename in linkuserwdg.keys()
+                                    and field in linkuserwdg[tablename]['widgets'].keys()
+                                    and isinstance(linkuserwdg[tablename]['widgets'][field],QComboBox)):
+                                # if linkuserwdg[] is not None and field in linkuserwdg.keys():
+                                templist = [str(description[0]) for description in dbasetable['fields'][field]['Cst']]
+                                linkuserwdg[tablename]['widgets'][field].addItems(templist)
+
+                            if 'ParFldCst' in dbasetable['fields'][field].keys():
+                                # listfieldname = [fieldname for fieldname in dbasetable['fields'].keys()]
+                                listfieldname = [self.tableWidget.item(row, 0).text() for row in range(self.tableWidget.rowCount())]
+                                indexparentfield = listfieldname.index(tablename + '.' + dbasetable['fields'][field]['ParFldCst'])
+                                nameparenttalbe, nameparentfield = listfieldname[indexparentfield].split('.')
+                                # print('indexparentfield', indexparentfield)
+                                comboparent = self.tableWidget.cellWidget(indexparentfield, 1)
+                                comboparent.currentIndexChanged.connect(self.comboparentValueChanged)
+                                # userwidget
+                                if (tablename in linkuserwdg.keys() and 'widgets' in linkuserwdg[tablename].keys()
+                                        and nameparentfield in linkuserwdg[tablename]['widgets'].keys()
+                                        and isinstance(linkuserwdg[tablename]['widgets'][nameparentfield], QComboBox)):
+                                    linkuserwdg[tablename]['widgets'][nameparentfield].currentIndexChanged.connect(self.comboparentValueChanged)
 
                     elif 'INTEGER' in dbasetable['fields'][field]['SLtype']:
                         if field[0:2].lower() == 'id':
@@ -971,8 +984,11 @@ class AbstractInspectionDigueTool(QWidget):
             if False:
                 for i in range(self.linkedtreewidget.invisibleRootItem().childCount()):
                     self.linkedtreewidget.invisibleRootItem().removeChild(self.linkedtreewidget.invisibleRootItem().child(0))
+            if False:
+                for topitemindex in range(self.linkedtreewidget.topLevelItemCount() ):
+                    self.linkedtreewidget.takeTopLevelItem(topitemindex)
             if True:
-                self.linkedtreewidget.takeTopLevelItem(0)
+                self.linkedtreewidget.clear()
 
         self.comboBox_featurelist.clear()
 
@@ -1219,8 +1235,10 @@ class AbstractInspectionDigueTool(QWidget):
                                 workingfeat = parentfeat
                             try :
                                 valuetoset = workingfeat[field]
-                            except :
+                            except Exception as e :
+                                print('initFeatureProperties - field ' + str(field) + ' not found')
                                 valuetoset = None
+
                         else:
                             valuetoset = value
 
@@ -2191,6 +2209,11 @@ class AbstractInspectionDigueTool(QWidget):
 
             if not self.currentFeature.id() in self.dbasetable['layer'].selectedFeaturesIds():
                 type = self.dbasetable['layer'].geometryType()
+                geom = qgis.core.QgsGeometry(self.currentFeature.geometry())
+                if type == 1 and len(geom.asPolyline()) == 2 and geom.asPolyline()[0] == geom.asPolyline()[1] :
+                    #case when point stored in polyline
+                    type = 0
+                    geom = qgis.core.QgsGeometry.fromPoint(geom.asPolyline()[0])
                 if self.rubberBandBlink is not None:
                     self.rubberBandBlink.reset(type)
                 else:
@@ -2198,7 +2221,7 @@ class AbstractInspectionDigueTool(QWidget):
                 self.rubberBandBlink.setWidth(5)
                 self.rubberBandBlink.setColor(QtGui.QColor("magenta"))
                 # xform = qgis.core.QgsCoordinateTransform(self.dbase.qgiscrs,self.canvas.mapSettings().destinationCrs())
-                geom = qgis.core.QgsGeometry(self.currentFeature.geometry())
+                # geom = qgis.core.QgsGeometry(self.currentFeature.geometry())
                 # print(geom.exportToWkt())
                 # success = geom.transform(xform)
                 success = geom.transform(self.dbase.xform)

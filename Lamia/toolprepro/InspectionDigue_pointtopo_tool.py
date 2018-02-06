@@ -74,8 +74,10 @@ class PointtopoTool(AbstractInspectionDigueTool):
                                                         'raf09': self.userwdg.doubleSpinBox_raf09,
                                                         'hauteurperche': self.userwdg.doubleSpinBox_hautperche}}
                                                       }
-
-
+        if self.parentWidget is not None and self.parentWidget.dbasetablename == 'Topographie':
+            self.pushButton_addFeature.setEnabled(True)
+        else:
+            self.pushButton_addFeature.setEnabled(False)
         self.userwdg.pushButton_catchvalues.clicked.connect(self.getGPSValues)
 
         self.gpswidget = {'x' : {'widget' : self.userwdg.label_X,

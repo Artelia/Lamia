@@ -206,6 +206,7 @@ class PathTool(AbstractInspectionDigueTool):
     def getGraphData(self):
         graphtype = self.userwdg.comboBox_chart_theme.currentText()
         datas={}    #data[i] = ['graph type', x, y]
+
         if graphtype == 'Profil':
             # datas['test'] = {'x' : [0, self.geomfinal.length()], 'y' : [0,0]}
             # datas['crete'] = {'x':[], 'y':[] }
@@ -213,65 +214,65 @@ class PathTool(AbstractInspectionDigueTool):
             # datas['niveauprotection'] = {'x':[], 'y':[] }
 
             #process topographie
+            if self.geomfinal is not None:
+                geomfinalbuffer = self.geomfinal.buffer(200,12).exportToWkt()
 
-            geomfinalbuffer = self.geomfinal.buffer(200,12).exportToWkt()
+                sql = "SELECT typepointtopo, zmngf,id_topographie, ST_AsText(geom)  FROM Pointtopo "
+                sql += "WHERE ST_WITHIN(geom, ST_GeomFromText('" + geomfinalbuffer + "',"+str(self.dbase.crsnumber) + "));"
+                query = self.dbase.query(sql)
+                result = [row[0:4] for row in query]
+                #print(result)
 
-            sql = "SELECT typepointtopo, zmngf,id_topographie, ST_AsText(geom)  FROM Pointtopo "
-            sql += "WHERE ST_WITHIN(geom, ST_GeomFromText('" + geomfinalbuffer + "',"+str(self.dbase.crsnumber) + "));"
-            query = self.dbase.query(sql)
-            result = [row[0:4] for row in query]
-            #print(result)
+                for pointtopo in result:
+                    geompointtopo = qgis.core.QgsGeometry.fromWkt(pointtopo[3])
+                    geompointtopopoint = geompointtopo.asPoint()
+                    nearestinfralinid, dist = self.dbase.dbasetables['Infralineaire']['widget'].getNearestId(geompointtopopoint,
+                                                                                                       comefromcanvas=False)
+                    # print(geompointtopo, nearestinfralinid, dist)
+                    if nearestinfralinid in self.geomfinalids:
+                        # print('in nearest')
+                        # print('pointtopo',pointtopo)
+                        graphname = str(pointtopo[2]) + '-' + str(pointtopo[0])
+                        if not graphname in datas.keys():
+                            # datas[graphname]={'x':[], 'y':[] }
+                            datas[graphname] ={'x':[], 'y':[], 'xy':[] }
 
-            for pointtopo in result:
-                geompointtopo = qgis.core.QgsGeometry.fromWkt(pointtopo[3])
-                geompointtopopoint = geompointtopo.asPoint()
-                nearestinfralinid, dist = self.dbase.dbasetables['Infralineaire']['widget'].getNearestId(geompointtopopoint,
-                                                                                                   comefromcanvas=False)
-                # print(geompointtopo, nearestinfralinid, dist)
-                if nearestinfralinid in self.geomfinalids:
-                    # print('in nearest')
-                    # print('pointtopo',pointtopo)
-                    graphname = str(pointtopo[2]) + '-' + str(pointtopo[0])
-                    if not graphname in datas.keys():
-                        # datas[graphname]={'x':[], 'y':[] }
-                        datas[graphname] ={'x':[], 'y':[], 'xy':[] }
+                        distline = self.geomfinal.lineLocatePoint(geompointtopo)
 
-                    distline = self.geomfinal.lineLocatePoint(geompointtopo)
+                        datas[graphname]['xy'].append([distline,pointtopo[1]])
+                        #datas[graphname]['y'].append(pointtopo[1])
 
-                    datas[graphname]['xy'].append([distline,pointtopo[1]])
-                    #datas[graphname]['y'].append(pointtopo[1])
+                for dataname in datas.keys():
+                    # print('***********')
+                    xy = np.array(datas[dataname]['xy'])
+                    #print(xy)
+                    xyforunique = np.array([str(datas[dataname]['xy'][i]) for i in range(len(datas[dataname]['xy'])) ] )
+                    #print(xyforunique)
+                    xyuniquetemp, index1, index2 = np.unique(xyforunique, return_index=True, return_inverse=True)
+                    #print(xyuniquetemp)
+                    xyunique = xy[index1]
+                    #print(xyunique)
+                    #pointstemp1 = np.array([str(row) for row in pointstemp])
 
-            for dataname in datas.keys():
-                # print('***********')
-                xy = np.array(datas[dataname]['xy'])
-                #print(xy)
-                xyforunique = np.array([str(datas[dataname]['xy'][i]) for i in range(len(datas[dataname]['xy'])) ] )
-                #print(xyforunique)
-                xyuniquetemp, index1, index2 = np.unique(xyforunique, return_index=True, return_inverse=True)
-                #print(xyuniquetemp)
-                xyunique = xy[index1]
-                #print(xyunique)
-                #pointstemp1 = np.array([str(row) for row in pointstemp])
-
-                #points, index1, index2 = np.unique(pointstemp1, return_index=True, return_inverse=True)
+                    #points, index1, index2 = np.unique(pointstemp1, return_index=True, return_inverse=True)
 
 
-                xysorted = xyunique[xyunique[:, 0].argsort()]
-                #print(xysorted)
-                #xysorted = xy[xy[:, 0].argsort()]
-                datas[dataname]['x'] = xysorted[:,0]
-                datas[dataname]['y'] = xysorted[:, 1]
+                    xysorted = xyunique[xyunique[:, 0].argsort()]
+                    #print(xysorted)
+                    #xysorted = xy[xy[:, 0].argsort()]
+                    datas[dataname]['x'] = xysorted[:,0]
+                    datas[dataname]['y'] = xysorted[:, 1]
 
-                #adapt to geomfinal
-                totallengeom = self.geomfinal.length()
-                # print(totallengeom, datas[dataname]['x'],datas[dataname]['y'])
-                if 0 not in datas[dataname]['x']:
-                    datas[dataname]['x'] = np.insert(datas[dataname]['x'], 0, 0)
-                    datas[dataname]['y'] = np.insert(datas[dataname]['y'], 0, datas[dataname]['y'][0])
-                if totallengeom not in datas[dataname]['x']:
-                    datas[dataname]['x'] = np.append(datas[dataname]['x'], totallengeom)
-                    datas[dataname]['y'] = np.append(datas[dataname]['y'],  datas[dataname]['y'][-1])
-                #print(totallengeom, datas[dataname]['x'], datas[dataname]['y'])
+                    #adapt to geomfinal
+                    totallengeom = self.geomfinal.length()
+                    # print(totallengeom, datas[dataname]['x'],datas[dataname]['y'])
+                    if 0 not in datas[dataname]['x']:
+                        datas[dataname]['x'] = np.insert(datas[dataname]['x'], 0, 0)
+                        datas[dataname]['y'] = np.insert(datas[dataname]['y'], 0, datas[dataname]['y'][0])
+                    if totallengeom not in datas[dataname]['x']:
+                        datas[dataname]['x'] = np.append(datas[dataname]['x'], totallengeom)
+                        datas[dataname]['y'] = np.append(datas[dataname]['y'],  datas[dataname]['y'][-1])
+                    #print(totallengeom, datas[dataname]['x'], datas[dataname]['y'])
 
 
 
@@ -376,18 +377,24 @@ class PathTool(AbstractInspectionDigueTool):
             # print(geomforrubberband.asPolyline())
             self.rubberBand.addGeometry(geomforrubberband, None)
 
-            self.geomfinalnodes = geomfinalnodes
-            self.geomfinal = qgis.core.QgsGeometry.fromPolyline(geomfinalnodes)
-            self.geomfinalids = shortestids[:,0]
+            if len(shortestids)>0:
+                self.geomfinalnodes = geomfinalnodes
+                self.geomfinal = qgis.core.QgsGeometry.fromPolyline(geomfinalnodes)
+                self.geomfinalids = shortestids[:,0]
 
-            # print('self.geomfinalnodes',self.geomfinalnodes)
-            # print('self.geomfinal', self.geomfinal)
-            # print('self.geomfinalids', self.geomfinalids)
-            self.userwdg.label_pathids.setText(str(list(self.geomfinalids)))
+                # print('self.geomfinalnodes',self.geomfinalnodes)
+                # print('self.geomfinal', self.geomfinal)
+                # print('self.geomfinalids', self.geomfinalids)
+                self.userwdg.label_pathids.setText(str(list(self.geomfinalids)))
 
-            self.rubberBand.show()
+                self.rubberBand.show()
+            else:
+                self.geomfinalnodes = None
+                self.geomfinal = None
+                self.geomfinalids = []
 
             self.computeGraph()
+
 
 
     def postOnActivation(self):

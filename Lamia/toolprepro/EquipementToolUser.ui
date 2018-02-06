@@ -87,7 +87,11 @@
            </widget>
           </item>
           <item row="10" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_dimvert"/>
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_dimvert">
+            <property name="minimum">
+             <double>-1.000000000000000</double>
+            </property>
+           </widget>
           </item>
           <item row="12" column="0">
            <widget class="QLabel" name="label_8">
@@ -97,7 +101,11 @@
            </widget>
           </item>
           <item row="12" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_dimhoriz"/>
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_dimhoriz">
+            <property name="minimum">
+             <double>-1.000000000000000</double>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>

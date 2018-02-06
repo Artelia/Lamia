@@ -36,7 +36,7 @@ import os
 #class ConflitHorsLigne(QDialog, FORM_CLASS):
 class ConflitHorsLigne(QDialog):
 
-    def __init__(self, parent=None, local, original):
+    def __init__(self,  local, original, parent=None,):
         """Constructor."""
         super(ConflitHorsLigne, self).__init__(parent)
         #self.setupUi(self)
