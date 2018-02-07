@@ -26,6 +26,14 @@ stream_handler.setFormatter(formatter)
 logger.addHandler(stream_handler)
 debugtime = False
 
+try:
+    from pyspatialite import dbapi2 as db
+    from pyspatialite.dbapi2 import *
+except ImportError:
+    import sqlite3
+    from sqlite3 import *
+    print('spatialite not enabled')
+
 # plugin import
 from ..main.DBaseParser import DBaseParser
 from .InspectionDigue_Connexion_PG import ConnexionPGDialog
@@ -1090,41 +1098,55 @@ class InspectiondigueWindowWidget(QMainWindow):
             for order in range(10):
                 for dbname in self.dbase.dbasetables:
                     if self.dbase.dbasetables[dbname]['order'] == order:
-
+                        print("Export de la table : "+dbname)
                         sql = "SELECT * FROM "+ str(dbname)
 
                         if self.dbase.offLineType == 'spatialite' :
                             try:
                                 print(sql)
-                                #query = self.dbase.offLineCursor.execute(sql)
-                                #returnquery = list(query)
-                                #self.commit()
+                                query = self.offLineCursor.execute(sql)
+                                returnquery = list(query)
+                                self.dbase.commit()
                             except OperationalError as e:
                                 print('error query', e)
-                                return None
+                                continue
                         else :
                             print(sql)
-                            """
                             self.PGiscursor.execute(sql)
                             if sql.strip()[0:6] == 'SELECT':
                                 try:
                                     rows = self.PGiscursor.fetchall()
                                     returnquery = list(rows)
-                                    self.commit()
+                                    self.dbase.commit()
                                 except psycopg2.ProgrammingError as e:
                                     print('error query', e)
-                                    return None
-                            """
+                                    continue
+
 
 
                         for result in returnquery:
-                            sql = 'INSRERT INTO ' +  str(dbname) +  ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + 'VALUE'+ str(result)
+                            loop=True
+                            for toto in result :
+                                print(toto)
+                            while loop:
+                                loop = False
+                                if 'u\'' in result:
+                                    loop = True
+                                    pos1=result.index('u\'')
+                                    sub_str1 = result[:result.index('u\'')]
+                                    pos2=result[pos1].index('\'')
+                                    sub_str2 = result[pos1+2:pos2]
+                                    sub_str3 = result[pos2+1:]
+                                    print('ICI !!!!!!!!!!!!', sub_str1, sub_str2, sub_str3)
+                                    print sub_str1
+                            sql = 'INSERT INTO ' +  str(dbname) +' ('+  ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ') VALUES '+ str(result)
                             print(sql)
-                            #self.dbase.query(sql)
-                            #self.dbase
+                            self.dbase.query(sql)
+                            self.dbase
 
             self.dbase.horsligne = not self.dbase.horsligne
             self.date_deconnexion = datetime.datetime.now()
+            print("Mode hors ligne activé : ", self.dbase.horsligne)
             return
 
 
@@ -1155,9 +1177,9 @@ class InspectiondigueWindowWidget(QMainWindow):
 
                         try:
                             print(sql)
-                            #query = self.dbase.offLineCursor.execute(sql)
+                            #query = self.offLineCursor.execute(sql)
                             #local_data = list(query)
-                            #self.commit()
+                            #self.dbase.commit()
                         except OperationalError as e:
                             print('error query', e)
                             return None
@@ -1190,7 +1212,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                             if item[self.dbase.dbasetables[dbname].index('datecreation')]>self.dbase.date_deconnexion:
 
 
-                                sql = 'INSERT INTO ' +  str(dbname) +  ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ' VALUE '+ str(item) + ' RETURNING id_'+str(dbname)
+                                sql = 'INSERT INTO ' +  str(dbname) +' ('+  ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ') VALUES '+ str(item) + ' RETURNING id_'+str(dbname)
                                 #id_res= self.dbase.query(sql)
                                 print(sql)
                                 id_res = 5
@@ -1210,7 +1232,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                                 #If last modification on the server is before the deconnection -> inject
                                 if original[self.dbase.dbasetables[dbname].index('datemodification')]<self.dbase.date_deconnexion:
 
-                                    sql = 'UPDATE '+ str(dbname)+ ' SET '+ ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ' VALUE '+ str(item) + ' WHERE id_'+str(dbname)+' = ' + str(id_local)
+                                    sql = 'UPDATE '+ str(dbname)+ ' SET '+ ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ' VALUES '+ str(item) + ' WHERE id_'+str(dbname)+' = ' + str(id_local)
                                     #self.dbase.query(sql)
                                     print(sql)
                                 else :
@@ -1219,7 +1241,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                                     print('conflit')
                                     ecrase = ConflitHorsLigne(item, original)
                                     if ecrase :
-                                        sql = 'UPDATE '+ str(dbname)+ ' SET '+ ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ' VALUE '+ str(item) + ' WHERE id_'+str(dbname)+' = ' + str(id_local)
+                                        sql = 'UPDATE '+ str(dbname)+ ' SET '+ ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ' VALUES '+ str(item) + ' WHERE id_'+str(dbname)+' = ' + str(id_local)
                                         print(sql)
                                         #self.dbase.query(sql)
 
@@ -1276,12 +1298,12 @@ class InspectiondigueWindowWidget(QMainWindow):
                         if self.dbase.offLineType == 'spatialite' :
                             try:
                                 print(sql)
-                                query = self.dbase.offLineCursor.execute(sql)
+                                query = self.offLineCursor.execute(sql)
                                 returnquery = list(query)
-                                self.commit()
+                                self.dbase.commit()
                             except OperationalError as e:
                                 print('error query', e)
-                                return None
+                                continue
                         else :
                             print(sql)
                             self.PGiscursor.execute(sql)
@@ -1289,15 +1311,15 @@ class InspectiondigueWindowWidget(QMainWindow):
                                 try:
                                     rows = self.PGiscursor.fetchall()
                                     returnquery = list(rows)
-                                    self.commit()
+                                    self.dbase.commit()
                                 except psycopg2.ProgrammingError as e:
                                     print('error query', e)
-                                    return None
+                                    continue
 
 
 
                         for result in returnquery:
-                            sql = 'INSRERT INTO ' +  str(dbname) +  ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + 'VALUE'+ str(result)
+                            sql = 'INSERT INTO ' +  str(dbname) + ' ('+ ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ') VALUES '+ str(result)
                             print(sql)
                             self.dbase.query(sql)
                             self.dbase
@@ -1333,9 +1355,9 @@ class InspectiondigueWindowWidget(QMainWindow):
                         sql = "SELECT * FROM "+ str(dbname) + ' WHERE datecreation > ' + str(self.dbase.date_deconnexion) + ' OR datemodification > ' + str(self.dbase.date_deconnexion)
 
                         try:
-                            query = self.dbase.offLineCursor.execute(sql)
+                            query = self.offLineCursor.execute(sql)
                             local_data = list(query)
-                            self.commit()
+                            self.dbase.commit()
                         except OperationalError as e:
                             print('error query', e)
                             return None
@@ -1367,7 +1389,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                             if item[self.dbase.dbasetables[dbname].index('datecreation')]>self.dbase.date_deconnexion:
 
 
-                                sql = 'INSERT INTO ' +  str(dbname) +  ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ' VALUE '+ str(item) + ' RETURNING id_'+str(dbname)
+                                sql = 'INSERT INTO ' +  str(dbname) +' ('+  ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ') VALUES '+ str(item) + ' RETURNING id_'+str(dbname)
                                 id_res= self.dbase.query(sql)
 
                                 #Add the new id fit in a tuple
@@ -1385,7 +1407,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                                 #If last modification on the server is before the deconnection -> inject
                                 if original[self.dbase.dbasetables[dbname].index('datemodification')]<self.dbase.date_deconnexion:
 
-                                    sql = 'UPDATE '+ str(dbname)+ ' SET '+ ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ' VALUE '+ str(item) + ' WHERE id_'+str(dbname)+' = ' + str(id_local)
+                                    sql = 'UPDATE '+ str(dbname)+ ' SET '+ ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ' VALUES '+ str(item) + ' WHERE id_'+str(dbname)+' = ' + str(id_local)
                                     self.dbase.query(sql)
                                 else :
                                     #Else, user has to choose the data to keep
@@ -1393,7 +1415,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                                     print('conflit')
                                     ecrase = ConflitHorsLigne(item, original)
                                     if ecrase :
-                                        sql = 'UPDATE '+ str(dbname)+ ' SET '+ ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ' VALUE '+ str(item) + ' WHERE id_'+str(dbname)+' = ' + str(id_local)
+                                        sql = 'UPDATE '+ str(dbname)+ ' SET '+ ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ' VALUES '+ str(item) + ' WHERE id_'+str(dbname)+' = ' + str(id_local)
                                         self.dbase.query(sql)
 
 
