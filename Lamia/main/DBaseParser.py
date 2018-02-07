@@ -84,6 +84,7 @@ class DBaseParser(QtCore.QObject):
         # self.canvas.renderStarting.connect(self.renderStarts)
         # the QgsCoordinateTransform var
         self.xform = None
+        self.xformreverse = None
         #debug
         if False:
             formatter = logging.Formatter("%(asctime)s -- %(name)s -- %(levelname)s -- %(funcName)s -- %(message)s")
@@ -945,10 +946,15 @@ class DBaseParser(QtCore.QObject):
             if int(str(self.qgisversion_int)[0:3]) < 220:
                 self.xform = qgis.core.QgsCoordinateTransform(self.qgiscrs,
                                                               self.canvas.mapSettings().destinationCrs())
+                self.xformreverse = qgis.core.QgsCoordinateTransform(self.canvas.mapSettings().destinationCrs(),
+                                                                     self.qgiscrs)
             else:
                 self.xform = qgis.core.QgsCoordinateTransform(self.qgiscrs,
                                                               self.canvas.mapSettings().destinationCrs(),
                                                               qgis.core.QgsProject.instance() )
+                self.xformreverse = qgis.core.QgsCoordinateTransform(self.canvas.mapSettings().destinationCrs(),
+                                                                     self.qgiscrs,
+                                                                    qgis.core.QgsProject.instance() )
 
 
     def getConstraintRawValueFromText(self, table, field, txt):

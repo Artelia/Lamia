@@ -769,7 +769,7 @@ class AbstractInspectionDigueTool(QWidget):
             else:
                 for childwdgname in self.dbasechildwdg.keys():
                     chldwdg = self.getDBaseChildWidget(childwdgname)
-                    print(chldwdg)
+                    # print(chldwdg)
                     if chldwdg and childwdg.NAME:
                         self.windowdialog.tabWidget_childs.addTab(chldwdg,
                                                                   chldwdg.NAME)
@@ -1039,7 +1039,7 @@ class AbstractInspectionDigueTool(QWidget):
             ids = [row[0:1] for row in query]
 
         elif os.path.isfile(self.dbasetablename):
-            print('load ids file')
+            # print('load ids file')
             self.dbasefiledata = []
             #pathrecentproject = os.path.join(os.path.dirname(__file__), '..', 'config', 'path.txt')
             file = open(self.dbasetablename, "r")
@@ -1468,7 +1468,6 @@ class AbstractInspectionDigueTool(QWidget):
                 idobjet = self.currentFeature['id_objet']
                 datemodif = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
                 sql = "UPDATE Objet SET datemodification = '" + datemodif + "'  WHERE id_objet = " + str(idobjet) + ";"
-                print(sql)
                 self.dbase.query(sql)
                 self.dbase.commit()
 
@@ -1511,7 +1510,7 @@ class AbstractInspectionDigueTool(QWidget):
                 self.dbasefiledata[currentFeatureid] = values
                 self.currentFeature = [self.currentFeature[0]] + values
 
-            print(self.dbasefiledata)
+            # print(self.dbasefiledata)
 
             filedbase = open(self.dbasetablename, "w")
             for i, path in enumerate(self.dbasefiledata):
@@ -1741,9 +1740,10 @@ class AbstractInspectionDigueTool(QWidget):
         # xform = qgis.core.QgsCoordinateTransform(self.dbase.qgiscrs, self.canvas.mapSettings().destinationCrs())
         gpspoint = self.gpsutil.currentpoint
         mappoint = self.gpsutil.currentpoint
-        # success = qgis.core.QgsGeometry.fromPoint(mappoint).transform(xform)
         success = qgis.core.QgsGeometry.fromPoint(mappoint).transform(self.dbase.xform)
-        mappointgeometry = qgis.core.QgsGeometry.fromPoint(mappoint)
+        # success = qgis.core.QgsGeometry.fromPoint(mappoint).transform(self.dbase.xformreverse)
+        # print(qgis.core.QgsGeometry.fromPoint(mappoint).exportToWkt() )
+        # mappointgeometry = qgis.core.QgsGeometry.fromPoint(mappoint)
        # mappoint =  mappoint.asPoint()
 
         if type == 0 :       # POINT
@@ -1752,11 +1752,13 @@ class AbstractInspectionDigueTool(QWidget):
         elif type == 1:      # LINE
             geom = None
             if self.currentFeature is not None:
-                print(self.currentFeature.geometry())
+                # print(self.currentFeature.geometry())
+                pass
             if self.currentFeature is not None and self.currentFeature.geometry() is not None:
                 geom = self.currentFeature.geometry()
+                #print(geom.exportToWkt())
                 # success = geom.transform(xform)
-                success = geom.transform(self.dbase.xform)
+                # success = geom.transform(self.dbase.xform)
                 geompoly = geom.asPolyline()
                 geompoly.append(mappoint)
                 self.setTempGeometry(geompoly)
@@ -1859,76 +1861,51 @@ class AbstractInspectionDigueTool(QWidget):
 
 
     def setTempGeometry(self, points):
-        # print('setTempGeometry',points)
-        # crs thiings things
-        if False:
-            self.mtool.stopCapture.disconnect(self.setTempGeometry)
-            self.mtool.deactivate()
-            self.canvas.unsetMapTool(self.mtool)
-            self.mtool = None
-        if True:
-            self.currentmaptool.stopCapture.disconnect(self.setTempGeometry)
-            """
-            self.mtool.deactivate()
-            self.canvas.unsetMapTool(self.mtool)
-            self.mtool = None
-            """
 
-        if False:
-            xform = qgis.core.QgsCoordinateTransform(self.canvas.mapSettings().destinationCrs(),
-                                                     self.dbase.qgiscrs)
-
-        # xform = qgis.core.QgsCoordinateTransform(self.dbase.qgiscrs, self.canvas.mapSettings().destinationCrs())
+        if self.currentmaptool is not None:
+            try:
+                self.currentmaptool.stopCapture.disconnect(self.setTempGeometry)
+            except TypeError:
+                pass
 
         pointsmapcanvas = []
-        for point in points:
-            #pointsmapcanvas.append(xform.transform(point))
-            pointsmapcanvas.append(self.dbase.xform.transform(point))
-        # print(points,pointsmapcanvas)
+        type = self.dbasetable['layer'].geometryType()
 
-        if False and self.mtool is not None:
-            if len(points) == 1 or self.mtool.mode() == qgis.gui.QgsMapToolAdvancedDigitizing.CapturePoint:
-                geometryformap = qgis.core.QgsGeometry.fromPoint(points[0])
-                geometryforlayer = qgis.core.QgsGeometry.fromPoint(points2[0])
-            elif self.mtool.mode() == qgis.gui.QgsMapToolAdvancedDigitizing.CaptureLine:
-                geometryformap = qgis.core.QgsGeometry.fromMultiPolyline([points])
-                geometryforlayer = qgis.core.QgsGeometry.fromMultiPolyline([points2])
-            elif self.mtool.mode() == qgis.gui.QgsMapToolAdvancedDigitizing.CapturePolygon :
-                geometryformap = qgis.core.QgsGeometry.fromPolygon([points])
-                geometryforlayer = qgis.core.QgsGeometry.fromPolygon([points2])
+        if len(points)==2 and points[0] == points[1]:   #case point in line layer
+            self.rubberBand.reset(0)
+            type = 0.5
+
+        for point in points:
+            pointsmapcanvas.append(self.dbase.xform.transform(point))
+
+
+        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+            if type == 0:
+                geometryformap = qgis.core.QgsGeometry.fromPoint(pointsmapcanvas[0])
+                geometryforlayer = qgis.core.QgsGeometry.fromPoint(points[0])
+            elif type == 0.5:
+                geometryformap = qgis.core.QgsGeometry.fromPoint(pointsmapcanvas[0])
+                geometryforlayer = qgis.core.QgsGeometry.fromMultiPolyline([points])
+            elif type == 1:
+                geometryformap = qgis.core.QgsGeometry.fromMultiPolyline([pointsmapcanvas])
+                geometryforlayer = qgis.core.QgsGeometry.fromMultiPolyline([points])
+            elif type == 2:
+                geometryformap = qgis.core.QgsGeometry.fromPolygon([pointsmapcanvas])
+                geometryforlayer = qgis.core.QgsGeometry.fromPolygon([points])
         else:
-            type = self.dbasetable['layer'].geometryType()
-            if False:
-                if type == 0:
-                    geometryformap = qgis.core.QgsGeometry.fromPoint(points[0])
-                    geometryforlayer = qgis.core.QgsGeometry.fromPoint(points2[0])
-                elif type == 1:
-                    geometryformap = qgis.core.QgsGeometry.fromMultiPolyline([points])
-                    geometryforlayer = qgis.core.QgsGeometry.fromMultiPolyline([points2])
-                elif type == 2:
-                    geometryformap = qgis.core.QgsGeometry.fromPolygon([points])
-                    geometryforlayer = qgis.core.QgsGeometry.fromPolygon([points2])
-            if True:
-                if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                    if type == 0:
-                        geometryformap = qgis.core.QgsGeometry.fromPoint(pointsmapcanvas[0])
-                        geometryforlayer = qgis.core.QgsGeometry.fromPoint(points[0])
-                    elif type == 1:
-                        geometryformap = qgis.core.QgsGeometry.fromMultiPolyline([pointsmapcanvas])
-                        geometryforlayer = qgis.core.QgsGeometry.fromMultiPolyline([points])
-                    elif type == 2:
-                        geometryformap = qgis.core.QgsGeometry.fromPolygon([pointsmapcanvas])
-                        geometryforlayer = qgis.core.QgsGeometry.fromPolygon([points])
-                else:
-                    if type == 0:
-                        geometryformap = qgis.core.QgsGeometry.fromPointXY(pointsmapcanvas[0])
-                        geometryforlayer = qgis.core.QgsGeometry.fromPointXY(points[0])
-                    elif type == 1:
-                        geometryformap = qgis.core.QgsGeometry.fromMultiPolylineXY([pointsmapcanvas])
-                        geometryforlayer = qgis.core.QgsGeometry.fromMultiPolylineXY([points])
-                    elif type == 2:
-                        geometryformap = qgis.core.QgsGeometry.fromPolygonXY([pointsmapcanvas])
-                        geometryforlayer = qgis.core.QgsGeometry.fromPolygonXY([points])
+            if type == 0:
+                geometryformap = qgis.core.QgsGeometry.fromPointXY(pointsmapcanvas[0])
+                geometryforlayer = qgis.core.QgsGeometry.fromPointXY(points[0])
+            elif type == 0.5:
+                geometryformap = qgis.core.QgsGeometry.fromPointXY(pointsmapcanvas[0])
+                geometryforlayer = qgis.core.QgsGeometry.fromMultiPolylineXY([points])
+            elif type == 1:
+                geometryformap = qgis.core.QgsGeometry.fromMultiPolylineXY([pointsmapcanvas])
+                geometryforlayer = qgis.core.QgsGeometry.fromMultiPolylineXY([points])
+            elif type == 2:
+                geometryformap = qgis.core.QgsGeometry.fromPolygonXY([pointsmapcanvas])
+                geometryforlayer = qgis.core.QgsGeometry.fromPolygonXY([points])
+
 
 
         self.rubberBand.addGeometry(geometryformap, None)
@@ -2291,9 +2268,9 @@ class AbstractInspectionDigueTool(QWidget):
 
     def getDBaseChildWidget(self,keywidget):
         wdg = self.dbasechildwdg[keywidget]
-        print(self.dbasechildwdg)
-        print(keywidget, wdg, isinstance(wdg,list))
-        print(self.dbase.dbasetables['Photo']['widget'])
+        # print(self.dbasechildwdg)
+        # print(keywidget, wdg, isinstance(wdg,list))
+        # print(self.dbase.dbasetables['Photo']['widget'])
 
         if isinstance(wdg,list) and len(wdg)>0:
             return wdg[self.dbasechildwdg[keywidget][1]]
