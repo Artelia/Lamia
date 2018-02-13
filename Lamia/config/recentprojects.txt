@@ -1,1 +1,2 @@
-C:\Users\valentin.anjou\Desktop\BD_Begles_ind4.sqlite
+C:\Users\valentin.anjou\Desktop\BD_SIJALAG_ind5.sqlite
+../local/DB_local.sqlite

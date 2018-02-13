@@ -2,6 +2,7 @@
 
 # qgis pyqt import
 from qgis.PyQt import QtGui, uic, QtCore
+from unicodedata import normalize
 from qgis.PyQt.QtCore import pyqtSignal
 try:
     from qgis.PyQt.QtGui import (QDockWidget, QMainWindow, QFileDialog, QLabel, QInputDialog,
@@ -1071,6 +1072,11 @@ class InspectiondigueWindowWidget(QMainWindow):
 
             #1)Create a spatialite db
             # create database
+            try :
+                os.remove('../local/DB_local.sqlite')
+            except:
+                pass
+
             local_db = open('../local/DB_local.sqlite', 'a').close()
             #Create the folder to stock the new pictures
             local_folder='../local/local_data'
@@ -1086,12 +1092,10 @@ class InspectiondigueWindowWidget(QMainWindow):
                 self.offLineCursor = self.dbase.PGiscursor
                 self.dbase.offLineType = 'postgis'
 
-
-            if local_db:
-                self.dbase.createDbase(file=local_db, crs=self.dbase.crsnumber, type='digue', dbasetype='spatialite',
+            local_db='../local/DB_local.sqlite'
+            self.dbase.createDbase(file=local_db, crs=self.dbase.crsnumber, type='digue', dbasetype='spatialite',
                                        dbaseressourcesdirectory=local_folder)
-
-                self.dbase.dbasetype = 'spatialite'
+            self.dbase.dbasetype = 'spatialite'
 
             #2)Add items from the file to the spatialite database
 
@@ -1115,7 +1119,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                             self.PGiscursor.execute(sql)
                             if sql.strip()[0:6] == 'SELECT':
                                 try:
-                                    rows = self.PGiscursor.fetchall()
+                                    rows = self.offLineCursor.fetchall()
                                     returnquery = list(rows)
                                     self.dbase.commit()
                                 except psycopg2.ProgrammingError as e:
@@ -1125,24 +1129,29 @@ class InspectiondigueWindowWidget(QMainWindow):
 
 
                         for result in returnquery:
+                            str_test=""
                             loop=True
                             for toto in result :
-                                print(toto)
-                            while loop:
-                                loop = False
-                                if 'u\'' in result:
-                                    loop = True
-                                    pos1=result.index('u\'')
-                                    sub_str1 = result[:result.index('u\'')]
-                                    pos2=result[pos1].index('\'')
-                                    sub_str2 = result[pos1+2:pos2]
-                                    sub_str3 = result[pos2+1:]
-                                    print('ICI !!!!!!!!!!!!', sub_str1, sub_str2, sub_str3)
-                                    print sub_str1
-                            sql = 'INSERT INTO ' +  str(dbname) +' ('+  ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ') VALUES '+ str(result)
+                                print(toto2)
+                                try:
+                                    toto2=toto.decode('utf-8')
+                                except AttributeError:
+                                    toto2=str(toto)
+                                except:
+                                    toto2=normalize('NFKD', toto).encode('ASCII', 'ignore')
+                                print(toto2)
+                                if toto2=='':
+                                    toto2='\'\''
+                                elif toto2=='None':
+                                    toto2='NULL'
+                                str_test+=toto2+', '
+                            print("str_test",str_test)
+                            str_test=str_test[:-2]
+
                             print(sql)
+                            sql = 'INSERT INTO ' +  str(dbname) +' ('+  ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ') VALUES ('+ str(str_test)+')'
+
                             self.dbase.query(sql)
-                            self.dbase
 
             self.dbase.horsligne = not self.dbase.horsligne
             self.date_deconnexion = datetime.datetime.now()
@@ -1322,7 +1331,6 @@ class InspectiondigueWindowWidget(QMainWindow):
                             sql = 'INSERT INTO ' +  str(dbname) + ' ('+ ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ') VALUES '+ str(result)
                             print(sql)
                             self.dbase.query(sql)
-                            self.dbase
 
             self.dbase.horsligne = not self.dbase.horsligne
             self.date_deconnexion = datetime.datetime.now()
