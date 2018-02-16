@@ -73,6 +73,9 @@ class DBaseParser(QtCore.QObject):
         self.spatialitefile = None
         # postgis spec
         self.horsligne=False
+        self.date_deconnexion=None
+        self.offLineConn=None
+        self.offLineCursor = None
         self.pghost = None
         self.pgdb = None
         self.pguser = None

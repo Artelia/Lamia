@@ -1084,31 +1084,36 @@ class InspectiondigueWindowWidget(QMainWindow):
                 os.makedirs(local_folder)
 
             if self.dbase.dbasetype=='spatialite':
-                self.offLineConn = self.dbase.connSLITE
-                self.offLineCursor = self.dbase.SLITEcursor
+                self.dbase.offLineConn = self.dbase.connSLITE
+                self.dbase.offLineCursor = self.dbase.SLITEcursor
                 self.dbase.offLineType = 'spatialite'
             else:
-                self.offLineConn = self.dbase.connPGis
-                self.offLineCursor = self.dbase.PGiscursor
+                self.dbase.offLineConn = self.dbase.connPGis
+                self.dbase.offLineCursor = self.dbase.PGiscursor
                 self.dbase.offLineType = 'postgis'
 
             local_db='../local/DB_local.sqlite'
             self.dbase.createDbase(file=local_db, crs=self.dbase.crsnumber, type='digue', dbasetype='spatialite',
                                        dbaseressourcesdirectory=local_folder)
             self.dbase.dbasetype = 'spatialite'
+            self.dbase.date_deconnexion=datetime.datetime.now()
 
             #2)Add items from the file to the spatialite database
 
             for order in range(10):
                 for dbname in self.dbase.dbasetables:
-                    if self.dbase.dbasetables[dbname]['order'] == order:
-                        print("Export de la table : "+dbname)
-                        sql = "SELECT * FROM "+ str(dbname)
+                    if self.dbase.dbasetables[dbname]['order'] == order and not dbname=='Basedonnees':
+                        print("Import de la table : "+dbname)
+                        fields_table = self.dbase.dbasetables[dbname]['fields'].keys()
+                        fields_to_import=fields_table
+                        if 'geom' in fields_to_import:
+                            fields_to_import[fields_to_import.index('geom')]='ST_AsText(geom,'+ str(self.dbase.crsnumber)+')'
+                        sql = 'SELECT '+  ','.join(fields_to_import) + ' FROM '+ str(dbname)
 
                         if self.dbase.offLineType == 'spatialite' :
                             try:
                                 print(sql)
-                                query = self.offLineCursor.execute(sql)
+                                query = self.dbase.offLineCursor.execute(sql)
                                 returnquery = list(query)
                                 self.dbase.commit()
                             except OperationalError as e:
@@ -1119,7 +1124,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                             self.PGiscursor.execute(sql)
                             if sql.strip()[0:6] == 'SELECT':
                                 try:
-                                    rows = self.offLineCursor.fetchall()
+                                    rows = self.dbase.offLineCursor.fetchall()
                                     returnquery = list(rows)
                                     self.dbase.commit()
                                 except psycopg2.ProgrammingError as e:
@@ -1129,28 +1134,29 @@ class InspectiondigueWindowWidget(QMainWindow):
 
 
                         for result in returnquery:
-                            str_test=""
-                            loop=True
+                            str_test="'"
+                            compteur=-1
                             for toto in result :
-                                print(toto2)
-                                try:
-                                    toto2=toto.decode('utf-8')
-                                except AttributeError:
-                                    toto2=str(toto)
-                                except:
-                                    toto2=normalize('NFKD', toto).encode('ASCII', 'ignore')
-                                print(toto2)
-                                if toto2=='':
-                                    toto2='\'\''
-                                elif toto2=='None':
-                                    toto2='NULL'
-                                str_test+=toto2+', '
-                            print("str_test",str_test)
-                            str_test=str_test[:-2]
+                                if 'geom' in fields_to_import:
+                                    compteur+=1
+                                if  'geom' in fields_to_import and compteur == fields_to_import.index('geom'):
+                                    str_test+='ST_GeomFromText(\''+toto+'\', '+str(self.dbase.crsnumber)+'), '
+                                else :
+                                    try:
+                                        toto2=toto.decode('utf-8')
+                                    except AttributeError:
+                                        toto2=str(toto)
+                                    except:
+                                        toto2=normalize('NFKD', toto).encode('ASCII', 'ignore')
+                                    if toto2=='':
+                                        toto2='\'\''
+                                    elif toto2=='None':
+                                        toto2='NULL'
+                                    str_test+=toto2+"', '"
+                            str_test=str_test[:-3]
 
-                            print(sql)
                             sql = 'INSERT INTO ' +  str(dbname) +' ('+  ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ') VALUES ('+ str(str_test)+')'
-
+                            print(sql)
                             self.dbase.query(sql)
 
             self.dbase.horsligne = not self.dbase.horsligne
@@ -1162,14 +1168,14 @@ class InspectiondigueWindowWidget(QMainWindow):
 
         if self.dbase.horsligne:
             #1) Connect to database
-            if self.offLineType=='postgis':
-                self.offLineConn, self.dbase.connSLITE = self.dbase.connSLITE , self.offLineConn
-                self.offLineCursor, self.dbase.SLITEcursor = self.dbase.SLITEcursor, self.offLineCursor
-                self.dbase.offLineType = 'spatialite'
+            if self.dbase.offLineType=='spatialite':
+                self.dbase.offLineConn, self.dbase.connSLITE = self.dbase.connSLITE , self.dbase.offLineConn
+                self.dbase.offLineCursor, self.dbase.SLITEcursor = self.dbase.SLITEcursor, self.dbase.offLineCursor
             else:
-                self.offLineConn, self.dbase.connPGis =self.dbase.connPGis, self.offLineConn
-                self.offLineCursor, self.dbase.PGiscursor = self.dbase.PGiscursor, self.offLineCursor
-                self.dbasetype='postgis'
+                self.dbase.offLineConn, self.dbase.connPGis =self.dbase.connPGis, self.dbase.offLineConn
+                self.dbase.offLineCursor, self.dbase.PGiscursor = self.dbase.PGiscursor, self.dbase.offLineCursor
+                self.dbase.offLineType = 'spatialite'
+                self.dbase.dbasetype='postgis'
 
 
             #2)Confront the two databases
@@ -1178,30 +1184,59 @@ class InspectiondigueWindowWidget(QMainWindow):
 
             for order in range(10):
                 for dbname in self.dbase.dbasetables:
-                    if self.dbase.dbasetables[dbname]['order'] == order:
+                    if self.dbase.dbasetables[dbname]['order'] == order and not dbname=='Basedonnees':
+                        print("Export de la table : "+dbname)
+                        fields_table = self.dbase.dbasetables[dbname]['fields'].keys()
+                        fields_to_import=fields_table
+                        if 'geom' in fields_to_import:
+                            fields_to_import[fields_to_import.index('geom')]='ST_AsText(geom,'+ str(self.dbase.crsnumber)+')'
+
                         switch_id[dbname]=[]
 
                         #Get the data of the table in both database
-                        sql = "SELECT * FROM "+ str(dbname) + ' WHERE datecreation > ' + str(self.dbase.date_deconnexion) + ' OR datemodification > ' + str(self.dbase.date_deconnexion)
+                        sql = 'SELECT '+  ','.join(fields_to_import) + ' FROM '+ str(dbname) + ' WHERE datecreation > \'' + str(self.dbase.date_deconnexion.strftime("%Y-%m-%d %H:%M:%S")) + '\' OR datemodification > \'' + str(self.dbase.date_deconnexion.strftime("%Y-%m-%d %H:%M:%S"))+'\''
 
                         try:
                             print(sql)
-                            #query = self.offLineCursor.execute(sql)
-                            #local_data = list(query)
-                            #self.dbase.commit()
+                            query = self.dbase.offLineCursor.execute(sql)
+                            local_data = list(query)
+                            self.dbase.commit()
                         except OperationalError as e:
                             print('error query', e)
                             return None
 
-                        #original_data = self.dbase.query(sql)
-                        local_data = []
-                        orignial_data=[]
-                        #conpare the datasets
+                        original_data = self.dbase.query(sql)
 
 
-
+                        #compare the datasets
                         for item in local_data :
-                            id_local = item[self.dbase.dbasetables[dbname].index('id_'+str(dbname))]
+                            print(item)
+
+                            str_test="'"
+                            for toto in item :
+                                if 'geom' in fields_to_import:
+                                    compteur+=1
+                                if  'geom' in fields_to_import and compteur == fields_to_import.index('geom'):
+                                    str_test+='ST_GeomFromText(\''+toto+'\', '+str(self.dbase.crsnumber)+'), '
+                                else :
+                                    try:
+                                        toto2=toto.decode('utf-8')
+                                    except AttributeError:
+                                        toto2=str(toto)
+                                    except:
+                                        toto2=normalize('NFKD', toto).encode('ASCII', 'ignore')
+                                    print(toto2)
+                                    if toto2=='':
+                                        toto2='\'\''
+                                    elif toto2=='None':
+                                        toto2='NULL'
+                                    str_test+=toto2+"', '"
+                            print("str_test",str_test)
+                            item=str_test[:-3]
+
+                            print(dbname,self.dbase.dbasetables[dbname]['fields'])
+                            id_local = item[self.dbase.dbasetables[dbname]['fields'].keys().index('id_'+str(dbname).lower())]
+                            print(id_local)
 
                             #Get the proper id to use when updating the database
                             for field in self.dbase.dbasetables[dbname]['fields'].keys() :
@@ -1218,10 +1253,10 @@ class InspectiondigueWindowWidget(QMainWindow):
                                             break
 
                             #New items : date de creation > date de début offline
-                            if item[self.dbase.dbasetables[dbname].index('datecreation')]>self.dbase.date_deconnexion:
+                            if item[self.dbase.dbasetables[dbname]['fields'].index('datecreation')]>self.dbase.date_deconnexion:
 
 
-                                sql = 'INSERT INTO ' +  str(dbname) +' ('+  ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ') VALUES '+ str(item) + ' RETURNING id_'+str(dbname)
+                                sql = 'INSERT INTO ' +  str(dbname) +' ('+  ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ') VALUES ('+ str(item) + ') RETURNING id_'+str(dbname)
                                 #id_res= self.dbase.query(sql)
                                 print(sql)
                                 id_res = 5
@@ -1261,8 +1296,8 @@ class InspectiondigueWindowWidget(QMainWindow):
                 shutil.copyfile(file,self.dbase.imagedirectory)
 
         self.dbase.horsligne = not self.dbase.horsligne
-        self.offLineConn = None
-        self.offLineCursor = None
+        self.dbase.offLineConn = None
+        self.dbase.offLineCursor = None
         self.dbase.offLineType = None
 
         return
