@@ -1,0 +1,121 @@
+#DJAN  SELECT Equipement.*, Objet.datecreation, Objet.datedestruction, Objet.commentaire, Objet.libelle, Descriptionsystem.importancestrat, Descriptionsystem.etatfonct, Descriptionsystem.datederniereobs, Descriptionsystem.qualitegeoloc, Descriptionsystem.parametres, Descriptionsystem.listeparametres FROM Equipement INNER JOIN Descriptionsystem ON Equipement.id_descriptionsystem = Descriptionsystem.id_descriptionsystem INNER JOIN Objet ON Objet.id_objet = Equipement.id_objet
+#QGIS  SELECT Equipement.*, Objet.datecreation, Objet.datedestruction FROM Equipement INNER JOIN Descriptionsystem ON Equipement.id_descriptionsystem = Descriptionsystem.id_descriptionsystem INNER JOIN Objet ON Objet.id_objet = Equipement.id_objet
+#SHOW YES
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###id_equipement;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###cote;                VARCHAR(255);            TEXT
+/;
+Eau;RIV
+Terre;TER
+Etang;ETG
+Ocean;MER
+Deux cotes;DEU
+Crete;CRE
+Indefini;IND
+###position;           VARCHAR(255);            TEXT
+##cote
+/;                                 ;            ['','RIV','TER','DEU','MER','CRE','IND']
+Crete;                          CRE ;           ['CRE']
+Talus digue;                     TAD ;          ['RIV','TER','DEU','MER','ETG']
+Sommet risberme;                SOR ;           ['RIV','TER','DEU','MER','ETG']
+Talus risberme;                 TAR;            ['RIV','TER','DEU','MER','ETG']
+Talus risberme - pied de digue; TRP;            ['RIV','TER','DEU','MER','ETG']
+Pied de digue;                  PDI;            ['RIV','TER','DEU','MER','ETG']
+Franc-bord;                     FRB ;           ['RIV','MER','ETG']
+Berge;                          BER;            ['RIV','MER','ETG']
+Hors digue;                     HOR;            ['IND']
+Plusieurs parties;              PLU;            ['IND']
+Indefini;                       IND;            ['IND']
+###categorie;           VARCHAR(255);            TEXT
+/;
+Lineaire - Hydrau enterre;                 RHF
+Lineaire - Hydrau ciel ouvert;             RHO
+Lineaire - Telecom/Energie;                RTE
+Ponctuel - Hydraulique;                    OUH
+Ponctuel - Telecom/Energie;                OUT
+Ponctuel - Particulier;                    OUP
+###typeequipement;           VARCHAR(255);            TEXT
+##categorie
+/;                                  ;               ['','OUH','OUP','RTE','RHF','RHO','OUT']
+Clapet;                       CLA;                ['OUH']
+Vanne;                       VAN;                ['OUH']
+Borne incendie;               BIN;                ['OUH']
+Fosse de decantation;         FOD;                ['OUH']
+Poste de refoulement, pompage;POS;                ['OUH']
+Regard, bouche a clef;         REG;                ['OUH']
+Reservoir, chateau d eau;         RES;             ['OUH']
+Station d epuration;         RES;                ['OUH']
+Grille, degrillage;          GRI;                ['OUH']
+Borne (Gaz...);                BOR;            ['OUT']
+Coffret de branchement;      CDB;            ['OUT']
+Chambre Telecom;            CHT;            ['OUT']
+Poteau (EDF,PTT);            POT;            ['OUT']
+Transformateur;            TRA;             ['OUT']
+Batiment encastre;                   BAT;            ['OUP']
+Borne PK;                   BOK;            ['OUP']
+Borne reseau d eau;          BRE;            ['OUP']
+Cave encastree;          CAV;            ['OUP']
+Cloture encastree;          CLO;            ['OUP']
+Echelle Limnimetrique;          ECH;            ['OUP']
+Escalier;                    ESC;            ['OUP']
+Monument;                    MOU;            ['OUP']
+Ouvrage alimentant champs inond.;  OUA;            ['OUP']
+Panneau d'information divers; PAN;            ['OUP']
+Passe a poissons;           PAS;            ['OUP']
+Piezometre;                PIE;            ['OUP']
+Ponton   ;                PON;            ['OUP']
+Repere de nivellement   ; RDN;            ['OUP']
+Socle beton;               SOB;            ['OUP']
+Station de mesure;          STA;            ['OUP']
+Pompage, prise d eau;           CAN;                ['RHF']
+Canalisation (AEP,EU...);       CON;                ['RHF']
+Affluent;                       AFL;                ['RHO']
+Caniveau beton;                 CAI;                ['RHO']
+Canal;                          CAN;                ['RHO']
+Chantourne;                     CHAN;                ['RHO']
+Porteaux;                     PRO;                ['RHO']
+Chauffage urbain;              CCU;                ['RTE']
+EDF ou PTT;                   EFT;                ['RTE']
+EDF ou PTT;                   EFT;                ['RTE']
+Fibre optique;                FIB;                ['RTE']
+Gaz;                         GDF;                ['RTE']
+Hydrocarbure;                 HYD;                ['RTE']
+Saumure;                 SAU;                ['RTE']
+Indefini;                       IND;                ['OUH','OUP','RTE','RHF','RHO','OUT']
+###implantation;           VARCHAR(255);            TEXT
+##categorie
+/;                                  ;               ['','OUH','OUP','RTE','RHO','OUT']
+Aerien;                     AER;                  ['RTE']
+Enterre;                   ENT;                  ['RHF','RTE']
+Superficiel;              ENT;                  ['RTE']
+Indefini;                       IND;               ['RTE']
+###ecoulement;           VARCHAR(255);            TEXT
+##categorie
+/;                                  ;               ['','OUH','OUP','RTE','RHF','RHO','OUT']
+Gravitaire;                 GRA;                  ['RHF']
+Sous pression;              PRE;                  ['RHF']
+###utilisation;           VARCHAR(255);            TEXT
+##categorie
+/;                                  ;               ['','OUH','OUP','RTE','RHF','RHO','OUT']
+Drainage;                   DRA;                  ['RHF']
+AEP;                        EDI;                  ['RHF']
+Eaux pluviales;              EPL;                  ['RHF']
+Eaux usees;                 EUS;                  ['RHF']
+Irrigation;                 IRR;                  ['RHF']
+Eaux residuaires indus.;      ERI;                  ['RHF']
+Alimentation champ d inonation;ACIC;                  ['RHF']
+Indefini;                       IND;               ['RHF']
+###dimverti;           NUMERIC;            REAL
+###dimhori;           NUMERIC;            REAL
+###securite;            VARCHAR(255);            TEXT
+/;                                  
+Visitable en securite;   1
+Non visitable en securite;  0
+###commentaires;                VARCHAR(255);            TEXT
+###id_objet;             INT ;                   INTEGER ;                               Objet(id_objet)
+###id_descriptionsystem ;               INT ;                   INTEGER;                                Descriptionsystem(id_descriptionsystem)
+###lk_photo;        INT ;                       INTEGER
+###lk_infralineaire;        INT ;                   INTEGER ;                               Infralineaire(id_infralineaire)
+###lk_noeud;        INT ;                   INTEGER ;                               Noeud(id_noeud)
+###lk_equipement;        INT ;                   INTEGER ;                               Equipement(id_equipement)
+###geom;                LINESTRING

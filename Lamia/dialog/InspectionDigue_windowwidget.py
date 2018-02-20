@@ -1077,7 +1077,6 @@ class InspectiondigueWindowWidget(QMainWindow):
             except:
                 pass
 
-            local_db = open('../local/DB_local.sqlite', 'a').close()
             #Create the folder to stock the new pictures
             local_folder='../local/local_data'
             if not os.path.exists(local_folder):
@@ -1092,23 +1091,33 @@ class InspectiondigueWindowWidget(QMainWindow):
                 self.dbase.offLineCursor = self.dbase.PGiscursor
                 self.dbase.offLineType = 'postgis'
 
+
             local_db='../local/DB_local.sqlite'
+
+            originalfile = os.path.join(os.path.dirname(__file__), '..', 'DBASE', 'DBase_ind0.sqlite')
+            shutil.copyfile(originalfile, local_db)
+
+
             self.dbase.createDbase(file=local_db, crs=self.dbase.crsnumber, type='digue', dbasetype='spatialite',
                                        dbaseressourcesdirectory=local_folder)
+            self.dbaseressourcesdirectory=local_folder
             self.dbase.dbasetype = 'spatialite'
             self.dbase.date_deconnexion=datetime.datetime.now()
 
-            #2)Add items from the file to the spatialite database
 
+
+            #2)Add items from the file to the spatialite database
             for order in range(10):
                 for dbname in self.dbase.dbasetables:
                     if self.dbase.dbasetables[dbname]['order'] == order and not dbname=='Basedonnees':
 
                         print("Import de la table : "+dbname)
                         fields_table = self.dbase.dbasetables[dbname]['fields'].keys()
+
+
                         fields_to_import=fields_table
-                        if 'geom' in fields_to_import:
-                            fields_to_import[fields_to_import.index('geom')]='ST_AsText(geom,'+ str(self.dbase.crsnumber)+')'
+                        if 'geom' in self.dbase.dbasetables[dbname]:
+                            fields_to_import+=['ST_AsText(geom)']
                         sql = 'SELECT '+  ','.join(fields_to_import) + ' FROM '+ str(dbname)
 
                         if self.dbase.offLineType == 'spatialite' :
@@ -1132,38 +1141,52 @@ class InspectiondigueWindowWidget(QMainWindow):
                                     print('error query', e)
                                     continue
 
-
+                        if 'geom' in self.dbase.dbasetables[dbname]:
+                            fields_to_import[-1]='geom'
 
                         for result in returnquery:
                             str_test="'"
                             compteur=-1
-                            for toto in result :
-                                if 'geom' in fields_to_import:
-                                    compteur+=1
-                                if  'geom' in fields_to_import and compteur == fields_to_import.index('geom'):
-                                    str_test+='ST_GeomFromText(\''+toto+'\', '+str(self.dbase.crsnumber)+'), '
-                                else :
-                                    try:
-                                        toto2=toto.decode('utf-8')
-                                    except AttributeError:
-                                        toto2=str(toto)
-                                    except:
-                                        toto2=normalize('NFKD', toto).encode('ASCII', 'ignore')
+                            if 'geom' in fields_to_import:
+                                geometry = result[-1]
+                                result = result[:-1]
+                            for toto in result:
+                                null=False
+                                try:
+                                    toto2=toto.decode('utf-8')
+                                except AttributeError:
+                                    toto2=str(toto)
+                                except:
+                                    toto2=normalize('NFKD', toto).encode('ASCII', 'ignore')
 
-                                    if toto2=='':
-                                        toto2=""
-                                    elif toto2=='None':
-                                        toto2='NULL'
+                                if toto2=='':
+                                    toto2=""
+                                elif toto2=='None' or toto2=='NULL':
+                                    toto2='NULL'
+                                    null=True
+                                    str_test=str_test[:-1]
+                                if null:
+                                    str_test+=toto2+", '"
+                                else:
                                     str_test+=toto2+"', '"
                             str_test=str_test[:-3]
 
-                            sql = 'INSERT INTO ' +  str(dbname) +' ('+  ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ') VALUES ('+ str(str_test)+')'
+                            if 'geom' in fields_to_import:
+                                str_test+=", "
+                                try :
+                                    str_test+='ST_GeomFromText(\''+geometry+'\', '+str(self.dbase.crsnumber)+')'
+                                except:
+                                    str_test+="NULL"
+
+
+
+                            sql = 'INSERT INTO ' +  str(dbname) +' ('+  ','.join(fields_to_import) + ') VALUES ('+ str(str_test)+')'
                             print(sql)
                             self.dbase.query(sql)
 
             self.dbase.horsligne = not self.dbase.horsligne
             self.date_deconnexion = datetime.datetime.now()
-            print("Mode hors ligne activé : ", self.dbase.horsligne)
+            print("Mode hors ligne active : ", self.dbase.horsligne)
             return
 
 
@@ -1180,6 +1203,8 @@ class InspectiondigueWindowWidget(QMainWindow):
                 self.dbase.dbasetype='postgis'
 
 
+
+
             #2)Confront the two databases
             #Table to get the correspondances between local ids and ids in the original database
             switch_id={}
@@ -1189,6 +1214,8 @@ class InspectiondigueWindowWidget(QMainWindow):
 
             for order in range(10):
                 for dbname in self.dbase.dbasetables:
+
+                    switch_id[dbname]=[]
                     #First we work on the tables connected to an object
                     if self.dbase.dbasetables[dbname]['order'] == order and 'id_objet' in self.dbase.dbasetables[dbname]['fields'].keys():
 
@@ -1199,13 +1226,10 @@ class InspectiondigueWindowWidget(QMainWindow):
 
                         #Gather the data on the local and online database
                         print("Export de la table : "+dbname)
-                        fields_table = self.dbase.dbasetables[dbname]['fields'].keys()
-                        print(fields_table)
-                        fields_to_import=fields_table
-                        if 'geom' in fields_to_import:
-                            fields_to_import[fields_to_import.index('geom')]='ST_AsText(geom,'+ str(self.dbase.crsnumber)+')'
+                        fields_to_import=self.dbase.dbasetables[dbname]['fields'].keys()
+                        if 'geom' in self.dbase.dbasetables[dbname]:
+                            fields_to_import+=['ST_AsText(geom)']
 
-                        switch_id[dbname]=[]
 
                         #Get the data of the table in both database
                         #sql = 'SELECT '+  ','.join(fields_to_import) + ' FROM '+ str(dbname) + ' WHERE datecreation > \'' + str(self.dbase.date_deconnexion.strftime("%Y-%m-%d %H:%M:%S")) + '\' OR datemodification > \'' + str(self.dbase.date_deconnexion.strftime("%Y-%m-%d %H:%M:%S"))+'\''
@@ -1214,7 +1238,10 @@ class InspectiondigueWindowWidget(QMainWindow):
                         #A RETABLIR A LA FIN DES TESTS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                         #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+                        print(fields_to_import)
+
                         sql = 'SELECT '+  ','.join(fields_to_import) + ' FROM '+ str(dbname)
+                        print(sql)
 
                         try:
                             query = self.dbase.offLineCursor.execute(sql)
@@ -1227,7 +1254,8 @@ class InspectiondigueWindowWidget(QMainWindow):
                         original_data = self.dbase.query(sql)
 
 
-
+                        if 'geom' in self.dbase.dbasetables[dbname]:
+                            fields_to_import[-1]='geom'
 
 
 
@@ -1269,7 +1297,6 @@ class InspectiondigueWindowWidget(QMainWindow):
 
 
 
-
                         #Make sure we update the foreign key used
                         for item in local_data :
                             print('item : '+str(item))
@@ -1290,31 +1317,49 @@ class InspectiondigueWindowWidget(QMainWindow):
                                                     break
                                             except:
                                                 pass
+                                        else:
+                                            item[pos]='NULL'
 
 
 
 
                         #Get the output to send back to the database
                             str_test="'"
+                            if 'geom' in fields_to_import:
+                                geometry = item[-1]
+                                item = item[:-1]
+
                             for toto in item :
-                                if 'geom' in fields_to_import:
-                                    compteur+=1
-                                if  'geom' in fields_to_import and compteur == fields_to_import.index('geom'):
-                                    str_test+='ST_GeomFromText(\''+toto+'\', '+str(self.dbase.crsnumber)+'), '
-                                else :
-                                    try:
-                                        toto2=toto.decode('utf-8')
-                                    except AttributeError:
-                                        toto2=str(toto)
-                                    except:
-                                        toto2=normalize('NFKD', toto).encode('ASCII', 'ignore')
-                                    if toto2=='' or toto2=="'''" or toto2=="'":
-                                        toto2=""
-                                    elif toto2=='None':
-                                        toto2='NULL'
+                                null=False
+                                try:
+                                    toto2=toto.decode('utf-8')
+                                except AttributeError:
+                                    toto2=str(toto)
+                                except:
+                                    toto2=normalize('NFKD', toto).encode('ASCII', 'ignore')
+                                if toto2=='' or toto2=="'''" or toto2=="'":
+                                    toto2=""
+                                elif toto2=='None' or toto2=='NULL':
+                                    toto2='NULL'
+                                    null=True
+                                    str_test=str_test[:-1]
+                                if null:
+                                    str_test+=toto2+", '"
+                                else:
                                     str_test+=toto2+"', '"
                             output=str(str_test[:-3])
+
+                            if 'geom' in fields_to_import:
+                                output+=", "
+                                try :
+                                    output+='ST_GeomFromText(\''+geometry+'\', '+str(self.dbase.crsnumber)+')'
+                                except:
+                                    output+="NULL"
+
                             print('output : '+ output)
+
+
+
 
 
                             id_local = item[self.dbase.dbasetables[dbname]['fields'].keys().index('id_objet')]
@@ -1356,7 +1401,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                             #If it is a new item, we add it to the database online
                             if nouveau:
 
-                                sql = 'INSERT INTO ' +  str(dbname) +' ('+  ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ') VALUES ('+ str(output) + ') RETURNING id_'+str(dbname)
+                                sql = 'INSERT INTO ' +  str(dbname) +' ('+  ','.join(fields_to_import) + ') VALUES ('+ str(output) + ') RETURNING id_'+str(dbname)
                                 #id_res= self.dbase.query(sql)
                                 print('nouveau, sql : '+sql)
 
@@ -1364,7 +1409,7 @@ class InspectiondigueWindowWidget(QMainWindow):
 
 
                                 #Add the new id fit in a tuple : We make sure we get the id online of the newly created item
-                                switch_id[dbname]+=[(item[list(self.dbase.dbasetables[dbname]['fields'].key()).index('id_'+str(dbname).lower())],id_res)]
+                                switch_id[dbname]+=[(item[list(self.dbase.dbasetables[dbname]['fields'].keys()).index('id_'+str(dbname).lower())],id_res)]
 
 
 
@@ -1382,6 +1427,8 @@ class InspectiondigueWindowWidget(QMainWindow):
                                         if list_dates_reperes[id_local][1]==None or list_dates_reperes[id_local][1]=='NULL':
                                             non_modifie = True
                                         else:
+
+
                                             #Was the item modified while offline ? The test is here
                                             non_modifie = list_dates_reperes[id_local][1]<self.dbase.date_deconnexion
 
@@ -1393,10 +1440,12 @@ class InspectiondigueWindowWidget(QMainWindow):
                                             #Construct the UPDATE request
                                             sql = 'UPDATE '+ str(dbname)+ ' SET '
                                             output=output[output.index(','):]
-                                            for field in self.dbase.dbasetables[dbname]['fields'].keys():
+                                            for field in fields_to_import:
                                                 if field==('id_'+dbname.lower()):
                                                     output=output[output.index(',')+1:]
                                                     pass
+                                                elif field=='geom':
+                                                    sql+="geom ="+output
                                                 else:
                                                     output=str(output)
                                                     try :
@@ -1437,10 +1486,12 @@ class InspectiondigueWindowWidget(QMainWindow):
                                                 #Construct the UPDATE request
                                                 sql = 'UPDATE '+ str(dbname)+ ' SET '
                                                 output=output[output.index(','):]
-                                                for field in self.dbase.dbasetables[dbname]['fields'].keys():
+                                                for field in fields_to_import:
                                                     if field==('id_'+dbname.lower()):
                                                         output=output[output.index(',')+1:]
                                                         pass
+                                                    elif field=='geom':
+                                                        sql+="geom ="+output
                                                     else:
                                                         output=str(output)
                                                         print('output, sql :'+ output, sql)
@@ -1458,14 +1509,15 @@ class InspectiondigueWindowWidget(QMainWindow):
 
 
 
-
                     #Deal with the tc tables
                     elif self.dbase.dbasetables[dbname]['order'] == order and 'id_tcobjet' in self.dbase.dbasetables[dbname]['fields'].keys():
+                        print("Export de la table : "+dbname)
+                        fields_to_import=self.dbase.dbasetables[dbname]['fields'].keys()
 
                         #Une tc ne sera pas modifiée, au mieux on ajoute des choses dedans
                         #We select the data
                         sql = 'SELECT '+  ','.join(fields_to_import) + ' FROM '+ str(dbname)
-
+                        print(sql)
 
                         try:
                             query = self.dbase.offLineCursor.execute(sql)
@@ -1512,20 +1564,20 @@ class InspectiondigueWindowWidget(QMainWindow):
                                 if id_local==id_item:
                                     new = False
                                     break
-                                if new :
-                                    output="'"
-                                    for value in item :
-                                        output += str(value)
-                                        str_test+=toto2+"', '"
+                            if new :
+                                output="'"
+                                for value in item :
+                                    output += str(value)
+                                    str_test+=toto2+"', '"
 
-                                    output=str(str_test[:-3])
-                                    print('output : '+ output)
+                                output=str(str_test[:-3])
+                                print('output : '+ output)
 
-                                    sql = 'INSERT INTO ' +  str(dbname) +' ('+  ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ') VALUES ('+ str(output) + ') RETURNING id_'+str(dbname)
-                                    #id_res= self.dbase.query(sql)
-                                    print('tc_new, sql : '+sql)
+                                sql = 'INSERT INTO ' +  str(dbname) +' ('+  ','.join(fields_to_import) + ') VALUES ('+ str(output) + ') RETURNING id_'+str(dbname).lower()
+                                #id_res= self.dbase.query(sql)
+                                print('tc_new, sql : '+sql)
 
-                                    switch_id[dbname]+=[(item[list(self.dbase.dbasetables[dbname]['fields'].key()).index('id_'+str(dbname).lower())],id_res)]
+                                switch_id[dbname]+=[(item[list(self.dbase.dbasetables[dbname]['fields'].keys()).index('id_'+str(dbname).lower())],id_res)]
 
 
 
