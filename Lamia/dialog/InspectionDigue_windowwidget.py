@@ -1232,15 +1232,10 @@ class InspectiondigueWindowWidget(QMainWindow):
 
 
                         #Get the data of the table in both database
-                        #sql = 'SELECT '+  ','.join(fields_to_import) + ' FROM '+ str(dbname) + ' WHERE datecreation > \'' + str(self.dbase.date_deconnexion.strftime("%Y-%m-%d %H:%M:%S")) + '\' OR datemodification > \'' + str(self.dbase.date_deconnexion.strftime("%Y-%m-%d %H:%M:%S"))+'\''
+                        sql = 'SELECT '+  ','.join(fields_to_import) + ' FROM '+ str(dbname) + ' WHERE datecreation > \'' + str(self.dbase.date_deconnexion.strftime("%Y-%m-%d %H:%M:%S")) + '\' OR datemodification > \'' + str(self.dbase.date_deconnexion.strftime("%Y-%m-%d %H:%M:%S"))+'\''
 
-                        #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                        #A RETABLIR A LA FIN DES TESTS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                        #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
                         print(fields_to_import)
-
-                        sql = 'SELECT '+  ','.join(fields_to_import) + ' FROM '+ str(dbname)
                         print(sql)
 
                         try:
@@ -1402,7 +1397,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                             if nouveau:
 
                                 sql = 'INSERT INTO ' +  str(dbname) +' ('+  ','.join(fields_to_import) + ') VALUES ('+ str(output) + ') RETURNING id_'+str(dbname)
-                                #id_res= self.dbase.query(sql)
+                                id_res= self.dbase.query(sql)
                                 print('nouveau, sql : '+sql)
 
 
@@ -1456,7 +1451,7 @@ class InspectiondigueWindowWidget(QMainWindow):
 
                                             sql += ' WHERE id_'+str(dbname)+' = ' + str(id_local)
                                             print('update car non modifié, output et sql :'+output, sql)
-                                            #self.dbase.query(sql)
+                                            self.dbase.query(sql)
 
 
 
@@ -1503,7 +1498,7 @@ class InspectiondigueWindowWidget(QMainWindow):
 
                                                 sql += ' WHERE id_'+str(dbname)+' = ' + str(id_local)
                                                 print('conflit, final :'+output, sql)
-                                                #self.dbase.query(sql)
+                                                self.dbase.query(sql)
 
 
 
@@ -1574,7 +1569,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                                 print('output : '+ output)
 
                                 sql = 'INSERT INTO ' +  str(dbname) +' ('+  ','.join(fields_to_import) + ') VALUES ('+ str(output) + ') RETURNING id_'+str(dbname).lower()
-                                #id_res= self.dbase.query(sql)
+                                id_res= self.dbase.query(sql)
                                 print('tc_new, sql : '+sql)
 
                                 switch_id[dbname]+=[(item[list(self.dbase.dbasetables[dbname]['fields'].keys()).index('id_'+str(dbname).lower())],id_res)]
