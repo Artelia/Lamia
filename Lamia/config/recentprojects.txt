@@ -1,2 +1,3 @@
 C:\Users\valentin.anjou\Desktop\BD_SIJALAG_ind5.sqlite
 ../local/DB_local.sqlite
+C:/Users/valentin.anjou/Documents/GitHub/Lamia/Lamia/local/DB_local.sqlite
