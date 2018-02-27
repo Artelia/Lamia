@@ -1,0 +1,84 @@
+#DJAN  SELECT Infralineaire.*, Objet.datecreation, Objet.datedestruction, Objet.commentaire, Objet.libelle, Descriptionsystem.importancestrat, Descriptionsystem.etatfonct, Descriptionsystem.datederniereobs, Descriptionsystem.qualitegeoloc, Descriptionsystem.parametres, Descriptionsystem.listeparametres FROM Infralineaire INNER JOIN Descriptionsystem ON Infralineaire.id_descriptionsystem = Descriptionsystem.id_descriptionsystem INNER JOIN Objet ON Objet.id_objet = Infralineaire.id_objet
+#QGIS  SELECT Infralineaire.*, Objet.datecreation, Objet.datedestruction FROM Infralineaire INNER JOIN Descriptionsystem ON Infralineaire.id_descriptionsystem = Descriptionsystem.id_descriptionsystem INNER JOIN Objet ON Objet.id_objet = Infralineaire.id_objet
+#SHOW YES
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###id_infralineaire;    SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_objet;             INT ;                     INTEGER ;                                    Objet(id_objet)
+###id_descriptionsystem;        INT ;                       INTEGER;                            Descriptionsystem(id_descriptionsystem)
+###materiau;                VARCHAR(255);            TEXT
+/;
+Acier;              01
+Amiante-ciment;     02
+Beton ame tole;     03
+Beton ame;          04
+Beton fibre;        05
+Beton non arme;     06
+Cuivre;             07
+Fibre ciment;       08
+Fibre de verre;     09
+Fibrociment;        10
+Fonte ductile;      11
+Fonte grise;        12
+Gres;               13
+Maconnerie;         14
+Meuliere;           15
+PEBD;               16
+PEHD annele;        17
+PEHD lisse;         18
+Plomb;              19
+PP annele;          20
+PP lisse;           21
+PRV A;              22
+PRV B;              23
+PVC ancien;         24
+PVC BO;             25
+PVC U annele;       26
+PVC U lisse;        27
+Tole galvanisee;    28
+Autre;              00
+Indetermine;        99
+###diametreNominal;        INT ;                       INTEGER
+###anPoseSup;            DATE ;                  TEXT
+###maitreOuvrage;                VARCHAR(255);            TEXT
+###exploitant;                VARCHAR(255);            TEXT
+###enService;        INT ;                       INTEGER
+/;
+True;           1
+False           0
+###branchement;        INT ;                       INTEGER
+/;
+True;           1
+False           0
+###modeCirculation;        INT ;                       INTEGER
+/;
+Gravitaire;         01
+Force;              02
+Sous-vide;          03
+Autre;              00
+Indetermine;        99
+###metaREAPA;             INT ;                     INTEGER ;                                    Metaraepa(id_metaraepa)
+###anPoseInf;            DATE ;                  TEXT
+###longuer;             REAL;                     DECIMAL
+###typeReseau;                VARCHAR(255);            TEXT
+/;
+Pluvial;                  PLU
+Eaux usees;               USE
+Unitaire;                 UNI
+###contCanAss
+/;
+Eaux pluviales;     01
+Eaux usees;         02
+Unitaire;           03
+Autre;              00
+Indetermine;        99
+###fonctionCannAss
+/;
+Transport;          01
+Collecte;         02
+Autre;              00
+Indetermine;        99
+###altAmont;             REAL;                     DECIMAL
+###altAval;             REAL;                     DECIMAL
+###lk_noeud1;        INT ;                       INTEGER;                            Noeud(id_noeud)
+###lk_noeud2;        INT ;                       INTEGER;                            Noeud(id_noeud)
+###geom;                LINESTRING
