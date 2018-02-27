@@ -1022,6 +1022,18 @@ class InspectiondigueWindowWidget(QMainWindow):
                 templinkuserwgd = self.dbase.dbasetables['Topographie']['widget'].propertieswdgPOINTTOPO.linkuserwdg
             if item == "Infralineaire":
                 templinkuserwgd = self.dbase.dbasetables['Infralineaire']['widget'].linkuserwdg
+            if item == "Desordre":
+                templinkuserwgd = self.dbase.dbasetables['Desordre']['widget'].linkuserwdg
+            if item == "Observation":
+                templinkuserwgd = self.dbase.dbasetables['Observation']['widget'].linkuserwdg
+            if item == "Noeud":
+                templinkuserwgd = self.dbase.dbasetables['Noeud']['widget'].linkuserwdg
+            if item == "Equipement":
+                templinkuserwgd = self.dbase.dbasetables['Equipement']['widget'].linkuserwdg
+            if item == "Travaux":
+                templinkuserwgd = self.dbase.dbasetables['Travaux']['widget'].linkuserwdg
+            if item == "Environnement":
+                templinkuserwgd = self.dbase.dbasetables['Environnement']['widget'].linkuserwdg
 
 
             self.importobjetdialog.tableWidget.setRowCount(0)
