@@ -37,11 +37,65 @@ PVC U lisse;        27
 Tole galvanisee;    28
 Autre;              00
 Indetermine;        99
+###origineCasse;        INT ;                       INTEGER
+/;
+Casse;                                  01
+Corrosion externe;                      02
+Fissuration;                            03
+Conduite ecrasee;                       04
+Fuite au joint;                         05
+Fuite sur vanne;                        06
+Deterioration par un tiers;             07
+Autre;                                  08
+Surpression;                            09
+Gel degel;                              10
+Mouvement de terrain;                   11
+Courant induits;                        12
+###origineCasse;        INT ;                       INTEGER
+/;
+Champs + pont + RN+ HT;           01
+Hopital;                          02
+RD + pont;                        03
+RD+ ligne HT;                     04
+RN + cours d eau;                 05
+RN;                               06
+RN + ligne HT;                    07
+RN + pont;                        08
+Cours d eau + RD + HT;            09
+RD;                               10
+Champs + cours d eau;             11
+Pont;                             12
+Champs;                           13
+Champs + cours d eau + HT;        14
+Champs + HT;                      15
+Cours d eau + HT;                 16
+HT;                               17
+Chemin forestier;                 18
+Cours d eau;                      19
+Autre;                            00
 ###diametreNominal;        INT ;                       INTEGER
+###temperatureEau;        INT ;                       INTEGER
+###qualiteEau;        INT ;                       INTEGER
+###ageEau;        INT ;                       INTEGER
+###tauxChlore;        INT ;                       INTEGER
+###variationP;        INT ;                       INTEGER
+###densiteRepartition;        INT ;                       INTEGER
+###criticite;        INT ;                       INTEGER
+###corrosiviteSol;        INT ;                       INTEGER
+/;
+Limon;         1
+Marne;         2
+Argile;        3
+Gres;          4
+Calcaire;      5
 ###anPoseSup;            DATE ;                  TEXT
 ###maitreOuvrage;                VARCHAR(255);            TEXT
 ###exploitant;                VARCHAR(255);            TEXT
 ###enService;        INT ;                       INTEGER
+/;
+True;           1
+False           0
+###protection;        INT ;                       INTEGER
 /;
 True;           1
 False           0

@@ -1,0 +1,25 @@
+#DJAN  SELECT Option.*, Objet.datecreation, Objet.datedestruction, Objet.commentaire, Objet.libelle, Descriptionsystem.importancestrat, Descriptionsystem.etatfonct, Descriptionsystem.datederniereobs, Descriptionsystem.qualitegeoloc, Descriptionsystem.parametres, Descriptionsystem.listeparametres FROM Option INNER JOIN Descriptionsystem ON Option.id_descriptionsystem = Descriptionsystem.id_descriptionsystem INNER JOIN Objet ON Objet.id_objet = Option.id_objet
+#QGIS  SELECT Option.*, Objet.datecreation, Objet.datedestruction FROM Option INNER JOIN Descriptionsystem ON Option.id_descriptionsystem = Descriptionsystem.id_descriptionsystem INNER JOIN Objet ON Objet.id_objet = Option.id_objet
+#SHOW YES
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###id_option;    SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_objet;             INT ;                     INTEGER ;                                    Objet(id_objet)
+###id_descriptionsystem;        INT ;                       INTEGER;                            Descriptionsystem(id_descriptionsystem)
+###lk_photo;        INT ;                       INTEGER;                        Ressource(id_ressource)
+###niveau;        INT ;                       INTEGER
+###pourcent;        INT ;                       INTEGER
+###detail ;             VARCHAR(255);                TEXT
+###id_propriete;        INT ;                       INTEGER;                            Proriete(id_propriete)
+###propriete;        INT ;                       INTEGER
+/;
+On reprend la propriete de Propriete, ne peut pas être modifie ici
+....
+....
+....
+###option;        INT ;                       INTEGER
+##propriete
+/;
+En fonction de la propriete, les options ne sont pas les mêmes
+....
+....
+....

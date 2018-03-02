@@ -1,0 +1,23 @@
+#DJAN  SELECT Propriete.*, Objet.datecreation, Objet.datedestruction, Objet.commentaire, Objet.libelle, Descriptionsystem.importancestrat, Descriptionsystem.etatfonct, Descriptionsystem.datederniereobs, Descriptionsystem.qualitegeoloc, Descriptionsystem.parametres, Descriptionsystem.listeparametres FROM Propriete INNER JOIN Descriptionsystem ON Propriete.id_descriptionsystem = Descriptionsystem.id_descriptionsystem INNER JOIN Objet ON Objet.id_objet = Propriete.id_objet
+#QGIS  SELECT Propriete.*, Objet.datecreation, Objet.datedestruction FROM Propriete INNER JOIN Descriptionsystem ON Propriete.id_descriptionsystem = Descriptionsystem.id_descriptionsystem INNER JOIN Objet ON Objet.id_objet = Propriete.id_objet
+#SHOW YES
+# Nom_champ             TypePostGis              TypeSpatialite                          Propriete
+###id_propriete;    SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_objet;             INT ;                     INTEGER ;                                    Objet(id_objet)
+###id_descriptionsystem;        INT ;                       INTEGER;                            Descriptionsystem(id_descriptionsystem)
+###partie;             INT ;                   INTEGER
+###equipement;             INT ;                   INTEGER
+###ouvrage;             INT ;                   INTEGER
+###lk_ouvrage;             INT ;                   INTEGER;                               Infralineaire(id_infralineaire)
+###lk_equipement;             INT ;                   INTEGER;                               Equipement(id_equipement)
+###pk_debut;        INT ;                       INTEGER
+###pk_fin;        INT ;                       INTEGER
+###groupe_number;        INT ;                       INTEGER
+###valeur ;             VARCHAR(255);                TEXT
+###propriete;             INT ;                   INTEGER
+##id_equipement
+/;
+En fonction de l equipement (et de la partie ?) auquel on se rapporte, les proprietes ne sont pas forcement les mêmes
+....
+....
+....
