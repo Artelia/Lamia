@@ -22,7 +22,9 @@ def testRapport(canvas, loadfile=True, typedb="spatialite",tabletype=None, pdffi
             #path = os.path.normpath('C://001_travail_BM//BD_SIJALAG_ind0_travail2.sqlite')
             #path = os.path.normpath('I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201710_Begles//BD_Begles_ind0.sqlite')
             # path = os.path.normpath('C://000_testdigue//temp//test01.sqlite')
-            path = os.path.normpath( 'I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201708_SIJALAG//BD_SIJALAG_ind4.sqlite')
+            # path = os.path.normpath( 'I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201708_SIJALAG//BD_SIJALAG_ind8.sqlite')
+            # path = os.path.normpath('C://000_testdigue//temp//BD_Rivedroite_ind1.sqlite')
+            path = os.path.normpath('I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201710_Begles//BD_Begles_ind8.sqlite')
             wind.dbase.loadQgisVectorLayers(path)
 
         elif typedb == "postgis":
@@ -39,10 +41,18 @@ def testRapport(canvas, loadfile=True, typedb="spatialite",tabletype=None, pdffi
 # *********************************************************************************************************************
 
 
-if True:
-    qgis_path = "C://OSGeo4W64//apps//qgis"
+try:
+    qgisversion_int = qgis.utils.QGis.QGIS_VERSION_INT
+except AttributeError:  #qgis 3
+    qgisversion_int = qgis.utils.Qgis.QGIS_VERSION_INT
+
+print(qgisversion_int)
+
+if int(str(qgisversion_int)[0:3]) < 220:
+    qgis_path = "C://OSGeo4W64//apps//qgis-ltr"
 else:
-    qgis_path = "C://OSGeo4W64//apps//qgis-dev"
+    qgis_path = "C://OSGeo4W64//apps//qgis"
+    #os.environ["QT_QPA_PLATFORM"] = "offscreen"
 
 app = qgis.core.QgsApplication([], True)
 qgis.core.QgsApplication.setPrefixPath(qgis_path, True)

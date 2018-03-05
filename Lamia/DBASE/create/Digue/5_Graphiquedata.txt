@@ -3,6 +3,7 @@
 # Nom_champ             TypePostGis              TypeSpatialite                          Option
 ###id_graphiquedata;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
 ###typedata;                VARCHAR(255);            TEXT
+/;
 Simple;                  SIM
 Profil en travers relatif;PTR
 Profil en travers cote;PTC

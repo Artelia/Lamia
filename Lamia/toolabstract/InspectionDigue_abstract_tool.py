@@ -41,6 +41,7 @@ class AbstractInspectionDigueTool(QWidget):
         @param linkedtreewidget  : the treewidget it interacts with
         @param parent : the parent widget (TODO : the same as dialog)
         """
+        import time
         timestart = time.clock()
         if debugtime: logging.getLogger('Lamia').debug('Start init %.3f', time.clock() - timestart)
 
@@ -172,14 +173,10 @@ class AbstractInspectionDigueTool(QWidget):
         if debugtime: logging.getLogger('Lamia').debug('before initTool %.3f', time.clock() - timestart)
         self.initTool()
         if debugtime: logging.getLogger('Lamia').debug('After initTool %.3f', time.clock() - timestart)
+
         # *******************************************************
         # Post inittool things
-        # widget connection
-        if self.userwdgfield is not None:
-            self.userwdg = self.userwdgfield
-            self.linkuserwdg = self.linkuserwdgfield
-        if self.dbasechildwdgfield is not None:
-            self.dbasechildwdg = self.dbasechildwdgfield
+
 
 
 
@@ -193,8 +190,20 @@ class AbstractInspectionDigueTool(QWidget):
             # connect signals of inherited widget
             if self.windowdialog is not None:
                 self.windowdialog.MaintreeWidget.currentItemChanged.connect(self.onActivationRaw)
+        """
+        # widget connection
+        if self.userwdgfield is not None:
+            self.userwdg = self.userwdgfield
+            self.linkuserwdg = self.linkuserwdgfield
+        if self.dbasechildwdgfield is not None:
+            self.dbasechildwdg = self.dbasechildwdgfield
+        """
 
+
+        if self.dbasetablename is not None:
             self.initWidgets()
+
+
         """
         #childwdg change
         if True:
@@ -218,6 +227,12 @@ class AbstractInspectionDigueTool(QWidget):
             self.iconpath = '...path to icon...'
         """
         pass
+
+    def initFieldUI(self):
+        pass
+
+    def initDesktopUI(self):
+        self.initFieldUI()
 
     # ******************************************************************************************************************
     # **********************************    on dbase loaded   methods        *******************************************
@@ -246,17 +261,27 @@ class AbstractInspectionDigueTool(QWidget):
         if self.dbase.visualmode in [0, 1, 4]:
             # define self.userwdg, self.linkuserwdg and self.dbasechildwdg
             if self.dbase.visualmode == 0:
+                self.initFieldUI()
                 if self.userwdgfield is not None:
                     self.userwdg = self.userwdgfield
                     self.linkuserwdg = self.linkuserwdgfield
                 if self.dbasechildwdgfield is not None:
                     self.dbasechildwdg = self.dbasechildwdgfield
             elif self.dbase.visualmode in [1,4]:
+                self.initDesktopUI()
                 if self.userwdgdesktop is not None:
                     self.userwdg = self.userwdgdesktop
                     self.linkuserwdg = self.linkuserwdgdesktop
+                else:
+                    self.userwdg = self.userwdgfield
+                    self.linkuserwdg = self.linkuserwdgfield
+
                 if self.dbasechildwdgdesktop is not None:
-                    self.dbasechildwdg = self.dbasechildwdgdesktop
+                    self.dbasechildwdg = self.dbasechildwdgfield + self.dbasechildwdgdesktop
+                elif self.dbasechildwdgfield is not None:
+                    self.dbasechildwdg = self.dbasechildwdgfield
+                else:
+                    self.dbasechildwdg = []
             # load userwdg
             if self.userwdg is not None:
                 self.groupBox_properties.layout().addWidget(self.userwdg)
@@ -381,10 +406,13 @@ class AbstractInspectionDigueTool(QWidget):
                         self.tableWidget.setCellWidget(rowPosition, 1, wdg)
 
                         linkuserwdglist = []
-                        if self.linkuserwdgfield is not None and self.linkuserwdgdesktop is not None:
-                            linkuserwdglist.append(self.linkuserwdgfield)
-                            linkuserwdglist.append(self.linkuserwdgdesktop)
-                        else :
+                        if self.linkuserwdgfield is not None or self.linkuserwdgdesktop is not None:
+                            if self.linkuserwdgfield is not None :
+                                linkuserwdglist.append(self.linkuserwdgfield)
+                            if self.linkuserwdgdesktop is not None:
+                                linkuserwdglist.append(self.linkuserwdgdesktop)
+                        elif self.linkuserwdg is not None:
+                            #else :
                             linkuserwdglist.append(self.linkuserwdg)
 
                         for linkuserwdg in linkuserwdglist:
@@ -512,7 +540,7 @@ class AbstractInspectionDigueTool(QWidget):
             self.pushButton_goto.setEnabled(False)
 
         # GPS
-        if self.gpsutil is not None and (self.gpswidget is not None or 'geom' in self.dbasetable.keys()):
+        if self.gpsutil is not None and (self.gpswidget is not None or (self.dbasetable is not None and 'geom' in self.dbasetable.keys())):
             self.gpsutil.GPSConnected.connect(self.displayGPS)
 
         # Magic button
@@ -594,7 +622,7 @@ class AbstractInspectionDigueTool(QWidget):
 
         if senderwdg.text() == 'Open':
             filepath = self.getValueFromWidget(self.tableWidget.cellWidget(ind, 1), tablename, fieldname)
-            os.startfile(self.completePathOfFile(filepath))
+            os.startfile(self.dbase.completePathOfFile(filepath))
 
         elif senderwdg.text() == 'Pick':
             self.pickfield = fieldname
@@ -1155,7 +1183,7 @@ class AbstractInspectionDigueTool(QWidget):
         # **************** gui things when selected ***************************************************************
         if self.dbasetable is not None:                             #widget has dbasetable linked
             if id is not None:        # item clicked in treewidget
-                self.currentFeature = self.getLayerFeatureById(self.dbasetablename, id)
+                self.currentFeature = self.dbase.getLayerFeatureById(self.dbasetablename, id)
                 if self.parentWidget is None:
                     if int(str(self.dbase.qgisversion_int)[0:3]) < 218:
                         self.dbasetable['layerqgis'].setSelectedFeatures([self.currentFeature.id()])
@@ -1231,7 +1259,7 @@ class AbstractInspectionDigueTool(QWidget):
                             else:
                                 parendid = feat[templinkuserwgd[tablename]['linkfield']]
                                 # parentfeat = self.dbase.dbasetables[tablename]['layer'].getFeatures(qgis.core.QgsFeatureRequest(parendid)).next()
-                                parentfeat = self.getLayerFeatureById(tablename, parendid)
+                                parentfeat = self.dbase.getLayerFeatureById(tablename, parendid)
                                 workingfeat = parentfeat
                             try :
                                 valuetoset = workingfeat[field]
@@ -1277,7 +1305,7 @@ class AbstractInspectionDigueTool(QWidget):
                     if isspatial:
                         # if self.dbasetable['layerview'].isSpatial():
                         # lk_presta = self.dbasetable['layerview'].getFeatures(qgis.core.QgsFeatureRequest(feat.id())).next()['lk_marche']
-                        lk_presta = self.getLayerFeatureById(self.dbasetablename, feat.id())['lk_marche']
+                        lk_presta = self.dbase.getLayerFeatureById(self.dbasetablename, feat.id())['lk_marche']
                     else:
                         if True:
                             listfeat = list(self.dbasetable['layerqgis'].getFeatures())
@@ -1290,7 +1318,7 @@ class AbstractInspectionDigueTool(QWidget):
                             lk_presta = [row[0] for row in query][0]
                 else:
                     # lk_presta = self.dbasetable['layerview'].getFeatures(qgis.core.QgsFeatureRequest(feat.id())).next()['lk_marche']
-                    lk_presta = self.getLayerFeatureById(self.dbasetablename, feat.id())['lk_marche']
+                    lk_presta = self.dbase.getLayerFeatureById(self.dbasetablename, feat.id())['lk_marche']
                 if lk_presta != self.dbase.currentprestationid:
                     self.pushButton_savefeature.setEnabled(False)
 
@@ -1425,23 +1453,23 @@ class AbstractInspectionDigueTool(QWidget):
             # Second save attributes
             # print('id', self.currentFeature.attributes())
             # self.currentFeature = self.dbasetable['layer'].getFeatures(qgis.core.QgsFeatureRequest(self.currentFeature.id())).next()
-            self.currentFeature = self.getLayerFeatureById(self.dbasetablename, self.currentFeature.id())
+            self.currentFeature = self.dbase.getLayerFeatureById(self.dbasetablename, self.currentFeature.id())
 
             self.saveFeatureProperties()
             # self.currentFeature = self.dbasetable['layer'].getFeatures(qgis.core.QgsFeatureRequest(self.currentFeature.id())).next()
-            self.currentFeature = self.getLayerFeatureById(self.dbasetablename, self.currentFeature.id())
+            self.currentFeature = self.dbase.getLayerFeatureById(self.dbasetablename, self.currentFeature.id())
 
             # then save properly ressource file if exists
             if self.linkuserwdg is not None and 'Ressource' in self.linkuserwdg.keys():
                 self.saveRessourceFile()
 
             # self.currentFeature = self.dbasetable['layer'].getFeatures(qgis.core.QgsFeatureRequest(self.currentFeature.id())).next()
-            self.currentFeature = self.getLayerFeatureById(self.dbasetablename, self.currentFeature.id())
+            self.currentFeature = self.dbase.getLayerFeatureById(self.dbasetablename, self.currentFeature.id())
 
             # do postsavefeature traitment
             self.postSaveFeature(self.savingnewfeature)
             # self.currentFeature = self.dbasetable['layer'].getFeatures(qgis.core.QgsFeatureRequest(self.currentFeature.id())).next()
-            self.currentFeature = self.getLayerFeatureById(self.dbasetablename, self.currentFeature.id())
+            self.currentFeature = self.dbase.getLayerFeatureById(self.dbasetablename, self.currentFeature.id())
 
             # current prestation case:
             if self.savingnewfeature and self.linkagespec is not None and 'Marche' in self.linkagespec.keys()  and self.dbase.currentprestationid is not None:
@@ -1461,7 +1489,7 @@ class AbstractInspectionDigueTool(QWidget):
                     # self.dbase.commit()
 
             # self.currentFeature = self.dbasetable['layer'].getFeatures(qgis.core.QgsFeatureRequest(self.currentFeature.id())).next()
-            self.currentFeature = self.getLayerFeatureById(self.dbasetablename, self.currentFeature.id())
+            self.currentFeature = self.dbase.getLayerFeatureById(self.dbasetablename, self.currentFeature.id())
 
             # update datemodification
             if self.dbasetable is not None and 'id_objet' in self.dbasetable['fields'].keys() :
@@ -1558,10 +1586,10 @@ class AbstractInspectionDigueTool(QWidget):
         # print('addedFeatureid',feat.id(),self.addedFeatureid)
         if self.addedFeatureid is not None:
             # return dbasetablelayer.getFeatures(qgis.core.QgsFeatureRequest(self.addedFeatureid)).next()
-            return self.getLayerFeatureById(table, self.addedFeatureid)
+            return self.dbase.getLayerFeatureById(table, self.addedFeatureid)
         else:
             # return dbasetablelayer.getFeatures(qgis.core.QgsFeatureRequest(feat.id())).next()
-            return self.getLayerFeatureById(table, feat.id())
+            return self.dbase.getLayerFeatureById(table, feat.id())
 
 
 
@@ -1585,7 +1613,7 @@ class AbstractInspectionDigueTool(QWidget):
                     # print('attrs',self.currentFeature.attributes())
                     featid = self.currentFeature[self.linkuserwdg[tablename]['linkfield']]
                     # feature = self.dbase.dbasetables[tablename]['layer'].getFeatures(qgis.core.QgsFeatureRequest(featid)).next()
-                    feature = self.getLayerFeatureById(tablename, featid)
+                    feature = self.dbase.getLayerFeatureById(tablename, featid)
                     for fieldname in self.linkuserwdg[tablename]['widgets'].keys():
                         fieldvaluetosave = self.getValueFromWidget(self.linkuserwdg[tablename]['widgets'][fieldname],
                                                                    tablename,
@@ -1609,7 +1637,7 @@ class AbstractInspectionDigueTool(QWidget):
 
                 featid = self.currentFeature[templinkuserwgd[tablename]['linkfield']]
                 # feature = self.dbase.dbasetables[tablename]['layer'].getFeatures(qgis.core.QgsFeatureRequest(featid)).next()
-                feature = self.getLayerFeatureById(tablename, featid)
+                feature = self.dbase.getLayerFeatureById(tablename, featid)
 
                 for j, field in enumerate(dbasetable['fields'].keys()):
                     itemindex = listfieldname.index(tablename + '.' + field)
@@ -1942,7 +1970,7 @@ class AbstractInspectionDigueTool(QWidget):
             layer = self.dbase.dbasetables[layernearist]['layer']
             idtoget = self.pickTable[self.pickfield][layernearist]
             # nearestfeature = layer.getFeatures(qgis.core.QgsFeatureRequest(nearestid)).next()
-            nearestfeature = self.getLayerFeatureById(layernearist, nearestid)
+            nearestfeature = self.dbase.getLayerFeatureById(layernearist, nearestid)
             nearattributevalue = nearestfeature[idtoget]
             if int(str(self.dbase.qgisversion_int)[0:3]) < 218:
                 layer.setSelectedFeatures([nearestfeature.id()])
@@ -1979,7 +2007,7 @@ class AbstractInspectionDigueTool(QWidget):
             self.picklayername = None
             self.pickspinbox = None
 
-
+    """
     def getNearestId(self, point, comefromcanvas=True):
         if int(str(self.dbase.qgisversion_int)[0:3]) < 218:
             isspatial = self.dbasetable['layerqgis'].geometryType()  < 3
@@ -2001,10 +2029,6 @@ class AbstractInspectionDigueTool(QWidget):
         spIndex = qgis.core.QgsSpatialIndex(self.dbasetable['layerqgis'].getFeatures())
         layernearestids = spIndex.nearestNeighbor(point2, 5)
         # print('getNearestId',layernearestids)
-        """
-        for nid in layernearestid:
-            nearestid.append([layer, point2geom, nid])
-        """
         distance = None
         nearestindex = None
         # geom = None
@@ -2033,7 +2057,7 @@ class AbstractInspectionDigueTool(QWidget):
                     distance = dist
                     nearestindex = layernearestid
         return nearestindex, distance
-
+    """
 
 
     def zoomToFeature(self,fid=None):
@@ -2042,7 +2066,7 @@ class AbstractInspectionDigueTool(QWidget):
         if fid is None:
             feat = self.currentFeature
         else:
-            feat = self.getLayerFeatureById(self.dbasetablename,fid )
+            feat = self.dbase.getLayerFeatureById(self.dbasetablename,fid )
         # point2 = xform.transform(feat.geometry().centroid().asPoint())
         if feat.geometry().centroid() is not None:
             point2 = self.dbase.xform.transform(feat.geometry().centroid().asPoint())
@@ -2128,8 +2152,8 @@ class AbstractInspectionDigueTool(QWidget):
 
                     newfile = finalname
 
-                    if os.path.isfile(self.completePathOfFile(oldfile)) and oldfile != newfile:
-                        os.remove(self.completePathOfFile(oldfile))
+                    if os.path.isfile(self.dbase.completePathOfFile(oldfile)) and oldfile != newfile:
+                        os.remove(self.dbase.completePathOfFile(oldfile))
                     else:
                         pass
 
@@ -2137,7 +2161,7 @@ class AbstractInspectionDigueTool(QWidget):
 
 
     def showImageinLabelWidget(self,wdg,savedfile):
-        file = self.completePathOfFile(savedfile)
+        file = self.dbase.completePathOfFile(savedfile)
         if os.path.isfile(file):
             wdg.clear()
             wdg.setPixmap(file)
@@ -2145,6 +2169,7 @@ class AbstractInspectionDigueTool(QWidget):
             wdg.clear()
             wdg.setText('Image non trouvee')
 
+    """
     def completePathOfFile(self,file):
         completefile = ''
         if int(str(self.dbase.qgisversion_int)[0:3]) < 220 and isinstance(file, QtCore.QPyNullVariant):
@@ -2161,7 +2186,9 @@ class AbstractInspectionDigueTool(QWidget):
 
             completefile = os.path.normpath(completefile)
         return completefile
+    """
 
+    """
     def isAttributeNull(self,attr):
         if int(str(self.dbase.qgisversion_int)[0:3]) < 220 and isinstance(attr, QtCore.QPyNullVariant):
             return True
@@ -2171,7 +2198,7 @@ class AbstractInspectionDigueTool(QWidget):
             return True
         else:
             return False
-
+    """
 
     def goToFeaturePressed(self):
 
@@ -2247,24 +2274,37 @@ class AbstractInspectionDigueTool(QWidget):
         for key in self.gpswidget.keys():
             if 'gga' in self.gpswidget[key].keys() and self.gpswidget[key]['widget'] is not None:
                 if key == 'zmNGF' :
-                    self.gpswidget[key]['widget'].setText(str(round(dictgga[self.gpswidget[key]['gga']] - self.dbase.hauteurperche,2)))
+                    try:
+                        self.gpswidget[key]['widget'].setText(str(round(dictgga[self.gpswidget[key]['gga']] - self.dbase.hauteurperche,2)))
+                    except KeyError:
+                        pass
                 elif key == 'zgps' :
-                    self.gpswidget[key]['widget'].setText(str(round(dictgga[self.gpswidget[key]['gga']] - self.dbase.hauteurperche,2)))
+                    try:
+                        self.gpswidget[key]['widget'].setText(str(round(dictgga[self.gpswidget[key]['gga']] - self.dbase.hauteurperche,2)))
+                    except KeyError:
+                        pass
                 elif key == 'hauteurperche' :
-                    self.gpswidget[key]['widget'].setText(str(round(self.dbase.hauteurperche,2)))
+                    try:
+                        self.gpswidget[key]['widget'].setText(str(round(self.dbase.hauteurperche,2)))
+                    except KeyError:
+                        pass
                 else:
-                    self.gpswidget[key]['widget'].setText(str(round(dictgga[self.gpswidget[key]['gga']],2)))
+                    try:
+                        self.gpswidget[key]['widget'].setText(str(round(dictgga[self.gpswidget[key]['gga']],2)))
+                    except KeyError:
+                        pass
 
     def displayGST(self, dictgst):
         for key in self.gpswidget.keys():
             if 'gst' in self.gpswidget[key].keys() and self.gpswidget[key]['widget'] is not None:
                 self.gpswidget[key]['widget'].setText(str(round(dictgst[self.gpswidget[key]['gst']],2)))
-
+    """
     def getLayerFeatureById(self,layername,fid):
         if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
             return self.dbase.dbasetables[layername]['layer'].getFeatures(qgis.core.QgsFeatureRequest(fid)).next()
         else:
             return self.dbase.dbasetables[layername]['layer'].getFeature(fid)
+    """
 
     def getDBaseChildWidget(self,keywidget):
         wdg = self.dbasechildwdg[keywidget]

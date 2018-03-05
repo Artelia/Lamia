@@ -8,9 +8,11 @@ except ImportError:
 
 from ..toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
 import os
+"""
 from ..toolprepro.InspectionDigue_photos_tool import PhotosTool
 from ..toolprepro.InspectionDigue_observation_tool import ObservationTool
 from ..toolabstract.inspectiondigue_abstractworker import AbstractWorker
+"""
 import io
 import matplotlib
 matplotlib.use('Agg')
@@ -23,8 +25,18 @@ import matplotlib.pyplot as plt
 
 class SyntheseZonegeoTool(AbstractInspectionDigueTool):
 
+    # DBASES = ['digue']
+
     def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
         super(SyntheseZonegeoTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
+
+        """
+        exec('from ..toolprepro.' + dbase.type.lower() + '.lamia' + dbase.type.lower() + '_photos_tool import PhotosTool')
+        exec('from ..toolprepro.' + dbase.type.lower() + '.lamia' + dbase.type.lower() + '_observation_tool import ObservationTool')
+        """
+        # from ..toolprepro.InspectionDigue_photos_tool import PhotosTool
+        # from ..toolprepro.InspectionDigue_observation_tool import ObservationTool
+        # from ..toolabstract.inspectiondigue_abstractworker import AbstractWorker
         
     def initTool(self):
         # ****************************************************************************************
@@ -44,20 +56,24 @@ class SyntheseZonegeoTool(AbstractInspectionDigueTool):
         self.groupBox_geom.setParent(None)
         self.groupBox_elements.setParent(None)
 
+    def initFieldUI(self):
         # ****************************************************************************************
-        # userui
+        #   userui Field
+        if self.userwdgfield is None:
+            # ****************************************************************************************
+            # userui
 
-        self.userwdg = UserUI()
-        self.userwdg.comboBox_objetrequest.clear()
-        self.userwdg.comboBox_objetrequest.addItems(['Zone geographique', 'Troncon'])
-        self.userwdg.comboBox_objetrequest.currentIndexChanged.connect(self.postOnActivation)
+            self.userwdgfield = UserUI()
+            self.userwdgfield.comboBox_objetrequest.clear()
+            self.userwdgfield.comboBox_objetrequest.addItems(['Zone geographique', 'Troncon'])
+            self.userwdgfield.comboBox_objetrequest.currentIndexChanged.connect(self.postOnActivation)
 
-        self.propertieswdgDESORDRE = DesordreSyntheseTool(dbase=self.dbase,
-                                                          linkedtreewidget=self.userwdg.treeWidget_desordres,
-                                                          # dialog = self.windowdialog,
-                                                          parentwidget=self)
+            self.propertieswdgDESORDRE = DesordreSyntheseTool(dbase=self.dbase,
+                                                              linkedtreewidget=self.userwdgfield.treeWidget_desordres,
+                                                              # dialog = self.windowdialog,
+                                                              parentwidget=self)
 
-        self.userwdg.frame_2.layout().addWidget(self.propertieswdgDESORDRE)
+            self.userwdgfield.frame_2.layout().addWidget(self.propertieswdgDESORDRE)
 
 
 
@@ -65,7 +81,7 @@ class SyntheseZonegeoTool(AbstractInspectionDigueTool):
     def postOnActivation(self):
         self.disconnectIdsGui()
         self._clearLinkedTreeWidget()
-        self.userwdg.treeWidget_desordres.clear()
+        self.userwdgfield.treeWidget_desordres.clear()
 
 
 
@@ -85,14 +101,14 @@ class SyntheseZonegeoTool(AbstractInspectionDigueTool):
         ids = []
         # ******************************************************************
         # combo : infralineaire
-        if self.userwdg.comboBox_objetrequest.currentText() == 'Troncon':
+        if self.userwdgfield.comboBox_objetrequest.currentText() == 'Troncon':
             # sql = 'SELECT id_infralineaire FROM Infralineaire_view'
             sql = 'SELECT id_infralineaire FROM Infralineaire_qgis'
             #query = self.dbase.query(sql)
             # ids = [row[0:1] for row in query]
         # ******************************************************************
         # combo : zonegeo
-        if self.userwdg.comboBox_objetrequest.currentText() == 'Zone geographique':
+        if self.userwdgfield.comboBox_objetrequest.currentText() == 'Zone geographique':
             # sql = 'SELECT id_zonegeo FROM zonegeo_view'
             sql = 'SELECT id_zonegeo FROM zonegeo_qgis'
 
@@ -150,12 +166,12 @@ class SyntheseZonegeoTool(AbstractInspectionDigueTool):
     def selectPickedFeature(self, point):
         # ******************************************************************
         # combo : infralineaire
-        if self.userwdg.comboBox_objetrequest.currentText() == 'Troncon':
+        if self.userwdgfield.comboBox_objetrequest.currentText() == 'Troncon':
             layer = self.dbase.dbasetables['Infralineaire']['layerqgis']
             wdg = self.dbase.dbasetables['Infralineaire']['widget']
         # ******************************************************************
         # combo : zone geo
-        if self.userwdg.comboBox_objetrequest.currentText() == 'Zone geographique':
+        if self.userwdgfield.comboBox_objetrequest.currentText() == 'Zone geographique':
             layer = self.dbase.dbasetables['Zonegeo']['layerqgis']
             wdg = self.dbase.dbasetables['Zonegeo']['widget']
         nearestid, dist = wdg.getNearestId(point)
@@ -183,6 +199,9 @@ class DesordreSyntheseTool(AbstractInspectionDigueTool):
     def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None, parentwidget=None, parent=None):
         super(DesordreSyntheseTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil, parentwidget, parent=parent)
 
+        exec('from ..toolprepro.' + dbase.type.lower() + '.lamia' + dbase.type.lower() + '_photos_tool import PhotosTool')
+        exec('from ..toolprepro.' + dbase.type.lower() + '.lamia' + dbase.type.lower() + '_observation_tool import ObservationTool')
+
     def initTool(self):
         # ****************************************************************************************
         # Main spec
@@ -201,66 +220,70 @@ class DesordreSyntheseTool(AbstractInspectionDigueTool):
         self.groupBox_geom.setParent(None)
         self.linkedtreewidget.currentItemChanged.connect(self.itemChanged)
 
+    def initFieldUI(self):
         # ****************************************************************************************
-        # userui
-        self.userwdg = DesordreUserUI()
-        self.linkuserwdg = {'Desordre': {'linkfield': 'id_desordre',
-                                         'widgets': {'cote': self.userwdg.label_cote,
-                                                     'position': self.userwdg.label_position,
-                                                     'catdes': self.userwdg.label_catdes,
-                                                     'typedes': self.userwdg.label_typedes}},
-                            'Objet': {'linkfield': 'id_objet',
-                                      'widgets': {}}}
+        #   userui Field
+        if self.userwdgfield is None:
+            # ****************************************************************************************
+            # userui
+            self.userwdgfield = DesordreUserUI()
+            self.linkuserwdgfield = {'Desordre': {'linkfield': 'id_desordre',
+                                             'widgets': {'cote': self.userwdgfield.label_cote,
+                                                         'position': self.userwdgfield.label_position,
+                                                         'catdes': self.userwdgfield.label_catdes,
+                                                         'typedes': self.userwdgfield.label_typedes}},
+                                'Objet': {'linkfield': 'id_objet',
+                                          'widgets': {}}}
 
-        try:
-            self.figuretype = plt.figure()
-            # self.canvastype = FigureCanvas(self.figuretype)
-            #layout = QtGui.QVBoxLayout()
-
-            # self.parentWidget.userwdg.frame_chart.layout().addWidget(self.canvastype)
-            # self.userwdg.frame_type.setLayout(layout)
-            self.axtype = self.figuretype.add_subplot(111)
-        except NameError:
-            print('no matplotlib')
-
-        self.graphwdg = Label()
-        self.parentWidget.userwdg.frame_chart.layout().addWidget(self.graphwdg)
-
-
-        self.synteticresultfields = {'Categorie': 'Desordre.catdes',
-                                'Type': 'Desordre.typedes',
-                                'Urgence': 'Observation.gravite'}
-
-        self.parentWidget.userwdg.comboBox_chart_theme.addItems(list(self.synteticresultfields.keys()))
-        self.parentWidget.userwdg.comboBox_chart_theme.currentIndexChanged.connect(self.getSyntheticResults)
-
-
-        # ****************************************************************************************
-        # child widgets
-        if True:
-            self.propertieswdgOBSERVATION = ObservationSyntheseTool(dbase=self.dbase, parentwidget=self)
-            self.propertieswdgOBSERVATION.NAME = None
-            self.propertieswdgOBSERVATION.frame_edit.setParent(None)
-            self.userwdg.frame_observ.layout().addWidget(self.propertieswdgOBSERVATION)
-            self.dbasechildwdg.append(self.propertieswdgOBSERVATION)
-        if True:
-            self.propertieswdgPHOTOGRAPHIE = PhotosTool(dbase=self.dbase, parentwidget=self.propertieswdgOBSERVATION)
-            self.propertieswdgPHOTOGRAPHIE.NAME = None
-            self.propertieswdgPHOTOGRAPHIE.groupBox_geom.setParent(None)
-            self.propertieswdgPHOTOGRAPHIE.frame_edit.setParent(None)
-            self.propertieswdgPHOTOGRAPHIE.userwdg.pushButton_lastph.setParent(None)
-            self.propertieswdgPHOTOGRAPHIE.userwdg.label_5.setParent(None)
-            self.propertieswdgPHOTOGRAPHIE.userwdg.lineEdit_file.setParent(None)
-            self.propertieswdgPHOTOGRAPHIE.userwdg.pushButton_chooseph.setParent(None)
-            self.propertieswdgPHOTOGRAPHIE.userwdg.dateEdit.setEnabled(False)
-            self.userwdg.frame_photo.layout().addWidget(self.propertieswdgPHOTOGRAPHIE)
-            self.propertieswdgOBSERVATION.dbasechildwdg = [self.propertieswdgPHOTOGRAPHIE]
             try:
-                self.propertieswdgOBSERVATION.currentFeatureChanged.disconnect()
-            except:
-                pass
-            for childwdg in self.propertieswdgOBSERVATION.dbasechildwdg:
-                self.propertieswdgOBSERVATION.currentFeatureChanged.connect(childwdg.loadChildFeatureinWidget)
+                self.figuretype = plt.figure()
+                # self.canvastype = FigureCanvas(self.figuretype)
+                #layout = QtGui.QVBoxLayout()
+
+                # self.parentWidget.userwdgfield.frame_chart.layout().addWidget(self.canvastype)
+                # self.userwdgfield.frame_type.setLayout(layout)
+                self.axtype = self.figuretype.add_subplot(111)
+            except NameError:
+                print('no matplotlib')
+
+            self.graphwdg = Label()
+            self.parentWidget.userwdgfield.frame_chart.layout().addWidget(self.graphwdg)
+
+
+            self.synteticresultfields = {'Categorie': 'Desordre.catdes',
+                                    'Type': 'Desordre.typedes',
+                                    'Urgence': 'Observation.gravite'}
+
+            self.parentWidget.userwdgfield.comboBox_chart_theme.addItems(list(self.synteticresultfields.keys()))
+            self.parentWidget.userwdgfield.comboBox_chart_theme.currentIndexChanged.connect(self.getSyntheticResults)
+
+
+            # ****************************************************************************************
+            # child widgets
+            if True:
+                self.propertieswdgOBSERVATION = ObservationSyntheseTool(dbase=self.dbase, parentwidget=self)
+                self.propertieswdgOBSERVATION.NAME = None
+                self.propertieswdgOBSERVATION.frame_edit.setParent(None)
+                self.userwdgfield.frame_observ.layout().addWidget(self.propertieswdgOBSERVATION)
+                self.dbasechildwdg.append(self.propertieswdgOBSERVATION)
+            if True:
+                self.propertieswdgPHOTOGRAPHIE = PhotosTool(dbase=self.dbase, parentwidget=self.propertieswdgOBSERVATION)
+                self.propertieswdgPHOTOGRAPHIE.NAME = None
+                self.propertieswdgPHOTOGRAPHIE.groupBox_geom.setParent(None)
+                self.propertieswdgPHOTOGRAPHIE.frame_edit.setParent(None)
+                self.propertieswdgPHOTOGRAPHIE.userwdgfield.pushButton_lastph.setParent(None)
+                self.propertieswdgPHOTOGRAPHIE.userwdgfield.label_5.setParent(None)
+                self.propertieswdgPHOTOGRAPHIE.userwdgfield.lineEdit_file.setParent(None)
+                self.propertieswdgPHOTOGRAPHIE.userwdgfield.pushButton_chooseph.setParent(None)
+                self.propertieswdgPHOTOGRAPHIE.userwdgfield.dateEdit.setEnabled(False)
+                self.userwdgfield.frame_photo.layout().addWidget(self.propertieswdgPHOTOGRAPHIE)
+                self.propertieswdgOBSERVATION.dbasechildwdg = [self.propertieswdgPHOTOGRAPHIE]
+                try:
+                    self.propertieswdgOBSERVATION.currentFeatureChanged.disconnect()
+                except:
+                    pass
+                for childwdg in self.propertieswdgOBSERVATION.dbasechildwdg:
+                    self.propertieswdgOBSERVATION.currentFeatureChanged.connect(childwdg.loadChildFeatureinWidget)
 
 
     def loadIds(self):
@@ -268,7 +291,7 @@ class DesordreSyntheseTool(AbstractInspectionDigueTool):
         ids = []
         # ******************************************************************
         # combo : infralineaire
-        if self.parentWidget.userwdg.comboBox_objetrequest.currentText() == 'Troncon':
+        if self.parentWidget.userwdgfield.comboBox_objetrequest.currentText() == 'Troncon':
             #sql = 'SELECT id_descriptionsystem FROM Infralineaire_view WHERE id_objet = ' + str(objetid)
             sql = 'SELECT id_descriptionsystem FROM Infralineaire WHERE id_objet = ' + str(objetid)
             query = self.dbase.query(sql)
@@ -286,7 +309,7 @@ class DesordreSyntheseTool(AbstractInspectionDigueTool):
             # ids = [row[0:1] for row in query]
         # ******************************************************************
         # combo : zone geo
-        if self.parentWidget.userwdg.comboBox_objetrequest.currentText() == 'Zone geographique':
+        if self.parentWidget.userwdgfield.comboBox_objetrequest.currentText() == 'Zone geographique':
             #sql = "SELECT ST_AsText(geom) FROM Zonegeo_view WHERE id_zonegeo = " + str(objetid)
             sql = "SELECT ST_AsText(geom) FROM Zonegeo WHERE id_zonegeo = " + str(objetid)
             query = self.dbase.query(sql)
@@ -326,8 +349,6 @@ class DesordreSyntheseTool(AbstractInspectionDigueTool):
             return ids
         else:
             return ids
-
-
 
 
     def itemChanged(self,item):
@@ -396,6 +417,7 @@ class DesordreSyntheseTool(AbstractInspectionDigueTool):
 
             # self.axtype.clear()
             self.axtype.cla()
+
             # plt.cla()
             self.axtype.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%', shadow=True, startangle=90)
             self.axtype.axis('equal')

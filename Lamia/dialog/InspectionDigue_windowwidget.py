@@ -26,6 +26,8 @@ stream_handler.setFormatter(formatter)
 logger.addHandler(stream_handler)
 debugtime = False
 
+import glob, importlib, inspect
+
 # plugin import
 from ..main.DBaseParser import DBaseParser
 from .InspectionDigue_Connexion_PG import ConnexionPGDialog
@@ -43,6 +45,8 @@ from ..toolgeneral.InspectionDigue_exportshp import exportShapefileWorker
 from ..toolgeneral.InspectionDigue_import import ImportObjectWorker
 from ..gps.GPSutil import GpsUtil
 import time
+
+
 
 
 class InspectiondigueWindowWidget(QMainWindow):
@@ -91,6 +95,11 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.printrapportdialog = ImpressionRapportDialog()
         self.exportshapefiledialog = ExportShapefileDialog()
         self.importobjetdialog =ImportObjetDialog()
+        #ui classes
+        self.uifields = []
+        self.uidesktop = []
+        self.uipostpro = []
+        self.desktopuiloaded = False
 
 
 
@@ -386,6 +395,8 @@ class InspectiondigueWindowWidget(QMainWindow):
             self.actionTTC.setChecked(True)
             self.actionModeExpert.setChecked(False)
             self.actionPosttraitement.setChecked(False)
+            if not self.desktopuiloaded:
+                self.loadUiDesktop()
 
         elif actionname == 'actionModeExpert':
             self.dbase.visualmode = 2
@@ -521,252 +532,401 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.dbase.updateWorkingDate()
         timestart = time.clock()
 
-        if qgis.utils.iface is not None:
-            progressMessageBar = qgis.utils.iface.messageBar().createMessage("Loading widget...")
-            progress = QProgressBar()
-            progress.setMaximum(20)
-            progress.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
-            progressMessageBar.layout().addWidget(progress)
-            qgis.utils.iface.messageBar().pushWidget(progressMessageBar, qgis.utils.iface.messageBar().INFO)
-        else:
-            progress = None
+
 
         if debugtime: logger.debug(' progress bar done %.3f', time.clock() - timestart)
+
+
+        if True:
+
+            path = os.path.join(os.path.dirname(__file__), '..', 'toolprepro', self.dbase.type.lower())
+            modules = glob.glob(path + "/*.py")
+            __all__ = [os.path.basename(f)[:-3] for f in modules if os.path.isfile(f)]
+            for x in __all__:
+                if qgis.utils.iface is not None:
+                    moduletemp = importlib.import_module('.' + str(x), 'Lamia.toolprepro.' + self.dbase.type.lower() )
+                else:
+                    moduletemp = importlib.import_module('.' + str(x), 'Lamia.Lamia.toolprepro.' + self.dbase.type.lower())
+                for name, obj in inspect.getmembers(moduletemp, inspect.isclass):
+                    if moduletemp.__name__ == obj.__module__:
+                        try:
+                            if obj.LOADFIRST:
+                                self.uifields.append(obj)
+                            else:
+                                self.uidesktop.append(obj)
+                        except AttributeError:
+                            pass
+
+            path = os.path.join(os.path.dirname(__file__), '..', 'toolpostpro')
+            modules = glob.glob(path + "/*.py")
+            __all__ = [os.path.basename(f)[:-3] for f in modules if os.path.isfile(f)]
+            for x in __all__:
+                if qgis.utils.iface is not None:
+                    moduletemp = importlib.import_module('.' + str(x), 'Lamia.toolpostpro' )
+                else:
+                    moduletemp = importlib.import_module('.' + str(x), 'Lamia.Lamia.toolpostpro')
+                for name, obj in inspect.getmembers(moduletemp, inspect.isclass):
+                    if moduletemp.__name__ == obj.__module__:
+                        try:
+                            if self.dbase.type.lower() in obj.DBASES:
+                                self.uipostpro.append(obj)
+                        except AttributeError:
+                            pass
+
+            if False:
+                print('*********** ui lodaded *************** ')
+                print(self.uifields)
+                print(self.uidesktop)
+                print(self.uipostpro)
+
+            self.loadUiField()
+
+
+
 
 
         if self.dbase.type.lower() == 'digue':
             # *************************************************************************************************
             # Description sys  ***************************
+
             i = 0
-            if True:
-                from ..toolprepro.InspectionDigue_infralineaire_tool import InfraLineaireTool
-                self.dbase.dbasetables['Infralineaire']['widget'] = InfraLineaireTool(dbase = self.dbase,
-                                                                             dialog = self,
-                                                                             linkedtreewidget = self.ElemtreeWidget,
-                                                                             gpsutil = self.gpsutil)
 
-                if debugtime: logger.debug('InfraLineaireTool %.3f', time.clock() - timestart)
-                i += 1
-                self.setLoadingProgressBar(progress, i)
 
-            if True:
-                from ..toolprepro.InspectionDigue_tronconemprise_tool import TronconEmpriseTool
-                self.dbase.dbasetables['Infralinemprise']['widget'] = TronconEmpriseTool(dbase=self.dbase,
-                                                                                  dialog=self,
-                                                                                  linkedtreewidget=self.ElemtreeWidget,
-                                                                                    gpsutil = self.gpsutil)
-                if debugtime: logger.debug('TronconEmpriseTool %.3f', time.clock() - timestart)
-                i += 1
-                self.setLoadingProgressBar(progress, i)
 
-            if True:
-                from ..toolprepro.InspectionDigue_equipement_tool import EquipementTool
-                self.dbase.dbasetables['Equipement']['widget'] = EquipementTool(dbase=self.dbase,
-                                                                                dialog=self,
-                                                                                linkedtreewidget=self.ElemtreeWidget,
-                                                                                gpsutil=self.gpsutil)
-                parentwdg = self.dbase.dbasetables['Equipement']['widget']
-                parentwdg.propertieswdgEQUIPEMENT = EquipementTool(dbase=self.dbase, parentwidget=parentwdg)
-                parentwdg.dbasechildwdg.append(self.dbase.dbasetables['Equipement']['widget'].propertieswdgEQUIPEMENT)
-                try:
-                    parentwdg.currentFeatureChanged.disconnect()
-                except:
-                    pass
-                for childwdg in parentwdg.dbasechildwdg:
-                    parentwdg.currentFeatureChanged.connect(childwdg.loadChildFeatureinWidget)
-                if debugtime: logger.debug('EquipementTool %.3f', time.clock() - timestart)
-                i += 1
-                self.setLoadingProgressBar(progress, i)
+            if False:
 
-            if True:
-                from ..toolprepro.InspectionDigue_profil_tool import ProfilTool
-                self.dbase.dbasetables['Profil']['widget'] = ProfilTool(dbase=self.dbase,
-                                                                        dialog=self,
-                                                                        linkedtreewidget=self.ElemtreeWidget,
-                                                                        gpsutil=self.gpsutil)
-                if debugtime: logger.debug(' ProfilTool %.3f', time.clock() - timestart)
-                i += 1
-                self.setLoadingProgressBar(progress, i)
+                if True:
+                    from ..toolprepro.InspectionDigue_infralineaire_tool import InfraLineaireTool
+                    self.dbase.dbasetables['Infralineaire']['widget'] = InfraLineaireTool(dbase = self.dbase,
+                                                                                 dialog = self,
+                                                                                 linkedtreewidget = self.ElemtreeWidget,
+                                                                                 gpsutil = self.gpsutil)
 
-            if True:
-                from ..toolprepro.InspectionDigue_noeud_tool import NoeudTool
-                self.dbase.dbasetables['Noeud']['widget'] = NoeudTool(dbase=self.dbase,
-                                                                        dialog=self,
-                                                                        linkedtreewidget=self.ElemtreeWidget,
-                                                                        gpsutil=self.gpsutil)
-                if debugtime: logger.debug('NoeudTool %.3f', time.clock() - timestart)
-                i += 1
-                self.setLoadingProgressBar(progress, i)
+                    if debugtime: logger.debug('InfraLineaireTool %.3f', time.clock() - timestart)
+                    i += 1
+                    self.setLoadingProgressBar(progress, i)
 
-            # *************************************************************************************************
-            # Ressource ***************************
-            if True:
-                from ..toolprepro.InspectionDigue_photos_tool import PhotosTool
-                self.dbase.dbasetables['Photo']['widget'] = [PhotosTool(dbase=self.dbase,
-                                                                        dialog=self,
-                                                                        linkedtreewidget= self.ElemtreeWidget,
-                                                                        gpsutil=self.gpsutil)]
-                if debugtime: logger.debug('PhotosTool %.3f', time.clock() - timestart)
-                i += 1
-                self.setLoadingProgressBar(progress, i)
-            if True:
-                from ..toolprepro.InspectionDigue_croquis_tool import CroquisTool
-                self.dbase.dbasetables['Photo']['widget'].append( CroquisTool(dbase=self.dbase,
-                                                                              dialog=self,
-                                                                              linkedtreewidget=self.ElemtreeWidget,
-                                                                              gpsutil=self.gpsutil) )
-                if debugtime: logger.debug('CroquisTool %.3f', time.clock() - timestart)
-                i += 1
-                self.setLoadingProgressBar(progress, i)
-            if True:
-                from ..toolprepro.InspectionDigue_rapport_tool import RapportTool
-                self.dbase.dbasetables['Rapport']['widget'] = RapportTool(dbase=self.dbase,
-                                                                          dialog=self,
-                                                                          linkedtreewidget=self.ElemtreeWidget,
-                                                                          gpsutil=self.gpsutil)
-                if debugtime: logger.debug('RapportTool %.3f', time.clock() - timestart)
-                i += 1
-                self.setLoadingProgressBar(progress, i)
-            if True:
-                from ..toolprepro.InspectionDigue_raster_tool import RasterTool
-                self.dbase.dbasetables['Rasters']['widget'] = RasterTool(dbase=self.dbase,
-                                                                         dialog=self,
-                                                                         linkedtreewidget=self.ElemtreeWidget,
-                                                                         gpsutil=self.gpsutil)
-                if debugtime: logger.debug('RasterTool %.3f', time.clock() - timestart)
-                i += 1
-                self.setLoadingProgressBar(progress, i)
-            if True:
-                from ..toolprepro.InspectionDigue_topographie_tool import TopographieTool
-                self.dbase.dbasetables['Topographie']['widget'] = TopographieTool(dbase=self.dbase,
-                                                                                  dialog=self,
-                                                                                  linkedtreewidget=self.ElemtreeWidget,
-                                                                                  gpsutil=self.gpsutil)
-                if debugtime: logger.debug('TopographieTool %.3f', time.clock() - timestart)
-                i += 1
-                self.setLoadingProgressBar(progress, i)
-            if True:
-                from ..toolprepro.InspectionDigue_graphique_tool import GraphiqueTool
-                self.dbase.dbasetables['Graphique']['widget'] = GraphiqueTool(dbase=self.dbase,
-                                                                              dialog=self,
-                                                                              linkedtreewidget=self.ElemtreeWidget,
-                                                                              gpsutil=self.gpsutil)
-                if debugtime: logger.debug('GraphiqueTool %.3f', time.clock() - timestart)
-                i += 1
-                self.setLoadingProgressBar(progress, i)
-            if True:
-                from ..toolprepro.InspectionDigue_pointtopo_tool import PointtopoTool
-                self.dbase.dbasetables['Pointtopo']['widget'] = PointtopoTool(dbase=self.dbase,
-                                                                              dialog=self,
-                                                                              linkedtreewidget=self.ElemtreeWidget,
-                                                                              gpsutil=self.gpsutil)
-                if debugtime: logger.debug('PointtopoTool %.3f', time.clock() - timestart)
-                i += 1
-                self.setLoadingProgressBar(progress, i)
+                if True:
+                    from ..toolprepro.InspectionDigue_tronconemprise_tool import TronconEmpriseTool
+                    self.dbase.dbasetables['Infralinemprise']['widget'] = TronconEmpriseTool(dbase=self.dbase,
+                                                                                      dialog=self,
+                                                                                      linkedtreewidget=self.ElemtreeWidget,
+                                                                                        gpsutil = self.gpsutil)
+                    if debugtime: logger.debug('TronconEmpriseTool %.3f', time.clock() - timestart)
+                    i += 1
+                    self.setLoadingProgressBar(progress, i)
 
-            # *************************************************************************************************
-            # Desordre  ***************************
-            if True:
-                from ..toolprepro.InspectionDigue_desordre_tool import DesordreTool
-                self.dbase.dbasetables['Desordre']['widget'] = DesordreTool(dbase=self.dbase,
+                if True:
+                    from ..toolprepro.InspectionDigue_equipement_tool import EquipementTool
+                    self.dbase.dbasetables['Equipement']['widget'] = EquipementTool(dbase=self.dbase,
+                                                                                    dialog=self,
+                                                                                    linkedtreewidget=self.ElemtreeWidget,
+                                                                                    gpsutil=self.gpsutil)
+                    parentwdg = self.dbase.dbasetables['Equipement']['widget']
+                    parentwdg.propertieswdgEQUIPEMENT = EquipementTool(dbase=self.dbase, parentwidget=parentwdg)
+                    parentwdg.dbasechildwdg.append(self.dbase.dbasetables['Equipement']['widget'].propertieswdgEQUIPEMENT)
+                    try:
+                        parentwdg.currentFeatureChanged.disconnect()
+                    except:
+                        pass
+                    for childwdg in parentwdg.dbasechildwdg:
+                        parentwdg.currentFeatureChanged.connect(childwdg.loadChildFeatureinWidget)
+                    if debugtime: logger.debug('EquipementTool %.3f', time.clock() - timestart)
+                    i += 1
+                    self.setLoadingProgressBar(progress, i)
+
+                if True:
+                    from ..toolprepro.InspectionDigue_profil_tool import ProfilTool
+                    self.dbase.dbasetables['Profil']['widget'] = ProfilTool(dbase=self.dbase,
                                                                             dialog=self,
                                                                             linkedtreewidget=self.ElemtreeWidget,
                                                                             gpsutil=self.gpsutil)
-                if debugtime: logger.debug('DesordreTool %.3f', time.clock() - timestart)
-                i += 1
-                self.setLoadingProgressBar(progress, i)
+                    if debugtime: logger.debug(' ProfilTool %.3f', time.clock() - timestart)
+                    i += 1
+                    self.setLoadingProgressBar(progress, i)
 
-            if True:
-                from ..toolprepro.InspectionDigue_observation_tool import ObservationTool
-                self.dbase.dbasetables['Observation']['widget'] = ObservationTool(dbase=self.dbase,
+                if True:
+                    from ..toolprepro.InspectionDigue_noeud_tool import NoeudTool
+                    self.dbase.dbasetables['Noeud']['widget'] = NoeudTool(dbase=self.dbase,
+                                                                            dialog=self,
+                                                                            linkedtreewidget=self.ElemtreeWidget,
+                                                                            gpsutil=self.gpsutil)
+                    if debugtime: logger.debug('NoeudTool %.3f', time.clock() - timestart)
+                    i += 1
+                    self.setLoadingProgressBar(progress, i)
+
+                # *************************************************************************************************
+                # Ressource ***************************
+                if True:
+                    from ..toolprepro.InspectionDigue_photos_tool import PhotosTool
+                    self.dbase.dbasetables['Photo']['widget'] = [PhotosTool(dbase=self.dbase,
+                                                                            dialog=self,
+                                                                            linkedtreewidget= self.ElemtreeWidget,
+                                                                            gpsutil=self.gpsutil)]
+                    if debugtime: logger.debug('PhotosTool %.3f', time.clock() - timestart)
+                    i += 1
+                    self.setLoadingProgressBar(progress, i)
+                if True:
+                    from ..toolprepro.InspectionDigue_croquis_tool import CroquisTool
+                    self.dbase.dbasetables['Photo']['widget'].append( CroquisTool(dbase=self.dbase,
+                                                                                  dialog=self,
+                                                                                  linkedtreewidget=self.ElemtreeWidget,
+                                                                                  gpsutil=self.gpsutil) )
+                    if debugtime: logger.debug('CroquisTool %.3f', time.clock() - timestart)
+                    i += 1
+                    self.setLoadingProgressBar(progress, i)
+                if True:
+                    from ..toolprepro.InspectionDigue_rapport_tool import RapportTool
+                    self.dbase.dbasetables['Rapport']['widget'] = RapportTool(dbase=self.dbase,
+                                                                              dialog=self,
+                                                                              linkedtreewidget=self.ElemtreeWidget,
+                                                                              gpsutil=self.gpsutil)
+                    if debugtime: logger.debug('RapportTool %.3f', time.clock() - timestart)
+                    i += 1
+                    self.setLoadingProgressBar(progress, i)
+                if True:
+                    from ..toolprepro.InspectionDigue_raster_tool import RasterTool
+                    self.dbase.dbasetables['Rasters']['widget'] = RasterTool(dbase=self.dbase,
+                                                                             dialog=self,
+                                                                             linkedtreewidget=self.ElemtreeWidget,
+                                                                             gpsutil=self.gpsutil)
+                    if debugtime: logger.debug('RasterTool %.3f', time.clock() - timestart)
+                    i += 1
+                    self.setLoadingProgressBar(progress, i)
+                if True:
+                    from ..toolprepro.InspectionDigue_topographie_tool import TopographieTool
+                    self.dbase.dbasetables['Topographie']['widget'] = TopographieTool(dbase=self.dbase,
+                                                                                      dialog=self,
+                                                                                      linkedtreewidget=self.ElemtreeWidget,
+                                                                                      gpsutil=self.gpsutil)
+                    if debugtime: logger.debug('TopographieTool %.3f', time.clock() - timestart)
+                    i += 1
+                    self.setLoadingProgressBar(progress, i)
+                if True:
+                    from ..toolprepro.InspectionDigue_graphique_tool import GraphiqueTool
+                    self.dbase.dbasetables['Graphique']['widget'] = GraphiqueTool(dbase=self.dbase,
                                                                                   dialog=self,
                                                                                   linkedtreewidget=self.ElemtreeWidget,
                                                                                   gpsutil=self.gpsutil)
-                if debugtime: logger.debug('ObservationTool %.3f', time.clock() - timestart)
-                i += 1
-                self.setLoadingProgressBar(progress, i)
+                    if debugtime: logger.debug('GraphiqueTool %.3f', time.clock() - timestart)
+                    i += 1
+                    self.setLoadingProgressBar(progress, i)
+                if True:
+                    from ..toolprepro.InspectionDigue_pointtopo_tool import PointtopoTool
+                    self.dbase.dbasetables['Pointtopo']['widget'] = PointtopoTool(dbase=self.dbase,
+                                                                                  dialog=self,
+                                                                                  linkedtreewidget=self.ElemtreeWidget,
+                                                                                  gpsutil=self.gpsutil)
+                    if debugtime: logger.debug('PointtopoTool %.3f', time.clock() - timestart)
+                    i += 1
+                    self.setLoadingProgressBar(progress, i)
 
-            # *************************************************************************************************
-            # Autre ***************************
-            if True:
-                from ..toolprepro.InspectionDigue_zonegeo_tool import ZonegeoTool
-                self.dbase.dbasetables['Zonegeo']['widget'] = ZonegeoTool(dbase=self.dbase,
+                # *************************************************************************************************
+                # Desordre  ***************************
+                if True:
+                    from ..toolprepro.InspectionDigue_desordre_tool import DesordreTool
+                    self.dbase.dbasetables['Desordre']['widget'] = DesordreTool(dbase=self.dbase,
+                                                                                dialog=self,
+                                                                                linkedtreewidget=self.ElemtreeWidget,
+                                                                                gpsutil=self.gpsutil)
+                    if debugtime: logger.debug('DesordreTool %.3f', time.clock() - timestart)
+                    i += 1
+                    self.setLoadingProgressBar(progress, i)
+
+                if True:
+                    from ..toolprepro.InspectionDigue_observation_tool import ObservationTool
+                    self.dbase.dbasetables['Observation']['widget'] = ObservationTool(dbase=self.dbase,
+                                                                                      dialog=self,
+                                                                                      linkedtreewidget=self.ElemtreeWidget,
+                                                                                      gpsutil=self.gpsutil)
+                    if debugtime: logger.debug('ObservationTool %.3f', time.clock() - timestart)
+                    i += 1
+                    self.setLoadingProgressBar(progress, i)
+
+                # *************************************************************************************************
+                # Autre ***************************
+                if True:
+                    from ..toolprepro.InspectionDigue_zonegeo_tool import ZonegeoTool
+                    self.dbase.dbasetables['Zonegeo']['widget'] = ZonegeoTool(dbase=self.dbase,
+                                                                              dialog=self,
+                                                                              linkedtreewidget=self.ElemtreeWidget,
+                                                                              gpsutil=self.gpsutil)
+                    if debugtime: logger.debug('ZonegeoTool %.3f', time.clock() - timestart)
+                    i += 1
+                    self.setLoadingProgressBar(progress, i)
+                if True:
+                    from ..toolprepro.InspectionDigue_marche_tool import MarcheTool
+                    self.dbase.dbasetables['Marche']['widget'] = MarcheTool(dbase=self.dbase,
+                                                                            dialog=self,
+                                                                            linkedtreewidget=self.ElemtreeWidget,
+                                                                            gpsutil=self.gpsutil)
+                    if debugtime: logger.debug('MarcheTool %.3f', time.clock() - timestart)
+                    i += 1
+                    self.setLoadingProgressBar(progress, i)
+                if True:
+                    from ..toolprepro.InspectionDigue_intervenant_tool import IntervenantTool
+                    self.dbase.dbasetables['Intervenant']['widget'] = IntervenantTool(dbase=self.dbase,
+                                                                                      dialog=self,
+                                                                                      linkedtreewidget=self.ElemtreeWidget,
+                                                                                      gpsutil=self.gpsutil)
+                    if debugtime: logger.debug('IntervenantTool %.3f', time.clock() - timestart)
+                    i += 1
+                    self.setLoadingProgressBar(progress, i)
+
+                # *************************************************************************************************
+                # Base  ***************************
+                if False:
+                    from ..toolprepro.InspectionDigue_objet_tool import objetTool
+                    self.dbase.dbasetables['OBJET']['widget'] = objetTool(dbase=self.dbase,
                                                                           dialog=self,
                                                                           linkedtreewidget=self.ElemtreeWidget,
                                                                           gpsutil=self.gpsutil)
-                if debugtime: logger.debug('ZonegeoTool %.3f', time.clock() - timestart)
-                i += 1
-                self.setLoadingProgressBar(progress, i)
-            if True:
-                from ..toolprepro.InspectionDigue_marche_tool import MarcheTool
-                self.dbase.dbasetables['Marche']['widget'] = MarcheTool(dbase=self.dbase,
-                                                                        dialog=self,
-                                                                        linkedtreewidget=self.ElemtreeWidget,
-                                                                        gpsutil=self.gpsutil)
-                if debugtime: logger.debug('MarcheTool %.3f', time.clock() - timestart)
-                i += 1
-                self.setLoadingProgressBar(progress, i)
-            if True:
-                from ..toolprepro.InspectionDigue_intervenant_tool import IntervenantTool
-                self.dbase.dbasetables['Intervenant']['widget'] = IntervenantTool(dbase=self.dbase,
-                                                                                  dialog=self,
-                                                                                  linkedtreewidget=self.ElemtreeWidget,
-                                                                                  gpsutil=self.gpsutil)
-                if debugtime: logger.debug('IntervenantTool %.3f', time.clock() - timestart)
-                i += 1
-                self.setLoadingProgressBar(progress, i)
 
-            # *************************************************************************************************
-            # Base  ***************************
-            if False:
-                from ..toolprepro.InspectionDigue_objet_tool import objetTool
-                self.dbase.dbasetables['OBJET']['widget'] = objetTool(dbase=self.dbase,
-                                                                      dialog=self,
-                                                                      linkedtreewidget=self.ElemtreeWidget,
-                                                                      gpsutil=self.gpsutil)
+                if False:
+                    from ..toolprepro.InspectionDigue_descriptionsysteme_tool import DescriptionsystemeTool
+                    self.dbase.dbasetables['DESCRIPTIONSYSTEME']['widget'] = DescriptionsystemeTool(dbase=self.dbase,
+                                                                                                    dialog=self,
+                                                                                                    linkedtreewidget=self.ElemtreeWidget,
+                                                                                                    gpsutil=self.gpsutil)
 
-            if False:
-                from ..toolprepro.InspectionDigue_descriptionsysteme_tool import DescriptionsystemeTool
-                self.dbase.dbasetables['DESCRIPTIONSYSTEME']['widget'] = DescriptionsystemeTool(dbase=self.dbase,
-                                                                                                dialog=self,
-                                                                                                linkedtreewidget=self.ElemtreeWidget,
-                                                                                                gpsutil=self.gpsutil)
 
-            # *************************************************************************************************
-            # PostPro  ***************************
-
-            if True:
-                from ..toolpostpro.InspectionDigue_synth_zonegeo_tool import SyntheseZonegeoTool
-                self.synthesezonegeotool = SyntheseZonegeoTool(dbase=self.dbase,
-                                                               dialog=self,
-                                                               linkedtreewidget=self.ElemtreeWidget)
-                self.tools.append(self.synthesezonegeotool)
-                if debugtime: logger.debug('SyntheseZonegeoTool %.3f', time.clock() - timestart)
-                i += 1
-                self.setLoadingProgressBar(progress, i)
-
-            if True:
-                try:
-                    from ..toolpostpro.InspectionDigue_path_tool import PathTool
-                    self.pathtool = PathTool(dbase=self.dbase,
+                if True:
+                    from ..toolpostpro.InspectionDigue_synth_zonegeo_tool import SyntheseZonegeoTool
+                    self.synthesezonegeotool = SyntheseZonegeoTool(dbase=self.dbase,
                                                                    dialog=self,
                                                                    linkedtreewidget=self.ElemtreeWidget)
-                    self.tools.append(self.pathtool)
-                    if debugtime: logger.debug('PathTool %.3f', time.clock() - timestart)
-
-                    if not os.path.isfile(self.pathtool.dbasetablename):
-                        filepath = open(self.pathtool.dbasetablename,'w')
-                        filepath.close()
+                    self.tools.append(self.synthesezonegeotool)
+                    if debugtime: logger.debug('SyntheseZonegeoTool %.3f', time.clock() - timestart)
                     i += 1
                     self.setLoadingProgressBar(progress, i)
-                except:
-                    pass
 
-            if progress is not None: qgis.utils.iface.messageBar().clearWidgets()
+                if True:
+                    try:
+                        from ..toolpostpro.InspectionDigue_path_tool import PathTool
+                        self.pathtool = PathTool(dbase=self.dbase,
+                                                                       dialog=self,
+                                                                       linkedtreewidget=self.ElemtreeWidget)
+                        self.tools.append(self.pathtool)
+                        if debugtime: logger.debug('PathTool %.3f', time.clock() - timestart)
+
+                        if not os.path.isfile(self.pathtool.dbasetablename):
+                            filepath = open(self.pathtool.dbasetablename,'w')
+                            filepath.close()
+                        i += 1
+                        self.setLoadingProgressBar(progress, i)
+                    except:
+                        pass
+
+            # if self.progress is not None: qgis.utils.iface.messageBar().clearWidgets()
 
         # self.applyVisualMode()
 
         if debugtime: logger.debug('applyVisualMode %.3f', time.clock() - timestart)
+
+
+    def loadUiField(self):
+
+
+        if qgis.utils.iface is not None:
+            progressMessageBar = qgis.utils.iface.messageBar().createMessage("Loading widget...")
+            progress = QProgressBar()
+            progress.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+            progressMessageBar.layout().addWidget(progress)
+            qgis.utils.iface.messageBar().pushWidget(progressMessageBar, qgis.utils.iface.messageBar().INFO)
+            lenuifields = len(self.uifields)
+            progress.setMaximum(lenuifields)
+        else:
+            progress = None
+
+        i = 0
+        for uifield in self.uifields:
+            #try:
+            dbasename = uifield.dbasetablename
+            # print(dbasename)
+            self.dbase.dbasetables[dbasename]['widget'] = uifield(dbase = self.dbase,
+                                                                     dialog = self,
+                                                                     linkedtreewidget = self.ElemtreeWidget,
+                                                                     gpsutil = self.gpsutil)
+            i += 1
+            self.setLoadingProgressBar(progress, i)
+            #except Exception as e:
+            #     print('error load', e)
+
+        if progress is not None: qgis.utils.iface.messageBar().clearWidgets()
+
+
+
+    def loadUiDesktop(self):
+
+        if qgis.utils.iface is not None:
+            progressMessageBar = qgis.utils.iface.messageBar().createMessage("Loading widget...")
+            progress = QProgressBar()
+            progress.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+            progressMessageBar.layout().addWidget(progress)
+            qgis.utils.iface.messageBar().pushWidget(progressMessageBar, qgis.utils.iface.messageBar().INFO)
+            lenuifields = len(self.uidesktop)
+            lenuipostpro = len(self.uipostpro)
+            progress.setMaximum(lenuifields + lenuipostpro)
+        else:
+            progress = None
+
+
+        i = 0
+        for uidesktop in self.uidesktop:
+            try:
+                dbasename = uidesktop.dbasetablename
+                self.dbase.dbasetables[dbasename]['widget'] = uidesktop(dbase = self.dbase,
+                                                                         dialog = self,
+                                                                         linkedtreewidget = self.ElemtreeWidget,
+                                                                         gpsutil = self.gpsutil)
+                # self.dbase.dbasetables[dbasename]['widget'].initWidgets()
+                i += 1
+                self.setLoadingProgressBar(progress, i)
+
+            except AttributeError:
+                pass
+
+
+
+
+        if False:
+            for dbasename in self.dbase.dbasetables.keys():
+                if 'widget' in self.dbase.dbasetables[dbasename].keys():
+                    print('iniwdg', dbasename)
+                    if isinstance(self.dbase.dbasetables[dbasename]['widget'], list):
+                        for wdg in self.dbase.dbasetables[dbasename]['widget']:
+                            wdg.initWidgets()
+                    else:
+                        self.dbase.dbasetables[dbasename]['widget'].initWidgets()
+
+
+        for uidpostpr in self.uipostpro:
+
+            strtoexec = ('self.' + uidpostpr.__name__.lower() + " = uidpostpr(dbase = self.dbase, dialog = self,linkedtreewidget = self.ElemtreeWidget, gpsutil = self.gpsutil)")
+            # print(strtoexec)
+            exec(strtoexec)
+            # print('test', eval('self.' + uidpostpr.__name__.lower()))
+            strtoexec = 'self.tools.append(' + 'self.' + uidpostpr.__name__.lower() + ')'
+            # print(strtoexec)
+            exec(strtoexec)
+            # print('ok')
+
+
+            if False:
+                self.tools.append( uidpostpr(dbase = self.dbase,
+                                             dialog = self,
+                                             linkedtreewidget = self.ElemtreeWidget,
+                                             gpsutil = self.gpsutil)
+                               )
+            i += 1
+            self.setLoadingProgressBar(progress, i)
+
+
+
+        if progress is not None: qgis.utils.iface.messageBar().clearWidgets()
+        self.desktopuiloaded = True
+
+
 
     #**********************************************************************************************
     #********************************    Tree widget    ********************************************
@@ -839,7 +999,12 @@ class InspectiondigueWindowWidget(QMainWindow):
         if self.stackedWidget_main.currentIndex() == 0:
             wdg = self.MaintabWidget.widget(0).layout().itemAt(0).widget()
             layer = wdg.dbasetable['layerqgis']
-            nearestid, dist = wdg.getNearestId(point)
+            #nearestid, dist = wdg.getNearestId(point)
+            point2 = self.pointEmitter.toLayerCoordinates(wdg.dbasetable['layerqgis'], point)
+            nearestid, dist = self.dbase.getNearestId(wdg.dbasetable,
+                                                      wdg.dbasetablename,
+                                                      point2,
+                                                      False)
             itemindex = wdg.comboBox_featurelist.findText(str(nearestid))
             wdg.comboBox_featurelist.setCurrentIndex(itemindex)
         elif self.stackedWidget_main.currentIndex() == 1:
@@ -946,12 +1111,19 @@ class InspectiondigueWindowWidget(QMainWindow):
                 self.thread.started.connect(self.worker.run)
 
                 self.thread.start()
-            if True:
+            if False:
                 self.worker = printPDFWorker(self.dbase, qgis.core.QgsProject.instance(), self.canvas, reporttype, pdffile,self)
                 self.worker.finished.connect(self.exportPDFFinished)
                 self.worker.error.connect(self.printError)
                 self.worker.message.connect(self.printMessage)
                 self.worker.run()
+            if True:
+                self.worker = printPDFWorker(self.dbase, qgis.core.QgsProject.instance(), self.canvas, reporttype,
+                                             pdffile, self)
+                self.worker.work()
+
+
+
 
     def exportShapefile(self,tabletype=None, pdffile=None):
         if tabletype is None or pdffile is None:
@@ -973,12 +1145,16 @@ class InspectiondigueWindowWidget(QMainWindow):
                 self.worker.finished.connect(self.thread.quit)
                 self.thread.started.connect(self.worker.run)
                 self.thread.start()
-            if True:
+            if False:
                 self.worker = exportShapefileWorker(self.dbase, self, tabletype, pdffile)
                 self.worker.finished.connect(self.exportPDFFinished)
                 self.worker.error.connect(self.printError)
                 self.worker.message.connect(self.printMessage)
                 self.worker.run()
+            if True:
+                self.worker = exportShapefileWorker(self.dbase, self, tabletype, pdffile)
+                self.worker.work()
+
 
 
     def exportPDFFinished(self):

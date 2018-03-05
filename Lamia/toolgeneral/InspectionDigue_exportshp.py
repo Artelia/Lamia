@@ -9,10 +9,11 @@ import datetime
 import decimal
 import numpy as np
 
-class exportShapefileWorker(AbstractWorker):
+#class exportShapefileWorker(AbstractWorker):
+class exportShapefileWorker:
 
     def __init__(self, dbase, windowdialog, reporttype, pdffile):
-        AbstractWorker.__init__(self)
+        # AbstractWorker.__init__(self)
         self.dbase = dbase
         self.reporttype = reporttype
         self.windowdialog = windowdialog
@@ -50,6 +51,7 @@ class exportShapefileWorker(AbstractWorker):
                       ['Infralineaire', 'lk_noeud1'],
                       ['Infralineaire', 'lk_noeud2'],
                       ['Infralineaire', 'lk_photo'],                    #15
+                      ['Infralineaire', 'classement'],
                       ['Infralineaire', 'lk_profil'],
                       ['Infralineaire', 'id_objet'],
                       ['Infralineaire', 'id_descriptionsystem']]
@@ -78,18 +80,31 @@ class exportShapefileWorker(AbstractWorker):
 
             #donnees profil
             if True:
-                fieldslinear.append(qgis.core.QgsField('Hauteur', QtCore.QVariant.Double))
-                fieldslinear.append(qgis.core.QgsField('Largeurcrete', QtCore.QVariant.Double))
-                fieldslinear.append(qgis.core.QgsField('LargeurAubarede', QtCore.QVariant.Double))
-                fieldslinear.append(qgis.core.QgsField('Des_prof', QtCore.QVariant.String))
-                champs += [[],[],[],[]]
+                fieldslinear.append(qgis.core.QgsField('Hauteur', QtCore.QVariant.Double))          #0
+                fieldslinear.append(qgis.core.QgsField('Larcrete', QtCore.QVariant.Double))
+                fieldslinear.append(qgis.core.QgsField('Larfranc', QtCore.QVariant.Double))
+                fieldslinear.append(qgis.core.QgsField('typtater', QtCore.QVariant.String))
+                fieldslinear.append(qgis.core.QgsField('typcrete', QtCore.QVariant.String))
+                fieldslinear.append(qgis.core.QgsField('typtaeau', QtCore.QVariant.String))         #5
+                fieldslinear.append(qgis.core.QgsField('typauba', QtCore.QVariant.String))
+                fieldslinear.append(qgis.core.QgsField('Desterre', QtCore.QVariant.String))
+                fieldslinear.append(qgis.core.QgsField('Descrete', QtCore.QVariant.String))
+                fieldslinear.append(qgis.core.QgsField('Deseau', QtCore.QVariant.String))
+                champs += [[],[],[],[],[],[],[],[],[],[]]
                 # print('champs',champs)
+
                 for i, row in enumerate(result):
+                    hauteurdigue = -1
                     largcrete = -1
                     largfrancbord = -1
-                    hauteurdigue = -1
-                    description = ''
-                    lkprofil  = row[16]
+                    typtater=''
+                    typcrete=''
+                    typtaeau=''
+                    typeauba = ''
+                    Desterre=''
+                    Descrete=''
+                    Deseau=''
+                    lkprofil  = row[17]
                     if lkprofil is not None:
                         sql = "SELECT id_graphique, typegraphique FROM Graphique  WHERE id_ressource = " + str(lkprofil)
                         query = self.dbase.query(sql)
@@ -101,25 +116,104 @@ class exportShapefileWorker(AbstractWorker):
                             resultrow2 = [list(row2) for row2 in query]
                             # row : [id, None, dx, dz, None, position, type1, type2, None, 1]
                             npresultrow = np.array(resultrow2)
+
                             #largeur crete
                             index = np.where(npresultrow[:,5] == 'CRE')
                             largcrete = np.sum(npresultrow[:,2][index])
                             #hauteur
-                            minindex = int(np.amin(index))
-                            hauteurdigue = np.sum(npresultrow[0:minindex, 3])
+                            minindexcrete = int(np.amin(index))
+                            maxindexcrete = int(np.amax(index))
+                            hauteurdigue = np.sum(npresultrow[0:minindexcrete, 3])
+
                             #francbord
                             index = np.where(npresultrow[:,5] == 'FRB')
                             largfrancbord = np.sum(npresultrow[:,2][index])
                             # print(hauteurdigue, largcrete, largfrancbord)
+
                             #description
-                            listdescr = ['dX;dZ;Partie;Type1;Type2']
-                            for elem in resultrow2:
-                                listdescr += [';'.join([str(round(elem[2],1)),
-                                                         str(round(elem[3],1)),
-                                                         self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index1', elem[5]),
-                                                        self.dbase.getConstraintTextFromRawValue('Graphiquedata','index2', elem[6]),
-                                                         self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7])])]
-                            description = '\n'.join(listdescr)
+
+
+
+
+                            listdescrtalusterre = ['dX;dZ;Partie;Type1;Type2']
+                            listdescrcrete = ['dX;dZ;Partie;Type1;Type2']
+                            listdescrtaluseau = ['dX;dZ;Partie;Type1;Type2']
+                            for j, elem in enumerate(resultrow2):
+                                # print(j,minindexcrete,maxindexcrete, self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index1', elem[5]),self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7]) )
+                                if j < minindexcrete:
+                                    # print('listdescrtalusterre')
+                                    listdescrtalusterre += [';'.join([str(round(elem[2],1)),
+                                                             str(round(elem[3],1)),
+                                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index1', elem[5]),
+                                                            self.dbase.getConstraintTextFromRawValue('Graphiquedata','index2', elem[6]),
+                                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7])])]
+                                    if elem[5] in ['TAD','SOR', 'TAR'] :
+                                        if typtater == '':
+                                            typtater = ';'.join([self.dbase.getConstraintTextFromRawValue('Graphiquedata','index2', elem[6]),
+                                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7])])
+                                        else:
+                                            typcurr = ';'.join([self.dbase.getConstraintTextFromRawValue('Graphiquedata','index2', elem[6]),
+                                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7])])
+                                            if typcurr != typtater:
+                                                typtater = 'mixte'
+
+                                elif j<=maxindexcrete and j >= minindexcrete:
+                                    # print('listdescrcrete')
+                                    listdescrcrete += [';'.join([str(round(elem[2],1)),
+                                                             str(round(elem[3],1)),
+                                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index1', elem[5]),
+                                                            self.dbase.getConstraintTextFromRawValue('Graphiquedata','index2', elem[6]),
+                                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7])])]
+
+                                    if typcrete == '':
+                                        typcrete = ';'.join(
+                                            [self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index2', elem[6]),
+                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7])])
+                                    else:
+                                        typcurr = ';'.join(
+                                            [self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index2', elem[6]),
+                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7])])
+                                        if typcurr != typcrete:
+                                            typcrete = 'mixte'
+
+
+                                elif j> maxindexcrete:
+                                    # print('listdescrtaluseau')
+                                    listdescrtaluseau += [';'.join([str(round(elem[2],1)),
+                                                             str(round(elem[3],1)),
+                                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index1', elem[5]),
+                                                            self.dbase.getConstraintTextFromRawValue('Graphiquedata','index2', elem[6]),
+                                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7])])]
+
+                                    if elem[5] in ['TAD','SOR', 'TAR']:
+                                        if typtaeau == '':
+                                            typtaeau = ';'.join([self.dbase.getConstraintTextFromRawValue('Graphiquedata','index2', elem[6]),
+                                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7])])
+                                        else:
+                                            typcurr = ';'.join([self.dbase.getConstraintTextFromRawValue('Graphiquedata','index2', elem[6]),
+                                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7])])
+                                            if typcurr != typtaeau:
+                                                typtaeau = 'mixte'
+
+                                    if elem[5] in ['FRB']:
+                                        if typeauba == '':
+                                            typeauba = ';'.join([self.dbase.getConstraintTextFromRawValue('Graphiquedata','index2', elem[6]),
+                                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7])])
+                                        else:
+                                            typcurr = ';'.join([self.dbase.getConstraintTextFromRawValue('Graphiquedata','index2', elem[6]),
+                                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7])])
+                                            if typcurr != typeauba:
+                                                typeauba = 'mixte'
+
+                            #description = '\n'.join(listdescr)
+
+                            Desterre = '\n'.join(listdescrtalusterre)
+                            Descrete = '\n'.join(listdescrcrete)
+                            Deseau = '\n'.join(listdescrtaluseau)
+
+
+
+
                             if False:
                                 print(listdescr)
 
@@ -127,7 +221,21 @@ class exportShapefileWorker(AbstractWorker):
                                 return
 
 
-                    result[i] = list(result[i])[:-1] + [hauteurdigue, largcrete, largfrancbord,description] + list(result[i])[-1:]
+                    """
+                    hauteurdigue = -1
+                    largcrete = -1
+                    largfrancbord = -1
+                    typtater=''
+                    typcrete=''
+                    typtaeau=''
+                    typeauba = ''
+                    Desterre=''
+                    Descrete=''
+                    Deseau=''
+                    """
+
+                    result[i] = list(result[i])[:-1] + [hauteurdigue, largcrete, largfrancbord,typtater,typcrete,typtaeau,typeauba, Desterre, Descrete, Deseau  ] + list(result[i])[-1:]
+                    # print([hauteurdigue, largcrete, largfrancbord,typtater,typcrete,typtaeau, Desterre, Descrete, Deseau  ])
 
 
             #niveau protection surete
@@ -139,7 +247,7 @@ class exportShapefileWorker(AbstractWorker):
                 champs += [[], [], [],[]]
 
                 profiletraverstool = self.windowdialog.pathtool
-                profiletraverstool.computeNXGraph()
+                profiletraverstool.computeNXGraphForAll()
 
                 for i, row in enumerate(result):
                     niv_pro_am = None
@@ -174,7 +282,7 @@ class exportShapefileWorker(AbstractWorker):
 
                 for i, row in enumerate(result):
                     gestionnaire = ''
-                    idobjet = row[17]
+                    idobjet = row[18]
                     sql = "SELECT Tcobjetintervenant.fonction, Intervenant.nom,Intervenant.societe  FROM Tcobjetintervenant "
                     sql += " INNER JOIN Intervenant ON Tcobjetintervenant.id_tcintervenant = Intervenant.id_intervenant "
                     sql += "WHERE id_tcobjet = " + str(idobjet)
@@ -186,7 +294,25 @@ class exportShapefileWorker(AbstractWorker):
                     result[i] = list(result[i])[:-1] + [gestionnaire] + list(result[i])[-1:]
 
 
+            # secteur
+            if True:
+                fieldslinear.append(qgis.core.QgsField('secteur', QtCore.QVariant.String))
+                champs += [[]]
 
+                for i, row in enumerate(result):
+                    secteur = ''
+                    idinfra = row[10]
+
+                    sql = "SELECT Zonegeo.nom FROM Zonegeo, Infralineaire  "
+                    sql += " WHERE Infralineaire.id_infralineaire = " + str(idinfra)
+                    sql += " AND Zonegeo.type_zonegeo = 'GES' "
+                    sql += " AND ST_WITHIN(ST_MakeValid(Infralineaire.geom), ST_MakeValid(Zonegeo.geom))"
+
+                    query = self.dbase.query(sql)
+                    resultsec = [row1 for row1 in query]
+                    if len(resultsec)>0:
+                        secteur = resultsec[0][0]
+                    result[i] = list(result[i])[:-1] + [secteur] + list(result[i])[-1:]
 
             #process shapefile
             # print(len(result), result[0])
@@ -285,10 +411,7 @@ class exportShapefileWorker(AbstractWorker):
             self.fillShapefile(linearname, qgis.core.QGis.WKBPoint, fieldslinear, champs, result)
 
 
-
-
         elif self.reporttype == 'Observations':
-
             champs =[['Objet', 'datecreation'],
                      ['Objet', 'datedestruction'],
                      ['Objet', 'commentaire'],

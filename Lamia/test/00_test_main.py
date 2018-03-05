@@ -3,6 +3,7 @@
 import os
 import qgis
 import qgis.gui
+import qgis.utils
 import shutil
 from Lamia.Lamia.dialog.InspectionDigue_windowwidget import InspectiondigueWindowWidget
 
@@ -12,6 +13,8 @@ def testCoreParserValue(canvas, loadfile=True, typedb="spatialite"):
     print('begin')
     wind = InspectiondigueWindowWidget(canvas)
     wind.setParent(None)
+
+    print('ok')
 
     if loadfile:
         if typedb == "spatialite":
@@ -27,7 +30,9 @@ def testCoreParserValue(canvas, loadfile=True, typedb="spatialite"):
             # path = os.path.normpath('I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201710_Begles//BD_Begles_ind8.sqlite')
             # path = os.path.normpath( 'C://000_testdigue//temp//test01.sqlite')
             # path = os.path.normpath( 'I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201708_SIJALAG//BD_SIJALAG_ind4.sqlite')
-            path = os.path.normpath('C://000_testdigue//BM//BD_SIJALAG_ind4.sqlite')
+            #path = os.path.normpath('C://000_testdigue//BM//BD_SIJALAG_ind4.sqlite')
+            # path = os.path.normpath('C://000_testdigue//temp01//test01.sqlite')
+            path = os.path.normpath('C://000_testdigue//BD_Begles_ind8.sqlite')
             wind.dbase.loadQgisVectorLayers(path)
 
         elif typedb == "postgis":
@@ -36,6 +41,7 @@ def testCoreParserValue(canvas, loadfile=True, typedb="spatialite"):
                                             password='PVR', port=5432)
 
     if True:
+        print('ok')
         # canvas.setDestinationCrs(wind.dbase.dbasetables['Infralineaire']['layer'].crs())
         canvas.setDestinationCrs(qgis.core.QgsCoordinateReferenceSystem(2154))
 
@@ -52,6 +58,8 @@ def testCoreParserValue(canvas, loadfile=True, typedb="spatialite"):
         canvas.setExtent(wind.dbase.dbasetables['Infralineaire']['layer'].extent())
         canvas.refresh()
 
+        print('ok1')
+
         canvas.show()
         canvas.refresh()
         wind.show()
@@ -61,22 +69,48 @@ def testCoreParserValue(canvas, loadfile=True, typedb="spatialite"):
 # *********************************************************************************************************************
 
 
-if True:
+
+
+try:
+    qgisversion_int = qgis.utils.QGis.QGIS_VERSION_INT
+except AttributeError:  #qgis 3
+    qgisversion_int = qgis.utils.Qgis.QGIS_VERSION_INT
+
+print(qgisversion_int)
+
+if int(str(qgisversion_int)[0:3]) < 220:
+    qgis_path = "C://OSGeo4W64//apps//qgis-ltr"
+else:
+    qgis_path = "C://OSGeo4W64//apps//qgis"
+    #os.environ["QT_QPA_PLATFORM"] = "offscreen"
+
+
+"""
+if False:
     qgis_path = "C://OSGeo4W64//apps//qgis"
 else:
     qgis_path = "C://OSGeo4W64//apps//qgis-dev"
+"""
 
+
+
+print('ok0')
 app = qgis.core.QgsApplication([], True)
+print('ok1')
 qgis.core.QgsApplication.setPrefixPath(qgis_path, True)
 qgis.core.QgsApplication.initQgis()
+print('ok2')
 canvas = qgis.gui.QgsMapCanvas()
 canvas.enableAntiAliasing(True)
 
+print('begin1')
+
 
 # spatialite   postgis
-testCoreParserValue(canvas,True,"spatialite")
+if True:
+    testCoreParserValue(canvas,True,"spatialite")
 
 
-app.exec_()
-qgis.core.QgsApplication.exitQgis()
+    app.exec_()
+    qgis.core.QgsApplication.exitQgis()
 print('ok')

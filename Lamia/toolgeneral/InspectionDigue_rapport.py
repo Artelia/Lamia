@@ -7,66 +7,222 @@ import logging
 from ..toolabstract.inspectiondigue_abstractworker import AbstractWorker
 from qgis.PyQt import QtGui, uic, QtCore, QtXml
 try:
-    from qgis.PyQt.QtGui import  QPrinter
-except ImportError:
+    from qgis.PyQt.QtGui import QPrinter
+    from qgis.PyQt.QtGui import QProgressBar, QApplication
+    #except ImportError:
+except ImportError as e:
     from qgis.PyQt.QtPrintSupport import QPrinter
+    from qgis.PyQt.QtWidgets import  QProgressBar, QApplication
 from ..libs import pyqtgraph as pg
+import networkx
+import numpy as np
 
-class printPDFWorker(AbstractWorker):
+# class printPDFWorker(AbstractWorker):
+class printPDFWorker:
 
-    def __init__(self, dbase, project, canvas, reporttype, pdffile,windowdialog):
-        AbstractWorker.__init__(self)
+    def __init__(self, dbase, project, canvas, reporttype, pdffile,windowdialog,
+                 printer=None,painter=None,idparent=None, parentheightpx=None):
+        #AbstractWorker.__init__(self)
+        self.logger = logging.getLogger("Lamia")
+
         self.dbase = dbase
         self.project =project
         self.canvas =canvas
         self.reporttype = reporttype
         self.pdffile = pdffile
         self.windowdialog = windowdialog
+        if printer is None:
+            self.printer = QPrinter()
+            self.painter = QtGui.QPainter()
+            self.idparent = None
+            self.parentheightpx = None
+        else:
+            self.printer = printer
+            self.painter = painter
+            self.idparent = idparent
+            self.parentheightpx = parentheightpx
 
-        #debug
-        formatter = logging.Formatter("%(asctime)s -- %(name)s -- %(funcName)s -- %(levelname)s -- %(message)s")
-        self.logger = logging.getLogger(__name__)
-        self.logger.setLevel(logging.DEBUG)             # DEBUG INFO WARNING
-        stream_handler = logging.StreamHandler()
-        stream_handler.setFormatter(formatter)
-        stream_handler.setLevel(logging.DEBUG)
-        self.logger.addHandler(stream_handler)
+
 
         self.reportdict={}
+
+
+
+        # ****************************  Infralineaire *****************************************************
+
+        sql = "SELECT Infralineaire.*,"
+        sql += " Objet.datecreation, Objet.datedestruction, Objet.commentaire, Objet.libelle, "
+        sql += "Descriptionsystem.importancestrat, Descriptionsystem.etatfonct, Descriptionsystem.datederniereobs, Descriptionsystem.qualitegeoloc, Descriptionsystem.parametres, Descriptionsystem.listeparametres"
+        sql += " FROM Infralineaire INNER JOIN Descriptionsystem ON Infralineaire.id_descriptionsystem = Descriptionsystem.id_descriptionsystem "
+        sql += "INNER JOIN Objet ON Objet.id_objet = Infralineaire.id_objet"
+        sql += "&uid=id_infralineaire"
+        #print(sql)
+
+        atlaslayer = qgis.core.QgsVectorLayer("?query=" + sql, "myvlayer", "virtual")
+
         self.reportdict['Infrastructure lineaire'] = {'qptfile': 'Infralineaire',
-                                                      'atlaslayer': self.dbase.dbasetables['Infralineaire']['layerqgis'],
+                                                      'dbasename':'Infralineaire',
+                                                      'atlaslayer': atlaslayer,
+                                                      #'specialstyledlayer' : self.dbase.dbasetables['Infralineaire']['layerqgis'],
+                                                      'atlaslayerstyle': 'Infralineaire_atlas.qml',
                                                       'atlasdriven': ['map1'],
+                                                      'atlasdrivenminscale' : 2500,
+                                                      'atlastypescale' : qgis.core.QgsComposerMap.Auto,
                                                       'generalmap': ['map0'],
                                                       'layers': {'map0': [self.dbase.dbasetables['Infralineaire']['layerqgis'],
                                                                           'scan25'],
-                                                                'map1': [self.dbase.dbasetables['Infralineaire']['layerqgis'],
+                                                                 #'map1': [self.dbase.dbasetables['Infralineaire']['layerqgis'],
+                                                                 'map1': ['atlaslayer',
                                                                          self.dbase.dbasetables['Equipement']['layerqgis'],
-                                                                         'scan25']},
-                                                      'images':{'graph' : 'profile'}}
+                                                                         'ortho']},
+                                                      'images':{'graph' : 'profile',
+                                                                'profiltravers' : 'profiltravers',
+                                                                'photo' : 'photo',
+                                                                'logo':'logo'}
+                                                      }
+
+        # ****************************  Equipements hydrauliques *****************************************************
+
+        sql = "SELECT Equipement.*,"
+        sql += " Objet.datecreation, Objet.datedestruction, Objet.commentaire, Objet.libelle, "
+        sql += "Descriptionsystem.importancestrat, Descriptionsystem.etatfonct, Descriptionsystem.datederniereobs, Descriptionsystem.qualitegeoloc, Descriptionsystem.parametres, Descriptionsystem.listeparametres"
+        sql += " FROM Equipement INNER JOIN Descriptionsystem ON Equipement.id_descriptionsystem = Descriptionsystem.id_descriptionsystem "
+        sql += "INNER JOIN Objet ON Objet.id_objet = Equipement.id_objet"
+        sql += " WHERE ( Equipement.categorie = 'RHF' or Equipement.categorie = 'RHO' or Equipement.categorie = 'OUH')"
+        # sql += " AND Equipement.lk_equipement IS NULL"
+        sql += "&uid=id_equipement"
+        # print(sql)
+
+        atlaslayer = qgis.core.QgsVectorLayer("?query=" + sql, "myvlayer", "virtual")
+
+
+        if False:
+
+            for fet in atlaslayer.getFeatures():
+                print(fet.attributes())
+                print(fet.id())
+            print([fiel.name() for fiel in atlaslayer.fields()])
+
 
         self.reportdict['Equipements hydrauliques'] = {'qptfile': 'Equipement_hydraulique',
-                                                       'atlaslayer': self.dbase.dbasetables['Equipement']['layerqgis'],
-                                                       'expression':'lk_equipement = NULL and (categorie=RHO or categorie=RHF or categorie=RHF or categorie = OUH)',
+                                                       'dbasename': 'Equipement',
+                                                       'atlaslayer': atlaslayer,
+                                                       #'expression':'lk_equipement = NULL and (categorie=RHO or categorie=RHF or categorie=RHF or categorie = OUH)',
+                                                       'atlaslayerstyle': 'Equipement_atlas.qml',
                                                        'atlasdriven': ['map1'],
-                                                       'atlasdrivenscale': 2000,
+                                                       'atlasdrivenminscale': 2000,
+                                                       'atlastypescale': qgis.core.QgsComposerMap.Auto,
                                                        'generalmap': ['map0'],
-                                                       'layers':{'map0': [self.dbase.dbasetables['Equipement']['layerqgis'],
+                                                       'layers':{'map0': [self.dbase.dbasetables['Infralineaire']['layerqgis'],
                                                                           'scan25'],
-                                                                'map1': [self.dbase.dbasetables['Infralineaire']['layerqgis'],
-                                                                         self.dbase.dbasetables['Equipement']['layerqgis'],
+                                                                'map1': ['atlaslayer',
+                                                                         self.dbase.dbasetables['Infralineaire']['layerqgis'],
                                                                          'scan25']},
-                                                       'images':{'photo': 'lastphoto'},
-                                                       'childlayer': {'name': 'Equipement',
-                                                                      'lkfieldparentlayer': 'lk_equimement',
-                                                                      'lkfieldchildlayer': 'id_equipement',
-                                                                      'images': {}}}
+                                                       'images':{'photo1': 'photo'},
+                                                       'childprint':  "Equipements hydrauliques annexes"
+                                                       }
 
+
+        # ****************************  Equipements hydrauliques annexes *****************************************************
+
+        sql = "SELECT Equipement.*,"
+        sql += " Objet.datecreation, Objet.datedestruction, Objet.commentaire, Objet.libelle, "
+        sql += "Descriptionsystem.importancestrat, Descriptionsystem.etatfonct, Descriptionsystem.datederniereobs, Descriptionsystem.qualitegeoloc, Descriptionsystem.parametres, Descriptionsystem.listeparametres"
+        sql += " FROM Equipement INNER JOIN Descriptionsystem ON Equipement.id_descriptionsystem = Descriptionsystem.id_descriptionsystem "
+        sql += "INNER JOIN Objet ON Objet.id_objet = Equipement.id_objet"
+        sql += " WHERE ( Equipement.categorie = 'RHF' or Equipement.categorie = 'RHO' or Equipement.categorie = 'OUH')"
+        if self.idparent is not None:
+            sql += " AND Equipement.lk_equipement = " + str(self.idparent)
+        sql += "&uid=id_equipement"
+        # print(sql)
+
+        atlaslayer = qgis.core.QgsVectorLayer("?query=" + sql, "myvlayer", "virtual")
+
+
+        if False:
+
+            for fet in atlaslayer.getFeatures():
+                print(fet.attributes())
+                print(fet.id())
+            print([fiel.name() for fiel in atlaslayer.fields()])
+
+
+        self.reportdict['Equipements hydrauliques annexes'] = {'qptfile': 'Equipement_hydraulique_annexe',
+                                                       'dbasename': 'Equipement',
+                                                       'atlaslayer': atlaslayer,
+                                                       #'expression':'lk_equipement = NULL and (categorie=RHO or categorie=RHF or categorie=RHF or categorie = OUH)',
+                                                       'atlaslayerstyle': 'Equipement.qml',
+                                                       'atlasdriven': [],
+                                                       'atlasdrivenminscale': 2000,
+                                                       'atlastypescale': qgis.core.QgsComposerMap.Auto,
+                                                       'generalmap': [],
+                                                       'layers':{},
+                                                       'images':{'photo1': 'photo'},
+                                                       }
+
+
+
+        # ****************************  Desordres *****************************************************
+
+
+        if self.dbase.dbasetype == 'spatialite':
+            sql = "SELECT Observation.*, Desordre.*, Objet.*,  MAX(Observation.dateobservation)  FROM Observation "
+            sql += "INNER JOIN Desordre ON Desordre.id_desordre = Observation.lk_desordre "
+            #sql += "INNER JOIN Observation ON Desordre.id_desordre = Observation.lk_desordre "
+            sql += "INNER JOIN Objet ON Objet.id_objet = Observation.id_objet "
+            sql += "GROUP BY Observation.lk_desordre"
+        elif self.dbase.dbasetype == 'postgis':
+            pass
+
+        sql += "&uid=id_desordre"
+        # print(sql)
+
+        atlaslayer = qgis.core.QgsVectorLayer("?query=" + sql, "myvlayer", "virtual")
+
+        if False:
+
+            for fet in atlaslayer.getFeatures():
+                print(fet.attributes())
+                print(fet.id())
+            print([fiel.name() for fiel in atlaslayer.fields()])
+
+        self.reportdict['Desordre'] = {'qptfile': 'Desordres',
+                                                      'dbasename':'Observation',
+                                                      'atlaslayer': atlaslayer,
+                                                      #'specialstyledlayer' : self.dbase.dbasetables['Infralineaire']['layerqgis'],
+                                                      'atlaslayerstyle': 'Desordre_atlas.qml',
+                                                      'atlasdriven': ['map1'],
+                                                      'atlasdrivenminscale' : 2500,
+                                                       'atlastypescale': qgis.core.QgsComposerMap.Predefined,
+                                                       #'atlastypescale': qgis.core.QgsComposerMap.Fixed,
+                                                      'generalmap': ['map0'],
+                                                      'layers': {'map0': [self.dbase.dbasetables['Infralineaire']['layerqgis'],
+                                                                          'scan25'],
+                                                                 'map1': ['atlaslayer',
+                                                                          self.dbase.dbasetables['Infralineaire']['layerqgis'],
+                                                                          self.dbase.dbasetables['Equipement']['layerqgis'],
+                                                                          'scan25']},
+                                                      'images':{'photo1' : 'photo1',
+                                                                'photo2': 'photo2',
+                                                                'logo':'logo'}
+                                                      }
 
     def work(self):
         # self.message.emit('newComposition creation')
-        self.logger.debug('started')
-        mapsettings = self.canvas.mapSettings()
+        if qgis.utils.iface is not None:
+            debug = False
+            stop10 = False
+        else:
+            debug = True  # True False
+            stop10 = True
 
+
+
+        if debug : self.logger.debug('started')
+        mapsettings = self.canvas.mapSettings()
+        layertoremove = []
+
+        # ********************* create composition *****************************
         if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
             newComposition = qgis.core.QgsComposition(mapsettings)
         else:
@@ -76,11 +232,14 @@ class printPDFWorker(AbstractWorker):
             reportdic = self.reportdict['Infrastructure lineaire']
         elif self.reporttype == "Equipements hydrauliques":
             reportdic = self.reportdict['Equipements hydrauliques']
+        elif self.reporttype == "Equipements hydrauliques annexes":
+            reportdic = self.reportdict['Equipements hydrauliques annexes']
+        elif self.reporttype == "Desordres":
+            reportdic = self.reportdict['Desordre']
 
-            # templatepath = "C://00_Base.qpt"
+        if debug : self.logger.debug('type %s %s', str(self.reporttype),str(self.idparent))
 
-
-        # Load template
+        # ********************* Load template *****************************
         templatepath = os.path.abspath(os.path.join(os.path.dirname(__file__),'..','DBASE','rapport',self.dbase.type, reportdic['qptfile'] + '.qpt'))
         template_file = QtCore.QFile(templatepath)
         template_file.open(QtCore.QIODevice.ReadOnly | QtCore.QIODevice.Text)
@@ -94,13 +253,29 @@ class printPDFWorker(AbstractWorker):
         # substitution_map = {'DATE_TIME_START': 'foo','DATE_TIME_END': 'bar'}
         substitution_map = {}
         newComposition.loadFromTemplate(document,substitution_map)
-        self.logger.debug('template loaded')
+        if debug: self.logger.debug('template loaded')
+        if debug: self.logger.debug('paperHeight %s', str(newComposition.paperHeight() 		))
 
-        #atlas
+        # ********************* set atlas and linked composeritem *****************************
 
         atlas = newComposition.atlasComposition()
-        #atlas.setCoverageLayer(self.dbase.dbasetables['Infralineaire']['layerqgis'])
-        atlas.setCoverageLayer(reportdic['atlaslayer'])
+        #coveragelayer = qgis.core.QgsVectorLayer(reportdic['atlaslayer'])
+        if True:
+            coveragelayer = reportdic['atlaslayer']
+            stylepath = os.path.join(os.path.dirname(__file__), '..','DBASE', 'style', self.dbase.type, reportdic['atlaslayerstyle'])
+            coveragelayer.loadNamedStyle(stylepath)
+            # print(stylepath)
+
+            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                qgis.core.QgsMapLayerRegistry.instance().addMapLayer(coveragelayer, False)
+            else:
+                qgis.core.QgsProject.instance().addMapLayer(coveragelayer, False)
+            layertoremove.append(coveragelayer)
+            atlas.setCoverageLayer(coveragelayer)
+
+        if False:
+            atlas.setCoverageLayer(reportdic['atlaslayer'])
+
         atlas.setEnabled(True)
         atlas.setSingleFile(True)
         ret = newComposition.setAtlasMode(qgis.core.QgsComposition.ExportAtlas)
@@ -110,34 +285,67 @@ class printPDFWorker(AbstractWorker):
                 atlas.setComposerMap(newComposition.getComposerItemById(mapname))
                 newComposition.getComposerItemById(mapname).setAtlasDriven(True)
                 #newComposition.getComposerItemById(mapname).setNewScale(reportdic['atlasdrivenscale'])
-                newComposition.getComposerItemById(mapname).setAtlasScalingMode(qgis.core.QgsComposerMap.Fixed)
+                #newComposition.getComposerItemById(mapname).setAtlasScalingMode(qgis.core.QgsComposerMap.Auto)
+                newComposition.getComposerItemById(mapname).setAtlasScalingMode(reportdic['atlastypescale'])
+
         else:
             pass
-        self.logger.debug('atlas driven loaded')
 
-        num = atlas.numFeatures()
+        if debug: self.logger.debug('atlas driven loaded')
 
-        # fill composer map with layers
-        rastertoremove = []
+        # ********************* fill composer map with layers *****************************
+
         for mapname in reportdic['layers'].keys():
             layersformapcomposer = []
             for layer in reportdic['layers'][mapname]:
                 if isinstance(layer, str):
-                    if layer == 'scan25':
+                    if True and layer == 'atlaslayer':
+                        layersformapcomposer.append(coveragelayer)
+                        if False:
+                            stylepath = os.path.join(os.path.dirname(__file__), '..', 'DBASE', 'style', self.dbase.type, reportdic['specialstyledlayerstyle'])
+                            reportdic['specialstyledlayer'].loadNamedStyle(stylepath)
+                            layersformapcomposer.append(reportdic['specialstyledlayer'])
+                            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                                qgis.core.QgsMapLayerRegistry.instance().addMapLayer(reportdic['specialstyledlayer'], False)
+                            else:
+                                qgis.core.QgsProject.instance().addMapLayer(reportdic['specialstyledlayer'], False)
+                            layertoremove.append(reportdic['specialstyledlayer'])
+
+                    elif layer == 'scan25':
                         sql = "SELECT Ressource.file from Rasters"
                         sql += " INNER JOIN Ressource ON Rasters.id_ressource = Ressource.id_ressource"
                         sql += " WHERE Rasters.typeraster = 'IRF'"
                         query = self.dbase.query(sql)
                         result = [row[0] for row in query]
                         if len(result) > 0:
-                            fileraster = self.dbase.dbasetables['Infralineaire']['widget'].completePathOfFile(result[0])
+                            #fileraster = self.dbase.dbasetables['Infralineaire']['widget'].completePathOfFile(result[0])
+                            fileraster = self.dbase.completePathOfFile(result[0])
                             rlayer = qgis.core.QgsRasterLayer(fileraster, os.path.basename(fileraster).split('.')[0])
+                            rlayer.renderer().setOpacity(0.5)
                             if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
                                 qgis.core.QgsMapLayerRegistry.instance().addMapLayer(rlayer,False)
                             else:
                                 qgis.core.QgsProject.instance().addMapLayer(rlayer,False)
                             layersformapcomposer.append(rlayer)
-                            rastertoremove.append(rlayer)
+                            layertoremove.append(rlayer)
+
+                    elif layer == 'ortho':
+                        sql = "SELECT Ressource.file from Rasters"
+                        sql += " INNER JOIN Ressource ON Rasters.id_ressource = Ressource.id_ressource"
+                        sql += " WHERE Rasters.typeraster = 'ORF'"
+                        query = self.dbase.query(sql)
+                        result = [row[0] for row in query]
+                        if len(result) > 0:
+                            #fileraster = self.dbase.dbasetables['Infralineaire']['widget'].completePathOfFile(result[0])
+                            fileraster = self.dbase.completePathOfFile(result[0])
+                            rlayer = qgis.core.QgsRasterLayer(fileraster, os.path.basename(fileraster).split('.')[0])
+                            rlayer.renderer().setOpacity(0.5)
+                            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                                qgis.core.QgsMapLayerRegistry.instance().addMapLayer(rlayer,False)
+                            else:
+                                qgis.core.QgsProject.instance().addMapLayer(rlayer,False)
+                            layersformapcomposer.append(rlayer)
+                            layertoremove.append(rlayer)
 
                 else:
                     layersformapcomposer.append(layer)
@@ -156,19 +364,11 @@ class printPDFWorker(AbstractWorker):
             # xform = qgis.core.QgsCoordinateTransform(self.dbase.qgiscrs, self.canvas.mapSettings().destinationCrs())
             layerextgeomcanvas = layerextgeom.transform(self.dbase.xform)
             layerextgeomcanvasfinal = layerextgeom.boundingBox()
-            #newComposition.getComposerItemById(mapname).setNewExtent(layerextgeomcanvasfinal)
             newComposition.getComposerItemById(mapname).zoomToExtent(layerextgeomcanvasfinal)
-
             #overview
             overvw = newComposition.getComposerItemById(mapname).overview()
 
-            # print(overvw.frameSymbol(), overvw.frameMapId(), overvw.inverted() )
-
-        self.logger.debug('map configured')
-
-        if False:
-            layersformapcomposer = [self.dbase.dbasetables['Infralineaire']['layerqgis'],
-                                    self.dbase.dbasetables['Equipement']['layerqgis']]
+        if debug: self.logger.debug('map configured')
 
         if False:
             sql = "SELECT Ressource.file from Rasters"
@@ -176,10 +376,10 @@ class printPDFWorker(AbstractWorker):
             sql += " WHERE Rasters.typeraster = 'IRF'"
             query = self.dbase.query(sql)
             result = [row[0] for row in query]
-            print(result)
+            # print(result)
             if len(result)>0:
                 fileraster = self.dbase.dbasetables['Infralineaire']['widget'].completePathOfFile(result[0])
-                print(fileraster)
+                # print(fileraster)
                 rlayer = qgis.core.QgsRasterLayer(fileraster, os.path.basename(fileraster).split('.')[0])
                 if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
                     qgis.core.QgsMapLayerRegistry.instance().addMapLayer(rlayer,
@@ -219,97 +419,392 @@ class printPDFWorker(AbstractWorker):
             layerextgeomcanvas = layerextgeom.transform(self.dbase.xform)
             layerextgeomcanvasfinal = layerextgeom.boundingBox()
 
-            print('layerextgeom', layerextgeom.asPolygon())
+            # print('layerextgeom', layerextgeom.asPolygon())
             newComposition.getComposerItemById('map0').setNewExtent(layerextgeomcanvasfinal)
 
             # self.message.emit('Printing')
 
+        # ********************* %lamia var in composer *****************************
 
-        #create dict for values
-        #for composeritem in newComposition.composerItems(qgis.core.QgsComposerLabel):
-        for composeritem in newComposition.items():
-            if isinstance(composeritem, qgis.core.QgsComposerLabel):
-                #print(composeritem.displayText())
-                print(composeritem.text())
-                print re.findall(r'\[([^]]*)\]', composeritem.text())
+        dictfields={}
+        if True:
+            for composeritem in newComposition.items():
+                if isinstance(composeritem, qgis.core.QgsComposerLabel):
+                    # print(composeritem.text())
+                    if "%lamia" in composeritem.text():
+                        txtsplit = composeritem.text().split('%')
+                        dictfields[composeritem.uuid()] = txtsplit
+
+        # ********************* ordering ids for pdf *****************************
+        orderedids = None
+        if self.idparent is None:
+            orderedids = self.orderIdsAlongPath()
+        if orderedids is None:
+            orderedids = [feat.id() for feat in reportdic['atlaslayer'].getFeatures()]
 
 
+        if debug: self.logger.debug('orderedids %s', str(orderedids))
 
 
-
-        return
-
-        try:
-            printer = QPrinter()
-            # newComposition.beginPrintAsPDF(printer, "C:\\test.pdf")
-            # painter = QtGui.QPainter(printer)
-            painter = QtGui.QPainter()
-            # atlas.beginRender()
-
-            if True:
-                newComposition.setUseAdvancedEffects(False)
-                atlas.beginRender()
-                newComposition.beginPrintAsPDF(printer, self.pdffile)
-                printReady = painter.begin(printer)
-                # newComposition.beginPrint(printer)
-                for i in range(0, num):
-
-                    # self.message.emit('num' + str(i) + str(painter.isActive()))
-                    # painter = QtGui.QPainter()
-                    atlas.prepareForFeature(i)
-                    currentfeature = atlas.feature()
-                    print(currentfeature.attributes())
-                    # print('*********')
-                    # print(newComposition.getComposerItemById('map1').currentMapExtent().asPolygon())
-                    # print(newComposition.getComposerItemById('map1').extent().asPolygon())
-                    # print(newComposition.getComposerItemById('map0').extent().asPolygon())
-
-                    # *************************************************************
-                    # Values
+        if orderedids is None or len(orderedids) == 0:
+            return
 
 
 
 
+        # ********************* progress bar *****************************
+        if qgis.utils.iface is not None and self.idparent is None:
+            progressMessageBar = qgis.utils.iface.messageBar().createMessage("Generation du pdf...")
+            progress = QProgressBar()
+            progress.setMaximum(len(orderedids))
+            progress.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+            progressMessageBar.layout().addWidget(progress)
+            qgis.utils.iface.messageBar().pushWidget(progressMessageBar, qgis.utils.iface.messageBar().INFO)
+        else:
+            progress = None
+
+        # *********************************************************************
+        # ********************* begin printing  *****************************
+        # *********************************************************************
+        # try:
+
+        if True:
+            newComposition.setUseAdvancedEffects(False)
+            atlas.beginRender()
+            if self.idparent is None:
+                newComposition.beginPrintAsPDF(self.printer, self.pdffile)
+                printReady = self.painter.begin(self.printer)
+                if debug: self.logger.debug('print ready %s', printReady)
+
+            #print('paint', self.painter.device().width(),self.painter.device().widthMM() , self.painter.device().logicalDpiX())
+            idecalage = 0
+            for i, featid in enumerate(orderedids):
+                #for i, featid in enumerate([7]):
+                # print(featid)
+                self.setLoadingProgressBar(progress, i)
+                #parentfeat = self.dbase.dbasetables[tablename]['layer'].getFeatures(qgis.core.QgsFeatureRequest(parendid)).next()
+                atlasfeat = reportdic['atlaslayer'].getFeatures(qgis.core.QgsFeatureRequest(featid)).next()
+
+                if atlasfeat.geometry().boundingBox().toString() == 'Empty':        #point in linelayer
+                    for mapname in reportdic['atlasdriven']:
+                        newComposition.getComposerItemById(mapname).setAtlasScalingMode(qgis.core.QgsComposerMap.Fixed)
+                        newComposition.getComposerItemById(mapname).setNewScale(reportdic['atlasdrivenminscale'])
+                else:
+                    for mapname in reportdic['atlasdriven']:
+                        newComposition.getComposerItemById(mapname).setAtlasScalingMode(reportdic['atlastypescale'])
 
 
-                    try:
-                        for imageitemname in reportdic['images'].keys():
-                            imageitem = newComposition.getComposerItemById(imageitemname)
-                            if os.path.isfile(reportdic['images'][imageitemname]):
-                                imagefile = reportdic['images'][imageitemname]
-                            elif reportdic['images'][imageitemname] == 'profile':
-                                imagefile = self.getImageFileOfProfile(atlas.currentGeometry(self.dbase.qgiscrs),imageitem)
+                atlas.prepareForFeature(atlasfeat)
+                currentfeature = atlas.feature()
+
+                if debug: self.logger.debug('feat attr : %s', str([field.name() for field in currentfeature.fields()]))
+                if debug: self.logger.debug('feat attr : %s',str(currentfeature.attributes()))
+
+                #check atlasdriven map scale
+                for mapname in reportdic['atlasdriven']:
+                    if newComposition.getComposerItemById(mapname).scale() < reportdic['atlasdrivenminscale']:
+                        newComposition.getComposerItemById(mapname).setNewScale(reportdic['atlasdrivenminscale'])
+                        # print('ok')
+                    elif newComposition.getComposerItemById(mapname).scale() > 100000.0:
+                        newComposition.getComposerItemById(mapname).setNewScale(reportdic['atlasdrivenminscale'])
+                        #print('ok')
+
+                # photo and graph inclusion
+                if debug: self.logger.debug('image')
+                if True:
+                    for imageitemname in reportdic['images'].keys():
+                        imageitem = newComposition.getComposerItemById(imageitemname)
+                        #print(imageitem, reportdic['images'][imageitemname])
+                        imagefile = None
+                        if os.path.isfile(reportdic['images'][imageitemname]):
+                            imagefile = reportdic['images'][imageitemname]
+                        elif True and reportdic['images'][imageitemname] == 'profile':
+                            imagefile = self.getImageFileOfProfile(atlas.currentGeometry(self.dbase.qgiscrs),imageitem)
+                        elif True and reportdic['images'][imageitemname] ==   'profiltravers':
+                            imagefile = self.getImageFileOfProfileTravers(reportdic, currentfeature,imageitem)
+                        elif reportdic['images'][imageitemname] == 'photo':
+                            imagefile = self.getPhoto(reportdic, currentfeature)
+                        elif 'photo' in reportdic['images'][imageitemname]:
+                            photoid = int(reportdic['images'][imageitemname][5:])
+                            imagefile = self.getNumberedPhoto(reportdic, currentfeature, photoid)
+                        elif reportdic['images'][imageitemname] == 'logo':
+                            imagefile = os.path.join(os.path.dirname(__file__), '..', 'DBASE', 'rapport','utils', 'logo.jpg')
+
+                        if imageitem is not None:
+                            # print('ok',imagefile )
                             imageitem.setPicturePath(imagefile)
                             imageitem.updateItem()
-                    except Exception as e:
-                        print('image error', e)
-                    # newComposition.beginPrintAsPDF(printer, "C:\\test.pdf")
-                    # newComposition.beginPrint(printer)
-                    # printReady = painter.begin(printer)
-                    if i > 0:
-                        printer.newPage()
-                    newComposition.doPrint(printer, painter)
-                    # painter.end()
-                # self.message.emit('end print')
-                atlas.endRender()
-                painter.end()
 
-        except Exception as e:
-            self.error.emit(e)
+                if debug: self.logger.debug('var')
+                # var inclusion
+                if True:
+                    for compitemuuid in dictfields.keys():
+                        composeritem = newComposition.getComposerItemByUuid(compitemuuid)
+                        finaltxt = []
+                        for temptxt in dictfields[compitemuuid]:
+                            if 'lamia.' in temptxt:
+                                table = temptxt.split('.')[1]
+                                field = temptxt.split('.')[2]
+                                #sql = "SELECT " + field + " FROM " + table + " WHERE id_" + table + " = " + str(currentfeature.id())
 
-        for rastlayer in rastertoremove:
+                                sql = "SELECT " + field + " FROM " + table
+                                #print('id_' + table.lower(), self.dbase.dbasetables[reportdic['dbasename']]['fields'].keys())
+                                if 'id_' + table.lower() in self.dbase.dbasetables[reportdic['dbasename']]['fields'].keys():
+                                    sql += " WHERE " + table + ".id_" + table + " = " + str(currentfeature['id_' + table])
+                                elif 'lk_' + table.lower() in self.dbase.dbasetables[reportdic['dbasename']]['fields'].keys():
+                                    sql += " WHERE " + table + ".id_" + table + " = " + str(currentfeature['lk_' + table])
+
+                                #print('lamia', sql)
+                                query = self.dbase.query(sql)
+                                valtemp = [row[0] for row in query][0]
+                                #print(valtemp)
+
+                                #val = self.dbase.getConstraintTextFromRawValue(table, field, currentfeature[field])
+                                val = self.dbase.getConstraintTextFromRawValue(table, field,valtemp)
+                                if unicode(val).lstrip("-").isdigit() and float(val) == -1.:
+                                    finaltxt.append('/')
+                                elif val == '':
+                                    finaltxt.append(' / ')
+                                else:
+                                    finaltxt.append(unicode(val))
+                            elif 'lamiasql.' in temptxt:
+                                """
+                                "SELECT Tcobjetintervenant.fonction, Intervenant.nom,Intervenant.societe  FROM Tcobjetintervenant 
+                                INNER JOIN Intervenant ON Tcobjetintervenant.id_tcintervenant = Intervenant.id_intervenant 
+                                WHERE id_tcobjet = " + str(currentfeature['id_objet'])
+                                """
+                                # print(str(eval(temptxt[9:])))
+                                query = self.dbase.query(str(eval(temptxt[9:])))
+                                result = [row for row in query]
+                                if len(result)>0:
+                                    finaltxt.append(' - '.join(list(result[0])))
+                                else:
+                                    finaltxt.append('NR')
+                            else:
+                                finaltxt.append(temptxt)
+                        txt = ''.join(finaltxt)
+                        composeritem.setText(txt)
+
+                if debug: self.logger.debug('childprint')
+
+
+
+                if self.idparent is  None:
+                    if i > 0 :
+                        self.printer.newPage()
+                    newComposition.doPrint(self.printer, self.painter)
+                else:
+                    # print('height', self.parentheightpx,selfheightpx , self.painter.device().height())
+                    #selfheightpx = newComposition.compositionBounds().height()/ 25.4 * 96 * 1.08
+                    pageheightmm = self.printer.paperRect(QPrinter.Millimeter).height()
+                    selfheightpx = newComposition.compositionBounds().height() /pageheightmm * self.painter.device().height()
+                    verticalpositionpx = self.parentheightpx + (i - idecalage + 1) * selfheightpx
+                    # print('temp', self.idparent,verticalpositionpx, self.painter.device().height() )
+                    if verticalpositionpx > self.painter.device().height():
+                        # print('***************************************************** attention *****************************')
+                        self.printer.newPage()
+                        self.parentheightpx = 0
+                        idecalage = i
+
+
+                    self.painter.translate(0,self.parentheightpx + (i - idecalage) *selfheightpx)
+                    newComposition.doPrint(self.printer, self.painter)
+                    self.painter.translate(0, -self.parentheightpx - (i - idecalage) * selfheightpx)
+
+                # childprint
+                if True:
+                    if 'childprint' in reportdic.keys():
+                        #parentheight = newComposition.getComposerItemById('parentheight').rectWithFrame().height()
+                        #pour A4
+                        #print('paperSize()' , self.printer.paperRect(QPrinter.Millimeter).height())
+                        parentheightmm = newComposition.getComposerItemById('parentheight').rectWithFrame().height()
+                        pageheightmm = self.printer.paperRect(QPrinter.Millimeter).height()
+                        parentheightpx = int(parentheightmm / pageheightmm * self.painter.device().height())
+                        # height = height(mm)/(inchtomm) * resolution *1.08
+                        #parentheightpx = parentheight / 25.4 * 96 * 1.08
+                        childrapport = printPDFWorker(self.dbase,
+                                            self.project,
+                                            self.canvas,
+                                            reportdic['childprint'],
+                                            self.pdffile,
+                                            self.windowdialog,
+                                            self.printer,
+                                            self.painter,
+                                            idparent=currentfeature.id(),
+                                             parentheightpx=parentheightpx)
+                        childrapport.work()
+
+                if stop10 and i == 5 :
+                    break
+
+            # ********************* close printing  *****************************
+            atlas.endRender()
+            if self.idparent is None:
+                self.painter.end()
+            if debug: self.logger.debug('end')
+            if progress is not None: qgis.utils.iface.messageBar().clearWidgets()
+            return
+
+
+        for rastlayer in layertoremove:
             if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
                 qgis.core.QgsMapLayerRegistry.instance().removeMapLayer(rastlayer)
             else:
                 qgis.core.QgsProject.instance().removeMapLayer(rastlayer)
 
-        if False:
-            if self.reporttype == "Infrastructure lineaire":
-                if rlayer is not None:
-                    if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                        qgis.core.QgsMapLayerRegistry.instance().removeMapLayer(rlayer)
+
+        if debug: self.logger.debug('end')
+
+
+    def orderIdsAlongPath(self):
+        if qgis.utils.iface is not None:
+            debug = False
+        else:
+            debug = True  #True false
+        orderedids=[]
+
+        if debug : self.logger.debug('start')
+
+        # **********************   ordering view ****************************
+        # ************ by zonegeo and infralineaire ************************
+
+        sql = "SELECT id_zonegeo FROM Zonegeo"
+        query = self.dbase.query(sql)
+        zonegeoids = [row[0] for row in query]
+        dictedgesordered = {}
+        if len(zonegeoids) > 0:
+            for zonegeoid in zonegeoids:
+                dictedgesordered[zonegeoid] = []
+                sql = "SELECT ST_AsText(geom) FROM Zonegeo WHERE id_zonegeo = " + str(zonegeoid)
+                query = self.dbase.query(sql)
+                zonegeogeom = [row[0] for row in query][0]
+                sql = "SELECT Infralineaire.id_infralineaire FROM Infralineaire"
+                sql += " WHERE ST_WITHIN(ST_MakeValid(Infralineaire.geom),ST_GeomFromText('" + str(zonegeogeom) + "'," + str(
+                    self.dbase.crsnumber) + "))"
+                query = self.dbase.query(sql)
+                result = [row[0] for row in query]
+                dictedgesordered[zonegeoid] = result
+
+
+
+        if debug: self.logger.debug('dictedgesordered %s', str(dictedgesordered))
+
+
+        self.windowdialog.pathtool.computeNXGraphForAll()
+
+        if len(dictedgesordered) > 0:
+            for zonegeoid in dictedgesordered.keys():
+                nxgraph, ids, indexnoeuds, infralinfaces, reverseinfralinfaces = self.windowdialog.pathtool.computeNXGraph(dictedgesordered[zonegeoid])
+                subgraphs = networkx.connected_component_subgraphs(nxgraph)
+                for subgraph in subgraphs:
+                    #count elem
+                    npedges = np.ravel(list(subgraph.edges()))
+                    unique, counts = np.unique(npedges, return_counts=True)
+                    edgeextremite = unique[np.where(counts==1)]
+                    edgenoeud = unique[np.where(counts>2)]
+
+                    if len(edgenoeud)>0:
+                        print('attention presence d un noeud - non traite')
                     else:
-                        qgis.core.QgsProject.instance().removeMapLayer(rlayer)
+                        paths=[list(edgeextremite)]
+
+                    if debug: self.logger.debug('subgraph %s %s %s', str(subgraph), str(edgeextremite), str(edgenoeud))
+
+                    for path in paths:
+                        shortestpathedges = networkx.shortest_path(nxgraph, path[0], path[1])
+                        id = self.windowdialog.pathtool.getIdsFromPath(shortestpathedges, ids, infralinfaces,reverseinfralinfaces)
+                        #reverse list of not from amaont to aval
+                        if not shortestpathedges[0:2] in infralinfaces.tolist():
+                            shortestpathedgesreversed = shortestpathedges[::-1]
+                            id = self.windowdialog.pathtool.getIdsFromPath(shortestpathedgesreversed, ids, infralinfaces,
+                                                                           reverseinfralinfaces)
+
+
+                        if self.reporttype == 'Infrastructure lineaire':
+                            orderedids += list(id[:,0])
+
+                        elif self.reporttype == 'Desordres':
+                            geom = self.windowdialog.pathtool.getGeomFromIds(id)
+
+                            datas = self.windowdialog.pathtool.getGraphData(geom,list(id[:,0]),'desordre', 'Profil')
+                            res = [int(id) for id in datas['desordre']['id']]
+                            orderedids += res
+
+                        elif self.reporttype == 'Equipements hydrauliques':
+                            geom = self.windowdialog.pathtool.getGeomFromIds(id)
+                            datas = self.windowdialog.pathtool.getGraphData(geom,list(id[:,0]),'equipement_hydraulique', 'Profil')
+
+                            res = [int(id) for id in datas['equipement']['id']]
+                            orderedids += res
+
+
+        return orderedids
+
+
+    def getPhoto(self,reportdic, feat):
+        # print('getPhoto')
+        resfile = None
+        #print([field.name() for field in reportdic['atlaslayer'].fields()])
+        #if 'lk_photo' in [field.name() for field in reportdic['atlaslayer'].fields()]:
+        if 'lk_photo' in self.dbase.dbasetables[reportdic['dbasename']]['fields'].keys():
+            sql = "SELECT lk_photo FROM " + reportdic['dbasename']
+            sql += " WHERE id_" + reportdic['dbasename']  + " = " + str(feat.id())
+            # print(sql)
+            query = self.dbase.query(sql)
+            result = [row for row in query]
+            # print('reslkphoto', result)
+            #lkphoto = feat['lk_photo']
+            # print('getPhoto',lkphoto )
+            #if not self.dbase.isAttributeNull(lkphoto):
+            if len(result) > 0 and not self.dbase.isAttributeNull(result[0][0]):
+                sql = "SELECT Ressource.file FROM Photo INNER JOIN Ressource ON Photo.id_ressource = Ressource.id_ressource WHERE Photo.id_objet = "
+                #sql += str(feat['lk_photo'])
+                sql += str(result[0][0])
+                query = self.dbase.query(sql)
+                result = [row for row in query]
+                filephoto = result[0][0]
+                # print(filephoto)
+                resfile = self.dbase.completePathOfFile(filephoto)
+        if resfile is None:
+            """
+            sql = "SELECT Ressource.file FROM " + reportdic['dbasename']
+            sql += " INNER JOIN Objet ON Objet.id_objet = " + reportdic['dbasename'] + ".id_objet"
+            sql += " INNER JOIN Tcobjetressource ON Tcobjetressource.id_tcobjet = Objet.id_objet"
+            sql += " INNER JOIN Ressource ON Tcobjetressource.id_tcressource = Ressource.id_ressource"
+            sql += " INNER JOIN Photo ON Photo.id_ressource = Ressource.id_ressource"
+            sql += " WHERE "+ reportdic['dbasename'] + ".id_objet = " + str(feat['id_objet'])
+            #print(sql)
+            query = self.dbase.query(sql)
+            result = [row for row in query]
+            # print(result)
+            #resfile = result[0][0]
+            if len(result)>0:
+                resfile = self.dbase.completePathOfFile(result[0][0])
+            """
+            resfile = self.getNumberedPhoto(reportdic, feat, 1)
+
+        return resfile
+
+    def getNumberedPhoto(self,reportdic, feat, photoid):
+        #print('getNumberedPhoto', photoid)
+        resfile = None
+
+        sql = "SELECT Ressource.file FROM " + reportdic['dbasename']
+        sql += " INNER JOIN Objet ON Objet.id_objet = " + reportdic['dbasename'] + ".id_objet"
+        sql += " INNER JOIN Tcobjetressource ON Tcobjetressource.id_tcobjet = Objet.id_objet"
+        sql += " INNER JOIN Ressource ON Tcobjetressource.id_tcressource = Ressource.id_ressource"
+        sql += " INNER JOIN Photo ON Photo.id_ressource = Ressource.id_ressource"
+        sql += " WHERE " + reportdic['dbasename'] + ".id_objet = " + str(feat['id_objet'])
+        # print(sql)
+        query = self.dbase.query(sql)
+        result = [row for row in query]
+        #print(result)
+        # resfile = result[0][0]
+        if len(result) > (photoid -1):
+            resfile = self.dbase.completePathOfFile(result[photoid -1][0])
+            # print(resfile)
+        return resfile
+
 
     def getImageFileOfProfile(self,featgeom,imageitem):
         point1 = [featgeom.asPolyline()[0].x(), featgeom.asPolyline()[0].y()]
@@ -326,14 +821,85 @@ class printPDFWorker(AbstractWorker):
         # win = pg.GraphicsWindow(title="Basic plotting examples")
         # win.resize(imageitem.rect().width(), imageitem.rect().height())
 
-        self.windowdialog.pathtool.computePath(point1, point2)
-        print('path',self.windowdialog.pathtool.geomfinalids)
+        #self.windowdialog.pathtool.computePath(point1, point2)
+        #print('path',self.windowdialog.pathtool.geomfinalids)
 
-        print(imageitem.rect().width(), imageitem.rect().height())
+        # print(imageitem.rect().width(), imageitem.rect().height())
 
         exportfile = os.path.join(os.path.dirname(__file__), '..', 'config', 'tempgraph.png')
-        self.windowdialog.pathtool.exportCurrentGraph(imageitem.rect().width()*96,
-                                                      imageitem.rect().height()*96,
+        self.windowdialog.pathtool.exportCurrentGraph(point1, point2,
+                                                      imageitem.rect().width(),
+                                                      imageitem.rect().height(),
                                                       exportfile)
 
         return os.path.abspath(exportfile)
+
+
+    def getImageFileOfProfileTravers(self,reportdic, feat,imageitem):
+        resfile = None
+        #print([field.name() for field in reportdic['atlaslayer'].fields()])
+        currentfeatureid = feat.id()
+        if 'lk_profil' in self.dbase.dbasetables[reportdic['dbasename']]['fields'].keys():
+            # if 'lk_profil' in [field.name() for field in reportdic['atlaslayer'].fields()]:
+            sql = "SELECT lk_profil FROM Infralineaire WHERE id_infralineaire = " + str(currentfeatureid)
+            query = self.dbase.query(sql)
+            result = [row for row in query]
+            lkressourceprofile = result[0][0]
+            # print('getPhoto',lkphoto )
+
+            if not self.dbase.isAttributeNull(lkressourceprofile):
+                sql = "SELECT Ressource.file FROM Photo INNER JOIN Ressource ON Photo.id_ressource = Ressource.id_ressource WHERE Photo.id_ressource = "
+                sql += str(lkressourceprofile)
+                query = self.dbase.query(sql)
+                result = [row for row in query]
+                if len(result) > 0:
+                    filephoto = result[0][0]
+                    resfile = self.dbase.completePathOfFile(filephoto)
+
+                sql = "SELECT typegraphique, id_graphique FROM Graphique  WHERE id_ressource = " + str(lkressourceprofile)
+                query = self.dbase.query(sql)
+                result = [row for row in query]
+                if len(result) > 0:
+                    #self.userwdgdesktop.stackedWidget_profiltravers.setCurrentIndex(1)
+                    # print('ok')
+                    typegraphique = result[0][0]
+                    idgraphique = result[0][1]
+                    # print(idgraphique)
+
+                    #self.graphprofil.featureSelected(idgraphique, True)
+
+                    datas = self.dbase.dbasetables['Graphique']['widget'].getGraphData(idgraphique)
+                    exportfile = os.path.join(os.path.dirname(__file__), '..', 'config', 'tempgraph.png')
+                    self.dbase.dbasetables['Graphique']['widget'].exportgraph(typegraphique,
+                                                                                        datas,
+                                                                                        exportfile,
+                                                                                        imageitem.rect().width(),
+                                                                                        imageitem.rect().height())
+                    resfile = exportfile
+
+
+        # print('resfile', resfile)
+        if resfile is None:
+            pass
+
+        """
+        # print(imageitem.rect().width(), imageitem.rect().height())
+
+        exportfile = os.path.join(os.path.dirname(__file__), '..', 'config', 'tempgraph.png')
+        self.windowdialog.pathtool.exportCurrentGraph(point1, point2,
+                                                      imageitem.rect().width(),
+                                                      imageitem.rect().height(),
+                                                      exportfile)
+
+        return os.path.abspath(exportfile)
+        """
+
+        return resfile
+
+    def setLoadingProgressBar(self, progressbar, val):
+        if progressbar is not None:
+            progressbar.setValue(val)
+        else:
+            if qgis.utils.iface is None:
+                logging.getLogger('Lamia').info('Generation du pdf %d', val )
+        QApplication.processEvents()

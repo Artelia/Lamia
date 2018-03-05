@@ -44,7 +44,7 @@ class ImpressionRapportDialog(QDialog):
         uic.loadUi(path, self)
 
         self.qfiledlg = QFileDialog()
-        self.comboBox_type.addItems(['Infrastructure lineaire','Equipements hydrauliques'])
+        self.comboBox_type.addItems(['Infrastructure lineaire','Equipements hydrauliques','Desordres'])
         self.pushButton_filechoose.clicked.connect(self.chooseFile)
         self.finished.connect(self.dialogIsFinished)
 
