@@ -5,6 +5,7 @@
 ###id_infralineaire;    SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
 ###id_objet;             INT ;                     INTEGER ;                                    Objet(id_objet)
 ###id_descriptionsystem;        INT ;                       INTEGER;                            Descriptionsystem(id_descriptionsystem)
+###id_ouvrage;             INT ;                   INTEGER
 ###lk_photo;             INT ;                   INTEGER;                               Ressource(id_ressource)
 ###visite_par;          VARCHAR(255);                TEXT
 ###visite_date;         DATE;                       DATE
@@ -12,7 +13,7 @@
 /;
 True;     1
 False;    0
-###id_ouvrage;             INT ;                   INTEGER
+###commentaire;          VARCHAR(255);                TEXT
 ###id_nature;             INT ;                   INTEGER
 ###id_troncon_georef;             INT ;                   INTEGER
 ###id_lst_statut_ouvrage;             INT ;                   INTEGER
@@ -47,7 +48,7 @@ False;    0
 ###respect_debit;             INT ;                   INTEGER
 /;
 True;     1
-False;    0;
+False;    0
 ###ampli_jour_ouv;             INT ;                   INTEGER
 ###classe_prev;          VARCHAR(255);                TEXT
 ###classe_off;          VARCHAR(255);                TEXT
@@ -60,7 +61,7 @@ False;    0;
 ###fiabilite_classe_number;             INT ;                   INTEGER
 /;
 True;     1
-False;    0;
+False;    0
 ###note_ief;             INT ;                   INTEGER
 ###forcage_ief;             INT ;                   INTEGER
 ###point_kilometrique;             INT ;                   INTEGER
@@ -78,12 +79,10 @@ False;    0;
 ###enable_optionale_equipment;             INT ;                   INTEGER
 /;
 True;     1
-False;    0;
+False;    0
 ###id_famille;             INT ;                   INTEGER
-###commentaire;          VARCHAR(255);                TEXT
 ###exploit_mode;          VARCHAR(255);                TEXT
 ###service_offer;          VARCHAR(255);                TEXT
 ###km_point_start;             INT ;                   INTEGER
 ###km_point_end;             INT ;                   INTEGER
 ###real_length;             INT ;                   INTEGER
-###geom;                LINESTRING

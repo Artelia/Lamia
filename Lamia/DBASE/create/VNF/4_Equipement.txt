@@ -41,5 +41,3 @@ Contre-fosse                         9;  [2,3]
 Connexion au terrain naturel         10;  [2,3]
 Elements de securite                 11;  [2,3]
 Franchissement et ouvrages divers    12;  [2,3]
-###geom;                LINESTRING
-

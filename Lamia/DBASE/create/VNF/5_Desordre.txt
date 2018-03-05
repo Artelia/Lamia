@@ -17,17 +17,43 @@
 ###state_level;             INT ;                   INTEGER
 ###magnitude;             INT ;                   INTEGER
 ###ordre;             INT ;                   INTEGER
-###id_lst_desordre_enfant;             INT ;                   INTEGER
+###desordre;             INT ;                   INTEGER
+##equipement
 /;
-.....
-.....
-.....
-###id_lst_type_travaux;             INT ;                   INTEGER
-##id_lst_desordre_enfant
-/;
-En fonction des desordres, les travaux suggeres ne sont pas les memes
-.....
-.....
-.....
-###description ;             VARCHAR(255);                TEXT
-###geom;                LINESTRING
+Degradation du genie civil;                                         1;  [12]
+Deterioration d elements mecaniques, d equipements;                 2;  [2,3,4,5]
+Rupture, casse d element;                                           3;  [2,3,4,5,6,7,8,9,10,11]
+Degradation de surface, epaufrure, trous, dechirure,pourissement;   4;  [2,3,4,5,6,7,8,9,10,11]
+Fissuration;                                                        5;  [2,3,4,5,6,7,8,9,10,11]
+Dejointement;                                                       6;  [2,3,4,5,6,7,8,9,10,11]
+Erosion, ravinement, affouillement;                                 7;  [2,3,4,5,6,7,8,9,10]
+Corrosion;                                                          8;  [2,3,4,5]
+Non visible, indetermine;                                           9;  [2,3,4,5,6,7,8,9,10,11,12]
+Vegetation dense;                                                   10; [2,3,4,5,6,7,8,9,10]
+Arbres penches, desequilibres;                                      11; [2,3,4,5,6,7,8,9,10]
+Systeme racinaire à l origine d une degradation;                    12; [2,3,4,5,8,9,10]
+Souches, arbres morts, arbres pourris;                              13; [2,3,4,5,6,7,8,9,10]
+Obstables, encombres;                                               14; [2,3,4,5,6,7,8,9,10]
+Terrier ou galerie d animaux fouisseurs;                            15; [2,3,4,5,6,7,8,9,10]
+Pietinement d animaux;                                              16; [6,7]
+Envasement, dysfonctionnement de la frayère du aux usages VNF;      17; [12]
+Indice de renard hydraulique;                                       18; [2,3,4,5,6,7,8]
+Fuite par le fond;                                                  19; [1]
+Mouillage insuffisant;                                              20; [1]
+Atterissement;                                                      21; [1]
+Presence d obstacle, epave, encombre;                               22; [1]
+Element saillant;                                                   23; [2,3,6,7,8]
+Rique de chute d elements sur la voie d eau;                        24; [4,5,6,7,12]
+Rique de collision, d arrachement de reseaux;                       25; [6,7,12]
+Absence de l equipement;                                            26; [11]
+Deterioration de l equipement;                                      27; [11]
+Non-conformite de l equipement;                                     28; [11]
+Deversement, renversement;                                          29; [2,3,4,5,8,9,10]
+Glissement, eboulement;                                             30; [2,3,4,5,6,7,8,9,10]
+Soulèvement;                                                        31; [2,3,4,5,6,7,8,9,10]
+Fontis, effondrement;                                               32; [2,3,4,5,6,7,8,9,10]
+Affouillement;                                                      33; [2,3,4,5,8,9,10]
+Desalignement, desorganisation entre elements;                      34; [2,3,4,5,6,7,8,9,10]
+Tassement;                                                          35; [6,7]
+###travaux;             INT ;                   INTEGER
+###description;             VARCHAR(255);                TEXT

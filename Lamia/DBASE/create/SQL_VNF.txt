@@ -7,6 +7,9 @@ ref_option pour les options possibles et le lien entre les proprietes et les opt
 ref_parties en fonction des ouvrages
 ref-equipement en fonction des ouvrages et des parties
 
+listes à rétablir :
+desordre_travaux
+Ressource_id_lst_photo
 
 --------------------------------------------------------
 --  Fichier créé - mercredi-février-28-2018
