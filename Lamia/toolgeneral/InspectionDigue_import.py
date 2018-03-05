@@ -108,6 +108,141 @@ class ImportObjectWorker(AbstractWorker):
 
 
 
+        if self.importtable == 'Infralineaires':
+            table = 'Infralineaire'
+            fielddestination=['description1', 'description2', 'importancestrat', 'etatfonct', 'datederniereobs', 'qualitegeoloc', 'parametres', 'listeparametres', 'datecreation', 'datemodification', 'datedestruction', 'commentaire', 'libelle', 'geom']
+
+
+            linktable = {}
+            for i, result in enumerate(self.results):
+                for j, field in enumerate(fielddestination):
+                    if 'Infralineaire.' + field in result or 'Objet.'+ field in result or 'Descriptionsystem.' + field in result :
+                        linktable[j] = i
+
+            # print(linktable)
+
+
+
+
+            for layerfeat in feats:
+                sql = "INSERT INTO Objet (datecreation, datemodification, datedestruction, commentaire, libelle) VALUES ('"
+                featvalues = []
+                for i, field in enumerate(fielddestination):
+                    if field in ['datecreation', 'datemodification', 'datedestruction', 'commentaire', 'libelle']:
+                        valuefieldtemp = values[linktable[i]]
+                        # print(valuefieldtemp, layerfromfieldsname)
+                        if valuefieldtemp == '':
+                            featvalues.append('NULL')
+                        else:
+
+
+                            if valuefieldtemp in layerfromfieldsname:
+                                valuefieldtemp = layerfeat[valuefieldtemp]
+                                # print(valuefieldtemp)
+                                if valuefieldtemp is None:
+                                    featvalues.append('NULL')
+                                else:
+                                    # print(type(valuefieldtemp))
+                                    if isinstance(valuefieldtemp, unicode):
+                                        featvalues.append("'" + str(valuefieldtemp) + "'")
+                                    else:
+                                        featvalues.append(str(valuefieldtemp))
+                            else:
+                                featvalues.append(str(valuefieldtemp))
+
+
+                sql += ', '.join(featvalues)
+                sql += ") RETURNING id_objet;"
+                # print(sql)
+                id_objet = self.dbase.query(sql)
+                self.dbase.commit()
+
+
+
+            for layerfeat in feats:
+                sql = "INSERT INTO Descriptionsystem (id_objet, importancestrat, etatfonct, datederniereobs, qualitegeoloc, parametres, listeparametres) VALUES ('"
+                sql += str(id_objet)+', '
+                featvalues = []
+                for i, field in enumerate(fielddestination):
+                    if field in ['importancestrat', 'etatfonct', 'datederniereobs', 'qualitegeoloc', 'parametres', 'listeparametres']:
+                        valuefieldtemp = values[linktable[i]]
+                        # print(valuefieldtemp, layerfromfieldsname)
+                        if valuefieldtemp == '':
+                            featvalues.append('NULL')
+                        else:
+
+
+                            if valuefieldtemp in layerfromfieldsname:
+                                valuefieldtemp = layerfeat[valuefieldtemp]
+                                # print(valuefieldtemp)
+                                if valuefieldtemp is None:
+                                    featvalues.append('NULL')
+                                else:
+                                    # print(type(valuefieldtemp))
+                                    if isinstance(valuefieldtemp, unicode):
+                                        featvalues.append("'" + str(valuefieldtemp) + "'")
+                                    else:
+                                        featvalues.append(str(valuefieldtemp))
+                            else:
+                                featvalues.append(str(valuefieldtemp))
+
+
+                sql += ', '.join(featvalues)
+                sql += ") RETURNING id_descriptionsystem;"
+                # print(sql)
+                id_descriptionsystem = self.dbase.query(sql)
+                self.dbase.commit()
+
+
+
+
+                sql = "INSERT INTO Infralineaires (id_objet, id_descriptionsystem, description1, description2, geom) "
+                sql += "VALUES("+str(id_objet)+', '+str(id_descriptionsystem)Z+', '
+                featvalues = []
+                for i, field in enumerate(fielddestination):
+                    # print('values',field,featvalues)
+                    if field == 'geom':
+                        featgeom = layerfeat.geometry()
+                        success = featgeom.transform(xform)
+                        featgeomwkt = featgeom.exportToWkt()
+
+                        geomsql = "ST_GeomFromText('"
+                        geomsql += featgeomwkt
+                        geomsql += "', " + str(self.dbase.crsnumber) + ")"
+                        featvalues.append(geomsql)
+                    else:
+                        if field in ['description1', 'description2']:
+                            valuefieldtemp = values[linktable[i]]
+                            # print(valuefieldtemp, layerfromfieldsname)
+                            if valuefieldtemp == '':
+                                featvalues.append('NULL')
+                            else:
+
+
+                                if valuefieldtemp in layerfromfieldsname:
+                                    valuefieldtemp = layerfeat[valuefieldtemp]
+                                    # print(valuefieldtemp)
+                                    if valuefieldtemp is None:
+                                        featvalues.append('NULL')
+                                    else:
+                                        # print(type(valuefieldtemp))
+                                        if isinstance(valuefieldtemp, unicode):
+                                            featvalues.append("'" + str(valuefieldtemp) + "'")
+                                        else:
+                                            featvalues.append(str(valuefieldtemp))
+                                else:
+                                    featvalues.append(str(valuefieldtemp))
+
+
+                sql += ', '.join(featvalues)
+                sql += ");"
+                # print(sql)
+                query = self.dbase.query(sql)
+                self.dbase.commit()
+
+
+
+
 
 
 

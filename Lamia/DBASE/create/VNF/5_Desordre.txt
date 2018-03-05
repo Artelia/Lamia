@@ -1,0 +1,33 @@
+#DJAN SELECT  Desordre.* , Objet.datecreation, Objet.datedestruction, Objet.commentaire, Objet.libelle FROM Desordre INNER JOIN OBJET ON Desordre.id_objet = Objet.id_objet
+#QGIS SELECT  Desordre.* , Objet.datecreation, Objet.datedestruction FROM Desordre INNER JOIN OBJET ON Desordre.id_objet = Objet.id_objet
+#SHOW YES
+#SCAL 10000
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###id_desordre;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_objet;             INT ;                   INTEGER ;                               Objet(id_objet)
+###partie;             INT ;                   INTEGER
+###equipement;             INT ;                   INTEGER
+###ouvrage;             INT ;                   INTEGER
+###lk_infralineaire;             INT ;                   INTEGER;                               Infralineaire(id_infralineaire)
+###lk_equipement;             INT ;                   INTEGER;                               Equipement(id_equipement)
+###group_number;             INT ;                   INTEGER
+###lk_photo;             INT ;                   INTEGER;                               Ressource(id_ressource)
+###pk_debut;             INT ;                   INTEGER
+###pk_fin;             INT ;                   INTEGER
+###state_level;             INT ;                   INTEGER
+###magnitude;             INT ;                   INTEGER
+###ordre;             INT ;                   INTEGER
+###id_lst_desordre_enfant;             INT ;                   INTEGER
+/;
+.....
+.....
+.....
+###id_lst_type_travaux;             INT ;                   INTEGER
+##id_lst_desordre_enfant
+/;
+En fonction des desordres, les travaux suggeres ne sont pas les memes
+.....
+.....
+.....
+###description ;             VARCHAR(255);                TEXT
+###geom;                LINESTRING

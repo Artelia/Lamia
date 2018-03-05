@@ -187,354 +187,403 @@ def getData(list_travaux, typeData):
 return(list_travaux, list_params, list_poids)
 
 
-def renouveau(list_troncon, list_poids_criteres, list_poids_sous_criteres):
-    list_params=['Materiau', 'AgeCanalisation', 'Diamètre','QualitéEau', 'TemperatureEau','OrigineCasse' ,'DensitéRepartition','Protection', 'CorrosivitéSol', 'ImplantationCanalisation', 'Criticité', 'VariationP', 'AgeEau', 'TauxChlore']
+def renouveau(list_poids_criteres, list_poids_sous_criteres):
+    list_params=['materiau', 'anPoseSup', 'diametreNominal','qualiteEau', 'temperatureEau','origineCasse' ,'densiteRepartition','protection', 'corrosivitéSol', 'ImplantationCanalisation', 'criticite', 'variationP', 'ageEau', 'tauxChlore', 'id_infralineaire']
     res=[]
 
     #list_poids_criteres : Caractéristiques de la conduite, Caractéristiques de l'eau distribuée, Caractéristiques des casses, Environnement de la conduite, Vulnerabilite des réseaux, Fonctionnement des réseaux
     #list_poids_sous_criteres : Matériau, Age canalisation, Qualité eau distribuée (agressive), Température eau distribuée , Origine casse, Densité de réparation (nb/km/an), Corrosivité sol + protection contre la corrosion, Implantation canalisation, Diamètre, Criticité, Variation de pression, Age de l'eau, Taux de chlore
 
+    test= True
+    while test:
+        test=False
+        self.importobjetdialog.tableWidget.setRowCount(0)
+        self.importobjetdialog.tableWidget.setColumnCount(2)
+        for param in list_params:
+            rowPosition = self.importobjetdialog.tableWidget.rowCount()
+            self.importobjetdialog.tableWidget.insertRow(rowPosition)
+            itemfield = QTableWidgetItem(param)
+            itemfield.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+            self.importobjetdialog.tableWidget.setItem(rowPosition, 0, itemfield)
+            itemfield = QTableWidgetItem('')
+            self.importobjetdialog.tableWidget.setItem(rowPosition, 1, itemfield)
 
 
-    for troncon in list_troncon:
+        self.importobjetdialog.exec_()
+        tableview = self.importobjetdialog.dialogIsFinished()
+        if tableview is not None:
+            result = []
+            for row in range(self.importobjetdialog.tableWidget.rowCount()):
+                if self.importobjetdialog.tableWidget.cellWidget(row, 1) is not None:
+                    try:
+                        result.append([self.importobjetdialog.tableWidget.item(row,0).text(),
+                                       int(self.importobjetdialog.tableWidget.cellWidget(row, 1).currentText())])
+                    except:
+                        test=True
+                        result.append([self.importobjetdialog.tableWidget.item(row,0).text(),
+                                       int(self.importobjetdialog.tableWidget.cellWidget(row, 1).currentText())])
+                else:
+                    result.append([self.importobjetdialog.tableWidget.item(row,0).text(),
+                                   self.importobjetdialog.tableWidget.item(row,1).text()])
+
+    print(result)
+
+
+    sql = "SELECT "+','.join(list_params)+" FROM Infralineaire"
+    query = self.dbase.query(sql)
+
+    for troncon in query:
+        for i, item in enumerate(troncon):
+            try:
+                troncon[i]=int(item)
+            except:
+                troncon[i]=str(item)
+
         note = 0
         type_materiau = 0
-        sql = "SELECT list_params FROM Infralineaire WHERE Infralineaire.id_infralineaire =" + str(troncon)
-        query = self.dbase.query(sql)
+        age = datetime.datetime.now()-datetime.datetime.strptime(troncon[1], '%Y-%m-%d')
 
-        for param in query :
-            #MATERIAU
+        #MATERIAU
 
-            if param[0]="Fonte_ductile":
-                type_materiau = 2
-                note_materiau = 4
-            elif param[0]="Pvc":
-                type_materiau = 1
-                note_materiau = 2
-            elif param[0]="Polyethylene":
-                type_materiau = 1
-                note_materiau = 2
-            elif param[0]="Fonte_grise":
-                type_materiau = 2
-                note_materiau = 10
-            elif param[0]="Amiante ciment":
-                type_materiau = 0
-                note_materiau = 10
-            elif param[0]="Composite":
-                type_materiau = 0
-                note_materiau = 4
-            elif param[0]="PE":
-                type_materiau = 1
-                note_materiau = -10000
-            elif param[0]="Acier":
-                type_materiau = 2
-                note_materiau = -10000
-            elif param[0]="PVC joints collés":
-                type_materiau = 1
-                note_materiau = -10000
-            elif param[0]="Plomb":
-                type_materiau = 2
-                note_materiau = -10000
-            elif param[0]="Fonte ductile à revêtement extérieur":
-                type_materiau = 2
-                note_materiau = -10000
-            elif param[0]="Acier galvanisé":
-                type_materiau = 2
-                note_materiau = -10000
-            elif param[0]="Grès":
-                type_materiau = 0
-                note_materiau = -10000
-            elif param[0]="Béton":
-                type_materiau = 0
-                note_materiau = -10000
+        if troncon[0]=="11":
+            type_materiau = 2
+            note_materiau = 4
+        elif troncon[0]=="24" or troncon[0]=="25" or troncon[0]=="26" or troncon[0]=="27"  :
+            type_materiau = 1
+            note_materiau = 2
+        elif troncon[0]=="16" or troncon[0]=="17" or troncon[0]=="18" :
+            type_materiau = 1
+            note_materiau = 2
+        elif troncon[0]=="12":
+            type_materiau = 2
+            note_materiau = 10
+        elif troncon[0]=="02":
+            type_materiau = 0
+            note_materiau = 10
+        elif troncon[0]=="Composite":
+            type_materiau = 0
+            note_materiau = 4
+        elif troncon[0]=="01":
+            type_materiau = 2
+            note_materiau = -10000
+        elif troncon[0]=="07" or troncon[0]=="19":
+            type_materiau = 2
+            note_materiau = -10000
+        elif troncon[0]=="08" or troncon[0]=="09" or troncon[0]=="10":
+            type_materiau = 0
+            note_materiau = 0
+        elif troncon[0]=="14" :
+            type_materiau = 0
+            note_materiau = 0
+        elif troncon[0]=="15":
+            type_materiau = 0
+            note_materiau = 0
+        elif troncon[0]=="28":
+            type_materiau = 2
+            note_materiau = -10000
+        elif troncon[0]=="20"or troncon[0]=="21" :
+            type_materiau = 1
+            note_materiau = 1
+        elif troncon[0]=="22"or troncon[0]=="23" :
+            type_materiau = 1
+            note_materiau = 1
+        elif troncon[0]=="13":
+            type_materiau = 0
+            note_materiau = -10000
+        elif troncon[0]=="03" or troncon[0]=="04" or troncon[0]=="05" or troncon[0]=="06" :
+            type_materiau = 0
+            note_materiau = -10000
+        elif troncon[0]=="00" or troncon[0]=="99":
+            type_materiau = 0
+            note_materiau = 0
 
-            if note_materiau==0:
-                #Sol
-                note_sol=0
-                #AGE
-                if param[1]<10:
-                    note_age =0
-                elif param[1]<20:
-                    note_age =2
-                elif param[1]<30:
-                    note_age =4
-                elif param[1]<40:
-                    note_age =6
-                elif param[1]<60:
-                    note_age =8
-                else :
-                    note_age =10
+        if type_materiau==0:
+            #Sol
+            note_sol=0
+            #AGE
+            if age<10:
+                note_age =0
+            elif age<20:
+                note_age =2
+            elif age<30:
+                note_age =4
+            elif age<40:
+                note_age =6
+            elif age<60:
+                note_age =8
+            else :
+                note_age =10
 
-                #DIAMETRE
-                if param[2]<=100:
-                    note_diametre =6
-                elif param[2]<=150:
-                    note_diametre =8
+            #DIAMETRE
+            if troncon[2]<=100:
+                note_diametre =6
+            elif troncon[2]<=150:
+                note_diametre =8
 
-            elif note_materiau==1:
-                #Sol
-                note_sol=0
-                #AGE
-                if param[1]<10:
-                    note_age = 2
-                elif param[1]<20:
-                    note_age =2
-                elif param[1]<30:
-                    note_age =2
-                elif param[1]<40:
-                    note_age =2
-                elif param[1]<60:
-                    note_age =2
-                else :
-                    note_age =6
+        elif type_materiau==1:
+            #Sol
+            note_sol=0
+            #AGE
+            if age<10:
+                note_age = 2
+            elif age<20:
+                note_age =2
+            elif age<30:
+                note_age =2
+            elif age<40:
+                note_age =2
+            elif age<60:
+                note_age =2
+            else :
+                note_age =6
 
-                #DIAMETRE
-                if param[2]<=25:
-                    note_diametre =1
-                elif param[2]<=40:
-                    note_diametre =2
-                elif param[2]<=50:
-                    note_diametre =2
-                elif param[2]<=63:
-                    note_diametre =3
-                elif param[2]<=75:
-                    note_diametre =4
-                elif param[2]<=90:
-                    note_diametre =4
-                elif param[2]<=110:
-                    note_diametre =5
-                elif param[2]<=125:
-                    note_diametre =6
-                elif param[2]<=140:
-                    note_diametre =7
-                elif param[2]<=160:
-                    note_diametre =8
-                elif param[2]<=200:
-                    note_diametre =9
-                elif param[2]<=225:
-                    note_diametre =10
-
-
-            elif note_materiau==2:
-                #Sol
-
-                #Protection
-                note_protection=param[7]
-
-                #CorrosivitéSol
-                if param[8] == 'Limon':
-                    note_aggressivite_sol=2
-                    elif param[8]=='Marne':
-                    note_aggressivite_sol=1
-                    elif param[8]=='Argile':
-                    note_aggressivite_sol=1
-                    elif param[8]=='Gres':
-                    note_aggressivite_sol=1
-                    elif param[8]=='Calcaire':
-                    note_aggressivite_sol=0
-
-                if note_protection==0:
-                    note_sol=10*note_aggressivite_sol
-                else:
-                    note_sol=2*note_aggressivite_sol
+            #DIAMETRE
+            if troncon[2]<=25:
+                note_diametre =1
+            elif troncon[2]<=40:
+                note_diametre =2
+            elif troncon[2]<=50:
+                note_diametre =2
+            elif troncon[2]<=63:
+                note_diametre =3
+            elif troncon[2]<=75:
+                note_diametre =4
+            elif troncon[2]<=90:
+                note_diametre =4
+            elif troncon[2]<=110:
+                note_diametre =5
+            elif troncon[2]<=125:
+                note_diametre =6
+            elif troncon[2]<=140:
+                note_diametre =7
+            elif troncon[2]<=160:
+                note_diametre =8
+            elif troncon[2]<=200:
+                note_diametre =9
+            elif troncon[2]<=225:
+                note_diametre =10
 
 
-                #AGE
-                if param[1]<10:
-                    note_age =1
-                elif param[1]<20:
-                    note_age =1
-                elif param[1]<30:
-                    note_age =2
-                elif param[1]<40:
-                    note_age =4
-                elif param[1]<60:
-                    note_age =7
-                else :
-                    note_age =10
+        elif type_materiau==2:
+            #Sol
 
-                #DIAMETRE
-                if param[2]<=60:
-                    note_diametre =3
-                elif param[2]<=80:
-                    note_diametre =4
-                elif param[2]<=100:
-                    note_diametre =7
-                elif param[2]<=125:
-                    note_diametre =8
-                elif param[2]<=150:
-                    note_diametre =9
-                elif param[2]<=200:
-                    note_diametre =10
+            #Protection
+            note_protection=troncon[7]
 
-            #QualitéEau
-            if param[3]==0:
-                note_qualite_eau=0
-            elif param[3]==1:
-                note_qualite_eau=5
+            #CorrosivitéSol
+            if troncon[8] == '1':
+                note_aggressivite_sol=2
+                elif troncon[8]=='2':
+                note_aggressivite_sol=1
+                elif troncon[8]=='3':
+                note_aggressivite_sol=1
+                elif troncon[8]=='4':
+                note_aggressivite_sol=1
+                elif troncon[8]=='5':
+                note_aggressivite_sol=0
+
+            if note_protection==0:
+                note_sol=10*note_aggressivite_sol
+            else:
+                note_sol=2*note_aggressivite_sol
 
 
-            #TemperatureEau
-            if param[4]<=10:
-                note_temperature=1
-            elif parma[4]<=25:
-                note_temperature=2
-            elif parma[4]<=30:
-                note_temperature=3
-            elif parma[4]<=35:
-                note_temperature=7
-            elif parma[4]<=100:
-                note_temperature=10
+            #AGE
+            if age<10:
+                note_age =1
+            elif age<20:
+                note_age =1
+            elif age<30:
+                note_age =2
+            elif age<40:
+                note_age =4
+            elif age<60:
+                note_age =7
+            else :
+                note_age =10
+
+            #DIAMETRE
+            if troncon[2]<=60:
+                note_diametre =3
+            elif troncon[2]<=80:
+                note_diametre =4
+            elif troncon[2]<=100:
+                note_diametre =7
+            elif troncon[2]<=125:
+                note_diametre =8
+            elif troncon[2]<=150:
+                note_diametre =9
+            elif troncon[2]<=200:
+                note_diametre =10
+
+        #QualitéEau
+        if troncon[3]==0:
+            note_qualite_eau=0
+        elif troncon[3]==1:
+            note_qualite_eau=5
 
 
-            #OrigineCasse
-            if param[5]=='Casse':
-                note_casse=10
-            elif param[5]=='Corrosion externe':
-                note_casse=10
-            elif param[5]=='Fissuratio':
-                note_casse=9
-            elif param[5]=='Conduite écrasée':
-                note_casse=3
-            elif param[5]=='Fuite au joint':
-                note_casse=2
-            elif param[5]=='Fuite sur vanne':
-                note_casse=2
-            elif param[5]=='Deterioration par un tiers':
-                note_casse=0
-            elif param[5]=='Autre':
-                note_casse=0
-            elif param[5]=='Surpression':
-                note_casse=-10000
-            elif param[5]=='Gel/dégel':
-                note_casse=-10000
-            elif param[5]=='Mouvement de terrain':
-                note_casse=-10000
-            elif param[5]=='Courant induits':
-                note_casse=-10000
+        #TemperatureEau
+        if troncon[4]<=10:
+            note_temperature=1
+        elif parma[4]<=25:
+            note_temperature=2
+        elif parma[4]<=30:
+            note_temperature=3
+        elif parma[4]<=35:
+            note_temperature=7
+        elif parma[4]<=100:
+            note_temperature=10
 
 
-
-            #DensitéReparation
-            if param[6] <=0:
-                note_densite_reparation = 2
-            elif param[6]<=1:
-                note_densite_reparation=1
-            elif param[6]<=3:
-                note_densite_reparation=3
-            elif param[6]<=4:
-                note_densite_reparation=4
-            elif param[6]<=8:
-                note_densite_reparation=7
-            elif param[6]<=1000:
-                note_densite_reparation=10
+        #OrigineCasse
+        if troncon[5]=='01':
+            note_casse=10
+        elif troncon[5]=='02':
+            note_casse=10
+        elif troncon[5]=='03':
+            note_casse=9
+        elif troncon[5]=='04':
+            note_casse=3
+        elif troncon[5]=='05':
+            note_casse=2
+        elif troncon[5]=='06':
+            note_casse=2
+        elif troncon[5]=='07':
+            note_casse=0
+        elif troncon[5]=='08':
+            note_casse=0
+        elif troncon[5]=='09':
+            note_casse=-10000
+        elif troncon[5]=='10':
+            note_casse=-10000
+        elif troncon[5]=='11':
+            note_casse=-10000
+        elif troncon[5]=='12':
+            note_casse=-10000
 
 
 
-
-
-            #ImplantationCanalisation
-            if param[9] == 'Champs + pont + RN+ HT':
-                note_implantation=10
-            elif param[9]='Hôpital':
-                note_implantation=10
-            elif param[9]='RD + pont':
-                note_implantation=10
-            elif param[9]='RD+ ligne HT':
-                note_implantation=10
-            elif param[9]='RN + cours d eau':
-                note_implantation=10
-            elif param[9]='RN':
-                note_implantation=10
-            elif param[9]='RN + ligne HT':
-                note_implantation=10
-            elif param[9]='RN + pont ':
-                note_implantation=10
-            elif param[9]='Cours d eau + RD + HT':
-                note_implantation=9
-            elif param[9]='RD':
-                note_implantation=8
-            elif param[9]='Champs + cours d eau':
-                note_implantation=7
-            elif param[9]='Pont':
-                note_implantation=7
-            elif param[9]='Champs':
-                note_implantation=6
-            elif param[9]='Champs + cours d eau + HT':
-                note_implantation=6
-            elif param[9]='Champs + HT':
-                note_implantation=6
-            elif param[9]='Cours d eau + HT ':
-                note_implantation=5
-            elif param[9]='HT':
-                note_implantation=4
-            elif param[9]='Chemin forestier':
-                note_implantation=2
-            elif param[9]='Cours d eau':
-                note_implantation=2
-            elif param[9]='Autre':
-                note_implantation=0
+        #DensitéReparation
+        if troncon[6] <=0:
+            note_densite_reparation = 2
+        elif troncon[6]<=1:
+            note_densite_reparation=1
+        elif troncon[6]<=3:
+            note_densite_reparation=3
+        elif troncon[6]<=4:
+            note_densite_reparation=4
+        elif troncon[6]<=8:
+            note_densite_reparation=7
+        elif troncon[6]<=1000:
+            note_densite_reparation=10
 
 
 
 
-            #Criticité
-            if param[10] <=2:
-                note_criticite=1
-            elif param[10]<=4:
-                note_criticite=2
-            elif param[10]<=200:
-                note_criticite=5
-            elif param[10]<=5000:
-                note_criticite=10
+
+        #ImplantationCanalisation
+        if troncon[9] == '01':
+            note_implantation=10
+        elif troncon[9]=='02':
+            note_implantation=10
+        elif troncon[9]=='03':
+            note_implantation=10
+        elif troncon[9]=='04':
+            note_implantation=10
+        elif troncon[9]=='05':
+            note_implantation=10
+        elif troncon[9]=='06':
+            note_implantation=10
+        elif troncon[9]=='07':
+            note_implantation=10
+        elif troncon[9]=='08 ':
+            note_implantation=10
+        elif troncon[9]=='09':
+            note_implantation=9
+        elif troncon[9]=='10':
+            note_implantation=8
+        elif troncon[9]=='11':
+            note_implantation=7
+        elif troncon[9]=='12':
+            note_implantation=7
+        elif troncon[9]=='13':
+            note_implantation=6
+        elif troncon[9]=='14':
+            note_implantation=6
+        elif troncon[9]=='15':
+            note_implantation=6
+        elif troncon[9]=='16':
+            note_implantation=5
+        elif troncon[9]=='17':
+            note_implantation=4
+        elif troncon[9]=='18':
+            note_implantation=2
+        elif troncon[9]=='19':
+            note_implantation=2
+        elif troncon[9]=='00':
+            note_implantation=0
 
 
-            #VariationP
-            if param[11]<=5:
-                note_pression=1
-            elif param[11]<=10:
-                note_pression = 2
-            elif param[11]<=15:
-                note_pression = 3
-            elif param[11]<=20:
-                note_pression = 4
-            elif param[11]<=30:
-                note_pression = 5
-            elif param[11]<=50:
-                note_pression = 7
-            elif param[11]<=1000:
-                note_pression = 10
+
+
+        #Criticité
+        if troncon[10] <=2:
+            note_criticite=1
+        elif troncon[10]<=4:
+            note_criticite=2
+        elif troncon[10]<=200:
+            note_criticite=5
+        elif troncon[10]<=5000:
+            note_criticite=10
+
+
+        #VariationP
+        if troncon[11]<=5:
+            note_pression=1
+        elif troncon[11]<=10:
+            note_pression = 2
+        elif troncon[11]<=15:
+            note_pression = 3
+        elif troncon[11]<=20:
+            note_pression = 4
+        elif troncon[11]<=30:
+            note_pression = 5
+        elif troncon[11]<=50:
+            note_pression = 7
+        elif troncon[11]<=1000:
+            note_pression = 10
 
 
 
-            #AgeEau
-            if param[12]==0:
-                note_age_eau = 0
-            elif param[12]<=12:
-                note_age_eau=0
-            elif param[12]<=24:
-                note_age_eau=1
-            elif param[12]<=36:
-                note_age_eau=3
-            elif param[12]<=48:
-                note_age_eau=5
-            elif param[12]<=72:
-                note_age_eau=7
-            elif param[12]<=10000:
-                note_age_eau=10
+        #AgeEau
+        if troncon[12]==0:
+            note_age_eau = 0
+        elif troncon[12]<=12:
+            note_age_eau=0
+        elif troncon[12]<=24:
+            note_age_eau=1
+        elif troncon[12]<=36:
+            note_age_eau=3
+        elif troncon[12]<=48:
+            note_age_eau=5
+        elif troncon[12]<=72:
+            note_age_eau=7
+        elif troncon[12]<=10000:
+            note_age_eau=10
 
 
-            #TauxChlore
-            if param[13]<=0.1:
-                note_taux_chlore = 9
-            elif param[13]<=0.2:
-                note_taux_chlore = 2
-            elif param[13]<=0.5:
-                note_taux_chlore = 2
-            elif param[13]<=1:
-                note_taux_chlore = 3
-            elif param[13]<=1000:
-                note_taux_chlore = 6
+        #TauxChlore
+        if troncon[13]<=0.1:
+            note_taux_chlore = 9
+        elif troncon[13]<=0.2:
+            note_taux_chlore = 2
+        elif troncon[13]<=0.5:
+            note_taux_chlore = 2
+        elif troncon[13]<=1:
+            note_taux_chlore = 3
+        elif troncon[13]<=1000:
+            note_taux_chlore = 6
 
 
         note = 6*(4*note_materiau+6*note_age)+2*(2*note_qualite_eau+2*note_temperature)+5*(4*note_casse+6*note_densite_reparation)
@@ -544,7 +593,7 @@ def renouveau(list_troncon, list_poids_criteres, list_poids_sous_criteres):
         #note = list_poids_criteres[0]*(list_poids_sous_criteres[0]*note_materiau+list_poids_sous_criteres[1]*note_age)+list_poids_criteres[1]*(list_poids_sous_criteres[2]*note_qualite_eau+list_poids_sous_criteres[3]*note_temperature)+list_poids_criteres[2]*(list_poids_sous_criteres[4]*note_casse+list_poids_sous_criteres[5]*note_densite_reparation)
         #note += list_poids_criteres[3]*(list_poids_sous_criteres[6]*note_sol+list_poids_sous_criteres[7]*note_implantation+list_poids_sous_criteres[8]*note_diametre)+list_poids_criteres[4]*list_poids_sous_criteres[9]*note_criticite + list_poids_criteres[5]*(list_poids_sous_criteres[10]*note_pression+list_poids_sous_criteres[11]*note_age_eau+list_poids_sous_criteres[12]*note_taux_chlore)
 
-        res+=[(troncon,note)]
+        res+=[(troncon[14],note)]
     return(res)
 
 

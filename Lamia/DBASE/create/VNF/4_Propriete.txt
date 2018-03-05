@@ -1,0 +1,78 @@
+#DJAN  SELECT Propriete.*, Objet.datecreation, Objet.datedestruction, Objet.commentaire, Objet.libelle, Descriptionsystem.importancestrat, Descriptionsystem.etatfonct, Descriptionsystem.datederniereobs, Descriptionsystem.qualitegeoloc, Descriptionsystem.parametres, Descriptionsystem.listeparametres FROM Propriete INNER JOIN Descriptionsystem ON Propriete.id_descriptionsystem = Descriptionsystem.id_descriptionsystem INNER JOIN Objet ON Objet.id_objet = Propriete.id_objet
+#QGIS  SELECT Propriete.*, Objet.datecreation, Objet.datedestruction FROM Propriete INNER JOIN Descriptionsystem ON Propriete.id_descriptionsystem = Descriptionsystem.id_descriptionsystem INNER JOIN Objet ON Objet.id_objet = Propriete.id_objet
+#SHOW YES
+# Nom_champ             TypePostGis              TypeSpatialite                          Propriete
+###id_propriete;    SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_objet;             INT ;                     INTEGER ;                                    Objet(id_objet)
+###id_descriptionsystem;        INT ;                       INTEGER;                            Descriptionsystem(id_descriptionsystem)
+###partie;             INT ;                   INTEGER
+###equipement;             INT ;                   INTEGER
+###ouvrage;             INT ;                   INTEGER
+###lk_ouvrage;             INT ;                   INTEGER;                               Infralineaire(id_infralineaire)
+###lk_equipement;             INT ;                   INTEGER;                               Equipement(id_equipement)
+###pk_debut;        INT ;                       INTEGER
+###pk_fin;        INT ;                       INTEGER
+###groupe_number;        INT ;                       INTEGER
+###valeur ;             VARCHAR(255);                TEXT
+###propriete;             INT ;                   INTEGER
+##equipement
+/;
+Chenal - Materiaux;                                                                 1;              [1]
+Chenal - Y-a-t-il eu une inspection de fonds ?;                                     2;              [1]
+Chenal - Si oui a quelle date ?;                                                    3;              [1]
+Chenal - Conclusion de l inspection;                                                4;              [1]
+Chenal - L equipement a-t-il fait l objet de travaux localises;                     5;              [1]
+Chenal - Si oui, sur quel pourcentage du lineaire;                                  6;              [1]
+Chenal - Commentaires;                                                              7;              [1]
+Pied de berge - Materiaux;                                                          8;              [2,3]
+Pied de berge - Hauteur de protection;                                              9;              [2,3]
+Pied de berge - L equipement a-t-il fait l objet de travaux localises ?;            10;             [2,3]
+Pied de berge - Si oui, sur quel pourcentage du lineaire;                           11;             [2,3]
+Pied de berge - Commentaires;                                                       12;             [2,3]
+Talus expose - Materiaux;                                                           13;             [4,5]
+Talus expose - Mode constructif;                                                    14;             [4,5]
+Talus expose - Hauteur de protection;                                               15;             [4,5]
+Talus expose - Presence de risbeme ? d une berme ?;                                 16;             [4,5]
+Talus expose - Si oui, sur quelle largeur ? (en m);                                 17;             [4,5]
+Talus expose - L equipement a-t-il fait l objet de travaux localises ?;             18;             [4,5]
+Talus expose - Si oui, sur quel pourcentage du lineaire;                            19;             [4,5]
+Talus expose - Commentaires;                                                        20;             [4,5]
+Crete - Materiaux du centre de crete;                                               21;             [6]
+Crete - Materiaux du bord de crete;                                                 22;             [6]
+Crete - Type de cheminement, Mode d acces;                                          23;             [6]
+Crete - Position de la voie;                                                        24;             [6]
+Crete - L equipement a-t-il fait l objet de travaux localises ?;                    25;             [6]
+Crete - Si oui, sur quel pourcentage du lineaire;                                   26;             [6]
+Crete - Commentaires;                                                               27;             [6]
+Corps de digue - Materiaux;                                                         28;             [7]
+Corps de digue - L equipement a-t-il fait l objet de travaux localises ?;           29;             [7]
+Corps de digue - Si oui, sur quel pourcentage du lineaire;                          30;             [7]
+Corps de digue - Commentaires;                                                      31;             [7]
+Talus aval digue - Materiaux;                                                       32;             [8]
+Talus aval digue - Mode constructif;                                                33;             [8]
+Talus aval digue - Hauteur de protection;                                           34;             [8]
+Talus aval digue - Presence de risberme ?;                                          35;             [8]
+Talus aval digue - Si oui, sur quelle largeur ? (en m);                             36;             [8]
+Talus aval digue - Hauteur maximum de digue (en m);                                 37;             [8]
+Talus aval digue - L equipement a-t-il fait l objet de travaux localises ?;         38;             [8]
+Talus aval digue - Si oui, sur quel pourcentage du lineaire;                        39;             [8]
+Talus aval digue - Commentaires;                                                    40;             [8]
+Contre-fosse - Materiaux;                                                           41;             [9]
+Contre-fosse - Position du contre-fosse;                                            42;             [9]
+Contre-fosse - L equipement a-t-il fait l objet de travaux localises ?;             43;             [9]
+Contre-fosse - Si oui, sur quelle pourcentage du lineaire ?;                        44;             [9]
+Contre-fosse - Commentaires;                                                        45;             [9]
+Connexion terrain naturel - Materiaux;                                              46;             [10]
+Connexion terrain naturel - Position de l equipement;                               47;             [10]
+Connexion terrain naturel - L equipement a-t-il fait l objet de travaux localises ?;48;             [10]
+Connexion terrain naturel - Si oui, sur quelle pourcentage du lineaire ?;           49;             [10]
+Connexion terrain naturel - Commentaires;                                           50;             [10]
+Elements de securite - Materiaux;                                                   51;             [11]
+Elements de securite - Position de l equipement;                                    52;             [11]
+Elements de securite - Quantite;                                                    53;             [11]
+Elements de securite - Commentaires;                                                54;             [11]
+Franchissement et ouvrages divers - Element;                                        55;             [12]
+Franchissement et ouvrages divers - Position;                                       56;             [12]
+Franchissement et ouvrages divers - Proprietaire;                                   57;             [12]
+Franchissement et ouvrages divers - Usage;                                          58;             [12]
+Franchissement et ouvrages divers - Commentaires;                                   59;             [12]

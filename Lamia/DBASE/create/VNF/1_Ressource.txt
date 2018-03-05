@@ -1,0 +1,15 @@
+#DJAN  SELECT id_ressource FROM Ressource
+# Nom_champ              TypePostGis             TypeSpatialite                          Option
+###id_ressource;        SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###date_document;                 DATE ;                  TEXT
+###description ;             VARCHAR(255);                TEXT
+###proprietaire ;             VARCHAR(255);                TEXT
+###nom_document ;             VARCHAR(255);                TEXT
+###id_objet;             INT;                    INTEGER;                                Objet(id_objet)
+###id_origine;             INT;                    INTEGER;                                Objet(id_objet)
+###id_photo;             INT;                    INTEGER;                                Photo(id_photo)
+###id_lst_photo;             INT;                    INTEGER
+/;
+.....
+.....
+.....

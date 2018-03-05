@@ -2,6 +2,7 @@
 
 # qgis pyqt import
 from qgis.PyQt import QtGui, uic, QtCore
+from unicodedata import normalize
 from qgis.PyQt.QtCore import pyqtSignal
 try:
     from qgis.PyQt.QtGui import (QDockWidget, QMainWindow, QFileDialog, QLabel, QInputDialog,
@@ -26,7 +27,17 @@ stream_handler.setFormatter(formatter)
 logger.addHandler(stream_handler)
 debugtime = False
 
+
 import glob, importlib, inspect
+
+try:
+    from pyspatialite import dbapi2 as db
+    from pyspatialite.dbapi2 import *
+except ImportError:
+    import sqlite3
+    from sqlite3 import *
+    print('spatialite not enabled')
+
 
 # plugin import
 from ..main.DBaseParser import DBaseParser
@@ -1189,6 +1200,18 @@ class InspectiondigueWindowWidget(QMainWindow):
                 templinkuserwgd = self.dbase.dbasetables['Topographie']['widget'].propertieswdgPOINTTOPO.linkuserwdg
             if item == "Infralineaire":
                 templinkuserwgd = self.dbase.dbasetables['Infralineaire']['widget'].linkuserwdg
+            if item == "Desordre":
+                templinkuserwgd = self.dbase.dbasetables['Desordre']['widget'].linkuserwdg
+            if item == "Observation":
+                templinkuserwgd = self.dbase.dbasetables['Observation']['widget'].linkuserwdg
+            if item == "Noeud":
+                templinkuserwgd = self.dbase.dbasetables['Noeud']['widget'].linkuserwdg
+            if item == "Equipement":
+                templinkuserwgd = self.dbase.dbasetables['Equipement']['widget'].linkuserwdg
+            if item == "Travaux":
+                templinkuserwgd = self.dbase.dbasetables['Travaux']['widget'].linkuserwdg
+            if item == "Environnement":
+                templinkuserwgd = self.dbase.dbasetables['Environnement']['widget'].linkuserwdg
 
 
             self.importobjetdialog.tableWidget.setRowCount(0)
@@ -1239,351 +1262,525 @@ class InspectiondigueWindowWidget(QMainWindow):
 
             #1)Create a spatialite db
             # create database
-            local_db = open('../local/DB_local.sqlite', 'a').close()
+            try :
+                os.remove('../local/DB_local.sqlite')
+            except:
+                pass
+
             #Create the folder to stock the new pictures
             local_folder='../local/local_data'
             if not os.path.exists(local_folder):
                 os.makedirs(local_folder)
 
             if self.dbase.dbasetype=='spatialite':
-                self.offLineConn = self.dbase.connSLITE
-                self.offLineCursor = self.dbase.SLITEcursor
+                self.dbase.offLineConn = self.dbase.connSLITE
+                self.dbase.offLineCursor = self.dbase.SLITEcursor
                 self.dbase.offLineType = 'spatialite'
             else:
-                self.offLineConn = self.dbase.connPGis
-                self.offLineCursor = self.dbase.PGiscursor
+                self.dbase.offLineConn = self.dbase.connPGis
+                self.dbase.offLineCursor = self.dbase.PGiscursor
                 self.dbase.offLineType = 'postgis'
 
 
-            if local_db:
-                self.dbase.createDbase(file=local_db, crs=self.dbase.crsnumber, type='digue', dbasetype='spatialite',
-                                       dbaseressourcesdirectory=local_folder)
+            local_db='../local/DB_local.sqlite'
 
-                self.dbase.dbasetype = 'spatialite'
+            originalfile = os.path.join(os.path.dirname(__file__), '..', 'DBASE', 'DBase_ind0.sqlite')
+            shutil.copyfile(originalfile, local_db)
+
+
+            self.dbase.createDbase(file=local_db, crs=self.dbase.crsnumber, type='digue', dbasetype='spatialite',
+                                       dbaseressourcesdirectory=local_folder)
+            self.dbaseressourcesdirectory=local_folder
+            self.dbase.dbasetype = 'spatialite'
+            self.dbase.date_deconnexion=datetime.datetime.now()
+
+
 
             #2)Add items from the file to the spatialite database
-
             for order in range(10):
                 for dbname in self.dbase.dbasetables:
-                    if self.dbase.dbasetables[dbname]['order'] == order:
+                    if self.dbase.dbasetables[dbname]['order'] == order and not dbname=='Basedonnees':
 
-                        sql = "SELECT * FROM "+ str(dbname)
-
-                        if self.dbase.offLineType == 'spatialite' :
-                            try:
-                                print(sql)
-                                #query = self.dbase.offLineCursor.execute(sql)
-                                #returnquery = list(query)
-                                #self.commit()
-                            except OperationalError as e:
-                                print('error query', e)
-                                return None
-                        else :
-                            print(sql)
-                            """
-                            self.PGiscursor.execute(sql)
-                            if sql.strip()[0:6] == 'SELECT':
-                                try:
-                                    rows = self.PGiscursor.fetchall()
-                                    returnquery = list(rows)
-                                    self.commit()
-                                except psycopg2.ProgrammingError as e:
-                                    print('error query', e)
-                                    return None
-                            """
+                        print("Import de la table : "+dbname)
+                        fields_table = self.dbase.dbasetables[dbname]['fields'].keys()
 
 
-                        for result in returnquery:
-                            sql = 'INSRERT INTO ' +  str(dbname) +  ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + 'VALUE'+ str(result)
-                            print(sql)
-                            #self.dbase.query(sql)
-                            #self.dbase
-
-            self.dbase.horsligne = not self.dbase.horsligne
-            self.date_deconnexion = datetime.datetime.now()
-            return
-
-
-
-        if self.dbase.horsligne:
-            #1) Connect to database
-            if self.offLineType=='postgis':
-                self.offLineConn, self.dbase.connSLITE = self.dbase.connSLITE , self.offLineConn
-                self.offLineCursor, self.dbase.SLITEcursor = self.dbase.SLITEcursor, self.offLineCursor
-                self.dbase.offLineType = 'spatialite'
-            else:
-                self.offLineConn, self.dbase.connPGis =self.dbase.connPGis, self.offLineConn
-                self.offLineCursor, self.dbase.PGiscursor = self.dbase.PGiscursor, self.offLineCursor
-                self.dbasetype='postgis'
-
-
-            #2)Confront the two databases
-            #Table to get the correspondances between local ids and ids in the original database
-            switch_id={}
-
-            for order in range(10):
-                for dbname in self.dbase.dbasetables:
-                    if self.dbase.dbasetables[dbname]['order'] == order:
-                        switch_id[dbname]=[]
-
-                        #Get the data of the table in both database
-                        sql = "SELECT * FROM "+ str(dbname) + ' WHERE datecreation > ' + str(self.dbase.date_deconnexion) + ' OR datemodification > ' + str(self.dbase.date_deconnexion)
-
-                        try:
-                            print(sql)
-                            #query = self.dbase.offLineCursor.execute(sql)
-                            #local_data = list(query)
-                            #self.commit()
-                        except OperationalError as e:
-                            print('error query', e)
-                            return None
-
-                        #original_data = self.dbase.query(sql)
-                        local_data = []
-                        orignial_data=[]
-                        #conpare the datasets
-
-
-
-                        for item in local_data :
-                            id_local = item[self.dbase.dbasetables[dbname].index('id_'+str(dbname))]
-
-                            #Get the proper id to use when updating the database
-                            for field in self.dbase.dbasetables[dbname]['fields'].keys() :
-                                position = self.dbase.dbasetables[dbname]['fields'][field]
-                                field = field.lower()
-
-                                if 'lk_' in field or 'id_' in field:
-                                    field = field[3:]
-
-                                if field in switch_id :
-                                    for tuple_coresp in switch_id[field] :
-                                        if tuple_coresp[0]==item[pos]:
-                                            item[pos]=tuple_coresp[1]
-                                            break
-
-                            #New items : date de creation > date de début offline
-                            if item[self.dbase.dbasetables[dbname].index('datecreation')]>self.dbase.date_deconnexion:
-
-
-                                sql = 'INSERT INTO ' +  str(dbname) +  ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ' VALUE '+ str(item) + ' RETURNING id_'+str(dbname)
-                                #id_res= self.dbase.query(sql)
-                                print(sql)
-                                id_res = 5
-
-                                #Add the new id fit in a tuple
-                                switch_id[dbname]+=[(item[self.dbase.dbasetables[dbname].index('id_'+str(dbname))],id_res)]
-
-                            #Else : the data has been modified
-                            else :
-                                #Get the item version from the server to compare. Id should be the same as it was created before the deconection
-                                original = None
-                                for item_online in original_data:
-                                    if item_online[self.dbase.dbasetables[dbname].index('id_'+str(dbname))] == id_local:
-                                        original=item_online
-                                        break
-
-                                #If last modification on the server is before the deconnection -> inject
-                                if original[self.dbase.dbasetables[dbname].index('datemodification')]<self.dbase.date_deconnexion:
-
-                                    sql = 'UPDATE '+ str(dbname)+ ' SET '+ ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ' VALUE '+ str(item) + ' WHERE id_'+str(dbname)+' = ' + str(id_local)
-                                    #self.dbase.query(sql)
-                                    print(sql)
-                                else :
-                                    #Else, user has to choose the data to keep
-                                    #3)Correct the conflict
-                                    print('conflit')
-                                    ecrase = ConflitHorsLigne(item, original)
-                                    if ecrase :
-                                        sql = 'UPDATE '+ str(dbname)+ ' SET '+ ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ' VALUE '+ str(item) + ' WHERE id_'+str(dbname)+' = ' + str(id_local)
-                                        print(sql)
-                                        #self.dbase.query(sql)
-
-
-
-            #4) Copy the static files
-            for file in os.listdir(local_folder):
-                shutil.copyfile(file,self.dbase.imagedirectory)
-
-        self.dbase.horsligne = not self.dbase.horsligne
-        self.offLineConn = None
-        self.offLineCursor = None
-        self.dbase.offLineType = None
-
-        return
-
-
-    def modeHorsLigne_prod(self):
-        if not self.dbase.horsligne:
-
-
-            #1)Create a spatialite db
-            # create database
-            local_db = open('../local/DB_local.sqlite', 'a').close()
-            #Create the folder to stock the new pictures
-            local_folder='../local/local_data'
-            if not os.path.exists(local_folder):
-                os.makedirs(local_folder)
-
-            if self.dbase.dbasetype=='spatialite':
-                self.offLineConn = self.dbase.connSLITE
-                self.offLineCursor = self.dbase.SLITEcursor
-                self.dbase.offLineType = 'spatialite'
-            else:
-                self.offLineConn = self.dbase.connPGis
-                self.offLineCursor = self.dbase.PGiscursor
-                self.dbase.offLineType = 'postgis'
-
-
-            if local_db:
-                self.dbase.createDbase(file=local_db, crs=self.dbase.crsnumber, type='digue', dbasetype='spatialite',
-                                       dbaseressourcesdirectory=local_folder)
-
-                self.dbase.dbasetype = 'spatialite'
-
-            #2)Add items from the file to the spatialite database
-
-            for order in range(10):
-                for dbname in self.dbase.dbasetables:
-                    if self.dbase.dbasetables[dbname]['order'] == order:
-
-                        sql = "SELECT * FROM "+ str(dbname)
+                        fields_to_import=fields_table
+                        if 'geom' in self.dbase.dbasetables[dbname]:
+                            fields_to_import+=['ST_AsText(geom)']
+                        sql = 'SELECT '+  ','.join(fields_to_import) + ' FROM '+ str(dbname)
 
                         if self.dbase.offLineType == 'spatialite' :
                             try:
                                 print(sql)
                                 query = self.dbase.offLineCursor.execute(sql)
                                 returnquery = list(query)
-                                self.commit()
+                                self.dbase.commit()
                             except OperationalError as e:
                                 print('error query', e)
-                                return None
+                                continue
                         else :
                             print(sql)
                             self.PGiscursor.execute(sql)
                             if sql.strip()[0:6] == 'SELECT':
                                 try:
-                                    rows = self.PGiscursor.fetchall()
+                                    rows = self.dbase.offLineCursor.fetchall()
                                     returnquery = list(rows)
-                                    self.commit()
+                                    self.dbase.commit()
                                 except psycopg2.ProgrammingError as e:
                                     print('error query', e)
-                                    return None
+                                    continue
 
-
+                        if 'geom' in self.dbase.dbasetables[dbname]:
+                            fields_to_import[-1]='geom'
 
                         for result in returnquery:
-                            sql = 'INSRERT INTO ' +  str(dbname) +  ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + 'VALUE'+ str(result)
+                            str_test="'"
+                            compteur=-1
+                            if 'geom' in fields_to_import:
+                                geometry = result[-1]
+                                result = result[:-1]
+                            for toto in result:
+                                null=False
+                                try:
+                                    toto2=toto.decode('utf-8')
+                                except AttributeError:
+                                    toto2=str(toto)
+                                except:
+                                    toto2=normalize('NFKD', toto).encode('ASCII', 'ignore')
+
+                                if toto2=='':
+                                    toto2=""
+                                elif toto2=='None' or toto2=='NULL':
+                                    toto2='NULL'
+                                    null=True
+                                    str_test=str_test[:-1]
+                                if null:
+                                    str_test+=toto2+", '"
+                                else:
+                                    str_test+=toto2+"', '"
+                            str_test=str_test[:-3]
+
+                            if 'geom' in fields_to_import:
+                                str_test+=", "
+                                try :
+                                    str_test+='ST_GeomFromText(\''+geometry+'\', '+str(self.dbase.crsnumber)+')'
+                                except:
+                                    str_test+="NULL"
+
+
+
+                            sql = 'INSERT INTO ' +  str(dbname) +' ('+  ','.join(fields_to_import) + ') VALUES ('+ str(str_test)+')'
                             print(sql)
                             self.dbase.query(sql)
-                            self.dbase
 
             self.dbase.horsligne = not self.dbase.horsligne
             self.date_deconnexion = datetime.datetime.now()
+            print("Mode hors ligne active : ", self.dbase.horsligne)
             return
 
 
 
         if self.dbase.horsligne:
             #1) Connect to database
-            if self.offLineType=='postgis':
-                self.offLineConn, self.dbase.connSLITE = self.dbase.connSLITE , self.offLineConn
-                self.offLineCursor, self.dbase.SLITEcursor = self.dbase.SLITEcursor, self.offLineCursor
-                self.dbase.offLineType = 'spatialite'
+            if self.dbase.offLineType=='spatialite':
+                self.dbase.offLineConn, self.dbase.connSLITE = self.dbase.connSLITE , self.dbase.offLineConn
+                self.dbase.offLineCursor, self.dbase.SLITEcursor = self.dbase.SLITEcursor, self.dbase.offLineCursor
             else:
-                self.offLineConn, self.dbase.connPGis =self.dbase.connPGis, self.offLineConn
-                self.offLineCursor, self.dbase.PGiscursor = self.dbase.PGiscursor, self.offLineCursor
-                self.dbasetype='postgis'
+                self.dbase.offLineConn, self.dbase.connPGis =self.dbase.connPGis, self.dbase.offLineConn
+                self.dbase.offLineCursor, self.dbase.PGiscursor = self.dbase.PGiscursor, self.dbase.offLineCursor
+                self.dbase.offLineType = 'spatialite'
+                self.dbase.dbasetype='postgis'
+
+
 
 
             #2)Confront the two databases
             #Table to get the correspondances between local ids and ids in the original database
             switch_id={}
 
+            #Table to store the date of the creation and the last modification of each object on the server where id_objet is the key
+            list_dates_reperes = {}
+
             for order in range(10):
                 for dbname in self.dbase.dbasetables:
-                    if self.dbase.dbasetables[dbname]['order'] == order:
-                        switch_id[dbname]=[]
+
+                    switch_id[dbname]=[]
+                    #First we work on the tables connected to an object
+                    if self.dbase.dbasetables[dbname]['order'] == order and 'id_objet' in self.dbase.dbasetables[dbname]['fields'].keys():
+
+
+
+
+
+
+                        #Gather the data on the local and online database
+                        print("Export de la table : "+dbname)
+                        fields_to_import=self.dbase.dbasetables[dbname]['fields'].keys()
+                        if 'geom' in self.dbase.dbasetables[dbname]:
+                            fields_to_import+=['ST_AsText(geom)']
+
 
                         #Get the data of the table in both database
-                        sql = "SELECT * FROM "+ str(dbname) + ' WHERE datecreation > ' + str(self.dbase.date_deconnexion) + ' OR datemodification > ' + str(self.dbase.date_deconnexion)
+                        sql = 'SELECT '+  ','.join(fields_to_import) + ' FROM '+ str(dbname) + ' WHERE datecreation > \'' + str(self.dbase.date_deconnexion.strftime("%Y-%m-%d %H:%M:%S")) + '\' OR datemodification > \'' + str(self.dbase.date_deconnexion.strftime("%Y-%m-%d %H:%M:%S"))+'\''
+
+
+                        print(fields_to_import)
+                        print(sql)
 
                         try:
                             query = self.dbase.offLineCursor.execute(sql)
                             local_data = list(query)
-                            self.commit()
+                            self.dbase.offLineConn.commit()
                         except OperationalError as e:
                             print('error query', e)
                             return None
 
                         original_data = self.dbase.query(sql)
 
-                        #conpare the datasets
+
+                        if 'geom' in self.dbase.dbasetables[dbname]:
+                            fields_to_import[-1]='geom'
 
 
 
+
+                        #Store the list of the dates of creation on the local db and date of modification on the server
+                        if dbname == 'Objet':
+
+                            for item in local_data:
+                                id_local=item[list(self.dbase.dbasetables[dbname]['fields'].keys()).index('id_objet')]
+                                if item[list(self.dbase.dbasetables[dbname]['fields'].keys()).index('datecreation')] == None or item[list(self.dbase.dbasetables[dbname]['fields'].keys()).index('datecreation')] == 'NULL':
+                                    list_dates_reperes[id_local]=[None]
+                                else:
+                                    try:
+                                        list_dates_reperes[id_local]=[datetime.datetime.strptime(item[list(self.dbase.dbasetables[dbname]['fields'].keys()).index('datecreation')], '%Y-%m-%dT%H:%M:%S')]
+                                    except:
+                                        list_dates_reperes[id_local]=[datetime.datetime.strptime(item[list(self.dbase.dbasetables[dbname]['fields'].keys()).index('datecreation')], '%Y-%m-%d')]
+
+                            for original in original_data:
+                                id_original=original[list(self.dbase.dbasetables[dbname]['fields'].keys()).index('id_objet')]
+                                try :
+                                    if original[list(self.dbase.dbasetables[dbname]['fields'].keys()).index('datemodification')]==None or original[list(self.dbase.dbasetables[dbname]['fields'].keys()).index('datemodification')]=='NULL':
+                                        list_dates_reperes[id_original]+=[None]
+                                    else:
+                                        try :
+                                            list_dates_reperes[id_original]+=[datetime.datetime.strptime(original[list(self.dbase.dbasetables[dbname]['fields'].keys()).index('datemodification')], '%Y-%m-%dT%H:%M:%S')]
+                                        except:
+                                            list_dates_reperes[id_original]+=[datetime.datetime.strptime(original[list(self.dbase.dbasetables[dbname]['fields'].keys()).index('datemodification')], '%Y-%m-%d')]
+                                except : #The item doesn't exist in the local version
+                                    list_dates_reperes[id_original]=[None]
+                                    if original[list(self.dbase.dbasetables[dbname]['fields'].keys()).index('datemodification')]==None or original[list(self.dbase.dbasetables[dbname]['fields'].keys()).index('datemodification')]=='NULL':
+                                        list_dates_reperes[id_original]+=[None]
+                                    else:
+                                        try :
+                                            list_dates_reperes[id_original]+=[datetime.datetime.strptime(original[list(self.dbase.dbasetables[dbname]['fields'].keys()).index('datemodification')], '%Y-%m-%dT%H:%M:%S')]
+                                        except:
+                                            list_dates_reperes[id_original]+=[datetime.datetime.strptime(original[list(self.dbase.dbasetables[dbname]['fields'].keys()).index('datemodification')], '%Y-%m-%d')]
+
+
+
+
+
+                        #Make sure we update the foreign key used
                         for item in local_data :
-                            id_local = item[self.dbase.dbasetables[dbname].index('id_'+str(dbname))]
-
+                            print('item : '+str(item))
+                            pos=0
                             #Get the proper id to use when updating the database
                             for field in self.dbase.dbasetables[dbname]['fields'].keys() :
-                                position = self.dbase.dbasetables[dbname]['fields'][field]
-                                field = field.lower()
+                                pos+=1
 
                                 if 'lk_' in field or 'id_' in field:
-                                    field = field[3:]
+                                    field = field[3:].lower()
 
                                 if field in switch_id :
                                     for tuple_coresp in switch_id[field] :
-                                        if tuple_coresp[0]==item[pos]:
-                                            item[pos]=tuple_coresp[1]
-                                            break
+                                        if not item[pos]=='NULL' and not item[pos]==None:
+                                            try:
+                                                if tuple_coresp[0]==int(item[pos]):
+                                                    item[pos]=tuple_coresp[1]
+                                                    break
+                                            except:
+                                                pass
+                                        else:
+                                            item[pos]='NULL'
 
-                            #New items : date de creation > date de début offline
-                            if item[self.dbase.dbasetables[dbname].index('datecreation')]>self.dbase.date_deconnexion:
 
 
-                                sql = 'INSERT INTO ' +  str(dbname) +  ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ' VALUE '+ str(item) + ' RETURNING id_'+str(dbname)
+
+                        #Get the output to send back to the database
+                            str_test="'"
+                            if 'geom' in fields_to_import:
+                                geometry = item[-1]
+                                item = item[:-1]
+
+                            for toto in item :
+                                null=False
+                                try:
+                                    toto2=toto.decode('utf-8')
+                                except AttributeError:
+                                    toto2=str(toto)
+                                except:
+                                    toto2=normalize('NFKD', toto).encode('ASCII', 'ignore')
+                                if toto2=='' or toto2=="'''" or toto2=="'":
+                                    toto2=""
+                                elif toto2=='None' or toto2=='NULL':
+                                    toto2='NULL'
+                                    null=True
+                                    str_test=str_test[:-1]
+                                if null:
+                                    str_test+=toto2+", '"
+                                else:
+                                    str_test+=toto2+"', '"
+                            output=str(str_test[:-3])
+
+                            if 'geom' in fields_to_import:
+                                output+=", "
+                                try :
+                                    output+='ST_GeomFromText(\''+geometry+'\', '+str(self.dbase.crsnumber)+')'
+                                except:
+                                    output+="NULL"
+
+                            print('output : '+ output)
+
+
+
+
+
+                            id_local = item[self.dbase.dbasetables[dbname]['fields'].keys().index('id_objet')]
+
+
+
+
+
+
+
+                            #Is it a new item ? test : date de creation > date de début offline
+                            nouveau=False
+                            no_id=False
+                            try :
+
+
+                                #We deal with the exceptions
+                                if id_local=='NULL' or id_local == None:
+                                    nouveau=False
+                                    no_id = True
+                                    print('id_local null')
+                                elif list_dates_reperes[id_local][0]==None or list_dates_reperes[id_local][0]=='NULL':
+                                    nouveau=True
+                                else:
+
+
+                                    #The true test
+                                    nouveau = list_dates_reperes[id_local][0]>self.dbase.date_deconnexion
+
+
+                            #Other exceptions
+                            except KeyError, e:
+                                print(e, list_dates_reperes)
+                                return
+                                nouveau = False
+                                no_id=True
+
+
+                            #If it is a new item, we add it to the database online
+                            if nouveau:
+
+                                sql = 'INSERT INTO ' +  str(dbname) +' ('+  ','.join(fields_to_import) + ') VALUES ('+ str(output) + ') RETURNING id_'+str(dbname)
                                 id_res= self.dbase.query(sql)
+                                print('nouveau, sql : '+sql)
 
-                                #Add the new id fit in a tuple
-                                switch_id[dbname]+=[(item[self.dbase.dbasetables[dbname].index('id_'+str(dbname))],id_res)]
 
-                            #Else : the data has been modified
+
+
+                                #Add the new id fit in a tuple : We make sure we get the id online of the newly created item
+                                switch_id[dbname]+=[(item[list(self.dbase.dbasetables[dbname]['fields'].keys()).index('id_'+str(dbname).lower())],id_res)]
+
+
+
+
+                            #Else : the data has been modified on the local version of the database
                             else :
-                                #Get the item version from the server to compare. Id should be the same as it was created before the deconection
-                                original = None
-                                for item_online in original_data:
-                                    if item_online[self.dbase.dbasetables[dbname].index('id_'+str(dbname))] == id_local:
-                                        original=item_online
-                                        break
+                                #More exceptions ...
+                                if not original_data==[]:
+                                    if no_id :
+                                        print('pad d\'id local')
+                                        pass
+                                    else:
 
-                                #If last modification on the server is before the deconnection -> inject
-                                if original[self.dbase.dbasetables[dbname].index('datemodification')]<self.dbase.date_deconnexion:
 
-                                    sql = 'UPDATE '+ str(dbname)+ ' SET '+ ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ' VALUE '+ str(item) + ' WHERE id_'+str(dbname)+' = ' + str(id_local)
-                                    self.dbase.query(sql)
-                                else :
-                                    #Else, user has to choose the data to keep
-                                    #3)Correct the conflict
-                                    print('conflit')
-                                    ecrase = ConflitHorsLigne(item, original)
-                                    if ecrase :
-                                        sql = 'UPDATE '+ str(dbname)+ ' SET '+ ','.join(self.dbase.dbasetables[dbname]['fields'].keys()) + ' VALUE '+ str(item) + ' WHERE id_'+str(dbname)+' = ' + str(id_local)
-                                        self.dbase.query(sql)
+                                        if list_dates_reperes[id_local][1]==None or list_dates_reperes[id_local][1]=='NULL':
+                                            non_modifie = True
+                                        else:
+
+
+                                            #Was the item modified while offline ? The test is here
+                                            non_modifie = list_dates_reperes[id_local][1]<self.dbase.date_deconnexion
+
+
+
+                                        #If last modification on the server is before the deconnection -> inject
+                                        if non_modifie:
+
+                                            #Construct the UPDATE request
+                                            sql = 'UPDATE '+ str(dbname)+ ' SET '
+                                            output=output[output.index(','):]
+                                            for field in fields_to_import:
+                                                if field==('id_'+dbname.lower()):
+                                                    output=output[output.index(',')+1:]
+                                                    pass
+                                                elif field=='geom':
+                                                    sql+="geom ="+output
+                                                else:
+                                                    output=str(output)
+                                                    try :
+                                                        sql += str(field)+' ='+ output[:output.index(',')]+', '
+                                                        output=output[output.index(',')+1:]
+                                                    except:
+                                                        sql += str(field)+' ='+ output
+
+                                            sql += ' WHERE id_'+str(dbname)+' = ' + str(id_local)
+                                            print('update car non modifié, output et sql :'+output, sql)
+                                            self.dbase.query(sql)
+
+
+
+                                        #If last modification on the server is after the deconnection -> give the choice to the user
+                                        else :
+                                            #User has to choose the data to keep
+                                            #Get the item version from the server to compare. Id should be the same as it was created before the deconection
+                                            original = None
+                                            for item_online in original_data:
+                                                if item_online[list(self.dbase.dbasetables[dbname]['fields'].keys()).index('id_objet')] == id_local:
+                                                    original=item_online
+                                                    print(original, item)
+                                                    break
+
+
+
+                                            #3)Correct the conflict
+                                            #Ask the user what to do
+                                            print('conflit')
+                                            ecrase = ConflitHorsLigne(item, original)
+
+
+
+
+                                            #If the user wants to erase the data online
+                                            if ecrase :
+                                                #Construct the UPDATE request
+                                                sql = 'UPDATE '+ str(dbname)+ ' SET '
+                                                output=output[output.index(','):]
+                                                for field in fields_to_import:
+                                                    if field==('id_'+dbname.lower()):
+                                                        output=output[output.index(',')+1:]
+                                                        pass
+                                                    elif field=='geom':
+                                                        sql+="geom ="+output
+                                                    else:
+                                                        output=str(output)
+                                                        print('output, sql :'+ output, sql)
+                                                        try :
+                                                            sql += str(field)+' ='+ output[:output.index(',')]+', '
+                                                            output=output[output.index(',')+1:]
+                                                        except:
+                                                            sql += str(field)+' ='+ output
+
+                                                sql += ' WHERE id_'+str(dbname)+' = ' + str(id_local)
+                                                print('conflit, final :'+output, sql)
+                                                self.dbase.query(sql)
+
+
+
+
+
+                    #Deal with the tc tables
+                    elif self.dbase.dbasetables[dbname]['order'] == order and 'id_tcobjet' in self.dbase.dbasetables[dbname]['fields'].keys():
+                        print("Export de la table : "+dbname)
+                        fields_to_import=self.dbase.dbasetables[dbname]['fields'].keys()
+
+                        #Une tc ne sera pas modifiée, au mieux on ajoute des choses dedans
+                        #We select the data
+                        sql = 'SELECT '+  ','.join(fields_to_import) + ' FROM '+ str(dbname)
+                        print(sql)
+
+                        try:
+                            query = self.dbase.offLineCursor.execute(sql)
+                            local_data = list(query)
+                            self.dbase.offLineConn.commit()
+                        except OperationalError as e:
+                            print('error query', e)
+                            return None
+
+                        original_data = self.dbase.query(sql)
+
+
+
+
+                        #compare the datasets
+                        for item in local_data :
+                            id_item=item[list(self.dbase.dbasetables[dbname]['fields'].keys()).index('id_'+dbname.lower())]
+                            print('item : '+str(item))
+
+
+                            #Get the proper id to use when updating the database
+                            pos=0
+                            for field in self.dbase.dbasetables[dbname]['fields'].keys() :
+                                pos+=1
+
+                                if 'id_tc' in field:
+                                    field = field[5:].lower()
+
+                                if field in switch_id :
+                                    for tuple_coresp in switch_id[field] :
+                                        if not item[pos]=='NULL' and not item[pos]==None:
+                                            try:
+                                                if tuple_coresp[0]==int(item[pos]):
+                                                    item[pos]=tuple_coresp[1]
+                                                    break
+                                            except:
+                                                pass
+
+
+
+                            new=True
+                            for local in original_data:
+                                id_local=local[list(self.dbase.dbasetables[dbname]['fields'].keys()).index('id_'+dbname.lower())]
+                                if id_local==id_item:
+                                    new = False
+                                    break
+                            if new :
+                                output="'"
+                                for value in item :
+                                    output += str(value)
+                                    str_test+=toto2+"', '"
+
+                                output=str(str_test[:-3])
+                                print('output : '+ output)
+
+                                sql = 'INSERT INTO ' +  str(dbname) +' ('+  ','.join(fields_to_import) + ') VALUES ('+ str(output) + ') RETURNING id_'+str(dbname).lower()
+                                id_res= self.dbase.query(sql)
+                                print('tc_new, sql : '+sql)
+
+                                switch_id[dbname]+=[(item[list(self.dbase.dbasetables[dbname]['fields'].keys()).index('id_'+str(dbname).lower())],id_res)]
 
 
 
             #4) Copy the static files
-            for file in os.listdir(local_folder):
-                shutil.copyfile(file,self.dbase.imagedirectory)
+            local_folder='../local/local_data'
+            try :
+                for file in os.listdir(local_folder):
+                    shutil.copyfile(file,self.dbase.imagedirectory)
+            except:
+                print('no folder to export the ressources, check imagedirectory')
 
-        self.dbase.horsligne = not self.dbase.horsligne
-        self.offLineConn = None
-        self.offLineCursor = None
-        self.dbase.offLineType = None
+            self.dbase.horsligne = not self.dbase.horsligne
+            self.dbase.offLineConn = None
+            self.dbase.offLineCursor = None
+            self.dbase.offLineType = None
 
-        return
+            return
+
 
 
     def setLoadingProgressBar(self, progressbar, val):

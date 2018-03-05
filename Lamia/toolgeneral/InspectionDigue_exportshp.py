@@ -39,6 +39,7 @@ class exportShapefileWorker:
                       ['Objet', 'datedestruction'],
                       ['Objet', 'commentaire'],
                       ['Objet', 'libelle'],
+                      ['Objet', 'datemodification'],
                       ['Descriptionsystem', 'importancestrat'],
                       ['Descriptionsystem', 'etatfonct'],                    #5
                       ['Descriptionsystem', 'datederniereobs'],
@@ -325,6 +326,7 @@ class exportShapefileWorker:
                       ['Objet', 'datedestruction'],
                       ['Objet', 'commentaire'],
                       ['Objet', 'libelle'],
+                      ['Objet', 'datemodification'],
                       ['Descriptionsystem', 'importancestrat'],
                       ['Descriptionsystem', 'etatfonct'],
                       ['Descriptionsystem', 'datederniereobs'],
@@ -416,6 +418,7 @@ class exportShapefileWorker:
                      ['Objet', 'datedestruction'],
                      ['Objet', 'commentaire'],
                      ['Objet', 'libelle'],
+                     ['Objet', 'datemodification'],
                      ['Desordre', 'id_desordre'],
                      ['Desordre', 'cote'],
                      ['Desordre', 'position'],
@@ -551,6 +554,7 @@ class exportShapefileWorker:
                     #['Objet', 'datecreation'],
                     # ['Objet', 'datedestruction'],
                      #['Objet', 'commentaire'],
+                    #['Objet', 'datemodification'],
                      #['Objet', 'libelle']
                                                          ]
 
@@ -666,6 +670,7 @@ class exportShapefileWorker:
                      #['Objet', 'datedestruction'],
                      #['Objet', 'commentaire'],
                      #['Objet', 'libelle'],
+                    #['Objet', 'datemodification'],
                      ['Ressource', 'source'],
                      ['Ressource', 'dateressource','datephoto'],
                      #['Ressource', 'contactadresse'],
@@ -721,6 +726,266 @@ class exportShapefileWorker:
             # print(len(result),result[0])
             self.fillShapefile(linearname, qgis.core.QGis.WKBPoint, fieldslinear, champs, result)
 
+
+        elif self.reporttype == 'Desordres':
+
+            champs =[['Desordre', 'id_desordre'],
+            ['Desordre', 'cote'],
+            ['Desordre', 'position'],
+            ['Desordre', 'catdes'],
+            ['Desordre', 'impact'],
+            ['Desordre', 'gravite'],
+            ['Desordre', 'priorite'],
+            ['Desordre', 'risques'],
+            ['Desordre', 'priorite'],
+            ['Desordre', 'priorite'],
+            ['Objet', 'datecreation' ],
+            ['Objet', 'datedestruction'],
+            ['Objet', 'commentaire'],
+            ['Objet', 'libelle'],
+            ['Objet', 'datemodification'],
+            ]
+
+            fieldslinear = self.getFieldsfromList(champs)
+
+
+            dir = os.path.dirname(self.pdffile)
+            name = os.path.basename(self.pdffile).split('.')[0]
+            linearname = os.path.join(dir, name + '.shp')
+
+
+            sql = "SELECT "
+            sql += ', '.join([str(field[0])+'.'+str(field[1]) for field in champs])
+            sql += ", ST_AsText(Desordre.geom) "
+            sql += "FROM Desordre  "
+            sql += " INNER JOIN Objet ON Desordre.id_objet = Objet.id_objet "
+
+            sql += " WHERE "
+
+
+            sql += '  Objet.Datecreation <= ' + "'" + self.dbase.workingdate + "'"
+            if self.dbase.dbasetype == 'postgis':
+                sql += ' AND CASE WHEN Objet.Datedestruction IS NOT NULL  '
+                sql += 'THEN Objet.DateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE TRUE END'
+            elif self.dbase.dbasetype == 'spatialite':
+                sql += ' AND CASE WHEN Objet.datedestruction IS NOT NULL  '
+                sql += 'THEN Objet.dateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE 1 END'
+            if boundinggeom is not None :
+                sql += " AND ST_WITHIN(ST_MakeValid(Desordre.geom), ST_GeomFromText('" + boundinggeom + "',"+ str(self.dbase.crsnumber) + ")) "
+            sql += ";"
+
+            query = self.dbase.query(sql)
+            result = [row for row in query]
+            self.fillShapefile(linearname, qgis.core.QGis.WKBPoint, fieldslinear, champs, result)
+
+
+
+
+        elif self.reporttype == 'Noeuds':
+
+            champs =[['Noeud', 'id_noeud'],
+            ['Descriptionsystem', 'importancestrat'],
+            ['Descriptionsystem', 'etatfonct'],
+            ['Descriptionsystem', 'datederniereobs'],
+            ['Descriptionsystem', 'qualitegeoloc'],
+            ['Descriptionsystem', 'parametres'],
+            ['Descriptionsystem', 'listeparametres'],
+            ['Objet', 'datecreation' ],
+            ['Objet', 'datedestruction'],
+            ['Objet', 'commentaire'],
+            ['Objet', 'libelle'],
+            ['Objet', 'datemodification'],
+            ]
+
+            fieldslinear = self.getFieldsfromList(champs)
+
+
+            dir = os.path.dirname(self.pdffile)
+            name = os.path.basename(self.pdffile).split('.')[0]
+            linearname = os.path.join(dir, name + '.shp')
+
+
+            sql = "SELECT "
+            sql += ', '.join([str(field[0])+'.'+str(field[1]) for field in champs])
+            sql += ", ST_AsText(Noeud.geom) "
+            sql += "FROM Noeud  "
+            sql += " INNER JOIN Objet ON Noeud.id_objet = Objet.id_objet "
+            sql += "INNER JOIN Descriptionsystem ON Descriptionsystem.id_descriptionsystem = Noeud.id_descriptionsystem "
+
+            sql += " WHERE "
+
+
+            sql += '  Objet.Datecreation <= ' + "'" + self.dbase.workingdate + "'"
+            if self.dbase.dbasetype == 'postgis':
+                sql += ' AND CASE WHEN Objet.Datedestruction IS NOT NULL  '
+                sql += 'THEN Objet.DateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE TRUE END'
+            elif self.dbase.dbasetype == 'spatialite':
+                sql += ' AND CASE WHEN Objet.datedestruction IS NOT NULL  '
+                sql += 'THEN Objet.dateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE 1 END'
+            if boundinggeom is not None :
+                sql += " AND ST_WITHIN(ST_MakeValid(Noeud.geom), ST_GeomFromText('" + boundinggeom + "',"+ str(self.dbase.crsnumber) + ")) "
+            sql += ";"
+
+            query = self.dbase.query(sql)
+            result = [row for row in query]
+            self.fillShapefile(linearname, qgis.core.QGis.WKBPoint, fieldslinear, champs, result)
+
+
+
+
+
+        elif self.reporttype == 'Environnement':
+
+            champs =[['Environnement', 'id_environnement'],
+            ['Descriptionsystem', 'importancestrat'],
+            ['Descriptionsystem', 'etatfonct'],
+            ['Descriptionsystem', 'datederniereobs'],
+            ['Descriptionsystem', 'qualitegeoloc'],
+            ['Descriptionsystem', 'parametres'],
+            ['Descriptionsystem', 'listeparametres'],
+            ['Objet', 'datecreation' ],
+            ['Objet', 'datedestruction'],
+            ['Objet', 'commentaire'],
+            ['Objet', 'libelle'],
+            ['Objet', 'datemodification'],
+            ]
+
+            fieldslinear = self.getFieldsfromList(champs)
+
+
+            dir = os.path.dirname(self.pdffile)
+            name = os.path.basename(self.pdffile).split('.')[0]
+            linearname = os.path.join(dir, name + '.shp')
+
+
+            sql = "SELECT "
+            sql += ', '.join([str(field[0])+'.'+str(field[1]) for field in champs])
+            sql += ", ST_AsText(Environnement.geom) "
+            sql += "FROM Environnement  "
+            sql += " INNER JOIN Objet ON Environnement.id_objet = Objet.id_objet "
+            sql += "INNER JOIN Descriptionsystem ON Descriptionsystem.id_descriptionsystem = Environnement.id_descriptionsystem "
+
+            sql += " WHERE "
+
+
+            sql += '  Objet.Datecreation <= ' + "'" + self.dbase.workingdate + "'"
+            if self.dbase.dbasetype == 'postgis':
+                sql += ' AND CASE WHEN Objet.Datedestruction IS NOT NULL  '
+                sql += 'THEN Objet.DateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE TRUE END'
+            elif self.dbase.dbasetype == 'spatialite':
+                sql += ' AND CASE WHEN Objet.datedestruction IS NOT NULL  '
+                sql += 'THEN Objet.dateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE 1 END'
+            if boundinggeom is not None :
+                sql += " AND ST_WITHIN(ST_MakeValid(Environnement.geom), ST_GeomFromText('" + boundinggeom + "',"+ str(self.dbase.crsnumber) + ")) "
+            sql += ";"
+
+            query = self.dbase.query(sql)
+            result = [row for row in query]
+            self.fillShapefile(linearname, qgis.core.QGis.WKBPoint, fieldslinear, champs, result)
+
+
+
+
+
+
+
+        elif self.reporttype == 'Travaux':
+
+            champs =[['Travaux', 'id_travaux'],
+            ['Travaux', 'urgence'],
+            ['Travaux', 'estimationcouts'],
+            ['Travaux', 'estimationduree'],
+            ['Travaux', 'dateestimationecheance'],
+            ['Travaux', 'phase'],
+            ['Travaux', 'datedebut'],
+            ['Travaux', 'datefin'],
+            ['Objet', 'datecreation' ],
+            ['Objet', 'datedestruction'],
+            ['Objet', 'commentaire'],
+            ['Objet', 'libelle'],
+            ['Objet', 'datemodification'],
+            ]
+
+            fieldslinear = self.getFieldsfromList(champs)
+
+
+            dir = os.path.dirname(self.pdffile)
+            name = os.path.basename(self.pdffile).split('.')[0]
+            linearname = os.path.join(dir, name + '.shp')
+
+
+            sql = "SELECT "
+            sql += ', '.join([str(field[0])+'.'+str(field[1]) for field in champs])
+            sql += "FROM Travaux  "
+            sql += " INNER JOIN Objet ON Travaux.id_objet = Objet.id_objet "
+
+            sql += " WHERE "
+
+
+            sql += '  Objet.Datecreation <= ' + "'" + self.dbase.workingdate + "'"
+            if self.dbase.dbasetype == 'postgis':
+                sql += ' AND CASE WHEN Objet.Datedestruction IS NOT NULL  '
+                sql += 'THEN Objet.DateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE TRUE END'
+            elif self.dbase.dbasetype == 'spatialite':
+                sql += ' AND CASE WHEN Objet.datedestruction IS NOT NULL  '
+                sql += 'THEN Objet.dateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE 1 END'
+            sql += ";"
+
+            query = self.dbase.query(sql)
+            result = [row for row in query]
+            self.fillShapefile(linearname, qgis.core.QGis.WKBPoint, fieldslinear, champs, result)
+
+
+
+
+
+
+
+        elif self.reporttype == 'Intervention_Tiers':
+
+            champs =[['Interventiontiers', 'id_interventiontiers'],
+            ['Interventiontiers', 'urgence'],
+            ['Interventiontiers', 'estimationcourts'],
+            ['Interventiontiers', 'estimationduree'],
+            ['Interventiontiers', 'dateestimationecheance'],
+            ['Interventiontiers', 'phase'],
+            ['Interventiontiers', 'datedebut'],
+            ['Interventiontiers', 'datefin'],
+            ['Objet', 'datecreation' ],
+            ['Objet', 'datedestruction'],
+            ['Objet', 'commentaire'],
+            ['Objet', 'libelle'],
+            ['Objet', 'datemodification'],
+            ]
+
+            fieldslinear = self.getFieldsfromList(champs)
+
+
+            dir = os.path.dirname(self.pdffile)
+            name = os.path.basename(self.pdffile).split('.')[0]
+            linearname = os.path.join(dir, name + '.shp')
+
+
+            sql = "SELECT "
+            sql += ', '.join([str(field[0])+'.'+str(field[1]) for field in champs])
+            sql += "FROM Interventiontiers  "
+            sql += " INNER JOIN Objet ON Interventiontiers.id_objet = Objet.id_objet "
+
+            sql += " WHERE "
+
+
+            sql += '  Objet.Datecreation <= ' + "'" + self.dbase.workingdate + "'"
+            if self.dbase.dbasetype == 'postgis':
+                sql += ' AND CASE WHEN Objet.Datedestruction IS NOT NULL  '
+                sql += 'THEN Objet.DateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE TRUE END'
+            elif self.dbase.dbasetype == 'spatialite':
+                sql += ' AND CASE WHEN Objet.datedestruction IS NOT NULL  '
+                sql += 'THEN Objet.dateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE 1 END'
+            sql += ";"
+
+            query = self.dbase.query(sql)
+            result = [row for row in query]
+            self.fillShapefile(linearname, qgis.core.QGis.WKBPoint, fieldslinear, champs, result)
 
 
 

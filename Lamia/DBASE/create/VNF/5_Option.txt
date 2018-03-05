@@ -1,0 +1,281 @@
+#DJAN  SELECT Option.*, Objet.datecreation, Objet.datedestruction, Objet.commentaire, Objet.libelle, Descriptionsystem.importancestrat, Descriptionsystem.etatfonct, Descriptionsystem.datederniereobs, Descriptionsystem.qualitegeoloc, Descriptionsystem.parametres, Descriptionsystem.listeparametres FROM Option INNER JOIN Descriptionsystem ON Option.id_descriptionsystem = Descriptionsystem.id_descriptionsystem INNER JOIN Objet ON Objet.id_objet = Option.id_objet
+#QGIS  SELECT Option.*, Objet.datecreation, Objet.datedestruction FROM Option INNER JOIN Descriptionsystem ON Option.id_descriptionsystem = Descriptionsystem.id_descriptionsystem INNER JOIN Objet ON Objet.id_objet = Option.id_objet
+#SHOW YES
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###id_option;    SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_objet;             INT ;                     INTEGER ;                                    Objet(id_objet)
+###id_descriptionsystem;        INT ;                       INTEGER;                            Descriptionsystem(id_descriptionsystem)
+###lk_photo;        INT ;                       INTEGER;                        Ressource(id_ressource)
+###niveau;        INT ;                       INTEGER
+###pourcent;        INT ;                       INTEGER
+###detail ;             VARCHAR(255);                TEXT
+###id_propriete;        INT ;                       INTEGER;                            Proriete(id_propriete)
+###propriete;        INT ;                       INTEGER
+/;
+On reprend la propriete de Propriete, ne peut pas être modifie ici
+Chenal - Materiaux;                                                                 1
+Chenal - Y-a-t-il eu une inspection de fonds ?;                                     2
+Chenal - Si oui a quelle date ?;                                                    3
+Chenal - Conclusion de l inspection;                                                4
+Chenal - L equipement a-t-il fait l objet de travaux localises;                     5
+Chenal - Si oui, sur quel pourcentage du lineaire;                                  6
+Chenal - Commentaires;                                                              7
+Pied de berge - Materiaux;                                                          8
+Pied de berge - Hauteur de protection;                                              9
+Pied de berge - L equipement a-t-il fait l objet de travaux localises ?;            10
+Pied de berge - Si oui, sur quel pourcentage du lineaire;                           11
+Pied de berge - Commentaires;                                                       12
+Talus expose - Materiaux;                                                           13
+Talus expose - Mode constructif;                                                    14
+Talus expose - Hauteur de protection;                                               15
+Talus expose - Presence de risbeme ? d une berme ?;                                 16
+Talus expose - Si oui, sur quelle largeur ? (en m);                                 17
+Talus expose - L equipement a-t-il fait l objet de travaux localises ?;             18
+Talus expose - Si oui, sur quel pourcentage du lineaire;                            19
+Talus expose - Commentaires;                                                        20
+Crete - Materiaux;                                                                  21
+Crete - Type de cheminement, Mode d acces;                                          22
+Crete - Position de la voie;                                                        23
+Crete - L equipement a-t-il fait l objet de travaux localises ?;                    24
+Crete - Si oui, sur quel pourcentage du lineaire;                                   25
+Crete - Commentaires;                                                               26
+Corps de digue - Materiaux;                                                         27
+Corps de digue - L equipement a-t-il fait l objet de travaux localises ?;           28
+Corps de digue - Si oui, sur quel pourcentage du lineaire;                          29
+Corps de digue - Commentaires;                                                      30
+Talus aval digue - Materiaux;                                                       31
+Talus aval digue - Mode constructif;                                                32
+Talus aval digue - Hauteur de protection;                                           33
+Talus aval digue - Presence de risberme ?;                                          34
+Talus aval digue - Si oui, sur quelle largeur ? (en m);                             35
+Talus aval digue - Hauteur maximum de digue (en m);                                 36
+Talus aval digue - L equipement a-t-il fait l objet de travaux localises ?;         37
+Talus aval digue - Si oui, sur quel pourcentage du lineaire;                        38
+Talus aval digue - Commentaires;                                                    39
+Contre-fosse - Materiaux;                                                           40
+Contre-fosse - Position du contre-fosse;                                            41
+Contre-fosse - L equipement a-t-il fait l objet de travaux localises ?;             42
+Contre-fosse - Si oui, sur quelle pourcentage du lineaire ?;                        43
+Contre-fosse - Commentaires;                                                        44
+Connexion terrain naturel - Materiaux;                                              45
+Connexion terrain naturel - Position de l equipement;                               46
+Connexion terrain naturel - L equipement a-t-il fait l objet de travaux localises ?;47
+Connexion terrain naturel - Si oui, sur quelle pourcentage du lineaire ?;           48
+Connexion terrain naturel - Commentaires;                                           49
+Elements de securite - Materiaux;                                                   50
+Elements de securite - Position de l equipement;                                    51
+Elements de securite - Quantiete;                                                   52
+Elements de securite - Commentaires;                                                53
+Franchissement et ouvrages divers - Element;                                        54
+Franchissement et ouvrages divers - Position;                                       55
+Franchissement et ouvrages divers - Proprietaire;                                   56
+Franchissement et ouvrages divers - Usage;                                          57
+Franchissement et ouvrages divers - Commentaires;                                   58
+###option;        INT ;                       INTEGER
+##propriete
+/;
+En fonction de la propriete, les options ne sont pas les mêmes
+Naturel;                                                                            1;      [1]
+Complexe d'étanchéité;                                                              2;      [1]
+Indeterminé;                                                                        3;      [1]
+Buse, conduit;                                                                      4;      [1]
+Cuvelé;                                                                             5;      [1]
+Oui;                                                                                6;      [2]
+Non;                                                                                7;      [2]
+Oui;                                                                                8;      [5]
+Non;                                                                                9;      [5]
+Réparation localisée;                                                               10;     [5]
+Rénovation importante;                                                              11;     [5]
+Confortement, création d'un cuvelage;                                               12;     [5]
+Visible mais indéterminé;                                                           13;     [8]
+Non accessible, indéterminé;                                                        14;     [8]
+Terrain naturel non protégé;                                                        15;     [8]
+Enrochements;                                                                       16;     [8]
+Enrochements liaisonnés;                                                            17;     [8]
+Perré maçonné ou perré en pierres séches;                                           18;     [8]
+Perré béton;                                                                        19;     [8]
+Tunage bois;                                                                        20;     [8]
+Gabions;                                                                            21;     [8]
+Palplanches;                                                                        22;     [8]
+Palplanches + poutre béton;                                                         23;     [8]
+Palplanches + tirants;                                                              24;     [8]
+Palplanches + tirants + poutre béton;                                               25;     [8]
+Mur béton ou paroi moulée;                                                          26;     [8]
+Mur Maçonnée;                                                                       27;     [8]
+Géomembrane, géosynthétique;                                                        28;     [8]
+Protection en génie végétal;                                                        29;     [8]
+Proche du niveau d'eau normal;                                                      30;     [9]
+Sur la zone de batillage (~1m au-dessus du niveau d'eau normal);                    31;     [9]
+Jusqu'à la crête;                                                                   32;     [9]
+Non;                                                                                33;     [10]
+Purge;                                                                              34;     [10]
+Remplacements;                                                                      35;     [10]
+Confortement;                                                                       36;     [10]
+Visible mais indéterminé;                                                           37;     [13]
+Non accessible, indéterminé;                                                        38;     [13]
+Terrain naturel non protégé;                                                        39;     [13]
+Enrochements;                                                                       39;     [13]
+Enrochements liaisonnés;                                                            40;     [13]
+Perré maçonné ou perré en pierres séches;                                           41;     [13]
+Perré béton;                                                                        42;     [13]
+Gabions;                                                                            43;     [13]
+Paroi maçonnée;                                                                     44;     [13]
+Paroi bétonnée;                                                                     45;     [13]
+Géomembrane, géosynthétique;                                                        46;     [13]
+Protection en génie végétal;                                                        47;     [13]
+Talus;                                                                              48;     [14]
+Soutènement;                                                                        49;     [14]
+Partielle;                                                                          48;     [15]
+Jusqu'à la crête;                                                                   49;     [15]
+Oui;                                                                                50;     [16]
+Non;                                                                                51;     [16]
+Non;                                                                                52;     [18]
+Purge;                                                                              53;     [18]
+Remplacements;                                                                      54;     [18]
+Confortement;                                                                       55;     [18]
+Non accessible, indéterminé;                                                        56;     [21]
+Visible mais indéterminé;                                                           57;     [21]
+Terrain naturel non protégé;                                                        56;     [21]
+Végétalisé;                                                                         58;     [21]
+Enrobé;                                                                             59;     [21]
+Grave, stabilisé;                                                                   60;     [21]
+Pavement;                                                                           61;     [21]
+Enrochements;                                                                       62;     [21]
+Gabions;                                                                            63;     [21]
+Béton, béton désactivé;                                                             64;     [21]
+Non accessible, indéterminé;                                                        65;     [22]
+Visible mais indéterminé;                                                           66;     [22]
+Terrain naturel non protégé;                                                        67;     [22]
+Végétalisé;                                                                         68;     [22]
+Enrobé;                                                                             69;     [22]
+Grave, stabilisé;                                                                   70;     [22]
+Pavement;                                                                           71;     [22]
+Enrochements;                                                                       72;     [22]
+Gabions;                                                                            73;     [22]
+Béton, béton désactivé;                                                             74;     [22]
+Non accessible, végétation;                                                         75;     [23]
+Accès VL restreint aux services, accès piétonnier publique;                         76;     [23]
+Accès totalement restreint aux services;                                            77;     [23]
+Chemin de halage;                                                                   78;     [23]
+Véloroute;                                                                          79;     [23]
+Voie routière accessible à tous;                                                    80;     [23]
+A proximité du bord;                                                                81;     [24]
+Eloignée du bord (+ de 5m);                                                         82;     [24]
+Non;                                                                                83;     [25]
+Purge;                                                                              84;     [25]
+Remplacements;                                                                      85;     [25]
+Confortement;                                                                       86;     [25]
+Inconnu;                                                                            87;     [25]
+Argile et limon argileux;                                                           88;     [28]
+Tout venant, terre végétale, sable;                                                 89;     [28]
+Terre-ciment, sol traité;                                                           90;     [28]
+Non;                                                                                91;     [29]
+Purge;                                                                              92;     [29]
+Remplacements;                                                                      93;     [29]
+Confortement;                                                                       94;     [29]
+Visible mais indéterminé;                                                           95;     [32]
+Non accessible, indéterminé;                                                        96;     [32]
+Terrain naturel non protégé;                                                        97;     [32]
+Enrochements;                                                                       98;     [32]
+Enrochements liaisonnés;                                                            99;     [32]
+Perré maçonné ou perré en pierres séches;                                           100;    [32]
+Perré béton;                                                                        101;    [32]
+Gabions;                                                                            102;    [32]
+Paroi maçonnée;                                                                     103;    [32]
+Paroi bétonnée;                                                                     104;    [32]
+Géomembrane, géosynthétique;                                                        105;    [29]
+Protection en génie végétal;                                                        106;    [32]
+Talus en remblai;                                                                   107;    [33]
+Talus en déblai;                                                                    108;    [33]
+Soutènement de remblai;                                                             109;    [33]
+Soutènement de déblai;                                                              110;    [33]
+Partielle;                                                                          111;    [34]
+Jusqu'à la crête;                                                                   112;    [34]
+Oui;                                                                                113;    [35]
+Non;                                                                                114;    [35]
+Non;                                                                                115;    [38]
+Purge;                                                                              116;    [38]
+Remplacements;                                                                      117;    [38]
+Confortement;                                                                       118;    [38]
+Visible mais indéterminé;                                                           119;    [41]
+Non accessible, indéterminé;                                                        120;    [41]
+Terrain nautrel non protégé;                                                        121;    [41]
+Enrochements;                                                                       122;    [41]
+Enrochements liaisonnés;                                                            123;    [41]
+Perré maçonné ou perré en pierres séches;                                           124;    [41]
+Perré béton;                                                                        125;    [41]
+Tunage bois;                                                                        126;    [41]
+Gabions;                                                                            127;    [41]
+Palplanches;                                                                        128;    [41]
+Palplanches + poutre béton;                                                         129;    [41]
+Palplanches + tirants;                                                              130;    [41]
+Palplanches + tirants + poutre béton;                                               131;    [41]
+Mur béton + paroi moulée;                                                           132;    [41]
+Géomembrane, géosynthétique;                                                        133;    [41]
+Protection en génie végétal;                                                        134;    [41]
+En pied de talus aval;                                                              135;    [42]
+A l'écart du pied du talus aval (+ de 3m);                                          136;    [42]
+Non;                                                                                137;    [43]
+Purge;                                                                              138;    [43]
+Remplacements;                                                                      139;    [43]
+Confortement;                                                                       140;    [43]
+Non accessible, indéterminé;                                                        141;    [46]
+Forêt;                                                                              142;    [46]
+Route;                                                                              143;    [46]
+Voie Ferrée;                                                                        144;    [46]
+Cours d'eau / rivière / étendue d'eau;                                              145;    [46]
+Habitations (yc jardin) , bâtiments et sites industriels;                           146;    [46]
+Site rural / champs / patûrages;                                                    147;    [46]
+Quai, Port, Poste de chargement/déchargement;                                       148;    [46]
+A proximité du bord;                                                                149;    [47]
+Eloigné du bord (+de 10 m);                                                         150;    [47]
+Non;                                                                                151;    [48]
+Purge;                                                                              152;    [48]
+Remplacements;                                                                      153;    [48]
+Confortement;                                                                       154;    [48]
+Muret ou rehausse anti-crue;                                                        155;    [51]
+Bollards d'amarrage;                                                                156;    [51]
+Escalier, échelle, ligne de vie;                                                    157;    [51]
+Gardes corps, Glissière de sécurité, chasse roues, parapet;                         158;    [51]
+Barrière, portail, clôture;                                                         159;    [51]
+Bouée;                                                                              160;    [51]
+Chenal de navigation;                                                               161;    [52]
+Pied de berge;                                                                      162;    [52]
+Talus exposé;                                                                       163;    [52]
+Crête;                                                                              164;    [52]
+Corps de digue;                                                                     165;    [52]
+Talus aval, connexion au terrain naturel;                                           166;    [52]
+Conduite;                                                                           167;    [55]
+Cours d'eau;                                                                        168;    [55]
+Prise d'eau;                                                                        169;    [55]
+Débitmètre;                                                                         170;    [55]
+Pluviomètre;                                                                        171;    [55]
+Piézomètre;                                                                         172;    [55]
+Pont, Passerelle fixe;                                                              173;    [55]
+Passerelle mobile;                                                                  174;    [55]
+Réseau posé sur le fond;                                                            175;    [55]
+Réseau sous-fluvial;                                                                176;    [55]
+Présence de frayère;                                                                177;    [55]
+Arbre d’alignement, végétation à but paysager;                                      178;    [55]
+Transformateur EDF;                                                                 179;    [55]
+Equipement pour raccord aux réseaux classique (Coffret électrique, arrivée d'eau, … );180;    [55]
+Champ libre;                                                                        181;    [55]
+Traversant;                                                                         182;    [56]
+Chenal de navigation;                                                               183;    [56]
+Pied de berge;                                                                      184;    [56]
+Talus exposé;                                                                       185;    [56]
+Crête;                                                                              186;    [56]
+Corps de digue;                                                                     187;    [56]
+Talus aval de digue;                                                                188;    [56]
+Contre-fossé;                                                                       189;    [56]
+Talus aval, connexion au terrain naturel;                                           190;    [56]
+VNF;                                                                                191;    [57]
+Inconnu;                                                                            192;    [57]
+Privé;                                                                              193;    [57]
+Public;                                                                             194;    [57]
+Non concerné;                                                                       195;    [57]
+Routier;                                                                            196;    [58]
+Piétonnier;                                                                         197;    [58]
+Ferré;                                                                              198;    [58]
+Conduites/réseaux;                                                                  199;    [58]
+Canal (pont);                                                                       200;    [58]
