@@ -111,6 +111,7 @@ class DBaseParser(QtCore.QObject):
         except AttributeError:  #qgis 3
             self.qgisversion_int = qgis.utils.Qgis.QGIS_VERSION_INT
 
+
         #logger.info('qgisversion : %s', str(self.qgisversion_int))
         #logging.getLogger("Lamia").info('qgisversion : %s', str(self.qgisversion_int))
 
@@ -426,6 +427,7 @@ class DBaseParser(QtCore.QObject):
                           'qgisviewsql' : sql statement for initial qgis view creation
                           'layer' : real layer
                           'layerqgis' : view layer with parent fields
+                          'layerdjango' : view layer with parent fields
                           'showinqgis' : display layer in canvas
                           'scale' : visibility scale
                           'fields' : OrderedDict{...{fieldname : {'PGtype' : PostGis type (integer not null...)
@@ -682,12 +684,19 @@ class DBaseParser(QtCore.QObject):
                     else:
                         uri.setDataSource('', str(tablename), '')
                     self.dbasetables[tablename]['layer'] = qgis.core.QgsVectorLayer(uri.uri(), tablename, 'spatialite')
-                    # view layer
+                    # view layer qgis
                     if geom is not None:
                         uri.setDataSource('', str(tablename)+'_qgis', 'geom', '', "id_" + str(tablename).lower())
                     else:
                         uri.setDataSource('', str(tablename) + '_qgis', '', '', "id_" + str(tablename).lower())
                     self.dbasetables[tablename]['layerqgis'] = qgis.core.QgsVectorLayer(uri.uri(), tablename, 'spatialite')
+                    # view layer django
+                    if geom is not None:
+                        uri.setDataSource('', str(tablename)+'_django', 'geom', '', "id_" + str(tablename).lower())
+                    else:
+                        uri.setDataSource('', str(tablename) + '_django', '', '', "id_" + str(tablename).lower())
+                    self.dbasetables[tablename]['layerdjango'] = qgis.core.QgsVectorLayer(uri.uri(), tablename, 'spatialite')
+
 
                 elif self.dbasetype == 'postgis':
                     uri.setConnection(self.pghost, str(self.pgport), self.pgdb, self.pguser, self.pgpassword)
@@ -698,12 +707,18 @@ class DBaseParser(QtCore.QObject):
                     else:
                         uri.setDataSource(self.pgschema, str(tablenamelayer), None, '', "'id_" + str(tablenamelayer))
                     self.dbasetables[tablename]['layer'] = qgis.core.QgsVectorLayer(uri.uri(), tablename, 'postgres')
-                    # view layer
+                    # view layer qgis
                     if geom is not None:
                         uri.setDataSource(self.pgschema, str(tablenamelayer) + '_qgis', 'geom', '', "id_" + str(tablenamelayer))
                     else:
                         uri.setDataSource(self.pgschema, str(tablenamelayer) + '_qgis', None, '', "id_" + str(tablenamelayer))
                     self.dbasetables[tablename]['layerqgis'] = qgis.core.QgsVectorLayer(uri.uri(), tablename, 'postgres')
+                    # view layer django
+                    if geom is not None:
+                        uri.setDataSource(self.pgschema, str(tablenamelayer) + '_django', 'geom', '', "id_" + str(tablenamelayer))
+                    else:
+                        uri.setDataSource(self.pgschema, str(tablenamelayer) + '_django', None, '', "id_" + str(tablenamelayer))
+                    self.dbasetables[tablename]['layerdjango'] = qgis.core.QgsVectorLayer(uri.uri(), tablename, 'postgres')
 
                 # style and loading
                 stylepath = os.path.join(os.path.dirname(__file__), '..',
@@ -713,6 +728,8 @@ class DBaseParser(QtCore.QObject):
                     if os.path.isfile(stylepath):
                         self.dbasetables[tablename]['layerqgis'].loadNamedStyle(stylepath)
 
+                    #load qgsvectorlayers and add to canvas if #showinqgis
+
                     if self.dbasetables[tablename]['showinqgis']:
                         if int(str(self.qgisversion_int)[0:3]) < 220:
                             qgis.core.QgsMapLayerRegistry.instance().addMapLayer(self.dbasetables[tablename]['layerqgis'],
@@ -720,6 +737,14 @@ class DBaseParser(QtCore.QObject):
                         else:
                             qgis.core.QgsProject.instance().addMapLayer(self.dbasetables[tablename]['layerqgis'],
                                                                                  True)
+                    else:
+                        if int(str(self.qgisversion_int)[0:3]) < 220:
+                            qgis.core.QgsMapLayerRegistry.instance().addMapLayer(self.dbasetables[tablename]['layer'],
+                                                                                 False)
+                        else:
+                            qgis.core.QgsProject.instance().addMapLayer(self.dbasetables[tablename]['layer'],
+                                                                                 False)
+
                     if 'scale' in self.dbasetables[tablename].keys():
                         self.dbasetables[tablename]['layerqgis'].setScaleBasedVisibility(True)
                         if int(str(self.qgisversion_int)[0:3]) < 220:
@@ -967,17 +992,134 @@ class DBaseParser(QtCore.QObject):
         return dbasetable['fields'][field]['Cst'][index][1]
 
 
+
     def getConstraintTextFromRawValue(self, table, field, rawvalue):
         # print('_getConstraintTextFromRawValue',self.dbasetablename, self.dbasetable['fields'][field], rawvalue,field)
         dbasetable = self.dbasetables[table]
         try:
-            index = [value[1] for value in dbasetable['fields'][field]['Cst']].index(rawvalue)
-            return dbasetable['fields'][field]['Cst'][index][0]
+            if 'Cst' in dbasetable['fields'][field].keys():
+                if not self.isAttributeNull(rawvalue):
+                    index = [value[1] for value in dbasetable['fields'][field]['Cst']].index(rawvalue)
+                    return dbasetable['fields'][field]['Cst'][index][0]
+                else :
+                    return ''
+            else:
+                if not self.isAttributeNull(rawvalue):
+                    return rawvalue
+                else:
+                    return ''
         except ValueError:
             self.errorMessage.emit('Probleme de valeur de champ : table : "' + str(table)
                                                                   + '" champ : "' + str(field)
                                                                   + '" valeur :"' + str(rawvalue) + '"')
             return ''
+
+
+    def isAttributeNull(self,attr):
+        if int(str(self.qgisversion_int)[0:3]) < 220 and isinstance(attr, QtCore.QPyNullVariant):
+            return True
+        elif int(str(self.qgisversion_int)[0:3]) > 220 and isinstance(attr, QtCore.QVariant) and attr.isNull():
+            return True
+        elif attr is None:
+            return True
+        else:
+            return False
+
+
+    def getNearestId(self, dbasetable, dbasetablename, point, comefromcanvas=True):
+        """
+        Get nearest id from point for dbasetable
+        :param dbasetable:
+        :param point:
+        :param comefromcanvas:
+        :return: nearestid , distance
+        """
+
+        if int(str(self.qgisversion_int)[0:3]) < 218:
+            isspatial = dbasetable['layerqgis'].geometryType() < 3
+        else:
+            isspatial = dbasetable['layerqgis'].isSpatial()
+        if not isspatial:
+            return None, None
+
+        nearestid = []
+        if comefromcanvas:
+            point2 = self.pointEmitter.toLayerCoordinates(dbasetable['layerqgis'], point)
+            print('Attention methode depreciee')
+        else:
+            point2 = point
+
+        if int(str(self.qgisversion_int)[0:3]) < 220:
+            point2geom = qgis.core.QgsGeometry.fromPoint(point2)
+        else:
+            point2geom = qgis.core.QgsGeometry.fromPointXY(point2)
+        spIndex = qgis.core.QgsSpatialIndex(dbasetable['layerqgis'].getFeatures())
+        layernearestids = spIndex.nearestNeighbor(point2, 5)
+        # print('getNearestId',layernearestids)
+        """
+        for nid in layernearestid:
+            nearestid.append([layer, point2geom, nid])
+        """
+        distance = None
+        nearestindex = None
+        # geom = None
+
+        if len(layernearestids) > 0:
+            for layernearestid in layernearestids:
+                # feat = self.dbasetable['layerview'].getFeatures(qgis.core.QgsFeatureRequest(layernearestid)).next()
+                feat = self.getLayerFeatureById(dbasetablename, layernearestid)
+                featgeom = feat.geometry()
+                # print(featgeom.asPolyline())
+                if featgeom.isGeosValid():  # if not valid, return dist = -1...
+                    dist = featgeom.distance(point2geom)
+                else:  # point
+                    if featgeom.type() == 1 and not featgeom.isMultipart():
+                        if len(featgeom.asPolyline()) == 1:  # polyline of 1 point
+                            dist = qgis.core.QgsGeometry.fromPoint(
+                                qgis.core.QgsPoint(featgeom.asPolyline()[0])).distance(point2geom)
+                        elif len(featgeom.asPolyline()) == 2 and featgeom.asPolyline()[0] == featgeom.asPolyline()[1]:
+                            dist = qgis.core.QgsGeometry.fromPoint(
+                                qgis.core.QgsPoint(featgeom.asPolyline()[0])).distance(point2geom)
+                    else:
+                        continue
+                # print('getNearestId',feat.geometry().isGeosValid(), layernearestid,dist )
+                if distance is None:
+                    distance = dist
+                    nearestindex = layernearestid
+                elif dist < distance:
+                    distance = dist
+                    nearestindex = layernearestid
+        return nearestindex, distance
+
+
+    def getLayerFeatureById(self,layername,fid):
+        """
+
+        :param layername:
+        :param fid:
+        :return:
+        """
+        if int(str(self.qgisversion_int)[0:3]) < 220:
+            return self.dbasetables[layername]['layer'].getFeatures(qgis.core.QgsFeatureRequest(fid)).next()
+        else:
+            return self.dbasetables[layername]['layer'].getFeature(fid)
+
+    def completePathOfFile(self,filetoprocess):
+        completefile = ''
+        if int(str(self.qgisversion_int)[0:3]) < 220 and isinstance(filetoprocess, QtCore.QPyNullVariant):
+            filetoprocess = None
+
+        #if file is None or isinstance(file,QtCore.QPyNullVariant):
+        if filetoprocess is None:
+            return completefile
+        if len(filetoprocess)>0:
+            if filetoprocess[0] == '.':
+                completefile = os.path.join(self.dbaseressourcesdirectory, filetoprocess)
+            else:
+                completefile = filetoprocess
+
+            completefile = os.path.normpath(completefile)
+        return completefile
 
 
     def exportBase(self, exportdbase):

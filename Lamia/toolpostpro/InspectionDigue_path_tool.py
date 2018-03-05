@@ -8,9 +8,6 @@ except ImportError:
 
 from ..toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
 import os
-from ..toolprepro.InspectionDigue_photos_tool import PhotosTool
-from ..toolprepro.InspectionDigue_observation_tool import ObservationTool
-from ..toolabstract.inspectiondigue_abstractworker import AbstractWorker
 import io
 from ..libs import pyqtgraph as pg
 from ..libs.pyqtgraph import exporters
@@ -20,6 +17,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import networkx
 import numpy as np
+import shutil
 
 
 # ********************************************************************************************************************
@@ -28,8 +26,11 @@ import numpy as np
 
 class PathTool(AbstractInspectionDigueTool):
 
+    DBASES = ['digue']
+
     def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
         super(PathTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
+
         
     def initTool(self):
         # ****************************************************************************************
@@ -50,10 +51,14 @@ class PathTool(AbstractInspectionDigueTool):
         elif self.dbase.dbasetype == 'postgis':
             fielpathname = 'path_' + str(self.dbase.pghost)+ '_' + str(self.dbase.pgdb) + '_' + str(self.dbase.pgschema)
         self.dbasetablename = os.path.join(os.path.dirname(__file__), '..', 'config', fielpathname + '.txt')
-
+        #networkx var
         self.nxgraph = None
+        self.ids = None
         self.indexnoeuds = None
-        # self.rubberbandpath
+        self.infralinfaces = None
+        self.reverseinfralinfaces = None
+        self.indexnoeuds = None
+        # rubberband var
         self.rubberBand = qgis.gui.QgsRubberBand(self.canvas,self.dbase.dbasetables['Infralineaire']['layer'].geometryType())
         self.rubberBand.setWidth(5)
         self.rubberBand.setColor(QtGui.QColor("magenta"))
@@ -63,7 +68,9 @@ class PathTool(AbstractInspectionDigueTool):
         self.rubberbandtrack.setIconSize(5)
         self.rubberbandtrack.setIconType(qgis.gui.QgsVertexMarker.ICON_BOX) # or ICON_CROSS, ICON_X
         self.rubberbandtrack.setPenWidth(3)
-
+        # matplotlib var
+        self.figuretype = plt.figure()
+        self.axtype = self.figuretype.add_subplot(111)
 
         self.postOnActivation()
 
@@ -72,34 +79,40 @@ class PathTool(AbstractInspectionDigueTool):
         self.groupBox_geom.setParent(None)
         # self.groupBox_elements.setParent(None)
 
+    def initFieldUI(self):
+
         # ****************************************************************************************
-        # userui
+        # userui Desktop
+        if self.userwdgfield is None:
 
-        self.userwdg = UserUI()
-        self.linkuserwdg = [self.userwdg.lineEdit_nom,
-                            self.userwdg.lineEdit_start,
-                            self.userwdg.lineEdit_end]
+            # ****************************************************************************************
+            # userui
 
-        self.linkuserwdg = {self.dbasetablename: [self.userwdg.lineEdit_nom,
-                                                    self.userwdg.lineEdit_start,
-                                                    self.userwdg.lineEdit_end]}
+            self.userwdgfield = UserUI()
+            self.linkuserwdgfield = [self.userwdgfield.lineEdit_nom,
+                                self.userwdgfield.lineEdit_start,
+                                self.userwdgfield.lineEdit_end]
 
-        self.userwdg.pushButton_pickstart.clicked.connect(self.getPickResult)
-        self.userwdg.pushButton_pickend.clicked.connect(self.getPickResult)
+            self.linkuserwdgfield = {self.dbasetablename: [self.userwdgfield.lineEdit_nom,
+                                                        self.userwdgfield.lineEdit_start,
+                                                        self.userwdgfield.lineEdit_end]}
 
-        # plot
-        self.plotWdg = pg.PlotWidget()
-        datavline = pg.InfiniteLine(0, angle=90, pen=pg.mkPen('r', width=1), name='cross_vertical')
-        datahline = pg.InfiniteLine(0, angle=0, pen=pg.mkPen('r', width=1), name='cross_horizontal')
-        self.plotWdg.addItem(datavline)
-        self.plotWdg.addItem(datahline)
-        self.userwdg.frame_chart.layout().addWidget(self.plotWdg)
-        self.userwdg.checkBox_track.stateChanged.connect(self.activateMouseTracking)
-        self.doTracking = True
-        self.showcursor = True
+            self.userwdgfield.pushButton_pickstart.clicked.connect(self.getPickResult)
+            self.userwdgfield.pushButton_pickend.clicked.connect(self.getPickResult)
 
-        self.userwdg.comboBox_chart_theme.addItems(['Profil'])
-        self.userwdg.comboBox_chart_theme.currentIndexChanged.connect(self.computeGraph)
+            # plot
+            self.plotWdg = pg.PlotWidget()
+            datavline = pg.InfiniteLine(0, angle=90, pen=pg.mkPen('r', width=1), name='cross_vertical')
+            datahline = pg.InfiniteLine(0, angle=0, pen=pg.mkPen('r', width=1), name='cross_horizontal')
+            self.plotWdg.addItem(datavline)
+            self.plotWdg.addItem(datahline)
+            self.userwdgfield.frame_chart.layout().addWidget(self.plotWdg)
+            self.userwdgfield.checkBox_track.stateChanged.connect(self.activateMouseTracking)
+            self.doTracking = True
+            self.showcursor = True
+
+            self.userwdgfield.comboBox_chart_theme.addItems(['Profil'])
+            self.userwdgfield.comboBox_chart_theme.currentIndexChanged.connect(self.computeGraph)
 
 
 
@@ -168,7 +181,7 @@ class PathTool(AbstractInspectionDigueTool):
 
 
     def computeGraph(self):
-
+        # print('computeGraph')
         # self.plotwdg = self.plotWdg
         pitems = self.plotWdg.getPlotItem().listDataItems()
         for item in pitems:
@@ -180,6 +193,7 @@ class PathTool(AbstractInspectionDigueTool):
 
 
         datas = self.getGraphData()
+        # print('datas', datas)
         #x=[0, self.geomfinal.length()]
         #y = [0,0]
         # self.plotWdg.plot(x, y, pen=pg.mkPen(model1.item(i, 1).data(Qt.BackgroundRole), width=2), name=tmp_name)
@@ -198,13 +212,38 @@ class PathTool(AbstractInspectionDigueTool):
         self.plotWdg.getViewBox().autoRange(items=self.plotWdg.getPlotItem().listDataItems())
         self.plotWdg.getViewBox().disableAutoRange()
 
+
+
+
         #self.plotWdg.addLegend()
 
 
 
 
-    def getGraphData(self):
-        graphtype = self.userwdg.comboBox_chart_theme.currentText()
+    def getGraphData(self, geomprojection=None, geomprojectionids= None, datatype=None, graphtype=None ):
+        """
+
+        :param geomprojection: la geometrie sur laquelle on se projette
+        :param datatype: le type d'ojet à projeter
+        :return: datas : dict with name as key : for topo its the leve topo name
+                                                 for desordre its 'desordres'
+                                    and value dict : 'x' : lenght along the geomprojection
+                                                     'y' : value to store (z mngf for topo, desordre id for desordre)
+                                                     'xy' : list with [x,y]
+
+        """
+        # print('getGraphData')
+        if graphtype is None:
+            graphtype = self.userwdg.comboBox_chart_theme.currentText()
+        if geomprojection is None:
+            geomprojection = self.geomfinal
+        if geomprojectionids is None:
+            geomprojectionids = self.geomfinalids
+
+        #temp
+        if datatype is None:
+            datatype = 'topographie'
+
         datas={}    #data[i] = ['graph type', x, y]
 
         if graphtype == 'Profil':
@@ -214,71 +253,192 @@ class PathTool(AbstractInspectionDigueTool):
             # datas['niveauprotection'] = {'x':[], 'y':[] }
 
             #process topographie
-            if self.geomfinal is not None:
-                geomfinalbuffer = self.geomfinal.buffer(200,12).exportToWkt()
+            if geomprojection is not None:
+                geomfinalbuffer = geomprojection.buffer(200,12).exportToWkt()
 
-                sql = "SELECT typepointtopo, zmngf,id_topographie, ST_AsText(geom)  FROM Pointtopo "
-                sql += "WHERE ST_WITHIN(geom, ST_GeomFromText('" + geomfinalbuffer + "',"+str(self.dbase.crsnumber) + "));"
-                query = self.dbase.query(sql)
-                result = [row[0:4] for row in query]
-                #print(result)
+                if datatype == 'equipement_hydraulique':
+                    sql = "SELECT id_equipement, ST_AsText(geom)  FROM Equipement "
+                    sql += " INNER JOIN Objet ON Objet.id_objet = Equipement.id_objet "
+                    sql += "WHERE ST_WITHIN(ST_MakeValid(geom), ST_GeomFromText('" + geomfinalbuffer + "'," + str(
+                        self.dbase.crsnumber) + "))"
+                    sql += " AND ( Equipement.categorie = 'RHF' or Equipement.categorie = 'RHO' or Equipement.categorie = 'OUH') "
+                    sql += " AND lk_equipement IS NULL"
+                    sql += ' AND  Objet.Datecreation <= ' + "'" + self.dbase.workingdate + "'"
+                    if self.dbase.dbasetype == 'postgis':
+                        sql += ' AND CASE WHEN Objet.Datedestruction IS NOT NULL  '
+                        sql += 'THEN Objet.DateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE TRUE END'
+                    elif self.dbase.dbasetype == 'spatialite':
+                        sql += ' AND CASE WHEN Objet.datedestruction IS NOT NULL  '
+                        sql += 'THEN Objet.dateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE 1 END'
 
-                for pointtopo in result:
-                    geompointtopo = qgis.core.QgsGeometry.fromWkt(pointtopo[3])
-                    geompointtopopoint = geompointtopo.asPoint()
-                    nearestinfralinid, dist = self.dbase.dbasetables['Infralineaire']['widget'].getNearestId(geompointtopopoint,
-                                                                                                       comefromcanvas=False)
-                    # print(geompointtopo, nearestinfralinid, dist)
-                    if nearestinfralinid in self.geomfinalids:
-                        # print('in nearest')
-                        # print('pointtopo',pointtopo)
-                        graphname = str(pointtopo[2]) + '-' + str(pointtopo[0])
-                        if not graphname in datas.keys():
-                            # datas[graphname]={'x':[], 'y':[] }
-                            datas[graphname] ={'x':[], 'y':[], 'xy':[] }
+                    # print(sql)
+                    query = self.dbase.query(sql)
+                    result = [row for row in query]
 
-                        distline = self.geomfinal.lineLocatePoint(geompointtopo)
+                    datas['equipement'] = {'x': [], 'id': [], 'xy': []}
 
-                        datas[graphname]['xy'].append([distline,pointtopo[1]])
-                        #datas[graphname]['y'].append(pointtopo[1])
+                    for iterequipement in result:
 
-                for dataname in datas.keys():
-                    # print('***********')
-                    xy = np.array(datas[dataname]['xy'])
-                    #print(xy)
-                    xyforunique = np.array([str(datas[dataname]['xy'][i]) for i in range(len(datas[dataname]['xy'])) ] )
-                    #print(xyforunique)
-                    xyuniquetemp, index1, index2 = np.unique(xyforunique, return_index=True, return_inverse=True)
-                    #print(xyuniquetemp)
-                    xyunique = xy[index1]
-                    #print(xyunique)
-                    #pointstemp1 = np.array([str(row) for row in pointstemp])
+                        geomequipement = qgis.core.QgsGeometry.fromWkt(iterequipement[1])
 
-                    #points, index1, index2 = np.unique(pointstemp1, return_index=True, return_inverse=True)
+                        # startpoint
+                        geompointequipementpoint1 = geomequipement.asPolyline()[0]
+                        geompointequipement1 = qgis.core.QgsGeometry.fromPoint(geompointequipementpoint1)
+                        nearestinfralinid1, dist = self.dbase.getNearestId(self.dbase.dbasetables['Infralineaire'],
+                                                                           'Infralineaire',
+                                                                           geompointequipementpoint1,
+                                                                           comefromcanvas=False)
+                        # endpoint
+                        geompointequipementpoint2 = geomequipement.asPolyline()[-1]
+                        geompointequipement2 = qgis.core.QgsGeometry.fromPoint(geompointequipementpoint1)
+                        nearestinfralinid2, dist = self.dbase.getNearestId(self.dbase.dbasetables['Infralineaire'],
+                                                                           'Infralineaire',
+                                                                           geompointequipementpoint2,
+                                                                           comefromcanvas=False)
 
+                        if nearestinfralinid1 in geomprojectionids:
+                            # print('ok')
+                            distline = geomprojection.lineLocatePoint(geompointequipement1)
+                            datas['equipement']['xy'].append([distline, int(iterequipement[0])])
+                        elif nearestinfralinid2 in geomprojectionids:
+                            distline = geomprojection.lineLocatePoint(geompointequipement2)
+                            datas['equipement']['xy'].append([distline, int(iterequipement[0])])
 
-                    xysorted = xyunique[xyunique[:, 0].argsort()]
-                    #print(xysorted)
-                    #xysorted = xy[xy[:, 0].argsort()]
-                    datas[dataname]['x'] = xysorted[:,0]
-                    datas[dataname]['y'] = xysorted[:, 1]
-
-                    #adapt to geomfinal
-                    totallengeom = self.geomfinal.length()
-                    # print(totallengeom, datas[dataname]['x'],datas[dataname]['y'])
-                    if 0 not in datas[dataname]['x']:
-                        datas[dataname]['x'] = np.insert(datas[dataname]['x'], 0, 0)
-                        datas[dataname]['y'] = np.insert(datas[dataname]['y'], 0, datas[dataname]['y'][0])
-                    if totallengeom not in datas[dataname]['x']:
-                        datas[dataname]['x'] = np.append(datas[dataname]['x'], totallengeom)
-                        datas[dataname]['y'] = np.append(datas[dataname]['y'],  datas[dataname]['y'][-1])
-                    #print(totallengeom, datas[dataname]['x'], datas[dataname]['y'])
-
-
+                    if len(datas['equipement']['xy']) > 0:
+                        xy = np.array(datas['equipement']['xy'])
+                        # print(xy)
+                        xysorted = xy[xy[:, 0].argsort()]
+                        # print(xysorted)
+                        # xysorted = xy[xy[:, 0].argsort()]
+                        datas['equipement']['x'] = xysorted[:, 0]
+                        datas['equipement']['id'] = xysorted[:, 1]
 
 
 
-        # print('datas', datas)
+                if datatype == 'desordre':
+                    sql = "SELECT id_desordre, ST_AsText(geom)  FROM Desordre "
+                    sql += " INNER JOIN Objet ON Objet.id_objet = Desordre.id_objet "
+                    sql += "WHERE ST_WITHIN(ST_MakeValid(geom), ST_GeomFromText('" + geomfinalbuffer + "'," + str(
+                        self.dbase.crsnumber) + "))"
+                    sql += ' AND  Objet.Datecreation <= ' + "'" + self.dbase.workingdate + "'"
+                    if self.dbase.dbasetype == 'postgis':
+                        sql += ' AND CASE WHEN Objet.Datedestruction IS NOT NULL  '
+                        sql += 'THEN Objet.DateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE TRUE END'
+                    elif self.dbase.dbasetype == 'spatialite':
+                        sql += ' AND CASE WHEN Objet.datedestruction IS NOT NULL  '
+                        sql += 'THEN Objet.dateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE 1 END'
+
+                    # print(sql)
+                    query = self.dbase.query(sql)
+                    result = [row for row in query]
+                    # print('result',result)
+
+                    datas['desordre'] = {'x': [], 'id': [], 'xy': []}
+                    for iterdesordre in result:
+                        geomdesordre = qgis.core.QgsGeometry.fromWkt(iterdesordre[1])
+
+                        #startpoint
+                        geompointdesordrepoint1 = geomdesordre.asPolyline()[0]
+                        geompointdesordre1 = qgis.core.QgsGeometry.fromPoint(geompointdesordrepoint1)
+                        nearestinfralinid1, dist = self.dbase.getNearestId(self.dbase.dbasetables['Infralineaire'],
+                                                                          'Infralineaire',
+                                                                           geompointdesordrepoint1,
+                                                                          comefromcanvas=False)
+                        # endpoint
+                        geompointdesordrepoint2 = geomdesordre.asPolyline()[-1]
+                        geompointdesordre2 = qgis.core.QgsGeometry.fromPoint(geompointdesordrepoint1)
+                        nearestinfralinid2, dist = self.dbase.getNearestId(self.dbase.dbasetables['Infralineaire'],
+                                                                          'Infralineaire',
+                                                                           geompointdesordrepoint2,
+                                                                          comefromcanvas=False)
+
+                        if nearestinfralinid1 in geomprojectionids :
+                            #print('ok')
+                            distline = geomprojection.lineLocatePoint(geompointdesordre1)
+                            datas['desordre']['xy'].append([distline,int(iterdesordre[0])])
+                        elif nearestinfralinid2 in geomprojectionids:
+                            distline = geomprojection.lineLocatePoint(geompointdesordre2)
+                            datas['desordre']['xy'].append([distline,int(iterdesordre[0])])
+
+                    if len(datas['desordre']['xy'])>0:
+                        xy = np.array(datas['desordre']['xy'])
+                        #print(xy)
+                        xysorted = xy[xy[:, 0].argsort()]
+                        #print(xysorted)
+                        #xysorted = xy[xy[:, 0].argsort()]
+                        datas['desordre']['x'] = xysorted[:,0]
+                        datas['desordre']['id'] = xysorted[:, 1]
+
+
+
+
+                elif datatype == 'topographie':
+
+                    sql = "SELECT typepointtopo, zmngf,id_topographie, ST_AsText(geom)  FROM Pointtopo "
+                    sql += "WHERE ST_WITHIN(geom, ST_GeomFromText('" + geomfinalbuffer + "',"+str(self.dbase.crsnumber) + "));"
+                    query = self.dbase.query(sql)
+                    result = [row[0:4] for row in query]
+                    #print(result)
+
+                    for pointtopo in result:
+                        geompointtopo = qgis.core.QgsGeometry.fromWkt(pointtopo[3])
+                        geompointtopopoint = geompointtopo.asPoint()
+                        nearestinfralinid, dist = self.dbase.getNearestId(self.dbase.dbasetables['Infralineaire'],
+                                                                          'Infralineaire',
+                                                                          geompointtopopoint,
+                                                                          comefromcanvas=False)
+
+                        # print(geompointtopo, nearestinfralinid, dist)
+                        if nearestinfralinid in geomprojectionids:
+                            # print('in nearest')
+                            # print('pointtopo',pointtopo)
+                            graphname = str(pointtopo[2]) + '-' + str(pointtopo[0])
+                            if not graphname in datas.keys():
+                                # datas[graphname]={'x':[], 'y':[] }
+                                datas[graphname] ={'x':[], 'y':[], 'xy':[] }
+
+                            distline = geomprojection.lineLocatePoint(geompointtopo)
+
+                            datas[graphname]['xy'].append([distline,pointtopo[1]])
+                            #datas[graphname]['y'].append(pointtopo[1])
+
+                    for dataname in datas.keys():
+                        # print('***********')
+                        xy = np.array(datas[dataname]['xy'])
+                        #print(xy)
+                        xyforunique = np.array([str(datas[dataname]['xy'][i]) for i in range(len(datas[dataname]['xy'])) ] )
+                        #print(xyforunique)
+                        xyuniquetemp, index1, index2 = np.unique(xyforunique, return_index=True, return_inverse=True)
+                        #print(xyuniquetemp)
+                        xyunique = xy[index1]
+                        #print(xyunique)
+                        #pointstemp1 = np.array([str(row) for row in pointstemp])
+
+                        #points, index1, index2 = np.unique(pointstemp1, return_index=True, return_inverse=True)
+
+
+                        xysorted = xyunique[xyunique[:, 0].argsort()]
+                        #print(xysorted)
+                        #xysorted = xy[xy[:, 0].argsort()]
+                        datas[dataname]['x'] = xysorted[:,0]
+                        datas[dataname]['y'] = xysorted[:, 1]
+
+                        #adapt to geomfinal
+                        totallengeom = geomprojection.length()
+                        # print(totallengeom, datas[dataname]['x'],datas[dataname]['y'])
+                        if 0 not in datas[dataname]['x']:
+                            datas[dataname]['x'] = np.insert(datas[dataname]['x'], 0, 0)
+                            datas[dataname]['y'] = np.insert(datas[dataname]['y'], 0, datas[dataname]['y'][0])
+                        if totallengeom not in datas[dataname]['x']:
+                            datas[dataname]['x'] = np.append(datas[dataname]['x'], totallengeom)
+                            datas[dataname]['y'] = np.append(datas[dataname]['y'],  datas[dataname]['y'][-1])
+                        #print(totallengeom, datas[dataname]['x'], datas[dataname]['y'])
+
+
+
+
+
+        #print('datas', datas)
         return datas
 
 
@@ -287,9 +447,9 @@ class PathTool(AbstractInspectionDigueTool):
 
     def getPickResult(self):
         # print('cliekd')
-        if self.sender() == self.userwdg.pushButton_pickstart:
+        if self.sender() == self.userwdgfield.pushButton_pickstart:
             self.tempbutton = 'start'
-        elif self.sender() == self.userwdg.pushButton_pickend:
+        elif self.sender() == self.userwdgfield.pushButton_pickend:
             self.tempbutton = 'end'
         self.pointEmitter.canvasClicked.connect(self.selectPickedFeature)
         self.canvas.setMapTool(self.pointEmitter)
@@ -314,20 +474,23 @@ class PathTool(AbstractInspectionDigueTool):
         # print(point2)
 
         if self.tempbutton == 'start':
-            self.userwdg.lineEdit_start.setText(str(point2.x()) + ',' + str(point2.y()))
+            self.userwdgfield.lineEdit_start.setText(str(point2.x()) + ',' + str(point2.y()))
         elif self.tempbutton == 'end':
-            self.userwdg.lineEdit_end.setText(str(point2.x()) + ',' + str(point2.y()))
+            self.userwdgfield.lineEdit_end.setText(str(point2.x()) + ',' + str(point2.y()))
 
         try:
-            point1 = np.array([float(elem1) for elem1 in self.userwdg.lineEdit_start.text().split(',')])
-            point2 = np.array([float(elem1) for elem1 in self.userwdg.lineEdit_end.text().split(',')])
+            point1 = np.array([float(elem1) for elem1 in self.userwdgfield.lineEdit_start.text().split(',')])
+            point2 = np.array([float(elem1) for elem1 in self.userwdgfield.lineEdit_end.text().split(',')])
         except ValueError:
             print('ValueError')
             return
 
         self.computePath(point1, point2)
 
-    def computePath(self,  point1, point2):
+    def computePath(self,  point1, point2, alsocomputegraph=True):
+
+        if self.nxgraph is None:
+            self.computeNXGraphForAll()
 
         point1 = np.array(point1)
         point2 = np.array(point2)
@@ -344,48 +507,60 @@ class PathTool(AbstractInspectionDigueTool):
                 # print('shortestpathedges', shortestpathedges)
             except networkx.exception.NetworkXNoPath:
                 #print('no path')
-                self.userwdg.label_pathids.setText('Pas de chemin')
+                self.userwdgfield.label_pathids.setText('Pas de chemin')
                 return
 
-            shortestids=[]
-            for i in range(len(shortestpathedges)-1):
-                singlepath = [shortestpathedges[i], shortestpathedges[i + 1]]
-                reverse = 0 #not reverse
-                index = np.where(np.all(self.infralinfaces == singlepath, axis=1))[0]
-                if len(index) == 0:
-                    index = np.where(np.all(self.reverseinfralinfaces == singlepath, axis=1))[0]
-                    reverse = 1
-                shortestids.append([self.ids[index[0]],reverse])
-            shortestids = np.array(shortestids)
+            if False:
+                shortestids=[]
+                for i in range(len(shortestpathedges)-1):
+                    singlepath = [shortestpathedges[i], shortestpathedges[i + 1]]
+                    reverse = 0 #not reverse
+                    index = np.where(np.all(self.infralinfaces == singlepath, axis=1))[0]
+                    if len(index) == 0:
+                        index = np.where(np.all(self.reverseinfralinfaces == singlepath, axis=1))[0]
+                        reverse = 1
+                    shortestids.append([self.ids[index[0]],reverse])
+                shortestids = np.array(shortestids)
+            if True:
+                shortestids = self.getIdsFromPath(shortestpathedges)
 
-            geomfinalnodes = []
-            for id, reverse in shortestids:
-                # print(id, reverse)
-                feat = self.getLayerFeatureById('Infralineaire', id)
-                geom = feat.geometry()
-                nodes = geom.asPolyline()
-                if reverse:
-                    nodes.reverse()
-                    #geom = qgis.core.QgsGeometry.fromPolyline(nodes)
-                geomfinalnodes += nodes
 
-            geom = qgis.core.QgsGeometry.fromPolyline(geomfinalnodes)
-            xform = qgis.core.QgsCoordinateTransform(self.dbase.qgiscrs ,self.canvas.mapSettings().destinationCrs())
+            # print(shortestids)
+
+            if False:
+                geomfinalnodes = []
+                for id, reverse in shortestids:
+                    # print(id, reverse)
+                    feat = self.dbase.getLayerFeatureById('Infralineaire', id)
+                    geom = feat.geometry()
+                    nodes = geom.asPolyline()
+                    if reverse:
+                        nodes.reverse()
+                        #geom = qgis.core.QgsGeometry.fromPolyline(nodes)
+                    geomfinalnodes += nodes
+                geom = qgis.core.QgsGeometry.fromPolyline(geomfinalnodes)
+
+            if True:
+                self.geomfinal = self.getGeomFromIds(shortestids)
+
+            # print(self.geomfinal.asPolyline())
+            # xform = qgis.core.QgsCoordinateTransform(self.dbase.qgiscrs ,self.canvas.mapSettings().destinationCrs())
             #success = qgis.core.QgsGeometry.fromPoint(pointfromcanvas).transform(xform)
-            geomforrubberband = qgis.core.QgsGeometry(geom)
-            geomforrubberband.transform(xform)
+            geomforrubberband = qgis.core.QgsGeometry(self.geomfinal)
+            #geomforrubberband.transform(xform)
+            geomforrubberband.transform(self.dbase.xform)
             # print(geomforrubberband.asPolyline())
             self.rubberBand.addGeometry(geomforrubberband, None)
 
             if len(shortestids)>0:
-                self.geomfinalnodes = geomfinalnodes
-                self.geomfinal = qgis.core.QgsGeometry.fromPolyline(geomfinalnodes)
+                #self.geomfinalnodes = geomfinalnodes
+                #self.geomfinal = qgis.core.QgsGeometry.fromPolyline(geomfinalnodes)
                 self.geomfinalids = shortestids[:,0]
 
                 # print('self.geomfinalnodes',self.geomfinalnodes)
                 # print('self.geomfinal', self.geomfinal)
                 # print('self.geomfinalids', self.geomfinalids)
-                self.userwdg.label_pathids.setText(str(list(self.geomfinalids)))
+                self.userwdgfield.label_pathids.setText(str(list(self.geomfinalids)))
 
                 self.rubberBand.show()
             else:
@@ -393,17 +568,81 @@ class PathTool(AbstractInspectionDigueTool):
                 self.geomfinal = None
                 self.geomfinalids = []
 
-            self.computeGraph()
+            if alsocomputegraph:
+                self.computeGraph()
+
+    def getIdsFromPath(self,pathedges, ids=None, infralinfaces=None, reverseinfralinfaces=None):
+        """
+        :param pathedges: the edges of the path
+        :return: np.array [..[id, reverse = True/False : if the geom is in the same direction of path edge]...]
+        """
+        # print('getIdsFromPath',pathedges)
+        if ids is None and infralinfaces is None and reverseinfralinfaces is None  :
+            if self.nxgraph is None:
+                self.computeNXGraphForAll()
+            ids = self.ids
+            infralinfaces = self.infralinfaces
+            reverseinfralinfaces = self.reverseinfralinfaces
+        shortestids = []
+
+        # print('***********************getIdsFromPath***')
+        # print(pathedges)
+        # print(ids)
+
+        for i in range(len(pathedges) - 1):
+            singlepath = [pathedges[i], pathedges[i + 1]]
+
+            # print(singlepath)
+            # print('infra', infralinfaces)
+            # print()
+            reverse = 0  # not reverse
+            index = np.where(np.all(infralinfaces == singlepath, axis=1))[0]
+            # print('index1', index)
+            if len(index) == 0:
+                index = np.where(np.all(reverseinfralinfaces == singlepath, axis=1))[0]
+                reverse = 1
+            # print(ids)
+            # print('index2', index)
+            shortestids.append([ids[index[0]], reverse])
+        shortestids = np.array(shortestids)
+        return shortestids
+
+
+    def getGeomFromIds(self,ids):
+        geomfinalnodes = []
+        for id, reverse in ids:
+            # print('id, reverse', id, reverse)
+            feat = self.dbase.getLayerFeatureById('Infralineaire', id)
+            geom = feat.geometry()
+            nodes = geom.asPolyline()
+            if reverse:
+                nodes.reverse()
+                # geom = qgis.core.QgsGeometry.fromPolyline(nodes)
+            geomfinalnodes += nodes
+        geom = qgis.core.QgsGeometry.fromPolyline(geomfinalnodes)
+        return geom
 
 
 
     def postOnActivation(self):
         # print('post path activ')
-        self.computeNXGraph()
+        self.computeNXGraphForAll()
+        #self.nxgraph, self.indexnoeuds, self.infralinfaces, self.reverseinfralinfaces= self.computeNXGraph()
 
+    def computeNXGraphForAll(self):
+        self.nxgraph, self.ids, self.indexnoeuds, self.infralinfaces, self.reverseinfralinfaces = self.computeNXGraph()
 
-    def computeNXGraph(self):
-        self.nxgraph = networkx.Graph()
+    def computeNXGraph(self, listids=None):
+        """
+        compute networkx graph for all infralineaire or for listids if specified
+        :param listids:
+        :return: nxgraph : the graph with list ids
+                 ids : list of ids
+                  indexnoeuds : list où l'ordre est l'index du noeud selon le graph , et la valeur le xy du noeud
+                   infralinfaces : les index du noeud correspondant aux id
+                    reverseinfralinfaces
+        """
+        nxgraph = networkx.Graph()
 
         #get noeuds
         sql = "SELECT Infralineaire.id_infralineaire, ST_AsText(ST_StartPoint(Infralineaire.geom)), ST_AsText(ST_EndPoint(Infralineaire.geom)) "
@@ -417,28 +656,34 @@ class PathTool(AbstractInspectionDigueTool):
         elif self.dbase.dbasetype == 'spatialite':
             sql += ' AND CASE WHEN Objet.datedestruction IS NOT NULL  '
             sql += 'THEN Objet.dateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE 1 END'
+        if listids is not None:
+            sql += " AND Infralineaire.id_infralineaire IN " + str(tuple(listids))
 
         query = self.dbase.query(sql)
         if len(query)>0:
             rawpoints = np.array([[[float(elem1) for elem1 in row[1].split('(')[1][:-1].split(' ')],
                                 [float(elem2) for elem2 in row[2].split('(')[1][:-1].split(' ')]] for row in query])
-            self.ids = np.array([row[0] for row in query])
-
+            ids = np.array([row[0] for row in query])
+            # create 1d array with startxy1, startxy2, ..., startxyn, endxy1, endxyy2, ...,endxyn
             pointstemp = np.append(rawpoints[:,0], rawpoints[:,1] ,axis = 0)
-
+            # convert to string to manage np.unique with couple of xy
             pointstemp1 = np.array([str(row) for row in pointstemp])
-
+            # get unique point with index compared to pointstemp1
             points, index1, index2 = np.unique(pointstemp1, return_index=True,  return_inverse=True)
-
-            pointsarr = pointstemp[index1]
-
+            # list of unique points
+            pointsarr = pointstemp[index1]      # the uniques points
+            # list of unique point index compared to pointstemp1
             index2bis = np.transpose(np.reshape(index2, (2,-1)))
+            #
+            nxgraph.add_edges_from([(edge[0], edge[1]) for edge in index2bis])
+            indexnoeuds = pointsarr
+            infralinfaces = index2bis
+            reverseinfralinfaces = np.flip(infralinfaces,1)
 
-            self.nxgraph.add_edges_from([(edge[0], edge[1]) for edge in index2bis])
+            return nxgraph, ids, indexnoeuds, infralinfaces, reverseinfralinfaces
+        else:
+            return None, None, None, None, None
 
-            self.indexnoeuds = pointsarr
-            self.infralinfaces = index2bis
-            self.reverseinfralinfaces = np.flip(self.infralinfaces,1)
 
 
 
@@ -446,11 +691,11 @@ class PathTool(AbstractInspectionDigueTool):
         # print('post path')
         if self.rubberBand is not None:
             self.rubberBand.reset(self.dbase.dbasetables['Infralineaire']['layer'].geometryType())
-        self.userwdg.label_pathids.setText('')
+        self.userwdgfield.label_pathids.setText('')
 
         try:
-            point1 = np.array([float(elem1) for elem1 in self.userwdg.lineEdit_start.text().split(',')])
-            point2 = np.array([float(elem1) for elem1 in self.userwdg.lineEdit_end.text().split(',')])
+            point1 = np.array([float(elem1) for elem1 in self.userwdgfield.lineEdit_start.text().split(',')])
+            point2 = np.array([float(elem1) for elem1 in self.userwdgfield.lineEdit_end.text().split(',')])
         except ValueError:
             print('ValueError')
             return
@@ -472,7 +717,51 @@ class PathTool(AbstractInspectionDigueTool):
         except Exception as e:
             print(e)
 
-    def exportCurrentGraph(self,w,h,exportfile):
+    def exportCurrentGraph(self,point1,point2, w,h,exportfile):
+
+        self.computePath(point1, point2, alsocomputegraph=False)
+        datas = self.getGraphData()
+
+        #print('datas',datas)
+
+        self.axtype.cla()
+        self.figuretype.set_size_inches(w / 25.4, h / 25.4)
+
+        if len(datas) == 0:
+            src_file = os.path.join(os.path.dirname(__file__), '..', 'DBASE', 'rapport', 'utils', 'blank.png')
+            shutil.copyfile(src_file, exportfile)
+            return
+
+        for dataname in datas.keys():
+            # print('*****')
+            datavalues = datas[dataname]
+            label = []
+            topoid = int(dataname.split('-')[0].strip())
+            # print(topoid)
+            idressource = self.dbase.getLayerFeatureById('Topographie',int(topoid))['id_ressource']
+            # print(idressource)
+            nom = self.dbase.getLayerFeatureById('Ressource',idressource)['Description']
+            # print(nom)
+            label.append(nom)
+            label.append(self.dbase.getConstraintTextFromRawValue('Pointtopo','typepointtopo',dataname.split('-')[1].strip()))
+            labelname = '-'.join(label)
+
+
+            self.axtype.plot(datavalues['x'], datavalues['y'], label = labelname)
+        #legend = self.axtype.legend(loc='upper center', prop={'size': 6}, shadow=False)
+        #legend = self.axtype.legend(bbox_to_anchor=(1.04,0), loc="lower left", borderaxespad=0, prop={'size': 8}, shadow=False)
+        legend = self.axtype.legend(bbox_to_anchor=(0., 1.), loc="lower left", bbox_transform=self.figuretype.transFigure, prop={'size': 8})
+        # print('size',w,h)
+            #self.plotWdg.plot(, name=dataname, pen= penforgraph)
+        # plt.ylabel('Altitude m NGF', fontsize=8)
+        self.axtype.set_ylabel('Altitude m NGF', fontsize=8)
+        #self.figuretype.set_size_inches(w/25.4,h/25.4)
+        #self.figuretype.savefig(exportfile, bbox_inches='tight')
+        # plt.draw()
+        # self.axtype.apply_aspec()
+        self.figuretype.savefig(exportfile, bbox_inches='tight', dpi = 150)
+        # self.figuretype.savefig(exportfile, dpi=150)
+
         if False:
             exportplotWdg = pg.PlotWidget()
             exportplotWdg.resize(w, h)
@@ -483,9 +772,9 @@ class PathTool(AbstractInspectionDigueTool):
                 # exporter = exporters.ImageExporter(self.plotWdg.plotItem)
                 if False:
                     pitems = self.plotWdg.getPlotItem()
-                    print(pitems)
+                    # print(pitems)
                     pitems = self.plotWdg.getPlotItem().listDataItems()
-                    print(pitems)
+                    # print(pitems)
                     for item in pitems:
                         exportplotWdg.addItem(item)
                 exportplotWdg.addItem(self.plotWdg.getPlotItem())
@@ -495,14 +784,14 @@ class PathTool(AbstractInspectionDigueTool):
             exporter = exporters.ImageExporter(exportplotWdg.scene())
             exporter.export(exportfile)
 
+        if False:
+            self.plotWdg.resize(w, h)
 
-        self.plotWdg.resize(w, h)
-
-        self.plotWdg.setVisible(True)
-        QtGui.QApplication.processEvents()
-        self.plotWdg.setVisible(False)
-        exporter = exporters.ImageExporter(self.plotWdg.scene())
-        exporter.export(exportfile)
+            self.plotWdg.setVisible(True)
+            QtGui.QApplication.processEvents()
+            self.plotWdg.setVisible(False)
+            exporter = exporters.ImageExporter(self.plotWdg.scene())
+            exporter.export(exportfile)
 
     def resizewidget(self,w,h):
 

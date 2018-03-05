@@ -54,7 +54,7 @@ class InspectiondigueDockWidget(QDockWidget):
         ## The windowwidget put inside te dockwidget
         self.windowwidget = InspectiondigueWindowWidget(canvas,self)
         self.setWidget(self.windowwidget)
-        self.setWindowTitle('InspectionDigue')
+        self.setWindowTitle('Lamia')
         
 
 

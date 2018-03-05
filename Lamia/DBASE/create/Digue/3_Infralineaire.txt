@@ -21,6 +21,12 @@ Palplanche;         PAL;        ['DIG']
 Genie-civil;        GCI;        ['DIG']
 Voirie;             VOI;        ['DIG']
 Autre;              AUT;        ['DIG']
+###classement;                VARCHAR(255);            TEXT
+/;
+A;A
+B;B
+C;C
+NC;NC
 ###lk_photo;        INT ;                       INTEGER
 ###lk_profil;        INT ;                       INTEGER
 ###lk_noeud1;        INT ;                       INTEGER;                            Noeud(id_noeud)

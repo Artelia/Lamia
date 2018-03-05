@@ -168,7 +168,7 @@ class LinkageDialog(QDialog, FORM_CLASS):
 
                 ids = [row[0] for row in query]
                 self.addrow()
-                if len(ids)> 0 and not self.widget.isAttributeNull(ids[0]):
+                if len(ids)> 0 and not self.widget.dbase.isAttributeNull(ids[0]):
                     self.tableWidget.setItem(0,0,QTableWidgetItem( str(ids[0])))
                 else :
                     self.tableWidget.setItem(0,0,QTableWidgetItem( ''))

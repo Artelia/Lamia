@@ -1,0 +1,73 @@
+<Composer title="Composeur 2" visible="1">
+ <Composition resizeToContentsMarginLeft="0" snapping="0" showPages="1" guidesVisible="1" resizeToContentsMarginTop="0" worldFileMap="" alignmentSnap="1" printResolution="300" paperWidth="210" gridVisible="0" snapGridOffsetX="0" smartGuides="1" snapGridOffsetY="0" resizeToContentsMarginRight="0" snapTolerancePixels="5" printAsRaster="0" generateWorldFile="0" paperHeight="65" numPages="1" snapGridResolution="10" resizeToContentsMarginBottom="0">
+  <symbol alpha="1" clip_to_extent="1" type="fill" name="">
+   <layer pass="0" class="SimpleFill" locked="0">
+    <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
+    <prop k="color" v="255,255,255,255"/>
+    <prop k="joinstyle" v="miter"/>
+    <prop k="offset" v="0,0"/>
+    <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+    <prop k="offset_unit" v="MM"/>
+    <prop k="outline_color" v="0,0,0,255"/>
+    <prop k="outline_style" v="no"/>
+    <prop k="outline_width" v="0.26"/>
+    <prop k="outline_width_unit" v="MM"/>
+    <prop k="style" v="solid"/>
+   </layer>
+  </symbol>
+  <ComposerLabel valign="32" marginX="1" marginY="1" labelText="%lamia.Equipement.categorie%&#xa;%lamia.Equipement.typeequipement%&#xa;%lamia.Equipement.implantation%&#xa;%lamia.Equipement.ecoulement%&#xa;%lamia.Equipement.utilisation%&#xa;%lamia.Equipement.dimverti%&#xa;%lamia.Equipement.dimhori%&#xa;%lamia.Equipement.securite%&#xa;%lamia.Equipement.commentaires%&#xa;&#xa;&#xa;" htmlState="0" halign="1">
+   <LabelFont description="Arial,10,-1,5,50,0,0,0,0,0" style=""/>
+   <FontColor red="0" blue="0" green="0"/>
+   <ComposerItem pagey="17.648" page="1" id="" lastValidViewScaleFactor="-1" positionMode="0" positionLock="false" x="57.1266" y="17.648" visibility="1" zValue="20" background="false" transparency="0" frameJoinStyle="miter" blendMode="0" width="57.6868" outlineWidth="0.3" excludeFromExports="0" uuid="{d2630382-f9b9-423a-93fa-15340724a008}" height="45.8866" itemRotation="0" frame="true" pagex="57.1266">
+    <FrameColor alpha="255" red="0" blue="0" green="0"/>
+    <BackgroundColor alpha="255" red="255" blue="255" green="255"/>
+    <customproperties/>
+   </ComposerItem>
+  </ComposerLabel>
+  <ComposerLabel valign="32" marginX="1" marginY="1" labelText="Catégorie&#xa;Type équipement&#xa;Implantation&#xa;Ecoulement&#xa;Utilisation&#xa;Dimension verticale (m)&#xa;Dimension horizontale (m)&#xa;Visitable&#xa;Commentaires" htmlState="0" halign="1">
+   <LabelFont description="Arial,10,-1,5,50,0,0,0,0,0" style=""/>
+   <FontColor red="0" blue="0" green="0"/>
+   <ComposerItem pagey="17.648" page="1" id="" lastValidViewScaleFactor="-1" positionMode="0" positionLock="false" x="12.811" y="17.648" visibility="1" zValue="17" background="false" transparency="0" frameJoinStyle="miter" blendMode="0" width="44.0156" outlineWidth="0.3" excludeFromExports="0" uuid="{07415e4f-7508-4738-8d8e-8ed1436860eb}" height="45.8866" itemRotation="0" frame="true" pagex="12.811">
+    <FrameColor alpha="255" red="0" blue="0" green="0"/>
+    <BackgroundColor alpha="255" red="255" blue="255" green="255"/>
+    <customproperties/>
+   </ComposerItem>
+  </ComposerLabel>
+  <ComposerLabel valign="32" marginX="1" marginY="1" labelText="Photographie" htmlState="0" halign="1">
+   <LabelFont description="Arial,10,-1,5,50,0,0,0,0,0" style=""/>
+   <FontColor red="0" blue="0" green="0"/>
+   <ComposerItem pagey="10.053" page="1" id="" lastValidViewScaleFactor="-1" positionMode="0" positionLock="false" x="115.113" y="10.053" visibility="1" zValue="7" background="false" transparency="0" frameJoinStyle="miter" blendMode="0" width="82.0756" outlineWidth="0.3" excludeFromExports="0" uuid="{4c5c63a0-08d1-43b7-a37b-9901cfb43c3f}" height="7.29493" itemRotation="0" frame="true" pagex="115.113">
+    <FrameColor alpha="255" red="0" blue="0" green="0"/>
+    <BackgroundColor alpha="255" red="255" blue="255" green="255"/>
+    <customproperties/>
+   </ComposerItem>
+  </ComposerLabel>
+  <ComposerPicture resizeMode="0" svgBorderWidth="0.2" pictureRotation="0" pictureWidth="nan" svgFillColor="255,255,255,255" svgBorderColor="0,0,0,255" northMode="0" file="" northOffset="0" pictureHeight="nan" mapId="-1" anchorPoint="0">
+   <ComposerItem pagey="17.648" page="1" id="photo1" lastValidViewScaleFactor="-1" positionMode="0" positionLock="false" x="115.113" y="17.648" visibility="1" zValue="6" background="false" transparency="0" frameJoinStyle="miter" blendMode="0" width="82.0756" outlineWidth="0.3" excludeFromExports="0" uuid="{1bd8e515-d244-4a78-ae99-218a29b9d29b}" height="45.8866" itemRotation="0" frame="true" pagex="115.113">
+    <FrameColor alpha="255" red="0" blue="0" green="0"/>
+    <BackgroundColor alpha="255" red="255" blue="255" green="255"/>
+    <dataDefinedSource expr="" field="" active="false" useExpr="true"/>
+    <customproperties/>
+   </ComposerItem>
+  </ComposerPicture>
+  <ComposerLabel valign="32" marginX="1" marginY="1" labelText="Equipement annexe n° %lamia.Equipement.id_equipement%" htmlState="0" halign="1">
+   <LabelFont description="Arial,10,-1,5,50,0,0,0,0,0" style=""/>
+   <FontColor red="0" blue="0" green="0"/>
+   <ComposerItem pagey="1.61835" page="1" id="" lastValidViewScaleFactor="-1" positionMode="0" positionLock="false" x="12.811" y="1.61835" visibility="1" zValue="4" background="false" transparency="0" frameJoinStyle="miter" blendMode="0" width="184.378" outlineWidth="0.3" excludeFromExports="0" uuid="{e34cb024-4ad0-498b-8b87-32b5100bb3c4}" height="8.13465" itemRotation="0" frame="true" pagex="12.811">
+    <FrameColor alpha="255" red="0" blue="0" green="0"/>
+    <BackgroundColor alpha="255" red="255" blue="255" green="255"/>
+    <customproperties/>
+   </ComposerItem>
+  </ComposerLabel>
+  <ComposerLabel valign="32" marginX="1" marginY="1" labelText="Caractéristiques" htmlState="0" halign="1">
+   <LabelFont description="Arial,10,-1,5,50,0,0,0,0,0" style=""/>
+   <FontColor red="0" blue="0" green="0"/>
+   <ComposerItem pagey="10.053" page="1" id="" lastValidViewScaleFactor="-1" positionMode="0" positionLock="false" x="12.8111" y="10.053" visibility="1" zValue="2" background="false" transparency="0" frameJoinStyle="miter" blendMode="0" width="102.002" outlineWidth="0.3" excludeFromExports="0" uuid="{391af577-d41b-451a-a783-2e1a6e903eaa}" height="7.29493" itemRotation="0" frame="true" pagex="12.8111">
+    <FrameColor alpha="255" red="0" blue="0" green="0"/>
+    <BackgroundColor alpha="255" red="255" blue="255" green="255"/>
+    <customproperties/>
+   </ComposerItem>
+  </ComposerLabel>
+  <customproperties/>
+ </Composition>
+</Composer>
