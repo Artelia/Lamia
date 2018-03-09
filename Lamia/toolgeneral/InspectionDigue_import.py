@@ -197,7 +197,7 @@ class ImportObjectWorker(AbstractWorker):
 
 
                 sql = "INSERT INTO Infralineaires (id_objet, id_descriptionsystem, description1, description2, geom) "
-                sql += "VALUES("+str(id_objet)+', '+str(id_descriptionsystem)Z+', '
+                sql += "VALUES("+str(id_objet)+', '+str(id_descriptionsystem)+', '
                 featvalues = []
                 for i, field in enumerate(fielddestination):
                     # print('values',field,featvalues)

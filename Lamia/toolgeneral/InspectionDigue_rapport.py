@@ -164,7 +164,7 @@ class printPDFWorker:
 
         # ****************************  Desordres *****************************************************
 
-
+        """
         if self.dbase.dbasetype == 'spatialite':
             sql = "SELECT Observation.*, Desordre.*, Objet.*,  MAX(Observation.dateobservation)  FROM Observation "
             sql += "INNER JOIN Desordre ON Desordre.id_desordre = Observation.lk_desordre "
@@ -173,6 +173,8 @@ class printPDFWorker:
             sql += "GROUP BY Observation.lk_desordre"
         elif self.dbase.dbasetype == 'postgis':
             pass
+        """
+        sql = " SELECT Desordre.*, Objet.* FROM Desordre INNER JOIN Objet ON Objet.id_objet = Desordre.id_objet"
 
         sql += "&uid=id_desordre"
         # print(sql)
@@ -187,7 +189,7 @@ class printPDFWorker:
             print([fiel.name() for fiel in atlaslayer.fields()])
 
         self.reportdict['Desordre'] = {'qptfile': 'Desordres',
-                                                      'dbasename':'Observation',
+                                                      'dbasename':'Desordre',
                                                       'atlaslayer': atlaslayer,
                                                       #'specialstyledlayer' : self.dbase.dbasetables['Infralineaire']['layerqgis'],
                                                       'atlaslayerstyle': 'Desordre_atlas.qml',
@@ -202,10 +204,57 @@ class printPDFWorker:
                                                                           self.dbase.dbasetables['Infralineaire']['layerqgis'],
                                                                           self.dbase.dbasetables['Equipement']['layerqgis'],
                                                                           'scan25']},
-                                                      'images':{'photo1' : 'photo1',
-                                                                'photo2': 'photo2',
-                                                                'logo':'logo'}
+                                                      'images':{
+                                                                #'photo1' : 'photo1',
+                                                                #'photo2': 'photo2',
+                                                                'logo':'logo'},
+                                                     'childprint': "Observation"
                                                       }
+
+
+        # ****************************  Observations *****************************************************
+
+        if self.dbase.dbasetype == 'spatialite':
+            sql = "SELECT Observation.*, Desordre.*, Objet.*  FROM Observation "
+            sql += "INNER JOIN Desordre ON Desordre.id_desordre = Observation.lk_desordre "
+            # sql += "INNER JOIN Observation ON Desordre.id_desordre = Observation.lk_desordre "
+            sql += "INNER JOIN Objet ON Objet.id_objet = Observation.id_objet "
+            # sql += "GROUP BY Observation.lk_desordre"
+        elif self.dbase.dbasetype == 'postgis':
+            pass
+        if self.idparent is not None:
+            sql += " WHERE Observation.lk_desordre = " + str(self.idparent)
+            sql += " ORDER BY Observation.dateobservation DESC"
+
+        sql += "&uid=id_observation"
+        # print(sql)
+
+        atlaslayer = qgis.core.QgsVectorLayer("?query=" + sql, "myvlayer", "virtual")
+
+        if False:
+
+            for fet in atlaslayer.getFeatures():
+                print(fet.attributes())
+                print(fet.id())
+            print([fiel.name() for fiel in atlaslayer.fields()])
+
+        self.reportdict['Observation'] = {'qptfile': 'Observation',
+                                       'dbasename': 'Observation',
+                                       'atlaslayer': atlaslayer,
+                                       # 'specialstyledlayer' : self.dbase.dbasetables['Infralineaire']['layerqgis'],
+                                       'atlaslayerstyle': 'Desordre_atlas.qml',
+                                       'atlasdriven': [],
+                                       'atlasdrivenminscale': 2500,
+                                       'atlastypescale': qgis.core.QgsComposerMap.Predefined,
+                                       # 'atlastypescale': qgis.core.QgsComposerMap.Fixed,
+                                       'generalmap': [],
+                                       'layers': {},
+                                       'images': {'photo1': 'photo1',
+                                                  'photo2': 'photo2',
+                                                  'photo3': 'photo3',
+                                                  #'logo': 'logo'
+                                                  }
+                                       }
 
     def work(self):
         # self.message.emit('newComposition creation')
@@ -236,6 +285,8 @@ class printPDFWorker:
             reportdic = self.reportdict['Equipements hydrauliques annexes']
         elif self.reporttype == "Desordres":
             reportdic = self.reportdict['Desordre']
+        elif self.reporttype == "Observation":
+            reportdic = self.reportdict['Observation']
 
         if debug : self.logger.debug('type %s %s', str(self.reporttype),str(self.idparent))
 
@@ -449,6 +500,24 @@ class printPDFWorker:
         if orderedids is None or len(orderedids) == 0:
             return
 
+        # ********************* if zonegeo selected *****************************
+        if self.idparent is None and len(self.dbase.dbasetables['Zonegeo']['layerqgis'].selectedFeatures()) > 0:
+            idszonegeoselected = [int(feat.id()) for feat in self.dbase.dbasetables['Zonegeo']['layerqgis'].selectedFeatures()]
+            # print(idszonegeoselected)
+            sql = "SELECT * FROM  " + reportdic['dbasename'] + ",Zonegeo "
+            sql += " WHERE ST_WITHIN(ST_MakeValid(" +reportdic['dbasename']  +".geom),ST_MakeValid(Zonegeo.geom))"
+            if len(idszonegeoselected)==1:
+                sql += " AND Zonegeo.id_zonegeo = " + str(idszonegeoselected[0])
+            else:
+                sql += " AND Zonegeo.id_zonegeo IN " + str(tuple(idszonegeoselected))
+            # print(sql)
+            query = self.dbase.query(sql)
+            idsinzonegeo = [row[0] for row in query]
+            # print(idsinzonegeo)
+        else:
+            idsinzonegeo = orderedids
+
+        idsforreport = [id for id in orderedids if id in idsinzonegeo]
 
 
 
@@ -456,7 +525,7 @@ class printPDFWorker:
         if qgis.utils.iface is not None and self.idparent is None:
             progressMessageBar = qgis.utils.iface.messageBar().createMessage("Generation du pdf...")
             progress = QProgressBar()
-            progress.setMaximum(len(orderedids))
+            progress.setMaximum(len(idsforreport))
             progress.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
             progressMessageBar.layout().addWidget(progress)
             qgis.utils.iface.messageBar().pushWidget(progressMessageBar, qgis.utils.iface.messageBar().INFO)
@@ -478,8 +547,8 @@ class printPDFWorker:
 
             #print('paint', self.painter.device().width(),self.painter.device().widthMM() , self.painter.device().logicalDpiX())
             idecalage = 0
-            for i, featid in enumerate(orderedids):
-                #for i, featid in enumerate([7]):
+            for i, featid in enumerate(idsforreport):
+            # for i, featid in enumerate([6]):
                 # print(featid)
                 self.setLoadingProgressBar(progress, i)
                 #parentfeat = self.dbase.dbasetables[tablename]['layer'].getFeatures(qgis.core.QgsFeatureRequest(parendid)).next()
@@ -550,9 +619,9 @@ class printPDFWorker:
                                 sql = "SELECT " + field + " FROM " + table
                                 #print('id_' + table.lower(), self.dbase.dbasetables[reportdic['dbasename']]['fields'].keys())
                                 if 'id_' + table.lower() in self.dbase.dbasetables[reportdic['dbasename']]['fields'].keys():
-                                    sql += " WHERE " + table + ".id_" + table + " = " + str(currentfeature['id_' + table])
+                                    sql += " WHERE " + table + ".id_" + table + " = " + str(currentfeature['id_' + table.lower()])
                                 elif 'lk_' + table.lower() in self.dbase.dbasetables[reportdic['dbasename']]['fields'].keys():
-                                    sql += " WHERE " + table + ".id_" + table + " = " + str(currentfeature['lk_' + table])
+                                    sql += " WHERE " + table + ".id_" + table + " = " + str(currentfeature['lk_' + table.lower()])
 
                                 #print('lamia', sql)
                                 query = self.dbase.query(sql)

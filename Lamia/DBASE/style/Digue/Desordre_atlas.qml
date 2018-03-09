@@ -45,7 +45,7 @@
     </rules>
     <symbols>
       <symbol alpha="1" clip_to_extent="1" type="line" name="0">
-        <layer pass="0" class="SimpleLine" locked="0">
+        <layer pass="1" class="SimpleLine" locked="0">
           <prop k="capstyle" v="square"/>
           <prop k="customdash" v="5;2"/>
           <prop k="customdash_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -62,7 +62,7 @@
           <prop k="use_custom_dash" v="0"/>
           <prop k="width_map_unit_scale" v="0,0,0,0,0,0"/>
         </layer>
-        <layer pass="0" class="MarkerLine" locked="0">
+        <layer pass="2" class="MarkerLine" locked="0">
           <prop k="interval" v="3"/>
           <prop k="interval_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="interval_unit" v="MM"/>
@@ -97,7 +97,7 @@
             </layer>
           </symbol>
         </layer>
-        <layer pass="0" class="MarkerLine" locked="0">
+        <layer pass="2" class="MarkerLine" locked="0">
           <prop k="interval" v="3"/>
           <prop k="interval_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="interval_unit" v="MM"/>

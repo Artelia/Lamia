@@ -59,10 +59,11 @@ def testRapport(canvas, loadfile=True, typedb="spatialite",reporttype=None, pdff
             #path = os.path.normpath('I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201710_Begles//BD_Begles_ind0.sqlite')
             # path = os.path.normpath('C://000_testdigue//testBM//BD_Begles_ind0.sqlite')
             #path = os.path.normpath('C://000_testdigue//BM//BD_SIJALAG_ind4.sqlite')
-            # path = os.path.normpath('I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201708_SIJALAG//BD_SIJALAG_ind4.sqlite')
-            path = os.path.normpath('I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201710_Begles//BD_Begles_ind8.sqlite')
+            path = os.path.normpath('I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201708_SIJALAG//BD_SIJALAG_ind5.sqlite')
+            # path = os.path.normpath('I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201710_Begles//BD_Begles_ind8.sqlite')
             #path = os.path.normpath('I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201709_RD//BD_Rivedroite_ind2.sqlite')
             wind.dbase.loadQgisVectorLayers(path)
+            wind.loadUiDesktop()
 
         elif typedb == "postgis":
             wind.dbase.loadQgisVectorLayers(dbasetype='postgis', dbname='PVR_test', schema='exportbm', user='postgres',
@@ -72,6 +73,7 @@ def testRapport(canvas, loadfile=True, typedb="spatialite",reporttype=None, pdff
 
     if True:
         # testVirtualLayer()
+        wind.dbase.dbasetables['Zonegeo']['layerqgis'].selectByIds([2])
         wind.printRapport(reporttype=reporttype, pdffile=pdffile)
         print('fin')
 

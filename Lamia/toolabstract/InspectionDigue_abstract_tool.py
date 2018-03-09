@@ -179,7 +179,6 @@ class AbstractInspectionDigueTool(QWidget):
 
 
 
-
         if self.dbasetablename is not None :
             self.pushButton_savefeature.clicked.connect(self.saveFeature)
             self.pushButton_addFeature.clicked.connect(self.addFeature)
