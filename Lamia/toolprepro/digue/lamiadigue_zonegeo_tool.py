@@ -6,13 +6,14 @@ try:
     from qgis.PyQt.QtGui import (QWidget)
 except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget)
-from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
+#from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
+from ..abstract.lamia_zonegeo_tool import AbstractZonegeoTool
 import os
 import datetime
 
 
 
-class ZonegeoTool(AbstractInspectionDigueTool):
+class ZonegeoTool(AbstractZonegeoTool):
 
     LOADFIRST = False
     dbasetablename = 'Zonegeo'
@@ -20,6 +21,7 @@ class ZonegeoTool(AbstractInspectionDigueTool):
     def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
         super(ZonegeoTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
 
+"""
     def initTool(self):
         # ****************************************************************************************
         # Main spec
@@ -93,3 +95,5 @@ class UserUI(QWidget):
         super(UserUI, self).__init__(parent=parent)
         uipath = os.path.join(os.path.dirname(__file__), 'ZonegeoToolUser.ui')
         uic.loadUi(uipath, self)
+
+"""

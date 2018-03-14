@@ -39,23 +39,30 @@ class exportShapefileWorker:
                       ['Objet', 'datedestruction'],
                       ['Objet', 'commentaire'],
                       ['Objet', 'libelle'],
-                      ['Objet', 'datemodification'],
-                      ['Descriptionsystem', 'importancestrat'],
-                      ['Descriptionsystem', 'etatfonct'],                    #5
-                      ['Descriptionsystem', 'datederniereobs'],
-                      ['Descriptionsystem', 'qualitegeoloc'],
-                      ['Descriptionsystem', 'parametres'],
-                      ['Descriptionsystem', 'listeparametres'],
+                      # ['Objet', 'datemodification'],
+                      # ['Descriptionsystem', 'importancestrat'],
+                      # ['Descriptionsystem', 'etatfonct'],                    #5
+                      # ['Descriptionsystem', 'datederniereobs'],
+                      # ['Descriptionsystem', 'qualitegeoloc'],
+                      # ['Descriptionsystem', 'parametres'],
+                      # ['Descriptionsystem', 'listeparametres'],
                       ['Infralineaire', 'id_infralineaire'],                    #10
                       ['Infralineaire', 'description1'],
                       ['Infralineaire', 'description2'],
-                      ['Infralineaire', 'lk_noeud1'],
-                      ['Infralineaire', 'lk_noeud2'],
+                      # ['Infralineaire', 'lk_noeud1'],
+                      # ['Infralineaire', 'lk_noeud2'],
                       ['Infralineaire', 'lk_photo'],                    #15
                       ['Infralineaire', 'classement'],
                       ['Infralineaire', 'lk_profil'],
                       ['Infralineaire', 'id_objet'],
-                      ['Infralineaire', 'id_descriptionsystem']]
+                      # ['Infralineaire', 'id_descriptionsystem']
+                      ['Infralineaire', 'aubaredelargeur'],
+                      ['Infralineaire', 'aubaredevegherbacee'],
+                      ['Infralineaire', 'aubaredevegarbustive'],
+                      ['Infralineaire', 'aubaredevegarboree'],
+                      ['Infralineaire', 'aubaredecommentaire']
+
+                      ]
 
             fieldslinear = self.getFieldsfromList(champs)
 
@@ -78,6 +85,16 @@ class exportShapefileWorker:
             # print(sql)
             query = self.dbase.query(sql)
             result = [row for row in query]
+            # result = [list(row) for row in query]
+
+            if False:
+                for i, resultline in enumerate(result):
+                    print(result[i])
+                    for j, champ in enumerate(champs):
+                        result[i][j] = self.dbase.getConstraintTextFromRawValue(champ[0], champ[1], result[i][j])
+                    print(result[i])
+
+
 
             #donnees profil
             if True:
@@ -88,24 +105,29 @@ class exportShapefileWorker:
                 fieldslinear.append(qgis.core.QgsField('typcrete', QtCore.QVariant.String))
                 fieldslinear.append(qgis.core.QgsField('typtaeau', QtCore.QVariant.String))         #5
                 fieldslinear.append(qgis.core.QgsField('typauba', QtCore.QVariant.String))
+                fieldslinear.append(qgis.core.QgsField('typberg', QtCore.QVariant.String))
+                fieldslinear.append(qgis.core.QgsField('typpdber', QtCore.QVariant.String))
                 fieldslinear.append(qgis.core.QgsField('Desterre', QtCore.QVariant.String))
-                fieldslinear.append(qgis.core.QgsField('Descrete', QtCore.QVariant.String))
+                fieldslinear.append(qgis.core.QgsField('Descrete', QtCore.QVariant.String))         #10
                 fieldslinear.append(qgis.core.QgsField('Deseau', QtCore.QVariant.String))
-                champs += [[],[],[],[],[],[],[],[],[],[]]
+                champs += [[],[],[],[],[],[],[],[],[],[], [], []]
                 # print('champs',champs)
 
                 for i, row in enumerate(result):
-                    hauteurdigue = -1
-                    largcrete = -1
-                    largfrancbord = -1
+                    hauteurdigue = None
+                    largcrete = None
+                    largfrancbord = None
                     typtater=''
                     typcrete=''
                     typtaeau=''
                     typeauba = ''
+                    typeberge = ''
+                    typepdberge = ''
                     Desterre=''
                     Descrete=''
                     Deseau=''
-                    lkprofil  = row[17]
+                    indexprofil = champs.index(['Infralineaire', 'lk_profil'])
+                    lkprofil  = row[indexprofil]
                     if lkprofil is not None:
                         sql = "SELECT id_graphique, typegraphique FROM Graphique  WHERE id_ressource = " + str(lkprofil)
                         query = self.dbase.query(sql)
@@ -206,6 +228,26 @@ class exportShapefileWorker:
                                             if typcurr != typeauba:
                                                 typeauba = 'mixte'
 
+                                    if elem[5] in ['BER']:
+                                        if typeberge == '':
+                                            typeberge = ';'.join([self.dbase.getConstraintTextFromRawValue('Graphiquedata','index2', elem[6]),
+                                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7])])
+                                        else:
+                                            typcurr = ';'.join([self.dbase.getConstraintTextFromRawValue('Graphiquedata','index2', elem[6]),
+                                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7])])
+                                            if typcurr != typeberge:
+                                                typeberge = 'mixte'
+
+                                    if elem[5] in ['PDB']:
+                                        if typepdberge == '':
+                                            typepdberge = ';'.join([self.dbase.getConstraintTextFromRawValue('Graphiquedata','index2', elem[6]),
+                                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7])])
+                                        else:
+                                            typcurr = ';'.join([self.dbase.getConstraintTextFromRawValue('Graphiquedata','index2', elem[6]),
+                                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7])])
+                                            if typcurr != typepdberge:
+                                                typepdberge = 'mixte'
+
                             #description = '\n'.join(listdescr)
 
                             Desterre = '\n'.join(listdescrtalusterre)
@@ -230,12 +272,16 @@ class exportShapefileWorker:
                     typcrete=''
                     typtaeau=''
                     typeauba = ''
+                    typeberge = ''
+                    typepdberge = ''
                     Desterre=''
                     Descrete=''
                     Deseau=''
                     """
 
-                    result[i] = list(result[i])[:-1] + [hauteurdigue, largcrete, largfrancbord,typtater,typcrete,typtaeau,typeauba, Desterre, Descrete, Deseau  ] + list(result[i])[-1:]
+                    result[i] = list(result[i])[:-1] \
+                                + [hauteurdigue, largcrete, largfrancbord,typtater,typcrete,typtaeau,typeauba,typeberge,typepdberge,  Desterre, Descrete, Deseau  ] \
+                                + list(result[i])[-1:]
                     # print([hauteurdigue, largcrete, largfrancbord,typtater,typcrete,typtaeau, Desterre, Descrete, Deseau  ])
 
 
@@ -283,7 +329,8 @@ class exportShapefileWorker:
 
                 for i, row in enumerate(result):
                     gestionnaire = ''
-                    idobjet = row[18]
+                    indexobjet = champs.index(['Infralineaire', 'id_objet'])
+                    idobjet = row[indexobjet]
                     sql = "SELECT Tcobjetintervenant.fonction, Intervenant.nom,Intervenant.societe  FROM Tcobjetintervenant "
                     sql += " INNER JOIN Intervenant ON Tcobjetintervenant.id_tcintervenant = Intervenant.id_intervenant "
                     sql += "WHERE id_tcobjet = " + str(idobjet)
@@ -619,6 +666,7 @@ class exportShapefileWorker:
 
             query = self.dbase.query(sql)
             result = [row for row in query]
+
             self.fillShapefile(linearname, qgis.core.QGis.WKBLineString, fieldslinear, champs, result)
 
             # **********************************************************
@@ -987,9 +1035,47 @@ class exportShapefileWorker:
             result = [row for row in query]
             self.fillShapefile(linearname, qgis.core.QGis.WKBPoint, fieldslinear, champs, result)
 
+        elif self.reporttype == 'Graphiques digue':
+            champs =[['Graphiquedata', 'id_graphiquedata'],
+                    ['Graphiquedata', 'typedata'],
+                     ['Graphiquedata', 'x'],
+                     ['Graphiquedata', 'y'],
+                     ['Graphiquedata', 'z'],
+                     ['Graphiquedata', 'index1'],
+                     ['Graphiquedata', 'index2'],
+                     ['Graphiquedata', 'index3'],
+                    ['Infralineaire', 'id_objet']
+                    ]
 
+            fieldslinear = self.getFieldsfromList(champs)
 
+            dir = os.path.dirname(self.pdffile)
+            name = os.path.basename(self.pdffile).split('.')[0]
+            linearname = os.path.join(dir, name + '.shp')
 
+            """
+            sql = "SELECT Graphiquedata.* , Objet.datecreation, Objet.datedestruction FROM Graphiquedata "
+            sql += " INNER JOIN Graphique ON Graphiquedata.id_graphique = Graphique.id_graphique "
+            sql += "INNER JOIN Ressource ON Graphique.id_ressource = Ressource.id_ressource "
+            sql += "INNER JOIN Objet ON Graphique.id_objet = Objet.id_objet"
+            """
+
+            sql = "SELECT "
+            sql += ', '.join([str(field[0]) + '.' + str(field[1]) for field in champs])
+            sql += " FROM Graphiquedata "
+            sql += " INNER JOIN Graphique ON Graphiquedata.id_graphique = Graphique.id_graphique "
+            sql += " INNER JOIN Ressource ON Graphique.id_ressource = Ressource.id_ressource "
+            sql += " INNER JOIN Infralineaire ON Graphique.id_ressource = Infralineaire.lk_profil"
+
+            query = self.dbase.query(sql)
+            result = [row for row in query]
+            """
+            resultfinal = []        #add no geometry
+            for resultline in result:
+                resultfinal.append(list(resultline))
+                resultfinal[-1].append(None)
+            """
+            self.fillShapefile(linearname, qgis.core.QGis.WKBNoGeometry, fieldslinear, champs, result)
 
 
 
@@ -1005,10 +1091,11 @@ class exportShapefileWorker:
 
         for row in result:
             feat = qgis.core.QgsFeature(fields)
-            if row[-1] is not None:
-                feat.setGeometry(qgis.core.QgsGeometry.fromWkt(row[-1]))
-            else:
-                continue
+            if typegeom != qgis.core.QGis.WKBNoGeometry :
+                if row[-1] is not None:
+                    feat.setGeometry(qgis.core.QgsGeometry.fromWkt(row[-1]))
+                else:
+                    continue
             # print(feat.geometry().exportToWkt())
             for i, field in enumerate(champs):
                 if len(field)>0:       #come from simple db
@@ -1020,6 +1107,8 @@ class exportShapefileWorker:
                                 value = str(row[i])
                             elif isinstance(row[i], decimal.Decimal):
                                 value = float(row[i])
+                            elif row[i] == -1 and self.dbase.dbasetables[field[0]]['fields'][field[1]]['SLtype'] == 'INTEGER':
+                                value = None
                             else:
                                 value = row[i]
                             feat[i] = value

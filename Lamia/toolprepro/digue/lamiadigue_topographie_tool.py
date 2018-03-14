@@ -6,7 +6,8 @@ try:
     from qgis.PyQt.QtGui import (QWidget)
 except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget)
-from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
+#from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
+from ..abstract.lamia_topographie_tool import AbstractTopographieTool
 import os
 import datetime
 
@@ -19,7 +20,7 @@ ca fout la merde....
 """
 
 
-class TopographieTool(AbstractInspectionDigueTool):
+class TopographieTool(AbstractTopographieTool):
 
     LOADFIRST = True
     dbasetablename = 'Topographie'
@@ -27,6 +28,7 @@ class TopographieTool(AbstractInspectionDigueTool):
     def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
         super(TopographieTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
 
+"""
     def initTool(self):
         # ****************************************************************************************
         # Main spec
@@ -186,3 +188,5 @@ class UserUI(QWidget):
         uipath = os.path.join(os.path.dirname(__file__), 'TopographieToolUser.ui')
         uic.loadUi(uipath, self)
 
+
+"""

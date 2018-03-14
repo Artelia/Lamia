@@ -29,7 +29,8 @@ def testDbaseCreation(canvas, typedb="spatialite"):
         shutil.copyfile(originalfile, spatialitefile)
 
         #wind.dbase.createDbase(file=spatialitefile, crs=crs, type='Digue', dbaseressourcesdirectory=spatialitedir)
-        wind.dbase.createDbase(file=spatialitefile, crs=crs, type='Digue')
+        # Digue VNF  Assainissement
+        wind.dbase.createDbase(file=spatialitefile, crs=crs, type='Assainissement')
 
     elif typedb == "postgis":
         wind.dbase.createDbase(crs=crs, type='Digue', dbasetype='postgis', dbname='PVR_test', schema='diguebebe',
@@ -41,11 +42,26 @@ def testDbaseCreation(canvas, typedb="spatialite"):
 
 
 
+try:
+    qgisversion_int = qgis.utils.QGis.QGIS_VERSION_INT
+except AttributeError:  #qgis 3
+    qgisversion_int = qgis.utils.Qgis.QGIS_VERSION_INT
 
-if True:
+print(qgisversion_int)
+
+if int(str(qgisversion_int)[0:3]) < 220:
+    qgis_path = "C://OSGeo4W64//apps//qgis-ltr"
+else:
+    qgis_path = "C://OSGeo4W64//apps//qgis"
+    #os.environ["QT_QPA_PLATFORM"] = "offscreen"
+
+
+"""
+if False:
     qgis_path = "C://OSGeo4W64//apps//qgis"
 else:
     qgis_path = "C://OSGeo4W64//apps//qgis-dev"
+"""
 
 app = qgis.core.QgsApplication([], True)
 qgis.core.QgsApplication.setPrefixPath(qgis_path, True)

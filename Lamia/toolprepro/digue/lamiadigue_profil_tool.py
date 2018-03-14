@@ -168,5 +168,5 @@ class ProfilTool(AbstractInspectionDigueTool):
 class UserUI(QWidget):
     def __init__(self, parent=None):
         super(UserUI, self).__init__(parent=parent)
-        uipath = os.path.join(os.path.dirname(__file__), 'ProfilToolUser.ui')
+        uipath = os.path.join(os.path.dirname(__file__), 'lamiadigue_profil_tool_ui.ui')
         uic.loadUi(uipath, self)

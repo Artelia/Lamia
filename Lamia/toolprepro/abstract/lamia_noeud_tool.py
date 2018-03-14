@@ -14,13 +14,11 @@ import datetime
 
 
 
-class NoeudTool(AbstractInspectionDigueTool):
+class AbstractNoeudTool(AbstractInspectionDigueTool):
 
-    LOADFIRST = False
-    dbasetablename = 'Noeud'
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
-        super(NoeudTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
+        super(AbstractNoeudTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
         
     def initTool(self):
         # ****************************************************************************************
@@ -29,7 +27,7 @@ class NoeudTool(AbstractInspectionDigueTool):
         self.CAT = 'Description'
         self.NAME = 'Noeud'
         self.dbasetablename = 'Noeud'
-        self.visualmode = [1, 2]
+        self.visualmode = [0, 1, 2]
         self.PointENABLED = True
         # self.LineENABLED = False
         # self.PolygonENABLED = True
@@ -43,15 +41,17 @@ class NoeudTool(AbstractInspectionDigueTool):
         #properties ui
         pass
 
-    def initDesktopUI(self):
+
+
+    def initFieldUI(self):
         # ****************************************************************************************
         # userui Desktop
-        if self.userwdgdesktop is None:
+        if self.userwdgfield is None:
 
             # ****************************************************************************************
             # userui
-            self.userwdgdesktop = UserUI()
-            self.linkuserwdgdesktop = {'Noeud' : {'linkfield' : 'id_noeud',
+            self.userwdgfield = UserUI()
+            self.linkuserwdgfield = {'Noeud' : {'linkfield' : 'id_noeud',
                                              'widgets' : {}},
                                 'Objet' : {'linkfield' : 'id_objet',
                                           'widgets' : {}},
@@ -112,5 +112,5 @@ class NoeudTool(AbstractInspectionDigueTool):
 class UserUI(QWidget):
     def __init__(self, parent=None):
         super(UserUI, self).__init__(parent=parent)
-        uipath = os.path.join(os.path.dirname(__file__), 'NoeudToolUser.ui')
+        uipath = os.path.join(os.path.dirname(__file__), 'lamia_noeud_tool_ui.ui')
         uic.loadUi(uipath, self)

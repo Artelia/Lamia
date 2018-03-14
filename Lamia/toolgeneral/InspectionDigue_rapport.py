@@ -67,7 +67,8 @@ class printPDFWorker:
                                                       'atlaslayerstyle': 'Infralineaire_atlas.qml',
                                                       'atlasdriven': ['map1'],
                                                       'atlasdrivenminscale' : 2500,
-                                                      'atlastypescale' : qgis.core.QgsComposerMap.Auto,
+                                                      #'atlastypescale' : qgis.core.QgsComposerMap.Auto,
+                                                      'atlastypescale': 'Auto',
                                                       'generalmap': ['map0'],
                                                       'layers': {'map0': [self.dbase.dbasetables['Infralineaire']['layerqgis'],
                                                                           'scan25'],
@@ -111,13 +112,14 @@ class printPDFWorker:
                                                        'atlaslayerstyle': 'Equipement_atlas.qml',
                                                        'atlasdriven': ['map1'],
                                                        'atlasdrivenminscale': 2000,
-                                                       'atlastypescale': qgis.core.QgsComposerMap.Auto,
+                                                       # 'atlastypescale': qgis.core.QgsComposerMap.Auto,
+                                                       'atlastypescale': 'Auto',
                                                        'generalmap': ['map0'],
                                                        'layers':{'map0': [self.dbase.dbasetables['Infralineaire']['layerqgis'],
                                                                           'scan25'],
                                                                 'map1': ['atlaslayer',
                                                                          self.dbase.dbasetables['Infralineaire']['layerqgis'],
-                                                                         'scan25']},
+                                                                         'ortho']},
                                                        'images':{'photo1': 'photo'},
                                                        'childprint':  "Equipements hydrauliques annexes"
                                                        }
@@ -154,7 +156,8 @@ class printPDFWorker:
                                                        'atlaslayerstyle': 'Equipement.qml',
                                                        'atlasdriven': [],
                                                        'atlasdrivenminscale': 2000,
-                                                       'atlastypescale': qgis.core.QgsComposerMap.Auto,
+                                                       # 'atlastypescale': qgis.core.QgsComposerMap.Auto,
+                                                       'atlastypescale': 'Auto',
                                                        'generalmap': [],
                                                        'layers':{},
                                                        'images':{'photo1': 'photo'},
@@ -195,7 +198,8 @@ class printPDFWorker:
                                                       'atlaslayerstyle': 'Desordre_atlas.qml',
                                                       'atlasdriven': ['map1'],
                                                       'atlasdrivenminscale' : 2500,
-                                                       'atlastypescale': qgis.core.QgsComposerMap.Predefined,
+                                                      # 'atlastypescale': qgis.core.QgsComposerMap.Predefined,
+                                                         'atlastypescale': 'Predefined',
                                                        #'atlastypescale': qgis.core.QgsComposerMap.Fixed,
                                                       'generalmap': ['map0'],
                                                       'layers': {'map0': [self.dbase.dbasetables['Infralineaire']['layerqgis'],
@@ -203,7 +207,7 @@ class printPDFWorker:
                                                                  'map1': ['atlaslayer',
                                                                           self.dbase.dbasetables['Infralineaire']['layerqgis'],
                                                                           self.dbase.dbasetables['Equipement']['layerqgis'],
-                                                                          'scan25']},
+                                                                          'ortho']},
                                                       'images':{
                                                                 #'photo1' : 'photo1',
                                                                 #'photo2': 'photo2',
@@ -245,7 +249,8 @@ class printPDFWorker:
                                        'atlaslayerstyle': 'Desordre_atlas.qml',
                                        'atlasdriven': [],
                                        'atlasdrivenminscale': 2500,
-                                       'atlastypescale': qgis.core.QgsComposerMap.Predefined,
+                                       # 'atlastypescale': qgis.core.QgsComposerMap.Predefined,
+                                       'atlastypescale': 'Predefined',
                                        # 'atlastypescale': qgis.core.QgsComposerMap.Fixed,
                                        'generalmap': [],
                                        'layers': {},
@@ -258,7 +263,7 @@ class printPDFWorker:
 
     def work(self):
         # self.message.emit('newComposition creation')
-        if qgis.utils.iface is not None:
+        if self.dbase.qgsiface is not None:
             debug = False
             stop10 = False
         else:
@@ -275,7 +280,7 @@ class printPDFWorker:
         if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
             newComposition = qgis.core.QgsComposition(mapsettings)
         else:
-            newComposition = qgis.core.QgsComposition(self.project)
+            newComposition = qgis.core.QgsLayout(self.project)
 
         if self.reporttype == "Infrastructure lineaire":
             reportdic = self.reportdict['Infrastructure lineaire']
@@ -296,14 +301,15 @@ class printPDFWorker:
         template_file.open(QtCore.QIODevice.ReadOnly | QtCore.QIODevice.Text)
         template_content = template_file.readAll()
         template_file.close()
-        document = QtXml.QDomDocument()
-        document.setContent(template_content)
-        # You can use this to replace any string like this [key]
-        # in the template with a new value. e.g. to replace
-        # [date] pass a map like this {'date': '1 Jan 2012'}
-        # substitution_map = {'DATE_TIME_START': 'foo','DATE_TIME_END': 'bar'}
-        substitution_map = {}
-        newComposition.loadFromTemplate(document,substitution_map)
+        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+            document = QtXml.QDomDocument()
+            document.setContent(template_content)
+            # You can use this to replace any string like this [key]
+            # in the template with a new value. e.g. to replace
+            # [date] pass a map like this {'date': '1 Jan 2012'}
+            # substitution_map = {'DATE_TIME_START': 'foo','DATE_TIME_END': 'bar'}
+            substitution_map = {}
+            newComposition.loadFromTemplate(document,substitution_map)
         if debug: self.logger.debug('template loaded')
         if debug: self.logger.debug('paperHeight %s', str(newComposition.paperHeight() 		))
 
@@ -327,12 +333,18 @@ class printPDFWorker:
         if False:
             atlas.setCoverageLayer(reportdic['atlaslayer'])
 
+        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+            toexec = "reportdic['atlastypescale'] = qgis.core.QgsComposerMap." + reportdic['atlastypescale']
+            print(toexec)
+            exec(toexec)
+
         atlas.setEnabled(True)
         atlas.setSingleFile(True)
         ret = newComposition.setAtlasMode(qgis.core.QgsComposition.ExportAtlas)
         if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
             #atlas.setComposerMap(newComposition.composerMapItems()[0])
             for mapname in reportdic['atlasdriven']:
+                # print('mapname', mapname)
                 atlas.setComposerMap(newComposition.getComposerItemById(mapname))
                 newComposition.getComposerItemById(mapname).setAtlasDriven(True)
                 #newComposition.getComposerItemById(mapname).setNewScale(reportdic['atlasdrivenscale'])
@@ -482,8 +494,8 @@ class printPDFWorker:
             for composeritem in newComposition.items():
                 if isinstance(composeritem, qgis.core.QgsComposerLabel):
                     # print(composeritem.text())
-                    if "%lamia" in composeritem.text():
-                        txtsplit = composeritem.text().split('%')
+                    if "#lamia" in composeritem.text():
+                        txtsplit = composeritem.text().split('#')
                         dictfields[composeritem.uuid()] = txtsplit
 
         # ********************* ordering ids for pdf *****************************
@@ -522,13 +534,13 @@ class printPDFWorker:
 
 
         # ********************* progress bar *****************************
-        if qgis.utils.iface is not None and self.idparent is None:
-            progressMessageBar = qgis.utils.iface.messageBar().createMessage("Generation du pdf...")
+        if self.dbase.qgsiface is not None and self.idparent is None:
+            progressMessageBar = self.dbase.qgsiface.messageBar().createMessage("Generation du pdf...")
             progress = QProgressBar()
             progress.setMaximum(len(idsforreport))
             progress.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
             progressMessageBar.layout().addWidget(progress)
-            qgis.utils.iface.messageBar().pushWidget(progressMessageBar, qgis.utils.iface.messageBar().INFO)
+            self.dbase.qgsiface.messageBar().pushWidget(progressMessageBar, self.dbase.qgsiface.messageBar().INFO)
         else:
             progress = None
 
@@ -623,7 +635,7 @@ class printPDFWorker:
                                 elif 'lk_' + table.lower() in self.dbase.dbasetables[reportdic['dbasename']]['fields'].keys():
                                     sql += " WHERE " + table + ".id_" + table + " = " + str(currentfeature['lk_' + table.lower()])
 
-                                #print('lamia', sql)
+                                # print('lamia', sql)
                                 query = self.dbase.query(sql)
                                 valtemp = [row[0] for row in query][0]
                                 #print(valtemp)
@@ -634,6 +646,13 @@ class printPDFWorker:
                                     finaltxt.append('/')
                                 elif val == '':
                                     finaltxt.append(' / ')
+                                elif field[0:4] == 'date':
+                                    #print(val)
+                                    #print(val.split('-'))
+                                    #print(val.split('-')[::-1])
+                                    #print('-'.join(val.split('-')[::-1]))
+                                    dateinverted = '-'.join(val.split('-')[::-1])
+                                    finaltxt.append(dateinverted)
                                 else:
                                     finaltxt.append(unicode(val))
                             elif 'lamiasql.' in temptxt:
@@ -643,12 +662,15 @@ class printPDFWorker:
                                 WHERE id_tcobjet = " + str(currentfeature['id_objet'])
                                 """
                                 # print(str(eval(temptxt[9:])))
-                                query = self.dbase.query(str(eval(temptxt[9:])))
-                                result = [row for row in query]
-                                if len(result)>0:
-                                    finaltxt.append(' - '.join(list(result[0])))
-                                else:
-                                    finaltxt.append('NR')
+                                try:
+                                    query = self.dbase.query(str(eval(temptxt[9:])))
+                                    result = [row for row in query]
+                                    if len(result)>0:
+                                        finaltxt.append(' - '.join(list(result[0])))
+                                    else:
+                                        finaltxt.append('NR')
+                                except Exception as e:
+                                    finaltxt.append(str(eval(temptxt[9:])))
                             else:
                                 finaltxt.append(temptxt)
                         txt = ''.join(finaltxt)
@@ -711,7 +733,7 @@ class printPDFWorker:
             if self.idparent is None:
                 self.painter.end()
             if debug: self.logger.debug('end')
-            if progress is not None: qgis.utils.iface.messageBar().clearWidgets()
+            if progress is not None: self.dbase.qgsiface.messageBar().clearWidgets()
             return
 
 
@@ -726,7 +748,7 @@ class printPDFWorker:
 
 
     def orderIdsAlongPath(self):
-        if qgis.utils.iface is not None:
+        if self.dbase.qgsiface is not None:
             debug = False
         else:
             debug = True  #True false
@@ -776,6 +798,10 @@ class printPDFWorker:
                         print('attention presence d un noeud - non traite')
                     else:
                         paths=[list(edgeextremite)]
+
+                    # if len(paths)==0 and len(edgenoeud)==0: #cas d'un circuit fermé
+
+
 
                     if debug: self.logger.debug('subgraph %s %s %s', str(subgraph), str(edgeextremite), str(edgenoeud))
 
@@ -969,6 +995,6 @@ class printPDFWorker:
         if progressbar is not None:
             progressbar.setValue(val)
         else:
-            if qgis.utils.iface is None:
+            if self.dbase.qgsiface is None:
                 logging.getLogger('Lamia').info('Generation du pdf %d', val )
         QApplication.processEvents()

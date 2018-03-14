@@ -3,8 +3,11 @@
 from __future__ import unicode_literals
 from qgis.PyQt import QtCore
 import os
+import sys
 import qgis
 import qgis.utils
+qgis.utils.uninstallErrorHook()     #for standart output
+
 try:
     from pyspatialite import dbapi2 as db
     from pyspatialite.dbapi2 import *
@@ -111,6 +114,9 @@ class DBaseParser(QtCore.QObject):
         except AttributeError:  #qgis 3
             self.qgisversion_int = qgis.utils.Qgis.QGIS_VERSION_INT
 
+        self.qgsiface = qgis.utils.iface
+
+
 
         #logger.info('qgisversion : %s', str(self.qgisversion_int))
         #logging.getLogger("Lamia").info('qgisversion : %s', str(self.qgisversion_int))
@@ -199,6 +205,10 @@ class DBaseParser(QtCore.QObject):
         :param dbaseressourcesdirectory:
         :return:
         """
+        debug = False
+
+        if debug: logging.getLogger("Lamia").debug('started')
+
         # create dbasedict
         self._createDBDictionary(type)
         # manage ressource directory
@@ -222,9 +232,9 @@ class DBaseParser(QtCore.QObject):
         # Manage connection - creation and config
         if self.dbasetype == 'spatialite':
             self.spatialitefile = file
-            try:    #python 2
+            if sys.version_info.major == 2:
                 self.connSLITE = db.connect(file)
-            except NameError:   #python 3
+            elif sys.version_info.major == 3:   #python 3
                 self.connSLITE = qgis.utils.spatialite_connect(file)
             self.SLITEcursor = self.connSLITE.cursor()
             sql = "PRAGMA foreign_keys = ON"
@@ -441,14 +451,19 @@ class DBaseParser(QtCore.QObject):
          ...}
 
         """
+        debug = False
+        if debug: logging.getLogger("Lamia").debug('started')
+
         # first readfiles in ./DBASE\create directory and create self.dbasetables
         self.type = type
         self.dbasetables = {}
         createfilesdir = os.path.join(os.path.dirname(__file__), '..', 'DBASE', 'create', self.type)
 
         for filename in glob.glob(os.path.join(createfilesdir, '*.txt')):
+
             # print(filename)
             basename = os.path.basename(filename).split('.')[0]
+            if debug: logging.getLogger("Lamia").debug('filename %s',basename )
             temp = basename.split('_')
             if len(temp) == 1:  # non table file
                 continue
@@ -473,8 +488,11 @@ class DBaseParser(QtCore.QObject):
             self.dbasetables[tablename]['fields'] = OrderedDict()
             self.dbasetables[tablename]['showinqgis'] = False
             self.dbasetables[tablename]['widget'] = []
-
-            file = open(filename, 'r')
+            if sys.version_info.major == 2:
+                file = open(filename, 'r')
+            elif sys.version_info.major == 3:
+                file = open(filename, 'r',encoding="utf-8")
+                #file = open(filename, 'rb')
             compt = 0
             for line in file:
                 if line[0:3] == '###':          # new field
@@ -512,7 +530,15 @@ class DBaseParser(QtCore.QObject):
                         self.dbasetables[tablename]['fields'][fieldname]['Cst'].append([])
                     else:
                         self.dbasetables[tablename]['fields'][fieldname]['Cst'] = [[]]
-                    linesplit = line.split(';')
+                    if sys.version_info.major == 2:
+                        linesplit = line.decode('utf-8').split(';')
+                    elif sys.version_info.major == 3:
+                        # print(line.__class__)
+                        linesplit = line.split(';')
+                        #print(type(linesplit[0]))
+                        #linesplit = line.decode('utf-8').split(';')
+                    if debug: logging.getLogger("Lamia").debug('cst line split %s %s',fieldname, str(linesplit))
+
                     self.dbasetables[tablename]['fields'][fieldname]['Cst'][-1].append(linesplit[0].strip())
                     self.dbasetables[tablename]['fields'][fieldname]['Cst'][-1].append(linesplit[1].strip())
                     if len(linesplit) > 2:
@@ -520,7 +546,8 @@ class DBaseParser(QtCore.QObject):
                     else:
                         self.dbasetables[tablename]['fields'][fieldname]['Cst'][-1].append(None)
                 compt += 1
-
+            file.close()
+        # print(self.dbasetables)
 
     def _generateSpatialiteCreationSQL(self, name, dbasetable, crs):
         """!
@@ -616,13 +643,15 @@ class DBaseParser(QtCore.QObject):
         Load dbase as Qgis layers
         put the layer in self.dbasetables['layer']
         """
+        debug = False
+        if debug: logging.getLogger('Lamia').debug('start')
         self.dbasetype = dbasetype
 
         if self.dbasetype == 'spatialite' and file is not None:
             self.spatialitefile = file
-            try:    #python 2
+            if sys.version_info.major == 2:
                 self.connSLITE = db.connect(file)
-            except NameError:   #python 3
+            elif sys.version_info.major == 3:
                 self.connSLITE = qgis.utils.spatialite_connect(file)
 
             self.SLITEcursor = self.connSLITE.cursor()
@@ -646,6 +675,8 @@ class DBaseParser(QtCore.QObject):
             self.query(sql)
             self.commit()
 
+        if debug: logging.getLogger('Lamia').debug('step1')
+
         self._AddDbaseInRecentsDBase(spatialitefile=file, host=host, port=port, dbname=dbname, schema=schema, user=user,
                                      password=password)
         self.reInitDBase()
@@ -660,6 +691,8 @@ class DBaseParser(QtCore.QObject):
         self.crsnumber = crs
         self.qgiscrs = qgis.core.QgsCoordinateReferenceSystem(self.crsnumber)
 
+        if debug: logging.getLogger('Lamia').debug('step2')
+
         if type is not None:
             self._createDBDictionary(type)
             # create a list of tables to load
@@ -672,6 +705,7 @@ class DBaseParser(QtCore.QObject):
 
             # load the table as qgsvectorlayer
             for tablename, geom in listoftabletoload:
+
                 if int(str(self.qgisversion_int)[0:3]) < 220:
                     uri = qgis.core.QgsDataSourceURI()
                 else:
@@ -764,8 +798,13 @@ class DBaseParser(QtCore.QObject):
                             qgis.core.QgsProject.instance().addMapLayer(self.dbasetables[tablename]['layer'],
                                                                                  True)
 
+            if debug: logging.getLogger('Lamia').debug('step3')
+
             self.updateQgsCoordinateTransformFromLayerToCanvas()
             self.dBaseLoaded.emit()
+
+
+        if debug: logging.getLogger('Lamia').debug('end')
 
 
     def query(self, sql):
@@ -780,7 +819,8 @@ class DBaseParser(QtCore.QObject):
                 self.commit()
                 return returnquery
             except OperationalError as e:
-                print('error query', e)
+                if self.qgsiface is None:
+                    print('error query', e)
                 return None
         elif self.dbasetype == 'postgis':
             if self.PGiscursor is None:
@@ -986,7 +1026,7 @@ class DBaseParser(QtCore.QObject):
 
 
     def getConstraintRawValueFromText(self, table, field, txt):
-        # print('_getConstraintRawValueFromText',[value[0] for value in self.dbasetable['fields'][field]['Cst']], txt )
+        # print('_getConstraintRawValueFromText',[value[0] for value in self.dbasetables[table]['fields'][field]['Cst']], txt )
         dbasetable = self.dbasetables[table]
         index = [value[0] for value in dbasetable['fields'][field]['Cst']].index(txt)
         return dbasetable['fields'][field]['Cst'][index][1]
@@ -996,23 +1036,28 @@ class DBaseParser(QtCore.QObject):
     def getConstraintTextFromRawValue(self, table, field, rawvalue):
         # print('_getConstraintTextFromRawValue',self.dbasetablename, self.dbasetable['fields'][field], rawvalue,field)
         dbasetable = self.dbasetables[table]
-        try:
-            if 'Cst' in dbasetable['fields'][field].keys():
-                if not self.isAttributeNull(rawvalue):
-                    index = [value[1] for value in dbasetable['fields'][field]['Cst']].index(rawvalue)
-                    return dbasetable['fields'][field]['Cst'][index][0]
-                else :
-                    return ''
+        #try:
+        if 'Cst' in dbasetable['fields'][field].keys():
+            if not self.isAttributeNull(rawvalue):
+                # print(type(rawvalue))
+                if isinstance(rawvalue, int) or isinstance(rawvalue, long):
+                    rawvalue = str(rawvalue)
+                index = [value[1] for value in dbasetable['fields'][field]['Cst']].index(rawvalue)
+                return dbasetable['fields'][field]['Cst'][index][0]
+            else :
+                return ''
+        else:
+            if not self.isAttributeNull(rawvalue):
+                return rawvalue
             else:
-                if not self.isAttributeNull(rawvalue):
-                    return rawvalue
-                else:
-                    return ''
+                return ''
+        """
         except ValueError:
             self.errorMessage.emit('Probleme de valeur de champ : table : "' + str(table)
                                                                   + '" champ : "' + str(field)
                                                                   + '" valeur :"' + str(rawvalue) + '"')
             return ''
+        """
 
 
     def isAttributeNull(self,attr):
@@ -1074,12 +1119,16 @@ class DBaseParser(QtCore.QObject):
                     dist = featgeom.distance(point2geom)
                 else:  # point
                     if featgeom.type() == 1 and not featgeom.isMultipart():
-                        if len(featgeom.asPolyline()) == 1:  # polyline of 1 point
-                            dist = qgis.core.QgsGeometry.fromPoint(
-                                qgis.core.QgsPoint(featgeom.asPolyline()[0])).distance(point2geom)
-                        elif len(featgeom.asPolyline()) == 2 and featgeom.asPolyline()[0] == featgeom.asPolyline()[1]:
-                            dist = qgis.core.QgsGeometry.fromPoint(
-                                qgis.core.QgsPoint(featgeom.asPolyline()[0])).distance(point2geom)
+                        if int(str(self.qgisversion_int)[0:3]) < 220:
+                            if len(featgeom.asPolyline()) == 1:  # polyline of 1 point
+                                dist = qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(featgeom.asPolyline()[0])).distance(point2geom)
+                            elif len(featgeom.asPolyline()) == 2 and featgeom.asPolyline()[0] == featgeom.asPolyline()[1]:
+                                dist = qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(featgeom.asPolyline()[0])).distance(point2geom)
+                        else:
+                            if len(featgeom.asPolyline()) == 1:  # polyline of 1 point
+                                dist = qgis.core.QgsGeometry.fromPointXY(qgis.core.QgsPointXY(featgeom.asPolyline()[0])).distance(point2geom)
+                            elif len(featgeom.asPolyline()) == 2 and featgeom.asPolyline()[0] == featgeom.asPolyline()[1]:
+                                dist = qgis.core.QgsGeometry.fromPointXY(qgis.core.QgsPointXY(featgeom.asPolyline()[0])).distance(point2geom)
                     else:
                         continue
                 # print('getNearestId',feat.geometry().isGeosValid(), layernearestid,dist )

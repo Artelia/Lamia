@@ -5,14 +5,15 @@ try:
     from qgis.PyQt.QtGui import (QWidget)
 except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget)
-from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
+#from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
+from ..abstract.lamia_rapport_tool import AbstractRapportTool
 import os
 import datetime
 
 
 
 
-class RapportTool(AbstractInspectionDigueTool):
+class RapportTool(AbstractRapportTool):
 
     LOADFIRST = False
     dbasetablename = 'Rapport'
@@ -20,6 +21,8 @@ class RapportTool(AbstractInspectionDigueTool):
     def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
         super(RapportTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
 
+
+    """
     def initTool(self):
         # ****************************************************************************************
         # Main spec
@@ -117,15 +120,7 @@ class RapportTool(AbstractInspectionDigueTool):
 
         self.initLinkageFromGeometry('Tcobjetressource',idres)
 
-        """
-        if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
-            if self.parentWidget.dbasetablename == 'Prestation':
-                # print(self.parentWidget.currentFeature.attributes())
-                currentparentlinkfield = self.parentWidget.currentFeature['id_prestation']
-                sql = "UPDATE Ressource SET lk_prestation = " + str(currentparentlinkfield) + " WHERE id_ressource = " + str(idres) + ";"
-                query = self.dbase.query(sql)
-                self.dbase.commit()
-        """
+
 
 
 
@@ -140,3 +135,5 @@ class UserUI(QWidget):
         super(UserUI, self).__init__(parent=parent)
         uipath = os.path.join(os.path.dirname(__file__), 'RapportToolUser.ui')
         uic.loadUi(uipath, self)
+    
+"""

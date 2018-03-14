@@ -5,7 +5,9 @@ try:
     from qgis.PyQt.QtGui import (QWidget, QLabel, QFrame)
 except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget, QLabel, QFrame)
-from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
+
+#from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
+from ..abstract.lamia_photos_tool import AbstractPhotosTool
 import os
 import datetime
 import glob
@@ -14,7 +16,7 @@ import glob
 
 
 
-class PhotosTool(AbstractInspectionDigueTool):
+class PhotosTool(AbstractPhotosTool):
 
     LOADFIRST = False
     dbasetablename = 'Photo'
@@ -22,6 +24,7 @@ class PhotosTool(AbstractInspectionDigueTool):
     def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
         super(PhotosTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
 
+"""
     def initTool(self):
         # ****************************************************************************************
         # Main spec
@@ -141,13 +144,7 @@ class PhotosTool(AbstractInspectionDigueTool):
             datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
             self.initFeatureProperties(feat, 'Ressource', 'dateressource', datecreation)
 
-        """
-        if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
-            if self.parentWidget.dbasetablename == 'TRONCON':
-                self.initFeatureProperties(feat, 'LkObjet', self.parentWidget.currentFeature.id())
-            elif self.parentWidget.dbasetablename == 'OBSERVATION':
-                self.initFeatureProperties(feat, 'LkObjet', self.parentWidget.currentFeature.id())
-        """
+
 
         if feat is not None:
             sql = "SELECT file FROM Ressource  WHERE id_ressource = " + str(feat['id_ressource']) + ";"
@@ -210,14 +207,7 @@ class PhotosTool(AbstractInspectionDigueTool):
                     query = self.dbase.query(sql)
                     self.dbase.commit()
 
-                """
-                if self.parentWidget.dbasetablename == 'Prestation':
-                    # print(self.parentWidget.currentFeature.attributes())
-                    currentparentlinkfield = self.parentWidget.currentFeature['id_prestation']
-                    sql = "UPDATE Ressource SET lk_prestation = " + str(currentparentlinkfield) + " WHERE id_ressource = " + str(idres) + ";"
-                    query = self.dbase.query(sql)
-                    self.dbase.commit()
-                """
+
 
 
 
@@ -293,3 +283,5 @@ class Label(QLabel):
     def clear(self):
         self.pixmap = QtGui.QPixmap()
         self.repaint()
+                
+"""

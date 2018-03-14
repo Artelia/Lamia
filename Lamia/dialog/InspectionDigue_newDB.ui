@@ -60,6 +60,16 @@
         </item>
         <item>
          <property name="text">
+          <string>VNF</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>EauPotable</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
           <string>Assainissement</string>
          </property>
         </item>

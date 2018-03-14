@@ -9,7 +9,7 @@
 /;
 Acier;              01
 Amiante-ciment;     02
-Beton ame tole;     03
+Béton ame tole;     03
 Beton ame;          04
 Beton fibre;        05
 Beton non arme;     06
@@ -44,11 +44,11 @@ Indetermine;        99
 ###enService;        INT ;                       INTEGER
 /;
 True;           1
-False           0
+False;           0
 ###branchement;        INT ;                       INTEGER
 /;
 True;           1
-False           0
+False;           0
 ###modeCirculation;        INT ;                       INTEGER
 /;
 Gravitaire;         01
@@ -64,14 +64,14 @@ Indetermine;        99
 Pluvial;                  PLU
 Eaux usees;               USE
 Unitaire;                 UNI
-###contCanAss
+###contCanAss;                VARCHAR(255);            TEXT
 /;
 Eaux pluviales;     01
 Eaux usees;         02
 Unitaire;           03
 Autre;              00
 Indetermine;        99
-###fonctionCannAss
+###fonctionCannAss;                VARCHAR(255);            TEXT
 /;
 Transport;          01
 Collecte;         02
@@ -79,6 +79,8 @@ Autre;              00
 Indetermine;        99
 ###altAmont;             REAL;                     DECIMAL
 ###altAval;             REAL;                     DECIMAL
+###profamont;             REAL;                     DECIMAL
+###profaval;             REAL;                     DECIMAL
 ###lk_noeud1;        INT ;                       INTEGER;                            Noeud(id_noeud)
 ###lk_noeud2;        INT ;                       INTEGER;                            Noeud(id_noeud)
 ###geom;                LINESTRING

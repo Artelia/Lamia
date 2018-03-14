@@ -86,3 +86,4 @@ False;    0
 ###km_point_start;             INT ;                   INTEGER
 ###km_point_end;             INT ;                   INTEGER
 ###real_length;             INT ;                   INTEGER
+###geom;                LINESTRING

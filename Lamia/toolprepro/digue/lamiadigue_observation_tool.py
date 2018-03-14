@@ -6,21 +6,24 @@ try:
     from qgis.PyQt.QtGui import (QWidget)
 except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget)
-from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
+#from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
+from ..abstract.lamia_observation_tool import AbstractObservationTool
 from .lamiadigue_photos_tool import PhotosTool
-from .lamiadigue_croquis_tool  import CroquisTool
+from .lamiadigue_croquis_tool import CroquisTool
 import os
 import datetime
 
 
-class ObservationTool(AbstractInspectionDigueTool):
+class ObservationTool(AbstractObservationTool):
 
     LOADFIRST = False
     dbasetablename = 'Observation'
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
         super(ObservationTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
-        
+
+
+    """
     def initTool(self):
         # ****************************************************************************************
         # Main spec
@@ -48,7 +51,9 @@ class ObservationTool(AbstractInspectionDigueTool):
         # ****************************************************************************************
         #properties ui
         pass
-
+    
+    
+    """
     def initFieldUI(self):
         # ****************************************************************************************
         # userui Desktop
@@ -74,6 +79,7 @@ class ObservationTool(AbstractInspectionDigueTool):
             self.propertieswdgCROQUIS = CroquisTool(dbase=self.dbase, parentwidget=self)
             self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
+    """
 
     def postOnActivation(self):
             pass
@@ -119,9 +125,10 @@ class ObservationTool(AbstractInspectionDigueTool):
     def postSaveFeature(self, boolnewfeature):
         pass
 
-
+    """
 class UserUI(QWidget):
     def __init__(self, parent=None):
         super(UserUI, self).__init__(parent=parent)
-        uipath = os.path.join(os.path.dirname(__file__), 'ObservationToolUser.ui')
+        uipath = os.path.join(os.path.dirname(__file__), 'lamiadigue_observation_tool_ui.ui')
         uic.loadUi(uipath, self)
+

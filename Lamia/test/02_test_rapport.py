@@ -14,7 +14,7 @@ def testVirtualLayer():
         layers = qgis.core.QgsMapLayerRegistry.instance().mapLayers()
 
         for lay, mapl in layers.iteritems():
-            print mapl.name()
+            print(mapl.name())
 
 
 
@@ -59,9 +59,11 @@ def testRapport(canvas, loadfile=True, typedb="spatialite",reporttype=None, pdff
             #path = os.path.normpath('I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201710_Begles//BD_Begles_ind0.sqlite')
             # path = os.path.normpath('C://000_testdigue//testBM//BD_Begles_ind0.sqlite')
             #path = os.path.normpath('C://000_testdigue//BM//BD_SIJALAG_ind4.sqlite')
-            path = os.path.normpath('I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201708_SIJALAG//BD_SIJALAG_ind5.sqlite')
+            # path = os.path.normpath('I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201708_SIJALAG//BD_SIJALAG_ind5.sqlite')
             # path = os.path.normpath('I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201710_Begles//BD_Begles_ind8.sqlite')
             #path = os.path.normpath('I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201709_RD//BD_Rivedroite_ind2.sqlite')
+            # path = os.path.normpath('C://000_testdigue//BM_SIJALAG//BD_SIJALAG_ind6.sqlite')
+            path = os.path.normpath('C://00_Affaires//BM_digues//Base_donnees//Begles//BD_Begles_ind8.sqlite')
             wind.dbase.loadQgisVectorLayers(path)
             wind.loadUiDesktop()
 

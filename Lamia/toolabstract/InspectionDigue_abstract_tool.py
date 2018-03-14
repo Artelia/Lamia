@@ -16,6 +16,7 @@ except ImportError:
                                      QDoubleSpinBox, QDialog, QVBoxLayout, QTreeWidget, QLineEdit, QCheckBox,
                                      QLabel, QMessageBox, QTextBrowser, QTableWidgetItem)
 import os
+import sys
 import qgis
 import qgis.utils
 from ..dialog.InspectionDigue_linkage import LinkageDialog
@@ -23,6 +24,7 @@ from ..dialog.InspectionDigue_linkage import LinkageDialog
 from ..maptool.mapTools import mapToolCapture
 import shutil
 import datetime
+
 import time
 import logging
 debugtime = False
@@ -401,7 +403,10 @@ class AbstractInspectionDigueTool(QWidget):
                     self.tableWidget.setItem(rowPosition, 0, item)
                     if 'Cst' in dbasetable['fields'][field].keys():
                         wdg = QComboBox()
-                        wdg.addItems([str(description[0]) for description in dbasetable['fields'][field]['Cst']])
+                        if sys.version_info.major == 2:
+                            wdg.addItems([str(description[0].encode('utf-8')) for description in dbasetable['fields'][field]['Cst']])
+                        elif sys.version_info.major == 3:
+                            wdg.addItems([description[0] for description in dbasetable['fields'][field]['Cst']])
                         self.tableWidget.setCellWidget(rowPosition, 1, wdg)
 
                         linkuserwdglist = []
@@ -419,12 +424,18 @@ class AbstractInspectionDigueTool(QWidget):
                                     and field in linkuserwdg[tablename]['widgets'].keys()
                                     and isinstance(linkuserwdg[tablename]['widgets'][field],QComboBox)):
                                 # if linkuserwdg[] is not None and field in linkuserwdg.keys():
-                                templist = [str(description[0]) for description in dbasetable['fields'][field]['Cst']]
+                                if sys.version_info.major == 2:
+                                    templist = [str(description[0].encode('utf-8')) for description in dbasetable['fields'][field]['Cst']]
+                                elif sys.version_info.major == 3:
+                                    templist = [description[0] for description in dbasetable['fields'][field]['Cst']]
                                 linkuserwdg[tablename]['widgets'][field].addItems(templist)
 
                             if 'ParFldCst' in dbasetable['fields'][field].keys():
                                 # listfieldname = [fieldname for fieldname in dbasetable['fields'].keys()]
                                 listfieldname = [self.tableWidget.item(row, 0).text() for row in range(self.tableWidget.rowCount())]
+                                #print(dbasetable['fields'])
+                                #print(listfieldname)
+                                # print(tablename + '.' + dbasetable['fields'][field]['ParFldCst'])
                                 indexparentfield = listfieldname.index(tablename + '.' + dbasetable['fields'][field]['ParFldCst'])
                                 nameparenttalbe, nameparentfield = listfieldname[indexparentfield].split('.')
                                 # print('indexparentfield', indexparentfield)
@@ -665,7 +676,6 @@ class AbstractInspectionDigueTool(QWidget):
         """!
         manage constrained combobox
         """
-
         # table
         senderwdg = self.sender()
         parenttablename = None
@@ -708,7 +718,7 @@ class AbstractInspectionDigueTool(QWidget):
         if comefromrawtable:
             listfieldname = [self.tableWidget.item(row, 0).text() for row in range(self.tableWidget.rowCount())]
             for childfieldname in childfieldnames:
-                listtoadd = [str(value[0]) for value in dbasetable['fields'][childfieldname]['Cst'] if
+                listtoadd = [value[0] for value in dbasetable['fields'][childfieldname]['Cst'] if
                              parentcstvalue in value[2]]
                 indexchildintable = listfieldname.index(parenttablename + '.' + childfieldname)
                 combochild = self.tableWidget.cellWidget(indexchildintable, 1)
@@ -717,7 +727,10 @@ class AbstractInspectionDigueTool(QWidget):
                     combochild.addItems(listtoadd)
         else:
             for childfieldname in childfieldnames:
-                listtoadd = [str(value[0]) for value in dbasetable['fields'][childfieldname]['Cst'] if
+
+                if dbasetable['fields'][parentfieldname]['SLtype'] == 'INTEGER' and parentcstvalue != '':
+                    parentcstvalue = int(parentcstvalue)
+                listtoadd = [value[0] for value in dbasetable['fields'][childfieldname]['Cst'] if
                              parentcstvalue in value[2]]
                 combochild = self.linkuserwdg[parenttablename]['widgets'][childfieldname]
                 combochild.clear()
@@ -1285,10 +1298,11 @@ class AbstractInspectionDigueTool(QWidget):
                             if tablename in templinkuserwgd.keys() and templinkuserwgd[tablename] is not None and 'widgets' in templinkuserwgd[tablename].keys() and field in templinkuserwgd[tablename]['widgets'].keys():
                                 self.setValueInWidget(templinkuserwgd[tablename]['widgets'][field], valuetoset, tablename, field)
                         else:
-                            if valuetoset is None:
-                                self.tableWidget.item(itemindex, 1).setText('')
-                            else:
-                                self.tableWidget.item(itemindex, 1).setText(str(valuetoset))
+                            if self.tableWidget.item(itemindex, 1) is not None:
+                                if valuetoset is None:
+                                    self.tableWidget.item(itemindex, 1).setText('')
+                                else:
+                                    self.tableWidget.item(itemindex, 1).setText(str(valuetoset))
 
             # current prestation case:
             self.pushButton_savefeature.setEnabled(True)
@@ -1443,6 +1457,7 @@ class AbstractInspectionDigueTool(QWidget):
 
             # print(self.currentFeature.geometry().exportToWkt())
             self.currentFeature = self.saveTableFeature(self.dbasetablename, self.currentFeature)
+            # print('curfeat1', self.currentFeature.id())
 
             # *************************
             # save attributes
@@ -1661,6 +1676,13 @@ class AbstractInspectionDigueTool(QWidget):
         if 'Cst' in self.dbase.dbasetables[tablename]['fields'][fieldname].keys():
             # fieldvaluetosave = self._getConstraintRawValueFromText(tablename,fieldname, wdg.currentText())
             fieldvaluetosave = self.dbase.getConstraintRawValueFromText(tablename, fieldname, wdg.currentText())
+
+            if False:
+                try:
+                    fieldvaluetosave = self.dbase.getConstraintRawValueFromText(tablename, fieldname, wdg.currentText())
+                except AttributeError as e:
+                    print(self.dbase.dbasetables[tablename]['fields'][fieldname])
+                    print('error',tablename, fieldname)
             if fieldvaluetosave == '':
                 fieldvaluetosave = None
         else:
@@ -2209,8 +2231,12 @@ class AbstractInspectionDigueTool(QWidget):
             self.canvas.setCenter(point2)
             self.canvas.refresh()
             """
+            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                selectedfeatureids = self.dbasetable['layer'].selectedFeaturesIds()
+            else:
+                selectedfeatureids = self.dbasetable['layer'].selectedFeatureIds()
 
-            if not self.currentFeature.id() in self.dbasetable['layer'].selectedFeaturesIds():
+            if not self.currentFeature.id() in selectedfeatureids:
                 type = self.dbasetable['layer'].geometryType()
                 geom = qgis.core.QgsGeometry(self.currentFeature.geometry())
                 if type == 1 and len(geom.asPolyline()) == 2 and geom.asPolyline()[0] == geom.asPolyline()[1] :

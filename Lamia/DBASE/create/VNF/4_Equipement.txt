@@ -6,8 +6,8 @@
 ###id_objet;             INT ;                   INTEGER ;                               Objet(id_objet)
 ###id_descriptionsystem ;               INT ;                   INTEGER;                                Descriptionsystem(id_descriptionsystem)
 ###lk_infralineaire;        INT ;                   INTEGER ;                               Infralineaire(id_infralineaire)
-###partie;             INT ;                   INTEGER
-###equipement;             INT ;                   INTEGER
+#partie;             INT ;                   INTEGER
+#equipement;             INT ;                   INTEGER
 ###note_ief;             INT ;                   INTEGER
 ###forcage_ree;             INT ;                   INTEGER
 ###pk_debut;             INT ;                   INTEGER
@@ -23,21 +23,22 @@ False;    0
 ###ouvrage;             INT ;                   INTEGER
 ###partie;     INT ;                   INTEGER
 /;
-Voie d eau;         1
+Voie d'eau;         1
 Berge rive gauche;  2
 Berge rive droite;  3
 ###equipement;     INT ;                   INTEGER
 ##partie
-/;
+/;                                    ; ['']            
 chenal de navigation;                1;  [1]
-Pied de berge - Rive droite          2;  [1]
-Pied de berge - Rive gauche          3;  [1]
-Talus exposé - Rive gauche           4;  [2,3]
-Talus exposé - Rive droite           5;  [2,3]
-Crete                                6;  [2,3]
-Corps de digue                       7;  [2,3]
-Talus aval digue                     8;  [2,3]
-Contre-fosse                         9;  [2,3]
-Connexion au terrain naturel         10;  [2,3]
-Elements de securite                 11;  [2,3]
-Franchissement et ouvrages divers    12;  [2,3]
+Pied de berge - Rive droite;          2;  [1]
+Pied de berge - Rive gauche;          3;  [1]
+Talus exposé - Rive gauche;           4;  [2,3]
+Talus exposé - Rive droite;           5;  [2,3]
+Crête;                                6;  [2,3]
+Corps de digue;                       7;  [2,3]
+Talus aval digue;                     8;  [2,3]
+Contre-fosse;                         9;  [2,3]
+Connexion au terrain naturel;         10;  [2,3]
+Eléments de securite;                 11;  [2,3]
+Franchissement et ouvrages divers;    12;  [2,3]
+###geom;                LINESTRING

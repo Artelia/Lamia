@@ -516,8 +516,8 @@ class GraphiqueTool(AbstractInspectionDigueTool):
             #legend = self.axtype.legend(bbox_to_anchor=(1.04, 0), loc="lower left", borderaxespad=0, prop={'size': 8}, shadow=False)
             #legend = self.axtype.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.,prop={'size': 8})
             legend = self.axtype.legend(bbox_to_anchor=(0., 1.), loc="lower left", bbox_transform=self.figuretype.transFigure, prop={'size': 8})
-            self.axtype.annotate('TERRE', xy=(0.05, 0.95), xycoords='axes fraction',horizontalalignment='left')
-            self.axtype.annotate('EAU', xy=(0.95, 0.95), xycoords='axes fraction',horizontalalignment='right')
+            self.axtype.annotate('TERRE', xy=(0.05, 1.05), xycoords='axes fraction',horizontalalignment='left')
+            self.axtype.annotate('EAU', xy=(0.95, 1.05), xycoords='axes fraction',horizontalalignment='right')
 
             #plt.ylabel('Z (m)', fontsize=8)
             self.axtype.set_ylabel('Z (m)', fontsize=8)
@@ -595,6 +595,6 @@ class GraphiqueTool(AbstractInspectionDigueTool):
 class UserUI(QWidget):
     def __init__(self, parent=None):
         super(UserUI, self).__init__(parent=parent)
-        uipath = os.path.join(os.path.dirname(__file__), 'GraphiqueToolUser.ui')
+        uipath = os.path.join(os.path.dirname(__file__), 'lamiadigue_graphique_tool_ui.ui')
         uic.loadUi(uipath, self)
 

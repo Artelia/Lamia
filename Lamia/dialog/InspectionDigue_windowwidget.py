@@ -49,15 +49,16 @@ from .InspectionDigue_Import import ImportObjetDialog
 
 from .InspectionDigue_newDB import newDBDialog
 from .InspectionDigue_getDate import getDateDialog
-from ..maptool.mapTools import mapToolCapture
+
 
 from ..toolgeneral.InspectionDigue_rapport import printPDFWorker
 from ..toolgeneral.InspectionDigue_exportshp import exportShapefileWorker
 from ..toolgeneral.InspectionDigue_import import ImportObjectWorker
-from ..gps.GPSutil import GpsUtil
+
 import time
 
-
+from ..gps.GPSutil import GpsUtil
+from ..maptool.mapTools import mapToolCapture
 
 
 class InspectiondigueWindowWidget(QMainWindow):
@@ -74,6 +75,12 @@ class InspectiondigueWindowWidget(QMainWindow):
         :param parent : pyqt widget parent
         """
         super(InspectiondigueWindowWidget, self).__init__(parent)
+        debug = False
+
+
+
+        if debug: logging.getLogger('Lamia').debug('start')
+
         if False:
             self.setupUi(self)
         else:
@@ -143,6 +150,8 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.GPSlabel = QLabel('GPS non connecte')
         self.statusBar().addWidget(self.GPSlabel)
 
+        if debug: logging.getLogger('Lamia').debug('step1')
+
         # ***************************************************************
         # ******************   Actions  ****************************
         # ***************************************************************
@@ -201,6 +210,8 @@ class InspectiondigueWindowWidget(QMainWindow):
             self.dbase.imagedirectory = os.path.normpath(QtCore.QSettings().value("InspectionDigue/picturepath"))
         else:
             self.dbase.imagedirectory = None
+
+        if debug: logging.getLogger('Lamia').debug('end')
 
 
     def setWorkingDate(self):
@@ -283,7 +294,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                             if moduletemp.__name__ == obj.__module__:
 
                                 print('obj',self.tools,obj, self.dbase,self )
-                                self.tools.append(obj(self.dbase, self, qgis.utils.iface.mapCanvas() ))
+                                self.tools.append(obj(self.dbase, self, self.dbase.qgsiface.mapCanvas() ))
 
 
                                 if False:
@@ -518,8 +529,13 @@ class InspectiondigueWindowWidget(QMainWindow):
 
     #
     def loadSLDbase(self):
-        file, extension = self.qfiledlg.getOpenFileNameAndFilter(None, 'Choose the file', '',
-                                                                 'Spatialite (*.sqlite)', '')
+        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+            file, extension = self.qfiledlg.getOpenFileNameAndFilter(None, 'Choose the file', '',
+                                                                     'Spatialite (*.sqlite)', '')
+        else:
+            file , extension= self.qfiledlg.getOpenFileName(None, 'Choose the file', '',
+                                                                     'Spatialite (*.sqlite)', '')
+            print(file)
         if file:
             self.dbase.loadQgisVectorLayers(file)
 
@@ -539,10 +555,21 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.menuBases_recentes.triggered.connect(self.openFileFromMenu)
 
     def DBaseLoaded(self):
+
+        debug = False
+        if debug: logging.getLogger('Lamia').debug('start')
+
+
+        if False:
+            qgis.utils.uninstallErrorHook()  # for standart output
+            qgis.utils.uninstallErrorHook()  # for standart output
+            sys.excepthook = sys.__excepthook__
+            print(sys.excepthook)
+            print(sys.stderr)
+            'okok'.decode('utf-8')
         self.gpsutil.setCRS(self.dbase.qgiscrs)
         self.dbase.updateWorkingDate()
         timestart = time.clock()
-
 
 
         if debugtime: logger.debug(' progress bar done %.3f', time.clock() - timestart)
@@ -550,14 +577,23 @@ class InspectiondigueWindowWidget(QMainWindow):
 
         if True:
 
+
             path = os.path.join(os.path.dirname(__file__), '..', 'toolprepro', self.dbase.type.lower())
             modules = glob.glob(path + "/*.py")
             __all__ = [os.path.basename(f)[:-3] for f in modules if os.path.isfile(f)]
+
             for x in __all__:
-                if qgis.utils.iface is not None:
+                if debug: logging.getLogger('Lamia').debug('x %s', x)
+                if self.dbase.qgsiface is not None:
+                    #   if not self.dbase.standalone:
+                    exec('import Lamia.toolprepro.' + self.dbase.type.lower())
                     moduletemp = importlib.import_module('.' + str(x), 'Lamia.toolprepro.' + self.dbase.type.lower() )
+                    # moduletemp = importlib.import_module('.' + str(x), 'Lamia.toolprepro.' + self.dbase.type.lower())
+                    # moduletemp = importlib.import_module('.' + str(x), '..toolprepro.' + self.dbase.type.lower())
                 else:
+                    exec('import Lamia.Lamia.toolprepro.' + self.dbase.type.lower())
                     moduletemp = importlib.import_module('.' + str(x), 'Lamia.Lamia.toolprepro.' + self.dbase.type.lower())
+
                 for name, obj in inspect.getmembers(moduletemp, inspect.isclass):
                     if moduletemp.__name__ == obj.__module__:
                         try:
@@ -568,11 +604,14 @@ class InspectiondigueWindowWidget(QMainWindow):
                         except AttributeError:
                             pass
 
+            if debug: logging.getLogger('Lamia').debug('step1')
+
             path = os.path.join(os.path.dirname(__file__), '..', 'toolpostpro')
             modules = glob.glob(path + "/*.py")
             __all__ = [os.path.basename(f)[:-3] for f in modules if os.path.isfile(f)]
             for x in __all__:
-                if qgis.utils.iface is not None:
+                if self.dbase.qgsiface is not None:
+                    #if not self.dbase.standalone:
                     moduletemp = importlib.import_module('.' + str(x), 'Lamia.toolpostpro' )
                 else:
                     moduletemp = importlib.import_module('.' + str(x), 'Lamia.Lamia.toolpostpro')
@@ -828,7 +867,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                     except:
                         pass
 
-            # if self.progress is not None: qgis.utils.iface.messageBar().clearWidgets()
+            # if self.progress is not None: self.dbase.qgsiface.messageBar().clearWidgets()
 
         # self.applyVisualMode()
 
@@ -838,12 +877,16 @@ class InspectiondigueWindowWidget(QMainWindow):
     def loadUiField(self):
 
 
-        if qgis.utils.iface is not None:
-            progressMessageBar = qgis.utils.iface.messageBar().createMessage("Loading widget...")
+        if self.dbase.qgsiface is not None:
+            #if not self.dbase.standalone:
+            progressMessageBar = self.dbase.qgsiface.messageBar().createMessage("Loading widget...")
             progress = QProgressBar()
             progress.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
             progressMessageBar.layout().addWidget(progress)
-            qgis.utils.iface.messageBar().pushWidget(progressMessageBar, qgis.utils.iface.messageBar().INFO)
+            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                self.dbase.qgsiface.messageBar().pushWidget(progressMessageBar, self.dbase.qgsiface.messageBar().INFO)
+            else:
+                self.dbase.qgsiface.messageBar().pushWidget(progressMessageBar, qgis.core.Qgis.Info)
             lenuifields = len(self.uifields)
             progress.setMaximum(lenuifields)
         else:
@@ -863,18 +906,22 @@ class InspectiondigueWindowWidget(QMainWindow):
             #except Exception as e:
             #     print('error load', e)
 
-        if progress is not None: qgis.utils.iface.messageBar().clearWidgets()
+        if progress is not None: self.dbase.qgsiface.messageBar().clearWidgets()
 
 
 
     def loadUiDesktop(self):
 
-        if qgis.utils.iface is not None:
-            progressMessageBar = qgis.utils.iface.messageBar().createMessage("Loading widget...")
+        if self.dbase.qgsiface is not None:
+            #if not self.dbase.standalone:
+            progressMessageBar = self.dbase.qgsiface.messageBar().createMessage("Loading widget...")
             progress = QProgressBar()
             progress.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
             progressMessageBar.layout().addWidget(progress)
-            qgis.utils.iface.messageBar().pushWidget(progressMessageBar, qgis.utils.iface.messageBar().INFO)
+            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                self.dbase.qgsiface.messageBar().pushWidget(progressMessageBar, self.dbase.qgsiface.messageBar().INFO)
+            else:
+                self.dbase.qgsiface.messageBar().pushWidget(progressMessageBar, qgis.core.Qgis.Info)
             lenuifields = len(self.uidesktop)
             lenuipostpro = len(self.uipostpro)
             progress.setMaximum(lenuifields + lenuipostpro)
@@ -934,7 +981,7 @@ class InspectiondigueWindowWidget(QMainWindow):
 
 
 
-        if progress is not None: qgis.utils.iface.messageBar().clearWidgets()
+        if progress is not None: self.dbase.qgsiface.messageBar().clearWidgets()
         self.desktopuiloaded = True
 
 
@@ -1068,8 +1115,9 @@ class InspectiondigueWindowWidget(QMainWindow):
             # run export
             self.dbase.exportBase(self.exportdbase)
 
-            if qgis.utils.iface is not None:
-                qgis.utils.iface.messageBar().pushMessage("InspectionDigue", 'Export fini', level=qgis.gui.QgsMessageBar.SUCCESS, duration=3)
+            if self.dbase.qgsiface is not None:
+                # if not self.dbase.standalone:
+                self.dbase.qgsiface.messageBar().pushMessage("InspectionDigue", 'Export fini', level=qgis.gui.QgsMessageBar.SUCCESS, duration=3)
             else:
                 print('export fini')
 
@@ -1079,23 +1127,38 @@ class InspectiondigueWindowWidget(QMainWindow):
 
 
     def errorMessage(self, text):
-        if qgis.utils.iface is not None:
-            qgis.utils.iface.messageBar().pushMessage("InspectionDigue", text,
-                                                      level=qgis.gui.QgsMessageBar.CRITICAL, duration=3)
+        if self.dbase.qgsiface is not None:
+            #if not self.dbase.standalone:
+            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                self.dbase.qgsiface.messageBar().pushMessage("InspectionDigue", text,
+                                                          level=qgis.gui.QgsMessageBar.CRITICAL, duration=3)
+            else:
+                self.dbase.qgsiface.messageBar().pushMessage("InspectionDigue", text,
+                                                          level=qgis.core.Qgis.CRITICAL, duration=3)
         else:
             print('ErrorMessage', text)
 
     def warningMessage(self, text):
-        if qgis.utils.iface is not None:
-            qgis.utils.iface.messageBar().pushMessage("InspectionDigue", text,
-                                                      level=qgis.gui.QgsMessageBar.WARNING, duration=3)
+        if self.dbase.qgsiface is not None:
+            # if not self.dbase.standalone:
+            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                self.dbase.qgsiface.messageBar().pushMessage("InspectionDigue", text,
+                                                          level=qgis.gui.QgsMessageBar.WARNING, duration=3)
+            else:
+                self.dbase.qgsiface.messageBar().pushMessage("InspectionDigue", text,
+                                                          level= qgis.core.Qgis.WARNING, duration=3)
         else:
             print('ErrorMessage', text)
 
     def normalMessage(self, text):
-        if qgis.utils.iface is not None:
-            qgis.utils.iface.messageBar().pushMessage("InspectionDigue", text,
-                                                      level=qgis.gui.QgsMessageBar.INFO, duration=3)
+        if self.dbase.qgsiface is not None:
+            #if not self.dbase.standalone:
+            # self.dbase.qgsiface.messageBar().pushMessage("InspectionDigue", text, level=qgis.gui.QgsMessageBar.INFO, duration=3)
+            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                self.dbase.qgsiface.messageBar().pushMessage("InspectionDigue", text, self.dbase.qgsiface.messageBar().INFO)
+            else:
+                self.dbase.qgsiface.messageBar().pushMessage("InspectionDigue" ,text, qgis.core.Qgis.Info)
+
         else:
             print('normalMessage', text)
 
@@ -1185,8 +1248,9 @@ class InspectiondigueWindowWidget(QMainWindow):
         item, ok = QInputDialog.getItem(self, "select input dialog",
                                         "list of languages", items, 0, False)
         if ok and item:
-            if qgis.utils.iface is not None:
-                currentlayer = qgis.utils.iface.activeLayer()
+            if self.dbase.qgsiface is not None:
+                #if not self.dbase.standalone:
+                currentlayer = self.dbase.qgsiface.activeLayer()
                 currentlayerfields = currentlayer.fields()
                 currentlayerfieldsname = [''] + [field.name() for field in currentlayerfields]
                 # combofield = QComboBox([''] + currentlayerfieldsname)
@@ -1576,7 +1640,7 @@ class InspectiondigueWindowWidget(QMainWindow):
 
 
                             #Other exceptions
-                            except KeyError, e:
+                            except KeyError as e:
                                 print(e, list_dates_reperes)
                                 return
                                 nouveau = False

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>466</width>
+    <height>304</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <item row="2" column="2">
+    <widget class="QComboBox" name="comboBox"/>
+   </item>
+   <item row="4" column="1">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Si oui à quelle date</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="2">
+    <widget class="QComboBox" name="comboBox_2"/>
+   </item>
+   <item row="6" column="1">
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>Conclusion de l'inspection</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="2">
+    <widget class="QTextBrowser" name="textBrowser"/>
+   </item>
+   <item row="0" column="2">
+    <widget class="QComboBox" name="comboBox_4">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="1">
+    <widget class="QLabel" name="label_6">
+     <property name="text">
+      <string>Si oui,  sur quel % du linéaire ?</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="1">
+    <widget class="QLabel" name="label_7">
+     <property name="text">
+      <string>Commentaires</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QComboBox" name="comboBox_6">
+     <item>
+      <property name="text">
+       <string>Chenal - Y-a-t-il eu une inspection de fonds ?</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="4" column="2">
+    <widget class="QDateEdit" name="dateEdit"/>
+   </item>
+   <item row="0" column="1">
+    <widget class="QLabel" name="label_8">
+     <property name="text">
+      <string>equipement</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="2">
+    <widget class="QComboBox" name="comboBox_3"/>
+   </item>
+   <item row="9" column="2">
+    <widget class="QTextBrowser" name="textBrowser_2"/>
+   </item>
+   <item row="2" column="1">
+    <widget class="QComboBox" name="comboBox_5">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string>Chenal - Materiaux</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="8" column="2">
+    <widget class="QSpinBox" name="spinBox"/>
+   </item>
+   <item row="7" column="1">
+    <widget class="QComboBox" name="comboBox_7">
+     <property name="frame">
+      <bool>false</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string>Chenal - L equipement a-t-il fait l objet de travaux localises</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

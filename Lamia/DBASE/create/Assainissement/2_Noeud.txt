@@ -10,23 +10,24 @@
 ###maitreOuvrage;                VARCHAR(255);            TEXT
 ###exploitant;                VARCHAR(255);            TEXT
 ###metaREAPA;             INT ;                     INTEGER ;                                    Metaraepa(id_metaraepa)
-###altRadierOuvrage;             REAL;                     DECIMAL
+###altradierouvrage;             REAL;                     DECIMAL
+###alttamponouvrage;             REAL;                     DECIMAL
+###profradierouvrage;             REAL;                     DECIMAL
+###proftamponouvrage;             REAL;                     DECIMAL
 ###typeReseau;                VARCHAR(255);            TEXT
 /;
 Pluvial;                  PLU
 Eaux usees;               USE
 Unitaire;                 UNI
-###typeOuvrageAss;             INT ;                     INTEGER ;
+###typeOuvrageAss;             INT ;                     INTEGER 
 /;
-Station de pompage;        01
-Station d epuration;       02
-Bassin de stockage;        03
-Deversoir d orage;         04
-Rejet;                     05
-Regard;                    06
-Avaloir;                   07
-Autre;                     00
+Poste de refoulement;        1
+Station d epuration;       2
+Bassin de stockage;        3
+Deversoir d orage;         4
+Rejet;                     5
+Regard;                    6
+Avaloir;                   7
+Autre;                     0
 Indetermine;               99
-###lk_cana1;        INT ;                       INTEGER;                            Infralineaire(id_infralineaire)
-###lk_cana2;        INT ;                       INTEGER;                            Infralineaire(id_infralineaire)
 ###geom;                POINT

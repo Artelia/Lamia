@@ -254,7 +254,10 @@ class PathTool(AbstractInspectionDigueTool):
 
             #process topographie
             if geomprojection is not None:
-                geomfinalbuffer = geomprojection.buffer(200,12).exportToWkt()
+                if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                    geomfinalbuffer = geomprojection.buffer(200,12).exportToWkt()
+                else:
+                    geomfinalbuffer = geomprojection.buffer(200, 12).asWkt()
 
                 if datatype == 'equipement_hydraulique':
                     sql = "SELECT id_equipement, ST_AsText(geom)  FROM Equipement "
@@ -619,7 +622,10 @@ class PathTool(AbstractInspectionDigueTool):
                 nodes.reverse()
                 # geom = qgis.core.QgsGeometry.fromPolyline(nodes)
             geomfinalnodes += nodes
-        geom = qgis.core.QgsGeometry.fromPolyline(geomfinalnodes)
+        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+            geom = qgis.core.QgsGeometry.fromPolyline(geomfinalnodes)
+        else:
+            geom = qgis.core.QgsGeometry.fromPolylineXY(geomfinalnodes)
         return geom
 
 

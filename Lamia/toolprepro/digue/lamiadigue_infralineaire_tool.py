@@ -6,7 +6,8 @@ try:
     from qgis.PyQt.QtGui import (QWidget, QLabel, QFrame)
 except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget, QLabel, QFrame)
-from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
+#from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
+from ..abstract.lamia_infralineaire_tool import AbstractInfraLineaireTool
 from .lamiadigue_photos_tool import PhotosTool
 from .lamiadigue_rapport_tool import RapportTool
 from .lamiadigue_tronconemprise_tool  import TronconEmpriseTool
@@ -16,6 +17,7 @@ from .lamiadigue_profil_tool import ProfilTool
 # from .InspectionDigue_profiltravers_tool  import ProfilTraversTool
 from ...toolpostpro.InspectionDigue_path_tool import PathTool
 from .lamiadigue_graphique_tool  import GraphiqueTool
+from ..abstract.lamia_photoviewer import PhotoViewer
 import os
 import datetime
 import logging
@@ -24,7 +26,7 @@ debugtime = False
 
 
 
-class InfraLineaireTool(AbstractInspectionDigueTool):
+class InfraLineaireTool(AbstractInfraLineaireTool):
 
     LOADFIRST = True
     dbasetablename = 'Infralineaire'
@@ -69,7 +71,13 @@ class InfraLineaireTool(AbstractInspectionDigueTool):
 
             self.linkuserwdgfield = {'Infralineaire': {'linkfield': 'id_infralineaire',
                                                        'widgets': {'description1': self.userwdgfield.comboBox_type,
-                                                                   'description2': self.userwdgfield.comboBox_contitution}},
+                                                                   'description2': self.userwdgfield.comboBox_contitution,
+                                                                   'aubaredelargeur': self.userwdgfield.comboBox_aubaredelargeur,
+                                                                   'aubaredevegherbacee': self.userwdgfield.comboBox_aubaredevegherbacee,
+                                                                   'aubaredevegarbustive': self.userwdgfield.comboBox_aubaredevegarbustive,
+                                                                   'aubaredevegarboree': self.userwdgfield.comboBox_aubaredevegarboree,
+                                                                   'aubaredecommentaire': self.userwdgfield.textBrowser_aubaredecommentaire
+                                                                   }},
                                      'Objet': {'linkfield': 'id_objet',
                                                'widgets': {'libelle': self.userwdgfield.lineEdit_nom,
                                                            'commentaire': self.userwdgfield.textBrowser_comm}},
@@ -96,7 +104,13 @@ class InfraLineaireTool(AbstractInspectionDigueTool):
             self.linkuserwdgdesktop = {'Infralineaire': {'linkfield': 'id_infralineaire',
                                                          'widgets': {'description1': self.userwdgdesktop.comboBox_type,
                                                                      'description2': self.userwdgdesktop.comboBox_contitution,
-                                                                     'classement': self.userwdgdesktop.comboBox_classement}},
+                                                                     'classement': self.userwdgdesktop.comboBox_classement,
+                                                                     'aubaredelargeur': self.userwdgdesktop.comboBox_aubaredelargeur,
+                                                                     'aubaredevegherbacee': self.userwdgdesktop.comboBox_aubaredevegherbacee,
+                                                                     'aubaredevegarbustive': self.userwdgdesktop.comboBox_aubaredevegarbustive,
+                                                                     'aubaredevegarboree': self.userwdgdesktop.comboBox_aubaredevegarboree,
+                                                                     'aubaredecommentaire': self.userwdgdesktop.textBrowser_aubaredecommentaire
+                                                                     }},
                                        'Objet': {'linkfield': 'id_objet',
                                                  'widgets': {'libelle': self.userwdgdesktop.lineEdit_nom,
                                                              'commentaire': self.userwdgdesktop.textBrowser_comm}},
@@ -106,10 +120,10 @@ class InfraLineaireTool(AbstractInspectionDigueTool):
             self.userwdgdesktop.pushButton_defineinter.clicked.connect(self.manageLinkage)
 
             if True:
-                self.photowdg = Label()
+                self.photowdg = PhotoViewer()
                 self.userwdgdesktop.tabWidget.widget(0).layout().addWidget(self.photowdg)
             if True:
-                self.croquisprofilwdg = Label()
+                self.croquisprofilwdg = PhotoViewer()
                 self.userwdgdesktop.stackedWidget_profiltravers.widget(0).layout().addWidget(self.croquisprofilwdg)
 
                 self.graphprofil = GraphiqueTool(dbase=self.dbase, parentwidget=self)
@@ -325,7 +339,7 @@ class InfraLineaireTool(AbstractInspectionDigueTool):
 
 
 
-
+    """
     def createParentFeature(self):
         datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
         sql = "INSERT INTO Objet (datecreation) VALUES('" + datecreation + "');"
@@ -376,6 +390,9 @@ class InfraLineaireTool(AbstractInspectionDigueTool):
         self.dbase.commit()
 
         return True
+    """
+
+
 
     def showImageinLabelWidget(self,wdg,savedfile):
         file = self.dbase.completePathOfFile(savedfile)
@@ -399,37 +416,11 @@ class InfraLineaireTool(AbstractInspectionDigueTool):
 class UserUI(QWidget):
     def __init__(self, parent=None):
         super(UserUI, self).__init__(parent=parent)
-        uipath = os.path.join(os.path.dirname(__file__), 'InfralineaireToolUser.ui')
+        uipath = os.path.join(os.path.dirname(__file__), 'lamiadigue_infralineaire_tooldesktop_ui.ui')
         uic.loadUi(uipath, self)
 
 class UserUIField(QWidget):
     def __init__(self, parent=None):
         super(UserUIField, self).__init__(parent=parent)
-        uipath = os.path.join(os.path.dirname(__file__), 'InfralineaireFieldToolUser.ui')
+        uipath = os.path.join(os.path.dirname(__file__), 'lamiadigue_infralineaire_tool_ui.ui')
         uic.loadUi(uipath, self)
-
-class Label(QLabel):
-    def __init__(self, img = None):
-        super(Label, self).__init__()
-        self.setFrameStyle(QFrame.StyledPanel)
-        self.pixmap = QtGui.QPixmap(img)
-
-    def paintEvent(self, event):
-        size = self.size()
-        painter = QtGui.QPainter(self)
-        point = QtCore.QPoint(0,0)
-        if not self.pixmap.isNull() :
-            scaledPix = self.pixmap.scaled(size, QtCore.Qt.KeepAspectRatio, transformMode = QtCore.Qt.SmoothTransformation)
-            # start painting the label from left upper corner
-            point.setX((size.width() - scaledPix.width())/2)
-            point.setY((size.height() - scaledPix.height())/2)
-            painter.drawPixmap(point, scaledPix)
-
-
-    def setPixmap(self, img):
-        self.pixmap = QtGui.QPixmap(img)
-        self.repaint()
-
-    def clear(self):
-        self.pixmap = QtGui.QPixmap()
-        self.repaint()

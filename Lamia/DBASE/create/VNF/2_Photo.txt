@@ -9,3 +9,4 @@
 ###id_ressource;        INT ;                       INTEGER;                                    Ressource(id_ressource)
 ###chemin;                VARCHAR(255);            TEXT
 ###nom_fichier;                VARCHAR(255);            TEXT
+###geom;                POINT

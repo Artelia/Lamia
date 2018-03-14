@@ -5,7 +5,8 @@ try:
     from qgis.PyQt.QtGui import (QWidget)
 except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget)
-from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
+#from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
+from ..abstract.lamia_pointtopo_tool import AbstractPointtopoTool
 import os
 import qgis
 
@@ -13,7 +14,7 @@ import qgis
 
 
 
-class PointtopoTool(AbstractInspectionDigueTool):
+class PointtopoTool(AbstractPointtopoTool):
 
     LOADFIRST = False
     dbasetablename = 'Pointtopo'
@@ -21,6 +22,7 @@ class PointtopoTool(AbstractInspectionDigueTool):
     def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
         super(PointtopoTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
 
+"""
     def initTool(self):
         # ****************************************************************************************
         # Main spec
@@ -52,23 +54,7 @@ class PointtopoTool(AbstractInspectionDigueTool):
             # ****************************************************************************************
             # userui
             self.userwdgfield = UserUI()
-            """
-            self.linkuserwdg = {'Pointtopo' : {'linkfield' : 'id_pointtopo',
-                                             'widgets' : {'typepointtopo': self.userwdg.comboBox_position,
-                                                            'x': self.userwdg.doubleSpinBox_X,
-                                                            'y': self.userwdg.doubleSpinBox_Y,
-                                                            'zmngf': self.userwdg.doubleSpinBox_Zngf,
-                                                            'dx': self.userwdg.doubleSpinBox_dX,
-                                                            'dy': self.userwdg.doubleSpinBox_dY,
-                                                            'dz': self.userwdg.doubleSpinBox_dZ,
-                                                            'zwgs84': self.userwdg.doubleSpinBox_Zwgs84,
-                                                            'zgps': self.userwdg.doubleSpinBox_Zgps,
-                                                            'raf09': self.userwdg.doubleSpinBox_raf09,
-                                                            'hauteurperche': self.userwdg.doubleSpinBox_hautperche}},
-                                'Topographie': {'linkfield': 'id_topographie',
-                                              'widgets': {}}
-                                                          }
-            """
+
             self.linkuserwdgfield = {'Pointtopo' : {'linkfield' : 'id_pointtopo',
                                              'widgets' : {'typepointtopo': self.userwdgfield.comboBox_position,
                                                             'x': self.userwdgfield.doubleSpinBox_X,
@@ -192,3 +178,5 @@ class UserUI(QWidget):
         super(UserUI, self).__init__(parent=parent)
         uipath = os.path.join(os.path.dirname(__file__), 'PointtopoToolUser.ui')
         uic.loadUi(uipath, self)
+            
+"""

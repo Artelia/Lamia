@@ -6,10 +6,11 @@ try:
     from qgis.PyQt.QtGui import (QWidget)
 except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget)
-from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
-from .lamiadigue_observation_tool import ObservationTool
+#from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
+from ..abstract.lamia_desordre_tool import AbstractDesordreTool
 from .lamiadigue_photos_tool import PhotosTool
-from .lamiadigue_croquis_tool  import CroquisTool
+from .lamiadigue_observation_tool import ObservationTool
+from .lamiadigue_croquis_tool import CroquisTool
 import os
 import datetime
 import qgis
@@ -17,14 +18,17 @@ import qgis
 
 
 
-class DesordreTool(AbstractInspectionDigueTool):
+class DesordreTool(AbstractDesordreTool):
 
     LOADFIRST = True
     dbasetablename = 'Desordre'
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None, parentwidget=None, parent=None):
         super(DesordreTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
-        
+
+
+
+    """
     def initTool(self):
         # ****************************************************************************************
         # Main spec
@@ -36,14 +40,7 @@ class DesordreTool(AbstractInspectionDigueTool):
         self.LineENABLED = True
         # self.PolygonEnabled = True
         self.magicfunctionENABLED = True
-        """
-        self.linkagespec = {'Tcdesordredescriptionsystem' : {'tabletc' : 'Tcdesordredescriptionsystem',
-                                              'idsource' : 'id_desordre',
-                                            'idtcsource' : 'id_tcdesordre',
-                                           'iddest' : 'id_descriptionsystem',
-                                           'idtcdest' : 'id_tcdescriptionsystem',
-                                           'desttable' : ['Infralineaire']}}
-        """
+
         self.linkagespec = {'Descriptionsystem' : {'tabletc' : None,
                                               'idsource' : 'lk_descriptionsystem',
                                             'idtcsource' : None,
@@ -58,6 +55,7 @@ class DesordreTool(AbstractInspectionDigueTool):
         #properties ui
         pass
 
+    """
     def initFieldUI(self):
         # ****************************************************************************************
         #   userui Field
@@ -109,20 +107,20 @@ class DesordreTool(AbstractInspectionDigueTool):
                 #self.dbasechildwdg = [self.propertieswdgOBSERVATION, self.propertieswdgOBSERVATION2]
 
 
-
+    """
     def postOnActivation(self):
         pass
 
     def postOnDesactivation(self):
         pass
-
+    """
     def magicFunction(self):
         self.featureSelected()
         self.addGPSPoint()
         self.saveFeature()
         self.propertieswdgOBSERVATION2.featureSelected()
         self.propertieswdgOBSERVATION2.saveFeature()
-
+    """
     def postInitFeatureProperties(self, feat):
         pass
 
@@ -191,9 +189,11 @@ class DesordreTool(AbstractInspectionDigueTool):
         pass
 
 
-
+    """
 class UserUI(QWidget):
     def __init__(self, parent=None):
         super(UserUI, self).__init__(parent=parent)
-        uipath = os.path.join(os.path.dirname(__file__), 'DesordreToolUser.ui')
+        uipath = os.path.join(os.path.dirname(__file__), 'lamiadigue_desordre_tool_ui.ui')
         uic.loadUi(uipath, self)
+        
+

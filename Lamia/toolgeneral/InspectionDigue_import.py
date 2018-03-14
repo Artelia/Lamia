@@ -29,8 +29,8 @@ class ImportObjectWorker(AbstractWorker):
         tablefield = [result[0] for result in self.results]
         values = [result[1] for result in self.results]
 
-        if qgis.utils.iface is not None:
-            layer = qgis.utils.iface.activeLayer()
+        if self.dbase.qgsiface is not None:
+            layer = self.dbase.qgsiface.activeLayer()
         else:
             layer = qgis.core.QgsVectorLayer('C://001_travail_BM//testtopo//toposijalag1.shp', 'test', "ogr")
 

@@ -30,6 +30,7 @@ Some map tools for digitizing features
 from qgis.PyQt import uic, QtCore, QtGui
 import qgis
 import qgis.utils
+qgis.utils.uninstallErrorHook()     #for standart output
 
 """
 from qgis.gui import (

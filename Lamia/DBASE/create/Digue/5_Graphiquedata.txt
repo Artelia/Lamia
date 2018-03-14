@@ -17,10 +17,11 @@ Crete;                          CRE
 Talus digue;                     TAD 
 Sommet risberme;                SOR 
 Talus risberme;                 TAR
-Talus risberme - pied ;          TRP
-Pied de digue;                  PDI]
+Talus risberme - pied ;         TRP
+Pied de digue;                  PDI
 Franc-bord;                     FRB 
 Berge;                          BER
+Pied de berge;                  PDB
 Hors digue;                     HOR
 Plusieurs parties;              PLU
 Indefini;                       IND

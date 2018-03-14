@@ -25,7 +25,9 @@ def testRapport(canvas, loadfile=True, typedb="spatialite",tabletype=None, pdffi
             # path = os.path.normpath( 'I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201708_SIJALAG//BD_SIJALAG_ind8.sqlite')
             # path = os.path.normpath('C://000_testdigue//temp//BD_Rivedroite_ind1.sqlite')
             path = os.path.normpath('I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201710_Begles//BD_Begles_ind8.sqlite')
+            #path = os.path.normpath('I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201709_RD//BD_Rivedroite_ind2.sqlite')
             wind.dbase.loadQgisVectorLayers(path)
+            wind.loadUiDesktop()
 
         elif typedb == "postgis":
             wind.dbase.loadQgisVectorLayers(dbasetype='postgis', dbname='PVR_test', schema='exportbm', user='postgres',
@@ -35,6 +37,8 @@ def testRapport(canvas, loadfile=True, typedb="spatialite",tabletype=None, pdffi
 
     if True:
         wind.exportShapefile(tabletype=tabletype, pdffile=pdffile )
+
+        print('fin')
 
 # *********************************************************************************************************************
 # ******************************************   MAIN      *************************************************************
@@ -62,9 +66,10 @@ canvas.enableAntiAliasing(True)
 
 
 # spatialite   postgis
-# Infrastructure lineaire
+# Infrastructure lineaire           Dernieres observations      Graphiques digue
+
 # c://testexport.shp
-testRapport(canvas,True,typedb="spatialite",tabletype="Infralineaire", pdffile="c://testexport.shp")
+testRapport(canvas,True,typedb="spatialite",tabletype="Graphiques digue", pdffile="c://testexport.shp")
 
 
 app.exec_()
