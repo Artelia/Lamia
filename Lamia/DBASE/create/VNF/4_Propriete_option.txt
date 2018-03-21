@@ -5,36 +5,13 @@
 ###id_propriete_option;    SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
 ###id_objet;             INT ;                     INTEGER ;                                    Objet(id_objet)
 ###id_descriptionsystem;        INT ;                       INTEGER;                            Descriptionsystem(id_descriptionsystem)
-###partie;             INT ;                   INTEGER
-###lk_photo;        INT ;                       INTEGER;                        Ressource(id_ressource)
-###niveau;        INT ;                       INTEGER
-###pourcent;        INT ;                       INTEGER
-###detail ;             VARCHAR(255);                TEXT
 ###ouvrage;             INT ;                   INTEGER
-###lk_ouvrage;             INT ;                   INTEGER;                               Infralineaire(id_infralineaire)
-###lk_equipement;             INT ;                   INTEGER;                               Equipement(id_equipement)
-###pk_debut;        INT ;                       INTEGER
-###pk_fin;        INT ;                       INTEGER
-###groupe_number;        INT ;                       INTEGER
-###valeur ;             VARCHAR(255);                TEXT
 ###equipement;             INT ;                   INTEGER
-/;
-3;      3
-60000;  60000
-60120;  60120
-60121;  60121
-60122;  60122
-60123;  60123
-60124;  60124
-60125;  60125
-60126;  60126
-60127;  60127
-60128;  60128
-60129;  60129
-60130;  60130
-60131;  60131
-60132;  60132
-60134;  60134
+###partie;             INT ;                   INTEGER
+###lk_equipement;             INT ;                   INTEGER;                               Equipement(id_equipement)
+###detail ;             VARCHAR(255);                TEXT
+###valeur ;             VARCHAR(255);                TEXT
+###equipementpropriete;             INT;                    INTEGER
 ###propriete;             INT ;                   INTEGER
 ##equipement
 /;                                                                                   ;                   ['']
@@ -76,9 +53,8 @@ Donnees d exploitation - Mode de circulation;                                   
 Carcateristiques geometriques - Protection berge rive droite;                       177660;              [3]
 Carcateristiques geometriques - Protection berge rive gauche;                       177661;              [3]
 Materiaux - Nature;                                                                 177700;              [60122,60123,60124,60126,60127,60128,60129,60130]
-Crete - Materiaux - Naturedu centre de crete;                                       177701;              [60125]
+Crete - Materiaux - Nature du centre de crete;                                      177701;              [60125]
 Franchissement et ouvrages divers - Element;                                        177702;              [60131]
-###equipementpropriete; INT;    INTEGER
 ###option;        INT ;                       INTEGER
 ##equipementpropriete
 /;                                                                                   ;      ['']

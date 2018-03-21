@@ -2,11 +2,9 @@
 # Nom_champ              TypePostGis             TypeSpatialite                          Option
 ###id_ressource;        SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
 ###id_objet;             INT;                    INTEGER;                                Objet(id_objet)
-###date_document;                 DATE ;                  TEXT
-###description ;             VARCHAR(255);                TEXT
-###proprietaire ;             VARCHAR(255);                TEXT
-###nom_document ;             VARCHAR(255);                TEXT
-###id_origine;             INT;                    INTEGER
+###id_list_document;             INT;                    INTEGER
+/;                                    ; ['']
+1
 ###id_list_photo;             INT;                    INTEGER
 /;                                    ; ['']
 Photo de type miniature : id_ouvrage + '_300.jpg ;                                                                                      1
@@ -18,6 +16,3 @@ photo de type 'composant_  + id_equipement + '.jpg  qui font reference aux compo
 Photo_1.jpg qui est la photo de l' quipement = 'equipement_ + id_equipement_photo1' + .jpg;                                             7
 Photo_2.jpg qui est la photo de l' quipement = 'equipement_ + id_equipement_photo2' + .jpg;                                             8
 photo de type 'desordre_' + id_equipement + id_propriete + '.jpg' qui font reference aux desordres d'un ouvrage lineaire;               9
-###id_list_photo;             INT;                    INTEGER
-/;
-Photo;                                                                                                                                  1

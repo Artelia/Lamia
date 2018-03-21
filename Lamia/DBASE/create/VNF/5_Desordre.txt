@@ -5,17 +5,13 @@
 # Nom_champ             TypePostGis              TypeSpatialite                          Option
 ###id_desordre;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
 ###id_objet;             INT ;                   INTEGER ;                               Objet(id_objet)
-###partie;             INT ;                   INTEGER
-###equipement;             INT ;                   INTEGER
 ###ouvrage;             INT ;                   INTEGER
+###equipement;             INT ;                   INTEGER
+###partie;             INT ;                   INTEGER
 ###lk_infralineaire;             INT ;                   INTEGER;                               Infralineaire(id_infralineaire)
 ###lk_equipement;             INT ;                   INTEGER;                               Equipement(id_equipement)
-###group_number;             INT ;                   INTEGER
-###lk_photo;             INT ;                   INTEGER;                               Ressource(id_ressource)
 ###pk_debut;             INT ;                   INTEGER
 ###pk_fin;             INT ;                   INTEGER
-###state_level;             INT ;                   INTEGER
-###magnitude;             INT ;                   INTEGER
 ###ordre;             INT ;                   INTEGER
 ###desordre;             INT ;                   INTEGER
 ##equipement
@@ -55,12 +51,4 @@ Stabilité, déformation - Affouillement;                                       
 Stabilité, déformation - Désalignement, désorganisation entre éléments;                             36;                 [60122,60123,60124,60125,60126,60127,60128,60129]
 Stabilité, déformation - Tassement;                                                                 37;                 [60125,60126]
 Stabilité, déformation - Non visible, indéterminé                                                   41;                 [60122,60123,60124,60125,60126,60127,60128,60129,60130,60131]
-###travaux;             INT ;                   INTEGER
-/;
-Surveillance;       1
-Reparation;         2
-Renovation;         3
-Remplacement;       4
-Expert;             5
-###description;             VARCHAR(255);                TEXT
 ###geom;                LINESTRING

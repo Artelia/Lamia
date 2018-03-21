@@ -1,0 +1,16 @@
+#DJAN  SELECT Observation.*, Objet.datecreation, Objet.datedestruction, Objet.commentaire, Objet.libelle  FROM Observation INNER JOIN Objet ON Observation.id_objet = Objet.id_objet
+#QGIS  SELECT Observation.*, Objet.datecreation, Objet.datedestruction  FROM Observation INNER JOIN Objet ON Observation.id_objet = Objet.id_objet
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###id_observation;      SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_objet;             INT ;                     INTEGER ;                                    Objet(id_objet)
+###lk_desordre;         INT ;            INTEGER;                                              Desordre(id_desordre)
+###travaux;             INT ;                   INTEGER
+/;
+Surveillance;       1
+Reparation;         2
+Renovation;         3
+Remplacement;       4
+Expert;             5
+###magnitude;             INT ;                   INTEGER
+###state_level;             INT ;                   INTEGER
+###description;             VARCHAR(255);                TEXT

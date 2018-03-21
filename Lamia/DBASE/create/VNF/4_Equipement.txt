@@ -6,8 +6,6 @@
 ###id_objet;             INT ;                   INTEGER ;                               Objet(id_objet)
 ###id_descriptionsystem ;               INT ;                   INTEGER;                                Descriptionsystem(id_descriptionsystem)
 ###lk_infralineaire;        INT ;                   INTEGER ;                               Infralineaire(id_infralineaire)
-#partie;             INT ;                   INTEGER
-#equipement;             INT ;                   INTEGER
 ###note_ief;             INT ;                   INTEGER
 ###forcage_ree;             INT ;                   INTEGER
 ###pk_debut;             INT ;                   INTEGER
@@ -16,6 +14,7 @@
 ###pr_fin;             INT ;                   INTEGER
 ###abs_debut;             INT ;                   INTEGER
 ###abs_fin;             INT ;                   INTEGER
+###groupe_number;        INT ;                       INTEGER
 ###is_modified;             INT ;                   INTEGER
 /;
 True;     1
@@ -25,9 +24,9 @@ False;    0
 /;
 Renseignements generaux;        1
 Donnees reglementaires;         10100
-Voie d'eau;         10101
-Berge rive droite;  10102
-Berge rive gauche;  10103
+Voie d'eau;                     10101
+Berge rive droite;              10102
+Berge rive gauche;              10103
 ###equipement;     INT ;                   INTEGER
 ##partie
 /;                                    ; ['']
