@@ -116,7 +116,8 @@ class mapToolCapture(qgis.gui.QgsMapToolCapture):
                 # if len(self.points()) > 0:
                 if len(self.mappoints) > 0:
                     if qgis.utils.iface is not None:  #run from within qgis
-                        self.stopCapture.emit(self.points())
+                        self.stopCapture.emit(self.mappoints)
+                        # self.stopCapture.emit(self.points())
                     else:       # run from pycharm
                         self.stopCapture.emit(self.mappoints)
                     self.stopCapturing()

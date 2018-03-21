@@ -69,8 +69,8 @@ class DesordreTool(AbstractDesordreTool):
                                              'widgets' : {
                                                         'equipement': self.userwdgfield.comboBox_equipement,
                                                          'desordre': self.userwdgfield.comboBox_des_cat,
-                                                        'pk_debut': self.userwdgfield.spinBox_pkdebut,
-                                                          'pk_fin': self.userwdgfield.spinBox_pkfin
+                                                        'pk_debut': self.userwdgfield.doubleSpinBox_pkdebut,
+                                                          'pk_fin': self.userwdgfield.doubleSpinBox_pkfin
 
                                                         }},
                                 'Objet' : {'linkfield' : 'id_objet',

@@ -43,12 +43,6 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
-       <widget class="QSpinBox" name="spinBox_pkfin"/>
-      </item>
-      <item row="2" column="1">
-       <widget class="QSpinBox" name="spinBox_pkdebut"/>
-      </item>
       <item row="1" column="1">
        <widget class="QComboBox" name="comboBox_des_cat"/>
       </item>
@@ -70,6 +64,20 @@
        <widget class="QComboBox" name="comboBox_equipement">
         <property name="enabled">
          <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QDoubleSpinBox" name="doubleSpinBox_pkdebut">
+        <property name="decimals">
+         <number>3</number>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QDoubleSpinBox" name="doubleSpinBox_pkfin">
+        <property name="decimals">
+         <number>3</number>
         </property>
        </widget>
       </item>

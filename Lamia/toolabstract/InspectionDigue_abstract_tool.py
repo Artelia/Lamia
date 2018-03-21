@@ -1876,7 +1876,7 @@ class AbstractInspectionDigueTool(QWidget):
                     self.setTempGeometry(geompoly)
 
     def addPoint(self):
-        print('addPoint')
+        # print('addPoint')
         type = self.dbasetable['layer'].geometryType()
 
         if self.rubberBand is not None:
@@ -1888,7 +1888,7 @@ class AbstractInspectionDigueTool(QWidget):
 
         if type == 1:      # LINE
             initialgeom = self.currentFeature.geometry().asPolyline()
-            print(initialgeom)
+            # print(initialgeom)
             mapgeometry = []
             for point in initialgeom:
                 mapgeometry.append(self.dbase.xform.transform(point))

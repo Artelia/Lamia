@@ -11,7 +11,7 @@ name=Lamia
 qgisMinimumVersion=2.14
 qgisMaximumVersion=3.99
 description=a voir
-version=0.1.3
+version=0.1.4
 author=ARTELIA
 email=patrice.verchere@arteliagroup.com
 
@@ -25,6 +25,7 @@ repository=erg
 
 # Uncomment the following line and add your changelog:
 changelog=
+    0.1.4 : vnf
     0.1.3 : alpha release - bug fix
     0.1.2 : alpha release - bug fix
     0.1.1 : alpha release - bug fix

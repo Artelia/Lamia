@@ -77,7 +77,9 @@ class InfraLineaireTool(AbstractInspectionDigueTool):
             self.userwdgfield = UserUIField()
 
             self.linkuserwdgfield = {'Infralineaire': {'linkfield': 'id_infralineaire',
-                                                       'widgets': {'commentaire': self.userwdgfield.textBrowser_comm,
+                                                       'widgets': {
+                                                                    'num_ouvrage': self.userwdgfield.spinBox_num_ouvrage,
+                                                                    'commentaire': self.userwdgfield.textBrowser_comm,
                                                                    'nbre_pass': self.userwdgfield.spinBox_nbre_pass,
                                                                    'id_lst_gabarit': self.userwdgfield.spinBox_id_lst_gabarit,
                                                                    'gabarit_passe': self.userwdgfield.spinBox_gabarit_passe,
