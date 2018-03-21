@@ -1,5 +1,5 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis version="2.18.17" simplifyAlgorithm="0" minimumScale="0" maximumScale="10000" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" readOnly="0" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="1" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+<qgis version="2.18.17" simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+06" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" readOnly="0" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="1" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
   <edittypes>
     <edittype widgetv2type="TextEdit" name="id_desordre">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
@@ -31,25 +31,25 @@
     <edittype widgetv2type="TextEdit" name="risques">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
+    <edittype widgetv2type="TextEdit" name="lk_descriptionsystem">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
     <edittype widgetv2type="TextEdit" name="datecreation">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="datedestruction">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="long">
-      <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
   </edittypes>
   <renderer-v2 forceraster="0" symbollevels="0" type="RuleRenderer" enableorderby="0">
     <rules key="{814f4a1d-ecf8-4ab4-af4f-b8f84c22d0bd}">
       <rule filter="$id = @atlas_featureid" key="{ed59b4cd-05d2-48a7-bbe0-a34c45f43e29}" symbol="0">
-        <rule filter=" $length = 0" key="{cbd4adb2-912f-4ba6-9eaf-d37c02ab7418}" symbol="1"/>
-        <rule filter=" $length > 0" key="{b7888143-02b9-45d8-a5bd-4c9a0904ea73}" symbol="2"/>
+        <rule filter=" $length &lt;= 0.01" key="{cbd4adb2-912f-4ba6-9eaf-d37c02ab7418}" symbol="1"/>
+        <rule filter=" $length > 0.01" key="{b7888143-02b9-45d8-a5bd-4c9a0904ea73}" symbol="2"/>
       </rule>
       <rule filter="ELSE" key="{872706e5-c68c-490c-8e7b-9d829fa227b0}" symbol="3">
-        <rule filter=" $length = 0" key="{9e8c992f-803c-4377-a76c-66947b76d4c9}" symbol="4"/>
-        <rule filter=" $length > 0" key="{22152158-761b-4ad9-bd31-761df5a8b085}" symbol="5"/>
+        <rule filter=" $length &lt;= 0.01" key="{9e8c992f-803c-4377-a76c-66947b76d4c9}" symbol="4"/>
+        <rule filter=" $length > 0.01" key="{22152158-761b-4ad9-bd31-761df5a8b085}" symbol="5"/>
       </rule>
     </rules>
     <symbols>
@@ -449,9 +449,9 @@
     <alias field="gravite" index="7" name=""/>
     <alias field="priorite" index="8" name=""/>
     <alias field="risques" index="9" name=""/>
-    <alias field="datecreation" index="10" name=""/>
-    <alias field="datedestruction" index="11" name=""/>
-    <alias field="long" index="12" name=""/>
+    <alias field="lk_descriptionsystem" index="10" name=""/>
+    <alias field="datecreation" index="11" name=""/>
+    <alias field="datedestruction" index="12" name=""/>
   </aliases>
   <excludeAttributesWMS/>
   <excludeAttributesWFS/>
@@ -471,7 +471,7 @@
       <column width="-1" hidden="0" type="field" name="risques"/>
       <column width="-1" hidden="0" type="field" name="datecreation"/>
       <column width="-1" hidden="0" type="field" name="datedestruction"/>
-      <column width="-1" hidden="0" type="field" name="long"/>
+      <column width="-1" hidden="0" type="field" name="lk_descriptionsystem"/>
     </columns>
   </attributetableconfig>
   <editform></editform>
@@ -512,9 +512,9 @@ def my_form_open(dialog, layer, feature):
     <default field="gravite" expression=""/>
     <default field="priorite" expression=""/>
     <default field="risques" expression=""/>
+    <default field="lk_descriptionsystem" expression=""/>
     <default field="datecreation" expression=""/>
     <default field="datedestruction" expression=""/>
-    <default field="long" expression=""/>
   </defaults>
   <previewExpression>COALESCE("ID", '&lt;NULL>')</previewExpression>
   <layerGeometryType>1</layerGeometryType>

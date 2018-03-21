@@ -47,6 +47,7 @@ class EquipementTool(AbstractInspectionDigueTool):
         #properties ui
         pass
 
+
     def initFieldUI(self):
         # ****************************************************************************************
         #   userui Field

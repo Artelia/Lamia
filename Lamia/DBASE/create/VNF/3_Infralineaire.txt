@@ -6,7 +6,6 @@
 ###id_objet;             INT ;                     INTEGER ;                                    Objet(id_objet)
 ###id_descriptionsystem;        INT ;                       INTEGER;                            Descriptionsystem(id_descriptionsystem)
 ###id_ouvrage;             INT ;                   INTEGER
-###lk_photo;             INT ;                   INTEGER;                               Ressource(id_ressource)
 ###visite_par;          VARCHAR(255);                TEXT
 ###visite_date;         DATE;                       DATE
 ###is_modified;             INT ;                   INTEGER
@@ -15,6 +14,8 @@ True;     1
 False;    0
 ###commentaire;          VARCHAR(255);                TEXT
 ###id_nature;             INT ;                   INTEGER
+/;
+Bief;     60
 ###id_troncon_georef;             INT ;                   INTEGER
 ###id_lst_statut_ouvrage;             INT ;                   INTEGER
 ###date_construction ;             VARCHAR(255);                TEXT
@@ -34,7 +35,7 @@ False;    0
 ###longueur_bief;             INT ;                   INTEGER
 ###largeur_bief;             INT ;                   INTEGER
 ###id_bief_georef;          VARCHAR(255);                TEXT
-###staut_donnees;          VARCHAR(255);                TEXT
+###statut_donnees;          VARCHAR(255);                TEXT
 ###reference_ouvrage_validee;             INT ;                   INTEGER
 ###user_login;          VARCHAR(255);                TEXT
 ###date_validation;                TIMESTAMP;              TIMESTAMP

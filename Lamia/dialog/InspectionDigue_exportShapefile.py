@@ -44,7 +44,11 @@ class ExportShapefileDialog(QDialog):
         uic.loadUi(path, self)
 
         self.qfiledlg = QFileDialog()
-        self.comboBox_type.addItems(['Infralineaire', 'Observations','Dernieres observations', 'Equipement','Photo'])
+        self.comboBox_type.addItems(['Infralineaire',
+                                     'Observations',
+                                     'Dernieres observations',
+                                     'Equipement','Photo',
+                                     'Graphiques digue'])
         # self.comboBox_type.setCurrentIndex(2)
         self.lineEdit_nom.setText('c:\\testshapeile.shp')
         self.pushButton_filechoose.clicked.connect(self.chooseFile)

@@ -24,7 +24,7 @@ def testRapport(canvas, loadfile=True, typedb="spatialite",tabletype=None, pdffi
             # path = os.path.normpath('C://000_testdigue//temp//test01.sqlite')
             # path = os.path.normpath( 'I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201708_SIJALAG//BD_SIJALAG_ind8.sqlite')
             # path = os.path.normpath('C://000_testdigue//temp//BD_Rivedroite_ind1.sqlite')
-            path = os.path.normpath('I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201710_Begles//BD_Begles_ind8.sqlite')
+            path = os.path.normpath('I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201710_Begles//BD_Begles_ind9.sqlite')
             #path = os.path.normpath('I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201709_RD//BD_Rivedroite_ind2.sqlite')
             wind.dbase.loadQgisVectorLayers(path)
             wind.loadUiDesktop()
@@ -69,7 +69,7 @@ canvas.enableAntiAliasing(True)
 # Infrastructure lineaire           Dernieres observations      Graphiques digue
 
 # c://testexport.shp
-testRapport(canvas,True,typedb="spatialite",tabletype="Graphiques digue", pdffile="c://testexport.shp")
+testRapport(canvas,True,typedb="spatialite",tabletype="Infralineaire", pdffile="c://testexport.shp")
 
 
 app.exec_()

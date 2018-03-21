@@ -35,6 +35,8 @@ class exportShapefileWorker:
 
         if self.reporttype == 'Infralineaire':
 
+
+
             champs = [['Objet', 'datecreation'],                    #0
                       ['Objet', 'datedestruction'],
                       ['Objet', 'commentaire'],
@@ -87,6 +89,8 @@ class exportShapefileWorker:
             result = [row for row in query]
             # result = [list(row) for row in query]
 
+
+
             if False:
                 for i, resultline in enumerate(result):
                     print(result[i])
@@ -100,7 +104,7 @@ class exportShapefileWorker:
             if True:
                 fieldslinear.append(qgis.core.QgsField('Hauteur', QtCore.QVariant.Double))          #0
                 fieldslinear.append(qgis.core.QgsField('Larcrete', QtCore.QVariant.Double))
-                fieldslinear.append(qgis.core.QgsField('Larfranc', QtCore.QVariant.Double))
+                # fieldslinear.append(qgis.core.QgsField('Larfranc', QtCore.QVariant.Double))
                 fieldslinear.append(qgis.core.QgsField('typtater', QtCore.QVariant.String))
                 fieldslinear.append(qgis.core.QgsField('typcrete', QtCore.QVariant.String))
                 fieldslinear.append(qgis.core.QgsField('typtaeau', QtCore.QVariant.String))         #5
@@ -110,13 +114,13 @@ class exportShapefileWorker:
                 fieldslinear.append(qgis.core.QgsField('Desterre', QtCore.QVariant.String))
                 fieldslinear.append(qgis.core.QgsField('Descrete', QtCore.QVariant.String))         #10
                 fieldslinear.append(qgis.core.QgsField('Deseau', QtCore.QVariant.String))
-                champs += [[],[],[],[],[],[],[],[],[],[], [], []]
+                champs += [[],[],[],[],[],[],[],[],[],[], []]
                 # print('champs',champs)
 
                 for i, row in enumerate(result):
                     hauteurdigue = None
                     largcrete = None
-                    largfrancbord = None
+                    # largfrancbord = None
                     typtater=''
                     typcrete=''
                     typtaeau=''
@@ -149,10 +153,12 @@ class exportShapefileWorker:
                             hauteurdigue = np.sum(npresultrow[0:minindexcrete, 3])
 
                             #francbord
+                            """
                             index = np.where(npresultrow[:,5] == 'FRB')
                             largfrancbord = np.sum(npresultrow[:,2][index])
+                            print(index,largfrancbord )
                             # print(hauteurdigue, largcrete, largfrancbord)
-
+                            """
                             #description
 
 
@@ -280,10 +286,9 @@ class exportShapefileWorker:
                     """
 
                     result[i] = list(result[i])[:-1] \
-                                + [hauteurdigue, largcrete, largfrancbord,typtater,typcrete,typtaeau,typeauba,typeberge,typepdberge,  Desterre, Descrete, Deseau  ] \
+                                + [hauteurdigue, largcrete, typtater,typcrete,typtaeau,typeauba,typeberge,typepdberge,  Desterre, Descrete, Deseau  ] \
                                 + list(result[i])[-1:]
                     # print([hauteurdigue, largcrete, largfrancbord,typtater,typcrete,typtaeau, Desterre, Descrete, Deseau  ])
-
 
             #niveau protection surete
             if True:
@@ -321,7 +326,6 @@ class exportShapefileWorker:
                 profiletraverstool.rubberBand.reset(1)
 
 
-
             # gestionnaire
             if True:
                 fieldslinear.append(qgis.core.QgsField('Gestionnaire', QtCore.QVariant.String))
@@ -340,7 +344,6 @@ class exportShapefileWorker:
                         if interv[0] == 'GES':
                             gestionnaire = interv[2] + ' - ' + interv[1]
                     result[i] = list(result[i])[:-1] + [gestionnaire] + list(result[i])[-1:]
-
 
             # secteur
             if True:
@@ -645,7 +648,7 @@ class exportShapefileWorker:
             sql += ", ST_AsText(Desordre.geom) "
             sql += "FROM Observation  "
             sql += " INNER JOIN Desordre ON Observation.lk_desordre = Desordre.id_desordre  "
-            sql += "INNER JOIN Objet ON Objet.id_objet = Observation.id_objet "
+            sql += "INNER JOIN Objet ON Objet.id_objet = Desordre.id_objet "
             sql += " WHERE NOT ST_EQUALS(ST_StartPoint(Desordre.geom) , ST_EndPoint(Desordre.geom))"
             if boundinggeom is not None :
                 sql += " AND ST_WITHIN(ST_MakeValid(Desordre.geom), ST_GeomFromText('" + boundinggeom + "',"+ str(self.dbase.crsnumber) + ")) "
@@ -684,7 +687,7 @@ class exportShapefileWorker:
             sql += ", ST_AsText(ST_StartPoint(Desordre.geom)) "
             sql += "FROM Observation  "
             sql += " INNER JOIN Desordre ON Observation.lk_desordre = Desordre.id_desordre  "
-            sql += "INNER JOIN Objet ON Objet.id_objet = Observation.id_objet "
+            sql += "INNER JOIN Objet ON Objet.id_objet = Desordre.id_objet "
             sql += " WHERE  ST_EQUALS(ST_StartPoint(Desordre.geom) , ST_EndPoint(Desordre.geom))"
             if boundinggeom is not None :
                 sql += " AND ST_WITHIN(ST_StartPoint(Desordre.geom), ST_GeomFromText('" + boundinggeom + "',"+ str(self.dbase.crsnumber) + ")) "
@@ -1089,11 +1092,13 @@ class exportShapefileWorker:
                                                 # qgis.core.QGis.WKBLineString,
                                                 self.dbase.qgiscrs)
 
+
         for row in result:
             feat = qgis.core.QgsFeature(fields)
             if typegeom != qgis.core.QGis.WKBNoGeometry :
                 if row[-1] is not None:
                     feat.setGeometry(qgis.core.QgsGeometry.fromWkt(row[-1]))
+                    #print(row[10], feat.geometry())
                 else:
                     continue
             # print(feat.geometry().exportToWkt())
@@ -1109,12 +1114,33 @@ class exportShapefileWorker:
                                 value = float(row[i])
                             elif row[i] == -1 and self.dbase.dbasetables[field[0]]['fields'][field[1]]['SLtype'] == 'INTEGER':
                                 value = None
+
+                            elif False and self.dbase.dbasetables[field[0]]['fields'][field[1]]['SLtype'] == 'TEXT':
+                                pass
+                                # value = str(row[i])
+                                if False:
+                                    print('encode',row[i] )
+                                    print(type(row[i]))
+                                    value = row[i].encode('utf-8')
+
                             else:
                                 value = row[i]
+
                             feat[i] = value
+
+
                 else:   #computed field
+                    if False and (isinstance(row[i], str) or isinstance(row[i], unicode)) and len(row[i]) >= 255:
+                        print(len(row[i]))
+                        print('ok')
+                        row[i] = row[i][0:253].encode('utf-8')
+                        print(len(row[i]))
+
                     feat[i] = row[i]
-            writer.addFeature(feat)
+            # print(feat.attributes(), feat.geometry())
+            # print( feat.geometry().isGeosValid())
+            success = writer.addFeature(feat)
+            # print(success)
 
         del writer
 

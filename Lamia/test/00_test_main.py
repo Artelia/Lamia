@@ -52,8 +52,8 @@ def testCoreParserValue(canvas, loadfile=True, typedb="spatialite"):
             #path = os.path.normpath('C://000_testdigue//BM//BD_SIJALAG_ind4.sqlite')
             # path = os.path.normpath('C://000_testdigue//temp01//test01.sqlite')
             #path = os.path.normpath('C://000_testdigue//BD_Begles_ind8.sqlite')
-            # path = os.path.normpath('C://000_testdigue//temp//test01.sqlite')
-            path = os.path.normpath('C://00_Affaires//BM_digues//Base_donnees//Begles//BD_Begles_ind8.sqlite')
+            path = os.path.normpath('C://000_testdigue//temp//test01.sqlite')
+            #path = os.path.normpath('C://00_Affaires//BM_digues//Base_donnees//Begles//BD_Begles_ind8.sqlite')
 
             wind.dbase.loadQgisVectorLayers(path)
 

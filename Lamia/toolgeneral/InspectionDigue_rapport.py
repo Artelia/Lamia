@@ -55,6 +55,14 @@ class printPDFWorker:
         sql += "Descriptionsystem.importancestrat, Descriptionsystem.etatfonct, Descriptionsystem.datederniereobs, Descriptionsystem.qualitegeoloc, Descriptionsystem.parametres, Descriptionsystem.listeparametres"
         sql += " FROM Infralineaire INNER JOIN Descriptionsystem ON Infralineaire.id_descriptionsystem = Descriptionsystem.id_descriptionsystem "
         sql += "INNER JOIN Objet ON Objet.id_objet = Infralineaire.id_objet"
+
+        sql += '  WHERE Objet.Datecreation <= ' + "'" + self.dbase.workingdate + "'"
+        if self.dbase.dbasetype == 'postgis':
+            sql += ' AND CASE WHEN Objet.Datedestruction IS NOT NULL  '
+            sql += 'THEN Objet.DateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE TRUE END'
+        elif self.dbase.dbasetype == 'spatialite':
+            sql += ' AND CASE WHEN Objet.datedestruction IS NOT NULL  '
+            sql += 'THEN Objet.dateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE 1 END'
         sql += "&uid=id_infralineaire"
         #print(sql)
 
@@ -91,6 +99,14 @@ class printPDFWorker:
         sql += "INNER JOIN Objet ON Objet.id_objet = Equipement.id_objet"
         sql += " WHERE ( Equipement.categorie = 'RHF' or Equipement.categorie = 'RHO' or Equipement.categorie = 'OUH')"
         # sql += " AND Equipement.lk_equipement IS NULL"
+
+        sql += ' AND  Objet.Datecreation <= ' + "'" + self.dbase.workingdate + "'"
+        if self.dbase.dbasetype == 'postgis':
+            sql += ' AND CASE WHEN Objet.Datedestruction IS NOT NULL  '
+            sql += 'THEN Objet.DateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE TRUE END'
+        elif self.dbase.dbasetype == 'spatialite':
+            sql += ' AND CASE WHEN Objet.datedestruction IS NOT NULL  '
+            sql += 'THEN Objet.dateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE 1 END'
         sql += "&uid=id_equipement"
         # print(sql)
 
@@ -135,6 +151,14 @@ class printPDFWorker:
         sql += " WHERE ( Equipement.categorie = 'RHF' or Equipement.categorie = 'RHO' or Equipement.categorie = 'OUH')"
         if self.idparent is not None:
             sql += " AND Equipement.lk_equipement = " + str(self.idparent)
+
+        sql += '  AND  Objet.Datecreation <= ' + "'" + self.dbase.workingdate + "'"
+        if self.dbase.dbasetype == 'postgis':
+            sql += ' AND CASE WHEN Objet.Datedestruction IS NOT NULL  '
+            sql += 'THEN Objet.DateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE TRUE END'
+        elif self.dbase.dbasetype == 'spatialite':
+            sql += ' AND CASE WHEN Objet.datedestruction IS NOT NULL  '
+            sql += 'THEN Objet.dateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE 1 END'
         sql += "&uid=id_equipement"
         # print(sql)
 
@@ -179,6 +203,13 @@ class printPDFWorker:
         """
         sql = " SELECT Desordre.*, Objet.* FROM Desordre INNER JOIN Objet ON Objet.id_objet = Desordre.id_objet"
 
+        sql += '  WHERE  Objet.Datecreation <= ' + "'" + self.dbase.workingdate + "'"
+        if self.dbase.dbasetype == 'postgis':
+            sql += ' AND CASE WHEN Objet.Datedestruction IS NOT NULL  '
+            sql += 'THEN Objet.DateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE TRUE END'
+        elif self.dbase.dbasetype == 'spatialite':
+            sql += '  AND CASE WHEN Objet.datedestruction IS NOT NULL  '
+            sql += 'THEN Objet.dateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE 1 END'
         sql += "&uid=id_desordre"
         # print(sql)
 
@@ -226,8 +257,16 @@ class printPDFWorker:
             # sql += "GROUP BY Observation.lk_desordre"
         elif self.dbase.dbasetype == 'postgis':
             pass
+
+        sql += '  WHERE  Objet.Datecreation <= ' + "'" + self.dbase.workingdate + "'"
+        if self.dbase.dbasetype == 'postgis':
+            sql += ' AND CASE WHEN Objet.Datedestruction IS NOT NULL  '
+            sql += 'THEN Objet.DateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE TRUE END'
+        elif self.dbase.dbasetype == 'spatialite':
+            sql += '  AND CASE WHEN Objet.datedestruction IS NOT NULL  '
+            sql += 'THEN Objet.dateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE 1 END'
         if self.idparent is not None:
-            sql += " WHERE Observation.lk_desordre = " + str(self.idparent)
+            sql += " AND Observation.lk_desordre = " + str(self.idparent)
             sql += " ORDER BY Observation.dateobservation DESC"
 
         sql += "&uid=id_observation"
@@ -335,7 +374,7 @@ class printPDFWorker:
 
         if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
             toexec = "reportdic['atlastypescale'] = qgis.core.QgsComposerMap." + reportdic['atlastypescale']
-            print(toexec)
+            # print(toexec)
             exec(toexec)
 
         atlas.setEnabled(True)
@@ -800,8 +839,6 @@ class printPDFWorker:
                         paths=[list(edgeextremite)]
 
                     # if len(paths)==0 and len(edgenoeud)==0: #cas d'un circuit fermé
-
-
 
                     if debug: self.logger.debug('subgraph %s %s %s', str(subgraph), str(edgeextremite), str(edgenoeud))
 

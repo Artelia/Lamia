@@ -20,6 +20,9 @@ from .lamiadigue_profil_tool import ProfilTool
 from ...toolpostpro.InspectionDigue_path_tool import PathTool
 from .lamiadigue_graphique_tool  import GraphiqueTool
 """
+
+from .lamiavnf_equipement_tool import EquipementTool
+
 import os
 import datetime
 import logging
@@ -43,7 +46,7 @@ class InfraLineaireTool(AbstractInspectionDigueTool):
         if debugtime: logging.getLogger('Lamia').debug('Start init %s',str(round(time.clock() - timestart, 3)))
 
         self.CAT = 'Description'
-        self.NAME = 'Troncon'
+        self.NAME = 'Bief'
         self.dbasetablename = 'Infralineaire'
         # self.visualmode = [0, 1, 2]
         # self.PointEnabled = True
@@ -84,6 +87,11 @@ class InfraLineaireTool(AbstractInspectionDigueTool):
                                                'widgets': {}},
                                      'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
                                                            'widgets': {}}}
+
+            self.dbasechildwdgfield = []
+
+            self.propertieswdgEquipement = EquipementTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
+            self.dbasechildwdgfield.append(self.propertieswdgEquipement)
             """
                 self.dbasechildwdgfield = []
 
@@ -246,5 +254,5 @@ class InfraLineaireTool(AbstractInspectionDigueTool):
 class UserUIField(QWidget):
     def __init__(self, parent=None):
         super(UserUIField, self).__init__(parent=parent)
-        uipath = os.path.join(os.path.dirname(__file__), 'InfralineaireFieldToolUser.ui')
+        uipath = os.path.join(os.path.dirname(__file__), 'lamiavnf_infralineaire_tool_ui.ui')
         uic.loadUi(uipath, self)

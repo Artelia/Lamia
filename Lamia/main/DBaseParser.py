@@ -345,6 +345,8 @@ class DBaseParser(QtCore.QObject):
                 viewnames['djangoviewsql'] = str(dbname) + '_django'
             if 'qgisviewsql' in self.dbasetables[dbname].keys():
                 viewnames['qgisviewsql'] = str(dbname) + '_qgis'
+            if 'exportviewsql' in self.dbasetables[dbname].keys():
+                viewnames['exportviewsql'] = str(dbname) + '_export'
 
             for viewname in viewnames.keys():
                 # sql = 'CREATE VIEW ' + str(dbname) + '_view AS '
@@ -435,6 +437,7 @@ class DBaseParser(QtCore.QObject):
                           'widget' : the table widget,
                           'djangoviewsql' : sql statement for initial django view creation
                           'qgisviewsql' : sql statement for initial qgis view creation
+                          'exportviewsql' : sql statement for initial special view creation
                           'layer' : real layer
                           'layerqgis' : view layer with parent fields
                           'layerdjango' : view layer with parent fields
@@ -495,10 +498,14 @@ class DBaseParser(QtCore.QObject):
                 #file = open(filename, 'rb')
             compt = 0
             for line in file:
+                if len(line.strip()) == 0:
+                    continue
+
                 if line[0:3] == '###':          # new field
                     line = line[3:].strip()
                     linesplit = line.split(';')
                     fieldname = linesplit[0].strip()
+                    if debug: logging.getLogger("Lamia").debug('fieldname %s', fieldname)
                     if fieldname == 'geom':
                         self.dbasetables[tablename]['geom'] = linesplit[1].strip()
                         continue
@@ -517,12 +524,16 @@ class DBaseParser(QtCore.QObject):
                         self.dbasetables[tablename]['djangoviewsql'] = line[5:].strip()
                     elif line[0:5] == '#QGIS':
                         self.dbasetables[tablename]['qgisviewsql'] = line[5:].strip()
+                    elif line[0:5] == '#EXPO':
+                        self.dbasetables[tablename]['exportviewsql'] = line[5:].strip()
                     elif line[0:5] == '#SCAL':
                         self.dbasetables[tablename]['scale'] = float(line[5:].strip())
                     elif line[0:5] == '#SHOW':
                         value = line[5:].strip()
                         if value == 'YES':
                             self.dbasetables[tablename]['showinqgis'] = True
+                    else:
+                        continue
 
 
                 else:                           # field constraint
@@ -530,6 +541,7 @@ class DBaseParser(QtCore.QObject):
                         self.dbasetables[tablename]['fields'][fieldname]['Cst'].append([])
                     else:
                         self.dbasetables[tablename]['fields'][fieldname]['Cst'] = [[]]
+
                     if sys.version_info.major == 2:
                         linesplit = line.decode('utf-8').split(';')
                     elif sys.version_info.major == 3:
@@ -1028,8 +1040,18 @@ class DBaseParser(QtCore.QObject):
     def getConstraintRawValueFromText(self, table, field, txt):
         # print('_getConstraintRawValueFromText',[value[0] for value in self.dbasetables[table]['fields'][field]['Cst']], txt )
         dbasetable = self.dbasetables[table]
-        index = [value[0] for value in dbasetable['fields'][field]['Cst']].index(txt)
-        return dbasetable['fields'][field]['Cst'][index][1]
+        try:
+            index = [value[0] for value in dbasetable['fields'][field]['Cst']].index(txt)
+            return dbasetable['fields'][field]['Cst'][index][1]
+        except ValueError as e:
+            if self.qgsiface is None :
+                logging.getLogger("Lamia").debug('error %s %s %s',e, table,field )
+            #print('getConstraintRawValueFromText', e,table,field)
+            #print(table,field )
+            #print(txt)
+            #print([value[0] for value in dbasetable['fields'][field]['Cst']])
+            return None
+
 
 
 

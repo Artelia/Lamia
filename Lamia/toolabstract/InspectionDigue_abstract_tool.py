@@ -403,10 +403,12 @@ class AbstractInspectionDigueTool(QWidget):
                     self.tableWidget.setItem(rowPosition, 0, item)
                     if 'Cst' in dbasetable['fields'][field].keys():
                         wdg = QComboBox()
-                        if sys.version_info.major == 2:
-                            wdg.addItems([str(description[0].encode('utf-8')) for description in dbasetable['fields'][field]['Cst']])
-                        elif sys.version_info.major == 3:
-                            wdg.addItems([description[0] for description in dbasetable['fields'][field]['Cst']])
+                        wdg.addItems([description[0] for description in dbasetable['fields'][field]['Cst']])
+                        if False:
+                            if sys.version_info.major == 2:
+                                wdg.addItems([str(description[0].encode('utf-8')) for description in dbasetable['fields'][field]['Cst']])
+                            elif sys.version_info.major == 3:
+                                wdg.addItems([description[0] for description in dbasetable['fields'][field]['Cst']])
                         self.tableWidget.setCellWidget(rowPosition, 1, wdg)
 
                         linkuserwdglist = []
@@ -424,10 +426,12 @@ class AbstractInspectionDigueTool(QWidget):
                                     and field in linkuserwdg[tablename]['widgets'].keys()
                                     and isinstance(linkuserwdg[tablename]['widgets'][field],QComboBox)):
                                 # if linkuserwdg[] is not None and field in linkuserwdg.keys():
-                                if sys.version_info.major == 2:
-                                    templist = [str(description[0].encode('utf-8')) for description in dbasetable['fields'][field]['Cst']]
-                                elif sys.version_info.major == 3:
-                                    templist = [description[0] for description in dbasetable['fields'][field]['Cst']]
+                                templist = [description[0] for description in dbasetable['fields'][field]['Cst']]
+                                if False:
+                                    if sys.version_info.major == 2:
+                                        templist = [str(description[0].encode('utf-8')) for description in dbasetable['fields'][field]['Cst']]
+                                    elif sys.version_info.major == 3:
+                                        templist = [description[0] for description in dbasetable['fields'][field]['Cst']]
                                 linkuserwdg[tablename]['widgets'][field].addItems(templist)
 
                             if 'ParFldCst' in dbasetable['fields'][field].keys():
@@ -440,7 +444,12 @@ class AbstractInspectionDigueTool(QWidget):
                                 nameparenttalbe, nameparentfield = listfieldname[indexparentfield].split('.')
                                 # print('indexparentfield', indexparentfield)
                                 comboparent = self.tableWidget.cellWidget(indexparentfield, 1)
-                                comboparent.currentIndexChanged.connect(self.comboparentValueChanged)
+                                # print('okok',comboparent.objectName() )
+                                try:
+                                     comboparent.currentIndexChanged.connect(self.comboparentValueChanged)
+                                except Exception as e:
+                                    if self.dbase.qgsiface is None:
+                                        logging.getLogger("Lamia").debug('error %s %s', e, comboparent.objectName())
                                 # userwidget
                                 if (tablename in linkuserwdg.keys() and 'widgets' in linkuserwdg[tablename].keys()
                                         and nameparentfield in linkuserwdg[tablename]['widgets'].keys()
@@ -678,6 +687,9 @@ class AbstractInspectionDigueTool(QWidget):
         """
         # table
         senderwdg = self.sender()
+        if isinstance(senderwdg, QComboBox) and senderwdg.count() == 0: #case triple descendant and parent not filled
+            return
+
         parenttablename = None
         parentfieldname = None
 
@@ -699,7 +711,12 @@ class AbstractInspectionDigueTool(QWidget):
         if parenttablename is None:
             return
 
+
+
+        # print(parenttablename, parentfieldname, senderwdg,senderwdg.currentText() )
+
         # parentcstvalue = self._getConstraintRawValueFromText(parenttablename, parentfieldname, senderwdg.currentText())
+
         parentcstvalue = self.dbase.getConstraintRawValueFromText(parenttablename, parentfieldname, senderwdg.currentText())
 
         dbasetable = self.dbase.dbasetables[parenttablename]
@@ -715,11 +732,18 @@ class AbstractInspectionDigueTool(QWidget):
             childfieldnames = [list(dbasetable['fields'].keys())[i] for i in range(len(listparentcst))
                                if parentfieldname == listparentcst[i]]
 
+
         if comefromrawtable:
             listfieldname = [self.tableWidget.item(row, 0).text() for row in range(self.tableWidget.rowCount())]
             for childfieldname in childfieldnames:
-                listtoadd = [value[0] for value in dbasetable['fields'][childfieldname]['Cst'] if
-                             parentcstvalue in value[2]]
+                listtoadd = [value[0] for value in dbasetable['fields'][childfieldname]['Cst'] if parentcstvalue in value[2]]
+                if False:
+                    if sys.version_info.major == 2:
+                        listtoadd = [str(value[0].encode('utf-8')) for value in dbasetable['fields'][childfieldname]['Cst'] if
+                                     parentcstvalue in value[2]]
+                    elif sys.version_info.major == 3:
+                        listtoadd = [value[0] for value in dbasetable['fields'][childfieldname]['Cst'] if
+                                     parentcstvalue in value[2]]
                 indexchildintable = listfieldname.index(parenttablename + '.' + childfieldname)
                 combochild = self.tableWidget.cellWidget(indexchildintable, 1)
                 combochild.clear()
@@ -728,10 +752,15 @@ class AbstractInspectionDigueTool(QWidget):
         else:
             for childfieldname in childfieldnames:
 
-                if dbasetable['fields'][parentfieldname]['SLtype'] == 'INTEGER' and parentcstvalue != '':
+                if dbasetable['fields'][parentfieldname]['SLtype'] == 'INTEGER' and parentcstvalue != '' and parentcstvalue is not None:
                     parentcstvalue = int(parentcstvalue)
-                listtoadd = [value[0] for value in dbasetable['fields'][childfieldname]['Cst'] if
-                             parentcstvalue in value[2]]
+                listtoadd = [value[0] for value in dbasetable['fields'][childfieldname]['Cst'] if parentcstvalue in value[2]]
+                if False:
+                    if sys.version_info.major == 2:
+                        listtoadd = [value[0] for value in dbasetable['fields'][childfieldname]['Cst'] if parentcstvalue in value[2]]
+                        # print(listtoadd)
+                    elif sys.version_info.major == 3:
+                        listtoadd = [value[0] for value in dbasetable['fields'][childfieldname]['Cst'] if parentcstvalue in value[2]]
                 combochild = self.linkuserwdg[parenttablename]['widgets'][childfieldname]
                 combochild.clear()
                 if len(listtoadd) > 0:
@@ -1010,6 +1039,12 @@ class AbstractInspectionDigueTool(QWidget):
         """
         pass
         """
+        if False:
+            if self.linkedtreewidget is not None:
+                print('connect', self.dbasetablename, self.linkedtreewidget.objectName())
+            else:
+                print('connect', self.dbasetablename)
+
         if self.linkedtreewidget is not None and isinstance(self.linkedtreewidget, QTreeWidget):
             self.linkedtreewidget.currentItemChanged.connect(self.featureSelected)
         self.comboBox_featurelist.currentIndexChanged.connect(self.featureSelected)
@@ -1120,7 +1155,11 @@ class AbstractInspectionDigueTool(QWidget):
         @param item : if none, add new feature else show properties of id selected
         """
         debug = False
-        # print('featureSelected',self.dbasetablename, self.sender().objectName(),item)
+        if False:
+            print('featureSelected',self.dbasetablename, self.sender().objectName(),item)
+            if isinstance(item, QTreeWidgetItem ):
+                print(item.text(0))
+
 
         if debug: logging.getLogger("Lamia").debug('start %s %s %s', self.dbasetablename, type(item), str(itemisid))
 
@@ -1178,6 +1217,7 @@ class AbstractInspectionDigueTool(QWidget):
                 self.connectIdsGui()
                 return
         elif isinstance(item, int) and not itemisid:        #feature selected with combobox
+            # print('item', item)
             id = int(self.comboBox_featurelist.itemText(item))
             if self.linkedtreewidget is not None and isinstance(self.linkedtreewidget, QTreeWidget):
                 parentitem = self.linkedtreewidget.findItems(self.dbasetablename, QtCore.Qt.MatchExactly | QtCore.Qt.MatchRecursive, 0)[0]
@@ -1355,19 +1395,27 @@ class AbstractInspectionDigueTool(QWidget):
                 wdg.setText('')
         elif isinstance(wdg, QSpinBox) or isinstance(wdg, QDoubleSpinBox):
             # if valuetoset is not None and valuetoset is not None and not isinstance(valuetoset, QtCore.QPyNullVariant):
-            if valuetoset is not None:
-                wdg.setValue(valuetoset)
-            else:
-                wdg.setValue(-1)
+            try:
+                if valuetoset is not None:
+                    wdg.setValue(valuetoset)
+                else:
+                    wdg.setValue(-1)
+            except Exception as e:
+                if self.dbase.qgsiface is None:
+                    logging.getLogger("Lamia").debug('error %s', e)
         elif isinstance(wdg, QComboBox):
             # if valuetoset is not None and valuetoset is not None and not isinstance(valuetoset, QtCore.QPyNullVariant):
-            if valuetoset is not None:
-                # text = self._getConstraintTextFromRawValue(table, field, valuetoset)
-                text = self.dbase.getConstraintTextFromRawValue(table, field, valuetoset)
-                index = wdg.findText(text)
-                wdg.setCurrentIndex(index)
-            else:
-                wdg.setCurrentIndex(0)
+            try:
+                if valuetoset is not None:
+                    # text = self._getConstraintTextFromRawValue(table, field, valuetoset)
+                    text = self.dbase.getConstraintTextFromRawValue(table, field, valuetoset)
+                    index = wdg.findText(text)
+                    wdg.setCurrentIndex(index)
+                else:
+                    wdg.setCurrentIndex(0)
+            except Exception as e:
+                if self.dbase.qgsiface is None:
+                    logging.getLogger("Lamia").debug('error %s', e)
         elif isinstance(wdg, QDateEdit):
             # if valuetoset is not None and not isinstance(valuetoset, QtCore.QPyNullVariant):
             if valuetoset is not None:
@@ -1403,12 +1451,13 @@ class AbstractInspectionDigueTool(QWidget):
                 wdg.setText('')
 
 
-    def saveFeature(self):
+    def saveFeature(self,pushbuttonsignal=0, showsavemessage=True):
         """!
         Action when save feature is clicked
         """
         # *************************
         # save previous feature
+
         self.canvas.freeze(True)
         if self.dbasetable is not None :
             if self.currentFeature is not None:
@@ -1524,7 +1573,8 @@ class AbstractInspectionDigueTool(QWidget):
                 self.initFeatureProperties(self.currentFeature)
                 self.postInitFeatureProperties(self.currentFeature)
 
-            self.windowdialog.normalMessage('Objet sauvegarde : ' + str(self.currentFeature.attributes()))
+            if showsavemessage:
+                self.windowdialog.normalMessage('Objet sauvegarde : ' + str(self.currentFeature.attributes()))
             self.dbasetable['layerqgis'].triggerRepaint()
 
             # *************************
@@ -1573,7 +1623,9 @@ class AbstractInspectionDigueTool(QWidget):
                 self.initFeatureProperties(self.currentFeature)
                 self.postInitFeatureProperties(self.currentFeature)
 
-            self.windowdialog.normalMessage('Objet sauvegarde : ' + str(self.currentFeature))
+
+            if showsavemessage:
+                self.windowdialog.normalMessage('Objet sauvegarde : ' + str(self.currentFeature))
             self.savingnewfeature = False
             self.canvas.freeze(False)
 
@@ -1626,6 +1678,8 @@ class AbstractInspectionDigueTool(QWidget):
                 for i, tablename in enumerate(self.linkuserwdg.keys()):
                     # print('attrs',self.currentFeature.attributes())
                     featid = self.currentFeature[self.linkuserwdg[tablename]['linkfield']]
+                    # print('featid', featid)
+                    # print(self.currentFeature.attributes())
                     # feature = self.dbase.dbasetables[tablename]['layer'].getFeatures(qgis.core.QgsFeatureRequest(featid)).next()
                     feature = self.dbase.getLayerFeatureById(tablename, featid)
                     for fieldname in self.linkuserwdg[tablename]['widgets'].keys():
@@ -1822,20 +1876,48 @@ class AbstractInspectionDigueTool(QWidget):
                     self.setTempGeometry(geompoly)
 
     def addPoint(self):
-        type = 0
+        print('addPoint')
+        type = self.dbasetable['layer'].geometryType()
 
-    def captureGeometry(self):
+        if self.rubberBand is not None:
+            self.rubberBand.reset(type)
+        else:
+            self.rubberBand = qgis.gui.QgsRubberBand(self.canvas,type)
+        self.rubberBand.setWidth(5)
+        self.rubberBand.setColor(QtGui.QColor("magenta"))
+
+        if type == 1:      # LINE
+            initialgeom = self.currentFeature.geometry().asPolyline()
+            print(initialgeom)
+            mapgeometry = []
+            for point in initialgeom:
+                mapgeometry.append(self.dbase.xform.transform(point))
+
+            self.captureGeometry(listpointinitialgeometry=mapgeometry, type=1)
+
+
+    def captureGeometry(self,connectint=0, listpointinitialgeometry=[], type=None):
         """!
 
         """
+
+
         source = self.sender()
         # print(source.objectName())
-        if 'Point' in source.objectName():
-            type = 0
-        elif 'Line' in source.objectName():
-            type = 1
-        elif 'Polygon' in source.objectName():
-            type = 2
+
+        if source.objectName() != 'pushButton_rajoutPoint':
+            listpointinitialgeometry = []
+
+        # print('captureGeometry', connectint, listpointinitialgeometry, type)
+
+        if type is None:
+            if 'Point' in source.objectName():
+                type = 0
+            elif 'Line' in source.objectName():
+                type = 1
+            elif 'Polygon' in source.objectName():
+                type = 2
+
 
         # pushButton_rajoutPointGPS
 
@@ -1906,10 +1988,14 @@ class AbstractInspectionDigueTool(QWidget):
                 self.canvas.setMapTool(self.currentmaptool)
             self.currentmaptool.stopCapture.connect(self.setTempGeometry)
             # self.mtool.activate()
+            self.currentmaptool.mappoints = listpointinitialgeometry
+            # self.currentmaptool.setMapPoints(listpointinitialgeometry)
             self.currentmaptool.startCapturing()
 
 
+
     def setTempGeometry(self, points):
+        #print('setTempGeometry',points)
 
         if self.currentmaptool is not None:
             try:
@@ -1918,48 +2004,59 @@ class AbstractInspectionDigueTool(QWidget):
                 pass
 
         pointsmapcanvas = []
+        pointslayer=[]
         type = self.dbasetable['layer'].geometryType()
 
         if len(points)==2 and points[0] == points[1]:   #case point in line layer
             self.rubberBand.reset(0)
             type = 0.5
 
-        for point in points:
-            pointsmapcanvas.append(self.dbase.xform.transform(point))
+        if self.dbase.qgsiface is None: #for stadalone app bug
+            for point in points:
+                pointsmapcanvas.append(self.dbase.xform.transform(point))
+            pointslayer = points
+        else:
+            pointsmapcanvas = points
+            for point in points:
+                pointslayer.append(self.dbase.xformreverse.transform(point))
 
+        #self.currentmaptool.mappoints = []
+        #print('pointslayer',pointslayer)
+        #print('pointsmapcanvas', pointsmapcanvas)
 
         if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
             if type == 0:
                 geometryformap = qgis.core.QgsGeometry.fromPoint(pointsmapcanvas[0])
-                geometryforlayer = qgis.core.QgsGeometry.fromPoint(points[0])
+                geometryforlayer = qgis.core.QgsGeometry.fromPoint(pointslayer[0])
             elif type == 0.5:
                 geometryformap = qgis.core.QgsGeometry.fromPoint(pointsmapcanvas[0])
-                geometryforlayer = qgis.core.QgsGeometry.fromMultiPolyline([points])
+                geometryforlayer = qgis.core.QgsGeometry.fromMultiPolyline([pointslayer])
             elif type == 1:
                 geometryformap = qgis.core.QgsGeometry.fromMultiPolyline([pointsmapcanvas])
-                geometryforlayer = qgis.core.QgsGeometry.fromMultiPolyline([points])
+                geometryforlayer = qgis.core.QgsGeometry.fromMultiPolyline([pointslayer])
             elif type == 2:
                 geometryformap = qgis.core.QgsGeometry.fromPolygon([pointsmapcanvas])
-                geometryforlayer = qgis.core.QgsGeometry.fromPolygon([points])
+                geometryforlayer = qgis.core.QgsGeometry.fromPolygon([pointslayer])
         else:
             if type == 0:
                 geometryformap = qgis.core.QgsGeometry.fromPointXY(pointsmapcanvas[0])
-                geometryforlayer = qgis.core.QgsGeometry.fromPointXY(points[0])
+                geometryforlayer = qgis.core.QgsGeometry.fromPointXY(pointslayer[0])
             elif type == 0.5:
                 geometryformap = qgis.core.QgsGeometry.fromPointXY(pointsmapcanvas[0])
-                geometryforlayer = qgis.core.QgsGeometry.fromMultiPolylineXY([points])
+                geometryforlayer = qgis.core.QgsGeometry.fromMultiPolylineXY([pointslayer])
             elif type == 1:
                 geometryformap = qgis.core.QgsGeometry.fromMultiPolylineXY([pointsmapcanvas])
-                geometryforlayer = qgis.core.QgsGeometry.fromMultiPolylineXY([points])
+                geometryforlayer = qgis.core.QgsGeometry.fromMultiPolylineXY([pointslayer])
             elif type == 2:
                 geometryformap = qgis.core.QgsGeometry.fromPolygonXY([pointsmapcanvas])
-                geometryforlayer = qgis.core.QgsGeometry.fromPolygonXY([points])
+                geometryforlayer = qgis.core.QgsGeometry.fromPolygonXY([pointslayer])
 
 
 
         self.rubberBand.addGeometry(geometryformap, None)
         self.rubberBand.show()
         self.tempgeometry = geometryforlayer
+
 
         self.mtool = None
 

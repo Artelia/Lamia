@@ -1,7 +1,5 @@
-I:\FLUVIAL\4352024_33_Conformite_digues_BM\6_Reglementaire\61_Calculs\Basedonnees\201710_Begles\BD_Begles_ind8.sqlite
-I:\FLUVIAL\4352024_33_Conformite_digues_BM\6_Reglementaire\61_Calculs\Basedonnees\201709_RD\BD_Rivedroite_ind2.sqlite
-C:\00_Affaires\BM_digues\Base_donnees\Begles\BD_Begles_ind8.sqlite
-C:\000_testdigue\temp\test01.sqlite
-C:\000_testdigue\BD_Begles_ind8.sqlite
 C://000_testdigue//temp//test01.sqlite
+C:\000_testdigue\temp\test01.sqlite
+C:\00_Affaires\BM_digues\Base_donnees\Begles\BD_Begles_ind8.sqlite
+C:\000_testdigue\BD_Begles_ind8.sqlite
 C:\000_testdigue\temp\BD_Rivedroite_ind1.sqlite

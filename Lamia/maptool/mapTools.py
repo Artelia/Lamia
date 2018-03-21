@@ -87,7 +87,9 @@ class mapToolCapture(qgis.gui.QgsMapToolCapture):
         except AttributeError:  #qgis 3
             self.qgisversion_int = qgis.utils.Qgis.QGIS_VERSION_INT
 
+
     def canvasReleaseEvent(self, event):
+        # print(self.mappoints)
         if event.button() == QtCore.Qt.LeftButton:
             """
             if not self.isCapturing():
@@ -122,7 +124,8 @@ class mapToolCapture(qgis.gui.QgsMapToolCapture):
 
         elif event.button() == QtCore.Qt.RightButton:
             if qgis.utils.iface is not None:  # run from within qgis
-                self.stopCapture.emit(self.points())
+                self.stopCapture.emit(self.mappoints)
+                #self.stopCapture.emit(self.points())
             else:  # run from pycharm
                 self.stopCapture.emit(self.mappoints)
             self.stopCapturing()
