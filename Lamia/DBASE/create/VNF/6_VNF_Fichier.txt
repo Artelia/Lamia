@@ -1,1 +1,0 @@
-#EXPO SELECT *.id_photo, as id_fichier, *.chemin, *.nom_fichier, *.content_type FROM Photo

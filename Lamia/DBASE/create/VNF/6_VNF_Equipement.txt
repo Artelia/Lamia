@@ -1,4 +1,0 @@
-#EXPO SELECT Equipement.id_ouvrage AS num_ouvrage, Equipement.partie AS id_partie, Equipement.equipement AS id_equipement, Infralineaire.pk_debut, Infralineaire.pk_fin, Equipement.pr_debut, Equipement.pr_fin, Equipement.abs_deut, Equipement.abs_fin, Equipement.forcage_ree, Equipement.note_ief, Equipement.is_modified FROM Equipement INNER JOIN Infralineaire ON Equipement.lk_infralineaire = Infralineaire.id_infralineaire
-
-
-#Ici il va falloir regrouper les équipements par même infralineaire (id_ouvrage), garder une des valeurs pour les note_ief et créer les group_number déduire les groupes.

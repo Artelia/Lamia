@@ -1,3 +1,0 @@
-#EXPO SELECT * FROM Infralineaire
-#EXPO UPDATE VNF_ref_ouvrage SET id_modified = '1'
-#EXPO ALTER TABLE "VNF_ref_ouvrage" RENAME COLUMN "id_ouvrage" TO "num_ouvrage";
