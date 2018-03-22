@@ -5,36 +5,36 @@
 ###id_infralineaire;    SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
 ###id_objet;             INT ;                     INTEGER ;                                    Objet(id_objet)
 ###id_descriptionsystem;        INT ;                       INTEGER;                            Descriptionsystem(id_descriptionsystem)
-###id_ouvrage;             INT ;                   INTEGER
+###ouvrage;             INT ;                   INTEGER
 ###visite_par;          VARCHAR(255);                TEXT
 ###visite_date;         DATE;                       DATE
-###is_modified;             INT ;                   INTEGER
+###modified;             INT ;                   INTEGER
 /;
 True;     1
 False;    0
 ###commentaire;          VARCHAR(255);                TEXT
-###id_nature;             INT ;                   INTEGER
+###nature;             INT ;                   INTEGER
 /;
 Bief;     60
-###id_troncon_georef;             INT ;                   INTEGER
-###id_lst_statut_ouvrage;             INT ;                   INTEGER
+###troncon_georef;             INT ;                   INTEGER
+###lst_statut_ouvrage;             INT ;                   INTEGER
 ###date_construction ;             VARCHAR(255);                TEXT
 ###nombre_sas;             INT ;                   INTEGER
-###id_sig;             VARCHAR(255);                TEXT
-###id_parent;             INT ;                   INTEGER
-###id_organisme_georef;             VARCHAR(255);                TEXT
+###sig;             VARCHAR(255);                TEXT
+###parent;             INT ;                   INTEGER
+###organisme_georef;             VARCHAR(255);                TEXT
 ###nbre_pass;             INT ;                   INTEGER
-###id_lst_gabarit;             INT ;                   INTEGER
+###lst_gabarit;             INT ;                   INTEGER
 ###gabarit_passe;             INT ;                   INTEGER
 ###mode_expl_manuel_barrage;          VARCHAR(255);                TEXT
 ###nb_vannes;             INT ;                   INTEGER
 ###largeur;             INT ;                   INTEGER
 ###nbre_voute;             INT ;                   INTEGER
-###id_site;             INT ;                   INTEGER
+###site;             INT ;                   INTEGER
 ###lieu_de_stockage_batardeaux;          VARCHAR(255);                TEXT
 ###longueur_bief;             INT ;                   INTEGER
 ###largeur_bief;             INT ;                   INTEGER
-###id_bief_georef;          VARCHAR(255);                TEXT
+###bief_georef;          VARCHAR(255);                TEXT
 ###statut_donnees;          VARCHAR(255);                TEXT
 ###reference_ouvrage_validee;             INT ;                   INTEGER
 ###user_login;          VARCHAR(255);                TEXT
@@ -42,7 +42,6 @@ Bief;     60
 ###identifiant_local;          VARCHAR(255);                TEXT
 ###ttr_calcule;             INT ;                   INTEGER
 ###ttr_pmp;             INT ;                   INTEGER
-###num_ouvrage;             INT ;                   INTEGER
 ###remise_en_etat;             INT ;                   INTEGER
 ###equivalent_temps_plein;             INT ;                   INTEGER
 ###date_calcul_indicateur;                TIMESTAMP;              TIMESTAMP
@@ -70,10 +69,10 @@ False;    0
 ###point_kilometrique_abs;             INT ;                   INTEGER
 ###toponyme_1;          VARCHAR(255);                TEXT
 ###toponyme_2;          VARCHAR(255);                TEXT
-###id_lst_caracteristique;             INT ;                   INTEGER
+###lst_caracteristique;             INT ;                   INTEGER
 ###fiabilite_note;             INT ;                   INTEGER
 ###fiabilite_classe;          VARCHAR(255);                TEXT
-###id_origine;             INT ;                   INTEGER
+###origine;             INT ;                   INTEGER
 ###caracteristique;          VARCHAR(255);                TEXT
 ###latitude;             INT ;                   INTEGER
 ###longitude;             INT ;                   INTEGER
@@ -81,7 +80,7 @@ False;    0
 /;
 True;     1
 False;    0
-###id_famille;             INT ;                   INTEGER
+###famille;             INT ;                   INTEGER
 ###exploit_mode;          VARCHAR(255);                TEXT
 ###service_offer;          VARCHAR(255);                TEXT
 ###km_point_start;             INT ;                   INTEGER

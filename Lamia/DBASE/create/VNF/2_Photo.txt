@@ -13,10 +13,10 @@ Video;VID
 ###content_type;                VARCHAR(255);            TEXT
 ###chemin;                VARCHAR(255);            TEXT
 ###nom_fichier;                VARCHAR(255);            TEXT
-###id_list_document;             INT;                    INTEGER
+###list_document;             INT;                    INTEGER
 /;                                    ; ['']
 1;1
-###id_list_photo;             INT;                    INTEGER
+###list_photo;             INT;                    INTEGER
 /;                                    ; ['']
 Photo de type miniature : id_ouvrage + '_300.jpg ;                                                                                      1
 Photo au format de depart : id_ouvrage (le fichier n a pas d extension);                                                                2

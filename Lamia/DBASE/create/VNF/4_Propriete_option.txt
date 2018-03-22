@@ -11,6 +11,8 @@
 ###lk_equipement;             INT ;                   INTEGER;                               Equipement(id_equipement)
 ###detail ;             VARCHAR(255);                TEXT
 ###valeur ;             VARCHAR(255);                TEXT
+###niveau;             INT ;                   INTEGER
+###pourcent;             INT ;                   INTEGER
 ###equipementpropriete;             INT;                    INTEGER
 ###propriete;             INT ;                   INTEGER
 ##equipement
