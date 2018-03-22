@@ -1,1 +1,3 @@
 #EXPO SELECT Propriete_option.id_propriete_option AS id_ouvrage_propriete, Propriete_option.option as id_propriete_option, Propriete_option.detail, Ressource.id_ressource AS photo FROM Propriete_option LEFT JOIN Objet ON Propriete_option.id_objet = Objet.id_objet  LEFT JOIN Tcobjetressource ON Tcobjetressource.id_tcobjet = Objet.id_objet  LEFT JOIN Ressource ON Tcobjetressource.id_tcressource = Ressource.id_ressource WHERE Propriete_option.option IS NOT NULL
+#EXPO ALTER TABLE VNF_Ouvrage_propriete_option_export ADD detail TEXT
+#EXPO ALTER TABLE VNF_Ouvrage_propriete_option_export ADD pourcent INTEGER
