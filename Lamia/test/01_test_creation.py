@@ -6,7 +6,7 @@ import qgis
 import qgis.gui
 import shutil
 #import time
-from pyspatialite import dbapi2 as db
+#from pyspatialite import dbapi2 as db
 from qgis.PyQt import QtGui
 
 from InspectionDigueV2.src.dialog.InspectionDigue_dockwidget import InspectiondigueDockWidget

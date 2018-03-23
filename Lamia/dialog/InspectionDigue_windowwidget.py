@@ -612,8 +612,10 @@ class InspectiondigueWindowWidget(QMainWindow):
             for x in __all__:
                 if self.dbase.qgsiface is not None:
                     #if not self.dbase.standalone:
+                    exec('import Lamia.toolpostpro')
                     moduletemp = importlib.import_module('.' + str(x), 'Lamia.toolpostpro' )
                 else:
+                    exec('import Lamia.Lamia.toolpostpro' )
                     moduletemp = importlib.import_module('.' + str(x), 'Lamia.Lamia.toolpostpro')
                 for name, obj in inspect.getmembers(moduletemp, inspect.isclass):
                     if moduletemp.__name__ == obj.__module__:
