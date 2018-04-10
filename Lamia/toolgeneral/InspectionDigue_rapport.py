@@ -33,6 +33,7 @@ class printPDFWorker:
         self.windowdialog = windowdialog
         if printer is None:
             self.printer = QPrinter()
+
             self.painter = QtGui.QPainter()
             self.idparent = None
             self.parentheightpx = None
@@ -319,7 +320,7 @@ class printPDFWorker:
         if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
             newComposition = qgis.core.QgsComposition(mapsettings)
         else:
-            newComposition = qgis.core.QgsLayout(self.project)
+            newComposition = qgis.core.QgsPrintLayout(self.project)
 
         if self.reporttype == "Infrastructure lineaire":
             reportdic = self.reportdict['Infrastructure lineaire']
@@ -335,7 +336,11 @@ class printPDFWorker:
         if debug : self.logger.debug('type %s %s', str(self.reporttype),str(self.idparent))
 
         # ********************* Load template *****************************
-        templatepath = os.path.abspath(os.path.join(os.path.dirname(__file__),'..','DBASE','rapport',self.dbase.type, reportdic['qptfile'] + '.qpt'))
+        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+            templatepath = os.path.abspath(os.path.join(os.path.dirname(__file__),'..','DBASE','rapport',self.dbase.type, reportdic['qptfile'] + '.qpt'))
+        else:
+            templatepath = os.path.abspath(
+                os.path.join(os.path.dirname(__file__), '..', 'DBASE', 'rapport', self.dbase.type,reportdic['qptfile'] + '3.qpt'))
         template_file = QtCore.QFile(templatepath)
         template_file.open(QtCore.QIODevice.ReadOnly | QtCore.QIODevice.Text)
         template_content = template_file.readAll()
@@ -349,12 +354,25 @@ class printPDFWorker:
             # substitution_map = {'DATE_TIME_START': 'foo','DATE_TIME_END': 'bar'}
             substitution_map = {}
             newComposition.loadFromTemplate(document,substitution_map)
+        else:
+            document = QtXml.QDomDocument()
+            document.setContent(template_content)
+            substitution_map = {}
+            newComposition.loadFromTemplate(document,qgis.core.QgsReadWriteContext())
+
+
         if debug: self.logger.debug('template loaded')
-        if debug: self.logger.debug('paperHeight %s', str(newComposition.paperHeight() 		))
+
+        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+            if debug: self.logger.debug('paperHeight %s', str(newComposition.paperHeight() 		))
+        else:
+            if debug: self.logger.debug('paperHeight %s', str(newComposition.pageCollection().page(0).pageSize().height() 	))
 
         # ********************* set atlas and linked composeritem *****************************
-
-        atlas = newComposition.atlasComposition()
+        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+            atlas = newComposition.atlasComposition()
+        else:
+            atlas = newComposition.atlas()
         #coveragelayer = qgis.core.QgsVectorLayer(reportdic['atlaslayer'])
         if True:
             coveragelayer = reportdic['atlaslayer']
@@ -376,10 +394,17 @@ class printPDFWorker:
             toexec = "reportdic['atlastypescale'] = qgis.core.QgsComposerMap." + reportdic['atlastypescale']
             # print(toexec)
             exec(toexec)
+        else:
+            toexec = "reportdic['atlastypescale'] = qgis.core.QgsLayoutItemMap." + reportdic['atlastypescale']
+            # print(toexec)
+            exec(toexec)
 
         atlas.setEnabled(True)
-        atlas.setSingleFile(True)
-        ret = newComposition.setAtlasMode(qgis.core.QgsComposition.ExportAtlas)
+
+        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+            atlas.setSingleFile(True)
+            ret = newComposition.setAtlasMode(qgis.core.QgsComposition.ExportAtlas)
+
         if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
             #atlas.setComposerMap(newComposition.composerMapItems()[0])
             for mapname in reportdic['atlasdriven']:
@@ -391,7 +416,17 @@ class printPDFWorker:
                 newComposition.getComposerItemById(mapname).setAtlasScalingMode(reportdic['atlastypescale'])
 
         else:
-            pass
+            for mapname in reportdic['atlasdriven']:
+                # atlas.setComposerMap(newComposition.getComposerItemById(mapname))
+                temp1 = newComposition.itemById(mapname)
+                # print(mapname, type(temp1))
+                temp1.__class__ = qgis.core.QgsLayoutItemMap
+                # print(mapname, type(temp1))
+                newComposition.itemById(mapname).setAtlasDriven(True)
+                #newComposition.getComposerItemById(mapname).setNewScale(reportdic['atlasdrivenscale'])
+                #newComposition.getComposerItemById(mapname).setAtlasScalingMode(qgis.core.QgsComposerMap.Auto)
+                newComposition.itemById(mapname).setAtlasScalingMode(reportdic['atlastypescale'])
+
 
         if debug: self.logger.debug('atlas driven loaded')
 
@@ -423,7 +458,10 @@ class printPDFWorker:
                             #fileraster = self.dbase.dbasetables['Infralineaire']['widget'].completePathOfFile(result[0])
                             fileraster = self.dbase.completePathOfFile(result[0])
                             rlayer = qgis.core.QgsRasterLayer(fileraster, os.path.basename(fileraster).split('.')[0])
-                            rlayer.renderer().setOpacity(0.5)
+                            try:
+                                rlayer.renderer().setOpacity(0.5)
+                            except:
+                                pass
                             if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
                                 qgis.core.QgsMapLayerRegistry.instance().addMapLayer(rlayer,False)
                             else:
@@ -455,8 +493,14 @@ class printPDFWorker:
             if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
                 layersformapcomposer = [layer.id() for layer in layersformapcomposer]
 
-            newComposition.getComposerItemById(mapname).setLayerSet(layersformapcomposer)
-            newComposition.getComposerItemById(mapname).setKeepLayerSet(True)
+            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                newComposition.getComposerItemById(mapname).setLayerSet(layersformapcomposer)
+                newComposition.getComposerItemById(mapname).setKeepLayerSet(True)
+            else:
+                temp1 = newComposition.itemById(mapname)
+                temp1.__class__ = qgis.core.QgsLayoutItemMap
+                temp1.setLayers(layersformapcomposer)
+                temp1.setKeepLayerSet(True)
 
             # newComposition.getComposerItemById('map0').setAtlasScalingMode(qgis.core.QgsComposerMap.Auto)
 
@@ -466,9 +510,15 @@ class printPDFWorker:
             # xform = qgis.core.QgsCoordinateTransform(self.dbase.qgiscrs, self.canvas.mapSettings().destinationCrs())
             layerextgeomcanvas = layerextgeom.transform(self.dbase.xform)
             layerextgeomcanvasfinal = layerextgeom.boundingBox()
-            newComposition.getComposerItemById(mapname).zoomToExtent(layerextgeomcanvasfinal)
-            #overview
-            overvw = newComposition.getComposerItemById(mapname).overview()
+            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                newComposition.getComposerItemById(mapname).zoomToExtent(layerextgeomcanvasfinal)
+                #overview
+                overvw = newComposition.getComposerItemById(mapname).overview()
+            else:
+                temp1 = newComposition.itemById(mapname)
+                temp1.__class__ = qgis.core.QgsLayoutItemMap
+                temp1.zoomToExtent(layerextgeomcanvasfinal)
+                overvw = temp1.overview()
 
         if debug: self.logger.debug('map configured')
 
@@ -531,7 +581,11 @@ class printPDFWorker:
         dictfields={}
         if True:
             for composeritem in newComposition.items():
-                if isinstance(composeritem, qgis.core.QgsComposerLabel):
+                if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                    labelclass = qgis.core.QgsComposerLabel
+                else:
+                    labelclass = qgis.core.QgsLayoutItemLabel
+                if isinstance(composeritem, labelclass):
                     # print(composeritem.text())
                     if "#lamia" in composeritem.text():
                         txtsplit = composeritem.text().split('#')
@@ -579,7 +633,10 @@ class printPDFWorker:
             progress.setMaximum(len(idsforreport))
             progress.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
             progressMessageBar.layout().addWidget(progress)
-            self.dbase.qgsiface.messageBar().pushWidget(progressMessageBar, self.dbase.qgsiface.messageBar().INFO)
+            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                self.dbase.qgsiface.messageBar().pushWidget(progressMessageBar, self.dbase.qgsiface.messageBar().INFO)
+            else:
+                self.dbase.qgsiface.messageBar().pushWidget(progressMessageBar, qgis.core.Qgis.Info)
         else:
             progress = None
 
@@ -589,12 +646,37 @@ class printPDFWorker:
         # try:
 
         if True:
-            newComposition.setUseAdvancedEffects(False)
-            atlas.beginRender()
-            if self.idparent is None:
-                newComposition.beginPrintAsPDF(self.printer, self.pdffile)
-                printReady = self.painter.begin(self.printer)
-                if debug: self.logger.debug('print ready %s', printReady)
+            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                newComposition.setUseAdvancedEffects(False)
+                atlas.beginRender()
+                exporter = None
+                if self.idparent is None:
+                    newComposition.beginPrintAsPDF(self.printer, self.pdffile)
+                    printReady = self.painter.begin(self.printer)
+                    if debug: self.logger.debug('print ready %s', printReady)
+            else:
+                atlas.beginRender()
+                exporter = qgis.core.QgsLayoutExporter(newComposition)
+                settings = qgis.core.QgsLayoutExporter.PdfExportSettings()
+                printsettings = qgis.core.QgsLayoutExporter.PrintExportSettings()
+                if self.idparent is None:
+                    #newComposition.beginPrintAsPDF(self.printer, self.pdffile)
+
+                    # equivalent for beginPrintAsPDF
+                    """
+                    printer.setOutputFormat(QPrinter::PdfFormat );
+                    printer.setOutputFileName(file);
+                    printer.setPaperSize(QSizeF(paperWidth(), paperHeight()), QPrinter::Millimeter );
+                    """
+                    self.printer.setOutputFormat(QPrinter.PdfFormat)
+                    self.printer.setOutputFileName(self.pdffile)
+                    paperWidth = newComposition.pageCollection().page(0).pageSize().width()
+                    paperHeight = newComposition.pageCollection().page(0).pageSize().height()
+                    self.printer.setPaperSize(QtCore.QSizeF(paperWidth, paperHeight), QPrinter.Millimeter)
+                    self.printer.setFullPage(True)
+
+                    printReady = self.painter.begin(self.printer)
+                    if debug: self.logger.debug('print ready %s', printReady)
 
             #print('paint', self.painter.device().width(),self.painter.device().widthMM() , self.painter.device().logicalDpiX())
             idecalage = 0
@@ -603,43 +685,60 @@ class printPDFWorker:
                 # print(featid)
                 self.setLoadingProgressBar(progress, i)
                 #parentfeat = self.dbase.dbasetables[tablename]['layer'].getFeatures(qgis.core.QgsFeatureRequest(parendid)).next()
-                atlasfeat = reportdic['atlaslayer'].getFeatures(qgis.core.QgsFeatureRequest(featid)).next()
-
-                if atlasfeat.geometry().boundingBox().toString() == 'Empty':        #point in linelayer
-                    for mapname in reportdic['atlasdriven']:
-                        newComposition.getComposerItemById(mapname).setAtlasScalingMode(qgis.core.QgsComposerMap.Fixed)
-                        newComposition.getComposerItemById(mapname).setNewScale(reportdic['atlasdrivenminscale'])
+                if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                    atlasfeat = reportdic['atlaslayer'].getFeatures(qgis.core.QgsFeatureRequest(featid)).next()
                 else:
-                    for mapname in reportdic['atlasdriven']:
-                        newComposition.getComposerItemById(mapname).setAtlasScalingMode(reportdic['atlastypescale'])
+                    atlasfeat = next(reportdic['atlaslayer'].getFeatures(qgis.core.QgsFeatureRequest(featid)))
 
+                if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                    if atlasfeat.geometry().boundingBox().toString() == 'Empty':        #point in linelayer
+                        for mapname in reportdic['atlasdriven']:
+                            newComposition.getComposerItemById(mapname).setAtlasScalingMode(qgis.core.QgsComposerMap.Fixed)
+                            newComposition.getComposerItemById(mapname).setNewScale(reportdic['atlasdrivenminscale'])
+                    else:
+                        for mapname in reportdic['atlasdriven']:
+                            newComposition.getComposerItemById(mapname).setAtlasScalingMode(reportdic['atlastypescale'])
 
-                atlas.prepareForFeature(atlasfeat)
-                currentfeature = atlas.feature()
+                if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                    atlas.prepareForFeature(atlasfeat)
+                    currentfeature = atlas.feature()
+                else:
+                    atlas.seekTo(atlasfeat)
+                    currentfeature = atlasfeat
 
                 if debug: self.logger.debug('feat attr : %s', str([field.name() for field in currentfeature.fields()]))
                 if debug: self.logger.debug('feat attr : %s',str(currentfeature.attributes()))
 
                 #check atlasdriven map scale
-                for mapname in reportdic['atlasdriven']:
-                    if newComposition.getComposerItemById(mapname).scale() < reportdic['atlasdrivenminscale']:
-                        newComposition.getComposerItemById(mapname).setNewScale(reportdic['atlasdrivenminscale'])
-                        # print('ok')
-                    elif newComposition.getComposerItemById(mapname).scale() > 100000.0:
-                        newComposition.getComposerItemById(mapname).setNewScale(reportdic['atlasdrivenminscale'])
-                        #print('ok')
+                if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                    for mapname in reportdic['atlasdriven']:
+                        if newComposition.getComposerItemById(mapname).scale() < reportdic['atlasdrivenminscale']:
+                            newComposition.getComposerItemById(mapname).setNewScale(reportdic['atlasdrivenminscale'])
+                            # print('ok')
+                        elif newComposition.getComposerItemById(mapname).scale() > 100000.0:
+                            newComposition.getComposerItemById(mapname).setNewScale(reportdic['atlasdrivenminscale'])
+                            #print('ok')
 
                 # photo and graph inclusion
                 if debug: self.logger.debug('image')
                 if True:
                     for imageitemname in reportdic['images'].keys():
-                        imageitem = newComposition.getComposerItemById(imageitemname)
+                        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                            imageitem = newComposition.getComposerItemById(imageitemname)
+                        else:
+                            imageitem = newComposition.itemById(imageitemname)
+                            #composeritem = newComposition.itemByUuid(compitemuuid)
+                            imageitem.__class__ = qgis.core.QgsLayoutItemPicture
+
                         #print(imageitem, reportdic['images'][imageitemname])
                         imagefile = None
                         if os.path.isfile(reportdic['images'][imageitemname]):
                             imagefile = reportdic['images'][imageitemname]
                         elif True and reportdic['images'][imageitemname] == 'profile':
-                            imagefile = self.getImageFileOfProfile(atlas.currentGeometry(self.dbase.qgiscrs),imageitem)
+                            try:
+                                imagefile = self.getImageFileOfProfile(atlas.currentGeometry(self.dbase.qgiscrs),imageitem)
+                            except Exception as e:
+                                print(e)
                         elif True and reportdic['images'][imageitemname] ==   'profiltravers':
                             imagefile = self.getImageFileOfProfileTravers(reportdic, currentfeature,imageitem)
                         elif reportdic['images'][imageitemname] == 'photo':
@@ -653,13 +752,24 @@ class printPDFWorker:
                         if imageitem is not None:
                             # print('ok',imagefile )
                             imageitem.setPicturePath(imagefile)
-                            imageitem.updateItem()
+                            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                                imageitem.updateItem()
+                            else:
+                                imageitem.refreshPicture()
+
 
                 if debug: self.logger.debug('var')
+
+
                 # var inclusion
+
                 if True:
                     for compitemuuid in dictfields.keys():
-                        composeritem = newComposition.getComposerItemByUuid(compitemuuid)
+                        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                            composeritem = newComposition.getComposerItemByUuid(compitemuuid)
+                        else:
+                            composeritem = newComposition.itemByUuid(compitemuuid)
+                            composeritem.__class__ = qgis.core.QgsLayoutItemLabel
                         finaltxt = []
                         for temptxt in dictfields[compitemuuid]:
                             if 'lamia.' in temptxt:
@@ -722,7 +832,13 @@ class printPDFWorker:
                 if self.idparent is  None:
                     if i > 0 :
                         self.printer.newPage()
-                    newComposition.doPrint(self.printer, self.painter)
+
+                    if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                        newComposition.doPrint(self.printer, self.painter)
+                    else:
+                        #newComposition.doPrint(self.printer, self.painter)
+                        exporter.renderPage(self.painter,0)
+                        eval('exporter.print(self.printer, printsettings )')
                 else:
                     # print('height', self.parentheightpx,selfheightpx , self.painter.device().height())
                     #selfheightpx = newComposition.compositionBounds().height()/ 25.4 * 96 * 1.08

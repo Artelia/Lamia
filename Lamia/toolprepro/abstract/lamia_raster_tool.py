@@ -79,7 +79,10 @@ class AbstractRasterTool(AbstractInspectionDigueTool):
 
         basename = os.path.basename(file).split('.')[0]
         rlayer = qgis.core.QgsRasterLayer(file, basename)
-        qgis.core.QgsMapLayerRegistry.instance().addMapLayer(rlayer, True)
+        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+            qgis.core.QgsMapLayerRegistry.instance().addMapLayer(rlayer, True)
+        else:
+            qgis.core.QgsProject.instance().addMapLayer(rlayer, True)
 
     def chooseFile(self):
         file, extension = self.qfiledlg.getOpenFileNameAndFilter(None, 'Choose the file', self.dbase.imagedirectory,

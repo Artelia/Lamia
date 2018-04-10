@@ -1,37 +1,34 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis version="2.18.18" simplifyAlgorithm="0" minimumScale="0" maximumScale="10000" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" readOnly="0" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="1" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+<qgis version="2.18.14" simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" readOnly="0" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
   <edittypes>
-    <edittype widgetv2type="TextEdit" name="id_desordre">
+    <edittype widgetv2type="TextEdit" name="id_zonegeo">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="cote">
+    <edittype widgetv2type="TextEdit" name="pays">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="position">
+    <edittype widgetv2type="TextEdit" name="region">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="catdes">
+    <edittype widgetv2type="TextEdit" name="commune">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="typedes">
+    <edittype widgetv2type="TextEdit" name="nom">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="populations">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="contextesocioeco">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="importancesociale">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="importanceindustrielle">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="id_objet">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="impact">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="gravite">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="priorite">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="risques">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="lk_descriptionsystem">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="datecreation">
@@ -40,87 +37,37 @@
     <edittype widgetv2type="TextEdit" name="datedestruction">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
+    <edittype widgetv2type="TextEdit" name="commentaire">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="libelle">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
   </edittypes>
-  <renderer-v2 forceraster="0" symbollevels="0" type="RuleRenderer" enableorderby="0">
-    <rules key="{814f4a1d-ecf8-4ab4-af4f-b8f84c22d0bd}">
-      <rule filter="&#xa;geom_to_wkt( end_point(  $geometry ) ) !=  &#xa;geom_to_wkt( start_point(  $geometry ))" key="{830c67d5-7aea-4bc5-8f87-a47209708db8}" symbol="0"/>
-      <rule filter="&#xa;geom_to_wkt( end_point(  $geometry ) ) =  &#xa;geom_to_wkt( start_point(  $geometry ))" key="{3cad803e-8642-43b4-a260-2ea5d7dba0b5}" symbol="1"/>
-    </rules>
+  <renderer-v2 forceraster="0" symbollevels="0" type="singleSymbol" enableorderby="0">
     <symbols>
-      <symbol alpha="1" clip_to_extent="1" type="line" name="0">
-        <layer pass="0" class="SimpleLine" locked="0">
-          <prop k="capstyle" v="round"/>
-          <prop k="customdash" v="5;2"/>
-          <prop k="customdash_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="customdash_unit" v="MM"/>
-          <prop k="draw_inside_polygon" v="0"/>
-          <prop k="joinstyle" v="round"/>
-          <prop k="line_color" v="255,138,99,255"/>
-          <prop k="line_style" v="solid"/>
-          <prop k="line_width" v="1.56"/>
-          <prop k="line_width_unit" v="MM"/>
-          <prop k="offset" v="0"/>
+      <symbol alpha="1" clip_to_extent="1" type="fill" name="0">
+        <layer pass="0" class="ShapeburstFill" locked="0">
+          <prop k="blur_radius" v="0"/>
+          <prop k="color" v="0,0,0,255"/>
+          <prop k="color1" v="0,0,255,255"/>
+          <prop k="color2" v="0,255,0,255"/>
+          <prop k="color_type" v="0"/>
+          <prop k="discrete" v="0"/>
+          <prop k="distance_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="distance_unit" v="MM"/>
+          <prop k="gradient_color2" v="255,255,255,0"/>
+          <prop k="ignore_rings" v="0"/>
+          <prop k="max_distance" v="5"/>
+          <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="offset_unit" v="MM"/>
-          <prop k="use_custom_dash" v="0"/>
-          <prop k="width_map_unit_scale" v="0,0,0,0,0,0"/>
-        </layer>
-        <layer pass="0" class="SimpleLine" locked="1">
-          <prop k="capstyle" v="round"/>
-          <prop k="customdash" v="5;2"/>
-          <prop k="customdash_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="customdash_unit" v="MM"/>
-          <prop k="draw_inside_polygon" v="0"/>
-          <prop k="joinstyle" v="round"/>
-          <prop k="line_color" v="255,1,1,255"/>
-          <prop k="line_style" v="dot"/>
-          <prop k="line_width" v="1.36"/>
-          <prop k="line_width_unit" v="MM"/>
-          <prop k="offset" v="0"/>
-          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="offset_unit" v="MM"/>
-          <prop k="use_custom_dash" v="0"/>
-          <prop k="width_map_unit_scale" v="0,0,0,0,0,0"/>
-        </layer>
-      </symbol>
-      <symbol alpha="1" clip_to_extent="1" type="line" name="1">
-        <layer pass="1" class="MarkerLine" locked="0">
-          <prop k="interval" v="3"/>
-          <prop k="interval_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="interval_unit" v="MM"/>
-          <prop k="offset" v="0"/>
-          <prop k="offset_along_line" v="0"/>
-          <prop k="offset_along_line_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="offset_along_line_unit" v="MM"/>
-          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="offset_unit" v="MM"/>
-          <prop k="placement" v="firstvertex"/>
-          <prop k="rotate" v="1"/>
-          <symbol alpha="1" clip_to_extent="1" type="marker" name="@1@0">
-            <layer pass="0" class="SimpleMarker" locked="0">
-              <prop k="angle" v="0"/>
-              <prop k="color" v="255,0,0,255"/>
-              <prop k="horizontal_anchor_point" v="1"/>
-              <prop k="joinstyle" v="bevel"/>
-              <prop k="name" v="star"/>
-              <prop k="offset" v="0,0"/>
-              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="offset_unit" v="MM"/>
-              <prop k="outline_color" v="0,0,0,255"/>
-              <prop k="outline_style" v="solid"/>
-              <prop k="outline_width" v="0"/>
-              <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="outline_width_unit" v="MM"/>
-              <prop k="scale_method" v="diameter"/>
-              <prop k="size" v="3"/>
-              <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="size_unit" v="MM"/>
-              <prop k="vertical_anchor_point" v="1"/>
-            </layer>
-          </symbol>
+          <prop k="use_whole_shape" v="0"/>
         </layer>
       </symbol>
     </symbols>
+    <rotation/>
+    <sizescale scalemethod="diameter"/>
   </renderer-v2>
   <labeling type="simple"/>
   <customproperties>
@@ -186,7 +133,7 @@
     <property key="labeling/obstacleType" value="0"/>
     <property key="labeling/offsetType" value="0"/>
     <property key="labeling/placeDirectionSymbol" value="0"/>
-    <property key="labeling/placement" value="2"/>
+    <property key="labeling/placement" value="1"/>
     <property key="labeling/placementFlags" value="10"/>
     <property key="labeling/plussign" value="false"/>
     <property key="labeling/predefinedPositionOrder" value="TR,TL,BR,BL,R,L,TSR,BSR"/>
@@ -269,7 +216,7 @@
   <blendMode>0</blendMode>
   <featureBlendMode>0</featureBlendMode>
   <layerTransparency>0</layerTransparency>
-  <displayfield>ID</displayfield>
+  <displayfield>id_zonegeo</displayfield>
   <label>0</label>
   <labelattributes>
     <label fieldname="" text="Étiquette"/>
@@ -319,48 +266,50 @@
       </layer>
     </symbol>
   </SingleCategoryDiagramRenderer>
-  <DiagramLayerSettings yPosColumn="-1" showColumn="-1" linePlacementFlags="10" placement="2" dist="0" xPosColumn="-1" priority="0" obstacle="0" zIndex="0" showAll="1"/>
-  <annotationform></annotationform>
+  <DiagramLayerSettings yPosColumn="-1" showColumn="-1" linePlacementFlags="10" placement="0" dist="0" xPosColumn="-1" priority="0" obstacle="0" zIndex="0" showAll="1"/>
+  <annotationform>.</annotationform>
   <aliases>
-    <alias field="id_desordre" index="0" name=""/>
-    <alias field="cote" index="1" name=""/>
-    <alias field="position" index="2" name=""/>
-    <alias field="catdes" index="3" name=""/>
-    <alias field="typedes" index="4" name=""/>
-    <alias field="id_objet" index="5" name=""/>
-    <alias field="impact" index="6" name=""/>
-    <alias field="gravite" index="7" name=""/>
-    <alias field="priorite" index="8" name=""/>
-    <alias field="risques" index="9" name=""/>
-    <alias field="lk_descriptionsystem" index="10" name=""/>
-    <alias field="datecreation" index="11" name=""/>
-    <alias field="datedestruction" index="12" name=""/>
+    <alias field="id_zonegeo" index="0" name=""/>
+    <alias field="pays" index="1" name=""/>
+    <alias field="region" index="2" name=""/>
+    <alias field="commune" index="3" name=""/>
+    <alias field="nom" index="4" name=""/>
+    <alias field="populations" index="5" name=""/>
+    <alias field="contextesocioeco" index="6" name=""/>
+    <alias field="importancesociale" index="7" name=""/>
+    <alias field="importanceindustrielle" index="8" name=""/>
+    <alias field="id_objet" index="9" name=""/>
+    <alias field="datecreation" index="10" name=""/>
+    <alias field="datedestruction" index="11" name=""/>
+    <alias field="commentaire" index="12" name=""/>
+    <alias field="libelle" index="13" name=""/>
   </aliases>
   <excludeAttributesWMS/>
   <excludeAttributesWFS/>
   <attributeactions default="-1"/>
   <attributetableconfig actionWidgetStyle="dropDown" sortExpression="" sortOrder="0">
     <columns>
-      <column width="-1" hidden="1" type="actions"/>
-      <column width="-1" hidden="0" type="field" name="id_desordre"/>
-      <column width="-1" hidden="0" type="field" name="cote"/>
-      <column width="-1" hidden="0" type="field" name="position"/>
-      <column width="-1" hidden="0" type="field" name="catdes"/>
-      <column width="-1" hidden="0" type="field" name="typedes"/>
+      <column width="-1" hidden="0" type="field" name="id_zonegeo"/>
+      <column width="-1" hidden="0" type="field" name="pays"/>
+      <column width="-1" hidden="0" type="field" name="region"/>
+      <column width="-1" hidden="0" type="field" name="commune"/>
+      <column width="-1" hidden="0" type="field" name="nom"/>
+      <column width="-1" hidden="0" type="field" name="populations"/>
+      <column width="-1" hidden="0" type="field" name="contextesocioeco"/>
+      <column width="-1" hidden="0" type="field" name="importancesociale"/>
+      <column width="-1" hidden="0" type="field" name="importanceindustrielle"/>
       <column width="-1" hidden="0" type="field" name="id_objet"/>
-      <column width="-1" hidden="0" type="field" name="impact"/>
-      <column width="-1" hidden="0" type="field" name="gravite"/>
-      <column width="-1" hidden="0" type="field" name="priorite"/>
-      <column width="-1" hidden="0" type="field" name="risques"/>
       <column width="-1" hidden="0" type="field" name="datecreation"/>
       <column width="-1" hidden="0" type="field" name="datedestruction"/>
-      <column width="-1" hidden="0" type="field" name="lk_descriptionsystem"/>
+      <column width="-1" hidden="0" type="field" name="commentaire"/>
+      <column width="-1" hidden="0" type="field" name="libelle"/>
+      <column width="-1" hidden="1" type="actions"/>
     </columns>
   </attributetableconfig>
-  <editform></editform>
+  <editform>.</editform>
   <editforminit/>
   <editforminitcodesource>0</editforminitcodesource>
-  <editforminitfilepath></editforminitfilepath>
+  <editforminitfilepath>.</editforminitfilepath>
   <editforminitcode><![CDATA[# -*- coding: utf-8 -*-
 """
 Les formulaires QGIS peuvent avoir une fonction Python qui sera appelée à l'ouverture du formulaire.
@@ -385,20 +334,21 @@ def my_form_open(dialog, layer, feature):
     <fieldstyles/>
   </conditionalstyles>
   <defaults>
-    <default field="id_desordre" expression=""/>
-    <default field="cote" expression=""/>
-    <default field="position" expression=""/>
-    <default field="catdes" expression=""/>
-    <default field="typedes" expression=""/>
+    <default field="id_zonegeo" expression=""/>
+    <default field="pays" expression=""/>
+    <default field="region" expression=""/>
+    <default field="commune" expression=""/>
+    <default field="nom" expression=""/>
+    <default field="populations" expression=""/>
+    <default field="contextesocioeco" expression=""/>
+    <default field="importancesociale" expression=""/>
+    <default field="importanceindustrielle" expression=""/>
     <default field="id_objet" expression=""/>
-    <default field="impact" expression=""/>
-    <default field="gravite" expression=""/>
-    <default field="priorite" expression=""/>
-    <default field="risques" expression=""/>
-    <default field="lk_descriptionsystem" expression=""/>
     <default field="datecreation" expression=""/>
     <default field="datedestruction" expression=""/>
+    <default field="commentaire" expression=""/>
+    <default field="libelle" expression=""/>
   </defaults>
-  <previewExpression>COALESCE("ID", '&lt;NULL>')</previewExpression>
-  <layerGeometryType>1</layerGeometryType>
+  <previewExpression></previewExpression>
+  <layerGeometryType>2</layerGeometryType>
 </qgis>

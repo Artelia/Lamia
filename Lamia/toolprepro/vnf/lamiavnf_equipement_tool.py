@@ -107,6 +107,12 @@ class EquipementTool(AbstractInspectionDigueTool):
                 #self.userwdgfield.tabWidget.widget(2).layout().addWidget(self.propertieswdgCROQUIS)
 
 
+            if self.parentWidget is not None and self.parentWidget.dbasetablename == 'Infralineaire':
+                self.pushButton_addFeature.setEnabled(True)
+            else:
+                self.pushButton_addFeature.setEnabled(False)
+
+
 
 
             """

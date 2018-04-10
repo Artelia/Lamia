@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-
-
 import os
 import sys
 
@@ -23,6 +21,7 @@ import shutil
 
 
 from Lamia.Lamia.dialog.InspectionDigue_windowwidget import InspectiondigueWindowWidget
+
 
 
 
@@ -63,7 +62,7 @@ def testCoreParserValue(canvas, loadfile=True, typedb="spatialite"):
                                             host='localhost',
                                             password='PVR', port=5432)
 
-    if True:
+    if False:
         print('ok00')
         # canvas.setDestinationCrs(wind.dbase.dbasetables['Infralineaire']['layer'].crs())
         canvas.setDestinationCrs(qgis.core.QgsCoordinateReferenceSystem(2154))
@@ -92,6 +91,15 @@ def testCoreParserValue(canvas, loadfile=True, typedb="spatialite"):
         canvas.show()
         canvas.refresh()
         wind.show()
+
+    if True:
+        wdg = wind.dbase.dbasetables['Infralineaire']['widget']
+        print(wdg.gpsutil)
+        wdg.gpsutil.currentpoint = qgis.core.QgsPointXY(1000,2000)
+        wdg.addGPSPoint()
+
+        print('ok')
+
 
 # *********************************************************************************************************************
 # ******************************************   MAIN      *************************************************************

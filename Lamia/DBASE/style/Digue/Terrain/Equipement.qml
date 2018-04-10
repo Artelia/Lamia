@@ -1,7 +1,7 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis version="2.18.18" simplifyAlgorithm="0" minimumScale="0" maximumScale="10000" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" readOnly="0" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="1" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+<qgis version="2.18.16" simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" readOnly="0" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
   <edittypes>
-    <edittype widgetv2type="TextEdit" name="id_desordre">
+    <edittype widgetv2type="TextEdit" name="id_equipement">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="cote">
@@ -10,28 +10,46 @@
     <edittype widgetv2type="TextEdit" name="position">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="catdes">
+    <edittype widgetv2type="TextEdit" name="categorie">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="typedes">
+    <edittype widgetv2type="TextEdit" name="typeequipement">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="implantation">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="ecoulement">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="utilisation">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="dimverti">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="dimhori">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="securite">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="commentaires">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="id_objet">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="impact">
+    <edittype widgetv2type="TextEdit" name="id_descriptionsystem">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="gravite">
+    <edittype widgetv2type="TextEdit" name="lk_infralineaire">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="priorite">
+    <edittype widgetv2type="TextEdit" name="lk_noeud">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="risques">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="lk_descriptionsystem">
+    <edittype widgetv2type="TextEdit" name="lk_equipement">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="datecreation">
@@ -41,23 +59,27 @@
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
   </edittypes>
-  <renderer-v2 forceraster="0" symbollevels="0" type="RuleRenderer" enableorderby="0">
-    <rules key="{814f4a1d-ecf8-4ab4-af4f-b8f84c22d0bd}">
-      <rule filter="&#xa;geom_to_wkt( end_point(  $geometry ) ) !=  &#xa;geom_to_wkt( start_point(  $geometry ))" key="{830c67d5-7aea-4bc5-8f87-a47209708db8}" symbol="0"/>
-      <rule filter="&#xa;geom_to_wkt( end_point(  $geometry ) ) =  &#xa;geom_to_wkt( start_point(  $geometry ))" key="{3cad803e-8642-43b4-a260-2ea5d7dba0b5}" symbol="1"/>
-    </rules>
+  <renderer-v2 attr="categorie" forceraster="0" symbollevels="0" type="categorizedSymbol" enableorderby="0">
+    <categories>
+      <category render="true" symbol="0" value="RTE" label="RTE"/>
+      <category render="true" symbol="1" value="OUH" label="OUH"/>
+      <category render="true" symbol="2" value="OUP" label="OUP"/>
+      <category render="true" symbol="3" value="RHF" label="RHF"/>
+      <category render="true" symbol="4" value="RHO" label="RHO"/>
+      <category render="true" symbol="5" value="OUT" label="OUT"/>
+    </categories>
     <symbols>
       <symbol alpha="1" clip_to_extent="1" type="line" name="0">
-        <layer pass="0" class="SimpleLine" locked="0">
-          <prop k="capstyle" v="round"/>
+        <layer pass="0" class="SimpleLine" locked="1">
+          <prop k="capstyle" v="square"/>
           <prop k="customdash" v="5;2"/>
           <prop k="customdash_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="customdash_unit" v="MM"/>
           <prop k="draw_inside_polygon" v="0"/>
-          <prop k="joinstyle" v="round"/>
-          <prop k="line_color" v="255,138,99,255"/>
+          <prop k="joinstyle" v="bevel"/>
+          <prop k="line_color" v="255,255,255,255"/>
           <prop k="line_style" v="solid"/>
-          <prop k="line_width" v="1.56"/>
+          <prop k="line_width" v="1.2"/>
           <prop k="line_width_unit" v="MM"/>
           <prop k="offset" v="0"/>
           <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -65,16 +87,16 @@
           <prop k="use_custom_dash" v="0"/>
           <prop k="width_map_unit_scale" v="0,0,0,0,0,0"/>
         </layer>
-        <layer pass="0" class="SimpleLine" locked="1">
-          <prop k="capstyle" v="round"/>
+        <layer pass="0" class="SimpleLine" locked="0">
+          <prop k="capstyle" v="square"/>
           <prop k="customdash" v="5;2"/>
           <prop k="customdash_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="customdash_unit" v="MM"/>
           <prop k="draw_inside_polygon" v="0"/>
-          <prop k="joinstyle" v="round"/>
-          <prop k="line_color" v="255,1,1,255"/>
-          <prop k="line_style" v="dot"/>
-          <prop k="line_width" v="1.36"/>
+          <prop k="joinstyle" v="bevel"/>
+          <prop k="line_color" v="200,255,1,255"/>
+          <prop k="line_style" v="solid"/>
+          <prop k="line_width" v="0.7"/>
           <prop k="line_width_unit" v="MM"/>
           <prop k="offset" v="0"/>
           <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -84,7 +106,7 @@
         </layer>
       </symbol>
       <symbol alpha="1" clip_to_extent="1" type="line" name="1">
-        <layer pass="1" class="MarkerLine" locked="0">
+        <layer pass="0" class="MarkerLine" locked="0">
           <prop k="interval" v="3"/>
           <prop k="interval_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="interval_unit" v="MM"/>
@@ -99,10 +121,47 @@
           <symbol alpha="1" clip_to_extent="1" type="marker" name="@1@0">
             <layer pass="0" class="SimpleMarker" locked="0">
               <prop k="angle" v="0"/>
-              <prop k="color" v="255,0,0,255"/>
+              <prop k="color" v="0,95,255,255"/>
               <prop k="horizontal_anchor_point" v="1"/>
               <prop k="joinstyle" v="bevel"/>
-              <prop k="name" v="star"/>
+              <prop k="name" v="square"/>
+              <prop k="offset" v="0,0"/>
+              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="offset_unit" v="MM"/>
+              <prop k="outline_color" v="0,0,0,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0"/>
+              <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="outline_width_unit" v="MM"/>
+              <prop k="scale_method" v="area"/>
+              <prop k="size" v="2"/>
+              <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="size_unit" v="MM"/>
+              <prop k="vertical_anchor_point" v="1"/>
+            </layer>
+          </symbol>
+        </layer>
+      </symbol>
+      <symbol alpha="1" clip_to_extent="1" type="line" name="2">
+        <layer pass="0" class="MarkerLine" locked="0">
+          <prop k="interval" v="3"/>
+          <prop k="interval_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="interval_unit" v="MM"/>
+          <prop k="offset" v="0"/>
+          <prop k="offset_along_line" v="0"/>
+          <prop k="offset_along_line_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="offset_along_line_unit" v="MM"/>
+          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="placement" v="firstvertex"/>
+          <prop k="rotate" v="1"/>
+          <symbol alpha="1" clip_to_extent="1" type="marker" name="@2@0">
+            <layer pass="0" class="SimpleMarker" locked="0">
+              <prop k="angle" v="0"/>
+              <prop k="color" v="0,0,0,255"/>
+              <prop k="horizontal_anchor_point" v="1"/>
+              <prop k="joinstyle" v="bevel"/>
+              <prop k="name" v="square"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
               <prop k="offset_unit" v="MM"/>
@@ -112,7 +171,116 @@
               <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
               <prop k="outline_width_unit" v="MM"/>
               <prop k="scale_method" v="diameter"/>
-              <prop k="size" v="3"/>
+              <prop k="size" v="2"/>
+              <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="size_unit" v="MM"/>
+              <prop k="vertical_anchor_point" v="1"/>
+            </layer>
+          </symbol>
+        </layer>
+      </symbol>
+      <symbol alpha="1" clip_to_extent="1" type="line" name="3">
+        <layer pass="0" class="SimpleLine" locked="1">
+          <prop k="capstyle" v="square"/>
+          <prop k="customdash" v="5;2"/>
+          <prop k="customdash_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="customdash_unit" v="MM"/>
+          <prop k="draw_inside_polygon" v="0"/>
+          <prop k="joinstyle" v="bevel"/>
+          <prop k="line_color" v="255,255,255,255"/>
+          <prop k="line_style" v="solid"/>
+          <prop k="line_width" v="1.2"/>
+          <prop k="line_width_unit" v="MM"/>
+          <prop k="offset" v="0"/>
+          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="use_custom_dash" v="0"/>
+          <prop k="width_map_unit_scale" v="0,0,0,0,0,0"/>
+        </layer>
+        <layer pass="0" class="SimpleLine" locked="0">
+          <prop k="capstyle" v="square"/>
+          <prop k="customdash" v="5;2"/>
+          <prop k="customdash_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="customdash_unit" v="MM"/>
+          <prop k="draw_inside_polygon" v="0"/>
+          <prop k="joinstyle" v="bevel"/>
+          <prop k="line_color" v="0,95,255,255"/>
+          <prop k="line_style" v="dot"/>
+          <prop k="line_width" v="0.7"/>
+          <prop k="line_width_unit" v="MM"/>
+          <prop k="offset" v="0"/>
+          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="use_custom_dash" v="0"/>
+          <prop k="width_map_unit_scale" v="0,0,0,0,0,0"/>
+        </layer>
+      </symbol>
+      <symbol alpha="1" clip_to_extent="1" type="line" name="4">
+        <layer pass="0" class="SimpleLine" locked="1">
+          <prop k="capstyle" v="square"/>
+          <prop k="customdash" v="5;2"/>
+          <prop k="customdash_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="customdash_unit" v="MM"/>
+          <prop k="draw_inside_polygon" v="0"/>
+          <prop k="joinstyle" v="bevel"/>
+          <prop k="line_color" v="255,255,255,255"/>
+          <prop k="line_style" v="solid"/>
+          <prop k="line_width" v="1.2"/>
+          <prop k="line_width_unit" v="MM"/>
+          <prop k="offset" v="0"/>
+          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="use_custom_dash" v="0"/>
+          <prop k="width_map_unit_scale" v="0,0,0,0,0,0"/>
+        </layer>
+        <layer pass="0" class="SimpleLine" locked="0">
+          <prop k="capstyle" v="square"/>
+          <prop k="customdash" v="5;2"/>
+          <prop k="customdash_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="customdash_unit" v="MM"/>
+          <prop k="draw_inside_polygon" v="0"/>
+          <prop k="joinstyle" v="bevel"/>
+          <prop k="line_color" v="0,95,255,255"/>
+          <prop k="line_style" v="solid"/>
+          <prop k="line_width" v="0.7"/>
+          <prop k="line_width_unit" v="MM"/>
+          <prop k="offset" v="0"/>
+          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="use_custom_dash" v="0"/>
+          <prop k="width_map_unit_scale" v="0,0,0,0,0,0"/>
+        </layer>
+      </symbol>
+      <symbol alpha="1" clip_to_extent="1" type="line" name="5">
+        <layer pass="0" class="MarkerLine" locked="0">
+          <prop k="interval" v="3"/>
+          <prop k="interval_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="interval_unit" v="MM"/>
+          <prop k="offset" v="0"/>
+          <prop k="offset_along_line" v="0"/>
+          <prop k="offset_along_line_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="offset_along_line_unit" v="MM"/>
+          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="placement" v="firstvertex"/>
+          <prop k="rotate" v="1"/>
+          <symbol alpha="1" clip_to_extent="1" type="marker" name="@5@0">
+            <layer pass="0" class="SimpleMarker" locked="0">
+              <prop k="angle" v="0"/>
+              <prop k="color" v="245,5,0,255"/>
+              <prop k="horizontal_anchor_point" v="1"/>
+              <prop k="joinstyle" v="bevel"/>
+              <prop k="name" v="triangle"/>
+              <prop k="offset" v="0,0"/>
+              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="offset_unit" v="MM"/>
+              <prop k="outline_color" v="245,5,0,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0"/>
+              <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="outline_width_unit" v="MM"/>
+              <prop k="scale_method" v="diameter"/>
+              <prop k="size" v="2"/>
               <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
               <prop k="size_unit" v="MM"/>
               <prop k="vertical_anchor_point" v="1"/>
@@ -121,6 +289,29 @@
         </layer>
       </symbol>
     </symbols>
+    <source-symbol>
+      <symbol alpha="1" clip_to_extent="1" type="line" name="0">
+        <layer pass="0" class="SimpleLine" locked="0">
+          <prop k="capstyle" v="square"/>
+          <prop k="customdash" v="5;2"/>
+          <prop k="customdash_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="customdash_unit" v="MM"/>
+          <prop k="draw_inside_polygon" v="0"/>
+          <prop k="joinstyle" v="bevel"/>
+          <prop k="line_color" v="110,161,121,255"/>
+          <prop k="line_style" v="solid"/>
+          <prop k="line_width" v="0.26"/>
+          <prop k="line_width_unit" v="MM"/>
+          <prop k="offset" v="0"/>
+          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="use_custom_dash" v="0"/>
+          <prop k="width_map_unit_scale" v="0,0,0,0,0,0"/>
+        </layer>
+      </symbol>
+    </source-symbol>
+    <rotation/>
+    <sizescale scalemethod="diameter"/>
   </renderer-v2>
   <labeling type="simple"/>
   <customproperties>
@@ -269,7 +460,7 @@
   <blendMode>0</blendMode>
   <featureBlendMode>0</featureBlendMode>
   <layerTransparency>0</layerTransparency>
-  <displayfield>ID</displayfield>
+  <displayfield>id_descriptionsystem</displayfield>
   <label>0</label>
   <labelattributes>
     <label fieldname="" text="Étiquette"/>
@@ -320,47 +511,59 @@
     </symbol>
   </SingleCategoryDiagramRenderer>
   <DiagramLayerSettings yPosColumn="-1" showColumn="-1" linePlacementFlags="10" placement="2" dist="0" xPosColumn="-1" priority="0" obstacle="0" zIndex="0" showAll="1"/>
-  <annotationform></annotationform>
+  <annotationform>.</annotationform>
   <aliases>
-    <alias field="id_desordre" index="0" name=""/>
+    <alias field="id_equipement" index="0" name=""/>
     <alias field="cote" index="1" name=""/>
     <alias field="position" index="2" name=""/>
-    <alias field="catdes" index="3" name=""/>
-    <alias field="typedes" index="4" name=""/>
-    <alias field="id_objet" index="5" name=""/>
-    <alias field="impact" index="6" name=""/>
-    <alias field="gravite" index="7" name=""/>
-    <alias field="priorite" index="8" name=""/>
-    <alias field="risques" index="9" name=""/>
-    <alias field="lk_descriptionsystem" index="10" name=""/>
-    <alias field="datecreation" index="11" name=""/>
-    <alias field="datedestruction" index="12" name=""/>
+    <alias field="categorie" index="3" name=""/>
+    <alias field="typeequipement" index="4" name=""/>
+    <alias field="implantation" index="5" name=""/>
+    <alias field="ecoulement" index="6" name=""/>
+    <alias field="utilisation" index="7" name=""/>
+    <alias field="dimverti" index="8" name=""/>
+    <alias field="dimhori" index="9" name=""/>
+    <alias field="securite" index="10" name=""/>
+    <alias field="commentaires" index="11" name=""/>
+    <alias field="id_objet" index="12" name=""/>
+    <alias field="id_descriptionsystem" index="13" name=""/>
+    <alias field="lk_infralineaire" index="14" name=""/>
+    <alias field="lk_noeud" index="15" name=""/>
+    <alias field="lk_equipement" index="16" name=""/>
+    <alias field="datecreation" index="17" name=""/>
+    <alias field="datedestruction" index="18" name=""/>
   </aliases>
   <excludeAttributesWMS/>
   <excludeAttributesWFS/>
   <attributeactions default="-1"/>
   <attributetableconfig actionWidgetStyle="dropDown" sortExpression="" sortOrder="0">
     <columns>
-      <column width="-1" hidden="1" type="actions"/>
-      <column width="-1" hidden="0" type="field" name="id_desordre"/>
+      <column width="-1" hidden="0" type="field" name="id_equipement"/>
       <column width="-1" hidden="0" type="field" name="cote"/>
       <column width="-1" hidden="0" type="field" name="position"/>
-      <column width="-1" hidden="0" type="field" name="catdes"/>
-      <column width="-1" hidden="0" type="field" name="typedes"/>
+      <column width="-1" hidden="0" type="field" name="categorie"/>
+      <column width="-1" hidden="0" type="field" name="implantation"/>
+      <column width="-1" hidden="0" type="field" name="ecoulement"/>
+      <column width="-1" hidden="0" type="field" name="utilisation"/>
+      <column width="-1" hidden="0" type="field" name="dimverti"/>
+      <column width="-1" hidden="0" type="field" name="dimhori"/>
+      <column width="-1" hidden="0" type="field" name="securite"/>
       <column width="-1" hidden="0" type="field" name="id_objet"/>
-      <column width="-1" hidden="0" type="field" name="impact"/>
-      <column width="-1" hidden="0" type="field" name="gravite"/>
-      <column width="-1" hidden="0" type="field" name="priorite"/>
-      <column width="-1" hidden="0" type="field" name="risques"/>
+      <column width="-1" hidden="0" type="field" name="id_descriptionsystem"/>
+      <column width="-1" hidden="0" type="field" name="lk_infralineaire"/>
+      <column width="-1" hidden="0" type="field" name="lk_noeud"/>
+      <column width="-1" hidden="0" type="field" name="lk_equipement"/>
       <column width="-1" hidden="0" type="field" name="datecreation"/>
       <column width="-1" hidden="0" type="field" name="datedestruction"/>
-      <column width="-1" hidden="0" type="field" name="lk_descriptionsystem"/>
+      <column width="-1" hidden="1" type="actions"/>
+      <column width="-1" hidden="0" type="field" name="typeequipement"/>
+      <column width="-1" hidden="0" type="field" name="commentaires"/>
     </columns>
   </attributetableconfig>
-  <editform></editform>
+  <editform>.</editform>
   <editforminit/>
   <editforminitcodesource>0</editforminitcodesource>
-  <editforminitfilepath></editforminitfilepath>
+  <editforminitfilepath>.</editforminitfilepath>
   <editforminitcode><![CDATA[# -*- coding: utf-8 -*-
 """
 Les formulaires QGIS peuvent avoir une fonction Python qui sera appelée à l'ouverture du formulaire.
@@ -385,20 +588,26 @@ def my_form_open(dialog, layer, feature):
     <fieldstyles/>
   </conditionalstyles>
   <defaults>
-    <default field="id_desordre" expression=""/>
+    <default field="id_equipement" expression=""/>
     <default field="cote" expression=""/>
     <default field="position" expression=""/>
-    <default field="catdes" expression=""/>
-    <default field="typedes" expression=""/>
+    <default field="categorie" expression=""/>
+    <default field="typeequipement" expression=""/>
+    <default field="implantation" expression=""/>
+    <default field="ecoulement" expression=""/>
+    <default field="utilisation" expression=""/>
+    <default field="dimverti" expression=""/>
+    <default field="dimhori" expression=""/>
+    <default field="securite" expression=""/>
+    <default field="commentaires" expression=""/>
     <default field="id_objet" expression=""/>
-    <default field="impact" expression=""/>
-    <default field="gravite" expression=""/>
-    <default field="priorite" expression=""/>
-    <default field="risques" expression=""/>
-    <default field="lk_descriptionsystem" expression=""/>
+    <default field="id_descriptionsystem" expression=""/>
+    <default field="lk_infralineaire" expression=""/>
+    <default field="lk_noeud" expression=""/>
+    <default field="lk_equipement" expression=""/>
     <default field="datecreation" expression=""/>
     <default field="datedestruction" expression=""/>
   </defaults>
-  <previewExpression>COALESCE("ID", '&lt;NULL>')</previewExpression>
+  <previewExpression></previewExpression>
   <layerGeometryType>1</layerGeometryType>
 </qgis>

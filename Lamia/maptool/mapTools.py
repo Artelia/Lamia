@@ -101,7 +101,7 @@ class mapToolCapture(qgis.gui.QgsMapToolCapture):
             if int(str(self.qgisversion_int)[0:3]) < 220:
                 mapPt = event.snapPoint(qgis.gui.QgsMapMouseEvent.SnapProjectConfig)
             else:
-                mapPt = event.snapPoint ()
+                mapPt = event.snapPoint()
 
             self.addVertex(mapPt)
             self.mappoints.append(mapPt)

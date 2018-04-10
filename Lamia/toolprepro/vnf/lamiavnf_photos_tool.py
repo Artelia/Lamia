@@ -186,29 +186,6 @@ class PhotosTool(AbstractPhotosTool):
             query = self.dbase.query(sql)
             self.dbase.commit()
 
-            if False:
-                if self.parentWidget.dbasetablename == 'Infralineaire':
-                    currentparentlinkfield = self.parentWidget.currentFeature['id_objet']
-                    sql = "INSERT INTO Tcobjetressource(id_tcobjet, id_tcressource) VALUES(" +  str(currentparentlinkfield) + ", " +  str(idres) + ");"
-                    print('createparent',sql)
-
-                    query = self.dbase.query(sql)
-                    self.dbase.commit()
-
-                if self.parentWidget.dbasetablename == 'Equipement':
-                    currentparentlinkfield = self.parentWidget.currentFeature['id_objet']
-                    sql = "INSERT INTO Tcobjetressource(id_tcobjet, id_tcressource) VALUES(" +  str(currentparentlinkfield) + ", " +  str(idres) + ");"
-                    print('createparent',sql)
-                    query = self.dbase.query(sql)
-                    self.dbase.commit()
-
-                elif self.parentWidget.dbasetablename == 'Observation':
-                    currentparentlinkfield = self.parentWidget.currentFeature['id_objet']
-                    #sql = "UPDATE PHOTO SET LkObjet = " + str(currentparentlinkfield) + " WHERE id = " + str(idphoto) + ";"
-                    sql = "INSERT INTO Tcobjetressource(id_tcobjet, id_tcressource) VALUES(" + str(currentparentlinkfield) + ", " + str(idres) + ");"
-                    query = self.dbase.query(sql)
-                    self.dbase.commit()
-
 
 
     """
