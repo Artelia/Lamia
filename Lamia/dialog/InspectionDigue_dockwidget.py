@@ -62,8 +62,10 @@ class InspectiondigueDockWidget(QDockWidget):
         for tool in self.windowwidget.tools:
             if tool.rubberBand is not None:
                 tool.rubberBand.reset(0)
-                
+
+
         self.windowwidget.dbase.reInitDBase()
+        self.windowwidget.reInitWindows()
 
         self.windowwidget.gpsutil.closeConnection()
         self.closingPlugin.emit()

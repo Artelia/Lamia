@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>358</width>
+    <width>375</width>
     <height>587</height>
    </rect>
   </property>
@@ -95,6 +95,9 @@
                <property name="margin">
                 <number>0</number>
                </property>
+               <item>
+                <widget class="QComboBox" name="comboBox_style"/>
+               </item>
                <item>
                 <widget class="QTreeWidget" name="MaintreeWidget">
                  <property name="sizePolicy">
@@ -220,7 +223,7 @@
                     </property>
                    </widget>
                   </item>
-                  <item row="1" column="0" colspan="2">
+                  <item row="2" column="0" colspan="2">
                    <widget class="QCheckBox" name="checkBox_onlyvisible">
                     <property name="text">
                      <string>Visibles</string>
@@ -364,7 +367,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>358</width>
+     <width>375</width>
      <height>21</height>
     </rect>
    </property>

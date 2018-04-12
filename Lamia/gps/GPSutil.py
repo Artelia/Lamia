@@ -23,7 +23,7 @@
 
 import os
 import qgis
-
+import sys
 import qgis.utils
 qgis.utils.uninstallErrorHook()     #for standart output
 
@@ -59,7 +59,11 @@ class GpsUtil(QtCore.QObject):
 
         #raf09
         self.raf09filepath = os.path.join(os.path.dirname(__file__),'raf09.mnt')
-        self.raf09file = open(self.raf09filepath,'r')
+        if sys.version_info.major == 2:
+            self.raf09file = open(self.raf09filepath,'r')
+        elif sys.version_info.major == 3:
+            self.raf09file = open(self.raf09filepath, 'r')
+
         line1 = self.raf09file.readline().strip()
         linelist = line1.split(' ')
         self.minlong = float(linelist[0])
@@ -119,7 +123,11 @@ class GpsUtil(QtCore.QObject):
                 #self.connection.stateChanged.connect(self.gpsStateChanged)
                 self.connection.destroyed.connect(self.connectionLost)
                 self.GPSConnected.emit(True)
-                self.raf09file = open(self.raf09filepath ,'r')
+                #self.raf09file = open(self.raf09filepath ,'r')
+                if sys.version_info.major == 2:
+                    self.raf09file = open(self.raf09filepath, 'r')
+                elif sys.version_info.major == 3:
+                    self.raf09file = open(self.raf09filepath, 'rb')
             else:
                 self.errorMessage('Connecter d abord le GPS de QGIS')
 
@@ -184,8 +192,10 @@ class GpsUtil(QtCore.QObject):
             result['RAF09'] = zconvert
             result['zmNGF'] = result['elevation'] + result['deltageoid'] - zconvert
 
-
-            wgs84point = qgis.core.QgsPoint(result['longitude'], result['latitude'])
+            if int(str(self.qgisversion_int)[0:3]) < 220:
+                wgs84point = qgis.core.QgsPoint(result['longitude'], result['latitude'])
+            else:
+                wgs84point = qgis.core.QgsPointXY(result['longitude'], result['latitude'])
             if self.xform is not None:
                 crspoint = self.xform.transform(wgs84point)
                 result['Xcrs'] = crspoint.x()
@@ -222,13 +232,22 @@ class GpsUtil(QtCore.QObject):
     def getRAF09ZConvert(self,x,y):
 
         #point1 - x1 y1
+
+        # print(self.minlong,self.paslong, self.maxlat,self.paslat )
+
         xindex = abs(int((x - self.minlong) / self.paslong))
         yindex = abs(int((y - self.maxlat) / self.paslat))
         seekindex = self.lenline1 + (yindex * self.lenx + xindex) * 10
+
+        # print('seekindex',seekindex)
+
         self.raf09file.seek(seekindex)
+        # print('okokok', self.raf09file.read(7))
         raf1 = float(self.raf09file.read(7))
         raf1x = (self.minlong + xindex * self.paslong)
         raf1y = (self.maxlat - yindex * self.paslat)
+
+        # print('raf1', raf1,raf1x, raf1y )
 
         #point2 (x suivant) - x2 y1
         self.raf09file.seek(3,1)
@@ -262,7 +281,11 @@ class GpsUtil(QtCore.QObject):
     def errorMessage(self,text):
 
         if qgis.utils.iface is not None:
-            qgis.utils.iface.messageBar().pushMessage("InspectionDigue", text,
+            if int(str(self.qgisversion_int)[0:3]) < 220:
+                qgis.utils.iface.messageBar().pushMessage("InspectionDigue", text,
                                                       level=qgis.gui.QgsMessageBar.CRITICAL, duration=3)
+            else:
+                qgis.utils.iface.messageBar().pushMessage("InspectionDigue", text,
+                                                      level=qgis.core.Qgis.Warning, duration=3)
         else:
             print('ErrorMessage', text)

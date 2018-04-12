@@ -8,6 +8,7 @@ except ImportError:
 
 from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
 import os
+import sys
 """
 from ..toolprepro.InspectionDigue_photos_tool import PhotosTool
 from ..toolprepro.InspectionDigue_observation_tool import ObservationTool
@@ -116,7 +117,8 @@ class EquipementMainTool(AbstractInspectionDigueTool):
                 label.setWordWrap(True)
                 self.userwdgfield.treeWidget_proprietes.setItemWidget(wdgitem, 1, label)
                 if i%2 == 0:
-                    wdgitem.setBackgroundColor(1,QtGui.QColor('lightGray'))
+                    if sys.version_info.major == 2:
+                        wdgitem.setBackgroundColor(1,QtGui.QColor('lightGray'))
 
 
             # self.onActivationRaw(elem[1][0])

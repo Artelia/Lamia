@@ -446,10 +446,15 @@ class AbstractInspectionDigueTool(QWidget):
                                 comboparent = self.tableWidget.cellWidget(indexparentfield, 1)
                                 # print('okok',comboparent.objectName() )
                                 try:
-                                     comboparent.currentIndexChanged.connect(self.comboparentValueChanged)
+                                    comboparent.currentIndexChanged.connect(self.comboparentValueChanged)
+                                    if False:
+                                        if isinstance(comboparent, QComboBox):
+                                            comboparent.currentIndexChanged.connect(self.comboparentValueChanged)
+                                        elif  isinstance(comboparent, QSpinBox):
+                                            comboparent.valueChanged.connect(self.comboparentValueChanged)
                                 except Exception as e:
                                     if self.dbase.qgsiface is None:
-                                        logging.getLogger("Lamia").debug('error %s %s', e, comboparent.objectName())
+                                        logging.getLogger("Lamia").debug('error %s %s %s', e, tablename, field)
                                 # userwidget
                                 if (tablename in linkuserwdg.keys() and 'widgets' in linkuserwdg[tablename].keys()
                                         and nameparentfield in linkuserwdg[tablename]['widgets'].keys()
@@ -714,16 +719,24 @@ class AbstractInspectionDigueTool(QWidget):
 
 
         # print(parenttablename, parentfieldname, senderwdg,senderwdg.currentText() )
-
-        # parentcstvalue = self._getConstraintRawValueFromText(parenttablename, parentfieldname, senderwdg.currentText())
-
-        parentcstvalue = self.dbase.getConstraintRawValueFromText(parenttablename, parentfieldname, senderwdg.currentText())
+        try:
+            parentcstvalue = self.dbase.getConstraintRawValueFromText(parenttablename, parentfieldname, senderwdg.currentText())
+        except Exception as e:
+            if self.dbase.qgsiface is None:
+                logging.getLogger("Lamia").debug('error %s %s %s', e, parenttablename, parentfieldname)
+            return
+        if False:
+            if isinstance(senderwdg, QComboBox):
+                parentcstvalue = self.dbase.getConstraintRawValueFromText(parenttablename, parentfieldname, senderwdg.currentText())
+            elif isinstance(senderwdg, QSpinBox):
+                parentcstvalue = self.dbase.getConstraintRawValueFromText(parenttablename, parentfieldname,senderwdg.value())
 
         dbasetable = self.dbase.dbasetables[parenttablename]
         # get child index and combochild
         listparentcst = [dbasetable['fields'][field]['ParFldCst']
                          if 'ParFldCst' in dbasetable['fields'][field].keys() else None
                          for field in dbasetable['fields'].keys()]
+
 
         if False:   # only python 2
             childfieldnames = [dbasetable['fields'].keys()[i] for i in range(len(listparentcst))
@@ -736,6 +749,8 @@ class AbstractInspectionDigueTool(QWidget):
         if comefromrawtable:
             listfieldname = [self.tableWidget.item(row, 0).text() for row in range(self.tableWidget.rowCount())]
             for childfieldname in childfieldnames:
+                if dbasetable['fields'][parentfieldname]['SLtype'] == 'INTEGER' and parentcstvalue != '' and parentcstvalue is not None:
+                    parentcstvalue = int(parentcstvalue)
                 listtoadd = [value[0] for value in dbasetable['fields'][childfieldname]['Cst'] if parentcstvalue in value[2]]
                 if False:
                     if sys.version_info.major == 2:
@@ -1843,7 +1858,13 @@ class AbstractInspectionDigueTool(QWidget):
         # xform = qgis.core.QgsCoordinateTransform(self.dbase.qgiscrs, self.canvas.mapSettings().destinationCrs())
         gpspoint = self.gpsutil.currentpoint
         mappoint = self.gpsutil.currentpoint
-        success = qgis.core.QgsGeometry.fromPoint(mappoint).transform(self.dbase.xform)
+        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+            success = qgis.core.QgsGeometry.fromPoint(mappoint).transform(self.dbase.xform)
+        else:
+            success = qgis.core.QgsGeometry.fromPointXY(mappoint).transform(self.dbase.xform)
+
+
+
         # success = qgis.core.QgsGeometry.fromPoint(mappoint).transform(self.dbase.xformreverse)
         # print(qgis.core.QgsGeometry.fromPoint(mappoint).exportToWkt() )
         # mappointgeometry = qgis.core.QgsGeometry.fromPoint(mappoint)

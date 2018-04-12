@@ -766,14 +766,16 @@ class DBaseParser(QtCore.QObject):
                         uri.setDataSource(self.pgschema, str(tablenamelayer) + '_django', None, '', "id_" + str(tablenamelayer))
                     self.dbasetables[tablename]['layerdjango'] = qgis.core.QgsVectorLayer(uri.uri(), tablename, 'postgres')
 
-                # style and loading
-                stylepath = os.path.join(os.path.dirname(__file__), '..',
-                                         'DBASE', 'style', self.type, self.dbasetables[tablename]['layer'].name() + '.qml')
+                if False:
+                    # style and loading
+                    stylepath = os.path.join(os.path.dirname(__file__), '..',
+                                             'DBASE', 'style', self.type, self.dbasetables[tablename]['layer'].name() + '.qml')
 
-                if True:
+
                     if os.path.isfile(stylepath):
                         self.dbasetables[tablename]['layerqgis'].loadNamedStyle(stylepath)
 
+                if False:
                     #load qgsvectorlayers and add to canvas if #showinqgis
 
                     if self.dbasetables[tablename]['showinqgis']:
@@ -993,6 +995,8 @@ class DBaseParser(QtCore.QObject):
                             qgis.core.QgsProject.instance().removeMapLayer(self.dbasetables[layername]['layerqgis'])
                         except:
                             pass
+
+
 
 
                 if 'widget' in self.dbasetables[layername]:
