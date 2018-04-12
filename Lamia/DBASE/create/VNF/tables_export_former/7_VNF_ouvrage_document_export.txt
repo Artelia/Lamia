@@ -1,0 +1,1 @@
+#EXPO SELECT Tcobjetressource.id_tcressource as id_document, Infralineaire.ouvrage as num_ouvrage FROM Tcobjetressource INNER JOIN Objet ON Tcobjetressource.id_tcobjet=Objet.id_objet INNER JOIN Infralineaire ON Objet.id_objet = Infralineaire.id_objet
