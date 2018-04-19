@@ -175,7 +175,7 @@ class PhotosTool(AbstractPhotosTool):
 
         idphoto = self.currentFeature.id()
 
-        sql = "UPDATE Photo SET id_objet = " + str(idobjet) + ",id_ressource = " + str(idres) + ",typephoto = 'PHO' "
+        sql = "UPDATE Photo SET id_objet = " + str(idobjet) + ",id_ressource = " + str(idres) + ",typephoto = 'PHO', content_type='JPG', list_photo=5, list_document=0  "
         sql += " WHERE id_photo = " + str(idphoto) + ";"
         query = self.dbase.query(sql)
         self.dbase.commit()
@@ -245,5 +245,5 @@ class Label(QLabel):
     def clear(self):
         self.pixmap = QtGui.QPixmap()
         self.repaint()
-                
+
 """

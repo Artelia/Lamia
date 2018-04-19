@@ -76,7 +76,7 @@ False;    0
 ###caracteristique;          VARCHAR(255);                TEXT
 ###latitude;             INT ;                   INTEGER
 ###longitude;             INT ;                   INTEGER
-###enable_optional_equipment;             INT ;                   INTEGER
+###enable_optionale_equipment;             INT ;                   INTEGER
 /;
 True;     1
 False;    0

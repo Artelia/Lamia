@@ -94,7 +94,7 @@ class DesordreTool(AbstractDesordreTool):
                 self.propertieswdgPHOTOGRAPHIE = PhotosTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self.propertieswdgOBSERVATION2)
                 self.propertieswdgPHOTOGRAPHIE.NAME = None
                 self.userwdgfield.tabWidget.widget(1).layout().addWidget(self.propertieswdgPHOTOGRAPHIE)
-                
+
                 """
                 self.propertieswdgCROQUIS = CroquisTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self.propertieswdgOBSERVATION2)
                 self.propertieswdgCROQUIS.NAME = None
@@ -230,5 +230,5 @@ class UserUI(QWidget):
         super(UserUI, self).__init__(parent=parent)
         uipath = os.path.join(os.path.dirname(__file__), 'lamiavnf_desordre_tool_ui.ui')
         uic.loadUi(uipath, self)
-        
+
 

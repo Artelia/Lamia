@@ -213,7 +213,7 @@ class InfraLineaireTool(AbstractInspectionDigueTool):
 
         idtroncon = self.currentFeature.id()
 
-        sql = "UPDATE Infralineaire SET id_objet = " + str(idobjet) + ",id_descriptionsystem = " + str(idsys) + " WHERE id_infralineaire = " + str(idtroncon) + ";"
+        sql = "UPDATE Infralineaire SET id_objet = " + str(idobjet) + ",id_descriptionsystem = " + str(idsys) + ", modified=1, nature=60 WHERE id_infralineaire = " + str(idtroncon) + ";"
         # print(sql)
         query = self.dbase.query(sql)
         self.dbase.commit()
