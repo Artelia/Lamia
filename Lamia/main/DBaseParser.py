@@ -321,7 +321,7 @@ class DBaseParser(QtCore.QObject):
                         sql = self._generatePostGisCreationSQL(dbname, self.dbasetables[dbname], crs)
                         # print(sql['main'])
                         openedsqlfile.write(sql['main'] + '\n')
-                    print(sql['main'])
+                    # print(sql['main'])
                     self.query(sql['main'])
                     self.commit()
                     if 'other' in sql.keys():
@@ -346,7 +346,11 @@ class DBaseParser(QtCore.QObject):
             if 'qgisviewsql' in self.dbasetables[dbname].keys():
                 viewnames['qgisviewsql'] = str(dbname) + '_qgis'
             if 'exportviewsql' in self.dbasetables[dbname].keys():
-                viewnames['exportviewsql'] = str(dbname) + '_export'
+                if True:
+                    viewnames['exportviewsql'] = str(dbname) + '_export'
+                if False:
+                    for i, idexpo in enumerate(self.dbasetables[dbname]['exportviewsql']):
+                        viewnames['exportviewsql' + str(i)] = str(dbname) + '_export' + str(i)
 
             for viewname in viewnames.keys():
                 # sql = 'CREATE VIEW ' + str(dbname) + '_view AS '
@@ -359,24 +363,26 @@ class DBaseParser(QtCore.QObject):
                 self.query(sql)
                 self.commit()
                 # add view in geom register
-                if 'geom' in self.dbasetables[dbname].keys():
+                #if 'geom' in self.dbasetables[dbname].keys():
+                if self.isTableSpatial(viewnames[viewname]):
                     if self.dbasetype == 'spatialite':
                         dbnamelower = dbname.lower()
+                        idcolumnname = self.getFirstIdColumn(viewnames[viewname])
                         viewlower = viewnames[viewname].lower()
                         sql = "INSERT INTO views_geometry_columns (view_name, view_geometry, view_rowid, "
                         sql += "f_table_name, f_geometry_column,read_only) VALUES ("
-                        sql += "'" + str(viewlower) + "','geom','id_" + str(dbnamelower) + "','" + str(
-                            dbnamelower) + "','geom',0);"
-                        # print(sql)
+                        # sql += "'" + str(viewlower) + "','geom','id_" + str(dbnamelower) + "','" + str(dbnamelower) + "','geom',0);"
+                        sql += "'" + str(viewlower) + "','geom','" + idcolumnname + "','" + str(dbnamelower) + "','geom',0);"
+                        openedsqlfile.write(sql + '\n')
                         self.query(sql)
                         self.commit()
                     elif dbasetype == 'postgis':
                         dbnamelower = dbname.lower()
+                        idcolumnname = self.getFirstIdColumn(viewnames[viewname])
                         viewlower = viewnames[viewname].lower()
                         sql = 'INSERT INTO geometry_columns(f_table_catalog, f_table_schema, f_table_name, '
                         sql += 'f_geometry_column, coord_dimension, srid, "type") VALUES ('
-                        sql += "'" + type.lower() + "', '" + self.pgschema.lower() + "', '" + str(
-                            viewlower) + "','geom',2,"
+                        sql += "'" + type.lower() + "', '" + self.pgschema.lower() + "', '" + str( viewlower) + "','geom',2,"
                         sql += str(crs) + ",'" + self.dbasetables[dbname]['geom'] + "' );"
                         # print(sql)
                         openedsqlfile.write(sql + '\n')
@@ -416,6 +422,8 @@ class DBaseParser(QtCore.QObject):
                             openedsqlfile.write(sql + '\n')
                             self.query(sql)
                             self.commit()
+
+        openedsqlfile.close()
 
         self.loadQgisVectorLayers(file=self.spatialitefile, dbasetype=self.dbasetype,
                                   host=self.pghost, port=self.pgport, dbname=self.pgdb, schema=self.pgschema,
@@ -491,6 +499,7 @@ class DBaseParser(QtCore.QObject):
             self.dbasetables[tablename]['fields'] = OrderedDict()
             self.dbasetables[tablename]['showinqgis'] = False
             self.dbasetables[tablename]['widget'] = []
+            # self.dbasetables[tablename]['exportviewsql'] = []
             if sys.version_info.major == 2:
                 file = open(filename, 'r')
             elif sys.version_info.major == 3:
@@ -708,16 +717,17 @@ class DBaseParser(QtCore.QObject):
         if type is not None:
             self._createDBDictionary(type)
             # create a list of tables to load
-            listoftabletoload = []
-            for tablename in self.dbasetables:
-                if 'geom' in self.dbasetables[tablename]:
-                    listoftabletoload.append((tablename, self.dbasetables[tablename]['geom']))
-                else:
-                    listoftabletoload.append((tablename, None))
+            if False:
+                listoftabletoload = []
+                for tablename in self.dbasetables:
+                    if 'geom' in self.dbasetables[tablename] :
+                        listoftabletoload.append((tablename, self.dbasetables[tablename]['geom']))
+                    else:
+                        listoftabletoload.append((tablename, None))
 
             # load the table as qgsvectorlayer
-            for tablename, geom in listoftabletoload:
-
+            #for tablename, geom in listoftabletoload:
+            for tablename in self.dbasetables:
                 if int(str(self.qgisversion_int)[0:3]) < 220:
                     uri = qgis.core.QgsDataSourceURI()
                 else:
@@ -725,22 +735,40 @@ class DBaseParser(QtCore.QObject):
                 if self.dbasetype == 'spatialite':
                     uri.setDatabase(file)
                     # raw layer
-                    if geom is not None:
+                    #if geom is not None:
+                    if self.isTableSpatial(tablename):
                         uri.setDataSource('', str(tablename), 'geom')
                     else:
                         uri.setDataSource('', str(tablename), '')
                     self.dbasetables[tablename]['layer'] = qgis.core.QgsVectorLayer(uri.uri(), tablename, 'spatialite')
+
                     # view layer qgis
-                    if geom is not None:
-                        uri.setDataSource('', str(tablename)+'_qgis', 'geom', '', "id_" + str(tablename).lower())
+                    #if geom is not None:
+
+                    #get id column
+                    idcolumnname = self.getFirstIdColumn(tablename + '_qgis')
+                    # print('***', tablename + '_qgis' , idcolumnname)
+
+                    if self.isTableSpatial(str(tablename)+'_qgis'):
+                        #uri.setDataSource('', str(tablename)+'_qgis', 'geom', '', "id_" + str(tablename).lower())
+                        uri.setDataSource('', str(tablename) + '_qgis', 'geom', '', idcolumnname)
+
                     else:
-                        uri.setDataSource('', str(tablename) + '_qgis', '', '', "id_" + str(tablename).lower())
+                        #uri.setDataSource('', str(tablename) + '_qgis', '', '', "id_" + str(tablename).lower())
+                        uri.setDataSource('', str(tablename) + '_qgis', '', '', idcolumnname)
                     self.dbasetables[tablename]['layerqgis'] = qgis.core.QgsVectorLayer(uri.uri(), tablename, 'spatialite')
+
                     # view layer django
-                    if geom is not None:
-                        uri.setDataSource('', str(tablename)+'_django', 'geom', '', "id_" + str(tablename).lower())
+                    idcolumnname = self.getFirstIdColumn(tablename + '_django')
+                    # print('***', tablename+ '_django' , idcolumnname)
+
+                    #if geom is not None:
+                    if self.isTableSpatial(str(tablename) + '_django'):
+                        #uri.setDataSource('', str(tablename)+'_django', 'geom', '', "id_" + str(tablename).lower())
+                        uri.setDataSource('', str(tablename) + '_django', 'geom', '', idcolumnname)
                     else:
-                        uri.setDataSource('', str(tablename) + '_django', '', '', "id_" + str(tablename).lower())
+                        # uri.setDataSource('', str(tablename) + '_django', '', '', "id_" + str(tablename).lower())
+                        uri.setDataSource('', str(tablename) + '_django', '', '', idcolumnname)
                     self.dbasetables[tablename]['layerdjango'] = qgis.core.QgsVectorLayer(uri.uri(), tablename, 'spatialite')
 
 
@@ -748,19 +776,22 @@ class DBaseParser(QtCore.QObject):
                     uri.setConnection(self.pghost, str(self.pgport), self.pgdb, self.pguser, self.pgpassword)
                     tablenamelayer = tablename.lower()
                     # raw layer
-                    if geom is not None:
+                    # if geom is not None:
+                    if self.isTableSpatial(tablenamelayer):
                         uri.setDataSource(self.pgschema, str(tablenamelayer), 'geom', '', "id_" + str(tablenamelayer))
                     else:
                         uri.setDataSource(self.pgschema, str(tablenamelayer), None, '', "'id_" + str(tablenamelayer))
                     self.dbasetables[tablename]['layer'] = qgis.core.QgsVectorLayer(uri.uri(), tablename, 'postgres')
                     # view layer qgis
-                    if geom is not None:
+                    #if geom is not None:
+                    if self.isTableSpatial(str(tablenamelayer) + '_qgis'):
                         uri.setDataSource(self.pgschema, str(tablenamelayer) + '_qgis', 'geom', '', "id_" + str(tablenamelayer))
                     else:
                         uri.setDataSource(self.pgschema, str(tablenamelayer) + '_qgis', None, '', "id_" + str(tablenamelayer))
                     self.dbasetables[tablename]['layerqgis'] = qgis.core.QgsVectorLayer(uri.uri(), tablename, 'postgres')
                     # view layer django
-                    if geom is not None:
+                    #if geom is not None:
+                    if self.isTableSpatial(str(tablenamelayer) + '_django'):
                         uri.setDataSource(self.pgschema, str(tablenamelayer) + '_django', 'geom', '', "id_" + str(tablenamelayer))
                     else:
                         uri.setDataSource(self.pgschema, str(tablenamelayer) + '_django', None, '', "id_" + str(tablenamelayer))
@@ -813,6 +844,7 @@ class DBaseParser(QtCore.QObject):
                                                                                  True)
 
             if debug: logging.getLogger('Lamia').debug('step3')
+
 
             self.updateQgsCoordinateTransformFromLayerToCanvas()
             self.dBaseLoaded.emit()
@@ -868,10 +900,10 @@ class DBaseParser(QtCore.QObject):
                 return None
 
     def vacuum(self,table):
-        print('vacuum')
+        # print('vacuum')
         if self.dbasetype == 'spatialite':
             sql = "VACUUM " + str(table)
-            print(sql)
+            # print(sql)
             self.query(sql)
         elif self.dbasetype == 'postgis':
             old_isolation_level = self.connPGis.isolation_level
@@ -1026,7 +1058,7 @@ class DBaseParser(QtCore.QObject):
 
 
     def updateQgsCoordinateTransformFromLayerToCanvas(self):
-        if self.qgiscrs is not None:
+        if self.qgiscrs is not None and self.canvas is not None:
             if int(str(self.qgisversion_int)[0:3]) < 220:
                 self.xform = qgis.core.QgsCoordinateTransform(self.qgiscrs,
                                                               self.canvas.mapSettings().destinationCrs())
@@ -1056,6 +1088,27 @@ class DBaseParser(QtCore.QObject):
             #print([value[0] for value in dbasetable['fields'][field]['Cst']])
             return None
 
+
+    def getFirstIdColumn(self,tablename):
+        sql = "PRAGMA table_info(" + str(tablename) + ")"
+        query = self.query(sql)
+        if self.dbasetype == 'spatialite':
+            result = [row[1] for row in query]
+            #print(result)
+            for fieldname in result:
+                if 'id_' in fieldname:
+                    return fieldname
+        return None
+
+    def isTableSpatial(self, tablename):
+        sql = "PRAGMA table_info(" + str(tablename) + ")"
+        query = self.query(sql)
+        if self.dbasetype == 'spatialite':
+            result = [row[1] for row in query]
+            #print(result)
+            if 'geom' in result:
+                return True
+        return False
 
 
 

@@ -1,0 +1,6 @@
+#SHOW YES
+#QGIS SELECT Desordre.id_desordre,Desordre.cote ,Desordre.position, Desordre.catdes,Desordre.typedes,ST_Buffer(ST_MakeValid(geom), 0.1) as geom, Objet.datecreation, Objet.datedestruction , Observation.id_observation, Observation.dateobservation, Observation.source, Observation.nombre, Observation.gravite,Observation.evolution ,Observation.commentaires ,Observation.suite , MAX(Observation.dateobservation) AS datederniereobs FROM Observation INNER JOIN Desordre ON Observation.lk_desordre = Desordre.id_desordre INNER JOIN Objet ON Objet.id_objet = Desordre.id_objet  GROUP BY Observation.lk_desordre 
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+# la creation a minima de ces champs est obligatoire si on veut creer la vue spatiale ... c comme ca
+###id_dernieresobservations;      SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###geom;                MULTIPOLYGON

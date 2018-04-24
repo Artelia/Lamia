@@ -30,7 +30,7 @@ def testDbaseCreation(canvas, typedb="spatialite"):
 
         #wind.dbase.createDbase(file=spatialitefile, crs=crs, type='Digue', dbaseressourcesdirectory=spatialitedir)
         # Digue VNF  Assainissement
-        wind.dbase.createDbase(file=spatialitefile, crs=crs, type='VNF')
+        wind.dbase.createDbase(file=spatialitefile, crs=crs, type='Digue')
 
     elif typedb == "postgis":
         wind.dbase.createDbase(crs=crs, type='Digue', dbasetype='postgis', dbname='PVR_test', schema='diguebebe',
