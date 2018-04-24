@@ -63,8 +63,9 @@ def testRapport(canvas, loadfile=True, typedb="spatialite",reporttype=None, pdff
             # path = os.path.normpath('I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201710_Begles//BD_Begles_ind8.sqlite')
             #path = os.path.normpath('I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201709_RD//BD_Rivedroite_ind2.sqlite')
             # path = os.path.normpath('C://000_testdigue//BM_SIJALAG//BD_SIJALAG_ind6.sqlite')
-            path = os.path.normpath('C://00_Affaires//BM_digues//Base_donnees//Begles//BD_Begles_ind9.sqlite')
+            # path = os.path.normpath('C://00_Affaires//BM_digues//Base_donnees//Begles//BD_Begles_ind9.sqlite')
             # path = os.path.normpath('C://000_testdigue//BD_Begles_ind8.sqlite')
+            path = os.path.normpath('I://CD17-2016//03-BDC//4352286-BDC182131-00790-DIGUE DE GUYENNE BOYARDVILLE//5_Etude//Basedonnees//BD_Cayenne_ind1.sqlite')
             wind.dbase.loadQgisVectorLayers(path)
             wind.loadUiDesktop()
 
@@ -107,7 +108,7 @@ canvas.enableAntiAliasing(True)
 # spatialite   postgis
 # Infrastructure lineaire   #  Equipements hydrauliques #Desordres
 # c://testrapport.pdf
-testRapport(canvas,True,typedb="spatialite",reporttype="Infrastructure lineaire", pdffile="c://testrapport.pdf")
+testRapport(canvas,True,typedb="spatialite",reporttype="Desordres", pdffile="c://testrapport.pdf")
 
 
 app.exec_()

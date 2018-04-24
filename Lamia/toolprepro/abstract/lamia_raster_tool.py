@@ -79,10 +79,19 @@ class AbstractRasterTool(AbstractInspectionDigueTool):
 
         basename = os.path.basename(file).split('.')[0]
         rlayer = qgis.core.QgsRasterLayer(file, basename)
-        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-            qgis.core.QgsMapLayerRegistry.instance().addMapLayer(rlayer, True)
-        else:
-            qgis.core.QgsProject.instance().addMapLayer(rlayer, True)
+
+
+
+
+        if True:
+            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                qgis.core.QgsMapLayerRegistry.instance().addMapLayer(rlayer, False)
+            else:
+                qgis.core.QgsProject.instance().addMapLayer(rlayer, False)
+
+        root = qgis.core.QgsProject.instance().layerTreeRoot()
+        lamialegendgroup =  root.findGroup('Lamia')
+        lamialegendgroup.insertLayer(-1, rlayer)
 
     def chooseFile(self):
         file, extension = self.qfiledlg.getOpenFileNameAndFilter(None, 'Choose the file', self.dbase.imagedirectory,

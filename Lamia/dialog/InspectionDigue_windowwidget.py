@@ -598,6 +598,7 @@ class InspectiondigueWindowWidget(QMainWindow):
 
                 lamialegendgroup.addLayer(self.dbase.dbasetables[tablename]['layerqgis'])
 
+
             else:
                 if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
                     qgis.core.QgsMapLayerRegistry.instance().addMapLayer(self.dbase.dbasetables[tablename]['layer'],
