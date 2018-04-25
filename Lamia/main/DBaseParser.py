@@ -853,14 +853,14 @@ class DBaseParser(QtCore.QObject):
         if debug: logging.getLogger('Lamia').debug('end')
 
 
-    def query(self, sql):
+    def query(self, sql,arguments=[]):
         if self.dbasetype == 'spatialite':
             # cursor = self.connSLITE.cursor()
             if self.SLITEcursor is None:
                 # self.connSLITE = db.connect(self.spatialitefile)
                 self.SLITEcursor = self.connSLITE.cursor()
             try:
-                query = self.SLITEcursor.execute(sql)
+                query = self.SLITEcursor.execute(sql,arguments)
                 returnquery = list(query)
                 self.commit()
                 return returnquery

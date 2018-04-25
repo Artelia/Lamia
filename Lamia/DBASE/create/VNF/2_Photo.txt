@@ -13,6 +13,7 @@ Video;VID
 ###content_type;                VARCHAR(255);            TEXT
 ###chemin;                VARCHAR(255);            TEXT
 ###nom_fichier;                VARCHAR(255);            TEXT
+###file;                      BYTEA         ; BLOB
 ###list_document;             INT;                    INTEGER
 /;                                    ; ['']
 1;1

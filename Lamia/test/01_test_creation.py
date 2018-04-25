@@ -20,8 +20,12 @@ def testDbaseCreation(canvas, typedb="spatialite"):
     crs = 3945
 
     if typedb == "spatialite":
-        spatialitefile = 'C://000_testdigue//temp//test01.sqlite'
-        #spatialitedir = 'C://000_testimportBM//BDspatialite'
+        # Digue VNF  Assainissement
+        typebase = 'VNF'
+        if typebase == 'VNF':
+            spatialitefile = 'C://000_testdigue//temp_VNF//test01.sqlite'
+        elif typebase == 'Digue':
+            spatialitefile = 'C://000_testdigue//temp_digue//test01.sqlite'
 
         #shutil.rmtree('c://000_testdigue//BDspatialite')
 
@@ -29,8 +33,8 @@ def testDbaseCreation(canvas, typedb="spatialite"):
         shutil.copyfile(originalfile, spatialitefile)
 
         #wind.dbase.createDbase(file=spatialitefile, crs=crs, type='Digue', dbaseressourcesdirectory=spatialitedir)
-        # Digue VNF  Assainissement
-        wind.dbase.createDbase(file=spatialitefile, crs=crs, type='Digue')
+
+        wind.dbase.createDbase(file=spatialitefile, crs=crs, type=typebase)
 
     elif typedb == "postgis":
         wind.dbase.createDbase(crs=crs, type='Digue', dbasetype='postgis', dbname='PVR_test', schema='diguebebe',

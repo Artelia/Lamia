@@ -22,6 +22,7 @@ from .lamiadigue_graphique_tool  import GraphiqueTool
 """
 
 from .lamiavnf_equipement_tool import EquipementTool
+from .lamiavnf_photos_tool import PhotosTool
 
 import os
 import datetime
@@ -94,11 +95,14 @@ class InfraLineaireTool(AbstractInspectionDigueTool):
 
             self.propertieswdgEquipement = EquipementTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
             self.dbasechildwdgfield.append(self.propertieswdgEquipement)
+
+            self.propertieswdgPHOTOGRAPHIE = PhotosTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
+            self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
+
             """
                 self.dbasechildwdgfield = []
 
-                self.propertieswdgPHOTOGRAPHIE = PhotosTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
-                self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
+
 
                 self.propertieswdgCROQUIS = CroquisTool(dbase=self.dbase, parentwidget=self)
                 self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)

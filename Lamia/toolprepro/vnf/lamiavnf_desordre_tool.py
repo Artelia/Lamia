@@ -110,6 +110,12 @@ class DesordreTool(AbstractDesordreTool):
                 for childwdg in self.propertieswdgOBSERVATION2.dbasechildwdgfield:
                     self.propertieswdgOBSERVATION2.currentFeatureChanged.connect(childwdg.loadChildFeatureinWidget)
 
+            if self.parentWidget is not None and self.parentWidget.dbasetablename == 'Equipement':
+                self.pushButton_addFeature.setEnabled(True)
+            else:
+                self.pushButton_addFeature.setEnabled(False)
+
+
                 #self.dbasechildwdg = [self.propertieswdgOBSERVATION, self.propertieswdgOBSERVATION2]
 
 
