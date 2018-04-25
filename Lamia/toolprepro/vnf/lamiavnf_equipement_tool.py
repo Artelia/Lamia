@@ -100,8 +100,10 @@ class EquipementTool(AbstractInspectionDigueTool):
 
             if True:
                 self.propertieswdgPHOTOGRAPHIE = PhotosTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
-                #self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
+                self.propertieswdgPHOTOGRAPHIE.NAME = None
                 self.userwdgfield.tabWidget.widget(2).layout().addWidget(self.propertieswdgPHOTOGRAPHIE)
+                self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
+
 
                 #self.propertieswdgCROQUIS = CroquisTool(dbase=self.dbase, parentwidget=self)
                 #self.userwdgfield.tabWidget.widget(2).layout().addWidget(self.propertieswdgCROQUIS)
