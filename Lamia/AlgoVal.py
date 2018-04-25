@@ -661,3 +661,14 @@ line 1996 : !!!!!!!!!! POSSIBLE : ALLER CHERCHER UN PARENT ET SE CENTRER SUR SA 
         else :
             pass
 
+def import_blob(id_file, path_photo):
+
+    path_photo=path_photo.replace('\\','/')
+    try:
+        with open(path_photo, 'rb') as f:
+            ablob = f.read()
+            # Upload it in the db
+            sql = "INSERT INTO Photo VALUES " + ablob + " WHERE id_file="+ id_file
+            dbase.query(sql)
+    except:
+        pass
