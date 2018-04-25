@@ -75,7 +75,7 @@ class EquipementTool(AbstractInspectionDigueTool):
                                                           'abs_debut': self.userwdgfield.spinBox_abs_debut,
                                                           'abs_fin': self.userwdgfield.spinBox_abs_fin,
                                                           'is_modified': self.userwdgfield.comboBox_is_modified,
-                                                          'ouvrage': self.userwdgfield.spinBox_ouvrage,
+                                                          #'ouvrage': self.userwdgfield.spinBox_ouvrage,
                                                           'partie': self.userwdgfield.comboBox_partie,
                                                           'equipement': self.userwdgfield.comboBox_equipement
 
