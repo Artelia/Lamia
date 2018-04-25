@@ -199,23 +199,17 @@ class PhotosTool(AbstractPhotosTool):
         sql = "SELECT file FROM Ressource  WHERE id_ressource = " + str(self.currentFeature['id_ressource']) + ";"
         query = self.dbase.query(sql)
         result = [row[0] for row in query]
-        # print('post',result)
         file = result[0]
-        print(file)
 
         if file is not None and file != '':
             #self.showImageinLabelWidget(self.photowdg, self.userwdg.lineEdit_file.text())
             path_photo = self.dbase.completePathOfFile(file)
-            print(path_photo)
-            print(self.currentFeature.id())
             try:
                 with open(path_photo, 'rb') as f:
                     ablob = f.read()
                     sql = '''UPDATE Photo SET file = ?  WHERE id_photo = ?;'''
                     args = [sqlite3.Binary(ablob),self.currentFeature.id() ]
                     query = self.dbase.query(sql, args)
-
-
             except Exception as e :
                 print('error', e)
 

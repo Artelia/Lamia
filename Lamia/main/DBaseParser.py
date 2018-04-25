@@ -104,6 +104,8 @@ class DBaseParser(QtCore.QObject):
             logging.basicConfig(level=logging.DEBUG)
             logging.info('popo')
 
+        self.printsql = False
+
 
 
         self._readRecentDBase()
@@ -854,6 +856,10 @@ class DBaseParser(QtCore.QObject):
 
 
     def query(self, sql,arguments=[]):
+        if self.printsql :
+            logging.getLogger("Lamia").debug('%s', sql)
+
+
         if self.dbasetype == 'spatialite':
             # cursor = self.connSLITE.cursor()
             if self.SLITEcursor is None:

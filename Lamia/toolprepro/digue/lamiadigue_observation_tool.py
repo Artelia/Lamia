@@ -64,10 +64,11 @@ class ObservationTool(AbstractObservationTool):
             self.linkuserwdgfield = {'Observation' : {'linkfield' : 'id_observation',
                                              'widgets' : {'dateobservation' : self.userwdgfield.dateEdit,
                                                           'nombre' : self.userwdgfield.spinBox_nombre,
-                                                        'gravite': self.userwdgfield.comboBox_urgence,
-                                                        'evolution': self.userwdgfield.textEdit_evolution,
-                                                        'commentaires': self.userwdgfield.textEdit_comm,
-                                                        'suite': self.userwdgfield.textEdit_suite}},
+                                                          'gravite': self.userwdgfield.comboBox_urgence,
+                                                          'evolution': self.userwdgfield.textEdit_evolution,
+                                                          'commentaires': self.userwdgfield.textEdit_comm,
+                                                          'suite': self.userwdgfield.textEdit_suite,
+                                                          'oh_etatvanne': self.userwdgfield.comboBox_etatvanne}},
                                 'Objet' : {'linkfield' : 'id_objet',
                                           'widgets' : {}}}
 
@@ -92,12 +93,14 @@ class ObservationTool(AbstractObservationTool):
             sqlin += " ORDER BY dateobservation DESC"
         return sqlin
 
-
+    
     def postInitFeatureProperties(self, feat):
         if self.currentFeature is None:
             datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
             self.initFeatureProperties(feat, self.dbasetablename, 'dateobservation', datecreation)
 
+
+    
 
     def createParentFeature(self):
         datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')

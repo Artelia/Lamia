@@ -4,6 +4,9 @@
 #SCAL 10000
 # Nom_champ             TypePostGis              TypeSpatialite                          Option
 ###id_desordre;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###groupedesordre;           VARCHAR(255);            TEXT
+Infralineaire; INF
+Ouvrage hydraulique;OH
 ###cote;                VARCHAR(255);            TEXT
 /;
 Eau;RIV

@@ -107,6 +107,14 @@ class DesordreTool(AbstractDesordreTool):
                 #self.dbasechildwdg = [self.propertieswdgOBSERVATION, self.propertieswdgOBSERVATION2]
 
 
+            if self.parentWidget is not None :
+                self.pushButton_addFeature.setEnabled(True)
+            else:
+                self.pushButton_addFeature.setEnabled(False)
+
+
+
+
     """
     def postOnActivation(self):
         pass
@@ -123,7 +131,7 @@ class DesordreTool(AbstractDesordreTool):
     """
     def postInitFeatureProperties(self, feat):
         pass
-
+    """
 
     def createParentFeature(self):
 
@@ -140,56 +148,34 @@ class DesordreTool(AbstractDesordreTool):
         query = self.dbase.query(sql)
         self.dbase.commit()
 
-        if False:   #link nearest descriptionsystem... TODO
+        if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
+            if self.parentWidget.dbasetablename in ['Equipement'] and self.parentWidget.currentFeature['categorie'] == 'OUH':
+                currentparentlinkfield = self.parentWidget.currentFeature['id_descriptionsystem']
+                sql = "UPDATE Desordre SET lk_descriptionsystem = " + str(currentparentlinkfield) + ','
+                sql += "groupedesordre = 'OH'  WHERE id_desordre = " + str(iddesordre)
+                #sql = "UPDATE Desordre SET lk_descriptionsystem = ?, groupedesordre = 'OH' WHERE id_desordre = ?"
+                #params = [self.parentWidget.currentFeature['id_descriptionsystem'],iddesordre ]
+                self.dbase.query(sql)
+                self.dbase.commit()
+            elif self.parentWidget.dbasetablename in ['Infralineaire']:
+                currentparentlinkfield = self.parentWidget.currentFeature['id_descriptionsystem']
+                sql = "UPDATE Desordre SET lk_descriptionsystem = " + str(currentparentlinkfield) + ','
+                sql += "groupedesordre = 'INF'  WHERE id_desordre = " + str(iddesordre)
+                self.dbase.query(sql)
+                self.dbase.commit()
 
-            #sql = "SELECT LkDesSys FROM DESORDRE WHERE ID = " + str(iddesordre)
-            sql = "SELECT id_tcdescriptionsystem FROM Tcdesordredescriptionsystem WHERE id_tcdesordre = " + str(iddesordre)
-            query = self.dbase.query(sql)
-            ids = [row[0] for row in query]
-            print(ids)
-            #if ids is None:
-            if len(ids)==0:
-                if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                    geomaswkt = self.currentFeature.geometry().exportToWkt()
-                else:
-                    geomaswkt = self.currentFeature.geometry().asWkt()
-
-                sql = "SELECT Infralineaire.id_descriptionsystem FROM Desordre "
-                sql += "INNER JOIN Infralinemprise ON ST_WITHIN(ST_GeomFromText('" + geomaswkt + "'," + str(
-                    self.dbase.crsnumber) + "),Infralinemprise.geom) "
-                sql += " AND Desordre.id_desordre = " + str(iddesordre)
-                sql += " INNER JOIN Infralineaire ON Infralineaire.id_infralineaire = Infralinemprise.lk_infralineaire"
-
-
-                print(sql)
-                query = self.dbase.query(sql)
-                ids = [row[0] for row in query]
-
-                print('result',ids)
-
-                if len(ids)>0:
-                    sql = "INSERT INTO Tcdesordredescriptionsystem(id_tcdescriptionsystem,id_tcdesordre) VALUES(" + str(ids[0]) + ", " + str(iddesordre) + ");"
-                    #sql = "UPDATE DESORDRE SET LkDesSys = " + str(ids[0]) + " WHERE id = " + str(iddesordre) + ";"
-                    query = self.dbase.query(sql)
-                    self.dbase.commit()
-
-
-
-                if False:
-                    nearestindex = self.dbase.dbasetables['Infralineaire']['widget'].getNearestIdinBuffer(self.tempgeometry)
-                    if nearestindex is not None:
-                        feat = self.dbase.dbastables['Infralineaire']['layerqgis'].getFeatures(qgis.core.QgsFeatureRequest(nearestindex)).next()
-                        idsys = feat['id_descriptionsystem']
-                        sql = "INSERT INTO Tcdesordredescriptionsystem(id_tcdescriptionsystem,id_tcdesordre) VALUES(" + str(idsys) + ", " + str(iddesordre) + ");"
-                        #sql = "UPDATE DESORDRE SET LkDesSys = " + str(ids[0]) + " WHERE id = " + str(iddesordre) + ";"
-                        query = self.dbase.query(sql)
-                        self.dbase.commit()
+    """
+                        
+                        
+                        
 
     def postSaveFeature(self, boolnewfeature):
         pass
 
 
     """
+
+
 class UserUI(QWidget):
     def __init__(self, parent=None):
         super(UserUI, self).__init__(parent=parent)
