@@ -13,6 +13,7 @@ from .lamiadigue_rapport_tool import RapportTool
 from .lamiadigue_tronconemprise_tool  import TronconEmpriseTool
 from .lamiadigue_croquis_tool import CroquisTool
 from .lamiadigue_profil_tool import ProfilTool
+from .lamiadigue_desordre_tool import DesordreTool
 # from ..InspectionDigue_graphique_tool import GraphiqueTool
 # from .InspectionDigue_profiltravers_tool  import ProfilTraversTool
 from ...toolpostpro.InspectionDigue_path_tool import PathTool
@@ -91,6 +92,9 @@ class InfraLineaireTool(AbstractInfraLineaireTool):
 
             self.propertieswdgCROQUIS = CroquisTool(dbase=self.dbase, parentwidget=self)
             self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+
+            self.propertieswdgDesordre = DesordreTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
+            self.dbasechildwdgfield.append(self.propertieswdgDesordre)
 
 
 

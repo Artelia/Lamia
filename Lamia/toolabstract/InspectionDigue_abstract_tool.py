@@ -1544,6 +1544,20 @@ class AbstractInspectionDigueTool(QWidget):
             # self.currentFeature = self.dbasetable['layer'].getFeatures(qgis.core.QgsFeatureRequest(self.currentFeature.id())).next()
             self.currentFeature = self.dbase.getLayerFeatureById(self.dbasetablename, self.currentFeature.id())
 
+
+            #  reload with saved attributes
+            if self.savingnewfeature:
+                self.loadFeaturesinTreeWdg()
+                if self.comboBox_featurelist.count() > 1:
+                    self.comboBox_featurelist.setCurrentIndex(self.comboBox_featurelist.count() - 1)
+                else:
+                    self.comboBox_featurelist.currentIndexChanged.emit(0)
+            else:
+                self.initFeatureProperties(self.currentFeature)
+                self.postInitFeatureProperties(self.currentFeature)
+
+
+
             # do postsavefeature traitment
             self.postSaveFeature(self.savingnewfeature)
             # self.currentFeature = self.dbasetable['layer'].getFeatures(qgis.core.QgsFeatureRequest(self.currentFeature.id())).next()

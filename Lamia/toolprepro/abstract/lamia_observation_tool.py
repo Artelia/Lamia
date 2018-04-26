@@ -90,6 +90,17 @@ class AbstractObservationTool(AbstractInspectionDigueTool):
             datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
             self.initFeatureProperties(feat, self.dbasetablename, 'dateobservation', datecreation)
 
+        if ('groupedesordre' in self.dbase.dbasetables['Desordre']['fields'].keys()  ):
+            if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
+                grpdes = self.parentWidget.currentFeature['groupedesordre']
+                grpdescst = [elem[1] for elem in self.dbase.dbasetables['Desordre']['fields']['groupedesordre']['Cst']]
+                indexgrp = grpdescst.index(grpdes)
+                try:
+                    self.userwdgfield.stackedWidget.setCurrentIndex(indexgrp)
+                except:
+                    pass
+
+
 
     def createParentFeature(self):
         datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')

@@ -9,6 +9,7 @@ except ImportError:
 from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
 from .lamiadigue_photos_tool import PhotosTool
 from .lamiadigue_croquis_tool import CroquisTool
+from .lamiadigue_desordre_tool import DesordreTool
 import os
 import datetime
 
@@ -85,6 +86,14 @@ class EquipementTool(AbstractInspectionDigueTool):
             self.propertieswdgCROQUIS = CroquisTool(dbase=self.dbase, parentwidget=self)
             self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
+            self.propertieswdgDesordre = DesordreTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
+            self.propertieswdgDesordre.userwdgfield.frame_2.setParent(None)
+            self.propertieswdgDesordre.pushButton_addFeature.setEnabled(False)
+            self.propertieswdgDesordre.pushButton_delFeature.setEnabled(False)
+            self.propertieswdgDesordre.comboBox_featurelist.setEnabled(False)
+            self.propertieswdgDesordre.groupBox_geom.setParent(None)
+            self.dbasechildwdgfield.append(self.propertieswdgDesordre)
+
             if self.parentWidget is None:
                 #parentwdg = self.dbase.dbasetables['Equipement']['widget']
                 self.propertieswdgEQUIPEMENT = EquipementTool(dbase=self.dbase, parentwidget=self)
@@ -144,6 +153,7 @@ class EquipementTool(AbstractInspectionDigueTool):
         query = self.dbase.query(sql)
         self.dbase.commit()
 
+
         if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
             if self.parentWidget.dbasetablename == 'Equipement':
                 currentparentlinkfield = self.parentWidget.currentFeature['id_equipement']
@@ -152,8 +162,17 @@ class EquipementTool(AbstractInspectionDigueTool):
                 self.dbase.commit()
 
 
+
+
     def postSaveFeature(self, boolnewfeature):
-        pass
+        #print('postsave',boolnewfeature,self.currentFeature['categorie'] )
+        #self.dbase.printsql = True
+        if boolnewfeature and self.currentFeature['categorie'] == 'OUH':
+            self.propertieswdgDesordre.featureSelected()
+            self.propertieswdgDesordre.tempgeometry = self.currentFeature.geometry()
+            self.propertieswdgDesordre.saveFeature()
+        #self.dbase.printsql = False
+
 
 
     def deleteParentFeature(self):

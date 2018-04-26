@@ -34,7 +34,7 @@ if True:
 
     #read
     if True:
-        sql = '''SELECT file FROM Photo WHERE id_photo=3'''
+        sql = '''SELECT file FROM Photo WHERE id_photo=7'''
         query = parser.query(sql)
         result = [row[0] for row in query][0]
         #print(result)
