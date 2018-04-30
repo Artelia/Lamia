@@ -3,4 +3,4 @@
 ###id_basedonnees;SERIAL PRIMARY KEY;INTEGER PRIMARY KEY AUTOINCREMENT
 ###metier;VARCHAR(255) ;TEXT
 ###repertoireressources;VARCHAR(255) ;TEXT
-###crs;INT ;                   INTEGER 
+###crs;INT ;                   INTEGER

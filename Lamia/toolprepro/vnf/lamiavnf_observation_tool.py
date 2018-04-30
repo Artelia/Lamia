@@ -45,8 +45,8 @@ class ObservationTool(AbstractObservationTool):
         # ****************************************************************************************
         #properties ui
         pass
-    
-    
+
+
 
     def initFieldUI(self):
         # ****************************************************************************************
@@ -57,7 +57,8 @@ class ObservationTool(AbstractObservationTool):
             self.userwdgfield = UserUI()
             self.linkuserwdgfield = {'Observation' : {'linkfield' : 'id_observation',
                                              'widgets' : {'dateobservation' : self.userwdgfield.dateEdit,
-                                                          'magnitude' : self.userwdgfield.spinBox_magnitude,
+                                                          'magnitude' : self.userwdgfield.comboBox_ampleur,
+                                                          'state_level' : self.userwdgfield.comboBox_gravite,
                                                         'description': self.userwdgfield.textEdit_description,
                                                         'travaux': self.userwdgfield.comboBox_travaux}},
                                 'Objet' : {'linkfield' : 'id_objet',
