@@ -1,5 +1,5 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis version="2.18.17" simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" readOnly="0" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+<qgis version="2.18.19" simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" readOnly="0" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
   <edittypes>
     <edittype widgetv2type="TextEdit" name="id_infralineaire">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
@@ -10,10 +10,7 @@
     <edittype widgetv2type="TextEdit" name="id_descriptionsystem">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="id_ouvrage">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="lk_photo">
+    <edittype widgetv2type="TextEdit" name="ouvrage">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="visite_par">
@@ -22,19 +19,19 @@
     <edittype widgetv2type="TextEdit" name="visite_date">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="is_modified">
+    <edittype widgetv2type="TextEdit" name="modified">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="commentaire">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="id_nature">
+    <edittype widgetv2type="TextEdit" name="nature">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="id_troncon_georef">
+    <edittype widgetv2type="TextEdit" name="troncon_georef">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="id_lst_statut_ouvrage">
+    <edittype widgetv2type="TextEdit" name="lst_statut_ouvrage">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="date_construction">
@@ -43,19 +40,19 @@
     <edittype widgetv2type="TextEdit" name="nombre_sas">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="id_sig">
+    <edittype widgetv2type="TextEdit" name="sig">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="id_parent">
+    <edittype widgetv2type="TextEdit" name="parent">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="id_organisme_georef">
+    <edittype widgetv2type="TextEdit" name="organisme_georef">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="nbre_pass">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="id_lst_gabarit">
+    <edittype widgetv2type="TextEdit" name="lst_gabarit">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="gabarit_passe">
@@ -73,7 +70,7 @@
     <edittype widgetv2type="TextEdit" name="nbre_voute">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="id_site">
+    <edittype widgetv2type="TextEdit" name="site">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="lieu_de_stockage_batardeaux">
@@ -85,10 +82,10 @@
     <edittype widgetv2type="TextEdit" name="largeur_bief">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="id_bief_georef">
+    <edittype widgetv2type="TextEdit" name="bief_georef">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="staut_donnees">
+    <edittype widgetv2type="TextEdit" name="statut_donnees">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="reference_ouvrage_validee">
@@ -107,9 +104,6 @@
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="ttr_pmp">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="num_ouvrage">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="remise_en_etat">
@@ -131,96 +125,6 @@
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="classe_off">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="validateur">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="proprietaire">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="exploitant">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="autre_proprietaire">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="autre_exploitant">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="autre_gestionnaire">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="fiabilite_classe_number">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="note_ief">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="forcage_ief">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="point_kilometrique">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="point_kilometrique_pr">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="point_kilometrique_abs">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="toponyme_1">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="toponyme_2">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="id_lst_caracteristique">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="fiabilite_note">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="fiabilite_classe">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="id_origine">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="caracteristique">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="latitude">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="longitude">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="enable_optionale_equipment">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="id_famille">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="exploit_mode">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="service_offer">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="km_point_start">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="km_point_end">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="real_length">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="datecreation">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="datedestruction">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
   </edittypes>
@@ -330,6 +234,76 @@
           <prop k="offset_unit" v="MM"/>
           <prop k="use_custom_dash" v="0"/>
           <prop k="width_map_unit_scale" v="0,0,0,0,0,0"/>
+        </layer>
+        <layer pass="0" class="MarkerLine" locked="0">
+          <prop k="interval" v="1000"/>
+          <prop k="interval_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="interval_unit" v="MapUnit"/>
+          <prop k="offset" v="0"/>
+          <prop k="offset_along_line" v="0"/>
+          <prop k="offset_along_line_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="offset_along_line_unit" v="MM"/>
+          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="placement" v="interval"/>
+          <prop k="rotate" v="1"/>
+          <symbol alpha="1" clip_to_extent="1" type="marker" name="@0@4">
+            <layer pass="0" class="SimpleMarker" locked="0">
+              <prop k="angle" v="0"/>
+              <prop k="color" v="255,0,0,255"/>
+              <prop k="horizontal_anchor_point" v="1"/>
+              <prop k="joinstyle" v="bevel"/>
+              <prop k="name" v="line"/>
+              <prop k="offset" v="0,0"/>
+              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="offset_unit" v="MM"/>
+              <prop k="outline_color" v="0,0,0,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="1"/>
+              <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="outline_width_unit" v="MM"/>
+              <prop k="scale_method" v="diameter"/>
+              <prop k="size" v="50"/>
+              <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="size_unit" v="MapUnit"/>
+              <prop k="vertical_anchor_point" v="1"/>
+            </layer>
+          </symbol>
+        </layer>
+        <layer pass="0" class="MarkerLine" locked="0">
+          <prop k="interval" v="100"/>
+          <prop k="interval_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="interval_unit" v="MapUnit"/>
+          <prop k="offset" v="0"/>
+          <prop k="offset_along_line" v="0"/>
+          <prop k="offset_along_line_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="offset_along_line_unit" v="MM"/>
+          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="placement" v="interval"/>
+          <prop k="rotate" v="1"/>
+          <symbol alpha="1" clip_to_extent="1" type="marker" name="@0@5">
+            <layer pass="0" class="SimpleMarker" locked="0">
+              <prop k="angle" v="0"/>
+              <prop k="color" v="255,0,0,255"/>
+              <prop k="horizontal_anchor_point" v="1"/>
+              <prop k="joinstyle" v="bevel"/>
+              <prop k="name" v="line"/>
+              <prop k="offset" v="0,0"/>
+              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="offset_unit" v="MM"/>
+              <prop k="outline_color" v="0,0,0,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0"/>
+              <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="outline_width_unit" v="MM"/>
+              <prop k="scale_method" v="diameter"/>
+              <prop k="size" v="50"/>
+              <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="size_unit" v="MapUnit"/>
+              <prop k="vertical_anchor_point" v="1"/>
+            </layer>
+          </symbol>
         </layer>
       </symbol>
     </symbols>
@@ -539,77 +513,45 @@
     <alias field="id_infralineaire" index="0" name=""/>
     <alias field="id_objet" index="1" name=""/>
     <alias field="id_descriptionsystem" index="2" name=""/>
-    <alias field="id_ouvrage" index="3" name=""/>
-    <alias field="lk_photo" index="4" name=""/>
-    <alias field="visite_par" index="5" name=""/>
-    <alias field="visite_date" index="6" name=""/>
-    <alias field="is_modified" index="7" name=""/>
-    <alias field="commentaire" index="8" name=""/>
-    <alias field="id_nature" index="9" name=""/>
-    <alias field="id_troncon_georef" index="10" name=""/>
-    <alias field="id_lst_statut_ouvrage" index="11" name=""/>
-    <alias field="date_construction" index="12" name=""/>
-    <alias field="nombre_sas" index="13" name=""/>
-    <alias field="id_sig" index="14" name=""/>
-    <alias field="id_parent" index="15" name=""/>
-    <alias field="id_organisme_georef" index="16" name=""/>
-    <alias field="nbre_pass" index="17" name=""/>
-    <alias field="id_lst_gabarit" index="18" name=""/>
-    <alias field="gabarit_passe" index="19" name=""/>
-    <alias field="mode_expl_manuel_barrage" index="20" name=""/>
-    <alias field="nb_vannes" index="21" name=""/>
-    <alias field="largeur" index="22" name=""/>
-    <alias field="nbre_voute" index="23" name=""/>
-    <alias field="id_site" index="24" name=""/>
-    <alias field="lieu_de_stockage_batardeaux" index="25" name=""/>
-    <alias field="longueur_bief" index="26" name=""/>
-    <alias field="largeur_bief" index="27" name=""/>
-    <alias field="id_bief_georef" index="28" name=""/>
-    <alias field="staut_donnees" index="29" name=""/>
-    <alias field="reference_ouvrage_validee" index="30" name=""/>
-    <alias field="user_login" index="31" name=""/>
-    <alias field="date_validation" index="32" name=""/>
-    <alias field="identifiant_local" index="33" name=""/>
-    <alias field="ttr_calcule" index="34" name=""/>
-    <alias field="ttr_pmp" index="35" name=""/>
-    <alias field="num_ouvrage" index="36" name=""/>
-    <alias field="remise_en_etat" index="37" name=""/>
-    <alias field="equivalent_temps_plein" index="38" name=""/>
-    <alias field="date_calcul_indicateur" index="39" name=""/>
-    <alias field="respect_debit" index="40" name=""/>
-    <alias field="ampli_jour_ouv" index="41" name=""/>
-    <alias field="classe_prev" index="42" name=""/>
-    <alias field="classe_off" index="43" name=""/>
-    <alias field="validateur" index="44" name=""/>
-    <alias field="proprietaire" index="45" name=""/>
-    <alias field="exploitant" index="46" name=""/>
-    <alias field="autre_proprietaire" index="47" name=""/>
-    <alias field="autre_exploitant" index="48" name=""/>
-    <alias field="autre_gestionnaire" index="49" name=""/>
-    <alias field="fiabilite_classe_number" index="50" name=""/>
-    <alias field="note_ief" index="51" name=""/>
-    <alias field="forcage_ief" index="52" name=""/>
-    <alias field="point_kilometrique" index="53" name=""/>
-    <alias field="point_kilometrique_pr" index="54" name=""/>
-    <alias field="point_kilometrique_abs" index="55" name=""/>
-    <alias field="toponyme_1" index="56" name=""/>
-    <alias field="toponyme_2" index="57" name=""/>
-    <alias field="id_lst_caracteristique" index="58" name=""/>
-    <alias field="fiabilite_note" index="59" name=""/>
-    <alias field="fiabilite_classe" index="60" name=""/>
-    <alias field="id_origine" index="61" name=""/>
-    <alias field="caracteristique" index="62" name=""/>
-    <alias field="latitude" index="63" name=""/>
-    <alias field="longitude" index="64" name=""/>
-    <alias field="enable_optionale_equipment" index="65" name=""/>
-    <alias field="id_famille" index="66" name=""/>
-    <alias field="exploit_mode" index="67" name=""/>
-    <alias field="service_offer" index="68" name=""/>
-    <alias field="km_point_start" index="69" name=""/>
-    <alias field="km_point_end" index="70" name=""/>
-    <alias field="real_length" index="71" name=""/>
-    <alias field="datecreation" index="72" name=""/>
-    <alias field="datedestruction" index="73" name=""/>
+    <alias field="ouvrage" index="3" name=""/>
+    <alias field="visite_par" index="4" name=""/>
+    <alias field="visite_date" index="5" name=""/>
+    <alias field="modified" index="6" name=""/>
+    <alias field="commentaire" index="7" name=""/>
+    <alias field="nature" index="8" name=""/>
+    <alias field="troncon_georef" index="9" name=""/>
+    <alias field="lst_statut_ouvrage" index="10" name=""/>
+    <alias field="date_construction" index="11" name=""/>
+    <alias field="nombre_sas" index="12" name=""/>
+    <alias field="sig" index="13" name=""/>
+    <alias field="parent" index="14" name=""/>
+    <alias field="organisme_georef" index="15" name=""/>
+    <alias field="nbre_pass" index="16" name=""/>
+    <alias field="lst_gabarit" index="17" name=""/>
+    <alias field="gabarit_passe" index="18" name=""/>
+    <alias field="mode_expl_manuel_barrage" index="19" name=""/>
+    <alias field="nb_vannes" index="20" name=""/>
+    <alias field="largeur" index="21" name=""/>
+    <alias field="nbre_voute" index="22" name=""/>
+    <alias field="site" index="23" name=""/>
+    <alias field="lieu_de_stockage_batardeaux" index="24" name=""/>
+    <alias field="longueur_bief" index="25" name=""/>
+    <alias field="largeur_bief" index="26" name=""/>
+    <alias field="bief_georef" index="27" name=""/>
+    <alias field="statut_donnees" index="28" name=""/>
+    <alias field="reference_ouvrage_validee" index="29" name=""/>
+    <alias field="user_login" index="30" name=""/>
+    <alias field="date_validation" index="31" name=""/>
+    <alias field="identifiant_local" index="32" name=""/>
+    <alias field="ttr_calcule" index="33" name=""/>
+    <alias field="ttr_pmp" index="34" name=""/>
+    <alias field="remise_en_etat" index="35" name=""/>
+    <alias field="equivalent_temps_plein" index="36" name=""/>
+    <alias field="date_calcul_indicateur" index="37" name=""/>
+    <alias field="respect_debit" index="38" name=""/>
+    <alias field="ampli_jour_ouv" index="39" name=""/>
+    <alias field="classe_prev" index="40" name=""/>
+    <alias field="classe_off" index="41" name=""/>
   </aliases>
   <excludeAttributesWMS/>
   <excludeAttributesWFS/>
@@ -620,42 +562,26 @@
       <column width="-1" hidden="0" type="field" name="id_infralineaire"/>
       <column width="-1" hidden="0" type="field" name="id_objet"/>
       <column width="-1" hidden="0" type="field" name="id_descriptionsystem"/>
-      <column width="-1" hidden="0" type="field" name="datecreation"/>
-      <column width="-1" hidden="0" type="field" name="datedestruction"/>
-      <column width="-1" hidden="0" type="field" name="id_ouvrage"/>
-      <column width="-1" hidden="0" type="field" name="lk_photo"/>
       <column width="-1" hidden="0" type="field" name="visite_par"/>
       <column width="-1" hidden="0" type="field" name="visite_date"/>
-      <column width="-1" hidden="0" type="field" name="is_modified"/>
       <column width="-1" hidden="0" type="field" name="commentaire"/>
-      <column width="-1" hidden="0" type="field" name="id_nature"/>
-      <column width="-1" hidden="0" type="field" name="id_troncon_georef"/>
-      <column width="-1" hidden="0" type="field" name="id_lst_statut_ouvrage"/>
       <column width="-1" hidden="0" type="field" name="date_construction"/>
       <column width="-1" hidden="0" type="field" name="nombre_sas"/>
-      <column width="-1" hidden="0" type="field" name="id_sig"/>
-      <column width="-1" hidden="0" type="field" name="id_parent"/>
-      <column width="-1" hidden="0" type="field" name="id_organisme_georef"/>
       <column width="-1" hidden="0" type="field" name="nbre_pass"/>
-      <column width="-1" hidden="0" type="field" name="id_lst_gabarit"/>
       <column width="-1" hidden="0" type="field" name="gabarit_passe"/>
       <column width="-1" hidden="0" type="field" name="mode_expl_manuel_barrage"/>
       <column width="-1" hidden="0" type="field" name="nb_vannes"/>
       <column width="-1" hidden="0" type="field" name="largeur"/>
       <column width="-1" hidden="0" type="field" name="nbre_voute"/>
-      <column width="-1" hidden="0" type="field" name="id_site"/>
       <column width="-1" hidden="0" type="field" name="lieu_de_stockage_batardeaux"/>
       <column width="-1" hidden="0" type="field" name="longueur_bief"/>
       <column width="-1" hidden="0" type="field" name="largeur_bief"/>
-      <column width="-1" hidden="0" type="field" name="id_bief_georef"/>
-      <column width="-1" hidden="0" type="field" name="staut_donnees"/>
       <column width="-1" hidden="0" type="field" name="reference_ouvrage_validee"/>
       <column width="-1" hidden="0" type="field" name="user_login"/>
       <column width="-1" hidden="0" type="field" name="date_validation"/>
       <column width="-1" hidden="0" type="field" name="identifiant_local"/>
       <column width="-1" hidden="0" type="field" name="ttr_calcule"/>
       <column width="-1" hidden="0" type="field" name="ttr_pmp"/>
-      <column width="-1" hidden="0" type="field" name="num_ouvrage"/>
       <column width="-1" hidden="0" type="field" name="remise_en_etat"/>
       <column width="-1" hidden="0" type="field" name="equivalent_temps_plein"/>
       <column width="-1" hidden="0" type="field" name="date_calcul_indicateur"/>
@@ -663,34 +589,18 @@
       <column width="-1" hidden="0" type="field" name="ampli_jour_ouv"/>
       <column width="-1" hidden="0" type="field" name="classe_prev"/>
       <column width="-1" hidden="0" type="field" name="classe_off"/>
-      <column width="-1" hidden="0" type="field" name="validateur"/>
-      <column width="-1" hidden="0" type="field" name="proprietaire"/>
-      <column width="-1" hidden="0" type="field" name="exploitant"/>
-      <column width="-1" hidden="0" type="field" name="autre_proprietaire"/>
-      <column width="-1" hidden="0" type="field" name="autre_exploitant"/>
-      <column width="-1" hidden="0" type="field" name="autre_gestionnaire"/>
-      <column width="-1" hidden="0" type="field" name="fiabilite_classe_number"/>
-      <column width="-1" hidden="0" type="field" name="note_ief"/>
-      <column width="-1" hidden="0" type="field" name="forcage_ief"/>
-      <column width="-1" hidden="0" type="field" name="point_kilometrique"/>
-      <column width="-1" hidden="0" type="field" name="point_kilometrique_pr"/>
-      <column width="-1" hidden="0" type="field" name="point_kilometrique_abs"/>
-      <column width="-1" hidden="0" type="field" name="toponyme_1"/>
-      <column width="-1" hidden="0" type="field" name="toponyme_2"/>
-      <column width="-1" hidden="0" type="field" name="id_lst_caracteristique"/>
-      <column width="-1" hidden="0" type="field" name="fiabilite_note"/>
-      <column width="-1" hidden="0" type="field" name="fiabilite_classe"/>
-      <column width="-1" hidden="0" type="field" name="id_origine"/>
-      <column width="-1" hidden="0" type="field" name="caracteristique"/>
-      <column width="-1" hidden="0" type="field" name="latitude"/>
-      <column width="-1" hidden="0" type="field" name="longitude"/>
-      <column width="-1" hidden="0" type="field" name="enable_optionale_equipment"/>
-      <column width="-1" hidden="0" type="field" name="id_famille"/>
-      <column width="-1" hidden="0" type="field" name="exploit_mode"/>
-      <column width="-1" hidden="0" type="field" name="service_offer"/>
-      <column width="-1" hidden="0" type="field" name="km_point_start"/>
-      <column width="-1" hidden="0" type="field" name="km_point_end"/>
-      <column width="-1" hidden="0" type="field" name="real_length"/>
+      <column width="-1" hidden="0" type="field" name="ouvrage"/>
+      <column width="-1" hidden="0" type="field" name="modified"/>
+      <column width="-1" hidden="0" type="field" name="nature"/>
+      <column width="-1" hidden="0" type="field" name="troncon_georef"/>
+      <column width="-1" hidden="0" type="field" name="lst_statut_ouvrage"/>
+      <column width="-1" hidden="0" type="field" name="sig"/>
+      <column width="-1" hidden="0" type="field" name="parent"/>
+      <column width="-1" hidden="0" type="field" name="organisme_georef"/>
+      <column width="-1" hidden="0" type="field" name="lst_gabarit"/>
+      <column width="-1" hidden="0" type="field" name="site"/>
+      <column width="-1" hidden="0" type="field" name="bief_georef"/>
+      <column width="-1" hidden="0" type="field" name="statut_donnees"/>
     </columns>
   </attributetableconfig>
   <editform>.</editform>
@@ -724,40 +634,38 @@ def my_form_open(dialog, layer, feature):
     <default field="id_infralineaire" expression=""/>
     <default field="id_objet" expression=""/>
     <default field="id_descriptionsystem" expression=""/>
-    <default field="id_ouvrage" expression=""/>
-    <default field="lk_photo" expression=""/>
+    <default field="ouvrage" expression=""/>
     <default field="visite_par" expression=""/>
     <default field="visite_date" expression=""/>
-    <default field="is_modified" expression=""/>
+    <default field="modified" expression=""/>
     <default field="commentaire" expression=""/>
-    <default field="id_nature" expression=""/>
-    <default field="id_troncon_georef" expression=""/>
-    <default field="id_lst_statut_ouvrage" expression=""/>
+    <default field="nature" expression=""/>
+    <default field="troncon_georef" expression=""/>
+    <default field="lst_statut_ouvrage" expression=""/>
     <default field="date_construction" expression=""/>
     <default field="nombre_sas" expression=""/>
-    <default field="id_sig" expression=""/>
-    <default field="id_parent" expression=""/>
-    <default field="id_organisme_georef" expression=""/>
+    <default field="sig" expression=""/>
+    <default field="parent" expression=""/>
+    <default field="organisme_georef" expression=""/>
     <default field="nbre_pass" expression=""/>
-    <default field="id_lst_gabarit" expression=""/>
+    <default field="lst_gabarit" expression=""/>
     <default field="gabarit_passe" expression=""/>
     <default field="mode_expl_manuel_barrage" expression=""/>
     <default field="nb_vannes" expression=""/>
     <default field="largeur" expression=""/>
     <default field="nbre_voute" expression=""/>
-    <default field="id_site" expression=""/>
+    <default field="site" expression=""/>
     <default field="lieu_de_stockage_batardeaux" expression=""/>
     <default field="longueur_bief" expression=""/>
     <default field="largeur_bief" expression=""/>
-    <default field="id_bief_georef" expression=""/>
-    <default field="staut_donnees" expression=""/>
+    <default field="bief_georef" expression=""/>
+    <default field="statut_donnees" expression=""/>
     <default field="reference_ouvrage_validee" expression=""/>
     <default field="user_login" expression=""/>
     <default field="date_validation" expression=""/>
     <default field="identifiant_local" expression=""/>
     <default field="ttr_calcule" expression=""/>
     <default field="ttr_pmp" expression=""/>
-    <default field="num_ouvrage" expression=""/>
     <default field="remise_en_etat" expression=""/>
     <default field="equivalent_temps_plein" expression=""/>
     <default field="date_calcul_indicateur" expression=""/>
@@ -765,36 +673,6 @@ def my_form_open(dialog, layer, feature):
     <default field="ampli_jour_ouv" expression=""/>
     <default field="classe_prev" expression=""/>
     <default field="classe_off" expression=""/>
-    <default field="validateur" expression=""/>
-    <default field="proprietaire" expression=""/>
-    <default field="exploitant" expression=""/>
-    <default field="autre_proprietaire" expression=""/>
-    <default field="autre_exploitant" expression=""/>
-    <default field="autre_gestionnaire" expression=""/>
-    <default field="fiabilite_classe_number" expression=""/>
-    <default field="note_ief" expression=""/>
-    <default field="forcage_ief" expression=""/>
-    <default field="point_kilometrique" expression=""/>
-    <default field="point_kilometrique_pr" expression=""/>
-    <default field="point_kilometrique_abs" expression=""/>
-    <default field="toponyme_1" expression=""/>
-    <default field="toponyme_2" expression=""/>
-    <default field="id_lst_caracteristique" expression=""/>
-    <default field="fiabilite_note" expression=""/>
-    <default field="fiabilite_classe" expression=""/>
-    <default field="id_origine" expression=""/>
-    <default field="caracteristique" expression=""/>
-    <default field="latitude" expression=""/>
-    <default field="longitude" expression=""/>
-    <default field="enable_optionale_equipment" expression=""/>
-    <default field="id_famille" expression=""/>
-    <default field="exploit_mode" expression=""/>
-    <default field="service_offer" expression=""/>
-    <default field="km_point_start" expression=""/>
-    <default field="km_point_end" expression=""/>
-    <default field="real_length" expression=""/>
-    <default field="datecreation" expression=""/>
-    <default field="datedestruction" expression=""/>
   </defaults>
   <previewExpression>COALESCE("ID", '&lt;NULL>')</previewExpression>
   <layerGeometryType>1</layerGeometryType>
