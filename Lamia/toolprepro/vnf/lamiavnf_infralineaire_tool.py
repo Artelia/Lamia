@@ -81,6 +81,8 @@ class InfraLineaireTool(AbstractInspectionDigueTool):
                                                        'widgets': {
                                                                     'ouvrage': self.userwdgfield.spinBox_num_ouvrage,
                                                                     'commentaire': self.userwdgfield.textBrowser_comm,
+                                                                    'art_pk_debut': self.userwdgfield.doubleSpinBox_pkdebut,
+                                                                    'art_pk_fin': self.userwdgfield.doubleSpinBox_pkfin,
                                                                    'nbre_pass': self.userwdgfield.spinBox_nbre_pass,
                                                                    'lst_gabarit': self.userwdgfield.spinBox_id_lst_gabarit,
                                                                    'gabarit_passe': self.userwdgfield.spinBox_gabarit_passe,

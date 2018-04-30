@@ -68,6 +68,7 @@ class EquipementTool(AbstractInspectionDigueTool):
             self.linkuserwdgfield = {'Equipement' : {'linkfield' : 'id_equipement',
                                              'widgets' : {'note_ief': self.userwdgfield.spinBox_note_ief,
                                                           'forcage_ree': self.userwdgfield.spinBox_forcage_ree,
+                                                          'typepk' : self.userwdgfield.comboBox_typepk,
                                                           'pk_debut': self.userwdgfield.doubleSpinBox_pk_debut,
                                                           'pk_fin': self.userwdgfield.doubleSpinBox_pk_fin,
                                                           'pr_debut': self.userwdgfield.spinBox_pr_debut,

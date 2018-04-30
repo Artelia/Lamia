@@ -16,6 +16,8 @@ False;    0
 ###nature;             INT ;                   INTEGER
 /;
 Bief;     60
+###art_pk_debut;           NUMERIC;            REAL
+###art_pk_fin;           NUMERIC;            REAL
 ###troncon_georef;             INT ;                   INTEGER
 ###lst_statut_ouvrage;             INT ;                   INTEGER
 ###date_construction ;             VARCHAR(255);                TEXT

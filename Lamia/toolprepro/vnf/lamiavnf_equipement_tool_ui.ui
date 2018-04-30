@@ -100,6 +100,16 @@
          </property>
         </widget>
        </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Type de PK</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QComboBox" name="comboBox_typepk"/>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="tab_2">

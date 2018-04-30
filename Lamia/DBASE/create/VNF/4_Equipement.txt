@@ -8,6 +8,10 @@
 ###lk_infralineaire;        INT ;                   INTEGER ;                               Infralineaire(id_infralineaire)
 ###note_ief;             INT ;                   INTEGER
 ###forcage_ree;             INT ;                   INTEGER
+###typepk;                VARCHAR(255);            TEXT
+Absolu; ABS
+Relatif croissant;  REC
+Relatif decroissant;  RED
 ###pk_debut;             INT ;                   INTEGER
 ###pk_fin;             INT ;                   INTEGER
 ###pr_debut;             INT ;                   INTEGER
