@@ -19,9 +19,9 @@ Clairseme;  2
 Generalise; 3
 ###state_level;             INT ;                   INTEGER
 /;
-1;
-2;
-3;
-4;
+1;                  1
+2;                  2
+3;                  3
+4;                  4
 ###description;             VARCHAR(255);                TEXT
 ###lk_marche;       INT;            INTEGER
