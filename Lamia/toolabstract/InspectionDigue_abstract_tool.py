@@ -1087,7 +1087,10 @@ class AbstractInspectionDigueTool(QWidget):
         ids = []
         if self.dbasetable is not None:
             strid = 'id_' + self.dbasetablename.lower()
-            sql = "SELECT " + strid + " FROM " + self.dbasetablename + '_qgis'
+            sql = "SELECT " + strid
+            if len(self.qtreewidgetfields)>0 :
+                sql += "," + ','.join(self.qtreewidgetfields)
+            sql += " FROM " + self.dbasetablename + '_qgis'
             sql += ' WHERE datecreation <= ' + "'" + self.dbase.workingdate + "'"
             if self.dbase.dbasetype == 'postgis':
                 sql += ' AND CASE WHEN datedestruction IS NOT NULL  '
@@ -1126,7 +1129,8 @@ class AbstractInspectionDigueTool(QWidget):
             sql += ';'
             # print('loadIds', sql)
             query = self.dbase.query(sql)
-            ids = [row[0:1] for row in query]
+            #ids = [row[0:1] for row in query]
+            ids = [row for row in query]
 
         elif os.path.isfile(self.dbasetablename):
             # print('load ids file')
