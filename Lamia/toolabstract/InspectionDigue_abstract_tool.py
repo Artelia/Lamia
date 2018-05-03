@@ -1130,23 +1130,27 @@ class AbstractInspectionDigueTool(QWidget):
             # print('loadIds', sql)
             query = self.dbase.query(sql)
             #ids = [row[0:1] for row in query]
-            ids = [row for row in query]
+            if query != None:
+                ids = [row for row in query]
 
-            i=0
-            j=0
-            res=[]
-            for row in ids :
+                i=0
                 j=0
-                res=res+[[]]
-                for id in row :
-                    if j>0:
-                        res[i]+=[self.dbase.getConstraintTextFromRawValue(self.dbasetablename, self.qtreewidgetfields[j-1], ids[i][j])]
-                    else :
-                        res[i]+=[ids[i][j]]
-                    j=j+1
-                i=i+1
-            ids=res
-            #Reprendre
+                res=[]
+                for row in ids :
+                    j=0
+                    res=res+[[]]
+                    for id in row :
+                        if j>0:
+                            try :
+                                res[i]+=[self.dbase.getConstraintTextFromRawValue(self.dbasetablename, self.qtreewidgetfields[j-1], ids[i][j])]
+                            except:
+                                pass
+                        else :
+                            res[i]+=[ids[i][j]]
+                        j=j+1
+                    i=i+1
+                ids=res
+                #Reprendre
 
         elif os.path.isfile(self.dbasetablename):
             # print('load ids file')
