@@ -47,4 +47,3 @@ Contre-fosse;                         60128;  [10102,10103]
 Connexion au terrain naturel;         60129;  [10102,10103]
 Eléments de securite;                 60130;  [10102,10103]
 Franchissement et ouvrages divers;    60131;  [10102,10103]
-###geom;                LINESTRING

@@ -52,7 +52,7 @@ class EquipementTool(AbstractInspectionDigueTool):
 
         # self.pickTable = None
         self.debug = False
-        self.qtreewidgetfields = ['equipement']
+        self.qtreewidgetfields = ['equipement', 'pk_debut','pk_fin']
 
 
         # ****************************************************************************************
@@ -93,7 +93,8 @@ class EquipementTool(AbstractInspectionDigueTool):
             # ****************************************************************************************
             # child widgets
             self.dbasechildwdgfield = []
-            self.propertieswdgEquipement = EquipementMainTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
+            EquipementMainToolInstance = EquipementMainTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
+            self.propertieswdgEquipement = EquipementMainToolInstance
             self.dbasechildwdgfield.append(self.propertieswdgEquipement)
 
             self.propertieswdgDesordre = DesordreTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
@@ -103,8 +104,22 @@ class EquipementTool(AbstractInspectionDigueTool):
             if True:
                 self.propertieswdgPHOTOGRAPHIE = PhotosTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
                 self.propertieswdgPHOTOGRAPHIE.NAME = None
-                self.userwdgfield.tabWidget.widget(2).layout().addWidget(self.propertieswdgPHOTOGRAPHIE)
+                self.userwdgfield.tabWidget.widget(3).layout().addWidget(self.propertieswdgPHOTOGRAPHIE)
                 self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
+
+
+
+                self.propertieswdgSSEQUIPEMENT = EquipementMainToolInstance
+                self.propertieswdgSSEQUIPEMENT.NAME = None
+                self.userwdgfield.tabWidget.widget(2).layout().addWidget(self.propertieswdgSSEQUIPEMENT)
+                self.dbasechildwdgfield.append(self.propertieswdgSSEQUIPEMENT)
+
+
+
+                self.propertieswdgDESORDRE = DesordreTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
+                self.propertieswdgDESORDRE.NAME = None
+                self.userwdgfield.tabWidget.widget(4).layout().addWidget(self.propertieswdgDESORDRE)
+                self.dbasechildwdgfield.append(self.propertieswdgDESORDRE)
 
 
                 #self.propertieswdgCROQUIS = CroquisTool(dbase=self.dbase, parentwidget=self)

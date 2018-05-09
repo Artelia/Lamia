@@ -66,4 +66,3 @@ Stabilité, déformation - Affouillement;                                       
 Stabilité, déformation - Désalignement, désorganisation entre éléments;                             36;                 [60122,60123,60124,60125,60126,60127,60128,60129]
 Stabilité, déformation - Tassement;                                                                 37;                 [60125,60126]
 Stabilité, déformation - Non visible, indéterminé;                                                   41;                 [60122,60123,60124,60125,60126,60127,60128,60129,60130,60131]
-###geom;                LINESTRING
