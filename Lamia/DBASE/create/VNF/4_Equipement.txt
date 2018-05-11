@@ -19,6 +19,7 @@ Relatif decroissant;  RED
 ###abs_debut;             INT ;                   INTEGER
 ###abs_fin;             INT ;                   INTEGER
 ###groupe_number;        INT ;                       INTEGER
+###qualificatif;                VARCHAR(255);            TEXT
 ###is_modified;             INT ;                   INTEGER
 /;
 True;     1

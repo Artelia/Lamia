@@ -1,1 +1,1 @@
-#EXPO SELECT DISTINCT Infralineaire.ouvrage as num_ouvrage, Equipement.partie as id_partie FROM  Equipement INNER JOIN Infralineaire ON Equipement.lk_infralineaire = Infralineaire.id_infralineaire
+#EXPO SELECT DISTINCT Infralineaire.ouvrage as num_ouvrage, Equipement.partie as id_partie, Equipement.abs_debut, Equipement.abs_fin, Equipement.pr_debut, Equipement.pr_fin, Equipement.pk_debut, Equipement.pk_fin, Equipement.qualificatif FROM Equipement INNER JOIN Infralineaire ON Equipement.lk_infralineaire = Infralineaire.id_infralineaire
