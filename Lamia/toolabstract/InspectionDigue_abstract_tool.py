@@ -1152,6 +1152,7 @@ class AbstractInspectionDigueTool(QWidget):
                 ids=res
                 #Reprendre
 
+
         elif os.path.isfile(self.dbasetablename):
             # print('load ids file')
             self.dbasefiledata = []

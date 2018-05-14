@@ -58,7 +58,7 @@ class InfraLineaireTool(AbstractInfraLineaireTool):
                                             }
         self.pickTable = {'LkZoneGeo': {'ZONEGEO': 'ID'}}
         self.debug = False
-        self.qtreewidgetfields = ['description1']
+        # self.qtreewidgetfields = ['description1']
 
 
 
