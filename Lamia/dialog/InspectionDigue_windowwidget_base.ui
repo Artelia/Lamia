@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>375</width>
-    <height>587</height>
+    <width>520</width>
+    <height>543</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -88,7 +88,7 @@
               <property name="frameShadow">
                <enum>QFrame::Raised</enum>
               </property>
-              <layout class="QVBoxLayout" name="verticalLayout_3">
+              <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1,10,0">
                <property name="spacing">
                 <number>0</number>
                </property>
@@ -96,7 +96,44 @@
                 <number>0</number>
                </property>
                <item>
-                <widget class="QComboBox" name="comboBox_style"/>
+                <widget class="QFrame" name="frame_6">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::Box</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Raised</enum>
+                 </property>
+                 <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,10">
+                  <property name="spacing">
+                   <number>3</number>
+                  </property>
+                  <property name="margin">
+                   <number>3</number>
+                  </property>
+                  <item>
+                   <widget class="QLabel" name="label">
+                    <property name="text">
+                     <string/>
+                    </property>
+                    <property name="pixmap">
+                     <pixmap resource="../resources.qrc">:/plugins/Lamia/icons/eye2.svg</pixmap>
+                    </property>
+                    <property name="scaledContents">
+                     <bool>false</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QComboBox" name="comboBox_style"/>
+                  </item>
+                 </layout>
+                </widget>
                </item>
                <item>
                 <widget class="QTreeWidget" name="MaintreeWidget">
@@ -116,6 +153,12 @@
                   <size>
                    <width>16777215</width>
                    <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>32</width>
+                   <height>32</height>
                   </size>
                  </property>
                  <property name="rootIsDecorated">
@@ -141,6 +184,44 @@
                    <string>1</string>
                   </property>
                  </column>
+                </widget>
+               </item>
+               <item>
+                <widget class="QFrame" name="frame_2">
+                 <property name="frameShape">
+                  <enum>QFrame::NoFrame</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Raised</enum>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout">
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>3</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>3</number>
+                  </property>
+                  <property name="spacing">
+                   <number>3</number>
+                  </property>
+                  <item row="0" column="0">
+                   <widget class="QPushButton" name="pushButton_selectfeat">
+                    <property name="text">
+                     <string/>
+                    </property>
+                    <property name="icon">
+                     <iconset resource="../resources.qrc">
+                      <normaloff>:/plugins/Lamia/icons/select.png</normaloff>:/plugins/Lamia/icons/select.png</iconset>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </widget>
                </item>
               </layout>
@@ -170,7 +251,7 @@
               <property name="frameShadow">
                <enum>QFrame::Raised</enum>
               </property>
-              <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,10">
+              <layout class="QVBoxLayout" name="verticalLayout_2" stretch="10">
                <property name="spacing">
                 <number>0</number>
                </property>
@@ -178,68 +259,18 @@
                 <number>0</number>
                </property>
                <item>
-                <widget class="QFrame" name="frame_2">
-                 <property name="frameShape">
-                  <enum>QFrame::NoFrame</enum>
-                 </property>
-                 <property name="frameShadow">
-                  <enum>QFrame::Raised</enum>
-                 </property>
-                 <layout class="QGridLayout" name="gridLayout">
-                  <property name="topMargin">
-                   <number>3</number>
-                  </property>
-                  <property name="rightMargin">
-                   <number>3</number>
-                  </property>
-                  <property name="bottomMargin">
-                   <number>3</number>
-                  </property>
-                  <property name="spacing">
-                   <number>3</number>
-                  </property>
-                  <item row="0" column="0">
-                   <widget class="QPushButton" name="pushButton_zoomFeature">
-                    <property name="enabled">
-                     <bool>false</bool>
-                    </property>
-                    <property name="text">
-                     <string/>
-                    </property>
-                    <property name="icon">
-                     <iconset>
-                      <normaloff>:/plugins/Lamia/icons/Zoom_48x48.png</normaloff>:/plugins/Lamia/icons/Zoom_48x48.png</iconset>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="1">
-                   <widget class="QPushButton" name="pushButton_selectfeat">
-                    <property name="text">
-                     <string/>
-                    </property>
-                    <property name="icon">
-                     <iconset>
-                      <normaloff>:/plugins/Lamia/icons/select.png</normaloff>:/plugins/Lamia/icons/select.png</iconset>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="2" column="0" colspan="2">
-                   <widget class="QCheckBox" name="checkBox_onlyvisible">
-                    <property name="text">
-                     <string>Visibles</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item>
                 <widget class="QTreeWidget" name="ElemtreeWidget">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>64</width>
+                   <height>64</height>
+                  </size>
                  </property>
                  <property name="rootIsDecorated">
                   <bool>false</bool>
@@ -280,16 +311,35 @@
             </property>
             <item>
              <widget class="QTabWidget" name="MaintabWidget">
+              <property name="tabPosition">
+               <enum>QTabWidget::West</enum>
+              </property>
+              <property name="tabShape">
+               <enum>QTabWidget::Rounded</enum>
+              </property>
               <property name="currentIndex">
                <number>0</number>
               </property>
+              <property name="iconSize">
+               <size>
+                <width>32</width>
+                <height>32</height>
+               </size>
+              </property>
               <property name="elideMode">
                <enum>Qt::ElideLeft</enum>
+              </property>
+              <property name="documentMode">
+               <bool>false</bool>
               </property>
               <property name="tabsClosable">
                <bool>false</bool>
               </property>
               <widget class="QWidget" name="tab">
+               <attribute name="icon">
+                <iconset resource="../resources.qrc">
+                 <normaloff>:/plugins/Lamia/icons/main.png</normaloff>:/plugins/Lamia/icons/main.png</iconset>
+               </attribute>
                <attribute name="title">
                 <string>Proprietes</string>
                </attribute>
@@ -306,6 +356,10 @@
                </layout>
               </widget>
               <widget class="QWidget" name="tab_2">
+               <attribute name="icon">
+                <iconset resource="../resources.qrc">
+                 <normaloff>:/plugins/Lamia/icons/link.svg</normaloff>:/plugins/Lamia/icons/link.svg</iconset>
+               </attribute>
                <attribute name="title">
                 <string>Tables enfants</string>
                </attribute>
@@ -329,6 +383,12 @@
                   </property>
                   <property name="currentIndex">
                    <number>-1</number>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>32</width>
+                    <height>32</height>
+                   </size>
                   </property>
                   <property name="elideMode">
                    <enum>Qt::ElideRight</enum>
@@ -367,7 +427,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>375</width>
+     <width>520</width>
      <height>21</height>
     </rect>
    </property>
@@ -598,6 +658,7 @@
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+ </resources>
  <connections/>
 </ui>

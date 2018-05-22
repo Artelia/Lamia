@@ -42,7 +42,7 @@ class EquipementTool(AbstractInspectionDigueTool):
                                            'desttable': ['Equipement']}}
         # self.pickTable = None
         self.debug = False
-
+        self.iconpath = os.path.join(os.path.dirname(__file__), 'lamiadigue_equipement_tool_icon.svg')
 
         # ****************************************************************************************
         #properties ui

@@ -34,7 +34,7 @@ class AbstractPhotosTool(AbstractInspectionDigueTool):
                                             'idtcsource' : 'id_tcressource',
                                            'iddest' : 'id_objet',
                                            'idtcdest' : 'id_tcobjet',
-                                           'desttable' : ['Infralineaire','Observation','Equipement']},
+                                           'desttable' : ['Infralineaire','Observation','Equipement','Noeud']},
                             'Marche' :{'tabletc' : None,
                                               'idsource' : 'lk_marche',
                                             'idtcsource' : None,
@@ -42,6 +42,7 @@ class AbstractPhotosTool(AbstractInspectionDigueTool):
                                            'idtcdest' : None,
                                            'desttable' : ['Marche']} }
         # self.pickTable = None
+        self.iconpath = os.path.join(os.path.dirname(__file__), 'lamia_photos_tool_icon.svg')
 
         # ****************************************************************************************
         #properties ui

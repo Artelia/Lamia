@@ -49,7 +49,7 @@ class AbstractTopographieTool(AbstractInspectionDigueTool):
                                            'idtcdest': None,
                                            'desttable': ['Marche']}}
         # self.pickTable = None
-
+        self.iconpath = os.path.join(os.path.dirname(__file__), 'lamia_topographie_tool_icon.png')
 
         # ****************************************************************************************
         #properties ui

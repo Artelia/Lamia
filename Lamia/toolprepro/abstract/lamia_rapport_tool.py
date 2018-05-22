@@ -44,6 +44,8 @@ class AbstractRapportTool(AbstractInspectionDigueTool):
 
         # ****************************************************************************************
         #properties ui
+        self.iconpath = os.path.join(os.path.dirname(__file__), 'lamia_rapport_tool_icon.png')
+
 
     def initDesktopUI(self):
         # ****************************************************************************************

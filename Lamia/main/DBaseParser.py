@@ -7,6 +7,7 @@ import sys
 import qgis
 import qgis.utils
 qgis.utils.uninstallErrorHook()     #for standart output
+import math
 
 try:
     from pyspatialite import dbapi2 as db
@@ -1165,6 +1166,8 @@ class DBaseParser(QtCore.QObject):
         :return: nearestid , distance
         """
 
+        debug = False
+
         if int(str(self.qgisversion_int)[0:3]) < 218:
             isspatial = dbasetable['layerqgis'].geometryType() < 3
         else:
@@ -1172,12 +1175,22 @@ class DBaseParser(QtCore.QObject):
         if not isspatial:
             return None, None
 
+        if debug: logging.getLogger("Lamia").debug('pointbefore %s', str(point))
+
         nearestid = []
         if comefromcanvas:
-            point2 = self.pointEmitter.toLayerCoordinates(dbasetable['layerqgis'], point)
-            print('Attention methode depreciee')
+            #point2 = self.pointEmitter.toLayerCoordinates(dbasetable['layerqgis'], point)
+            #point2 = self.xformreverse.transform(point)
+
+            if self.qgsiface is not None:
+                point2 = self.xformreverse.transform(point)
+            else:
+                point2 = point
+            #print('Attention methode depreciee')
         else:
             point2 = point
+
+        if debug: logging.getLogger("Lamia").debug('pointafter %s', str(point2))
 
         if int(str(self.qgisversion_int)[0:3]) < 220:
             point2geom = qgis.core.QgsGeometry.fromPoint(point2)
@@ -1225,6 +1238,13 @@ class DBaseParser(QtCore.QObject):
                     nearestindex = layernearestid
         return nearestindex, distance
 
+
+    def areNodesEquals(self, node1, node2):
+        dist = math.sqrt( (node2[0] - node1[0])**2 + (node2[1]-node1[1])**2 )
+        if dist < 0.01:
+            return True
+        else:
+            return False
 
     def getLayerFeatureById(self,layername,fid):
         """

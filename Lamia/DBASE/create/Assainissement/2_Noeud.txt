@@ -13,7 +13,6 @@
 ###altradierouvrage;             REAL;                     DECIMAL
 ###alttamponouvrage;             REAL;                     DECIMAL
 ###profradierouvrage;             REAL;                     DECIMAL
-###proftamponouvrage;             REAL;                     DECIMAL
 ###typeReseau;                VARCHAR(255);            TEXT
 /;
 Pluvial;                  PLU
@@ -21,13 +20,35 @@ Eaux usees;               USE
 Unitaire;                 UNI
 ###typeOuvrageAss;             INT ;                     INTEGER 
 /;
+Regard;                    60
+Branchement;                61
+Avaloir;                   70
+Grille;                     71
+Grille avaloir;             72
 Poste de refoulement;        1
 Station d epuration;       2
 Bassin de stockage;        3
 Deversoir d orage;         4
 Rejet;                     5
-Regard;                    6
-Avaloir;                   7
 Autre;                     0
 Indetermine;               99
+###accessibilite;                VARCHAR(255);            TEXT
+Ouvrable;                   OUV
+Ouvrable non visitable;     OUN
+En privé;                   PRI
+Non ouvrable;               NOU
+Non vu;                     NVU
+Sous TN;                    STN
+Sous voirie;                SVO
+###cloisonsiphoide;             INT ;                     INTEGER
+##typeOuvrageAss
+/;                     ;[60]
+Non;    0;          [61]
+Oui;    1;          [61]
+###X;             REAL;                     DECIMAL
+###dX;             REAL;                     DECIMAL
+###Y;             REAL;                     DECIMAL
+###dY;             REAL;                     DECIMAL
+###Z;             REAL;                     DECIMAL
+###dZ;             REAL;                     DECIMAL
 ###geom;                POINT

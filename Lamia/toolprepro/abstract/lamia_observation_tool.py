@@ -42,6 +42,7 @@ class AbstractObservationTool(AbstractInspectionDigueTool):
                                            'iddest' : 'id_marche',
                                            'idtcdest' : None,
                                            'desttable' : ['Marche']} }
+        self.iconpath = os.path.join(os.path.dirname(__file__), 'lamia_observation_tool_icon.png')
 
         # ****************************************************************************************
         #properties ui

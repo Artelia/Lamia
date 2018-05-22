@@ -20,12 +20,37 @@ import qgis
 
 class DesordreTool(AbstractDesordreTool):
 
-    LOADFIRST = True
+    LOADFIRST = False
     dbasetablename = 'Desordre'
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None, parentwidget=None, parent=None):
         super(DesordreTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
 
+    def initTool(self):
+        # ****************************************************************************************
+        # Main spec
+        self.CAT = 'Desordre'
+        self.NAME = 'Desordre'
+        self.dbasetablename = 'Desordre'
+        self.visualmode = [1, 2]
+        self.PointENABLED = True
+        self.LineENABLED = True
+        # self.PolygonEnabled = True
+        self.magicfunctionENABLED = True
+
+        self.linkagespec = {'Descriptionsystem': {'tabletc': None,
+                                                  'idsource': 'lk_descriptionsystem',
+                                                  'idtcsource': None,
+                                                  'iddest': 'id_descriptionsystem',
+                                                  'idtcdest': None,
+                                                  'desttable': ['Infralineaire', 'Equipement', 'Noeud']}}
+
+        self.pickTable = {'LkDesSys': {'TRONCON': 'IdSys'}}
+        self.iconpath = os.path.join(os.path.dirname(__file__), '..', 'abstract', 'lamia_desordre_tool_icon.png')
+
+        # ****************************************************************************************
+        # properties ui
+        pass
 
 
     """
@@ -66,10 +91,7 @@ class DesordreTool(AbstractDesordreTool):
             self.userwdgfield = UserUI()
 
             self.linkuserwdgfield = {'Desordre' : {'linkfield' : 'id_desordre',
-                                             'widgets' : {'cote': self.userwdgfield.comboBox_cote,
-                                                        'position': self.userwdgfield.comboBox_position,
-                                                          'catdes': self.userwdgfield.comboBox_des_cat,
-                                                        'typedes': self.userwdgfield.comboBox_des_type}},
+                                             'widgets' : {'groupedesordre': self.userwdgfield.comboBox_groupedesordre}},
                                 'Objet' : {'linkfield' : 'id_objet',
                                           'widgets' : {}}}
 
@@ -106,6 +128,12 @@ class DesordreTool(AbstractDesordreTool):
 
                 #self.dbasechildwdg = [self.propertieswdgOBSERVATION, self.propertieswdgOBSERVATION2]
 
+            if self.parentWidget is None:
+                self.pushButton_addFeature.setEnabled(False)
+
+            self.userwdgfield.comboBox_groupedesordre.setEnabled(False)
+
+
 
     """
     def postOnActivation(self):
@@ -120,6 +148,52 @@ class DesordreTool(AbstractDesordreTool):
         self.saveFeature()
         self.propertieswdgOBSERVATION2.featureSelected()
         self.propertieswdgOBSERVATION2.saveFeature()
+
+    def postInitFeatureProperties(self, feat):
+        if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
+            if self.parentWidget.dbasetablename in ['Infralineaire']:
+                indexinfra = self.userwdgfield.comboBox_groupedesordre.findText('Infralineaire')
+                self.userwdgfield.comboBox_groupedesordre.setCurrentIndex(indexinfra)
+
+
+    def createParentFeature(self):
+        datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
+        # print(datecreation)
+        sql = "INSERT INTO Objet (datecreation) VALUES('" + datecreation + "');"
+        query = self.dbase.query(sql)
+        self.dbase.commit()
+        idobjet = self.dbase.getLastRowId('Objet')
+
+        iddesordre = self.currentFeature.id()
+
+        sql = "UPDATE Desordre SET id_objet = " + str(idobjet) + " WHERE id_desordre = " + str(iddesordre) + ";"
+        query = self.dbase.query(sql)
+        self.dbase.commit()
+
+        if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
+
+            if self.parentWidget.dbasetablename in ['Noeud'] :
+                currentparentlinkfield = self.parentWidget.currentFeature['id_descriptionsystem']
+                sql = "UPDATE Desordre SET lk_descriptionsystem = " + str(currentparentlinkfield) + ','
+                sql += "groupedesordre = 'NOE'  WHERE id_desordre = " + str(iddesordre)
+                #sql = "UPDATE Desordre SET lk_descriptionsystem = ?, groupedesordre = 'OH' WHERE id_desordre = ?"
+                #params = [self.parentWidget.currentFeature['id_descriptionsystem'],iddesordre ]
+                # print(sql)
+                self.dbase.query(sql)
+                self.dbase.commit()
+            elif self.parentWidget.dbasetablename in ['Infralineaire']:
+                currentparentlinkfield = self.parentWidget.currentFeature['id_descriptionsystem']
+                sql = "UPDATE Desordre SET lk_descriptionsystem = " + str(currentparentlinkfield) + ','
+                sql += "groupedesordre = 'INF'  WHERE id_desordre = " + str(iddesordre)
+                # print(sql)
+                self.dbase.query(sql)
+                self.dbase.commit()
+
+
+
+
+
+
     """
     def postInitFeatureProperties(self, feat):
         pass
@@ -190,6 +264,11 @@ class DesordreTool(AbstractDesordreTool):
 
 
     """
+
+
+
+
+
 class UserUI(QWidget):
     def __init__(self, parent=None):
         super(UserUI, self).__init__(parent=parent)

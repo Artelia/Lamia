@@ -46,6 +46,7 @@ from .InspectionDigue_ConflitHorsLigne import ConflitHorsLigne
 from .InspectionDigue_impression_rapport import ImpressionRapportDialog
 from .InspectionDigue_exportShapefile import ExportShapefileDialog
 from .InspectionDigue_Import import ImportObjetDialog
+from .Lamia_numpad import NumPadDialog
 
 from .InspectionDigue_newDB import newDBDialog
 from .InspectionDigue_getDate import getDateDialog
@@ -107,6 +108,8 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.dateDialog = getDateDialog()
         # the new db dialog
         self.newDBDialog = newDBDialog()
+        #numpad dialog
+        self.numpaddialog = NumPadDialog()
         # the postgis connection dialog
         self.connDialog = ConnexionPGDialog()
         # for printing reports
@@ -190,7 +193,7 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.actionMode_hors_ligne_Reconnexion.triggered.connect(self.modeHorsLigne)
 
 
-        self.pushButton_zoomFeature.clicked.connect(self.zoomToFeature)
+        #self.pushButton_zoomFeature.clicked.connect(self.zoomToFeature)
         self.pushButton_selectfeat.clicked.connect(self.selectFeature)
         self.action_Repertoire_photo.triggered.connect(self.setImageDir)
         self.actionDate_de_travail.triggered.connect(self.setWorkingDate)
@@ -983,6 +986,17 @@ class InspectiondigueWindowWidget(QMainWindow):
         if file:
             self.dbase.imagedirectory = file
             QtCore.QSettings().setValue("InspectionDigue/picturepath", file)
+
+
+    def showNumPad(self, finalwdg):
+        # print('ok', finalwdg)
+
+        self.numpaddialog.exec_()
+        number = self.numpaddialog.dialogIsFinished()
+        # print(number)
+        if number:
+            finalwdg.setValue(number)
+
 
 
     def exportBase(self):

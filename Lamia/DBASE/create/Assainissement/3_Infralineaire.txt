@@ -38,6 +38,12 @@ Tole galvanisee;    28
 Autre;              00
 Indetermine;        99
 ###diametreNominal;        INT ;                       INTEGER
+###formecanalisation;                VARCHAR(255);            TEXT
+Circulaire;CIR
+Aqueduc; AQU
+Ovoide;OVO
+###hauteur;             REAL;                     DECIMAL
+###largeur;             REAL;                     DECIMAL
 ###anPoseSup;            DATE ;                  TEXT
 ###maitreOuvrage;                VARCHAR(255);            TEXT
 ###exploitant;                VARCHAR(255);            TEXT
@@ -46,9 +52,8 @@ Indetermine;        99
 True;           1
 False;           0
 ###branchement;        INT ;                       INTEGER
-/;
-True;           1
-False;           0
+Faux;           0
+Vrai;           1
 ###modeCirculation;        INT ;                       INTEGER
 /;
 Gravitaire;         01
@@ -58,7 +63,7 @@ Autre;              00
 Indetermine;        99
 ###metaREAPA;             INT ;                     INTEGER ;                                    Metaraepa(id_metaraepa)
 ###anPoseInf;            DATE ;                  TEXT
-###longuer;             REAL;                     DECIMAL
+###longueur;             REAL;                     DECIMAL
 ###typeReseau;                VARCHAR(255);            TEXT
 /;
 Pluvial;                  PLU
@@ -83,4 +88,5 @@ Indetermine;        99
 ###profaval;             REAL;                     DECIMAL
 ###lk_noeud1;        INT ;                       INTEGER;                            Noeud(id_noeud)
 ###lk_noeud2;        INT ;                       INTEGER;                            Noeud(id_noeud)
+###infracommentaire;                VARCHAR(255);            TEXT
 ###geom;                LINESTRING

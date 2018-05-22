@@ -47,10 +47,11 @@ class AbstractDesordreTool(AbstractInspectionDigueTool):
                                             'idtcsource' : None,
                                            'iddest' : 'id_descriptionsystem',
                                            'idtcdest' : None,
-                                           'desttable' : ['Infralineaire','Equipement']}}
+                                           'desttable' : ['Infralineaire','Equipement','Noeud']}}
 
 
         self.pickTable = {'LkDesSys': {'TRONCON': 'IdSys'}}
+        self.iconpath = os.path.join(os.path.dirname(__file__), 'lamia_desordre_tool_icon.png')
 
         # ****************************************************************************************
         #properties ui

@@ -63,11 +63,22 @@ class ObservationTool(AbstractObservationTool):
             self.userwdgfield = UserUI()
             self.linkuserwdgfield = {'Observation' : {'linkfield' : 'id_observation',
                                              'widgets' : {'dateobservation' : self.userwdgfield.dateEdit,
-                                                          'nombre' : self.userwdgfield.spinBox_nombre,
+                                                          #'nombre' : self.userwdgfield.spinBox_nombre,
                                                         'gravite': self.userwdgfield.comboBox_urgence,
-                                                        'evolution': self.userwdgfield.textEdit_evolution,
+                                                          'depots' : self.userwdgfield.comboBox_depots,
+
+                                                        # 'evolution': self.userwdgfield.textEdit_evolution,
                                                         'commentaires': self.userwdgfield.textEdit_comm,
-                                                        'suite': self.userwdgfield.textEdit_suite}},
+                                                        'suite': self.userwdgfield.comboBox_suite,
+                                                          'typesuite': self.userwdgfield.comboBox_typesuite,
+
+                                                          'ECPPdepuisbranchement': self.userwdgfield.checkBox_ecpp,
+                                                          'gcdegrade': self.userwdgfield.checkBox_gcdegrade,
+                                                          'infiltration': self.userwdgfield.checkBox_infiltration,
+                                                          'intrusionracine': self.userwdgfield.checkBox_racines,
+                                                          'miseencharge': self.userwdgfield.checkBox_charge,
+                                                          'tamponendommage': self.userwdgfield.checkBox_tamponendommage
+                                                          }},
                                 'Objet' : {'linkfield' : 'id_objet',
                                           'widgets' : {}}}
 

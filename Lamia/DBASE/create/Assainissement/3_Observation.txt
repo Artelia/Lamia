@@ -4,6 +4,11 @@
 ###id_observation;      SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
 ###dateobservation;                DATE;            TEXT
 ###source;                VARCHAR(255);            TEXT
+###depots;             INT ;                   INTEGER
+Aucun;0
+Leger;1
+Moyen;2
+Fort;3
 ###nombre;                 INT ;                   INTEGER 
 ###gravite;                VARCHAR(255);            TEXT
 /;                          
@@ -14,6 +19,23 @@
 ###evolution;                VARCHAR(255);            TEXT
 ###commentaires;                VARCHAR(255);            TEXT
 ###suite;                VARCHAR(255);            TEXT
+Aucune; AUC
+Travaux;TVX
+###typesuite;                VARCHAR(255);            TEXT
+##suite
+/;                              ;['AUC']
+Regard a rehausser;     REH    ;['TVX']
+Remplacement tampon fonte; RTF;['TVX']
+Rehabilitation complete;    RCO;['TVX']
+Scellement tampon;      SCT;['TVX']
+Etancheification branchement;   ETB;['TVX']
+Etancheification regard;   ETR;['TVX']
+###ECPPdepuisbranchement;                 INT ;                   INTEGER 
+###gcdegrade;                 INT ;                   INTEGER 
+###infiltration;                 INT ;                   INTEGER 
+###intrusionracine;                 INT ;                   INTEGER 
+###miseencharge;                 INT ;                   INTEGER 
+###tamponendommage;                 INT ;                   INTEGER 
 ###id_objet;             INT ;                     INTEGER ;                                    Objet(id_objet)
 ###lk_marche;       INT;            INTEGER;                                              Marche(id_marche)
 ###lk_desordre;         INT ;            INTEGER;                                              Desordre(id_desordre)

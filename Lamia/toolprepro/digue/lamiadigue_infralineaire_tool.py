@@ -59,6 +59,7 @@ class InfraLineaireTool(AbstractInfraLineaireTool):
         self.pickTable = {'LkZoneGeo': {'ZONEGEO': 'ID'}}
         self.debug = False
         # self.qtreewidgetfields = ['description1']
+        self.iconpath = os.path.join(os.path.dirname(__file__), 'lamiadigue_infralineaire_tool_icon.svg')
 
 
 

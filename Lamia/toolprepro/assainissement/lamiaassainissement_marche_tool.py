@@ -30,3 +30,28 @@ class MarcheTool(AbstractMarcheTool):
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
         super(MarcheTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
+
+
+    def initTool(self):
+        # ****************************************************************************************
+        # Main spec
+        self.CAT = 'Gestion'
+        self.NAME = 'Marche'
+        self.dbasetablename = 'Marche'
+        self.visualmode = [ 1, 2]
+        # self.PointENABLED = True
+        # self.LineENABLED = True
+        # self.PolygonENABLED = True
+        # self.magicfunctionENABLED = True
+        self.linkagespec = {'Tcobjetintervenant' : {'tabletc' : 'Tcobjetintervenant',
+                                              'idsource' : 'id_objet',
+                                            'idtcsource' : 'id_tcobjet',
+                                           'iddest' : 'id_intervenant',
+                                           'idtcdest' : 'id_tcintervenant',
+                                           'desttable' : ['Intervenant']}
+                                            }
+        # self.pickTable = None
+        self.iconpath = os.path.join(os.path.dirname(__file__), '..', 'abstract','lamia_marche_tool_icon.png')
+        # ****************************************************************************************
+        #properties ui
+        pass

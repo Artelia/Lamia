@@ -38,6 +38,7 @@ class AbstractIntervenantTool(AbstractInspectionDigueTool):
                                            'desttable' : ['Infralineaire','Prestation']}
                                             }
         # self.pickTable = None
+        self.iconpath = os.path.join(os.path.dirname(__file__), 'lamia_intervenant_tool_icon.png')
         # ****************************************************************************************
         #properties ui
         pass

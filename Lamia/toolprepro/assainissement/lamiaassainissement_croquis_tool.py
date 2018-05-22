@@ -23,3 +23,28 @@ class CroquisTool(AbstractCroquisTool):
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None, parentwidget=None, parent=None):
         super(CroquisTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil, parentwidget, parent=parent)
+
+    def initTool(self):
+        # ****************************************************************************************
+        # Main spec
+        self.CAT = 'Ressources'
+        self.NAME = 'Croquis'
+        self.dbasetablename = 'Photo'
+        self.visualmode = [1, 2]
+        # self.PointENABLED = True
+        # self.LineENABLED = True
+        # self.PolygonEnabled = True
+        # self.magicfunctionENABLED = True
+        self.linkagespec = {'Tcobjetressource' : {'tabletc' : 'Tcobjetressource',
+                                              'idsource' : 'id_ressource',
+                                            'idtcsource' : 'id_tcressource',
+                                           'iddest' : 'id_objet',
+                                           'idtcdest' : 'id_tcobjet',
+                                           'desttable' : ['Profil','Infralineaire','Observation','Equipement']} }
+        # self.pickTable = None
+        self.iconpath = os.path.join(os.path.dirname(__file__), '..','abstract', 'lamia_croquis_tool_icon.png')
+
+
+        # ****************************************************************************************
+        #properties ui
+        pass

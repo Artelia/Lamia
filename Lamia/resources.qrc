@@ -16,5 +16,9 @@
         <file>icons/mActionCapturePolygon.svg</file>
         <file>icons/mActionAddNodesItem1.svg</file>
         <file>icons/mActionAddNodesItemGPS.svg</file>
+        <file>icons/numpad.png</file>
+        <file>icons/link.svg</file>
+        <file>icons/main.png</file>
+        <file>icons/eye2.svg</file>
     </qresource>
 </RCC>

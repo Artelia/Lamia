@@ -58,7 +58,7 @@ class GraphiqueTool(AbstractInspectionDigueTool):
                                            'idtcdest': None,
                                            'desttable': ['Marche']}}
         # self.pickTable = None
-
+        self.iconpath = os.path.join(os.path.dirname(__file__), 'lamia_graphique_tool_icon.png')
 
         # ****************************************************************************************
         #properties ui

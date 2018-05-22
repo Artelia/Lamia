@@ -7,8 +7,8 @@ try:
 except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget)
 from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
-from .lamiadigue_photos_tool import PhotosTool
-from .lamiadigue_croquis_tool import CroquisTool
+from .lamiaassainissement_photos_tool import PhotosTool
+from .lamiaassainissement_croquis_tool import CroquisTool
 import os
 import datetime
 
@@ -34,14 +34,14 @@ class EquipementTool(AbstractInspectionDigueTool):
         # self.PolygonENABLED = True
         # self.magicfunctionENABLED = True
         self.linkagespec = {'Equipement': {'tabletc': None,
-                                           'idsource': 'lk_equipement',
+                                           'idsource': 'lk_descriptionsystem',
                                            'idtcsource': None,
-                                           'iddest': 'id_equipement',
+                                           'iddest': 'id_descriptionsystem',
                                            'idtcdest': None,
-                                           'desttable': ['Equipement']}}
+                                           'desttable': ['Noeud','Infralineaire']}}
         # self.pickTable = None
         self.debug = False
-
+        self.iconpath = os.path.join(os.path.dirname(__file__), 'lamiaassainissement_equipement_tool_icon.svg')
 
         # ****************************************************************************************
         #properties ui
@@ -55,22 +55,14 @@ class EquipementTool(AbstractInspectionDigueTool):
             # userui
             self.userwdgfield = UserUI()
             self.linkuserwdgfield = {'Equipement' : {'linkfield' : 'id_equipement',
-                                             'widgets' : {'cote': self.userwdgfield.comboBox_cote,
-                                                          'position' : self.userwdgfield.comboBox_position,
-                                                          'categorie': self.userwdgfield.comboBox_cat,
-                                                          'typeequipement': self.userwdgfield.comboBox_type,
-                                                          'implantation': self.userwdgfield.comboBox_implantation,
-                                                          'ecoulement': self.userwdgfield.comboBox_ecoulement,
-                                                          'utilisation': self.userwdgfield.comboBox_utilisation,
-                                                          'dimverti': self.userwdgfield.doubleSpinBox_dimvert,
-                                                          'dimhori': self.userwdgfield.doubleSpinBox_dimhoriz,
-                                                          'securite' : self.userwdgfield.comboBox_securite,
-                                                          'commentaires': self.userwdgfield.textBrowser_comm}},
+                                             'widgets' : {'typeReseau': self.userwdgfield.comboBox_typeres,
+                                                          'typeAppAss' : self.userwdgfield.comboBox_typeapp,
+                                                          'commentaireequipement': self.userwdgfield.textBrowser_comm}},
                                 'Objet' : {'linkfield' : 'id_objet',
                                           'widgets' : {}},
                                 'Descriptionsystem' : {'linkfield' : 'id_descriptionsystem',
                                           'widgets' : {}}}
-            self.userwdgfield.comboBox_cat.currentIndexChanged.connect(self.changeCategorie)
+            #self.userwdgfield.comboBox_cat.currentIndexChanged.connect(self.changeCategorie)
             self.pushButton_addPoint.setEnabled(False)
             self.pushButton_addLine.setEnabled(False)
 
@@ -84,7 +76,7 @@ class EquipementTool(AbstractInspectionDigueTool):
             self.propertieswdgCROQUIS = CroquisTool(dbase=self.dbase, parentwidget=self)
             self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
-            if self.parentWidget is None:
+            if False and self.parentWidget is None:
                 #parentwdg = self.dbase.dbasetables['Equipement']['widget']
                 self.propertieswdgEQUIPEMENT = EquipementTool(dbase=self.dbase, parentwidget=self)
                 self.dbasechildwdgfield.append(self.propertieswdgEQUIPEMENT)
@@ -121,7 +113,17 @@ class EquipementTool(AbstractInspectionDigueTool):
 
 
     def postInitFeatureProperties(self, feat):
-        pass
+        if feat is None and self.comboBox_featurelist.currentText() == self.newentrytext :
+            if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
+                if self.parentWidget.dbasetablename == 'Noeud':
+                    # get geom
+                    noeudfet = self.dbase.getLayerFeatureById('Noeud', self.parentWidget.currentFeature.id())
+                    neudfetgeom = noeudfet.geometry().asPoint()
+                    self.createorresetRubberband(1)
+                    self.setTempGeometry([neudfetgeom],False)
+
+
+
 
     def createParentFeature(self):
         datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
@@ -144,11 +146,12 @@ class EquipementTool(AbstractInspectionDigueTool):
         self.dbase.commit()
 
         if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
-            if self.parentWidget.dbasetablename == 'Equipement':
-                currentparentlinkfield = self.parentWidget.currentFeature['id_equipement']
-                sql = "UPDATE Equipement SET lk_equipement = " + str(currentparentlinkfield) + " WHERE id_equipement = " + str(idreseaulin)
+            if self.parentWidget.dbasetablename == 'Noeud':
+                currentparentlinkfield = self.parentWidget.currentFeature['id_descriptionsystem']
+                sql = "UPDATE Equipement SET lk_descriptionsystem = " + str(currentparentlinkfield) + " WHERE id_equipement = " + str(idreseaulin)
                 self.dbase.query(sql)
                 self.dbase.commit()
+
 
 
     def postSaveFeature(self, boolnewfeature):

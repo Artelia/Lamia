@@ -18,12 +18,18 @@ Eaux usees;               USE
 Unitaire;                 UNI
 ###typeAppAss;             INT ;                     INTEGER 
 /;
-Point de branchement;       01
-Ventouse;                   02
-Vanne;                      03
-Debitmetre;                 04
-Autre;                      00
+Point de branchement;       1
+Ventouse;                   2
+Vanne;                      3
+Debitmetre;                 4
+Chasse d eau;               5
+Dessableur;                 6
+Deversoir;                  7
+Siphon;                     8
+Autre;                      0
 Indetermine;                99
 ###lk_cana1;        INT ;                       INTEGER;                            Infralineaire(id_infralineaire)
 ###lk_cana2;        INT ;                       INTEGER;                            Infralineaire(id_infralineaire)
+###lk_descriptionsystem;        INT ;                       INTEGER;                 Descriptionsystem(id_descriptionsystem)
+###commentaireequipement;    VARCHAR(255);            TEXT
 ###geom;                POINT

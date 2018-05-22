@@ -39,6 +39,8 @@ class AbstractCroquisTool(AbstractInspectionDigueTool):
                                            'idtcdest' : 'id_tcobjet',
                                            'desttable' : ['Profil','Infralineaire','Observation','Equipement']} }
         # self.pickTable = None
+        self.iconpath = os.path.join(os.path.dirname(__file__), 'lamia_croquis_tool_icon.png')
+
 
         # ****************************************************************************************
         #properties ui

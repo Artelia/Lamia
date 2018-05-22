@@ -7,12 +7,12 @@ from qgis.PyQt import uic, QtCore, QtGui
 
 try:
     from qgis.PyQt.QtGui import (QWidget, QTreeWidgetItem, QMessageBox, QFileDialog, QTableWidget,
-                                 QHeaderView, QComboBox, QSpinBox, QPushButton, QDateEdit, QTextEdit,
+                                 QHeaderView, QComboBox, QSpinBox, QCheckBox, QPushButton, QDateEdit, QTextEdit,
                                  QDoubleSpinBox, QDialog, QVBoxLayout, QTreeWidget, QLineEdit, QCheckBox,
                                  QLabel, QMessageBox, QTextBrowser, QTableWidgetItem)
 except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget, QTreeWidgetItem, QMessageBox, QFileDialog, QTableWidget,
-                                     QHeaderView, QComboBox, QSpinBox, QPushButton, QDateEdit, QTextEdit,
+                                     QHeaderView, QComboBox, QSpinBox,QCheckBox, QPushButton, QDateEdit, QTextEdit,
                                      QDoubleSpinBox, QDialog, QVBoxLayout, QTreeWidget, QLineEdit, QCheckBox,
                                      QLabel, QMessageBox, QTextBrowser, QTableWidgetItem)
 import os
@@ -34,6 +34,7 @@ class AbstractInspectionDigueTool(QWidget):
 
     saveFeatureSignal = QtCore.pyqtSignal()
     currentFeatureChanged = QtCore.pyqtSignal()
+    lamiageomChanged = QtCore.pyqtSignal()
 
     def __init__(self, dbase=None, dialog=None, linkedtreewidget=None, gpsutil=None, parentwidget=None, parent=None):
         """
@@ -48,6 +49,8 @@ class AbstractInspectionDigueTool(QWidget):
         if debugtime: logging.getLogger('Lamia').debug('Start init %.3f', time.clock() - timestart)
 
         super(AbstractInspectionDigueTool, self).__init__(parent)
+        # QWidget.__init__(self)
+
         uipath = os.path.join(os.path.dirname(__file__), '..', 'dialog', 'InspectionDigue_propertieswidget.ui')
         uic.loadUi(uipath, self)
 
@@ -495,7 +498,7 @@ class AbstractInspectionDigueTool(QWidget):
                                 wdg = QPushButton('Open')
                                 self.tableWidget.setCellWidget(rowPosition, 3, wdg)
                                 wdg.clicked.connect(self.rawtablePushButtonClicked)
-                    elif 'REAL' in dbasetable['fields'][field]['SLtype']:
+                    elif 'DECIMAL' in dbasetable['fields'][field]['SLtype']:
                         wdg = QDoubleSpinBox()
                         wdg.setRange(-1, 9999999)
                         self.tableWidget.setCellWidget(rowPosition, 1, wdg)
@@ -849,7 +852,9 @@ class AbstractInspectionDigueTool(QWidget):
             if True:
                 for childwdg in self.dbasechildwdg:
                     if childwdg.NAME is not None:
-                        self.windowdialog.tabWidget_childs.addTab(childwdg, childwdg.NAME)
+                        self.windowdialog.tabWidget_childs.addTab(childwdg, QtGui.QIcon(childwdg.iconpath), childwdg.NAME)
+                        #self.windowdialog.tabWidget_childs.widget(-1).setIcon(childwdg.iconpath)
+
             else:
                 for childwdgname in self.dbasechildwdg.keys():
                     chldwdg = self.getDBaseChildWidget(childwdgname)
@@ -1418,6 +1423,7 @@ class AbstractInspectionDigueTool(QWidget):
 
     def setValueInWidget(self, wdg, valuetoset, table, field):
 
+
         """
         if isinstance(feat, qgis.core.QgsFeature):
             valuetoset = feat[field]
@@ -1425,7 +1431,7 @@ class AbstractInspectionDigueTool(QWidget):
             valuetoset = feat
         """
 
-        # print('setValueInWidget', field,valuetoset , type(valuetoset))
+        # print('setValueInWidget',table, field,valuetoset , type(valuetoset))
 
         if isinstance(wdg, QTextEdit) or isinstance(wdg, QLineEdit):
             # if valuetoset is not None and valuetoset is not None and not isinstance(valuetoset, QtCore.QPyNullVariant):
@@ -1544,6 +1550,7 @@ class AbstractInspectionDigueTool(QWidget):
                     self.currentFeature.setGeometry(self.tempgeometry)
                     pass
 
+            # print(self.dbasetablename, self.currentFeature.id(),self.currentFeature.geometry().exportToWkt() )
             # print(self.currentFeature.geometry().exportToWkt())
             self.currentFeature = self.saveTableFeature(self.dbasetablename, self.currentFeature)
             # print('curfeat1', self.currentFeature.id())
@@ -1638,7 +1645,7 @@ class AbstractInspectionDigueTool(QWidget):
             self.tempgeometry = None
             self.savingnewfeature = False
             self.canvas.freeze(False)
-            # self.canvas.refresh()
+            self.canvas.refresh()
             self.dbasetable['layerqgis'].triggerRepaint()
             # self.linkageids = None
 
@@ -1682,7 +1689,7 @@ class AbstractInspectionDigueTool(QWidget):
                 self.windowdialog.normalMessage('Objet sauvegarde : ' + str(self.currentFeature))
             self.savingnewfeature = False
             self.canvas.freeze(False)
-
+            self.canvas.refresh()
             #self.recentDBaseChanged.emit()
 
 
@@ -1692,7 +1699,7 @@ class AbstractInspectionDigueTool(QWidget):
         # print('addedFeatureid', feat.id())
         if feat.id() == 0:  # new feature
             # self.addedFeatureid = None
-            dbasetablelayer.addFeature(feat)
+            success = dbasetablelayer.addFeature(feat)
         success = dbasetablelayer.updateFeature(feat)
 
         self.addedFeatureid = None
@@ -1784,6 +1791,11 @@ class AbstractInspectionDigueTool(QWidget):
         if 'Cst' in self.dbase.dbasetables[tablename]['fields'][fieldname].keys():
             # fieldvaluetosave = self._getConstraintRawValueFromText(tablename,fieldname, wdg.currentText())
             fieldvaluetosave = self.dbase.getConstraintRawValueFromText(tablename, fieldname, wdg.currentText())
+            if False:
+                if isinstance(wdg, QComboBox):
+                    fieldvaluetosave = self.dbase.getConstraintRawValueFromText(tablename, fieldname, wdg.currentText())
+                elif isinstance(wdg, QCheckBox):
+                    fieldvaluetosave = int(wdg.isChecked())
 
             if False:
                 try:
@@ -1887,22 +1899,40 @@ class AbstractInspectionDigueTool(QWidget):
             return
         type = self.dbasetable['layer'].geometryType()
 
-        if self.rubberBand is not None:
-            self.rubberBand.reset(type)
-        else:
-            self.rubberBand = qgis.gui.QgsRubberBand(self.canvas,type)
-        self.rubberBand.setWidth(5)
-        self.rubberBand.setColor(QtGui.QColor("magenta"))
+        if False:
+            if self.rubberBand is not None:
+                self.rubberBand.reset(type)
+            else:
+                self.rubberBand = qgis.gui.QgsRubberBand(self.canvas,type)
+            self.rubberBand.setWidth(5)
+            self.rubberBand.setColor(QtGui.QColor("magenta"))
+
+        if False:
+            if self.rubberBand is not None:
+                self.rubberBand.reset(type)
+            else:
+                self.rubberBand = qgis.gui.QgsRubberBand(self.canvas,type)
+            self.rubberBand.setWidth(5)
+            self.rubberBand.setColor(QtGui.QColor("magenta"))
+
+        self.createorresetRubberband(type)
+
 
         # xform = qgis.core.QgsCoordinateTransform(self.dbase.qgiscrs, self.canvas.mapSettings().destinationCrs())
-        gpspoint = self.gpsutil.currentpoint
-        mappoint = self.gpsutil.currentpoint
-        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-            success = qgis.core.QgsGeometry.fromPoint(mappoint).transform(self.dbase.xform)
-        else:
-            success = qgis.core.QgsGeometry.fromPointXY(mappoint).transform(self.dbase.xform)
+        #gpspoint = self.gpsutil.currentpoint
+        # mappoint = self.gpsutil.currentpoint
+        layerpoint = self.gpsutil.currentpoint
 
+        # print('1', layerpoint)
 
+        if False:
+
+            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                success = qgis.core.QgsGeometry.fromPoint(layerpoint).transform(self.dbase.xform)
+            else:
+                success = qgis.core.QgsGeometry.fromPointXY(layerpoint).transform(self.dbase.xform)
+
+        # print('2', layerpoint)
 
         # success = qgis.core.QgsGeometry.fromPoint(mappoint).transform(self.dbase.xformreverse)
         # print(qgis.core.QgsGeometry.fromPoint(mappoint).exportToWkt() )
@@ -1910,7 +1940,7 @@ class AbstractInspectionDigueTool(QWidget):
        # mappoint =  mappoint.asPoint()
 
         if type == 0 :       # POINT
-            self.setTempGeometry([mappoint])
+            self.setTempGeometry([layerpoint],False)
 
         elif type == 1:      # LINE
             geom = None
@@ -1923,35 +1953,63 @@ class AbstractInspectionDigueTool(QWidget):
                 # success = geom.transform(xform)
                 # success = geom.transform(self.dbase.xform)
                 geompoly = geom.asPolyline()
-                geompoly.append(mappoint)
-                self.setTempGeometry(geompoly)
+                geompoly.append(layerpoint)
+                self.setTempGeometry(geompoly,False)
             else:
                 if self.tempgeometry is None:
-                    self.setTempGeometry([mappoint,mappoint])
+                    self.setTempGeometry([layerpoint,layerpoint],False)
                 else:
                     geompoly = self.tempgeometry.asMultiPolyline()[0]
                     if geompoly[0] == geompoly[1]:
                         del geompoly[0]
-                    geompoly.append(mappoint)
-                    self.setTempGeometry(geompoly)
+                    geompoly.append(layerpoint)
+                    self.setTempGeometry(geompoly,False)
 
     def addPoint(self):
         # print('addPoint')
         type = self.dbasetable['layer'].geometryType()
 
-        if self.rubberBand is not None:
-            self.rubberBand.reset(type)
-        else:
-            self.rubberBand = qgis.gui.QgsRubberBand(self.canvas,type)
-        self.rubberBand.setWidth(5)
-        self.rubberBand.setColor(QtGui.QColor("magenta"))
+        if False:
+            if self.rubberBand is not None:
+                self.rubberBand.reset(type)
+            else:
+                self.rubberBand = qgis.gui.QgsRubberBand(self.canvas,type)
+            self.rubberBand.setWidth(5)
+            self.rubberBand.setColor(QtGui.QColor("magenta"))
+
+        if False:
+            if self.rubberBand is not None:
+                self.rubberBand.reset(type)
+            else:
+                self.rubberBand = qgis.gui.QgsRubberBand(self.canvas,type)
+            self.rubberBand.setWidth(5)
+            self.rubberBand.setColor(QtGui.QColor("magenta"))
+
+        self.createorresetRubberband(type)
+
+
 
         if type == 1:      # LINE
-            initialgeom = self.currentFeature.geometry().asPolyline()
+            if False:
+                initialgeom = self.currentFeature.geometry().asPolyline()
+            if True:
+                # get the geometry before editing
+                initialgeom = []
+                if self.tempgeometry is not None:
+                    if len(self.tempgeometry.asPolyline()) > 0:
+                        initialgeom = self.tempgeometry.asPolyline()
+                    else:
+                        initialgeom = self.tempgeometry.asMultiPolyline()[0]
+                elif self.currentFeature is not None and self.tempgeometry is None:
+                    initialgeom = self.currentFeature.geometry().asPolyline()
+
             # print(initialgeom)
             mapgeometry = []
             for point in initialgeom:
-                mapgeometry.append(self.dbase.xform.transform(point))
+                if self.dbase.qgsiface is None: #bug for standalone
+                    mapgeometry = initialgeom
+                else:
+                    mapgeometry.append(self.dbase.xform.transform(point))
 
             self.captureGeometry(listpointinitialgeometry=mapgeometry, type=1)
 
@@ -1984,12 +2042,15 @@ class AbstractInspectionDigueTool(QWidget):
         # self.actuallayerindex = self.dbaseused['type'].index(typename)
 
         # rubberband things
-        if self.rubberBand is not None:
-            self.rubberBand.reset(type)
-        else:
-            self.rubberBand = qgis.gui.QgsRubberBand(self.canvas,type)
-        self.rubberBand.setWidth(5)
-        self.rubberBand.setColor(QtGui.QColor("magenta"))
+        if False:
+            if self.rubberBand is not None:
+                self.rubberBand.reset(type)
+            else:
+                self.rubberBand = qgis.gui.QgsRubberBand(self.canvas,type)
+            self.rubberBand.setWidth(5)
+            self.rubberBand.setColor(QtGui.QColor("magenta"))
+
+        self.createorresetRubberband(type)
 
         if False:
 
@@ -2053,9 +2114,23 @@ class AbstractInspectionDigueTool(QWidget):
             self.currentmaptool.startCapturing()
 
 
+    def createorresetRubberband(self,type=0):
+        if self.rubberBand is not None:
+            self.rubberBand.reset(type)
+        else:
+            self.rubberBand = qgis.gui.QgsRubberBand(self.canvas,type)
+        self.rubberBand.setWidth(5)
+        self.rubberBand.setColor(QtGui.QColor("magenta"))
 
-    def setTempGeometry(self, points):
-        #print('setTempGeometry',points)
+
+
+    def setTempGeometry(self, points, comefromcanvas=True):
+
+        debug = False
+
+        if debug: logging.getLogger("Lamia").debug('start points : %s', points)
+
+
 
         if self.currentmaptool is not None:
             try:
@@ -2071,14 +2146,41 @@ class AbstractInspectionDigueTool(QWidget):
             self.rubberBand.reset(0)
             type = 0.5
 
+
         if self.dbase.qgsiface is None: #for stadalone app bug
             for point in points:
                 pointsmapcanvas.append(self.dbase.xform.transform(point))
             pointslayer = points
         else:
-            pointsmapcanvas = points
-            for point in points:
-                pointslayer.append(self.dbase.xformreverse.transform(point))
+            if comefromcanvas:
+                pointsmapcanvas = points
+                for point in points:
+                    pointslayer.append(self.dbase.xformreverse.transform(point))
+            else:
+                pointslayer = points
+                for point in points:
+                    pointsmapcanvas.append(self.dbase.xform.transform(point))
+
+        if False:
+            if comefromcanvas:
+                if self.dbase.qgsiface is None: #for stadalone app bug
+                    for point in points:
+                        pointsmapcanvas.append(self.dbase.xform.transform(point))
+                    pointslayer = points
+                else:
+                    pointsmapcanvas = points
+                    for point in points:
+                        pointslayer.append(self.dbase.xformreverse.transform(point))
+            else:
+                if self.dbase.qgsiface is None: #for stadalone app bug
+                    for point in points:
+                        pointsmapcanvas.append(self.dbase.xform.transform(point))
+                    pointslayer = points
+                else:
+                    pointslayer = points
+                    for point in points:
+                        pointsmapcanvas.append(self.dbase.xform.transform(point))
+
 
         #self.currentmaptool.mappoints = []
         #print('pointslayer',pointslayer)
@@ -2111,12 +2213,19 @@ class AbstractInspectionDigueTool(QWidget):
                 geometryformap = qgis.core.QgsGeometry.fromPolygonXY([pointsmapcanvas])
                 geometryforlayer = qgis.core.QgsGeometry.fromPolygonXY([pointslayer])
 
+        #outside qgis bug
+        if self.dbase.qgsiface is None:
+            self.rubberBand.addGeometry(geometryforlayer, None)
+        else:
+            self.rubberBand.addGeometry(geometryformap, None)
 
-
-        self.rubberBand.addGeometry(geometryformap, None)
         self.rubberBand.show()
         self.tempgeometry = geometryforlayer
+        self.lamiageomChanged.emit()
 
+        if debug: logging.getLogger("Lamia").debug('end layer points : %s', pointslayer)
+        if debug: logging.getLogger("Lamia").debug('end canvas points : %s', pointsmapcanvas)
+        if debug: logging.getLogger("Lamia").debug('end tempgeom : %s', self.tempgeometry.exportToWkt())
 
         self.mtool = None
 
