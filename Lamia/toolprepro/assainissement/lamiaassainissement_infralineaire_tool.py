@@ -174,22 +174,35 @@ class InfraLineaireTool(AbstractInfraLineaireTool):
 
         if debug: logging.getLogger("Lamia").debug('edit mode %s', str(editingnode))
 
-        nearestnodeid, distance  = self.dbase.getNearestId(self.dbase.dbasetables['Noeud'],
-                                              'Noeud',
-                                              point)
+        if self.userwdgfield.comboBox_branch.currentText()=='Faux' or editingnode == 1:
+            nearestnodeid, distance  = self.dbase.getNearestId(self.dbase.dbasetables['Noeud'],
+                                                  'Noeud',
+                                                  point)
+            nearestnodefet = self.dbase.getLayerFeatureById('Noeud', nearestnodeid)
+            nearestnodepoint = nearestnodefet.geometry().asPoint()
+        else:
+            nearestnodeid, distance  = self.dbase.getNearestId(self.dbase.dbasetables['Infralineaire'],
+                                                  'Infralineaire',
+                                                  point)
+            nearestnodefet = self.dbase.getLayerFeatureById('Infralineaire', nearestnodeid)
+            nearestnodepoint = nearestnodefet.geometry().nearestPoint(qgis.core.QgsGeometry.fromPoint(point)).asPoint()
+
+        nearestnodeiddessys = nearestnodefet['id_descriptionsystem']
 
         if debug: logging.getLogger("Lamia").debug('id,dist  %s %s', str(nearestnodeid), str(distance))
 
-        nearestnodefet = self.dbase.getLayerFeatureById('Noeud', nearestnodeid)
-        nearestnodepoint = nearestnodefet.geometry().asPoint()
+        #nearestnodefet = self.dbase.getLayerFeatureById('Noeud', nearestnodeid)
+        #nearestnodepoint = nearestnodefet.geometry().asPoint()
 
         if debug: logging.getLogger("Lamia").debug('id  %s', str(nearestnodepoint) )
 
         #gui things
         if editingnode == 1:
-            self.userwdgfield.spinBox_lk_noeud1.setValue(nearestnodeid)
+            #self.userwdgfield.spinBox_lk_noeud1.setValue(nearestnodeid)
+            self.userwdgfield.spinBox_lk_noeud1.setValue(nearestnodeiddessys)
         elif editingnode == 2:
-            self.userwdgfield.spinBox_lk_noeud2.setValue(nearestnodeid)
+            #self.userwdgfield.spinBox_lk_noeud2.setValue(nearestnodeid)
+            self.userwdgfield.spinBox_lk_noeud2.setValue(nearestnodeiddessys)
 
         # get the geometry before editing
         tempgeom=[]
@@ -317,54 +330,86 @@ class InfraLineaireTool(AbstractInfraLineaireTool):
         if True:
             indexnode1 = self.userwdgfield.spinBox_lk_noeud1.value()
             if indexnode1 > -1 :
-                nearestnodefet1 = self.dbase.getLayerFeatureById('Noeud', indexnode1)
-                nearestnodepoint1 = nearestnodefet1.geometry().asPoint()
-                print('indexnode1',indexnode1,nearestnodepoint1)
+                sql = "SELECT id_noeud FROM Noeud WHERE id_descriptionsystem = " + str(indexnode1)
+                query = self.dbase.query(sql)
+                ids = [row for row in query]
+                # print(sql,ids )
+                if len(ids) == 1:
+                    iddessys = ids[0][0]
+                    nearestnodefet1 = self.dbase.getLayerFeatureById('Noeud', iddessys)
+                    nearestnodepoint1 = nearestnodefet1.geometry().asPoint()
+                    # print('indexnode1',iddessys,nearestnodepoint1)
 
-                #if nearestnodepoint1 != fetgeom[0] :
-                if not self.dbase.areNodesEquals(fetgeom[0], nearestnodepoint1):
-                    # if nearestnodepoint1 == fetgeom[-1] :
-                    if self.dbase.areNodesEquals(fetgeom[-1], nearestnodepoint1):
-                        fetgeom = fetgeom[::-1]
-                        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                            newgeom = qgis.core.QgsGeometry.fromPolyline(fetgeom)
+                    #if nearestnodepoint1 != fetgeom[0] :
+                    if not self.dbase.areNodesEquals(fetgeom[0], nearestnodepoint1):
+                        # print('areNodesEquals')
+                        # if nearestnodepoint1 == fetgeom[-1] :
+                        if self.dbase.areNodesEquals(fetgeom[-1], nearestnodepoint1):
+                            fetgeom = fetgeom[::-1]
+                            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                                newgeom = qgis.core.QgsGeometry.fromPolyline(fetgeom)
+                            else:
+                                newgeom = qgis.core.QgsGeometry.fromPolylineXY(fetgeom)
+                            dbasetablelayer = self.dbase.dbasetables['Infralineaire']['layer']
+                            dbasetablelayer.startEditing()
+                            success = dbasetablelayer.changeGeometry(self.currentFeature.id(), newgeom)
+                            dbasetablelayer.commitChanges()
                         else:
-                            newgeom = qgis.core.QgsGeometry.fromPolylineXY(fetgeom)
-                        dbasetablelayer = self.dbase.dbasetables['Infralineaire']['layer']
-                        dbasetablelayer.startEditing()
-                        success = dbasetablelayer.changeGeometry(self.currentFeature.id(), newgeom)
-                        dbasetablelayer.commitChanges()
-                    else:
-                        self.userwdgfield.spinBox_lk_noeud1.setValue(-1)
-                        self.saveFeatureProperties()
+                            self.userwdgfield.spinBox_lk_noeud1.setValue(-1)
+                            self.saveFeatureProperties()
 
 
             indexnode2 = self.userwdgfield.spinBox_lk_noeud2.value()
+            # print(self.userwdgfield.comboBox_branch.currentText(), self.userwdgfield.spinBox_lk_noeud2.value())
             if indexnode2 > -1:
-                nearestnodefet2 = self.dbase.getLayerFeatureById('Noeud', indexnode2)
-                nearestnodepoint2 = nearestnodefet2.geometry().asPoint()
-                print('indexnode2', indexnode2, nearestnodepoint2)
-                #print(nearestnodepoint2,fetgeom[0], fetgeom[0] ==  nearestnodepoint2)
-                # print(self.dbase.areNodesEquals(fetgeom[0],nearestnodepoint2 ))
+                if self.userwdgfield.comboBox_branch.currentText() == 'Faux':
+                    sql = "SELECT id_noeud FROM Noeud WHERE id_descriptionsystem = " + str(indexnode2)
+                    query = self.dbase.query(sql)
+                    ids = [row for row in query]
+                    # print(sql,ids )
+                    if len(ids) == 1:
+                        iddessys = ids[0][0]
+                        nearestnodefet2 = self.dbase.getLayerFeatureById('Noeud', iddessys)
+                        nearestnodepoint2 = nearestnodefet2.geometry().asPoint()
+                        # print('indexnode2', iddessys, nearestnodepoint2)
+                        #print(nearestnodepoint2,fetgeom[0], fetgeom[0] ==  nearestnodepoint2)
+                        # print(self.dbase.areNodesEquals(fetgeom[0],nearestnodepoint2 ))
 
-                #if nearestnodepoint2 != fetgeom[-1]:
-                if not self.dbase.areNodesEquals(fetgeom[-1], nearestnodepoint2):
-                    #if nearestnodepoint2 == fetgeom[0] :
-                    if self.dbase.areNodesEquals(fetgeom[0],nearestnodepoint2 ):
-                        # print('av', fetgeom)
-                        fetgeom = fetgeom[::-1]
-                        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                            newgeom = qgis.core.QgsGeometry.fromPolyline(fetgeom)
-                        else:
-                            newgeom = qgis.core.QgsGeometry.fromPolylineXY(fetgeom)
-                        dbasetablelayer = self.dbase.dbasetables['Infralineaire']['layer']
-                        dbasetablelayer.startEditing()
-                        success = dbasetablelayer.changeGeometry(self.currentFeature.id(), newgeom)
-                        dbasetablelayer.commitChanges()
-                        # print('av', self.currentFeature.geometry().asPolyline())
-                    else:
-                        self.userwdgfield.spinBox_lk_noeud2.setValue(-1)
-                        self.saveFeatureProperties()
+                        #if nearestnodepoint2 != fetgeom[-1]:
+                        if not self.dbase.areNodesEquals(fetgeom[-1], nearestnodepoint2):
+                            #if nearestnodepoint2 == fetgeom[0] :
+                            if self.dbase.areNodesEquals(fetgeom[0],nearestnodepoint2 ):
+                                # print('av', fetgeom)
+                                fetgeom = fetgeom[::-1]
+                                if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                                    newgeom = qgis.core.QgsGeometry.fromPolyline(fetgeom)
+                                else:
+                                    newgeom = qgis.core.QgsGeometry.fromPolylineXY(fetgeom)
+                                dbasetablelayer = self.dbase.dbasetables['Infralineaire']['layer']
+                                dbasetablelayer.startEditing()
+                                success = dbasetablelayer.changeGeometry(self.currentFeature.id(), newgeom)
+                                dbasetablelayer.commitChanges()
+                                # print('av', self.currentFeature.geometry().asPolyline())
+                            else:
+                                self.userwdgfield.spinBox_lk_noeud2.setValue(-1)
+                                self.saveFeatureProperties()
+
+                else:
+                    sql = "SELECT id_infralineaire FROM Infralineaire WHERE id_descriptionsystem = " + str(indexnode2)
+                    query = self.dbase.query(sql)
+                    ids = [row for row in query]
+                    # print(sql,ids )
+                    if len(ids) == 1:
+                        iddessys = ids[0][0]
+                        nearestnodefet2 = self.dbase.getLayerFeatureById('Infralineaire', iddessys)
+                        nearestnodepoint2 = nearestnodefet2.geometry()
+                        # print('indexnode2', iddessys, nearestnodepoint2)
+                        # print(nearestnodepoint2.exportToWkt(), self.currentFeature.geometry().exportToWkt())
+                        resultintersect = nearestnodepoint2.buffer(0.01,12).intersects(self.currentFeature.geometry())
+                        # print('resultintersect',resultintersect)
+                        if not resultintersect:
+                            self.userwdgfield.spinBox_lk_noeud2.setValue(-1)
+                            self.saveFeatureProperties()
 
 
 

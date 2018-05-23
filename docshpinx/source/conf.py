@@ -55,9 +55,9 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Inspection digues'
-copyright = u'2017, PVr'
-author = u'PVr'
+project = u'LAMIA'
+copyright = u'2018, Artelia'
+author = u'PVR'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -122,8 +122,8 @@ html_sidebars = {
 }
 
 # -- Mock ------------------------------------------
+#autodoc_mock_imports = ["qgis","Lamia.dialog"]
 autodoc_mock_imports = ["qgis"]
-
 
 # -- Options for HTMLHelp output ------------------------------------------
 

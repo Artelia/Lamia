@@ -37,7 +37,7 @@ class AbstractZonegeoTool(AbstractInspectionDigueTool):
                                            'desttable' : ['Infralineaire']}}
         # self.pickTable = None
         self.iconpath = os.path.join(os.path.dirname(__file__), 'lamia_zonegeo_tool_icon.svg')
-
+        self.qtreewidgetfields = ['nom']
         # ****************************************************************************************
         #properties ui
         pass

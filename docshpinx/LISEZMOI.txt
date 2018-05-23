@@ -1,0 +1,6 @@
+lancer makehtml.bat depuis le shell osgeo4w
+
+le fichier de conf est dans \source\conf.py
+
+pour autodocumenter une classe:
+1 mettre from "classe" import * dans le __init__.py du module

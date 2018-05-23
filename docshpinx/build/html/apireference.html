@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>API Reference &mdash; documentation Inspection digues 1.0</title>
+  <title>API Reference &mdash; documentation LAMIA 1.0</title>
   
 
   
@@ -35,8 +35,8 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Recherche" href="search.html"/>
-    <link rel="top" title="documentation Inspection digues 1.0" href="index.html"/>
-        <link rel="prev" title="Introduction" href="introduction.html"/> 
+    <link rel="top" title="documentation LAMIA 1.0" href="index.html"/>
+        <link rel="prev" title="Tutoriel" href="tutoriel.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -55,7 +55,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> Inspection digues
+            <a href="index.html" class="icon icon-home"> LAMIA
           
 
           
@@ -91,7 +91,9 @@
             
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul class="simple">
+<li class="toctree-l1"><a class="reference internal" href="tutoriel.html">Tutoriel</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-Lamia">Lancement de Lamia</a></li>
 </ul>
 </li>
 </ul>
@@ -108,7 +110,7 @@
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">Inspection digues</a>
+          <a href="index.html">LAMIA</a>
         
       </nav>
 
@@ -162,62 +164,15 @@
 <p>Contents:</p>
 <div class="toctree-wrapper compound">
 </div>
-<span class="target" id="module-src"></span><p>MainModule core</p>
-<dl class="class">
-<dt id="src.InspectionDigue">
-<em class="property">class </em><code class="descclassname">src.</code><code class="descname">InspectionDigue</code><span class="sig-paren">(</span><em>iface</em><span class="sig-paren">)</span><a class="headerlink" href="#src.InspectionDigue" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>QGIS Plugin Implementation</p>
-<p>aussi</p>
-<dl class="method">
-<dt id="src.InspectionDigue.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>iface</em><span class="sig-paren">)</span><a class="headerlink" href="#src.InspectionDigue.__init__" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>blblblb
-:param iface &lt;String&gt; : An interface instance that will be passed to this class
-:return Bool Return somethong</p>
-</dd></dl>
+<div class="section" id="module-Lamia">
+<span id="lancement-de-lamia"></span><h2>Lancement de Lamia<a class="headerlink" href="#module-Lamia" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Used by autodoc_mock_imports.</p>
+<dl class="attribute">
+<dt id="Lamia.Lamia">
+<code class="descclassname">Lamia.</code><code class="descname">Lamia</code><a class="headerlink" href="#Lamia.Lamia" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
 
-<dl class="method">
-<dt id="src.InspectionDigue.add_action">
-<code class="descname">add_action</code><span class="sig-paren">(</span><em>icon_path</em>, <em>text</em>, <em>callback</em>, <em>enabled_flag=True</em>, <em>add_to_menu=True</em>, <em>add_to_toolbar=True</em>, <em>status_tip=None</em>, <em>whats_this=None</em>, <em>parent=None</em><span class="sig-paren">)</span><a class="headerlink" href="#src.InspectionDigue.add_action" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>Add a toolbar icon to the toolbar.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.InspectionDigue.initGui">
-<code class="descname">initGui</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.InspectionDigue.initGui" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>Create the menu entries and toolbar icons inside the QGIS GUI</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.InspectionDigue.onClosePlugin">
-<code class="descname">onClosePlugin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.InspectionDigue.onClosePlugin" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>Cleanup necessary items here when plugin dockwidget is closed</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.InspectionDigue.run">
-<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.InspectionDigue.run" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>Run method that loads and starts the plugin</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.InspectionDigue.tr">
-<code class="descname">tr</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="headerlink" href="#src.InspectionDigue.tr" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>Get the translation for a string using Qt translation API.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>message (str): We all know what foo does.</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.InspectionDigue.unload">
-<code class="descname">unload</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.InspectionDigue.unload" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>Removes the plugin menu item and icon from QGIS GUI.</p>
-</dd></dl>
-
-</dd></dl>
-
+</div>
 </div>
 
 
@@ -231,7 +186,7 @@
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="introduction.html" class="btn btn-neutral" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="tutoriel.html" class="btn btn-neutral" title="Tutoriel" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -240,7 +195,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, PVr.
+        &copy; Copyright 2018, Artelia.
 
     </p>
   </div>

@@ -31,6 +31,12 @@ debugtime = False
 
 
 class AbstractInspectionDigueTool(QWidget):
+    """
+    AbstractInspectionDigueTool
+
+    aussi
+    """
+
 
     saveFeatureSignal = QtCore.pyqtSignal()
     currentFeatureChanged = QtCore.pyqtSignal()

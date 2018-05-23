@@ -1,6 +1,6 @@
 Contents:
  
-Welcome to the documentation for DataBase Lineat Struct
+Welcome to the documentation Lamia
 =======================================================
 
 Contents:
@@ -9,6 +9,7 @@ Contents:
     :maxdepth: 2
 
     introduction
+    tutoriel
     apireference
  
 Indices and tables

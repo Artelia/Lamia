@@ -86,7 +86,7 @@ Indetermine;        99
 ###altAval;             REAL;                     DECIMAL
 ###profamont;             REAL;                     DECIMAL
 ###profaval;             REAL;                     DECIMAL
-###lk_noeud1;        INT ;                       INTEGER;                            Noeud(id_noeud)
-###lk_noeud2;        INT ;                       INTEGER;                            Noeud(id_noeud)
+###lk_noeud1;        INT ;                       INTEGER;                            Descriptionsystem(id_descriptionsystem)
+###lk_noeud2;        INT ;                       INTEGER;                            Descriptionsystem(id_descriptionsystem)
 ###infracommentaire;                VARCHAR(255);            TEXT
 ###geom;                LINESTRING

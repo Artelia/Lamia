@@ -6,12 +6,14 @@ Contents:
 .. toctree::
     :maxdepth: 2
 
+Lancement de Lamia
+------------------
 
+.. automodule::  Lamia
 
-.. automodule::  src
-
-.. autoclass:: src.InspectionDigue
+.. autoclass:: Lamia.Lamia
    :members: 
    :special-members:
-
+   
+   
 

@@ -188,9 +188,11 @@ class NoeudTool(AbstractNoeudTool):
         #adapt linked infralin geoemtry
         if self.currentFeature is not None:
             nodeid = self.currentFeature.id()
+            nodedesys = self.currentFeature['id_descriptionsystem']
             nodegeom = self.currentFeature.geometry().asPoint()
+            movebranchement = False
 
-            sql = "SELECT id_infralineaire, lk_noeud1 FROM Infralineaire WHERE lk_noeud1 = " + str(nodeid)
+            sql = "SELECT id_infralineaire, lk_noeud1 FROM Infralineaire WHERE lk_noeud1 = " + str(nodedesys)
             query = self.dbase.query(sql)
             result = [row for row in query]
             for fetid,lknoeud1 in result:
@@ -207,9 +209,26 @@ class NoeudTool(AbstractNoeudTool):
                 success = dbasetablelayer.changeGeometry(fetid, newgeom)
 
                 dbasetablelayer.commitChanges()
+
+                sql = "SELECT id_infralineaire FROM Infralineaire WHERE lk_noeud2 = " + str(infrafet['id_descriptionsystem'])
+                query = self.dbase.query(sql)
+                result2 = [row[0] for row in query]
+                for fetid2 in result2:
+                    infrafet = self.dbase.getLayerFeatureById('Infralineaire', fetid2)
+                    infrafetpoint1 = qgis.core.QgsGeometry().fromPoint(infrafet.geometry().asPolyline()[0])
+                    # newgeom2 = newgeom.shortestLine(infrafetpoint1)
+                    newgeom2 = infrafetpoint1.shortestLine(newgeom)
+                    dbasetablelayer.startEditing()
+                    success = dbasetablelayer.changeGeometry(fetid2, newgeom2)
+                    dbasetablelayer.commitChanges()
+
+
+
+
+                movebranchement = True
                 # print('lk1', success, fetid, newgeom.asPolyline())
 
-            sql = "SELECT id_infralineaire, lk_noeud2 FROM Infralineaire WHERE lk_noeud2 = " + str(nodeid)
+            sql = "SELECT id_infralineaire, lk_noeud2 FROM Infralineaire WHERE lk_noeud2 = " + str(nodedesys)
             query = self.dbase.query(sql)
             result = [row for row in query]
 
@@ -227,6 +246,26 @@ class NoeudTool(AbstractNoeudTool):
                 dbasetablelayer.startEditing()
                 success = dbasetablelayer.changeGeometry(fetid, newgeom)
                 dbasetablelayer.commitChanges()
+
+                sql = "SELECT id_infralineaire FROM Infralineaire WHERE lk_noeud2 = " + str(infrafet['id_descriptionsystem'])
+                query = self.dbase.query(sql)
+                result2 = [row[0] for row in query]
+                for fetid2 in result2:
+                    infrafet = self.dbase.getLayerFeatureById('Infralineaire', fetid2)
+                    infrafetpoint1 = qgis.core.QgsGeometry().fromPoint(infrafet.geometry().asPolyline()[0])
+                    # newgeom2 = newgeom.shortestLine(infrafetpoint1)
+                    newgeom2 = infrafetpoint1.shortestLine(newgeom)
+                    dbasetablelayer.startEditing()
+                    success = dbasetablelayer.changeGeometry(fetid2, newgeom2)
+                    dbasetablelayer.commitChanges()
+
+
+
+
+
+
+
+
 
         #self.canvas.freeze(False)
         #self.canvas.refresh()
