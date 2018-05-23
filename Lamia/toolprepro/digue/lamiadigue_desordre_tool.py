@@ -106,11 +106,11 @@ class DesordreTool(AbstractDesordreTool):
 
                 #self.dbasechildwdg = [self.propertieswdgOBSERVATION, self.propertieswdgOBSERVATION2]
 
-
-            if self.parentWidget is not None :
-                self.pushButton_addFeature.setEnabled(True)
-            else:
-                self.pushButton_addFeature.setEnabled(False)
+            if False:
+                if self.parentWidget is not None :
+                    self.pushButton_addFeature.setEnabled(True)
+                else:
+                    self.pushButton_addFeature.setEnabled(False)
 
 
 
@@ -163,17 +163,18 @@ class DesordreTool(AbstractDesordreTool):
                 sql += "groupedesordre = 'INF'  WHERE id_desordre = " + str(iddesordre)
                 self.dbase.query(sql)
                 self.dbase.commit()
+        else:
+            sql = "UPDATE Desordre SET groupedesordre = 'INF'  WHERE id_desordre = " + str(iddesordre)
+            self.dbase.query(sql)
+            self.dbase.commit()
 
     """
-                        
-                        
-                        
 
     def postSaveFeature(self, boolnewfeature):
         pass
 
-
     """
+
 
 
 class UserUI(QWidget):

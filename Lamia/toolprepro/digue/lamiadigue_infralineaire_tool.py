@@ -96,8 +96,9 @@ class InfraLineaireTool(AbstractInfraLineaireTool):
             self.propertieswdgCROQUIS = CroquisTool(dbase=self.dbase, parentwidget=self)
             self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
-            self.propertieswdgDesordre = DesordreTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
-            self.dbasechildwdgfield.append(self.propertieswdgDesordre)
+            if False:
+                self.propertieswdgDesordre = DesordreTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
+                self.dbasechildwdgfield.append(self.propertieswdgDesordre)
 
 
 
