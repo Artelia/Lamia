@@ -1,8 +1,0 @@
-# SELECT TRONCON.*, OBJET.DateCreation, OBJET.DateDestruction FROM TRONCON, OBJET WHERE TRONCON.IdObjet = OBJET.ID
-# Nom_champ             TypePostGis              TypeSpatialite                          Option
-###ID;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
-###Nom;                VARCHAR(255);            TEXT
-###IdObjet;             INT ;                   INTEGER ;                               OBJET(ID)
-###IdSys;               INT ;                   INTEGER;                                DESCRIPTIONSYSTEME(ID)
-###LkZoneGeo;           INT ;                   INTEGER;                                ZONEGEO(ID)
-###geom;                LINESTRING

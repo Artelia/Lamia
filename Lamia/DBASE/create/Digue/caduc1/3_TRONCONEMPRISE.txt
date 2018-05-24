@@ -1,5 +1,0 @@
-#SELECT TRONCONEMPRISE.*, OBJET.DateCreation, OBJET.DateDestruction FROM TRONCONEMPRISE, OBJET,TRONCON WHERE TRONCONEMPRISE.LkTroncon = TRONCON.ID AND TRONCON.IdObjet = OBJET.ID
-# Nom_champ             TypePostGis              TypeSpatialite                          Option
-###ID;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
-###LkTroncon;             INT ;                   INTEGER ;                               TRONCON(ID)
-###geom;                MULTIPOLYGON

@@ -18,11 +18,14 @@ Fort;3
 3 : urgent ;                3
 ###evolution;                VARCHAR(255);            TEXT
 ###commentaires;                VARCHAR(255);            TEXT
-###suite;                VARCHAR(255);            TEXT
-Aucune; AUC
-Travaux;TVX
 ###typesuite;                VARCHAR(255);            TEXT
-##suite
+Aucune;         AUC
+Travaux;        TVX   
+Surveillance;   SUR
+Entretien;      ENT
+Etudes;         ETU
+###precisionsuite;                VARCHAR(255);            TEXT
+##typesuite
 /;                              ;['AUC']
 Regard a rehausser;     REH    ;['TVX']
 Remplacement tampon fonte; RTF;['TVX']
@@ -30,6 +33,7 @@ Rehabilitation complete;    RCO;['TVX']
 Scellement tampon;      SCT;['TVX']
 Etancheification branchement;   ETB;['TVX']
 Etancheification regard;   ETR;['TVX']
+###suite;                VARCHAR(255);            TEXT
 ###ECPPdepuisbranchement;                 INT ;                   INTEGER 
 ###gcdegrade;                 INT ;                   INTEGER 
 ###infiltration;                 INT ;                   INTEGER 

@@ -67,6 +67,7 @@ class ObservationTool(AbstractObservationTool):
                                                           'gravite': self.userwdgfield.comboBox_urgence,
                                                           'evolution': self.userwdgfield.textEdit_evolution,
                                                           'commentaires': self.userwdgfield.textEdit_comm,
+                                                          'typesuite': self.userwdgfield.comboBox_typesuite,
                                                           'suite': self.userwdgfield.textEdit_suite,
                                                           'oh_etatvanne': self.userwdgfield.comboBox_etatvanne}},
                                 'Objet' : {'linkfield' : 'id_objet',

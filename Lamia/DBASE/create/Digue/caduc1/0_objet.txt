@@ -1,8 +1,0 @@
-#
-# Nom_champ                 TypePostGis          TypeSpatialite                       Option  Referecens/foreignkey
-###id_objet;                SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
-###DateCreation;            DATE ;                  TEXT
-###DateDestruction;         DATE ;                  TEXT 
-###Commentaire;             VARCHAR(255);           TEXT
-###lk_utilisateur;           INT ;                  INTEGER 
-###lk_projet;           INT ;                  INTEGER 

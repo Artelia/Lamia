@@ -69,8 +69,9 @@ class ObservationTool(AbstractObservationTool):
 
                                                         # 'evolution': self.userwdgfield.textEdit_evolution,
                                                         'commentaires': self.userwdgfield.textEdit_comm,
-                                                        'suite': self.userwdgfield.comboBox_suite,
+                                                        'suite': self.userwdgfield.textEdit_suite,
                                                           'typesuite': self.userwdgfield.comboBox_typesuite,
+                                                          'precisionsuite': self.userwdgfield.comboBox_precisionsuite,
 
                                                           'ECPPdepuisbranchement': self.userwdgfield.checkBox_ecpp,
                                                           'gcdegrade': self.userwdgfield.checkBox_gcdegrade,
