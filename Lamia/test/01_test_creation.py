@@ -21,7 +21,7 @@ def testDbaseCreation(canvas, typedb="spatialite"):
 
     if typedb == "spatialite":
         # Digue VNF  Assainissement
-        typebase = 'Assainissement'
+        typebase = 'Digue'
         if typebase == 'VNF':
             spatialitefile = 'C://000_testdigue//temp_VNF//test01.sqlite'
         elif typebase == 'Digue':

@@ -20,5 +20,6 @@
         <file>icons/link.svg</file>
         <file>icons/main.png</file>
         <file>icons/eye2.svg</file>
+        <file>icons/Calendar_icon.png</file>
     </qresource>
 </RCC>

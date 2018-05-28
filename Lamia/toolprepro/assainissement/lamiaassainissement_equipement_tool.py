@@ -76,6 +76,10 @@ class EquipementTool(AbstractInspectionDigueTool):
             self.propertieswdgCROQUIS = CroquisTool(dbase=self.dbase, parentwidget=self)
             self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
+            if self.parentWidget is None:
+                self.pushButton_addFeature.setEnabled(False)
+
+
             if False and self.parentWidget is None:
                 #parentwdg = self.dbase.dbasetables['Equipement']['widget']
                 self.propertieswdgEQUIPEMENT = EquipementTool(dbase=self.dbase, parentwidget=self)

@@ -36,12 +36,14 @@ import os
 #class newDBDialog(QDialog, FORM_CLASS):
 class getDateDialog(QDialog):
 
-    def __init__(self, parent=None):
+    def __init__(self, dialog, parent=None):
         """Constructor."""
         super(getDateDialog, self).__init__(parent)
         #self.setupUi(self)
+        self.dialog = dialog
         path = os.path.join(os.path.dirname(__file__), 'InspectionDigue_getDate.ui')
         uic.loadUi(path, self)
+        self.previousdate = None
 
 
 
@@ -49,20 +51,76 @@ class getDateDialog(QDialog):
         self.finished.connect(self.dialogIsFinished)
 
     def setDate(self,datetoset = None):
-        if datetoset is None:
-            date = QtCore.QDate.currentDate()
-        else:
-            date = QtCore.QDate.fromString(datetoset, 'yyyy-MM-dd')
-        self.dateEdit.setDate(date)
-        
+
+        self.previousdate = str(self.dialog.dbase.workingdate)
+
+        if False:
+            if datetoset is None:
+                date = QtCore.QDate.currentDate()
+            else:
+                date = QtCore.QDate.fromString(datetoset, 'yyyy-MM-dd')
+            self.dateEdit.setDate(date)
+
+        if True:
+            todaydate = QtCore.QDate.currentDate()
+            self.label_end.setText(todaydate.toString('yyyy-MM-dd'))
+            self.dateEdit_end.setDate(todaydate)
+
+            sql = "SELECT MIN(datecreation) FROM Objet"
+            query = self.dialog.dbase.query(sql)
+            startdate = [row[0] for row in query]
+            if len(startdate) > 0:
+                date2 = QtCore.QDate.fromString(startdate[0], 'yyyy-MM-dd')
+            else:
+                date2 = todaydate
+            self.label_start.setText(date2.toString('yyyy-MM-dd'))
+            self.dateEdit_start.setDate(todaydate)
+
+            self.dateLimitchanged()
+
+            self.horizontalSlider_date.valueChanged.connect(self.dateSliderAction)
+            self.dateEdit_start.dateChanged.connect(self.dateLimitchanged)
+            self.dateEdit_end.dateChanged.connect(self.dateLimitchanged)
+
+
+
+    def dateSliderAction(self, sliderint):
+        begindate = QtCore.QDate.fromString(self.label_start.text(), 'yyyy-MM-dd')
+        datetoset = begindate.addDays(sliderint)
+        self.dateEdit.setDate(datetoset)
+        self.dialog.dbase.workingdate = datetoset.toString('yyyy-MM-dd')
+        self.dialog.dbase.updateWorkingDate()
+
+    def dateLimitchanged(self):
+        dif = self.dateEdit_start.date().daysTo(self.dateEdit_end.date())
+        # dif = todaydate - date2
+        self.horizontalSlider_date.setRange(0, dif)
+        self.horizontalSlider_date.setSingleStep(1)
+        self.horizontalSlider_date.setPageStep(1)
+
+
     def dialogIsFinished(self):
         """
         return level list
         return color array like this : [stop in 0 < stop > 1 ,r,g,b]
         """
+        if True:
+            try:
+                self.horizontalSlider_date.valueChanged.disconnect(self.dateSliderAction)
+            except :
+                pass
+            try:
+                self.dateEdit_start.dateChanged.disconnect(self.dateLimitchanged)
+                self.dateEdit_end.dateChanged.disconnect(self.dateLimitchanged)
+            except:
+                pass
+
         if (self.result() == 1):
             return (self.dateEdit.date().toString('yyyy-MM-dd') )
         else:
+            #self.previousdate = str(self.dbase.workingdate)
+            self.dialog.dbase.workingdate = self.previousdate
+            self.dialog.dbase.updateWorkingDate()
             return None
             
             

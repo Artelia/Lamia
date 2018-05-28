@@ -105,7 +105,7 @@ class InspectiondigueWindowWidget(QMainWindow):
         # The main qfiledialog
         self.qfiledlg = QFileDialog()
         # the working date dialog
-        self.dateDialog = getDateDialog()
+        self.dateDialog = getDateDialog(self)
         # the new db dialog
         self.newDBDialog = newDBDialog()
         #numpad dialog
@@ -196,7 +196,8 @@ class InspectiondigueWindowWidget(QMainWindow):
         #self.pushButton_zoomFeature.clicked.connect(self.zoomToFeature)
         self.pushButton_selectfeat.clicked.connect(self.selectFeature)
         self.action_Repertoire_photo.triggered.connect(self.setImageDir)
-        self.actionDate_de_travail.triggered.connect(self.setWorkingDate)
+        #self.actionDate_de_travail.triggered.connect(self.setWorkingDate)
+        self.toolButton_date.clicked.connect(self.setWorkingDate)
         self.actionModeExpert.triggered.connect(self.setVisualMode)
         self.actionTTC.triggered.connect(self.setVisualMode)
         self.actionModeTerrain.triggered.connect(self.setVisualMode)
@@ -222,23 +223,51 @@ class InspectiondigueWindowWidget(QMainWindow):
         """
         pass
         """
-        if self.dbase.workingdate is None:
-            self.dateDialog.setDate()
-        else:
-            self.dateDialog.setDate(self.dbase.workingdate)
+        if False:
+            if self.dbase.workingdate is None:
+                self.dateDialog.setDate()
+            else:
+                self.dateDialog.setDate(self.dbase.workingdate)
+
+            todaydate = QtCore.QDate.currentDate()
+            self.dateDialog.label_end.setText( todaydate.toString('yyyy-MM-dd') )
+            sql = "SELECT MIN(datecreation) FROM Objet"
+            query = self.dbase.query(sql)
+            startdate = [row[0] for row in query]
+            if len(startdate)>0:
+                date2 = QtCore.QDate.fromString(startdate[0], 'yyyy-MM-dd')
+            else:
+                date2 = todaydate
+            self.dateDialog.label_start.setText(date2.toString('yyyy-MM-dd'))
+            dif = date2.daysTo(todaydate)
+            #dif = todaydate - date2
+            self.dateDialog.horizontalSlider_date.setRange(0, dif)
+
+            self.dateDialog.horizontalSlider_date.valueChanged.connect(self.dateSliderAction)
+
+
+        self.dateDialog.setDate()
         self.dateDialog.exec_()
-        date = self.dateDialog.dialogIsFinished()
-        if date is not None:
-            self.dbase.workingdate = date
-            self.dbase.updateWorkingDate()
+        if False:
+            date = self.dateDialog.dialogIsFinished()
+            if date is not None:
+                self.dbase.workingdate = date
+                self.dbase.updateWorkingDate()
+
+
+
+
+
+
 
     def closeEvent(self, event):
         """
         PyQt closeEvent - called when the windowdialog is closed
         Unloads the tools widgets
         """
-        for tool in self.tools:
-            del tool
+        if True:
+            for tool in self.tools:
+                del tool
         self.closingPlugin.emit()
         try:
             self.dbase.canvas.renderStarting.disconnect(self.dbaserenderStarts)
@@ -759,12 +788,23 @@ class InspectiondigueWindowWidget(QMainWindow):
 
 
 
-
+    def loadUiField2(self):
+        self.thread = QtCore.QThread()
+        self.worker = LoadUiField(self)
+        self.worker.moveToThread(self.thread)
+        self.thread.started.connect(self.worker.loadUiField)
+        self.worker.finished.connect(self.worker.deleteLater)
+        self.thread.finished.connect(self.thread.deleteLater)
+        self.worker.finished.connect(self.thread.quit)
+        self.thread.start()
 
 
 
     def loadUiField(self):
+        timestart = time.clock()
 
+
+        if debugtime: logger.debug(' start %.3f', time.clock() - timestart)
 
         if self.dbase.qgsiface is not None:
             #if not self.dbase.standalone:
@@ -783,6 +823,7 @@ class InspectiondigueWindowWidget(QMainWindow):
 
         i = 0
         for uifield in self.uifields:
+            if debugtime: logger.debug(' start %s %.3f', uifield.dbasetablename, time.clock() - timestart)
             #try:
             dbasename = uifield.dbasetablename
             # print(dbasename)
@@ -790,6 +831,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                                                                      dialog = self,
                                                                      linkedtreewidget = self.ElemtreeWidget,
                                                                      gpsutil = self.gpsutil)
+            if debugtime: logger.debug(' end %s %.3f', uifield.dbasetablename, time.clock() - timestart)
             i += 1
             self.setLoadingProgressBar(progress, i)
             #except Exception as e:
@@ -797,6 +839,19 @@ class InspectiondigueWindowWidget(QMainWindow):
 
         if progress is not None: self.dbase.qgsiface.messageBar().clearWidgets()
 
+
+
+    """
+    def loadUiDesktop(self):
+        self.thread = QtCore.QThread()
+        self.worker = LoadUiDesktop(self.dbase, self.uidesktop, self.uipostpro)
+        self.worker.moveToThread(self.thread)
+        self.thread.started.connect(self.worker.loadUiDesktop)
+        self.worker.finished.connect(self.worker.deleteLater)
+        self.thread.finished.connect(self.thread.deleteLater)
+        self.worker.finished.connect(self.thread.quit)
+        self.thread.start()
+    """
 
 
     def loadUiDesktop(self):
@@ -1761,3 +1816,54 @@ class InspectiondigueWindowWidget(QMainWindow):
         QApplication.processEvents()
 
 
+
+class LoadUiField(QtCore.QObject):
+
+    finished = QtCore.pyqtSignal()
+
+    def __init__(self,dialog ):
+        QtCore.QObject.__init__(self)
+        self.dialog = dialog
+        self.dbase = dialog.dbase
+        self.uifields = dialog.uifields
+        self.ElemtreeWidget = dialog.ElemtreeWidget
+        self.gpsutil =dialog.gpsutil
+
+    def loadUiField(self):
+        timestart = time.clock()
+
+        if debugtime: logger.debug(' start %.3f', time.clock() - timestart)
+
+        if self.dbase.qgsiface is not None:
+            # if not self.dbase.standalone:
+            progressMessageBar = self.dbase.qgsiface.messageBar().createMessage("Loading widget...")
+            progress = QProgressBar()
+            progress.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+            progressMessageBar.layout().addWidget(progress)
+            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                self.dbase.qgsiface.messageBar().pushWidget(progressMessageBar, self.dbase.qgsiface.messageBar().INFO)
+            else:
+                self.dbase.qgsiface.messageBar().pushWidget(progressMessageBar, qgis.core.Qgis.Info)
+            lenuifields = len(self.uifields)
+            progress.setMaximum(lenuifields)
+        else:
+            progress = None
+
+        i = 0
+        for uifield in self.uifields:
+            if debugtime: logger.debug(' start %s %.3f', uifield.dbasetablename, time.clock() - timestart)
+            # try:
+            dbasename = uifield.dbasetablename
+            # print(dbasename)
+            self.dbase.dbasetables[dbasename]['widget'] = uifield(dbase=self.dbase,
+                                                                  dialog=self,
+                                                                  linkedtreewidget=self.ElemtreeWidget,
+                                                                  gpsutil=self.gpsutil)
+            if debugtime: logger.debug(' end %s %.3f', uifield.dbasetablename, time.clock() - timestart)
+            i += 1
+            self.setLoadingProgressBar(progress, i)
+            # except Exception as e:
+            #     print('error load', e)
+
+        if progress is not None: self.dbase.qgsiface.messageBar().clearWidgets()
+        self.finished.emit()

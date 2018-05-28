@@ -9,12 +9,12 @@ try:
     from qgis.PyQt.QtGui import (QWidget, QTreeWidgetItem, QMessageBox, QFileDialog, QTableWidget,
                                  QHeaderView, QComboBox, QSpinBox, QCheckBox, QPushButton, QDateEdit, QTextEdit,
                                  QDoubleSpinBox, QDialog, QVBoxLayout, QTreeWidget, QLineEdit, QCheckBox,
-                                 QLabel, QMessageBox, QTextBrowser, QTableWidgetItem)
+                                 QLabel, QMessageBox, QTextBrowser, QTableWidgetItem,QApplication)
 except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget, QTreeWidgetItem, QMessageBox, QFileDialog, QTableWidget,
                                      QHeaderView, QComboBox, QSpinBox,QCheckBox, QPushButton, QDateEdit, QTextEdit,
                                      QDoubleSpinBox, QDialog, QVBoxLayout, QTreeWidget, QLineEdit, QCheckBox,
-                                     QLabel, QMessageBox, QTextBrowser, QTableWidgetItem)
+                                     QLabel, QMessageBox, QTextBrowser, QTableWidgetItem,QApplication)
 import os
 import sys
 import qgis
@@ -50,16 +50,19 @@ class AbstractInspectionDigueTool(QWidget):
         @param linkedtreewidget  : the treewidget it interacts with
         @param parent : the parent widget (TODO : the same as dialog)
         """
-        import time
-        timestart = time.clock()
-        if debugtime: logging.getLogger('Lamia').debug('Start init %.3f', time.clock() - timestart)
 
         super(AbstractInspectionDigueTool, self).__init__(parent)
-        # QWidget.__init__(self)
+
+        timestart = time.clock()
+        if debugtime: logging.getLogger('Lamia').debug('Start init %s %.3f',self.dbasetablename,  time.clock() - timestart)
+        #print(AbstractInspectionDigueTool,self,  parent)
+
 
         uipath = os.path.join(os.path.dirname(__file__), '..', 'dialog', 'InspectionDigue_propertieswidget.ui')
         uic.loadUi(uipath, self)
 
+        #QApplication.processEvents()
+        if debugtime: logging.getLogger('Lamia').debug('step1 prop wdg %s %.3f', self.dbasetablename,time.clock() - timestart)
         # ***************************************************************
         # ******************   Variables def ****************************
         # ***************************************************************
@@ -122,8 +125,16 @@ class AbstractInspectionDigueTool(QWidget):
         self.linkuserwdg = None             #current linkuserwdg
         # wile saving new feature
         self.savingnewfeature = False
+
+        # QApplication.processEvents()
+        if debugtime: logging.getLogger('Lamia').debug('step1a fieldlg %s %.3f', self.dbasetablename, time.clock() - timestart)
+
         #  The main qfiledialog
-        self.qfiledlg = QFileDialog()
+        #self.qfiledlg = QFileDialog()
+
+        # QApplication.processEvents()
+        if debugtime: logging.getLogger('Lamia').debug('step2 fieldlg %s %.3f', self.dbasetablename, time.clock() - timestart)
+
         #  tablewidget - expert widget
         self.tableWidget = QTableWidget()
         self.tableWidget.setColumnCount(4)
@@ -136,6 +147,10 @@ class AbstractInspectionDigueTool(QWidget):
             header.setSectionResizeMode(0, QHeaderView.ResizeToContents)
         self.tableWidget.setColumnWidth(2, 48)
         self.tableWidget.setColumnWidth(3, 48)
+
+        # QApplication.processEvents()
+        if debugtime: logging.getLogger('Lamia').debug('step3 table wdg %s %.3f', self.dbasetablename, time.clock() - timestart)
+
         # header.setResizeMode(2, QHeaderView.ResizeToContents)
         # header.setResizeMode(3, QHeaderView.ResizeToContents)
         self.newentrytext = 'Nouvelle entree'
@@ -181,9 +196,11 @@ class AbstractInspectionDigueTool(QWidget):
 
         # *******************************************************
         # load tools - must be kept in this order
-        if debugtime: logging.getLogger('Lamia').debug('before initTool %.3f', time.clock() - timestart)
+        # QApplication.processEvents()
+        if debugtime: logging.getLogger('Lamia').debug('before initTool %s %.3f',self.dbasetablename, time.clock() - timestart)
         self.initTool()
-        if debugtime: logging.getLogger('Lamia').debug('After initTool %.3f', time.clock() - timestart)
+        # QApplication.processEvents()
+        if debugtime: logging.getLogger('Lamia').debug('After initTool %s %.3f',self.dbasetablename, time.clock() - timestart)
 
         # *******************************************************
         # Post inittool things
@@ -220,8 +237,8 @@ class AbstractInspectionDigueTool(QWidget):
             for childwdg in self.dbasechildwdg:
                 self.currentFeatureChanged.connect(childwdg.loadChildFeatureinWidget)
         """
-
-        if debugtime: logging.getLogger('Lamia').debug('end init %.3f', time.clock() - timestart)
+        # QApplication.processEvents()
+        if debugtime: logging.getLogger('Lamia').debug('end init %s %.3f',self.dbasetablename, time.clock() - timestart)
 
 
     # ******************************************************************************************************************
@@ -648,7 +665,7 @@ class AbstractInspectionDigueTool(QWidget):
         # fieldname = self.tableWidget.item(ind, 0).text()
 
         if senderwdg.text() == 'File':
-            file, extension = self.qfiledlg.getOpenFileNameAndFilter(None, 'Choose the file', None,
+            file, extension = self.dialog.qfiledlg.getOpenFileNameAndFilter(None, 'Choose the file', None,
                                                                      'All (*.*)', '')
             if file:
                 self.setValueInWidget(self.tableWidget.cellWidget(ind, 1), file, tablename, fieldname)
@@ -1092,6 +1109,17 @@ class AbstractInspectionDigueTool(QWidget):
                 self.linkedtreewidget.clear()
 
         self.comboBox_featurelist.clear()
+
+
+    def updateWorkingDate(self):
+        subsetstring = None
+        if self.dbasetype == 'spatialite':
+            subsetstring = '"datecreation" <= ' + "'" + self.workingdate + "'"
+            subsetstring += ' AND CASE WHEN "datedestruction" IS NOT NULL  THEN "datedestruction" > ' + "'" + self.workingdate + "'" + ' ELSE 1 END'
+        elif self.dbasetype == 'postgis':
+            subsetstring = '"datecreation" <= ' + "'" + self.workingdate + "'"
+            subsetstring += ' AND CASE WHEN "datedestruction" IS NOT NULL  THEN "datedestruction" > ' + "'" + self.workingdate + "'" + ' ELSE TRUE END'
+        return subsetstring
 
     def loadIds(self):
 
