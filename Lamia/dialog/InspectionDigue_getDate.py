@@ -54,6 +54,7 @@ class getDateDialog(QDialog):
 
         self.previousdate = str(self.dialog.dbase.workingdate)
 
+
         if False:
             if datetoset is None:
                 date = QtCore.QDate.currentDate()
@@ -63,6 +64,11 @@ class getDateDialog(QDialog):
 
         if True:
             todaydate = QtCore.QDate.currentDate()
+            if self.previousdate is not None:
+                self.dateEdit.setDate(QtCore.QDate.fromString(self.previousdate, 'yyyy-MM-dd') )
+            else:
+                self.dateEdit.setDate(todaydate)
+
             self.label_end.setText(todaydate.toString('yyyy-MM-dd'))
             self.dateEdit_end.setDate(todaydate)
 
@@ -74,9 +80,12 @@ class getDateDialog(QDialog):
             else:
                 date2 = todaydate
             self.label_start.setText(date2.toString('yyyy-MM-dd'))
-            self.dateEdit_start.setDate(todaydate)
+            self.dateEdit_start.setDate(date2)
 
             self.dateLimitchanged()
+
+            sliderpos = self.dateEdit_start.date().daysTo(self.dateEdit.date())
+            self.horizontalSlider_date.setValue(sliderpos)
 
             self.horizontalSlider_date.valueChanged.connect(self.dateSliderAction)
             self.dateEdit_start.dateChanged.connect(self.dateLimitchanged)

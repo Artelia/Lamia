@@ -279,7 +279,26 @@ class NoeudTool(AbstractNoeudTool):
             self.propertieswdgDesordre.saveFeature()
         #self.dbase.printsql = False
 
+    def deleteParentFeature(self):
+        idobjet = self.currentFeature['id_objet']
+        iddescriptionsystem = self.currentFeature['id_descriptionsystem']
+        # idnoeud= self.currentFeature['id_noeud']
 
+
+        sql = "DELETE FROM Objet WHERE id_objet = " + str(idobjet) + ";"
+        query = self.dbase.query(sql)
+        self.dbase.commit()
+
+        sql = "DELETE FROM Descriptionsystem WHERE id_objet = " + str(idobjet) + ";"
+        query = self.dbase.query(sql)
+        self.dbase.commit()
+
+        sql = "DELETE FROM Desordre WHERE lk_descriptionsystem = " + str(iddescriptionsystem) + ";"
+        query = self.dbase.query(sql)
+        self.dbase.commit()
+
+
+        return True
 
 
 class UserUI(QWidget):

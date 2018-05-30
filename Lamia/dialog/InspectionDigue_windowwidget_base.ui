@@ -481,7 +481,7 @@
     <addaction name="actionReinitialier_prestation_courante"/>
     <addaction name="action_GPSConnection"/>
     <addaction name="actionHauteur_de_perche_GPS"/>
-    <addaction name="actionDate_de_travail"/>
+    <addaction name="action_taille_icone"/>
    </widget>
    <widget class="QMenu" name="menuMode">
     <property name="title">
@@ -626,9 +626,9 @@
     <string>A propos</string>
    </property>
   </action>
-  <action name="actionDate_de_travail">
+  <action name="action_taille_icone">
    <property name="text">
-    <string>Date de travail</string>
+    <string>Taille icones</string>
    </property>
   </action>
   <action name="actionHauteur_de_perche_GPS">
@@ -676,6 +676,7 @@
   </action>
  </widget>
  <resources>
+  <include location="../resources.qrc"/>
  </resources>
  <connections/>
 </ui>

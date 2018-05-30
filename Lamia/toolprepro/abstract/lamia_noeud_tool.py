@@ -108,6 +108,22 @@ class AbstractNoeudTool(AbstractInspectionDigueTool):
     def postDeleteFeature(self):
         pass
 
+    def deleteParentFeature(self):
+        idobjet = self.currentFeature['id_objet']
+        # idnoeud= self.currentFeature['id_noeud']
+
+
+        sql = "DELETE FROM Objet WHERE id_objet = " + str(idobjet) + ";"
+        query = self.dbase.query(sql)
+        self.dbase.commit()
+
+        sql = "DELETE FROM Descriptionsystem WHERE id_objet = " + str(idobjet) + ";"
+        query = self.dbase.query(sql)
+        self.dbase.commit()
+
+
+        return True
+
 
 class UserUI(QWidget):
     def __init__(self, parent=None):

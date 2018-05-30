@@ -76,10 +76,13 @@ class ObservationTool(AbstractObservationTool):
             # ****************************************************************************************
             # child widgets
             self.dbasechildwdgfield=[]
-            self.propertieswdgPHOTOGRAPHIE = PhotosTool(dbase=self.dbase, parentwidget=self)
-            self.dbasechildwdgfield = [self.propertieswdgPHOTOGRAPHIE]
-            self.propertieswdgCROQUIS = CroquisTool(dbase=self.dbase, parentwidget=self)
-            self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+            if self.parentWidget is None or  self.parentWidget is not None and self.parentWidget.dbasetablename == 'Desordre':
+
+                self.propertieswdgPHOTOGRAPHIE = PhotosTool(dbase=self.dbase, parentwidget=self)
+                self.dbasechildwdgfield = [self.propertieswdgPHOTOGRAPHIE]
+                self.propertieswdgCROQUIS = CroquisTool(dbase=self.dbase, parentwidget=self)
+                self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+
 
     """
 

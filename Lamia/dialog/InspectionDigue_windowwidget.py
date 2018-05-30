@@ -6,10 +6,12 @@ from unicodedata import normalize
 from qgis.PyQt.QtCore import pyqtSignal
 try:
     from qgis.PyQt.QtGui import (QDockWidget, QMainWindow, QFileDialog, QLabel, QInputDialog,
-                                 QComboBox,QTableWidgetItem,QProgressBar,QApplication)
+                                 QComboBox,QTableWidgetItem,QProgressBar,QApplication,QToolBar,
+                                 QPushButton,QToolButton,QWidget)
 except ImportError:
     from qgis.PyQt.QtWidgets import (QDockWidget, QMainWindow, QFileDialog, QLabel, QInputDialog,
-                                     QComboBox,QTableWidgetItem, QProgressBar,QApplication)
+                                     QComboBox,QTableWidgetItem, QProgressBar,QApplication,QToolBar,
+                                     QPushButton,QToolButton,QWidget)
 
 # other libs import
 import os
@@ -47,6 +49,7 @@ from .InspectionDigue_impression_rapport import ImpressionRapportDialog
 from .InspectionDigue_exportShapefile import ExportShapefileDialog
 from .InspectionDigue_Import import ImportObjetDialog
 from .Lamia_numpad import NumPadDialog
+from .Lamia_iconsize import IconSizeDialog
 
 from .InspectionDigue_newDB import newDBDialog
 from .InspectionDigue_getDate import getDateDialog
@@ -112,6 +115,8 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.numpaddialog = NumPadDialog()
         # the postgis connection dialog
         self.connDialog = ConnexionPGDialog()
+        #iconsize
+        self.iconsizedialog = IconSizeDialog(self)
         # for printing reports
         self.printrapportdialog = ImpressionRapportDialog()
         self.exportshapefiledialog = ExportShapefileDialog()
@@ -122,7 +127,12 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.uipostpro = []
         self.desktopuiloaded = False
 
-
+        # icon size changed
+        if False and self.dbase.qgsiface is not None:
+            mainwindow = self.dbase.qgsiface.mainWindow()
+            toolbars = mainwindow.findChildren(QToolBar)
+            toolbars[0].iconSizeChanged.connect(self.themechanged)
+            #self.dbase.qgsiface.currentThemeChanged.connect(self.themechanged)
 
 
         if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
@@ -204,6 +214,7 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.actionPosttraitement.triggered.connect(self.setVisualMode)
         self.actionReinitialier_prestation_courante.triggered.connect(self.reinitCurrentPrestation)
         self.actionHauteur_de_perche_GPS.triggered.connect(self.setHauteurPerche)
+        self.action_taille_icone.triggered.connect(self.setLamiaIconSize)
         self.action_GPSConnection.triggered.connect(self.connectToGPS)
         # other
         self.gpsutil.GPSConnected.connect(self.GPSconnected)
@@ -217,6 +228,34 @@ class InspectiondigueWindowWidget(QMainWindow):
             self.dbase.imagedirectory = None
 
         if debug: logging.getLogger('Lamia').debug('end')
+
+
+    def themechanged(self, iconwidth):
+        if isinstance(iconwidth, int):
+            newsize = QtCore.QSize(iconwidth, iconwidth)
+        elif isinstance(iconwidth, QtCore.QSize):
+            newsize = iconwidth
+        newsizeicon = QtCore.QSize(newsize)
+        newsizeicon.scale(newsize.width() * 0.8, newsize.width() * 0.8, QtCore.Qt.KeepAspectRatio)
+        for dbasetablename in self.dbase.dbasetables.keys():
+            wgd = self.dbase.dbasetables[dbasetablename]['widget']
+            # print('changed', dbasetablename,wgd )
+            if not isinstance(wgd, list):
+                butttons = wgd.findChildren(QPushButton)
+                for button in butttons:
+                    # print('button', button.icon())
+                    if button.icon() is not None:
+                        button.setIconSize(newsizeicon)
+                        button.setBaseSize(newsize)
+                        button.setFixedSize(newsize)
+                butttons = wgd.findChildren(QToolButton)
+                for button in butttons:
+                    if button.icon() is not None:
+                        button.setIconSize(newsizeicon)
+                        button.setBaseSize(newsize)
+                        button.setFixedSize(newsize)
+
+
 
 
     def setWorkingDate(self):
@@ -493,6 +532,11 @@ class InspectiondigueWindowWidget(QMainWindow):
                                          self.dbase.hauteurperche)
         if ok:
             self.dbase.hauteurperche = num
+
+    def setLamiaIconSize(self):
+        self.iconsizedialog.exec_()
+
+
 
     def newDbase(self):
         """
@@ -922,7 +966,6 @@ class InspectiondigueWindowWidget(QMainWindow):
                                )
             i += 1
             self.setLoadingProgressBar(progress, i)
-
 
 
         if progress is not None: self.dbase.qgsiface.messageBar().clearWidgets()

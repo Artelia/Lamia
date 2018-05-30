@@ -93,6 +93,16 @@ class PhotosTool(AbstractPhotosTool):
 
             self.userwdgfield.spinBox_numphoto.setValue(numphoto)
 
+            #geom if parent is node
+            if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
+                if self.parentWidget.dbasetablename == 'Noeud':
+                    # get geom
+                    noeudfet = self.dbase.getLayerFeatureById('Noeud', self.parentWidget.currentFeature.id())
+                    neudfetgeom = noeudfet.geometry().asPoint()
+                    self.createorresetRubberband(1)
+                    self.setTempGeometry([neudfetgeom],False)
+
+
         """
         if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
             if self.parentWidget.dbasetablename == 'TRONCON':
@@ -112,14 +122,7 @@ class PhotosTool(AbstractPhotosTool):
             else:
                 self.photowdg.clear()
 
-            #geom if parent is node
-            if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
-                if self.parentWidget.dbasetablename == 'Noeud':
-                    # get geom
-                    noeudfet = self.dbase.getLayerFeatureById('Noeud', self.parentWidget.currentFeature.id())
-                    neudfetgeom = noeudfet.geometry().asPoint()
-                    self.createorresetRubberband(1)
-                    self.setTempGeometry([neudfetgeom],False)
+
 
 
         else:

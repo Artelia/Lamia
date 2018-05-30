@@ -110,7 +110,7 @@ class AbstractPhotosTool(AbstractInspectionDigueTool):
 
 
     def choosePhoto(self):
-        file, extension = self.qfiledlg.getOpenFileNameAndFilter(None, 'Choose the file', self.dbase.imagedirectory,
+        file, extension = self.windowdialog.qfiledlg.getOpenFileNameAndFilter(None, 'Choose the file', self.dbase.imagedirectory,
                                                                  'Image (*.jpg)', '')
         if file:
             self.userwdg.lineEdit_file.setText(os.path.normpath(file))

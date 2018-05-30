@@ -25,7 +25,7 @@ import matplotlib.pyplot as plt
 
 class SyntheseZonegeoTool(AbstractInspectionDigueTool):
 
-    DBASES = ['digue']
+    # DBASES = ['digue']
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
         super(SyntheseZonegeoTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)

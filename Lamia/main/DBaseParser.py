@@ -426,6 +426,20 @@ class DBaseParser(QtCore.QObject):
                             self.query(sql)
                             self.commit()
 
+        #delete non used srid
+        if False:
+            if self.dbasetype == 'spatialite':
+                sql = "DELETE FROM spatial_ref_sys_aux WHERE srid != " + str(crs)
+                print(sql)
+                self.query(sql)
+                self.commit()
+
+                sql = "DELETE FROM spatial_ref_sys WHERE srid != " + str(crs)
+                print(sql)
+                self.query(sql)
+                self.commit()
+
+
         openedsqlfile.close()
 
         self.loadQgisVectorLayers(file=self.spatialitefile, dbasetype=self.dbasetype,
@@ -857,9 +871,9 @@ class DBaseParser(QtCore.QObject):
 
 
     def query(self, sql,arguments=[]):
-        if self.printsql :
-            logging.getLogger("Lamia").debug('%s', sql)
 
+        if self.printsql :
+            timestart = time.clock()
 
         if self.dbasetype == 'spatialite':
             # cursor = self.connSLITE.cursor()
@@ -870,6 +884,8 @@ class DBaseParser(QtCore.QObject):
                 query = self.SLITEcursor.execute(sql,arguments)
                 returnquery = list(query)
                 self.commit()
+                if self.printsql :
+                    logging.getLogger('Lamia').debug('%s %.3f', sql,  time.clock() - timestart)
                 return returnquery
             except OperationalError as e:
                 if self.qgsiface is None:
@@ -888,6 +904,8 @@ class DBaseParser(QtCore.QObject):
                     rows = self.PGiscursor.fetchall()
                     returnrows = list(rows)
                     self.commit()
+                    if self.printsql:
+                        logging.getLogger('Lamia').debug('%s %.3f', sql, time.clock() - timestart)
                     return returnrows
                 except psycopg2.ProgrammingError as e:
                     print('error query', e)

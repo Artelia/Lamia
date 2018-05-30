@@ -130,6 +130,18 @@ class AbstractObservationTool(AbstractInspectionDigueTool):
         pass
 
 
+
+    def deleteParentFeature(self):
+        idobjet = self.currentFeature['id_objet']
+
+        sql = "DELETE FROM Objet WHERE id_objet = " + str(idobjet) + ";"
+        query = self.dbase.query(sql)
+        self.dbase.commit()
+
+        return True
+
+
+
 class UserUI(QWidget):
     def __init__(self, parent=None):
         super(UserUI, self).__init__(parent=parent)

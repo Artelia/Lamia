@@ -65,7 +65,7 @@ class ObservationTool(AbstractObservationTool):
                                              'widgets' : {'dateobservation' : self.userwdgfield.dateEdit,
                                                           #'nombre' : self.userwdgfield.spinBox_nombre,
                                                         'gravite': self.userwdgfield.comboBox_urgence,
-                                                          'depots' : self.userwdgfield.comboBox_depots,
+                                                          'depots' : self.userwdgfield.comboBox_depot,
 
                                                         # 'evolution': self.userwdgfield.textEdit_evolution,
                                                         'commentaires': self.userwdgfield.textEdit_comm,

@@ -80,31 +80,35 @@ class EquipementTool(AbstractInspectionDigueTool):
             # ****************************************************************************************
             # child widgets
             self.dbasechildwdgfield = []
-            self.propertieswdgPHOTOGRAPHIE = PhotosTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
-            self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
-
-            self.propertieswdgCROQUIS = CroquisTool(dbase=self.dbase, parentwidget=self)
-            self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
-
-            self.propertieswdgDesordre = DesordreTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
-            self.propertieswdgDesordre.userwdgfield.frame_2.setParent(None)
-            self.propertieswdgDesordre.pushButton_addFeature.setEnabled(False)
-            self.propertieswdgDesordre.pushButton_delFeature.setEnabled(False)
-            self.propertieswdgDesordre.comboBox_featurelist.setEnabled(False)
-            self.propertieswdgDesordre.groupBox_geom.setParent(None)
-            self.dbasechildwdgfield.append(self.propertieswdgDesordre)
 
             if self.parentWidget is None:
+
+                self.propertieswdgPHOTOGRAPHIE = PhotosTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
+                self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
+
+                self.propertieswdgCROQUIS = CroquisTool(dbase=self.dbase, parentwidget=self)
+                self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+
+                self.propertieswdgDesordre = DesordreTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
+                self.propertieswdgDesordre.userwdgfield.frame_2.setParent(None)
+                self.propertieswdgDesordre.pushButton_addFeature.setEnabled(False)
+                self.propertieswdgDesordre.pushButton_delFeature.setEnabled(False)
+                self.propertieswdgDesordre.comboBox_featurelist.setEnabled(False)
+                self.propertieswdgDesordre.groupBox_geom.setParent(None)
+                self.dbasechildwdgfield.append(self.propertieswdgDesordre)
+
+
                 #parentwdg = self.dbase.dbasetables['Equipement']['widget']
                 self.propertieswdgEQUIPEMENT = EquipementTool(dbase=self.dbase, parentwidget=self)
                 self.dbasechildwdgfield.append(self.propertieswdgEQUIPEMENT)
 
-                try:
-                    self.currentFeatureChanged.disconnect()
-                except:
-                    pass
-                for childwdg in self.dbasechildwdgfield:
-                    self.currentFeatureChanged.connect(childwdg.loadChildFeatureinWidget)
+                if False:
+                    try:
+                        self.currentFeatureChanged.disconnect()
+                    except:
+                        pass
+                    for childwdg in self.dbasechildwdgfield:
+                        self.currentFeatureChanged.connect(childwdg.loadChildFeatureinWidget)
 
 
     def changeCategorie(self,int):

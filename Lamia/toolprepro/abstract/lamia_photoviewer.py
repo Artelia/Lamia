@@ -27,8 +27,11 @@ class PhotoViewer(QLabel):
                 painter.drawPixmap(point, scaledPix)
 
     def setPixmap(self, img):
-        self.pixmap = QtGui.QPixmap(img)
-        self.repaint()
+        if False:
+            pass
+        else:
+            self.pixmap = QtGui.QPixmap(img)
+            self.repaint()
 
     def clear(self):
         self.pixmap = QtGui.QPixmap()

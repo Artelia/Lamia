@@ -99,10 +99,19 @@ class AbstractCroquisTool(AbstractInspectionDigueTool):
         self.editorwindow.show()
 
     def openPhoto(self):
-        if os.path.isfile(self.dbase.completePathOfFile(self.currentFeature['File'] )):
-            filepath = self.dbase.completePathOfFile(self.currentFeature['File'])
-            os.startfile(filepath)
+        if False:
+            if os.path.isfile(self.dbase.completePathOfFile(self.currentFeature['File'] )):
+                filepath = self.dbase.completePathOfFile(self.currentFeature['File'])
+                os.startfile(filepath)
 
+        if True:
+            sql = "SELECT file FROM Ressource  WHERE id_ressource = " + str(self.currentFeature['id_ressource']) + ";"
+            query = self.dbase.query(sql)
+            result = [row[0] for row in query]
+            resultfile = result[0]
+            if os.path.isfile(self.dbase.completePathOfFile(resultfile)):
+                filepath = self.dbase.completePathOfFile(resultfile)
+                os.startfile(filepath)
 
     def createParentFeature(self):
 

@@ -21,5 +21,6 @@
         <file>icons/main.png</file>
         <file>icons/eye2.svg</file>
         <file>icons/Calendar_icon.png</file>
+        <file>icons/deselect.png</file>
     </qresource>
 </RCC>

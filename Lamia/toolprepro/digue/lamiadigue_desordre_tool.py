@@ -77,17 +77,25 @@ class DesordreTool(AbstractDesordreTool):
             # ****************************************************************************************
             # child widgets
 
-            if True:
-                self.dbasechildwdgfield = []
+            #if True:
+            self.dbasechildwdgfield = []
+
+            if self.parentWidget is None :
+
                 self.propertieswdgOBSERVATION = ObservationTool(dbase=self.dbase, parentwidget=self)
                 self.dbasechildwdgfield.append(self.propertieswdgOBSERVATION)
 
 
-                self.propertieswdgOBSERVATION2 = ObservationTool(dbase=self.dbase, parentwidget=self)
-                self.propertieswdgOBSERVATION2.NAME = None
-                self.userwdgfield.tabWidget.widget(0).layout().addWidget(self.propertieswdgOBSERVATION2)
-                self.dbasechildwdgfield.append(self.propertieswdgOBSERVATION2)
+            self.propertieswdgOBSERVATION2 = ObservationTool(dbase=self.dbase, parentwidget=self)
+            self.propertieswdgOBSERVATION2.NAME = None
+            self.userwdgfield.tabWidget.widget(0).layout().addWidget(self.propertieswdgOBSERVATION2)
+            self.dbasechildwdgfield.append(self.propertieswdgOBSERVATION2)
 
+            self.userwdgfield.tabWidget.widget(1).layout().addWidget(self.propertieswdgOBSERVATION2.propertieswdgPHOTOGRAPHIE)
+            self.userwdgfield.tabWidget.widget(2).layout().addWidget(self.propertieswdgOBSERVATION2.propertieswdgCROQUIS)
+
+
+            if False:
                 self.propertieswdgPHOTOGRAPHIE = PhotosTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self.propertieswdgOBSERVATION2)
                 self.propertieswdgPHOTOGRAPHIE.NAME = None
                 self.userwdgfield.tabWidget.widget(1).layout().addWidget(self.propertieswdgPHOTOGRAPHIE)
@@ -97,6 +105,7 @@ class DesordreTool(AbstractDesordreTool):
                 self.userwdgfield.tabWidget.widget(2).layout().addWidget(self.propertieswdgCROQUIS)
 
                 self.propertieswdgOBSERVATION2.dbasechildwdgfield = [self.propertieswdgPHOTOGRAPHIE, self.propertieswdgCROQUIS]
+
                 try:
                     self.propertieswdgOBSERVATION2.currentFeatureChanged.disconnect()
                 except:
@@ -104,7 +113,7 @@ class DesordreTool(AbstractDesordreTool):
                 for childwdg in self.propertieswdgOBSERVATION2.dbasechildwdgfield:
                     self.propertieswdgOBSERVATION2.currentFeatureChanged.connect(childwdg.loadChildFeatureinWidget)
 
-                #self.dbasechildwdg = [self.propertieswdgOBSERVATION, self.propertieswdgOBSERVATION2]
+                    #self.dbasechildwdg = [self.propertieswdgOBSERVATION, self.propertieswdgOBSERVATION2]
 
             if False:
                 if self.parentWidget is not None :
