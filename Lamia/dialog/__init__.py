@@ -1,1 +1,1 @@
-from Lamia_numpad import *
+from .Lamia_numpad import *

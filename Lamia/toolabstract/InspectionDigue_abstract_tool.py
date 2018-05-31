@@ -1659,6 +1659,9 @@ class AbstractInspectionDigueTool(QWidget):
             self.currentFeature = self.dbase.getLayerFeatureById(self.dbasetablename, self.currentFeature.id())
 
 
+            # do postsavefeature traitment
+            # self.postSaveFeature(self.savingnewfeature)
+
             #  reload with saved attributes
             if self.savingnewfeature:
                 self.loadFeaturesinTreeWdg()
@@ -1666,14 +1669,19 @@ class AbstractInspectionDigueTool(QWidget):
                     self.comboBox_featurelist.setCurrentIndex(self.comboBox_featurelist.count() - 1)
                 else:
                     self.comboBox_featurelist.currentIndexChanged.emit(0)
-            else:
-                self.initFeatureProperties(self.currentFeature)
-                self.postInitFeatureProperties(self.currentFeature)
 
-
+            #else:
+            #    self.initFeatureProperties(self.currentFeature)
+            #    self.postInitFeatureProperties(self.currentFeature)
 
             # do postsavefeature traitment
             self.postSaveFeature(self.savingnewfeature)
+
+            # reload entirely saved feature
+            self.initFeatureProperties(self.currentFeature)
+            self.postInitFeatureProperties(self.currentFeature)
+
+
             # self.currentFeature = self.dbasetable['layer'].getFeatures(qgis.core.QgsFeatureRequest(self.currentFeature.id())).next()
             self.currentFeature = self.dbase.getLayerFeatureById(self.dbasetablename, self.currentFeature.id())
 

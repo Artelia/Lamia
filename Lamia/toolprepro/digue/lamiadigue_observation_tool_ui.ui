@@ -59,7 +59,7 @@
       <number>0</number>
      </property>
      <widget class="QWidget" name="page">
-      <layout class="QGridLayout" name="gridLayout">
+      <layout class="QGridLayout" name="gridLayout" columnstretch="1,5,1">
        <item row="5" column="0">
         <widget class="QLabel" name="label_6">
          <property name="text">
@@ -74,7 +74,32 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
+       <item row="1" column="1">
+        <widget class="QSpinBox" name="spinBox_nombre">
+         <property name="minimum">
+          <number>-1</number>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string>Commentaire</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QToolButton" name="toolButton_calc_nb">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../../resources.qrc">
+           <normaloff>:/plugins/Lamia/icons/numpad.png</normaloff>:/plugins/Lamia/icons/numpad.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1" colspan="2">
         <widget class="QTextEdit" name="textEdit_comm">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -90,14 +115,7 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
-        <widget class="QSpinBox" name="spinBox_nombre">
-         <property name="minimum">
-          <number>-1</number>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="1">
+       <item row="5" column="1" colspan="2">
         <widget class="QTextEdit" name="textEdit_evolution">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -110,13 +128,6 @@
            <width>16777215</width>
            <height>40</height>
           </size>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="label_7">
-         <property name="text">
-          <string>Commentaire</string>
          </property>
         </widget>
        </item>
@@ -208,6 +219,7 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+ </resources>
  <connections/>
 </ui>

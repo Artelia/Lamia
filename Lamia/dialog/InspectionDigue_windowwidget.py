@@ -238,17 +238,22 @@ class InspectiondigueWindowWidget(QMainWindow):
         newsizeicon = QtCore.QSize(newsize)
         newsizeicon.scale(newsize.width() * 0.8, newsize.width() * 0.8, QtCore.Qt.KeepAspectRatio)
         for dbasetablename in self.dbase.dbasetables.keys():
-            wgd = self.dbase.dbasetables[dbasetablename]['widget']
+            wgds = self.dbase.dbasetables[dbasetablename]['widget']
             # print('changed', dbasetablename,wgd )
-            if not isinstance(wgd, list):
-                butttons = wgd.findChildren(QPushButton)
+            if not isinstance(wgds, list):
+                listwdg = [wgds]
+            else:
+                listwdg = wgds
+
+            for wdg in listwdg:
+                butttons = wdg.findChildren(QPushButton)
                 for button in butttons:
                     # print('button', button.icon())
                     if button.icon() is not None:
                         button.setIconSize(newsizeicon)
                         button.setBaseSize(newsize)
                         button.setFixedSize(newsize)
-                butttons = wgd.findChildren(QToolButton)
+                butttons = wdg.findChildren(QToolButton)
                 for button in butttons:
                     if button.icon() is not None:
                         button.setIconSize(newsizeicon)
@@ -871,10 +876,17 @@ class InspectiondigueWindowWidget(QMainWindow):
             #try:
             dbasename = uifield.dbasetablename
             # print(dbasename)
-            self.dbase.dbasetables[dbasename]['widget'] = uifield(dbase = self.dbase,
-                                                                     dialog = self,
-                                                                     linkedtreewidget = self.ElemtreeWidget,
-                                                                     gpsutil = self.gpsutil)
+            if False:
+                self.dbase.dbasetables[dbasename]['widget'] = uifield(dbase = self.dbase,
+                                                                         dialog = self,
+                                                                         linkedtreewidget = self.ElemtreeWidget,
+                                                                         gpsutil = self.gpsutil)
+            else:
+                self.dbase.dbasetables[dbasename]['widget'].append( uifield(dbase = self.dbase,
+                                                                         dialog = self,
+                                                                         linkedtreewidget = self.ElemtreeWidget,
+                                                                         gpsutil = self.gpsutil) )
+
             if debugtime: logger.debug(' end %s %.3f', uifield.dbasetablename, time.clock() - timestart)
             i += 1
             self.setLoadingProgressBar(progress, i)
@@ -921,10 +933,16 @@ class InspectiondigueWindowWidget(QMainWindow):
         for uidesktop in self.uidesktop:
             try:
                 dbasename = uidesktop.dbasetablename
-                self.dbase.dbasetables[dbasename]['widget'] = uidesktop(dbase = self.dbase,
-                                                                         dialog = self,
-                                                                         linkedtreewidget = self.ElemtreeWidget,
-                                                                         gpsutil = self.gpsutil)
+                if False:
+                    self.dbase.dbasetables[dbasename]['widget'] = uidesktop(dbase = self.dbase,
+                                                                             dialog = self,
+                                                                             linkedtreewidget = self.ElemtreeWidget,
+                                                                             gpsutil = self.gpsutil)
+                else:
+                    self.dbase.dbasetables[dbasename]['widget'].append(uidesktop(dbase = self.dbase,
+                                                                             dialog = self,
+                                                                             linkedtreewidget = self.ElemtreeWidget,
+                                                                             gpsutil = self.gpsutil))
                 # self.dbase.dbasetables[dbasename]['widget'].initWidgets()
                 i += 1
                 self.setLoadingProgressBar(progress, i)

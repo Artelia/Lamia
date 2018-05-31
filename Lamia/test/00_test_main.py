@@ -33,14 +33,15 @@ def testCoreParserValue(canvas, loadfile=True, typedb="spatialite"):
     wind = InspectiondigueWindowWidget(canvas)
     wind.setParent(None)
 
-    print('ok')
+    print('InspectiondigueWindowWidget loaded')
 
     if loadfile:
         if typedb == "spatialite":
-            # path = os.path.normpath( 'I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201708_SIJALAG//BD_SIJALAG_ind9.sqlite')
+            #path = os.path.normpath( 'I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201708_SIJALAG//BD_SIJALAG_ind10.sqlite')
             # path = os.path.normpath('I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201709_RD//BD_Rivedroite_ind4.sqlite')
-            path = os.path.normpath('I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201710_Begles//BD_Begles_ind10.sqlite')
+            # path = os.path.normpath('I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201710_Begles//BD_Begles_ind10.sqlite')
             # path = os.path.normpath( 'C://Users//patrice.verchere//Desktop//VTA_Capa.sqlite')
+            path = os.path.normpath('C://000_testdigue//digues_BM//BD_SIJALAG_ind10.sqlite')
             # path = os.path.normpath('C://000_testdigue//temp_VNF//test01.sqlite')
             # path = os.path.normpath('C://000_testdigue//temp_digue//test01.sqlite')
             # path = os.path.normpath('C://000_testdigue//temp_ass//test01.sqlite')
@@ -53,7 +54,7 @@ def testCoreParserValue(canvas, loadfile=True, typedb="spatialite"):
                                             password='PVR', port=5432)
 
     if True:
-        print('ok00')
+        print('loadQgisVectorLayers done')
         # canvas.setDestinationCrs(wind.dbase.dbasetables['Infralineaire']['layer'].crs())
         canvas.setDestinationCrs(qgis.core.QgsCoordinateReferenceSystem(2154))
 
@@ -66,7 +67,7 @@ def testCoreParserValue(canvas, loadfile=True, typedb="spatialite"):
                     layerstoadd.append(qgis.gui.QgsMapCanvasLayer(wind.dbase.dbasetables[tablename]['layerqgis']))
                 elif sys.version_info.major == 3:
                     layerstoadd.append(wind.dbase.dbasetables[tablename]['layerqgis'])
-            print('ok0')
+
             if sys.version_info.major == 2:
                  canvas.setLayerSet(layerstoadd)
             else:
@@ -76,7 +77,7 @@ def testCoreParserValue(canvas, loadfile=True, typedb="spatialite"):
             canvas.setExtent(wind.dbase.dbasetables['Infralineaire']['layer'].extent())
             canvas.refresh()
 
-        print('ok1')
+        print('Layers loaded')
 
         canvas.show()
         canvas.refresh()

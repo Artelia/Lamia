@@ -167,17 +167,15 @@ class AbstractPointtopoTool(AbstractInspectionDigueTool):
                     self.linkuserwdg[self.dbasetablename]['widgets'][fieldname].setValue(value)
                 else:
                     self.linkuserwdg[self.dbasetablename]['widgets'][fieldname].setValue(-1.0)
-
-            xform = qgis.core.QgsCoordinateTransform(self.dbase.qgiscrs, self.canvas.mapSettings().destinationCrs())
-            mappoint = self.gpsutil.currentpoint
-            success = qgis.core.QgsGeometry.fromPoint(mappoint).transform(xform)
-            if self.rubberBand is not None:
-                self.rubberBand.reset(0)
-            else:
-                self.rubberBand = qgis.gui.QgsRubberBand(self.canvas,0)
-                self.rubberBand.setWidth(5)
-                self.rubberBand.setColor(QtGui.QColor("magenta"))
-            self.setTempGeometry([mappoint])
+            if False:
+                if self.rubberBand is not None:
+                    self.rubberBand.reset(0)
+                else:
+                    self.rubberBand = qgis.gui.QgsRubberBand(self.canvas,0)
+                    self.rubberBand.setWidth(5)
+                    self.rubberBand.setColor(QtGui.QColor("magenta"))
+            self.createorresetRubberband(0)
+            self.setTempGeometry([self.gpsutil.currentpoint],False)
             return True
         else:
             self.errorMessage('GPS non connecte')

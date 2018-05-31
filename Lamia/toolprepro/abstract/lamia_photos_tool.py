@@ -24,7 +24,7 @@ class AbstractPhotosTool(AbstractInspectionDigueTool):
         self.CAT = 'Ressources'
         self.NAME = 'Photographies'
         self.dbasetablename = 'Photo'
-        self.visualmode = [1, 2]
+        self.visualmode = [ 1, 2]
         self.PointENABLED = True
         # self.LineENABLED = True
         # self.PolygonEnabled = True

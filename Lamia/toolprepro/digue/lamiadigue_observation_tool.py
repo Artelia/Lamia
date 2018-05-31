@@ -73,6 +73,9 @@ class ObservationTool(AbstractObservationTool):
                                 'Objet' : {'linkfield' : 'id_objet',
                                           'widgets' : {}}}
 
+            self.userwdgfield.toolButton_calc_nb.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.spinBox_nombre))
+
             # ****************************************************************************************
             # child widgets
             self.dbasechildwdgfield=[]

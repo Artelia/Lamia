@@ -27,7 +27,7 @@ class AbstractCroquisTool(AbstractInspectionDigueTool):
         self.CAT = 'Ressources'
         self.NAME = 'Croquis'
         self.dbasetablename = 'Photo'
-        self.visualmode = [1, 2]
+        self.visualmode = [ 1, 2]
         # self.PointENABLED = True
         # self.LineENABLED = True
         # self.PolygonEnabled = True
@@ -214,6 +214,7 @@ class ScribbleMainWindow(QMainWindow):
         self.toolbar.addAction(self.clearAction)
 
 
+
     def saveImage(self,file):
         self.scribbleArea.saveImage(file,"png")
 
@@ -222,6 +223,11 @@ class ScribbleMainWindow(QMainWindow):
 
     def openImage(self,file):
         self.scribbleArea.openImage(file)
+
+    def closeEvent(self, event):
+        self.parentwdg.photowdg.clear()
+        self.parentwdg.photowdg.setPixmap(self.scribbleArea.image)
+        event.accept()
 
 
 class ScribbleArea(QWidget):
@@ -261,13 +267,7 @@ class ScribbleArea(QWidget):
         return True
 
     def saveImage(self, fileName, fileFormat):
-        visibleImage = self.image
-        #self.resizeImage(visibleImage, self.size())
-
-        #fileName = 'C://test1.png'
-        #fileFormat = "PNG"
-
-        if visibleImage.save(fileName, fileFormat):
+        if self.image.save(fileName, fileFormat):
             self.modified = False
             return True
         else:
@@ -280,6 +280,7 @@ class ScribbleArea(QWidget):
         self.myPenWidth = newWidth
 
     def clearImage(self):
+        #print('celar')
         self.image.fill(QtGui.qRgb(255, 255, 255))
         self.modified = True
         self.update()

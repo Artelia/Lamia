@@ -76,6 +76,11 @@ class EquipementTool(AbstractInspectionDigueTool):
             self.pushButton_addPoint.setEnabled(False)
             self.pushButton_addLine.setEnabled(False)
 
+            self.userwdgfield.toolButton_calch.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_dimvert))
+            self.userwdgfield.toolButton__calcv.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_dimhoriz))
+
 
             # ****************************************************************************************
             # child widgets
