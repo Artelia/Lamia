@@ -1,0 +1,42 @@
+{
+  "Descriptionsystem" : {
+    "fields" : ["Objet"],
+    "query_sql" : "INSERT INTO Descriptionsystem (id_objet) VALUES (?)"
+  },
+  "Desordre" : {
+    "query_couch" : { "@class": "fr.sirs.core.model.Desordre"},
+    "fields" : [ "Objet", "categorieDesordreId abrege", "coteId abrege", "geometry", "typeDesordreId abrege", "positionId abrege"],
+    "query_sql" : "INSERT INTO Desordre (id_objet, groupedesordre, cote, catdes, geom, typedes, position) VALUES (?,'clapet',?,?,st_geomfromtext(?,3057),?,?)"
+  },
+  "Equipement": {
+    "query_couch" : { "@class": "fr.sirs.core.model.OuvrageParticulier"},
+    "fields" : ["Descriptionsystem", "Objet", "coteId abrege", "geometry", "positionId abrege", "typeOuvrageParticulierId abrege"],
+    "query_sql" : "INSERT INTO Equipement (id_descriptionsystem, id_objet, cote, geom, position, typeequipement) VALUES (?,?,?,st_geomfromtext(?,3057),?,?)"
+  },
+  "Infralineaire": {
+	  "query_couch" : { "@class": "fr.sirs.core.model.TronconDigue"},
+    "fields" : ["Descriptionsystem", "Objet", "geometry"],
+    "query_sql" : "INSERT INTO Infralineaire (id_descriptionsystem, id_objet, geom) VALUES (?,?,st_geomfromtext(?,3057))"
+	},
+  "Objet" : {
+    "fields" : ["dateMaj", "date_debut", "libelle"],
+    "query_sql" : "INSERT INTO Objet (datemodification, datecreation, libelle) VALUES (?,?,?)"
+  },
+  "Observation" : {
+      "list" : "observations",
+      "query_couch" : { "@class": "fr.sirs.core.model.Desordre"},
+      "fields" : ["Objet", "date","evolution",  "urgenceId abrege", "nombreDesordres"],
+      "query_sql" : "INSERT INTO Observation (id_objet, dateobservation, commentaires, gravite, nombre) VALUES (?,?,?,?,?)"
+  },
+  "Noeud" : {
+    "query_couch": { "@class": "fr.sirs.core.model.BorneDigue" },
+    "fields" : ["Objet", "geometry"],
+    "query_sql" : "INSERT INTO Noeud (id_objet, geom) VALUES (?,st_geomfromtext(?,3057))"
+  },
+  "Misc" : {
+    "Update_using_id" : "UPDATE {table_name01} SET {field_name01} = {value} WHERE {table_name01}.{field_name02} = {id_search}",
+    "Select_using_id" : "SELECT {field_name01} FROM {table_name01} WHERE {field_name02} = {id_search}",
+    "Select_cross_field" : "SELECT {table_name01}.id_{table_name01} FROM {table_name01}, {table_name02} WHERE {table_name01}.{field_name01} = {table_name02}.{field_name02} AND {table_name02}.id_{table_name02} = {id_search}",
+    "Select_using_geom" : "SELECT {table_name01}.id_{table_name01} FROM {table_name01}, {table_name02} WHERE {table_name01}.id_{table_name01} = {id_search} ORDER BY ST_Distance(ST_MakeValid({table_name01}.geom), ST_MakeValid({table_name02}.geom)) ASC LIMIT 1"
+  }
+}

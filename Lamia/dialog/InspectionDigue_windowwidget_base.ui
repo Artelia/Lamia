@@ -576,6 +576,8 @@
     <addaction name="actionImport"/>
     <addaction name="actionImprimer_rapport"/>
     <addaction name="actionMode_hors_ligne_Reconnexion"/>
+    <addaction name="actionImporter_depuis_SIRS_Digues"/>
+    <addaction name="actionExporter_vers_SIRS_Digues"/>
    </widget>
    <addaction name="menuFichiers"/>
    <addaction name="menuMode"/>
@@ -741,6 +743,16 @@
   <action name="actionMode_hors_ligne_Reconnexion">
    <property name="text">
     <string>Mode hors ligne/Reconnexion</string>
+   </property>
+  </action>
+  <action name="actionImporter_depuis_SIRS_Digues">
+   <property name="text">
+    <string>Importer depuis SIRS Digues</string>
+   </property>
+  </action>
+  <action name="actionExporter_vers_SIRS_Digues">
+   <property name="text">
+    <string>Exporter vers SIRS Digues</string>
    </property>
   </action>
  </widget>
