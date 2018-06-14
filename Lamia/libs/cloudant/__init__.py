@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (c) 2015, 2018 IBM. All rights reserved.
+# Copyright (c) 2015 IBM. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,13 +15,12 @@
 """
 Cloudant / CouchDB Python client library API package
 """
-__version__ = '2.8.2-SNAPSHOT'
+__version__ = '2.0.2'
 
 # pylint: disable=wrong-import-position
 import contextlib
 # pylint: disable=wrong-import-position
 from .client import Cloudant, CouchDB
-from ._common_util import CloudFoundryService
 
 @contextlib.contextmanager
 def cloudant(user, passwd, **kwargs):
@@ -58,105 +57,6 @@ def cloudant(user, passwd, **kwargs):
             # ...
     """
     cloudant_session = Cloudant(user, passwd, **kwargs)
-    cloudant_session.connect()
-    yield cloudant_session
-    cloudant_session.disconnect()
-
-@contextlib.contextmanager
-def cloudant_iam(account_name, api_key, **kwargs):
-    """
-    Provides a context manager to create a Cloudant session using IAM
-    authentication and provide access to databases, docs etc.
-
-    :param account_name: Cloudant account name.
-    :param api_key: IAM authentication API key.
-
-    For example:
-
-    .. code-block:: python
-
-        # cloudant context manager
-        from cloudant import cloudant_iam
-
-        with cloudant_iam(ACCOUNT_NAME, API_KEY) as client:
-            # Context handles connect() and disconnect() for you.
-            # Perform library operations within this context.  Such as:
-            print client.all_dbs()
-            # ...
-
-    """
-    cloudant_session = Cloudant.iam(account_name, api_key, **kwargs)
-
-    cloudant_session.connect()
-    yield cloudant_session
-    cloudant_session.disconnect()
-
-@contextlib.contextmanager
-def cloudant_bluemix(vcap_services, instance_name=None, service_name=None, **kwargs):
-    """
-    Provides a context manager to create a Cloudant session and provide access
-    to databases, docs etc.
-
-    :param vcap_services: VCAP_SERVICES environment variable
-    :type vcap_services: dict or str
-    :param str instance_name: Optional Bluemix instance name. Only required if
-        multiple Cloudant instances are available.
-    :param str service_name: Optional Bluemix service name.
-    :param str encoder: Optional json Encoder object used to encode
-        documents for storage. Defaults to json.JSONEncoder.
-
-    Loads all configuration from the specified VCAP_SERVICES Cloud Foundry
-    environment variable. The VCAP_SERVICES variable contains connection
-    information to access a service instance. For example:
-
-    .. code-block:: json
-
-        {
-            "VCAP_SERVICES": {
-                "cloudantNoSQLDB": [
-                    {
-                        "credentials": {
-                            "apikey": "some123api456key"
-                            "username": "example",
-                            "password": "xxxxxxx",
-                            "host": "example.cloudant.com",
-                            "port": 443,
-                            "url": "https://example:xxxxxxx@example.cloudant.com"
-                        },
-                        "syslog_drain_url": null,
-                        "label": "cloudantNoSQLDB",
-                        "provider": null,
-                        "plan": "Lite",
-                        "name": "Cloudant NoSQL DB"
-                    }
-                ]
-            }
-        }
-
-    See `Cloud Foundry Environment Variables <http://docs.cloudfoundry.org/
-    devguide/deploy-apps/environment-variable.html#VCAP-SERVICES>`_.
-
-    Example usage:
-
-    .. code-block:: python
-
-        import os
-
-        # cloudant_bluemix context manager
-        from cloudant import cloudant_bluemix
-
-        with cloudant_bluemix(os.getenv('VCAP_SERVICES'), 'Cloudant NoSQL DB') as client:
-            # Context handles connect() and disconnect() for you.
-            # Perform library operations within this context.  Such as:
-            print client.all_dbs()
-            # ...
-    """
-    cloudant_session = Cloudant.bluemix(
-        vcap_services,
-        instance_name=instance_name,
-        service_name=service_name,
-        **kwargs
-    )
     cloudant_session.connect()
     yield cloudant_session
     cloudant_session.disconnect()

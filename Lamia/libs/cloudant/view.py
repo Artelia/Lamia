@@ -16,11 +16,13 @@
 API module for interacting with a view in a design document.
 """
 import contextlib
+import posixpath
+import json
 
 from ._2to3 import STRTYPE
-from ._common_util import codify, get_docs
+from ._common_util import python_to_couch, codify
 from .result import Result
-from .error import CloudantArgumentError, CloudantViewException
+from .error import CloudantArgumentError, CloudantException
 
 class View(dict):
     """
@@ -167,11 +169,11 @@ class View(dict):
 
         :returns: View URL
         """
-        return '/'.join((
+        return posixpath.join(
             self.design_doc.document_url,
             '_view',
             self.view_name
-        ))
+        )
 
     def __call__(self, **kwargs):
         """
@@ -223,10 +225,15 @@ class View(dict):
 
         :returns: View result data in JSON format
         """
-        resp = get_docs(self._r_session,
-                        self.url,
-                        self.design_doc.encoder,
-                        **kwargs)
+        params = python_to_couch(kwargs)
+        keys_list = params.pop('keys', None)
+        resp = None
+        if keys_list:
+            keys = json.dumps({'keys': keys_list})
+            resp = self._r_session.post(self.url, params=params, data=keys)
+        else:
+            resp = self._r_session.get(self.url, params=params)
+        resp.raise_for_status()
         return resp.json()
 
     @contextlib.contextmanager
@@ -300,9 +307,9 @@ class QueryIndexView(View):
     """
     def __init__(self, ddoc, view_name, map_fields, reduce_func, **kwargs):
         if not isinstance(map_fields, dict):
-            raise CloudantArgumentError(132)
+            raise CloudantArgumentError('The map property must be a dictionary')
         if not isinstance(reduce_func, STRTYPE):
-            raise CloudantArgumentError(133)
+            raise CloudantArgumentError('The reduce property must be a string.')
         super(QueryIndexView, self).__init__(
             ddoc,
             view_name,
@@ -333,7 +340,7 @@ class QueryIndexView(View):
         if isinstance(map_func, dict):
             self['map'] = map_func
         else:
-            raise CloudantArgumentError(132)
+            raise CloudantArgumentError('The map property must be a dictionary')
 
     @property
     def reduce(self):
@@ -355,7 +362,7 @@ class QueryIndexView(View):
         if isinstance(reduce_func, STRTYPE):
             self['reduce'] = reduce_func
         else:
-            raise CloudantArgumentError(133)
+            raise CloudantArgumentError('The reduce property must be a string')
 
     def __call__(self, **kwargs):
         """
@@ -363,7 +370,10 @@ class QueryIndexView(View):
         using a query index, use
         :func:`~cloudant.database.CloudantDatabase.get_query_result` instead.
         """
-        raise CloudantViewException(101)
+        raise CloudantException(
+            'A QueryIndexView is not callable.  If you wish to execute a query '
+            'use the database \'get_query_result\' convenience method.'
+        )
 
     def custom_result(self, **options):
         """
@@ -374,4 +384,8 @@ class QueryIndexView(View):
         query using a query index, use
         :func:`~cloudant.database.CloudantDatabase.get_query_result` instead.
         """
-        raise CloudantViewException(102)
+        raise CloudantException(
+            'Cannot create a custom result context manager using a '
+            'QueryIndexView.  If you wish to execute a query use the '
+            'database \'get_query_result\' convenience method instead.'
+        )

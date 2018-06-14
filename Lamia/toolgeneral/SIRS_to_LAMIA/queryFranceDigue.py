@@ -1,11 +1,12 @@
 #! /usr/bin/env python3.6
 from ...libs.cloudant import Cloudant
-from ...libs.cloudant import query
+from ...libs.cloudant.query import Query
 
 #from cloudant import Cloudant
 #from cloudant.query import Query
 import json
 import re
+import os
 
 class queryFranceDigue():
 
@@ -21,7 +22,7 @@ class queryFranceDigue():
         self.client = Cloudant(user, pwd, url='http://' + ip + ':' + port)
         self.client.connect()
         if selectDb not in self.client.all_dbs():
-            raise ValueError("The database you searching '"+selectDb+"' isn't here")
+            raise ValueError("The database you're searching '"+selectDb+"' isn't here")
         self.selectDb = selectDb
         self.keySet = self.getPossibleKeys()
 
@@ -93,11 +94,32 @@ class queryFranceDigue():
     :param fields: list fo string
     :rtype: an iterable object
     """
-    def customQuery(self, json, fields=None):
-        if fields == None:
-            fields = self.getPossibleKeys()
-        query = Query(self.client[self.selectDb], selector=json, fields=fields)
-        return query.result
+    def customQuery(self, query, fields=None):
+
+
+        #A recoder ?
+        #Remplacer Query par une methode maison :
+        #Prend en entree la base, le selector qui est un json ici (les filtres WHERE de SQL, typiquement sur la classe) et les champs a retourner (fields, ici un [])
+
+
+
+
+
+        #if fields == None:
+        #    fields = self.getPossibleKeys()
+        #query = Query(self.client[self.selectDb], selector=json, fields=fields)
+        #print('resultat : ',query.result)
+        #return query.result
+
+
+        for fld in query:
+            fld
+            if fields == None:
+                fields = self.getPossibleKeys()
+            for doc in self.client[self.selectDb]:
+                if fld in doc and doc[fld] == query[fld]:
+                    yield doc
+                continue
 
     """
     Get the document with the specified id, and return the values of the fields given in entry
@@ -125,7 +147,7 @@ class queryFranceDigue():
 
         #Si le path est compose d'un noeud, une redirection vers un autre objet a creer
         if path[0][0].isupper() and len(path) == 1:
-            config = json.load(open('jsonConfig/config.json'))
+            config = json.load(open(os.path.join(os.path.dirname(__file__), 'jsonConfig/config.json')))
             path = path[0]
             ret = self.getDocFields(obj['_id'], config[path]['fields'])
             return ret

@@ -70,9 +70,9 @@ class ImportSirsDialog(QDialog):
 class FranceDiguetoLamia():
 
     def __init__(self, user, pwd, ip, port, nom_sirs, path_lamia):
-        self.configPATH = 'jsonConfig/config.json'
-        self.bridgePATH = 'jsonConfig/bridge.json'
-        self.convertisseurPATH = 'jsonConfig/convertisseur.json'
+        self.configPATH =  os.path.join(os.path.dirname(__file__), 'jsonConfig/config.json')
+        self.bridgePATH =  os.path.join(os.path.dirname(__file__), 'jsonConfig/bridge.json')
+        self.convertisseurPATH = os.path.join(os.path.dirname(__file__), 'jsonConfig/convertisseur.json')
         #user = "r.beckprotoy"
         #pwd = "CouchDb"
         #ip = "10.3.38.37"
@@ -105,7 +105,9 @@ class FranceDiguetoLamia():
 
         for nom_lm in config:
             if 'query_couch' in config[nom_lm]:
+                print(config[nom_lm]['query_couch'])
                 for doc in self.queryFD.customQuery(config[nom_lm]['query_couch'],['_id','@class']):
+                    print('test',doc)
                     id_fd = doc['_id']
 
                     #Cas ou le métaObjet est constiutés sur un seul document (Desersordre, Indralineaire)
@@ -131,7 +133,7 @@ class FranceDiguetoLamia():
 
             self.setDependencies()
             #Block d'écriture et de fermeture des connexions aux bases
-            # self.queryL.commit()
+            self.queryL.commit()
             self.queryFD.disconnect()
             self.queryL.disconnect()
 
@@ -148,7 +150,7 @@ class FranceDiguetoLamia():
     def insertInConvertisseur(self, convertisseur, id_fd, id_lm, nom_fd, nom_lm, alpha = []):
         tmp = {'couch': {'id': id_fd, 'type': nom_fd}, 'sql': {'id': id_lm, 'type': nom_lm}}
         convertisseur.append(tmp)
-        open('jsonConfig/convertisseur.json','w').write(json.dumps(convertisseur))
+        open(os.path.join(os.path.dirname(__file__), 'jsonConfig/convertisseur.json'),'w').write(json.dumps(convertisseur))
 
     """
     Entry point of the recurcive loop for creating a metaObjet

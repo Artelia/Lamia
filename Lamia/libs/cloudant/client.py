@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (C) 2015, 2018 IBM Corp. All rights reserved.
+# Copyright (c) 2015, 2016 IBM. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,27 +16,18 @@
 Top level API module that maps to a Cloudant or CouchDB client connection
 instance.
 """
+import base64
 import json
-from ._2to3 import url_parse
+import posixpath
+import requests
 
-from ._client_session import (
-    BasicSession,
-    ClientSession,
-    CookieSession,
-    IAMSession
-)
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util import Retry
+from ._2to3 import bytes_, unicode_
 from .database import CloudantDatabase, CouchDatabase
 from .feed import Feed, InfiniteFeed
-from .error import (
-    CloudantArgumentError,
-    CloudantClientException,
-    CloudantDatabaseException, CloudantException)
-from ._common_util import (
-    USER_AGENT,
-    append_response_error_content,
-    CloudFoundryService,
-    )
-
+from .error import CloudantException, CloudantArgumentError
+from ._common_util import USER_AGENT
 
 class CouchDB(dict):
     """
@@ -50,33 +41,11 @@ class CouchDB(dict):
 
     :param str user: Username used to connect to CouchDB.
     :param str auth_token: Authentication token used to connect to CouchDB.
+    :param str url: URL for CouchDB server.
     :param bool admin_party: Setting to allow the use of Admin Party mode in
         CouchDB.  Defaults to ``False``.
-    :param str url: URL for CouchDB server.
     :param str encoder: Optional json Encoder object used to encode
         documents for storage.  Defaults to json.JSONEncoder.
-    :param requests.HTTPAdapter adapter: Optional adapter to use for
-        configuring requests.
-    :param bool connect: Keyword argument, if set to True performs the call to
-        connect as part of client construction.  Default is False.
-    :param bool auto_renew: Keyword argument, if set to True performs
-        automatic renewal of expired session authentication settings.
-        Default is False.
-    :param float timeout: Timeout in seconds (use float for milliseconds, for
-        example 0.1 for 100 ms) for connecting to and reading bytes from the
-        server.  If a single value is provided it will be applied to both the
-        connect and read timeouts.  To specify different values for each timeout
-        use a tuple.  For example, a 10 second connect timeout and a 1 minute
-        read timeout would be (10, 60).  This follows the same behaviour as the
-        `Requests library timeout argument
-        <http://docs.python-requests.org/en/master/user/quickstart/#timeouts>`_.
-        but will apply to every request made using this client.
-    :param bool use_basic_auth: Keyword argument, if set to True performs basic
-        access authentication with server. Default is False.
-    :param bool use_iam: Keyword argument, if set to True performs
-        IAM authentication with server. Default is False.
-        Use :func:`~cloudant.client.CouchDB.iam` to construct an IAM
-        authenticated client.
     """
     _DATABASE_CLASS = CouchDatabase
 
@@ -84,113 +53,46 @@ class CouchDB(dict):
         super(CouchDB, self).__init__()
         self._user = user
         self._auth_token = auth_token
+        self._client_session = None
         self.server_url = kwargs.get('url')
         self._client_user_header = None
         self.admin_party = admin_party
         self.encoder = kwargs.get('encoder') or json.JSONEncoder
-        self.adapter = kwargs.get('adapter')
-        self._timeout = kwargs.get('timeout', None)
         self.r_session = None
-        self._auto_renew = kwargs.get('auto_renew', False)
-        self._use_basic_auth = kwargs.get('use_basic_auth', False)
-        self._use_iam = kwargs.get('use_iam', False)
-        # If user/pass exist in URL, remove and set variables
-        if not self._use_basic_auth and self.server_url:
-            parsed_url = url_parse(kwargs.get('url'))
-            # Note: To prevent conflicts with field names, the method
-            # and attribute names of `url_parse` start with an underscore
-            if parsed_url.port is None:
-                self.server_url = parsed_url._replace(
-                    netloc="{}".format(parsed_url.hostname)).geturl()
-            else:
-                self.server_url = parsed_url._replace(
-                    netloc="{}:{}".format(parsed_url.hostname, parsed_url.port)).geturl()
-            if (not user and not auth_token) and (parsed_url.username and parsed_url.password):
-                self._user = parsed_url.username
-                self._auth_token = parsed_url.password
-        self._features = None
-
-        connect_to_couch = kwargs.get('connect', False)
-        if connect_to_couch and self._DATABASE_CLASS == CouchDatabase:
-            self.connect()
-
-    @property
-    def is_iam_authenticated(self):
-        """
-        Show if a client has authenticated using an IAM API key.
-
-        :return: True if client is IAM authenticated. False otherwise.
-        """
-        return self._use_iam
-
-    def features(self):
-        """
-        lazy fetch and cache features
-        """
-        if self._features is None:
-            metadata = self.metadata()
-            if "features" in metadata:
-                self._features = metadata["features"]
-            else:
-                self._features = []
-        return self._features
 
     def connect(self):
         """
         Starts up an authentication session for the client using cookie
-        authentication if necessary.
+        authentication.
         """
-        if self.r_session:
-            self.session_logout()
-
-        if self.admin_party:
-            self._use_iam = False
-            self.r_session = ClientSession(
-                timeout=self._timeout
-            )
-        elif self._use_basic_auth:
-            self._use_iam = False
-            self.r_session = BasicSession(
-                self._user,
-                self._auth_token,
-                self.server_url,
-                timeout=self._timeout
-            )
-        elif self._use_iam:
-            self.r_session = IAMSession(
-                self._auth_token,
-                self.server_url,
-                auto_renew=self._auto_renew,
-                timeout=self._timeout
-            )
-        else:
-            self.r_session = CookieSession(
-                self._user,
-                self._auth_token,
-                self.server_url,
-                auto_renew=self._auto_renew,
-                timeout=self._timeout
-            )
-
-        # If a Transport Adapter was supplied add it to the session
-        if self.adapter is not None:
-            self.r_session.mount(self.server_url, self.adapter)
+        self.r_session = requests.Session()
+        # Configure a Transport Adapter for custom retry behaviour
+        self.r_session.mount(self.server_url, HTTPAdapter(
+            max_retries=Retry(
+                # Allow 10 retries for status
+                total=10,
+                # No retries for connect|read errors
+                connect=0,
+                read=0,
+                # Allow retries for all the CouchDB HTTP method types
+                method_whitelist=frozenset(['GET', 'HEAD', 'PUT', 'POST',
+                                            'DELETE', 'COPY']),
+                # Only retry for a 429 too many requests status code
+                status_forcelist=[429],
+                # Configure the doubling backoff to start at 0.25 s
+                backoff_factor=0.25)))
         if self._client_user_header is not None:
             self.r_session.headers.update(self._client_user_header)
-
-        self.session_login()
-
-        # Utilize an event hook to append to the response message
-        # using :func:`~cloudant.common_util.append_response_error_content`
-        self.r_session.hooks['response'].append(append_response_error_content)
+        if not self.admin_party:
+            self.r_session.auth = (self._user, self._auth_token)
+            self.session_login(self._user, self._auth_token)
+        self._client_session = self.session()
 
     def disconnect(self):
         """
         Ends a client authentication session, performs a logout and a clean up.
         """
-        if self.r_session:
-            self.session_logout()
-
+        self.session_logout()
         self.r_session = None
         self.clear()
 
@@ -201,7 +103,13 @@ class CouchDB(dict):
 
         :returns: Dictionary of session info for the current session.
         """
-        return self.r_session.info()
+        if self.admin_party:
+            return None
+        sess_url = posixpath.join(self.server_url, '_session')
+        resp = self.r_session.get(sess_url)
+        resp.raise_for_status()
+        sess_data = resp.json()
+        return sess_data
 
     def session_cookie(self):
         """
@@ -209,34 +117,41 @@ class CouchDB(dict):
 
         :returns: Session cookie for the current session
         """
+        if self.admin_party:
+            return None
         return self.r_session.cookies.get('AuthSession')
 
-    def session_login(self, user=None, passwd=None):
+    def session_login(self, user, passwd):
         """
         Performs a session login by posting the auth information
         to the _session endpoint.
 
-        :param str user: Username used to connect to server.
-        :param str auth_token: Authentication token used to connect to server.
+        :param str user: Username used to connect.
+        :param str passwd: Passcode used to connect.
         """
-        self.change_credentials(user=user, auth_token=passwd)
-
-    def change_credentials(self, user=None, auth_token=None):
-        """
-        Change login credentials.
-
-        :param str user: Username used to connect to server.
-        :param str auth_token: Authentication token used to connect to server.
-        """
-        self.r_session.set_credentials(user, auth_token)
-        self.r_session.login()
+        if self.admin_party:
+            return
+        sess_url = posixpath.join(self.server_url, '_session')
+        resp = self.r_session.post(
+            sess_url,
+            data={
+                'name': user,
+                'password': passwd
+            },
+            headers={'Content-Type': 'application/x-www-form-urlencoded'}
+        )
+        resp.raise_for_status()
 
     def session_logout(self):
         """
         Performs a session logout and clears the current session by
         sending a delete request to the _session endpoint.
         """
-        self.r_session.logout()
+        if self.admin_party:
+            return
+        sess_url = posixpath.join(self.server_url, '_session')
+        resp = self.r_session.delete(sess_url)
+        resp.raise_for_status()
 
     def basic_auth_str(self):
         """
@@ -245,7 +160,13 @@ class CouchDB(dict):
 
         :returns: Basic http authentication string
         """
-        return self.r_session.base64_user_pass()
+        if self.admin_party:
+            return None
+        hash_ = base64.urlsafe_b64encode(bytes_("{username}:{password}".format(
+            username=self._user,
+            password=self._auth_token
+        )))
+        return "Basic {0}".format(unicode_(hash_))
 
     def all_dbs(self):
         """
@@ -253,7 +174,7 @@ class CouchDB(dict):
 
         :returns: List of database names for the client
         """
-        url = '/'.join((self.server_url, '_all_dbs'))
+        url = posixpath.join(self.server_url, '_all_dbs')
         resp = self.r_session.get(url)
         resp.raise_for_status()
         return resp.json()
@@ -263,35 +184,37 @@ class CouchDB(dict):
         Creates a new database on the remote server with the name provided
         and adds the new database object to the client's locally cached
         dictionary before returning it to the caller.  The method will
-        optionally throw a CloudantClientException if the database
-        exists remotely.
+        optionally throw a CloudantException if the database exists remotely.
 
         :param str dbname: Name used to create the database.
         :param bool throw_on_exists: Boolean flag dictating whether or
-            not to throw a CloudantClientException when attempting to
-            create a database that already exists.
+            not to throw a CloudantException when attempting to create a
+            database that already exists.
 
         :returns: The newly created database object
         """
         new_db = self._DATABASE_CLASS(self, dbname)
-        try:
-            new_db.create(kwargs.get('throw_on_exists', False))
-        except CloudantDatabaseException as ex:
-            if ex.status_code == 412:
-                raise CloudantClientException(412, dbname)
+        if new_db.exists():
+            if kwargs.get('throw_on_exists', True):
+                raise CloudantException(
+                    "Database {0} already exists".format(dbname)
+                )
+        new_db.create()
         super(CouchDB, self).__setitem__(dbname, new_db)
         return new_db
 
     def delete_database(self, dbname):
         """
-        Removes the named database remotely and locally. The method will throw
-        a CloudantClientException if the database does not exist.
+        Removes the named database remotely and locally. The method will throw a
+        CloudantException if the database does not exist.
 
         :param str dbname: Name of the database to delete.
         """
         db = self._DATABASE_CLASS(self, dbname)
         if not db.exists():
-            raise CloudantClientException(404, dbname)
+            raise CloudantException(
+                "Database {0} does not exist".format(dbname)
+            )
         db.delete()
         if dbname in list(self.keys()):
             super(CouchDB, self).__delitem__(dbname)
@@ -336,16 +259,6 @@ class CouchDB(dict):
             feed.
         """
         return Feed(self, raw_data, **kwargs)
-
-    def metadata(self):
-        """
-        Retrieves the remote server metadata dictionary.
-
-        :returns: Dictionary containing server metadata details
-        """
-        resp = self.r_session.get(self.server_url)
-        resp.raise_for_status()
-        return resp.json()
 
     def keys(self, remote=False):
         """
@@ -428,8 +341,8 @@ class CouchDB(dict):
         if db.exists():
             super(CouchDB, self).__setitem__(key, db)
             return db
-
-        return default
+        else:
+            return default
 
     def __setitem__(self, key, value, remote=False):
         """
@@ -451,7 +364,8 @@ class CouchDB(dict):
             create the database remotely or not.  Defaults to False.
         """
         if not isinstance(value, self._DATABASE_CLASS):
-            raise CloudantClientException(101, type(value).__name__)
+            msg = "Value must be set to a Database object"
+            raise CloudantException(msg)
         if remote and not value.exists():
             value.create()
         super(CouchDB, self).__setitem__(key, value)
@@ -480,24 +394,25 @@ class Cloudant(CouchDB):
         the x_cloudant_user parameter setting is ignored.
     :param str encoder: Optional json Encoder object used to encode
         documents for storage. Defaults to json.JSONEncoder.
-    :param requests.HTTPAdapter adapter: Optional adapter to use for configuring requests.
     """
     _DATABASE_CLASS = CloudantDatabase
 
     def __init__(self, cloudant_user, auth_token, **kwargs):
         super(Cloudant, self).__init__(cloudant_user, auth_token, **kwargs)
+
         self._client_user_header = {'User-Agent': USER_AGENT}
         account = kwargs.get('account')
+        url = kwargs.get('url')
+        x_cloudant_user = kwargs.get('x_cloudant_user')
         if account is not None:
             self.server_url = 'https://{0}.cloudant.com'.format(account)
-        if kwargs.get('x_cloudant_user') is not None:
-            self._client_user_header['X-Cloudant-User'] = kwargs.get('x_cloudant_user')
+        elif kwargs.get('url') is not None:
+            self.server_url = url
+            if x_cloudant_user is not None:
+                self._client_user_header['X-Cloudant-User'] = x_cloudant_user
 
         if self.server_url is None:
-            raise CloudantClientException(102)
-
-        if kwargs.get('connect', False):
-            self.connect()
+            raise CloudantException('You must provide a url or an account.')
 
     def db_updates(self, raw_data=False, **kwargs):
         """
@@ -605,21 +520,25 @@ class Cloudant(CouchDB):
             between 1 and 12. Optional parameter. Defaults to None.
             If used, it must be accompanied by ``year``.
         """
-        err = False
+        err = None
         if year is None and month is None:
             resp = self.r_session.get(endpoint)
         else:
             try:
                 if int(year) > 0 and int(month) in range(1, 13):
                     resp = self.r_session.get(
-                        '/'.join((endpoint, str(int(year)), str(int(month)))))
+                        posixpath.join(
+                            endpoint, str(int(year)), str(int(month)))
+                    )
                 else:
-                    err = True
+                    err = ('Invalid year and/or month supplied.  '
+                           'Found: year - {0}, month - {1}').format(year, month)
             except (ValueError, TypeError):
-                err = True
+                err = ('Invalid year and/or month supplied.  '
+                       'Found: year - {0}, month - {1}').format(year, month)
 
         if err:
-            raise CloudantArgumentError(101, year, month)
+            raise CloudantArgumentError(err)
         else:
             resp.raise_for_status()
             return resp.json()
@@ -637,7 +556,7 @@ class Cloudant(CouchDB):
 
         :returns: Billing data in JSON format
         """
-        endpoint = '/'.join((self.server_url, '_api', 'v2', 'bill'))
+        endpoint = posixpath.join(self.server_url, '_api', 'v2', 'bill')
         return self._usage_endpoint(endpoint, year, month)
 
     def volume_usage(self, year=None, month=None):
@@ -654,8 +573,9 @@ class Cloudant(CouchDB):
 
         :returns: Volume usage data in JSON format
         """
-        endpoint = '/'.join((
-            self.server_url, '_api', 'v2', 'usage', 'data_volume'))
+        endpoint = posixpath.join(
+            self.server_url, '_api', 'v2', 'usage', 'data_volume'
+        )
         return self._usage_endpoint(endpoint, year, month)
 
     def requests_usage(self, year=None, month=None):
@@ -672,8 +592,9 @@ class Cloudant(CouchDB):
 
         :returns: Requests usage data in JSON format
         """
-        endpoint = '/'.join((
-            self.server_url, '_api', 'v2', 'usage', 'requests'))
+        endpoint = posixpath.join(
+            self.server_url, '_api', 'v2', 'usage', 'requests'
+        )
         return self._usage_endpoint(endpoint, year, month)
 
     def shared_databases(self):
@@ -683,8 +604,9 @@ class Cloudant(CouchDB):
 
         :returns: List of database names
         """
-        endpoint = '/'.join((
-            self.server_url, '_api', 'v2', 'user', 'shared_databases'))
+        endpoint = posixpath.join(
+            self.server_url, '_api', 'v2', 'user', 'shared_databases'
+        )
         resp = self.r_session.get(endpoint)
         resp.raise_for_status()
         data = resp.json()
@@ -696,7 +618,9 @@ class Cloudant(CouchDB):
 
         :returns: API key/pass pair in JSON format
         """
-        endpoint = '/'.join((self.server_url, '_api', 'v2', 'api_keys'))
+        endpoint = posixpath.join(
+            self.server_url, '_api', 'v2', 'api_keys'
+        )
         resp = self.r_session.post(endpoint)
         resp.raise_for_status()
         return resp.json()
@@ -707,8 +631,9 @@ class Cloudant(CouchDB):
 
         :returns: CORS data in JSON format
         """
-        endpoint = '/'.join((
-            self.server_url, '_api', 'v2', 'user', 'config', 'cors'))
+        endpoint = posixpath.join(
+            self.server_url, '_api', 'v2', 'user', 'config', 'cors'
+        )
         resp = self.r_session.get(endpoint)
         resp.raise_for_status()
 
@@ -798,68 +723,14 @@ class Cloudant(CouchDB):
 
         :returns: CORS configuration update status in JSON format
         """
-        endpoint = '/'.join((
-            self.server_url, '_api', 'v2', 'user', 'config', 'cors'))
+        endpoint = posixpath.join(
+            self.server_url, '_api', 'v2', 'user', 'config', 'cors'
+        )
         resp = self.r_session.put(
             endpoint,
-            data=json.dumps(config, cls=self.encoder),
+            data=json.dumps(config),
             headers={'Content-Type': 'application/json'}
         )
         resp.raise_for_status()
 
         return resp.json()
-
-    @classmethod
-    def bluemix(cls, vcap_services, instance_name=None, service_name=None, **kwargs):
-        """
-        Create a Cloudant session using a VCAP_SERVICES environment variable.
-
-        :param vcap_services: VCAP_SERVICES environment variable
-        :type vcap_services: dict or str
-        :param str instance_name: Optional Bluemix instance name. Only required
-            if multiple Cloudant instances are available.
-        :param str service_name: Optional Bluemix service name.
-
-        Example usage:
-
-        .. code-block:: python
-
-            import os
-            from cloudant.client import Cloudant
-
-            client = Cloudant.bluemix(os.getenv('VCAP_SERVICES'),
-                                      'Cloudant NoSQL DB')
-
-            print client.all_dbs()
-        """
-        service_name = service_name or 'cloudantNoSQLDB'  # default service
-        try:
-            service = CloudFoundryService(vcap_services,
-                                          instance_name=instance_name,
-                                          service_name=service_name)
-        except CloudantException:
-            raise CloudantClientException(103)
-
-        if hasattr(service, 'iam_api_key'):
-            return Cloudant.iam(service.username,
-                                service.iam_api_key,
-                                url=service.url)
-        return Cloudant(service.username,
-                        service.password,
-                        url=service.url,
-                        **kwargs)
-
-    @classmethod
-    def iam(cls, account_name, api_key, **kwargs):
-        """
-        Create a Cloudant client that uses IAM authentication.
-
-        :param account_name: Cloudant account name.
-        :param api_key: IAM authentication API key.
-        """
-        return cls(None,
-                   api_key,
-                   account=account_name,
-                   auto_renew=kwargs.get('auto_renew', True),
-                   use_iam=True,
-                   **kwargs)

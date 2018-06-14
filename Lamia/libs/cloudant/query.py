@@ -16,6 +16,7 @@
 API module for composing and executing Cloudant queries.
 """
 
+import posixpath
 import json
 import contextlib
 
@@ -104,7 +105,7 @@ class Query(dict):
 
         :returns: Query URL
         """
-        return '/'.join((self._database.database_url, '_find'))
+        return posixpath.join(self._database.database_url, '_find')
 
     def __call__(self, **kwargs):
         """
@@ -158,11 +159,19 @@ class Query(dict):
         # Validate query arguments and values
         for key, val in iteritems_(data):
             if key not in list(QUERY_ARG_TYPES.keys()):
-                raise CloudantArgumentError(129, key)
+                msg = 'Invalid argument: {0}'.format(key)
+                raise CloudantArgumentError(msg)
             if not isinstance(val, QUERY_ARG_TYPES[key]):
-                raise CloudantArgumentError(130, key, QUERY_ARG_TYPES[key])
+                msg = (
+                    'Argument {0} is not an instance of expected type: {1}'
+                ).format(key, QUERY_ARG_TYPES[key])
+                raise CloudantArgumentError(msg)
         if data.get('selector', None) is None or data.get('selector') == {}:
-            raise CloudantArgumentError(131)
+            msg = (
+                'No selector in the query or the selector was empty.  '
+                'Add a selector to define the query and retry.'
+            )
+            raise CloudantArgumentError(msg)
 
         # Execute query find
         headers = {'Content-Type': 'application/json'}

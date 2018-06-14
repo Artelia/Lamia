@@ -1,11 +1,12 @@
 # coding=utf-8
 from ...libs.cloudant import Cloudant
-from ...libs.cloudant import query
+from ...libs.cloudant.query import Query
 
 #from cloudant import Cloudant
 #from cloudant.query import Query
 import json
 import re
+import os
 
 class queryFranceDigue():
 
@@ -91,11 +92,19 @@ class queryFranceDigue():
     :param fields: list fo string
     :rtype: an iterable object
     """
-    def customQuery(self, json, fields=None):
-        if fields == None:
-            fields = self.getPossibleKeys()
-        query = Query(self.client[self.selectDb], selector=json, fields=fields)
-        return query.result
+    def customQuery(self, query, fields=None):
+        #if fields == None:
+        #    fields = self.getPossibleKeys()
+        #query = Query(self.client[self.selectDb], selector=json, fields=fields)
+        #return query.result
+        for fld in query:
+            fld
+            if fields == None:
+                fields = self.getPossibleKeys()
+            for doc in self.client[self.selectDb]:
+                if fld in doc and doc[fld] == query[fld]:
+                    yield doc
+                continue
 
     """
     Get the document with the specified id, and return the values of the fields given in entry
@@ -123,7 +132,7 @@ class queryFranceDigue():
 
         #Si le path est compose d'un noeud, une redirection vers un autre objet a creer
         if path[0][0].isupper() and len(path) == 1:
-            fields = json.load(open('jsonConfig/fields.json'))
+            fields = json.load(open(os.path.join(os.path.dirname(__file__), 'jsonConfig/fields.json')))
             path = path[0]
             ret = self.getDocFields(obj['_id'], fields[path])
             return ret

@@ -33,7 +33,9 @@ class queryLamia():
             tmp = copy.deepcopy(template)
             self.row = row
             #Remplacement des fld: par leur valeur
+            print('template avant :', tmp)
             self.addValues(tmp)
+            print('template apres :',tmp)
             #On ajoute un champ id pour le convertisseur
             tmp.update({'id':self.row[-1]})
             #On yield les résultats pour les traiter de manière fluide
@@ -41,7 +43,7 @@ class queryLamia():
 
     """Permet d'ajouter des valeurs dans le clone du template"""
     def addValues(self, obj):
-
+        print('obj :', obj)
         #Sélection des dict présent dans l'obj
         listIndexDict = self.getListIndexDict(obj)
         #Sélection des list présent dans l'obj
@@ -59,18 +61,23 @@ class queryLamia():
 
         if isinstance(obj, list):
             for i in range(0, len(obj)):
-                if isinstance(obj[i], str) and 'fld:' in obj[i]:
-                    tmp = obj[i].split(' ')
-                    obj[i] = self.row[tmp[1]]
+                try :
+                    if 'fld:' in obj[i]:
+                        tmp = obj[i].split(' ')
+                        obj[i] = self.row[tmp[1]]
+                except:
+                    pass
 
         if isinstance(obj, dict):
             for it in obj:
-                if isinstance(obj[it], str) and 'fld:' in obj[it]:
-                    tmp = obj[it].split(' ')
-                    if int(tmp[1]) > len(self.row)-1:
-                        raise LookupError('Error on '+self.currObj+'\nNumber of SQL values :'+str(len(self.row))+' Number of fld :'+tmp[1])
-                    obj[it] = self.row[int(tmp[1])]
-
+                try :
+                    if 'fld:' in obj[it]:
+                        tmp = obj[it].split(' ')
+                        if int(tmp[1]) > len(self.row)-1:
+                            raise LookupError('Error on '+self.currObj+'\nNumber of SQL values :'+str(len(self.row))+' Number of fld :'+tmp[1])
+                        obj[it] = self.row[int(tmp[1])]
+                except:
+                    pass
         return obj
 
     """Retour la liste des cles menant vers un dict"""

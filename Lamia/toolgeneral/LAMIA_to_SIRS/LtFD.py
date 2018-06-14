@@ -35,7 +35,7 @@ def export_sirs(self):
 
 
     queryFD = queryFranceDigue(user, pwd, ip, port, nom_sirs)
-    queryL = queryLamia(path_lamia)
+    queryL = queryLamia(path_LAMIA)
     LtFD = LamiatoFranceDigue(queryFD, queryL)
     LtFD.insertInFranceDigue()
 
@@ -77,9 +77,10 @@ class LamiatoFranceDigue():
         self.queryFD = queryFD
         self.queryL = queryL
         self.count = 0
-        self.templatePATH = 'jsonConfig/templates.json'
-        self.convertisseurPATH = 'jsonConfig/convertisseur.json'
-        self.bridgePATH = 'jsonConfig/bridge.json'
+
+        self.templatePATH = path = os.path.join(os.path.dirname(__file__), 'jsonConfig/templates.json')
+        self.bridgePATH = path = os.path.join(os.path.dirname(__file__), 'jsonConfig/bridge.json')
+        self.convertisseurPATH = os.path.join(os.path.dirname(__file__), 'jsonConfig/convertisseur.json')
 
     """Insere la donnees recupere depuis Lamia vers FranceDigue"""
     def insertInFranceDigue(self):
@@ -92,7 +93,7 @@ class LamiatoFranceDigue():
             convertisseur = json.load(open(self.convertisseurPATH, 'r'))
 
         if len(convertisseur) > 0:
-            print('Purge de la CouchDb')
+            print('Purge de la base CouchDb')
             self.resetCouchDb()
             sys.exit()
 
@@ -108,6 +109,7 @@ class LamiatoFranceDigue():
         for obj in documents:
             template[obj['couch']['type']] = self.makeTemplate(obj['couch']['fields'], obj['sql']['fields'])
             for metaObj in self.queryL.createMetaObjet(obj['couch']['type'], template, obj['sql']['query']):
+                print('metaobjet :', metaObj)
                 self.count = 0
                 if not metaObj['id'] in checkList :
                     self.setSecondaryDependencies(metaObj['id'], metaObj)
@@ -334,13 +336,14 @@ class LamiatoFranceDigue():
 
                         #Si l'on crée l'objet de toute pièce
                         if 'bypass' in bridge[obj][i]:
-                            id_fd_dest = self.queryFD.customQuery(bridge[obj][i]['bypass'], ['_id'])[0]
-                            if len(id_fd_dest) > 0:
-                                print('bypass: '+str(id_fd_src)+'-->'+str(path)+'-->'+str(id_fd_dest[0]['_id']))
-                                self.queryFD.updateDocument(id_fd_src, path, id_fd_dest[0]['_id'])
+                            for id_fd_dest in self.queryFD.customQuery(bridge[obj][i]['bypass'], ['_id']):
+                                if len(id_fd_dest) > 0:
+                                    print('bypass: '+str(id_fd_src)+'-->'+str(path)+'-->'+str(id_fd_dest['_id']))
+                                    self.queryFD.updateDocument(id_fd_src, path, id_fd_dest['_id'])
+                                    continue
+                                print('bypass: '+str(id_fd_src)+'-->'+str(path)+'-->'+str(None))
+                                self.queryFD.updateDocument(id_fd_src, path, None)
                                 continue
-                            print('bypass: '+str(id_fd_src)+'-->'+str(path)+'-->'+str(None))
-                            self.queryFD.updateDocument(id_fd_src, path, None)
                             continue
 
                         #Récupération en utilisant l'id

@@ -20,7 +20,7 @@ continuous and non-continuous feeds like ``_changes`` and ``_db_updates``.
 import json
 
 from ._2to3 import iteritems_, next_, unicode_, STRTYPE, NONETYPE
-from .error import CloudantArgumentError, CloudantFeedException
+from .error import CloudantArgumentError, CloudantException
 from ._common_util import feed_arg_types, TYPE_CONVERTERS
 
 class Feed(object):
@@ -103,7 +103,8 @@ class Feed(object):
                     arg_converter = TYPE_CONVERTERS.get(type(val))
                     translation[key] = arg_converter(val)
             except Exception as ex:
-                raise CloudantArgumentError(115, key, ex)
+                msg = 'Error converting argument {0}: {1}'.format(key, ex)
+                raise CloudantArgumentError(msg)
         return translation
 
     def _validate(self, key, val, arg_types):
@@ -112,20 +113,28 @@ class Feed(object):
         the feed.
         """
         if key not in arg_types:
-            raise CloudantArgumentError(116, key)
+            raise CloudantArgumentError('Invalid argument {0}'.format(key))
         if (not isinstance(val, arg_types[key]) or
                 (isinstance(val, bool) and int in arg_types[key])):
-            raise CloudantArgumentError(117, key, arg_types[key])
-        if isinstance(val, int) and val < 0 and not isinstance(val, bool):
-            raise CloudantArgumentError(118, key, val)
+            msg = 'Argument {0} not instance of expected type: {1}'.format(
+                key, arg_types[key])
+            raise CloudantArgumentError(msg)
+        if isinstance(val, int) and val <= 0 and not isinstance(val, bool):
+            msg = 'Argument {0} must be > 0.  Found: {1}'.format(key, val)
+            raise CloudantArgumentError(msg)
         if key == 'feed':
             valid_vals = ('continuous', 'normal', 'longpoll')
             if self._source == 'CouchDB':
                 valid_vals = ('continuous', 'longpoll')
             if val not in valid_vals:
-                raise CloudantArgumentError(119, val, valid_vals)
+                msg = (
+                    'Invalid value ({0}) for feed option.  Must be one of {1}.'
+                ).format(val, valid_vals)
+                raise CloudantArgumentError(msg)
         if key == 'style' and val not in ('main_only', 'all_docs'):
-            raise CloudantArgumentError(120, val)
+            msg = ('Invalid value ({0}) for style option.  Must be main_only, '
+                   'or all_docs.').format(val)
+            raise CloudantArgumentError(msg)
 
     def __iter__(self):
         """
@@ -146,14 +155,13 @@ class Feed(object):
 
         :returns: Data representing what was seen in the feed
         """
-        while True:
-            if not self._resp:
-                self._start()
-            if self._stop:
-                raise StopIteration
-            skip, data = self._process_data(next_(self._lines))
-            if not skip:
-                break
+        if not self._resp:
+            self._start()
+        if self._stop:
+            raise StopIteration
+        skip, data = self._process_data(next_(self._lines))
+        if skip:
+            return self.next()
         return data
 
     def _process_data(self, line):
@@ -228,7 +236,10 @@ class InfiniteFeed(Feed):
         the feed.
         """
         if key == 'feed' and val != 'continuous':
-            raise CloudantArgumentError(121, val)
+            msg = (
+                'Invalid infinite feed option: {0}.  Must be set to continuous.'
+            ).format(val)
+            raise CloudantArgumentError(msg)
         super(InfiniteFeed, self)._validate(key, val, arg_types)
 
     def next(self):
@@ -238,18 +249,11 @@ class InfiniteFeed(Feed):
 
         :returns: Data representing what was seen in the feed
         """
-        while True:
-            if self._source == 'CouchDB':
-                raise CloudantFeedException(101)
-            if self._last_seq:
-                self._options.update({'since': self._last_seq})
-                self._resp = None
-                self._last_seq = None
-            if not self._resp:
-                self._start()
-            if self._stop:
-                raise StopIteration
-            skip, data = self._process_data(next_(self._lines))
-            if not skip:
-                break
-        return data
+        if self._source == 'CouchDB':
+            raise CloudantException(
+                'Infinite _db_updates feed not supported for CouchDB.')
+        if self._last_seq:
+            self._options.update({'since': self._last_seq})
+            self._resp = None
+            self._last_seq = None
+        return super(InfiniteFeed, self).next()

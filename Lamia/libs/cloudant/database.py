@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (C) 2015, 2018 IBM Corp. All rights reserved.
+# Copyright (c) 2015 IBM. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,23 +17,21 @@ API module that maps to a Cloudant or CouchDB database instance.
 """
 import json
 import contextlib
+import posixpath
 
 from requests.exceptions import HTTPError
 
-from ._2to3 import url_quote_plus, iteritems_
-from ._common_util import (
-    JSON_INDEX_TYPE,
-    SEARCH_INDEX_ARGS,
-    SPECIAL_INDEX_TYPE,
-    TEXT_INDEX_TYPE,
-    get_docs)
+from ._2to3 import url_quote_plus
 from .document import Document
 from .design_document import DesignDocument
-from .security_document import SecurityDocument
 from .view import View
 from .index import Index, TextIndex, SpecialIndex
+from ._common_util import JSON_INDEX_TYPE
+from ._common_util import TEXT_INDEX_TYPE
+from ._common_util import SPECIAL_INDEX_TYPE
+from ._common_util import python_to_couch
 from .query import Query
-from .error import CloudantArgumentError, CloudantDatabaseException
+from .error import CloudantException, CloudantArgumentError
 from .result import Result, QueryResult
 from .feed import Feed, InfiniteFeed
 
@@ -54,17 +52,9 @@ class CouchDatabase(dict):
         self.client = client
         self._database_host = client.server_url
         self.database_name = database_name
+        self.r_session = client.r_session
         self._fetch_limit = fetch_limit
         self.result = Result(self.all_docs)
-
-    @property
-    def r_session(self):
-        """
-        Returns the ``r_session`` from the client instance used by the database.
-
-        :returns: Client ``r_session``
-        """
-        return self.client.r_session
 
     @property
     def admin_party(self):
@@ -83,8 +73,10 @@ class CouchDatabase(dict):
 
         :returns: Database URL
         """
-        return '/'.join((
-            self._database_host, url_quote_plus(self.database_name)))
+        return posixpath.join(
+            self._database_host,
+            url_quote_plus(self.database_name)
+        )
 
     @property
     def creds(self):
@@ -94,13 +86,11 @@ class CouchDatabase(dict):
 
         :returns: Dictionary containing authentication information
         """
-        session = self.client.session()
-        if session is None:
+        if self.admin_party:
             return None
-
         return {
             "basic_auth": self.client.basic_auth_str(),
-            "user_ctx": session.get('userCtx')
+            "user_ctx": self.client.session()['userCtx']
         }
 
     def exists(self):
@@ -109,10 +99,7 @@ class CouchDatabase(dict):
 
         :returns: Boolean True if the database exists, False otherwise
         """
-        resp = self.r_session.head(self.database_url)
-        if resp.status_code not in [200, 404]:
-            resp.raise_for_status()
-
+        resp = self.r_session.get(self.database_url)
         return resp.status_code == 200
 
     def metadata(self):
@@ -156,15 +143,12 @@ class CouchDatabase(dict):
             doc = DesignDocument(self, docid)
         else:
             doc = Document(self, docid)
+        if throw_on_exists and doc.exists():
+            raise CloudantException(
+                'Error - Document with id {0} already exists.'.format(docid)
+            )
         doc.update(data)
-        try:
-            doc.create()
-        except HTTPError as error:
-            if error.response.status_code == 409:
-                if throw_on_exists:
-                    raise CloudantDatabaseException(409, docid)
-            else:
-                raise
+        doc.create()
         super(CouchDatabase, self).__setitem__(doc['_id'], doc)
         return doc
 
@@ -188,7 +172,7 @@ class CouchDatabase(dict):
 
         :returns: All design documents found in this database in JSON format
         """
-        url = '/'.join((self.database_url, '_all_docs'))
+        url = posixpath.join(self.database_url, '_all_docs')
         query = "startkey=\"_design\"&endkey=\"_design0\"&include_docs=true"
         resp = self.r_session.get(url, params=query)
         resp.raise_for_status()
@@ -202,7 +186,7 @@ class CouchDatabase(dict):
 
         :returns: List of names for all design documents in this database
         """
-        url = '/'.join((self.database_url, '_all_docs'))
+        url = posixpath.join(self.database_url, '_all_docs')
         query = "startkey=\"_design\"&endkey=\"_design0\""
         resp = self.r_session.get(url, params=query)
         resp.raise_for_status()
@@ -228,19 +212,6 @@ class CouchDatabase(dict):
                 raise
 
         return ddoc
-
-    def get_security_document(self):
-        """
-        Retrieves the database security document as a SecurityDocument object.
-        The returned object is useful for viewing as well as updating the
-        the database's security document.
-
-        :returns: A SecurityDocument instance representing the database
-            security document
-        """
-        sdoc = SecurityDocument(self)
-        sdoc.fetch()
-        return sdoc
 
     def get_view_result(self, ddoc_id, view_name, raw_result=False, **kwargs):
         """
@@ -330,30 +301,29 @@ class CouchDatabase(dict):
             return view(**kwargs)
         elif kwargs:
             return Result(view, **kwargs)
+        else:
+            return view.result
 
-        return view.result
-
-    def create(self, throw_on_exists=False):
+    def create(self):
         """
         Creates a database defined by the current database object, if it
         does not already exist and raises a CloudantException if the operation
         fails.  If the database already exists then this method call is a no-op.
 
-        :param bool throw_on_exists: Boolean flag dictating whether or
-            not to throw a CloudantDatabaseException when attempting to
-            create a database that already exists.
-
         :returns: The database object
         """
-        if not throw_on_exists and self.exists():
+        if self.exists():
             return self
 
         resp = self.r_session.put(self.database_url)
         if resp.status_code == 201 or resp.status_code == 202:
             return self
 
-        raise CloudantDatabaseException(
-            resp.status_code, self.database_url, resp.text
+        raise CloudantException(
+            "Unable to create database {0}: Reason: {1}".format(
+                self.database_url, resp.text
+            ),
+            code=resp.status_code
         )
 
     def delete(self):
@@ -390,10 +360,16 @@ class CouchDatabase(dict):
         :returns: Raw JSON response content from ``_all_docs`` endpoint
 
         """
-        resp = get_docs(self.r_session,
-                        '/'.join([self.database_url, '_all_docs']),
-                        self.client.encoder,
-                        **kwargs)
+        all_docs_url = posixpath.join(self.database_url, '_all_docs')
+        params = python_to_couch(kwargs)
+        keys_list = params.pop('keys', None)
+        resp = None
+        if keys_list:
+            keys = json.dumps({'keys': keys_list})
+            resp = self.r_session.post(all_docs_url, params=params, data=keys)
+        else:
+            resp = self.r_session.get(all_docs_url, params=params)
+        resp.raise_for_status()
         return resp.json()
 
     @contextlib.contextmanager
@@ -475,7 +451,7 @@ class CouchDatabase(dict):
             changes = db.changes(feed='continuous', since='now', descending=True)
             for change in changes:
                 if some_condition:
-                    changes.stop()
+                    db_updates.stop()
                 print(change)
 
         :param bool raw_data: If set to True then the raw response data will be
@@ -608,32 +584,6 @@ class CouchDatabase(dict):
         else:
             raise KeyError(key)
 
-    def __contains__(self, key):
-        """
-        Overrides dictionary __contains__ behavior to check if a document
-        by key exists in the current cached or remote database.
-
-        For example:
-
-        .. code-block:: python
-
-            if key in database:
-                doc = database[key]
-                # Do something with doc
-
-        :param str key: Document id used to check if it exists in the database.
-
-        :returns: True if the document exists in the local or remote
-        database, otherwise False.
-        """
-        if key in list(self.keys()):
-            return True
-        if key.startswith('_design/'):
-            doc = DesignDocument(self, key)
-        else:
-            doc = Document(self, key)
-        return doc.exists()
-
     def __iter__(self, remote=True):
         """
         Overrides dictionary __iter__ behavior to provide iterable Document
@@ -655,20 +605,18 @@ class CouchDatabase(dict):
         if not remote:
             super(CouchDatabase, self).__iter__()
         else:
-            # Use unicode Null U+0000 as the initial lower bound to ensure any
-            # document id could exist in the results set.
-            next_startkey = u'\u0000'
+            next_startkey = '0'
             while next_startkey is not None:
                 docs = self.all_docs(
-                    limit=self._fetch_limit,
+                    limit=self._fetch_limit + 1,  # Get one extra doc
+                                                  # to use as
+                                                  # next_startkey
                     include_docs=True,
                     startkey=next_startkey
                 ).get('rows', [])
 
-                if len(docs) >= self._fetch_limit:
-                    # Ensure the next document batch contains ids that sort
-                    # strictly higher than the previous document id fetched.
-                    next_startkey = docs[-1]['id'] + u'\u0000'
+                if len(docs) > self._fetch_limit:
+                    next_startkey = docs.pop()['id']
                 else:
                     # This is the last batch of docs, so we set
                     # ourselves up to break out of the while loop
@@ -686,7 +634,7 @@ class CouchDatabase(dict):
                     super(CouchDatabase, self).__setitem__(doc['id'], document)
                     yield document
 
-            return
+            raise StopIteration
 
     def bulk_docs(self, docs):
         """
@@ -700,12 +648,12 @@ class CouchDatabase(dict):
 
         :returns: Bulk document creation/update status in JSON format
         """
-        url = '/'.join((self.database_url, '_bulk_docs'))
+        url = posixpath.join(self.database_url, '_bulk_docs')
         data = {'docs': docs}
         headers = {'Content-Type': 'application/json'}
         resp = self.r_session.post(
             url,
-            data=json.dumps(data, cls=self.client.encoder),
+            data=json.dumps(data),
             headers=headers
         )
         resp.raise_for_status()
@@ -723,13 +671,13 @@ class CouchDatabase(dict):
 
         :returns: List of missing document revision values
         """
-        url = '/'.join((self.database_url, '_missing_revs'))
+        url = posixpath.join(self.database_url, '_missing_revs')
         data = {doc_id: list(revisions)}
 
         resp = self.r_session.post(
             url,
             headers={'Content-Type': 'application/json'},
-            data=json.dumps(data, cls=self.client.encoder)
+            data=json.dumps(data)
         )
         resp.raise_for_status()
 
@@ -752,13 +700,13 @@ class CouchDatabase(dict):
 
         :returns: The revision differences in JSON format
         """
-        url = '/'.join((self.database_url, '_revs_diff'))
+        url = posixpath.join(self.database_url, '_revs_diff')
         data = {doc_id: list(revisions)}
 
         resp = self.r_session.post(
             url,
             headers={'Content-Type': 'application/json'},
-            data=json.dumps(data, cls=self.client.encoder)
+            data=json.dumps(data)
         )
         resp.raise_for_status()
 
@@ -771,14 +719,17 @@ class CouchDatabase(dict):
 
         :returns: Revision limit value for the current remote database
         """
-        url = '/'.join((self.database_url, '_revs_limit'))
+        url = posixpath.join(self.database_url, '_revs_limit')
         resp = self.r_session.get(url)
         resp.raise_for_status()
 
         try:
             ret = int(resp.text)
         except ValueError:
-            raise CloudantDatabaseException(400, resp.json())
+            resp.status_code = 400
+            raise CloudantException(
+                'Error - Invalid Response Value: {}'.format(resp.json())
+            )
 
         return ret
 
@@ -792,9 +743,9 @@ class CouchDatabase(dict):
 
         :returns: Revision limit set operation status in JSON format
         """
-        url = '/'.join((self.database_url, '_revs_limit'))
+        url = posixpath.join(self.database_url, '_revs_limit')
 
-        resp = self.r_session.put(url, data=json.dumps(limit, cls=self.client.encoder))
+        resp = self.r_session.put(url, data=json.dumps(limit))
         resp.raise_for_status()
 
         return resp.json()
@@ -806,7 +757,7 @@ class CouchDatabase(dict):
 
         :returns: View cleanup status in JSON format
         """
-        url = '/'.join((self.database_url, '_view_cleanup'))
+        url = posixpath.join(self.database_url, '_view_cleanup')
         resp = self.r_session.post(
             url,
             headers={'Content-Type': 'application/json'}
@@ -815,137 +766,134 @@ class CouchDatabase(dict):
 
         return resp.json()
 
-    def get_list_function_result(self, ddoc_id, list_name, view_name, **kwargs):
+class CloudantDatabase(CouchDatabase):
+    """
+    Encapsulates a Cloudant database.  A CloudantDatabase object is
+    instantiated with a reference to a client/session.
+    It supports accessing the documents, and various database
+    features such as the document indexes, changes feed, design documents, etc.
+
+    :param Cloudant client: Client instance used by the database.
+    :param str database_name: Database name used to reference the database.
+    :param int fetch_limit: Optional fetch limit used to set the max number of
+        documents to fetch per query during iteration cycles.  Defaults to 100.
+    """
+    def __init__(self, client, database_name, fetch_limit=100):
+        super(CloudantDatabase, self).__init__(
+            client,
+            database_name,
+            fetch_limit=fetch_limit
+        )
+
+    def security_document(self):
         """
-        Retrieves a customized MapReduce view result from the specified
-        database based on the list function provided.  List functions are
-        used, for example,  when you want to access Cloudant directly
-        from a browser, and need data to be returned in a different
-        format, such as HTML.
+        Retrieves the security document for the current database
+        containing information about the users that the database
+        is shared with.
 
-        Note: All query parameters for View requests are supported.
-        See :class:`~cloudant.database.get_view_result` for
-        all supported query parameters.
-
-        For example:
-
-        .. code-block:: python
-
-            # Assuming that 'view001' exists as part of the
-            # 'ddoc001' design document in the remote database...
-            # Retrieve documents where the list function is 'list1'
-            resp = db.get_list_result('ddoc001', 'list1', 'view001', limit=10)
-            for row in resp['rows']:
-                # Process data (in text format).
-
-        For more detail on list functions, refer to the
-        `Cloudant list documentation <https://console.bluemix.net/docs/services/Cloudant/api/
-        design_documents.html#list-functions>`_.
-
-        :param str ddoc_id: Design document id used to get result.
-        :param str list_name: Name used in part to identify the
-            list function.
-        :param str view_name: Name used in part to identify the view.
-
-        :return: Formatted view result data in text format
+        :returns: Security document in JSON format
         """
-        ddoc = DesignDocument(self, ddoc_id)
-        headers = {'Content-Type': 'application/json'}
-        resp = get_docs(self.r_session,
-                        '/'.join([ddoc.document_url, '_list', list_name, view_name]),
-                        self.client.encoder,
-                        headers,
-                        **kwargs)
-        return resp.text
-
-    def get_show_function_result(self, ddoc_id, show_name, doc_id):
-        """
-        Retrieves a formatted document from the specified database
-        based on the show function provided.  Show functions, for example,
-        are used when you want to access Cloudant directly from a browser,
-        and need data to be returned in a different format, such as HTML.
-
-        For example:
-
-        .. code-block:: python
-
-            # Assuming that 'view001' exists as part of the
-            # 'ddoc001' design document in the remote database...
-            # Retrieve a formatted 'doc001' document where the show function is 'show001'
-            resp = db.get_show_function_result('ddoc001', 'show001', 'doc001')
-            for row in resp['rows']:
-                # Process data (in text format).
-
-        For more detail on show functions, refer to the
-        `Cloudant show documentation <https://console.bluemix.net/docs/services/Cloudant/api/
-        design_documents.html#show-functions>`_.
-
-        :param str ddoc_id: Design document id used to get the result.
-        :param str show_name: Name used in part to identify the
-            show function.
-        :param str doc_id: The ID of the document to show.
-
-        :return: Formatted document result data in text format
-        """
-        ddoc = DesignDocument(self, ddoc_id)
-        headers = {'Content-Type': 'application/json'}
-        resp = get_docs(self.r_session,
-                        '/'.join([ddoc.document_url, '_show', show_name, doc_id]),
-                        self.client.encoder,
-                        headers)
-        return resp.text
-
-    def update_handler_result(self, ddoc_id, handler_name, doc_id=None, data=None, **params):
-        """
-        Creates or updates a document from the specified database based on the
-        update handler function provided.  Update handlers are used, for
-        example, to provide server-side modification timestamps, and document
-        updates to individual fields without the latest revision. You can
-        provide query parameters needed by the update handler function using
-        the ``params`` argument.
-
-        Create a document with a generated ID:
-
-        .. code-block:: python
-
-            # Assuming that 'update001' update handler exists as part of the
-            # 'ddoc001' design document in the remote database...
-            # Execute 'update001' to create a new document
-            resp = db.update_handler_result('ddoc001', 'update001', data={'name': 'John',
-                                            'message': 'hello'})
-
-        Create or update a document with the specified ID:
-
-        .. code-block:: python
-
-            # Assuming that 'update001' update handler exists as part of the
-            # 'ddoc001' design document in the remote database...
-            # Execute 'update001' to update document 'doc001' in the database
-            resp = db.update_handler_result('ddoc001', 'update001', 'doc001',
-                                            data={'month': 'July'})
-
-        For more details, see the `update handlers documentation
-        <https://console.bluemix.net/docs/services/Cloudant/api/design_documents.html#update-handlers>`_.
-
-        :param str ddoc_id: Design document id used to get result.
-        :param str handler_name: Name used in part to identify the
-            update handler function.
-        :param str doc_id: Optional document id used to specify the
-            document to be handled.
-
-        :returns: Result of update handler function in text format
-        """
-        ddoc = DesignDocument(self, ddoc_id)
-        if doc_id:
-            resp = self.r_session.put(
-                '/'.join([ddoc.document_url, '_update', handler_name, doc_id]),
-                params=params, data=data)
-        else:
-            resp = self.r_session.post(
-                '/'.join([ddoc.document_url, '_update', handler_name]),
-                params=params, data=data)
+        resp = self.r_session.get(self.security_url)
         resp.raise_for_status()
-        return resp.text
+        return resp.json()
+
+    @property
+    def security_url(self):
+        """
+        Constructs and returns the security document URL.
+
+        :returns: Security document URL
+        """
+        parts = ['_api', 'v2', 'db', self.database_name, '_security']
+        url = posixpath.join(self._database_host, *parts)
+        return url
+
+    def share_database(self, username, roles=None):
+        """
+        Shares the current remote database with the username provided.
+        You can grant varying degrees of access rights,
+        default is to share read-only, but additional
+        roles can be added by providing the specific roles as a
+        ``list`` argument.  If the user already has this database shared with
+        them then it will modify/overwrite the existing permissions.
+
+        :param str username: Cloudant user to share the database with.
+        :param list roles: A list of
+            `roles <https://docs.cloudant.com/authorization.html#roles>`_
+            to grant to the named user.
+
+        :returns: Share database status in JSON format
+        """
+        if roles is None:
+            roles = ['_reader']
+        valid_roles = [
+            '_reader',
+            '_writer',
+            '_admin',
+            '_replicator',
+            '_db_updates',
+            '_design',
+            '_shards',
+            '_security'
+        ]
+        doc = self.security_document()
+        data = doc.get('cloudant', {})
+        perms = []
+        if all(role in valid_roles for role in roles):
+            perms = list(set(roles))
+
+        if not perms:
+            msg = (
+                'Invalid role(s) provided: {0}.  Valid roles are: {1}.'
+            ).format(roles, valid_roles)
+            raise CloudantArgumentError(msg)
+
+        data[username] = perms
+        doc['cloudant'] = data
+        resp = self.r_session.put(
+            self.security_url,
+            data=json.dumps(doc),
+            headers={'Content-Type': 'application/json'}
+        )
+        resp.raise_for_status()
+        return resp.json()
+
+    def unshare_database(self, username):
+        """
+        Removes all sharing with the named user for the current remote database.
+        This will remove the entry for the user from the security document.
+        To modify permissions, use the
+        :func:`~cloudant.database.CloudantDatabase.share_database` method
+        instead.
+
+        :param str username: Cloudant user to unshare the database from.
+
+        :returns: Unshare database status in JSON format
+        """
+        doc = self.security_document()
+        data = doc.get('cloudant', {})
+        if username in data:
+            del data[username]
+        doc['cloudant'] = data
+        resp = self.r_session.put(
+            self.security_url,
+            data=json.dumps(doc),
+            headers={'Content-Type': 'application/json'}
+        )
+        resp.raise_for_status()
+        return resp.json()
+
+    def shards(self):
+        """
+        Retrieves information about the shards in the current remote database.
+
+        :returns: Shard information retrieval status in JSON format
+        """
+        url = posixpath.join(self.database_url, '_shards')
+        resp = self.r_session.get(url)
+        resp.raise_for_status()
+
+        return resp.json()
 
     def get_query_indexes(self, raw_result=False):
         """
@@ -960,7 +908,7 @@ class CouchDatabase(dict):
         :returns: The query indexes in the database
         """
 
-        url = '/'.join((self.database_url, '_index'))
+        url = posixpath.join(self.database_url, '_index')
         resp = self.r_session.get(url)
         resp.raise_for_status()
 
@@ -991,7 +939,7 @@ class CouchDatabase(dict):
                     **data.get('def', {})
                 ))
             else:
-                raise CloudantDatabaseException(101, data.get('type'))
+                raise CloudantException('Unexpected index content: {0} found.')
         return indexes
 
     def create_query_index(
@@ -1040,7 +988,11 @@ class CouchDatabase(dict):
         elif index_type == TEXT_INDEX_TYPE:
             index = TextIndex(self, design_document_id, index_name, **kwargs)
         else:
-            raise CloudantArgumentError(103, index_type)
+            msg = (
+                'Invalid index type: {0}.  '
+                'Index type must be either \"json\" or \"text\"'
+            ).format(index_type)
+            raise CloudantArgumentError(msg)
         index.create()
         return index
 
@@ -1060,7 +1012,11 @@ class CouchDatabase(dict):
         elif index_type == TEXT_INDEX_TYPE:
             index = TextIndex(self, design_document_id, index_name)
         else:
-            raise CloudantArgumentError(103, index_type)
+            msg = (
+                'Invalid index type: {0}.  '
+                'Index type must be either \"json\" or \"text\"'
+            ).format(index_type)
+            raise CloudantArgumentError(msg)
         index.delete()
 
     def get_query_result(self, selector, fields=None, raw_result=False,
@@ -1140,254 +1096,5 @@ class CouchDatabase(dict):
             return query(**kwargs)
         if kwargs:
             return QueryResult(query, **kwargs)
-
-        return query.result
-
-
-class CloudantDatabase(CouchDatabase):
-    """
-    Encapsulates a Cloudant database.  A CloudantDatabase object is
-    instantiated with a reference to a client/session.
-    It supports accessing the documents, and various database
-    features such as the document indexes, changes feed, design documents, etc.
-
-    :param Cloudant client: Client instance used by the database.
-    :param str database_name: Database name used to reference the database.
-    :param int fetch_limit: Optional fetch limit used to set the max number of
-        documents to fetch per query during iteration cycles.  Defaults to 100.
-    """
-    def __init__(self, client, database_name, fetch_limit=100):
-        super(CloudantDatabase, self).__init__(
-            client,
-            database_name,
-            fetch_limit=fetch_limit
-        )
-
-    def security_document(self):
-        """
-        Retrieves the security document for the current database
-        containing information about the users that the database
-        is shared with.
-
-        :returns: Security document as a ``dict``
-        """
-        return dict(self.get_security_document())
-
-    @property
-    def security_url(self):
-        """
-        Constructs and returns the security document URL.
-
-        :returns: Security document URL
-        """
-        url = '/'.join((self._database_host, '_api', 'v2', 'db',
-                        self.database_name, '_security'))
-        return url
-
-    def share_database(self, username, roles=None):
-        """
-        Shares the current remote database with the username provided.
-        You can grant varying degrees of access rights,
-        default is to share read-only, but additional
-        roles can be added by providing the specific roles as a
-        ``list`` argument.  If the user already has this database shared with
-        them then it will modify/overwrite the existing permissions.
-
-        :param str username: Cloudant user to share the database with.
-        :param list roles: A list of
-            `roles
-            <https://console.bluemix.net/docs/services/Cloudant/api/authorization.html#roles>`_
-            to grant to the named user.
-
-        :returns: Share database status in JSON format
-        """
-        if roles is None:
-            roles = ['_reader']
-        valid_roles = [
-            '_reader',
-            '_writer',
-            '_admin',
-            '_replicator',
-            '_db_updates',
-            '_design',
-            '_shards',
-            '_security'
-        ]
-        doc = self.security_document()
-        data = doc.get('cloudant', {})
-        perms = []
-        if all(role in valid_roles for role in roles):
-            perms = list(set(roles))
-
-        if not perms:
-            raise CloudantArgumentError(102, roles, valid_roles)
-
-        data[username] = perms
-        doc['cloudant'] = data
-        resp = self.r_session.put(
-            self.security_url,
-            data=json.dumps(doc, cls=self.client.encoder),
-            headers={'Content-Type': 'application/json'}
-        )
-        resp.raise_for_status()
-        return resp.json()
-
-    def unshare_database(self, username):
-        """
-        Removes all sharing with the named user for the current remote database.
-        This will remove the entry for the user from the security document.
-        To modify permissions, use the
-        :func:`~cloudant.database.CloudantDatabase.share_database` method
-        instead.
-
-        :param str username: Cloudant user to unshare the database from.
-
-        :returns: Unshare database status in JSON format
-        """
-        doc = self.security_document()
-        data = doc.get('cloudant', {})
-        if username in data:
-            del data[username]
-        doc['cloudant'] = data
-        resp = self.r_session.put(
-            self.security_url,
-            data=json.dumps(doc, cls=self.client.encoder),
-            headers={'Content-Type': 'application/json'}
-        )
-        resp.raise_for_status()
-        return resp.json()
-
-    def shards(self):
-        """
-        Retrieves information about the shards in the current remote database.
-
-        :returns: Shard information retrieval status in JSON format
-        """
-        url = '/'.join((self.database_url, '_shards'))
-        resp = self.r_session.get(url)
-        resp.raise_for_status()
-
-        return resp.json()
-
-    def get_search_result(self, ddoc_id, index_name, **query_params):
-        """
-        Retrieves the raw JSON content from the remote database based on the
-        search index on the server, using the query_params provided as query
-        parameters. A ``query`` parameter containing the Lucene query
-        syntax is mandatory.
-
-        Example for search queries:
-
-        .. code-block:: python
-
-            # Assuming that 'searchindex001' exists as part of the
-            # 'ddoc001' design document in the remote database...
-            # Retrieve documents where the Lucene field name is 'name' and
-            # the value is 'julia*'
-            resp = db.get_search_result('ddoc001', 'searchindex001',
-                                        query='name:julia*',
-                                        include_docs=True)
-            for row in resp['rows']:
-                # Process search index data (in JSON format).
-
-        Example if the search query requires grouping by using
-        the ``group_field`` parameter:
-
-        .. code-block:: python
-
-            # Assuming that 'searchindex001' exists as part of the
-            # 'ddoc001' design document in the remote database...
-            # Retrieve JSON response content, limiting response to 10 documents
-            resp = db.get_search_result('ddoc001', 'searchindex001',
-                                        query='name:julia*',
-                                        group_field='name',
-                                        limit=10)
-            for group in resp['groups']:
-                for row in group['rows']:
-                # Process search index data (in JSON format).
-
-        :param str ddoc_id: Design document id used to get the search result.
-        :param str index_name: Name used in part to identify the index.
-        :param str bookmark: Optional string that enables you to specify which
-            page of results you require. Only valid for queries that do not
-            specify the ``group_field`` query parameter.
-        :param list counts: Optional JSON array of field names for which
-            counts should be produced. The response will contain counts for each
-            unique value of this field name among the documents matching the
-            search query.
-            Requires the index to have faceting enabled.
-        :param list drilldown:  Optional list of fields that each define a
-            pair of a field name and a value. This field can be used several
-            times.  The search will only match documents that have the given
-            value in the field name. It differs from using
-            ``query=fieldname:value`` only in that the values are not analyzed.
-        :param str group_field: Optional string field by which to group
-            search matches.  Fields containing other data
-            (numbers, objects, arrays) can not be used.
-        :param int group_limit: Optional number with the maximum group count.
-            This field can only be used if ``group_field`` query parameter
-            is specified.
-        :param group_sort: Optional JSON field that defines the order of the
-            groups in a search using ``group_field``. The default sort order
-            is relevance. This field can have the same values as the sort field,
-            so single fields as well as arrays of fields are supported.
-        :param int limit: Optional number to limit the maximum count of the
-            returned documents. In case of a grouped search, this parameter
-            limits the number of documents per group.
-        :param query/q: A Lucene query in the form of ``name:value``.
-            If name is omitted, the special value ``default`` is used.
-            The ``query`` parameter can be abbreviated as ``q``.
-        :param ranges: Optional JSON facet syntax that reuses the standard
-            Lucene syntax to return counts of results which fit into each
-            specified category. Inclusive range queries are denoted by brackets.
-            Exclusive range queries are denoted by curly brackets.
-            For example ``ranges={"price":{"cheap":"[0 TO 100]"}}`` has an
-            inclusive range of 0 to 100.
-            Requires the index to have faceting enabled.
-        :param sort: Optional JSON string of the form ``fieldname<type>`` for
-            ascending or ``-fieldname<type>`` for descending sort order.
-            Fieldname is the name of a string or number field and type is either
-            number or string or a JSON array of such strings. The type part is
-            optional and defaults to number.
-        :param str stale: Optional string to allow the results from a stale
-            index to be used. This makes the request return immediately, even
-            if the index has not been completely built yet.
-        :param list highlight_fields: Optional list of fields which should be
-            highlighted.
-        :param str highlight_pre_tag: Optional string inserted before the
-            highlighted word in the highlights output.  Defaults to ``<em>``.
-        :param str highlight_post_tag: Optional string inserted after the
-            highlighted word in the highlights output.  Defaults to ``</em>``.
-        :param int highlight_number: Optional number of fragments returned in
-            highlights. If the search term occurs less often than the number of
-            fragments specified, longer fragments are returned.  Default is 1.
-        :param int highlight_size: Optional number of characters in each
-            fragment for highlights.  Defaults to 100 characters.
-        :param list include_fields: Optional list of field names to include in
-            search results. Any fields included must have been indexed with the
-            ``store:true`` option.
-
-        :returns: Search query result data in JSON format
-        """
-        param_q = query_params.get('q')
-        param_query = query_params.get('query')
-        # Either q or query parameter is required
-        if bool(param_q) == bool(param_query):
-            raise CloudantArgumentError(104, query_params)
-
-        # Validate query arguments and values
-        for key, val in iteritems_(query_params):
-            if key not in list(SEARCH_INDEX_ARGS.keys()):
-                raise CloudantArgumentError(105, key)
-            if not isinstance(val, SEARCH_INDEX_ARGS[key]):
-                raise CloudantArgumentError(106, key, SEARCH_INDEX_ARGS[key])
-        # Execute query search
-        headers = {'Content-Type': 'application/json'}
-        ddoc = DesignDocument(self, ddoc_id)
-        resp = self.r_session.post(
-            '/'.join([ddoc.document_url, '_search', index_name]),
-            headers=headers,
-            data=json.dumps(query_params, cls=self.client.encoder)
-        )
-        resp.raise_for_status()
-        return resp.json()
+        else:
+            return query.result

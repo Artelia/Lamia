@@ -5,6 +5,7 @@ import re
 from pyspatialite import dbapi2 as db
 from pyspatialite.dbapi2 import *
 import sys
+import os
 
 class queryLamia():
 
@@ -14,8 +15,8 @@ class queryLamia():
         elif sys.version_info.major == 3:   #python 3
             self.connSLITE = qgis.utils.spatialite_connect(path)
         self.SLITEcursor = self.connSLITE.cursor()
-        self.configPATH = './jsonConfig/config.json'
-        self.swapPATH = './jsonConfig/swapping.json'
+        self.configPATH = os.path.join(os.path.dirname(__file__), 'jsonConfig/config.json')
+        self.swapPATH = os.path.join(os.path.dirname(__file__), 'jsonConfig/swapping.json')
 
     def commit(self):
         self.connSLITE.commit()

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (C) 2015, 2018 IBM Corp. All rights reserved.
+# Copyright (c) 2015 IBM. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
 API module/class for interacting with a document in a database.
 """
 import json
+import posixpath
 import requests
 from requests.exceptions import HTTPError
 
 from ._2to3 import url_quote, url_quote_plus
-from .error import CloudantDocumentException
-
+from .error import CloudantException
 
 class Document(dict):
     """
@@ -60,19 +60,11 @@ class Document(dict):
         self._database = database
         self._database_host = self._client.server_url
         self._database_name = database.database_name
+        self.r_session = database.r_session
         self._document_id = document_id
         if self._document_id is not None:
             self['_id'] = self._document_id
-        self.encoder = self._client.encoder
-
-    @property
-    def r_session(self):
-        """
-        Returns the database instance ``r_session`` used by the document.
-
-        :returns: Client ``r_session``
-        """
-        return self._client.r_session
+        self._encoder = self._client.encoder
 
     @property
     def document_url(self):
@@ -86,19 +78,19 @@ class Document(dict):
 
         # handle design document url
         if self._document_id.startswith('_design/'):
-            return '/'.join((
+            return posixpath.join(
                 self._database_host,
                 url_quote_plus(self._database_name),
                 '_design',
                 url_quote(self._document_id[8:], safe='')
-            ))
+            )
 
         # handle document url
-        return '/'.join((
+        return posixpath.join(
             self._database_host,
             url_quote_plus(self._database_name),
             url_quote(self._document_id, safe='')
-        ))
+        )
 
     def exists(self):
         """
@@ -109,11 +101,7 @@ class Document(dict):
         """
         if self._document_id is None:
             return False
-        else:
-            resp = self.r_session.head(self.document_url)
-            if resp.status_code not in [200, 404]:
-                resp.raise_for_status()
-
+        resp = self.r_session.get(self.document_url)
         return resp.status_code == 200
 
     def json(self):
@@ -124,7 +112,7 @@ class Document(dict):
 
         :returns: Encoded JSON string containing the document data
         """
-        return json.dumps(dict(self), cls=self.encoder)
+        return json.dumps(dict(self), cls=self._encoder)
 
     def create(self):
         """
@@ -144,7 +132,7 @@ class Document(dict):
         resp = self.r_session.post(
             self._database.database_url,
             headers=headers,
-            data=json.dumps(doc, cls=self.encoder)
+            data=json.dumps(doc, cls=self._encoder)
         )
         resp.raise_for_status()
         data = resp.json()
@@ -161,7 +149,10 @@ class Document(dict):
         the locally cached Document object.
         """
         if self.document_url is None:
-            raise CloudantDocumentException(101)
+            raise CloudantException(
+                'A document id is required to fetch document contents.  '
+                'Add an _id key and value to the document and re-try.'
+            )
         resp = self.r_session.get(self.document_url)
         resp.raise_for_status()
         self.clear()
@@ -207,7 +198,9 @@ class Document(dict):
         if doc.get(field) is None:
             doc[field] = []
         if not isinstance(doc[field], list):
-            raise CloudantDocumentException(102, field)
+            raise CloudantException(
+                'The field {0} is not a list.'.format(field)
+            )
         if value is not None:
             doc[field].append(value)
 
@@ -222,7 +215,9 @@ class Document(dict):
         :param value: Value to remove from the field list.
         """
         if not isinstance(doc[field], list):
-            raise CloudantDocumentException(102, field)
+            raise CloudantException(
+                'The field {0} is not a list.'.format(field)
+            )
         doc[field].remove(value)
 
     @staticmethod
@@ -257,7 +252,7 @@ class Document(dict):
             self.save()
         except requests.HTTPError as ex:
             if tries < max_tries and ex.response.status_code == 409:
-                self._update_field(
+                return self._update_field(
                     action, field, value, max_tries, tries=tries+1)
             raise
 
@@ -307,7 +302,10 @@ class Document(dict):
         object.
         """
         if not self.get("_rev"):
-            raise CloudantDocumentException(103)
+            raise CloudantException(
+                "Attempting to delete a doc with no _rev. Try running "
+                ".fetch first!"
+            )
 
         del_resp = self.r_session.delete(
             self.document_url,
@@ -331,9 +329,6 @@ class Document(dict):
             self.fetch()
         except HTTPError as error:
             if error.response.status_code != 404:
-                raise
-        except CloudantDocumentException as error:
-            if error.status_code != 101:
                 raise
 
         return self
@@ -391,7 +386,7 @@ class Document(dict):
         """
         # need latest rev
         self.fetch()
-        attachment_url = '/'.join((self.document_url, attachment))
+        attachment_url = posixpath.join(self.document_url, attachment)
         if headers is None:
             headers = {'If-Match': self['_rev']}
         else:
@@ -434,7 +429,7 @@ class Document(dict):
         """
         # need latest rev
         self.fetch()
-        attachment_url = '/'.join((self.document_url, attachment))
+        attachment_url = posixpath.join(self.document_url, attachment)
         if headers is None:
             headers = {'If-Match': self['_rev']}
         else:
@@ -475,7 +470,7 @@ class Document(dict):
         """
         # need latest rev
         self.fetch()
-        attachment_url = '/'.join((self.document_url, attachment))
+        attachment_url = posixpath.join(self.document_url, attachment)
         if headers is None:
             headers = {
                 'If-Match': self['_rev'],

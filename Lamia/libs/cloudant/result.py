@@ -201,7 +201,7 @@ class Result(object):
         data = None
         if isinstance(arg, int):
             data = self._handle_result_by_index(arg)
-        elif isinstance(arg, (STRTYPE, list)):
+        elif isinstance(arg, STRTYPE) or isinstance(arg, list):
             data = self._handle_result_by_key(arg)
         elif isinstance(arg, ResultByKey):
             data = self._handle_result_by_key(arg())
@@ -345,7 +345,7 @@ class Result(object):
             )
             result = self._parse_data(response)
             skip += int(self._page_size)
-            if result:
+            if len(result) > 0:
                 for row in result:
                     yield row
                 del result
@@ -358,18 +358,6 @@ class Result(object):
         Used to extract the rows content from the JSON result content
         """
         return data.get('rows', [])
-
-    def all(self):
-        """
-        Retrieve all results.
-
-        Specifying a ``limit`` parameter in the ``Result`` constructor will
-        limit the number of documents returned. Be aware that the ``page_size``
-        parameter is not honoured.
-
-        :return: results data as list in JSON format.
-        """
-        return self[:]
 
 class QueryResult(Result):
     """

@@ -16,6 +16,7 @@
 API module for managing/viewing query indexes.
 """
 
+import posixpath
 import json
 
 from ._2to3 import STRTYPE, iteritems_
@@ -23,7 +24,7 @@ from ._common_util import JSON_INDEX_TYPE
 from ._common_util import TEXT_INDEX_TYPE
 from ._common_util import SPECIAL_INDEX_TYPE
 from ._common_util import TEXT_INDEX_ARGS
-from .error import CloudantArgumentError, CloudantIndexException
+from .error import CloudantArgumentError, CloudantException
 
 class Index(object):
     """
@@ -59,7 +60,7 @@ class Index(object):
 
         :returns: Index URL
         """
-        return '/'.join((self._database.database_url, '_index'))
+        return posixpath.join(self._database.database_url, '_index')
 
     @property
     def design_document_id(self):
@@ -127,19 +128,23 @@ class Index(object):
                 else:
                     payload['ddoc'] = self._ddoc_id
             else:
-                raise CloudantArgumentError(122, self._ddoc_id)
+                msg = (
+                    'The design document id: {0} is not a string.'
+                ).format(self._ddoc_id)
+                raise CloudantArgumentError(msg)
         if self._name and self._name != '':
             if isinstance(self._name, STRTYPE):
                 payload['name'] = self._name
             else:
-                raise CloudantArgumentError(123, self._name)
+                msg = 'The index name: {0} is not a string.'.format(self._name)
+                raise CloudantArgumentError(msg)
         self._def_check()
         payload['index'] = self._def
 
         headers = {'Content-Type': 'application/json'}
         resp = self._r_session.post(
             self.index_url,
-            data=json.dumps(payload, cls=self._database.client.encoder),
+            data=json.dumps(payload),
             headers=headers
         )
         resp.raise_for_status()
@@ -152,20 +157,26 @@ class Index(object):
         Checks that the only definition provided is a "fields" definition.
         """
         if list(self._def.keys()) != ['fields']:
-            raise CloudantArgumentError(124, self._def)
+            msg = (
+                '{0} provided as argument(s).  A JSON index requires that '
+                'only a \'fields\' argument is provided.'
+            ).format(self._def)
+            raise CloudantArgumentError(msg)
 
     def delete(self):
         """
         Removes the current index from the remote database.
         """
         if not self._ddoc_id:
-            raise CloudantArgumentError(125)
+            msg = 'Deleting an index requires a design document id be provided.'
+            raise CloudantArgumentError(msg)
         if not self._name:
-            raise CloudantArgumentError(126)
+            msg = 'Deleting an index requires an index name be provided.'
+            raise CloudantArgumentError(msg)
         ddoc_id = self._ddoc_id
         if ddoc_id.startswith('_design/'):
             ddoc_id = ddoc_id[8:]
-        url = '/'.join((self.index_url, ddoc_id, self._type, self._name))
+        url = posixpath.join(self.index_url, ddoc_id, self._type, self._name)
         resp = self._r_session.delete(url)
         resp.raise_for_status()
         return
@@ -205,9 +216,13 @@ class TextIndex(Index):
         if self._def != dict():
             for key, val in iteritems_(self._def):
                 if key not in list(TEXT_INDEX_ARGS.keys()):
-                    raise CloudantArgumentError(127, key)
+                    msg = 'Invalid argument: {0}'.format(key)
+                    raise CloudantArgumentError(msg)
                 if not isinstance(val, TEXT_INDEX_ARGS[key]):
-                    raise CloudantArgumentError(128, key, TEXT_INDEX_ARGS[key])
+                    msg = (
+                        'Argument {0} is not an instance of expected type: {1}'
+                    ).format(key, TEXT_INDEX_ARGS[key])
+                    raise CloudantArgumentError(msg)
 
 class SpecialIndex(Index):
     """
@@ -237,11 +252,13 @@ class SpecialIndex(Index):
         A "special" index cannot be created.  This method is disabled for a
         SpecialIndex object.
         """
-        raise CloudantIndexException(101)
+        msg = 'Creating the \"special\" index is not allowed.'
+        raise CloudantException(msg)
 
     def delete(self):
         """
         A "special" index cannot be deleted.  This method is disabled for a
         SpecialIndex object.
         """
-        raise CloudantIndexException(102)
+        msg = 'Deleting the \"special\" index is not allowed.'
+        raise CloudantException(msg)
