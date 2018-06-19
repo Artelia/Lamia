@@ -58,6 +58,9 @@ from .InspectionDigue_getDate import getDateDialog
 from ..toolgeneral.InspectionDigue_rapport import printPDFWorker
 from ..toolgeneral.InspectionDigue_exportshp import exportShapefileWorker
 from ..toolgeneral.InspectionDigue_import import ImportObjectWorker
+from ..toolgeneral.SIRS_to_LAMIA.FDtL import *
+from ..toolgeneral.LAMIA_to_SIRS.LtFD import *
+
 
 import time
 
@@ -121,6 +124,7 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.printrapportdialog = ImpressionRapportDialog()
         self.exportshapefiledialog = ExportShapefileDialog()
         self.importobjetdialog =ImportObjetDialog()
+
         #ui classes
         self.uifields = []
         self.uidesktop = []
@@ -195,6 +199,8 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.actionExport_shapefile.triggered.connect(self.exportShapefile)
         self.actionImport.triggered.connect(self.importObjet)
         self.actionVersion.triggered.connect(self.setVersion)
+        self.actionExporter_vers_SIRS_Digues.triggered.connect(export_sirs)
+        self.actionImporter_depuis_SIRS_Digues.triggered.connect(import_sirs)
 
         if self.dbase.dbasetype == 'postgis':
             self.actionMode_hors_ligne_Reconnexion.setEnabled(True)

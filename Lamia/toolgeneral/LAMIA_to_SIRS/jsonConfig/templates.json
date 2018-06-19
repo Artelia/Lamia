@@ -1,0 +1,98 @@
+{
+	"Document": [{
+		"couch": {
+			"type" : "Desordre",
+			"fields" : ["@class", "borne_debut_aval", "borne_debut_distance", "prDebut", "borne_fin_aval", "borne_fin_distance", "prFin", "valid", "designation", "longitudeMin", "longitudeMax", "latitudeMin", "latitudeMax", "geometryMode", "linearId", "foreignParentId", "date_debut", "dateMaj"]
+		},
+		"sql": {
+			"type" : "Desordre",
+			"query" : "SELECT o.datecreation, o.datemodification, d.id_desordre FROM Desordre d, Objet o WHERE d.id_objet = o.id_objet ORDER BY d.id_desordre ASC LIMIT 10",
+			"fields" : ["fr.sirs.core.model.Desordre", false, 0.0, 0.0, false, 0.0, 0.0, true, "Desordre Alpha", 0.0, 0.0, 0.0, 0.0, "COORD", null, null, "fld:", "fld:"]
+		}
+	}, {
+		"couch": {
+			"type": "SystemeReperageBorne",
+			"fields" : ["@class", "libelle", "valid", "systemeReperageBornes", "linearId", "dateMaj"]
+		},
+		"sql": {
+			"type": "Desordre",
+			"query": "SELECT o.datemodification, o.id_objet FROM Objet o ORDER BY o.id_objet ASC LIMIT 1",
+			"fields" : ["fr.sirs.core.model.SystemeReperage", "SystemeReperageBorne Insertion", true, ["sub: SystemeReperageBornesDebut", "sub: SystemeReperageBornesFin"], null, "fld:"]
+		}
+	}, {
+		"couch": {
+			"type": "SystemeEndiguement",
+			"fields": ["@class", "libelle", "populationProtegee", "niveauProtection", "valid", "dateMaj", "designation"]
+		},
+		"sql": {
+			"type": "Desordre",
+			"query": "SELECT o.datemodification, o.id_objet FROM Objet o ORDER BY o.id_objet ASC LIMIT 1",
+			"fields": ["fr.sirs.core.model.SystemeEndiguement", "SystemeEndiguement insertion", 0.0, 0.0, true, "fld:", "Systeme Endiguement Alpha"]
+		}
+	}, {
+		"couch": {
+			"type": "Digue",
+			"fields": ["@class", "libelle", "valid", "systemeEndiguementId", "dateMaj", "designation"]
+		},
+		"sql": {
+			"type": "Digue",
+			"query": "SELECT o.datemodification, o.id_objet FROM Objet o ORDER BY o.id_objet ASC LIMIT 1",
+			"fields": ["fr.sirs.core.model.Digue", "Digue insertion", true,  null, "fld:", "Digue Alpha"]
+		}
+	}, {
+		"couch": {
+			"type": "TronconDigue",
+			"fields": ["@class", "libelle", "designation", "valid", "digueId", "borneIds", "systemeRepDefautId", "date_debut", "dateMaj", "geometry"]
+		},
+		"sql": {
+			"type": "Infralineaire",
+			"query": "SELECT o.datecreation, o.datemodification, AsText(i.geom), i.id_infralineaire FROM Infralineaire i, Objet o WHERE i.id_objet = o.id_objet ORDER BY i.id_infralineaire ASC LIMIT 10",
+			"fields": ["fr.sirs.core.model.TronconDigue", "Tronçon insertion", "Tronçon alpha", true, null, ["crt: BorneDigueDebut", "crt: BorneDigueFin"], null, "fld:", "fld:", "fld:"]
+		}
+	}],
+
+	"SubDocument": {
+		"BorneDigueDebut": {
+			"couch": {
+				"type" : "BorneDigueDebut",
+				"fields": ["@class", "fictive", "libelle", "valid", "date_debut", "dateMaj", "geometry", "designation"]
+			},
+			"sql": {
+				"type" : null,
+				"query" : "SELECT o.datecreation, o.datemodification, AsText(StartPoint(i.geom)), {id_search} FROM Infralineaire i, Objet o WHERE i.id_Infralineaire = {id_search} and i.id_objet = o.id_objet",
+				"fields": ["fr.sirs.core.model.BorneDigue", false, "Début du tronçon", true, "fld:", "fld:", "fld:", "Borne Digue Alpha"]
+			}
+		},
+		"BorneDigueFin": {
+			"couch": {
+				"type" : "BorneDigueFin",
+				"fields": ["@class", "fictive", "libelle", "valid", "date_debut", "dateMaj", "geometry", "designation"]
+			},
+			"sql": {
+				"type" : null,
+				"query" : "SELECT o.datecreation, o.datemodification, AsText(EndPoint(i.geom)), {id_search} FROM Infralineaire i, Objet o WHERE i.id_Infralineaire = {id_search} and i.id_objet = o.id_objet",
+				"fields": ["fr.sirs.core.model.BorneDigue", false, "Tronçon fin", true, "fld:", "fld:", "fld:", "Borne Digue Alpha"]
+			}
+		},
+		"SystemeReperageBornesDebut": {
+			"couch": {
+				"type" : "ReperageBornesDebut",
+				"fields" : ["@class", "valeurPR", "valid", "borneId", "id"]
+			},
+			"sql": {
+				"type" : "ReperageBornesDebut",
+				"fields" : ["fr.sirs.core.model.SystemeReperageBorne", 0.0, true, "crt: BorneDigueDebut", null]
+			}
+		},
+		"SystemeReperageBornesFin": {
+			"couch": {
+				"type" : "ReperageBornesFin",
+				"fields" : ["@class", "valeurPR", "valid", "borneId", "id"]
+			},
+			"sql": {
+				"type" : "ReperageBornesFin",
+				"fields" : ["fr.sirs.core.model.SystemeReperageBorne", 80000.0, true, "crt: BorneDigueFin", null]
+			}
+		}
+	}
+}
