@@ -73,6 +73,16 @@
           <string>Assainissement</string>
          </property>
         </item>
+        <item>
+         <property name="text">
+          <string>Default</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Assainissement2</string>
+         </property>
+        </item>
        </widget>
       </item>
      </layout>

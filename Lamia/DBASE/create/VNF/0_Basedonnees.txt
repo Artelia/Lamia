@@ -4,3 +4,4 @@
 ###metier;VARCHAR(255) ;TEXT
 ###repertoireressources;VARCHAR(255) ;TEXT
 ###crs;INT ;                   INTEGER
+###version;VARCHAR(255) ;TEXT

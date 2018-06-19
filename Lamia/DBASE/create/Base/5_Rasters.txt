@@ -1,0 +1,105 @@
+#DJAN  SELECT Rasters.*, Objet.datecreation, Objet.datedestruction, Objet.commentaire, Objet.libelle, Ressource.source,Ressource.dateressource,Ressource.contactadresse,Ressource.contactnom, Ressource.contactmail, Ressource.contacttel1, Ressource.contacttel2, Ressource.file,Ressource.description FROM Rasters INNER JOIN Ressource ON Ressource.id_ressource = Rasters.id_ressource INNER JOIN Objet ON Rasters.id_objet = Objet.id_objet
+# For qgis
+#QGISSL SELECT Rasters.*, Objet.datecreation, Objet.datedestruction, Ressource.lk_marche ,
+#QGISSL MAX(Rasters.id_revisionbegin, Ressource.id_revisionbegin) AS temprevisionbegin,
+#QGISSL CASE WHEN MIN(Rasters.id_revisionend, Ressource.id_revisionend) NOT NULL
+#QGISSL     THEN MIN(Rasters.id_revisionend, Ressource.id_revisionend)
+#QGISSL     ELSE CASE WHEN  Rasters.id_revisionend NOT NULL 
+#QGISSL             THEN Rasters.id_revisionend
+#QGISSL             ELSE Ressource.id_revisionend END 
+#QGISSL         END AS temprevisionend,
+#QGISSL MAX(Rasters.id_revisionbegin, Ressource.id_revisionbegin, Objet.id_revisionbegin) AS revisionbegin,
+#QGISSL CASE WHEN MIN(Rasters.id_revisionend, Ressource.id_revisionend, Objet.id_revisionend) NOT NULL
+#QGISSL     THEN MIN(Rasters.id_revisionend, Ressource.id_revisionend, Objet.id_revisionend) 
+#QGISSL     ELSE CASE WHEN  Rasters.id_revisionend NOT NULL 
+#QGISSL             THEN CASE WHEN Ressource.id_revisionend NOT NULL
+#QGISSL                         THEN MIN(Rasters.id_revisionend, Ressource.id_revisionend)
+#QGISSL                         ELSE CASE WHEN Objet.id_revisionend NOT null
+#QGISSL                             THEN MIN(Rasters.id_revisionend, Objet.id_revisionend)
+#QGISSL                             ELSE Rasters.id_revisionend END
+#QGISSL                         END 
+#QGISSL             ELSE CASE WHEN Ressource.id_revisionend NOT NULL
+#QGISSL                 THEN MIN(Objet.id_revisionend, Ressource.id_revisionend)
+#QGISSL                 ELSE  Objet.id_revisionend END  
+#QGISSL             END 
+#QGISSL         END AS revisionend
+#QGISSL FROM Rasters
+#QGISSL INNER JOIN Ressource ON 
+#QGISSL Rasters.id_ressource= Ressource.id_ressource
+#QGISSL AND CASE WHEN Rasters.id_revisionend NOT NULL 
+#QGISSL         THEN CASE WHEN Ressource.id_revisionend NOT NULL 
+#QGISSL                     THEN Ressource.id_revisionbegin < Rasters.id_revisionend   AND Ressource.id_revisionend > Rasters.id_revisionbegin
+#QGISSL                     ELSE  Ressource.id_revisionbegin < Rasters.id_revisionend   END
+#QGISSL         ELSE   CASE WHEN Ressource.id_revisionend NOT NULL 
+#QGISSL             THEN Ressource.id_revisionend > Rasters.id_revisionbegin   
+#QGISSL             ELSE 1 END
+#QGISSL         END
+#QGISSL INNER JOIN Objet ON Rasters.id_objet = Objet.id_objet
+#QGISSL AND CASE WHEN temprevisionend NOT NULL 
+#QGISSL         THEN CASE WHEN Objet.id_revisionend NOT NULL 
+#QGISSL                     THEN Objet.id_revisionbegin < temprevisionend   AND Objet.id_revisionend > temprevisionbegin
+#QGISSL                     ELSE  Objet.id_revisionbegin < temprevisionend   END
+#QGISSL         ELSE   CASE WHEN Objet.id_revisionend NOT NULL 
+#QGISSL                     THEN Objet.id_revisionend > temprevisionbegin   
+#QGISSL         ELSE 1 END
+#QGISSL         END
+
+
+#QGISPG WITH Rasterstemp AS (
+#QGISPG  SELECT Rasters.*, 
+#QGISPG  greatest(Rasters.id_revisionbegin, Ressource.id_revisionbegin) AS temprevisionbegin,
+#QGISPG  CASE WHEN least(Rasters.id_revisionend, Ressource.id_revisionend) IS NOT NULL
+#QGISPG      THEN least(Rasters.id_revisionend, Ressource.id_revisionend)
+#QGISPG      ELSE CASE WHEN  Rasters.id_revisionend IS NOT NULL 
+#QGISPG              THEN Rasters.id_revisionend
+#QGISPG              ELSE Ressource.id_revisionend END 
+#QGISPG          END AS temprevisionend
+#QGISPG  FROM Rasters
+#QGISPG  INNER JOIN Ressource ON 
+#QGISPG  Rasters.id_ressource= Ressource.id_ressource
+#QGISPG  AND CASE WHEN Rasters.id_revisionend IS NOT NULL 
+#QGISPG          THEN CASE WHEN Ressource.id_revisionend IS NOT NULL 
+#QGISPG                      THEN Ressource.id_revisionbegin < Rasters.id_revisionend   AND Ressource.id_revisionend > Rasters.id_revisionbegin
+#QGISPG                      ELSE  Ressource.id_revisionbegin < Rasters.id_revisionend   END
+#QGISPG          ELSE   CASE WHEN Ressource.id_revisionend IS NOT NULL 
+#QGISPG              THEN Ressource.id_revisionend > Rasters.id_revisionbegin   
+#QGISPG              ELSE true END
+#QGISPG          END)
+#QGISPG SELECT Rasterstemp.*, Objet.datecreation, Objet.datedestruction,
+#QGISPG  greatest(Rasterstemp.temprevisionbegin, Objet.id_revisionbegin) AS revisionbegin,
+#QGISPG  CASE WHEN least(Rasterstemp.temprevisionend, Objet.id_revisionend) IS NOT NULL
+#QGISPG      THEN least(Rasterstemp.temprevisionend, Objet.id_revisionend)
+#QGISPG      ELSE CASE WHEN  Rasterstemp.temprevisionend IS NOT NULL 
+#QGISPG              THEN Rasterstemp.temprevisionend
+#QGISPG              ELSE Objet.id_revisionend END 
+#QGISPG          END AS revisionend
+#QGISPG FROM Rasterstemp
+#QGISPG INNER JOIN Objet ON Rasterstemp.id_objet = Objet.id_objet
+#QGISPG   AND CASE WHEN Rasterstemp.temprevisionend IS NOT NULL 
+#QGISPG          THEN CASE WHEN Objet.id_revisionend IS NOT NULL 
+#QGISPG                      THEN Objet.id_revisionbegin < Rasterstemp.temprevisionend   AND Objet.id_revisionend > Rasterstemp.temprevisionbegin
+#QGISPG                      ELSE  Objet.id_revisionbegin < Rasterstemp.temprevisionend   END
+#QGISPG          ELSE   CASE WHEN Objet.id_revisionend IS NOT NULL 
+#QGISPG                      THEN Objet.id_revisionend > Rasterstemp.temprevisionbegin   
+#QGISPG          ELSE true END
+#QGISPG          END
+
+
+# Nom_champ              TypePostGis            TypeSpatialite                        Option
+###pk_rasters;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_rasters;        INT ;                       INTEGER
+###id_revisionbegin;        INT ;                   INTEGER;                              Revision(pk_revision)
+###id_revisionend;          INT ;                   INTEGER
+###id_objet;             INT ;                     INTEGER
+###id_ressource;        INT ;                       INTEGER
+
+###typeraster;VARCHAR(255);TEXT
+/;
+Orthophoto de reference;ORF
+IGN25k de reference;IRF
+Lidar de reference;LRF
+Lidar;LID
+Orthophoto;ORT
+IGN25k;IGN
+Autre;AUT
+

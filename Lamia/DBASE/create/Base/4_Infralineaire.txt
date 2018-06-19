@@ -1,0 +1,106 @@
+#DJAN  SELECT Infralineaire.*, Objet.datecreation, Objet.datedestruction, Objet.commentaire, Objet.libelle, Descriptionsystem.importancestrat, Descriptionsystem.etatfonct,  Descriptionsystem.parametres, Descriptionsystem.listeparametres FROM Infralineaire INNER JOIN Descriptionsystem ON Infralineaire.id_descriptionsystem = Descriptionsystem.id_descriptionsystem INNER JOIN Objet ON Objet.id_objet = Infralineaire.id_objet
+# For qgis
+#QGISSL SELECT Infralineaire.*, Objet.datecreation, Objet.datedestruction ,
+#QGISSL MAX(Infralineaire.id_revisionbegin, Descriptionsystem.id_revisionbegin) AS temprevisionbegin,
+#QGISSL CASE WHEN MIN(Infralineaire.id_revisionend, Descriptionsystem.id_revisionend) NOT NULL
+#QGISSL     THEN MIN(Infralineaire.id_revisionend, Descriptionsystem.id_revisionend)
+#QGISSL     ELSE CASE WHEN  Infralineaire.id_revisionend NOT NULL 
+#QGISSL             THEN Infralineaire.id_revisionend
+#QGISSL             ELSE Descriptionsystem.id_revisionend END 
+#QGISSL         END AS temprevisionend,
+#QGISSL MAX(Infralineaire.id_revisionbegin, Descriptionsystem.id_revisionbegin, Objet.id_revisionbegin) AS revisionbegin,
+#QGISSL CASE WHEN MIN(Infralineaire.id_revisionend, Descriptionsystem.id_revisionend, Objet.id_revisionend) NOT NULL
+#QGISSL     THEN MIN(Infralineaire.id_revisionend, Descriptionsystem.id_revisionend, Objet.id_revisionend) 
+#QGISSL     ELSE CASE WHEN  Infralineaire.id_revisionend NOT NULL 
+#QGISSL             THEN CASE WHEN Descriptionsystem.id_revisionend NOT NULL
+#QGISSL                         THEN MIN(Infralineaire.id_revisionend, Descriptionsystem.id_revisionend)
+#QGISSL                         ELSE CASE WHEN Objet.id_revisionend NOT null
+#QGISSL                             THEN MIN(Infralineaire.id_revisionend, Objet.id_revisionend)
+#QGISSL                             ELSE Infralineaire.id_revisionend END
+#QGISSL                         END 
+#QGISSL             ELSE CASE WHEN Descriptionsystem.id_revisionend NOT NULL
+#QGISSL                 THEN MIN(Objet.id_revisionend, Descriptionsystem.id_revisionend)
+#QGISSL                 ELSE  Objet.id_revisionend END  
+#QGISSL             END 
+#QGISSL         END AS revisionend
+#QGISSL FROM Infralineaire
+#QGISSL INNER JOIN Descriptionsystem ON 
+#QGISSL Infralineaire.id_descriptionsystem= Descriptionsystem.id_descriptionsystem
+#QGISSL AND CASE WHEN Infralineaire.id_revisionend NOT NULL 
+#QGISSL         THEN CASE WHEN Descriptionsystem.id_revisionend NOT NULL 
+#QGISSL                     THEN Descriptionsystem.id_revisionbegin < Infralineaire.id_revisionend   AND Descriptionsystem.id_revisionend > Infralineaire.id_revisionbegin
+#QGISSL                     ELSE  Descriptionsystem.id_revisionbegin < Infralineaire.id_revisionend   END
+#QGISSL         ELSE   CASE WHEN Descriptionsystem.id_revisionend NOT NULL 
+#QGISSL             THEN Descriptionsystem.id_revisionend > Infralineaire.id_revisionbegin   
+#QGISSL             ELSE 1 END
+#QGISSL         END
+#QGISSL INNER JOIN Objet ON Infralineaire.id_objet = Objet.id_objet
+#QGISSL AND CASE WHEN temprevisionend NOT NULL 
+#QGISSL         THEN CASE WHEN Objet.id_revisionend NOT NULL 
+#QGISSL                     THEN Objet.id_revisionbegin < temprevisionend   AND Objet.id_revisionend > temprevisionbegin
+#QGISSL                     ELSE  Objet.id_revisionbegin < temprevisionend   END
+#QGISSL         ELSE   CASE WHEN Objet.id_revisionend NOT NULL 
+#QGISSL                     THEN Objet.id_revisionend > temprevisionbegin   
+#QGISSL         ELSE 1 END
+#QGISSL         END
+
+
+#QGISPG WITH Infralineairetemp AS (
+#QGISPG  SELECT Infralineaire.*, 
+#QGISPG  greatest(Infralineaire.id_revisionbegin, Descriptionsystem.id_revisionbegin) AS temprevisionbegin,
+#QGISPG  CASE WHEN least(Infralineaire.id_revisionend, Descriptionsystem.id_revisionend) IS NOT NULL
+#QGISPG      THEN least(Infralineaire.id_revisionend, Descriptionsystem.id_revisionend)
+#QGISPG      ELSE CASE WHEN  Infralineaire.id_revisionend IS NOT NULL 
+#QGISPG              THEN Infralineaire.id_revisionend
+#QGISPG              ELSE Descriptionsystem.id_revisionend END 
+#QGISPG          END AS temprevisionend
+#QGISPG  FROM Infralineaire
+#QGISPG  INNER JOIN Descriptionsystem ON 
+#QGISPG  Infralineaire.id_descriptionsystem= Descriptionsystem.id_descriptionsystem
+#QGISPG  AND CASE WHEN Infralineaire.id_revisionend IS NOT NULL 
+#QGISPG          THEN CASE WHEN Descriptionsystem.id_revisionend IS NOT NULL 
+#QGISPG                      THEN Descriptionsystem.id_revisionbegin < Infralineaire.id_revisionend   AND Descriptionsystem.id_revisionend > Infralineaire.id_revisionbegin
+#QGISPG                      ELSE  Descriptionsystem.id_revisionbegin < Infralineaire.id_revisionend   END
+#QGISPG          ELSE   CASE WHEN Descriptionsystem.id_revisionend IS NOT NULL 
+#QGISPG              THEN Descriptionsystem.id_revisionend > Infralineaire.id_revisionbegin   
+#QGISPG              ELSE true END
+#QGISPG          END)
+#QGISPG SELECT Infralineairetemp.*, Objet.datecreation, Objet.datedestruction,
+#QGISPG  greatest(Infralineairetemp.temprevisionbegin, Objet.id_revisionbegin) AS revisionbegin,
+#QGISPG  CASE WHEN least(Infralineairetemp.temprevisionend, Objet.id_revisionend) IS NOT NULL
+#QGISPG      THEN least(Infralineairetemp.temprevisionend, Objet.id_revisionend)
+#QGISPG      ELSE CASE WHEN  Infralineairetemp.temprevisionend IS NOT NULL 
+#QGISPG              THEN Infralineairetemp.temprevisionend
+#QGISPG              ELSE Objet.id_revisionend END 
+#QGISPG          END AS revisionend
+#QGISPG FROM Infralineairetemp
+#QGISPG INNER JOIN Objet ON Infralineairetemp.id_objet = Objet.id_objet
+#QGISPG   AND CASE WHEN Infralineairetemp.temprevisionend IS NOT NULL 
+#QGISPG          THEN CASE WHEN Objet.id_revisionend IS NOT NULL 
+#QGISPG                      THEN Objet.id_revisionbegin < Infralineairetemp.temprevisionend   AND Objet.id_revisionend > Infralineairetemp.temprevisionbegin
+#QGISPG                      ELSE  Objet.id_revisionbegin < Infralineairetemp.temprevisionend   END
+#QGISPG          ELSE   CASE WHEN Objet.id_revisionend IS NOT NULL 
+#QGISPG                      THEN Objet.id_revisionend > Infralineairetemp.temprevisionbegin   
+#QGISPG          ELSE true END
+#QGISPG          END
+
+
+#SHOW YES
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###pk_infralineaire;    SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_infralineaire;            INT ;                     INTEGER
+###id_revisionbegin;        INT ;                   INTEGER;                              Revision(pk_revision)
+###id_revisionend;          INT ;                   INTEGER;                              Revision(pk_revision)
+###id_objet;             INT ;                     INTEGER 
+###id_descriptionsystem;        INT ;                       INTEGER
+
+
+#lien vers une ressource type photo, graph ....
+###lk_ressource1;        INT ;                       INTEGER
+
+#lk_descriptionsystem1 : lien vers l infra amont
+###lk_descriptionsystem1;        INT ;                       INTEGER
+#lk_descriptionsystem2 : lien vers l infra aval
+###lk_descriptionsystem2;        INT ;                       INTEGER
+
+###geom;                LINESTRING

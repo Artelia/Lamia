@@ -9,12 +9,12 @@ try:
     from qgis.PyQt.QtGui import (QWidget, QTreeWidgetItem, QMessageBox, QFileDialog, QTableWidget,
                                  QHeaderView, QComboBox, QSpinBox, QCheckBox, QPushButton, QDateEdit, QTextEdit,
                                  QDoubleSpinBox, QDialog, QVBoxLayout, QTreeWidget, QLineEdit, QCheckBox,
-                                 QLabel, QMessageBox, QTextBrowser, QTableWidgetItem,QApplication)
+                                 QLabel, QMessageBox, QTextBrowser, QTableWidgetItem,QApplication,QToolButton)
 except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget, QTreeWidgetItem, QMessageBox, QFileDialog, QTableWidget,
                                      QHeaderView, QComboBox, QSpinBox,QCheckBox, QPushButton, QDateEdit, QTextEdit,
                                      QDoubleSpinBox, QDialog, QVBoxLayout, QTreeWidget, QLineEdit, QCheckBox,
-                                     QLabel, QMessageBox, QTextBrowser, QTableWidgetItem,QApplication)
+                                     QLabel, QMessageBox, QTextBrowser, QTableWidgetItem,QApplication,QToolButton)
 import os
 import sys
 import qgis
@@ -27,6 +27,8 @@ import datetime
 
 import time
 import logging
+
+
 
 
 
@@ -548,7 +550,11 @@ class AbstractInspectionDigueTool(QWidget):
                                 wdg = QPushButton('Open')
                                 self.tableWidget.setCellWidget(rowPosition, 3, wdg)
                                 wdg.clicked.connect(self.rawtablePushButtonClicked)
-                    elif 'DECIMAL' in dbasetable['fields'][field]['SLtype']:
+                    elif 'DECIMAL'  in dbasetable['fields'][field]['SLtype']:
+                        wdg = QDoubleSpinBox()
+                        wdg.setRange(-1, 9999999)
+                        self.tableWidget.setCellWidget(rowPosition, 1, wdg)
+                    elif 'REAL' in dbasetable['fields'][field]['SLtype']:
                         wdg = QDoubleSpinBox()
                         wdg.setRange(-1, 9999999)
                         self.tableWidget.setCellWidget(rowPosition, 1, wdg)
@@ -829,10 +835,12 @@ class AbstractInspectionDigueTool(QWidget):
                         # print(listtoadd)
                     elif sys.version_info.major == 3:
                         listtoadd = [value[0] for value in dbasetable['fields'][childfieldname]['Cst'] if parentcstvalue in value[2]]
-                combochild = self.linkuserwdg[parenttablename]['widgets'][childfieldname]
-                combochild.clear()
-                if len(listtoadd) > 0:
-                    combochild.addItems(listtoadd)
+
+                if childfieldname in self.linkuserwdg[parenttablename]['widgets']:
+                    combochild = self.linkuserwdg[parenttablename]['widgets'][childfieldname]
+                    combochild.clear()
+                    if len(listtoadd) > 0:
+                        combochild.addItems(listtoadd)
 
     # *******************************************************************************************************************
     # **********************************    on activation/des methods        *******************************************
@@ -856,6 +864,8 @@ class AbstractInspectionDigueTool(QWidget):
             if param2 == self.qtreewidgetitem:
                 self.onDesactivationRaw()
                 self.postOnDesactivation()
+                if param2 == param1:
+                    self.lastidselected = None
 
             if param1 == self.qtreewidgetitem :
                 if debug: logging.getLogger("Lamia").debug('step 2 %s %s', param1.text(0), param2)
@@ -1060,11 +1070,17 @@ class AbstractInspectionDigueTool(QWidget):
             root = self.parentWidget.linkedtreewidget.invisibleRootItem()
             indexchild = [root.child(i).text(0) for i in range(root.childCount())].index(str(self.parentWidget.dbasetablename))
             tempitem = root.child(indexchild)
-            indexchild = [tempitem.child(i).text(0) for i in range(tempitem.childCount())].index(str(self.parentWidget.currentFeature.id()))
+            if self.dbase.revisionwork:
+                parentfeat = self.dbase.getLayerFeatureByPk( self.parentWidget.dbasetablename, self.parentWidget.currentFeature.id() )
+                parentid = parentfeat['id_' + self.parentWidget.dbasetablename]
+                indexchild = [tempitem.child(i).text(0) for i in range(tempitem.childCount())].index(str(parentid))
+            else:
+                indexchild = [tempitem.child(i).text(0) for i in range(tempitem.childCount())].index(str(self.parentWidget.currentFeature.id()))
             parentitem = tempitem.child(indexchild)
 
         # selection of particular feature to load (if parentfeature, or window only mode)
         ids = self.loadIds()
+        # print('id',ids)
 
         # creation de la liste des elements qui figurent dans le linkedtreewidget
         lenqtreewidg = len(self.qtreewidgetfields) + 1
@@ -1174,9 +1190,19 @@ class AbstractInspectionDigueTool(QWidget):
             if self.dbase.dbasetype == 'postgis':
                 sql += ' AND CASE WHEN datedestruction IS NOT NULL  '
                 sql += 'THEN DateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE TRUE END'
+                if self.dbase.revisionwork:
+                    sql += " AND revisionbegin <= " + str(self.dbase.currentrevision)
+                    sql += " AND CASE WHEN revisionend IS NOT NULL THEN "
+                    sql += " revisionend > " + str(self.dbase.currentrevision)
+                    sql += " ELSE TRUE END "
             elif self.dbase.dbasetype == 'spatialite':
                 sql += ' AND CASE WHEN datedestruction IS NOT NULL  '
                 sql += 'THEN DateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE 1 END'
+                if self.dbase.revisionwork:
+                    sql += " AND revisionbegin <= " + str(self.dbase.currentrevision)
+                    sql += " AND CASE WHEN revisionend IS NOT NULL THEN "
+                    sql += " revisionend > " + str(self.dbase.currentrevision)
+                    sql += " ELSE 1 END "
 
             # if self.parentWidget is not None and self.linkagespec is not None and self.parentWidget.dbasetablename in sum([self.linkagespec[key]['desttable'] for key in self.linkagespec.keys()],[]):
             if (self.parentWidget is not None and self.linkagespec is not None
@@ -1190,13 +1216,29 @@ class AbstractInspectionDigueTool(QWidget):
                     if linkagetemp['tabletc'] is None:
                         sql += " AND " + linkagetemp['idsource'] + " = "
                         sql += str(self.parentWidget.currentFeature[linkagetemp['iddest']])
+                        #TODO versionning
+
+
+
                     else:
                         sqltemp = "SELECT " + linkagetemp['idtcsource'] + " FROM " + linkagetemp['tabletc']
                         sqltemp += " WHERE " + linkagetemp['idtcdest'] + " = "
                         sqltemp += str(self.parentWidget.currentFeature[linkagetemp['iddest']])
-                        # print(sqltemp)
+                        # TODO versionning
+                        if self.dbase.revisionwork:
+                            if self.dbase.dbasetype == 'postgis':
+                                sqltemp += " AND id_revisionbegin <= " + str(self.dbase.currentrevision)
+                                sqltemp += " AND CASE WHEN id_revisionend IS NOT NULL THEN "
+                                sqltemp += " id_revisionend > " + str(self.dbase.currentrevision)
+                                sqltemp += " ELSE true END "
+                            elif self.dbase.dbasetype == 'spatialite':
+                                sqltemp += " AND id_revisionbegin <= " + str(self.dbase.currentrevision)
+                                sqltemp += " AND CASE WHEN id_revisionend IS NOT NULL THEN "
+                                sqltemp += " id_revisionend > " + str(self.dbase.currentrevision)
+                                sqltemp += " ELSE 1 END "
+
                         query = self.dbase.query(sqltemp)
-                        if not query == None :
+                        if len(query) > 0 :
                             idstemp = [str(row[0]) for row in query]
                             idssql = '(' + ','.join(idstemp) + ')'
                             sql += " AND " + linkagetemp['idsource'] + " IN " + idssql
@@ -1222,8 +1264,8 @@ class AbstractInspectionDigueTool(QWidget):
                         if j>0:
                             try :
                                 res[i]+=[self.dbase.getConstraintTextFromRawValue(self.dbasetablename, self.qtreewidgetfields[j-1], ids[i][j])]
-                            except:
-                                pass
+                            except Exception as e:
+                                print(e)
                         else :
                             res[i]+=[ids[i][j]]
                         j=j+1
@@ -1357,6 +1399,8 @@ class AbstractInspectionDigueTool(QWidget):
         else:
             id = None
 
+
+
         # **************** gui things when selected ***************************************************************
         if self.dbasetable is not None:                             #widget has dbasetable linked
             if id is not None:        # item clicked in treewidget
@@ -1430,6 +1474,7 @@ class AbstractInspectionDigueTool(QWidget):
                 dbasetable = self.dbase.dbasetables[tablename]
                 for i, field in enumerate(dbasetable['fields'].keys()):
                     # raw table
+                    # print('field',field)
                     itemindex = listfieldname.index(tablename + '.' + field)
                     if fieldname is None or field == fieldname:
                         if feat is not None and value is None:
@@ -1449,6 +1494,7 @@ class AbstractInspectionDigueTool(QWidget):
                         else:
                             valuetoset = value
 
+
                         if int(str(self.dbase.qgisversion_int)[0:3]) < 220 and isinstance(valuetoset, QtCore.QPyNullVariant):
                             valuetoset = None
 
@@ -1463,6 +1509,7 @@ class AbstractInspectionDigueTool(QWidget):
                             self.setValueInWidget(self.tableWidget.cellWidget(itemindex, 1), valuetoset, tablename, field)
 
                             if tablename in templinkuserwgd.keys() and templinkuserwgd[tablename] is not None and 'widgets' in templinkuserwgd[tablename].keys() and field in templinkuserwgd[tablename]['widgets'].keys():
+
                                 self.setValueInWidget(templinkuserwgd[tablename]['widgets'][field], valuetoset, tablename, field)
                         else:
                             if self.tableWidget.item(itemindex, 1) is not None:
@@ -1543,7 +1590,7 @@ class AbstractInspectionDigueTool(QWidget):
                     wdg.setCurrentIndex(0)
             except Exception as e:
                 if self.dbase.qgsiface is None:
-                    logging.getLogger("Lamia").debug('error %s', e)
+                    logging.getLogger("Lamia").debug('error %s %s %s',table,field ,  e)
         elif isinstance(wdg, QDateEdit):
             # if valuetoset is not None and not isinstance(valuetoset, QtCore.QPyNullVariant):
             if valuetoset is not None:
@@ -1585,6 +1632,11 @@ class AbstractInspectionDigueTool(QWidget):
         """
         # *************************
         # save previous feature
+
+        debug = False
+
+        #if debug: logging.getLogger("Lamia").debug('start points : %s', points)
+        if debug: logging.getLogger("Lamia").debug('start')
 
         self.canvas.freeze(True)
         if self.dbasetable is not None :
@@ -1632,31 +1684,51 @@ class AbstractInspectionDigueTool(QWidget):
                     self.currentFeature.setGeometry(self.tempgeometry)
                     pass
 
-            # print(self.dbasetablename, self.currentFeature.id(),self.currentFeature.geometry().exportToWkt() )
-            # print(self.currentFeature.geometry().exportToWkt())
+
+
             self.currentFeature = self.saveTableFeature(self.dbasetablename, self.currentFeature)
             # print('curfeat1', self.currentFeature.id())
+
+            if debug: logging.getLogger("Lamia").debug('saveTableFeature done with geom  : %s',self.currentFeature.geometry().exportToWkt())
 
             # *************************
             # save attributes
             # first assure that parent features are created
             if self.savingnewfeature:
                 self.createParentFeature()
+                if debug: logging.getLogger("Lamia").debug('createParentFeature ok')
+
             # Second save attributes
             # print('id', self.currentFeature.attributes())
             # self.currentFeature = self.dbasetable['layer'].getFeatures(qgis.core.QgsFeatureRequest(self.currentFeature.id())).next()
-            self.currentFeature = self.dbase.getLayerFeatureById(self.dbasetablename, self.currentFeature.id())
+            if self.dbase.revisionwork:
+                self.currentFeature = self.dbase.getLayerFeatureByPk(self.dbasetablename, self.currentFeature.id())
+            else:
+                self.currentFeature = self.dbase.getLayerFeatureById(self.dbasetablename, self.currentFeature.id())
+
+            if debug: logging.getLogger("Lamia").debug('currentFeature updated')
 
             self.saveFeatureProperties()
+
+            if debug: logging.getLogger("Lamia").debug('saveFeatureProperties done')
+
             # self.currentFeature = self.dbasetable['layer'].getFeatures(qgis.core.QgsFeatureRequest(self.currentFeature.id())).next()
-            self.currentFeature = self.dbase.getLayerFeatureById(self.dbasetablename, self.currentFeature.id())
+            if self.dbase.revisionwork:
+                self.currentFeature = self.dbase.getLayerFeatureByPk(self.dbasetablename, self.currentFeature.id())
+            else:
+                self.currentFeature = self.dbase.getLayerFeatureById(self.dbasetablename, self.currentFeature.id())
 
             # then save properly ressource file if exists
             if self.linkuserwdg is not None and 'Ressource' in self.linkuserwdg.keys():
                 self.saveRessourceFile()
 
+            if debug: logging.getLogger("Lamia").debug('saveRessourceFile done')
+
             # self.currentFeature = self.dbasetable['layer'].getFeatures(qgis.core.QgsFeatureRequest(self.currentFeature.id())).next()
-            self.currentFeature = self.dbase.getLayerFeatureById(self.dbasetablename, self.currentFeature.id())
+            if self.dbase.revisionwork:
+                self.currentFeature = self.dbase.getLayerFeatureByPk(self.dbasetablename, self.currentFeature.id())
+            else:
+                self.currentFeature = self.dbase.getLayerFeatureById(self.dbasetablename, self.currentFeature.id())
 
 
             # do postsavefeature traitment
@@ -1677,13 +1749,18 @@ class AbstractInspectionDigueTool(QWidget):
             # do postsavefeature traitment
             self.postSaveFeature(self.savingnewfeature)
 
+            if debug: logging.getLogger("Lamia").debug('postSaveFeature done')
+
             # reload entirely saved feature
             self.initFeatureProperties(self.currentFeature)
             self.postInitFeatureProperties(self.currentFeature)
 
 
             # self.currentFeature = self.dbasetable['layer'].getFeatures(qgis.core.QgsFeatureRequest(self.currentFeature.id())).next()
-            self.currentFeature = self.dbase.getLayerFeatureById(self.dbasetablename, self.currentFeature.id())
+            if self.dbase.revisionwork:
+                self.currentFeature = self.dbase.getLayerFeatureByPk(self.dbasetablename, self.currentFeature.id())
+            else:
+                self.currentFeature = self.dbase.getLayerFeatureById(self.dbasetablename, self.currentFeature.id())
 
             # current prestation case:
             if self.savingnewfeature and self.linkagespec is not None and 'Marche' in self.linkagespec.keys()  and self.dbase.currentprestationid is not None:
@@ -1703,15 +1780,26 @@ class AbstractInspectionDigueTool(QWidget):
                     # self.dbase.commit()
 
             # self.currentFeature = self.dbasetable['layer'].getFeatures(qgis.core.QgsFeatureRequest(self.currentFeature.id())).next()
-            self.currentFeature = self.dbase.getLayerFeatureById(self.dbasetablename, self.currentFeature.id())
+            if self.dbase.revisionwork:
+                self.currentFeature = self.dbase.getLayerFeatureByPk(self.dbasetablename, self.currentFeature.id())
+            else:
+                self.currentFeature = self.dbase.getLayerFeatureById(self.dbasetablename, self.currentFeature.id())
 
             # update datemodification
             if self.dbasetable is not None and 'id_objet' in self.dbasetable['fields'].keys() :
                 idobjet = self.currentFeature['id_objet']
                 datemodif = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
-                sql = "UPDATE Objet SET datemodification = '" + datemodif + "'  WHERE id_objet = " + str(idobjet) + ";"
-                self.dbase.query(sql)
-                self.dbase.commit()
+                if not self.dbase.revisionwork:
+                    sql = "UPDATE Objet SET datemodification = '" + datemodif + "'  WHERE id_objet = " + str(idobjet) + ";"
+                    self.dbase.query(sql)
+                    self.dbase.commit()
+                else:
+                    pkobjet  = self.dbase.getLayerFeatureById('Objet', idobjet).id()
+                    sql = "UPDATE Objet SET datemodification = '" + datemodif + "'  WHERE pk_objet = " + str(pkobjet) + ";"
+                    self.dbase.query(sql)
+                    self.dbase.commit()
+
+                if debug: logging.getLogger("Lamia").debug('datemodification done')
 
             # then reload with saved attributes
             if self.savingnewfeature:
@@ -1784,29 +1872,101 @@ class AbstractInspectionDigueTool(QWidget):
 
 
     def saveTableFeature(self, table, feat):
+
+        debug = False
+
         dbasetablelayer = self.dbase.dbasetables[table]['layer']
-        dbasetablelayer.startEditing()
-        # print('addedFeatureid', feat.id())
-        if feat.id() == 0:  # new feature
-            # self.addedFeatureid = None
-            success = dbasetablelayer.addFeature(feat)
-        success = dbasetablelayer.updateFeature(feat)
 
-        self.addedFeatureid = None
-        dbasetablelayer.raiseError.connect(self.windowdialog.errorMessage)
-        dbasetablelayer.featureAdded.connect(self.getFeatureAddedId)
-        dbasetablelayer.commitChanges()
-        dbasetablelayer.rollBack()
-        dbasetablelayer.raiseError.disconnect(self.windowdialog.errorMessage)
-        dbasetablelayer.featureAdded.disconnect(self.getFeatureAddedId)
+        if debug: logging.getLogger("Lamia").debug('start : %s %s %s', table, str(feat.id()) , feat.attributes())
 
-        # print('addedFeatureid',feat.id(),self.addedFeatureid)
-        if self.addedFeatureid is not None:
-            # return dbasetablelayer.getFeatures(qgis.core.QgsFeatureRequest(self.addedFeatureid)).next()
-            return self.dbase.getLayerFeatureById(table, self.addedFeatureid)
+
+
+        if self.dbase.revisionwork:
+            newfeature = None
+            if (feat.id() > 0 and feat['id_revisionbegin'] != self.dbase.getLatestVersion()):
+                print('newfeature')
+                # print('diff',table, feat.id(),  feat['id_revisionbegin'] != self.dbase.getLatestVersion())
+                newfeature = qgis.core.QgsFeature(feat)
+                newfeature['pk_' + table.lower()] = None
+
+                newfeature['id_revisionbegin'] = int(self.dbase.getLatestVersion())
+                #newfeature['id_revisionend'] = None
+
+                feat = self.dbase.getLayerFeatureByPk(table, feat.id())
+                feat['id_revisionend'] = int(self.dbase.getLatestVersion())
+
+                # print('save',table,  feat.attributes(), newfeature.attributes())
+            if feat.id() == 0:
+                feat['id_revisionbegin'] = self.dbase.maxrevision
+
+
+            if debug: logging.getLogger("Lamia").debug('newfeature : %s', str(newfeature))
+            if debug: logging.getLogger("Lamia").debug('feat : %s', str(feat.attributes()))
+
+
+
+            dbasetablelayer.startEditing()
+
+            if feat.id() == 0:  # new feature
+                # self.addedFeatureid = None
+                success = dbasetablelayer.addFeature(feat)
+            else:
+                success = dbasetablelayer.updateFeature(feat)
+
+            if newfeature:
+                success = dbasetablelayer.addFeature(newfeature)
+                success = dbasetablelayer.updateFeature(newfeature)
+                # success = dbasetablelayer.updateFeature(feat)
+
+
+            self.addedFeatureid = None
+            dbasetablelayer.raiseError.connect(self.windowdialog.errorMessage)
+            dbasetablelayer.featureAdded.connect(self.getFeatureAddedId)
+            dbasetablelayer.commitChanges()
+            dbasetablelayer.rollBack()
+            dbasetablelayer.raiseError.disconnect(self.windowdialog.errorMessage)
+            dbasetablelayer.featureAdded.disconnect(self.getFeatureAddedId)
+
+            if debug: logging.getLogger("Lamia").debug('table, feat.id addedfeatureid : %s %s %s', table, str(feat.id()), str(self.addedFeatureid))
+
+            if self.addedFeatureid is not None:
+                # return dbasetablelayer.getFeatures(qgis.core.QgsFeatureRequest(self.addedFeatureid)).next()
+                return self.dbase.getLayerFeatureByPk(table, self.addedFeatureid)
+            else:
+                # return dbasetablelayer.getFeatures(qgis.core.QgsFeatureRequest(feat.id())).next()
+                return self.dbase.getLayerFeatureByPk(table, feat.id())
+
+
+
         else:
-            # return dbasetablelayer.getFeatures(qgis.core.QgsFeatureRequest(feat.id())).next()
-            return self.dbase.getLayerFeatureById(table, feat.id())
+
+
+
+            dbasetablelayer.startEditing()
+            # print('addedFeatureid', feat.id())
+            if feat.id() == 0:  # new feature
+                # self.addedFeatureid = None
+                success = dbasetablelayer.addFeature(feat)
+            success = dbasetablelayer.updateFeature(feat)
+
+            self.addedFeatureid = None
+            dbasetablelayer.raiseError.connect(self.windowdialog.errorMessage)
+            dbasetablelayer.featureAdded.connect(self.getFeatureAddedId)
+            dbasetablelayer.commitChanges()
+            dbasetablelayer.rollBack()
+            dbasetablelayer.raiseError.disconnect(self.windowdialog.errorMessage)
+            dbasetablelayer.featureAdded.disconnect(self.getFeatureAddedId)
+
+            if debug: logging.getLogger("Lamia").debug('saveTableFeature : %s %s %s', table, str(feat.id()), str(self.addedFeatureid))
+
+            if self.addedFeatureid is not None:
+                # return dbasetablelayer.getFeatures(qgis.core.QgsFeatureRequest(self.addedFeatureid)).next()
+                return self.dbase.getLayerFeatureById(table, self.addedFeatureid)
+            else:
+                # return dbasetablelayer.getFeatures(qgis.core.QgsFeatureRequest(feat.id())).next()
+                return self.dbase.getLayerFeatureById(table, feat.id())
+
+
 
 
 
@@ -1820,6 +1980,8 @@ class AbstractInspectionDigueTool(QWidget):
         # self.dbasetable['layer'].raiseError.connect(self.errorMessage)
         # with qgis.core.edit(self.dbasetable['layer']):
 
+        debug = False
+
 
         # if self.tabWidget_properties.currentIndex() == 0 :
         self.dbasetable['layer'].startEditing()
@@ -1827,12 +1989,14 @@ class AbstractInspectionDigueTool(QWidget):
         if self.dbase.visualmode in [0, 1]:
             if self.linkuserwdg is not None:
                 for i, tablename in enumerate(self.linkuserwdg.keys()):
+                    if debug: logging.getLogger("Lamia").debug('start : %s', tablename)
                     # print('attrs',self.currentFeature.attributes())
                     featid = self.currentFeature[self.linkuserwdg[tablename]['linkfield']]
-                    # print('featid', featid)
-                    # print(self.currentFeature.attributes())
+                    if debug: logging.getLogger("Lamia").debug('start : %s %s %s', tablename,self.linkuserwdg[tablename]['linkfield'],str(featid))
                     # feature = self.dbase.dbasetables[tablename]['layer'].getFeatures(qgis.core.QgsFeatureRequest(featid)).next()
                     feature = self.dbase.getLayerFeatureById(tablename, featid)
+                    if debug: logging.getLogger("Lamia").debug('feat linked : %s %s', str(feature.id()), str(feature.attributes()))
+
                     for fieldname in self.linkuserwdg[tablename]['widgets'].keys():
                         fieldvaluetosave = self.getValueFromWidget(self.linkuserwdg[tablename]['widgets'][fieldname],
                                                                    tablename,
@@ -1927,14 +2091,9 @@ class AbstractInspectionDigueTool(QWidget):
         if reply == QMessageBox.Yes:
             # self.windowdialog.errorMessage("pas encore disponible")
             if self.deleteParentFeature():
-                if False:
-                    idobjet = self.currentFeature['id_objet']
-                    sql = "DELETE FROM  " + self.dbasetablename + " WHERE id_objet = " + str(idobjet) + ";"
-                    self.dbase.query(sql)
-                if True:
-                    fetid = self.currentFeature.id()
-                    sql = "DELETE FROM  " + self.dbasetablename + " WHERE id_" + self.dbasetablename + " = " + str(fetid) + ";"
-                    self.dbase.query(sql)
+                fetid = self.currentFeature.id()
+                sql = "DELETE FROM  " + self.dbasetablename + " WHERE id_" + self.dbasetablename + " = " + str(fetid) + ";"
+                self.dbase.query(sql)
 
             else:
                 self.windowdialog.errorMessage("pas encore disponible")
@@ -2253,7 +2412,12 @@ class AbstractInspectionDigueTool(QWidget):
         pointslayer=[]
         type = self.dbasetable['layer'].geometryType()
 
-        if len(points)==2 and points[0] == points[1]:   #case point in line layer
+        # case point in line layer
+        if len(points)==2 and points[0] == points[1]:
+            self.rubberBand.reset(0)
+            type = 0.5
+        elif len(points) == 1 and self.dbasetable['geom'] == 'LINESTRING':
+            points.append(points[0])
             self.rubberBand.reset(0)
             type = 0.5
 
@@ -2720,3 +2884,31 @@ class AbstractInspectionDigueTool(QWidget):
             return wdg
         else:
             return None
+
+
+    def themechanged(self,iconwidth):
+
+        if isinstance(iconwidth, int):
+            newsize = QtCore.QSize(iconwidth, iconwidth)
+        elif isinstance(iconwidth, QtCore.QSize):
+            newsize = iconwidth
+        newsizeicon = QtCore.QSize(newsize)
+        newsizeicon.scale(newsize.width() * 0.8, newsize.width() * 0.8, QtCore.Qt.KeepAspectRatio)
+
+        butttons = self.findChildren(QPushButton)
+        for button in butttons:
+            # print('button', button.icon())
+            if button.icon() is not None:
+                button.setIconSize(newsizeicon)
+                button.setBaseSize(newsize)
+                button.setFixedSize(newsize)
+        butttons = self.findChildren(QToolButton)
+        for button in butttons:
+            if button.icon() is not None:
+                button.setIconSize(newsizeicon)
+                button.setBaseSize(newsize)
+                button.setFixedSize(newsize)
+
+        for wdg in self.dbasechildwdg:
+            wdg.themechanged(iconwidth)
+

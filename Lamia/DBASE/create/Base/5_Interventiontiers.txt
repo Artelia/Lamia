@@ -1,0 +1,60 @@
+#DJAN SELECT  Interventiontiers.* , Objet.datecreation, Objet.datedestruction, Objet.commentaire, Objet.libelle FROM Interventiontiers INNER JOIN OBJET ON Interventiontiers.id_objet = Objet.id_objet
+# For qgis
+#QGISSL SELECT Interventiontiers.* , Objet.datecreation, Objet.datedestruction,
+#QGISSL MAX(Interventiontiers.id_revisionbegin, Objet.id_revisionbegin) AS revisionbegin,
+#QGISSL CASE WHEN MIN(Interventiontiers.id_revisionend, Objet.id_revisionend) NOT NULL
+#QGISSL     THEN MIN(Interventiontiers.id_revisionend, Objet.id_revisionend)
+#QGISSL     ELSE CASE WHEN  Interventiontiers.id_revisionend NOT NULL 
+#QGISSL             THEN Interventiontiers.id_revisionend
+#QGISSL             ELSE Objet.id_revisionend END 
+#QGISSL         END AS revisionend
+#QGISSL FROM Interventiontiers
+#QGISSL INNER JOIN Objet ON Interventiontiers.id_objet= Objet.id_objet
+#QGISSL AND CASE WHEN Interventiontiers.id_revisionend NOT NULL 
+#QGISSL         THEN CASE WHEN Objet.id_revisionend NOT NULL 
+#QGISSL                     THEN Objet.id_revisionbegin < Interventiontiers.id_revisionend   AND Objet.id_revisionend > Interventiontiers.id_revisionbegin
+#QGISSL                     ELSE  Objet.id_revisionbegin < Interventiontiers.id_revisionend   END
+#QGISSL         ELSE   CASE WHEN Objet.id_revisionend NOT NULL 
+#QGISSL             THEN Objet.id_revisionend > Interventiontiers.id_revisionbegin   
+#QGISSL             ELSE 1 END
+#QGISSL         END
+
+#QGISPG SELECT Interventiontiers.* , Objet.datecreation, Objet.datedestruction,
+#QGISPG greatest(Interventiontiers.id_revisionbegin, Objet.id_revisionbegin) AS revisionbegin,
+#QGISPG CASE WHEN least(Interventiontiers.id_revisionend, Objet.id_revisionend) IS NOT NULL
+#QGISPG     THEN least(Interventiontiers.id_revisionend, Objet.id_revisionend)
+#QGISPG     ELSE CASE WHEN  Interventiontiers.id_revisionend IS NOT NULL 
+#QGISPG             THEN Interventiontiers.id_revisionend
+#QGISPG             ELSE Objet.id_revisionend END 
+#QGISPG         END AS revisionend
+#QGISPG FROM Interventiontiers
+#QGISPG INNER JOIN Objet ON Interventiontiers.id_objet= Objet.id_objet
+#QGISPG AND CASE WHEN Interventiontiers.id_revisionend IS NOT NULL 
+#QGISPG         THEN CASE WHEN Objet.id_revisionend IS NOT NULL 
+#QGISPG                     THEN Objet.id_revisionbegin < Interventiontiers.id_revisionend   AND Objet.id_revisionend > Interventiontiers.id_revisionbegin
+#QGISPG                     ELSE  Objet.id_revisionbegin < Interventiontiers.id_revisionend   END
+#QGISPG         ELSE   CASE WHEN Objet.id_revisionend IS NOT NULL 
+#QGISPG             THEN Objet.id_revisionend > Interventiontiers.id_revisionbegin   
+#QGISPG             ELSE true END
+#QGISPG         END
+
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###pk_interventiontiers;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_interventiontiers;            INT ;                   INTEGER
+###id_revisionbegin;        INT ;                   INTEGER;                              Revision(pk_revision)
+###id_revisionend;          INT ;                   INTEGER
+###id_objet;             INT ;                   INTEGER
+
+###urgence;                VARCHAR(255);            TEXT
+###estimationcouts;           NUMERIC;            REAL
+###estimationduree;           NUMERIC;            REAL
+###dateestimationecheance;            DATE ;                  TEXT
+###phase;                VARCHAR(255);            TEXT
+/;              
+Non programme;  NON
+Programme;      PRO
+Conception;     ETU
+Realisation;    REA
+Receptionne;    REC
+###datedebut;            DATE ;                  TEXT
+###datefin;            DATE ;                  TEXT

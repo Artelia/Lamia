@@ -482,6 +482,7 @@
     <addaction name="action_GPSConnection"/>
     <addaction name="actionHauteur_de_perche_GPS"/>
     <addaction name="action_taille_icone"/>
+    <addaction name="actionVersion"/>
    </widget>
    <widget class="QMenu" name="menuMode">
     <property name="title">
@@ -672,6 +673,11 @@
   <action name="actionMode_hors_ligne_Reconnexion">
    <property name="text">
     <string>Mode hors ligne/Reconnexion</string>
+   </property>
+  </action>
+  <action name="actionVersion">
+   <property name="text">
+    <string>version</string>
    </property>
   </action>
  </widget>

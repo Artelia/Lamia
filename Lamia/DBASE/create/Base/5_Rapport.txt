@@ -1,0 +1,96 @@
+#DJAN  SELECT Rapport.*, Objet.datecreation, Objet.datedestruction, Objet.commentaire, Objet.libelle, Ressource.source,Ressource.dateressource,Ressource.contactadresse,Ressource.contactnom, Ressource.contactmail, Ressource.contacttel1, Ressource.contacttel2, Ressource.file,Ressource.description,Ressource.lk_marche  FROM Rapport INNER JOIN Ressource ON Ressource.id_ressource = Rapport.id_ressource INNER JOIN Objet ON Rapport.id_objet = Objet.id_objet
+# For qgis
+#QGISSL SELECT Rapport.*, Objet.datecreation, Objet.datedestruction, Objet.libelle, Ressource.lk_marche ,
+#QGISSL MAX(Rapport.id_revisionbegin, Ressource.id_revisionbegin) AS temprevisionbegin,
+#QGISSL CASE WHEN MIN(Rapport.id_revisionend, Ressource.id_revisionend) NOT NULL
+#QGISSL     THEN MIN(Rapport.id_revisionend, Ressource.id_revisionend)
+#QGISSL     ELSE CASE WHEN  Rapport.id_revisionend NOT NULL 
+#QGISSL             THEN Rapport.id_revisionend
+#QGISSL             ELSE Ressource.id_revisionend END 
+#QGISSL         END AS temprevisionend,
+#QGISSL MAX(Rapport.id_revisionbegin, Ressource.id_revisionbegin, Objet.id_revisionbegin) AS revisionbegin,
+#QGISSL CASE WHEN MIN(Rapport.id_revisionend, Ressource.id_revisionend, Objet.id_revisionend) NOT NULL
+#QGISSL     THEN MIN(Rapport.id_revisionend, Ressource.id_revisionend, Objet.id_revisionend) 
+#QGISSL     ELSE CASE WHEN  Rapport.id_revisionend NOT NULL 
+#QGISSL             THEN CASE WHEN Ressource.id_revisionend NOT NULL
+#QGISSL                         THEN MIN(Rapport.id_revisionend, Ressource.id_revisionend)
+#QGISSL                         ELSE CASE WHEN Objet.id_revisionend NOT null
+#QGISSL                             THEN MIN(Rapport.id_revisionend, Objet.id_revisionend)
+#QGISSL                             ELSE Rapport.id_revisionend END
+#QGISSL                         END 
+#QGISSL             ELSE CASE WHEN Ressource.id_revisionend NOT NULL
+#QGISSL                 THEN MIN(Objet.id_revisionend, Ressource.id_revisionend)
+#QGISSL                 ELSE  Objet.id_revisionend END  
+#QGISSL             END 
+#QGISSL         END AS revisionend
+#QGISSL FROM Rapport
+#QGISSL INNER JOIN Ressource ON 
+#QGISSL Rapport.id_ressource= Ressource.id_ressource
+#QGISSL AND CASE WHEN Rapport.id_revisionend NOT NULL 
+#QGISSL         THEN CASE WHEN Ressource.id_revisionend NOT NULL 
+#QGISSL                     THEN Ressource.id_revisionbegin < Rapport.id_revisionend   AND Ressource.id_revisionend > Rapport.id_revisionbegin
+#QGISSL                     ELSE  Ressource.id_revisionbegin < Rapport.id_revisionend   END
+#QGISSL         ELSE   CASE WHEN Ressource.id_revisionend NOT NULL 
+#QGISSL             THEN Ressource.id_revisionend > Rapport.id_revisionbegin   
+#QGISSL             ELSE 1 END
+#QGISSL         END
+#QGISSL INNER JOIN Objet ON Rapport.id_objet = Objet.id_objet
+#QGISSL AND CASE WHEN temprevisionend NOT NULL 
+#QGISSL         THEN CASE WHEN Objet.id_revisionend NOT NULL 
+#QGISSL                     THEN Objet.id_revisionbegin < temprevisionend   AND Objet.id_revisionend > temprevisionbegin
+#QGISSL                     ELSE  Objet.id_revisionbegin < temprevisionend   END
+#QGISSL         ELSE   CASE WHEN Objet.id_revisionend NOT NULL 
+#QGISSL                     THEN Objet.id_revisionend > temprevisionbegin   
+#QGISSL         ELSE 1 END
+#QGISSL         END
+
+#QGISPG WITH Rapporttemp AS (
+#QGISPG  SELECT Rapport.*, Ressource.lk_marche, 
+#QGISPG  greatest(Rapport.id_revisionbegin, Ressource.id_revisionbegin) AS temprevisionbegin,
+#QGISPG  CASE WHEN least(Rapport.id_revisionend, Ressource.id_revisionend) IS NOT NULL
+#QGISPG      THEN least(Rapport.id_revisionend, Ressource.id_revisionend)
+#QGISPG      ELSE CASE WHEN  Rapport.id_revisionend IS NOT NULL 
+#QGISPG              THEN Rapport.id_revisionend
+#QGISPG              ELSE Ressource.id_revisionend END 
+#QGISPG          END AS temprevisionend
+#QGISPG  FROM Rapport
+#QGISPG  INNER JOIN Ressource ON 
+#QGISPG  Rapport.id_ressource= Ressource.id_ressource
+#QGISPG  AND CASE WHEN Rapport.id_revisionend IS NOT NULL 
+#QGISPG          THEN CASE WHEN Ressource.id_revisionend IS NOT NULL 
+#QGISPG                      THEN Ressource.id_revisionbegin < Rapport.id_revisionend   AND Ressource.id_revisionend > Rapport.id_revisionbegin
+#QGISPG                      ELSE  Ressource.id_revisionbegin < Rapport.id_revisionend   END
+#QGISPG          ELSE   CASE WHEN Ressource.id_revisionend IS NOT NULL 
+#QGISPG              THEN Ressource.id_revisionend > Rapport.id_revisionbegin   
+#QGISPG              ELSE true END
+#QGISPG          END)
+#QGISPG SELECT Rapporttemp.*, Objet.datecreation, Objet.datedestruction,, Objet.libelle, 
+#QGISPG  greatest(Rapporttemp.temprevisionbegin, Objet.id_revisionbegin) AS revisionbegin,
+#QGISPG  CASE WHEN least(Rapporttemp.temprevisionend, Objet.id_revisionend) IS NOT NULL
+#QGISPG      THEN least(Rapporttemp.temprevisionend, Objet.id_revisionend)
+#QGISPG      ELSE CASE WHEN  Rapporttemp.temprevisionend IS NOT NULL 
+#QGISPG              THEN Rapporttemp.temprevisionend
+#QGISPG              ELSE Objet.id_revisionend END 
+#QGISPG          END AS revisionend
+#QGISPG FROM Rapporttemp
+#QGISPG INNER JOIN Objet ON Rapporttemp.id_objet = Objet.id_objet
+#QGISPG   AND CASE WHEN Rapporttemp.temprevisionend IS NOT NULL 
+#QGISPG          THEN CASE WHEN Objet.id_revisionend IS NOT NULL 
+#QGISPG                      THEN Objet.id_revisionbegin < Rapporttemp.temprevisionend   AND Objet.id_revisionend > Rapporttemp.temprevisionbegin
+#QGISPG                      ELSE  Objet.id_revisionbegin < Rapporttemp.temprevisionend   END
+#QGISPG          ELSE   CASE WHEN Objet.id_revisionend IS NOT NULL 
+#QGISPG                      THEN Objet.id_revisionend > Rapporttemp.temprevisionbegin   
+#QGISPG          ELSE true END
+#QGISPG          END
+
+#SHOW YES
+
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###pk_rapport;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_rapport;                INT ;                     INTEGER
+###id_revisionbegin;        INT ;                   INTEGER;                              Revision(pk_revision)
+###id_revisionend;          INT ;                   INTEGER
+###id_objet;             INT ;                     INTEGER 
+###id_ressource;        INT ;                       INTEGER
+
+###geom;                MULTIPOLYGON

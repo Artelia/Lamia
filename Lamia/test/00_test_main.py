@@ -29,6 +29,10 @@ from Lamia.Lamia.dialog.InspectionDigue_windowwidget import InspectiondigueWindo
 
 def testCoreParserValue(canvas, loadfile=True, typedb="spatialite"):
 
+    # spatialite   postgis
+    typedb = "spatialite"
+
+
     print('begin')
     wind = InspectiondigueWindowWidget(canvas)
     wind.setParent(None)
@@ -41,15 +45,22 @@ def testCoreParserValue(canvas, loadfile=True, typedb="spatialite"):
             # path = os.path.normpath('I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201709_RD//BD_Rivedroite_ind4.sqlite')
             # path = os.path.normpath('I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201710_Begles//BD_Begles_ind10.sqlite')
             # path = os.path.normpath( 'C://Users//patrice.verchere//Desktop//VTA_Capa.sqlite')
-            path = os.path.normpath('C://000_testdigue//digues_BM//BD_SIJALAG_ind10.sqlite')
+            # path = os.path.normpath('C://000_testdigue//digues_BM//BD_SIJALAG_ind10.sqlite')
             # path = os.path.normpath('C://000_testdigue//temp_VNF//test01.sqlite')
             # path = os.path.normpath('C://000_testdigue//temp_digue//test01.sqlite')
             # path = os.path.normpath('C://000_testdigue//temp_ass//test01.sqlite')
+            # path = os.path.normpath('C://000_testdigue//temp_default//test01.sqlite')
+            # path = os.path.normpath('C://000_testdigue//temp_basedefault//test01.sqlite')
+            #path = os.path.normpath('C://000_testdigue//temp_baseassainissement//test01.sqlite')
+
+
+            # path = os.path.normpath("C://000_testdigue//convertBM//TO//BD_SIJALAG_ind10.sqlite")
+            path = os.path.normpath("C://000_testdigue//URBAIN//TO//SLT.sqlite")
 
             wind.dbase.loadQgisVectorLayers(path)
 
         elif typedb == "postgis":
-            wind.dbase.loadQgisVectorLayers(dbasetype='postgis', dbname='PVR_test', schema='exportbm', user='postgres',
+            wind.dbase.loadQgisVectorLayers(dbasetype='postgis', dbname='PVR_test', schema='lamia_default', user='postgres',
                                             host='localhost',
                                             password='PVR', port=5432)
 
@@ -78,6 +89,9 @@ def testCoreParserValue(canvas, loadfile=True, typedb="spatialite"):
             canvas.refresh()
 
         print('Layers loaded')
+        print("versioning", wind.dbase.revisionwork)
+
+        # wind.dbase.printsql = True
 
         canvas.show()
         canvas.refresh()

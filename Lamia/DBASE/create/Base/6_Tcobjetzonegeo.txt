@@ -1,0 +1,7 @@
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###pk_tcobjetzonegeo;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_revisionbegin;        INT ;                   INTEGER;                              Revision(pk_revision)
+###id_revisionend;          INT ;                   INTEGER
+
+###id_tczonegeo;       INT;            INTEGER
+###id_tcobjet;       INT;            INTEGER

@@ -1,16 +1,16 @@
 Contents:
  
 Welcome to the documentation Lamia
-=======================================================
+==================================
 
 Contents:
 
 .. toctree::
     :maxdepth: 2
-
+    
     introduction
     tutoriel
-    apireference
+    developpement
  
 Indices and tables
 ==================

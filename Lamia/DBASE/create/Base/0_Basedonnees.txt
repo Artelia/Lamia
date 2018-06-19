@@ -1,0 +1,7 @@
+#DJAN
+# Nom_champ   TypePostGis   TypeSpatialite   Option  Referecens/foreignkey
+###pk_basedonnees;SERIAL PRIMARY KEY;INTEGER PRIMARY KEY AUTOINCREMENT
+###metier;VARCHAR(255) ;TEXT
+###repertoireressources;VARCHAR(255) ;TEXT
+###crs;INT ;                   INTEGER
+###version;VARCHAR(255) ;TEXT

@@ -1,0 +1,20 @@
+###categorie;           VARCHAR(255);            TEXT
+Noeud;NOD
+###typeReseau;                VARCHAR(255);            TEXT
+/;
+Pluvial;                  PLU
+Eaux usees;               USE
+Unitaire;                 UNI
+###typeAppAss;             INT ;                     INTEGER 
+/;
+Point de branchement;       1
+Ventouse;                   2
+Vanne;                      3
+Debitmetre;                 4
+Chasse d eau;               5
+Dessableur;                 6
+Deversoir;                  7
+Siphon;                     8
+Autre;                      0
+Puits d'infiltration;       20
+Indetermine;                99

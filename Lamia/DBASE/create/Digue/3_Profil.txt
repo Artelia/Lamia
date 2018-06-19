@@ -7,6 +7,7 @@
 ###type;           VARCHAR(255);           TEXT
 Croquis;        CRO
 Graphique;        GRA
+Image;      PHO
 ###file;           VARCHAR(255);           TEXT
 ###X;                VARCHAR(255);            TEXT
 ###Z;                VARCHAR(255);            TEXT

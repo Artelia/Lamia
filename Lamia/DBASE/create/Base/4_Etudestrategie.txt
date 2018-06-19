@@ -1,0 +1,53 @@
+#DJAN  SELECT Etudestrategie.*, Objet.datecreation, Objet.datedestruction, Objet.commentaire, Objet.libelle  FROM Etudestrategie  INNER JOIN Objet ON Objet.id_objet = Etudestrategie.id_objet
+# For qgis
+#QGISSL SELECT Etudestrategie.* , Objet.datecreation, Objet.datedestruction, Objet.libelle,
+#QGISSL MAX(Etudestrategie.id_revisionbegin, Objet.id_revisionbegin) AS revisionbegin,
+#QGISSL CASE WHEN MIN(Etudestrategie.id_revisionend, Objet.id_revisionend) IS NOT NULL
+#QGISSL     THEN MIN(Etudestrategie.id_revisionend, Objet.id_revisionend)
+#QGISSL     ELSE CASE WHEN  Etudestrategie.id_revisionend IS NOT NULL 
+#QGISSL             THEN Etudestrategie.id_revisionend
+#QGISSL             ELSE Objet.id_revisionend END 
+#QGISSL         END AS revisionend
+#QGISSL FROM Etudestrategie
+#QGISSL INNER JOIN Objet ON Etudestrategie.id_objet= Objet.id_objet
+#QGISSL AND CASE WHEN Etudestrategie.id_revisionend IS NOT NULL 
+#QGISSL         THEN CASE WHEN Objet.id_revisionend IS NOT NULL 
+#QGISSL                     THEN Objet.id_revisionbegin < Etudestrategie.id_revisionend   AND Objet.id_revisionend > Etudestrategie.id_revisionbegin
+#QGISSL                     ELSE  Objet.id_revisionbegin < Etudestrategie.id_revisionend   END
+#QGISSL         ELSE   CASE WHEN Objet.id_revisionend IS NOT NULL 
+#QGISSL             THEN Objet.id_revisionend > Etudestrategie.id_revisionbegin   
+#QGISSL             ELSE 1 END
+#QGISSL         END
+
+#QGISPG SELECT Etudestrategie.* , Objet.datecreation, Objet.datedestruction,Objet.libelle,
+#QGISPG greatest(Etudestrategie.id_revisionbegin, Objet.id_revisionbegin) AS revisionbegin,
+#QGISPG CASE WHEN least(Etudestrategie.id_revisionend, Objet.id_revisionend) IS NOT NULL
+#QGISPG     THEN least(Etudestrategie.id_revisionend, Objet.id_revisionend)
+#QGISPG     ELSE CASE WHEN  Etudestrategie.id_revisionend IS NOT NULL 
+#QGISPG             THEN Etudestrategie.id_revisionend
+#QGISPG             ELSE Objet.id_revisionend END 
+#QGISPG         END AS revisionend
+#QGISPG FROM Etudestrategie
+#QGISPG INNER JOIN Objet ON Etudestrategie.id_objet= Objet.id_objet
+#QGISPG AND CASE WHEN Etudestrategie.id_revisionend IS NOT NULL 
+#QGISPG         THEN CASE WHEN Objet.id_revisionend IS NOT NULL 
+#QGISPG                     THEN Objet.id_revisionbegin < Etudestrategie.id_revisionend   AND Objet.id_revisionend > Etudestrategie.id_revisionbegin
+#QGISPG                     ELSE  Objet.id_revisionbegin < Etudestrategie.id_revisionend   END
+#QGISPG         ELSE   CASE WHEN Objet.id_revisionend IS NOT NULL 
+#QGISPG             THEN Objet.id_revisionend > Etudestrategie.id_revisionbegin   
+#QGISPG             ELSE true END
+#QGISPG         END
+
+
+
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###pk_etudestrategie;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_etudestrategie;             INT ;                   INTEGER
+###id_revisionbegin;        INT ;                   INTEGER;                              Revision(pk_revision)
+###id_revisionend;          INT ;                   INTEGER
+###id_objet;             INT ;                   INTEGER
+
+###investissements;                VARCHAR(255);            TEXT
+###chronologie;                VARCHAR(255);            TEXT
+###note;                VARCHAR(255);            TEXT
+###lk_marche;           INT ;                   INTEGER

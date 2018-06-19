@@ -194,6 +194,7 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.actionImprimer_rapport.triggered.connect(self.printRapport)
         self.actionExport_shapefile.triggered.connect(self.exportShapefile)
         self.actionImport.triggered.connect(self.importObjet)
+        self.actionVersion.triggered.connect(self.setVersion)
 
         if self.dbase.dbasetype == 'postgis':
             self.actionMode_hors_ligne_Reconnexion.setEnabled(True)
@@ -237,6 +238,22 @@ class InspectiondigueWindowWidget(QMainWindow):
             newsize = iconwidth
         newsizeicon = QtCore.QSize(newsize)
         newsizeicon.scale(newsize.width() * 0.8, newsize.width() * 0.8, QtCore.Qt.KeepAspectRatio)
+
+        butttons = self.findChildren(QPushButton)
+        for button in butttons:
+            # print('button', button.icon())
+            if button.icon() is not None:
+                button.setIconSize(newsizeicon)
+                button.setBaseSize(newsize)
+                button.setFixedSize(newsize)
+        butttons = self.findChildren(QToolButton)
+        for button in butttons:
+            if button.icon() is not None:
+                button.setIconSize(newsizeicon)
+                button.setBaseSize(newsize)
+                button.setFixedSize(newsize)
+
+
         for dbasetablename in self.dbase.dbasetables.keys():
             wgds = self.dbase.dbasetables[dbasetablename]['widget']
             # print('changed', dbasetablename,wgd )
@@ -246,19 +263,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                 listwdg = wgds
 
             for wdg in listwdg:
-                butttons = wdg.findChildren(QPushButton)
-                for button in butttons:
-                    # print('button', button.icon())
-                    if button.icon() is not None:
-                        button.setIconSize(newsizeicon)
-                        button.setBaseSize(newsize)
-                        button.setFixedSize(newsize)
-                butttons = wdg.findChildren(QToolButton)
-                for button in butttons:
-                    if button.icon() is not None:
-                        button.setIconSize(newsizeicon)
-                        button.setBaseSize(newsize)
-                        button.setFixedSize(newsize)
+                wdg.themechanged(iconwidth)
 
 
 
@@ -537,6 +542,21 @@ class InspectiondigueWindowWidget(QMainWindow):
                                          self.dbase.hauteurperche)
         if ok:
             self.dbase.hauteurperche = num
+
+    def setVersion(self):
+        num, ok = QInputDialog.getInteger(self,
+                                         "Version",
+                                         "Version à afficher",
+                                         value = self.dbase.currentrevision,
+                                          min = 1,
+                                          max = self.dbase.maxrevision)
+        if ok:
+            self.dbase.currentrevision = num
+            self.dbase.updateWorkingDate()
+
+            self.MaintreeWidget.currentItemChanged.emit(self.MaintreeWidget.currentItem(),self.MaintreeWidget.currentItem())
+
+
 
     def setLamiaIconSize(self):
         self.iconsizedialog.exec_()
@@ -1064,12 +1084,20 @@ class InspectiondigueWindowWidget(QMainWindow):
             layer = wdg.dbasetable['layerqgis']
             #nearestid, dist = wdg.getNearestId(point)
             point2 = self.pointEmitter.toLayerCoordinates(wdg.dbasetable['layerqgis'], point)
-            nearestid, dist = self.dbase.getNearestId(wdg.dbasetable,
+            nearestpk, dist = self.dbase.getNearestId(wdg.dbasetable,
                                                       wdg.dbasetablename,
                                                       point2,
                                                       False)
-            itemindex = wdg.comboBox_featurelist.findText(str(nearestid))
+            if self.dbase.revisionwork:
+                feat = self.dbase.getLayerFeatureByPk(wdg.dbasetablename, nearestpk)
+                featid = feat['id_' + wdg.dbasetablename]
+                # print('sel',featid)
+            else:
+                featid = nearestpk
+
+            itemindex = wdg.comboBox_featurelist.findText(str(featid))
             wdg.comboBox_featurelist.setCurrentIndex(itemindex)
+
         elif self.stackedWidget_main.currentIndex() == 1:
             wdg = self.stackedWidget_main.widget(1).layout().itemAt(0).widget()
             wdg.selectPickedFeature(point)
@@ -1143,6 +1171,7 @@ class InspectiondigueWindowWidget(QMainWindow):
 
 
     def errorMessage(self, text):
+        # print('eror', self.sender(),self.sender().name())
         if self.dbase.qgsiface is not None:
             #if not self.dbase.standalone:
             if int(str(self.dbase.qgisversion_int)[0:3]) < 220:

@@ -1,0 +1,63 @@
+#DJAN SELECT  Travaux.* , Objet.datecreation, Objet.datedestruction, Objet.commentaire, Objet.libelle FROM Travaux INNER JOIN OBJET ON Travaux.id_objet = Objet.id_objet
+# For qgis
+#QGISSL SELECT Travaux.* , Objet.datecreation, Objet.datedestruction,
+#QGISSL MAX(Travaux.id_revisionbegin, Objet.id_revisionbegin) AS revisionbegin,
+#QGISSL CASE WHEN MIN(Travaux.id_revisionend, Objet.id_revisionend) NOT NULL
+#QGISSL     THEN MIN(Travaux.id_revisionend, Objet.id_revisionend)
+#QGISSL     ELSE CASE WHEN  Travaux.id_revisionend NOT NULL 
+#QGISSL             THEN Travaux.id_revisionend
+#QGISSL             ELSE Objet.id_revisionend END 
+#QGISSL         END AS revisionend
+#QGISSL FROM Travaux
+#QGISSL INNER JOIN Objet ON Travaux.id_objet= Objet.id_objet
+#QGISSL AND CASE WHEN Travaux.id_revisionend NOT NULL 
+#QGISSL         THEN CASE WHEN Objet.id_revisionend NOT NULL 
+#QGISSL                     THEN Objet.id_revisionbegin < Travaux.id_revisionend   AND Objet.id_revisionend > Travaux.id_revisionbegin
+#QGISSL                     ELSE  Objet.id_revisionbegin < Travaux.id_revisionend   END
+#QGISSL         ELSE   CASE WHEN Objet.id_revisionend NOT NULL 
+#QGISSL             THEN Objet.id_revisionend > Travaux.id_revisionbegin   
+#QGISSL             ELSE 1 END
+#QGISSL         END
+
+#QGISPG SELECT Travaux.* , Objet.datecreation, Objet.datedestruction,
+#QGISPG greatest(Travaux.id_revisionbegin, Objet.id_revisionbegin) AS revisionbegin,
+#QGISPG CASE WHEN least(Travaux.id_revisionend, Objet.id_revisionend) IS NOT NULL
+#QGISPG     THEN least(Travaux.id_revisionend, Objet.id_revisionend)
+#QGISPG     ELSE CASE WHEN  Travaux.id_revisionend IS NOT NULL 
+#QGISPG             THEN Travaux.id_revisionend
+#QGISPG             ELSE Objet.id_revisionend END 
+#QGISPG         END AS revisionend
+#QGISPG FROM Travaux
+#QGISPG INNER JOIN Objet ON Travaux.id_objet= Objet.id_objet
+#QGISPG AND CASE WHEN Travaux.id_revisionend IS NOT NULL 
+#QGISPG         THEN CASE WHEN Objet.id_revisionend IS NOT NULL 
+#QGISPG                     THEN Objet.id_revisionbegin < Travaux.id_revisionend   AND Objet.id_revisionend > Travaux.id_revisionbegin
+#QGISPG                     ELSE  Objet.id_revisionbegin < Travaux.id_revisionend   END
+#QGISPG         ELSE   CASE WHEN Objet.id_revisionend IS NOT NULL 
+#QGISPG             THEN Objet.id_revisionend > Travaux.id_revisionbegin   
+#QGISPG             ELSE true END
+#QGISPG         END
+
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###pk_travaux;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_travaux;               INT ;                   INTEGER
+###id_revisionbegin;        INT ;                   INTEGER;                              Revision(pk_revision)
+###id_revisionend;          INT ;                   INTEGER
+###id_objet;             INT ;                   INTEGER
+###lk_observation ;             INT ;                   INTEGER 
+
+###urgence;                VARCHAR(255);            TEXT
+###estimationcouts;           NUMERIC;            REAL
+###estimationduree;           NUMERIC;            REAL
+###dateestimationecheance;            DATE ;                  TEXT
+###phase;                VARCHAR(255);            TEXT
+/;              
+Non programme;  NON
+Programme;      PRO
+Conception;     ETU
+Realisation;    REA
+Receptionne;    REC
+###datedebut;            DATE ;                  TEXT
+###datefin;            DATE ;                  TEXT
+
+###lk_marche;             INT ;                   INTEGER

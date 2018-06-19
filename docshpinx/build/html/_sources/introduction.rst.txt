@@ -4,7 +4,7 @@ Introduction
 
 
 What is Lamia ?
-------------------
+---------------
 
 ...
 

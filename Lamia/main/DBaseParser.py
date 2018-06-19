@@ -107,6 +107,10 @@ class DBaseParser(QtCore.QObject):
 
         self.printsql = False
 
+        self.revisionwork = False
+        self.currentrevision = None
+        self.maxrevision = 0
+
 
 
         self._readRecentDBase()
@@ -213,7 +217,7 @@ class DBaseParser(QtCore.QObject):
         if debug: logging.getLogger("Lamia").debug('started')
 
         # create dbasedict
-        self._createDBDictionary(type)
+        self.createDBDictionary(type)
         # manage ressource directory
         if False:
             if not os.path.isdir(dbaseressourcesdirectory):
@@ -303,13 +307,17 @@ class DBaseParser(QtCore.QObject):
             self.query(sql)
             self.commit()
             sql = 'SET search_path TO ' + self.pgschema + ',public'
+            self.query(sql)
+            self.commit()
             # print(sql)
             # res = self.PGiscursor.execute(sql)
-            self.query(sql)
-            self.commit()
-            sql = 'GRANT ALL ON SCHEMA '+self.pgschema+' TO vadjango'
-            self.query(sql)
-            self.commit()
+            if False:
+
+                sql = 'GRANT ALL ON SCHEMA '+self.pgschema+' TO vadjango'
+                self.query(sql)
+                self.commit()
+
+
 
         # ***************************************************************************************
         # Tables creation
@@ -324,7 +332,7 @@ class DBaseParser(QtCore.QObject):
                         sql = self._generatePostGisCreationSQL(dbname, self.dbasetables[dbname], crs)
                         # print(sql['main'])
                         openedsqlfile.write(sql['main'] + '\n')
-                    # print(sql['main'])
+                    print(sql['main'])
                     self.query(sql['main'])
                     self.commit()
                     if 'other' in sql.keys():
@@ -339,14 +347,25 @@ class DBaseParser(QtCore.QObject):
         self.query(sql)
         self.commit()
 
+        if self.revisionwork:
+            datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
+            sql = "INSERT INTO Revision (daterevision, commentaire) "
+            sql += "VALUES('" + datecreation + "','Premiere version ');"
+            self.query(sql)
+            self.commit()
+
         # ***************************************************************************************
         # view creation
         for dbname in self.dbasetables:
-            # print(dbname)
+            print(dbname)
             viewnames={}
             if 'djangoviewsql' in self.dbasetables[dbname].keys():
                 viewnames['djangoviewsql'] = str(dbname) + '_django'
-            if 'qgisviewsql' in self.dbasetables[dbname].keys():
+            if self.dbasetype == 'spatialite' and 'qgisSLviewsql' in self.dbasetables[dbname].keys():
+                viewnames['qgisSLviewsql'] = str(dbname) + '_qgis'
+            elif self.dbasetype == 'postgis' and 'qgisPGviewsql' in self.dbasetables[dbname].keys():
+                viewnames['qgisPGviewsql'] = str(dbname) + '_qgis'
+            elif 'qgisviewsql' in self.dbasetables[dbname].keys():
                 viewnames['qgisviewsql'] = str(dbname) + '_qgis'
             if 'exportviewsql' in self.dbasetables[dbname].keys():
                 if True:
@@ -356,6 +375,7 @@ class DBaseParser(QtCore.QObject):
                         viewnames['exportviewsql' + str(i)] = str(dbname) + '_export' + str(i)
 
             for viewname in viewnames.keys():
+
                 # sql = 'CREATE VIEW ' + str(dbname) + '_view AS '
                 sql = 'CREATE VIEW ' + str(viewnames[viewname]) + ' AS '
                 if self.dbasetables[dbname][viewname] != '':
@@ -447,7 +467,7 @@ class DBaseParser(QtCore.QObject):
                                   user=self.pguser, password=self.pgpassword)
 
 
-    def _createDBDictionary(self, type):
+    def createDBDictionary(self, type):
         """!
         Read the files in ./DBASE/create
         A file describes the fields  like that:
@@ -462,6 +482,8 @@ class DBaseParser(QtCore.QObject):
                           'widget' : the table widget,
                           'djangoviewsql' : sql statement for initial django view creation
                           'qgisviewsql' : sql statement for initial qgis view creation
+                          'qgisSLviewsql' : sql statement for initial qgis view creation - spatialite compatible
+                          'qgisPGviewsql' : sql statement for initial qgis view creation - postgis compatible
                           'exportviewsql' : sql statement for initial special view creation
                           'layer' : real layer
                           'layerqgis' : view layer with parent fields
@@ -482,10 +504,23 @@ class DBaseParser(QtCore.QObject):
         debug = False
         if debug: logging.getLogger("Lamia").debug('started')
 
+
+
         # first readfiles in ./DBASE\create directory and create self.dbasetables
         self.type = type
         self.dbasetables = {}
         createfilesdir = os.path.join(os.path.dirname(__file__), '..', 'DBASE', 'create', self.type)
+
+        if len(self.type.split('_')) == 2 and self.type.split('_')[0] == 'Base':
+            parsertemp = DBaseParser(None)
+            parsertemp.createDBDictionary('Base')
+            self.dbasetables = parsertemp.dbasetables
+            del parsertemp
+
+
+
+
+
 
         for filename in glob.glob(os.path.join(createfilesdir, '*.txt')):
 
@@ -511,11 +546,12 @@ class DBaseParser(QtCore.QObject):
                 temp[1]+='_'
                 temp[1]+=temp[4]
             tablename = temp[1]
-            self.dbasetables[tablename] = {}
-            self.dbasetables[tablename]['order'] = int(temp[0])
-            self.dbasetables[tablename]['fields'] = OrderedDict()
-            self.dbasetables[tablename]['showinqgis'] = False
-            self.dbasetables[tablename]['widget'] = []
+            if tablename not in self.dbasetables.keys():
+                self.dbasetables[tablename] = {}
+                self.dbasetables[tablename]['order'] = int(temp[0])
+                self.dbasetables[tablename]['fields'] = OrderedDict()
+                self.dbasetables[tablename]['showinqgis'] = False
+                self.dbasetables[tablename]['widget'] = []
             # self.dbasetables[tablename]['exportviewsql'] = []
             if sys.version_info.major == 2:
                 file = open(filename, 'r')
@@ -548,6 +584,16 @@ class DBaseParser(QtCore.QObject):
                 elif line[0] == '#':            # comment - pass
                     if line[0:5] == '#DJAN':
                         self.dbasetables[tablename]['djangoviewsql'] = line[5:].strip()
+                    elif line[0:7] == '#QGISSL':
+                        if 'qgisSLviewsql' in self.dbasetables[tablename].keys():
+                            self.dbasetables[tablename]['qgisSLviewsql'] += ' ' + line[7:].strip() + ' '
+                        else:
+                            self.dbasetables[tablename]['qgisSLviewsql'] = line[7:].strip()
+                    elif line[0:7] == '#QGISPG':
+                        if 'qgisPGviewsql' in self.dbasetables[tablename].keys():
+                            self.dbasetables[tablename]['qgisPGviewsql'] += ' ' + line[7:].strip() + ' '
+                        else:
+                            self.dbasetables[tablename]['qgisPGviewsql'] = line[7:].strip()
                     elif line[0:5] == '#QGIS':
                         self.dbasetables[tablename]['qgisviewsql'] = line[5:].strip()
                     elif line[0:5] == '#EXPO':
@@ -584,7 +630,16 @@ class DBaseParser(QtCore.QObject):
                     else:
                         self.dbasetables[tablename]['fields'][fieldname]['Cst'][-1].append(None)
                 compt += 1
+
+
+
+
             file.close()
+
+        if "Revision" in self.dbasetables.keys():
+            self.revisionwork = True
+
+
         # print(self.dbasetables)
 
     def _generateSpatialiteCreationSQL(self, name, dbasetable, crs):
@@ -729,10 +784,19 @@ class DBaseParser(QtCore.QObject):
         self.crsnumber = crs
         self.qgiscrs = qgis.core.QgsCoordinateReferenceSystem(self.crsnumber)
 
+
+
         if debug: logging.getLogger('Lamia').debug('step2')
 
         if type is not None:
-            self._createDBDictionary(type)
+            self.createDBDictionary(type)
+
+            if self.revisionwork:
+                sql = "SELECT MAX(pk_revision) FROM Revision;"
+                query = self.query(sql)
+                self.currentrevision = query[0][0]
+                print('rev', self.currentrevision ,query )
+
             # create a list of tables to load
             if False:
                 listoftabletoload = []
@@ -864,6 +928,10 @@ class DBaseParser(QtCore.QObject):
 
 
             self.updateQgsCoordinateTransformFromLayerToCanvas()
+            if self.revisionwork:
+                self.maxrevision = self.getMaxRevision()
+
+
             self.dBaseLoaded.emit()
 
 
@@ -897,8 +965,13 @@ class DBaseParser(QtCore.QObject):
                 # connectstr += self.pghost + "' password='" + self.pgpassword + "'"
                 # self.connPGis = psycopg2.connect(connectstr)
                 self.PGiscursor = self.connPGis.cursor()
+            try:
+                self.PGiscursor.execute(sql)
+            except psycopg2.ProgrammingError as e:
+                print('error', sql)
+                print('error query', e)
+                return None
 
-            self.PGiscursor.execute(sql)
             if sql.strip()[0:6] == 'SELECT':
                 try:
                     rows = self.PGiscursor.fetchall()
@@ -1016,15 +1089,25 @@ class DBaseParser(QtCore.QObject):
         if self.dbasetype == 'spatialite':
             subsetstring = '"datecreation" <= ' + "'" + self.workingdate + "'"
             subsetstring += ' AND CASE WHEN "datedestruction" IS NOT NULL  THEN "datedestruction" > ' + "'" + self.workingdate + "'" + ' ELSE 1 END'
+            if self.revisionwork:
+                subsetstring += ' AND "revisionbegin" <= ' + str(self.currentrevision)
+                subsetstring += ' AND CASE WHEN "revisionend" IS NOT NULL  THEN "revisionend" > '  + str(self.currentrevision)  + ' ELSE 1 END'
+
         elif self.dbasetype == 'postgis':
             subsetstring = '"datecreation" <= ' + "'" + self.workingdate + "'"
             subsetstring += ' AND CASE WHEN "datedestruction" IS NOT NULL  THEN "datedestruction" > ' + "'" + self.workingdate + "'" + ' ELSE TRUE END'
+            if self.revisionwork:
+                subsetstring += ' AND "revisionbegin" <= ' + str(self.currentrevision)
+                subsetstring += ' AND CASE WHEN "revisionend" IS NOT NULL  THEN "revisionend" > '  + str(self.currentrevision)  + ' ELSE TRUE END'
 
         for tablename in self.dbasetables:
             fieldnames = [field.name().lower() for field in self.dbasetables[tablename]['layerqgis'].fields()]
             if 'datecreation' in fieldnames:
                 self.dbasetables[tablename]['layerqgis'].setSubsetString(subsetstring)
                 self.dbasetables[tablename]['layerqgis'].triggerRepaint()
+
+    def getMaxRevision(self):
+        return self.getLastPk('Revision')
 
     def reInitDBase(self):
         if self.dbasetables is not None:
@@ -1115,24 +1198,53 @@ class DBaseParser(QtCore.QObject):
 
 
     def getFirstIdColumn(self,tablename):
-        sql = "PRAGMA table_info(" + str(tablename) + ")"
-        query = self.query(sql)
+
         if self.dbasetype == 'spatialite':
+            sql = "PRAGMA table_info(" + str(tablename) + ")"
+            query = self.query(sql)
             result = [row[1] for row in query]
             #print(result)
             for fieldname in result:
-                if 'id_' in fieldname:
-                    return fieldname
+                if self.revisionwork:
+                    if 'pk_' in fieldname:
+                        return fieldname
+                else:
+                    if 'id_' in fieldname:
+                        return fieldname
+
+        elif self.dbasetype == 'postgis':
+            sql = "SELECT column_name FROM information_schema.columns WHERE table_name  = '" +  str(tablename).lower() + "'"
+            query = self.query(sql)
+            result = [row[0] for row in query]
+            for fieldname in result:
+                if self.revisionwork:
+                    if 'pk_' in fieldname:
+                        return fieldname
+                else:
+                    if 'id_' in fieldname:
+                        return fieldname
+
+
+
         return None
 
     def isTableSpatial(self, tablename):
-        sql = "PRAGMA table_info(" + str(tablename) + ")"
-        query = self.query(sql)
+
         if self.dbasetype == 'spatialite':
+            sql = "PRAGMA table_info(" + str(tablename) + ")"
+            query = self.query(sql)
             result = [row[1] for row in query]
             #print(result)
             if 'geom' in result:
                 return True
+
+        elif self.dbasetype == 'postgis':
+            sql = "SELECT column_name FROM information_schema.columns WHERE table_name  = '" +  str(tablename).lower() + "'"
+            query = self.query(sql)
+            result = [row[0] for row in query]
+            if 'geom' in result:
+                return True
+
         return False
 
 
@@ -1141,7 +1253,7 @@ class DBaseParser(QtCore.QObject):
         # print('_getConstraintTextFromRawValue',self.dbasetablename, self.dbasetable['fields'][field], rawvalue,field)
         dbasetable = self.dbasetables[table]
         #try:
-        if 'Cst' in dbasetable['fields'][field].keys():
+        if field in dbasetable['fields'].keys() and 'Cst' in dbasetable['fields'][field].keys():
             if not self.isAttributeNull(rawvalue):
                 # print(type(rawvalue))
                 if isinstance(rawvalue, int) or isinstance(rawvalue, long):
@@ -1214,6 +1326,7 @@ class DBaseParser(QtCore.QObject):
             point2geom = qgis.core.QgsGeometry.fromPoint(point2)
         else:
             point2geom = qgis.core.QgsGeometry.fromPointXY(point2)
+
         spIndex = qgis.core.QgsSpatialIndex(dbasetable['layerqgis'].getFeatures())
         layernearestids = spIndex.nearestNeighbor(point2, 5)
         # print('getNearestId',layernearestids)
@@ -1228,7 +1341,10 @@ class DBaseParser(QtCore.QObject):
         if len(layernearestids) > 0:
             for layernearestid in layernearestids:
                 # feat = self.dbasetable['layerview'].getFeatures(qgis.core.QgsFeatureRequest(layernearestid)).next()
-                feat = self.getLayerFeatureById(dbasetablename, layernearestid)
+                if not self.revisionwork:
+                    feat = self.getLayerFeatureById(dbasetablename, layernearestid)
+                else:
+                    feat = self.getLayerFeatureByPk(dbasetablename, layernearestid)
                 featgeom = feat.geometry()
                 # print(featgeom.asPolyline())
                 if featgeom.isGeosValid():  # if not valid, return dist = -1...
@@ -1271,10 +1387,87 @@ class DBaseParser(QtCore.QObject):
         :param fid:
         :return:
         """
+        if not self.revisionwork:
+            if int(str(self.qgisversion_int)[0:3]) < 220:
+                return self.dbasetables[layername]['layer'].getFeatures(qgis.core.QgsFeatureRequest(fid)).next()
+            else:
+                return self.dbasetables[layername]['layer'].getFeature(fid)
+        else:
+            #request =  qgis.core.QgsFeatureRequest().setFilterExpression(' "some_field_name" = \'some_value\' ')
+            txtrequest = ' "id_' +layername.lower() +  '" =  ' + str(fid)
+
+            if False:
+                if self.dbasetype == 'postgis':
+                    txtrequest += ' AND "revisionbegin" <= ' + "'"  + str(self.currentrevision)+ "'"
+                    txtrequest += ' AND CASE WHEN "revisionend" NOT NULL THEN '
+                    txtrequest += ' "revisionend" > ' + "'" + str(self.currentrevision) + "'"
+                    txtrequest += ' ELSE TRUE END '
+                elif self.dbasetype == 'spatialite':
+
+                    txtrequest += ' AND cast("revisionbegin" AS INTEGER) <= ' + str(self.currentrevision)
+                    if True:
+                        txtrequest += ' AND CASE WHEN "revisionend" NOT NULL THEN '
+                        txtrequest += ' cast("revisionend" AS INTEGER) > ' + str(self.currentrevision)
+                        txtrequest += ' ELSE 1 END '
+
+                    if False:
+                        txtrequest += ' AND cast("revisionbegin" AS INTEGER) <= '  + str(self.currentrevision)
+                        if True:
+                            txtrequest += ' AND CASE WHEN "revisionend" NOT NULL THEN '
+                            txtrequest += ' cast("revisionend" AS INTEGER) > '  + str(self.currentrevision)
+                            txtrequest += ' ELSE 1 END '
+
+            # print('getLayerFeatureById', txtrequest)
+
+            request = qgis.core.QgsFeatureRequest().setFilterExpression(txtrequest)
+            request.setFlags(qgis.core.QgsFeatureRequest.NoGeometry)
+            qgisfeatpk = self.dbasetables[layername]['layerqgis'].getFeatures(request).next()['pk_' + layername.lower()]
+
+            #return self.dbasetables[layername]['layerqgis'].getFeatures(request).next()
+            if int(str(self.qgisversion_int)[0:3]) < 220:
+                return self.dbasetables[layername]['layer'].getFeatures(qgis.core.QgsFeatureRequest(qgisfeatpk)).next()
+            else:
+                return self.dbasetables[layername]['layer'].getFeature(qgisfeatpk)
+
+
+
+
+    def getLayerFeatureByPk(self,layername,fid):
+        """
+
+        :param layername:
+        :param fid:
+        :return:
+        """
         if int(str(self.qgisversion_int)[0:3]) < 220:
             return self.dbasetables[layername]['layer'].getFeatures(qgis.core.QgsFeatureRequest(fid)).next()
         else:
             return self.dbasetables[layername]['layer'].getFeature(fid)
+
+
+
+
+    def appendDateVersionConstraintToSQL(self,sqlin):
+
+        sqlin += ' AND datecreation <= ' + "'" + self.dbase.workingdate + "'"
+        if self.dbase.dbasetype == 'postgis':
+            sqlin += ' AND CASE WHEN datedestruction IS NOT NULL  '
+            sqlin += 'THEN DateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE TRUE END'
+            if self.dbase.revisionwork:
+                sqlin += " AND revisionbegin <= " + str(self.dbase.currentrevision)
+                sqlin += " AND CASE WHEN revisionend IS NOT NULL THEN "
+                sqlin += " revisionend > " + str(self.dbase.currentrevision)
+                sqlin += " ELSE TRUE END "
+        elif self.dbase.dbasetype == 'spatialite':
+            sqlin += ' AND CASE WHEN datedestruction IS NOT NULL  '
+            sqlin += 'THEN DateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE 1 END'
+            if self.dbase.revisionwork:
+                sqlin += " AND revisionbegin <= " + str(self.dbase.currentrevision)
+                sqlin += " AND CASE WHEN revisionend IS NOT NULL THEN "
+                sqlin += " revisionend > " + str(self.dbase.currentrevision)
+                sqlin += " ELSE 1 END "
+        return sqlin
+
 
     def completePathOfFile(self,filetoprocess):
         completefile = ''
@@ -1292,6 +1485,30 @@ class DBaseParser(QtCore.QObject):
 
             completefile = os.path.normpath(completefile)
         return completefile
+
+
+
+    def getLastId(self, table):
+        sql = "SELECT MAX(id_" + table.lower() + ") FROM " + str(table)
+        query = self.query(sql)
+        result = [row[0] for row in query]
+        # print(sql, result)
+        if len(result)>0 and result[0] is not  None:
+            return result[0]
+        else:       #initialization
+            return 0
+
+    def getLastPk(self, table):
+        sql = "SELECT MAX(pk_" + table.lower() + ") FROM " + str(table)
+        query = self.query(sql)
+        result = [row[0] for row in query]
+        # print(sql, result)
+        if len(result)>0 and result[0] is not  None:
+            return result[0]
+        else:       #initialization
+            return None
+
+
 
 
     def exportBase(self, exportdbase):
@@ -1424,3 +1641,8 @@ class DBaseParser(QtCore.QObject):
 
     def featureAdded(self, id):
         self.featureaddedid = id
+
+    def getLatestVersion(self):
+        sql = "SELECT MAX(pk_revision) FROM Revision;"
+        query = self.query(sql)
+        return query[0][0]
