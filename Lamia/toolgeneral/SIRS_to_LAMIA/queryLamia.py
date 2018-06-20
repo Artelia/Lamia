@@ -9,7 +9,7 @@ import os
 
 class queryLamia():
 
-    def __init__(self, path):
+    def __init__(self, path, srid):
         if sys.version_info.major == 2:
             self.connSLITE = db.connect(path)
         elif sys.version_info.major == 3:   #python 3
@@ -17,6 +17,7 @@ class queryLamia():
         self.SLITEcursor = self.connSLITE.cursor()
         self.configPATH = os.path.join(os.path.dirname(__file__), 'jsonConfig/config.json')
         self.swapPATH = os.path.join(os.path.dirname(__file__), 'jsonConfig/swapping.json')
+        self.srid = srid
 
     def commit(self):
         self.connSLITE.commit()
@@ -89,7 +90,16 @@ class queryLamia():
         if ' ' in key:
             key = self.formatKey(key.split(' '))
 
-        self.SLITEcursor.execute(config[key]['query_sql'], values)
+
+        query_to_run = config[key]['query_sql']
+        print(query_to_run)
+        query_to_run=query_to_run.replace('2154',self.srid)
+        print(query_to_run)
+
+
+        #self.SLITEcursor.execute(config[key]['query_sql'], values)
+
+        self.SLITEcursor.execute(query_to_run, values)
 
         try:
             fetch = self.SLITEcursor.lastrowid

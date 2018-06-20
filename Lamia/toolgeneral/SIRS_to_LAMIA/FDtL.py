@@ -24,8 +24,8 @@ sys.setdefaultencoding('utf-8')
 def import_sirs():
     import_sirsDialog=ImportSirsDialog()
     import_sirsDialog.exec_()
-    user, pwd, ip, port, nom_sirs, path_LAMIA = import_sirsDialog.dialogIsFinished()
-    print(user, pwd, ip, port, nom_sirs, path_LAMIA)
+    user, pwd, ip, port, nom_sirs, path_LAMIA, srid = import_sirsDialog.dialogIsFinished()
+    print(user, pwd, ip, port, nom_sirs, path_LAMIA, srid)
 
     #user = "r.beckprotoy"
     #pwd = "CouchDb"
@@ -34,7 +34,7 @@ def import_sirs():
     #nom_sirs='valence_romans_agglo'
     #path_lamia = '../../DB/test_valence.sqlite'
 
-    FDtL = FranceDiguetoLamia(user,pwd,ip,port,nom_sirs,path_LAMIA)
+    FDtL = FranceDiguetoLamia(user,pwd,ip,port,nom_sirs,path_LAMIA, srid)
     FDtL.insertInLamia()
 
 
@@ -64,12 +64,12 @@ class ImportSirsDialog(QDialog):
             self.lineEdit_nom_LAMIA.setText(reportfile)
 
     def dialogIsFinished(self):
-        return self.lineEdit_user.text(), self.lineEdit_password.text(), self.lineEdit_adresse.text(), self.lineEdit_port.text(), self.lineEdit_nom.text(), self.lineEdit_nom_LAMIA.text()
+        return self.lineEdit_user.text(), self.lineEdit_password.text(), self.lineEdit_adresse.text(), self.lineEdit_port.text(), self.lineEdit_nom.text(), self.lineEdit_nom_LAMIA.text(), self.lineEdit_SRID.text()
 
 
 class FranceDiguetoLamia():
 
-    def __init__(self, user, pwd, ip, port, nom_sirs, path_lamia):
+    def __init__(self, user, pwd, ip, port, nom_sirs, path_lamia, srid):
         self.configPATH =  os.path.join(os.path.dirname(__file__), 'jsonConfig/config.json')
         self.bridgePATH =  os.path.join(os.path.dirname(__file__), 'jsonConfig/bridge.json')
         self.convertisseurPATH = os.path.join(os.path.dirname(__file__), 'jsonConfig/convertisseur.json')
@@ -80,7 +80,7 @@ class FranceDiguetoLamia():
         #nom_sirs='valence_romans_agglo'
         #path_lamia = '../../DB/test_valence.sqlite'
         self.queryFD = queryFranceDigue(user, pwd, ip, port, nom_sirs)
-        self.queryL = queryLamia(path_lamia)
+        self.queryL = queryLamia(path_lamia, srid)
 
 
     """
