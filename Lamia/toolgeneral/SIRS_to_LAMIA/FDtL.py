@@ -19,13 +19,12 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 
-
-
 def import_sirs():
     import_sirsDialog=ImportSirsDialog()
     import_sirsDialog.exec_()
-    user, pwd, ip, port, nom_sirs, path_LAMIA, srid = import_sirsDialog.dialogIsFinished()
-    print(user, pwd, ip, port, nom_sirs, path_LAMIA, srid)
+    user, pwd, ip, port, nom_sirs, path_LAMIA, user_LAMIA, password_LAMIA, adresse_LAMIA, port_LAMIA, nom_LAMIA, srid, type_spatialite, type_postgis  = import_sirsDialog.dialogIsFinished()
+
+    print(user, pwd, ip, port, nom_sirs, path_LAMIA, user_LAMIA, password_LAMIA, adresse_LAMIA, port_LAMIA, nom_LAMIA, srid, type_spatialite, type_postgis)
 
     #user = "r.beckprotoy"
     #pwd = "CouchDb"
@@ -34,7 +33,7 @@ def import_sirs():
     #nom_sirs='valence_romans_agglo'
     #path_lamia = '../../DB/test_valence.sqlite'
 
-    FDtL = FranceDiguetoLamia(user,pwd,ip,port,nom_sirs,path_LAMIA, srid)
+    FDtL = FranceDiguetoLamia(user, pwd, ip, port, nom_sirs, path_LAMIA, user_LAMIA, password_LAMIA, adresse_LAMIA, port_LAMIA, nom_LAMIA, srid, type_spatialite, type_postgis)
     FDtL.insertInLamia()
 
 
@@ -49,7 +48,17 @@ class ImportSirsDialog(QDialog):
         self.qfiledlg = QFileDialog()
         self.qfiledlg.setFileMode(QFileDialog.ExistingFile)
         self.qfiledlg.setOption(QFileDialog.DontConfirmOverwrite)
-        self.lineEdit_nom_LAMIA.setText('c:\\base_LAMIA.sqlite')
+        self.lineEdit_path_LAMIA.setText('c:\\base_LAMIA.sqlite')
+        self.checkBox_spatialite.setChecked(True)
+        self.pushButton_filechoose.setEnabled(True)
+        self.lineEdit_path_LAMIA.setEnabled(True)
+        self.lineEdit_user_LAMIA.setEnabled(False)
+        self.lineEdit_password_LAMIA.setEnabled(False)
+        self.lineEdit_adresse_LAMIA.setEnabled(False)
+        self.lineEdit_port_LAMIA.setEnabled(False)
+        self.lineEdit_nom_LAMIA.setEnabled(False)
+        self.checkBox_spatialite.stateChanged.connect(self.changeStateSpatialite)
+        self.checkBox_postgis.stateChanged.connect(self.changeStatePostgis)
         self.pushButton_filechoose.clicked.connect(self.chooseFile)
         self.finished.connect(self.dialogIsFinished)
 
@@ -61,15 +70,60 @@ class ImportSirsDialog(QDialog):
         if reportfile:
             if isinstance(reportfile, tuple):    # qt5
                 reportfile = reportfile[0]
-            self.lineEdit_nom_LAMIA.setText(reportfile)
+            self.lineEdit_path_LAMIA.setText(reportfile)
 
     def dialogIsFinished(self):
-        return self.lineEdit_user.text(), self.lineEdit_password.text(), self.lineEdit_adresse.text(), self.lineEdit_port.text(), self.lineEdit_nom.text(), self.lineEdit_nom_LAMIA.text(), self.lineEdit_SRID.text()
+        return self.lineEdit_user.text(), self.lineEdit_password.text(), self.lineEdit_adresse.text(), self.lineEdit_port.text(), self.lineEdit_nom.text(), self.lineEdit_path_LAMIA.text(), self.lineEdit_user_LAMIA.text(), self.lineEdit_password_LAMIA.text(), self.lineEdit_adresse_LAMIA.text(), self.lineEdit_port_LAMIA.text(), self.lineEdit_nom_LAMIA.text(), self.lineEdit_SRID.text(), self.checkBox_spatialite.isChecked(), self.checkBox_postgis.isChecked()
+
+
+    def changeStatePostgis(self):
+        if self.checkBox_spatialite.isChecked() and self.checkBox_postgis.isChecked():
+            self.checkBox_spatialite.setCheckState(False)
+            self.pushButton_filechoose.setEnabled(False)
+            self.lineEdit_path_LAMIA.setEnabled(False)
+            self.lineEdit_user_LAMIA.setEnabled(True)
+            self.lineEdit_password_LAMIA.setEnabled(True)
+            self.lineEdit_adresse_LAMIA.setEnabled(True)
+            self.lineEdit_port_LAMIA.setEnabled(True)
+            self.lineEdit_nom_LAMIA.setEnabled(True)
+        if not self.checkBox_spatialite.isChecked() and not self.checkBox_postgis.isChecked():
+            self.checkBox_spatialite.setChecked(True)
+            self.pushButton_filechoose.setEnabled(True)
+            self.lineEdit_path_LAMIA.setEnabled(True)
+            self.lineEdit_user_LAMIA.setEnabled(False)
+            self.lineEdit_password_LAMIA.setEnabled(False)
+            self.lineEdit_adresse_LAMIA.setEnabled(False)
+            self.lineEdit_port_LAMIA.setEnabled(False)
+            self.lineEdit_nom_LAMIA.setEnabled(False)
+
+        return
+
+
+    def changeStateSpatialite(self):
+        if self.checkBox_spatialite.isChecked() and self.checkBox_postgis.isChecked():
+            self.checkBox_postgis.setCheckState(False)
+            self.pushButton_filechoose.setEnabled(True)
+            self.lineEdit_path_LAMIA.setEnabled(True)
+            self.lineEdit_user_LAMIA.setEnabled(False)
+            self.lineEdit_password_LAMIA.setEnabled(False)
+            self.lineEdit_adresse_LAMIA.setEnabled(False)
+            self.lineEdit_port_LAMIA.setEnabled(False)
+            self.lineEdit_nom_LAMIA.setEnabled(False)
+        if not self.checkBox_spatialite.isChecked() and not self.checkBox_postgis.isChecked():
+            self.checkBox_postgis.setChecked(True)
+            self.pushButton_filechoose.setEnabled(False)
+            self.lineEdit_path_LAMIA.setEnabled(False)
+            self.lineEdit_user_LAMIA.setEnabled(True)
+            self.lineEdit_password_LAMIA.setEnabled(True)
+            self.lineEdit_adresse_LAMIA.setEnabled(True)
+            self.lineEdit_port_LAMIA.setEnabled(True)
+            self.lineEdit_nom_LAMIA.setEnabled(True)
+        return
 
 
 class FranceDiguetoLamia():
 
-    def __init__(self, user, pwd, ip, port, nom_sirs, path_lamia, srid):
+    def __init__(self, user, pwd, ip, port, nom_sirs, path_LAMIA, user_LAMIA, password_LAMIA, adresse_LAMIA, port_LAMIA, nom_LAMIA, srid, type_spatialite, type_postgis):
         self.configPATH =  os.path.join(os.path.dirname(__file__), 'jsonConfig/config.json')
         self.bridgePATH =  os.path.join(os.path.dirname(__file__), 'jsonConfig/bridge.json')
         self.convertisseurPATH = os.path.join(os.path.dirname(__file__), 'jsonConfig/convertisseur.json')
@@ -79,8 +133,8 @@ class FranceDiguetoLamia():
         #port = "5984"
         #nom_sirs='valence_romans_agglo'
         #path_lamia = '../../DB/test_valence.sqlite'
-        self.queryFD = queryFranceDigue(user, pwd, ip, port, nom_sirs)
-        self.queryL = queryLamia(path_lamia, srid)
+        self.queryFD= queryFranceDigue(user, pwd, ip, port, nom_sirs)
+        self.queryL = queryLamia(path_LAMIA, srid , user_LAMIA, password_LAMIA, adresse_LAMIA, port_LAMIA, nom_LAMIA, type_spatialite, type_postgis)
 
 
     """
