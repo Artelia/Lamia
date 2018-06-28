@@ -1,3 +1,4 @@
+# coding=utf-8
 import sqlite3
 import json
 import re
@@ -18,19 +19,39 @@ except ImportError:
     #print('spatialite not enabled')
 
 
+import psycopg2
+
 import sys
 import os
 
 class queryLamia():
 
-    def __init__(self, path):
-        if sys.version_info.major == 2:
-            self.connSLITE = db.connect(path)
-        elif sys.version_info.major == 3:   #python 3
-            self.connSLITE = qgis.utils.spatialite_connect(path)
-        self.SLITEcursor = self.connSLITE.cursor()
+    def __init__(self, path, srid, user_LAMIA, password_LAMIA, adresse_LAMIA, port_LAMIA, nom_LAMIA, type_spatialite, type_postgis):
+
         self.configPATH = os.path.join(os.path.dirname(__file__), 'jsonConfig/config.json')
         self.swapPATH = os.path.join(os.path.dirname(__file__), 'jsonConfig/swapping.json')
+        self.srid = srid
+        self.typedb=type_spatialite #True si spatialite, false sinon
+
+
+
+
+        if type_spatialite :
+            if sys.version_info.major == 2:
+                self.connSLITE = db.connect(path)
+            elif sys.version_info.major == 3:   #python 3
+                self.connSLITE = qgis.utils.spatialite_connect(path)
+            self.SLITEcursor = self.connSLITE.cursor()
+
+        else :
+            # connexion
+            # connect to postgres for checking database existence
+            connectstr = "dbname='"+ nom_LAMIA + "' user='" + user_LAMIA + "' host='" + adresse_LAMIA + "' password='" + password_LAMIA + "'"
+            print(connectstr)
+            self.connSLITE = psycopg2.connect(connectstr)
+            self.SLITEcursor = self.connSLITE.cursor()
+
+
 
     def commit(self):
         self.connSLITE.commit()
@@ -103,13 +124,40 @@ class queryLamia():
         if ' ' in key:
             key = self.formatKey(key.split(' '))
 
-        self.SLITEcursor.execute(config[key]['query_sql'], values)
 
-        try:
-            fetch = self.SLITEcursor.lastrowid
-        except TypeError:
-            fetch = 0
-        return fetch
+        query_to_run = config[key]['query_sql']
+
+        query_to_run=query_to_run.replace('2154',self.srid)
+
+
+
+        #self.SLITEcursor.execute(config[key]['query_sql'], values)
+
+        for value in values :
+            query_to_run=query_to_run.replace('?',"'"+str(value)+"'",1)
+
+        print('1 :', query_to_run, value)
+
+        if self.typedb:
+            self.SLITEcursor.execute(query_to_run)
+
+            try:
+                fetch = self.SLITEcursor.lastrowid
+            except TypeError:
+                fetch = 0
+            return fetch
+
+        else:
+            try :
+                query_to_run = query_to_run+ "RETURNING id_"+query_to_run[query_to_run.find("O")+2:query_to_run[query_to_run.find("O")+2:].find("(")+2+query_to_run.find("O")]
+                print(query_to_run)
+                self.SLITEcursor.execute(query_to_run)
+                fetch = self.SLITEcursor.fetchone()[0]
+            except :
+                print("erreur !", query_to_run)
+                self.SLITEcursor.execute(query_to_run)
+                fetch = 0
+            return fetch
 
     """
     format the key to a more standard string
@@ -134,13 +182,23 @@ class queryLamia():
         config = json.load(open(self.configPATH,'r'))
         query = config['Misc']['Update_using_id'].format(table_name01=table01, field_name01=field01, field_name02=field02, value=value, id_search=id_search)
         open('output.txt','a').write(query+'\n')
+        print('2 :', query)
         self.SLITEcursor.execute(query)
 
     def selectId(self, table01, field01, field02, id_search):
         config = json.load(open(self.configPATH,'r'))
         query = config['Misc']['Select_using_id'].format(table_name01 = table01, field_name01 = field01, field_name02 = field02, id_search = id_search)
         open('output.txt','a').write(query+'\n')
-        return self.SLITEcursor.execute(query).fetchone()[0]
+        print('3 :',query )
+
+        if self.typedb:
+            return self.SLITEcursor.execute(query).fetchone()[0]
+
+        else:
+            self.SLITEcursor.execute(query)
+            fetch = self.SLITEcursor.fetchone()[0]
+            return fetch
+
 
 def main():
     print("Class name : QueryLamia\npurpose: make SQL query to the Lamia database")

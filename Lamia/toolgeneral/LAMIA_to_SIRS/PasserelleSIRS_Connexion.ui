@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>456</width>
-    <height>461</height>
+    <height>567</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -28,77 +28,9 @@
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,0" columnminimumwidth="0,0,0">
-      <item row="5" column="0">
-       <spacer name="verticalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="6" column="0">
-       <widget class="QLabel" name="label_6">
-        <property name="text">
-         <string>Base LAMIA</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="label_5">
-        <property name="text">
-         <string>Mot de passe</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>User</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>Port</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>Adresse</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>Nom BD</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="2">
-       <widget class="QPushButton" name="pushButton_filechoose">
-        <property name="maximumSize">
-         <size>
-          <width>60</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>...</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="1">
-       <widget class="QLineEdit" name="lineEdit_nom_LAMIA">
+     <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,0,0">
+      <item row="14" column="2">
+       <widget class="QLineEdit" name="lineEdit_path_LAMIA">
         <property name="minimumSize">
          <size>
           <width>260</width>
@@ -113,38 +45,240 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
+      <item row="14" column="0">
+       <widget class="QLabel" name="label_6">
+        <property name="text">
+         <string>Chemin sqlite</string>
+        </property>
+       </widget>
+      </item>
+      <item row="14" column="3">
+       <widget class="QPushButton" name="pushButton_filechoose">
+        <property name="maximumSize">
+         <size>
+          <width>60</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>...</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="2">
+       <widget class="QLabel" name="label_8">
+        <property name="text">
+         <string>Informations sur la base LAMIA</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QLabel" name="label_9">
+        <property name="text">
+         <string>Informations sur la base SIRS Digues</string>
+        </property>
+       </widget>
+      </item>
+      <item row="18" column="0">
+       <widget class="QLabel" name="label_12">
+        <property name="text">
+         <string>Nom BD</string>
+        </property>
+       </widget>
+      </item>
+      <item row="17" column="0">
+       <widget class="QLabel" name="label_11">
+        <property name="text">
+         <string>Port</string>
+        </property>
+       </widget>
+      </item>
+      <item row="16" column="0">
+       <widget class="QLabel" name="label_10">
+        <property name="text">
+         <string>Adresse</string>
+        </property>
+       </widget>
+      </item>
+      <item row="20" column="0">
+       <widget class="QLabel" name="label_14">
+        <property name="text">
+         <string>Mot de passe</string>
+        </property>
+       </widget>
+      </item>
+      <item row="19" column="0">
+       <widget class="QLabel" name="label_13">
+        <property name="text">
+         <string>User</string>
+        </property>
+       </widget>
+      </item>
+      <item row="16" column="2">
+       <widget class="QLineEdit" name="lineEdit_adresse_LAMIA">
+        <property name="text">
+         <string>127.0.0.1</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>User</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>Mot de passe</string>
+        </property>
+       </widget>
+      </item>
+      <item row="22" column="0">
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>SRID</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="2">
        <widget class="QLineEdit" name="lineEdit_user">
         <property name="text">
          <string>geouser</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="1">
-       <widget class="QLineEdit" name="lineEdit_password">
+      <item row="1" column="0">
+       <widget class="QLabel" name="label">
         <property name="text">
-         <string>geopw</string>
+         <string>Adresse</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
+      <item row="22" column="2">
+       <widget class="QLineEdit" name="lineEdit_SRID">
+        <property name="text">
+         <string>2154</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Port</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Nom BD</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2">
        <widget class="QLineEdit" name="lineEdit_nom">
         <property name="text">
          <string>base_test</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
+      <item row="1" column="2">
+       <widget class="QLineEdit" name="lineEdit_adresse">
+        <property name="text">
+         <string>127.0.0.1</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
        <widget class="QLineEdit" name="lineEdit_port">
         <property name="text">
          <string>5984</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="lineEdit_adresse">
+      <item row="5" column="2">
+       <widget class="QLineEdit" name="lineEdit_password">
         <property name="text">
-         <string>127.0.0.1</string>
+         <string>geopw</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="2">
+       <spacer name="verticalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="19" column="2">
+       <widget class="QLineEdit" name="lineEdit_user_LAMIA">
+        <property name="text">
+         <string>user LAMIA</string>
+        </property>
+       </widget>
+      </item>
+      <item row="17" column="2">
+       <widget class="QLineEdit" name="lineEdit_port_LAMIA"/>
+      </item>
+      <item row="18" column="2">
+       <widget class="QLineEdit" name="lineEdit_nom_LAMIA">
+        <property name="text">
+         <string>base_test LAMIA</string>
+        </property>
+       </widget>
+      </item>
+      <item row="20" column="2">
+       <widget class="QLineEdit" name="lineEdit_password_LAMIA">
+        <property name="text">
+         <string>password LAMIA</string>
+        </property>
+       </widget>
+      </item>
+      <item row="21" column="2">
+       <spacer name="verticalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="15" column="2">
+       <spacer name="verticalSpacer_4">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="10" column="0">
+       <widget class="QCheckBox" name="checkBox_spatialite">
+        <property name="text">
+         <string>Spatialite</string>
+        </property>
+       </widget>
+      </item>
+      <item row="15" column="0">
+       <widget class="QCheckBox" name="checkBox_postgis">
+        <property name="text">
+         <string>PostGIS</string>
         </property>
        </widget>
       </item>

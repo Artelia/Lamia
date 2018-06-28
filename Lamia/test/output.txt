@@ -1,0 +1,116 @@
+--- START ---
+UPDATE Infralineaire SET lk_noeud1 = 1 WHERE Infralineaire.id_Infralineaire = 1
+UPDATE Infralineaire SET lk_noeud1 = 3 WHERE Infralineaire.id_Infralineaire = 2
+UPDATE Infralineaire SET lk_noeud1 = 5 WHERE Infralineaire.id_Infralineaire = 3
+UPDATE Infralineaire SET lk_noeud2 = 2 WHERE Infralineaire.id_Infralineaire = 1
+UPDATE Infralineaire SET lk_noeud2 = 4 WHERE Infralineaire.id_Infralineaire = 2
+UPDATE Infralineaire SET lk_noeud2 = 6 WHERE Infralineaire.id_Infralineaire = 3
+--- END ---
+--- START ---
+UPDATE Infralineaire SET lk_noeud1 = 7 WHERE Infralineaire.id_Infralineaire = 4
+UPDATE Infralineaire SET lk_noeud1 = 9 WHERE Infralineaire.id_Infralineaire = 5
+UPDATE Infralineaire SET lk_noeud1 = 11 WHERE Infralineaire.id_Infralineaire = 6
+UPDATE Infralineaire SET lk_noeud2 = 8 WHERE Infralineaire.id_Infralineaire = 4
+UPDATE Infralineaire SET lk_noeud2 = 10 WHERE Infralineaire.id_Infralineaire = 5
+UPDATE Infralineaire SET lk_noeud2 = 12 WHERE Infralineaire.id_Infralineaire = 6
+--- END ---
+--- START ---
+UPDATE Infralineaire SET lk_noeud1 = 13 WHERE Infralineaire.id_Infralineaire = 7
+UPDATE Infralineaire SET lk_noeud1 = 15 WHERE Infralineaire.id_Infralineaire = 8
+UPDATE Infralineaire SET lk_noeud1 = 17 WHERE Infralineaire.id_Infralineaire = 9
+UPDATE Infralineaire SET lk_noeud2 = 14 WHERE Infralineaire.id_Infralineaire = 7
+UPDATE Infralineaire SET lk_noeud2 = 16 WHERE Infralineaire.id_Infralineaire = 8
+UPDATE Infralineaire SET lk_noeud2 = 18 WHERE Infralineaire.id_Infralineaire = 9
+--- END ---
+--- START ---
+UPDATE Infralineaire SET lk_noeud1 = 1 WHERE Infralineaire.id_Infralineaire = 1
+UPDATE Infralineaire SET lk_noeud1 = 3 WHERE Infralineaire.id_Infralineaire = 2
+UPDATE Infralineaire SET lk_noeud1 = 5 WHERE Infralineaire.id_Infralineaire = 3
+UPDATE Infralineaire SET lk_noeud2 = 2 WHERE Infralineaire.id_Infralineaire = 1
+UPDATE Infralineaire SET lk_noeud2 = 4 WHERE Infralineaire.id_Infralineaire = 2
+UPDATE Infralineaire SET lk_noeud2 = 6 WHERE Infralineaire.id_Infralineaire = 3
+--- END ---
+--- START ---
+UPDATE Infralineaire SET lk_noeud1 = 1 WHERE Infralineaire.id_Infralineaire = 1
+UPDATE Infralineaire SET lk_noeud1 = 3 WHERE Infralineaire.id_Infralineaire = 2
+UPDATE Infralineaire SET lk_noeud1 = 5 WHERE Infralineaire.id_Infralineaire = 3
+UPDATE Infralineaire SET lk_noeud2 = 2 WHERE Infralineaire.id_Infralineaire = 1
+UPDATE Infralineaire SET lk_noeud2 = 4 WHERE Infralineaire.id_Infralineaire = 2
+UPDATE Infralineaire SET lk_noeud2 = 6 WHERE Infralineaire.id_Infralineaire = 3
+--- END ---
+--- START ---
+UPDATE Infralineaire SET lk_noeud1 = 2 WHERE Infralineaire.id_Infralineaire = 2
+UPDATE Infralineaire SET lk_noeud1 = 4 WHERE Infralineaire.id_Infralineaire = 3
+UPDATE Infralineaire SET lk_noeud1 = 6 WHERE Infralineaire.id_Infralineaire = 4
+UPDATE Infralineaire SET lk_noeud2 = 3 WHERE Infralineaire.id_Infralineaire = 2
+UPDATE Infralineaire SET lk_noeud2 = 5 WHERE Infralineaire.id_Infralineaire = 3
+UPDATE Infralineaire SET lk_noeud2 = 7 WHERE Infralineaire.id_Infralineaire = 4
+--- END ---
+--- START ---
+UPDATE Infralineaire SET lk_noeud1 = 1 WHERE Infralineaire.id_Infralineaire = 1
+UPDATE Infralineaire SET lk_noeud1 = 3 WHERE Infralineaire.id_Infralineaire = 2
+UPDATE Infralineaire SET lk_noeud1 = 5 WHERE Infralineaire.id_Infralineaire = 3
+UPDATE Infralineaire SET lk_noeud2 = 2 WHERE Infralineaire.id_Infralineaire = 1
+UPDATE Infralineaire SET lk_noeud2 = 4 WHERE Infralineaire.id_Infralineaire = 2
+UPDATE Infralineaire SET lk_noeud2 = 6 WHERE Infralineaire.id_Infralineaire = 3
+SELECT id_descriptionsystem FROM Infralineaire WHERE id_Infralineaire = 1
+UPDATE Desordre SET lk_descriptionsystem = 1 WHERE Desordre.id_Desordre = 1
+--- END ---
+--- START ---
+UPDATE Infralineaire SET lk_noeud1 = 1 WHERE Infralineaire.id_Infralineaire = 1
+UPDATE Infralineaire SET lk_noeud1 = 3 WHERE Infralineaire.id_Infralineaire = 2
+UPDATE Infralineaire SET lk_noeud1 = 5 WHERE Infralineaire.id_Infralineaire = 3
+UPDATE Infralineaire SET lk_noeud2 = 2 WHERE Infralineaire.id_Infralineaire = 1
+UPDATE Infralineaire SET lk_noeud2 = 4 WHERE Infralineaire.id_Infralineaire = 2
+UPDATE Infralineaire SET lk_noeud2 = 6 WHERE Infralineaire.id_Infralineaire = 3
+SELECT id_descriptionsystem FROM Infralineaire WHERE id_Infralineaire = 1
+UPDATE Desordre SET lk_descriptionsystem = 1 WHERE Desordre.id_Desordre = 1
+--- END ---
+--- START ---
+UPDATE Infralineaire SET lk_noeud1 = 1 WHERE Infralineaire.id_Infralineaire = 1
+UPDATE Infralineaire SET lk_noeud1 = 3 WHERE Infralineaire.id_Infralineaire = 2
+UPDATE Infralineaire SET lk_noeud1 = 5 WHERE Infralineaire.id_Infralineaire = 3
+UPDATE Infralineaire SET lk_noeud2 = 2 WHERE Infralineaire.id_Infralineaire = 1
+UPDATE Infralineaire SET lk_noeud2 = 4 WHERE Infralineaire.id_Infralineaire = 2
+UPDATE Infralineaire SET lk_noeud2 = 6 WHERE Infralineaire.id_Infralineaire = 3
+SELECT id_descriptionsystem FROM Infralineaire WHERE id_Infralineaire = 1
+--- START ---
+UPDATE Infralineaire SET lk_noeud1 = 7 WHERE Infralineaire.id_Infralineaire = 4
+UPDATE Infralineaire SET lk_noeud1 = 9 WHERE Infralineaire.id_Infralineaire = 5
+UPDATE Infralineaire SET lk_noeud1 = 11 WHERE Infralineaire.id_Infralineaire = 6
+UPDATE Infralineaire SET lk_noeud2 = 8 WHERE Infralineaire.id_Infralineaire = 4
+UPDATE Infralineaire SET lk_noeud2 = 10 WHERE Infralineaire.id_Infralineaire = 5
+UPDATE Infralineaire SET lk_noeud2 = 12 WHERE Infralineaire.id_Infralineaire = 6
+SELECT id_descriptionsystem FROM Infralineaire WHERE id_Infralineaire = 4
+--- START ---
+UPDATE Infralineaire SET lk_noeud1 = 13 WHERE Infralineaire.id_Infralineaire = 7
+UPDATE Infralineaire SET lk_noeud1 = 15 WHERE Infralineaire.id_Infralineaire = 8
+UPDATE Infralineaire SET lk_noeud1 = 17 WHERE Infralineaire.id_Infralineaire = 9
+UPDATE Infralineaire SET lk_noeud2 = 14 WHERE Infralineaire.id_Infralineaire = 7
+UPDATE Infralineaire SET lk_noeud2 = 16 WHERE Infralineaire.id_Infralineaire = 8
+UPDATE Infralineaire SET lk_noeud2 = 18 WHERE Infralineaire.id_Infralineaire = 9
+SELECT id_descriptionsystem FROM Infralineaire WHERE id_Infralineaire = 7
+UPDATE Desordre SET lk_descriptionsystem = 7 WHERE Desordre.id_Desordre = 3
+--- END ---
+--- START ---
+--- START ---
+--- START ---
+--- START ---
+--- START ---
+--- START ---
+SELECT Infralineaire.id_Infralineaire FROM Infralineaire, Desordre WHERE Infralineaire.id_descriptionsystem = Desordre.lk_descriptionsystem AND Desordre.id_Desordre = 1
+SELECT Infralineaire.id_Infralineaire FROM Infralineaire, Desordre WHERE Infralineaire.id_descriptionsystem = Desordre.lk_descriptionsystem AND Desordre.id_Desordre = 1
+--- STOP ---
+--- START ---
+SELECT Infralineaire.id_Infralineaire FROM Infralineaire, Desordre WHERE Infralineaire.id_descriptionsystem = Desordre.lk_descriptionsystem AND Desordre.id_Desordre = 3
+SELECT Infralineaire.id_Infralineaire FROM Infralineaire, Desordre WHERE Infralineaire.id_descriptionsystem = Desordre.lk_descriptionsystem AND Desordre.id_Desordre = 3
+--- STOP ---
+--- START ---
+SELECT Infralineaire.id_Infralineaire FROM Infralineaire, Desordre WHERE Infralineaire.id_descriptionsystem = Desordre.lk_descriptionsystem AND Desordre.id_Desordre = 3
+SELECT Infralineaire.id_Infralineaire FROM Infralineaire, Desordre WHERE Infralineaire.id_descriptionsystem = Desordre.lk_descriptionsystem AND Desordre.id_Desordre = 3
+--- STOP ---
+--- START ---
+--- START ---
+SELECT Infralineaire.id_Infralineaire FROM Infralineaire, Desordre WHERE Infralineaire.id_descriptionsystem = Desordre.lk_descriptionsystem AND Desordre.id_Desordre = 1
+SELECT Infralineaire.id_Infralineaire FROM Infralineaire, Desordre WHERE Infralineaire.id_descriptionsystem = Desordre.lk_descriptionsystem AND Desordre.id_Desordre = 1
+--- STOP ---

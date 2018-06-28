@@ -30,8 +30,8 @@ import time
 def export_sirs(self):
     export_sirsDialog=ExportSirsDialog()
     export_sirsDialog.exec_()
-    user, pwd, ip, port, nom_sirs, path_LAMIA = export_sirsDialog.dialogIsFinished()
-    print(user, pwd, ip, port, nom_sirs, path_LAMIA)
+    user, pwd, ip, port, nom_sirs, path_LAMIA, user_LAMIA, password_LAMIA, adresse_LAMIA, port_LAMIA, nom_LAMIA, srid, type_spatialite, type_postgis = export_sirsDialog.dialogIsFinished()
+    print(user, pwd, ip, port, nom_sirs, path_LAMIA, user_LAMIA, password_LAMIA, adresse_LAMIA, port_LAMIA, nom_LAMIA, srid, type_spatialite, type_postgis)
 
     #user = "r.beckprotoy"
     #pwd = "CouchDb"
@@ -42,7 +42,7 @@ def export_sirs(self):
 
 
     queryFD = queryFranceDigue(user, pwd, ip, port, nom_sirs)
-    queryL = queryLamia(path_LAMIA)
+    queryL = queryLamia(path_LAMIA, srid , user_LAMIA, password_LAMIA, adresse_LAMIA, port_LAMIA, nom_LAMIA, type_spatialite, type_postgis)
     LtFD = LamiatoFranceDigue(queryFD, queryL)
     LtFD.insertInFranceDigue()
 
@@ -57,12 +57,69 @@ class ExportSirsDialog(QDialog):
         self.qfiledlg = QFileDialog()
         self.qfiledlg.setFileMode(QFileDialog.ExistingFile)
         self.qfiledlg.setOption(QFileDialog.DontConfirmOverwrite)
-        self.lineEdit_nom_LAMIA.setText('c:\\base_LAMIA.sqlite')
+        self.lineEdit_path_LAMIA.setText('c:\\base_LAMIA.sqlite')
+        self.checkBox_spatialite.setChecked(True)
+        self.pushButton_filechoose.setEnabled(True)
+        self.lineEdit_path_LAMIA.setEnabled(True)
+        self.lineEdit_user_LAMIA.setEnabled(False)
+        self.lineEdit_password_LAMIA.setEnabled(False)
+        self.lineEdit_adresse_LAMIA.setEnabled(False)
+        self.lineEdit_port_LAMIA.setEnabled(False)
+        self.lineEdit_nom_LAMIA.setEnabled(False)
+        self.checkBox_spatialite.stateChanged.connect(self.changeStateSpatialite)
+        self.checkBox_postgis.stateChanged.connect(self.changeStatePostgis)
         self.pushButton_filechoose.clicked.connect(self.chooseFile)
         self.finished.connect(self.dialogIsFinished)
 
+
+
+
     def dialogIsFinished(self):
-        return self.lineEdit_user.text(), self.lineEdit_password.text(), self.lineEdit_adresse.text(), self.lineEdit_port.text(), self.lineEdit_nom.text(), self.lineEdit_nom_LAMIA.text()
+        return self.lineEdit_user.text(), self.lineEdit_password.text(), self.lineEdit_adresse.text(), self.lineEdit_port.text(), self.lineEdit_nom.text(), self.lineEdit_path_LAMIA.text(), self.lineEdit_user_LAMIA.text(), self.lineEdit_password_LAMIA.text(), self.lineEdit_adresse_LAMIA.text(), self.lineEdit_port_LAMIA.text(), self.lineEdit_nom_LAMIA.text(), self.lineEdit_SRID.text(), self.checkBox_spatialite.isChecked(), self.checkBox_postgis.isChecked()
+
+    def changeStatePostgis(self):
+        if self.checkBox_spatialite.isChecked() and self.checkBox_postgis.isChecked():
+            self.checkBox_spatialite.setCheckState(False)
+            self.pushButton_filechoose.setEnabled(False)
+            self.lineEdit_path_LAMIA.setEnabled(False)
+            self.lineEdit_user_LAMIA.setEnabled(True)
+            self.lineEdit_password_LAMIA.setEnabled(True)
+            self.lineEdit_adresse_LAMIA.setEnabled(True)
+            self.lineEdit_port_LAMIA.setEnabled(True)
+            self.lineEdit_nom_LAMIA.setEnabled(True)
+        if not self.checkBox_spatialite.isChecked() and not self.checkBox_postgis.isChecked():
+            self.checkBox_spatialite.setChecked(True)
+            self.pushButton_filechoose.setEnabled(True)
+            self.lineEdit_path_LAMIA.setEnabled(True)
+            self.lineEdit_user_LAMIA.setEnabled(False)
+            self.lineEdit_password_LAMIA.setEnabled(False)
+            self.lineEdit_adresse_LAMIA.setEnabled(False)
+            self.lineEdit_port_LAMIA.setEnabled(False)
+            self.lineEdit_nom_LAMIA.setEnabled(False)
+
+        return
+
+
+    def changeStateSpatialite(self):
+        if self.checkBox_spatialite.isChecked() and self.checkBox_postgis.isChecked():
+            self.checkBox_postgis.setCheckState(False)
+            self.pushButton_filechoose.setEnabled(True)
+            self.lineEdit_path_LAMIA.setEnabled(True)
+            self.lineEdit_user_LAMIA.setEnabled(False)
+            self.lineEdit_password_LAMIA.setEnabled(False)
+            self.lineEdit_adresse_LAMIA.setEnabled(False)
+            self.lineEdit_port_LAMIA.setEnabled(False)
+            self.lineEdit_nom_LAMIA.setEnabled(False)
+        if not self.checkBox_spatialite.isChecked() and not self.checkBox_postgis.isChecked():
+            self.checkBox_postgis.setChecked(True)
+            self.pushButton_filechoose.setEnabled(False)
+            self.lineEdit_path_LAMIA.setEnabled(False)
+            self.lineEdit_user_LAMIA.setEnabled(True)
+            self.lineEdit_password_LAMIA.setEnabled(True)
+            self.lineEdit_adresse_LAMIA.setEnabled(True)
+            self.lineEdit_port_LAMIA.setEnabled(True)
+            self.lineEdit_nom_LAMIA.setEnabled(True)
+        return
 
 
     def chooseFile(self):
@@ -73,7 +130,7 @@ class ExportSirsDialog(QDialog):
         if reportfile:
             if isinstance(reportfile, tuple):    # qt5
                 reportfile = reportfile[0]
-            self.lineEdit_nom_LAMIA.setText(reportfile)
+            self.lineEdit_path_LAMIA.setText(reportfile)
 
 
 
@@ -101,7 +158,12 @@ class LamiatoFranceDigue():
 
         if len(convertisseur) > 0:
             print('Purge de la base CouchDb')
-            self.resetCouchDb()
+
+
+            #self.resetCouchDb()
+            self.resetConvertisseur()
+
+
             sys.exit()
 
         template = {}

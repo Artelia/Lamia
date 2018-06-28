@@ -19,24 +19,47 @@ except ImportError:
 
 
 
+import psycopg2
+
 import sys
+import os
 
 class queryLamia():
 
-    def __init__(self, path):
-        if sys.version_info.major == 2:
-            self.connSLITE = db.connect(path)
-        elif sys.version_info.major == 3:   #python 3
-            self.connSLITE = qgis.utils.spatialite_connect(path)
-        self.SLITEcursor = self.connSLITE.cursor()
+    def __init__(self, path, srid, user_LAMIA, password_LAMIA, adresse_LAMIA, port_LAMIA, nom_LAMIA, type_spatialite, type_postgis):
 
-        self.configPATH = '../FDtL/jsonConfig/config.json'
+        path_config = os.path.dirname(__file__) + '/jsonConfig/config.json'
+        path_config = path_config.replace('LAMIA_to_SIRS', 'SIRS_to_LAMIA')
+        self.configPATH = path_config
+
         self.row = ()
         self.currObj = ""
+        self.srid = srid
+        self.typedb=type_spatialite #True si spatialite, false sinon
+
+
+        if type_spatialite :
+            if sys.version_info.major == 2:
+                self.connSLITE = db.connect(path)
+            elif sys.version_info.major == 3:   #python 3
+                self.connSLITE = qgis.utils.spatialite_connect(path)
+            self.SLITEcursor = self.connSLITE.cursor()
+
+        else :
+            # connexion
+            # connect to postgres for checking database existence
+            connectstr = "dbname='"+ nom_LAMIA + "' user='" + user_LAMIA + "' host='" + adresse_LAMIA + "' password='" + password_LAMIA + "'"
+            print(connectstr)
+            self.connSLITE = psycopg2.connect(connectstr)
+            self.SLITEcursor = self.connSLITE.cursor()
+
+
+
 
     """Utilise Template donne en entre pour produire autant de metaObjet que de tuple recupere dans la base Sql"""
     def createMetaObjet(self, currObj, template, query):
         #On pré-charge la query
+        print(query)
         self.SLITEcursor.execute(query)
         self.currObj = currObj
         i = 0
@@ -77,7 +100,8 @@ class queryLamia():
                 try :
                     if 'fld:' in obj[i]:
                         tmp = obj[i].split(' ')
-                        obj[i] = self.row[tmp[1]]
+                        print(self.row[tmp[1]])
+                        obj[i] = str(self.row[tmp[1]])
                 except:
                     pass
 
@@ -88,7 +112,7 @@ class queryLamia():
                         tmp = obj[it].split(' ')
                         if int(tmp[1]) > len(self.row)-1:
                             raise LookupError('Error on '+self.currObj+'\nNumber of SQL values :'+str(len(self.row))+' Number of fld :'+tmp[1])
-                        obj[it] = self.row[int(tmp[1])]
+                        obj[it] = str(self.row[int(tmp[1])])
                 except:
                     pass
         return obj
@@ -136,10 +160,21 @@ class queryLamia():
         #Ecriture de la requête dans output pour le débug
         open('output.txt','a').write(query+'\n')
         #Try catch au cas où l'on reécupère par d'id
-        try:
-            return self.SLITEcursor.execute(query).fetchone()[0]
-        except TypeError:
-            return None
+
+
+        if self.typedb:
+            try:
+                return self.SLITEcursor.execute(query).fetchone()[0]
+            except TypeError:
+                return None
+        else:
+            try:
+                self.SLITEcursor.execute(query)
+                fetch = self.SLITEcursor.fetchone()[0]
+                return fetch
+            except TypeError:
+                return None
+
 
 
     def selectClosestGeom(self, table01, table02, field01, field02, id_search):
@@ -148,10 +183,18 @@ class queryLamia():
         #Ecriture de la requête dans output pour le débug
         open('output.txt','a').write(query+'\n')
         #Try catch au cas où l'on reécupère par d'id
-        try:
-            return self.SLITEcursor.execute(query).fetchone()[0]
-        except TypeError:
-            return None
+        if self.typedb:
+            try:
+                return self.SLITEcursor.execute(query).fetchone()[0]
+            except TypeError:
+                return None
+        else:
+            try:
+                self.SLITEcursor.execute(query)
+                fetch = self.SLITEcursor.fetchone()[0]
+                return fetch
+            except TypeError:
+                return None
 
 def main():
     print("Class name : QueryLamia\npurpose: make SQL query to the Lamia database")

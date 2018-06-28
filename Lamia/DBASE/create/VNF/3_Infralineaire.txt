@@ -7,7 +7,7 @@
 ###id_descriptionsystem;        INT ;                       INTEGER;                            Descriptionsystem(id_descriptionsystem)
 ###ouvrage;             INT ;                   INTEGER
 ###visite_par;          VARCHAR(255);                TEXT
-###visite_date;         DATE;                       DATE
+###visite_date;         DATE;                       TEXT
 ###modified;             INT ;                   INTEGER
 /;
 True;     1
@@ -40,13 +40,13 @@ Bief;     60
 ###statut_donnees;          VARCHAR(255);                TEXT
 ###reference_ouvrage_validee;             INT ;                   INTEGER
 ###user_login;          VARCHAR(255);                TEXT
-###date_validation;                TIMESTAMP;              TIMESTAMP
+###date_validation;                TIMESTAMP;              TEXT
 ###identifiant_local;          VARCHAR(255);                TEXT
 ###ttr_calcule;             INT ;                   INTEGER
 ###ttr_pmp;             INT ;                   INTEGER
 ###remise_en_etat;             INT ;                   INTEGER
 ###equivalent_temps_plein;             INT ;                   INTEGER
-###date_calcul_indicateur;                TIMESTAMP;              TIMESTAMP
+###date_calcul_indicateur;                TIMESTAMP;              TEXT
 ###respect_debit;             INT ;                   INTEGER
 /;
 True;     1
