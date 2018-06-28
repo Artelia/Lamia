@@ -6,7 +6,7 @@
   "Desordre" : {
     "query_couch" : { "@class": "fr.sirs.core.model.Desordre"},
     "fields" : [ "Objet", "categorieDesordreId abrege", "coteId abrege", "geometry", "typeDesordreId abrege", "positionId abrege"],
-    "query_sql" : "INSERT INTO Desordre (id_objet, groupedesordre, cote, catdes, geom, typedes, position) VALUES (?,'clapet',?,?,st_geomfromtext(?,2154),?,?)"
+    "query_sql" : "INSERT INTO Desordre (id_objet, groupedesordre, cote, catdes, geom, typedes, position) VALUES (?,'INF',?,?,st_geomfromtext(?,2154),?,?)"
   },
   "Equipement": {
     "query_couch" : { "@class": "fr.sirs.core.model.OuvrageParticulier"},

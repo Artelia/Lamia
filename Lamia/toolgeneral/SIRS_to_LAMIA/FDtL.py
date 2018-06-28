@@ -158,13 +158,14 @@ class FranceDiguetoLamia():
         checkList = self.getListObj('couch id', convertisseur)
 
         for nom_lm in config:
+            print("Import de la couche : ", nom_lm)
             if 'query_couch' in config[nom_lm]:
                 print(config[nom_lm]['query_couch'])
                 for doc in self.queryFD.customQuery(config[nom_lm]['query_couch'],['_id','@class']):
-                    print('test',doc)
+                    print("import de l'objet :",doc)
                     id_fd = doc['_id']
 
-                    #Cas ou le métaObjet est constiutés sur un seul document (Desersordre, Indralineaire)
+                    #Cas ou le métaObjet est constiutés sur un seul document (Desersordre, Infralineaire)
                     if not id_fd in checkList and not 'list' in config[nom_lm]:
                         metaObj = self.makeMetaObjet(nom_lm, id_fd)
                         id_lm = self.queryL.insertion(nom_lm, metaObj)
@@ -175,13 +176,14 @@ class FranceDiguetoLamia():
 
                     #Cas où le metaObjet est constitués sur une liste contentnat les information (Observations, Photos)
                     elif 'list' in config[nom_lm]:
-                        arrMetaObjet = self.makeMetaObjet(nom_lm, id_fd)
-                        for metaObj in arrMetaObjet:
-                            id_lm = self.queryL.insertion(nom_lm, {nom_lm :arrMetaObjet[metaObj]} )
-                            nom_fd = doc['@class'][19:]
+                        if config[nom_lm]['list'] in self.queryFD.getDocument(id_fd).keys():
+                            arrMetaObjet = self.makeMetaObjet(nom_lm, id_fd)
+                            for metaObj in arrMetaObjet:
+                                id_lm = self.queryL.insertion(nom_lm, {nom_lm :arrMetaObjet[metaObj]} )
+                                nom_fd = doc['@class'][19:]
 
-                            self.insertInConvertisseur(convertisseur, id_fd, id_lm, nom_fd, nom_lm)
-                        newElem = True
+                                self.insertInConvertisseur(convertisseur, id_fd, id_lm, nom_fd, nom_lm)
+                            newElem = True
         if newElem:
             open('output.txt','a').write('--- START ---\n')
 
@@ -212,6 +214,7 @@ class FranceDiguetoLamia():
     :param id: string
     """
     def makeMetaObjet(self, nom_lm, id):
+        print("make metaobjet :", nom_lm, id)
         ret = {}
         config = json.load(open(self.configPATH, 'r'))[nom_lm]
         fields = config['fields']

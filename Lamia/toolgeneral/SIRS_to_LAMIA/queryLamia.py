@@ -174,7 +174,15 @@ class queryLamia():
         query = config['Misc']['Select_using_id'].format(table_name01 = table01, field_name01 = field01, field_name02 = field02, id_search = id_search)
         open('output.txt','a').write(query+'\n')
         print('3 :',query )
-        return self.SLITEcursor.execute(query).fetchone()[0]
+
+        if self.typedb:
+            return self.SLITEcursor.execute(query).fetchone()[0]
+
+        else:
+            self.SLITEcursor.execute(query)
+            fetch = self.SLITEcursor.fetchone()[0]
+            return fetch
+
 
 def main():
     print("Class name : QueryLamia\npurpose: make SQL query to the Lamia database")
