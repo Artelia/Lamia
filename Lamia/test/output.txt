@@ -92,3 +92,25 @@ UPDATE Infralineaire SET lk_noeud2 = 18 WHERE Infralineaire.id_Infralineaire = 9
 SELECT id_descriptionsystem FROM Infralineaire WHERE id_Infralineaire = 7
 UPDATE Desordre SET lk_descriptionsystem = 7 WHERE Desordre.id_Desordre = 3
 --- END ---
+--- START ---
+--- START ---
+--- START ---
+--- START ---
+--- START ---
+--- START ---
+SELECT Infralineaire.id_Infralineaire FROM Infralineaire, Desordre WHERE Infralineaire.id_descriptionsystem = Desordre.lk_descriptionsystem AND Desordre.id_Desordre = 1
+SELECT Infralineaire.id_Infralineaire FROM Infralineaire, Desordre WHERE Infralineaire.id_descriptionsystem = Desordre.lk_descriptionsystem AND Desordre.id_Desordre = 1
+--- STOP ---
+--- START ---
+SELECT Infralineaire.id_Infralineaire FROM Infralineaire, Desordre WHERE Infralineaire.id_descriptionsystem = Desordre.lk_descriptionsystem AND Desordre.id_Desordre = 3
+SELECT Infralineaire.id_Infralineaire FROM Infralineaire, Desordre WHERE Infralineaire.id_descriptionsystem = Desordre.lk_descriptionsystem AND Desordre.id_Desordre = 3
+--- STOP ---
+--- START ---
+SELECT Infralineaire.id_Infralineaire FROM Infralineaire, Desordre WHERE Infralineaire.id_descriptionsystem = Desordre.lk_descriptionsystem AND Desordre.id_Desordre = 3
+SELECT Infralineaire.id_Infralineaire FROM Infralineaire, Desordre WHERE Infralineaire.id_descriptionsystem = Desordre.lk_descriptionsystem AND Desordre.id_Desordre = 3
+--- STOP ---
+--- START ---
+--- START ---
+SELECT Infralineaire.id_Infralineaire FROM Infralineaire, Desordre WHERE Infralineaire.id_descriptionsystem = Desordre.lk_descriptionsystem AND Desordre.id_Desordre = 1
+SELECT Infralineaire.id_Infralineaire FROM Infralineaire, Desordre WHERE Infralineaire.id_descriptionsystem = Desordre.lk_descriptionsystem AND Desordre.id_Desordre = 1
+--- STOP ---
