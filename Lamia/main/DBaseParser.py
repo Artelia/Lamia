@@ -1421,7 +1421,10 @@ class DBaseParser(QtCore.QObject):
 
             request = qgis.core.QgsFeatureRequest().setFilterExpression(txtrequest)
             request.setFlags(qgis.core.QgsFeatureRequest.NoGeometry)
-            qgisfeatpk = self.dbasetables[layername]['layerqgis'].getFeatures(request).next()['pk_' + layername.lower()]
+            if int(str(self.qgisversion_int)[0:3]) < 220:
+                qgisfeatpk = self.dbasetables[layername]['layerqgis'].getFeatures(request).next()['pk_' + layername.lower()]
+            else:
+                qgisfeatpk = self.dbasetables[layername]['layerqgis'].getFeatures(request).__next__()['pk_' + layername.lower()]
 
             #return self.dbasetables[layername]['layerqgis'].getFeatures(request).next()
             if int(str(self.qgisversion_int)[0:3]) < 220:

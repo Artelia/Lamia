@@ -9,14 +9,21 @@ except:
 
 import os
 
-from queryFranceDigue import *
-from queryLamia import *
+from .queryFranceDigue import *
+from .queryLamia import *
 import json
 import re
 
 import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
+#reload(sys)
+#sys.setdefaultencoding('utf-8')
+
+if sys.version_info.major == 2:
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
+elif sys.version_info.major == 3:
+    import importlib
+    importlib.reload(sys)
 
 import time
 

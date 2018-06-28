@@ -10,6 +10,7 @@ Unitaire;                 UNI
 /;
 Regard;                    60
 Branchement;                61
+Regard mixte EP EU;         62
 Avaloir;                   70
 Grille;                     71
 Grille avaloir;             72
@@ -31,7 +32,12 @@ Sous TN;                    STN
 Sous voirie;                SVO
 ###cloisonsiphoide;             INT ;                     INTEGER
 ##typeOuvrageAss
-/;                     ;['','60']
+/;                     ;['61']
+Non;    0;          ['61']
+Oui;    1;          ['61']
+###couvercle;             INT ;                     INTEGER
+##typeOuvrageAss
+/;                     ;['61']
 Non;    0;          ['61']
 Oui;    1;          ['61']
 ###X;             REAL;                     DECIMAL

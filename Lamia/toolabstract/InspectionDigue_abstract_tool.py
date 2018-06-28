@@ -1044,6 +1044,10 @@ class AbstractInspectionDigueTool(QWidget):
         called whenever the list need to be reinitialized (ex : click in maintreewidget,...)
         """
         debug = False
+
+        if debug :
+            timestart = time.clock()
+
         self.disconnectIdsGui()
 
         if debug: logging.getLogger("Lamia").debug('Start %s %s', self.dbasetablename,self.parentWidget)
@@ -1117,6 +1121,8 @@ class AbstractInspectionDigueTool(QWidget):
             self.groupBox_geom.setEnabled(False)
             self.initFeatureProperties(None)
 
+
+        if debug: logging.getLogger('Lamia').debug('end  %.3f', time.clock() - timestart)
         self.connectIdsGui()
 
 
@@ -1635,6 +1641,9 @@ class AbstractInspectionDigueTool(QWidget):
 
         debug = False
 
+        if debug :
+            timestart = time.clock()
+
         #if debug: logging.getLogger("Lamia").debug('start points : %s', points)
         if debug: logging.getLogger("Lamia").debug('start')
 
@@ -1690,13 +1699,14 @@ class AbstractInspectionDigueTool(QWidget):
             # print('curfeat1', self.currentFeature.id())
 
             if debug: logging.getLogger("Lamia").debug('saveTableFeature done with geom  : %s',self.currentFeature.geometry().exportToWkt())
-
+            if debug: logging.getLogger('Lamia').debug('time  %.3f', time.clock() - timestart)
             # *************************
             # save attributes
             # first assure that parent features are created
             if self.savingnewfeature:
                 self.createParentFeature()
                 if debug: logging.getLogger("Lamia").debug('createParentFeature ok')
+                if debug: logging.getLogger('Lamia').debug('time  %.3f', time.clock() - timestart)
 
             # Second save attributes
             # print('id', self.currentFeature.attributes())
@@ -1707,10 +1717,12 @@ class AbstractInspectionDigueTool(QWidget):
                 self.currentFeature = self.dbase.getLayerFeatureById(self.dbasetablename, self.currentFeature.id())
 
             if debug: logging.getLogger("Lamia").debug('currentFeature updated')
+            if debug: logging.getLogger('Lamia').debug('time  %.3f', time.clock() - timestart)
 
             self.saveFeatureProperties()
 
             if debug: logging.getLogger("Lamia").debug('saveFeatureProperties done')
+            if debug: logging.getLogger('Lamia').debug('time  %.3f', time.clock() - timestart)
 
             # self.currentFeature = self.dbasetable['layer'].getFeatures(qgis.core.QgsFeatureRequest(self.currentFeature.id())).next()
             if self.dbase.revisionwork:
@@ -1723,6 +1735,7 @@ class AbstractInspectionDigueTool(QWidget):
                 self.saveRessourceFile()
 
             if debug: logging.getLogger("Lamia").debug('saveRessourceFile done')
+            if debug: logging.getLogger('Lamia').debug('time  %.3f', time.clock() - timestart)
 
             # self.currentFeature = self.dbasetable['layer'].getFeatures(qgis.core.QgsFeatureRequest(self.currentFeature.id())).next()
             if self.dbase.revisionwork:
@@ -1735,12 +1748,13 @@ class AbstractInspectionDigueTool(QWidget):
             # self.postSaveFeature(self.savingnewfeature)
 
             #  reload with saved attributes
-            if self.savingnewfeature:
+            if True and self.savingnewfeature:
                 self.loadFeaturesinTreeWdg()
-                if self.comboBox_featurelist.count() > 1:
-                    self.comboBox_featurelist.setCurrentIndex(self.comboBox_featurelist.count() - 1)
-                else:
-                    self.comboBox_featurelist.currentIndexChanged.emit(0)
+                if False:
+                    if self.comboBox_featurelist.count() > 1:
+                        self.comboBox_featurelist.setCurrentIndex(self.comboBox_featurelist.count() - 1)
+                    else:
+                        self.comboBox_featurelist.currentIndexChanged.emit(0)
 
             #else:
             #    self.initFeatureProperties(self.currentFeature)
@@ -1750,6 +1764,7 @@ class AbstractInspectionDigueTool(QWidget):
             self.postSaveFeature(self.savingnewfeature)
 
             if debug: logging.getLogger("Lamia").debug('postSaveFeature done')
+            if debug: logging.getLogger('Lamia').debug('time  %.3f', time.clock() - timestart)
 
             # reload entirely saved feature
             self.initFeatureProperties(self.currentFeature)
@@ -1779,6 +1794,9 @@ class AbstractInspectionDigueTool(QWidget):
                     self.dbase.query(sql)
                     # self.dbase.commit()
 
+            if debug: logging.getLogger("Lamia").debug('current prestation  done')
+            if debug: logging.getLogger('Lamia').debug('time  %.3f', time.clock() - timestart)
+
             # self.currentFeature = self.dbasetable['layer'].getFeatures(qgis.core.QgsFeatureRequest(self.currentFeature.id())).next()
             if self.dbase.revisionwork:
                 self.currentFeature = self.dbase.getLayerFeatureByPk(self.dbasetablename, self.currentFeature.id())
@@ -1800,10 +1818,12 @@ class AbstractInspectionDigueTool(QWidget):
                     self.dbase.commit()
 
                 if debug: logging.getLogger("Lamia").debug('datemodification done')
+                if debug: logging.getLogger('Lamia').debug('time  %.3f', time.clock() - timestart)
 
             # then reload with saved attributes
             if self.savingnewfeature:
                 self.loadFeaturesinTreeWdg()
+                if debug: logging.getLogger('Lamia').debug('new feat loadFeaturesinTreeWdg  %.3f', time.clock() - timestart)
                 if self.comboBox_featurelist.count() > 1:
                     self.comboBox_featurelist.setCurrentIndex(self.comboBox_featurelist.count() - 1)
                 else:
@@ -1814,7 +1834,12 @@ class AbstractInspectionDigueTool(QWidget):
 
             if showsavemessage:
                 self.windowdialog.normalMessage('Objet sauvegarde : ' + str(self.currentFeature.attributes()))
+
+            if debug: logging.getLogger('Lamia').debug('wait for repaint  %.3f', time.clock() - timestart)
+
             self.dbasetable['layerqgis'].triggerRepaint()
+
+            if debug: logging.getLogger('Lamia').debug('end time  %.3f', time.clock() - timestart)
 
             # *************************
             # reinit things
@@ -2092,7 +2117,10 @@ class AbstractInspectionDigueTool(QWidget):
             # self.windowdialog.errorMessage("pas encore disponible")
             if self.deleteParentFeature():
                 fetid = self.currentFeature.id()
-                sql = "DELETE FROM  " + self.dbasetablename + " WHERE id_" + self.dbasetablename + " = " + str(fetid) + ";"
+                if self.dbase.revisionwork:
+                    sql = "DELETE FROM  " + self.dbasetablename + " WHERE pk_" + self.dbasetablename + " = " + str(fetid) + ";"
+                else:
+                    sql = "DELETE FROM  " + self.dbasetablename + " WHERE id_" + self.dbasetablename + " = " + str(fetid) + ";"
                 self.dbase.query(sql)
 
             else:
@@ -2102,7 +2130,10 @@ class AbstractInspectionDigueTool(QWidget):
         elif reply == QMessageBox.No:
             idobjet = self.currentFeature['id_objet']
             datesuppr = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
-            sql = "UPDATE Objet SET datedestruction = '" + datesuppr + "'  WHERE id_objet = " + str(idobjet) + ";"
+            if self.dbase.revisionwork:
+                sql = "UPDATE Objet SET datedestruction = '" + datesuppr + "'  WHERE pk_objet = " + str(idobjet) + ";"
+            else:
+                sql = "UPDATE Objet SET datedestruction = '" + datesuppr + "'  WHERE id_objet = " + str(idobjet) + ";"
             self.dbase.query(sql)
             # self.dbase.commit()
 
@@ -2389,16 +2420,18 @@ class AbstractInspectionDigueTool(QWidget):
             self.rubberBand.reset(type)
         else:
             self.rubberBand = qgis.gui.QgsRubberBand(self.canvas,type)
-        self.rubberBand.setWidth(5)
-        self.rubberBand.setColor(QtGui.QColor("magenta"))
+            self.rubberBand.setWidth(5)
+            self.rubberBand.setColor(QtGui.QColor("magenta"))
 
 
 
-    def setTempGeometry(self, points, comefromcanvas=True):
+    def setTempGeometry(self, points, comefromcanvas=True, showinrubberband=True):
+
+
 
         debug = False
 
-        if debug: logging.getLogger("Lamia").debug('start points : %s', points)
+        if debug: logging.getLogger("Lamia").debug('start points : %s %s', self.dbasetablename, points)
 
 
 
@@ -2414,12 +2447,16 @@ class AbstractInspectionDigueTool(QWidget):
 
         # case point in line layer
         if len(points)==2 and points[0] == points[1]:
-            self.rubberBand.reset(0)
+            #self.rubberBand.reset(0)
+            self.createorresetRubberband(0)
             type = 0.5
         elif len(points) == 1 and self.dbasetable['geom'] == 'LINESTRING':
             points.append(points[0])
-            self.rubberBand.reset(0)
+            #self.rubberBand.reset(0)
+            self.createorresetRubberband(0)
             type = 0.5
+        else:
+            self.createorresetRubberband(type)
 
 
         if self.dbase.qgsiface is None: #for stadalone app bug
@@ -2489,12 +2526,13 @@ class AbstractInspectionDigueTool(QWidget):
                 geometryforlayer = qgis.core.QgsGeometry.fromPolygonXY([pointslayer])
 
         #outside qgis bug
-        if self.dbase.qgsiface is None:
-            self.rubberBand.addGeometry(geometryforlayer, None)
-        else:
-            self.rubberBand.addGeometry(geometryformap, None)
+        if showinrubberband:
+            if self.dbase.qgsiface is None:
+                self.rubberBand.addGeometry(geometryforlayer, None)
+            else:
+                self.rubberBand.addGeometry(geometryformap, None)
 
-        self.rubberBand.show()
+            self.rubberBand.show()
         self.tempgeometry = geometryforlayer
         self.lamiageomChanged.emit()
 

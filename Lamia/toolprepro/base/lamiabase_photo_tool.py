@@ -12,7 +12,7 @@ import glob
 from .lamiabase_photoviewer import PhotoViewer
 
 prefixhoto = ''
-numphoto = 0
+numphoto = None
 
 
 class BasePhotoTool(AbstractInspectionDigueTool):
@@ -59,11 +59,12 @@ class BasePhotoTool(AbstractInspectionDigueTool):
         if self.userwdgfield is None:
             self.userwdgfield = UserUI()
             self.linkuserwdgfield = {'Photo' : {'linkfield' : 'id_photo',
-                                             'widgets' : {'numphoto': self.userwdgfield.spinBox_numphoto}},
+                                             'widgets' : {}},
                                 'Objet' : {'linkfield' : 'id_objet',
                                           'widgets' : {}},
                                 'Ressource' : {'linkfield' : 'id_ressource',
                                           'widgets' : {'file': self.userwdgfield.lineEdit_file,
+                                                       'numphoto': self.userwdgfield.spinBox_numphoto,
                                                         'dateressource' : self.userwdgfield.dateEdit}}}
 
             self.userwdgfield.stackedWidget.setCurrentIndex(0)
@@ -96,6 +97,10 @@ class BasePhotoTool(AbstractInspectionDigueTool):
 
         global prefixhoto
         global numphoto
+
+        if numphoto is None:
+            numphoto = 0
+
         if self.sender() == self.userwdgfield.toolButton_photoplus:
             numphoto += 1
         elif self.sender() == self.userwdgfield.toolButton_photomoins:
@@ -167,16 +172,18 @@ class BasePhotoTool(AbstractInspectionDigueTool):
             datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
             self.initFeatureProperties(feat, 'Ressource', 'dateressource', datecreation)
 
-            self.userwdgfield.spinBox_numphoto.setValue(numphoto)
+            if numphoto is not None:
+                self.userwdgfield.spinBox_numphoto.setValue(numphoto)
 
             # geom if parent is node
             if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
                 if self.parentWidget.dbasetablename == 'Noeud':
+
                     # get geom
                     noeudfet = self.dbase.getLayerFeatureByPk('Noeud', self.parentWidget.currentFeature.id())
                     neudfetgeom = noeudfet.geometry().asPoint()
                     self.createorresetRubberband(1)
-                    self.setTempGeometry([neudfetgeom], False)
+                    self.setTempGeometry([neudfetgeom], False,False)
 
         """
         if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
@@ -247,10 +254,13 @@ class BasePhotoTool(AbstractInspectionDigueTool):
         global prefixhoto
         global numphoto
 
-        if numphoto == self.userwdgfield.spinBox_numphoto.value():
-            numphoto += 1
-        else:
-            numphoto = self.userwdgfield.spinBox_numphoto.value() + 1
+        if numphoto is not None:
+            if self.userwdgfield.spinBox_numphoto.value() == -1 :
+                numphoto = None
+            elif numphoto == self.userwdgfield.spinBox_numphoto.value():
+                numphoto += 1
+            else:
+                numphoto = self.userwdgfield.spinBox_numphoto.value() + 1
 
 
     def deleteParentFeature(self):

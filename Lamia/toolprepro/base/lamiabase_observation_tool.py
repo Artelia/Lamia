@@ -93,6 +93,21 @@ class BaseObservationTool(AbstractInspectionDigueTool):
 
     def postInitFeatureProperties(self, feat):
         if self.currentFeature is None:
+            if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
+                # SELECT pk_observation FROM Observation WHERE lk_desordre = 1 AND dateobservation = (SELECT MAX(dateobservation) FROM Observation WHERE lk_desordre = 1)
+                sql = "SELECT pk_observation FROM Observation WHERE lk_desordre = " + str(self.parentWidget.currentFeature['id_desordre'])
+                sql += " AND dateobservation = (SELECT MAX(dateobservation) FROM Observation WHERE lk_desordre = " + str(self.parentWidget.currentFeature['id_desordre'])
+                sql += " )"
+                # print(sql)
+                query = self.dbase.query(sql)
+                result = [row[0] for row in query]
+                if len(result)>0:
+                    pklastobservation = result[0]
+                    featobs = self.dbase.getLayerFeatureByPk('Observation',pklastobservation )
+                    #print(featobs.attributes())
+                    self.initFeatureProperties(featobs)
+
+
             datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
             self.initFeatureProperties(feat, self.dbasetablename, 'dateobservation', datecreation)
 

@@ -65,22 +65,22 @@
         </item>
         <item>
          <property name="text">
-          <string>EauPotable</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
           <string>Assainissement</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Default</string>
+          <string>Base</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Assainissement2</string>
+          <string>Base_assainissement</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Base_digue</string>
          </property>
         </item>
        </widget>
