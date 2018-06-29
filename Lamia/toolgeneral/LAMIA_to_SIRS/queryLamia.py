@@ -4,9 +4,23 @@ import json
 import re
 import copy
 
+"""
 from pyspatialite import dbapi2 as db
 from pyspatialite.dbapi2 import *
+"""
+
+try:
+    from pyspatialite import dbapi2 as db
+    from pyspatialite.dbapi2 import *
+except ImportError:
+    import sqlite3
+    from sqlite3 import *
+    #print('spatialite not enabled')
+
+
+
 import psycopg2
+
 import sys
 import os
 

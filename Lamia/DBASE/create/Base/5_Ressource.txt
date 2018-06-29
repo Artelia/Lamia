@@ -15,6 +15,7 @@
 ###contacttel1 ;             VARCHAR(255);                TEXT
 ###contacttel2 ;             VARCHAR(255);                TEXT
 ###file;                      VARCHAR(255);                TEXT
+###numphoto;             INT ;                     INTEGER
 ###description ;             VARCHAR(255);                TEXT
 
 ###lk_marche;       INT;            INTEGER

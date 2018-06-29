@@ -1,13 +1,31 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
 <qgis version="2.18.19" simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" readOnly="0" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
   <edittypes>
+    <edittype widgetv2type="TextEdit" name="pk_infralineaire">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
     <edittype widgetv2type="TextEdit" name="id_infralineaire">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="id_revisionbegin">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="id_revisionend">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="id_objet">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="id_descriptionsystem">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="lk_ressource1">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="lk_descriptionsystem1">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="lk_descriptionsystem2">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="materiau">
@@ -20,9 +38,6 @@
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="hauteur">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="largeur">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="anPoseSup">
@@ -41,9 +56,6 @@
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="modeCirculation">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="metaREAPA">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="anPoseInf">
@@ -73,26 +85,29 @@
     <edittype widgetv2type="TextEdit" name="profaval">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="lk_noeud1">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="lk_noeud2">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="infracommentaire">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
     <edittype widgetv2type="TextEdit" name="datecreation">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="datedestruction">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
+    <edittype widgetv2type="TextEdit" name="temprevisionbegin">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="temprevisionend">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="revisionbegin">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="revisionend">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
   </edittypes>
   <renderer-v2 forceraster="0" symbollevels="0" type="RuleRenderer" enableorderby="0">
     <rules key="{5e78f11d-4178-4ed7-8af6-f80178c4ba25}">
       <rule filter=" &quot;branchement&quot; = 1" key="{c647d32b-b632-485f-bd3c-91150bd75a8b}" symbol="0" label="Branchement">
-        <rule filter="&quot;lk_noeud1&quot; IS NOT NULL" key="{c64b87c5-2e70-47ec-a94f-a9b46d7ca120}" symbol="1">
+        <rule filter="&quot;lk_descriptionsystem1&quot; IS NOT NULL AND &quot;lk_descriptionsystem2&quot; IS NOT NULL" key="{c64b87c5-2e70-47ec-a94f-a9b46d7ca120}" symbol="1">
           <rule filter="&quot;typeReseau&quot; = 'USE'" key="{9739976b-e285-47e5-a9b3-f03be0ead4d2}" symbol="2" label="Eaux usées"/>
           <rule filter="&quot;typeReseau&quot; = 'UNI'" key="{b58611c9-3fed-43bb-b53c-b9e470bd0e7a}" symbol="3" label="Unitaire"/>
           <rule filter="&quot;typeReseau&quot; = 'PLU'" key="{79228b2f-3bcc-41db-b9b2-7a63236519b9}" symbol="4" label="Eaux pluviales"/>
@@ -104,7 +119,7 @@
         </rule>
       </rule>
       <rule filter="Else" key="{06826450-6078-4741-8f6d-022aaa3d991c}" symbol="9" label="Branchement">
-        <rule filter="&quot;lk_noeud1&quot; IS NOT NULL AND &quot;lk_noeud2&quot; IS NOT NULL" key="{88663e10-e0fc-4596-9b17-73b72cdd6b17}" symbol="10">
+        <rule filter="&quot;lk_descriptionsystem1&quot; IS NOT NULL AND &quot;lk_descriptionsystem2&quot; IS NOT NULL" key="{88663e10-e0fc-4596-9b17-73b72cdd6b17}" symbol="10">
           <rule filter="&quot;typeReseau&quot; = 'USE'" key="{1a389d12-0d10-440b-bc98-99359171cecd}" symbol="11" label="Eaux usées"/>
           <rule filter="&quot;typeReseau&quot; = 'UNI'" key="{68b407af-ccdc-4174-9cf3-b76afd97b02a}" symbol="12" label="Unitaire"/>
           <rule filter="&quot;typeReseau&quot; = 'PLU'" key="{63296647-4e1b-4afe-b24e-22e8e31ff386}" symbol="13" label="Eaux pluviales"/>
@@ -1136,35 +1151,40 @@
   <DiagramLayerSettings yPosColumn="-1" showColumn="-1" linePlacementFlags="10" placement="2" dist="0" xPosColumn="-1" priority="0" obstacle="0" zIndex="0" showAll="1"/>
   <annotationform>../../Données/Tables ARTELIA2</annotationform>
   <aliases>
-    <alias field="id_infralineaire" index="0" name=""/>
-    <alias field="id_objet" index="1" name=""/>
-    <alias field="id_descriptionsystem" index="2" name=""/>
-    <alias field="materiau" index="3" name=""/>
-    <alias field="diametreNominal" index="4" name=""/>
-    <alias field="formecanalisation" index="5" name=""/>
-    <alias field="hauteur" index="6" name="Hauteur de l'aqueduc / bâti"/>
-    <alias field="largeur" index="7" name="Largeur de l'aqueduc / bâti"/>
-    <alias field="anPoseSup" index="8" name=""/>
-    <alias field="maitreOuvrage" index="9" name=""/>
-    <alias field="exploitant" index="10" name=""/>
-    <alias field="enService" index="11" name=""/>
-    <alias field="branchement" index="12" name=""/>
-    <alias field="modeCirculation" index="13" name=""/>
-    <alias field="metaREAPA" index="14" name=""/>
-    <alias field="anPoseInf" index="15" name=""/>
-    <alias field="longueur" index="16" name=""/>
-    <alias field="typeReseau" index="17" name=""/>
-    <alias field="contCanAss" index="18" name=""/>
-    <alias field="fonctionCannAss" index="19" name=""/>
-    <alias field="altAmont" index="20" name=""/>
-    <alias field="altAval" index="21" name=""/>
-    <alias field="profamont" index="22" name=""/>
-    <alias field="profaval" index="23" name=""/>
-    <alias field="lk_noeud1" index="24" name=""/>
-    <alias field="lk_noeud2" index="25" name=""/>
-    <alias field="infracommentaire" index="26" name=""/>
-    <alias field="datecreation" index="27" name=""/>
-    <alias field="datedestruction" index="28" name=""/>
+    <alias field="pk_infralineaire" index="0" name=""/>
+    <alias field="id_infralineaire" index="1" name=""/>
+    <alias field="id_revisionbegin" index="2" name=""/>
+    <alias field="id_revisionend" index="3" name=""/>
+    <alias field="id_objet" index="4" name=""/>
+    <alias field="id_descriptionsystem" index="5" name=""/>
+    <alias field="lk_ressource1" index="6" name=""/>
+    <alias field="lk_descriptionsystem1" index="7" name=""/>
+    <alias field="lk_descriptionsystem2" index="8" name=""/>
+    <alias field="materiau" index="9" name=""/>
+    <alias field="diametreNominal" index="10" name=""/>
+    <alias field="formecanalisation" index="11" name=""/>
+    <alias field="hauteur" index="12" name="Hauteur de l'aqueduc / bâti"/>
+    <alias field="anPoseSup" index="13" name=""/>
+    <alias field="maitreOuvrage" index="14" name=""/>
+    <alias field="exploitant" index="15" name=""/>
+    <alias field="enService" index="16" name=""/>
+    <alias field="branchement" index="17" name=""/>
+    <alias field="modeCirculation" index="18" name=""/>
+    <alias field="anPoseInf" index="19" name=""/>
+    <alias field="longueur" index="20" name=""/>
+    <alias field="typeReseau" index="21" name=""/>
+    <alias field="contCanAss" index="22" name=""/>
+    <alias field="fonctionCannAss" index="23" name=""/>
+    <alias field="altAmont" index="24" name=""/>
+    <alias field="altAval" index="25" name=""/>
+    <alias field="profamont" index="26" name=""/>
+    <alias field="profaval" index="27" name=""/>
+    <alias field="datecreation" index="28" name=""/>
+    <alias field="datedestruction" index="29" name=""/>
+    <alias field="temprevisionbegin" index="30" name=""/>
+    <alias field="temprevisionend" index="31" name=""/>
+    <alias field="revisionbegin" index="32" name=""/>
+    <alias field="revisionend" index="33" name=""/>
   </aliases>
   <excludeAttributesWMS/>
   <excludeAttributesWFS/>
@@ -1179,14 +1199,12 @@
       <column width="-1" hidden="0" type="field" name="diametreNominal"/>
       <column width="-1" hidden="0" type="field" name="formecanalisation"/>
       <column width="-1" hidden="0" type="field" name="hauteur"/>
-      <column width="-1" hidden="0" type="field" name="largeur"/>
       <column width="-1" hidden="0" type="field" name="anPoseSup"/>
       <column width="-1" hidden="0" type="field" name="maitreOuvrage"/>
       <column width="-1" hidden="0" type="field" name="exploitant"/>
       <column width="-1" hidden="0" type="field" name="enService"/>
       <column width="-1" hidden="0" type="field" name="branchement"/>
       <column width="-1" hidden="0" type="field" name="modeCirculation"/>
-      <column width="-1" hidden="0" type="field" name="metaREAPA"/>
       <column width="-1" hidden="0" type="field" name="anPoseInf"/>
       <column width="-1" hidden="0" type="field" name="longueur"/>
       <column width="-1" hidden="0" type="field" name="typeReseau"/>
@@ -1196,11 +1214,18 @@
       <column width="-1" hidden="0" type="field" name="altAval"/>
       <column width="-1" hidden="0" type="field" name="profamont"/>
       <column width="-1" hidden="0" type="field" name="profaval"/>
-      <column width="-1" hidden="0" type="field" name="lk_noeud1"/>
-      <column width="-1" hidden="0" type="field" name="lk_noeud2"/>
-      <column width="-1" hidden="0" type="field" name="infracommentaire"/>
       <column width="-1" hidden="0" type="field" name="datecreation"/>
       <column width="-1" hidden="0" type="field" name="datedestruction"/>
+      <column width="-1" hidden="0" type="field" name="pk_infralineaire"/>
+      <column width="-1" hidden="0" type="field" name="id_revisionbegin"/>
+      <column width="-1" hidden="0" type="field" name="id_revisionend"/>
+      <column width="-1" hidden="0" type="field" name="lk_ressource1"/>
+      <column width="-1" hidden="0" type="field" name="lk_descriptionsystem1"/>
+      <column width="-1" hidden="0" type="field" name="lk_descriptionsystem2"/>
+      <column width="-1" hidden="0" type="field" name="temprevisionbegin"/>
+      <column width="-1" hidden="0" type="field" name="temprevisionend"/>
+      <column width="-1" hidden="0" type="field" name="revisionbegin"/>
+      <column width="-1" hidden="0" type="field" name="revisionend"/>
     </columns>
   </attributetableconfig>
   <editform>../../Données/Tables ARTELIA2</editform>
@@ -1233,8 +1258,8 @@ def my_form_open(dialog, layer, feature):
       <attributeEditorField showLabel="1" index="-1" name="FORME_CANA"/>
       <attributeEditorField showLabel="1" index="-1" name="DIAMETRE"/>
       <attributeEditorField showLabel="1" index="-1" name="MATERIAUX"/>
-      <attributeEditorField showLabel="1" index="6" name="HAUTEUR"/>
-      <attributeEditorField showLabel="1" index="7" name="LARGEUR"/>
+      <attributeEditorField showLabel="1" index="12" name="HAUTEUR"/>
+      <attributeEditorField showLabel="1" index="-1" name="LARGEUR"/>
       <attributeEditorField showLabel="1" index="-1" name="ANNEEPOSE"/>
       <attributeEditorField showLabel="1" index="-1" name="OBSERVATIO"/>
     </attributeEditorContainer>
@@ -1245,21 +1270,25 @@ def my_form_open(dialog, layer, feature):
     <fieldstyles/>
   </conditionalstyles>
   <defaults>
+    <default field="pk_infralineaire" expression=""/>
     <default field="id_infralineaire" expression=""/>
+    <default field="id_revisionbegin" expression=""/>
+    <default field="id_revisionend" expression=""/>
     <default field="id_objet" expression=""/>
     <default field="id_descriptionsystem" expression=""/>
+    <default field="lk_ressource1" expression=""/>
+    <default field="lk_descriptionsystem1" expression=""/>
+    <default field="lk_descriptionsystem2" expression=""/>
     <default field="materiau" expression=""/>
     <default field="diametreNominal" expression=""/>
     <default field="formecanalisation" expression=""/>
     <default field="hauteur" expression=""/>
-    <default field="largeur" expression=""/>
     <default field="anPoseSup" expression=""/>
     <default field="maitreOuvrage" expression=""/>
     <default field="exploitant" expression=""/>
     <default field="enService" expression=""/>
     <default field="branchement" expression=""/>
     <default field="modeCirculation" expression=""/>
-    <default field="metaREAPA" expression=""/>
     <default field="anPoseInf" expression=""/>
     <default field="longueur" expression=""/>
     <default field="typeReseau" expression=""/>
@@ -1269,11 +1298,12 @@ def my_form_open(dialog, layer, feature):
     <default field="altAval" expression=""/>
     <default field="profamont" expression=""/>
     <default field="profaval" expression=""/>
-    <default field="lk_noeud1" expression=""/>
-    <default field="lk_noeud2" expression=""/>
-    <default field="infracommentaire" expression=""/>
     <default field="datecreation" expression=""/>
     <default field="datedestruction" expression=""/>
+    <default field="temprevisionbegin" expression=""/>
+    <default field="temprevisionend" expression=""/>
+    <default field="revisionbegin" expression=""/>
+    <default field="revisionend" expression=""/>
   </defaults>
   <previewExpression>COALESCE( "TYP_RESEAU", '&lt;NULL>' )</previewExpression>
   <layerGeometryType>1</layerGeometryType>

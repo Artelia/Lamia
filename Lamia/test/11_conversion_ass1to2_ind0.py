@@ -11,11 +11,20 @@ from Lamia.Lamia.main.DBaseParser import DBaseParser
 
 
 pathfrom = "C://000_testdigue//URBAIN//FROM//SLT.sqlite"
+pathfrom = "M://FR//BOR//EE//URBAIN//4352240_87_NOBLAT_EtudeAEP_EU_EP//5_Etude//01_SIG//sqlite//Saint_Paul.sqlite"
+pathfrom = "I://URBAIN//4352260_87_ELAN_EtudeAEP_EU//5_Etude//01_SIG//Qgs//SQLITE//Nantiat.sqlite"
+pathfrom = "C://000_testdigue//URBAIN//autre//SLT.sqlite"
+#pathfrom = "C://000_testdigue//URBAIN//autre//St_Jouvent.sqlite"
 
 dbaseparserfrom = DBaseParser(None)
 dbaseparserfrom.loadQgisVectorLayers(pathfrom)
 
 pathto = "C://000_testdigue//URBAIN//TO//SLT.sqlite"
+pathto = "M://FR//BOR//EE//URBAIN//4352240_87_NOBLAT_EtudeAEP_EU_EP//5_Etude//01_SIG//sqlite//Saint_Paul1.sqlite"
+pathto = "I://URBAIN//4352260_87_ELAN_EtudeAEP_EU//5_Etude//01_SIG//Qgs//SQLITE//Nantiat3.sqlite"
+pathto = "C://000_testdigue//URBAIN//autre//SLT1.sqlite"
+#pathto = "C://000_testdigue//URBAIN//autre//St_Jouvent1.sqlite"
+
 
 originalfile = os.path.join(os.path.dirname(__file__), '..', 'DBASE', 'DBase_ind0.sqlite')
 shutil.copyfile(originalfile, pathto)
@@ -29,13 +38,13 @@ dbaseparserto.createDbase(file=pathto, crs=2154, type='Base_assainissement', dba
 
 # ************************************ MAIN **************************************************************************
 if True:
-    if True:
+    if False:
         sql = "SELECT metier, repertoireressources, crs FROM Basedonnees"
         results = list(dbaseparserfrom.query(sql))
         for result in results :
             print(result)
-            sql = "INSERT INTO Basedonnees (metier, repertoireressources, crs) VALUES (?,?,?) "
-            args = ['digue2',result[1],  result[2]]
+            sql = "INSERT INTO Basedonnees ( repertoireressources, crs) VALUES (?,?) "
+            args = [result[1],  result[2]]
             dbaseparserto.query(sql,args)
 
 
@@ -150,14 +159,18 @@ if True:
 
             sql = '''INSERT INTO Observation (id_observation,id_revisionbegin, id_objet, lk_desordre ,
                       dateobservation,  source,  nombre,     gravite,   evolution,
-                       depots, typesuite, commentairesuite, 
+                       depots, typesuite, precisionsuite, commentairesuite, 
                         ECPPdepuisbranchement, gcdegrade, infiltration, intrusionracine, miseencharge, tamponendommage ) 
-                    VALUES (?,?,?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?) '''
+                    VALUES (?,?,?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?,?) '''
             args = [                        result[0],      1,                result[1], result[2],
                         result[3], result[4],  result[5],   result[6],   result[7],
-                        result[9],result[10],result[11],
+                        result[9],result[10],result[11],    result[12],
                         result[13],         result[14],    result[15]  ,  result[16]      ,result[17], result[18]  ]
             dbaseparserto.query(sql,args)
+
+
+
+
 
             if result[8]:
                 comm = result[8]
@@ -248,50 +261,67 @@ if True:
 
 
 
-    if False:
+    if True:
         print('*************** Equipement *************************  ')
-        sql = '''SELECT id_equipement, id_objet, id_descriptionsystem, lk_equipement,
-                cote, position, categorie, typeequipement, implantation, ecoulement, utilisation,
-                dimverti, dimhori, securite, commentaires, geom
+        sql = '''SELECT id_equipement, id_objet, id_descriptionsystem, lk_descriptionsystem,
+                typeReseau, typeAppAss, commentaireequipement, ST_AsText(geom)
                 FROM Equipement'''
         results = list(dbaseparserfrom.query(sql))
         for i, result in enumerate(results):
             if i % 50 == 0:
                 print(result)
 
+
+
+            """
             # lienequip
             if result[3] is not None:
                 sql = '''SELECT id_descriptionsystem FROM Equipement WHERE id_equipement = ''' + str(result[3])
                 resulttemp = list(dbaseparserfrom.query(sql))
                 lk_dessys = resulttemp[0][0]
                 if i % 50 == 0:
-                    print('lk_ressource2', lk_ressource2)
+                    print('lk_ressource2', lk_dessys)
             else:
                 lk_dessys = None
-
+            """
             # lien profil
             # idem lk_profil
 
+            #geom
+            # print(result[7])
+            geom1 = qgis.core.QgsGeometry.fromWkt(result[7]).asPoint()
+            # print(geom1)
+            geomline = qgis.core.QgsGeometry.fromPolyline([geom1, geom1])
+
+            geomlinewkt = geomline.exportToWkt()
+
+            geomlinewfb = geomline.asWkb()
+
+            # print('tt',geomlinewkt)
+
+            #print('tot', qgis.core.QgsGeometry.fromWkb(geomlinewfb).exportToWkt() )
+
             sql = '''INSERT INTO Equipement 
-                    (id_equipement, id_revisionbegin,  id_objet, id_descriptionsystem, 
-                    categorie, typeequipement, implantation, ecoulement, utilisation, 
-                    dimverti, dimhori, securite,  cote, position, geom , lk_descriptionsystem )
-                     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) '''
-            args = [result[0],   1,                 result[1],      result[2],
-                    result[6],result[7],       result[8],   result[9], result[10],
-                    result[11],result[12], result[13], result[4], result[5], result[15], lk_dessys ]
+                    (id_equipement, id_revisionbegin,  id_objet, id_descriptionsystem, lk_descriptionsystem,
+                    categorie, typeReseau,typeAppAss )
+                     VALUES (?,?,?,?,?,?,?,?) '''
+            args = [result[0],   1,                 result[1],      result[2],          result[3],
+                    'NOD', result[4] , result[5] ]
+            dbaseparserto.query(sql,args)
+
+
+            sql = "UPDATE  Equipement SET geom = ST_GeomFromText('" + str(geomlinewkt) + "',2154) "
+            sql += " WHERE id_equipement = " + str(result[0])
+            dbaseparserto.query(sql)
+
+            if result[6]:
+                sql = 'UPDATE Objet SET commentaire = ' + "'" + str(result[6]) + "'" + ' WHERE id_objet = ' + str(result[1])
+                dbaseparserto.query(sql)
 
             if i % 50 == 0:
                 print(sql)
                 print(args)
-            dbaseparserto.query(sql, args)
-
-            if result[14]:
-                comm = result[14]
-            else:
-                comm = ''
-            sql = 'UPDATE Objet SET commentaire = ' + "'" + comm + "'" + ' WHERE id_objet = ' + str(result[1])
-            dbaseparserto.query(sql)
+            #dbaseparserto.query(sql, args)
 
 
     if False:
@@ -349,15 +379,26 @@ if True:
                 print(result)
 
             sql = '''INSERT INTO Photo 
-                    (id_photo, id_revisionbegin,  id_objet, id_ressource, typephoto,numphoto, geom  )
-                     VALUES (?,?,?,?,?,?,?) '''
-            args = [ result[0],         1,        result[1],  result[2],    result[3], result[4],result[5] ]
+                    (id_photo, id_revisionbegin,  id_objet, id_ressource, typephoto, geom  )
+                     VALUES (?,?,?,?,?,?) '''
+            args = [ result[0],         1,        result[1],  result[2],    result[3],result[5] ]
+            dbaseparserto.query(sql, args)
+
+            if result[4]:
+                sql = 'UPDATE Ressource SET numphoto = ' + str(result[4])  + ' WHERE id_ressource = ' + str(result[2])
+                dbaseparserto.query(sql)
+
+
+
 
             if i%50 == 0:
                 print(sql)
                 print(args)
 
-            dbaseparserto.query(sql,args)
+
+
+
+
 
 
     if True:

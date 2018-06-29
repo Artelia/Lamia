@@ -101,6 +101,6 @@
 Photo;PHO
 Croquis;CRO
 Video;VID
-###numphoto;             INT ;                     INTEGER
+
 
 ###geom;                POINT

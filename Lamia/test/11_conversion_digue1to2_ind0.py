@@ -16,19 +16,31 @@ dbaseparserfrom.loadQgisVectorLayers(pathfrom)
 
 pathto = "C://000_testdigue//convertBM//TO//BD_SIJALAG_ind10.sqlite"
 
-originalfile = os.path.join(os.path.dirname(__file__), '..', 'DBASE', 'DBase_ind0.sqlite')
-shutil.copyfile(originalfile, pathto)
+if False:
+    originalfile = os.path.join(os.path.dirname(__file__), '..', 'DBASE', 'DBase_ind0.sqlite')
+    shutil.copyfile(originalfile, pathto)
+
 
 dbaseparserto= DBaseParser(None)
-dbaseparserto.createDbase(file=pathto, crs=3945, type='Base_digue', dbasetype='spatialite',
-                       dbaseressourcesdirectory=None)
+"""
+            wind.dbase.loadQgisVectorLayers(dbasetype='postgis', dbname='PVR_test', schema='lamia_default', user='postgres',
+                                            host='localhost',
+                                            password='PVR', port=5432)
+"""
 
+if False:
+    dbaseparserto.createDbase(file=pathto, crs=3945, type='Base_digue', dbasetype='spatialite',
+                           dbaseressourcesdirectory=None)
+if True:
+    dbaseparserto.createDbase(file=None, crs=3945, type='Base_digue', dbasetype='postgis',
+                    dbname='PVR_test', schema='lamia_BM', user='postgres', host='localhost', port=5432, password='PVR',    # postgis
+                    dbaseressourcesdirectory='C://000_testdigue//temp_postgis//digue')
 
 
 
 # ************************************ MAIN **************************************************************************
 if True:
-    if True:
+    if False:
         sql = "SELECT metier, repertoireressources, crs FROM Basedonnees"
         results = list(dbaseparserfrom.query(sql))
         for result in results :

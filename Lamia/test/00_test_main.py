@@ -19,10 +19,23 @@ import qgis.utils
 
 
 import shutil
-
+from qgis.PyQt import uic, QtCore
 
 
 from Lamia.Lamia.dialog.InspectionDigue_windowwidget import InspectiondigueWindowWidget
+
+try:
+    from qgis.PyQt.QtGui import (QWidget,QDialog)
+except ImportError:
+    from qgis.PyQt.QtWidgets import (QWidget,QDialog)
+
+
+class UserUI(QDialog):
+
+    def __init__(self, parent=None):
+        super(UserUI, self).__init__(parent=parent)
+        uipath = os.path.join(os.path.dirname(__file__), 'mainwindows.ui')
+        uic.loadUi(uipath, self)
 
 
 
@@ -53,9 +66,13 @@ def testCoreParserValue(canvas, loadfile=True, typedb="spatialite"):
             # path = os.path.normpath('C://000_testdigue//temp_basedefault//test01.sqlite')
             #path = os.path.normpath('C://000_testdigue//temp_baseassainissement//test01.sqlite')
 
-
             # path = os.path.normpath("C://000_testdigue//convertBM//TO//BD_SIJALAG_ind10.sqlite")
-            path = os.path.normpath("C://000_testdigue//URBAIN//TO//SLT.sqlite")
+            # path = os.path.normpath("C://000_testdigue//URBAIN//TO//SLT.sqlite")
+            # path = "I://URBAIN//4352260_87_ELAN_EtudeAEP_EU//5_Etude//01_SIG//Qgs//SQLITE//Nantiat3.sqlite"
+            # path = "M://FR//BOR//EE//URBAIN//4352240_87_NOBLAT_EtudeAEP_EU_EP//5_Etude//01_SIG//sqlite//La_Geneytouse2.sqlite"
+            # path = "C://000_testdigue//URBAIN//Nantiat2.sqlite"
+            path = "C://000_testdigue//URBAIN//autre//SLT1.sqlite"
+            # path = "C://000_testdigue//temp_base//test01.sqlite"
 
             wind.dbase.loadQgisVectorLayers(path)
 
@@ -93,9 +110,20 @@ def testCoreParserValue(canvas, loadfile=True, typedb="spatialite"):
 
         # wind.dbase.printsql = True
 
-        canvas.show()
-        canvas.refresh()
-        wind.show()
+        if True:
+
+            mainwin = UserUI()
+            mainwin.frame.layout().addWidget(canvas)
+            mainwin.frame_2.layout().addWidget(wind)
+
+            #mainwin.show()
+            mainwin.exec_()
+            canvas.refresh()
+
+        if False:
+            canvas.show()
+            canvas.refresh()
+            wind.show()
 
 # *********************************************************************************************************************
 # ******************************************   MAIN      *************************************************************

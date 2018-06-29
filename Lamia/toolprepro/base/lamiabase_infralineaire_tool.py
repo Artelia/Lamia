@@ -156,9 +156,6 @@ class BaseInfraLineaireTool(AbstractInspectionDigueTool):
         query = self.dbase.query(sql)
         self.dbase.commit()
 
-        sql = "DELETE FROM Infralinemprise WHERE lk_infralineaire = " + str(idinfralin) + ";"
-        query = self.dbase.query(sql)
-        self.dbase.commit()
 
         return True
 
