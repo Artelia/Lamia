@@ -145,6 +145,7 @@ class LamiatoFranceDigue():
 
         try:
             convertisseur = json.load(open(self.convertisseurPATH, 'r'))
+            self.resetConvertisseur()
         except ValueError:
             self.resetConvertisseur()
             convertisseur = json.load(open(self.convertisseurPATH, 'r'))
@@ -185,8 +186,10 @@ class LamiatoFranceDigue():
                     i += 1
                     newElem = True
                     continue
-            #reset du template après créations des n métaObjet
+            #reset du template après creations des n metaObjet
             template = {}
+
+
         open('output.txt','a').write('--- START ---\n')
         if newElem:
             print('done :'+str(i)+' elements treated')
@@ -195,6 +198,14 @@ class LamiatoFranceDigue():
         else:
             print('done : no elements treadted')
         open('output.txt','a').write('--- STOP ---\n')
+
+
+        #Add the observations and their pictures
+        self.addObservationsAndPictures()
+
+
+
+
         self.queryFD.disconnect()
 
     """
@@ -289,6 +300,8 @@ class LamiatoFranceDigue():
         for idx in listIndexList:
             self.setSecondaryDependencies(id_parent, obj[idx])
 
+
+
         if isinstance(obj, list):
             for i in range(0, len(obj)):
                 if isinstance(obj[i], unicode) and 'crt:' in obj[i]:
@@ -319,7 +332,7 @@ class LamiatoFranceDigue():
                         nom_lm = tmp['sql']['type']
                         self.insertInConvertisseur(obj[it], id_lm, nom_fd, nom_lm)
 
-    """Retourne la liste des index|clés menant vers un dict"""
+    """Retourne la liste des index|cles menant vers un dict"""
     def getListIndexDict(self, obj):
         ret = []
         if isinstance(obj, list):
@@ -333,7 +346,7 @@ class LamiatoFranceDigue():
                     ret.append(it)
         return ret
 
-    """Retourne la liste des index|clés menant vers une list"""
+    """Retourne la liste des index|cles menant vers une list"""
     def getListIndexList(self, obj):
         ret = []
         if isinstance(obj, list):
@@ -371,15 +384,15 @@ class LamiatoFranceDigue():
                 return it
 
     """
-    Injecte les dépendences de clés étrangères dans la CouchDb
+    Injecte les dependences de cles etrangères dans la CouchDb
     """
     def setPrimaryDependencies(self):
         convertisseur = json.load(open(self.convertisseurPATH, 'r'))
         bridge = json.load(open(self.bridgePATH, 'r'))
-        #Recupération d'un des objets du modèle
+        #Recuperation d'un des objets du modèle
         for obj in bridge:
             print(obj+': ')
-            #récupéraiton des info contenu dans cet objet
+            #recuperaiton des info contenu dans cet objet
             for i in range(0, len(bridge[obj])):
                 path = bridge[obj][i]['path']
                 if 'bypass' not in bridge[obj][i]:
@@ -387,7 +400,7 @@ class LamiatoFranceDigue():
                     fld_lm_dest = bridge[obj][i]['destination']
                     tab_lm_dest = bridge[obj][i]['table']
 
-                #itération des objet contenu dans le convertisseur
+                #iteration des objet contenu dans le convertisseur
                 for it in convertisseur:
 
                     if it['couch']['type'] == obj:
@@ -396,7 +409,7 @@ class LamiatoFranceDigue():
                         id_lm_src = it['sql']['id']
                         tab_lm_src = it['sql']['type']
 
-                        #Si l'on crée l'objet de toute pièce
+                        #Si l'on cree l'objet de toute pièce
                         if 'bypass' in bridge[obj][i]:
                             for id_fd_dest in self.queryFD.customQuery(bridge[obj][i]['bypass'], ['_id']):
                                 if len(id_fd_dest) > 0:
@@ -408,10 +421,10 @@ class LamiatoFranceDigue():
                                 continue
                             continue
 
-                        #Récupération en utilisant l'id
+                        #Recuperation en utilisant l'id
                         id_lm_dest = self.queryL.selectId(tab_lm_dest, tab_lm_src, fld_lm_dest, fld_lm_src, id_lm_src)
 
-                        #Récupération en utilisant le plus proche voisin
+                        #Recuperation en utilisant le plus proche voisin
                         if id_lm_dest is None:
                             id_lm_dest = self.queryL.selectClosestGeom(tab_lm_dest, tab_lm_src, fld_lm_dest, fld_lm_src, id_lm_src)
 
@@ -435,3 +448,66 @@ class LamiatoFranceDigue():
     def resetConvertisseur(self):
         open(self.convertisseurPATH, 'w').write('[]')
 
+
+    def addObservationsAndPictures(self):
+
+        print("Upload Observations .................................................................")
+        query = "SELECT id_observation, id_objet, lk_desordre, dateobservation, commentaires, source, gravite, nombre FROM Observation "
+        cursor_obs=self.queryL.SLITEcursor.execute(query)
+        convertisseur = json.load(open(self.convertisseurPATH, 'r'))
+
+        while True:
+            list_obs = cursor_obs.fetchmany(1000)
+
+            if not list_obs:
+                break
+
+            for obs in list_obs :
+                id_observation = obs[0]
+                id_objet=obs[1]
+                lk_desordre=obs[2]
+                dateobservation=obs[3]
+                commentaires = obs[4]
+                source=obs[5]
+                gravite=obs[6]
+                nombre=obs[7]
+                print(obs)
+
+                #Recupere le desordre couch associe avec lk_desordre et le convertisseur
+                for item in convertisseur :
+                    if item['couch']['type']=='Desordre' and item['sql']['type']=='Desordre' and item['sql']['id']==lk_desordre :
+                        desordre = self.queryFD.getDocument(item['couch']['id'])
+
+                        #cree la liste des observations si elle n'existe pas pour ce desordre dans couch avec un if not "observations" in keys()
+                        if not 'observations' in desordre.keys():
+                            desordre['observations']=[]
+
+                        #cree la nouvelle observation sous forme de dic et db.save({'key': 'value'})
+                        #Pour cela, commence par traiter les champs de observation
+                        new_observation = {}
+                        new_observation['@class']='fr.sirs.core.model.Observation'
+                        new_observation['valid']='true'
+                        new_observation['nombreDesordres']=nombre
+                        if gravite is not None :
+                            new_observation['urgenceId']='RefUrgence:'+str(gravite)
+                        else :
+                            new_observation['urgenceId']='RefUrgence:0'
+                        new_observation['date']=str(dateobservation)
+
+
+                        new_observation['photos']=[]
+
+
+
+
+                    #puis recupere la liste des photos associees à cette observation et les ressources et objets associes
+                    #creer la liste des photos et y injecter les photos une a une
+                    #Ajouter les photos une a une a la base pour récupérer leur id
+                    #Reinjecter cet id dans l observation
+                    #ajouter l observation contenant les photos a la base
+                    #recuperer l id
+                    #completer l observation et l ajouter au desordre
+
+
+
+        return

@@ -52,17 +52,17 @@
 	}],
 
 	"SubDocument": {
-		"BorneDigueDebut": {
-			"couch": {
-				"type" : "BorneDigueDebut",
-				"fields": ["@class", "fictive", "libelle", "valid", "date_debut", "dateMaj", "geometry", "designation"]
-			},
-			"sql": {
-				"type" : null,
-				"query" : "SELECT o.datecreation, o.datemodification, ST_AsText(ST_StartPoint(i.geom)), {id_search} FROM Infralineaire i, Objet o WHERE i.id_Infralineaire = {id_search} and i.id_objet = o.id_objet",
-				"fields": ["fr.sirs.core.model.BorneDigue", false, "Début du tronçon", true, "fld:", "fld:", "fld:", "Borne Digue Alpha"]
-			}
-		},
+        "BorneDigueDebut": {
+            "couch": {
+                "type" : "BorneDigueDebut",
+                "fields": ["@class", "fictive", "libelle", "valid", "date_debut", "dateMaj", "geometry", "designation"]
+            },
+            "sql": {
+                "type" : null,
+                "query" : "SELECT o.datecreation, o.datemodification, ST_AsText(ST_StartPoint(i.geom)), {id_search} FROM Infralineaire i, Objet o WHERE i.id_Infralineaire = {id_search} and i.id_objet = o.id_objet",
+                "fields": ["fr.sirs.core.model.BorneDigue", false, "Début du tronçon", true, "fld:", "fld:", "fld:", "Borne Digue Alpha"]
+            }
+        },
 		"BorneDigueFin": {
 			"couch": {
 				"type" : "BorneDigueFin",

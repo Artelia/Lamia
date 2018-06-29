@@ -1,7 +1,7 @@
 {
   "Descriptionsystem" : {
-    "fields" : ["Objet"],
-    "query_sql" : "INSERT INTO Descriptionsystem (id_objet) VALUES (?)"
+    "fields" : [],
+    "query_sql" : "INSERT INTO Descriptionsystem DEFAULT VALUES "
   },
   "Desordre" : {
     "query_couch" : { "@class": "fr.sirs.core.model.Desordre"},
@@ -25,8 +25,8 @@
   "Observation" : {
       "list" : "observations",
       "query_couch" : { "@class": "fr.sirs.core.model.Desordre"},
-      "fields" : ["Objet", "date","evolution",  "urgenceId abrege", "nombreDesordres"],
-      "query_sql" : "INSERT INTO Observation (id_objet, dateobservation, commentaires, gravite, nombre) VALUES (?,?,?,?,?)"
+      "fields" : ["Objet", "date","evolution", "id",  "urgenceId abrege", "nombreDesordres"],
+      "query_sql" : "INSERT INTO Observation (id_objet, dateobservation, commentaires, source, gravite, nombre) VALUES (?,?,?,?,?,?)"
   },
   "Noeud" : {
     "query_couch": { "@class": "fr.sirs.core.model.BorneDigue" },
