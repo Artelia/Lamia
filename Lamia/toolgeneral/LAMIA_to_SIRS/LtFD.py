@@ -13,6 +13,7 @@ from .queryFranceDigue import *
 from .queryLamia import *
 import json
 import re
+import qgis
 
 import sys
 #reload(sys)
@@ -149,6 +150,7 @@ class LamiatoFranceDigue():
     """Insere la donnees recupere depuis Lamia vers FranceDigue"""
     def insertInFranceDigue(self):
         documents = json.load(open(self.templatePATH,'r'))['Document']
+        self.resetConvertisseur()
 
         try:
             convertisseur = json.load(open(self.convertisseurPATH, 'r'))
@@ -177,7 +179,9 @@ class LamiatoFranceDigue():
         i = 0
         # start_time = time.time()
         for obj in documents:
+            print(obj)
             template[obj['couch']['type']] = self.makeTemplate(obj['couch']['fields'], obj['sql']['fields'])
+            print(template[obj['couch']['type']])
             for metaObj in self.queryL.createMetaObjet(obj['couch']['type'], template, obj['sql']['query']):
                 print('metaobjet :', metaObj)
                 self.count = 0
@@ -208,7 +212,7 @@ class LamiatoFranceDigue():
 
 
         #Add the observations and their pictures
-        self.addObservationsAndPictures()
+        self.updateDesordreObservationsAndPictures()
 
 
 
@@ -456,7 +460,7 @@ class LamiatoFranceDigue():
         open(self.convertisseurPATH, 'w').write('[]')
 
 
-    def addObservationsAndPictures(self):
+    def updateDesordreObservationsAndPictures(self):
 
         print("Upload Observations .................................................................")
         query = "SELECT id_observation, id_objet, lk_desordre, dateobservation, commentaires, source, gravite, nombre FROM Observation "
@@ -495,7 +499,7 @@ class LamiatoFranceDigue():
                         new_observation['@class']='fr.sirs.core.model.Observation'
                         new_observation['valid']='true'
                         new_observation['nombreDesordres']=nombre
-                        if gravite is not None :
+                        if gravite is not None and not gravite == -1 and not gravite =='NULL'  :
                             new_observation['urgenceId']='RefUrgence:'+str(gravite)
                         else :
                             new_observation['urgenceId']='RefUrgence:0'
@@ -504,7 +508,51 @@ class LamiatoFranceDigue():
 
                         new_observation['photos']=[]
 
+                        query = "SELECT id_tcressource FROM Tcobjetressource WHERE id_tcobjet="+str(id_objet)
 
+                        cursor_ressources=self.queryL.SLITEcursor.execute(query)
+
+                        while True:
+                            list_ressources = cursor_ressources.fetchmany(1000)
+
+                            if not list_ressources:
+                                break
+
+                            for id_ressource in list_ressources :
+                                query = "SELECT o.libelle, r.file  FROM Ressource r, Objet o WHERE o.id_objet = r.id_objet AND r.id_ressource = "+str(id_ressource[0])
+                                print(query)
+                                cursor_photo=self.queryL.SLITEcursor.execute(query)
+                                photo_lamia = cursor_photo.fetchone()
+                                if photo_lamia:
+                                    print(photo_lamia)
+
+                                    new_photo ={}
+
+                                    new_photo["@class"]= "fr.sirs.core.model.Photo"
+                                    new_photo["borne_debut_aval"]= False
+                                    new_photo["borne_debut_distance"]= 0
+                                    new_photo["prDebut"]= 0
+                                    new_photo["borne_fin_aval"]= False
+                                    new_photo["borne_fin_distance"]= 0
+                                    new_photo["prFin"]=0
+                                    new_photo["valid"]= True
+                                    new_photo["longitudeMin"]= 0
+                                    new_photo["longitudeMax"]= 0
+                                    new_photo["latitudeMin"]=0
+                                    new_photo["latitudeMax"]= 0
+                                    new_photo["geometryMode"]= "LINEAR"
+                                    new_photo["designation"]=photo_lamia[0]
+                                    new_photo["chemin"]=self.traitement_path_photo(photo_lamia[1])
+
+                                    photo_sirs = self.queryFD.addDocument(new_photo)
+
+                                    new_observation['photos']+=[photo_sirs]
+
+                        observation = self.queryFD.addDocument(new_observation)
+
+                        desordre['observations']+=[observation]
+                        print("MAJ :", desordre)
+                        desordre.save()
 
 
                     #puis recupere la liste des photos associees à cette observation et les ressources et objets associes
@@ -515,6 +563,41 @@ class LamiatoFranceDigue():
                     #recuperer l id
                     #completer l observation et l ajouter au desordre
 
+        convertisseur = json.load(open(self.convertisseurPATH, 'r'))
+        for item in convertisseur :
+            if item['couch']['type']=='Desordre' and item['sql']['type']=='Desordre' :
+                desordre_sirs = self.queryFD.getDocument(item['couch']['id'])
+                query = "SELECT ST_AsText(geom) FROM Desordre WHERE id_desordre == "+str(item['sql']['id'])
+                cursor_des=self.queryL.SLITEcursor.execute(query)
+                geom=str(cursor_des.fetchone()[0])
 
+                if not geom == 'None' :
+
+                    geom = geom.split('(')
+                    geom = geom[1].split(')')
+
+                    desordre_sirs['geometryMode']='COORD'
+                    desordre_sirs['latitudeMin']=geom[0].split(' ')[1][:-1]
+                    desordre_sirs['longitudeMin']=geom[0].split(' ')[0]
+
+                    #Besoin de récupérer la geometry du troncon
+                    #nearestpoint = qgis.core.QgsGeometry.fromPolyline([list de qgspoints]).nearestPoint(qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(x,y)).asPoint()
+                    #nearest point est un tuple (x,y)
+
+                    if 'LINESTRING' in geom:
+
+                        geom = geom[0].split[',']
+                        geom = geom[1]
+                        desordre_sirs['longitudeMax']=geom.split(' ')[0]
+                        desordre_sirs['latitudeMax']=geom.split(' ')[1][:-1]
+                    else:
+                        desordre_sirs['longitudeMax']=desordre_sirs['longitudeMin']
+                        desordre_sirs['latitudeMax']=desordre_sirs['latitudeMin']
+                    print(desordre)
+                    desordre_sirs.save()
 
         return
+
+    #Update the path to the new ressource folder
+    def traitement_path_photo(self, chemin):
+        return chemin
