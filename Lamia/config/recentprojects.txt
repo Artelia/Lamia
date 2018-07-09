@@ -1,4 +1,5 @@
-C:/Users/valentin.anjou/Desktop/VNF1.sqlite
+C:\Users\valentin.anjou\Desktop\VNF1.sqlite
 C:\Users\valentin.anjou\Desktop\BD_SIJALAG_ind7.sqlite
+C:/Users/valentin.anjou/Desktop/VNF1.sqlite
 C:/Users/valentin.anjou/Desktop/test3.sqlite
 test_passerelle.projet@localhost:5432;vadjango;admin
