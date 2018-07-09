@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from qgis.PyQt import uic, QtCore
+from qgis.PyQt import uic, QtCore, QtGui
 
 try:
     from qgis.PyQt.QtGui import (QWidget)
@@ -224,13 +224,156 @@ class DesordreTool(AbstractDesordreTool):
                         query = self.dbase.query(sql)
                         self.dbase.commit()
 
-    """
 
     def postSaveFeature(self, boolnewfeature):
+        #Ici faire les tests sur les pks et afficher un pop-up avant de supprimer l objet si ces pks n obeissent pas aux regles souhaitees
+
+        correct=False
+
+        pk_debut = float(self.userwdgfield.doubleSpinBox_pkdebut.text().replace(',', '.'))
+        pk_fin = float(self.userwdgfield.doubleSpinBox_pkfin.text().replace(',', '.'))
+
+        id_equipement = self.parentWidget.currentFeature['id_equipement']
+        id_desordre = self.currentFeature['id_desordre']
+
+
+
+
+
+
+        sql = "SELECT pk_debut, pk_fin, typepk FROM Equipement WHERE  id_equipement=" + str(id_equipement) + ";"
+        query = self.dbase.query(sql)
+        row=query[0]
+
+
+        if row is not None :
+            row = [row[0], row[1], row[2]]
+            if row[0] is None :
+                row[0]=0
+            else :
+                row[0]=float(row[0])
+            if row[1] is None :
+                row[1]=0
+            else :
+                row[1]=float(row[1])
+
+            pk_debut_bief = float(row[0])
+            pk_fin_bief = float(row[1])
+
+            type_pk = row[2]
+
+            #absolu
+            if type_pk == 'ABS':
+                test_1=pk_debut>pk_fin
+                test_2=pk_debut<row[0]
+                test_3=pk_fin>row[1]
+                test_4= pk_debut>row[1]
+                test_5 = pk_fin<row[0]
+
+
+
+            #relatif croissant
+            elif type_pk=='REC' :
+                test_1=pk_debut>pk_fin
+                test_2=pk_debut<0
+                test_3=pk_fin>(row[1]-row[0])
+                test_4= pk_debut>(row[1]-row[0])
+                test_5 = pk_fin<0
+
+
+
+            #relatif decroissant
+            else:
+                test_1=pk_debut>pk_fin
+                test_2=pk_debut<0
+                test_3=pk_fin>(row[1]-row[0])
+                test_4= pk_debut>(row[1]-row[0])
+                test_5=pk_fin<0
+
+
+
+            if test_1 or test_2 or test_3 or test_4 or test_5:
+                correct=True
+                popup=QtGui.QMessageBox()
+                popup.setText('Les pks ne sont pas coherents avec ceux du bief et ont ete corriges en fonction. Pensez a verifier ces pks !')
+                popup.exec_()
+
+
+            if correct:
+                if type_pk == 'ABS':
+
+                    if test_2:
+                        sql = "UPDATE  Desordre SET pk_debut="+str(row[0])+" WHERE id_desordre=" + str(id_desordre) + ";"
+                        query = self.dbase.query(sql)
+                        self.dbase.commit()
+                        pk_debut=row[0]
+
+                    if test_3:
+                        sql = "UPDATE  Desordre SET pk_fin="+str(row[1])+" WHERE id_desordre=" + str(id_desordre) + ";"
+                        query = self.dbase.query(sql)
+                        self.dbase.commit()
+                        pk_fin = row[1]
+
+                    if test_4:
+                        sql = "UPDATE  Desordre SET pk_debut="+str(row[1])+", pk_fin = "+str(row[1])+" WHERE id_desordre=" + str(id_desordre) + ";"
+                        query = self.dbase.query(sql)
+                        self.dbase.commit()
+                        pk_debut=row[1]
+                        pk_fin=row[1]
+
+                    if test_5:
+                        sql = "UPDATE  Desordre SET pk_debut="+str(row[0])+",pk_fin="+str(row[0])+" WHERE id_desordre=" + str(id_desordre) + ";"
+                        query = self.dbase.query(sql)
+                        self.dbase.commit()
+                        pk_debut = row[0]
+                        pk_fin = row[0]
+
+                    if pk_debut>pk_fin:
+                        sql = "UPDATE  Desordre SET pk_debut="+str(pk_fin)+", pk_fin="+str(pk_debut)+" WHERE id_desordre=" + str(id_desordre) + ";"
+                        query = self.dbase.query(sql)
+                        self.dbase.commit()
+                        pk_transit=pk_debut
+                        pk_debut=pk_fin
+                        pk_fin = pk_transit
+
+                else :
+
+                    if test_2:
+                        sql = "UPDATE  Desordre SET pk_debut="+str(0)+" WHERE id_desordre=" + str(id_desordre) + ";"
+                        query = self.dbase.query(sql)
+                        self.dbase.commit()
+                        pk_debut=0
+
+                    if test_3:
+                        sql = "UPDATE  Desordre SET pk_fin="+str(row[1]-row[0])+" WHERE id_desordre=" + str(id_desordre) + ";"
+                        query = self.dbase.query(sql)
+                        pk_fin=row[1]-row[0]
+
+                    if test_4:
+                        sql = "UPDATE  Desordre SET pk_debut="+str(row[1]-row[0])+" WHERE id_desordre=" + str(id_desordre) + ";"
+                        query = self.dbase.query(sql)
+                        self.dbase.commit()
+                        pk_debut=row[1]-row[0]
+
+                    if test_5:
+                        sql = "UPDATE  Desordre SET pk_fin="+str(0)+" WHERE id_desordre=" + str(id_desordre) + ";"
+                        query = self.dbase.query(sql)
+                        self.dbase.commit()
+                        pk_fin=0
+
+                    if pk_debut>pk_fin:
+                        sql = "UPDATE  Desordre SET pk_debut="+str(pk_fin)+", pk_fin="+str(pk_debut)+" WHERE id_desordre=" + str(id_desordre) + ";"
+                        query = self.dbase.query(sql)
+                        self.dbase.commit()
+                        pk_transit=pk_debut
+                        pk_debut=pk_fin
+                        pk_fin = pk_transit
+
+
+
         pass
 
 
-    """
 class UserUI(QWidget):
     def __init__(self, parent=None):
         super(UserUI, self).__init__(parent=parent)
