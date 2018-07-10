@@ -88,7 +88,7 @@ class BaseDigueObservationTool(BaseObservationTool):
             self.dbasechildwdgfield=[]
             # if self.parentWidget is not None:
             if self.parentWidget is None or self.parentWidget is not None and self.parentWidget.dbasetablename == 'Desordre':
-                self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, parentwidget=self)
+                self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase,gpsutil=self.gpsutil, parentwidget=self)
                 self.dbasechildwdgfield = [self.propertieswdgPHOTOGRAPHIE]
                 self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
                 self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)

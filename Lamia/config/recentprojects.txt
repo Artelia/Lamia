@@ -1,11 +1,11 @@
 C://000_testdigue//URBAIN//autre//SLT1.sqlite
+C://000_testdigue//temp_base//test01.sqlite
+PVR_test.lamia_default@localhost:5432;postgres;PVR
 C:\000_testdigue\convertBM\TO\BD_SIJALAG_ind10.sqlite
+C://000_testdigue//convertBM//TO2//BD_Begles_ind10.sqlite
+C://000_testdigue//convertBM//FROM//BD_Begles_ind10.sqlite
+C://000_testdigue//convertBM//TO//BD_SIJALAG_ind10.sqlite
+C://000_testdigue//convertBM//FROM//BD_SIJALAG_ind10.sqlite
 C:\000_testdigue\convertBM\FROM\BD_SIJALAG_ind10.sqlite
 PVR_test.lamia_BM@localhost:5432;postgres;PVR
-C://000_testdigue//convertBM//FROM//BD_SIJALAG_ind10.sqlite
-C://000_testdigue//convertBM//TO//BD_SIJALAG_ind10.sqlite
 C://000_testdigue//temp_baseassainissement//test01.sqlite
-C://000_testdigue//temp_base//test01.sqlite
-C://000_testdigue//temp_default//test01.sqlite
-C://000_testdigue//URBAIN//Nantiat2.sqlite
-C://000_testdigue//URBAIN//autre//SLT.sqlite

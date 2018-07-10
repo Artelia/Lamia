@@ -1298,6 +1298,10 @@ class DBaseParser(QtCore.QObject):
 
         debug = False
 
+        if debug :
+            timestart = time.clock()
+
+
         if int(str(self.qgisversion_int)[0:3]) < 218:
             isspatial = dbasetable['layerqgis'].geometryType() < 3
         else:
@@ -1329,6 +1333,9 @@ class DBaseParser(QtCore.QObject):
 
         spIndex = qgis.core.QgsSpatialIndex(dbasetable['layerqgis'].getFeatures())
         layernearestids = spIndex.nearestNeighbor(point2, 5)
+
+        if debug:  logging.getLogger('Lamia').debug('layernearestids %s %.3f', str(layernearestids), time.clock() - timestart)
+
         # print('getNearestId',layernearestids)
         """
         for nid in layernearestid:
@@ -1336,21 +1343,26 @@ class DBaseParser(QtCore.QObject):
         """
         distance = None
         nearestindex = None
+        finalgeomispoint = False
         # geom = None
 
         if len(layernearestids) > 0:
             for layernearestid in layernearestids:
                 # feat = self.dbasetable['layerview'].getFeatures(qgis.core.QgsFeatureRequest(layernearestid)).next()
+                ispoint = False
                 if not self.revisionwork:
                     feat = self.getLayerFeatureById(dbasetablename, layernearestid)
                 else:
                     feat = self.getLayerFeatureByPk(dbasetablename, layernearestid)
                 featgeom = feat.geometry()
-                # print(featgeom.asPolyline())
+
+                if debug:  logging.getLogger('Lamia').debug('featgeom %s %.3f', str(featgeom.exportToWkt() ), time.clock() - timestart)
+
                 if featgeom.isGeosValid():  # if not valid, return dist = -1...
                     dist = featgeom.distance(point2geom)
                 else:  # point
                     if featgeom.type() == 1 and not featgeom.isMultipart():
+                        ispoint = True
                         if int(str(self.qgisversion_int)[0:3]) < 220:
                             if len(featgeom.asPolyline()) == 1:  # polyline of 1 point
                                 dist = qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(featgeom.asPolyline()[0])).distance(point2geom)
@@ -1363,13 +1375,32 @@ class DBaseParser(QtCore.QObject):
                                 dist = qgis.core.QgsGeometry.fromPointXY(qgis.core.QgsPointXY(featgeom.asPolyline()[0])).distance(point2geom)
                     else:
                         continue
-                # print('getNearestId',feat.geometry().isGeosValid(), layernearestid,dist )
+
+                if debug:  logging.getLogger('Lamia').debug('getNearestId %s %s %s %s %.3f',
+                                                            str(feat.geometry().isGeosValid()),
+                                                            str(layernearestid),
+                                                            str(dist),
+                                                            str(ispoint),
+                                                            time.clock() - timestart)
+
+
+
                 if distance is None:
                     distance = dist
                     nearestindex = layernearestid
+                    finalgeomispoint = ispoint
+                elif not finalgeomispoint and ispoint and dist < distance*1.2:
+                    distance = dist
+                    nearestindex = layernearestid
+                    finalgeomispoint = True
                 elif dist < distance:
                     distance = dist
                     nearestindex = layernearestid
+                    finalgeomispoint = ispoint
+
+        if debug :
+            logging.getLogger('Lamia').debug('end %s %s %.3f', str(nearestindex), str(distance), time.clock() - timestart)
+
         return nearestindex, distance
 
 
