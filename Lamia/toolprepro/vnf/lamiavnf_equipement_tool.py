@@ -267,6 +267,15 @@ class EquipementTool(AbstractInspectionDigueTool):
         pk_fin = float(self.userwdgfield.doubleSpinBox_pk_fin.text().replace(',', '.'))
         type_pk = self.userwdgfield.comboBox_typepk.currentIndex()
 
+        partie_type = self.userwdgfield.comboBox_partie.currentIndex()
+        equipement_type = self.userwdgfield.comboBox_equipement.currentIndex()
+
+        test_depassement = partie_type==2 or partie_type==3 or partie_type==4
+        test_discontinuite = partie_type==2
+        test_chevauchement = ((partie_type==2 or partie_type==3 or partie_type==4) and not (equipement_type==6 or equipement_type==7))
+
+        print(pk_debut, pk_fin)
+
         id_infralineaire = self.parentWidget.currentFeature['id_infralineaire']
         id_equipement = self.currentFeature.id()
 
@@ -321,7 +330,7 @@ class EquipementTool(AbstractInspectionDigueTool):
 
 
 
-            if test_1 or test_2 or test_3 or test_4 or test_5:
+            if (test_1 or test_2 or test_3 or test_4 or test_5) and test_depassement:
                 correct=True
                 popup=QtGui.QMessageBox()
                 popup.setText('Les pks ne sont pas coherents avec ceux du bief et ont ete corriges en fonction. Pensez a verifier ces pks !')
@@ -409,11 +418,12 @@ class EquipementTool(AbstractInspectionDigueTool):
             partie= row[0]
             equipement = row[1]
 
+            print(pk_debut, pk_fin)
 
 
             sql = "SELECT pk_debut, pk_fin, typepk FROM Equipement WHERE  lk_infralineaire='" + str(id_infralineaire) + "'AND equipement = '"+str(equipement)+"'AND partie = '"+str(partie)+"';"
             query = self.dbase.query(sql)
-            modified = True
+            modified = test_chevauchement
             message_needed=False
             while modified :
                 modified = False
@@ -510,7 +520,7 @@ class EquipementTool(AbstractInspectionDigueTool):
 
 
 
-                        if pk_debut<pk_fin_autre_equipement and pk_fin>pk_fin_autre_equipement:
+                        if pk_debut<pk_debut_autre_equipement and pk_fin>pk_fin_autre_equipement:
 
                             if type_pk_autre_equipement=='REC':
                                 sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_autre_equipement-pk_debut_bief)+", pk_fin = "+str(pk_fin_autre_equipement-pk_debut_bief)+" WHERE id_equipement=" + str(id_equipement) + ";"
@@ -527,44 +537,126 @@ class EquipementTool(AbstractInspectionDigueTool):
                             pk_fin = pk_fin_autre_equipement
                             pk_debut = pk_fin_autre_equipement
 
+                        if type_pk==1:
+                            pk_debut= pk_debut-pk_debut_bief
+                            pk_fin = pk_fin-pk_debut_bief
+
+                        elif type_pk_autre_equipement==2:
+                            pk_debut= pk_fin_bief-pk_fin
+                            pk_fin = pk_fin_bief-pk_debut
+
 
             if message_needed:
                 popup=QtGui.QMessageBox()
                 popup.setText('Les pks saisis entrent en conflit avec ceux d un autre equipement du meme type et ont donc ete corriges en fonction. Pensez a verifier ces pks !')
                 popup.exec_()
 
-                """
-                sql = "SELECT MAX(id_descriptionsystem) FROM Descriptionsystem"
+
+
+            if test_discontinuite:
+                print(pk_debut, pk_fin)
+                sql = "SELECT pk_debut, pk_fin, typepk FROM Equipement WHERE  lk_infralineaire='" + str(id_infralineaire) + "'AND equipement = '"+str(equipement)+"'AND partie = '"+str(partie)+"';"
                 query = self.dbase.query(sql)
-                id_descriptionsystem=query[0][0]
+                modified = True
+                message_needed=False
+                while modified :
+                    modified = False
+                    for result in query :
+                        if result is not None :
 
-                sql = "DELETE FROM Descriptionsystem WHERE  id_descriptionsystem=" + str(id_descriptionsystem) + ";"
-                print(sql)
-                query = self.dbase.query(sql)
-                self.dbase.commit()
+                            if result[0] is not None :
+                                pk_debut_autre_equipement = float(result[0])
+                            else:
+                                pk_debut_autre_equipement=0
 
-
-                sql = "SELECT MAX(id_objet) FROM Objet"
-                query = self.dbase.query(sql)
-                id_objet=query[0][0]
-
-                sql = "DELETE FROM Objet WHERE  id_objet=" + str(id_objet) + ";"
-                print(sql)
-                query = self.dbase.query(sql)
-                self.dbase.commit()
-
-
-                sql = "SELECT MAX(id_equipement) FROM Equipement"
-                query = self.dbase.query(sql)
-                id_equipement=query[0][0]
-
-                sql = "DELETE FROM Equipement WHERE id_equipement=" + str(id_equipement) + ";"
-                print(sql)
-                query = self.dbase.query(sql)
-                self.dbase.commit()
-                """
+                            if result[1] is not None :
+                                pk_fin_autre_equipement = float(result[1])
+                            else :
+                                pk_fin_autre_equipement=0
 
 
+                            if type_pk_autre_equipement=='REC':
+                                pk_debut_autre_equipement= pk_debut_autre_equipement+pk_debut_bief
+                                pk_fin_autre_equipement = pk_fin_autre_equipement+pk_debut_bief
+
+                            elif type_pk_autre_equipement=='RED':
+                                pk_debut_autre_equipement= pk_fin_bief-pk_fin_autre_equipement
+                                pk_fin_autre_equipement = pk_fin_bief-pk_debut_autre_equipement
+
+                            if type_pk==1:
+                                pk_debut= pk_debut+pk_debut_bief
+                                pk_fin = pk_fin+pk_debut_bief
+
+                            elif type_pk_autre_equipement==2:
+                                pk_debut= pk_fin_bief-pk_fin
+                                pk_fin = pk_fin_bief-pk_debut
+
+                                print(pk_debut, pk_fin, pk_debut_autre_equipement, pk_fin_autre_equipement)
+
+                            if pk_debut<pk_fin_autre_equipement and pk_fin<pk_fin_autre_equipement:
+
+                                if type_pk_autre_equipement=='REC':
+                                    sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_autre_equipement-pk_debut_bief)+", pk_fin = "+str(pk_fin_autre_equipement-pk_debut_bief)+" WHERE id_equipement=" + str(id_equipement) + ";"
+                                elif type_pk_autre_equipement=='RED':
+                                    sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_bief-pk_debut_autre_equipement)+", pk_fin = "+str(pk_fin_bief-pk_debut_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
+                                else :
+                                    sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_autre_equipement)+", pk_fin = "+str(pk_fin_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
+
+
+                                message_needed=True
+                                modified = True
+                                query = self.dbase.query(sql)
+                                self.dbase.commit()
+                                pk_fin = pk_fin_autre_equipement
+                                pk_debut = pk_fin_autre_equipement
+
+
+                            if pk_debut<pk_fin_autre_equipement and pk_fin>pk_fin_autre_equipement:
+
+                                if type_pk_autre_equipement=='REC':
+                                    sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_autre_equipement-pk_debut_bief)+" WHERE id_equipement=" + str(id_equipement) + ";"
+                                elif type_pk_autre_equipement=='RED':
+                                    sql = "UPDATE  Equipement SET pk_fin="+str(pk_fin_bief-pk_fin_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
+                                else :
+                                    sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
+
+
+                                message_needed=True
+                                modified = True
+                                query = self.dbase.query(sql)
+                                self.dbase.commit()
+                                pk_debut = pk_fin_autre_equipement
+
+                            if pk_debut>pk_fin_autre_equipement :
+
+                                if type_pk_autre_equipement=='REC':
+                                    sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_autre_equipement-pk_debut_bief)+" WHERE id_equipement=" + str(id_equipement) + ";"
+                                elif type_pk_autre_equipement=='RED':
+                                    sql = "UPDATE  Equipement SET pk_fin="+str(pk_fin_bief-pk_fin_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
+                                else :
+                                    sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
+
+
+                                message_needed=True
+                                modified = True
+                                query = self.dbase.query(sql)
+                                self.dbase.commit()
+                                pk_debut = pk_fin_autre_equipement
+
+
+                            if type_pk==1:
+                                pk_debut= pk_debut-pk_debut_bief
+                                pk_fin = pk_fin-pk_debut_bief
+
+                            elif type_pk_autre_equipement==2:
+                                pk_debut= pk_fin_bief-pk_fin
+                                pk_fin = pk_fin_bief-pk_debut
+
+
+                if message_needed:
+                    popup=QtGui.QMessageBox()
+                    popup.setText('Les pks saisis ne resepctent pas la continuite des equiepements du meme type et ont donc ete corriges en fonction. Pensez a verifier ces pks !')
+                    popup.exec_()
 
 
         pass
