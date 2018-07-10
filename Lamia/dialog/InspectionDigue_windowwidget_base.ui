@@ -511,8 +511,6 @@
      <string>Outils</string>
     </property>
     <addaction name="actionMode_hors_ligne_Reconnexion"/>
-    <addaction name="actionImporter_depuis_SIRS_Digues"/>
-    <addaction name="actionExporter_vers_SIRS_Digues"/>
    </widget>
    <addaction name="menuFichiers"/>
    <addaction name="menuMode"/>

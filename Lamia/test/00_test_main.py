@@ -79,12 +79,12 @@ class mainClass(QtCore.QObject):
                 # path = os.path.normpath('C://000_testdigue//temp_basedefault//test01.sqlite')
                 # path = os.path.normpath('C://000_testdigue//temp_baseassainissement//test01.sqlite')
 
-                # path = os.path.normpath("C://000_testdigue//convertBM//TO//BD_SIJALAG_ind10.sqlite")
+                path = os.path.normpath("C://000_testdigue//convertBM//TO//BD_SIJALAG_ind10.sqlite")
                 # path = os.path.normpath("C://000_testdigue//URBAIN//TO//SLT.sqlite")
                 # path = "I://URBAIN//4352260_87_ELAN_EtudeAEP_EU//5_Etude//01_SIG//Qgs//SQLITE//Nantiat3.sqlite"
                 # path = "M://FR//BOR//EE//URBAIN//4352240_87_NOBLAT_EtudeAEP_EU_EP//5_Etude//01_SIG//sqlite//La_Geneytouse2.sqlite"
                 # path = "C://000_testdigue//URBAIN//Nantiat2.sqlite"
-                path = "C://000_testdigue//URBAIN//autre//SLT1.sqlite"
+                # path = "C://000_testdigue//URBAIN//autre//SLT1.sqlite"
                 # path = "C://000_testdigue//temp_base//test01.sqlite"
 
                 wind.dbase.loadQgisVectorLayers(path)
