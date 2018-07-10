@@ -65,6 +65,7 @@ class queryLamia():
         i = 0
         #petite itération pour récupèrer les tuple du yeild
         for row in self.execSql(self.SLITEcursor, 1000):
+
             #copie profonde necessaire sinon Python edit le template
             tmp = copy.deepcopy(template)
             self.row = row

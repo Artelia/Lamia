@@ -137,6 +137,8 @@ class FranceDiguetoLamia():
         #port = "5984"
         #nom_sirs='valence_romans_agglo'
         #path_lamia = '../../DB/test_valence.sqlite'
+        self.typedb = type_spatialite
+        self.srid=srid
         self.queryFD= queryFranceDigue(user, pwd, ip, port, nom_sirs)
         self.queryL = queryLamia(path_LAMIA, srid , user_LAMIA, password_LAMIA, adresse_LAMIA, port_LAMIA, nom_LAMIA, type_spatialite, type_postgis)
 
@@ -147,6 +149,7 @@ class FranceDiguetoLamia():
     """
     def insertInLamia(self):
         config = json.load(open(self.configPATH, 'r'))
+        self.resetConvertisseur()
 
         try:
             convertisseur = json.load(open(self.convertisseurPATH, 'r'))
@@ -166,7 +169,7 @@ class FranceDiguetoLamia():
             if 'query_couch' in config[nom_lm]:
                 print(config[nom_lm]['query_couch'])
                 for doc in self.queryFD.customQuery(config[nom_lm]['query_couch'],['_id','@class']):
-                    print("import de l'objet :",doc)
+                    print("import des donnees de l objet ou d'un sous objet de l objet :",doc)
                     id_fd = doc['_id']
 
                     #Cas ou le métaObjet est constiutés sur un seul document (Desersordre, Infralineaire)
@@ -180,7 +183,7 @@ class FranceDiguetoLamia():
 
                     #Cas où le metaObjet est constitués sur une liste contentnat les information (Observations, Photos)
                     elif 'list' in config[nom_lm]:
-                        if config[nom_lm]['list'] in self.queryFD.getDocument(id_fd).keys():
+                        if config[nom_lm]['list'] in self.queryFD.getDocument(id_fd).keys() :
                             arrMetaObjet = self.makeMetaObjet(nom_lm, id_fd)
                             for metaObj in arrMetaObjet:
                                 id_lm = self.queryL.insertion(nom_lm, {nom_lm :arrMetaObjet[metaObj]} )
@@ -188,12 +191,30 @@ class FranceDiguetoLamia():
 
                                 self.insertInConvertisseur(convertisseur, id_fd, id_lm, nom_fd, nom_lm)
                             newElem = True
+
         if newElem:
             open('output.txt','a').write('--- START ---\n')
 
+            #Correct the link between objects and DescriptionSystem
+            self.updateDescriptionSystem()
+
+            #Correct the geometry of the table desordres
+            self.updateGeomDesordres()
+
             self.setDependencies()
             #Block d'écriture et de fermeture des connexions aux bases
+
+            #Gestion des photos
+            self.importPhotos()
+
+
+
+
+
             self.queryL.commit()
+
+
+
             self.queryFD.disconnect()
             self.queryL.disconnect()
 
@@ -292,4 +313,208 @@ class FranceDiguetoLamia():
     def resetConvertisseur(self):
         open(self.convertisseurPATH, 'w').write('[]')
 
+    """
+    Import les photos de FD
+    Va parcourir tous les désordres, leurs observations et leurs photos
+    Crée la ressource
+    Crée la photo
+    Assigne les FK
+    """
 
+    def importPhotos(self):
+        convertisseur = json.load(open(self.convertisseurPATH, 'r'))
+
+        for desordre in self.queryFD.customQuery( { "@class": "fr.sirs.core.model.Desordre"},['_id','@class']):
+
+            id_desordre= desordre['_id']
+            print("traitement des photos du desordre : ", desordre['_id'], "........................................................")
+
+            if 'observations' in self.queryFD.getDocument(id_desordre).keys() :
+                for observation in desordre['observations']:
+                    print("traitement des photos de l'observation : ", desordre['_id'])
+                    if 'photos' in observation.keys():
+                        for photo in observation['photos']:
+                            print("traitement de la photo : ", photo['id'])
+
+
+                            #Creation de l'objet
+                            print("insertion de l objet")
+                            query_to_run = "INSERT INTO Objet (datemodification, datecreation, libelle) VALUES ("
+                            query_to_run=query_to_run+"'"+str(observation['date'])+"', "
+                            query_to_run=query_to_run+"'"+str(observation['date'])+"', "
+                            query_to_run=query_to_run+"'"+str(photo['designation'])+"') "
+
+                            if self.typedb:
+                                self.queryL.SLITEcursor.execute(query_to_run)
+
+                                try:
+                                    fetch = self.queryL.SLITEcursor.lastrowid
+                                except TypeError:
+                                    fetch = 0
+
+                            else:
+                                try :
+                                    query_to_run = query_to_run+ "RETURNING id_objet"
+                                    self.queryL.SLITEcursor.execute(query_to_run)
+                                    fetch = self.SLITEcursor.fetchone()[0]
+                                except :
+                                    print("erreur !", query_to_run)
+                                    self.queryL.SLITEcursor.execute(query_to_run)
+                                    fetch = 0
+                            id_objet_insere = fetch
+
+
+                            #Creation de la Ressource
+                            print("insertion de la ressource")
+                            query_to_run = "INSERT INTO Ressource (id_objet, description, dateressource, file) VALUES ("
+                            query_to_run=query_to_run+"'"+str(id_objet_insere)+"', "
+                            query_to_run=query_to_run+"'"+str(photo['designation'])+"', "
+                            query_to_run=query_to_run+"'"+str(observation['date'])+"', "
+                            query_to_run=query_to_run+"'"+self.traitementCheminPhoto(str(photo['chemin']))+"') "
+
+                            if self.typedb:
+                                self.queryL.SLITEcursor.execute(query_to_run)
+
+                                try:
+                                    fetch = self.queryL.SLITEcursor.lastrowid
+                                except TypeError:
+                                    fetch = 0
+
+                            else:
+                                try :
+                                    query_to_run = query_to_run+ "RETURNING id_ressource"
+                                    self.queryL.SLITEcursor.execute(query_to_run)
+                                    fetch = self.queryL.SLITEcursor.fetchone()[0]
+                                except :
+                                    print("erreur !", query_to_run)
+                                    self.queryL.SLITEcursor.execute(query_to_run)
+                                    fetch = 0
+                            id_ressource_inseree = fetch
+
+
+
+
+
+                            #Insertion dans la Tc
+                            print("insertion dans la tc")
+                            query_to_run = "INSERT INTO Tcobjetressource (id_tcressource, id_tcobjet) VALUES ("
+                            query_to_run=query_to_run+"'"+str(id_ressource_inseree)+"', "
+                            query_to_run=query_to_run+"'"+str(self.fetchObservationConvertisseur(observation['id']))+"') "
+
+                            self.queryL.SLITEcursor.execute(query_to_run)
+
+
+
+
+                            #Creation de la photo
+                            print("insertion de la photo")
+                            query_to_run = "INSERT INTO Photo (id_objet, id_ressource, geom, typephoto) VALUES ("
+                            query_to_run=query_to_run+"'"+str(id_objet_insere)+"', "
+                            query_to_run=query_to_run+"'"+str(id_ressource_inseree)+"', "
+                            query_to_run=query_to_run+"st_geomfromtext('POINT("+str(photo['longitudeMin'])+' '+str(photo['latitudeMin'])+")',"+str(self.srid)+"), "
+                            query_to_run=query_to_run+"'PHO')"
+                            print(query_to_run)
+                            self.queryL.SLITEcursor.execute(query_to_run)
+
+
+
+        return
+
+    #Modification du chemin pour relocaliser les photos au bon endroit sur le serveur de destination
+    def traitementCheminPhoto(self, chemin):
+        return chemin
+
+    def fetchObservationConvertisseur(self, id_observation):
+        print(id_observation)
+        query = "SELECT id_objet FROM Observation WHERE source='"+str(id_observation)+"'"
+
+        if self.typedb:
+            fetch = self.queryL.SLITEcursor.execute(query).fetchone()[0]
+
+        else:
+            self.queryL.SLITEcursor.execute(query)
+            fetch = self.queryL.SLITEcursor.fetchone()[0]
+        print("id_objet de l observation : ",fetch)
+        return fetch
+
+
+    #Add the id_objet field to the Infralineaires items
+    def updateDescriptionSystem(self):
+
+        print("Update DescriptionSystem .................................................................")
+        query = "SELECT id_descriptionsystem FROM Descriptionsystem WHERE id_objet IS NULL"
+        cursor_id_dessys=self.queryL.SLITEcursor.execute(query)
+
+        while True:
+            list_id_dessys = cursor_id_dessys.fetchmany(1000)
+
+            if not list_id_dessys:
+                break
+
+            for id_dessys_item in list_id_dessys:
+                print(id_dessys_item)
+                id_dessys = id_dessys_item[0]
+
+                try :
+                    query = "SELECT id_objet FROM Noeud WHERE id_descriptionsystem = '"+str(id_dessys)+"'"
+                    list_id_noeud=self.queryL.SLITEcursor.execute(query)
+                    id_objet_res = list_id_noeud.fetchone()[0]
+                    print("noeud", id_objet_res)
+
+                except :
+                    query = "SELECT id_objet FROM Infralineaire WHERE id_descriptionsystem = '"+str(id_dessys)+"'"
+                    list_id_infra=self.queryL.SLITEcursor.execute(query)
+                    id_objet_res = list_id_infra.fetchone()[0]
+                    print("infralineaire", id_objet_res)
+
+                query = "UPDATE Descriptionsystem SET id_objet=" + str(id_objet_res)+" WHERE id_descriptionsystem = "+str(id_dessys)
+                print(query)
+                self.queryL.SLITEcursor.execute(query)
+
+
+        return
+
+    def updateGeomDesordres(self):
+
+        convertisseur = json.load(open(self.convertisseurPATH,'r'))
+
+        for obj in convertisseur:
+            if obj['couch']['type']==obj['sql']['type'] and obj['sql']['type']=="Desordre":
+
+                desordre_couch=self.queryFD.getDocument(obj['couch']['id'])
+
+
+
+                if 'borneDebutId' in desordre_couch.keys() and 'borneFinId' in desordre_couch.keys() :
+
+                    geom_borneMin = self.queryFD.getDocument(desordre_couch['borneDebutId'])
+                    geom_bornMax = self.queryFD.getDocument(desordre_couch['borneFinId'])
+
+                    latitudeMin = str(geom_borneMin['geometry'][geom_borneMin['geometry'].find('(')+1:geom_borneMin['geometry'].find(' ')])
+                    latitudeMax = str(geom_borneMin['geometry'][geom_borneMin['geometry'].find(' ')+1:geom_borneMin['geometry'].find(')')])
+                    longitudeMin =str(geom_bornMax['geometry'][geom_bornMax['geometry'].find('(')+1:geom_bornMax['geometry'].find(' ')])
+                    longitudeMax =str(geom_bornMax['geometry'][geom_bornMax['geometry'].find(' ')+1:geom_bornMax['geometry'].find(')')])
+
+                else:
+
+                    latitudeMin = str(desordre_couch['latitudeMin'])
+                    latitudeMax = str(desordre_couch['longitudeMin'])
+                    longitudeMin = str(desordre_couch['latitudeMax'])
+                    longitudeMax = str(desordre_couch['longitudeMax'])
+
+
+
+                query = "UPDATE Desordre SET geom=st_geomfromtext('LINESTRING("
+                query = query + longitudeMin +' '
+                query = query + latitudeMin +', '
+                query = query + longitudeMax +' '
+                query = query + latitudeMax
+                query = query + ")', "+ str(self.srid)+")"
+                query = query + " WHERE id_desordre="+str(obj['sql']['id'])
+
+
+                print(query)
+                self.queryL.SLITEcursor.execute(query)
+
+
+        return

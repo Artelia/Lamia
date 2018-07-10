@@ -1405,10 +1405,14 @@ class InspectiondigueWindowWidget(QMainWindow):
     """
 
     def modeHorsLigne(self):
+
+
+
+        #First we have to disconnect : create a local db and transfer the data .............................................................
         if not self.dbase.horsligne:
 
 
-            #1)Create a spatialite db
+            #1)Create a spatialite db ..................................................
             # create database
             try :
                 os.remove('../local/DB_local.sqlite')
@@ -1420,6 +1424,7 @@ class InspectiondigueWindowWidget(QMainWindow):
             if not os.path.exists(local_folder):
                 os.makedirs(local_folder)
 
+            #Deal with the connections : keep in memory the former connection
             if self.dbase.dbasetype=='spatialite':
                 self.dbase.offLineConn = self.dbase.connSLITE
                 self.dbase.offLineCursor = self.dbase.SLITEcursor
@@ -1444,7 +1449,7 @@ class InspectiondigueWindowWidget(QMainWindow):
 
 
 
-            #2)Add items from the file to the spatialite database
+            #2)Add items from the file to the spatialite database .................................................................
             for order in range(10):
                 for dbname in self.dbase.dbasetables:
                     if self.dbase.dbasetables[dbname]['order'] == order and not dbname=='Basedonnees':
@@ -1482,6 +1487,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                         if 'geom' in self.dbase.dbasetables[dbname]:
                             fields_to_import[-1]='geom'
 
+                        #Deal with all the encoding problems
                         for result in returnquery:
                             str_test="'"
                             compteur=-1
@@ -1517,7 +1523,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                                     str_test+="NULL"
 
 
-
+                            #Insert
                             sql = 'INSERT INTO ' +  str(dbname) +' ('+  ','.join(fields_to_import) + ') VALUES ('+ str(str_test)+')'
                             print(sql)
                             self.dbase.query(sql)
@@ -1528,9 +1534,9 @@ class InspectiondigueWindowWidget(QMainWindow):
             return
 
 
-
+        #Second part : reconcilliating the two databases ...............................................................................
         if self.dbase.horsligne:
-            #1) Connect to database
+            #1) Reonnect to database
             if self.dbase.offLineType=='spatialite':
                 self.dbase.offLineConn, self.dbase.connSLITE = self.dbase.connSLITE , self.dbase.offLineConn
                 self.dbase.offLineCursor, self.dbase.SLITEcursor = self.dbase.SLITEcursor, self.dbase.offLineCursor
@@ -1554,12 +1560,8 @@ class InspectiondigueWindowWidget(QMainWindow):
                 for dbname in self.dbase.dbasetables:
 
                     switch_id[dbname]=[]
-                    #First we work on the tables connected to an object
+                    #First we work on the tables connected to an object : the one with an id_objet ..............................................................................
                     if self.dbase.dbasetables[dbname]['order'] == order and 'id_objet' in self.dbase.dbasetables[dbname]['fields'].keys():
-
-
-
-
 
 
                         #Gather the data on the local and online database
@@ -1576,6 +1578,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                         print(fields_to_import)
                         print(sql)
 
+                        #Run query
                         try:
                             query = self.dbase.offLineCursor.execute(sql)
                             local_data = list(query)
@@ -1584,16 +1587,18 @@ class InspectiondigueWindowWidget(QMainWindow):
                             print('error query', e)
                             return None
 
+                        #We run the same query on the orginial database
                         original_data = self.dbase.query(sql)
 
 
                         if 'geom' in self.dbase.dbasetables[dbname]:
+                            #Rename the last field from 'ST_AsText(geom) to geom
                             fields_to_import[-1]='geom'
 
 
 
-
-                        #Store the list of the dates of creation on the local db and date of modification on the server
+                        #Store the list of the dates of creation on the local db and date of modification on the server.
+                        #We compare date createion on the local databse (when the base was created or after) with date modification on the central database (last update of the true db)
                         if dbname == 'Objet':
 
                             for item in local_data:
@@ -1630,7 +1635,7 @@ class InspectiondigueWindowWidget(QMainWindow):
 
 
 
-                        #Make sure we update the foreign key used
+                        #Make sure we update the foreign key used by using the switch table
                         for item in local_data :
                             print('item : '+str(item))
                             pos=0
@@ -1655,8 +1660,7 @@ class InspectiondigueWindowWidget(QMainWindow):
 
 
 
-
-                        #Get the output to send back to the database
+                        #Get the output to send back to the database by recreating the request
                             str_test="'"
                             if 'geom' in fields_to_import:
                                 geometry = item[-1]
@@ -1696,10 +1700,6 @@ class InspectiondigueWindowWidget(QMainWindow):
 
 
                             id_local = item[self.dbase.dbasetables[dbname]['fields'].keys().index('id_objet')]
-
-
-
-
 
 
 
@@ -1847,7 +1847,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                         print("Export de la table : "+dbname)
                         fields_to_import=self.dbase.dbasetables[dbname]['fields'].keys()
 
-                        #Une tc ne sera pas modifiée, au mieux on ajoute des choses dedans
+                        #Une tc ne sera pas modifiee, au mieux on ajoute des choses dedans
                         #We select the data
                         sql = 'SELECT '+  ','.join(fields_to_import) + ' FROM '+ str(dbname)
                         print(sql)
@@ -1914,7 +1914,7 @@ class InspectiondigueWindowWidget(QMainWindow):
 
 
 
-            #4) Copy the static files
+            #4) Copy the static files ....................................................................
             local_folder='../local/local_data'
             try :
                 for file in os.listdir(local_folder):

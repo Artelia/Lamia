@@ -136,7 +136,7 @@ class queryLamia():
         for value in values :
             query_to_run=query_to_run.replace('?',"'"+str(value)+"'",1)
 
-        print('1 :', query_to_run, value)
+        print('1 :', query_to_run)
 
         if self.typedb:
             self.SLITEcursor.execute(query_to_run)

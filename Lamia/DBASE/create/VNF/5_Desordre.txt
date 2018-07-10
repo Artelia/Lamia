@@ -14,13 +14,13 @@ Donnees reglementaires;               60120
 Chenal de navigation;                 60121
 Pied de berge - Rive droite;          60122
 Pied de berge - Rive gauche;          60123
-Talus exposé;                         60124
-Crête;                                60125
+Talus expose;                         60124
+Crete;                                60125
 Corps de digue;                       60126
 Talus aval digue;                     60127
 Contre-fosse;                         60128
 Connexion au terrain naturel;         60129
-Eléments de securite;                 60130
+Elements de securite;                 60130
 Franchissement et ouvrages divers;    60131
 ###partie;             INT ;                   INTEGER
 ###lk_infralineaire;             INT ;                   INTEGER;                               Infralineaire(id_infralineaire)
@@ -31,38 +31,38 @@ Franchissement et ouvrages divers;    60131
 ###desordre;             INT ;                   INTEGER
 ##equipement
 /;                                                                                                  ;                   ['']
-Génie Civil - Dégradation du génie civil;                                                           1;                  [60131]
-Génie Civil - Détérioration d'éléments mécaniques, d'équipements;                                   2;                  [60122,60123,60124,60131]
-Génie Civil - Rupture, casse d'élément;                                                             3;                  [60122,60123,60124,60125,60126,60127,60128,60129,60130]
-Génie Civil - Dégradation de surface, épaufrure, trous, déchirure,pourissement;                     4;                  [60122,60123,60124,60125,60126,60127,60128,60129,60130]
-Génie Civil - Fissuration;                                                                          5;                  [60122,60123,60124,60125,60126,60127,60128,60129,60130]
-Génie Civil - Déjointement;                                                                         6;                  [60122,60123,60124,60125,60126,60127,60128,60129,60130]
-Génie Civil - Erosion, ravinement, affouillement;                                                   7;                  [60122,60123,60124,60125,60126,60127,60128,60129]
-Génie Civil - Corrosion;                                                                            8;                  [60122,60123,60124]
-Environnement - Végétation dense;                                                                   9;                  [60122,60123,60124,60125,60126,60127,60128,60129]
-Environnement - Arbres penchés, déséquilibrés;                                                      11;                 [60122,60123,60124,60125,60126,60127,60128,60129]
-Environnement - Système racinaire à l'origine d'une dégradation;                                    13;                 [60122,60123,60124,60127,60128,60129]
+Genie Civil - Degradation du genie civil;                                                           1;                  [60131]
+Genie Civil - Deterioration d'elements mecaniques, d'equipements;                                   2;                  [60122,60123,60124,60131]
+Genie Civil - Rupture, casse d'element;                                                             3;                  [60122,60123,60124,60125,60126,60127,60128,60129,60130]
+Genie Civil - Degradation de surface, epaufrure, trous, dechirure,pourissement;                     4;                  [60122,60123,60124,60125,60126,60127,60128,60129,60130]
+Genie Civil - Fissuration;                                                                          5;                  [60122,60123,60124,60125,60126,60127,60128,60129,60130]
+Genie Civil - Dejointement;                                                                         6;                  [60122,60123,60124,60125,60126,60127,60128,60129,60130]
+Genie Civil - Erosion, ravinement, affouillement;                                                   7;                  [60122,60123,60124,60125,60126,60127,60128,60129]
+Genie Civil - Corrosion;                                                                            8;                  [60122,60123,60124]
+Environnement - Vegetation dense;                                                                   9;                  [60122,60123,60124,60125,60126,60127,60128,60129]
+Environnement - Arbres penches, desequilibres;                                                      11;                 [60122,60123,60124,60125,60126,60127,60128,60129]
+Environnement - Systeme racinaire à l'origine d'une degradation;                                    13;                 [60122,60123,60124,60127,60128,60129]
 Environnement - Souches, arbres morts, arbres pourris;                                              15;                 [60122,60123,60124,60125,60126,60127,60128,60129]
 Environnement - Obstables, encombres;                                                               16;                 [60122,60123,60124,60125,60126,60127,60128,60129]
 Environnement - Terrier ou galerie d'animaux fouisseurs;                                            17;                 [60122,60123,60124,60125,60126,60127,60128,60129]
-Environnement - Piétinement d'animaux;                                                              18;                 [60125,60126]
-Environnement - Envasement, dysfonctionnement de la frayère du aux usages VNF;                      19;                 [60131]
-Etanchéité - Indice de renard hydraulique;                                                          20;                 [60122,60123,60124,60125,60126,60127]
-Etanchéité - Fuite par le fond;                                                                     21;                 [60132,60121]
+Environnement - Pietinement d'animaux;                                                              18;                 [60125,60126]
+Environnement - Envasement, dysfonctionnement de la frayere du aux usages VNF;                      19;                 [60131]
+Etancheite - Indice de renard hydraulique;                                                          20;                 [60122,60123,60124,60125,60126,60127]
+Etancheite - Fuite par le fond;                                                                     21;                 [60132,60121]
 Exploitation - Mouillage insuffisant;                                                               22;                 [60132,60121]
 Exploitation - Atterissement;                                                                       23;                 [60132,60121]
-Exploitation - Présence d'obstacle, épave, encombre;                                                24;                 [60132,60121]
-Sécurité - Element saillant;                                                                        25;                 [60122,60123,60125,60126,60127]
-Sécurité - Rique de chute d'éléments sur la voie d'eau;                                             26;                 [60124,60125,60126,60131]
-Sécurité - Rique de collision, d'arrachement de réseaux;                                            27;                 [60125,60126,60131]
-Sécurité - Absence de l'équipement;                                                                 28;                 [60130]
-Sécurité - Détérioration de l'équipement;                                                           29;                 [60130]
-Sécurité - Non-conformité de l'équipement;                                                          30;                 [60130]
-Stabilité, déformation - Déversement, renversement;                                                 31;                 [60122,60123,60124,60127,60128,60129]
-Stabilité, déformation - Glissement, éboulement;                                                    32;                 [60122,60123,60124,60125,60126,60127,60128,60129]
-Stabilité, déformation - Soulèvement;                                                               33;                 [60122,60123,60124,60125,60126,60127,60128,60129]
-Stabilité, déformation - Fontis, effondrement;                                                      34;                 [60122,60123,60124,60125,60126,60127,60128,60129]
-Stabilité, déformation - Affouillement;                                                             35;                 [60122,60123,60124,60127,60128,60129]
-Stabilité, déformation - Désalignement, désorganisation entre éléments;                             36;                 [60122,60123,60124,60125,60126,60127,60128,60129]
-Stabilité, déformation - Tassement;                                                                 37;                 [60125,60126]
-Stabilité, déformation - Non visible, indéterminé;                                                   41;                 [60122,60123,60124,60125,60126,60127,60128,60129,60130,60131]
+Exploitation - Presence d'obstacle, epave, encombre;                                                24;                 [60132,60121]
+Securite - Element saillant;                                                                        25;                 [60122,60123,60125,60126,60127]
+Securite - Rique de chute d'elements sur la voie d'eau;                                             26;                 [60124,60125,60126,60131]
+Securite - Rique de collision, d'arrachement de reseaux;                                            27;                 [60125,60126,60131]
+Securite - Absence de l'equipement;                                                                 28;                 [60130]
+Securite - Deterioration de l'equipement;                                                           29;                 [60130]
+Securite - Non-conformite de l'equipement;                                                          30;                 [60130]
+Stabilite, deformation - Deversement, renversement;                                                 31;                 [60122,60123,60124,60127,60128,60129]
+Stabilite, deformation - Glissement, eboulement;                                                    32;                 [60122,60123,60124,60125,60126,60127,60128,60129]
+Stabilite, deformation - Soulevement;                                                               33;                 [60122,60123,60124,60125,60126,60127,60128,60129]
+Stabilite, deformation - Fontis, effondrement;                                                      34;                 [60122,60123,60124,60125,60126,60127,60128,60129]
+Stabilite, deformation - Affouillement;                                                             35;                 [60122,60123,60124,60127,60128,60129]
+Stabilite, deformation - Desalignement, desorganisation entre elements;                             36;                 [60122,60123,60124,60125,60126,60127,60128,60129]
+Stabilite, deformation - Tassement;                                                                 37;                 [60125,60126]
+Stabilite, deformation - Non visible, indetermine;                                                   41;                 [60122,60123,60124,60125,60126,60127,60128,60129,60130,60131]

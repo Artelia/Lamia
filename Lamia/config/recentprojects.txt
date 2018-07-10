@@ -9,3 +9,8 @@ C://000_testdigue//convertBM//FROM//BD_SIJALAG_ind10.sqlite
 C:\000_testdigue\convertBM\FROM\BD_SIJALAG_ind10.sqlite
 PVR_test.lamia_BM@localhost:5432;postgres;PVR
 C://000_testdigue//temp_baseassainissement//test01.sqlite
+C:\Users\valentin.anjou\Desktop\VNF1.sqlite
+C:\Users\valentin.anjou\Desktop\BD_SIJALAG_ind7.sqlite
+C:/Users/valentin.anjou/Desktop/VNF1.sqlite
+C:/Users/valentin.anjou/Desktop/test3.sqlite
+
