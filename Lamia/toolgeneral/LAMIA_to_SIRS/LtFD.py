@@ -567,22 +567,69 @@ class LamiatoFranceDigue():
         for item in convertisseur :
             if item['couch']['type']=='Desordre' and item['sql']['type']=='Desordre' :
                 desordre_sirs = self.queryFD.getDocument(item['couch']['id'])
-                query = "SELECT ST_AsText(geom) FROM Desordre WHERE id_desordre == "+str(item['sql']['id'])
+                query = "SELECT ST_AsText(geom), lk_descriptionsystem FROM Desordre WHERE id_desordre = "+str(item['sql']['id'])
                 cursor_des=self.queryL.SLITEcursor.execute(query)
-                geom=str(cursor_des.fetchone()[0])
+                res = cursor_des.fetchone()
+                print(res)
+                geom=str(res[0])
+                lk_description_system = res[1]
+                print(geom, res)
 
                 if not geom == 'None' :
 
                     geom = geom.split('(')
                     geom = geom[1].split(')')
+                    geom=geom[0]
+                    print(geom)
+
+                    lat_1=geom.split(' ')[1][:-1]
+                    lon_1=geom.split(' ')[0]
+
+
+                    #Recuperer le troncon, son trace et trouver la projection du premier point
+
+                    query = "SELECT ST_AsText(geom) FROM Infralineaire WHERE lk_descriptionsystem = "+str(lk_description_system)
+                    cursor_des=self.queryL.SLITEcursor.execute(query)
+                    geom_troncon = cursor_des.fetchone()[0]
+
+                    if not geom_troncon == 'None':
+                        troncon = geom_troncon[geom_troncon.find('(')]:geom_troncon[geom_troncon.find(')')]
+                        print(troncon)
+
+
+
+                        nearestpoint = qgis.core.QgsGeometry.fromPolyline([troncon]).nearestPoint(qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(lon_1,lat_1)).asPoint())
+                        #nearest point est un tuple (x,y)
+
+                        if 'LINESTRING' in geom:
+
+                            geom = geom.split[',']
+                            geom = geom[1:]
+                            for point in geom :
+                                lon_2=point.split(' ')[0]
+                                lat_2=point.split(' ')[1][:-1]
+                                nearestpoint_suivant = qgis.core.QgsGeometry.fromPolyline([troncon]).nearestPoint(qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(lon_2,lat_2)).asPoint())
+
+                        #avec le meme troncon, recuperer la projection du deuxieme point
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    """
 
                     desordre_sirs['geometryMode']='COORD'
                     desordre_sirs['latitudeMin']=geom[0].split(' ')[1][:-1]
                     desordre_sirs['longitudeMin']=geom[0].split(' ')[0]
 
-                    #Besoin de récupérer la geometry du troncon
-                    #nearestpoint = qgis.core.QgsGeometry.fromPolyline([list de qgspoints]).nearestPoint(qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(x,y)).asPoint()
-                    #nearest point est un tuple (x,y)
 
                     if 'LINESTRING' in geom:
 
@@ -593,6 +640,7 @@ class LamiatoFranceDigue():
                     else:
                         desordre_sirs['longitudeMax']=desordre_sirs['longitudeMin']
                         desordre_sirs['latitudeMax']=desordre_sirs['latitudeMin']
+                    """
                     print(desordre)
                     desordre_sirs.save()
 
