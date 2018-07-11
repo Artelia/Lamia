@@ -577,24 +577,80 @@ class LamiatoFranceDigue():
 
                 if not geom == 'None' :
 
+
+                    desordre_sirs["geometry"] = geom
+                    desordre_sirs['geometryMode'] = 'LINEAR'
+
+
                     geom = geom.split('(')
                     geom = geom[1].split(')')
                     geom=geom[0]
                     print(geom)
 
-                    lat_1=geom.split(' ')[1][:-1]
-                    lon_1=geom.split(' ')[0]
-
 
                     #Recuperer le troncon, son trace et trouver la projection du premier point
 
-                    query = "SELECT ST_AsText(geom) FROM Infralineaire WHERE lk_descriptionsystem = "+str(lk_description_system)
+                    query = "SELECT ST_AsText(geom), id_infralineaire FROM Infralineaire WHERE id_descriptionsystem = "+str(lk_description_system)
                     cursor_des=self.queryL.SLITEcursor.execute(query)
-                    geom_troncon = cursor_des.fetchone()[0]
+                    res = cursor_des.fetchone()[0]
+                    geom_troncon_lamia=res[0]
+                    id_infralineaire = res[1]
+                    id_troncondigue= None
 
-                    if not geom_troncon == 'None':
-                        troncon = geom_troncon[geom_troncon.find('(')]:geom_troncon[geom_troncon.find(')')]
-                        print(troncon)
+                    for item in convertisseur:
+                        if item['sql']['id']==id_infralineaire and item['sql']['type']=="InfralineaireInfralineaire" and item['couch']['type']==TronconDigue :
+                            id_troncondigue = item['sql']['couch']
+
+                    if not geom_troncon_lamia == 'None' and id_troncondigue is not None :
+                        troncon_lamia = geom_troncon_lamia[geom_troncon_lamia.find('(')]:geom_troncon_lamia[geom_troncon_lamia.find(')')]
+                        print(troncon_lamia)
+
+
+                        desordre_sirs['borneDebutId']= systemeReperageBornes[X] du systemeRepDefautId du troncon
+                        desordre_sirs['borneFinId']= systemeReperageBornes[X] du systemeRepDefautId du troncon
+                        desordre_sirs['borne_debut_aval']=True ou False
+                        desordre_sirs['borne_fin_aval']=True ou False
+                        desordre_sirs['borne_debut_distance']= un float >0
+                        desordre_sirs['borne_fin_distance']= un float >0
+                        desordre_sirs['positionDebut']= un POINT sur le début (sur le troncon)
+                        desordre_sirs['positionFin']= un POINT sur la fin (sur le troncon)
+                        desordre_sirs['SystemRepId']= systemeRepDefautId du troncon
+
+
+                    else :
+                        #We just take the begining and the end of the bief
+
+
+
+                        desordre_sirs['borneDebutId']= systemeReperageBornes[X] du systemeRepDefautId du troncon
+                        desordre_sirs['borneFinId']= systemeReperageBornes[X] du systemeRepDefautId du troncon
+                        desordre_sirs['borne_debut_aval']=True
+                        desordre_sirs['borne_fin_aval']=True ou False
+                        desordre_sirs['borne_debut_distance']= un float >0
+                        desordre_sirs['borne_fin_distance']= un float >0
+                        desordre_sirs['positionDebut']= un POINT sur le début (sur le troncon)
+                        desordre_sirs['positionFin']= un POINT sur la fin (sur le troncon)
+                        desordre_sirs['SystemRepId']= systemeRepDefautId du troncon
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    lat_1=geom.split(' ')[1][:-1]
+                    lon_1=geom.split(' ')[0]
+
 
 
 
