@@ -144,7 +144,7 @@
        <item>
         <widget class="QTabWidget" name="tabWidget">
          <property name="currentIndex">
-          <number>3</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="tab">
           <attribute name="title">
@@ -161,6 +161,9 @@
                <width>16777215</width>
                <height>40</height>
               </size>
+             </property>
+             <property name="readOnly">
+              <bool>false</bool>
              </property>
             </widget>
            </item>
@@ -182,6 +185,9 @@
                <height>40</height>
               </size>
              </property>
+             <property name="readOnly">
+              <bool>false</bool>
+             </property>
             </widget>
            </item>
           </layout>
@@ -201,6 +207,9 @@
                <width>16777215</width>
                <height>40</height>
               </size>
+             </property>
+             <property name="readOnly">
+              <bool>false</bool>
              </property>
             </widget>
            </item>
@@ -225,6 +234,9 @@
                <width>16777215</width>
                <height>40</height>
               </size>
+             </property>
+             <property name="readOnly">
+              <bool>false</bool>
              </property>
             </widget>
            </item>

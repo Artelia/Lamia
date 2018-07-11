@@ -11,27 +11,24 @@ from Lamia.Lamia.main.DBaseParser import DBaseParser
 
 
 pathfrom = "C://000_testdigue//convertBM//FROM//BD_SIJALAG_ind10.sqlite"
+pathfrom = "C://000_testdigue//convertBM//FROM//BD_Begles_ind10.sqlite"
+
 dbaseparserfrom = DBaseParser(None)
 dbaseparserfrom.loadQgisVectorLayers(pathfrom)
 
 pathto = "C://000_testdigue//convertBM//TO//BD_SIJALAG_ind10.sqlite"
+pathto = "C://000_testdigue//convertBM//TO2//BD_Begles_ind10.sqlite"
 
-if False:
+
+
+if True:
     originalfile = os.path.join(os.path.dirname(__file__), '..', 'DBASE', 'DBase_ind0.sqlite')
     shutil.copyfile(originalfile, pathto)
-
-
-dbaseparserto= DBaseParser(None)
-"""
-            wind.dbase.loadQgisVectorLayers(dbasetype='postgis', dbname='PVR_test', schema='lamia_default', user='postgres',
-                                            host='localhost',
-                                            password='PVR', port=5432)
-"""
-
-if False:
+    dbaseparserto = DBaseParser(None)
     dbaseparserto.createDbase(file=pathto, crs=3945, type='Base_digue', dbasetype='spatialite',
                            dbaseressourcesdirectory=None)
-if True:
+if False:
+    dbaseparserto = DBaseParser(None)
     dbaseparserto.createDbase(file=None, crs=3945, type='Base_digue', dbasetype='postgis',
                     dbname='PVR_test', schema='lamia_BM', user='postgres', host='localhost', port=5432, password='PVR',    # postgis
                     dbaseressourcesdirectory='C://000_testdigue//temp_postgis//digue')

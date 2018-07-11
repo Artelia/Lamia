@@ -32,12 +32,12 @@ Sous TN;                    STN
 Sous voirie;                SVO
 ###cloisonsiphoide;             INT ;                     INTEGER
 ##typeOuvrageAss
-/;                     ;['61']
+/;                     ;['','60','61','62','70','71','72','73','10','20','30','40','50','00','99']
 Non;    0;          ['61']
 Oui;    1;          ['61']
 ###couvercle;             INT ;                     INTEGER
 ##typeOuvrageAss
-/;                     ;['61']
+/;                     ;['','60','61','62','70','71','72','73','10','20','30','40','50','00','99']
 Non;    0;          ['61']
 Oui;    1;          ['61']
 ###X;             REAL;                     DECIMAL

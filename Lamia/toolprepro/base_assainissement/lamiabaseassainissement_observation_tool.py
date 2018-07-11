@@ -65,7 +65,7 @@ class BaseAssainissementObservationTool(BaseObservationTool):
                                                         'gravite': self.userwdgfield.comboBox_urgence,
                                                           'depots' : self.userwdgfield.comboBox_depot,
 
-                                                        # 'evolution': self.userwdgfield.textEdit_evolution,
+                                                        'evolution': self.userwdgfield.textEdit_evolution,
                                                         'commentaires': self.userwdgfield.textEdit_comm,
                                                         'suite': self.userwdgfield.textEdit_suite,
                                                           'typesuite': self.userwdgfield.comboBox_typesuite,

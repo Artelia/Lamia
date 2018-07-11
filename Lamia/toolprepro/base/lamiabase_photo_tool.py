@@ -172,6 +172,8 @@ class BasePhotoTool(AbstractInspectionDigueTool):
             datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
             self.initFeatureProperties(feat, 'Ressource', 'dateressource', datecreation)
 
+            print('postInitFeatureProperties', numphoto)
+
             if numphoto is not None:
                 self.userwdgfield.spinBox_numphoto.setValue(numphoto)
 
@@ -254,13 +256,15 @@ class BasePhotoTool(AbstractInspectionDigueTool):
         global prefixhoto
         global numphoto
 
-        if numphoto is not None:
-            if self.userwdgfield.spinBox_numphoto.value() == -1 :
-                numphoto = None
-            elif numphoto == self.userwdgfield.spinBox_numphoto.value():
-                numphoto += 1
-            else:
-                numphoto = self.userwdgfield.spinBox_numphoto.value() + 1
+        #if numphoto is not None:
+        if self.userwdgfield.spinBox_numphoto.value() == -1 :
+            numphoto = None
+        elif numphoto == self.userwdgfield.spinBox_numphoto.value():
+            numphoto += 1
+        else:
+            numphoto = self.userwdgfield.spinBox_numphoto.value() + 1
+
+        print('postSaveFeature', numphoto)
 
 
     def deleteParentFeature(self):

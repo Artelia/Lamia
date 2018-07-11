@@ -45,9 +45,9 @@ except ImportError:
 from ..main.DBaseParser import DBaseParser
 from .InspectionDigue_Connexion_PG import ConnexionPGDialog
 from .InspectionDigue_ConflitHorsLigne import ConflitHorsLigne
-from .InspectionDigue_impression_rapport import ImpressionRapportDialog
-from .InspectionDigue_exportShapefile import ExportShapefileDialog
-from .InspectionDigue_Import import ImportObjetDialog
+# from .InspectionDigue_impression_rapport import ImpressionRapportDialog
+# from .InspectionDigue_exportShapefile import ExportShapefileDialog
+#from .InspectionDigue_Import import ImportObjetDialog
 from .Lamia_numpad import NumPadDialog
 from .Lamia_iconsize import IconSizeDialog
 
@@ -55,11 +55,13 @@ from .InspectionDigue_newDB import newDBDialog
 from .InspectionDigue_getDate import getDateDialog
 
 
-from ..toolgeneral.InspectionDigue_rapport import printPDFWorker
+# from ..toolgeneral.InspectionDigue_rapport import printPDFWorker
 from ..toolgeneral.InspectionDigue_exportshp import exportShapefileWorker
 from ..toolgeneral.InspectionDigue_import import ImportObjectWorker
+"""
 from ..toolgeneral.SIRS_to_LAMIA.FDtL import *
 from ..toolgeneral.LAMIA_to_SIRS.LtFD import *
+"""
 
 
 import time
@@ -101,6 +103,8 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.canvas = canvas
         # list containing the tools widget
         self.tools = []
+        # list containing the menu tools classes
+        self.menutools = []
         # the pick maptool
         # self.pointEmitter = None
         self.pointEmitter = qgis.gui.QgsMapToolEmitPoint(self.canvas)
@@ -121,9 +125,9 @@ class InspectiondigueWindowWidget(QMainWindow):
         #iconsize
         self.iconsizedialog = IconSizeDialog(self)
         # for printing reports
-        self.printrapportdialog = ImpressionRapportDialog()
-        self.exportshapefiledialog = ExportShapefileDialog()
-        self.importobjetdialog =ImportObjetDialog()
+        #self.printrapportdialog = ImpressionRapportDialog()
+        # self.exportshapefiledialog = ExportShapefileDialog()
+        # self.importobjetdialog =ImportObjetDialog()
 
         #ui classes
         self.uifields = []
@@ -195,12 +199,12 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.actionAide.triggered.connect(self.openHelp)
         self.menuBases_recentes.triggered.connect(self.openFileFromMenu)
         self.actionExporter_base.triggered.connect(self.exportBase)
-        self.actionImprimer_rapport.triggered.connect(self.printRapport)
-        self.actionExport_shapefile.triggered.connect(self.exportShapefile)
-        self.actionImport.triggered.connect(self.importObjet)
+        # self.actionImprimer_rapport.triggered.connect(self.printRapport)
+        # self.actionExport_shapefile.triggered.connect(self.exportShapefile)
+        #self.actionImport.triggered.connect(self.importObjet)
         self.actionVersion.triggered.connect(self.setVersion)
-        self.actionExporter_vers_SIRS_Digues.triggered.connect(export_sirs)
-        self.actionImporter_depuis_SIRS_Digues.triggered.connect(import_sirs)
+        #self.actionExporter_vers_SIRS_Digues.triggered.connect(export_sirs)
+        #self.actionImporter_depuis_SIRS_Digues.triggered.connect(import_sirs)
 
         if self.dbase.dbasetype == 'postgis':
             self.actionMode_hors_ligne_Reconnexion.setEnabled(True)
@@ -756,17 +760,17 @@ class InspectiondigueWindowWidget(QMainWindow):
 
             if debug: logging.getLogger('Lamia').debug('step1')
 
-            path = os.path.join(os.path.dirname(__file__), '..', 'toolpostpro')
+            path = os.path.join(os.path.dirname(__file__), '..', 'toolpostpro',self.dbase.type)
             modules = glob.glob(path + "/*.py")
             __all__ = [os.path.basename(f)[:-3] for f in modules if os.path.isfile(f)]
             for x in __all__:
                 if self.dbase.qgsiface is not None:
                     #if not self.dbase.standalone:
-                    exec('import Lamia.toolpostpro')
-                    moduletemp = importlib.import_module('.' + str(x), 'Lamia.toolpostpro' )
+                    exec('import Lamia.toolpostpro.' + self.dbase.type)
+                    moduletemp = importlib.import_module('.' + str(x), 'Lamia.toolpostpro.' + self.dbase.type )
                 else:
-                    exec('import Lamia.Lamia.toolpostpro' )
-                    moduletemp = importlib.import_module('.' + str(x), 'Lamia.Lamia.toolpostpro')
+                    exec('import Lamia.Lamia.toolpostpro.' + self.dbase.type )
+                    moduletemp = importlib.import_module('.' + str(x), 'Lamia.Lamia.toolpostpro.' + self.dbase.type)
                 for name, obj in inspect.getmembers(moduletemp, inspect.isclass):
                     if moduletemp.__name__ == obj.__module__:
                         try:
@@ -786,6 +790,31 @@ class InspectiondigueWindowWidget(QMainWindow):
 
 
         if debugtime: logger.debug('applyVisualMode %.3f', time.clock() - timestart)
+
+
+        # ************************** LOAD tools ********************************************
+        print('******* LOAD tools ')
+        if True:
+            path = os.path.join(os.path.dirname(__file__), '..', 'toolmenu', self.dbase.type.lower())
+            print(path)
+            modules = glob.glob(path + "/*.py")
+            __all__ = [os.path.basename(f)[:-3] for f in modules if os.path.isfile(f)]
+
+            for x in __all__:
+                if self.dbase.qgsiface is not None:
+                    #if not self.dbase.standalone:
+                    exec('import Lamia.toolmenu.' + self.dbase.type.lower())
+                    moduletemp = importlib.import_module('.' + str(x), 'Lamia.toolmenu.' + self.dbase.type.lower() )
+                else:
+                    exec('import Lamia.Lamia.toolmenu.' + self.dbase.type.lower() )
+                    moduletemp = importlib.import_module('.' + str(x), 'Lamia.Lamia.toolmenu.' + self.dbase.type.lower())
+                for name, obj in inspect.getmembers(moduletemp, inspect.isclass):
+                    print( moduletemp.__name__, obj.__module__)
+                    if moduletemp.__name__ == obj.__module__:
+                        print('ok')
+                        self.menutools.append(obj(dbase=self.dbase, windowdialog=self))
+
+
 
 
     def loadStyle(self):
@@ -991,13 +1020,13 @@ class InspectiondigueWindowWidget(QMainWindow):
 
 
         for uidpostpr in self.uipostpro:
-
+            print('uidpostpr', uidpostpr)
             strtoexec = ('self.' + uidpostpr.__name__.lower() + " = uidpostpr(dbase = self.dbase, dialog = self,linkedtreewidget = self.ElemtreeWidget, gpsutil = self.gpsutil)")
-            # print(strtoexec)
+            print(strtoexec)
             exec(strtoexec)
             # print('test', eval('self.' + uidpostpr.__name__.lower()))
             strtoexec = 'self.tools.append(' + 'self.' + uidpostpr.__name__.lower() + ')'
-            # print(strtoexec)
+            print(strtoexec)
             exec(strtoexec)
             # print('ok')
 
@@ -1213,7 +1242,7 @@ class InspectiondigueWindowWidget(QMainWindow):
         else:
             print('normalMessage', text)
 
-
+    """
     def printRapport(self, reporttype=None, pdffile=None):
         if reporttype is None or pdffile is None:
             self.printrapportdialog.exec_()
@@ -1246,10 +1275,10 @@ class InspectiondigueWindowWidget(QMainWindow):
                 self.worker = printPDFWorker(self.dbase, qgis.core.QgsProject.instance(), self.canvas, reporttype,
                                              pdffile, self)
                 self.worker.work()
+    """
 
 
-
-
+    """
     def exportShapefile(self,tabletype=None, pdffile=None):
         if tabletype is None or pdffile is None:
             self.exportshapefiledialog.exec_()
@@ -1279,7 +1308,7 @@ class InspectiondigueWindowWidget(QMainWindow):
             if True:
                 self.worker = exportShapefileWorker(self.dbase, self, tabletype, pdffile)
                 self.worker.work()
-
+    """
 
     def reInitWindows(self):
         root = qgis.core.QgsProject.instance().layerTreeRoot()
@@ -1298,7 +1327,7 @@ class InspectiondigueWindowWidget(QMainWindow):
     def printMessage(self,message):
         print('message', message)
 
-
+    """
     def importObjet(self):
 
         items = ("Points topo", "Infralineaire")
@@ -1375,7 +1404,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                     self.worker.error.connect(self.printError)
                     self.worker.message.connect(self.printMessage)
                     self.worker.run()
-
+    """
 
     def modeHorsLigne(self):
 

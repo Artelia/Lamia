@@ -654,6 +654,7 @@ class LamiatoFranceDigue():
 
 
 
+
                         nearestpoint = qgis.core.QgsGeometry.fromPolyline([troncon]).nearestPoint(qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(lon_1,lat_1)).asPoint())
                         #nearest point est un tuple (x,y)
 

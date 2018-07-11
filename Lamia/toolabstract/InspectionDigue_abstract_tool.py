@@ -213,11 +213,13 @@ class AbstractInspectionDigueTool(QWidget):
             self.pushButton_deselect.clicked.connect(self.deselectFeature)
             if self.dbasetablename in self.dbase.dbasetables.keys():
                 self.dbasetable = self.dbase.dbasetables[self.dbasetablename]
-            if True:
-                self.changePropertiesWidget()
-            # connect signals of inherited widget
-            if self.windowdialog is not None:
-                self.windowdialog.MaintreeWidget.currentItemChanged.connect(self.onActivationRaw)
+
+        #work even with postpro tool
+        if True:
+            self.changePropertiesWidget()
+        # connect signals of inherited widget
+        if self.windowdialog is not None:
+            self.windowdialog.MaintreeWidget.currentItemChanged.connect(self.onActivationRaw)
         """
         # widget connection
         if self.userwdgfield is not None:
@@ -856,10 +858,10 @@ class AbstractInspectionDigueTool(QWidget):
         TODO : display or not the layer
         """
         debug = False
-        # if debug: logging.getLogger("Lamia").debug('start')
+
 
         if isinstance(param1, QTreeWidgetItem) and (isinstance(param2, QTreeWidgetItem) or param2 is None):    # signal from treeWidget_utils
-            # if debug: logging.getLogger("Lamia").debug('step 1 %s %s, %s', param1.text(0),param1 == self.qtreewidgetitem, param2)
+            if debug: logging.getLogger("Lamia").debug('step 1 %s %s, %s', param1.text(0),param1 == self.qtreewidgetitem, param2)
 
             if param2 == self.qtreewidgetitem:
                 self.onDesactivationRaw()

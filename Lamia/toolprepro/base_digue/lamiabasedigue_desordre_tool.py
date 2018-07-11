@@ -67,7 +67,11 @@ class BaseDigueDesordreTool(BaseDesordreTool):
             self.userwdgfield = UserUI()
 
             self.linkuserwdgfield = {'Desordre' : {'linkfield' : 'id_desordre',
-                                             'widgets' : {'groupedesordre': self.userwdgfield.comboBox_groupedes
+                                             'widgets' : {'groupedesordre': self.userwdgfield.comboBox_groupedes,
+                                                          'cote': self.userwdgfield.comboBox_cote,
+                                                          'position': self.userwdgfield.comboBox_position,
+                                                          'catdes': self.userwdgfield.comboBox_des_cat,
+                                                          'typedes': self.userwdgfield.comboBox_des_type
                                                           }},
                                 'Objet' : {'linkfield' : 'id_objet',
                                           'widgets' : {}}}
@@ -79,11 +83,11 @@ class BaseDigueDesordreTool(BaseDesordreTool):
             if True:
                 if self.parentWidget is None :
 
-                    self.propertieswdgOBSERVATION = BaseDigueObservationTool(dbase=self.dbase, parentwidget=self)
+                    self.propertieswdgOBSERVATION = BaseDigueObservationTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
                     self.dbasechildwdgfield.append(self.propertieswdgOBSERVATION)
 
 
-                self.propertieswdgOBSERVATION2 = BaseDigueObservationTool(dbase=self.dbase, parentwidget=self)
+                self.propertieswdgOBSERVATION2 = BaseDigueObservationTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
                 self.propertieswdgOBSERVATION2.NAME = None
                 self.userwdgfield.tabWidget.widget(0).layout().addWidget(self.propertieswdgOBSERVATION2)
                 self.dbasechildwdgfield.append(self.propertieswdgOBSERVATION2)

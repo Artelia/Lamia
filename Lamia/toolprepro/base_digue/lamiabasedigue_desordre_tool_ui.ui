@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>323</width>
-    <height>283</height>
+    <width>369</width>
+    <height>501</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -35,7 +35,7 @@
       <item row="0" column="0">
        <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>TextLabel</string>
+         <string>Catégorie</string>
         </property>
        </widget>
       </item>
@@ -48,11 +48,49 @@
       <number>0</number>
      </property>
      <widget class="QWidget" name="page">
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QLabel" name="label">
+      <layout class="QGridLayout" name="gridLayout_2">
+       <property name="topMargin">
+        <number>3</number>
+       </property>
+       <property name="rightMargin">
+        <number>3</number>
+       </property>
+       <property name="bottomMargin">
+        <number>3</number>
+       </property>
+       <property name="spacing">
+        <number>3</number>
+       </property>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_5">
          <property name="text">
-          <string>A remplir avec les spec desordre cat1</string>
+          <string>Categorie</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>Cote</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1" colspan="2">
+        <widget class="QComboBox" name="comboBox_des_type"/>
+       </item>
+       <item row="1" column="1" colspan="2">
+        <widget class="QComboBox" name="comboBox_des_cat"/>
+       </item>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="comboBox_cote"/>
+       </item>
+       <item row="0" column="2">
+        <widget class="QComboBox" name="comboBox_position"/>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string>Type</string>
          </property>
         </widget>
        </item>
