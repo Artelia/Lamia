@@ -581,75 +581,119 @@ class LamiatoFranceDigue():
                     desordre_sirs["geometry"] = geom
                     desordre_sirs['geometryMode'] = 'LINEAR'
 
+                    if 'POINT' in geom :
+                        type_geom=0
+                    elif 'LINE' in geom :
+                        type_geom = 1
 
                     geom = geom.split('(')
                     geom = geom[1].split(')')
                     geom=geom[0]
                     print(geom)
 
+                    if type_geom==0:
+                        lat=[float(geom.split(' ')[1][:-1])]
+                        lon=[float(geom.split(' ')[0])]
+
+                    else :
+                        lat=[]
+                        lon=[]
+
+                        for point in geom.split[',']:
+
+                            lat+=[float(point.split(' ')[1][:-1])]
+                            lon+=[float(point.split(' ')[0])]
+
+                    print(lat,lon)
+
 
                     #Recuperer le troncon, son trace et trouver la projection du premier point
 
-                    query = "SELECT ST_AsText(geom), id_infralineaire FROM Infralineaire WHERE id_descriptionsystem = "+str(lk_description_system)
+                    query = "SELECT ST_AsText(geom) FROM Infralineaire WHERE id_descriptionsystem = "+str(lk_description_system)
                     cursor_des=self.queryL.SLITEcursor.execute(query)
                     res = cursor_des.fetchone()[0]
                     geom_troncon_lamia=res[0]
-                    id_infralineaire = res[1]
-                    id_troncondigue= None
 
-                    for item in convertisseur:
-                        if item['sql']['id']==id_infralineaire and item['sql']['type']=="InfralineaireInfralineaire" and item['couch']['type']==TronconDigue :
-                            id_troncondigue = item['sql']['couch']
+                    id_troncondigue= desordre_sirs['foreignParentId']
+
+                    troncon_FD = self.queryFD.getDocument(desordre_sirs['foreignParentId'])
+                    sysRepDefaut = self.queryFD.getDocument(troncon_FD['systemeRepDefautId'])
+                    systemeReperageBornes = sysRepDefaut['systemeReperageBornes']
+
+                    bornes_geom = []
+                    for borne in systemeReperageBornes :
+                        bornes_geom +=[borne['borneId']]
+
+                    print(id_troncondigue, troncon_FD,sysRepDefaut,systemeReperageBornes,bornes_geom)
+
+
 
                     if not geom_troncon_lamia == 'None' and id_troncondigue is not None :
                         troncon_lamia = geom_troncon_lamia[geom_troncon_lamia.find('(')]:geom_troncon_lamia[geom_troncon_lamia.find(')')]
                         print(troncon_lamia)
 
 
-                        desordre_sirs['borneDebutId']= systemeReperageBornes[X] du systemeRepDefautId du troncon
-                        desordre_sirs['borneFinId']= systemeReperageBornes[X] du systemeRepDefautId du troncon
+                        distance_debut = qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(x,y) self.queryFD.getDocument(borne)).distance(qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(lon[0],lat[0])))
+                        distance_fin =
+                        borne_proche_debut = None
+                        borne_proche_fin = None
+
+                        for borne in bornes_geom:
+                            borne_x=self.queryFD.getDocument(borne)['geometry'].split('(')[1]
+                            borne_x=self.queryFD.getDocument(borne)['geometry'].split(')')[0]
+                            borne_x=float(self.queryFD.getDocument(borne)['geometry'].split(' ')[0])
+                            borne_y=self.queryFD.getDocument(borne)['geometry'].split('(')[1]
+                            borne_y=self.queryFD.getDocument(borne)['geometry'].split(')')[0]
+                            borne_y=float(self.queryFD.getDocument(borne)['geometry'].split(' ')[1][:-1])
+                            print(borne_x, borne_y)
+
+                            if qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(borne_x,borne_y)).distance(qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(lon[0],lat[0])))<distance_debut:
+                                borne_proche_debut = borne
+                                distance_debut =qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(borne_x,borne_y)).distance(qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(lon[0],lat[0])))
+
+                            if qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(borne_x,borne_y)).distance(qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(lon[-1],lat[-1])))<distance_fin:
+                                borne_proche_fin = borne
+                                distance_fin =qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(borne_x,borne_y)).distance(qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(lon[-1],lat[-1])))
+
+
+
+                        desordre_sirs['borneDebutId']= borne_proche_debut
+                        desordre_sirs['borneFinId']= borne_proche_fin
+
+
                         desordre_sirs['borne_debut_aval']=True ou False
                         desordre_sirs['borne_fin_aval']=True ou False
                         desordre_sirs['borne_debut_distance']= un float >0
                         desordre_sirs['borne_fin_distance']= un float >0
-                        desordre_sirs['positionDebut']= un POINT sur le début (sur le troncon)
-                        desordre_sirs['positionFin']= un POINT sur la fin (sur le troncon)
-                        desordre_sirs['SystemRepId']= systemeRepDefautId du troncon
+
+
+                        desordre_sirs['positionDebut']= un POINT au début (sur le troncon)
+                        desordre_sirs['positionFin']= un POINT a la fin (sur le troncon)
+
+
+                        desordre_sirs['SystemRepId']= troncon_FD['systemeRepDefautId']
 
 
                     else :
                         #We just take the begining and the end of the bief
 
-
-
-                        desordre_sirs['borneDebutId']= systemeReperageBornes[X] du systemeRepDefautId du troncon
-                        desordre_sirs['borneFinId']= systemeReperageBornes[X] du systemeRepDefautId du troncon
-                        desordre_sirs['borne_debut_aval']=True
-                        desordre_sirs['borne_fin_aval']=True ou False
-                        desordre_sirs['borne_debut_distance']= un float >0
-                        desordre_sirs['borne_fin_distance']= un float >0
-                        desordre_sirs['positionDebut']= un POINT sur le début (sur le troncon)
-                        desordre_sirs['positionFin']= un POINT sur la fin (sur le troncon)
-                        desordre_sirs['SystemRepId']= systemeRepDefautId du troncon
-
+                        desordre_sirs['borneDebutId']= bornes_geom[0]
+                        desordre_sirs['borneFinId']= bornes_geom[-1]
+                        desordre_sirs['borne_debut_aval']=False
+                        desordre_sirs['borne_fin_aval']=False
+                        desordre_sirs['borne_debut_distance']= 0
+                        desordre_sirs['borne_fin_distance']= 0
+                        desordre_sirs['positionDebut']= self.queryFD.getDocument(desordre_sirs['borneDebutId'])['geometry']
+                        desordre_sirs['positionFin']= self.queryFD.getDocument(desordre_sirs['borneFinId'])['geometry']
+                        desordre_sirs['SystemRepId']= troncon_FD['systemeRepDefautId']
 
 
 
 
 
+                    """
 
 
-
-
-
-
-
-
-
-
-
-                    lat_1=geom.split(' ')[1][:-1]
-                    lon_1=geom.split(' ')[0]
 
 
 
@@ -681,7 +725,7 @@ class LamiatoFranceDigue():
 
 
 
-                    """
+
 
                     desordre_sirs['geometryMode']='COORD'
                     desordre_sirs['latitudeMin']=geom[0].split(' ')[1][:-1]
@@ -698,7 +742,7 @@ class LamiatoFranceDigue():
                         desordre_sirs['longitudeMax']=desordre_sirs['longitudeMin']
                         desordre_sirs['latitudeMax']=desordre_sirs['latitudeMin']
                     """
-                    print(desordre)
+                    print(desordre_sirs)
                     desordre_sirs.save()
 
         return
