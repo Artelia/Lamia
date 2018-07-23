@@ -575,39 +575,50 @@ class LamiatoFranceDigue():
                 lk_description_system = res[1]
                 print(geom, res)
 
+
+                #Process geometry
                 if not geom == 'None' :
 
 
                     desordre_sirs["geometry"] = geom
                     desordre_sirs['geometryMode'] = 'LINEAR'
 
+                    #type_geom = 0 if point, else linear and =1
                     if 'POINT' in geom :
                         type_geom=0
                     elif 'LINE' in geom :
                         type_geom = 1
 
+
+                    #Get the part inside the () : list of points
                     geom = geom.split('(')
                     geom = geom[1].split(')')
                     geom=geom[0]
                     print(geom)
 
+                    #Then get the list of those points
                     if type_geom==0:
                         lat=[float(geom.split(' ')[1][:-1])]
                         lon=[float(geom.split(' ')[0])]
+                        list_bornes_desordres=[gis.core.QgsPoint(lon[0], lat[0])]
 
                     else :
                         lat=[]
                         lon=[]
+                        list_bornes_desordres=[]
 
                         for point in geom.split[',']:
 
                             lat+=[float(point.split(' ')[1][:-1])]
                             lon+=[float(point.split(' ')[0])]
+                            list_bornes_desordres+=[gis.core.QgsPoint(lon[-1], lat[-1])]
 
-                    print(lat,lon)
+                    print(lat,lon, list_bornes_desordres)
 
 
-                    #Recuperer le troncon, son trace et trouver la projection du premier point
+
+
+                    #Get the linear attached to the desordre and the rest of the data injected with it
 
                     query = "SELECT ST_AsText(geom) FROM Infralineaire WHERE id_descriptionsystem = "+str(lk_description_system)
                     cursor_des=self.queryL.SLITEcursor.execute(query)
@@ -616,59 +627,98 @@ class LamiatoFranceDigue():
 
                     id_troncondigue= desordre_sirs['foreignParentId']
 
+
+
+
+                    #Get the list of points in the referentiel system
                     troncon_FD = self.queryFD.getDocument(desordre_sirs['foreignParentId'])
-                    sysRepDefaut = self.queryFD.getDocument(troncon_FD['systemeRepDefautId'])
-                    systemeReperageBornes = sysRepDefaut['systemeReperageBornes']
+                    sysrepdefaut = self.queryFD.getDocument(desordre_sirs['systemeRepDefautId'])
+                    list_bornes_sys_rep = self.queryFD.getDocument(sysrepdefaut['systemeReperageBornes'])
 
-                    bornes_geom = []
-                    for borne in systemeReperageBornes :
-                        bornes_geom +=[borne['borneId']]
+                    bornes_sys_rep=[]
+                    for id_borne in list_bornes_sys_rep:
+                        bornes_sys_rep += [self.queryFD.getDocument(id_borne)['geometry']]
 
-                    print(id_troncondigue, troncon_FD,sysRepDefaut,systemeReperageBornes,bornes_geom)
+                    #process the bornes to get qgis points
+                    bornes_points_sys_rep = []
+                    for borne in bornes_sys_rep :
+                        res = borne.split('(')[1]
+                        res = res.split(')')[0]
+                        res = gis.core.QgsPoint(float(res.split(' ')[0]), float(res.split(' ')[1]))
+                        bornes_points_sys_rep +=[res]
+
+
+                    print(troncon_FD,bornes_points_sys_rep)
 
 
 
+
+
+                    #Process the data
                     if not geom_troncon_lamia == 'None' and id_troncondigue is not None :
-                        troncon_lamia = geom_troncon_lamia[geom_troncon_lamia.find('(')]:geom_troncon_lamia[geom_troncon_lamia.find(')')]
-                        print(troncon_lamia)
-
-
-                        distance_debut = qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(x,y) self.queryFD.getDocument(borne)).distance(qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(lon[0],lat[0])))
-                        distance_fin =
-                        borne_proche_debut = None
-                        borne_proche_fin = None
-
-                        for borne in bornes_geom:
-                            borne_x=self.queryFD.getDocument(borne)['geometry'].split('(')[1]
-                            borne_x=self.queryFD.getDocument(borne)['geometry'].split(')')[0]
-                            borne_x=float(self.queryFD.getDocument(borne)['geometry'].split(' ')[0])
-                            borne_y=self.queryFD.getDocument(borne)['geometry'].split('(')[1]
-                            borne_y=self.queryFD.getDocument(borne)['geometry'].split(')')[0]
-                            borne_y=float(self.queryFD.getDocument(borne)['geometry'].split(' ')[1][:-1])
-                            print(borne_x, borne_y)
-
-                            if qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(borne_x,borne_y)).distance(qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(lon[0],lat[0])))<distance_debut:
-                                borne_proche_debut = borne
-                                distance_debut =qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(borne_x,borne_y)).distance(qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(lon[0],lat[0])))
-
-                            if qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(borne_x,borne_y)).distance(qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(lon[-1],lat[-1])))<distance_fin:
-                                borne_proche_fin = borne
-                                distance_fin =qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(borne_x,borne_y)).distance(qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(lon[-1],lat[-1])))
+                        #Create the begining and ending points of the desordre geometry
+                        point_debut=qgis.core.QgsPoint(lon[0],lat[0])
+                        point_fin=qgis.core.QgsPoint(lon[-1],lat[-1])
 
 
 
-                        desordre_sirs['borneDebutId']= borne_proche_debut
-                        desordre_sirs['borneFinId']= borne_proche_fin
+
+                        #Get the projection of the desordre on the linear
 
 
-                        desordre_sirs['borne_debut_aval']=True ou False
-                        desordre_sirs['borne_fin_aval']=True ou False
-                        desordre_sirs['borne_debut_distance']= un float >0
-                        desordre_sirs['borne_fin_distance']= un float >0
+                        projection_beginning = qgis.core.QgsGeometry.fromPolyline(bornes_points_sys_rep).nearestPoint(qgis.core.QgsGeometry.fromPoint(point_debut).asPoint())
+                        desordre_sirs['positionDebut']= projection_beginning.asWkt()
 
 
-                        desordre_sirs['positionDebut']= un POINT au début (sur le troncon)
-                        desordre_sirs['positionFin']= un POINT a la fin (sur le troncon)
+                        projection_end = qgis.core.QgsGeometry.fromPolyline(bornes_points_sys_rep).nearestPoint(qgis.core.QgsGeometry.fromPoint(point_fin).asPoint())
+                        desordre_sirs['positionFin']= projection_end.asWkt()
+
+
+                        print(desordre_sirs['positionFin'],desordre_sirs['positionDebut'])
+
+
+
+
+
+                        #Get the closest bornes to the projection and the pos and distance to it
+
+                        k=0
+                        index = 0
+                        distance = projection_beginning.distance(bornes_points_sys_rep[0])
+                        borne_proche = bornes_points_sys_rep[0]
+                        for borne_ref in bornes_points_sys_rep :
+                            if distance > projection_beginning.distance(borne_ref) :
+                                borne_proche = borne_ref
+                                distance = projection_beginning.distance(borne_ref)
+                                index=k
+
+                            k=k+1
+
+
+                        desordre_sirs['borneDebutId']= list_bornes_sys_rep[index]
+                        desordre_sirs['borne_debut_aval']=False
+                        desordre_sirs['borne_debut_distance']= projection_beginning.distance(borne_proche)
+
+
+
+
+
+
+                        k=0
+                        index = 0
+                        distance = projection_end.distance(bornes_points_sys_rep[0])
+                        borne_proche = bornes_points_sys_rep[0]
+                        for borne_ref in bornes_points_sys_rep :
+                            if distance >= projection_end.distance(borne_ref) :
+                                borne_proche = borne_ref
+                                distance = projection_end.distance(borne_ref)
+                                index=k
+
+                            k=k+1
+
+                        desordre_sirs['borneFinId']= list_bornes_sys_rep[index]
+                        desordre_sirs['borne_fin_aval']=False
+                        desordre_sirs['borne_fin_distance']= projection_end.distance(borne_proche)
 
 
                         desordre_sirs['SystemRepId']= troncon_FD['systemeRepDefautId']
@@ -691,57 +741,6 @@ class LamiatoFranceDigue():
 
 
 
-                    """
-
-
-
-
-
-
-
-                        nearestpoint = qgis.core.QgsGeometry.fromPolyline([troncon]).nearestPoint(qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(lon_1,lat_1)).asPoint())
-                        #nearest point est un tuple (x,y)
-
-                        if 'LINESTRING' in geom:
-
-                            geom = geom.split[',']
-                            geom = geom[1:]
-                            for point in geom :
-                                lon_2=point.split(' ')[0]
-                                lat_2=point.split(' ')[1][:-1]
-                                nearestpoint_suivant = qgis.core.QgsGeometry.fromPolyline([troncon]).nearestPoint(qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(lon_2,lat_2)).asPoint())
-
-                        #avec le meme troncon, recuperer la projection du deuxieme point
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    desordre_sirs['geometryMode']='COORD'
-                    desordre_sirs['latitudeMin']=geom[0].split(' ')[1][:-1]
-                    desordre_sirs['longitudeMin']=geom[0].split(' ')[0]
-
-
-                    if 'LINESTRING' in geom:
-
-                        geom = geom[0].split[',']
-                        geom = geom[1]
-                        desordre_sirs['longitudeMax']=geom.split(' ')[0]
-                        desordre_sirs['latitudeMax']=geom.split(' ')[1][:-1]
-                    else:
-                        desordre_sirs['longitudeMax']=desordre_sirs['longitudeMin']
-                        desordre_sirs['latitudeMax']=desordre_sirs['latitudeMin']
-                    """
                     print(desordre_sirs)
                     desordre_sirs.save()
 
