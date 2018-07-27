@@ -179,13 +179,16 @@ class LamiatoFranceDigue():
         i = 0
         # start_time = time.time()
         for obj in documents:
-            print(obj)
+            print('obj :',obj)
+
             template[obj['couch']['type']] = self.makeTemplate(obj['couch']['fields'], obj['sql']['fields'])
-            print(template[obj['couch']['type']])
+            print('template :',template[obj['couch']['type']])
+
             for metaObj in self.queryL.createMetaObjet(obj['couch']['type'], template, obj['sql']['query']):
                 print('metaobjet :', metaObj)
                 self.count = 0
                 if not metaObj['id'] in checkList :
+                    print('metabobjet id :', metaObj['id'])
                     self.setSecondaryDependencies(metaObj['id'], metaObj)
 
                     id_fd =  self.queryFD.addDocument(metaObj[obj['couch']['type']])['_id']
@@ -301,6 +304,8 @@ class LamiatoFranceDigue():
 
     def setSecondaryDependencies(self, id_parent, obj):
         subDocuments = json.load(open(self.templatePATH, 'r'))['SubDocument']
+        print('subDoc :',subDocuments)
+
 
         listIndexDict = self.getListIndexDict(obj)
         listIndexList = self.getListIndexList(obj)
@@ -330,6 +335,7 @@ class LamiatoFranceDigue():
 
         if isinstance(obj, dict):
             for it in obj:
+                print('dict :',obj)
                 if isinstance(obj[it], unicode) and 'crt:' in obj[it]:
                     template = {}
                     tmp = subDocuments[obj[it][5:]]
@@ -463,7 +469,7 @@ class LamiatoFranceDigue():
     def updateDesordreObservationsAndPictures(self):
 
         print("Upload Observations .................................................................")
-        query = "SELECT id_observation, id_objet, lk_desordre, dateobservation, commentaires, source, gravite, nombre FROM Observation "
+        query = "SELECT id_observation, id_objet, lk_desordre, dateobservation, source, gravite, nombre FROM Observation "
         cursor_obs=self.queryL.SLITEcursor.execute(query)
         convertisseur = json.load(open(self.convertisseurPATH, 'r'))
 
@@ -478,14 +484,14 @@ class LamiatoFranceDigue():
                 id_objet=obs[1]
                 lk_desordre=obs[2]
                 dateobservation=obs[3]
-                commentaires = obs[4]
-                source=obs[5]
-                gravite=obs[6]
-                nombre=obs[7]
+                source=obs[4]
+                gravite=obs[5]
+                nombre=obs[6]
                 print(obs)
 
                 #Recupere le desordre couch associe avec lk_desordre et le convertisseur
                 for item in convertisseur :
+                    print('convertisseur',item['couch']['type']==item['sql']['type'], item['sql']['type']=='Desordre')
                     if item['couch']['type']=='Desordre' and item['sql']['type']=='Desordre' and item['sql']['id']==lk_desordre :
                         desordre = self.queryFD.getDocument(item['couch']['id'])
 
@@ -552,7 +558,7 @@ class LamiatoFranceDigue():
 
                         desordre['observations']+=[observation]
                         print("MAJ :", desordre)
-                        desordre.save()
+                        #desordre.save()
 
 
                     #puis recupere la liste des photos associees à cette observation et les ressources et objets associes
@@ -564,17 +570,20 @@ class LamiatoFranceDigue():
                     #completer l observation et l ajouter au desordre
 
         convertisseur = json.load(open(self.convertisseurPATH, 'r'))
+        print("Upload Desordres geometry  .................................................................")
+
         for item in convertisseur :
+            print('convertisseur',item['couch']['type'], item['sql']['type'])
             if item['couch']['type']=='Desordre' and item['sql']['type']=='Desordre' :
                 desordre_sirs = self.queryFD.getDocument(item['couch']['id'])
                 query = "SELECT ST_AsText(geom), lk_descriptionsystem FROM Desordre WHERE id_desordre = "+str(item['sql']['id'])
+                print(query)
                 cursor_des=self.queryL.SLITEcursor.execute(query)
                 res = cursor_des.fetchone()
                 print(res)
                 geom=str(res[0])
                 lk_description_system = res[1]
-                print(geom, res)
-
+                print('desordre_sirs :',desordre_sirs)
 
                 #Process geometry
                 if not geom == 'None' :
@@ -594,27 +603,41 @@ class LamiatoFranceDigue():
                     geom = geom.split('(')
                     geom = geom[1].split(')')
                     geom=geom[0]
-                    print(geom)
 
                     #Then get the list of those points
                     if type_geom==0:
-                        lat=[float(geom.split(' ')[1][:-1])]
-                        lon=[float(geom.split(' ')[0])]
-                        list_bornes_desordres=[gis.core.QgsPoint(lon[0], lat[0])]
+                        point_lat = geom.split(' ')[1]
+                        point_lon = geom.split(' ')[0]
+                        if point_lat[0]==' ':
+                            point_lat = point_lat[1:]
+                        if point_lat[-1]==' ':
+                            point_lat = point_lat[:-1]
+                        if point_lon[0]==' ':
+                            point_lon = point_lon[1:]
+                        if point_lon[-1]==' ':
+                            point_lon = point_lon[:-1]
+
+
+                        lat=[float(point_lat)]
+                        lon=[float(point_lon)]
+                        list_bornes_desordres=[qgis.core.QgsPoint(lon[0], lat[0])]
 
                     else :
                         lat=[]
                         lon=[]
                         list_bornes_desordres=[]
 
-                        for point in geom.split[',']:
-
-                            lat+=[float(point.split(' ')[1][:-1])]
+                        for point in geom.split(','):
+                            if point[0]==' ':
+                                point = point[1:]
+                            if point[-1]==' ':
+                                point = point[:-1]
+                            print('point :',point)
+                            lat+=[float(point.split(' ')[1])]
                             lon+=[float(point.split(' ')[0])]
-                            list_bornes_desordres+=[gis.core.QgsPoint(lon[-1], lat[-1])]
+                            list_bornes_desordres+=[qgis.core.QgsPoint(lon[-1], lat[-1])]
 
-                    print(lat,lon, list_bornes_desordres)
-
+                    print("1:",lat,lon, list_bornes_desordres)
 
 
 
@@ -626,29 +649,30 @@ class LamiatoFranceDigue():
                     geom_troncon_lamia=res[0]
 
                     id_troncondigue= desordre_sirs['foreignParentId']
-
-
+                    print('id_troncondigue :',id_troncondigue)
 
 
                     #Get the list of points in the referentiel system
                     troncon_FD = self.queryFD.getDocument(desordre_sirs['foreignParentId'])
-                    sysrepdefaut = self.queryFD.getDocument(desordre_sirs['systemeRepDefautId'])
-                    list_bornes_sys_rep = self.queryFD.getDocument(sysrepdefaut['systemeReperageBornes'])
+                    sysrepdefaut = self.queryFD.getDocument(troncon_FD['systemeRepDefautId'])
+                    list_bornes_sys_rep = sysrepdefaut['systemeReperageBornes']
+
+                    print('list_bornes :', list_bornes_sys_rep)
 
                     bornes_sys_rep=[]
                     for id_borne in list_bornes_sys_rep:
-                        bornes_sys_rep += [self.queryFD.getDocument(id_borne)['geometry']]
+                        bornes_sys_rep += [self.queryFD.getDocument(id_borne['borneId'])['geometry']]
 
                     #process the bornes to get qgis points
                     bornes_points_sys_rep = []
                     for borne in bornes_sys_rep :
                         res = borne.split('(')[1]
                         res = res.split(')')[0]
-                        res = gis.core.QgsPoint(float(res.split(' ')[0]), float(res.split(' ')[1]))
+                        res = qgis.core.QgsPoint(float(res.split(' ')[0]), float(res.split(' ')[1]))
                         bornes_points_sys_rep +=[res]
 
 
-                    print(troncon_FD,bornes_points_sys_rep)
+                    print("2:",troncon_FD,bornes_points_sys_rep)
 
 
 
@@ -665,16 +689,18 @@ class LamiatoFranceDigue():
 
                         #Get the projection of the desordre on the linear
 
-
-                        projection_beginning = qgis.core.QgsGeometry.fromPolyline(bornes_points_sys_rep).nearestPoint(qgis.core.QgsGeometry.fromPoint(point_debut).asPoint())
-                        desordre_sirs['positionDebut']= projection_beginning.asWkt()
-
-
-                        projection_end = qgis.core.QgsGeometry.fromPolyline(bornes_points_sys_rep).nearestPoint(qgis.core.QgsGeometry.fromPoint(point_fin).asPoint())
-                        desordre_sirs['positionFin']= projection_end.asWkt()
+                        print("qgis 1 :",qgis.core.QgsGeometry.fromPolyline(bornes_points_sys_rep).asPolyline())
+                        print("qgis 2 :",qgis.core.QgsGeometry.fromPoint(point_debut).asPoint())
+                        print("qgis 3 :",qgis.core.QgsGeometry.fromPoint(point_debut).asPoint())
+                        projection_beginning = qgis.core.QgsGeometry.fromPolyline(bornes_points_sys_rep).nearestPoint(qgis.core.QgsGeometry.fromPoint(point_debut)).asPoint()
+                        desordre_sirs['positionDebut']= "POINT("+str(projection_beginning.x())+" "+str(projection_beginning.y())+")"
 
 
-                        print(desordre_sirs['positionFin'],desordre_sirs['positionDebut'])
+                        projection_end = qgis.core.QgsGeometry.fromPolyline(bornes_points_sys_rep).nearestPoint(qgis.core.QgsGeometry.fromPoint(point_fin)).asPoint()
+                        desordre_sirs['positionFin']=  "POINT("+str(projection_end.x())+" "+str(projection_end.y())+")"
+
+
+                        print("5:",desordre_sirs['positionFin'],desordre_sirs['positionDebut'])
 
 
 
@@ -695,11 +721,11 @@ class LamiatoFranceDigue():
                             k=k+1
 
 
-                        desordre_sirs['borneDebutId']= list_bornes_sys_rep[index]
+                        desordre_sirs['borneDebutId']= list_bornes_sys_rep[index]['borneId']
                         desordre_sirs['borne_debut_aval']=False
                         desordre_sirs['borne_debut_distance']= projection_beginning.distance(borne_proche)
 
-
+                        print("6:",list_bornes_sys_rep[index],projection_beginning.distance(borne_proche))
 
 
 
@@ -716,12 +742,13 @@ class LamiatoFranceDigue():
 
                             k=k+1
 
-                        desordre_sirs['borneFinId']= list_bornes_sys_rep[index]
+                        desordre_sirs['borneFinId']= list_bornes_sys_rep[index]['borneId']
                         desordre_sirs['borne_fin_aval']=False
                         desordre_sirs['borne_fin_distance']= projection_end.distance(borne_proche)
 
 
                         desordre_sirs['SystemRepId']= troncon_FD['systemeRepDefautId']
+                        print("7:",list_bornes_sys_rep[index]['borneId'],projection_end.distance(borne_proche))
 
 
                     else :
@@ -738,10 +765,8 @@ class LamiatoFranceDigue():
                         desordre_sirs['SystemRepId']= troncon_FD['systemeRepDefautId']
 
 
-
-
-
                     print(desordre_sirs)
+                    print(desordre_sirs['geometry'])
                     desordre_sirs.save()
 
         return

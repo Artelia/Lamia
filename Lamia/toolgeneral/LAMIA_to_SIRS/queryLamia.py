@@ -80,7 +80,6 @@ class queryLamia():
 
     """Permet d'ajouter des valeurs dans le clone du template"""
     def addValues(self, obj):
-        print('obj :', obj)
         #Sélection des dict présent dans l'obj
         listIndexDict = self.getListIndexDict(obj)
         #Sélection des list présent dans l'obj

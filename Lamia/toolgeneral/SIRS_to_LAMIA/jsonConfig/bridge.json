@@ -10,17 +10,6 @@
 		"source": "lk_infralineaire",
 		"table": "Infralineaire"
 	}],
-	"Infralineaire": [{
-			"path": "borneIds 0",
-			"source": "lk_noeud1",
-			"table": "Noeud"
-		},
-		{
-			"path": "borneIds 1",
-			"source": "lk_noeud2",
-			"table": "Noeud"
-		}
-	],
 	"Observation": [{
 		"path": "_id",
 		"source": "lk_desordre",
