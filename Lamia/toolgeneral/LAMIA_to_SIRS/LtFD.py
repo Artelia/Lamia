@@ -179,13 +179,16 @@ class LamiatoFranceDigue():
         i = 0
         # start_time = time.time()
         for obj in documents:
-            print(obj)
+            print('obj :',obj)
+
             template[obj['couch']['type']] = self.makeTemplate(obj['couch']['fields'], obj['sql']['fields'])
-            print(template[obj['couch']['type']])
+            print('template :',template[obj['couch']['type']])
+
             for metaObj in self.queryL.createMetaObjet(obj['couch']['type'], template, obj['sql']['query']):
                 print('metaobjet :', metaObj)
                 self.count = 0
                 if not metaObj['id'] in checkList :
+                    print('metabobjet id :', metaObj['id'])
                     self.setSecondaryDependencies(metaObj['id'], metaObj)
 
                     id_fd =  self.queryFD.addDocument(metaObj[obj['couch']['type']])['_id']
@@ -301,6 +304,8 @@ class LamiatoFranceDigue():
 
     def setSecondaryDependencies(self, id_parent, obj):
         subDocuments = json.load(open(self.templatePATH, 'r'))['SubDocument']
+        print('subDoc :',subDocuments)
+
 
         listIndexDict = self.getListIndexDict(obj)
         listIndexList = self.getListIndexList(obj)
@@ -330,6 +335,7 @@ class LamiatoFranceDigue():
 
         if isinstance(obj, dict):
             for it in obj:
+                print('dict :',obj)
                 if isinstance(obj[it], unicode) and 'crt:' in obj[it]:
                     template = {}
                     tmp = subDocuments[obj[it][5:]]
@@ -463,7 +469,7 @@ class LamiatoFranceDigue():
     def updateDesordreObservationsAndPictures(self):
 
         print("Upload Observations .................................................................")
-        query = "SELECT id_observation, id_objet, lk_desordre, dateobservation, commentaires, source, gravite, nombre FROM Observation "
+        query = "SELECT id_observation, id_objet, lk_desordre, dateobservation, source, gravite, nombre FROM Observation "
         cursor_obs=self.queryL.SLITEcursor.execute(query)
         convertisseur = json.load(open(self.convertisseurPATH, 'r'))
 
@@ -478,14 +484,14 @@ class LamiatoFranceDigue():
                 id_objet=obs[1]
                 lk_desordre=obs[2]
                 dateobservation=obs[3]
-                commentaires = obs[4]
-                source=obs[5]
-                gravite=obs[6]
-                nombre=obs[7]
+                source=obs[4]
+                gravite=obs[5]
+                nombre=obs[6]
                 print(obs)
 
                 #Recupere le desordre couch associe avec lk_desordre et le convertisseur
                 for item in convertisseur :
+                    print('convertisseur',item['couch']['type']==item['sql']['type'], item['sql']['type']=='Desordre')
                     if item['couch']['type']=='Desordre' and item['sql']['type']=='Desordre' and item['sql']['id']==lk_desordre :
                         desordre = self.queryFD.getDocument(item['couch']['id'])
 
@@ -552,7 +558,7 @@ class LamiatoFranceDigue():
 
                         desordre['observations']+=[observation]
                         print("MAJ :", desordre)
-                        desordre.save()
+                        #desordre.save()
 
 
                     #puis recupere la liste des photos associees à cette observation et les ressources et objets associes
@@ -564,87 +570,204 @@ class LamiatoFranceDigue():
                     #completer l observation et l ajouter au desordre
 
         convertisseur = json.load(open(self.convertisseurPATH, 'r'))
+        print("Upload Desordres geometry  .................................................................")
+
         for item in convertisseur :
+            print('convertisseur',item['couch']['type'], item['sql']['type'])
             if item['couch']['type']=='Desordre' and item['sql']['type']=='Desordre' :
                 desordre_sirs = self.queryFD.getDocument(item['couch']['id'])
                 query = "SELECT ST_AsText(geom), lk_descriptionsystem FROM Desordre WHERE id_desordre = "+str(item['sql']['id'])
+                print(query)
                 cursor_des=self.queryL.SLITEcursor.execute(query)
                 res = cursor_des.fetchone()
                 print(res)
                 geom=str(res[0])
                 lk_description_system = res[1]
-                print(geom, res)
+                print('desordre_sirs :',desordre_sirs)
 
+                #Process geometry
                 if not geom == 'None' :
 
+
+                    desordre_sirs["geometry"] = geom
+                    desordre_sirs['geometryMode'] = 'LINEAR'
+
+                    #type_geom = 0 if point, else linear and =1
+                    if 'POINT' in geom :
+                        type_geom=0
+                    elif 'LINE' in geom :
+                        type_geom = 1
+
+
+                    #Get the part inside the () : list of points
                     geom = geom.split('(')
                     geom = geom[1].split(')')
                     geom=geom[0]
-                    print(geom)
 
-                    lat_1=geom.split(' ')[1][:-1]
-                    lon_1=geom.split(' ')[0]
+                    #Then get the list of those points
+                    if type_geom==0:
+                        point_lat = geom.split(' ')[1]
+                        point_lon = geom.split(' ')[0]
+                        if point_lat[0]==' ':
+                            point_lat = point_lat[1:]
+                        if point_lat[-1]==' ':
+                            point_lat = point_lat[:-1]
+                        if point_lon[0]==' ':
+                            point_lon = point_lon[1:]
+                        if point_lon[-1]==' ':
+                            point_lon = point_lon[:-1]
 
 
-                    #Recuperer le troncon, son trace et trouver la projection du premier point
+                        lat=[float(point_lat)]
+                        lon=[float(point_lon)]
+                        list_bornes_desordres=[qgis.core.QgsPoint(lon[0], lat[0])]
 
-                    query = "SELECT ST_AsText(geom) FROM Infralineaire WHERE lk_descriptionsystem = "+str(lk_description_system)
+                    else :
+                        lat=[]
+                        lon=[]
+                        list_bornes_desordres=[]
+
+                        for point in geom.split(','):
+                            if point[0]==' ':
+                                point = point[1:]
+                            if point[-1]==' ':
+                                point = point[:-1]
+                            print('point :',point)
+                            lat+=[float(point.split(' ')[1])]
+                            lon+=[float(point.split(' ')[0])]
+                            list_bornes_desordres+=[qgis.core.QgsPoint(lon[-1], lat[-1])]
+
+                    print("1:",lat,lon, list_bornes_desordres)
+
+
+
+                    #Get the linear attached to the desordre and the rest of the data injected with it
+
+                    query = "SELECT ST_AsText(geom) FROM Infralineaire WHERE id_descriptionsystem = "+str(lk_description_system)
                     cursor_des=self.queryL.SLITEcursor.execute(query)
-                    geom_troncon = cursor_des.fetchone()[0]
+                    res = cursor_des.fetchone()[0]
+                    geom_troncon_lamia=res[0]
 
-                    #TODO
-                    if False and not geom_troncon == 'None':
-                        #troncon = geom_troncon[geom_troncon.find('(')]:geom_troncon[geom_troncon.find(')')]
-                        troncon = None
-                        print(troncon)
+                    id_troncondigue= desordre_sirs['foreignParentId']
+                    print('id_troncondigue :',id_troncondigue)
 
 
+                    #Get the list of points in the referentiel system
+                    troncon_FD = self.queryFD.getDocument(desordre_sirs['foreignParentId'])
+                    sysrepdefaut = self.queryFD.getDocument(troncon_FD['systemeRepDefautId'])
+                    list_bornes_sys_rep = sysrepdefaut['systemeReperageBornes']
+
+                    print('list_bornes :', list_bornes_sys_rep)
+
+                    bornes_sys_rep=[]
+                    for id_borne in list_bornes_sys_rep:
+                        bornes_sys_rep += [self.queryFD.getDocument(id_borne['borneId'])['geometry']]
+
+                    #process the bornes to get qgis points
+                    bornes_points_sys_rep = []
+                    for borne in bornes_sys_rep :
+                        res = borne.split('(')[1]
+                        res = res.split(')')[0]
+                        res = qgis.core.QgsPoint(float(res.split(' ')[0]), float(res.split(' ')[1]))
+                        bornes_points_sys_rep +=[res]
 
 
-                        nearestpoint = qgis.core.QgsGeometry.fromPolyline([troncon]).nearestPoint(qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(lon_1,lat_1)).asPoint())
-                        #nearest point est un tuple (x,y)
-
-                        if 'LINESTRING' in geom:
-
-                            geom = geom.split[',']
-                            geom = geom[1:]
-                            for point in geom :
-                                lon_2=point.split(' ')[0]
-                                lat_2=point.split(' ')[1][:-1]
-                                nearestpoint_suivant = qgis.core.QgsGeometry.fromPolyline([troncon]).nearestPoint(qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(lon_2,lat_2)).asPoint())
-
-                        #avec le meme troncon, recuperer la projection du deuxieme point
-
-
-
-
-
-
+                    print("2:",troncon_FD,bornes_points_sys_rep)
 
 
 
 
 
+                    #Process the data
+                    if not geom_troncon_lamia == 'None' and id_troncondigue is not None :
+                        #Create the begining and ending points of the desordre geometry
+                        point_debut=qgis.core.QgsPoint(lon[0],lat[0])
+                        point_fin=qgis.core.QgsPoint(lon[-1],lat[-1])
 
 
-                    """
-
-                    desordre_sirs['geometryMode']='COORD'
-                    desordre_sirs['latitudeMin']=geom[0].split(' ')[1][:-1]
-                    desordre_sirs['longitudeMin']=geom[0].split(' ')[0]
 
 
-                    if 'LINESTRING' in geom:
+                        #Get the projection of the desordre on the linear
 
-                        geom = geom[0].split[',']
-                        geom = geom[1]
-                        desordre_sirs['longitudeMax']=geom.split(' ')[0]
-                        desordre_sirs['latitudeMax']=geom.split(' ')[1][:-1]
-                    else:
-                        desordre_sirs['longitudeMax']=desordre_sirs['longitudeMin']
-                        desordre_sirs['latitudeMax']=desordre_sirs['latitudeMin']
-                    """
-                    print(desordre)
+                        print("qgis 1 :",qgis.core.QgsGeometry.fromPolyline(bornes_points_sys_rep).asPolyline())
+                        print("qgis 2 :",qgis.core.QgsGeometry.fromPoint(point_debut).asPoint())
+                        print("qgis 3 :",qgis.core.QgsGeometry.fromPoint(point_debut).asPoint())
+                        projection_beginning = qgis.core.QgsGeometry.fromPolyline(bornes_points_sys_rep).nearestPoint(qgis.core.QgsGeometry.fromPoint(point_debut)).asPoint()
+                        desordre_sirs['positionDebut']= "POINT("+str(projection_beginning.x())+" "+str(projection_beginning.y())+")"
+
+
+                        projection_end = qgis.core.QgsGeometry.fromPolyline(bornes_points_sys_rep).nearestPoint(qgis.core.QgsGeometry.fromPoint(point_fin)).asPoint()
+                        desordre_sirs['positionFin']=  "POINT("+str(projection_end.x())+" "+str(projection_end.y())+")"
+
+
+
+                        print("5:",desordre_sirs['positionFin'],desordre_sirs['positionDebut'])
+
+
+
+
+
+                        #Get the closest bornes to the projection and the pos and distance to it
+
+                        k=0
+                        index = 0
+                        distance = projection_beginning.distance(bornes_points_sys_rep[0])
+                        borne_proche = bornes_points_sys_rep[0]
+                        for borne_ref in bornes_points_sys_rep :
+                            if distance > projection_beginning.distance(borne_ref) :
+                                borne_proche = borne_ref
+                                distance = projection_beginning.distance(borne_ref)
+                                index=k
+
+                            k=k+1
+
+
+                        desordre_sirs['borneDebutId']= list_bornes_sys_rep[index]['borneId']
+                        desordre_sirs['borne_debut_aval']=False
+                        desordre_sirs['borne_debut_distance']= projection_beginning.distance(borne_proche)
+
+                        print("6:",list_bornes_sys_rep[index],projection_beginning.distance(borne_proche))
+
+
+
+
+                        k=0
+                        index = 0
+                        distance = projection_end.distance(bornes_points_sys_rep[0])
+                        borne_proche = bornes_points_sys_rep[0]
+                        for borne_ref in bornes_points_sys_rep :
+                            if distance >= projection_end.distance(borne_ref) :
+                                borne_proche = borne_ref
+                                distance = projection_end.distance(borne_ref)
+                                index=k
+
+                            k=k+1
+
+                        desordre_sirs['borneFinId']= list_bornes_sys_rep[index]['borneId']
+                        desordre_sirs['borne_fin_aval']=False
+                        desordre_sirs['borne_fin_distance']= projection_end.distance(borne_proche)
+
+
+                        desordre_sirs['SystemRepId']= troncon_FD['systemeRepDefautId']
+                        print("7:",list_bornes_sys_rep[index]['borneId'],projection_end.distance(borne_proche))
+
+
+                    else :
+                        #We just take the begining and the end of the bief
+
+                        desordre_sirs['borneDebutId']= bornes_geom[0]
+                        desordre_sirs['borneFinId']= bornes_geom[-1]
+                        desordre_sirs['borne_debut_aval']=False
+                        desordre_sirs['borne_fin_aval']=False
+                        desordre_sirs['borne_debut_distance']= 0
+                        desordre_sirs['borne_fin_distance']= 0
+                        desordre_sirs['positionDebut']= self.queryFD.getDocument(desordre_sirs['borneDebutId'])['geometry']
+                        desordre_sirs['positionFin']= self.queryFD.getDocument(desordre_sirs['borneFinId'])['geometry']
+                        desordre_sirs['SystemRepId']= troncon_FD['systemeRepDefautId']
+
+
+                    print(desordre_sirs)
+                    print(desordre_sirs['geometry'])
                     desordre_sirs.save()
 
         return

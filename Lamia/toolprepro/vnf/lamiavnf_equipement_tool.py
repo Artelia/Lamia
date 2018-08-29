@@ -558,6 +558,7 @@ class EquipementTool(AbstractInspectionDigueTool):
                     popup.setText('Les pks saisis entrent en conflit avec ceux d un autre equipement du meme type et ont donc ete corriges en fonction. Pensez a verifier ces pks !')
                     popup.exec_()
 
+        #self.updateTableParties()
 
 
                 if test_discontinuite:
@@ -694,6 +695,67 @@ class EquipementTool(AbstractInspectionDigueTool):
         self.dbase.commit()
     """
 
+
+    """
+    def updateTableParties(self):
+        #dic_parties : (num_ouvrage, partie) -> [[pk_debut, pk_fin], [pk_debut, pk_fin], [pk_debut, pk_fin], ...]
+
+
+        dic_parties={}
+
+        sql = "SELECT partie, ouvrage, pk_debut, pk_fin, typepk, lk_infralineaire FROM Equipement"
+        equipements = self.dbase.query(sql)
+
+        #Treat each equipement
+        for equipement in equipements :
+            partie = equipement[0]
+            ouvrage = equipement[1]
+
+            pk_debut = equipement[2]
+            pk_fin = equipement[3]
+
+            type_pk = equipement[4]
+
+            #Get the real pk
+            if type_pk != 'ABS':
+                sql = lk_infralineaire
+
+                sql = "SELECT art_pk_debut, art_pk_fin FROM Infralineaire WHERE id_infralineaire ="+str(equipement[5])
+                pks_bief = self.dbase.query(sql)[0]
+
+
+                if type_pk == 'REC':
+                    pk_debut=pks_bief[0]+pk_debut
+                    pk_fin=pks_bief[0]+pk_fin
+
+                else :
+                    pk_debut=pks_bief[1]-pk_fin
+                    pk_fin=pks_bief[1]-pk_debut
+
+
+
+            #Really analyse the equipement
+
+
+            if (ouvrage, partie) in dic_parties :
+                i=0
+                for item in dic_parties[(ouvrage, partie)] :
+                    if pk_debut<item[0] and pk_fin>item[0] :
+                        dic_parties[(ouvrage, partie)][i][0]=pk_debut
+                    if pk_debut<item[1] and pk_fin>item[1] :
+                        dic_parties[(ouvrage, partie)][i][1]=pk_fin
+
+                    i=i+1
+
+
+
+            else :
+                dic_parties[(ouvrage, partie)] = [[pk_debut, pk_fin]]
+
+
+
+        pass
+    """
 
 class UserUI(QWidget):
     def __init__(self, parent=None):

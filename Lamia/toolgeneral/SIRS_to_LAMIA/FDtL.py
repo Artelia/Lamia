@@ -194,6 +194,11 @@ class FranceDiguetoLamia():
 
         if newElem:
             open('output.txt','a').write('--- START ---\n')
+            self.queryL.commit()
+
+            #Add version begin and id
+            self.setKeys()
+            self.queryL.commit()
 
             #Correct the link between objects and DescriptionSystem
             self.updateDescriptionSystem()
@@ -208,9 +213,10 @@ class FranceDiguetoLamia():
             self.importPhotos()
 
 
+            self.queryL.commit()
 
 
-
+            self.setKeysPhotos()
             self.queryL.commit()
 
 
@@ -287,20 +293,25 @@ class FranceDiguetoLamia():
         bridge = json.load(open(self.bridgePATH, 'r'))
 
         for obj in bridge:
+            print('obj',obj)
 
             for i in range(0, len(bridge[obj])):
+                print(i)
                 path = bridge[obj][i]['path']
                 fld_lm_src = bridge[obj][i]['source']
                 tab_lm_dest = bridge[obj][i]['table']
 
                 for it in convertisseur:
+                    print('it:',it)
                     if obj == it['sql']['type']:
-
                         id_lm_src = it['sql']['id']
                         id_fd_src = it['couch']['id']
 
                         doc = self.queryFD.getDocument(id_fd_src)
+                        print(path.split(' '))
                         id_fd_dest = self.queryFD.seekIn(doc, path.split(' '))
+
+                        print('id',id_fd_dest)
 
                         id_lm_dest = self.getObj('couch id', id_fd_dest, convertisseur)['sql']['id']
 
@@ -309,6 +320,7 @@ class FranceDiguetoLamia():
                             id_lm_dest = self.queryL.selectId(tab_lm_dest, fld_lm_dest, 'id_'+tab_lm_dest, id_lm_dest)
 
                         self.queryL.updateDependencies(obj, fld_lm_src, 'id_'+obj, id_lm_dest, id_lm_src)
+
 
     def resetConvertisseur(self):
         open(self.convertisseurPATH, 'w').write('[]')
@@ -331,7 +343,7 @@ class FranceDiguetoLamia():
 
             if 'observations' in self.queryFD.getDocument(id_desordre).keys() :
                 for observation in desordre['observations']:
-                    print("traitement des photos de l'observation : ", desordre['_id'])
+                    print("traitement des photos de l'observation : ", desordre['_id'], observation['id'])
                     if 'photos' in observation.keys():
                         for photo in observation['photos']:
                             print("traitement de la photo : ", photo['id'])
@@ -518,3 +530,24 @@ class FranceDiguetoLamia():
 
 
         return
+
+    def setKeys(self):
+
+
+        for table in ['Objet', 'Desordre', 'Infralineaire', 'Equipement', 'Noeud', 'Descriptionsystem', 'Observation'] :
+            query = "UPDATE "+table+" SET id_"+table+"= pk_"+table+", id_revisionbegin='1'"
+            print(query)
+            self.queryL.SLITEcursor.execute(query)
+
+
+
+    def setKeysPhotos(self):
+
+        for table in ['Photo', 'Ressource', 'Objet'] :
+            query = "UPDATE "+table+" SET id_"+table+"= pk_"+table+", id_revisionbegin='1'"
+            print(query)
+            self.queryL.SLITEcursor.execute(query)
+
+        table = 'Tcobjetressource'
+        query = "UPDATE "+table+" SET id_revisionbegin = '1'"
+        self.queryL.SLITEcursor.execute(query)
