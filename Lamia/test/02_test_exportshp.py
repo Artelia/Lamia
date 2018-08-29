@@ -24,8 +24,9 @@ def testRapport(canvas, loadfile=True, typedb="spatialite",tabletype=None, pdffi
             # path = os.path.normpath('C://000_testdigue//temp//test01.sqlite')
             # path = os.path.normpath( 'I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201708_SIJALAG//BD_SIJALAG_ind8.sqlite')
             # path = os.path.normpath('C://000_testdigue//temp//BD_Rivedroite_ind1.sqlite')
-            path = os.path.normpath('I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201710_Begles//BD_Begles_ind9.sqlite')
+            #path = os.path.normpath('I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201710_Begles//BD_Begles_ind9.sqlite')
             #path = os.path.normpath('I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201709_RD//BD_Rivedroite_ind2.sqlite')
+            path = os.path.normpath("C://000_testdigue//201710_Begles//BD_Begles_ind16.sqlite")
             wind.dbase.loadQgisVectorLayers(path)
             wind.loadUiDesktop()
 
@@ -35,10 +36,24 @@ def testRapport(canvas, loadfile=True, typedb="spatialite",tabletype=None, pdffi
                                             password='PVR', port=5432)
 
 
-    if True:
+    if False:
         wind.exportShapefile(tabletype=tabletype, pdffile=pdffile )
 
         print('fin')
+
+    if True:
+        indexrapport = None
+        for i, menutool in enumerate(wind.menutools):
+            #print('ook', menutool.__class__.__name__)
+            if 'exportShapefile' in menutool.__class__.__name__ :
+                #print('oooo',i)
+                indexrapport = i
+                break
+        # Infralineaire_BM Equipement_point_BM Photo_BM Graphdata_BM
+        shp = "c://testshape.shp"
+        wind.menutools[indexrapport].prepareData('Desordres_ligne_BM', shp)
+
+
 
 # *********************************************************************************************************************
 # ******************************************   MAIN      *************************************************************

@@ -8,6 +8,7 @@ except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget)
 from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
 from .lamiabase_photo_tool import BasePhotoTool
+
 from .lamiabase_croquis_tool import BaseCroquisTool
 from .lamiabase_graphique_tool import BaseGraphiqueTool
 
@@ -42,7 +43,7 @@ class BaseProfilTool(AbstractInspectionDigueTool):
                                            'idtcdest' : None,
                                            'desttable' : ['Infralineaire']} }
         # self.pickTable = None
-        # self.iconpath = os.path.join(os.path.dirname(__file__), 'lamiabase_photo_tool_icon.svg')
+        self.iconpath = os.path.join(os.path.dirname(__file__), 'lamiabase_profil_tool_icon.svg')
         # ****************************************************************************************
         #properties ui
         pass
@@ -67,11 +68,7 @@ class BaseProfilTool(AbstractInspectionDigueTool):
 
 
             # ****************************************************************************************
-            # parent widgets
-            if self.parentWidget is not None and 'lk_profil' in self.dbase.dbasetables[self.parentWidget.dbasetablename]['fields'].keys():
-                self.userwdgfield.pushButton_setasdefault.clicked.connect(self.setAsDefault)
-            else:
-                self.userwdgfield.pushButton_setasdefault.setParent(None)
+
 
             # ****************************************************************************************
             # child widgets
@@ -180,8 +177,8 @@ class BaseProfilTool(AbstractInspectionDigueTool):
         if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
             if self.parentWidget.dbasetablename == 'Infralineaire':
                 # print(self.parentWidget.currentFeature.attributes())
-                currentparentlinkfield = self.parentWidget.currentFeature['id_objet']
-                sql = "UPDATE Profil SET lk_objet = " + str(currentparentlinkfield) + " WHERE pk_profil = " + str(idprofil) + ";"
+                currentparentlinkfield = self.parentWidget.currentFeature['id_descriptionsystem']
+                sql = "UPDATE Profil SET lk_descriptionsystem = " + str(currentparentlinkfield) + " WHERE pk_profil = " + str(idprofil) + ";"
                 query = self.dbase.query(sql)
                 self.dbase.commit()
 

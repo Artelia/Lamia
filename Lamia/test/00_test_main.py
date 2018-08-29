@@ -61,6 +61,16 @@ class mainClass(QtCore.QObject):
 
         print('begin')
         wind = InspectiondigueWindowWidget(canvas)
+
+        stylesheet = """
+                    QMainWindow{
+                                background-color: rgba(0, 55, 90,80);
+                                }
+                    """
+        stylesheet = ''
+        wind.setStyleSheet(stylesheet)
+
+
         wind.setParent(None)
 
         print('InspectiondigueWindowWidget loaded')
@@ -79,13 +89,20 @@ class mainClass(QtCore.QObject):
                 # path = os.path.normpath('C://000_testdigue//temp_basedefault//test01.sqlite')
                 # path = os.path.normpath('C://000_testdigue//temp_baseassainissement//test01.sqlite')
 
-                path = os.path.normpath("C://000_testdigue//convertBM//TO//BD_SIJALAG_ind10.sqlite")
+                # path = os.path.normpath("C://000_testdigue//convertBM//TO//BD_SIJALAG_ind10.sqlite")
                 # path = os.path.normpath("C://000_testdigue//URBAIN//TO//SLT.sqlite")
                 # path = "I://URBAIN//4352260_87_ELAN_EtudeAEP_EU//5_Etude//01_SIG//Qgs//SQLITE//Nantiat3.sqlite"
                 # path = "M://FR//BOR//EE//URBAIN//4352240_87_NOBLAT_EtudeAEP_EU_EP//5_Etude//01_SIG//sqlite//La_Geneytouse2.sqlite"
                 # path = "C://000_testdigue//URBAIN//Nantiat2.sqlite"
                 # path = "C://000_testdigue//URBAIN//autre//SLT1.sqlite"
                 # path = "C://000_testdigue//temp_base//test01.sqlite"
+                #path = os.path.normpath("C://000_testdigue//201710_Begles//BD_Begles_ind13.sqlite")
+                # path = os.path.normpath("C://000_testdigue//voncent//Plaisance_ind0.sqlite")
+
+                # path = "C://000_testdigue//URBAIN//Nieul_ind1.sqlite"
+                path = os.path.normpath('C://000_testdigue//temp_VNF//test02.sqlite')
+
+
 
                 wind.dbase.loadQgisVectorLayers(path)
 
@@ -120,7 +137,7 @@ class mainClass(QtCore.QObject):
                 canvas.refresh()
 
             print('Layers loaded')
-            print("versioning", wind.dbase.revisionwork)
+            # print("versioning", wind.dbase.revisionwork)
 
             # wind.dbase.printsql = True
 
@@ -136,8 +153,10 @@ class mainClass(QtCore.QObject):
 
                 mainwin.setParent(None)
 
-                #wind.menutools[0].Infralineaire('c://test1.shp')
+                # wind.menutools[0].Noeud('c://test1.shp')
                 #wind.menutools[1].launchDialog()
+
+
 
 
                 #mainwin.show()

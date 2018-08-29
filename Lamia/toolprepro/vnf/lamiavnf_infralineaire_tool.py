@@ -66,6 +66,8 @@ class InfraLineaireTool(AbstractInspectionDigueTool):
         self.pickTable = {'LkZoneGeo': {'ZONEGEO': 'ID'}}
         self.debug = False
 
+        self.qtreewidgetfields = ['ouvrage', 'art_pk_debut', 'art_pk_fin']
+
 
         # ****************************************************************************************
         #properties ui
@@ -116,6 +118,15 @@ class InfraLineaireTool(AbstractInspectionDigueTool):
 
     def postOnDesactivation(self):
         pass
+
+    def postSaveFeature(self,newfeature):
+        # print('postsaveinf')
+
+        for i, elem in enumerate(self.qtreewidgetfields):
+            if self.linkedtreewidget.currentItem() is not None:
+                self.linkedtreewidget.currentItem().setText(i+1, str(self.currentFeature[elem]))
+
+
 
 
 

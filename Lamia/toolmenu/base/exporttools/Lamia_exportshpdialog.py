@@ -36,14 +36,17 @@ import os
 #class ConnexionPGDialog(QDialog, FORM_CLASS):
 class ExportShapefileDialog(QDialog):
 
-    def __init__(self, parent=None):
+    def __init__(self, windowsdialog, parent=None):
         """Constructor."""
         super(ExportShapefileDialog, self).__init__(parent)
         #self.setupUi(self)
         path = os.path.join(os.path.dirname(__file__), 'Lamia_exportshpdialog.ui')
         uic.loadUi(path, self)
 
-        self.qfiledlg = QFileDialog()
+        #self.qfiledlg = QFileDialog()
+        self.windowsdialog = windowsdialog
+        self.qfiledlg = self.windowsdialog.qfiledlg
+
         self.comboBox_type.addItems(['Infralineaire',
                                      'Noeud',
                                      'Observations',

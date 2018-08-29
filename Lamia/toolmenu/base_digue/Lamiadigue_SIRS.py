@@ -10,6 +10,11 @@ import decimal
 import numpy as np
 import glob
 
+try:
+    from qgis.PyQt.QtGui import (QAction)
+except ImportError:
+    from qgis.PyQt.QtWidgets import (QAction)
+
 from ...toolgeneral.SIRS_to_LAMIA.FDtL import *
 from ...toolgeneral.LAMIA_to_SIRS.LtFD import *
 
@@ -22,11 +27,11 @@ class lamiaSIRS(object):
     def __init__(self, dbase=None, windowdialog=None):
         self.windowdialog = windowdialog
         try:
-            lauchaction1 = QtGui.QAction(QtGui.QIcon(), 'Export vers SIRS Digues',self.windowdialog.menuPreferences)
+            lauchaction1 = QAction(QtGui.QIcon(), 'Export vers SIRS Digues',self.windowdialog.menuPreferences)
             lauchaction1.triggered.connect(export_sirs)
             self.windowdialog.menuOutils.addAction(lauchaction1)
             
-            lauchaction2 = QtGui.QAction(QtGui.QIcon(), 'Importer depuis SIRS Digues',self.windowdialog.menuPreferences)
+            lauchaction2 = QAction(QtGui.QIcon(), 'Importer depuis SIRS Digues',self.windowdialog.menuPreferences)
             lauchaction2.triggered.connect(import_sirs)
             self.windowdialog.menuOutils.addAction(lauchaction2)
         except  Exception as e:

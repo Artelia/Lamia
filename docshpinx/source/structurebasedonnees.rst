@@ -27,7 +27,9 @@ L'en tête peut contenir les lignes suivantes :
 #DJAN 
     requete sql pour créer la vue utilisée sous Django
 #QGIS
-    requete sql pour créer la vue utilisée sous qgis. Doit contenir les colonnes  datecreation et datedestruction.
+    requete sql pour créer la vue qui alimente la table affichée sous qgis. Doit contenir les colonnes  datecreation,  datedestruction, revisionbegin et revisionend.
+    Qgis effectue une requete sur cette view pour afficher les bons elements en fonction de la date et du numero de version.
+    
 #SHOW
     Prends la valeur YES ou NO . Charge la table dans qgis ou non.
     
@@ -99,7 +101,7 @@ Colonne avec clé étrangère
 
 Une convention de nommage est utilisée pour les colonnes associées à des clés étrangères. 
 
-Deux mots clés sont alors  utilisés pour le nom des colonnes: ``id_`` et ``lk_``. A la suite doit être indiqué le nom de la table (en minuscule) associée à cette colonne . 
+Trois mots clés sont alors  utilisés pour le nom des colonnes: ``pk``, ``id_`` et ``lk_``. A la suite doit être indiqué le nom de la table (en minuscule) associée à cette colonne . 
 Si plusieurs colonnes ont une clé étrangère renvoyant vers une même table, les appeler lk_nomtable1, lk_nomtable2 ...
 
 La différence entre ``id_`` et ``lk_`` est que ``id_`` est lié à les tables parentes (c'est à dire créées en même temps que la ligne  de la table), alors que ``lk_`` est utilisé pour des jointures ultérieures.
@@ -118,9 +120,9 @@ Toujours l'appeler "geom"
 structure commune à tous les métiers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Indépendemment des métiers, une structure commune est à utiliser et se trouve dans Lamia\\DBASE\\create\\default
+Indépendemment des métiers, une structure commune est à utiliser et se trouve dans Lamia\\DBASE\\create\\Base
 
-Cette sutrcture est à utiliser préférentiellement pour bien s'intégrer à LAMIA.
+Pour créer une nouvelle base, créer un repertore dans Lamia\\DBASE\\create qui s'appelle Base_{nom du metier}
 
 
 

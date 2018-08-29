@@ -8,7 +8,8 @@ except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget)
 #from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
 from ..base.lamiabase_observation_tool import BaseObservationTool
-from ..base.lamiabase_photo_tool import BasePhotoTool
+#from ..base.lamiabase_photo_tool import BasePhotoTool
+from .lamiabasedigue_photo_tool import BaseDiguePhotoTool as BasePhotoTool
 from ..base.lamiabase_croquis_tool import BaseCroquisTool
 import os
 import datetime

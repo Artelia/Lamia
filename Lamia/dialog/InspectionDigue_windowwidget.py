@@ -56,8 +56,8 @@ from .InspectionDigue_getDate import getDateDialog
 
 
 # from ..toolgeneral.InspectionDigue_rapport import printPDFWorker
-from ..toolgeneral.InspectionDigue_exportshp import exportShapefileWorker
-from ..toolgeneral.InspectionDigue_import import ImportObjectWorker
+# from ..toolgeneral.InspectionDigue_exportshp import exportShapefileWorker
+# from ..toolgeneral.InspectionDigue_import import ImportObjectWorker
 """
 from ..toolgeneral.SIRS_to_LAMIA.FDtL import *
 from ..toolgeneral.LAMIA_to_SIRS.LtFD import *
@@ -238,7 +238,10 @@ class InspectiondigueWindowWidget(QMainWindow):
         else:
             self.dbase.imagedirectory = None
 
+
+
         if debug: logging.getLogger('Lamia').debug('end')
+
 
 
     def themechanged(self, iconwidth):
@@ -604,14 +607,23 @@ class InspectiondigueWindowWidget(QMainWindow):
 
         # dialogs finished - reinit base
         self.dbase.reInitDBase()
+
+
+
         # create database
         if dbtype == 'spatialite':
             spatialitefile = self.qfiledlg.getSaveFileName(self, 'InspectionDigue nouveau', '', '*.sqlite')
             if spatialitefile:
                 originalfile = os.path.join(os.path.dirname(__file__), '..', 'DBASE', 'DBase_ind0.sqlite')
                 shutil.copyfile(originalfile, spatialitefile)
+
+                self.normalMessage(' Creation de la base de donnees...')
+                QApplication.processEvents()
+
                 self.dbase.createDbase(file=spatialitefile, crs=crsnumber, type=type, dbasetype='spatialite',
                                        dbaseressourcesdirectory = resdir)
+
+
         elif dbtype == 'postgis':
             self.connDialog.exec_()
             adresse, port, nom, schema, user, password = self.connDialog.dialogIsFinished()
@@ -621,6 +633,9 @@ class InspectiondigueWindowWidget(QMainWindow):
                 if  schemaexists :
                     print('schema existe deja - choisir un autre schema')
                 else:
+                    self.normalMessage('Creation de la base de donnees...')
+                    QApplication.processEvents()
+
                     self.dbase.createDbase(crs=crsnumber, type=type, dbasetype='postgis', dbname=nom, schema=schema,
                                            user=user, host=adresse, password=password, dbaseressourcesdirectory=resdir,
                                            port=port)
@@ -793,10 +808,10 @@ class InspectiondigueWindowWidget(QMainWindow):
 
 
         # ************************** LOAD tools ********************************************
-        print('******* LOAD tools ')
+        # print('******* LOAD tools ')
         if True:
             path = os.path.join(os.path.dirname(__file__), '..', 'toolmenu', self.dbase.type.lower())
-            print(path)
+            # print(path)
             modules = glob.glob(path + "/*.py")
             __all__ = [os.path.basename(f)[:-3] for f in modules if os.path.isfile(f)]
 
@@ -809,9 +824,9 @@ class InspectiondigueWindowWidget(QMainWindow):
                     exec('import Lamia.Lamia.toolmenu.' + self.dbase.type.lower() )
                     moduletemp = importlib.import_module('.' + str(x), 'Lamia.Lamia.toolmenu.' + self.dbase.type.lower())
                 for name, obj in inspect.getmembers(moduletemp, inspect.isclass):
-                    print( moduletemp.__name__, obj.__module__)
+                    # print( moduletemp.__name__, obj.__module__)
                     if moduletemp.__name__ == obj.__module__:
-                        print('ok')
+                        # print('ok')
                         self.menutools.append(obj(dbase=self.dbase, windowdialog=self))
 
 
@@ -994,6 +1009,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                                                                              linkedtreewidget = self.ElemtreeWidget,
                                                                              gpsutil = self.gpsutil)
                 else:
+
                     self.dbase.dbasetables[dbasename]['widget'].append(uidesktop(dbase = self.dbase,
                                                                              dialog = self,
                                                                              linkedtreewidget = self.ElemtreeWidget,
@@ -1020,13 +1036,13 @@ class InspectiondigueWindowWidget(QMainWindow):
 
 
         for uidpostpr in self.uipostpro:
-            print('uidpostpr', uidpostpr)
+            # print('uidpostpr', uidpostpr)
             strtoexec = ('self.' + uidpostpr.__name__.lower() + " = uidpostpr(dbase = self.dbase, dialog = self,linkedtreewidget = self.ElemtreeWidget, gpsutil = self.gpsutil)")
-            print(strtoexec)
+            # print(strtoexec)
             exec(strtoexec)
             # print('test', eval('self.' + uidpostpr.__name__.lower()))
             strtoexec = 'self.tools.append(' + 'self.' + uidpostpr.__name__.lower() + ')'
-            print(strtoexec)
+            # print(strtoexec)
             exec(strtoexec)
             # print('ok')
 
@@ -1119,7 +1135,7 @@ class InspectiondigueWindowWidget(QMainWindow):
             layer = wdg.dbasetable['layerqgis']
             #nearestid, dist = wdg.getNearestId(point)
             point2 = self.pointEmitter.toLayerCoordinates(wdg.dbasetable['layerqgis'], point)
-            nearestpk, dist = self.dbase.getNearestId(wdg.dbasetable,
+            nearestpk, dist = self.dbase.getNearestPk(wdg.dbasetable,
                                                       wdg.dbasetablename,
                                                       point2,
                                                       False)
@@ -1196,7 +1212,7 @@ class InspectiondigueWindowWidget(QMainWindow):
 
             if self.dbase.qgsiface is not None:
                 # if not self.dbase.standalone:
-                self.dbase.qgsiface.messageBar().pushMessage("InspectionDigue", 'Export fini', level=qgis.gui.QgsMessageBar.SUCCESS, duration=3)
+                self.dbase.qgsiface.messageBar().pushMessage("Lamia ", 'Export fini', level=qgis.gui.QgsMessageBar.SUCCESS, duration=3)
             else:
                 print('export fini')
 
@@ -1210,10 +1226,10 @@ class InspectiondigueWindowWidget(QMainWindow):
         if self.dbase.qgsiface is not None:
             #if not self.dbase.standalone:
             if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                self.dbase.qgsiface.messageBar().pushMessage("InspectionDigue", text,
+                self.dbase.qgsiface.messageBar().pushMessage("Lamia ", text,
                                                           level=qgis.gui.QgsMessageBar.CRITICAL, duration=3)
             else:
-                self.dbase.qgsiface.messageBar().pushMessage("InspectionDigue", text,
+                self.dbase.qgsiface.messageBar().pushMessage("Lamia ", text,
                                                           level=qgis.core.Qgis.Critical , duration=3)
         else:
             print('ErrorMessage', text)
@@ -1222,10 +1238,10 @@ class InspectiondigueWindowWidget(QMainWindow):
         if self.dbase.qgsiface is not None:
             # if not self.dbase.standalone:
             if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                self.dbase.qgsiface.messageBar().pushMessage("InspectionDigue", text,
+                self.dbase.qgsiface.messageBar().pushMessage("Lamia ", text,
                                                           level=qgis.gui.QgsMessageBar.WARNING, duration=3)
             else:
-                self.dbase.qgsiface.messageBar().pushMessage("InspectionDigue", text,
+                self.dbase.qgsiface.messageBar().pushMessage("Lamia ", text,
                                                           level= qgis.core.Qgis.Warning , duration=3)
         else:
             print('ErrorMessage', text)
@@ -1235,9 +1251,9 @@ class InspectiondigueWindowWidget(QMainWindow):
             #if not self.dbase.standalone:
             # self.dbase.qgsiface.messageBar().pushMessage("InspectionDigue", text, level=qgis.gui.QgsMessageBar.INFO, duration=3)
             if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                self.dbase.qgsiface.messageBar().pushMessage("InspectionDigue", text, self.dbase.qgsiface.messageBar().INFO)
+                self.dbase.qgsiface.messageBar().pushMessage("Lamia ", text, self.dbase.qgsiface.messageBar().INFO)
             else:
-                self.dbase.qgsiface.messageBar().pushMessage("InspectionDigue" ,text, qgis.core.Qgis.Info)
+                self.dbase.qgsiface.messageBar().pushMessage("Lamia " ,text, qgis.core.Qgis.Info)
 
         else:
             print('normalMessage', text)

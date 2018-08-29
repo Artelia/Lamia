@@ -48,3 +48,6 @@ libelle;       String;               ;                  libelle
 ###geom
 ##FROM Noeud AS Noeudtemp INNER JOIN Objet ON Objet.id_objet = Noeudtemp.id_objet AND Noeudtemp.pk_noeud = Noeud.pk_noeud
 geom;         Int;               ;                  ST_AsText(geom)
+
+###main
+FROM Infralineaire

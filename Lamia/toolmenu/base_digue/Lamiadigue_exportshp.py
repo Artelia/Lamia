@@ -26,13 +26,285 @@ class exportShapefileAssainissementWorker(exportShapefileBaseWorker):
 
 
     def postInit(self):
-        createfilesdir = os.path.join(os.path.dirname(__file__), 'exporttools')
-        for filename in glob.glob(os.path.join(createfilesdir, '*.txt')):
+        self.createfilesdir = os.path.join(os.path.dirname(__file__), 'exporttools')
+        for filename in glob.glob(os.path.join(self.createfilesdir, '*.txt')):
             basename = os.path.basename(filename).split('.')[0]
             self.exportshapefiledialog.comboBox_type.addItems([basename])
 
 
+    def postprepareData(self,tabletype):
 
+        if tabletype == 'Infralineaire_BM':
+            
+
+            #donnees profil
+            if True:
+                tempfield = []
+                tempfield.append(qgis.core.QgsField('Hauteur', QtCore.QVariant.Double))          #0
+                tempfield.append(qgis.core.QgsField('Larcrete', QtCore.QVariant.Double))
+                # tempfield.append(qgis.core.QgsField('Larfranc', QtCore.QVariant.Double))
+                tempfield.append(qgis.core.QgsField('typtater', QtCore.QVariant.String))
+                tempfield.append(qgis.core.QgsField('typcrete', QtCore.QVariant.String))
+                tempfield.append(qgis.core.QgsField('typtaeau', QtCore.QVariant.String))         #5
+                tempfield.append(qgis.core.QgsField('typauba', QtCore.QVariant.String))
+                tempfield.append(qgis.core.QgsField('typberg', QtCore.QVariant.String))
+                tempfield.append(qgis.core.QgsField('typpdber', QtCore.QVariant.String))
+                tempfield.append(qgis.core.QgsField('Desterre', QtCore.QVariant.String))
+                tempfield.append(qgis.core.QgsField('Descrete', QtCore.QVariant.String))         #10
+                tempfield.append(qgis.core.QgsField('Deseau', QtCore.QVariant.String))
+
+                #self.fieldsforshp += tempfield
+
+                for i, field in enumerate(tempfield):
+                    self.fieldsforshp.append(field)
+                    self.champs['postpro'+str(i)] = None
+                    #champs += [[],[],[],[],[],[],[],[],[],[], []]
+                # print('champs',champs)
+
+
+                for i, row in enumerate(self.result):
+
+
+                    hauteurdigue = None
+                    largcrete = None
+                    # largfrancbord = None
+                    typtater=''
+                    typcrete=''
+                    typtaeau=''
+                    typeauba = ''
+                    typeberge = ''
+                    typepdberge = ''
+                    Desterre=''
+                    Descrete=''
+                    Deseau=''
+                    if False:
+                        indexprofil = champs.index(['Infralineaire', 'lk_profil'])
+                        lkprofil  = row[indexprofil]
+                    sql = 'SELECT lk_ressource4 FROM Infralineaire WHERE id_infralineaire = ' + str(row[0])
+                    #print(sql)
+                    query = self.dbase.query(sql)
+                    #print('query',query)
+                    lkprofil = query[0][0]
+
+                    if lkprofil is not None:
+
+                        sql = "SELECT id_graphique, typegraphique FROM Graphique  WHERE id_ressource = " + str(lkprofil)
+                        query = self.dbase.query(sql)
+                        resultrow = [row1 for row1 in query]
+                        if len(resultrow)>0 and resultrow[0][1] == 'PTR':
+                            sql = "SELECT * FROM Graphiquedata WHERE id_graphique = " + str(resultrow[0][0])
+                            sql += " ORDER BY id_graphiquedata"
+                            query = self.dbase.query(sql)
+                            resultrow2 = [list(row2[4:]) for row2 in query]
+                            # row : [id, None, dx, dz, None, position, type1, type2, None, 1]
+                            npresultrow = np.array(resultrow2)
+                            #npresultrow = npresultrow[:,4:]
+                            #print('npresultrow', npresultrow)
+
+                            #largeur crete
+                            index = np.where(npresultrow[:,5] == 'CRE')
+                            largcrete = np.sum(npresultrow[:,2][index])
+                            #hauteur
+                            minindexcrete = int(np.amin(index))
+                            maxindexcrete = int(np.amax(index))
+                            hauteurdigue = np.sum(npresultrow[0:minindexcrete, 3])
+
+                            #francbord
+                            """
+                            index = np.where(npresultrow[:,5] == 'FRB')
+                            largfrancbord = np.sum(npresultrow[:,2][index])
+                            print(index,largfrancbord )
+                            # print(hauteurdigue, largcrete, largfrancbord)
+                            """
+                            #description
+
+
+
+
+                            listdescrtalusterre = ['dX;dZ;Partie;Type1;Type2']
+                            listdescrcrete = ['dX;dZ;Partie;Type1;Type2']
+                            listdescrtaluseau = ['dX;dZ;Partie;Type1;Type2']
+                            for j, elem in enumerate(resultrow2):
+                                # print(j,minindexcrete,maxindexcrete, self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index1', elem[5]),self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7]) )
+                                if j < minindexcrete:
+                                    # print('listdescrtalusterre')
+                                    listdescrtalusterre += [';'.join([str(round(elem[2],1)),
+                                                             str(round(elem[3],1)),
+                                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index1', elem[5]),
+                                                            self.dbase.getConstraintTextFromRawValue('Graphiquedata','index2', elem[6]),
+                                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7])])]
+                                    if elem[5] in ['TAD','SOR', 'TAR'] :
+                                        if typtater == '':
+                                            typtater = ';'.join([self.dbase.getConstraintTextFromRawValue('Graphiquedata','index2', elem[6]),
+                                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7])])
+                                        else:
+                                            typcurr = ';'.join([self.dbase.getConstraintTextFromRawValue('Graphiquedata','index2', elem[6]),
+                                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7])])
+                                            if typcurr != typtater:
+                                                typtater = 'mixte'
+
+                                elif j<=maxindexcrete and j >= minindexcrete:
+                                    # print('listdescrcrete')
+                                    listdescrcrete += [';'.join([str(round(elem[2],1)),
+                                                             str(round(elem[3],1)),
+                                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index1', elem[5]),
+                                                            self.dbase.getConstraintTextFromRawValue('Graphiquedata','index2', elem[6]),
+                                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7])])]
+
+                                    if typcrete == '':
+                                        typcrete = ';'.join(
+                                            [self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index2', elem[6]),
+                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7])])
+                                    else:
+                                        typcurr = ';'.join(
+                                            [self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index2', elem[6]),
+                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7])])
+                                        if typcurr != typcrete:
+                                            typcrete = 'mixte'
+
+
+                                elif j> maxindexcrete:
+                                    # print('listdescrtaluseau')
+                                    listdescrtaluseau += [';'.join([str(round(elem[2],1)),
+                                                             str(round(elem[3],1)),
+                                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index1', elem[5]),
+                                                            self.dbase.getConstraintTextFromRawValue('Graphiquedata','index2', elem[6]),
+                                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7])])]
+
+                                    if elem[5] in ['TAD','SOR', 'TAR']:
+                                        if typtaeau == '':
+                                            typtaeau = ';'.join([self.dbase.getConstraintTextFromRawValue('Graphiquedata','index2', elem[6]),
+                                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7])])
+                                        else:
+                                            typcurr = ';'.join([self.dbase.getConstraintTextFromRawValue('Graphiquedata','index2', elem[6]),
+                                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7])])
+                                            if typcurr != typtaeau:
+                                                typtaeau = 'mixte'
+
+                                    if elem[5] in ['FRB']:
+                                        if typeauba == '':
+                                            typeauba = ';'.join([self.dbase.getConstraintTextFromRawValue('Graphiquedata','index2', elem[6]),
+                                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7])])
+                                        else:
+                                            typcurr = ';'.join([self.dbase.getConstraintTextFromRawValue('Graphiquedata','index2', elem[6]),
+                                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7])])
+                                            if typcurr != typeauba:
+                                                typeauba = 'mixte'
+
+                                    if elem[5] in ['BER']:
+                                        if typeberge == '':
+                                            typeberge = ';'.join([self.dbase.getConstraintTextFromRawValue('Graphiquedata','index2', elem[6]),
+                                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7])])
+                                        else:
+                                            typcurr = ';'.join([self.dbase.getConstraintTextFromRawValue('Graphiquedata','index2', elem[6]),
+                                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7])])
+                                            if typcurr != typeberge:
+                                                typeberge = 'mixte'
+
+                                    if elem[5] in ['PDB']:
+                                        if typepdberge == '':
+                                            typepdberge = ';'.join([self.dbase.getConstraintTextFromRawValue('Graphiquedata','index2', elem[6]),
+                                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7])])
+                                        else:
+                                            typcurr = ';'.join([self.dbase.getConstraintTextFromRawValue('Graphiquedata','index2', elem[6]),
+                                                             self.dbase.getConstraintTextFromRawValue('Graphiquedata', 'index3', elem[7])])
+                                            if typcurr != typepdberge:
+                                                typepdberge = 'mixte'
+
+                            #description = '\n'.join(listdescr)
+
+                            Desterre = '\n'.join(listdescrtalusterre)
+                            Descrete = '\n'.join(listdescrcrete)
+                            Deseau = '\n'.join(listdescrtaluseau)
+
+
+
+
+                            if False:
+                                print(listdescr)
+
+                                print(description)
+                                return
+
+
+                    """
+                    hauteurdigue = -1
+                    largcrete = -1
+                    largfrancbord = -1
+                    typtater=''
+                    typcrete=''
+                    typtaeau=''
+                    typeauba = ''
+                    typeberge = ''
+                    typepdberge = ''
+                    Desterre=''
+                    Descrete=''
+                    Deseau=''
+                    """
+                    if False:
+                        result[i] = list(result[i])[:-1] \
+                                    + [hauteurdigue, largcrete, typtater,typcrete,typtaeau,typeauba,typeberge,typepdberge,  Desterre, Descrete, Deseau  ] \
+                                    + list(result[i])[-1:]
+                        # print([hauteurdigue, largcrete, largfrancbord,typtater,typcrete,typtaeau, Desterre, Descrete, Deseau  ])
+
+                    #self.result[i] += [hauteurdigue, largcrete, typtater,typcrete,typtaeau,typeauba,typeberge,typepdberge,  Desterre, Descrete, Deseau  ]
+                    self.result[i] = list(self.result[i])
+                    self.result[i][-1:-1] = [hauteurdigue, largcrete, typtater,typcrete,typtaeau,typeauba,typeberge,typepdberge,  Desterre, Descrete, Deseau  ]
+                    # self.result[i] = self.result[i].insert(-2,[hauteurdigue, largcrete, typtater,typcrete,typtaeau,typeauba,typeberge,typepdberge,  Desterre, Descrete, Deseau  ])
+            #niveau protection surete
+            if True:
+                tempfield.append(qgis.core.QgsField('niv_pro_am', QtCore.QVariant.Double))
+                tempfield.append(qgis.core.QgsField('niv_pro_av', QtCore.QVariant.Double))
+                tempfield.append(qgis.core.QgsField('niv_sur_am', QtCore.QVariant.Double))
+                tempfield.append(qgis.core.QgsField('niv_sur_av', QtCore.QVariant.Double))
+                #champs += [[], [], [],[]]
+
+                for i, field in enumerate(tempfield):
+                    self.fieldsforshp.append(field)
+                    self.champs['postpro'+str(i)] = None
+
+                pathtool = None
+                for i, tool in enumerate(self.windowdialog.tools):
+                    if 'PathTool' in tool.__class__.__name__:
+                        pathtool = self.windowdialog.tools[i]
+
+                profiletraverstool = pathtool
+
+                profiletraverstool.computeNXGraphForAll()
+
+                for i, row in enumerate(self.result):
+                    niv_pro_am = None
+                    niv_pro_av = None
+                    niv_sur_am = None
+                    niv_sur_av = None
+
+                    #currentgeom = self.currentFeature.geometry().asPolyline()
+                    currentgeom = qgis.core.QgsGeometry.fromWkt(row[-1]).asPolyline()
+                    profiletraverstool.computePath(list(currentgeom[0]), list(currentgeom[-1]))
+                    datas = profiletraverstool.getGraphData()
+
+                    for graphname in datas.keys():
+                        if 'NIV' in graphname:
+                            niv_pro_am = round(datas[graphname]['y'][0],2)
+                            niv_pro_av = round(datas[graphname]['y'][-1],2)
+
+                        if 'SUR' in graphname:
+                            niv_sur_am = round(datas[graphname]['y'][0],2)
+                            niv_sur_av = round(datas[graphname]['y'][-1],2)
+
+                    #result[i] = list(result[i])[:-1] + [niv_pro_am, niv_pro_av, niv_sur_am, niv_sur_av] + list(result[i])[-1:]
+                    self.result[i][-1:-1] = [niv_pro_am, niv_pro_av, niv_sur_am, niv_sur_av]
+
+                profiletraverstool.rubberBand.reset(1)
+            
+            
+            
+            
+            
+            
+            
+            
+            
 
 
 

@@ -20,3 +20,5 @@ class ZonegeoTool(AbstractZonegeoTool):
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
         super(ZonegeoTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
+
+

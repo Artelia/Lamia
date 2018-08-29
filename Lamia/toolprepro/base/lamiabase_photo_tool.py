@@ -39,13 +39,7 @@ class BasePhotoTool(AbstractInspectionDigueTool):
                                             'idtcsource' : 'id_tcressource',
                                            'iddest' : 'id_objet',
                                            'idtcdest' : 'id_tcobjet',
-                                           'desttable' : ['Infralineaire','Observation','Equipement','Noeud']},
-                            'Marche' :{'tabletc' : None,
-                                              'idsource' : 'lk_marche',
-                                            'idtcsource' : None,
-                                           'iddest' : 'id_marche',
-                                           'idtcdest' : None,
-                                           'desttable' : ['Marche']} }
+                                           'desttable' : ['Infralineaire','Observation','Equipement','Noeud','Profil']} }
         # self.pickTable = None
         self.iconpath = os.path.join(os.path.dirname(__file__), 'lamiabase_photo_tool_icon.svg')
 
@@ -80,12 +74,13 @@ class BasePhotoTool(AbstractInspectionDigueTool):
                 lambda: self.windowdialog.showNumPad(self.userwdgfield.spinBox_numphoto))
 
 
-            # ****************************************************************************************
-            # parent widgets
-            if self.parentWidget is not None and 'lk_photo' in self.dbase.dbasetables[self.parentWidget.dbasetablename]['fields'].keys():
-                self.userwdgfield.pushButton_defaultphoto.clicked.connect(self.setDefaultPhoto)
-            else:
-                self.userwdgfield.pushButton_defaultphoto.setParent(None)
+            if False:
+                # ****************************************************************************************
+                # parent widgets
+                if self.parentWidget is not None and 'lk_photo' in self.dbase.dbasetables[self.parentWidget.dbasetablename]['fields'].keys():
+                    self.userwdgfield.pushButton_defaultphoto.clicked.connect(self.setDefaultPhoto)
+                else:
+                    self.userwdgfield.pushButton_defaultphoto.setParent(None)
 
 
             # ****************************************************************************************
@@ -171,8 +166,6 @@ class BasePhotoTool(AbstractInspectionDigueTool):
         if self.currentFeature is None:
             datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
             self.initFeatureProperties(feat, 'Ressource', 'dateressource', datecreation)
-
-            print('postInitFeatureProperties', numphoto)
 
             if numphoto is not None:
                 self.userwdgfield.spinBox_numphoto.setValue(numphoto)

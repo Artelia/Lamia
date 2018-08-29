@@ -13,6 +13,7 @@ import os
 import qgis
 import datetime
 from ..base.lamiabase_photo_tool import BasePhotoTool
+from .lamiabaseassainissement_photo_tool import BaseAssainissementPhotoTool as BasePhotoTool
 from ..base.lamiabase_croquis_tool import BaseCroquisTool
 from .lamiabaseassainissement_desordre_tool import BaseAssainissementDesordreTool
 from .lamiabaseassainissement_equipement_tool import BaseAssainissementEquipementTool

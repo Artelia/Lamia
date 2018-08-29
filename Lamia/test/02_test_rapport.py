@@ -65,7 +65,13 @@ def testRapport(canvas, loadfile=True, typedb="spatialite",reporttype=None, pdff
             # path = os.path.normpath('C://000_testdigue//BM_SIJALAG//BD_SIJALAG_ind6.sqlite')
             # path = os.path.normpath('C://00_Affaires//BM_digues//Base_donnees//Begles//BD_Begles_ind9.sqlite')
             # path = os.path.normpath('C://000_testdigue//BD_Begles_ind8.sqlite')
-            path = os.path.normpath('I://CD17-2016//03-BDC//4352286-BDC182131-00790-DIGUE DE GUYENNE BOYARDVILLE//5_Etude//Basedonnees//BD_Cayenne_ind1.sqlite')
+            # path = os.path.normpath('I://CD17-2016//03-BDC//4352286-BDC182131-00790-DIGUE DE GUYENNE BOYARDVILLE//5_Etude//Basedonnees//BD_Cayenne_ind1.sqlite')
+
+            #path = os.path.normpath("C://000_testdigue//convertBM//TO//BD_SIJALAG_ind10.sqlite")
+
+            path = os.path.normpath("C://000_testdigue//201710_Begles//BD_Begles_ind16.sqlite")
+
+
             wind.dbase.loadQgisVectorLayers(path)
             wind.loadUiDesktop()
 
@@ -75,11 +81,30 @@ def testRapport(canvas, loadfile=True, typedb="spatialite",reporttype=None, pdff
                                             password='PVR', port=5432)
 
 
-    if True:
+    if False:
         # testVirtualLayer()
         wind.dbase.dbasetables['Zonegeo']['layerqgis'].selectByIds([2])
         wind.printRapport(reporttype=reporttype, pdffile=pdffile)
         print('fin')
+
+    if True:
+        indexrapport = None
+        for i, menutool in enumerate(wind.menutools):
+            #print('ook', menutool.__class__.__name__)
+            if 'printPDF' in menutool.__class__.__name__ :
+                #print('oooo',i)
+                indexrapport = i
+                break
+        """
+        self.pdffile = pdffile
+        self.reporttype = reporttype
+        """
+        wind.dbase.dbasetables['Zonegeo']['layerqgis'].selectByIds([7])
+        # Desordres Infralineaire Equipement_hydraulique
+        wind.menutools[indexrapport].pdffile = "c://testrapport.pdf"
+        wind.menutools[indexrapport].reporttype = 'Desordres'
+        wind.menutools[indexrapport].work()
+
 
 # *********************************************************************************************************************
 # ******************************************   MAIN      *************************************************************

@@ -91,12 +91,11 @@ class LinkageDialog(QDialog, FORM_CLASS):
         if self.currentlinkage['tabletc'] is not None:
 
             for fieldname in self.dbasetc['fields']:
-                if fieldname == self.currentlinkage['idtcsource'] or fieldname == 'id_' + self.currenttype.lower() :
+                if fieldname == self.currentlinkage['idtcsource'] or fieldname == 'pk_' + self.currenttype.lower() :
                     continue
                 else:
                     self.headerlist.append(fieldname)
         else:
-
             self.headerlist.append(self.currentlinkage['idsource'])
 
 
@@ -108,7 +107,7 @@ class LinkageDialog(QDialog, FORM_CLASS):
 
         if self.widget.currentFeature is not None:
             if self.currentlinkage['tabletc'] is not None:
-                sql = "SELECT id_" + self.currenttype.lower()  +"," + ",".join(self.headerlist) + " FROM " + self.currentlinkage['tabletc']
+                sql = "SELECT pk_" + self.currenttype.lower()  +"," + ",".join(self.headerlist) + " FROM " + self.currentlinkage['tabletc']
                 sql += " WHERE " + self.currentlinkage['idtcsource'] + " = " + str(self.widget.currentFeature[self.currentlinkage['idsource']])
                 query = self.widget.dbase.query(sql)
                 ids = [row[0:len(self.headerlist)+1] for row in query]
@@ -151,7 +150,7 @@ class LinkageDialog(QDialog, FORM_CLASS):
                 #sql = "SELECT lk_prestation FROM Ressource WHERE Ressource.id_ressource = " + str(feat['id_ressource'])
                 #sql = "SELECT " +self.currentlinkage['idsource'] + " FROM " +self.widget.dbasetablename + "_view  "
                 sql = "SELECT " + self.currentlinkage['idsource'] + " FROM " + self.widget.dbasetablename
-                sql += " WHERE id_" + self.widget.dbasetablename  + " = " + str(self.widget.currentFeature.id())
+                sql += " WHERE pk_" + self.widget.dbasetablename  + " = " + str(self.widget.currentFeature.id())
                 query = self.widget.dbase.query(sql)
 
 
@@ -165,13 +164,13 @@ class LinkageDialog(QDialog, FORM_CLASS):
                     query = self.widget.dbase.query(sql)
 
 
-
-                ids = [row[0] for row in query]
-                self.addrow()
-                if len(ids)> 0 and not self.widget.dbase.isAttributeNull(ids[0]):
-                    self.tableWidget.setItem(0,0,QTableWidgetItem( str(ids[0])))
-                else :
-                    self.tableWidget.setItem(0,0,QTableWidgetItem( ''))
+                if len(query)>0:
+                    ids = [row[0] for row in query]
+                    self.addrow()
+                    if len(ids)> 0 and not self.widget.dbase.isAttributeNull(ids[0]):
+                        self.tableWidget.setItem(0,0,QTableWidgetItem( str(ids[0])))
+                    else :
+                        self.tableWidget.setItem(0,0,QTableWidgetItem( ''))
 
 
     def resetFromGeometry(self):
@@ -258,7 +257,7 @@ class LinkageDialog(QDialog, FORM_CLASS):
             sql = "DELETE FROM " + self.currentlinkage['tabletc']  + " WHERE  " + self.currentlinkage['idtcsource'] + " =  " + str(self.widget.currentFeature[self.currentlinkage['idsource']]) + ";"
             #sql = "INSERT INTO " + self.currentlinkage['tabletc'] + " (" + self.currentlinkage['idtcsource'] + "," +  self.currentlinkage['idtcdest'] + ") "
             #sql += "VALUES(" + str(self.currentFeature[self.currentlinkage['idsource']]) + "," + str(id) + " );"
-            print(sql)
+            # print(sql)
             query = self.widget.dbase.query(sql)
             self.widget.dbase.commit()
 
@@ -281,14 +280,17 @@ class LinkageDialog(QDialog, FORM_CLASS):
                                                                                               self.headerlist[column],
                                                                                               wdg.currentText()) + "'")
                     elif self.tableWidget.item(row,column) is not None:
-                        if self.tableWidget.item(row,column).text() == '':
+                        if self.tableWidget.item(row,column).text() in ['', 'None']:
                             valuetoset = 'NULL'
                         else:
                             valuetoset = self.tableWidget.item(row,column).text()
                         rowvalues.append(valuetoset )
+                    else:
+                        rowvalues.append('NULL')
+
                 sql = "INSERT INTO " + self.currentlinkage['tabletc'] + " (" + self.currentlinkage['idtcsource'] + "," +  ",".join(self.headerlist) + ") "
                 sql += "VALUES(" + str(self.widget.currentFeature[self.currentlinkage['idsource']]) + "," + ",".join(rowvalues) + " );"
-                print(sql)
+                # print(sql)
                 query = self.widget.dbase.query(sql)
                 self.widget.dbase.commit()
         else:

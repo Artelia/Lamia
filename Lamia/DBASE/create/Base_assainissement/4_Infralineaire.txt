@@ -32,6 +32,7 @@ Autre;              00
 Indetermine;        99
 ###diametreNominal;        INT ;                       INTEGER
 ###formecanalisation;                VARCHAR(255);            TEXT
+/;
 Circulaire;CIR
 Aqueduc; AQU
 Ovoide;OVO

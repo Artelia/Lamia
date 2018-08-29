@@ -10,6 +10,7 @@ Z;               Double;                               ;     Z
 alttamponouvrage;Double;                               ;     alttamponouvrage
 profradierouvrage;Double;                               ;     profradierouvrage
 altradierouvrage;Double;                               ;     CASE WHEN altradierouvrage IS NULL THEN Z - profradierouvrage ELSE altradierouvrage END
+accessibilite;       String;           accessibilite;         accessibilite
 
 test1;            Int;                  ;                
 test2;            Int;                  ;               CASE WHEN id_noeud IS NULL THEN 1 ELSE 0 END
@@ -40,11 +41,28 @@ ART_NB_ARR;         Int;               ;                  COUNT(*)
 fichier;         String;               ;                  numphoto
 
 ###Zonegeo
-##FROM Zonegeo INNER JOIN Objet  ON Zonegeo.id_objet = Objet.id_objet WHERE  ST_WITHIN(ST_MakeValid(Noeud.geom), ST_MakeValid(Zonegeo.geom))
+##FROM Zonegeo INNER JOIN Objet  ON Zonegeo.id_objet = Objet.id_objet WHERE  ST_WITHIN(ST_MakeValid(Noeud.geom), ST_MakeValid(Zonegeo.geom)) AND Zonegeo.type_zonegeo = 'COL'
 #nom              type               cst               valeur                    
 id_zonegeo;       Int;               ;                  id_zonegeo
 libelle;       String;               ;                  libelle
 
+###Observation
+##FROM Observation INNER JOIN Desordre ON Desordre.id_desordre = Observation.lk_desordre INNER JOIN Objet  ON Observation.id_objet = Objet.id_objet WHERE Desordre.lk_descriptionsystem = Noeud.id_descriptionsystem
+#nom              type               cst               valeur                    
+depots;         String;             depots;             depots
+ECPPdepuisbranchement;Int;          ;                   ECPPdepuisbranchement
+gcdegrade;Int;          ;                   gcdegrade
+infiltration;Int;          ;                   infiltration
+intrusionracine;Int;          ;                   intrusionracine
+miseencharge;Int;          ;                   miseencharge
+tamponendommage;Int;          ;                   tamponendommage
+
+
+
 ###geom
 ##FROM Noeud AS Noeudtemp INNER JOIN Objet ON Objet.id_objet = Noeudtemp.id_objet AND Noeudtemp.pk_noeud = Noeud.pk_noeud
 geom;         Int;               ;                  ST_AsText(geom)
+
+
+###main
+FROM Noeud

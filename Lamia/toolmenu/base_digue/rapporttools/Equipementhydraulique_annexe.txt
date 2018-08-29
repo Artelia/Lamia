@@ -1,0 +1,36 @@
+###atlaslayersql
+WITH Objettemp AS (SELECT Objet.id_objet, Objet.libelle, Objet.commentaire FROM Objet ),
+Gestionnaire AS (SELECT Intervenant.societe, Intervenant.nom  , Tcobjetintervenant.id_tcobjet 
+                 FROM Tcobjetintervenant  
+                 INNER JOIN Intervenant ON Tcobjetintervenant.id_tcintervenant = Intervenant.id_intervenant  
+                 WHERE Tcobjetintervenant.fonction = 'GES' )
+SELECT Equipement_qgis.* , Objettemp.libelle, Objettemp.commentaire, Gestionnaire.societe, Gestionnaire.nom 
+FROM Equipement_qgis 
+INNER JOIN Objettemp ON Equipement_qgis.id_objet = Objettemp.id_objet
+LEFT JOIN Gestionnaire ON Gestionnaire.id_tcobjet = Objettemp.id_objet
+WHERE ( Equipement_qgis.categorie = 'RHF' or Equipement_qgis.categorie = 'RHO' or Equipement_qgis.categorie = 'OUH')
+###atlaslayerid
+id_equipement
+###spatial
+True
+###ordering
+
+###atlaslayerstyle
+
+###atlasdrivemap
+#itemname;   minscale;   typescale;      layers
+#map1;       2500;       Predefined      ;['atlaslayer','Infralineaire', 'scan25']
+#map1;       2500;       Predefined      ;[]
+###generalmap
+#itemname;   minscale;   typescale; layers
+#map0    ;           ;             ; ['Infralineaire', 'ortho']
+#map0    ;           ;             ; []
+###images
+#itemname   ; type
+photo1;photo1
+###childprint
+#confname;                linkcolumn;             optionsql
+
+
+
+

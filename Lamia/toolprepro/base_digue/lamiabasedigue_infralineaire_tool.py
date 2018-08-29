@@ -17,11 +17,13 @@ except ImportError:
 import os
 #from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
 from ..base.lamiabase_infralineaire_tool import BaseInfraLineaireTool
-
-from ..base.lamiabase_photo_tool import BasePhotoTool
+import logging
+# from ..base.lamiabase_photo_tool import BasePhotoTool
+from .lamiabasedigue_photo_tool import BaseDiguePhotoTool as BasePhotoTool
 from ..base.lamiabase_croquis_tool import BaseCroquisTool
-
-
+from ..base.lamiabase_photoviewer import PhotoViewer
+from ..base.lamiabase_graphique_tool import BaseGraphiqueTool as GraphiqueTool
+from .lamiabasedigue_profil_tool import BaseDigueProfilTool as ProfilTool
 
 
 class BaseDigueInfraLineaireTool(BaseInfraLineaireTool):
@@ -97,6 +99,267 @@ class BaseDigueInfraLineaireTool(BaseInfraLineaireTool):
 
             self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
             self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+
+
+
+
+
+    def initDesktopUI(self):
+
+        # ****************************************************************************************
+        # userui Desktop
+        if self.userwdgdesktop is None:
+            self.userwdgdesktop = UserUIDesktop()
+
+            self.linkuserwdgdesktop = {'Infralineaire': {'linkfield': 'id_infralineaire',
+                                                         'widgets': {'description1': self.userwdgdesktop.comboBox_type,
+                                                                     'description2': self.userwdgdesktop.comboBox_contitution,
+                                                                     'classement': self.userwdgdesktop.comboBox_classement,
+                                                                     'aubaredelargeur': self.userwdgdesktop.comboBox_aubaredelargeur,
+                                                                     'aubaredevegherbacee': self.userwdgdesktop.comboBox_aubaredevegherbacee,
+                                                                     'aubaredevegarbustive': self.userwdgdesktop.comboBox_aubaredevegarbustive,
+                                                                     'aubaredevegarboree': self.userwdgdesktop.comboBox_aubaredevegarboree,
+                                                                     'aubaredecommentaire': self.userwdgdesktop.textBrowser_aubaredecommentaire
+                                                                     }},
+                                       'Objet': {'linkfield': 'id_objet',
+                                                 'widgets': {'libelle': self.userwdgdesktop.lineEdit_nom,
+                                                             'commentaire': self.userwdgdesktop.textBrowser_comm}},
+                                       'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
+                                                             'widgets': {}}}
+
+            self.userwdgdesktop.pushButton_defineinter.clicked.connect(self.manageLinkage)
+
+            if True:
+                self.photowdg = PhotoViewer()
+                self.userwdgdesktop.tabWidget.widget(0).layout().addWidget(self.photowdg)
+            if True:
+                self.croquisprofilwdg = PhotoViewer()
+                self.userwdgdesktop.stackedWidget_profiltravers.widget(0).layout().addWidget(self.croquisprofilwdg)
+
+                self.graphprofil = GraphiqueTool(dbase=self.dbase, parentwidget=self)
+                self.userwdgdesktop.stackedWidget_profiltravers.widget(1).layout().addWidget(self.graphprofil.pyqtgraphwdg)
+                # self.userwdg.frame_graph.layout().addWidget(self.pyqtgraphwdg)
+
+            if True:
+                pathtool = None
+                for i, tool in enumerate(self.windowdialog.tools):
+                    if 'PathTool' in tool.__class__.__name__:
+                        pathtool = self.windowdialog.tools[i]
+
+                self.propertieswdgPROFILLONG = pathtool.__class__(dbase=self.dbase, parentwidget=self)
+                self.userwdgdesktop.tabWidget.widget(2).layout().addWidget(self.propertieswdgPROFILLONG.plotWdg)
+            else:
+                self.propertieswdgPROFILLONG = None
+
+            self.dbasechildwdgdesktop = []
+
+
+            if False:
+
+                self.propertieswdgRAPPORT = RapportTool(dbase=self.dbase, parentwidget=self)
+                self.dbasechildwdgdesktop.append(self.propertieswdgRAPPORT)
+
+                #self.propertieswdgTRONCONEMPRISE = TronconEmpriseTool(dbase=self.dbase, parentwidget=self)
+                #self.dbasechildwdgdesktop.append(self.propertieswdgTRONCONEMPRISE)
+
+            if True:
+                self.propertieswdgPROFIL = ProfilTool(dbase=self.dbase, parentwidget=self)
+                self.dbasechildwdgdesktop.append(self.propertieswdgPROFIL)
+
+            self.initWidgets()
+
+
+        if False:
+            # ****************************************************************************************
+            #   userui Field
+            self.userwdgfield = UserUIField()
+
+            self.linkuserwdgfield = {'Infralineaire': {'linkfield': 'id_infralineaire',
+                                                       'widgets': {'description1':self.userwdgfield.comboBox_type,
+                                                              'description2': self.userwdgfield.comboBox_contitution}},
+                                'Objet': {'linkfield': 'id_objet',
+                                          'widgets': {'libelle': self.userwdgfield.lineEdit_nom,
+                                                       'commentaire': self.userwdgfield.textBrowser_comm}},
+                                'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
+                                                      'widgets': {}}}
+
+            # ****************************************************************************************
+            # userui Desktop
+            self.userwdgdesktop = UserUI()
+
+            self.linkuserwdgdesktop = {'Infralineaire': {'linkfield': 'id_infralineaire',
+                                                  'widgets': {'description1':self.userwdgdesktop.comboBox_type,
+                                                              'description2': self.userwdgdesktop.comboBox_contitution,
+                                                              'classement': self.userwdgdesktop.comboBox_classement}},
+                                'Objet': {'linkfield': 'id_objet',
+                                          'widgets': {'libelle': self.userwdgdesktop.lineEdit_nom,
+                                                       'commentaire': self.userwdgdesktop.textBrowser_comm}},
+                                'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
+                                                      'widgets': {}}}
+
+
+            self.userwdgdesktop.pushButton_defineinter.clicked.connect(self.manageLinkage)
+
+            if True:
+                self.photowdg = Label()
+                self.userwdgdesktop.tabWidget.widget(0).layout().addWidget(self.photowdg)
+            if True:
+                self.croquisprofilwdg = Label()
+                self.userwdgdesktop.stackedWidget_profiltravers.widget(0).layout().addWidget(self.croquisprofilwdg)
+
+                self.graphprofil = GraphiqueTool(dbase=self.dbase, parentwidget=self)
+                self.userwdgdesktop.stackedWidget_profiltravers.widget(1).layout().addWidget(self.graphprofil.pyqtgraphwdg)
+                #self.userwdg.frame_graph.layout().addWidget(self.pyqtgraphwdg)
+
+
+
+            if True:
+                self.propertieswdgPROFILLONG = PathTool(dbase=self.dbase, parentwidget=self)
+                self.userwdgdesktop.tabWidget.widget(2).layout().addWidget(self.propertieswdgPROFILLONG.plotWdg)
+            else:
+                self.propertieswdgPROFILLONG = None
+
+
+
+
+
+
+
+
+            # ****************************************************************************************
+            # child widgets
+            self.dbasechildwdgfield = []
+            self.dbasechildwdgdesktop = []
+            if True:
+                self.dbasechildwdg=[]
+                self.propertieswdgPHOTOGRAPHIE = PhotosTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
+                self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
+                self.dbasechildwdgdesktop.append(self.propertieswdgPHOTOGRAPHIE)
+
+                self.propertieswdgRAPPORT = RapportTool(dbase=self.dbase, parentwidget=self)
+                self.dbasechildwdgdesktop.append(self.propertieswdgRAPPORT)
+
+                self.propertieswdgTRONCONEMPRISE = TronconEmpriseTool(dbase=self.dbase, parentwidget=self)
+                self.dbasechildwdgdesktop.append(self.propertieswdgTRONCONEMPRISE)
+
+                self.propertieswdgCROQUIS = CroquisTool(dbase=self.dbase, parentwidget=self)
+                self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+                self.dbasechildwdgdesktop.append(self.propertieswdgCROQUIS)
+
+                self.propertieswdgPROFIL = ProfilTool(dbase=self.dbase, parentwidget=self)
+                self.dbasechildwdgdesktop.append(self.propertieswdgPROFIL)
+
+            if False:
+                self.dbasechildwdg = [self.dbase.dbasetables['Photo']['widget'],
+                                      self.dbase.dbasetables['Rapport']['widget']]
+
+            if False:
+                self.dbasechildwdg = {'photo': [self.dbase.dbasetables['Photo']['widget'], 0]
+                                      }
+
+
+
+            if False:
+                self.propertieswdgPROFILTRAVERS = ProfilTraversTool(dbase=self.dbase, parentwidget=self)
+                self.dbasechildwdg.append(self.propertieswdgPROFILTRAVERS)
+
+            if debugtime: logging.getLogger('Lamia').debug('End init %s', str(round(time.clock() - timestart, 3)))
+
+
+
+
+
+
+
+
+
+
+    def postInitFeatureProperties(self, feat):
+        debug = False
+        if debug: logging.getLogger("Lamia").debug('Start ')
+
+        if self.currentFeature is None:
+            pass
+        else:
+            if self.userwdg == self.userwdgdesktop:
+                # intervenants
+                sql = "SELECT Tcobjetintervenant.fonction, Intervenant.nom,Intervenant.societe  FROM Tcobjetintervenant "
+                sql += " INNER JOIN Intervenant ON Tcobjetintervenant.id_tcintervenant = Intervenant.id_intervenant "
+                sql += "WHERE id_tcobjet = " + str(self.currentFeature['id_objet'])
+                query = self.dbase.query(sql)
+                result = "\n".join([str(row) for row in query])
+                self.userwdgdesktop.textBrowser_intervenants.clear()
+                self.userwdgdesktop.textBrowser_intervenants.append(result)
+
+                #photo
+                lkressource = self.currentFeature['lk_ressource2']
+                if not self.dbase.isAttributeNull(lkressource):
+                    #sql = "SELECT Ressource.file FROM Photo INNER JOIN Ressource ON Photo.id_ressource = Ressource.id_ressource WHERE Photo.id_objet = "
+                    # sql += str(self.currentFeature['lk_photo'])
+                    sql = "SELECT file FROM Ressource  WHERE id_ressource = " + str(lkressource)
+                    query = self.dbase.query(sql)
+                    result = [row for row in query]
+                    filephoto = result[0][0]
+                    completefilephoto = self.dbase.completePathOfFile(filephoto)
+                    self.showImageinLabelWidget(self.photowdg, completefilephoto)
+                else:
+                    self.photowdg.clear()
+
+                #profil travers
+                lkressourceprofile = self.currentFeature['lk_ressource4']
+                if not self.dbase.isAttributeNull(lkressourceprofile):
+                    #sql = "SELECT Ressource.file FROM Photo INNER JOIN Ressource ON Photo.id_ressource = Ressource.id_ressource WHERE Photo.id_ressource = "
+                    #sql += str(lkressourceprofile)
+                    sql = "SELECT file FROM Ressource  WHERE id_ressource = " + str(lkressourceprofile)
+                    query = self.dbase.query(sql)
+                    result = [row for row in query]
+                    if len(result)>0:
+                        self.userwdgdesktop.stackedWidget_profiltravers.setCurrentIndex(0)
+                        filephoto = result[0][0]
+                        completefilephoto = self.dbase.completePathOfFile(filephoto)
+                        self.showImageinLabelWidget(self.croquisprofilwdg, completefilephoto)
+                    else:
+                        self.croquisprofilwdg.clear()
+
+                    sql = "SELECT id_graphique FROM Graphique  WHERE id_ressource = " + str(lkressourceprofile)
+                    query = self.dbase.query(sql)
+                    result = [row for row in query]
+                    if len(result) > 0:
+                        self.userwdgdesktop.stackedWidget_profiltravers.setCurrentIndex(1)
+                        idgraphique = result[0][0]
+                        self.graphprofil.featureSelected(idgraphique,True)
+                else:
+                    self.userwdgdesktop.stackedWidget_profiltravers.setCurrentIndex(0)
+                    self.croquisprofilwdg.clear()
+
+
+                if False:
+                    if not self.dbase.isAttributeNull(lkphoto):
+                        sql = "SELECT Ressource.file FROM Photo INNER JOIN Ressource ON Photo.id_ressource = Ressource.id_ressource WHERE Photo.id_objet = "
+                        sql += str(self.currentFeature['lk_photo'])
+                        query = self.dbase.query(sql)
+                        result = [row for row in query]
+                        filephoto = result[0][0]
+                        completefilephoto = self.dbase.completePathOfFile(filephoto)
+                        self.showImageinLabelWidget(self.photowdg, completefilephoto)
+                    else:
+                        self.photowdg.clear()
+
+
+                #profil long
+                if self.propertieswdgPROFILLONG is not None:
+                    self.propertieswdgPROFILLONG.activateMouseTracking(0)
+                    self.propertieswdgPROFILLONG.rubberbandtrack.hide()
+                    self.propertieswdgPROFILLONG.rubberBand.reset(self.dbase.dbasetables['Infralineaire']['layer'].geometryType())
+                    currentgeom = self.currentFeature.geometry().asPolyline()
+                    self.propertieswdgPROFILLONG.computePath(list(currentgeom[0]), list(currentgeom[-1]))
+                    self.propertieswdgPROFILLONG.activateMouseTracking(2)
+                    self.propertieswdgPROFILLONG.rubberbandtrack.hide()
+                    self.propertieswdgPROFILLONG.rubberBand.reset(self.dbase.dbasetables['Infralineaire']['layer'].geometryType())
+
+
+
+
     """
     
     
@@ -184,3 +447,8 @@ class UserUIField(QWidget):
         uipath = os.path.join(os.path.dirname(__file__), 'lamiabasedigue_infralineaire_tool_ui.ui')
         uic.loadUi(uipath, self)
 
+class UserUIDesktop(QWidget):
+    def __init__(self, parent=None):
+        super(UserUIDesktop, self).__init__(parent=parent)
+        uipath = os.path.join(os.path.dirname(__file__), 'lamiabasedigue_infralineaire_tooldesktop_ui.ui')
+        uic.loadUi(uipath, self)

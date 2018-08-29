@@ -427,7 +427,8 @@ class BaseGraphiqueTool(AbstractInspectionDigueTool):
         if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
             if self.parentWidget.dbasetablename == 'Profil':
                 currentparentlinkfield = self.parentWidget.currentFeature['id_objet']
-                sql = "INSERT INTO Tcobjetressource(id_tcobjet, id_tcressource) VALUES(" +  str(currentparentlinkfield) + ", " +  str(lastressourceid) + ");"
+                sql = "INSERT INTO Tcobjetressource(id_tcobjet, id_tcressource,id_revisionbegin) "
+                sql += " VALUES(" +  str(currentparentlinkfield) + ", " +  str(lastressourceid) + "," +str(lastrevision) +");"
                 # print('createparent',sql)
 
                 query = self.dbase.query(sql)
@@ -444,8 +445,9 @@ class BaseGraphiqueTool(AbstractInspectionDigueTool):
         self.dbase.query(sql)
         self.dbase.commit()
 
-        self.dbase.vacuum('Graphiquedata')
-        self.dbase.commit()
+        if False:
+            self.dbase.vacuum('Graphiquedata')
+            self.dbase.commit()
 
         for row in range(self.userwdgfield.tableWidget.rowCount() ):
             # get values

@@ -1,46 +1,19 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis version="2.18.18" simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" readOnly="0" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+<qgis version="2.18.22" simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" readOnly="0" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
   <edittypes>
-    <edittype widgetv2type="TextEdit" name="id_desordre">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="cote">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="position">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="catdes">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="typedes">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="id_objet">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="impact">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="gravite">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="priorite">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="risques">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="lk_descriptionsystem">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="datecreation">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="datedestruction">
+    <edittype widgetv2type="TextEdit" name="pk_observation">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="id_observation">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="id_revisionbegin">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="id_revisionend">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="id_objet">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="dateobservation">
@@ -52,19 +25,61 @@
     <edittype widgetv2type="TextEdit" name="nombre">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="gravite:1">
+    <edittype widgetv2type="TextEdit" name="gravite">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="evolution">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="commentaires">
+    <edittype widgetv2type="TextEdit" name="typesuite">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="suite">
+    <edittype widgetv2type="TextEdit" name="precisionsuite">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="datederniereobs">
+    <edittype widgetv2type="TextEdit" name="commentairesuite">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="lk_marche">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="lk_desordre">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="oh_etatvantellerie">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="oh_etatvantelleriecom">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="oh_etatgeniecivil">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="oh_etatgeniecivilcom">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="oh_testmanoeuvre">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="oh_testmanoeuvrecom">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="oh_etancheite">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="oh_etancheitecom">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="datecreation">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="datedestruction">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="revisionbegin">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="revisionend">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
   </edittypes>
@@ -85,7 +100,7 @@
     </rules>
     <symbols>
       <symbol alpha="1" clip_to_extent="1" type="fill" name="0">
-        <layer pass="0" class="CentroidFill" locked="0">
+        <layer pass="3" class="CentroidFill" locked="0">
           <prop k="point_on_all_parts" v="1"/>
           <prop k="point_on_surface" v="0"/>
           <symbol alpha="1" clip_to_extent="1" type="marker" name="@0@0">
@@ -113,7 +128,7 @@
         </layer>
       </symbol>
       <symbol alpha="1" clip_to_extent="1" type="fill" name="1">
-        <layer pass="0" class="CentroidFill" locked="0">
+        <layer pass="3" class="CentroidFill" locked="0">
           <prop k="point_on_all_parts" v="1"/>
           <prop k="point_on_surface" v="0"/>
           <symbol alpha="1" clip_to_extent="1" type="marker" name="@1@0">
@@ -141,7 +156,7 @@
         </layer>
       </symbol>
       <symbol alpha="1" clip_to_extent="1" type="fill" name="2">
-        <layer pass="0" class="CentroidFill" locked="0">
+        <layer pass="3" class="CentroidFill" locked="0">
           <prop k="point_on_all_parts" v="1"/>
           <prop k="point_on_surface" v="0"/>
           <symbol alpha="1" clip_to_extent="1" type="marker" name="@2@0">
@@ -169,7 +184,7 @@
         </layer>
       </symbol>
       <symbol alpha="1" clip_to_extent="1" type="fill" name="3">
-        <layer pass="0" class="CentroidFill" locked="0">
+        <layer pass="4" class="CentroidFill" locked="0">
           <prop k="point_on_all_parts" v="1"/>
           <prop k="point_on_surface" v="0"/>
           <symbol alpha="1" clip_to_extent="1" type="marker" name="@3@0">
@@ -197,7 +212,7 @@
         </layer>
       </symbol>
       <symbol alpha="1" clip_to_extent="1" type="fill" name="4">
-        <layer pass="0" class="CentroidFill" locked="0">
+        <layer pass="4" class="CentroidFill" locked="0">
           <prop k="point_on_all_parts" v="1"/>
           <prop k="point_on_surface" v="0"/>
           <symbol alpha="1" clip_to_extent="1" type="marker" name="@4@0">
@@ -270,7 +285,7 @@
         </layer>
       </symbol>
       <symbol alpha="1" clip_to_extent="1" type="fill" name="8">
-        <layer pass="0" class="SimpleFill" locked="0">
+        <layer pass="1" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="color" v="244,202,76,255"/>
           <prop k="joinstyle" v="bevel"/>
@@ -285,7 +300,7 @@
         </layer>
       </symbol>
       <symbol alpha="1" clip_to_extent="1" type="fill" name="9">
-        <layer pass="0" class="SimpleFill" locked="0">
+        <layer pass="2" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="color" v="255,1,1,255"/>
           <prop k="joinstyle" v="bevel"/>
@@ -329,7 +344,7 @@
     <property key="labeling/distMapUnitScale" value="0,0,0,0,0,0"/>
     <property key="labeling/drawLabels" value="true"/>
     <property key="labeling/enabled" value="true"/>
-    <property key="labeling/fieldName" value="id_desordre"/>
+    <property key="labeling/fieldName" value="lk_desordre"/>
     <property key="labeling/fitInPolygonOnly" value="false"/>
     <property key="labeling/fontCapitals" value="0"/>
     <property key="labeling/fontFamily" value="MS Shell Dlg 2"/>
@@ -501,57 +516,67 @@
   <DiagramLayerSettings yPosColumn="-1" showColumn="-1" linePlacementFlags="10" placement="0" dist="0" xPosColumn="-1" priority="0" obstacle="0" zIndex="0" showAll="1"/>
   <annotationform></annotationform>
   <aliases>
-    <alias field="id_desordre" index="0" name=""/>
-    <alias field="cote" index="1" name=""/>
-    <alias field="position" index="2" name=""/>
-    <alias field="catdes" index="3" name=""/>
-    <alias field="typedes" index="4" name=""/>
-    <alias field="id_objet" index="5" name=""/>
-    <alias field="impact" index="6" name=""/>
-    <alias field="gravite" index="7" name=""/>
-    <alias field="priorite" index="8" name=""/>
-    <alias field="risques" index="9" name=""/>
-    <alias field="lk_descriptionsystem" index="10" name=""/>
-    <alias field="datecreation" index="11" name=""/>
-    <alias field="datedestruction" index="12" name=""/>
-    <alias field="id_observation" index="13" name=""/>
-    <alias field="dateobservation" index="14" name=""/>
-    <alias field="source" index="15" name=""/>
-    <alias field="nombre" index="16" name=""/>
-    <alias field="gravite:1" index="17" name=""/>
-    <alias field="evolution" index="18" name=""/>
-    <alias field="commentaires" index="19" name=""/>
-    <alias field="suite" index="20" name=""/>
-    <alias field="datederniereobs" index="21" name=""/>
+    <alias field="pk_observation" index="0" name=""/>
+    <alias field="id_observation" index="1" name=""/>
+    <alias field="id_revisionbegin" index="2" name=""/>
+    <alias field="id_revisionend" index="3" name=""/>
+    <alias field="id_objet" index="4" name=""/>
+    <alias field="dateobservation" index="5" name=""/>
+    <alias field="source" index="6" name=""/>
+    <alias field="nombre" index="7" name=""/>
+    <alias field="gravite" index="8" name=""/>
+    <alias field="evolution" index="9" name=""/>
+    <alias field="typesuite" index="10" name=""/>
+    <alias field="precisionsuite" index="11" name=""/>
+    <alias field="commentairesuite" index="12" name=""/>
+    <alias field="lk_marche" index="13" name=""/>
+    <alias field="lk_desordre" index="14" name=""/>
+    <alias field="oh_etatvantellerie" index="15" name=""/>
+    <alias field="oh_etatvantelleriecom" index="16" name=""/>
+    <alias field="oh_etatgeniecivil" index="17" name=""/>
+    <alias field="oh_etatgeniecivilcom" index="18" name=""/>
+    <alias field="oh_testmanoeuvre" index="19" name=""/>
+    <alias field="oh_testmanoeuvrecom" index="20" name=""/>
+    <alias field="oh_etancheite" index="21" name=""/>
+    <alias field="oh_etancheitecom" index="22" name=""/>
+    <alias field="datecreation" index="23" name=""/>
+    <alias field="datedestruction" index="24" name=""/>
+    <alias field="revisionbegin" index="25" name=""/>
+    <alias field="revisionend" index="26" name=""/>
   </aliases>
   <excludeAttributesWMS/>
   <excludeAttributesWFS/>
   <attributeactions default="-1"/>
   <attributetableconfig actionWidgetStyle="dropDown" sortExpression="" sortOrder="0">
     <columns>
-      <column width="-1" hidden="0" type="field" name="id_desordre"/>
-      <column width="-1" hidden="0" type="field" name="cote"/>
-      <column width="-1" hidden="0" type="field" name="position"/>
-      <column width="-1" hidden="0" type="field" name="catdes"/>
-      <column width="-1" hidden="0" type="field" name="typedes"/>
       <column width="-1" hidden="0" type="field" name="id_objet"/>
-      <column width="-1" hidden="0" type="field" name="impact"/>
       <column width="-1" hidden="0" type="field" name="gravite"/>
-      <column width="-1" hidden="0" type="field" name="priorite"/>
-      <column width="-1" hidden="0" type="field" name="risques"/>
-      <column width="-1" hidden="0" type="field" name="lk_descriptionsystem"/>
       <column width="-1" hidden="0" type="field" name="datecreation"/>
       <column width="-1" hidden="0" type="field" name="datedestruction"/>
       <column width="-1" hidden="0" type="field" name="id_observation"/>
       <column width="-1" hidden="0" type="field" name="dateobservation"/>
       <column width="-1" hidden="0" type="field" name="source"/>
       <column width="-1" hidden="0" type="field" name="nombre"/>
-      <column width="-1" hidden="0" type="field" name="gravite:1"/>
       <column width="-1" hidden="0" type="field" name="evolution"/>
-      <column width="-1" hidden="0" type="field" name="commentaires"/>
-      <column width="-1" hidden="0" type="field" name="suite"/>
-      <column width="-1" hidden="0" type="field" name="datederniereobs"/>
       <column width="-1" hidden="1" type="actions"/>
+      <column width="-1" hidden="0" type="field" name="pk_observation"/>
+      <column width="-1" hidden="0" type="field" name="id_revisionbegin"/>
+      <column width="-1" hidden="0" type="field" name="id_revisionend"/>
+      <column width="-1" hidden="0" type="field" name="typesuite"/>
+      <column width="-1" hidden="0" type="field" name="precisionsuite"/>
+      <column width="-1" hidden="0" type="field" name="commentairesuite"/>
+      <column width="-1" hidden="0" type="field" name="lk_marche"/>
+      <column width="-1" hidden="0" type="field" name="lk_desordre"/>
+      <column width="-1" hidden="0" type="field" name="oh_etatvantellerie"/>
+      <column width="-1" hidden="0" type="field" name="oh_etatvantelleriecom"/>
+      <column width="-1" hidden="0" type="field" name="oh_etatgeniecivil"/>
+      <column width="-1" hidden="0" type="field" name="oh_etatgeniecivilcom"/>
+      <column width="-1" hidden="0" type="field" name="oh_testmanoeuvre"/>
+      <column width="-1" hidden="0" type="field" name="oh_testmanoeuvrecom"/>
+      <column width="-1" hidden="0" type="field" name="oh_etancheite"/>
+      <column width="-1" hidden="0" type="field" name="oh_etancheitecom"/>
+      <column width="-1" hidden="0" type="field" name="revisionbegin"/>
+      <column width="-1" hidden="0" type="field" name="revisionend"/>
     </columns>
   </attributetableconfig>
   <editform></editform>
@@ -582,28 +607,33 @@ def my_form_open(dialog, layer, feature):
     <fieldstyles/>
   </conditionalstyles>
   <defaults>
-    <default field="id_desordre" expression=""/>
-    <default field="cote" expression=""/>
-    <default field="position" expression=""/>
-    <default field="catdes" expression=""/>
-    <default field="typedes" expression=""/>
-    <default field="id_objet" expression=""/>
-    <default field="impact" expression=""/>
-    <default field="gravite" expression=""/>
-    <default field="priorite" expression=""/>
-    <default field="risques" expression=""/>
-    <default field="lk_descriptionsystem" expression=""/>
-    <default field="datecreation" expression=""/>
-    <default field="datedestruction" expression=""/>
+    <default field="pk_observation" expression=""/>
     <default field="id_observation" expression=""/>
+    <default field="id_revisionbegin" expression=""/>
+    <default field="id_revisionend" expression=""/>
+    <default field="id_objet" expression=""/>
     <default field="dateobservation" expression=""/>
     <default field="source" expression=""/>
     <default field="nombre" expression=""/>
-    <default field="gravite:1" expression=""/>
+    <default field="gravite" expression=""/>
     <default field="evolution" expression=""/>
-    <default field="commentaires" expression=""/>
-    <default field="suite" expression=""/>
-    <default field="datederniereobs" expression=""/>
+    <default field="typesuite" expression=""/>
+    <default field="precisionsuite" expression=""/>
+    <default field="commentairesuite" expression=""/>
+    <default field="lk_marche" expression=""/>
+    <default field="lk_desordre" expression=""/>
+    <default field="oh_etatvantellerie" expression=""/>
+    <default field="oh_etatvantelleriecom" expression=""/>
+    <default field="oh_etatgeniecivil" expression=""/>
+    <default field="oh_etatgeniecivilcom" expression=""/>
+    <default field="oh_testmanoeuvre" expression=""/>
+    <default field="oh_testmanoeuvrecom" expression=""/>
+    <default field="oh_etancheite" expression=""/>
+    <default field="oh_etancheitecom" expression=""/>
+    <default field="datecreation" expression=""/>
+    <default field="datedestruction" expression=""/>
+    <default field="revisionbegin" expression=""/>
+    <default field="revisionend" expression=""/>
   </defaults>
   <previewExpression>COALESCE( "lk_descriptionsystem", '&lt;NULL>' )</previewExpression>
   <layerGeometryType>2</layerGeometryType>

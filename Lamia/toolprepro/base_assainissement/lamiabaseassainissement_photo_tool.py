@@ -1,26 +1,33 @@
 # -*- coding: utf-8 -*-
 
 from qgis.PyQt import uic, QtCore, QtGui
+
 try:
     from qgis.PyQt.QtGui import (QWidget, QLabel, QFrame)
 except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget, QLabel, QFrame)
-#from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
+# from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
 from ..base.lamiabase_photo_tool import BasePhotoTool
 import os
 import datetime
 import glob
 
-
-
-
 class BaseAssainissementPhotoTool(BasePhotoTool):
-
     LOADFIRST = False
     dbasetablename = 'Photo'
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
-        super(BaseAssainissementPhotoTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
+    def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None, parentwidget=None, parent=None):
+        super(BaseAssainissementPhotoTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil, parentwidget,
+                                                          parent=parent)
+
+    def initFieldUI(self):
+        # ret = super().initTool()
+        super(BaseAssainissementPhotoTool, self).initFieldUI()
+
+        if self.parentWidget is not None and self.parentWidget.dbasetablename in ['']:
+            self.userwdgfield.pushButton_defaultphoto.clicked.connect(self.setDefaultPhoto)
+        else:
+            self.userwdgfield.pushButton_defaultphoto.setParent(None)
 
     """
     def initTool(self):
@@ -226,6 +233,7 @@ class BaseAssainissementPhotoTool(BasePhotoTool):
 
     """
 
+
 """
 class UserUI(QWidget):
     def __init__(self, parent=None):
@@ -233,4 +241,3 @@ class UserUI(QWidget):
         uipath = os.path.join(os.path.dirname(__file__), 'lamiabase_photo_tool_ui.ui')
         uic.loadUi(uipath, self)
 """
-

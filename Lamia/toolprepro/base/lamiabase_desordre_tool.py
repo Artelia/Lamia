@@ -165,6 +165,22 @@ class BaseDesordreTool(AbstractInspectionDigueTool):
         pass
 
 
+    def deleteParentFeature(self):
+        idobjet = self.currentFeature['id_objet']
+
+        sql = "DELETE FROM Objet WHERE id_objet = " + str(idobjet) + ";"
+        query = self.dbase.query(sql)
+        self.dbase.commit()
+
+        sql = "DELETE FROM Descriptionsystem WHERE id_objet = " + str(idobjet) + ";"
+        query = self.dbase.query(sql)
+        self.dbase.commit()
+
+        iddesordre = self.currentFeature['id_desordre']
+        sql = "DELETE FROM Observation WHERE lk_desordre = " +str(iddesordre)
+
+        return True
+
 
 class UserUI(QWidget):
     def __init__(self, parent=None):

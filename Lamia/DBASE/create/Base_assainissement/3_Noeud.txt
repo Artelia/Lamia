@@ -23,6 +23,7 @@ Rejet;                     50
 Autre;                     00
 Indetermine;               99
 ###accessibilite;                VARCHAR(255);            TEXT
+/;
 Ouvrable;                   OUV
 Ouvrable non visitable;     OUN
 En privé;                   PRI

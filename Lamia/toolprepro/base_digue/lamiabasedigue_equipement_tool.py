@@ -9,7 +9,7 @@ except ImportError:
 #from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
 from ..base.lamiabase_equipement_tool import BaseEquipementTool
 
-from ..base.lamiabase_photo_tool import BasePhotoTool
+from .lamiabasedigue_photo_tool import BaseDiguePhotoTool as BasePhotoTool
 from ..base.lamiabase_croquis_tool import BaseCroquisTool
 from .lamiabasedigue_desordre_tool import BaseDigueDesordreTool
 

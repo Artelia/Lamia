@@ -36,15 +36,17 @@ import os
 #class ConnexionPGDialog(QDialog, FORM_CLASS):
 class ImpressionRapportDialog(QDialog):
 
-    def __init__(self, parent=None):
+    def __init__(self, windowsdialog, parent=None):
         """Constructor."""
         super(ImpressionRapportDialog, self).__init__(parent)
         #self.setupUi(self)
         path = os.path.join(os.path.dirname(__file__), 'InspectionDigue_impression_rapport.ui')
         uic.loadUi(path, self)
 
-        self.qfiledlg = QFileDialog()
-        self.comboBox_type.addItems(['Infrastructure lineaire','Equipements hydrauliques','Desordres'])
+        self.windowsdialog = windowsdialog
+        #self.qfiledlg = self.windowsdialog.QFileDialog()
+        self.qfiledlg =  self.windowsdialog.qfiledlg
+        #self.comboBox_type.addItems(['Infrastructure lineaire','Equipements hydrauliques','Desordres'])
         self.pushButton_filechoose.clicked.connect(self.chooseFile)
         self.finished.connect(self.dialogIsFinished)
 

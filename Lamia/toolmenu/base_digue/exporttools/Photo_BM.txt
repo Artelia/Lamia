@@ -1,0 +1,32 @@
+###Photo
+##FROM Photo AS Phototemp INNER JOIN Objet ON Objet.id_objet = Phototemp.id_objet AND Phototemp.pk_photo = Photo.pk_photo
+#nom              type               cst               valeur                    
+id_photo;         Int;                  ;               id_photo
+
+
+
+###Ressource
+## FROM Ressource INNER JOIN Objet ON Objet.id_objet = Ressource.id_objet WHERE  Ressource.id_ressource = Photo.id_ressource
+#nom              type               cst               valeur                    
+id_ressource;         Int;                  ;               id_ressource
+source;         String;                  ;               source
+datephoto;         String;                  ;               dateressource
+fichier;         String;                  ;               file
+descriptio;         String;                  ;               description
+
+
+
+###Tcobjetressource
+# FROM Tcobjetressource as Tcobjetressourcetemp WHERE Tcobjetressourcetemp.pk_tcobjetressource = Tcobjetressource.pk_tcobjetressource
+# FROM Tcobjetressource 
+lk_objet;         Int;                  ;               id_tcobjet
+
+
+
+
+###geom
+##FROM Photo AS Phototemp INNER JOIN Objet ON Objet.id_objet = Phototemp.id_objet AND Phototemp.pk_photo = Photo.pk_photo
+geom;         Int;               ;                  ST_AsText(geom)
+
+###main
+FROM Photo LEFT JOIN Tcobjetressource ON Tcobjetressource.id_tcressource = Photo.id_ressource

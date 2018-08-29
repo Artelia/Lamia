@@ -23,3 +23,6 @@ fichier;         String;               ;                  numphoto
 ###geom
 ##FROM Equipement AS Equipementtemp INNER JOIN Objet ON Objet.id_objet = Equipementtemp.id_objet AND Equipementtemp.pk_equipement = Equipement.pk_equipement
 geom;         Int;               ;                  ST_AsText(geom)
+
+###main
+FROM Equipement

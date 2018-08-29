@@ -53,9 +53,27 @@ class InspectiondigueDockWidget(QDockWidget):
         super(InspectiondigueDockWidget, self).__init__(parent)
         ## The windowwidget put inside te dockwidget
         self.windowwidget = InspectiondigueWindowWidget(canvas,self)
+
+        if True:
+            stylesheet = """
+                        QMainWindow{
+                                    background-color: rgba(0, 55, 90,80);
+                                    }
+                        """
+            stylesheet=''
+            self.windowwidget.setStyleSheet(stylesheet)
+
+
         self.setWidget(self.windowwidget)
         self.setWindowTitle('Lamia')
-        
+
+        if False:
+            p = self.windowwidget.palette()
+            p.setColor(self.windowwidget.Window(), QtCore.Qt.black)
+            self.windowwidget.setPalette(p)
+
+
+
 
 
     def closeEvent(self, event):

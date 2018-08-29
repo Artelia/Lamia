@@ -214,6 +214,7 @@ class DBaseParser(QtCore.QObject):
         """
         debug = False
 
+
         if debug: logging.getLogger("Lamia").debug('started')
 
         # create dbasedict
@@ -224,13 +225,15 @@ class DBaseParser(QtCore.QObject):
                 os.makedirs(dbaseressourcesdirectory)
         if True:
             if dbaseressourcesdirectory is None and dbasetype == 'spatialite':
-                dbaseressourcesdirectory = os.path.join(os.path.dirname(file),'DBspatialite')
+                dbaseressourcesdirectorytemp = os.path.join(os.path.dirname(file),'DBspatialite')
+            else:
+                dbaseressourcesdirectorytemp = dbaseressourcesdirectory
 
-            if not os.path.isdir(dbaseressourcesdirectory):
-                os.makedirs(dbaseressourcesdirectory)
+            if not os.path.isdir(dbaseressourcesdirectorytemp):
+                os.makedirs(dbaseressourcesdirectorytemp)
 
         # sql file contains output of dbase creation script
-        sqlfile = os.path.join(dbaseressourcesdirectory, 'sqlcreation.txt')
+        sqlfile = os.path.join(dbaseressourcesdirectorytemp, 'sqlcreation.txt')
         openedsqlfile = open(sqlfile, u'w')
         # dbasetype
         self.dbasetype = dbasetype
@@ -332,7 +335,9 @@ class DBaseParser(QtCore.QObject):
                         sql = self._generatePostGisCreationSQL(dbname, self.dbasetables[dbname], crs)
                         # print(sql['main'])
                         openedsqlfile.write(sql['main'] + '\n')
-                    print(sql['main'])
+
+                    if debug: logging.getLogger("Lamia").debug('sql : %s', sql['main'] )
+
                     self.query(sql['main'])
                     self.commit()
                     if 'other' in sql.keys():
@@ -342,8 +347,14 @@ class DBaseParser(QtCore.QObject):
                             self.query(sqlother)
                             self.commit()
 
+
+        if dbaseressourcesdirectory is None and dbasetype == 'spatialite':
+            dbaseressourcesdirectorytemp2 = '.\DBspatialite'
+        else:
+            dbaseressourcesdirectorytemp2 = dbaseressourcesdirectorytemp
+
         sql = "INSERT INTO Basedonnees (metier,repertoireressources,crs) "
-        sql += "VALUES('" + type + "','" + dbaseressourcesdirectory + "'," + str(crs) + ");"
+        sql += "VALUES('" + type + "','" + dbaseressourcesdirectorytemp2 + "'," + str(crs) + ");"
         self.query(sql)
         self.commit()
 
@@ -357,7 +368,7 @@ class DBaseParser(QtCore.QObject):
         # ***************************************************************************************
         # view creation
         for dbname in self.dbasetables:
-            print(dbname)
+            if debug: logging.getLogger("Lamia").debug('view creation : %s', dbname)
             viewnames={}
             if 'djangoviewsql' in self.dbasetables[dbname].keys():
                 viewnames['djangoviewsql'] = str(dbname) + '_django'
@@ -795,7 +806,7 @@ class DBaseParser(QtCore.QObject):
                 sql = "SELECT MAX(pk_revision) FROM Revision;"
                 query = self.query(sql)
                 self.currentrevision = query[0][0]
-                print('rev', self.currentrevision ,query )
+                if debug: logging.getLogger('Lamia').debug('rev : %s', str(self.currentrevision) )
 
             # create a list of tables to load
             if False:
@@ -938,7 +949,45 @@ class DBaseParser(QtCore.QObject):
         if debug: logging.getLogger('Lamia').debug('end')
 
 
-    def query(self, sql,arguments=[]):
+    def createQgsVectorLayer(self,tablename='tempvectorlayer',isspatial = True,  sql='', tableid=None):
+        layer = None
+
+        if tableid is not None:
+            finaltableid = tableid
+        else:
+            finaltableid = "id_" + str(tablename.lower())
+
+        if int(str(self.qgisversion_int)[0:3]) < 220:
+            uri = qgis.core.QgsDataSourceURI()
+        else:
+            uri = qgis.core.QgsDataSourceUri()
+
+        if 'SELECT' in sql :
+            sql = '(' + sql + ')'
+
+        if self.dbasetype == 'spatialite':
+            # uri.setDataSource("public","japan_ver52","the_geom","","gid")
+            # uri.setDataSource("",sql,"the_geom","","gid")
+            uri.setDatabase(self.spatialitefile)
+            if isspatial:
+                uri.setDataSource('', sql , 'geom' ,'',finaltableid)
+            else:
+                uri.setDataSource('', sql, '', '', finaltableid)
+            layer = qgis.core.QgsVectorLayer(uri.uri(), tablename, 'spatialite')
+
+        elif self.dbasetype == 'postgis':
+            uri.setConnection(self.pghost, str(self.pgport), self.pgdb, self.pguser, self.pgpassword)
+            if isspatial:
+                uri.setDataSource(self.pgschema, sql, 'geom', sql, finaltableid)
+            else:
+                uri.setDataSource(self.pgschema, sql, None, sql , finaltableid )
+
+            layer = qgis.core.QgsVectorLayer(uri.uri(), tablename, 'postgres')
+
+        return layer
+
+
+    def query(self, sql,arguments=[], docommit=True):
 
         if self.printsql :
             timestart = time.clock()
@@ -949,11 +998,13 @@ class DBaseParser(QtCore.QObject):
                 # self.connSLITE = db.connect(self.spatialitefile)
                 self.SLITEcursor = self.connSLITE.cursor()
             try:
-                query = self.SLITEcursor.execute(sql,arguments)
-                returnquery = list(query)
-                self.commit()
                 if self.printsql :
                     logging.getLogger('Lamia').debug('%s %.3f', sql,  time.clock() - timestart)
+                query = self.SLITEcursor.execute(sql,arguments)
+                returnquery = list(query)
+                if docommit:
+                    self.commit()
+
                 return returnquery
             except OperationalError as e:
                 if self.qgsiface is None:
@@ -976,7 +1027,8 @@ class DBaseParser(QtCore.QObject):
                 try:
                     rows = self.PGiscursor.fetchall()
                     returnrows = list(rows)
-                    self.commit()
+                    if docommit:
+                        self.commit()
                     if self.printsql:
                         logging.getLogger('Lamia').debug('%s %.3f', sql, time.clock() - timestart)
                     return returnrows
@@ -998,10 +1050,12 @@ class DBaseParser(QtCore.QObject):
                 return None
 
     def vacuum(self,table):
-        # print('vacuum')
+        """
+        Methode invoquée pour faire des vacuum dans la BD lamia en cours d'utilisation
+        """
+        self.commit()   #nedd to be done before vacuum
         if self.dbasetype == 'spatialite':
             sql = "VACUUM " + str(table)
-            # print(sql)
             self.query(sql)
         elif self.dbasetype == 'postgis':
             old_isolation_level = self.connPGis.isolation_level
@@ -1012,27 +1066,18 @@ class DBaseParser(QtCore.QObject):
 
 
     def commit(self):
+        """
+        Methode invoquée pour faire des commits dans la BD lamia en cours d'utilisation
+        """
         if self.dbasetype == 'spatialite':
             self.connSLITE.commit()
         elif self.dbasetype == 'postgis':
             self.connPGis.commit()
 
-    def getLastRowId(self, table=None):
-        id = None
-        if self.dbasetype == 'spatialite':
-            sql = 'SELECT last_insert_rowid()'
-            query = self.query(sql)
-            id = [row[0] for row in query][0]
-        elif self.dbasetype == 'postgis':
-            tablelower = table.lower()
-            sql = "SELECT currval('" + tablelower + "_id_" + tablelower + "_seq');"
-            query = self.query(sql)
-            id = [row[0] for row in query][0]
-        return id
 
     def _readRecentDBase(self):
-        """!
-        Read the file where the recents projects are stored and display it in recents files menu
+        """
+        Lit le fichier des bases de données recentes et rempli le  menu\Fichier\base de données recentes
         """
         pathrecentproject = os.path.join(os.path.dirname(__file__), '..', 'config', 'recentprojects.txt')
         try:
@@ -1052,7 +1097,8 @@ class DBaseParser(QtCore.QObject):
     def _AddDbaseInRecentsDBase(self, spatialitefile=None, host='localhost',
                                 port=None, dbname=None, schema=None, user=None, password=None):
         """
-        pass
+        Methode appelée lors du chargement d'une BD lamia
+        Ajoute le chemin dans le fichier chargé dans Menu\Fichier\base de données recentes
         """
         if self.dbasetype == 'spatialite':
             if spatialitefile in self.recentsdbase:
@@ -1073,7 +1119,8 @@ class DBaseParser(QtCore.QObject):
 
     def _saveRecentDBase(self):
         """
-        Save recents project in a file
+        Sauve le path de la BD lamia en cours d'utilisation dans le ficier employé dans
+        menu\Fichier\base de données recentes
         """
         pathrecentproject = os.path.join(os.path.dirname(__file__), '..', 'config', 'recentprojects.txt')
         file = open(pathrecentproject, "w")
@@ -1085,31 +1132,12 @@ class DBaseParser(QtCore.QObject):
         file.close()
         self.recentDBaseChanged.emit()
 
-    def updateWorkingDate(self):
-        if self.dbasetype == 'spatialite':
-            subsetstring = '"datecreation" <= ' + "'" + self.workingdate + "'"
-            subsetstring += ' AND CASE WHEN "datedestruction" IS NOT NULL  THEN "datedestruction" > ' + "'" + self.workingdate + "'" + ' ELSE 1 END'
-            if self.revisionwork:
-                subsetstring += ' AND "revisionbegin" <= ' + str(self.currentrevision)
-                subsetstring += ' AND CASE WHEN "revisionend" IS NOT NULL  THEN "revisionend" > '  + str(self.currentrevision)  + ' ELSE 1 END'
-
-        elif self.dbasetype == 'postgis':
-            subsetstring = '"datecreation" <= ' + "'" + self.workingdate + "'"
-            subsetstring += ' AND CASE WHEN "datedestruction" IS NOT NULL  THEN "datedestruction" > ' + "'" + self.workingdate + "'" + ' ELSE TRUE END'
-            if self.revisionwork:
-                subsetstring += ' AND "revisionbegin" <= ' + str(self.currentrevision)
-                subsetstring += ' AND CASE WHEN "revisionend" IS NOT NULL  THEN "revisionend" > '  + str(self.currentrevision)  + ' ELSE TRUE END'
-
-        for tablename in self.dbasetables:
-            fieldnames = [field.name().lower() for field in self.dbasetables[tablename]['layerqgis'].fields()]
-            if 'datecreation' in fieldnames:
-                self.dbasetables[tablename]['layerqgis'].setSubsetString(subsetstring)
-                self.dbasetables[tablename]['layerqgis'].triggerRepaint()
-
-    def getMaxRevision(self):
-        return self.getLastPk('Revision')
 
     def reInitDBase(self):
+        """
+        Methode appelée lors d'un changement de base de données
+        Reinitialise toutes les variables
+        """
         if self.dbasetables is not None:
             for layername in self.dbasetables.keys():
                 if 'layer' in self.dbasetables[layername]:
@@ -1136,9 +1164,6 @@ class DBaseParser(QtCore.QObject):
                         except:
                             pass
 
-
-
-
                 if 'widget' in self.dbasetables[layername]:
                     if not isinstance(self.dbasetables[layername]['widget'],list):
                         tablewdgs = [self.dbasetables[layername]['widget']]
@@ -1163,9 +1188,38 @@ class DBaseParser(QtCore.QObject):
 
         self.dbasetables = None
 
+    def updateWorkingDate(self):
+        """
+        Methode appelée lorsque la date de travail (self.workingdate) ou la version de travail (self.currentrevision)
+        est modifiée
+        Change les filtres de toutes les tables qgis en fonction
+        """
+        if self.dbasetype == 'spatialite':
+            subsetstring = '"datecreation" <= ' + "'" + self.workingdate + "'"
+            subsetstring += ' AND CASE WHEN "datedestruction" IS NOT NULL  THEN "datedestruction" > ' + "'" + self.workingdate + "'" + ' ELSE 1 END'
+            if self.revisionwork:
+                subsetstring += ' AND "revisionbegin" <= ' + str(self.currentrevision)
+                subsetstring += ' AND CASE WHEN "revisionend" IS NOT NULL  THEN "revisionend" > '  + str(self.currentrevision)  + ' ELSE 1 END'
+
+        elif self.dbasetype == 'postgis':
+            subsetstring = '"datecreation" <= ' + "'" + self.workingdate + "'"
+            subsetstring += ' AND CASE WHEN "datedestruction" IS NOT NULL  THEN "datedestruction" > ' + "'" + self.workingdate + "'" + ' ELSE TRUE END'
+            if self.revisionwork:
+                subsetstring += ' AND "revisionbegin" <= ' + str(self.currentrevision)
+                subsetstring += ' AND CASE WHEN "revisionend" IS NOT NULL  THEN "revisionend" > '  + str(self.currentrevision)  + ' ELSE TRUE END'
+
+        for tablename in self.dbasetables:
+            fieldnames = [field.name().lower() for field in self.dbasetables[tablename]['layerqgis'].fields()]
+            if 'datecreation' in fieldnames:
+                self.dbasetables[tablename]['layerqgis'].setSubsetString(subsetstring)
+                self.dbasetables[tablename]['layerqgis'].triggerRepaint()
 
 
     def updateQgsCoordinateTransformFromLayerToCanvas(self):
+        """
+        Methode appellée lorsque le crs du canvas qgis change
+        met à jour self.xform et self.xformreverse pour effectuer les transformations crs canvas <-> crs lamia
+        """
         if self.qgiscrs is not None and self.canvas is not None:
             if int(str(self.qgisversion_int)[0:3]) < 220:
                 self.xform = qgis.core.QgsCoordinateTransform(self.qgiscrs,
@@ -1182,6 +1236,13 @@ class DBaseParser(QtCore.QObject):
 
 
     def getConstraintRawValueFromText(self, table, field, txt):
+        """
+        Convertie la valeur textuelle  txt de la table lamia "table" vers sa valeur trigramme
+        :param table: la table lamia considérée
+        :param field: la colonne considérée
+        :param txt: la valeur textuelle
+        :return: le trigramme
+        """
         # print('_getConstraintRawValueFromText',[value[0] for value in self.dbasetables[table]['fields'][field]['Cst']], txt )
         dbasetable = self.dbasetables[table]
         try:
@@ -1190,14 +1251,361 @@ class DBaseParser(QtCore.QObject):
         except ValueError as e:
             if self.qgsiface is None :
                 logging.getLogger("Lamia").debug('error %s %s %s',e, table,field )
-            #print('getConstraintRawValueFromText', e,table,field)
-            #print(table,field )
-            #print(txt)
-            #print([value[0] for value in dbasetable['fields'][field]['Cst']])
             return None
 
+    def getConstraintTextFromRawValue(self, table, field, rawvalue):
+        """
+        Convertie le trigramme rawvalue de la table lamia "table" vers sa valeur textuelle
+        :param table: la table lamia considérée
+        :param field: la colonne considérée
+        :param rawvalue: le trigramme ou valeur stockée considérée
+        :return: la valeur textuelle
+        """
+        # print('_getConstraintTextFromRawValue',table, self.dbasetables[table]['fields'][field], rawvalue,field)
+        if (table in self.dbasetables.keys()
+            and field in self.dbasetables[table]['fields'].keys()
+            and 'Cst' in self.dbasetables[table]['fields'][field].keys()):
+
+            dbasetable = self.dbasetables[table]
+            #if field in dbasetable['fields'].keys() and 'Cst' in dbasetable['fields'][field].keys():
+            if not self.isAttributeNull(rawvalue):
+                if isinstance(rawvalue, int) or isinstance(rawvalue, long):
+                    rawvalue = str(rawvalue)
+
+                index = [value[1] for value in dbasetable['fields'][field]['Cst']].index(rawvalue)
+                return dbasetable['fields'][field]['Cst'][index][0]
+            else:
+                return ''
+        else:
+            if not self.isAttributeNull(rawvalue):
+                return rawvalue
+            else:
+                return ''
+
+    def isAttributeNull(self ,attr):
+        """
+        Vérifie si un qgisfeature attribute est NULL - piégeux car le NULL peu prendre plusieurs formes
+        :param attr: get an qgisfeature attribute
+        :return: True if NULL, else False
+        """
+        if int(str(self.qgisversion_int)[0:3]) < 220 and isinstance(attr, QtCore.QPyNullVariant):
+            return True
+        elif int(str(self.qgisversion_int)[0:3]) > 220 and isinstance(attr, QtCore.QVariant) and attr.isNull():
+            return True
+        elif attr is None:
+            return True
+        else:
+            return False
+
+    def isTableSpatial(self, tablename):
+        """
+        Permet de savoir si une table lamia est spatiale en cherchant le mot clé 'geom' dans la liste des colonnes
+        :param tablename: la table à analyser
+        :return: True si 'geom' est trouvé, False sinon
+        """
+
+        if self.dbasetype == 'spatialite':
+            sql = "PRAGMA table_info(" + str(tablename) + ")"
+            query = self.query(sql)
+            result = [row[1] for row in query]
+            #print(result)
+            if 'geom' in result:
+                return True
+
+        elif self.dbasetype == 'postgis':
+            sql = "SELECT column_name FROM information_schema.columns WHERE table_name  = '" +  str(tablename).lower() + "'"
+            query = self.query(sql)
+            result = [row[0] for row in query]
+            if 'geom' in result:
+                return True
+
+        return False
+
+    def getNearestPk(self, dbasetable, dbasetablename, point, comefromcanvas=True):
+        """
+        Permet d'avoir le pk du feature le plus proche du qgsvectorlayer correspondant à dbasetablename
+        pas besoin de filtre sur les dates et versions on travaille avec le qgsectorlyaer de la table
+        qui dispose déjà d'un filtre en fonction de la date et de la version
+        :param dbasetable: la dbasetable considérée
+        :param dbasetablename:  le nom de la dbasetable
+        :param point: le point dont on veut connaitre le plus proche élément
+        :param comefromcanvas: spécifie sir le point provient du canvas qgis (nécessité de trasformation) ou non
+        :return: le pk de la table dbasetablenamele plus proche du point
+        """
+
+        debug = False
+        if debug:
+            timestart = time.clock()
+
+        # vérifie que la table est spatiale
+        if int(str(self.qgisversion_int)[0:3]) < 218:
+            isspatial = dbasetable['layerqgis'].geometryType() < 3
+        else:
+            isspatial = dbasetable['layerqgis'].isSpatial()
+        if not isspatial:
+            return None, None
+
+        # Effectue la transformation geographique si necessaire
+        if debug: logging.getLogger("Lamia").debug('pointbefore %s', str(point))
+        if comefromcanvas:
+            if self.qgsiface is not None:
+                point2 = self.xformreverse.transform(point)
+            else:
+                point2 = point
+        else:
+            point2 = point
+        if debug: logging.getLogger("Lamia").debug('pointafter %s', str(point2))
+
+        # créé l'index spatial
+        spindex = qgis.core.QgsSpatialIndex(dbasetable['layerqgis'].getFeatures())
+        layernearestid = spindex.nearestNeighbor(point2, 1)
+
+        #on cherche la geometry du nearestid
+        if int(str(self.qgisversion_int)[0:3]) < 220:
+            point2geom = qgis.core.QgsGeometry.fromPoint(point2)
+        else:
+            point2geom = qgis.core.QgsGeometry.fromPointXY(point2)
+
+        if not self.revisionwork:
+            nearestfet = self.getLayerFeatureById(dbasetablename, layernearestid[0])
+        else:
+            nearestfet = self.getLayerFeatureByPk(dbasetablename, layernearestid[0])
+        nearestfetgeom = nearestfet.geometry()
+
+        # cas d'un point : le nearestNeighbor renvoi la bonne valeur
+        if dbasetable['layerqgis'].geometryType() == 0:
+            disfrompoint = nearestfetgeom.distance(point2geom)
+            return layernearestid[0], disfrompoint
+
+        # cas d'une ligne ou polygone : comme la recherce se fait su une boundingbox, il faut filtrer les
+        # elements dans cette box
+        else:
+            # clean nearestfet geometry if not valid
+            if not nearestfetgeom.isGeosValid() and nearestfetgeom.type() == 1:
+                nearestfetgeom = qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(nearestfetgeom.asPolyline()[0]))
+
+            disfrompoint = nearestfetgeom.distance(point2geom)
+            bboxtofilter = point2geom.buffer(disfrompoint * 1.2, 12).boundingBox()
+            idsintersectingbbox = spindex.intersects(bboxtofilter)
+
+            if debug: logging.getLogger("Lamia").debug('idsintersectingbbox %s', str(idsintersectingbbox))
+
+            # search nearest geom in bbox
+            distance = None
+            nearestindex = None
+            finalgeomispoint = False
+
+            for intersectingid in idsintersectingbbox:
+                ispoint = False
+                if not self.revisionwork:
+                    feat = self.getLayerFeatureById(dbasetablename, intersectingid)
+                else:
+                    feat = self.getLayerFeatureByPk(dbasetablename, intersectingid)
+                featgeom = feat.geometry()
+
+                if featgeom.isGeosValid():  # if not valid, return dist = -1...
+                    dist = featgeom.distance(point2geom)
+                else:  # point
+                    if featgeom.type() == 1 and not featgeom.isMultipart():
+                        ispoint = True
+                        if int(str(self.qgisversion_int)[0:3]) < 220:
+                            if len(featgeom.asPolyline()) == 1:  # polyline of 1 point
+                                dist = qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(featgeom.asPolyline()[0])).distance(point2geom)
+                            elif len(featgeom.asPolyline()) == 2 and featgeom.asPolyline()[0] == featgeom.asPolyline()[1]:
+                                dist = qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(featgeom.asPolyline()[0])).distance(point2geom)
+                        else:
+                            if len(featgeom.asPolyline()) == 1:  # polyline of 1 point
+                                dist = qgis.core.QgsGeometry.fromPointXY(qgis.core.QgsPointXY(featgeom.asPolyline()[0])).distance(point2geom)
+                            elif len(featgeom.asPolyline()) == 2 and featgeom.asPolyline()[0] == featgeom.asPolyline()[1]:
+                                dist = qgis.core.QgsGeometry.fromPointXY(qgis.core.QgsPointXY(featgeom.asPolyline()[0])).distance(point2geom)
+                    else:
+                        continue
+
+                # algo for keeping point in linestring layer as nearest
+                # if point is nearest than 1.2 x dist from nearest line
+                if distance is None:
+                    distance = dist
+                    nearestindex = intersectingid
+                    finalgeomispoint = ispoint
+                elif not finalgeomispoint and ispoint and dist < distance*1.2:
+                    distance = dist
+                    nearestindex = intersectingid
+                    finalgeomispoint = True
+                elif dist < distance:
+                    distance = dist
+                    nearestindex = intersectingid
+                    finalgeomispoint = ispoint
+
+        return nearestindex, distance
+
+    def areNodesEquals(self, node1, node2):
+        """
+        Fonction pour examiner l'égalité géographique de deux points.
+        Nécessaire car parfois les arrondis des coordonnées géographiques font que deux points égaux ont une
+        différence de qques micromètres
+        :param node1: point1 (list 2x1)
+        :param node2: point2 (list 2x1)
+        :return: Boolean, en fonction de l'égalité geographique des points
+        """
+        dist = math.sqrt( (node2[0] - node1[0])**2 + (node2[1]-node1[1])**2 )
+        if dist < 0.01:
+            return True
+        else:
+            return False
+
+    def getLayerFeatureById(self, layername, fid):
+        """
+        Renvoie le QgsFeature de la table lamia nommée layername dont le id est fid
+        Remarque : on demande ici l'id et non la cle primaire de la table
+        Remarquebis : on fait la requete sur le qgsvectorlayer de la table (dans self.dbasetables[layername]['layerqgis'])
+                      du coup, comme ce qgsvectorlayer dispose déjà d'un filtre en fonction de la date et de la version,
+                      pas besoin de requeter en plus sur ce sujet
+        :param layername: le nom de la table dans la BD lamia
+        :param fid: le id dont on veut le feature
+        :return: le QgsFeature associé au id demandé
+        """
+        if not self.revisionwork:
+            if int(str(self.qgisversion_int)[0:3]) < 220:
+                return self.dbasetables[layername]['layer'].getFeatures(qgis.core.QgsFeatureRequest(fid)).next()
+            else:
+                return self.dbasetables[layername]['layer'].getFeature(fid)
+        else:
+            # requete pour avoir le feature avec l'id demandé, puis on ndemande le pk_XXX de ce feature
+            # ex : request =  qgis.core.QgsFeatureRequest().setFilterExpression(' "some_field_name" = \'some_value\' ')
+            if False:
+                sql = "SELECT pk_" + str(layername).lower() + " FROM " + layername + '_qgis  '
+                sql += 'WHERE id_' + str(layername).lower() + ' = ' + str(fid) + ' AND '
+                sql += self.dateVersionConstraintSQL()
+                pk = self.query(sql)[0][0]
+                if int(str(self.qgisversion_int)[0:3]) < 220:
+                    return self.dbasetables[layername]['layer'].getFeatures(qgis.core.QgsFeatureRequest(pk)).next()
+                else:
+                    return self.dbasetables[layername]['layer'].getFeature(pk)
+
+
+            if True:
+                txtrequest = ' "id_' + layername.lower() + '" =  ' + str(fid)
+                request = qgis.core.QgsFeatureRequest().setFilterExpression(txtrequest)
+                # request.setFlags(qgis.core.QgsFeatureRequest.NoGeometry)
+                if int(str(self.qgisversion_int)[0:3]) < 220:
+                    qgisfeat = self.dbasetables[layername]['layer'].getFeatures(request).next()
+                else:
+                    qgisfeat = self.dbasetables[layername]['layer'].getFeatures(request).__next__()
+
+                # print(txtrequest, qgisfeat.id(), qgisfeat.attributes())
+
+                return qgisfeat
+
+    def getLayerFeatureByPk(self, layername, fid):
+        """
+        Renvoie le QgsFeature de la table lamia nommée layername dont le pk est fid
+        :param layername: le nom de la table dans la BD lamia
+        :param fid: le pk dont on veut le feature
+        :return: le QgsFeature associé au pk demandé
+        """
+        if int(str(self.qgisversion_int)[0:3]) < 220:
+            return self.dbasetables[layername]['layer'].getFeatures(qgis.core.QgsFeatureRequest(fid)).next()
+        else:
+            return self.dbasetables[layername]['layer'].getFeature(fid)
+
+    def dateVersionConstraintSQL(self):
+        """
+        Crée une chaine à rajouter à la fin d'autre requetes pour spécifier la date et la version voulue
+        :return: requete sql comprenant les éléments nécessaires pour filtrer les dates et les versions
+        """
+        sqlin = ' datecreation <= ' + "'" + self.workingdate + "'"
+        if self.dbasetype == 'postgis':
+            sqlin += ' AND CASE WHEN datedestruction IS NOT NULL  '
+            sqlin += 'THEN DateDestruction > ' + "'" + self.workingdate + "'" + ' ELSE TRUE END'
+            if self.revisionwork:
+                sqlin += " AND revisionbegin <= " + str(self.currentrevision)
+                sqlin += " AND CASE WHEN revisionend IS NOT NULL THEN "
+                sqlin += " revisionend > " + str(self.currentrevision)
+                sqlin += " ELSE TRUE END "
+        elif self.dbasetype == 'spatialite':
+            sqlin += ' AND CASE WHEN datedestruction IS NOT NULL  '
+            sqlin += 'THEN datedestruction > ' + "'" + self.workingdate + "'" + ' ELSE 1 END'
+            if self.revisionwork:
+                sqlin += " AND revisionbegin <= " + str(self.currentrevision)
+                sqlin += " AND CASE WHEN revisionend IS NOT NULL THEN "
+                sqlin += " revisionend > " + str(self.currentrevision)
+                sqlin += " ELSE 1 END"
+
+        return sqlin
+
+
+    def completePathOfFile(self,filetoprocess):
+        """
+        Génère le path complet du filetoprocess demandé. Utile quand on a un chemin relatif
+        :param filetoprocess: le chemin rentré (relatif ou absolu)
+        :return: le chemin absolu
+        """
+        completefile = ''
+        if int(str(self.qgisversion_int)[0:3]) < 220 and isinstance(filetoprocess, QtCore.QPyNullVariant):
+            filetoprocess = None
+        if filetoprocess is None:
+            return completefile
+        if len(filetoprocess)>0:
+            if filetoprocess[0] == '.':
+                completefile = os.path.join(self.dbaseressourcesdirectory, filetoprocess)
+            else:
+                completefile = filetoprocess
+            completefile = os.path.normpath(completefile)
+        return completefile
+
+
+    def getLastId(self, table):
+        """
+        renvoi l'id maximum de la table lamia demandée
+        :param table: la table lamia dont on veut l'id max
+        :return: l'id max
+        """
+        sql = "SELECT MAX(id_" + table.lower() + ") FROM " + str(table)
+        query = self.query(sql)
+        result = [row[0] for row in query]
+        if len(result)>0 and result[0] is not  None:
+            return result[0]
+        else:       #initialization
+            return 0
+
+    def getLastPk(self, table):
+        """
+        renvoi le pk maximum de la table lamia demandée
+        :param table: la table lamia dont on veut le pk max
+        :return: le pk max
+        """
+        sql = "SELECT MAX(pk_" + table.lower() + ") FROM " + str(table)
+        query = self.query(sql)
+        result = [row[0] for row in query]
+        if len(result) > 0 and result[0] is not None:
+            return result[0]
+        else:       # initialization
+            return None
+
+    def getLastRowId(self, table=None):
+        """
+        Renvoi le dernier pk ajouté dans la table lamia 'table'
+        :param table: la table dont on veut le dernier pk ajouté
+        :return: le dernier pk ajouté
+        """
+        id = None
+        if self.dbasetype == 'spatialite':
+            sql = 'SELECT last_insert_rowid()'
+            query = self.query(sql)
+            id = [row[0] for row in query][0]
+        elif self.dbasetype == 'postgis':
+            tablelower = table.lower()
+            sql = "SELECT currval('" + tablelower + "_id_" + tablelower + "_seq');"
+            query = self.query(sql)
+            id = [row[0] for row in query][0]
+        return id
 
     def getFirstIdColumn(self,tablename):
+        """
+        Permet d'avoir la premiere colonne de la table lamia tablename avec pk_ en prefixe
+        :param tablename: la table lamia
+        :return: le nom du premier champ trouvé avec pk_ en sufixe
+        """
 
         if self.dbasetype == 'spatialite':
             sql = "PRAGMA table_info(" + str(tablename) + ")"
@@ -1228,322 +1636,21 @@ class DBaseParser(QtCore.QObject):
 
         return None
 
-    def isTableSpatial(self, tablename):
-
-        if self.dbasetype == 'spatialite':
-            sql = "PRAGMA table_info(" + str(tablename) + ")"
-            query = self.query(sql)
-            result = [row[1] for row in query]
-            #print(result)
-            if 'geom' in result:
-                return True
-
-        elif self.dbasetype == 'postgis':
-            sql = "SELECT column_name FROM information_schema.columns WHERE table_name  = '" +  str(tablename).lower() + "'"
-            query = self.query(sql)
-            result = [row[0] for row in query]
-            if 'geom' in result:
-                return True
-
-        return False
-
-
-
-    def getConstraintTextFromRawValue(self, table, field, rawvalue):
-        # print('_getConstraintTextFromRawValue',self.dbasetablename, self.dbasetable['fields'][field], rawvalue,field)
-        dbasetable = self.dbasetables[table]
-        #try:
-        if field in dbasetable['fields'].keys() and 'Cst' in dbasetable['fields'][field].keys():
-            if not self.isAttributeNull(rawvalue):
-                # print(type(rawvalue))
-                if isinstance(rawvalue, int) or isinstance(rawvalue, long):
-                    rawvalue = str(rawvalue)
-                index = [value[1] for value in dbasetable['fields'][field]['Cst']].index(rawvalue)
-                return dbasetable['fields'][field]['Cst'][index][0]
-            else :
-                return ''
-        else:
-            if not self.isAttributeNull(rawvalue):
-                return rawvalue
-            else:
-                return ''
+    def getLatestVersion(self):
         """
-        except ValueError:
-            self.errorMessage.emit('Probleme de valeur de champ : table : "' + str(table)
-                                                                  + '" champ : "' + str(field)
-                                                                  + '" valeur :"' + str(rawvalue) + '"')
-            return ''
+        Renvoi la version max de la table Revision
+        :return: la version max de la table Revision
         """
-
-
-    def isAttributeNull(self,attr):
-        if int(str(self.qgisversion_int)[0:3]) < 220 and isinstance(attr, QtCore.QPyNullVariant):
-            return True
-        elif int(str(self.qgisversion_int)[0:3]) > 220 and isinstance(attr, QtCore.QVariant) and attr.isNull():
-            return True
-        elif attr is None:
-            return True
-        else:
-            return False
-
-
-    def getNearestId(self, dbasetable, dbasetablename, point, comefromcanvas=True):
-        """
-        Get nearest id from point for dbasetable
-        :param dbasetable:
-        :param point:
-        :param comefromcanvas:
-        :return: nearestid , distance
-        """
-
-        debug = False
-
-        if debug :
-            timestart = time.clock()
-
-
-        if int(str(self.qgisversion_int)[0:3]) < 218:
-            isspatial = dbasetable['layerqgis'].geometryType() < 3
-        else:
-            isspatial = dbasetable['layerqgis'].isSpatial()
-        if not isspatial:
-            return None, None
-
-        if debug: logging.getLogger("Lamia").debug('pointbefore %s', str(point))
-
-        nearestid = []
-        if comefromcanvas:
-            #point2 = self.pointEmitter.toLayerCoordinates(dbasetable['layerqgis'], point)
-            #point2 = self.xformreverse.transform(point)
-
-            if self.qgsiface is not None:
-                point2 = self.xformreverse.transform(point)
-            else:
-                point2 = point
-            #print('Attention methode depreciee')
-        else:
-            point2 = point
-
-        if debug: logging.getLogger("Lamia").debug('pointafter %s', str(point2))
-
-        if int(str(self.qgisversion_int)[0:3]) < 220:
-            point2geom = qgis.core.QgsGeometry.fromPoint(point2)
-        else:
-            point2geom = qgis.core.QgsGeometry.fromPointXY(point2)
-
-        spIndex = qgis.core.QgsSpatialIndex(dbasetable['layerqgis'].getFeatures())
-        layernearestids = spIndex.nearestNeighbor(point2, 5)
-
-        if debug:  logging.getLogger('Lamia').debug('layernearestids %s %.3f', str(layernearestids), time.clock() - timestart)
-
-        # print('getNearestId',layernearestids)
-        """
-        for nid in layernearestid:
-            nearestid.append([layer, point2geom, nid])
-        """
-        distance = None
-        nearestindex = None
-        finalgeomispoint = False
-        # geom = None
-
-        if len(layernearestids) > 0:
-            for layernearestid in layernearestids:
-                # feat = self.dbasetable['layerview'].getFeatures(qgis.core.QgsFeatureRequest(layernearestid)).next()
-                ispoint = False
-                if not self.revisionwork:
-                    feat = self.getLayerFeatureById(dbasetablename, layernearestid)
-                else:
-                    feat = self.getLayerFeatureByPk(dbasetablename, layernearestid)
-                featgeom = feat.geometry()
-
-                if debug:  logging.getLogger('Lamia').debug('featgeom %s %.3f', str(featgeom.exportToWkt() ), time.clock() - timestart)
-
-                if featgeom.isGeosValid():  # if not valid, return dist = -1...
-                    dist = featgeom.distance(point2geom)
-                else:  # point
-                    if featgeom.type() == 1 and not featgeom.isMultipart():
-                        ispoint = True
-                        if int(str(self.qgisversion_int)[0:3]) < 220:
-                            if len(featgeom.asPolyline()) == 1:  # polyline of 1 point
-                                dist = qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(featgeom.asPolyline()[0])).distance(point2geom)
-                            elif len(featgeom.asPolyline()) == 2 and featgeom.asPolyline()[0] == featgeom.asPolyline()[1]:
-                                dist = qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(featgeom.asPolyline()[0])).distance(point2geom)
-                        else:
-                            if len(featgeom.asPolyline()) == 1:  # polyline of 1 point
-                                dist = qgis.core.QgsGeometry.fromPointXY(qgis.core.QgsPointXY(featgeom.asPolyline()[0])).distance(point2geom)
-                            elif len(featgeom.asPolyline()) == 2 and featgeom.asPolyline()[0] == featgeom.asPolyline()[1]:
-                                dist = qgis.core.QgsGeometry.fromPointXY(qgis.core.QgsPointXY(featgeom.asPolyline()[0])).distance(point2geom)
-                    else:
-                        continue
-
-                if debug:  logging.getLogger('Lamia').debug('getNearestId %s %s %s %s %.3f',
-                                                            str(feat.geometry().isGeosValid()),
-                                                            str(layernearestid),
-                                                            str(dist),
-                                                            str(ispoint),
-                                                            time.clock() - timestart)
-
-
-
-                if distance is None:
-                    distance = dist
-                    nearestindex = layernearestid
-                    finalgeomispoint = ispoint
-                elif not finalgeomispoint and ispoint and dist < distance*1.2:
-                    distance = dist
-                    nearestindex = layernearestid
-                    finalgeomispoint = True
-                elif dist < distance:
-                    distance = dist
-                    nearestindex = layernearestid
-                    finalgeomispoint = ispoint
-
-        if debug :
-            logging.getLogger('Lamia').debug('end %s %s %.3f', str(nearestindex), str(distance), time.clock() - timestart)
-
-        return nearestindex, distance
-
-
-    def areNodesEquals(self, node1, node2):
-        dist = math.sqrt( (node2[0] - node1[0])**2 + (node2[1]-node1[1])**2 )
-        if dist < 0.01:
-            return True
-        else:
-            return False
-
-    def getLayerFeatureById(self,layername,fid):
-        """
-
-        :param layername:
-        :param fid:
-        :return:
-        """
-        if not self.revisionwork:
-            if int(str(self.qgisversion_int)[0:3]) < 220:
-                return self.dbasetables[layername]['layer'].getFeatures(qgis.core.QgsFeatureRequest(fid)).next()
-            else:
-                return self.dbasetables[layername]['layer'].getFeature(fid)
-        else:
-            #request =  qgis.core.QgsFeatureRequest().setFilterExpression(' "some_field_name" = \'some_value\' ')
-            txtrequest = ' "id_' +layername.lower() +  '" =  ' + str(fid)
-
-            if False:
-                if self.dbasetype == 'postgis':
-                    txtrequest += ' AND "revisionbegin" <= ' + "'"  + str(self.currentrevision)+ "'"
-                    txtrequest += ' AND CASE WHEN "revisionend" NOT NULL THEN '
-                    txtrequest += ' "revisionend" > ' + "'" + str(self.currentrevision) + "'"
-                    txtrequest += ' ELSE TRUE END '
-                elif self.dbasetype == 'spatialite':
-
-                    txtrequest += ' AND cast("revisionbegin" AS INTEGER) <= ' + str(self.currentrevision)
-                    if True:
-                        txtrequest += ' AND CASE WHEN "revisionend" NOT NULL THEN '
-                        txtrequest += ' cast("revisionend" AS INTEGER) > ' + str(self.currentrevision)
-                        txtrequest += ' ELSE 1 END '
-
-                    if False:
-                        txtrequest += ' AND cast("revisionbegin" AS INTEGER) <= '  + str(self.currentrevision)
-                        if True:
-                            txtrequest += ' AND CASE WHEN "revisionend" NOT NULL THEN '
-                            txtrequest += ' cast("revisionend" AS INTEGER) > '  + str(self.currentrevision)
-                            txtrequest += ' ELSE 1 END '
-
-            # print('getLayerFeatureById', txtrequest)
-
-            request = qgis.core.QgsFeatureRequest().setFilterExpression(txtrequest)
-            request.setFlags(qgis.core.QgsFeatureRequest.NoGeometry)
-            if int(str(self.qgisversion_int)[0:3]) < 220:
-                qgisfeatpk = self.dbasetables[layername]['layerqgis'].getFeatures(request).next()['pk_' + layername.lower()]
-            else:
-                qgisfeatpk = self.dbasetables[layername]['layerqgis'].getFeatures(request).__next__()['pk_' + layername.lower()]
-
-            #return self.dbasetables[layername]['layerqgis'].getFeatures(request).next()
-            if int(str(self.qgisversion_int)[0:3]) < 220:
-                return self.dbasetables[layername]['layer'].getFeatures(qgis.core.QgsFeatureRequest(qgisfeatpk)).next()
-            else:
-                return self.dbasetables[layername]['layer'].getFeature(qgisfeatpk)
-
-
-
-
-    def getLayerFeatureByPk(self,layername,fid):
-        """
-
-        :param layername:
-        :param fid:
-        :return:
-        """
-        if int(str(self.qgisversion_int)[0:3]) < 220:
-            return self.dbasetables[layername]['layer'].getFeatures(qgis.core.QgsFeatureRequest(fid)).next()
-        else:
-            return self.dbasetables[layername]['layer'].getFeature(fid)
-
-
-
-
-    def appendDateVersionConstraintToSQL(self,sqlin):
-
-        sqlin += ' AND datecreation <= ' + "'" + self.dbase.workingdate + "'"
-        if self.dbase.dbasetype == 'postgis':
-            sqlin += ' AND CASE WHEN datedestruction IS NOT NULL  '
-            sqlin += 'THEN DateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE TRUE END'
-            if self.dbase.revisionwork:
-                sqlin += " AND revisionbegin <= " + str(self.dbase.currentrevision)
-                sqlin += " AND CASE WHEN revisionend IS NOT NULL THEN "
-                sqlin += " revisionend > " + str(self.dbase.currentrevision)
-                sqlin += " ELSE TRUE END "
-        elif self.dbase.dbasetype == 'spatialite':
-            sqlin += ' AND CASE WHEN datedestruction IS NOT NULL  '
-            sqlin += 'THEN DateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE 1 END'
-            if self.dbase.revisionwork:
-                sqlin += " AND revisionbegin <= " + str(self.dbase.currentrevision)
-                sqlin += " AND CASE WHEN revisionend IS NOT NULL THEN "
-                sqlin += " revisionend > " + str(self.dbase.currentrevision)
-                sqlin += " ELSE 1 END "
-        return sqlin
-
-
-    def completePathOfFile(self,filetoprocess):
-        completefile = ''
-        if int(str(self.qgisversion_int)[0:3]) < 220 and isinstance(filetoprocess, QtCore.QPyNullVariant):
-            filetoprocess = None
-
-        #if file is None or isinstance(file,QtCore.QPyNullVariant):
-        if filetoprocess is None:
-            return completefile
-        if len(filetoprocess)>0:
-            if filetoprocess[0] == '.':
-                completefile = os.path.join(self.dbaseressourcesdirectory, filetoprocess)
-            else:
-                completefile = filetoprocess
-
-            completefile = os.path.normpath(completefile)
-        return completefile
-
-
-
-    def getLastId(self, table):
-        sql = "SELECT MAX(id_" + table.lower() + ") FROM " + str(table)
+        sql = "SELECT MAX(pk_revision) FROM Revision;"
         query = self.query(sql)
-        result = [row[0] for row in query]
-        # print(sql, result)
-        if len(result)>0 and result[0] is not  None:
-            return result[0]
-        else:       #initialization
-            return 0
+        return query[0][0]
 
-    def getLastPk(self, table):
-        sql = "SELECT MAX(pk_" + table.lower() + ") FROM " + str(table)
-        query = self.query(sql)
-        result = [row[0] for row in query]
-        # print(sql, result)
-        if len(result)>0 and result[0] is not  None:
-            return result[0]
-        else:       #initialization
-            return None
-
-
-
+    def getMaxRevision(self):
+        """
+        Renvoi la version max de la table Revision
+        :return: la version max de la table Revision
+        """
+        return self.getLastPk('Revision')
 
     def exportBase(self, exportdbase):
 
@@ -1674,9 +1781,10 @@ class DBaseParser(QtCore.QObject):
                                                 layer.updateFeature(feat)
 
     def featureAdded(self, id):
+        """
+        Méthode connectée au signal featureAdded d'un qgsvectorlayer pour connaitre le pk du feature ajouté
+        assigne cette valeur à self.featureaddedid
+        :param id: le pk fourni par le signal
+        """
         self.featureaddedid = id
 
-    def getLatestVersion(self):
-        sql = "SELECT MAX(pk_revision) FROM Revision;"
-        query = self.query(sql)
-        return query[0][0]

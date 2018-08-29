@@ -592,8 +592,10 @@ class LamiatoFranceDigue():
                     cursor_des=self.queryL.SLITEcursor.execute(query)
                     geom_troncon = cursor_des.fetchone()[0]
 
-                    if not geom_troncon == 'None':
-                        troncon = geom_troncon[geom_troncon.find('(')]:geom_troncon[geom_troncon.find(')')]
+                    #TODO
+                    if False and not geom_troncon == 'None':
+                        #troncon = geom_troncon[geom_troncon.find('(')]:geom_troncon[geom_troncon.find(')')]
+                        troncon = None
                         print(troncon)
 
 

@@ -642,7 +642,11 @@ class AbstractInspectionDigueTool(QWidget):
 
 
     def manageLinkage(self):
-        self.currentid = self.currentFeature.id()
+        if self.dbase.revisionwork:
+            self.currentid = int(self.currentFeature['id_' + self.dbasetablename.lower()])
+        else:
+            self.currentid = self.currentFeature.id()
+
         self.dlg_linkage = LinkageDialog(self)
         self.dlg_linkage.setWindowModality(2)
         self.dlg_linkage.exec_()
@@ -1671,8 +1675,12 @@ class AbstractInspectionDigueTool(QWidget):
 
         if (self.dbasetable is not None and 'geom' in self.dbasetable.keys() and self.dbasetable['geom'] == 'LINESTRING'
             and self.tempgeometry is not None and self.tempgeometry.type() == 0): # case point in linestring layer
-            self.tempgeometry = qgis.core.QgsGeometry.fromPolyline([self.tempgeometry.asPoint(),
-                                                                    self.tempgeometry.asPoint()])
+            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                self.tempgeometry = qgis.core.QgsGeometry.fromPolyline([self.tempgeometry.asPoint(),
+                                                                        self.tempgeometry.asPoint()])
+            else:
+                self.tempgeometry = qgis.core.QgsGeometry.fromPolylineXY([self.tempgeometry.asPoint(),
+                                                                        self.tempgeometry.asPoint()])
 
         if self.dbasetable is not None:
 
@@ -1827,7 +1835,10 @@ class AbstractInspectionDigueTool(QWidget):
                 self.loadFeaturesinTreeWdg()
                 if debug: logging.getLogger('Lamia').debug('new feat loadFeaturesinTreeWdg  %.3f', time.clock() - timestart)
                 if self.comboBox_featurelist.count() > 1:
-                    self.comboBox_featurelist.setCurrentIndex(self.comboBox_featurelist.count() - 1)
+                    newfeatureid = self.currentFeature['id_' + self.dbasetablename]
+                    indexnewfeature = self.comboBox_featurelist.findText(str(newfeatureid))
+                    #self.comboBox_featurelist.setCurrentIndex(self.comboBox_featurelist.count() - 1)
+                    self.comboBox_featurelist.setCurrentIndex(indexnewfeature)
                 else:
                     self.comboBox_featurelist.currentIndexChanged.emit(0)
             else:
@@ -1928,7 +1939,7 @@ class AbstractInspectionDigueTool(QWidget):
 
 
             if debug: logging.getLogger("Lamia").debug('newfeature : %s', str(newfeature))
-            if debug: logging.getLogger("Lamia").debug('feat : %s', str(feat.attributes()))
+            if debug: logging.getLogger("Lamia").debug('featid : %s - attrsd : %s', str(feat.id()), str(feat.attributes()))
 
 
 

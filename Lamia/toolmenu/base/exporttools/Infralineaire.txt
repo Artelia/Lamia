@@ -24,3 +24,6 @@ fichier;         String;               ;                  numphoto
 ###geom
 ##FROM Infralineaire AS Infralineairetemp INNER JOIN Objet ON Objet.id_objet = Infralineairetemp.id_objet AND Infralineairetemp.pk_infralineaire = Infralineaire.pk_infralineaire
 geom;         Int;               ;                  ST_AsText(geom)
+
+###main
+FROM Infralineaire

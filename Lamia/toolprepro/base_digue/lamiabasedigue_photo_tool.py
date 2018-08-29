@@ -10,6 +10,7 @@ from ..base.lamiabase_photo_tool import BasePhotoTool
 import os
 import datetime
 import glob
+import sys
 
 
 
@@ -21,6 +22,35 @@ class BaseDiguePhotoTool(BasePhotoTool):
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
         super(BaseDiguePhotoTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
+
+
+
+
+    def initFieldUI(self):
+
+        super(BaseDiguePhotoTool, self).initFieldUI()
+
+        if self.parentWidget is not None and self.parentWidget.dbasetablename in ['Infralineaire']:
+            self.userwdgfield.pushButton_defaultphoto.clicked.connect(self.setDefaultPhoto)
+        else:
+            self.userwdgfield.pushButton_defaultphoto.setParent(None)
+
+
+
+    def setDefaultPhoto(self):
+        # print('setDefaultPhoto', self.currentparentfeature)
+        if self.parentWidget.currentFeature is not None and self.parentWidget.dbasetablename == 'Infralineaire':
+            idressourcephoto = self.currentFeature['id_ressource']
+            idparentfeature=self.parentWidget.currentFeature['id_objet']
+            # print('setDefaultPhoto',idphoto,idparentfeature)
+            sql = "UPDATE " + str(self.parentWidget.dbasetablename) + " SET  lk_ressource2 = " + str(idressourcephoto)
+            sql += " WHERE id_objet = " + str(idparentfeature) + ";"
+            query = self.dbase.query(sql)
+            self.dbase.commit()
+
+
+
+
 
     """
     def initTool(self):

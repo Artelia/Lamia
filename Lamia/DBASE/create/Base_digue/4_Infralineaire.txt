@@ -50,7 +50,7 @@ dense;              3       ;['0-5 m', '5-10 m', '>10 m']
 ###aubaredecommentaire;                VARCHAR(255);            TEXT
 
 
-#photo eau
+#photo eau defaut
 ###lk_ressource1;        INT ;                       INTEGER
 #photo crete
 ###lk_ressource2;        INT ;                       INTEGER

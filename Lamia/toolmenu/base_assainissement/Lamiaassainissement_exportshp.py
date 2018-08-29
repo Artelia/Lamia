@@ -27,8 +27,8 @@ class exportShapefileAssainissementWorker(exportShapefileBaseWorker):
 
 
     def postInit(self):
-        createfilesdir = os.path.join(os.path.dirname(__file__), 'exporttools')
-        for filename in glob.glob(os.path.join(createfilesdir, '*.txt')):
+        self.createfilesdir = os.path.join(os.path.dirname(__file__), 'exporttools')
+        for filename in glob.glob(os.path.join(self.createfilesdir, '*.txt')):
             basename = os.path.basename(filename).split('.')[0]
             self.exportshapefiledialog.comboBox_type.addItems([basename])
 
