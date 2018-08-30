@@ -281,7 +281,9 @@ class EquipementTool(AbstractInspectionDigueTool):
 
         print(self.parentWidget.currentFeature.attributes())
 
-        if self.parentWidget.currentFeature is not None:
+        ended = pk_fin != -1
+
+        if self.parentWidget.currentFeature is not None :
 
             id_infralineaire = self.parentWidget.currentFeature['id_infralineaire']
             id_equipement = self.currentFeature.id()
@@ -309,31 +311,31 @@ class EquipementTool(AbstractInspectionDigueTool):
 
                 #absolu
                 if type_pk == 0:
-                    test_1=pk_debut>pk_fin
+                    test_1=pk_debut>pk_fin and ended
                     test_2=pk_debut<row[0]
-                    test_3=pk_fin>row[1]
+                    test_3=pk_fin>row[1] and ended
                     test_4= pk_debut>row[1]
-                    test_5 = pk_fin<row[0]
+                    test_5 = pk_fin<row[0] and ended
 
 
 
                 #relatif croissant
                 elif type_pk==1 :
-                    test_1=pk_debut>pk_fin
+                    test_1=pk_debut>pk_fin and ended
                     test_2=pk_debut<0
-                    test_3=pk_fin>(row[1]-row[0])
+                    test_3=pk_fin>(row[1]-row[0]) and ended
                     test_4= pk_debut>(row[1]-row[0])
-                    test_5 = pk_fin<0
+                    test_5 = pk_fin<0 and ended
 
 
 
                 #relatif decroissant
                 else:
-                    test_1=pk_debut>pk_fin
+                    test_1=pk_debut>pk_fin and ended
                     test_2=pk_debut<0
-                    test_3=pk_fin>(row[1]-row[0])
+                    test_3=pk_fin>(row[1]-row[0]) and ended
                     test_4= pk_debut>(row[1]-row[0])
-                    test_5=pk_fin<0
+                    test_5=pk_fin<0 and ended
 
 
 
@@ -444,113 +446,116 @@ class EquipementTool(AbstractInspectionDigueTool):
 
                             if result[1] is not None :
                                 pk_fin_autre_equipement = float(result[1])
+                                autre_equipement_ended=True
                             else :
                                 pk_fin_autre_equipement=0
+                                autre_equipement_ended=False
 
                             type_pk_autre_equipement = result[2]
 
-
-                            if type_pk_autre_equipement=='REC':
-                                pk_debut_autre_equipement= pk_debut_autre_equipement+pk_debut_bief
-                                pk_fin_autre_equipement = pk_fin_autre_equipement+pk_debut_bief
-
-                            elif type_pk_autre_equipement=='RED':
-                                pk_debut_autre_equipement= pk_fin_bief-pk_fin_autre_equipement
-                                pk_fin_autre_equipement = pk_fin_bief-pk_debut_autre_equipement
-
-
-                            if type_pk==1:
-                                pk_debut= pk_debut+pk_debut_bief
-                                pk_fin = pk_fin+pk_debut_bief
-
-                            elif type_pk_autre_equipement==2:
-                                pk_debut= pk_fin_bief-pk_fin
-                                pk_fin = pk_fin_bief-pk_debut
-
-
-
-                            if pk_debut<pk_debut_autre_equipement and pk_fin>pk_debut_autre_equipement:
+                            if autre_equipement_ended and ended:
 
                                 if type_pk_autre_equipement=='REC':
-                                    sql = "UPDATE  Equipement SET pk_fin="+str(pk_debut_autre_equipement-pk_debut_bief)+" WHERE id_equipement=" + str(id_equipement) + ";"
+                                    pk_debut_autre_equipement= pk_debut_autre_equipement+pk_debut_bief
+                                    pk_fin_autre_equipement = pk_fin_autre_equipement+pk_debut_bief
+
                                 elif type_pk_autre_equipement=='RED':
-                                    sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_bief-pk_debut_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
-                                else :
-                                    sql = "UPDATE  Equipement SET pk_fin="+str(pk_debut_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
+                                    pk_debut_autre_equipement= pk_fin_bief-pk_fin_autre_equipement
+                                    pk_fin_autre_equipement = pk_fin_bief-pk_debut_autre_equipement
 
 
-                                message_needed=True
-                                modified = True
-                                query = self.dbase.query(sql)
-                                self.dbase.commit()
-                                pk_fin = pk_debut_autre_equipement
+                                if type_pk==1:
+                                    pk_debut= pk_debut+pk_debut_bief
+                                    pk_fin = pk_fin+pk_debut_bief
 
-
-
-
-                            if pk_debut>pk_debut_autre_equipement and pk_fin<pk_fin_autre_equipement:
-
-                                if type_pk_autre_equipement=='REC':
-                                    sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_autre_equipement-pk_debut_bief)+", pk_fin = "+str(pk_fin_autre_equipement-pk_debut_bief)+" WHERE id_equipement=" + str(id_equipement) + ";"
-                                elif type_pk_autre_equipement=='RED':
-                                    sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_bief-pk_debut_autre_equipement)+", pk_fin = "+str(pk_fin_bief-pk_debut_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
-                                else :
-                                    sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_autre_equipement)+", pk_fin = "+str(pk_fin_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
-
-
-                                message_needed=True
-                                modified = True
-                                query = self.dbase.query(sql)
-                                self.dbase.commit()
-                                pk_fin = pk_fin_autre_equipement
-                                pk_debut = pk_fin_autre_equipement
+                                elif type_pk_autre_equipement==2:
+                                    pk_debut= pk_fin_bief-pk_fin
+                                    pk_fin = pk_fin_bief-pk_debut
 
 
 
+                                if pk_debut<pk_debut_autre_equipement and pk_fin>pk_debut_autre_equipement:
 
-                            if pk_debut<pk_fin_autre_equipement and pk_fin>pk_fin_autre_equipement:
-
-                                if type_pk_autre_equipement=='REC':
-                                    sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_autre_equipement-pk_debut_bief)+" WHERE id_equipement=" + str(id_equipement) + ";"
-                                elif type_pk_autre_equipement=='RED':
-                                    sql = "UPDATE  Equipement SET pk_fin="+str(pk_fin_bief-pk_fin_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
-                                else :
-                                    sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
+                                    if type_pk_autre_equipement=='REC':
+                                        sql = "UPDATE  Equipement SET pk_fin="+str(pk_debut_autre_equipement-pk_debut_bief)+" WHERE id_equipement=" + str(id_equipement) + ";"
+                                    elif type_pk_autre_equipement=='RED':
+                                        sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_bief-pk_debut_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
+                                    else :
+                                        sql = "UPDATE  Equipement SET pk_fin="+str(pk_debut_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
 
 
-                                message_needed=True
-                                modified = True
-                                query = self.dbase.query(sql)
-                                self.dbase.commit()
-                                pk_debut = pk_fin_autre_equipement
+                                    message_needed=True
+                                    modified = True
+                                    query = self.dbase.query(sql)
+                                    self.dbase.commit()
+                                    pk_fin = pk_debut_autre_equipement
 
 
 
 
-                            if pk_debut<pk_debut_autre_equipement and pk_fin>pk_fin_autre_equipement:
+                                if pk_debut>pk_debut_autre_equipement and pk_fin<pk_fin_autre_equipement:
 
-                                if type_pk_autre_equipement=='REC':
-                                    sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_autre_equipement-pk_debut_bief)+", pk_fin = "+str(pk_fin_autre_equipement-pk_debut_bief)+" WHERE id_equipement=" + str(id_equipement) + ";"
-                                elif type_pk_autre_equipement=='RED':
-                                    sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_bief-pk_debut_autre_equipement)+", pk_fin = "+str(pk_fin_bief-pk_debut_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
-                                else :
-                                    sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_autre_equipement)+", pk_fin = "+str(pk_fin_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
+                                    if type_pk_autre_equipement=='REC':
+                                        sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_autre_equipement-pk_debut_bief)+", pk_fin = "+str(pk_fin_autre_equipement-pk_debut_bief)+" WHERE id_equipement=" + str(id_equipement) + ";"
+                                    elif type_pk_autre_equipement=='RED':
+                                        sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_bief-pk_debut_autre_equipement)+", pk_fin = "+str(pk_fin_bief-pk_debut_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
+                                    else :
+                                        sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_autre_equipement)+", pk_fin = "+str(pk_fin_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
 
 
-                                message_needed=True
-                                modified = True
-                                query = self.dbase.query(sql)
-                                self.dbase.commit()
-                                pk_fin = pk_fin_autre_equipement
-                                pk_debut = pk_fin_autre_equipement
+                                    message_needed=True
+                                    modified = True
+                                    query = self.dbase.query(sql)
+                                    self.dbase.commit()
+                                    pk_fin = pk_fin_autre_equipement
+                                    pk_debut = pk_fin_autre_equipement
 
-                            if type_pk==1:
-                                pk_debut= pk_debut-pk_debut_bief
-                                pk_fin = pk_fin-pk_debut_bief
 
-                            elif type_pk_autre_equipement==2:
-                                pk_debut= pk_fin_bief-pk_fin
-                                pk_fin = pk_fin_bief-pk_debut
+
+
+                                if pk_debut<pk_fin_autre_equipement and pk_fin>pk_fin_autre_equipement:
+
+                                    if type_pk_autre_equipement=='REC':
+                                        sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_autre_equipement-pk_debut_bief)+" WHERE id_equipement=" + str(id_equipement) + ";"
+                                    elif type_pk_autre_equipement=='RED':
+                                        sql = "UPDATE  Equipement SET pk_fin="+str(pk_fin_bief-pk_fin_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
+                                    else :
+                                        sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
+
+
+                                    message_needed=True
+                                    modified = True
+                                    query = self.dbase.query(sql)
+                                    self.dbase.commit()
+                                    pk_debut = pk_fin_autre_equipement
+
+
+
+
+                                if pk_debut<pk_debut_autre_equipement and pk_fin>pk_fin_autre_equipement:
+
+                                    if type_pk_autre_equipement=='REC':
+                                        sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_autre_equipement-pk_debut_bief)+", pk_fin = "+str(pk_fin_autre_equipement-pk_debut_bief)+" WHERE id_equipement=" + str(id_equipement) + ";"
+                                    elif type_pk_autre_equipement=='RED':
+                                        sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_bief-pk_debut_autre_equipement)+", pk_fin = "+str(pk_fin_bief-pk_debut_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
+                                    else :
+                                        sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_autre_equipement)+", pk_fin = "+str(pk_fin_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
+
+
+                                    message_needed=True
+                                    modified = True
+                                    query = self.dbase.query(sql)
+                                    self.dbase.commit()
+                                    pk_fin = pk_fin_autre_equipement
+                                    pk_debut = pk_fin_autre_equipement
+
+                                if type_pk==1:
+                                    pk_debut= pk_debut-pk_debut_bief
+                                    pk_fin = pk_fin-pk_debut_bief
+
+                                elif type_pk_autre_equipement==2:
+                                    pk_debut= pk_fin_bief-pk_fin
+                                    pk_fin = pk_fin_bief-pk_debut
 
 
                 if message_needed:
@@ -579,86 +584,89 @@ class EquipementTool(AbstractInspectionDigueTool):
 
                                 if result[1] is not None :
                                     pk_fin_autre_equipement = float(result[1])
+                                    autre_equipement_ended=True
                                 else :
                                     pk_fin_autre_equipement=0
+                                    autre_equipement_ended=False
 
-
-                                if type_pk_autre_equipement=='REC':
-                                    pk_debut_autre_equipement= pk_debut_autre_equipement+pk_debut_bief
-                                    pk_fin_autre_equipement = pk_fin_autre_equipement+pk_debut_bief
-
-                                elif type_pk_autre_equipement=='RED':
-                                    pk_debut_autre_equipement= pk_fin_bief-pk_fin_autre_equipement
-                                    pk_fin_autre_equipement = pk_fin_bief-pk_debut_autre_equipement
-
-                                if type_pk==1:
-                                    pk_debut= pk_debut+pk_debut_bief
-                                    pk_fin = pk_fin+pk_debut_bief
-
-                                elif type_pk_autre_equipement==2:
-                                    pk_debut= pk_fin_bief-pk_fin
-                                    pk_fin = pk_fin_bief-pk_debut
-
-                                    print(pk_debut, pk_fin, pk_debut_autre_equipement, pk_fin_autre_equipement)
-
-                                if pk_debut<pk_fin_autre_equipement and pk_fin<pk_fin_autre_equipement:
+                                if autre_equipement_ended and ended:
 
                                     if type_pk_autre_equipement=='REC':
-                                        sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_autre_equipement-pk_debut_bief)+", pk_fin = "+str(pk_fin_autre_equipement-pk_debut_bief)+" WHERE id_equipement=" + str(id_equipement) + ";"
+                                        pk_debut_autre_equipement= pk_debut_autre_equipement+pk_debut_bief
+                                        pk_fin_autre_equipement = pk_fin_autre_equipement+pk_debut_bief
+
                                     elif type_pk_autre_equipement=='RED':
-                                        sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_bief-pk_debut_autre_equipement)+", pk_fin = "+str(pk_fin_bief-pk_debut_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
-                                    else :
-                                        sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_autre_equipement)+", pk_fin = "+str(pk_fin_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
+                                        pk_debut_autre_equipement= pk_fin_bief-pk_fin_autre_equipement
+                                        pk_fin_autre_equipement = pk_fin_bief-pk_debut_autre_equipement
+
+                                    if type_pk==1:
+                                        pk_debut= pk_debut+pk_debut_bief
+                                        pk_fin = pk_fin+pk_debut_bief
+
+                                    elif type_pk_autre_equipement==2:
+                                        pk_debut= pk_fin_bief-pk_fin
+                                        pk_fin = pk_fin_bief-pk_debut
+
+                                        print(pk_debut, pk_fin, pk_debut_autre_equipement, pk_fin_autre_equipement)
+
+                                    if pk_debut<pk_fin_autre_equipement and pk_fin<pk_fin_autre_equipement:
+
+                                        if type_pk_autre_equipement=='REC':
+                                            sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_autre_equipement-pk_debut_bief)+", pk_fin = "+str(pk_fin_autre_equipement-pk_debut_bief)+" WHERE id_equipement=" + str(id_equipement) + ";"
+                                        elif type_pk_autre_equipement=='RED':
+                                            sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_bief-pk_debut_autre_equipement)+", pk_fin = "+str(pk_fin_bief-pk_debut_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
+                                        else :
+                                            sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_autre_equipement)+", pk_fin = "+str(pk_fin_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
 
 
-                                    message_needed=True
-                                    modified = True
-                                    query = self.dbase.query(sql)
-                                    self.dbase.commit()
-                                    pk_fin = pk_fin_autre_equipement
-                                    pk_debut = pk_fin_autre_equipement
+                                        message_needed=True
+                                        modified = True
+                                        query = self.dbase.query(sql)
+                                        self.dbase.commit()
+                                        pk_fin = pk_fin_autre_equipement
+                                        pk_debut = pk_fin_autre_equipement
 
 
-                                if pk_debut<pk_fin_autre_equipement and pk_fin>pk_fin_autre_equipement:
+                                    if pk_debut<pk_fin_autre_equipement and pk_fin>pk_fin_autre_equipement:
 
-                                    if type_pk_autre_equipement=='REC':
-                                        sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_autre_equipement-pk_debut_bief)+" WHERE id_equipement=" + str(id_equipement) + ";"
-                                    elif type_pk_autre_equipement=='RED':
-                                        sql = "UPDATE  Equipement SET pk_fin="+str(pk_fin_bief-pk_fin_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
-                                    else :
-                                        sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
-
-
-                                    message_needed=True
-                                    modified = True
-                                    query = self.dbase.query(sql)
-                                    self.dbase.commit()
-                                    pk_debut = pk_fin_autre_equipement
-
-                                if pk_debut>pk_fin_autre_equipement :
-
-                                    if type_pk_autre_equipement=='REC':
-                                        sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_autre_equipement-pk_debut_bief)+" WHERE id_equipement=" + str(id_equipement) + ";"
-                                    elif type_pk_autre_equipement=='RED':
-                                        sql = "UPDATE  Equipement SET pk_fin="+str(pk_fin_bief-pk_fin_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
-                                    else :
-                                        sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
+                                        if type_pk_autre_equipement=='REC':
+                                            sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_autre_equipement-pk_debut_bief)+" WHERE id_equipement=" + str(id_equipement) + ";"
+                                        elif type_pk_autre_equipement=='RED':
+                                            sql = "UPDATE  Equipement SET pk_fin="+str(pk_fin_bief-pk_fin_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
+                                        else :
+                                            sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
 
 
-                                    message_needed=True
-                                    modified = True
-                                    query = self.dbase.query(sql)
-                                    self.dbase.commit()
-                                    pk_debut = pk_fin_autre_equipement
+                                        message_needed=True
+                                        modified = True
+                                        query = self.dbase.query(sql)
+                                        self.dbase.commit()
+                                        pk_debut = pk_fin_autre_equipement
+
+                                    if pk_debut>pk_fin_autre_equipement :
+
+                                        if type_pk_autre_equipement=='REC':
+                                            sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_autre_equipement-pk_debut_bief)+" WHERE id_equipement=" + str(id_equipement) + ";"
+                                        elif type_pk_autre_equipement=='RED':
+                                            sql = "UPDATE  Equipement SET pk_fin="+str(pk_fin_bief-pk_fin_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
+                                        else :
+                                            sql = "UPDATE  Equipement SET pk_debut="+str(pk_fin_autre_equipement)+" WHERE id_equipement=" + str(id_equipement) + ";"
 
 
-                                if type_pk==1:
-                                    pk_debut= pk_debut-pk_debut_bief
-                                    pk_fin = pk_fin-pk_debut_bief
+                                        message_needed=True
+                                        modified = True
+                                        query = self.dbase.query(sql)
+                                        self.dbase.commit()
+                                        pk_debut = pk_fin_autre_equipement
 
-                                elif type_pk_autre_equipement==2:
-                                    pk_debut= pk_fin_bief-pk_fin
-                                    pk_fin = pk_fin_bief-pk_debut
+
+                                    if type_pk==1:
+                                        pk_debut= pk_debut-pk_debut_bief
+                                        pk_fin = pk_fin-pk_debut_bief
+
+                                    elif type_pk_autre_equipement==2:
+                                        pk_debut= pk_fin_bief-pk_fin
+                                        pk_fin = pk_fin_bief-pk_debut
 
 
                     if message_needed:
