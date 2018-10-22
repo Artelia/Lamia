@@ -1,0 +1,19 @@
+#DJAN  SELECT Rasters.*, Ressource.*, Objet.* FROM Rasters INNER JOIN Ressource ON Rasters.lpk_ressource = Ressource.pk_ressource INNER JOIN Objet ON Ressource.lpk_objet = Objet.pk_objet  WHERE Objet.lpk_revision_end IS NULL
+#QGIS SELECT Rasters.*, Ressource.*, Objet.*FROM Rasters INNER JOIN Ressource ON Rasters.lpk_ressource = Ressource.pk_ressource INNER JOIN Objet ON Ressource.lpk_objet = Objet.pk_objet
+
+
+# Nom_champ              TypePostGis            TypeSpatialite                        Option
+###pk_rasters;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_rasters;        INT ;                       INTEGER
+###lpk_ressource;        INT ;                       INTEGER                                        ;Ressource(pk_ressource)
+
+###typeraster;VARCHAR(255);TEXT
+/;
+Orthophoto de reference;ORF
+IGN25k de reference;IRF
+Lidar de reference;LRF
+Lidar;LID
+Orthophoto;ORT
+IGN25k;IGN
+Autre;AUT
+

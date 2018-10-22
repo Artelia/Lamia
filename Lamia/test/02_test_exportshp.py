@@ -27,6 +27,8 @@ def testRapport(canvas, loadfile=True, typedb="spatialite",tabletype=None, pdffi
             #path = os.path.normpath('I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201710_Begles//BD_Begles_ind9.sqlite')
             #path = os.path.normpath('I://FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//201709_RD//BD_Rivedroite_ind2.sqlite')
             path = os.path.normpath("C://000_testdigue//201710_Begles//BD_Begles_ind16.sqlite")
+            path = os.path.normpath("C://000_testdigue//URBAIN//La_Geneytouse2.sqlite")
+
             wind.dbase.loadQgisVectorLayers(path)
             wind.loadUiDesktop()
 
@@ -51,7 +53,7 @@ def testRapport(canvas, loadfile=True, typedb="spatialite",tabletype=None, pdffi
                 break
         # Infralineaire_BM Equipement_point_BM Photo_BM Graphdata_BM
         shp = "c://testshape.shp"
-        wind.menutools[indexrapport].prepareData('Desordres_ligne_BM', shp)
+        wind.menutools[indexrapport].prepareData('Noeud', shp)
 
 
 

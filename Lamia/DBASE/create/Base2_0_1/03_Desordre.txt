@@ -1,0 +1,24 @@
+#DJAN SELECT Desordre.* , Objet.* FROM Desordre INNER JOIN Objet ON Desordre.lpk_objet = Objet.pk_objet WHERE Objet.lpk_revision_end IS NULL
+#QGIS SELECT  Desordre.* , Objet.* FROM Desordre INNER JOIN Objet ON Desordre.lpk_objet = Objet.pk_objet
+
+#SHOW YES
+#SCAL 10000
+
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###pk_desordre;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_desordre;           INT ;                   INTEGER 
+###lpk_objet ;           INT;                       INTEGER                                  ; Objet(pk_objet)
+
+#groupe desordre est utilise  pour distinguer les desordres selon le type d equipement choisi - influe sur le stackedwidget de pyqt pour les observations
+###groupedesordre;           VARCHAR(255);            TEXT
+Infralineaire;INF
+Noeud;NOD
+Equipement;EQP
+###impact ;               VARCHAR(255);             TEXT
+###gravite ;               VARCHAR(255);             TEXT
+###priorite ;               VARCHAR(255);             TEXT
+###risques ;               VARCHAR(255);             TEXT
+
+###lid_descriptionsystem;    INT ;                  INTEGER
+
+###geom;                LINESTRING

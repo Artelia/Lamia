@@ -64,6 +64,7 @@ class getDateDialog(QDialog):
 
         if True:
             todaydate = QtCore.QDate.currentDate()
+
             if self.previousdate is not None:
                 self.dateEdit.setDate(QtCore.QDate.fromString(self.previousdate, 'yyyy-MM-dd') )
             else:
@@ -72,13 +73,32 @@ class getDateDialog(QDialog):
             self.label_end.setText(todaydate.toString('yyyy-MM-dd'))
             self.dateEdit_end.setDate(todaydate)
 
-            sql = "SELECT MIN(datecreation) FROM Objet"
+
+
+            if self.dialog.dbase.version is None or self.dialog.dbase.version == '':
+                sql = "SELECT MIN(datecreation) FROM Objet"
+            else:
+                sql = "SELECT MIN(datetimecreation) FROM Objet"
+
             query = self.dialog.dbase.query(sql)
             startdate = [row[0] for row in query]
-            if len(startdate) > 0:
-                date2 = QtCore.QDate.fromString(startdate[0], 'yyyy-MM-dd')
+
+            if self.dialog.dbase.version is None or self.dialog.dbase.version == '':
+                if len(startdate) > 0:
+                    # (QtCore.QDateTime.fromString(valuetoset, 'yyyy-MM-dd hh:mm:ss'))
+                    date2 = QtCore.QDate.fromString(startdate[0], 'yyyy-MM-dd')
+                else:
+                    date2 = todaydate
             else:
-                date2 = todaydate
+                if len(startdate) > 0:
+                    date2 = QtCore.QDateTime.fromString(startdate[0], 'yyyy-MM-dd hh:mm:ss').date()
+                    #date2 = QtCore.QDate.fromString(startdate[0], 'yyyy-MM-dd')
+                else:
+                    date2 = todaydate
+
+
+
+
             self.label_start.setText(date2.toString('yyyy-MM-dd'))
             self.dateEdit_start.setDate(date2)
 
@@ -96,6 +116,7 @@ class getDateDialog(QDialog):
     def dateSliderAction(self, sliderint):
         begindate = QtCore.QDate.fromString(self.label_start.text(), 'yyyy-MM-dd')
         datetoset = begindate.addDays(sliderint)
+
         self.dateEdit.setDate(datetoset)
         self.dialog.dbase.workingdate = datetoset.toString('yyyy-MM-dd')
         self.dialog.dbase.updateWorkingDate()

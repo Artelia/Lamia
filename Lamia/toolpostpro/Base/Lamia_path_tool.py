@@ -442,7 +442,7 @@ class PathTool(AbstractInspectionDigueTool):
 
                 elif datatype == 'topographie':
 
-                    sql = "SELECT typepointtopo, zmngf,id_topographie, ST_AsText(geom)  FROM Pointtopo "
+                    sql = "SELECT typepointtopo, zmngf,id_topographie, ST_AsText(geom)  FROM Pointtopo_qgis "
                     sql += "WHERE ST_WITHIN(geom, ST_GeomFromText('" + geomfinalbuffer + "',"+str(self.dbase.crsnumber) + "));"
                     query = self.dbase.query(sql)
                     result = [row[0:4] for row in query]

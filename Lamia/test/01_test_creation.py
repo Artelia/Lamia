@@ -18,10 +18,10 @@ def testDbaseCreation(canvas, typedb="spatialite"):
     print('begin')
     wind = InspectiondigueWindowWidget(canvas)
     crs = 3945
-    # Digue VNF  Assainissement  Default Assainissement2 Base Base_default Base_assainissement
-    typebase = 'Base_assainissement'
+    # Digue VNF  Assainissement  Default Assainissement2 Base Base_default Base_assainissement Base2_digue
+    typebase = 'Base2_digue'
     # spatialite   postgis
-    typedb = 'spatialite'
+    typedb = 'postgis'
 
     if typedb == "spatialite":
 
@@ -46,14 +46,22 @@ def testDbaseCreation(canvas, typedb="spatialite"):
         elif typebase == 'Base_assainissement':
             spatialitefile = 'C://000_testdigue//temp_baseassainissement//test01.sqlite'
 
+        elif typebase == 'Base2':
+            spatialitefile = 'C://000_testdigue//temp_base2//test01.sqlite'
+
+        elif typebase == 'Base2_digue':
+            spatialitefile = 'C://000_testdigue//temp_base2_digue//test01.sqlite'
+
         #shutil.rmtree('c://000_testdigue//BDspatialite')
 
-        originalfile = os.path.join(os.path.dirname(__file__), '..', 'DBASE', 'DBase_ind0.sqlite')
-        shutil.copyfile(originalfile, spatialitefile)
+        #originalfile = os.path.join(os.path.dirname(__file__), '..', 'DBASE', 'DBase_ind0.sqlite')
+        #shutil.copyfile(originalfile, spatialitefile)
 
         #wind.dbase.createDbase(file=spatialitefile, crs=crs, type='Digue', dbaseressourcesdirectory=spatialitedir)
 
-        wind.dbase.createDbase(file=spatialitefile, crs=crs, type=typebase)
+        wind.dbase.printsql = True
+
+        wind.dbase.createDbase(slfile=spatialitefile, crs=crs, worktype=typebase)
 
 
 
@@ -68,6 +76,14 @@ def testDbaseCreation(canvas, typedb="spatialite"):
         if typebase == 'Digue':
             wind.dbase.printsql = True
             wind.dbase.createDbase(crs=crs, type = typebase, dbasetype='postgis', dbname='PVR_test', schema='lamia_digue',
+                                   user='postgres', host='localhost',
+                                   password='PVR', dbaseressourcesdirectory='c://000_testdigue//temp_postgis//digue')
+
+
+
+        if typebase == 'Base2_digue':
+            wind.dbase.printsql = True
+            wind.dbase.createDbase(crs=crs, worktype = typebase, dbasetype='postgis', dbname='PVR_test', schema='lamia_base2_digue',
                                    user='postgres', host='localhost',
                                    password='PVR', dbaseressourcesdirectory='c://000_testdigue//temp_postgis//digue')
 

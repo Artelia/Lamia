@@ -1,0 +1,11 @@
+#DJAN  SELECT Rapport.*, Ressource.*, Objet.*   FROM Rapport INNER JOIN Ressource ON Rapport.lpk_ressource = Ressource.pk_ressource INNER JOIN Objet ON Ressource.lpk_objet = Objet.pk_objet  WHERE Objet.lpk_revision_end IS NULL
+#QGIS SELECT Rapport.*, Ressource.*, Objet.*  FROM Rapport INNER JOIN Ressource ON Rapport.lpk_ressource = Ressource.pk_ressource INNER JOIN Objet ON Ressource.lpk_objet = Objet.pk_objet
+
+#SHOW YES
+
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###pk_rapport;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_rapport;                INT ;                     INTEGER
+###lpk_ressource;        INT ;                       INTEGER                                        ;Ressource(pk_ressource)
+
+###geom;                MULTIPOLYGON

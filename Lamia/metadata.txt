@@ -10,8 +10,8 @@
 name=Lamia
 qgisMinimumVersion=2.14
 qgisMaximumVersion=3.99
-description=a voir
-version=0.1.28
+description=lamia
+version=0.34
 author=ARTELIA
 email=patrice.verchere@arteliagroup.com
 
@@ -24,18 +24,14 @@ repository=erg
 # Recommended items:
 
 # Uncomment the following line and add your changelog:
-changelog=
-    0.1.4 : vnf
-    0.1.3 : alpha release - bug fix
-    0.1.2 : alpha release - bug fix
-    0.1.1 : alpha release - bug fix
-    0.1.0 : alpha release
-# Tags are comma separated with spaces allowed
-tags=digue
+# changelog=
 
-homepage=Non
+# Tags are comma separated with spaces allowed
+tags=gps
+
+homepage=erg
 category=Plugins
-icon=icons/icon.png
+icon=icon.png
 # experimental flag
 experimental=False
 

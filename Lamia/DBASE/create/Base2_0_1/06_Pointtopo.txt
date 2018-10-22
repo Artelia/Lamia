@@ -1,0 +1,27 @@
+#DJAN  SELECT Pointtopo.*, Topographie.*, Ressource.*, Objet.* FROM Pointtopo INNER JOIN  Topographie ON Pointtopo.lpk_topographie = Topographie.pk_topographie INNER JOIN Ressource ON Topographie.lpk_ressource = Ressource.pk_ressource INNER JOIN Objet ON Ressource.lpk_objet = Objet.pk_objet  WHERE Objet.lpk_revision_end IS NULL AND Objet.lpk_revision_end IS NULL
+#QGIS  SELECT Pointtopo.*, Topographie.*, Ressource.*, Objet.* FROM Pointtopo INNER JOIN  Topographie ON Pointtopo.lpk_topographie = Topographie.pk_topographie INNER JOIN Ressource ON Topographie.lpk_ressource = Ressource.pk_ressource INNER JOIN Objet ON Ressource.lpk_objet = Objet.pk_objet 
+
+
+#SHOW YES
+#SCAL 10000
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###pk_pointtopo;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_pointtopo;       INT;            INTEGER
+###lpk_topographie;       INT;            INTEGER;                                      Topographie(pk_topographie)
+
+###typepointtopo;                VARCHAR(255);            TEXT
+Autre;AUT
+Type1;TP1 
+###x;                NUMERIC;            REAL
+###y;                NUMERIC;            REAL
+###zgps;                NUMERIC;            REAL
+###zwgs84;                NUMERIC;            REAL
+###raf09;                NUMERIC;            REAL
+###zmngf;                NUMERIC;            REAL
+###precision;                VARCHAR(255);            TEXT
+###dx;                NUMERIC;            REAL
+###dy;                NUMERIC;            REAL
+###dz;                NUMERIC;            REAL
+###hauteurperche;                NUMERIC;            REAL
+
+###geom;                POINT

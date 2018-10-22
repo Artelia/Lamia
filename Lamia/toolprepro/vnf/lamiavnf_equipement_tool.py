@@ -93,13 +93,13 @@ class EquipementTool(AbstractInspectionDigueTool):
             # ****************************************************************************************
             # child widgets
             self.dbasechildwdgfield = []
-            EquipementMainToolInstance = EquipementMainTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
-            self.propertieswdgEquipement = EquipementMainToolInstance
-            self.dbasechildwdgfield.append(self.propertieswdgEquipement)
 
-            self.propertieswdgDesordre = DesordreTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
-            self.dbasechildwdgfield.append(self.propertieswdgDesordre)
-
+            if True:
+                # self.propertieswdgSSEQUIPEMENT = EquipementMainToolInstance
+                self.propertieswdgEquipement = EquipementMainTool(dbase=self.dbase, gpsutil=self.gpsutil,parentwidget=self)
+                self.propertieswdgEquipement.NAME = None
+                self.userwdgfield.tabWidget.widget(2).layout().addWidget(self.propertieswdgEquipement)
+                self.dbasechildwdgfield.append(self.propertieswdgEquipement)
 
             if True:
                 self.propertieswdgPHOTOGRAPHIE = PhotosTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
@@ -109,10 +109,7 @@ class EquipementTool(AbstractInspectionDigueTool):
 
 
 
-                self.propertieswdgSSEQUIPEMENT = EquipementMainToolInstance
-                self.propertieswdgSSEQUIPEMENT.NAME = None
-                self.userwdgfield.tabWidget.widget(2).layout().addWidget(self.propertieswdgSSEQUIPEMENT)
-                self.dbasechildwdgfield.append(self.propertieswdgSSEQUIPEMENT)
+
 
 
 
@@ -122,8 +119,11 @@ class EquipementTool(AbstractInspectionDigueTool):
                 self.dbasechildwdgfield.append(self.propertieswdgDESORDRE)
 
 
-                #self.propertieswdgCROQUIS = CroquisTool(dbase=self.dbase, parentwidget=self)
-                #self.userwdgfield.tabWidget.widget(2).layout().addWidget(self.propertieswdgCROQUIS)
+            self.userwdgfield.toolButton_pkdebut.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_pk_debut))
+            self.userwdgfield.toolButton_pkfin.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_pk_fin))
+
 
 
             if self.parentWidget is not None and self.parentWidget.dbasetablename == 'Infralineaire':
@@ -177,6 +177,7 @@ class EquipementTool(AbstractInspectionDigueTool):
         pass
 
         self.propertieswdgEquipement.postOnActivation()
+        #self.propertieswdgSSEQUIPEMENT.postOnActivation()
 
     def postOnDesactivation(self):
         pass
@@ -260,7 +261,18 @@ class EquipementTool(AbstractInspectionDigueTool):
 
     def postSaveFeature(self, boolnewfeature):
 
-        print('postsaveequi')
+        #update treewidget
+        itemintree =  self.parentWidget.linkedtreewidget.findItems(self.dbasetablename, QtCore.Qt.MatchExactly | QtCore.Qt.MatchRecursive, 0)[0]
+        print(itemintree.text(0))
+        itemtochange = None
+        for childitemindex in range(itemintree.childCount()):
+            if itemintree.child(childitemindex).text(0) == str(self.currentFeature['id_equipement']):
+                itemtochange = itemintree.child(childitemindex)
+
+        for i, elem in enumerate(self.qtreewidgetfields):
+            if   itemtochange is not None:
+                txttemp = self.dbase.getConstraintTextFromRawValue('Equipement', elem, self.currentFeature[elem])
+                itemtochange.setText(i+1, str(txttemp))
 
         #Ici faire les tests sur les pks et afficher un pop-up avant de supprimer l objet si ces pks n obeissent pas aux regles souhaitees
 
@@ -278,7 +290,7 @@ class EquipementTool(AbstractInspectionDigueTool):
         test_chevauchement = ((partie_type==2 or partie_type==3 or partie_type==4) and not (equipement_type==6 or equipement_type==7))
 
         print(pk_debut, pk_fin)
-
+        print(self.parentWidget)
         print(self.parentWidget.currentFeature.attributes())
 
         ended = pk_fin != -1

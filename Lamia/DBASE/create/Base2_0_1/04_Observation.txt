@@ -1,0 +1,29 @@
+#DJAN  SELECT Observation.* , Objet.* FROM Observation INNER JOIN Objet ON Observation.lpk_objet = Objet.pk_objet  WHERE Objet.lpk_revision_end IS NULL
+#QGIS SELECT Observation.* , Objet.* FROM Observation INNER JOIN Objet ON Observation.lpk_objet = Objet.pk_objet
+
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###pk_observation;      SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_observation;            INT ;                     INTEGER
+###lpk_objet ;           INT;                       INTEGER                                  ; Objet(pk_objet)
+
+###datetimeobservation;            TIMESTAMP ;                  TEXT
+###source;                VARCHAR(255);            TEXT
+###nombre;                 INT ;                   INTEGER 
+###gravite;                VARCHAR(255);            TEXT
+/;                          
+0 : faible urgence;         0
+1 : pas de grande urgence;  1
+2 : urgence moyen terme;    2
+3 : urgent ;                3
+###evolution;                VARCHAR(255);            TEXT
+###typesuite;                VARCHAR(255);            TEXT
+Aucune;         AUC
+Surveillance;   SUR
+Entretien;      ENT
+Etudes;         ETU
+Travaux;        TVX    
+###precisionsuite;                VARCHAR(255);            TEXT
+###commentairesuite;                VARCHAR(255);            TEXT
+
+###lid_marche;       INT;            INTEGER
+###lid_desordre;         INT ;            INTEGER
