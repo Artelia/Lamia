@@ -16,7 +16,7 @@
 Module that contains common exception classes for the Cloudant Python client
 library.
 """
-from cloudant._messages import (
+from _messages import (
     ARGUMENT_ERROR,
     CLIENT,
     DATABASE,

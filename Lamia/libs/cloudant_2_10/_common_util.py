@@ -29,7 +29,7 @@ from .error import CloudantArgumentError, CloudantException, CloudantClientExcep
 
 USER_AGENT = '/'.join([
     'python-cloudant',
-    sys.modules['cloudant'].__version__,
+    '2.10',
     'Python',
     '{0}.{1}.{2}'.format(
         sys.version_info[0], sys.version_info[1], sys.version_info[2]),
