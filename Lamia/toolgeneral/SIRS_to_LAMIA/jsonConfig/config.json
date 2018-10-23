@@ -1,37 +1,37 @@
 {
   "Descriptionsystem" : {
-    "fields" : [],
-    "query_sql" : "INSERT INTO Descriptionsystem DEFAULT VALUES "
+    "fields" : ["Objet"],
+    "query_sql" : "INSERT INTO Descriptionsystem (lpk_objet) VALUES (?)"
   },
   "Desordre" : {
     "query_couch" : { "@class": "fr.sirs.core.model.Desordre"},
     "fields" : [ "Objet", "categorieDesordreId abrege", "coteId abrege", "geometry", "typeDesordreId abrege", "positionId abrege"],
-    "query_sql" : "INSERT INTO Desordre (id_objet, groupedesordre, cote, catdes, geom, typedes, position) VALUES (?,'INF',?,?,st_geomfromtext(?,2154),?,?)"
+    "query_sql" : "INSERT INTO Desordre (lpk_objet, groupedesordre, cote, catdes, geom, typedes, position) VALUES (?,'INF',?,?,st_geomfromtext(?,2154),?,?)"
   },
   "Equipement": {
     "query_couch" : { "@class": "fr.sirs.core.model.OuvrageParticulier"},
-    "fields" : ["Descriptionsystem", "Objet", "coteId abrege", "geometry", "positionId abrege", "typeOuvrageParticulierId abrege"],
-    "query_sql" : "INSERT INTO Equipement (id_descriptionsystem, id_objet, cote, geom, position, typeequipement) VALUES (?,?,?,st_geomfromtext(?,2154),?,?)"
+    "fields" : ["Descriptionsystem", "coteId abrege", "geometry", "positionId abrege", "typeOuvrageParticulierId abrege"],
+    "query_sql" : "INSERT INTO Equipement (lpk_descriptionsystem, cote, geom, position, typeequipement) VALUES (?,?,st_geomfromtext(?,2154),?,?)"
   },
   "Infralineaire": {
 	  "query_couch" : { "@class": "fr.sirs.core.model.TronconDigue"},
-    "fields" : ["Descriptionsystem", "Objet", "geometry"],
-    "query_sql" : "INSERT INTO Infralineaire (id_descriptionsystem, id_objet, geom) VALUES (?,?,st_geomfromtext(?,2154))"
+    "fields" : ["Descriptionsystem", "geometry"],
+    "query_sql" : "INSERT INTO Infralineaire (lpk_descriptionsystem, geom) VALUES (?,st_geomfromtext(?,2154))"
 	},
   "Objet" : {
     "fields" : ["dateMaj", "date_debut", "libelle"],
-    "query_sql" : "INSERT INTO Objet (datemodification, datecreation, libelle) VALUES (?,?,?)"
+    "query_sql" : "INSERT INTO Objet (datetimemodification, datetimecreation, libelle) VALUES (?,?,?)"
   },
   "Observation" : {
       "list" : "observations",
       "query_couch" : { "@class": "fr.sirs.core.model.Desordre"},
       "fields" : ["Objet", "date","evolution", "id",  "urgenceId abrege", "nombreDesordres"],
-      "query_sql" : "INSERT INTO Observation (id_objet, dateobservation, evolution, source, gravite, nombre) VALUES (?,?,?,?,?,?)"
+      "query_sql" : "INSERT INTO Observation (lpk_objet, dateobservation, evolution, source, gravite, nombre) VALUES (?,?,?,?,?,?)"
   },
   "Noeud" : {
     "query_couch": { "@class": "fr.sirs.core.model.BorneDigue" },
-    "fields" : ["Objet", "geometry"],
-    "query_sql" : "INSERT INTO Noeud (id_objet, geom) VALUES (?,st_geomfromtext(?,2154))"
+    "fields" : ["Descriptionsystem", "geometry"],
+    "query_sql" : "INSERT INTO Noeud (lpk_descriptionsystem, geom) VALUES (?,st_geomfromtext(?,2154))"
   },
   "Misc" : {
     "Update_using_id" : "UPDATE {table_name01} SET {field_name01} = {value} WHERE {table_name01}.{field_name02} = {id_search}",

@@ -289,10 +289,16 @@ class FranceDiguetoLamia():
     :param newElem: dict
     """
     def setDependencies(self):
+        #Ici on rattache tous les ojets à ceux auxquels ils ne sont pas liés par un heritage direct, par exemple les dersordres aux infralineaires
         convertisseur = json.load(open(self.convertisseurPATH,'r'))
         bridge = json.load(open(self.bridgePATH, 'r'))
 
         for obj in bridge:
+            #Le bridge est constitue ainsi
+            #Le nom de chaque dico est celui de la table qu on veut rattacher (par ex desordre)
+            #le champ source donne le nom du champ de la clef etrangere dans la table qu on veut rattacher (ici lid_descriptionsystem qui est dans la table desordre)
+            #Le champ destination donne le nom de la clef dans la table a laquelle on veut se rattacher (ici lpk_descriptionsystem dans la table Infralineaire qui renvoie a l element de la table descriptionsystem)
+            #Le champ table donne la table a laquelle on veut rattacher l objet (ici infralineaire)
             print('obj',obj)
 
             for i in range(0, len(bridge[obj])):
@@ -351,7 +357,7 @@ class FranceDiguetoLamia():
 
                             #Creation de l'objet
                             print("insertion de l objet")
-                            query_to_run = "INSERT INTO Objet (datemodification, datecreation, libelle) VALUES ("
+                            query_to_run = "INSERT INTO Objet (datetimemodification, datetimecreation, libelle) VALUES ("
                             query_to_run=query_to_run+"'"+str(observation['date'])+"', "
                             query_to_run=query_to_run+"'"+str(observation['date'])+"', "
                             query_to_run=query_to_run+"'"+str(photo['designation'])+"') "
@@ -378,7 +384,7 @@ class FranceDiguetoLamia():
 
                             #Creation de la Ressource
                             print("insertion de la ressource")
-                            query_to_run = "INSERT INTO Ressource (id_objet, description, dateressource, file) VALUES ("
+                            query_to_run = "INSERT INTO Ressource (lpk_objet, description, dateressource, file) VALUES ("
                             query_to_run=query_to_run+"'"+str(id_objet_insere)+"', "
                             query_to_run=query_to_run+"'"+str(photo['designation'])+"', "
                             query_to_run=query_to_run+"'"+str(observation['date'])+"', "
@@ -420,8 +426,7 @@ class FranceDiguetoLamia():
 
                             #Creation de la photo
                             print("insertion de la photo")
-                            query_to_run = "INSERT INTO Photo (id_objet, id_ressource, geom, typephoto) VALUES ("
-                            query_to_run=query_to_run+"'"+str(id_objet_insere)+"', "
+                            query_to_run = "INSERT INTO Photo (lpk_ressource, geom, typephoto) VALUES ("
                             query_to_run=query_to_run+"'"+str(id_ressource_inseree)+"', "
                             query_to_run=query_to_run+"st_geomfromtext('POINT("+str(photo['longitudeMin'])+' '+str(photo['latitudeMin'])+")',"+str(self.srid)+"), "
                             query_to_run=query_to_run+"'PHO')"
@@ -438,7 +443,7 @@ class FranceDiguetoLamia():
 
     def fetchObservationConvertisseur(self, id_observation):
         print(id_observation)
-        query = "SELECT id_objet FROM Observation WHERE source='"+str(id_observation)+"'"
+        query = "SELECT lpk_objet FROM Observation WHERE source='"+str(id_observation)+"'"
 
         if self.typedb:
             fetch = self.queryL.SLITEcursor.execute(query).fetchone()[0]
@@ -452,9 +457,9 @@ class FranceDiguetoLamia():
 
     #Add the id_objet field to the Infralineaires items
     def updateDescriptionSystem(self):
-
+        """
         print("Update DescriptionSystem .................................................................")
-        query = "SELECT id_descriptionsystem FROM Descriptionsystem WHERE id_objet IS NULL"
+        query = "SELECT id_descriptionsystem FROM Descriptionsystem WHERE lpk_objet IS NULL"
         cursor_id_dessys=self.queryL.SLITEcursor.execute(query)
 
         while True:
@@ -483,7 +488,7 @@ class FranceDiguetoLamia():
                 print(query)
                 self.queryL.SLITEcursor.execute(query)
 
-
+        """
         return
 
     def updateGeomDesordres(self):
@@ -535,19 +540,25 @@ class FranceDiguetoLamia():
 
 
         for table in ['Objet', 'Desordre', 'Infralineaire', 'Equipement', 'Noeud', 'Descriptionsystem', 'Observation'] :
-            query = "UPDATE "+table+" SET id_"+table+"= pk_"+table+", id_revisionbegin='1'"
+            query = "UPDATE "+table+" SET id_"+table+"= pk_"+table
             print(query)
             self.queryL.SLITEcursor.execute(query)
 
-
+        query = "UPDATE Objet SET lpk_revision_begin='1'"
+        print(query)
+        self.queryL.SLITEcursor.execute(query)
 
     def setKeysPhotos(self):
 
         for table in ['Photo', 'Ressource', 'Objet'] :
-            query = "UPDATE "+table+" SET id_"+table+"= pk_"+table+", id_revisionbegin='1'"
+            query = "UPDATE "+table+" SET id_"+table+"= pk_"+table
             print(query)
             self.queryL.SLITEcursor.execute(query)
 
+        query = "UPDATE Objet SET lpk_revision_begin='1'"
+        print(query)
+        self.queryL.SLITEcursor.execute(query)
+
         table = 'Tcobjetressource'
-        query = "UPDATE "+table+" SET id_revisionbegin = '1'"
+        query = "UPDATE "+table+" SET lpk_revision_begin = '1'"
         self.queryL.SLITEcursor.execute(query)
