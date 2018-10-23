@@ -1,6 +1,6 @@
-# coding=utf-8
-from ...libs.cloudant_2_10 import Cloudant
-from ...libs.cloudant_2_10.query import Query
+#! /usr/bin/env python3.6
+from ...libs.cloudant import Cloudant
+from ...libs.cloudant.query import Query
 
 #from cloudant import Cloudant
 #from cloudant.query import Query
@@ -21,7 +21,10 @@ class queryFranceDigue():
     def __init__(self, user, pwd, ip, port, selectDb):
         self.client = Cloudant(user, pwd, url='http://' + ip + ':' + port)
         self.client.connect()
-        self.setSelectedDB(selectDb)
+        if selectDb not in self.client.all_dbs():
+            raise ValueError("The database you're searching '"+selectDb+"' isn't here")
+        self.selectDb = selectDb
+        self.keySet = self.getPossibleKeys()
 
     """
     get the current client
@@ -43,9 +46,8 @@ class queryFranceDigue():
     """
     def setSelectedDB(self, selectDB):
         if selectDB not in self.client.all_dbs():
-            raise ValueError("The database you searching '"+selectDB+"' isn't here")
+            raise ValueError("The database you searching '"+selectDb+"' isn't here")
         self.selectDb = selectDB
-        self.keySet = self.getPossibleKeys()
 
     """
     Get all the possible keys in a select dataBase
@@ -93,10 +95,23 @@ class queryFranceDigue():
     :rtype: an iterable object
     """
     def customQuery(self, query, fields=None):
+
+
+        #A recoder ?
+        #Remplacer Query par une methode maison :
+        #Prend en entree la base, le selector qui est un json ici (les filtres WHERE de SQL, typiquement sur la classe) et les champs a retourner (fields, ici un [])
+
+
+
+
+
         #if fields == None:
         #    fields = self.getPossibleKeys()
         #query = Query(self.client[self.selectDb], selector=json, fields=fields)
+        #print('resultat : ',query.result)
         #return query.result
+
+
         for fld in query:
             fld
             if fields == None:
@@ -132,9 +147,9 @@ class queryFranceDigue():
 
         #Si le path est compose d'un noeud, une redirection vers un autre objet a creer
         if path[0][0].isupper() and len(path) == 1:
-            fields = json.load(open(os.path.join(os.path.dirname(__file__), 'jsonConfig/fields.json')))
+            config = json.load(open(os.path.join(os.path.dirname(__file__), 'jsonConfig/config.json')))
             path = path[0]
-            ret = self.getDocFields(obj['_id'], fields[path])
+            ret = self.getDocFields(obj['_id'], config[path]['fields'])
             return ret
 
         #Si l'obj a explorer est de type list on peux donc iterer sur des int
@@ -203,7 +218,12 @@ class queryFranceDigue():
         return ret
 
     def addDocument(self, data):
-        return self.client[self.selectDb].create_document(data)
+        valid = self.customQuery({ '$and' : [{'@class' : { '$exists' : True }}, {'@class' : { '$not' : { '$regex' : 'Ref' }}}]}, ['@class'])
+        for key in valid:
+            if key['@class'] == data['@class']:
+                return self.client[self.selectDb].create(data)
+        else:
+            raise ValueError("The class isn't in the database")
 
     """
     Allow to edit an attribut of a document
@@ -211,23 +231,13 @@ class queryFranceDigue():
     :param key: String
     :param value: String
     """
-    def updateDocument(self, id, path, value):
+    def updateDocument(self, id, key, value):
         doc = self.getDocument(id)
-        #On split le path comme d'hab
-        path = path.split(' ')
-        #On convertit les éventuels Char: 0,1,2... en vrai INT
-        for i in range(0 , len(path)):
-            if path[i].isnumeric():
-                path[i] = int(path[i])
-        #Triviale mais rapide, peut-être amélioré en reprendnat le code de seekIn() on modifie la valeur pointé par le path
-        if len(path) == 1:
-            doc[path[0]] = value
-        if len(path) == 2:
-            doc[path[0]][path[1]] = value
-        if len(path) == 3:
-            doc[path[0]][path[1]][path[2]] = value
-        #save() permet de modifier la version distante de la CouchDb
-        doc.save()
+        if key in doc:
+            doc[key] = value
+            doc.save()
+        else:
+            raise ValueError("The key '"+key+"' doesn't exist in this document")
 
     """
     Allow to delete a document using his primary key

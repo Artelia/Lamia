@@ -1,0 +1,31 @@
+{
+	"TronconDigue": [{
+		"path": "digueId",
+		"bypass": { "@class": "fr.sirs.core.model.Digue" }
+	}, {
+		"path": "systemeRepDefautId",
+		"bypass": { "@class": "fr.sirs.core.model.SystemeReperage" }
+	}],
+
+	"Digue": [{
+		"path": "systemeEndiguementId",
+		"bypass": { "@class": "fr.sirs.core.model.SystemeEndiguement" }
+	}],
+
+	"Desordre": [{
+		"path": "linearId",
+		"source": "lk_descriptionsystem",
+		"destination": "id_descriptionsystem",
+		"table": "Infralineaire"
+	},{
+		"path": "foreignParentId",
+		"source": "lk_descriptionsystem",
+		"destination": "id_descriptionsystem",
+		"table": "Infralineaire"
+	}],
+
+	"SystemeReperageBorne" : [{
+		"path": "digueId",
+		"bypass": { "@class": "fr.sirs.core.model.Digue" }
+	}]
+}
