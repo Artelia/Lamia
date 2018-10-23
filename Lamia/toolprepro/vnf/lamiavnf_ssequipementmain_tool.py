@@ -54,20 +54,46 @@ class EquipementMainTool(AbstractInspectionDigueTool):
 
             self.userwdgfield = UserUI()
 
-            #self.dbasechildwdgfield = []
+            self.dbasechildwdgfield = []
             self.propertieswdgPropriete = SousEquipementTool(dbase=self.dbase,
                                                               linkedtreewidget=self.userwdgfield.treeWidget_proprietes,
                                                               # dialog = self.windowdialog,
                                                               parentwidget=self)
 
-            # self.linkedtreewidget = self.userwdgfield.treeWidget_proprietes
 
             self.userwdgfield.frame.layout().addWidget(self.propertieswdgPropriete)
 
 
+            #self.userwdgfield.treeWidget_proprietes.itemSelectionChanged.connect(self.treewidgetchanged)
+            #self.userwdgfield.treeWidget_proprietes.activated.connect(self.treewidgetactivated)
+
+
+
+    def treewidgetchanged(self):
+        print('changed')
+
+
+
+
+
+        if False:
+            self.propertieswdgPropriete.disconnectIdsGui()
+            self.propertieswdgPropriete.saveFeature()
+            self.propertieswdgPropriete.connectIdsGui()
+            #self.userwdgfield.treeWidget_proprietes.itemSelectionChanged.disconnect(self.treewidgetchanged)
+            #self.propertieswdgPropriete.saveFeature()
+            #self.userwdgfield.treeWidget_proprietes.itemSelectionChanged.connect(self.treewidgetchanged)
+        #self.propertieswdgPropriete.saveFeature()
+
+
+    def treewidgetactivated(self):
+        print('activated')
+
+
     def postOnActivation(self):
         pass
-        self.propertieswdgPropriete.connectIdsGui()
+        # self.propertieswdgPropriete.connectIdsGui()
+        # self.propertieswdgPropriete.onActivationRaw()
 
     def postOnDesactivation(self):
         pass
@@ -81,6 +107,14 @@ class EquipementMainTool(AbstractInspectionDigueTool):
     def loadIds(self):
         # objetid = int(self.parentWidget.linkedtreewidget.currentItem().text(0))
         # self.disconnectIdsGui()
+        self.propertieswdgPropriete.disconnectIdsGui()
+
+        if False:
+
+            try:
+                self.propertieswdgPropriete.linkedtreewidget.currentItemChanged.disconnect(self.propertieswdgPropriete.doSaveJob)
+            except:
+                pass
 
         ids = []
         if self.parentWidget.currentFeature is not None:
@@ -123,8 +157,11 @@ class EquipementMainTool(AbstractInspectionDigueTool):
 
             # self.onActivationRaw(elem[1][0])
 
-        # self.connectIdsGui()
-
+        if False:
+            #
+            self.propertieswdgPropriete.linkedtreewidget.currentItemChanged.connect(self.propertieswdgPropriete.doSaveJob)
+            self.propertieswdgPropriete.connectIdsGui()
+        self.propertieswdgPropriete.connectIdsGui()
         return ids
 
 

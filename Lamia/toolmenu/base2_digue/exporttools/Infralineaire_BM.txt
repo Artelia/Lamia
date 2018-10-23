@@ -1,0 +1,59 @@
+###Infralineaire1
+##FROM Infralineaire AS Infralineairetemp INNER JOIN Objet ON Objet.id_objet = Infralineairetemp.id_objet AND Infralineairetemp.pk_infralineaire = Infralineaire.pk_infralineaire
+#nom              type               cst               valeur                    
+id_infralineaire;         Int;                  ;     id_infralineaire
+
+
+###Objet
+##FROM Objet WHERE  Objet.id_objet = Infralineaire.id_objet
+#nom              type               cst               valeur                    
+#id_objet;         Int;               ;                  id_objet
+datecreati;      String;               ;                  datecreation
+datedestru;      String;               ;                  datedestruction
+commentaire;      String;               ;                  commentaire
+libelle;      String;               ;                  libelle
+
+
+###Infralineaire
+##FROM Infralineaire AS Infralineairetemp INNER JOIN Objet ON Objet.id_objet = Infralineairetemp.id_objet AND Infralineairetemp.pk_infralineaire = Infralineaire.pk_infralineaire
+#nom              type               cst               valeur                    
+descriptio;     String;            description1;        description1
+descript_1;     String;            description2;        description2
+lk_photo;        Int;                          ;        lk_ressource2
+classement;     String;              classement;         classement
+id_objet;       Int;                          ;        Infralineaire.id_objet
+aubaredela;     String;            aubaredelargeur;        aubaredelargeur
+aubaredeve;     String;            aubaredevegherbacee;        aubaredevegherbacee
+aubarede_1;     String;            aubaredevegarbustive;        aubaredevegarbustive
+aubarede_2;     String;            aubaredevegarboree;        aubaredevegarboree
+
+
+###Gestionnaire
+##FROM Intervenant INNER JOIN Objet  ON Intervenant.id_objet = Objet.id_objet INNER JOIN Tcobjetintervenant ON Tcobjetintervenant.id_tcintervenant = Intervenant.id_intervenant WHERE Infralineaire.id_objet = Tcobjetintervenant.id_tcobjet; LIMIT 1 OFFSET 0
+gestionnai;     String;            ;        nom || ' - ' || societe
+
+###Zonegeo
+## FROM Zonegeo INNER JOIN Objet ON Zonegeo.id_objet = Objet.id_objet WHERE ST_WITHIN(ST_MakeValid(Infralineaire.geom),ST_MakeValid(Zonegeo.geom))
+secteur;     String;            ;        libelle
+
+#lk_descriptionsystem1;    Int;                  ;     lk_descriptionsystem1
+#lk_descriptionsystem2;    Int;                  ;     lk_descriptionsystem2
+#test1;            Int;                  ;                
+#test2;            Int;                  ;               CASE WHEN id_infralineaire IS NULL THEN 1 ELSE 0 END
+
+###Descriptionsystem
+##FROM Descriptionsystem INNER JOIN Objet ON Objet.id_objet = Descriptionsystem.id_objet WHERE  Descriptionsystem.id_descriptionsystem = Infralineaire.id_infralineaire
+#id_descriptionsystem;         Int;               ;                  id_descriptionsystem
+
+
+
+###Photo1
+##FROM Photo INNER JOIN Ressource ON Ressource.id_ressource = Photo.id_ressource  INNER JOIN Objet  ON Photo.id_objet = Objet.id_objet INNER JOIN Tcobjetressource ON Tcobjetressource.id_tcressource = Ressource.id_ressource WHERE Infralineaire.id_objet = Tcobjetressource.id_tcobjet; LIMIT 1 OFFSET 0
+#fichier;         String;               ;                  numphoto
+
+###geom
+##FROM Infralineaire AS Infralineairetemp INNER JOIN Objet ON Objet.id_objet = Infralineairetemp.id_objet AND Infralineairetemp.pk_infralineaire = Infralineaire.pk_infralineaire
+geom;         Int;               ;                  ST_AsText(geom)
+
+###main
+FROM Infralineaire

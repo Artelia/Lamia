@@ -34,7 +34,7 @@ class SousEquipementTool(AbstractInspectionDigueTool):
         self.CAT = 'Description'
         self.NAME = 'SousEquipement'
         self.dbasetablename = 'Propriete_option'
-        self.visualmode = [1, 2]
+        self.visualmode = [0, 1, 2]
         #self.PointENABLED = True
         #self.LineENABLED = True
         # self.PolygonENABLED = True
@@ -91,6 +91,12 @@ class SousEquipementTool(AbstractInspectionDigueTool):
                 self.pushButton_delFeature.setParent(None)
                 self.pushButton_addFeature.setParent(None)
 
+                #self.connectIdsGui()
+
+
+
+
+
             if False:
                 self.propertieswdgPHOTOGRAPHIE = PhotosTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
                 #self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
@@ -123,8 +129,27 @@ class SousEquipementTool(AbstractInspectionDigueTool):
             """
 
 
+    def doSaveJob(self):
+        """
+        Goal is to save before featureselected is triggered..
+        :return:
+        """
+
+        print('doSaveJob')
+
+        if not self.savingnewfeature :
+
+            self.disconnectIdsGui()
+            self.parentWidget.disconnectIdsGui()
+            self.linkedtreewidget.currentItemChanged.disconnect(self.doSaveJob)
 
 
+            self.saveFeatureProperties()
+
+
+            self.linkedtreewidget.currentItemChanged.connect(self.doSaveJob)
+            self.connectIdsGui()
+            self.parentWidget.connectIdsGui()
 
     def postOnActivation(self):
         pass

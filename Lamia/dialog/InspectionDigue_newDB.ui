@@ -34,12 +34,12 @@
        <widget class="QComboBox" name="comboBox_dbtype">
         <item>
          <property name="text">
-          <string>postgis</string>
+          <string>spatialite</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>spatialite</string>
+          <string>postgis</string>
          </property>
         </item>
        </widget>
@@ -55,32 +55,12 @@
        <widget class="QComboBox" name="comboBox_type">
         <item>
          <property name="text">
-          <string>Base_assainissement</string>
+          <string>Base2_digue</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Base_digue</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>VNF</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Digue</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Assainissement</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Base</string>
+          <string>Base2_assainissement</string>
          </property>
         </item>
        </widget>

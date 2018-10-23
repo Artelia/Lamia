@@ -8,6 +8,7 @@ import qgis
 import qgis.utils
 qgis.utils.uninstallErrorHook()     #for standart output
 import math
+import shutil
 
 try:
     from pyspatialite import dbapi2 as db
@@ -16,6 +17,20 @@ except ImportError:
     import sqlite3
     from sqlite3 import *
     print('spatialite not enabled')
+
+try:
+    from qgis.PyQt.QtGui import (QMessageBox, QProgressBar, QApplication)
+except ImportError:
+    from qgis.PyQt.QtWidgets import (QMessageBox, QProgressBar, QApplication )
+
+try:
+    import PIL
+    PILexists = True
+except:
+    PILexists = False
+
+
+
 import psycopg2
 import glob
 from collections import OrderedDict
@@ -32,8 +47,7 @@ class DBaseParser(QtCore.QObject):
     recentDBaseChanged = QtCore.pyqtSignal()
     dBaseLoaded = QtCore.pyqtSignal()
     errorMessage = QtCore.pyqtSignal(str)
-
-
+    normalMessage = QtCore.pyqtSignal(str)
 
     def __init__(self,canvas):
         """
@@ -61,11 +75,12 @@ class DBaseParser(QtCore.QObject):
         self.searchbuffer = 20
         # used to define the working date in db
         self.workingdate = QtCore.QDate.currentDate().toString('yyyy-MM-dd')
+
         # crs of dbase
         self.crsnumber = None
         self.qgiscrs = None
-        #gps things
-        self.hauteurperche = 2.0
+        # gps things
+        # self.hauteurperche = 2.0
         # the current prestation id
         self.currentprestationid = None
         # connextion var
@@ -76,9 +91,9 @@ class DBaseParser(QtCore.QObject):
         # spatialite spec
         self.spatialitefile = None
         # postgis spec
-        self.horsligne=False
-        self.date_deconnexion=None
-        self.offLineConn=None
+        self.horsligne = False
+        self.date_deconnexion = None
+        self.offLineConn = None
         self.offLineCursor = None
         self.pghost = None
         self.pgdb = None
@@ -86,13 +101,13 @@ class DBaseParser(QtCore.QObject):
         self.pgpassword = None
         self.pgport = None
         self.pgschema = None
-        #the qgis canvas
+        # the qgis canvas
         self.canvas = canvas
         # self.canvas.renderStarting.connect(self.renderStarts)
         # the QgsCoordinateTransform var
         self.xform = None
         self.xformreverse = None
-        #debug
+        # debug
         if False:
             formatter = logging.Formatter("%(asctime)s -- %(name)s -- %(levelname)s -- %(funcName)s -- %(message)s")
             self.logger = logging.getLogger("Lamia")
@@ -106,50 +121,22 @@ class DBaseParser(QtCore.QObject):
             logging.info('popo')
 
         self.printsql = False
+        self.version = None  # dbase version
+        self.workversion = None  # dbase version
 
         self.revisionwork = False
         self.currentrevision = None
         self.maxrevision = 0
 
-
-
         self._readRecentDBase()
 
-        #getqgisversion : ex : 21820
+        # getqgisversion : ex : 21820
         try:
             self.qgisversion_int = qgis.utils.QGis.QGIS_VERSION_INT
-        except AttributeError:  #qgis 3
+        except AttributeError:  # qgis 3
             self.qgisversion_int = qgis.utils.Qgis.QGIS_VERSION_INT
 
         self.qgsiface = qgis.utils.iface
-
-
-
-        #logger.info('qgisversion : %s', str(self.qgisversion_int))
-        #logging.getLogger("Lamia").info('qgisversion : %s', str(self.qgisversion_int))
-
-    """
-
-    def renderStarts(self):
-        # print('digue render')
-        if self.dbasetype == 'spatialite':
-            if False and self.connSLITE is not None:
-                self.SLITEcursor.close()
-                self.connSLITE.close()
-                self.connSLITE = None
-            if self.SLITEcursor is not None:
-                self.SLITEcursor.close()
-                self.SLITEcursor = None
-
-        elif self.dbasetype == 'postgis':
-            if False and self.connPGis is not None:
-                self.PGiscursor.close()
-                self.connPGis.close()
-                self.connPGis = None
-            if self.PGiscursor is not None:
-                self.PGiscursor.close()
-                self.PGiscursor = None
-    """
 
 
     def checkIfPGShcemaExists(self, dbname=None, schema=None, user=None,
@@ -194,14 +181,14 @@ class DBaseParser(QtCore.QObject):
         else:
             return True, False
 
-    def createDbase(self, file=None, crs=None, type=None, dbasetype='spatialite',
+    def createDbase(self, slfile=None, crs=None, worktype=None, dbasetype='spatialite',
                     dbname=None, schema=None, user=None, host='localhost', port=None, password=None,    # postgis
                     dbaseressourcesdirectory=None):
         """
         pass
-        :param file:
+        :param slfile:
         :param crs:
-        :param type:
+        :param worktype:
         :param dbasetype:
         :param dbname:
         :param schema:
@@ -213,24 +200,24 @@ class DBaseParser(QtCore.QObject):
         :return:
         """
         debug = False
-
-
         if debug: logging.getLogger("Lamia").debug('started')
 
         # create dbasedict
-        self.createDBDictionary(type)
-        # manage ressource directory
-        if False:
-            if not os.path.isdir(dbaseressourcesdirectory):
-                os.makedirs(dbaseressourcesdirectory)
-        if True:
-            if dbaseressourcesdirectory is None and dbasetype == 'spatialite':
-                dbaseressourcesdirectorytemp = os.path.join(os.path.dirname(file),'DBspatialite')
-            else:
-                dbaseressourcesdirectorytemp = dbaseressourcesdirectory
+        self.createDBDictionary(worktype)
 
-            if not os.path.isdir(dbaseressourcesdirectorytemp):
-                os.makedirs(dbaseressourcesdirectorytemp)
+        # manage ressource directory
+        dbaseressourcesdirectorytemp = None
+        if dbaseressourcesdirectory is None and dbasetype == 'spatialite':
+            dbaseressourcesdirectorytemp = os.path.join(os.path.dirname(slfile), 'DBspatialite')
+        else:
+            dbaseressourcesdirectorytemp = dbaseressourcesdirectory
+
+        if not os.path.isdir(dbaseressourcesdirectorytemp):
+            os.makedirs(dbaseressourcesdirectorytemp)
+            if False:
+                exportdir = os.path.join(dbaseressourcesdirectorytemp, 'backup')
+                if not os.path.isdir(exportdir):
+                    os.makedirs(exportdir)
 
         # sql file contains output of dbase creation script
         sqlfile = os.path.join(dbaseressourcesdirectorytemp, 'sqlcreation.txt')
@@ -241,11 +228,15 @@ class DBaseParser(QtCore.QObject):
         # ***************************************************************************************
         # Manage connection - creation and config
         if self.dbasetype == 'spatialite':
-            self.spatialitefile = file
+
+            originalfile = os.path.join(os.path.dirname(__file__), '..', 'DBASE', 'DBase_ind0.sqlite')
+            shutil.copyfile(originalfile, slfile)
+
+            self.spatialitefile = slfile
             if sys.version_info.major == 2:
-                self.connSLITE = db.connect(file)
-            elif sys.version_info.major == 3:   #python 3
-                self.connSLITE = qgis.utils.spatialite_connect(file)
+                self.connSLITE = db.connect(slfile)
+            elif sys.version_info.major == 3:   # python 3
+                self.connSLITE = qgis.utils.spatialite_connect(slfile)
             self.SLITEcursor = self.connSLITE.cursor()
             sql = "PRAGMA foreign_keys = ON"
             openedsqlfile.write(sql + '\n')
@@ -289,7 +280,8 @@ class DBaseParser(QtCore.QObject):
             connpgis.close()
 
             # connexion to database
-            connectstr = "dbname='" + self.pgdb + "' user='" + user + "' host='" + host + "' password='" + password + "'"
+            connectstr = "dbname='" + self.pgdb + "' user='" + user + "' host='" + host
+            connectstr += "' password='" + password + "'"
             self.connPGis = psycopg2.connect(connectstr)
             self.PGiscursor = self.connPGis.cursor()
 
@@ -305,26 +297,21 @@ class DBaseParser(QtCore.QObject):
                 except Exception as e:
                     print(e)
             sql = 'CREATE SCHEMA ' + self.pgschema
-            # print(sql)
             # res = self.PGiscursor.execute(sql)
             self.query(sql)
             self.commit()
             sql = 'SET search_path TO ' + self.pgschema + ',public'
             self.query(sql)
             self.commit()
-            # print(sql)
             # res = self.PGiscursor.execute(sql)
             if False:
-
                 sql = 'GRANT ALL ON SCHEMA '+self.pgschema+' TO vadjango'
                 self.query(sql)
                 self.commit()
 
-
-
         # ***************************************************************************************
         # Tables creation
-        for order in range(10):
+        for order in range(20):
             for dbname in self.dbasetables:
                 if self.dbasetables[dbname]['order'] == order:
                     if self.dbasetype == 'spatialite':
@@ -336,7 +323,7 @@ class DBaseParser(QtCore.QObject):
                         # print(sql['main'])
                         openedsqlfile.write(sql['main'] + '\n')
 
-                    if debug: logging.getLogger("Lamia").debug('sql : %s', sql['main'] )
+                    if debug: logging.getLogger("Lamia").debug('sql : %s', sql['main'])
 
                     self.query(sql['main'])
                     self.commit()
@@ -347,20 +334,32 @@ class DBaseParser(QtCore.QObject):
                             self.query(sqlother)
                             self.commit()
 
-
         if dbaseressourcesdirectory is None and dbasetype == 'spatialite':
             dbaseressourcesdirectorytemp2 = '.\DBspatialite'
         else:
             dbaseressourcesdirectorytemp2 = dbaseressourcesdirectorytemp
 
-        sql = "INSERT INTO Basedonnees (metier,repertoireressources,crs) "
-        sql += "VALUES('" + type + "','" + dbaseressourcesdirectorytemp2 + "'," + str(crs) + ");"
-        self.query(sql)
-        self.commit()
+
+
+        if self.version is None or self.version == '':
+            versionsql = 'NULL'
+            sql = "INSERT INTO Basedonnees (metier,repertoireressources,crs, version) "
+            sql += "VALUES('" + worktype + "','" + dbaseressourcesdirectorytemp2 + "'," + str(crs) + "," + versionsql + ");"
+            self.query(sql)
+            self.commit()
+        else:
+            versionsql = "'" + str(self.version) + "'"
+            workversionsql = "'" + str(self.workversion) + "'"
+            sql = "INSERT INTO Basedonnees (metier,repertoireressources,crs, version, workversion) "
+            sql += "VALUES('" + worktype + "','" + dbaseressourcesdirectorytemp2 + "'," + str(crs) + "," + versionsql
+            sql += "," + workversionsql + ");"
+            self.query(sql)
+            self.commit()
 
         if self.revisionwork:
-            datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
-            sql = "INSERT INTO Revision (daterevision, commentaire) "
+            # datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
+            datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            sql = "INSERT INTO Revision (datetimerevision, commentaire) "
             sql += "VALUES('" + datecreation + "','Premiere version ');"
             self.query(sql)
             self.commit()
@@ -404,9 +403,9 @@ class DBaseParser(QtCore.QObject):
                         idcolumnname = self.getFirstIdColumn(viewnames[viewname])
                         viewlower = viewnames[viewname].lower()
                         sql = "INSERT INTO views_geometry_columns (view_name, view_geometry, view_rowid, "
-                        sql += "f_table_name, f_geometry_column,read_only) VALUES ("
-                        # sql += "'" + str(viewlower) + "','geom','id_" + str(dbnamelower) + "','" + str(dbnamelower) + "','geom',0);"
-                        sql += "'" + str(viewlower) + "','geom','" + idcolumnname + "','" + str(dbnamelower) + "','geom',0);"
+                        sql += "f_table_name, f_geometry_column,read_only)"
+                        sql += " VALUES ('" + str(viewlower) + "','geom','" + idcolumnname + "','" + str(dbnamelower)
+                        sql += "','geom',0)"
                         openedsqlfile.write(sql + '\n')
                         self.query(sql)
                         self.commit()
@@ -416,66 +415,21 @@ class DBaseParser(QtCore.QObject):
                         viewlower = viewnames[viewname].lower()
                         sql = 'INSERT INTO geometry_columns(f_table_catalog, f_table_schema, f_table_name, '
                         sql += 'f_geometry_column, coord_dimension, srid, "type") VALUES ('
-                        sql += "'" + type.lower() + "', '" + self.pgschema.lower() + "', '" + str( viewlower) + "','geom',2,"
+                        sql += "'" + worktype.lower() + "', '" + self.pgschema.lower() + "', '" + str( viewlower) + "','geom',2,"
                         sql += str(crs) + ",'" + self.dbasetables[dbname]['geom'] + "' );"
-                        # print(sql)
                         openedsqlfile.write(sql + '\n')
                         self.query(sql)
                         self.commit()
 
-
-
-
-                if False:
-                    #sql = 'CREATE VIEW ' + str(dbname) + '_view AS '
-                    sql = 'CREATE VIEW ' + str(viewnames[viewname]) + ' AS '
-                    if self.dbasetables[dbname]['sqlview'] != '':
-                        sql += self.dbasetables[dbname]['sqlview']
-                    else:
-                        sql += 'SELECT * FROM ' + str(dbname)
-                    openedsqlfile.write(sql + '\n')
-                    self.query(sql)
-                    self.commit()
-                    # add view in geom register
-                    if 'geom' in self.dbasetables[dbname].keys():
-                        if self.dbasetype == 'spatialite':
-                            dbnamelower = dbname.lower()
-                            sql = "INSERT INTO views_geometry_columns (view_name, view_geometry, view_rowid, "
-                            sql += "f_table_name, f_geometry_column,read_only) VALUES ("
-                            sql += "'" + str(dbnamelower) + "_view','geom','id_" + str(dbnamelower) + "','" + str(dbnamelower) + "','geom',0);"
-                            # print(sql)
-                            self.query(sql)
-                            self.commit()
-                        elif dbasetype == 'postgis':
-                            dbnamelower = dbname.lower()
-                            sql = 'INSERT INTO geometry_columns(f_table_catalog, f_table_schema, f_table_name, '
-                            sql += 'f_geometry_column, coord_dimension, srid, "type") VALUES ('
-                            sql += "'" + type.lower() + "', '" + self.pgschema.lower()  +"', '" + str(dbnamelower) + "_view','geom',2,"
-                            sql += str(crs) + ",'" + self.dbasetables[dbname]['geom'] + "' );"
-                            # print(sql)
-                            openedsqlfile.write(sql + '\n')
-                            self.query(sql)
-                            self.commit()
-
-        #delete non used srid
-        if False:
-            if self.dbasetype == 'spatialite':
-                sql = "DELETE FROM spatial_ref_sys_aux WHERE srid != " + str(crs)
-                print(sql)
-                self.query(sql)
-                self.commit()
-
-                sql = "DELETE FROM spatial_ref_sys WHERE srid != " + str(crs)
-                print(sql)
-                self.query(sql)
-                self.commit()
-
-
         openedsqlfile.close()
 
-        self.loadQgisVectorLayers(file=self.spatialitefile, dbasetype=self.dbasetype,
-                                  host=self.pghost, port=self.pgport, dbname=self.pgdb, schema=self.pgschema,
-                                  user=self.pguser, password=self.pgpassword)
+
+
+        if True:
+
+            self.loadQgisVectorLayers(file=self.spatialitefile, dbasetype=self.dbasetype,
+                                      host=self.pghost, port=self.pgport, dbname=self.pgdb, schema=self.pgschema,
+                                      user=self.pguser, password=self.pgpassword)
 
 
     def createDBDictionary(self, type):
@@ -520,17 +474,23 @@ class DBaseParser(QtCore.QObject):
         # first readfiles in ./DBASE\create directory and create self.dbasetables
         self.type = type
         self.dbasetables = {}
-        createfilesdir = os.path.join(os.path.dirname(__file__), '..', 'DBASE', 'create', self.type)
 
-        if len(self.type.split('_')) == 2 and self.type.split('_')[0] == 'Base':
+        createfilesdir, workversionmax = self.getMaxVersionRepository(self.type)
+        createfilesdirbase, baseversionmax = self.getMaxVersionRepository(self.type.split('_')[0])
+
+        if self.version is not None and (self.version < baseversionmax or self.workversion < workversionmax) :
+            self.updateDBaseVersion()
+
+        self.version = baseversionmax
+        self.workversion = workversionmax
+
+
+
+        if createfilesdirbase and createfilesdirbase != createfilesdir :
             parsertemp = DBaseParser(None)
-            parsertemp.createDBDictionary('Base')
+            parsertemp.createDBDictionary(self.type.split('_')[0])
             self.dbasetables = parsertemp.dbasetables
             del parsertemp
-
-
-
-
 
 
         for filename in glob.glob(os.path.join(createfilesdir, '*.txt')):
@@ -642,16 +602,12 @@ class DBaseParser(QtCore.QObject):
                         self.dbasetables[tablename]['fields'][fieldname]['Cst'][-1].append(None)
                 compt += 1
 
-
-
-
             file.close()
 
         if "Revision" in self.dbasetables.keys():
             self.revisionwork = True
 
 
-        # print(self.dbasetables)
 
     def _generateSpatialiteCreationSQL(self, name, dbasetable, crs):
         """!
@@ -783,17 +739,34 @@ class DBaseParser(QtCore.QObject):
 
         self._AddDbaseInRecentsDBase(spatialitefile=file, host=host, port=port, dbname=dbname, schema=schema, user=user,
                                      password=password)
-        self.reInitDBase()
+        # self.reInitDBase()
 
-        sql = "SELECT metier, repertoireressources,crs FROM Basedonnees;"
-        query = self.query(sql)
-        type, resdir, crs = [row[0:3] for row in query][0]
+        version = None
+        workversion = None
+
+
+        try:
+            sql = "SELECT metier, repertoireressources,crs, version , workversion FROM Basedonnees;"
+            query = self.query(sql)
+            type, resdir, crs , version, workversion = [row[0:5] for row in query][0]
+        except:
+            sql = "SELECT metier, repertoireressources,crs, version FROM Basedonnees;"
+            query = self.query(sql)
+            type, resdir, crs , version= [row[0:4] for row in query][0]
+
+
+
         if resdir[0] == '.' and self.dbasetype == 'spatialite':
             self.dbaseressourcesdirectory = os.path.join(os.path.dirname(self.spatialitefile ), resdir)
         else:
             self.dbaseressourcesdirectory = os.path.normpath(resdir)
         self.crsnumber = crs
         self.qgiscrs = qgis.core.QgsCoordinateReferenceSystem(self.crsnumber)
+        self.version = version
+        self.workversion = workversion
+
+        if self.qgsiface is None:
+            print(type, resdir, crs , version, workversion)
 
 
 
@@ -939,6 +912,7 @@ class DBaseParser(QtCore.QObject):
 
 
             self.updateQgsCoordinateTransformFromLayerToCanvas()
+
             if self.revisionwork:
                 self.maxrevision = self.getMaxRevision()
 
@@ -1008,8 +982,11 @@ class DBaseParser(QtCore.QObject):
                 return returnquery
             except OperationalError as e:
                 if self.qgsiface is None:
+                    print(sql)
                     print('error query', e)
                 return None
+
+
         elif self.dbasetype == 'postgis':
             if self.PGiscursor is None:
                 # connectstr = "dbname='" + self.pgdb + "' user='" + self.pguser + "' host='"
@@ -1134,6 +1111,17 @@ class DBaseParser(QtCore.QObject):
 
 
     def reInitDBase(self):
+        root = qgis.core.QgsProject.instance().layerTreeRoot()
+        #root.addGroup('Lamia')
+        lamialegendgroup =  root.findGroup('Lamia')
+        if lamialegendgroup is not None:
+            lamialegendgroup.removeAllChildren()
+
+        self.dbasetables = None
+
+
+
+    def reInitDBase2(self):
         """
         Methode appelée lors d'un changement de base de données
         Reinitialise toutes les variables
@@ -1165,26 +1153,29 @@ class DBaseParser(QtCore.QObject):
                             pass
 
                 if 'widget' in self.dbasetables[layername]:
-                    if not isinstance(self.dbasetables[layername]['widget'],list):
-                        tablewdgs = [self.dbasetables[layername]['widget']]
-                    else:
-                        tablewdgs = self.dbasetables[layername]['widget']
+                    self.dbasetables[layername]['widget'] = []
 
-                    for tablewdg in tablewdgs:
-                        tablewdg.onActivationRaw(None)
+                    if False:
+                        if not isinstance(self.dbasetables[layername]['widget'],list):
+                            tablewdgs = [self.dbasetables[layername]['widget']]
+                        else:
+                            tablewdgs = self.dbasetables[layername]['widget']
 
-                        try:
-                            tablewdg.unloadWidgetinMainTree()
-                        except Exception as e:
-                            print('unload', e)
+                        for tablewdg in tablewdgs:
+                            tablewdg.onActivationRaw(None)
 
-
-                        if tablewdg.linkedtreewidget is not None:
                             try:
-                                tablewdg.linkedtreewidget.disconnect()
-                            except:
-                                pass
-                        tablewdg.dbasetable = None
+                                tablewdg.unloadWidgetinMainTree()
+                            except Exception as e:
+                                print('unload', e)
+
+
+                            if tablewdg.linkedtreewidget is not None:
+                                try:
+                                    tablewdg.linkedtreewidget.disconnect()
+                                except:
+                                    pass
+                            tablewdg.dbasetable = None
 
         self.dbasetables = None
 
@@ -1194,23 +1185,46 @@ class DBaseParser(QtCore.QObject):
         est modifiée
         Change les filtres de toutes les tables qgis en fonction
         """
-        if self.dbasetype == 'spatialite':
-            subsetstring = '"datecreation" <= ' + "'" + self.workingdate + "'"
-            subsetstring += ' AND CASE WHEN "datedestruction" IS NOT NULL  THEN "datedestruction" > ' + "'" + self.workingdate + "'" + ' ELSE 1 END'
-            if self.revisionwork:
-                subsetstring += ' AND "revisionbegin" <= ' + str(self.currentrevision)
-                subsetstring += ' AND CASE WHEN "revisionend" IS NOT NULL  THEN "revisionend" > '  + str(self.currentrevision)  + ' ELSE 1 END'
 
-        elif self.dbasetype == 'postgis':
-            subsetstring = '"datecreation" <= ' + "'" + self.workingdate + "'"
-            subsetstring += ' AND CASE WHEN "datedestruction" IS NOT NULL  THEN "datedestruction" > ' + "'" + self.workingdate + "'" + ' ELSE TRUE END'
-            if self.revisionwork:
-                subsetstring += ' AND "revisionbegin" <= ' + str(self.currentrevision)
-                subsetstring += ' AND CASE WHEN "revisionend" IS NOT NULL  THEN "revisionend" > '  + str(self.currentrevision)  + ' ELSE TRUE END'
+
+        workingdatemodif = QtCore.QDate.fromString(self.workingdate, 'yyyy-MM-dd').addDays(1).toString('yyyy-MM-dd')
+
+
+        if self.version is None or self.version == '':
+            if self.dbasetype == 'spatialite':
+                subsetstring = '"datecreation" <= ' + "'" + workingdatemodif + "'"
+                subsetstring += ' AND CASE WHEN "datedestruction" IS NOT NULL  THEN "datedestruction" > ' + "'" + workingdatemodif + "'" + ' ELSE 1 END'
+                if self.revisionwork:
+                    subsetstring += ' AND "revisionbegin" <= ' + str(self.currentrevision)
+                    subsetstring += ' AND CASE WHEN "revisionend" IS NOT NULL  THEN "revisionend" > '  + str(self.currentrevision)  + ' ELSE 1 END'
+
+            elif self.dbasetype == 'postgis':
+                subsetstring = '"datecreation" <= ' + "'" + workingdatemodif + "'"
+                subsetstring += ' AND CASE WHEN "datedestruction" IS NOT NULL  THEN "datedestruction" > ' + "'" + workingdatemodif + "'" + ' ELSE TRUE END'
+                if self.revisionwork:
+                    subsetstring += ' AND "revisionbegin" <= ' + str(self.currentrevision)
+                    subsetstring += ' AND CASE WHEN "revisionend" IS NOT NULL  THEN "revisionend" > '  + str(self.currentrevision)  + ' ELSE TRUE END'
+        else:
+            if self.dbasetype == 'spatialite':
+                subsetstring = '"datetimecreation" <= ' + "'" + workingdatemodif + "'"
+                subsetstring += ' AND CASE WHEN "datetimedestruction" IS NOT NULL  THEN "datetimedestruction" > ' + "'" + workingdatemodif + "'" + ' ELSE 1 END'
+                if self.revisionwork:
+                    subsetstring += ' AND "lpk_revision_begin" <= ' + str(self.currentrevision)
+                    subsetstring += ' AND CASE WHEN "lpk_revision_end" IS NOT NULL  THEN "lpk_revision_end" > ' + str(
+                        self.currentrevision) + ' ELSE 1 END'
+
+            elif self.dbasetype == 'postgis':
+                subsetstring = '"datetimecreation" <= ' + "'" + workingdatemodif + "'"
+                subsetstring += ' AND CASE WHEN "datetimedestruction" IS NOT NULL  THEN "datetimedestruction" > ' + "'" + workingdatemodif + "'" + ' ELSE TRUE END'
+                if self.revisionwork:
+                    subsetstring += ' AND "lpk_revision_begin" <= ' + str(self.currentrevision)
+                    subsetstring += ' AND CASE WHEN "lpk_revision_end" IS NOT NULL  THEN "lpk_revision_end" > ' + str(
+                        self.currentrevision) + ' ELSE TRUE END'
+
 
         for tablename in self.dbasetables:
             fieldnames = [field.name().lower() for field in self.dbasetables[tablename]['layerqgis'].fields()]
-            if 'datecreation' in fieldnames:
+            if 'datecreation' in fieldnames or 'datetimecreation' in fieldnames :
                 self.dbasetables[tablename]['layerqgis'].setSubsetString(subsetstring)
                 self.dbasetables[tablename]['layerqgis'].triggerRepaint()
 
@@ -1381,8 +1395,12 @@ class DBaseParser(QtCore.QObject):
         # elements dans cette box
         else:
             # clean nearestfet geometry if not valid
-            if not nearestfetgeom.isGeosValid() and nearestfetgeom.type() == 1:
-                nearestfetgeom = qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(nearestfetgeom.asPolyline()[0]))
+            if int(str(self.qgisversion_int)[0:3]) < 220:
+                if not nearestfetgeom.isGeosValid() and nearestfetgeom.type() == 1:
+                    nearestfetgeom = qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(nearestfetgeom.asPolyline()[0]))
+            else:
+                if not nearestfetgeom.isGeosValid() and nearestfetgeom.type() == 1:
+                    nearestfetgeom = qgis.core.QgsGeometry.fromPointXY(qgis.core.QgsPointXY(nearestfetgeom.asPolyline()[0]))
 
             disfrompoint = nearestfetgeom.distance(point2geom)
             bboxtofilter = point2geom.buffer(disfrompoint * 1.2, 12).boundingBox()
@@ -1482,8 +1500,7 @@ class DBaseParser(QtCore.QObject):
                 else:
                     return self.dbasetables[layername]['layer'].getFeature(pk)
 
-
-            if True:
+            if self.version is None or self.version == '' :
                 txtrequest = ' "id_' + layername.lower() + '" =  ' + str(fid)
                 request = qgis.core.QgsFeatureRequest().setFilterExpression(txtrequest)
                 # request.setFlags(qgis.core.QgsFeatureRequest.NoGeometry)
@@ -1492,9 +1509,20 @@ class DBaseParser(QtCore.QObject):
                 else:
                     qgisfeat = self.dbasetables[layername]['layer'].getFeatures(request).__next__()
 
+            else:
+                sql = "SELECT pk_" + str(layername).lower() + " FROM " + str(layername).lower() +"_qgis "
+                sql += "WHERE id_" + str(layername).lower() + " = " + str(fid)
+                sql += " AND "
+                sql += self.dateVersionConstraintSQL()
+                pk = self.query(sql)[0][0]
+                if int(str(self.qgisversion_int)[0:3]) < 220:
+                    qgisfeat = self.dbasetables[layername]['layer'].getFeatures(qgis.core.QgsFeatureRequest(pk)).next()
+                else:
+                    qgisfeat = self.dbasetables[layername]['layer'].getFeature(pk)
+
                 # print(txtrequest, qgisfeat.id(), qgisfeat.attributes())
 
-                return qgisfeat
+            return qgisfeat
 
     def getLayerFeatureByPk(self, layername, fid):
         """
@@ -1508,28 +1536,145 @@ class DBaseParser(QtCore.QObject):
         else:
             return self.dbasetables[layername]['layer'].getFeature(fid)
 
+    def getValuesFromPk(self, dbasename, fields, pk):
+        if isinstance(fields, str):
+            fields = [fields]
+        sql = " SELECT " + ','.join(fields) + " FROM " + dbasename
+        sql += " WHERE pk_" + dbasename.split('_')[0].lower()
+        sql += " = " + str(pk)
+        res = self.query(sql)
+        if res  :
+            if len(res[0]) == 1:
+                return res[0][0]
+            else:
+                return res[0]
+        else:
+            if len(fields) == 1:
+                return None
+            else:
+                return tuple([None]*len(fields))
+
+    def createNewObjet(self):
+        datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        lastobjetid = self.getLastId('Objet') + 1
+        sql = "INSERT INTO Objet (id_objet, lpk_revision_begin, datetimecreation, datetimemodification ) "
+        sql += "VALUES(" + str(lastobjetid) + "," + str(self.maxrevision) + ",'" + datecreation + "','" + datecreation + "' )"
+        self.query(sql)
+        #self.dbase.commit()
+        pkobjet = self.getLastRowId('Objet')
+        return pkobjet
+
+    def createNewLineVersion(self,dbname, rawpk):
+
+        #first be sure
+        pkobjet, revbegin = self.getValuesFromPk(dbname + "_qgis", ['pk_objet','lpk_revision_begin'], rawpk)
+        if revbegin < self.maxrevision:
+
+            #first close object
+            sql = self.createSetValueSentence('UPDATE',
+                                              'Objet',
+                                              ['lpk_revision_end'],
+                                              [self.maxrevision])
+            sql += " WHERE pk_objet = " + str(pkobjet)
+            self.query(sql)
+
+            # then clone parents
+            parenttables = self.getParentTable(dbname)[::-1] + [dbname]
+            # get pkparents
+            pknames = ['pk_' + parenttablename.lower() for parenttablename in parenttables]
+            parentspk = self.getValuesFromPk(dbname.lower() + "_qgis", pknames, rawpk)
+
+            lastpk = []
+            for i, tablename in enumerate(parenttables):
+                pkfields = []
+                nonpkfields = []
+                for fields in self.getColumns(tablename):
+                    if fields[0:3] == 'pk_' or fields[0:4] == 'lpk_':
+                        pkfields.append(fields)
+                    elif fields == 'geom':
+                        nonpkfields.append('ST_AsText(geom)')
+                    else:
+                        nonpkfields.append(fields)
+                values = self.getValuesFromPk(tablename, nonpkfields,parentspk[i] )
+
+                nonpkfields = ['geom' if x == 'ST_AsText(geom)' else x for x in nonpkfields]
+                sql = self.createSetValueSentence('INSERT',
+                                                  tablename,
+                                                  nonpkfields,
+                                                  list(values))
+                self.query(sql)
+                lastpk.append(self.getLastRowId(tablename))
+                fieldstoupdate = []
+                valuestoupdate=[]
+                if 'lpk_revision_begin' in pkfields:
+                    fieldstoupdate +=['lpk_revision_begin', 'lpk_revision_end']
+                    valuestoupdate += [self.maxrevision,None]
+                if 'datetimemodification' in nonpkfields:
+                    datemodif = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+                    fieldstoupdate +=['datetimemodification']
+                    valuestoupdate += [datemodif]
+                if i > 0 and 'lpk_' + parenttables[i-1].lower() in pkfields:
+                    fieldstoupdate += ["lpk_" + parenttables[i-1].lower()]
+                    valuestoupdate += [lastpk[i-1]]
+
+                sql = self.createSetValueSentence('UPDATE',
+                                                  tablename,
+                                                  fieldstoupdate,
+                                                  valuestoupdate)
+                sql += " WHERE pk_" + tablename.lower() + " = " + str(lastpk[i])
+                self.query(sql)
+
+
+
+
+
     def dateVersionConstraintSQL(self):
         """
         Crée une chaine à rajouter à la fin d'autre requetes pour spécifier la date et la version voulue
         :return: requete sql comprenant les éléments nécessaires pour filtrer les dates et les versions
         """
-        sqlin = ' datecreation <= ' + "'" + self.workingdate + "'"
-        if self.dbasetype == 'postgis':
-            sqlin += ' AND CASE WHEN datedestruction IS NOT NULL  '
-            sqlin += 'THEN DateDestruction > ' + "'" + self.workingdate + "'" + ' ELSE TRUE END'
-            if self.revisionwork:
-                sqlin += " AND revisionbegin <= " + str(self.currentrevision)
-                sqlin += " AND CASE WHEN revisionend IS NOT NULL THEN "
-                sqlin += " revisionend > " + str(self.currentrevision)
-                sqlin += " ELSE TRUE END "
-        elif self.dbasetype == 'spatialite':
-            sqlin += ' AND CASE WHEN datedestruction IS NOT NULL  '
-            sqlin += 'THEN datedestruction > ' + "'" + self.workingdate + "'" + ' ELSE 1 END'
-            if self.revisionwork:
-                sqlin += " AND revisionbegin <= " + str(self.currentrevision)
-                sqlin += " AND CASE WHEN revisionend IS NOT NULL THEN "
-                sqlin += " revisionend > " + str(self.currentrevision)
-                sqlin += " ELSE 1 END"
+
+
+        workingdatemodif = QtCore.QDate.fromString(self.workingdate, 'yyyy-MM-dd').addDays(1).toString('yyyy-MM-dd')
+
+
+        if self.version == '':
+            sqlin = ' datecreation <= ' + "'" + workingdatemodif + "'"
+            if self.dbasetype == 'postgis':
+                sqlin += ' AND CASE WHEN datedestruction IS NOT NULL  '
+                sqlin += 'THEN DateDestruction > ' + "'" + workingdatemodif + "'" + ' ELSE TRUE END'
+                if self.revisionwork:
+                    sqlin += " AND revisionbegin <= " + str(self.currentrevision)
+                    sqlin += " AND CASE WHEN revisionend IS NOT NULL THEN "
+                    sqlin += " revisionend > " + str(self.currentrevision)
+                    sqlin += " ELSE TRUE END "
+            elif self.dbasetype == 'spatialite':
+                sqlin += ' AND CASE WHEN datedestruction IS NOT NULL  '
+                sqlin += 'THEN datedestruction > ' + "'" + workingdatemodif + "'" + ' ELSE 1 END'
+                if self.revisionwork:
+                    sqlin += " AND revisionbegin <= " + str(self.currentrevision)
+                    sqlin += " AND CASE WHEN revisionend IS NOT NULL THEN "
+                    sqlin += " revisionend > " + str(self.currentrevision)
+                    sqlin += " ELSE 1 END"
+        else:
+
+            sqlin = ' datetimecreation <= ' + "'" + workingdatemodif + "'"
+            if self.dbasetype == 'postgis':
+                sqlin += ' AND CASE WHEN datetimedestruction IS NOT NULL  '
+                sqlin += 'THEN datetimedestruction > ' + "'" + workingdatemodif + "'" + ' ELSE TRUE END'
+                if self.revisionwork:
+                    sqlin += " AND lpk_revision_begin <= " + str(self.currentrevision)
+                    sqlin += " AND CASE WHEN lpk_revision_end IS NOT NULL THEN "
+                    sqlin += " lpk_revision_end > " + str(self.currentrevision)
+                    sqlin += " ELSE TRUE END "
+            elif self.dbasetype == 'spatialite':
+                sqlin += ' AND CASE WHEN datetimedestruction IS NOT NULL  '
+                sqlin += 'THEN datetimedestruction > ' + "'" + workingdatemodif + "'" + ' ELSE 1 END'
+                if self.revisionwork:
+                    sqlin += " AND lpk_revision_begin <= " + str(self.currentrevision)
+                    sqlin += " AND CASE WHEN lpk_revision_end IS NOT NULL THEN "
+                    sqlin += " lpk_revision_end > " + str(self.currentrevision)
+                    sqlin += " ELSE 1 END"
 
         return sqlin
 
@@ -1595,10 +1740,31 @@ class DBaseParser(QtCore.QObject):
             id = [row[0] for row in query][0]
         elif self.dbasetype == 'postgis':
             tablelower = table.lower()
-            sql = "SELECT currval('" + tablelower + "_id_" + tablelower + "_seq');"
+            if self.version is None or self.version == '':
+                sql = "SELECT currval('" + tablelower + "_id_" + tablelower + "_seq');"
+            else:
+                sql = "SELECT currval('" + tablelower + "_pk_" + tablelower + "_seq');"
             query = self.query(sql)
             id = [row[0] for row in query][0]
         return id
+
+
+    def getColumns(self, tablename):
+
+        result = None
+
+        if self.dbasetype == 'spatialite':
+            sql = "PRAGMA table_info(" + str(tablename) + ")"
+            query = self.query(sql)
+            result = [row[1] for row in query]
+
+        elif self.dbasetype == 'postgis':
+            sql = "SELECT column_name FROM information_schema.columns WHERE table_name  = '" +  str(tablename).lower() + "'"
+            query = self.query(sql)
+            result = [row[0] for row in query]
+
+        return result
+
 
     def getFirstIdColumn(self,tablename):
         """
@@ -1652,7 +1818,7 @@ class DBaseParser(QtCore.QObject):
         """
         return self.getLastPk('Revision')
 
-    def exportBase(self, exportdbase):
+    def exportBase2(self, exportdbase):
 
         # load all features
         self.linkedids = {}
@@ -1787,4 +1953,1228 @@ class DBaseParser(QtCore.QObject):
         :param id: le pk fourni par le signal
         """
         self.featureaddedid = id
+
+    def getMaxVersionRepository(self, typemetier):
+        """
+        REcherche dans Lamia/DBASE/create le repertoire qui correspond au typemetier, avec la plus grande version
+        s'il n'y a pas de version (lamia avant sept.2018) , renvoi le repertoire avec version = None
+
+        :param typemetier:
+        :return:
+        """
+        version = ''
+        repository = None
+
+        createfilesdir = os.path.join(os.path.dirname(__file__), '..', 'DBASE', 'create')
+        listrep = os.listdir(createfilesdir)
+        for rep in listrep:
+            if len(rep.split('_')) > 2 :
+                if typemetier == '_'.join(rep.split('_')[:-2]) :
+                    versiontemp = '_'.join(rep.split('_')[-2:])
+                    if versiontemp > version:
+                        repository = os.path.join(createfilesdir,rep)
+                        version = versiontemp
+            else:
+                if typemetier == rep :
+                    repository = os.path.join(createfilesdir,rep)
+
+
+        return repository, version
+
+
+    def updateDBaseVersion(self):
+        print('DBASE need an update')
+
+
+
+
+    def getParentTable(self, tablename):
+        """
+        Get Parents table name
+        :param tablename:
+        :return:
+        """
+        parenttablenamelist = []
+        dbasetable = self.dbasetables[tablename]
+        continuesearchparent = True
+
+        while continuesearchparent:
+            for field in dbasetable['fields'].keys():
+                continuesearchparent = False
+                if 'lpk_' == field[:4]:
+                    tablename = field.split('_')[1].title()
+                    parenttablenamelist.append(tablename)
+                    dbasetable = self.dbasetables[tablename]
+                    if field[4:] == 'objet':
+                        continuesearchparent = False
+                    else:
+                        continuesearchparent = True
+                    break
+
+        return parenttablenamelist
+
+
+
+
+    def importDbase(self, dbaseparserfrom, typeimport='nouvelle'):
+        """
+
+        :param dbaseparserfrom:
+        :param typeimport:  nouvelle import_terrain
+        :return:
+        """
+
+        debug = False
+        if debug:
+            logging.getLogger("Lamia").debug('Start ')
+            dbaseparserfrom.printsql = True
+
+        self.backupBase()
+
+        if self.qgsiface is not None:
+            #if not self.dbase.standalone:
+            progressMessageBar = self.qgsiface.messageBar().createMessage("Import des donnees...")
+            progress = QProgressBar()
+            progress.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+            progressMessageBar.layout().addWidget(progress)
+            if int(str(self.qgisversion_int)[0:3]) < 220:
+                self.qgsiface.messageBar().pushWidget(progressMessageBar, self.qgsiface.messageBar().INFO)
+            else:
+                self.qgsiface.messageBar().pushWidget(progressMessageBar, qgis.core.Qgis.Info)
+            #len
+            maxprogress = len(self.dbasetables.keys())
+            progress.setMaximum(maxprogress)
+        else:
+            progress = None
+
+        # ********** Variables générales ***********************************
+        # import dict : {tablename : {...{idfrom : idto} ...} }
+        # utilise pour la correspondance entre les id de la table d'import et les id de la table main
+        importdictid = {}
+        # import dict : {tablename : {...{pkfrom : pkto} ...} }
+        # utilise pour la correspondance entre les pk de la table d'import et les pk de la table main
+        importdictpk = {}
+        # import dict : {tablename : [pk1, pk2,..] }
+        # utilise pour se souvenir des pk qui ont un revsionend
+        importdictdeletedpk = {}
+        #conflictobjetids dict : {..., idobjet:{fields : [], importvalue:[], mainvalue:[]},... }
+        conflictobjetids = OrderedDict()
+
+        # ************** add version
+        datedebutimport = str((datetime.datetime.now() - datetime.timedelta(seconds=2)).strftime("%Y-%m-%d %H:%M:%S"))
+        if typeimport == 'nouvelle':
+            comment = 'import'
+        elif typeimport == 'import_terrain':
+            comment = 'import_terrain'
+        sql = "INSERT INTO Revision(datetimerevision, commentaire) "
+        sql += " VALUES('" + str(datedebutimport) + "', '" + comment + "')"
+        self.query(sql)
+        self.maxrevision = self.getMaxRevision()
+        self.currentrevision = int(self.maxrevision)
+        self.updateWorkingDate()
+
+        # **************** date de la version d'import
+        datetravailhorsligne = None
+        if typeimport == 'import_terrain':
+            # datetravailhorsligne
+            sql = "SELECT datetimerevision FROM Revision WHERE pk_revision = 2"
+            datetravailhorsligne = dbaseparserfrom.query(sql)[0][0]
+
+        # **************** debut de l'iteration sur les tables à importer
+        counter = 0
+        for order in range(1, 10):
+            for dbname in self.dbasetables:
+                if self.dbasetables[dbname]['order'] == order:
+
+                    counter += 1
+
+                    if progress: progressMessageBar.setText("Import des donnees... : " + dbname)
+                    self.setLoadingProgressBar(progress, counter)
+
+
+
+                    if debug: logging.getLogger("Lamia").debug(' ******************* %s *********  ', dbname)
+                    # self.normalMessage.emit("Chargement de " + str(dbname))
+
+                    # initialisation des variables génerales
+                    importdictid[dbname.lower()] = {}
+                    importdictpk[dbname.lower()] = {}
+                    importdictdeletedpk[dbname.lower()] = []
+
+                    # get non critical fields (not pk and non id)
+                    noncriticalfield = []           # the "non-critical" fields
+                    pkidfields = []                 # the "critical" fields (pk; id, lpk, lid)
+                    for field in self.dbasetables[dbname]['fields'].keys():
+                        if field[0:3] in ['id_', 'pk_'] or field[0:4] in ['lpk_', 'lid_']:
+                            pkidfields.append(field)
+                        else:
+                            noncriticalfield.append(field)
+                    #add geom at rank-1
+                    if 'geom' in self.dbasetables[dbname].keys():
+                        noncriticalfield.insert(-1, 'ST_AsText(ST_Transform(geom,' + str(self.crsnumber) + '))')
+                    if not noncriticalfield:
+                        noncriticalfield = ['*']
+                    if debug: logging.getLogger("Lamia").debug(' fields, critical : %s %s ',
+                                                               str(noncriticalfield),str(pkidfields))
+
+                    # request results from dbaseparserfrom
+                    if typeimport == 'nouvelle':
+                        sqlconstraint = " WHERE lpk_revision_end IS NULL"
+                    elif typeimport == 'import_terrain':
+                        sqlconstraint = " WHERE lpk_revision_begin = 2 OR lpk_revision_end = 2"
+
+                    sql, sqlpk = '', ''
+                    if 'Objet' in self.getParentTable(dbname):
+                        sql = "SELECT " + ','.join(noncriticalfield) + " FROM " + dbname.lower() + "_qgis"
+                        sql += sqlconstraint
+                        sqlpk = "SELECT " + ','.join(pkidfields) + " FROM " + dbname.lower() + "_qgis"
+                        sqlpk += sqlconstraint
+                    elif 'lpk_revision_end' in self.dbasetables[dbname]['fields'].keys():
+                        sql = "SELECT " + ','.join(noncriticalfield) + " FROM " + dbname.lower()
+                        sql += sqlconstraint
+                        sqlpk = "SELECT " + ','.join(pkidfields) + " FROM " + dbname.lower()
+                        sqlpk += sqlconstraint
+                    else:
+                        sql = "SELECT " + ','.join(noncriticalfield) + " FROM " + dbname.lower()
+                        sqlpk = "SELECT " + ','.join(pkidfields) + " FROM " + dbname.lower()
+                    results = dbaseparserfrom.query(sql)
+                    resultpk = dbaseparserfrom.query(sqlpk)
+
+                    strtofind = 'ST_AsText(ST_Transform(geom,' + str(self.crsnumber) + '))'
+                    if strtofind in noncriticalfield:
+                        noncriticalfield[noncriticalfield.index(strtofind)] = 'geom'
+
+                    # get previoux existing id and other things for import terrain
+                    resultsid = None            # the existing id in main table
+                    indexidfield = None         # the index of id_ column
+                    indexrevisionend = None     # the index of lpk_revision_end
+                    indexpkdbase = None         # the index of pk_ column
+                    importid = None             # the id in the table lines iteration
+                    parenttable = None          # the parent table of actual table - defined as lpk_(parenttable)
+                    indexlkparenttable = None   # the index of parent table in pkidfields
+                    if typeimport == 'import_terrain':
+                        # get resultsid and indexidfield
+                        if "id_" + dbname.lower() in pkidfields:
+                            if True:
+                                sqlid = "SELECT id_" + dbname.lower() + " FROM " + dbname.lower() + "_qgis"
+                                sqlid += " WHERE lpk_revision_begin = 1 "
+                                resultsid = [elem[0] for elem in dbaseparserfrom.query(sqlid)]
+
+                            if False:
+                                sqlid = "SELECT id_" + dbname.lower() + " FROM " + dbname.lower() + "_qgis"
+                                sqlid += " WHERE datetimecreation < '" + str(datetravailhorsligne) + "'"
+                                resultsid = [elem[0] for elem in self.query(sqlid)]
+                            indexidfield = pkidfields.index("id_" + dbname.lower())
+                        # get indexrevisionend
+                        if "lpk_revision_end" in pkidfields:
+                            indexrevisionend = pkidfields.index('lpk_revision_end')
+                        indexpkdbase = pkidfields.index("pk_" + dbname.lower())
+                        # get eventual parenttable
+                        for j, fieldname in enumerate(pkidfields):
+                            if fieldname[0:4] == 'lpk_':
+                                parenttable = fieldname.split('_')[1]
+                                indexlkparenttable = j
+                        if debug: logging.getLogger("Lamia").debug(' parenttable, index : %s %s ',
+                                                                   str(parenttable),
+                                                                   str(indexlkparenttable))
+
+                    # start the iteration in table lines
+                    for i, result in enumerate(results):
+
+                        if i % 50 == 0 and debug: logging.getLogger("Lamia").debug(' result : %s  ', str(result))
+
+                        if resultsid is not None:
+                            importid = resultpk[i][indexidfield]
+
+                        # id already exists before - search if it was modified
+                        if resultsid is not None and importid in resultsid:
+                            # get its  datemodif
+                            if False:
+                                sqldate = " SELECT datetimemodification FROM " + dbname.lower() + "_qgis"
+                                sqldate += " WHERE id_" + dbname.lower() + " = " + str(importid)
+                                sqldate += " AND lpk_revision_end IS NULL"
+                            if True:
+                                sqldate = " SELECT MAX(datetimemodification) FROM " + dbname.lower() + "_qgis"
+                                sqldate += " WHERE id_" + dbname.lower() + " = " + str(importid)
+                            resultdatesql = self.query(sqldate)
+                            resultdate = None
+                            if resultdatesql : # cases 3, 5, 6, 8, 9
+                                resultdate = self.query(sqldate)[0][0]
+                            else:       # case 4 or 7 : line deleted in main
+                                pass
+
+                            if debug:  logging.getLogger("Lamia").debug('**** existing id : %s / date main : %s / date2 : %s', str(importid), str(resultdate), str(datetravailhorsligne))
+
+                            # Search if possible conflict
+                            # isinconflict = False
+                            if resultdate is None :  # case 4 or 7
+                                # not modified while field investigation- create new version - done
+                                if dbname.lower() == 'objet':
+                                    if debug: self.printsql = False
+                                    isinconflict, listfields, listvaluemain, listvalueimport = self.isInConflict(dbaseparserfrom, importid)
+                                    if debug: self.printsql = True
+                                    if debug: logging.getLogger("Lamia").debug('in conflict : %s', str(isinconflict))
+                                    if debug: logging.getLogger("Lamia").debug('date : %s %s', str(resultdate), str(datetravailhorsligne))
+                                    if isinconflict:
+                                        conflictobjetids[importid]={}
+                                        conflictobjetids[importid]['fields'] =  listfields
+                                        conflictobjetids[importid]['mainvalue'] = listvaluemain
+                                        conflictobjetids[importid]['importvalue'] = listvalueimport
+
+                            elif resultdate < datetravailhorsligne or resultdate > datedebutimport:     #case 1, 3 - no conflict
+                                pass
+
+
+
+
+
+
+                            else:     # cases  5, 6, 8, 9
+                                if dbname.lower() == 'objet':
+                                    if debug: self.printsql = False
+                                    isinconflict, listfields, listvaluemain, listvalueimport = self.isInConflict(dbaseparserfrom, importid)
+                                    if debug: self.printsql = True
+                                    if debug: logging.getLogger("Lamia").debug('in conflict : %s', str(isinconflict))
+                                    if debug: logging.getLogger("Lamia").debug('date : %s %s', str(resultdate), str(datetravailhorsligne))
+                                    if isinconflict:
+                                        conflictobjetids[importid]={}
+                                        conflictobjetids[importid]['fields'] =  listfields
+                                        conflictobjetids[importid]['mainvalue'] = listvaluemain
+                                        conflictobjetids[importid]['importvalue'] = listvalueimport
+
+                            # **** in all cases, create a new line or set revisionend  with import table value *****
+                            #   eventualy rewrite it when conflict process
+
+                            # deleted id case
+                            # its sure its an existing pk
+                            # case 3a, 4a, 5a, 6a, 7a, 8a, 9a
+                            if (typeimport == 'import_terrain' and indexrevisionend is not None
+                                    and resultpk[i][indexrevisionend] == 2):
+
+                                if debug: logging.getLogger("Lamia").debug(' set revisionend id, date: %s %s', str(importid), str(resultdate))
+
+                                # case 4a or 7a
+                                if not resultdate:
+                                    sql = " SELECT pk_" + dbname.lower() + "FROM " + dbname.lower() + "_qgis"
+                                    sql += " WHERE id_" + dbname.lower() + " = " + str(importid)
+                                    sql += " AND lpk_revision_end IS NULL"
+                                    resultcase = dbaseparserfrom.query(sql)
+                                    if resultcase:  # case 4a : do nothing - wait for active rev line
+                                        pass
+                                    else:    # case 7a : do nothing
+                                        pass
+
+                                # cases 3a, 5a, 6a, 8a, 9a, 10a, 11a
+                                else:
+                                    # simply set lpk_revision_end to main table
+                                    if 'lpk_revision_end' in self.dbasetables[dbname]['fields'].keys():
+                                        # search latest pk in main with same id
+                                        sql = "SELECT pk_" + dbname.lower() + " FROM  " + dbname.lower()
+                                        sql += " WHERE id_" + dbname.lower() + " = " + str(importid)
+                                        sql += " AND lpk_revision_end IS NULL"
+                                        sqlpkmain = self.query(sql)
+                                        # sqlpkimport = dbaseparserfrom.query(sql)
+
+                                        # add pk to importdictdeletedpk
+                                        importdictdeletedpk[dbname.lower()].append(resultpk[i][indexpkdbase])
+
+                                        if sqlpkmain:
+                                            self.printsql = True
+                                            pkmain = sqlpkmain[0][0]
+                                            datesuppr = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+                                            sql = "UPDATE " + dbname.lower() + " SET lpk_revision_end = " + str(self.maxrevision)
+                                            sql += " , datetimemodification = '" + datesuppr + "'"
+                                            sql += " WHERE pk_" + dbname.lower() + " = " + str(pkmain)
+                                            self.query(sql, docommit=False)
+
+
+                                    if False:
+
+                                        sql = " SELECT pk_" + dbname.lower() + "FROM " + dbname.lower() + "_qgis"
+                                        sql += " WHERE id_" + dbname.lower() + " = " + str(importid)
+                                        sql += " AND lpk_revision_end IS NULL "
+                                        sql += "AND datetimemodification > '"  + str(datetravailhorsligne) + "'"
+                                        resultcase = self.query(sql)
+
+                                        if resultcase:  #case 3a, 6a, 9a : revend to main line without possible conflict
+                                            pass
+                                        else:
+                                            pass
+
+
+                                        if 'lpk_revision_end' in self.dbasetables[dbname]['fields'].keys():
+                                            datesuppr = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+                                            sql = "UPDATE " + dbname.lower() + " SET lpk_revision_end = " + str(self.maxrevision)
+                                            sql += " , datetimemodification = '" + datesuppr + "'"
+                                            sql += " WHERE pk_" + dbname.lower() + " = " + str(resultpk[i][indexpkdbase])
+                                            self.query(sql, docommit=False)
+
+                                            # add pk to importdictdeletedpk
+                                            importdictdeletedpk[dbname.lower()].append(resultpk[i][indexpkdbase])
+
+                                            if True:
+                                                # search if another id is in main and not in import
+                                                sql = "SELECT pk_" + dbname.lower() + " FROM  " + dbname.lower()
+                                                sql += " WHERE id_" + dbname.lower() + " = " + str(importid)
+                                                sql += " AND lpk_revision_end IS NULL"
+                                                idmain = self.query(sql)
+                                                idimport = dbaseparserfrom.query(sql)
+
+                                                if not idimport and idmain:        # simple delete from import and remain in main
+                                                    pkmain = idmain[0][0]
+                                                    sql = "UPDATE " + dbname.lower() + " SET lpk_revision_end = " + str(self.maxrevision)
+                                                    sql += " , datetimemodification = '" + datesuppr + "'"
+                                                    sql += " WHERE pk_" + dbname.lower() + " = " + str(pkmain)
+                                                    self.query(sql, docommit=False)
+
+
+
+
+
+                            # if parent table pk is in  importdictdeletedpk
+                            elif (parenttable is not None
+                                  and parenttable in importdictdeletedpk.keys()
+                                  and resultpk[i][indexlkparenttable] in importdictdeletedpk[parenttable]):
+                                if debug: logging.getLogger("Lamia").debug(' parent revisionend : %s', str(importid))
+                                importdictdeletedpk[dbname.lower()].append(resultpk[i][indexpkdbase])
+
+
+                            # new version case
+                            # case 3b, 4b, 5b, 6b, 11b
+                            else:
+                                if debug: logging.getLogger("Lamia").debug(' new elem : %s', str(importid))
+                                # insert new line in main table
+                                sql = self.createSetValueSentence(type='INSERT',
+                                                                  tablename=dbname,
+                                                                  listoffields=noncriticalfield,
+                                                                  listofrawvalues=result)
+                                self.query(sql, docommit=True)
+                                # udpate id/pk fields without changing id_table value
+                                sqlup = self.updateIdPkSqL(tablename=dbname,
+                                                           listoffields=pkidfields,
+                                                           listofrawvalues=resultpk[i],
+                                                           dictpk=importdictpk,
+                                                           dictid=importdictid,
+                                                           changeID=False)
+                                self.query(sqlup, docommit=False)
+
+
+
+                        # id does not exists before - create new line or for tc
+                        else:
+                            if debug: logging.getLogger("Lamia").debug('****  new elem id : %s',str(importid))
+
+                            if (typeimport == 'import_terrain' and indexrevisionend is not None
+                                    and resultpk[i][indexrevisionend] == 2):
+                                # case of line deleted in main and deleted in import - dont t process it
+                                importdictdeletedpk[dbname.lower()].append(resultpk[i][indexpkdbase])
+
+
+
+                            elif (parenttable is not None
+                                  and parenttable in importdictdeletedpk.keys()
+                                  and resultpk[i][indexlkparenttable] in importdictdeletedpk[parenttable]):
+                                if debug: logging.getLogger("Lamia").debug(' parent revisionend : %s', str(importid))
+                                importdictdeletedpk[dbname.lower()].append(resultpk[i][indexpkdbase])
+
+                            else:
+                                # traite la mise en forme du result
+                                if noncriticalfield != ['*']:
+                                    sql = self.createSetValueSentence(type='INSERT',
+                                                                      tablename=dbname,
+                                                                      listoffields=noncriticalfield,
+                                                                      listofrawvalues=result)
+                                else:
+                                    sql = "INSERT INTO " + dbname + " DEFAULT VALUES"
+                                self.query(sql, docommit=False)
+
+                                # traite les id, pk et lid et lpk
+                                if True:
+                                    sqlup = self.updateIdPkSqL(tablename=dbname,
+                                                               listoffields=pkidfields,
+                                                               listofrawvalues=resultpk[i],
+                                                               dictpk=importdictpk,
+                                                               dictid=importdictid,
+                                                               changeID=True)
+
+
+                                    self.query(sqlup, docommit=False)
+
+                                # Ressource case : copy file
+                                if dbname == 'Ressource':
+                                    indexfile = noncriticalfield.index('file')
+                                    filepath = result[indexfile]
+                                    if not self.isAttributeNull(filepath):
+                                        filefrom = dbaseparserfrom.completePathOfFile(filepath)
+                                        fileto = os.path.join(self.dbaseressourcesdirectory, filepath)
+                                        self.copyRessourceFile(fromfile=filefrom,
+                                                               tofile=fileto,
+                                                               withthumbnail=0,
+                                                               copywholedirforraster=False)
+                    # Finaly commit all
+                    self.commit()
+
+                    if debug: logging.getLogger("Lamia").debug(' importdictid %s  ', str(importdictid[dbname.lower()]))
+                    if debug: logging.getLogger("Lamia").debug(' importdictpk %s  ', str(importdictpk[dbname.lower()]))
+                    if debug: logging.getLogger("Lamia").debug(' importdictdeletedpk %s  ', str(importdictdeletedpk[dbname.lower()]))
+                    if debug: logging.getLogger("Lamia").debug(' conflictobjetids %s  ', str(conflictobjetids))
+
+        self.resolveConflict(dbaseparserfrom,conflictobjetids )
+
+
+        if int(str(self.qgisversion_int)[0:3]) < 220:
+            self.canvas.refresh()
+        else:
+            self.canvas.refreshAllLayers()
+
+        if progress is not None: self.qgsiface.messageBar().clearWidgets()
+        self.normalMessage.emit("Import termine")
+
+
+
+
+    def isInConflict(self, dbaseparserfrom, conflictobjetid):
+        """
+        cases: (datet : datetravail)
+        MAin                                             Import
+        case n° datem       revbegin    revend          datem       revbegin    revend      Action                              Action on import                    Action if main retained
+        1       <datet      11                          <datet      1                       nothing modified                    /                                   /
+        2       >datet      11                          <datet      1                       only main modified - ok             /                                   /
+        3       <datet      11                          >datet      1           2           only import modified ok             close lastrev and create new rev    /
+                                                        >datet      2
+        4       suppr                                   >datet      1           2           conflict                            add new rev with same id            close new rev
+                                                        >datet      2
+        5       >datet      11          12              >datet      1           2           conflict                            rewrite main new rev                rewrite new rev with main
+                >datet      12                          >datet      2
+        6       >datet      11          12              >datet      1           2           conflict                            add new rev                         close new rev
+                                                        >datet      2
+        7       suppr                                   >datet      1           2           ok : deleted on main and import     /                                   /
+        8       >datet      11          12              >datet      1           2           conflict                            close lastrev                      write new rev with main
+                >datet      12
+        9       >datet      11                          >datet      1           2           conflit                             close lastrev                       unclose lastrev
+        10      >datet      11          12              >datet      1           2           ok : deleted on main and import     /                                   /
+        11      >datet      11          12              >datet      1           2           conlit                              add new rev                         /  close las rev
+                                                        >datet      2
+
+        :param dbaseparserfrom:
+        :param conflictobjetid:
+        :return:
+        """
+
+        debug = False
+        if debug: logging.getLogger("Lamia").debug(' isInConflict - idobjet : %s  ', str(conflictobjetid))
+
+        # get mainpkobjet and importpkobjet
+        sql = " SELECT MAX(pk_objet) FROM Objet WHERE id_objet = " + str(conflictobjetid)
+        mainpkobjetsql = self.query(sql)
+        importpkobjetsql = dbaseparserfrom.query(sql)
+
+
+        if False:
+            sql = " SELECT pk_objet FROM Objet WHERE id_objet = " + str(conflictobjetid)
+            sql += " AND lpk_revision_end IS NULL"
+            mainpkobjet = None
+            resmain = self.query(sql)
+            if resmain:
+                mainpkobjet = resmain[0][0]
+            importpkobjet = None
+            resimport = dbaseparserfrom.query(sql)
+            if resimport:
+                importpkobjet = resimport[0][0]
+
+            if mainpkobjet is None:
+                sql = " SELECT pk_objet FROM Objet WHERE id_objet = " + str(conflictobjetid)
+                sql += " AND lpk_revision_end = MAX(lpk_revision_end)"
+
+
+        # print('mainpkobjetsql',mainpkobjetsql,conflictobjetid)
+        if mainpkobjetsql[0][0] is not None: #cases 3, 5, 6, 8, 9
+
+            mainpkobjet = mainpkobjetsql[0][0]
+            importpkobjet = importpkobjetsql[0][0]
+
+            # get child table name and pk
+            mainconflictdbname, mainconflictpk = self.searchChildfeatureFromPkObjet(self, mainpkobjet)
+            importconflictdbname, importconflictpk = self.searchChildfeatureFromPkObjet(dbaseparserfrom, importpkobjet)
+
+            #get revend of pk
+            sql = "SELECT lpk_revision_end FROM " + mainconflictdbname.lower() + "_qgis"
+            sql += " WHERE pk_" + mainconflictdbname.lower() + " = " + str(mainconflictpk)
+            revendmain = self.query(sql)[0][0]
+            sql = "SELECT lpk_revision_end FROM " + importconflictdbname.lower() + "_qgis"
+            sql += " WHERE pk_" + importconflictdbname.lower() + " = " + str(importconflictpk)
+            revendimport = dbaseparserfrom.query(sql)[0][0]
+
+
+            if revendimport is not None and revendmain is not None:     # main and import has been deleted - non conflict
+                return False, None, None, None
+
+
+            # values from child table
+            sql = "SELECT * FROM " + mainconflictdbname.lower() + "_qgis"
+            sql += " WHERE pk_" + mainconflictdbname.lower() + " = " + str(mainconflictpk)
+            resmain = self.query(sql)[0]
+            sql = "SELECT * FROM " + importconflictdbname.lower() + "_qgis"
+            sql += " WHERE pk_" + importconflictdbname.lower() + " = " + str(importconflictpk)
+            resimport = dbaseparserfrom.query(sql)[0]
+
+            fields = self.getColumns(mainconflictdbname.lower() + "_qgis")
+
+            # get geom
+            resgeom1, resgeom2 = None, None
+            if 'geom' in fields:
+                sql = " SELECT ST_AsText(geom) FROM " + mainconflictdbname.lower() + "_qgis"
+                sql += " WHERE pk_" + mainconflictdbname.lower() + " = " + str(mainconflictpk)
+                resgeommain = self.query(sql)[0][0]
+                sql = " SELECT ST_AsText(geom) FROM " + importconflictdbname.lower() + "_qgis"
+                sql += " WHERE pk_" + importconflictdbname.lower() + " = " + str(importconflictpk)
+                resgeomimport = dbaseparserfrom.query(sql)[0][0]
+
+            if False:
+                print('resmain',resmain)
+                print('resimport',resimport)
+                print('resgeommain',resgeommain)
+                print('resgeomimport', resgeomimport)
+
+
+        else:
+
+            sql = " SELECT pk_objet FROM Objet WHERE id_objet = " + str(conflictobjetid)
+            sql += " AND lpk_revision_end = 2"
+            mainpkobjetsql = dbaseparserfrom.query(sql)
+
+            mainpkobjet = mainpkobjetsql[0][0]
+            importpkobjet = importpkobjetsql[0][0]
+
+            if mainpkobjet == importpkobjet:   #main was deleted and import also - no conflict
+                return False, None, None, None
+
+
+
+            mainconflictdbname, mainconflictpk = self.searchChildfeatureFromPkObjet(dbaseparserfrom, mainpkobjet)
+            importconflictdbname, importconflictpk = self.searchChildfeatureFromPkObjet(dbaseparserfrom, importpkobjet)
+
+            # values from child table
+            sql = "SELECT * FROM " + mainconflictdbname.lower() + "_qgis"
+            sql += " WHERE pk_" + mainconflictdbname.lower() + " = " + str(mainconflictpk)
+            resmain = dbaseparserfrom.query(sql)[0]
+            sql = "SELECT * FROM " + importconflictdbname.lower() + "_qgis"
+            sql += " WHERE pk_" + importconflictdbname.lower() + " = " + str(importconflictpk)
+            resimport = dbaseparserfrom.query(sql)[0]
+
+            fields = self.getColumns(mainconflictdbname.lower() + "_qgis")
+
+            # get geom
+            resgeom1, resgeom2 = None, None
+            if 'geom' in fields:
+                sql = " SELECT ST_AsText(geom) FROM " + mainconflictdbname.lower() + "_qgis"
+                sql += " WHERE pk_" + mainconflictdbname.lower() + " = " + str(mainconflictpk)
+                resgeommain = dbaseparserfrom.query(sql)[0][0]
+                sql = " SELECT ST_AsText(geom) FROM " + importconflictdbname.lower() + "_qgis"
+                sql += " WHERE pk_" + importconflictdbname.lower() + " = " + str(importconflictpk)
+                resgeomimport = dbaseparserfrom.query(sql)[0][0]
+
+
+
+
+        # manage fields in conflict
+        conflict1values = []  # conflict value in main table
+        conflict2values = []  # conflict value in import table
+        conflictfields = []  # conflict fields in import table
+        for i, restemp in enumerate(resmain):
+            if (fields[i] not in ['geom', 'datetimecreation', 'datetimemodification']
+                    and fields[i][0:3] != "pk_" and fields[i][0:4] != "lpk_"
+                    and restemp != resimport[i]):
+                conflict1values.append(restemp)
+                conflict2values.append(resimport[i])
+                conflictfields.append(fields[i])
+            elif fields[i] == 'geom' and resgeommain != resgeomimport:
+                conflict1values.append(resgeommain)
+                conflict2values.append(resgeomimport)
+                conflictfields.append(fields[i])
+
+        if debug:
+            logging.getLogger("Lamia").debug(' isInConflict - conflictfields : %s  ', str(conflictfields))
+            logging.getLogger("Lamia").debug(' isInConflict - conflict1values : %s  ', str(conflict1values))
+            logging.getLogger("Lamia").debug(' isInConflict - conflict2values : %s  ', str(conflict2values))
+
+
+        if len(conflict1values)>0:
+            return True, conflictfields, conflict1values, conflict2values
+        else:
+            return False, None, None, None
+
+
+    def resolveConflict(self,dbaseparserfrom,conflictobjetids ):
+        """
+                conflictobjetpks[importid]['fields'] =  listfields
+        conflictobjetpks[importid]['mainvalue'] = listvaluemain
+        conflictobjetpks[importid]['importvalue'] = listvalueimport
+        :param dbaseparserfrom:
+        :param conflictobjetpks:
+        :return:
+        """
+
+        debug = False
+
+        for conflictobjetid in conflictobjetids.keys():
+
+            # cas ou la ligne main a ete supprimee
+            sql = "SELECT lpk_revision_end FROM Objet WHERE id_objet = " + str(conflictobjetid)
+            resendpks = self.query(sql)
+            listrevendpks = [res[0] for res in resendpks]
+            # id was suppressed before import - re delet it
+            # print('listrevendpks', listrevendpks)
+            if not self.maxrevision in listrevendpks:
+                conflictobjetids[conflictobjetid]['mainvalue'] = 'Supprime'
+
+            # cas ou la ligne import a ete supprimee
+            sql = " SELECT MAX(pk_objet) FROM Objet WHERE id_objet = " + str(conflictobjetid)
+            pkobjet = self.query(sql)[0][0]
+            if pkobjet is not None:
+                sql = " SELECT  lpk_revision_end FROM Objet WHERE pk_objet = " + str(pkobjet)
+                mainrevend  = self.query(sql)[0][0]
+                if mainrevend is not None:
+                    conflictobjetids[conflictobjetid]['importvalue'] = 'Supprime'
+
+            # ui demande
+            message =  "ID objet       : " + str(conflictobjetid) + '\n'
+            message += "champs         : " + str(conflictobjetids[conflictobjetid]['fields']) + '\n'
+            message += "valeurs import : " + str(conflictobjetids[conflictobjetid]['importvalue']) + '\n'
+            message += "valeurs main   : " + str(conflictobjetids[conflictobjetid]['mainvalue']) + '\n'
+
+            reply = QMessageBox.question(None, 'Keep import values ?',
+                                         message, QMessageBox.Yes, QMessageBox.No)
+
+            # retour a la valeur du main
+            if reply == QMessageBox.No:
+                if debug : self.printsql = True
+
+                if conflictobjetids[conflictobjetid]['mainvalue'] == 'Supprime':
+                    datesuppr = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+                    sql = " UPDATE Objet SET "
+                    sql += "lpk_revision_begin = " + str(self.maxrevision - 1)
+                    sql += ", lpk_revision_end = " + str(self.maxrevision)
+                    sql += ", datetimedestruction = '" + str(datesuppr) + "'"
+                    sql += " WHERE pk_objet = " + str(pkobjet)
+                    self.query(sql, docommit=True)
+                    continue
+
+                if conflictobjetids[conflictobjetid]['importvalue'] == 'Supprime':
+                    # to know if deleted object - case of deleted objet in import and not in main
+                    # sql = " SELECT  lpk_revision_end FROM Objet WHERE pk_objet = " + str(pkobjet)
+                    # mainrevend  = self.query(sql)[0][0]
+                    # if mainrevend is not None:
+                    sql = " UPDATE Objet SET lpk_revision_end = NULL, datetimedestruction = NULL WHERE pk_objet = " + str(pkobjet)
+                    self.query(sql, docommit=False)
+
+
+                childdbname, childpk = self.searchChildfeatureFromPkObjet(self, pkobjet)
+                parenttables = [childdbname] + self.getParentTable(childdbname)
+
+                for tablename in parenttables:
+                    sql = " SELECT pk_" + tablename.lower() + " FROM " +  childdbname.lower() + "_qgis"
+                    sql += " WHERE pk_" + childdbname.lower() + " = " + str(childpk)
+                    pktable = self.query(sql)[0][0]
+                    fieldstomodif = []
+                    valuetoinsert=[]
+                    for i, field in enumerate(conflictobjetids[conflictobjetid]['fields']):
+                        #for i, field in enumerate(self.dbasetables[tablename]['fields']):
+                        #if field in conflictobjetids[conflictobjetid]['fields']:
+                        if field in self.dbasetables[tablename]['fields'].keys():
+                            # print(i, field, conflictobjetids[conflictobjetid]['mainvalue'])
+                            fieldstomodif.append(field)
+                            valuetoinsert.append(conflictobjetids[conflictobjetid]['mainvalue'][i])
+                        elif field == 'geom' and 'geom' in self.dbasetables[tablename].keys():
+                            fieldstomodif.append(field)
+                            valuetoinsert.append(conflictobjetids[conflictobjetid]['mainvalue'][i])
+
+                    if fieldstomodif:
+                        sql = self.createSetValueSentence(type='UPDATE',
+                                                          tablename=tablename,
+                                                          listoffields=fieldstomodif,
+                                                          listofrawvalues=valuetoinsert)
+                        sql += " WHERE pk_" + tablename.lower() + " = " + str(pktable)
+                        self.query(sql, docommit=False)
+                self.commit()
+                if debug: self.printsql = False
+
+
+            else:
+                continue
+
+
+
+    def searchChildfeatureFromPkObjet(self,dbaseparser, pkobjet):
+
+        currentdbname = "Objet"
+        currentpk = pkobjet
+
+        for order in range(1,10):
+            for dbname in self.dbasetables:
+                if self.dbasetables[dbname]['order'] == order :
+                    if "lpk_" + currentdbname.lower() in self.dbasetables[dbname]['fields'].keys():
+                        sql = "SELECT pk_" + dbname.lower() + " FROM " + dbname.lower()
+                        sql += " WHERE lpk_" + currentdbname.lower() + " = " + str(currentpk)
+                        result = dbaseparser.query(sql)
+                        if len(result)== 1 :
+                            currentdbname = dbname
+                            currentpk = result[0][0]
+                            break
+
+        return currentdbname, currentpk
+
+
+
+
+    def exportDbase(self,  exportfile=None ):
+
+        debug = False
+        if debug: logging.getLogger("Lamia").debug('Start ')
+
+        if self.qgsiface is not None:
+            # if not self.dbase.standalone:
+            progressMessageBar = self.qgsiface.messageBar().createMessage("Backup...")
+            progress = QProgressBar()
+            progress.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+            progressMessageBar.layout().addWidget(progress)
+            if int(str(self.qgisversion_int)[0:3]) < 220:
+                self.qgsiface.messageBar().pushWidget(progressMessageBar, self.qgsiface.messageBar().INFO)
+            else:
+                self.qgsiface.messageBar().pushWidget(progressMessageBar, qgis.core.Qgis.Info)
+            # len
+            maxprogress = len(self.dbasetables.keys())
+            progress.setMaximum(maxprogress)
+        else:
+            progress = None
+
+        exportparser = DBaseParser(self.canvas)
+        exportparser.createDbase(slfile=exportfile,
+                                 crs = self.crsnumber,
+                                 worktype = self.type)
+
+        counter = 0
+        for order in range(1,10):
+
+            for dbname in self.dbasetables:
+
+                if self.dbasetables[dbname]['order'] == order:
+                    counter += 1
+                    if progress: progressMessageBar.setText("Import des donnees... : " + dbname)
+                    self.setLoadingProgressBar(progress, counter)
+
+                    noncriticalfield = []
+
+                    for field in self.dbasetables[dbname]['fields'].keys():
+                            noncriticalfield.append(field)
+
+
+                    #add geom at rank-1
+                    if 'geom' in self.dbasetables[dbname].keys():
+                        noncriticalfield.insert(-1, 'ST_AsText(ST_Transform(geom,' + str(self.crsnumber) + '))')
+
+
+                    sql = ''
+                    if 'Objet' in self.getParentTable(dbname):
+                        sql = "SELECT " + ','.join(noncriticalfield) + " FROM " + dbname.lower() + "_qgis"
+                        sql += " WHERE lpk_revision_end IS NULL"
+
+
+                    elif 'lpk_revision_end' in self.dbasetables[dbname]['fields'].keys():
+                        sql = "SELECT " + ','.join(noncriticalfield) + " FROM " + dbname.lower()
+                        sql += " WHERE lpk_revision_end IS NULL"
+
+
+                    else:
+                        sql = "SELECT " + ','.join(noncriticalfield) + " FROM " + dbname.lower()
+
+
+                    results = self.query(sql)
+
+                    if 'ST_AsText(ST_Transform(geom,' + str(self.crsnumber) + '))' in noncriticalfield :
+                        noncriticalfield[noncriticalfield.index('ST_AsText(ST_Transform(geom,' + str(self.crsnumber) + '))')] = 'geom'
+
+
+                    # noncriticalfield.insert(0, "id_" + dbname)
+
+                    for i, result in enumerate(results):
+
+                        #traite la mise en forme du result
+                        restemp = []
+                        if noncriticalfield != ['*']:
+                            for l, res in enumerate(result):
+                                if noncriticalfield[l] == 'lpk_revision_begin':
+                                    restemp.append(str(1))
+                                elif isinstance(res, str) or  ( isinstance(res, unicode) and noncriticalfield[l] != 'geom') :
+                                    restemp.append("'" + str(res).replace("'","''") + "'")
+                                elif noncriticalfield[l] == 'geom' and res is not None:
+                                    # print('geom', "ST_GeomFromText('" + res + "', " + str(self.crsnumber)  + ")")
+                                    restemp.append("ST_GeomFromText('" + res + "', " + str(self.crsnumber)  + ")")
+
+                                elif res is None or res == '':
+                                    restemp.append('NULL')
+                                else:
+                                    restemp.append(str(res))
+
+                            # copy les valeurs
+                            if True:
+                                sql = "INSERT INTO " + dbname + '(' + ','.join(noncriticalfield) + ')'
+                                sql += " VALUES(" + ','.join(restemp) + ")"
+                                exportparser.query(sql,docommit=False)
+
+
+
+                            #ressource
+                            if dbname == 'Ressource':
+                                fileindex = noncriticalfield.index('file')
+                                filepath = result[fileindex]
+
+                                pkobjetindex = noncriticalfield.index('lpk_objet')
+                                pkobjet = result[pkobjetindex]
+
+                                childdbname, childpk = self.searchChildfeatureFromPkObjet(self, pkobjet)
+
+                                # only export reference rasters
+                                if childdbname.lower() == 'rasters':
+                                    sql = " SELECT typeraster FROM Rasters_qgis WHERE pk_rasters = " + str(childpk)
+                                    typeraster = self.query(sql,docommit=False)[0][0]
+                                    if typeraster not in ['ORF', 'IRF']:
+                                        continue
+
+
+                                if not self.isAttributeNull(filepath):
+
+                                    # print(self.dbaseressourcesdirectory,filepath,  exportparser.dbaseressourcesdirectory)
+
+                                    fromfile = os.path.join(self.dbaseressourcesdirectory, filepath)
+                                    tofile = os.path.join(exportparser.dbaseressourcesdirectory, filepath)
+
+                                    self.copyRessourceFile(fromfile=fromfile,
+                                                           tofile=tofile,
+                                                           withthumbnail=1,
+                                                           copywholedirforraster = True)
+
+
+                        else:
+                            sql = "INSERT INTO " + dbname + " DEFAULT VALUES"
+                            exportparser.query(sql,docommit=False)
+
+
+                    exportparser.commit()
+
+
+        #update seq file to remember last pk of each table
+        sql = "SELECT * FROM sqlite_sequence "
+        results = self.query(sql)
+        for res in results:
+            if res[0] == 'Revision':
+                continue
+            sql = "UPDATE sqlite_sequence SET seq = " + str(res[1])
+            sql += " WHERE name = '" + str(res[0]) + "'"
+            exportparser.query(sql)
+
+        datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        sql = "INSERT INTO Revision(datetimerevision, commentaire)  "
+        sql += " VALUES('" + datecreation + "','travail horsligne')"
+        exportparser.query(sql)
+
+        if progress is not None: self.qgsiface.messageBar().clearWidgets()
+
+
+
+    def backupBase(self):
+
+        if self.qgsiface is not None:
+            #if not self.dbase.standalone:
+            progressMessageBar = self.qgsiface.messageBar().createMessage("Backup...")
+            progress = QProgressBar()
+            progress.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+            progressMessageBar.layout().addWidget(progress)
+            if int(str(self.qgisversion_int)[0:3]) < 220:
+                self.qgsiface.messageBar().pushWidget(progressMessageBar, self.qgsiface.messageBar().INFO)
+            else:
+                self.qgsiface.messageBar().pushWidget(progressMessageBar, qgis.core.Qgis.Info)
+            #len
+            maxprogress = len(self.dbasetables.keys())
+            progress.setMaximum(maxprogress)
+        else:
+            progress = None
+
+        debug = False
+        if debug: logging.getLogger("Lamia").debug('Start ')
+
+
+        datesuppr = str(datetime.datetime.now().strftime("%Y_%m_%d__%H_%M_%S"))
+        # fileexport = os.path.join(exportdir, 'backup_' + datesuppr + '.sqlite')
+        exportdir = os.path.join(self.dbaseressourcesdirectory , 'backup')
+        if not os.path.exists(exportdir):
+            os.makedirs(exportdir)
+
+        fileexport = os.path.join(exportdir, 'backup_' + datesuppr + '.sqlite')
+
+        exportparser = DBaseParser(self.canvas)
+        exportparser.createDbase(slfile=fileexport,
+                                 crs=self.crsnumber,
+                                 worktype=self.type)
+
+
+        counter = 0
+        for order in range(0, 10):
+            for dbname in self.dbasetables:
+                if self.dbasetables[dbname]['order'] == order:
+                    counter += 1
+                    self.setLoadingProgressBar(progress, counter)
+
+                    if dbname.lower() == 'basedonnees':
+                        continue
+
+                    # self.normalMessage.emit("Export de " + str(dbname))
+
+                    noncriticalfield = []
+
+                    for field in self.dbasetables[dbname]['fields'].keys():
+                            noncriticalfield.append(field)
+
+                    #add geom at rank-1
+                    if 'geom' in self.dbasetables[dbname].keys():
+                        noncriticalfield.insert(-1, 'ST_AsText(ST_Transform(geom,' + str(self.crsnumber) + '))')
+
+                    sql = "SELECT " + ','.join(noncriticalfield) + " FROM " + dbname.lower()
+
+                    results = self.query(sql)
+
+                    if 'ST_AsText(ST_Transform(geom,' + str(self.crsnumber) + '))' in noncriticalfield :
+                        noncriticalfield[noncriticalfield.index('ST_AsText(ST_Transform(geom,' + str(self.crsnumber) + '))')] = 'geom'
+
+                    for i, result in enumerate(results):
+                        if dbname.lower() == 'revision' and i == 0:
+                            continue
+
+                        #traite la mise en forme du result
+                        sql = self.createSetValueSentence(type='INSERT',
+                                                          tablename=dbname,
+                                                          listoffields=noncriticalfield,
+                                                          listofrawvalues=result)
+                        exportparser.query(sql, docommit=False)
+
+                    exportparser.commit()
+
+        if False:
+            #update seq file to remember last pk of each table
+            sql = "SELECT * FROM sqlite_sequence "
+            results = self.query(sql)
+            for res in results:
+                if res[0] == 'Revision':
+                    continue
+                sql = "UPDATE sqlite_sequence SET seq = " + str(res[1])
+                sql += " WHERE name = '" + str(res[0]) + "'"
+                exportparser.query(sql)
+
+            datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            sql = "INSERT INTO Revision(datetimerevision, commentaire)  "
+            sql += " VALUES('" + datecreation + "','travail horsligne')"
+            exportparser.query(sql)
+        if progress is not None: self.qgsiface.messageBar().clearWidgets()
+        # print(self.dbasetables)
+
+
+
+
+
+
+
+    def updateIdPkSqL(self,tablename=None, listoffields=[], listofrawvalues=[], dictpk = {}, dictid = {}, changeID = True):
+        pktable = None
+        fields = []
+        values = []
+
+        for k, field in enumerate(listoffields):
+
+            if "pk_" == field[0:3]:
+                pktable = self.getLastRowId(tablename)
+                # print(pktable)
+                pkoldtable = listofrawvalues[k]
+                dictpk[tablename.lower()][pkoldtable] = pktable
+
+
+            elif "id_" == field[0:3]:
+
+                fields.append(field)
+                if changeID :
+                    idtable = self.getLastId(tablename) + 1
+                else:
+                    idtable = listofrawvalues[k]
+                values.append(str(idtable))
+
+                oldid = listofrawvalues[k]
+                dictid[tablename.lower()][oldid] = idtable
+
+            elif "lid_" == field[0:4]:
+                if field.split('_')[1] in dictid.keys():
+                    if listofrawvalues[k] is not None:
+                        if listofrawvalues[k] in dictid[field.split('_')[1]].keys():
+                            fields.append(field)
+                            values.append(str(dictid[field.split('_')[1]][listofrawvalues[k]]))
+                        else:
+                            fields.append(field)
+                            values.append(str(  listofrawvalues[k]    ))
+                            print('error lid_' )
+                            print('base : ' ,tablename, ' - column : ', field, ' - lid value : ',listofrawvalues[k]  )
+
+                else:
+                    if listofrawvalues[k] is not None:
+                        fields.append(field)
+                        values.append(str(listofrawvalues[k]))
+
+            elif "lpk_" == field[0:4]:
+
+                #if "lpk_revision_begin" in self.dbasetables[tablename]['fields'].keys():
+                if field == "lpk_revision_begin":
+                    fields.append('lpk_revision_begin')
+                    values.append(str(self.maxrevision))
+
+
+
+                elif field.split('_')[1] in dictpk.keys():
+                    if listofrawvalues[k] is not None:
+                        if listofrawvalues[k] in dictpk[field.split('_')[1]].keys():
+                            fields.append(field)
+                            values.append(str(dictpk[field.split('_')[1]][listofrawvalues[k]]))
+                        else:
+                            print('error lpk_', listofrawvalues)
+
+
+        if "lpk_revision_begin" in listoffields and not changeID:
+            #pkcurrentable
+            sql = " SELECT pk_" + tablename.lower() + " FROM " + tablename.lower()
+            sql += " WHERE id_" + tablename.lower() + " = " + str(idtable)
+            sql += " AND lpk_revision_end IS NULL"
+
+            tempres = self.query(sql)
+
+            if len(tempres)>0:
+                pkcurrenttable = self.query(sql)[0][0]
+
+
+                sql = "UPDATE " + tablename.lower() + " SET lpk_revision_end = " + str(self.maxrevision)
+                sql += " WHERE pk_" + tablename.lower() + " = " + str(pkcurrenttable)
+                self.query(sql, docommit=False)
+
+        # if i % 50 == 0:
+            # if debug: logging.getLogger("Lamia").debug(' field, value : %s %s  ', str(fields), str(values))
+
+        if pktable is not None:
+            # update line
+            sqlup = "UPDATE " + tablename.lower() + " SET "
+            for j, field in enumerate(fields):
+                sqlup += field + " = " + str(values[j]) + ","
+            sqlup = sqlup[:-1]
+            sqlup += " WHERE pk_" + tablename.lower() + ' = ' + str(pktable)
+
+            #self.query(sqlup, docommit=False)
+
+
+
+        return sqlup
+
+
+
+
+
+    def createSetValueSentence(self,type='INSERT',tablename=None, listoffields=[], listofrawvalues=[]):
+
+        debug = False
+        if debug : logging.getLogger("Lamia").debug(' fields / rawvalues %s %s  ', str(listoffields), str(listofrawvalues))
+
+        restemp = []
+
+        for l, res in enumerate(listofrawvalues):
+
+            if isinstance(res, str) or (isinstance(res, unicode) and listoffields[l] != 'geom'):
+                restemp.append("'" + str(res).replace("'", "''") + "'")
+            elif listoffields[l] == 'geom' and res is not None:
+                # print('geom', "ST_GeomFromText('" + res + "', " + str(self.crsnumber)  + ")")
+                restemp.append("ST_GeomFromText('" + res + "', " + str(self.crsnumber) + ")")
+            elif res is None or res == '':
+                restemp.append('NULL')
+            else:
+                restemp.append(str(res))
+
+        if type == 'INSERT':
+            sql = "INSERT INTO " + tablename + '(' + ','.join(listoffields) + ')'
+            sql += " VALUES(" + ','.join(restemp) + ")"
+
+        elif type == 'UPDATE':
+            sql = " UPDATE " + tablename.lower() + " SET "
+            for i, field in enumerate(listoffields):
+                sql += field + " = " + str(restemp[i]) + ', '
+            sql = sql[:-2]
+
+        return sql
+
+
+
+    def copyRessourceFile(self,fromfile, tofile, withthumbnail=0, copywholedirforraster = False):
+        """
+
+        :param fromrep:
+        :param fromfile:
+        :param torep:
+        :param withthumbnail: 0 : copy  file + create thumbnail ; 1 : copy only thumnail; 2 : copyonly file
+        :param copywholedirforraster:
+        :return:
+        """
+
+        debug = False
+
+        if debug: logging.getLogger("Lamia").debug('Copy %s %s', str(fromfile), str(tofile))
+
+        fromfile = fromfile
+        fromdir =  os.path.dirname(fromfile)
+        destinationfile = tofile
+        destinationdir = os.path.dirname(destinationfile)
+
+        if os.path.isfile(fromfile):
+
+            if copywholedirforraster and 'Rasters' in fromfile:
+                if not os.path.exists(destinationdir):
+                    shutil.copytree(fromdir, destinationdir)
+            else:
+                if not os.path.exists(destinationdir):
+                    os.makedirs(destinationdir)
+
+                fromfilebase, fromext = os.path.splitext(fromfile)
+                tofilebase, toext = os.path.splitext(destinationfile)
+
+                if fromfilebase.split('_')[1] == 'croquis':
+                    shutil.copy(fromfile, destinationfile)
+                else:
+                    if withthumbnail in [0,1] and PILexists and fromext.lower() in ['.jpg', '.jpeg', '.png']:
+
+                        possibletbnailfile = fromfilebase + "_thumbnail.png"
+                        if os.path.isfile(possibletbnailfile):
+                            if possibletbnailfile != tofilebase + "_thumbnail.png":
+                                shutil.copy(possibletbnailfile, tofilebase + "_thumbnail.png")
+                        else:
+                            size = 256, 256
+                            im = PIL.Image.open(fromfile)
+                            im.thumbnail(size)
+                            im.save(tofilebase + "_thumbnail.png", "PNG")
+
+                    if withthumbnail in [0,2]:
+                        shutil.copy(fromfile, destinationfile)
+
+
+
+
+    def setLoadingProgressBar(self, progressbar, val):
+        if progressbar is not None:
+            progressbar.setValue(val)
+        else:
+            logging.getLogger("Lamia").info('Chargement %d', val )
+        QApplication.processEvents()
+
+
+
+
 

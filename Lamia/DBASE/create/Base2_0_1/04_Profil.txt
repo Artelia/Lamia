@@ -1,0 +1,18 @@
+#DJAN  SELECT Profil.*, Descriptionsystem.*,  Objet.* FROM Profil INNER JOIN Descriptionsystem ON Profil.lpk_descriptionsystem = Descriptionsystem.pk_descriptionsystem INNER JOIN Objet ON Descriptionsystem.lpk_objet = Objet.pk_objet WHERE Objet.lpk_revision_end IS NULL
+#QGIS SELECT Profil.*, Descriptionsystem.*,  Objet.*  FROM Profil INNER JOIN Descriptionsystem ON Profil.lpk_descriptionsystem = Descriptionsystem.pk_descriptionsystem INNER JOIN Objet ON Descriptionsystem.lpk_objet = Objet.pk_objet
+
+#SHOW YES
+
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###pk_profil;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_profil;             INT ;                   INTEGER
+###lpk_descriptionsystem;        INT ;                       INTEGER                      ; Descriptionsystem(pk_descriptionsystem)
+
+###date;                DATE;                   TEXT
+###type;           VARCHAR(255);           TEXT
+Graphique;        GRA
+Croquis;        CRO
+Image;      PHO
+###lid_descriptionsystem;           INT ;                   INTEGER
+
+###geom;               LINESTRING

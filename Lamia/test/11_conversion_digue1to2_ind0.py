@@ -12,12 +12,14 @@ from Lamia.Lamia.main.DBaseParser import DBaseParser
 
 pathfrom = "C://000_testdigue//convertBM//FROM//BD_SIJALAG_ind10.sqlite"
 pathfrom = "C://000_testdigue//convertBM//FROM//BD_Begles_ind10.sqlite"
+pathfrom = "C://000_testdigue//convertBM2//FROM//BD_Rivedroite_ind4.sqlite"
 
 dbaseparserfrom = DBaseParser(None)
 dbaseparserfrom.loadQgisVectorLayers(pathfrom)
 
 pathto = "C://000_testdigue//convertBM//TO//BD_SIJALAG_ind10.sqlite"
 pathto = "C://000_testdigue//convertBM//TO2//BD_Begles_ind10.sqlite"
+pathto = "C://000_testdigue//convertBM2//FROM//BD_Rivedroite_ind5.sqlite"
 
 
 

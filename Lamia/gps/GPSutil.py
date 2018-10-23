@@ -37,7 +37,7 @@ from qgis.PyQt.QtCore import pyqtSignal
 
 
 class GpsUtil(QtCore.QObject):
-
+    qgssentence = QtCore.pyqtSignal(dict)
     ggasentence = QtCore.pyqtSignal(dict)
     gstsentence = QtCore.pyqtSignal(dict)
     GPSConnected = pyqtSignal(bool)
@@ -51,6 +51,11 @@ class GpsUtil(QtCore.QObject):
         self.wgs84CRS = qgis.core.QgsCoordinateReferenceSystem(4326)
         self.xform = None
         self.currentpoint = None
+
+        self.receiveGPGGA = False
+        self.receiveGPGST = False
+
+        self.hauteurperche = 0.0
 
         try:
             self.qgisversion_int = qgis.utils.QGis.QGIS_VERSION_INT
@@ -100,6 +105,10 @@ class GpsUtil(QtCore.QObject):
             self.connection.stateChanged.disconnect(self.gpsStateChanged)
         except:
             pass
+
+        self.receiveGPGGA = False
+        self.receiveGPGST = False
+
         self.currentpoint = None
         self.GPSConnected.emit(False)
 
@@ -118,7 +127,9 @@ class GpsUtil(QtCore.QObject):
             connectionList = connectionRegistry.connectionList()
             if len(connectionList) > 0 and connectionList[0] is not None:
                 self.connection = connectionList[0]
-                print('connected')
+                # print('connected')
+                self.receiveGPGGA = False
+                self.receiveGPGST = False
                 self.connection.nmeaSentenceReceived.connect(self.collectNMEA)
                 #self.connection.stateChanged.connect(self.gpsStateChanged)
                 self.connection.destroyed.connect(self.connectionLost)
@@ -159,13 +170,18 @@ class GpsUtil(QtCore.QObject):
 
     def collectNMEA(self, sentence):
 
+        if not self.receiveGPGGA:
+            self.ggasentence.emit(self.getQgsResult())
+
         if sentence.split(',')[0] == '$GPGGA':
+            self.receiveGPGGA = True
             #self.lineEdit_gga.setText(sentence)
             resultGGA = self.getGPGGAResult(sentence.split(','))
             #self.label_Z.setText(str(round(self.resultGGA['elevation'], 2)))
             self.ggasentence.emit(resultGGA)
 
         if sentence.split(',')[0] == '$GPGST':
+            self.receiveGPGST = True
             #self.lineEdit_gst.setText(sentence)
             resultGST = self.getGPGSTResult(sentence.split(','))
             #self.label_XP.setText(str(round(self.resultGST['xprecision'], 2)))
@@ -173,6 +189,43 @@ class GpsUtil(QtCore.QObject):
             #self.label_ZP.setText(str(round(self.resultGST['zprecision'], 2)))
             self.gstsentence.emit(resultGST)
 
+    def getQgsResult(self):
+        try:
+            result = {}
+            result['sentence'] = None
+            result['latitude'] = self.connection.currentGPSInformation().latitude
+            result['longitude'] = self.connection.currentGPSInformation().longitude
+            result['quality'] = self.connection.currentGPSInformation().quality
+
+            result['elevation'] = None
+            result['deltageoid'] = None
+            zconvert = None
+            result['RAF09'] = None
+            result['zmNGF'] = None
+            result['hauteurperche'] = self.hauteurperche
+
+            if int(str(self.qgisversion_int)[0:3]) < 220:
+                wgs84point = qgis.core.QgsPoint(result['longitude'], result['latitude'])
+            else:
+                wgs84point = qgis.core.QgsPointXY(result['longitude'], result['latitude'])
+
+            if self.xform is not None:
+                crspoint = self.xform.transform(wgs84point)
+                result['Xcrs'] = crspoint.x()
+                result['Ycrs'] = crspoint.y()
+                result['QgsPoint'] = crspoint
+                self.currentpoint = crspoint
+            else:
+                result['Xcrs'] = 0.0
+                result['Ycrs'] = 0.0
+                result['QgsPoint'] = None
+                #self.currentpoint = crspoint
+
+            return result
+        except Exception as e:
+            print('error nmeaGGA', e)
+            result = {}
+            return result
 
     def getGPGGAResult(self, sentence):
         try:
@@ -186,8 +239,10 @@ class GpsUtil(QtCore.QObject):
             if sentence[5] == 'W':
                 result['longitude'] = - result['longitude']
             result['quality'] = sentence[6]
-            result['elevation'] = float(sentence[9])
+
+            result['elevation'] = float(sentence[9]) - self.hauteurperche
             result['deltageoid'] = float(sentence[11])
+            result['hauteurperche'] = self.hauteurperche
             zconvert = self.getRAF09ZConvert(result['longitude'],result['latitude'] )
             result['RAF09'] = zconvert
             result['zmNGF'] = result['elevation'] + result['deltageoid'] - zconvert

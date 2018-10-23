@@ -1,0 +1,22 @@
+#DJAN  SELECT Graphiquedata.*, Graphique.*, Ressource.*, Objet.* FROM Graphiquedata INNER JOIN  Graphique ON Graphiquedata.lpk_graphique = Graphique.pk_graphique INNER JOIN Ressource ON Graphique.lpk_ressource = Ressource.pk_ressource INNER JOIN Objet ON Ressource.lpk_objet = Objet.pk_objet  WHERE Objet.lpk_revision_end IS NULL AND Objet.lpk_revision_end IS NULL
+#QGIS  SELECT Graphiquedata.*, Graphique.*, Ressource.*, Objet.* FROM Graphiquedata INNER JOIN  Graphique ON Graphiquedata.lpk_graphique = Graphique.pk_graphique INNER JOIN Ressource ON Graphique.lpk_ressource = Ressource.pk_ressource INNER JOIN Objet ON Ressource.lpk_objet = Objet.pk_objet  WHERE Objet.lpk_revision_end IS NULL
+
+
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###pk_graphiquedata;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_graphiquedata;         INT ;                   INTEGER
+###lpk_graphique;         INT ;                   INTEGER;                              Graphique(pk_graphique)
+
+###typedata;                VARCHAR(255);            TEXT
+/; 
+Simple;                  SIM
+###x;                NUMERIC;            REAL
+###y;                NUMERIC;            REAL
+###z;                NUMERIC;            REAL
+###index1;                VARCHAR(255);            TEXT
+/;                                 
+###index2;                VARCHAR(255);            TEXT
+/;
+###index3;                VARCHAR(255);            TEXT
+/;                                  
+###index4;                VARCHAR(255);            TEXT

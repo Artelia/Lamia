@@ -9,7 +9,7 @@ import sys
 
 import qgis
 
-
+import datetime
 
 import qgis.gui
 
@@ -99,15 +99,49 @@ class mainClass(QtCore.QObject):
                 #path = os.path.normpath("C://000_testdigue//201710_Begles//BD_Begles_ind13.sqlite")
                 # path = os.path.normpath("C://000_testdigue//voncent//Plaisance_ind0.sqlite")
 
-                # path = "C://000_testdigue//URBAIN//Nieul_ind1.sqlite"
-                path = os.path.normpath('C://000_testdigue//temp_VNF//test02.sqlite')
+                # path = "C://000_testdigue//URBAIN//La_Geneytouse2.sqlite"
+                # path = os.path.normpath('C://000_testdigue//temp_VNF//bief2 roanne//bief2 roanne.sqlite')
+                #path = os.path.normpath('C://000_testdigue//temp_VNF//test03new.sqlite')
+                path = os.path.normpath('C://000_testdigue//temp_base2_digue//test01.sqlite')
+                path = os.path.normpath('C://000_testdigue//temp_base2_assainissement//test01.sqlite')
+                # path = "C://000_testdigue//URBAIN//La_Geneytouse2.sqlite"
+                # path = os.path.normpath('I:\\URBAIN\\4352260_87_ELAN_EtudeAEP_EU\\5_Etude\\01_SIG\\SQLITE\\Compreignac\\Compreignac.sqlite')
+                # path = "C://000_testdigue//convertBM2//TO//BD_Begles_ind17.sqlite"
 
+                # path = "C://000_testdigue//convertBM2//TO//BD_Rivedroite_ind6.sqlite"
 
+                # path = "C://000_testdigue//convertBM2//TO//BD_Begles_ind17_test.sqlite"
+                # path = "C://000_testdigue//convertBM2//TO//BD_SIJALAG_ind15.sqlite"
+                # path = "C://000_testdigue//convertBM2//TO//BD_BMtotal_ind0.sqlite"
+                # path = "C://000_testdigue//convertBM2//TO//export2.sqlite"
+                # path = "C://000_testdigue//convertBM2//TO//BD_Rivedroite_ind6.sqlite"
 
+                # path = "c://000_testdigue//convertBM2//Export//BdRiveDroite//export3.sqlite"
+                # path = "c://000_testdigue//convertBM2//importest//BD_totale.sqlite"
+
+                #path = os.path.normpath('C://000_testdigue//temp_base2_digue//test01.sqlite')
+                #path = os.path.normpath('C://000_testdigue//temp_base2_digue_terrain//original//test01.sqlite')
+                #path = os.path.normpath('C://000_testdigue//temp_base2_digue_terrain//originalmodifie//test01modif.sqlite')
+                #path = os.path.normpath('C://000_testdigue//temp_base2_digue_terrain//terrain//terrain.sqlite')
+                #path = os.path.normpath('C://000_testdigue//temp_base2_digue//test01_importterrain.sqlite')
+
+                #path = os.path.normpath('C://000_testdigue//temp_base2_digue_terrain2//original//test02.sqlite')
+                #path = os.path.normpath('C://000_testdigue//temp_base2_digue_terrain2//terrain//test02terrain.sqlite')
+                # path = os.path.normpath('C://000_testdigue//temp_base2_digue_terrain2//originalmodif//test01modif.sqlite')
+                # path = os.path.normpath('C://000_testdigue//temp_base2_digue_terrain2//terrain2//test02terrain.sqlite')
+                # path = os.path.normpath('C://000_testdigue//temp_base2_digue_terrain2//originalmodif2//test02modif.sqlite')
+
+                path = "C://Users//patrice.verchere//Documents//GitHub//Lamia//Lamia//test//02_test_importdb//test01//02_modif//test01.sqlite"
+                #path = "C://Users//patrice.verchere//Documents//GitHub//Lamia//Lamia//test//02_test_importdb//test01//03_fusion_modif_terrain//test01.sqlite"
+                # path = os.path.normpath('C://000_testdigue//temp_base2_assainissement//test1.sqlite')
+                #path = os.path.normpath('C://Users//patrice.verchere//Documents//GitHub//Lamia//Lamia//test//02_test_importdb//test03//to//test01_terrain.sqlite')
+                path = os.path.normpath("C://Users//patrice.verchere//Documents//GitHub//Lamia//Lamia//test//02_test_importdb//test04//01_original//terrain.sqlite")
+                #path = os.path.normpath("C://Users//patrice.verchere//Documents//GitHub//Lamia//Lamia//test//02_test_importdb//test04//02_terrain//test01.sqlite")
+                # path = os.path.normpath("C://Users//patrice.verchere//Documents//GitHub//Lamia//Lamia//test//02_test_importdb//test04//03_fusion_modif_terrain//test01.sqlite")
                 wind.dbase.loadQgisVectorLayers(path)
 
             elif typedb == "postgis":
-                wind.dbase.loadQgisVectorLayers(dbasetype='postgis', dbname='PVR_test', schema='lamia_default',
+                wind.dbase.loadQgisVectorLayers(dbasetype='postgis', dbname='PVR_test', schema='lamia_base2_digue',
                                                 user='postgres',
                                                 host='localhost',
                                                 password='PVR', port=5432)
@@ -139,7 +173,7 @@ class mainClass(QtCore.QObject):
             print('Layers loaded')
             # print("versioning", wind.dbase.revisionwork)
 
-            # wind.dbase.printsql = True
+            wind.dbase.printsql = True
 
             if True:
 
@@ -153,11 +187,28 @@ class mainClass(QtCore.QObject):
 
                 mainwin.setParent(None)
 
+
+                if False:
+                    wind.dbase.createNewLineVersion('Infralineaire',3)
+
+                    sys.exit()
+
                 # wind.menutools[0].Noeud('c://test1.shp')
                 #wind.menutools[1].launchDialog()
 
+                if False:
+                    # sql = "SELECT MAX(pk_revision) FROM Revision"
+                    # maxverswind.dbase.query(sql)
+                    datesuppr = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+                    sql = "INSERT INTO Revision(datetimerevision, commentaire) VALUES('" + datesuppr + "','test')"
+                    wind.dbase.query(sql)
 
+                print('iface',wind.dbase.qgsiface)
+                print('ver', wind.dbase.qgisversion_int)
 
+                if False:
+                    res1, res2 = wind.dbase.searchChildfeatureFromPkObjet(5)
+                    print('result', res1, res2)
 
                 #mainwin.show()
                 mainwin.exec_()

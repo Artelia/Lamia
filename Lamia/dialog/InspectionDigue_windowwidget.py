@@ -7,11 +7,11 @@ from qgis.PyQt.QtCore import pyqtSignal
 try:
     from qgis.PyQt.QtGui import (QDockWidget, QMainWindow, QFileDialog, QLabel, QInputDialog,
                                  QComboBox,QTableWidgetItem,QProgressBar,QApplication,QToolBar,
-                                 QPushButton,QToolButton,QWidget)
+                                 QPushButton,QToolButton,QWidget, QMessageBox)
 except ImportError:
     from qgis.PyQt.QtWidgets import (QDockWidget, QMainWindow, QFileDialog, QLabel, QInputDialog,
                                      QComboBox,QTableWidgetItem, QProgressBar,QApplication,QToolBar,
-                                     QPushButton,QToolButton,QWidget)
+                                     QPushButton,QToolButton,QWidget, QMessageBox)
 
 # other libs import
 import os
@@ -110,8 +110,10 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.pointEmitter = qgis.gui.QgsMapToolEmitPoint(self.canvas)
         # The DBase parser
         self.dbase = DBaseParser(self.canvas)
+        self.importexportdbase = None
         # The GPS util
         self.gpsutil = GpsUtil()
+        self.gpsutil.hauteurperche = 2.0    #defaultvalue
         # The main qfiledialog
         self.qfiledlg = QFileDialog()
         # the working date dialog
@@ -133,6 +135,7 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.uifields = []
         self.uidesktop = []
         self.uipostpro = []
+        self.menuclasses = []
         self.desktopuiloaded = False
 
         # icon size changed
@@ -192,19 +195,26 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.dbase.recentDBaseChanged.connect(self.updateRecentDBaseMenu)
         self.dbase.dBaseLoaded.connect(self.DBaseLoaded)
         self.dbase.errorMessage.connect(self.errorMessage)
+        self.dbase.normalMessage.connect(self.normalMessage)
+
         # QT signals
         self.actionNouvelle_base.triggered.connect(self.newDbase)
         self.actionSpatialite.triggered.connect(self.loadSLDbase)
         self.actionPostgis.triggered.connect(self.loadPGDbase)
         self.actionAide.triggered.connect(self.openHelp)
         self.menuBases_recentes.triggered.connect(self.openFileFromMenu)
-        self.actionExporter_base.triggered.connect(self.exportBase)
+        # self.actionExporter_base.triggered.connect(self.exportBase)
         # self.actionImprimer_rapport.triggered.connect(self.printRapport)
         # self.actionExport_shapefile.triggered.connect(self.exportShapefile)
         #self.actionImport.triggered.connect(self.importObjet)
         self.actionVersion.triggered.connect(self.setVersion)
         #self.actionExporter_vers_SIRS_Digues.triggered.connect(export_sirs)
         #self.actionImporter_depuis_SIRS_Digues.triggered.connect(import_sirs)
+
+        self.actionImporter_et_ajouter_la_base.triggered.connect(self.importDBase)
+        self.actionImporter_et_mettre_jour_la_base.triggered.connect(self.importDBase)
+        self.actionExporter_la_base.triggered.connect(self.exportDBase)
+
 
         if self.dbase.dbasetype == 'postgis':
             self.actionMode_hors_ligne_Reconnexion.setEnabled(True)
@@ -493,12 +503,23 @@ class InspectiondigueWindowWidget(QMainWindow):
     # ********************************    MENU    ********************************************
     # **********************************************************************************************
 
-    def setVisualMode(self):
+    def setVisualMode(self, tempres=None, reset=False):
         """
         pass
         """
+
+        if reset:
+            self.dbase.visualmode = 0
+            self.actionModeTerrain.setChecked(True)
+            self.actionTTC.setChecked(False)
+            self.actionModeExpert.setChecked(False)
+            self.actionPosttraitement.setChecked(False)
+            return
+
+
         # print(self.sender.objectName())
         actionname = self.sender().objectName()
+
         if actionname == 'actionModeTerrain':
             self.dbase.visualmode = 0
             self.actionModeTerrain.setChecked(True)
@@ -552,9 +573,11 @@ class InspectiondigueWindowWidget(QMainWindow):
         num, ok = QInputDialog.getDouble(self,
                                          "Hauteur de perche",
                                          "Rentrer la hauteur de perche GPS",
-                                         self.dbase.hauteurperche)
+                                         self.gpsutil.hauteurperche)
         if ok:
-            self.dbase.hauteurperche = num
+            # self.dbase.hauteurperche = num
+            self.gpsutil.hauteurperche = num
+
 
     def setVersion(self):
         num, ok = QInputDialog.getInteger(self,
@@ -583,6 +606,10 @@ class InspectiondigueWindowWidget(QMainWindow):
         # print(self.sender().objectName())
         # print(self.sender().text())
         # new db dialog
+
+        #reset dbase
+        self.reinitDBase()
+
         self.newDBDialog.exec_()
         dbtype, type = self.newDBDialog.dialogIsFinished()
         if dbtype is None and type is None:
@@ -614,14 +641,18 @@ class InspectiondigueWindowWidget(QMainWindow):
         if dbtype == 'spatialite':
             spatialitefile = self.qfiledlg.getSaveFileName(self, 'InspectionDigue nouveau', '', '*.sqlite')
             if spatialitefile:
-                originalfile = os.path.join(os.path.dirname(__file__), '..', 'DBASE', 'DBase_ind0.sqlite')
-                shutil.copyfile(originalfile, spatialitefile)
+                # originalfile = os.path.join(os.path.dirname(__file__), '..', 'DBASE', 'DBase_ind0.sqlite')
+                # shutil.copyfile(originalfile, spatialitefile)
 
                 self.normalMessage(' Creation de la base de donnees...')
                 QApplication.processEvents()
 
-                self.dbase.createDbase(file=spatialitefile, crs=crsnumber, type=type, dbasetype='spatialite',
+                self.dbase.createDbase(slfile=spatialitefile, crs=crsnumber, worktype=type, dbasetype='spatialite',
                                        dbaseressourcesdirectory = resdir)
+                if False:
+                    self.loadQgisVectorLayers(file=self.dbase.spatialitefile, dbasetype=self.dbase.dbasetype,
+                                              host=self.dbase.pghost, port=self.dbase.pgport, dbname=self.dbase.pgdb, schema=self.dbase.pgschema,
+                                              user=self.dbase.pguser, password=self.dbase.pgpassword)
 
 
         elif dbtype == 'postgis':
@@ -636,14 +667,22 @@ class InspectiondigueWindowWidget(QMainWindow):
                     self.normalMessage('Creation de la base de donnees...')
                     QApplication.processEvents()
 
-                    self.dbase.createDbase(crs=crsnumber, type=type, dbasetype='postgis', dbname=nom, schema=schema,
+                    self.dbase.createDbase(crs=crsnumber, worktype=type, dbasetype='postgis', dbname=nom, schema=schema,
                                            user=user, host=adresse, password=password, dbaseressourcesdirectory=resdir,
                                            port=port)
+                    if False:
+                        self.loadQgisVectorLayers(file=self.dbase.spatialitefile, dbasetype=self.dbase.dbasetype,
+                                                  host=self.dbase.pghost, port=self.dbase.pgport, dbname=self.dbase.pgdb, schema=self.dbase.pgschema,
+                                                  user=self.dbase.pguser, password=self.dbase.pgpassword)
 
     def openFileFromMenu(self, action):
         """
         pass
         """
+
+        #reset dbase
+        self.reinitDBase()
+
         filetoopen = action.text()
         if len(filetoopen.split(';')) == 1:
             self.dbase.loadQgisVectorLayers(filetoopen)
@@ -664,6 +703,9 @@ class InspectiondigueWindowWidget(QMainWindow):
                                                                      'Spatialite (*.sqlite)', '')
             print(file)
         if file:
+            # reset dbase
+            self.reinitDBase()
+
             self.dbase.loadQgisVectorLayers(file)
 
     def loadPGDbase(self):
@@ -671,6 +713,9 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.connDialog.exec_()
         adresse, port, nom, schema, user, password = self.connDialog.dialogIsFinished()
         if adresse is not None and port is not None and nom is not None and user is not None and password is not None:
+            # reset dbase
+            self.reinitDBase()
+
             self.dbase.loadQgisVectorLayers(file=None, dbasetype='postgis', host=adresse, port=port, dbname=nom,
                                             schema=schema, user=user, password=password)
 
@@ -800,35 +845,37 @@ class InspectiondigueWindowWidget(QMainWindow):
                 print(self.uidesktop)
                 print(self.uipostpro)
 
+
+
+
+
+            if debugtime: logger.debug('applyVisualMode %.3f', time.clock() - timestart)
+
+
+            # ************************** LOAD tools ********************************************
+            # print('******* LOAD tools ')
+            if True:
+                path = os.path.join(os.path.dirname(__file__), '..', 'toolmenu', self.dbase.type.lower())
+                # print(path)
+                modules = glob.glob(path + "/*.py")
+                __all__ = [os.path.basename(f)[:-3] for f in modules if os.path.isfile(f)]
+
+                for x in __all__:
+                    if self.dbase.qgsiface is not None:
+                        #if not self.dbase.standalone:
+                        exec('import Lamia.toolmenu.' + self.dbase.type.lower())
+                        moduletemp = importlib.import_module('.' + str(x), 'Lamia.toolmenu.' + self.dbase.type.lower() )
+                    else:
+                        exec('import Lamia.Lamia.toolmenu.' + self.dbase.type.lower() )
+                        moduletemp = importlib.import_module('.' + str(x), 'Lamia.Lamia.toolmenu.' + self.dbase.type.lower())
+                    for name, obj in inspect.getmembers(moduletemp, inspect.isclass):
+                        # print( moduletemp.__name__, obj.__module__)
+                        if moduletemp.__name__ == obj.__module__:
+                            # print('ok')
+                            # self.menutools.append(obj(dbase=self.dbase, windowdialog=self))
+                            self.menuclasses.append(obj)
+
             self.loadUiField()
-
-
-
-        if debugtime: logger.debug('applyVisualMode %.3f', time.clock() - timestart)
-
-
-        # ************************** LOAD tools ********************************************
-        # print('******* LOAD tools ')
-        if True:
-            path = os.path.join(os.path.dirname(__file__), '..', 'toolmenu', self.dbase.type.lower())
-            # print(path)
-            modules = glob.glob(path + "/*.py")
-            __all__ = [os.path.basename(f)[:-3] for f in modules if os.path.isfile(f)]
-
-            for x in __all__:
-                if self.dbase.qgsiface is not None:
-                    #if not self.dbase.standalone:
-                    exec('import Lamia.toolmenu.' + self.dbase.type.lower())
-                    moduletemp = importlib.import_module('.' + str(x), 'Lamia.toolmenu.' + self.dbase.type.lower() )
-                else:
-                    exec('import Lamia.Lamia.toolmenu.' + self.dbase.type.lower() )
-                    moduletemp = importlib.import_module('.' + str(x), 'Lamia.Lamia.toolmenu.' + self.dbase.type.lower())
-                for name, obj in inspect.getmembers(moduletemp, inspect.isclass):
-                    # print( moduletemp.__name__, obj.__module__)
-                    if moduletemp.__name__ == obj.__module__:
-                        # print('ok')
-                        self.menutools.append(obj(dbase=self.dbase, windowdialog=self))
-
 
 
 
@@ -842,11 +889,12 @@ class InspectiondigueWindowWidget(QMainWindow):
         # print([x[0] for x in os.walk(stylepath)])
         #print([x[1] for x in os.walk(stylepath) if len(x[1])>0])
 
-        styledirs = [x[1] for x in os.walk(stylepath) if len(x[1])>0][0]
-
-        self.comboBox_style.addItems(styledirs)
-        self.comboBox_style.currentIndexChanged.connect(self.comboStyleChanged)
-        self.comboBox_style.currentIndexChanged.emit(0)
+        styledirs = [x[1] for x in os.walk(stylepath) if len(x[1])>0]
+        if len(styledirs)>0:
+            styledirs = styledirs[0]
+            self.comboBox_style.addItems(styledirs)
+            self.comboBox_style.currentIndexChanged.connect(self.comboStyleChanged)
+            self.comboBox_style.currentIndexChanged.emit(0)
 
 
     def comboStyleChanged(self,comboindex):
@@ -994,46 +1042,18 @@ class InspectiondigueWindowWidget(QMainWindow):
                 self.dbase.qgsiface.messageBar().pushWidget(progressMessageBar, qgis.core.Qgis.Info)
             lenuifields = len(self.uidesktop)
             lenuipostpro = len(self.uipostpro)
-            progress.setMaximum(lenuifields + lenuipostpro)
+            lenmenutool = len(self.menuclasses)
+            progress.setMaximum(lenuifields + lenuipostpro + lenmenutool)
         else:
             progress = None
 
 
         i = 0
-        for uidesktop in self.uidesktop:
-            try:
-                dbasename = uidesktop.dbasetablename
-                if False:
-                    self.dbase.dbasetables[dbasename]['widget'] = uidesktop(dbase = self.dbase,
-                                                                             dialog = self,
-                                                                             linkedtreewidget = self.ElemtreeWidget,
-                                                                             gpsutil = self.gpsutil)
-                else:
 
-                    self.dbase.dbasetables[dbasename]['widget'].append(uidesktop(dbase = self.dbase,
-                                                                             dialog = self,
-                                                                             linkedtreewidget = self.ElemtreeWidget,
-                                                                             gpsutil = self.gpsutil))
-                # self.dbase.dbasetables[dbasename]['widget'].initWidgets()
-                i += 1
-                self.setLoadingProgressBar(progress, i)
-
-            except AttributeError:
-                pass
-
-
-
-
-        if False:
-            for dbasename in self.dbase.dbasetables.keys():
-                if 'widget' in self.dbase.dbasetables[dbasename].keys():
-                    print('iniwdg', dbasename)
-                    if isinstance(self.dbase.dbasetables[dbasename]['widget'], list):
-                        for wdg in self.dbase.dbasetables[dbasename]['widget']:
-                            wdg.initWidgets()
-                    else:
-                        self.dbase.dbasetables[dbasename]['widget'].initWidgets()
-
+        for menuclasse in self.menuclasses:
+            self.menutools.append(menuclasse(dbase=self.dbase, windowdialog=self))
+            i += 1
+            self.setLoadingProgressBar(progress, i)
 
         for uidpostpr in self.uipostpro:
             # print('uidpostpr', uidpostpr)
@@ -1056,6 +1076,27 @@ class InspectiondigueWindowWidget(QMainWindow):
             i += 1
             self.setLoadingProgressBar(progress, i)
 
+
+        for uidesktop in self.uidesktop:
+            try:
+                dbasename = uidesktop.dbasetablename
+                if False:
+                    self.dbase.dbasetables[dbasename]['widget'] = uidesktop(dbase = self.dbase,
+                                                                             dialog = self,
+                                                                             linkedtreewidget = self.ElemtreeWidget,
+                                                                             gpsutil = self.gpsutil)
+                else:
+
+                    self.dbase.dbasetables[dbasename]['widget'].append(uidesktop(dbase = self.dbase,
+                                                                             dialog = self,
+                                                                             linkedtreewidget = self.ElemtreeWidget,
+                                                                             gpsutil = self.gpsutil))
+                # self.dbase.dbasetables[dbasename]['widget'].initWidgets()
+                i += 1
+                self.setLoadingProgressBar(progress, i)
+
+            except AttributeError:
+                pass
 
         if progress is not None: self.dbase.qgsiface.messageBar().clearWidgets()
         self.desktopuiloaded = True
@@ -1195,8 +1236,11 @@ class InspectiondigueWindowWidget(QMainWindow):
 
 
     def exportBase(self):
-        exportfile, extension = self.qfiledlg.getOpenFileNameAndFilter(None, 'Export vers', '',
-                                                                       'Spatialite (*.sqlite)', '')
+
+        #exportfile, extension = self.qfiledlg.getOpenFileNameAndFilter(None, 'Export vers', '','Spatialite (*.sqlite)', '')
+
+        exportfile = self.qfiledlg.getSaveFileName(self, 'Lamia exporter vers', '', '*.sqlite')
+
         if exportfile:
             self.exportdbase = DBaseParser()
             self.exportdbase.loadQgisVectorLayers(exportfile)
@@ -1234,6 +1278,8 @@ class InspectiondigueWindowWidget(QMainWindow):
         else:
             print('ErrorMessage', text)
 
+        QApplication.processEvents()
+
     def warningMessage(self, text):
         if self.dbase.qgsiface is not None:
             # if not self.dbase.standalone:
@@ -1257,6 +1303,8 @@ class InspectiondigueWindowWidget(QMainWindow):
 
         else:
             print('normalMessage', text)
+
+        QApplication.processEvents()
 
     """
     def printRapport(self, reporttype=None, pdffile=None):
@@ -1947,6 +1995,87 @@ class InspectiondigueWindowWidget(QMainWindow):
 
             return
 
+    def importDBase(self, slfile=None, crs=None, typemetier=None, dbasetype='spatialite',
+                    dbname=None, schema=None, user=None, host='localhost', port=None, password=None,    # postgis
+                    dbaseressourcesdirectory=None, typeimport='nouvelle'):
+
+        if self.sender() is not None:
+            actionname = self.sender().objectName()
+            print(actionname,slfile )
+
+            if actionname == 'actionImporter_et_ajouter_la_base':
+                typeimport = "nouvelle"
+            elif actionname == 'actionImporter_et_mettre_jour_la_base':
+                typeimport = "import_terrain"
+
+        if (slfile is not None and not isinstance(slfile, bool)) or dbname is not None:
+            pass
+        else:
+
+            self.newDBDialog.comboBox_type.setEnabled(False)
+            self.newDBDialog.exec_()
+            dbasetype, type = self.newDBDialog.dialogIsFinished()
+            self.newDBDialog.comboBox_type.setEnabled(True)
+            if dbasetype is None and type is None:
+                return
+
+            if dbasetype == 'postgis':
+                resdir = self.qfiledlg.getExistingDirectory(self, "Selectionner le reperoire des ressources")
+                if resdir:
+                    dbaseressourcesdirectory = str(resdir)
+                else:
+                    return
+            else:
+                resdir = None
+
+            # create database
+            if dbasetype == 'spatialite':
+                spatialitefile, extension = self.qfiledlg.getOpenFileNameAndFilter(None, 'Export vers', '',
+                                                                               'Spatialite (*.sqlite)', '')
+
+                if spatialitefile:
+                    slfile = spatialitefile
+
+
+            elif dbasetype == 'postgis':
+                self.connDialog.exec_()
+                adresse, port, nom, schema, user, password = self.connDialog.dialogIsFinished()
+                if adresse is not None and port is not None and nom is not None and user is not None and password is not None:
+                    databaseexists, schemaexists = self.dbase.checkIfPGShcemaExists(host=adresse, dbname=nom, schema=schema,
+                                                                                    user=user, password=password)
+                    if False:
+                        if  schemaexists :
+                            print('schema existe deja - choisir un autre schema')
+                        else:
+                            self.normalMessage('Creation de la base de donnees...')
+                            QApplication.processEvents()
+
+                            self.dbase.createDbase(crs=crsnumber, type=type, dbasetype='postgis', dbname=nom, schema=schema,
+                                                   user=user, host=adresse, password=password, dbaseressourcesdirectory=resdir,
+                                                   port=port)
+
+        self.importexportdbase = DBaseParser(self.canvas)
+        self.importexportdbase.loadQgisVectorLayers(file=slfile, dbasetype=dbasetype, host=host, port=None, dbname=None, schema=None, user=None, password=None)
+
+        self.dbase.importDbase(self.importexportdbase,typeimport )
+
+
+
+
+    def exportDBase(self):
+        if self.sender() is not None:
+            actionname = self.sender().objectName()
+            # print(actionname )
+
+        spatialitefile = self.qfiledlg.getSaveFileName(self, 'InspectionDigue nouveau', '', '*.sqlite')
+
+        if spatialitefile:
+            slfile = spatialitefile
+
+            self.dbase.exportDbase(slfile)
+
+
+
 
 
     def setLoadingProgressBar(self, progressbar, val):
@@ -1956,6 +2085,37 @@ class InspectiondigueWindowWidget(QMainWindow):
             logger.info('Chargement %d', val )
         QApplication.processEvents()
 
+
+
+    def reinitDBase(self):
+        #clean eventualy previous dbase
+        self.MaintreeWidget.clear()
+        self.ElemtreeWidget.clear()
+        self.menuOutils.clear()
+
+        self.dbase.reInitDBase()
+
+        self.setVisualMode(reset=True)
+        self.desktopuiloaded = False
+
+        if True:
+            self.uifields = []
+            self.uidesktop = []
+            self.uipostpro = []
+            self.menuclasses = []
+
+            self.tools = []
+            self.menutools = []
+
+
+
+        if False:
+            if self.dbase is not None:
+                self.dbase.reInitDBase()
+            self.MaintreeWidget.clear()
+            self.ElemtreeWidget.clear()
+            # self.dbase = DBaseParser(self.canvas)
+            self.__init__(self.canvas)
 
 
 class LoadUiField(QtCore.QObject):

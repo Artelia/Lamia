@@ -1,0 +1,24 @@
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###id;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###password ;                VARCHAR(128);            TEXT
+###username ;                VARCHAR(150);            TEXT
+###first_name ;                VARCHAR(30);            TEXT
+###last_name ;                VARCHAR(30);            TEXT
+###email ;                VARCHAR(254);            TEXT
+###last_login ;                TIMESTAMP WITH TIME ZONE;            DATE
+###date_joined ;                TIMESTAMP WITH TIME ZONE;            DATE
+###is_staff ;                BOOLEAN;            INTEGER
+/;
+True;1
+False;0
+/;
+###is_active ;                BOOLEAN;            INTEGER
+/;
+True;1
+False;0
+/;
+###is_superuser ;                BOOLEAN;            INTEGER
+/;
+True;1
+False;0
+/;

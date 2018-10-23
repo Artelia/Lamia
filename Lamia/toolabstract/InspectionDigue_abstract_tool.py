@@ -29,7 +29,7 @@ import time
 import logging
 
 
-
+debugconnector = False
 
 
 class AbstractInspectionDigueTool(QWidget):
@@ -339,6 +339,14 @@ class AbstractInspectionDigueTool(QWidget):
         for childwdg in self.dbasechildwdg:
             self.currentFeatureChanged.connect(childwdg.loadChildFeatureinWidget)
 
+            if debugconnector:
+                tempparentwdg = self
+                tempresult = str(childwdg.dbasetablename) + ',' + str(childwdg.NAME)
+                while tempparentwdg is not None:
+                    tempresult += ' - ' + str(tempparentwdg.dbasetablename) + ',' + str(tempparentwdg.NAME)
+                    tempparentwdg = tempparentwdg.parentWidget
+                logging.getLogger('Lamia').debug('currentFeatureChanged connection : %s', tempresult)
+
         if debug:
             QApplication.processEvents()
             logging.getLogger('Lamia').debug('befor  changePropertiesWidget %s %.3f',self.dbasetablename,  time.clock() - timestart)
@@ -383,8 +391,10 @@ class AbstractInspectionDigueTool(QWidget):
             if self.qtreewidgetitem is None:
                 self.qtreewidgetitem = QTreeWidgetItem()
                 self.qtreewidgetitem.setText(0, arb[-1])
-                self.qtreewidgetitem.setFlags(self.qtreewidgetitem.flags() | QtCore.Qt.ItemIsUserCheckable)
-                self.qtreewidgetitem.setCheckState(0, QtCore.Qt.Unchecked)
+                if False:
+                    self.qtreewidgetitem.setFlags(self.qtreewidgetitem.flags() | QtCore.Qt.ItemIsUserCheckable)
+                    self.qtreewidgetitem.setCheckState(0, QtCore.Qt.Unchecked)
+                self.qtreewidgetitem.setFlags(self.qtreewidgetitem.flags())
                 if self.iconpath is not None:
                     self.qtreewidgetitem.setIcon(0, QtGui.QIcon(self.iconpath))
             wdgitem = None
@@ -1056,7 +1066,7 @@ class AbstractInspectionDigueTool(QWidget):
 
         self.disconnectIdsGui()
 
-        if debug: logging.getLogger("Lamia").debug('Start %s %s', self.dbasetablename,self.parentWidget)
+        if debug: logging.getLogger("Lamia").debug('Start %s %s %s', self.dbasetablename, self.NAME, self.parentWidget)
 
         # clear treewidget
         self._clearLinkedTreeWidget()
@@ -1156,8 +1166,11 @@ class AbstractInspectionDigueTool(QWidget):
             else:
                 print('connect', self.dbasetablename)
 
+        #print('connectIdsGui', self.NAME)
+
         if self.linkedtreewidget is not None and isinstance(self.linkedtreewidget, QTreeWidget):
             self.linkedtreewidget.currentItemChanged.connect(self.featureSelected)
+
         self.comboBox_featurelist.currentIndexChanged.connect(self.featureSelected)
 
 
@@ -1198,23 +1211,28 @@ class AbstractInspectionDigueTool(QWidget):
             if len(self.qtreewidgetfields)>0 :
                 sql += "," + ','.join(self.qtreewidgetfields)
             sql += " FROM " + self.dbasetablename + '_qgis'
-            sql += ' WHERE datecreation <= ' + "'" + self.dbase.workingdate + "'"
-            if self.dbase.dbasetype == 'postgis':
-                sql += ' AND CASE WHEN datedestruction IS NOT NULL  '
-                sql += 'THEN DateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE TRUE END'
-                if self.dbase.revisionwork:
-                    sql += " AND revisionbegin <= " + str(self.dbase.currentrevision)
-                    sql += " AND CASE WHEN revisionend IS NOT NULL THEN "
-                    sql += " revisionend > " + str(self.dbase.currentrevision)
-                    sql += " ELSE TRUE END "
-            elif self.dbase.dbasetype == 'spatialite':
-                sql += ' AND CASE WHEN datedestruction IS NOT NULL  '
-                sql += 'THEN DateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE 1 END'
-                if self.dbase.revisionwork:
-                    sql += " AND revisionbegin <= " + str(self.dbase.currentrevision)
-                    sql += " AND CASE WHEN revisionend IS NOT NULL THEN "
-                    sql += " revisionend > " + str(self.dbase.currentrevision)
-                    sql += " ELSE 1 END "
+
+            sql += ' WHERE '
+            sql += self.dbase.dateVersionConstraintSQL()
+
+            if False:
+                sql += ' WHERE datecreation <= ' + "'" + self.dbase.workingdate + "'"
+                if self.dbase.dbasetype == 'postgis':
+                    sql += ' AND CASE WHEN datedestruction IS NOT NULL  '
+                    sql += 'THEN DateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE TRUE END'
+                    if self.dbase.revisionwork:
+                        sql += " AND revisionbegin <= " + str(self.dbase.currentrevision)
+                        sql += " AND CASE WHEN revisionend IS NOT NULL THEN "
+                        sql += " revisionend > " + str(self.dbase.currentrevision)
+                        sql += " ELSE TRUE END "
+                elif self.dbase.dbasetype == 'spatialite':
+                    sql += ' AND CASE WHEN datedestruction IS NOT NULL  '
+                    sql += 'THEN DateDestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE 1 END'
+                    if self.dbase.revisionwork:
+                        sql += " AND revisionbegin <= " + str(self.dbase.currentrevision)
+                        sql += " AND CASE WHEN revisionend IS NOT NULL THEN "
+                        sql += " revisionend > " + str(self.dbase.currentrevision)
+                        sql += " ELSE 1 END "
 
             # if self.parentWidget is not None and self.linkagespec is not None and self.parentWidget.dbasetablename in sum([self.linkagespec[key]['desttable'] for key in self.linkagespec.keys()],[]):
             if (self.parentWidget is not None and self.linkagespec is not None
@@ -1350,7 +1368,12 @@ class AbstractInspectionDigueTool(QWidget):
         self.disconnectIdsGui()
         self.beforesavingFeature = None
         # reinit current feature
-        self.currentFeature = None
+
+        if False:
+            savedcurrentFeature = None
+            if self.currentFeature is not None:
+                savedcurrentFeature = qgis.core.QgsFeature(self.currentFeature)
+            self.currentFeature = None
         # remove new entry if exists
         res = self.comboBox_featurelist.findText(self.newentrytext)
         if res >= 0:
@@ -1363,11 +1386,15 @@ class AbstractInspectionDigueTool(QWidget):
         if isinstance(item, QTreeWidgetItem) and item.parent() is not None:
             # print('featsel',item.parent().text(0),self.dbasetablename)
             if item.parent().text(0) == self.dbasetablename:    # treewdgitem has no parent
+                if debug: logging.getLogger("Lamia").debug('item with parent as current widget')
+                self.currentFeature = None
                 id = int(item.text(0))
                 if self.windowdialog is not None:
                     self.windowdialog.MaintabWidget.setCurrentIndex(0)
                 self.comboBox_featurelist.setCurrentIndex(self.comboBox_featurelist.findText(str(id)))
             elif item.parent().text(0) in [wdg.dbasetablename for wdg in self.dbasechildwdg]:   # treewdgitem has parent : child item
+                if debug: logging.getLogger("Lamia").debug('item with parent as child widget')
+                # self.currentFeature = savedcurrentFeature
                 childindex = [wdg.dbasetablename for wdg in self.dbasechildwdg].index(item.parent().text(0))
                 if self.windowdialog is not None:
                     self.windowdialog.MaintabWidget.setCurrentIndex(1)
@@ -1378,6 +1405,8 @@ class AbstractInspectionDigueTool(QWidget):
                 self.connectIdsGui()
                 return
             elif item.text(0) in [wdg.dbasetablename for wdg in self.dbasechildwdg]:
+                if debug: logging.getLogger("Lamia").debug('generic child widget selected')
+                # self.currentFeature = savedcurrentFeature
                 childindex = [wdg.dbasetablename for wdg in self.dbasechildwdg].index(item.text(0))
                 if self.windowdialog is not None:
                     self.windowdialog.MaintabWidget.setCurrentIndex(1)
@@ -1385,17 +1414,20 @@ class AbstractInspectionDigueTool(QWidget):
                 self.connectIdsGui()
                 return
             elif self.dbasetable is None:
+                if debug: logging.getLogger("Lamia").debug('no self.dbasetable')
                 id = int(item.text(0))
             else:
                 self.connectIdsGui()
                 return
         elif isinstance(item, QTreeWidgetItem) and item.parent() is None:
+            if debug: logging.getLogger("Lamia").debug('no item.parent()')
             try:
                 id = int(item.text(0))
             except ValueError:      # item text is not an id
                 self.connectIdsGui()
                 return
         elif isinstance(item, int) and not itemisid:        #feature selected with combobox
+            if debug: logging.getLogger("Lamia").debug('come from combobox')
             # print('item', item)
             id = int(self.comboBox_featurelist.itemText(item))
             if self.linkedtreewidget is not None and isinstance(self.linkedtreewidget, QTreeWidget):
@@ -1408,7 +1440,8 @@ class AbstractInspectionDigueTool(QWidget):
         elif isinstance(itemisid, QTreeWidgetItem):
             self.connectIdsGui()
             return
-        else:
+        else:   #new feature
+            self.currentFeature = None
             id = None
 
 
@@ -1589,7 +1622,7 @@ class AbstractInspectionDigueTool(QWidget):
                     wdg.setValue(-1)
             except Exception as e:
                 if self.dbase.qgsiface is None:
-                    logging.getLogger("Lamia").debug('error %s', e)
+                    logging.getLogger("Lamia").debug('error %s %s %s %s', table,field , str(valuetoset), e)
         elif isinstance(wdg, QComboBox):
             # if valuetoset is not None and valuetoset is not None and not isinstance(valuetoset, QtCore.QPyNullVariant):
             try:
@@ -1920,61 +1953,139 @@ class AbstractInspectionDigueTool(QWidget):
 
 
         if self.dbase.revisionwork:
-            newfeature = None
-            if (feat.id() > 0 and feat['id_revisionbegin'] != self.dbase.getLatestVersion()):
-                print('newfeature')
-                # print('diff',table, feat.id(),  feat['id_revisionbegin'] != self.dbase.getLatestVersion())
-                newfeature = qgis.core.QgsFeature(feat)
-                newfeature['pk_' + table.lower()] = None
+            if self.dbase.version == '':        # version avant sept.2018
+                newfeature = None
+                if (feat.id() > 0 and feat['id_revisionbegin'] != self.dbase.getLatestVersion()):
+                    print('newfeature')
+                    # print('diff',table, feat.id(),  feat['id_revisionbegin'] != self.dbase.getLatestVersion())
+                    newfeature = qgis.core.QgsFeature(feat)
+                    newfeature['pk_' + table.lower()] = None
 
-                newfeature['id_revisionbegin'] = int(self.dbase.getLatestVersion())
-                #newfeature['id_revisionend'] = None
+                    newfeature['id_revisionbegin'] = int(self.dbase.getLatestVersion())
+                    #newfeature['id_revisionend'] = None
 
-                feat = self.dbase.getLayerFeatureByPk(table, feat.id())
-                feat['id_revisionend'] = int(self.dbase.getLatestVersion())
+                    feat = self.dbase.getLayerFeatureByPk(table, feat.id())
+                    feat['id_revisionend'] = int(self.dbase.getLatestVersion())
 
-                # print('save',table,  feat.attributes(), newfeature.attributes())
-            if feat.id() == 0:
-                feat['id_revisionbegin'] = self.dbase.maxrevision
-
-
-            if debug: logging.getLogger("Lamia").debug('newfeature : %s', str(newfeature))
-            if debug: logging.getLogger("Lamia").debug('featid : %s - attrsd : %s', str(feat.id()), str(feat.attributes()))
+                    # print('save',table,  feat.attributes(), newfeature.attributes())
+                if feat.id() == 0:
+                    if self.dbase.version =='':
+                        feat['id_revisionbegin'] = self.dbase.maxrevision
 
 
 
-            dbasetablelayer.startEditing()
-
-            if feat.id() == 0:  # new feature
-                # self.addedFeatureid = None
-                success = dbasetablelayer.addFeature(feat)
-            else:
-                success = dbasetablelayer.updateFeature(feat)
-
-            if newfeature:
-                success = dbasetablelayer.addFeature(newfeature)
-                success = dbasetablelayer.updateFeature(newfeature)
-                # success = dbasetablelayer.updateFeature(feat)
+                if debug: logging.getLogger("Lamia").debug('newfeature : %s', str(newfeature))
+                if debug: logging.getLogger("Lamia").debug('featid : %s - attrsd : %s', str(feat.id()), str(feat.attributes()))
 
 
-            self.addedFeatureid = None
-            dbasetablelayer.raiseError.connect(self.windowdialog.errorMessage)
-            dbasetablelayer.featureAdded.connect(self.getFeatureAddedId)
-            dbasetablelayer.commitChanges()
-            dbasetablelayer.rollBack()
-            dbasetablelayer.raiseError.disconnect(self.windowdialog.errorMessage)
-            dbasetablelayer.featureAdded.disconnect(self.getFeatureAddedId)
 
-            if debug: logging.getLogger("Lamia").debug('table, feat.id addedfeatureid : %s %s %s', table, str(feat.id()), str(self.addedFeatureid))
+                dbasetablelayer.startEditing()
 
-            if self.addedFeatureid is not None:
-                # return dbasetablelayer.getFeatures(qgis.core.QgsFeatureRequest(self.addedFeatureid)).next()
-                return self.dbase.getLayerFeatureByPk(table, self.addedFeatureid)
-            else:
-                # return dbasetablelayer.getFeatures(qgis.core.QgsFeatureRequest(feat.id())).next()
-                return self.dbase.getLayerFeatureByPk(table, feat.id())
+                if feat.id() == 0:  # new feature
+                    # self.addedFeatureid = None
+                    success = dbasetablelayer.addFeature(feat)
+                else:
+                    success = dbasetablelayer.updateFeature(feat)
+
+                if newfeature:
+                    success = dbasetablelayer.addFeature(newfeature)
+                    success = dbasetablelayer.updateFeature(newfeature)
+                    # success = dbasetablelayer.updateFeature(feat)
 
 
+                self.addedFeatureid = None
+                dbasetablelayer.raiseError.connect(self.windowdialog.errorMessage)
+                dbasetablelayer.featureAdded.connect(self.getFeatureAddedId)
+                dbasetablelayer.commitChanges()
+                dbasetablelayer.rollBack()
+                dbasetablelayer.raiseError.disconnect(self.windowdialog.errorMessage)
+                dbasetablelayer.featureAdded.disconnect(self.getFeatureAddedId)
+
+                if debug: logging.getLogger("Lamia").debug('table, feat.id addedfeatureid : %s %s %s', table, str(feat.id()), str(self.addedFeatureid))
+
+                if self.addedFeatureid is not None:
+                    # return dbasetablelayer.getFeatures(qgis.core.QgsFeatureRequest(self.addedFeatureid)).next()
+                    return self.dbase.getLayerFeatureByPk(table, self.addedFeatureid)
+                else:
+                    # return dbasetablelayer.getFeatures(qgis.core.QgsFeatureRequest(feat.id())).next()
+                    return self.dbase.getLayerFeatureByPk(table, feat.id())
+
+            else:                                   # version apres sept.2018
+                newversionfeature = None
+                oldversionfeat = None
+                if feat.id() > 0:
+                    sql = "SELECT lpk_revision_begin FROM " + self.dbasetablename + "_django"
+                    sql += " WHERE pk_" + self.dbasetablename.lower() + ' = ' + str(feat.id())
+                    featlastrevision = [row for row in self.dbase.query(sql)][0]
+                    #if (feat.id() > 0 and feat['id_revisionbegin'] != self.dbase.getLatestVersion()):
+                    if featlastrevision != self.dbase.getLatestVersion():
+                        print('newversionfeature')
+                        # print('diff',table, feat.id(),  feat['id_revisionbegin'] != self.dbase.getLatestVersion())
+                        newversionfeature = qgis.core.QgsFeature(feat)
+                        newversionfeature['pk_' + table.lower()] = None
+
+                        #newfeature['id_revisionbegin'] = int(self.dbase.getLatestVersion())
+                        #newfeature['id_revisionend'] = None
+
+                        # oldversionfeat = self.dbase.getLayerFeatureByPk(table, feat.id())
+                        #feat['id_revisionend'] = int(self.dbase.getLatestVersion())
+
+                        # print('save',table,  feat.attributes(), newfeature.attributes())
+                """
+                if feat.id() == 0:
+                    if self.dbase.version =='':
+                        feat['id_revisionbegin'] = self.dbase.maxrevision
+                """
+
+
+                if debug: logging.getLogger("Lamia").debug('newfeature : %s', str(newversionfeature))
+                if debug: logging.getLogger("Lamia").debug('featid : %s - attrsd : %s', str(feat.id()), str(feat.attributes()))
+
+
+
+                dbasetablelayer.startEditing()
+
+                """
+                if False:
+                    if feat.id() == 0:  # new feature
+                        # self.addedFeatureid = None
+                        success = dbasetablelayer.addFeature(feat)
+                    else:
+                        success = dbasetablelayer.updateFeature(feat)
+    
+                    if newfeature:
+                        success = dbasetablelayer.addFeature(newfeature)
+                        success = dbasetablelayer.updateFeature(newfeature)
+                        # success = dbasetablelayer.updateFeature(feat)
+                else:
+                """
+                if feat.id() == 0:  # new feature
+                    # self.addedFeatureid = None
+                    success = dbasetablelayer.addFeature(feat)
+                else:
+                    if newversionfeature:
+                        pass
+
+
+                    else:
+                        success = dbasetablelayer.updateFeature(feat)
+
+                self.addedFeatureid = None
+                dbasetablelayer.raiseError.connect(self.windowdialog.errorMessage)
+                dbasetablelayer.featureAdded.connect(self.getFeatureAddedId)
+                dbasetablelayer.commitChanges()
+                dbasetablelayer.rollBack()
+                dbasetablelayer.raiseError.disconnect(self.windowdialog.errorMessage)
+                dbasetablelayer.featureAdded.disconnect(self.getFeatureAddedId)
+
+                if debug: logging.getLogger("Lamia").debug('table, feat.id addedfeatureid : %s %s %s', table, str(feat.id()), str(self.addedFeatureid))
+
+                if self.addedFeatureid is not None:
+                    # return dbasetablelayer.getFeatures(qgis.core.QgsFeatureRequest(self.addedFeatureid)).next()
+                    return self.dbase.getLayerFeatureByPk(table, self.addedFeatureid)
+                else:
+                    # return dbasetablelayer.getFeatures(qgis.core.QgsFeatureRequest(feat.id())).next()
+                    return self.dbase.getLayerFeatureByPk(table, feat.id())
 
         else:
 

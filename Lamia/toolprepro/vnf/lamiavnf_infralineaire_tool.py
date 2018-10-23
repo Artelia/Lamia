@@ -103,14 +103,12 @@ class InfraLineaireTool(AbstractInspectionDigueTool):
             self.propertieswdgPHOTOGRAPHIE = PhotosTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
             self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
 
-            """
-                self.dbasechildwdgfield = []
-
-
-
-                self.propertieswdgCROQUIS = CroquisTool(dbase=self.dbase, parentwidget=self)
-                self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
-            """
+            self.userwdgfield.toolButton_numouvrage.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.spinBox_num_ouvrage))
+            self.userwdgfield.toolButton_pkdebut.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_pkdebut))
+            self.userwdgfield.toolButton_pkfin.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_pkfin))
 
 
     def postOnActivation(self):
@@ -122,9 +120,17 @@ class InfraLineaireTool(AbstractInspectionDigueTool):
     def postSaveFeature(self,newfeature):
         # print('postsaveinf')
 
+        itemintree =  self.linkedtreewidget.findItems(self.dbasetablename, QtCore.Qt.MatchExactly | QtCore.Qt.MatchRecursive, 0)[0]
+        itemtochange = None
+        for childitemindex in range(itemintree.childCount()):
+            if itemintree.child(childitemindex).text(0) == str(self.currentFeature['id_infralineaire']):
+                itemtochange = itemintree.child(childitemindex)
+
         for i, elem in enumerate(self.qtreewidgetfields):
-            if self.linkedtreewidget.currentItem() is not None:
-                self.linkedtreewidget.currentItem().setText(i+1, str(self.currentFeature[elem]))
+            if itemtochange is not None:
+                txttemp = self.dbase.getConstraintTextFromRawValue('Infralineaire', elem, self.currentFeature[elem])
+                itemtochange.setText(i+1, str(txttemp))
+
 
 
 

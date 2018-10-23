@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>348</width>
+    <width>586</width>
     <height>428</height>
    </rect>
   </property>
@@ -33,13 +33,6 @@
           <string>Principale</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout">
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_7">
-            <property name="text">
-             <string>PK début</string>
-            </property>
-           </widget>
-          </item>
           <item row="3" column="0">
            <widget class="QLabel" name="label_9">
             <property name="text">
@@ -47,33 +40,23 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="1">
-           <widget class="QTextBrowser" name="textBrowser_comm">
-            <property name="maximumSize">
+          <item row="4" column="1">
+           <spacer name="verticalSpacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
              <size>
-              <width>16777215</width>
+              <width>20</width>
               <height>40</height>
              </size>
             </property>
-            <property name="readOnly">
-             <bool>false</bool>
-            </property>
-           </widget>
+           </spacer>
           </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_6">
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_8">
             <property name="text">
-             <string>Num ouvrage</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QSpinBox" name="spinBox_num_ouvrage">
-            <property name="minimum">
-             <number>-1</number>
-            </property>
-            <property name="maximum">
-             <number>9999999</number>
+             <string>PK fin</string>
             </property>
            </widget>
           </item>
@@ -97,25 +80,63 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_8">
-            <property name="text">
-             <string>PK fin</string>
+          <item row="0" column="1">
+           <widget class="QSpinBox" name="spinBox_num_ouvrage">
+            <property name="minimum">
+             <number>-1</number>
+            </property>
+            <property name="maximum">
+             <number>9999999</number>
             </property>
            </widget>
           </item>
-          <item row="4" column="1">
-           <spacer name="verticalSpacer">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
+          <item row="3" column="1">
+           <widget class="QTextBrowser" name="textBrowser_comm">
+            <property name="maximumSize">
              <size>
-              <width>20</width>
+              <width>16777215</width>
               <height>40</height>
              </size>
             </property>
-           </spacer>
+            <property name="readOnly">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_6">
+            <property name="text">
+             <string>Num ouvrage</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_7">
+            <property name="text">
+             <string>PK début</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QToolButton" name="toolButton_numouvrage">
+            <property name="text">
+             <string>...</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QToolButton" name="toolButton_pkdebut">
+            <property name="text">
+             <string>...</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QToolButton" name="toolButton_pkfin">
+            <property name="text">
+             <string>...</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>

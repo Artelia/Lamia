@@ -1,0 +1,30 @@
+###atlaslayersql
+SELECT Desordre_qgis.* 
+FROM Desordre_qgis
+WHERE groupedesordre = 'INF'
+###atlaslayerid
+id_desordre
+###spatial
+True
+###ordering
+#type; constraint (qgis typo)
+autoalongpath;
+###atlaslayerstyle
+Desordres_atlas.qml
+###atlasdrivemap
+#itemname;   minscale;   typescale;      layers
+map1;       2500;       Predefined      ;['atlaslayer','Infralineaire', 'scan25']
+#map1;       2500;       Predefined      ;[]
+###generalmap
+#itemname;   minscale;   typescale; layers
+map0    ;           ;             ; ['Infralineaire','Equipement', 'ortho']
+#map0    ;           ;             ; []
+###images
+#itemname   ; type
+logo;logo
+###childprint
+#confname;                linkcolumn;             optionsql
+Desordres_observation;    Observation_qgis.lk_desordre ; ORDER BY Observation_qgis.dateobservation DESC
+
+
+

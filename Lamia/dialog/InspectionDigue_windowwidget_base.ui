@@ -474,19 +474,31 @@
      <addaction name="actionPostgis"/>
      <addaction name="actionSpatialite"/>
     </widget>
+    <widget class="QMenu" name="menuImport_export">
+     <property name="title">
+      <string>Import / export</string>
+     </property>
+     <addaction name="actionExporter_la_base"/>
+     <addaction name="actionImporter_et_mettre_jour_la_base"/>
+     <addaction name="separator"/>
+     <addaction name="actionImporter_et_ajouter_la_base"/>
+    </widget>
     <addaction name="actionNouvelle_base"/>
     <addaction name="menuCharger_base"/>
+    <addaction name="menuImport_export"/>
+    <addaction name="separator"/>
     <addaction name="menuBases_recentes"/>
-    <addaction name="actionExporter_base"/>
    </widget>
    <widget class="QMenu" name="menuPreferences">
     <property name="title">
      <string>Préférences</string>
     </property>
     <addaction name="action_Repertoire_photo"/>
-    <addaction name="actionReinitialier_prestation_courante"/>
+    <addaction name="separator"/>
     <addaction name="action_GPSConnection"/>
     <addaction name="actionHauteur_de_perche_GPS"/>
+    <addaction name="separator"/>
+    <addaction name="actionReinitialier_prestation_courante"/>
     <addaction name="action_taille_icone"/>
     <addaction name="actionVersion"/>
    </widget>
@@ -510,7 +522,6 @@
     <property name="title">
      <string>Outils</string>
     </property>
-    <addaction name="actionMode_hors_ligne_Reconnexion"/>
    </widget>
    <addaction name="menuFichiers"/>
    <addaction name="menuMode"/>
@@ -532,14 +543,6 @@
   <action name="actionRepertoire_photo">
    <property name="text">
     <string>Répertoire photo</string>
-   </property>
-  </action>
-  <action name="actionExporter_base">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Exporter base</string>
    </property>
   </action>
   <action name="action_Nouvelle_base_Digue">
@@ -691,6 +694,21 @@
   <action name="actionExporter_vers_SIRS_Digues">
    <property name="text">
     <string>Exporter vers SIRS Digues</string>
+   </property>
+  </action>
+  <action name="actionExporter_la_base">
+   <property name="text">
+    <string>Exporter pour l'inspection terrain</string>
+   </property>
+  </action>
+  <action name="actionImporter_et_ajouter_la_base">
+   <property name="text">
+    <string>Importer et ajouter une base de données</string>
+   </property>
+  </action>
+  <action name="actionImporter_et_mettre_jour_la_base">
+   <property name="text">
+    <string>Importer l'inspection terrain</string>
    </property>
   </action>
  </widget>

@@ -110,6 +110,13 @@ class DesordreTool(AbstractDesordreTool):
                 for childwdg in self.propertieswdgOBSERVATION2.dbasechildwdgfield:
                     self.propertieswdgOBSERVATION2.currentFeatureChanged.connect(childwdg.loadChildFeatureinWidget)
 
+
+            self.userwdgfield.toolButton_pkdebut.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_pkdebut))
+            self.userwdgfield.toolButton_pkfin.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_pkfin))
+
+
             if self.parentWidget is not None and self.parentWidget.dbasetablename == 'Equipement':
                 self.pushButton_addFeature.setEnabled(True)
             else:
@@ -117,6 +124,11 @@ class DesordreTool(AbstractDesordreTool):
 
 
                 #self.dbasechildwdg = [self.propertieswdgOBSERVATION, self.propertieswdgOBSERVATION2]
+
+
+
+
+
 
 
     """
