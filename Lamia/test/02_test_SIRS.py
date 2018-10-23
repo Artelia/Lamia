@@ -20,7 +20,22 @@ class TestMain(Test):
     def testMethod(self):
         self.createWin()
 
-        self.dbase.createDbase(slfile=spatialitefile, crs=2154, worktype='Base2_digue')
+        user = "geouser"
+        pwd = "geopw"
+        ip = "127.0.0.1"
+        port = 5984
+        nom_sirs = "base_test3"
+        path_LAMIA = "C://Users//valentin.anjou//Desktop//test-sirs.sqlite"
+        user_LAMIA = ""
+        password_LAMIA = ""
+        adresse_LAMIA = ""
+        port_LAMIA = ""
+        nom_LAMIA = ""
+        srid = 2154
+        type_spatialite = True
+        type_postgis = False
+
+        self.dbase.createDbase(slfile=path_LAMIA, crs=2154, worktype='Base2_digue')
 
         FDtL = FranceDiguetoLamia(user, pwd, ip, port, nom_sirs, path_LAMIA, user_LAMIA, password_LAMIA, adresse_LAMIA,port_LAMIA, nom_LAMIA, srid, type_spatialite, type_postgis)
         FDtL.insertInLamia()
