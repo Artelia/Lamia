@@ -1,12 +1,13 @@
 ###Photo
-##FROM Photo AS Phototemp INNER JOIN Objet ON Objet.id_objet = Phototemp.id_objet AND Phototemp.pk_photo = Photo.pk_photo
+##FROM Photo AS Phototemp WHERE Phototemp.pk_photo = Photo_qgis.pk_photo
 #nom              type               cst               valeur                    
 id_photo;         Int;                  ;               id_photo
 
 
 
 ###Ressource
-## FROM Ressource INNER JOIN Objet ON Objet.id_objet = Ressource.id_objet WHERE  Ressource.id_ressource = Photo.id_ressource
+
+## FROM Ressource As Ressourcetemp WHERE  Ressourcetemp.pk_ressource = Photo_qgis.pk_ressource
 #nom              type               cst               valeur                    
 id_ressource;         Int;                  ;               id_ressource
 source;         String;                  ;               source
@@ -17,16 +18,21 @@ descriptio;         String;                  ;               description
 
 
 ###Tcobjetressource
-# FROM Tcobjetressource as Tcobjetressourcetemp WHERE Tcobjetressourcetemp.pk_tcobjetressource = Tcobjetressource.pk_tcobjetressource
-# FROM Tcobjetressource 
-lk_objet;         Int;                  ;               id_tcobjet
+## FROM Tcobjetressourcetemp WHERE Tcobjetressourcetemp.lid_ressource = Photo_qgis.id_ressource
+lk_objet;         Int;                  ;               lid_objet
 
-
+###Zonegeo
+## FROM Zonegeo_qgis WHERE ST_WITHIN(ST_MakeValid(Photo_qgis.geom),ST_MakeValid(Zonegeo_qgis.geom))
+pk_zonegeo;     Int;            ;        pk_zonegeo ;  pk_zonegeo
 
 
 ###geom
-##FROM Photo AS Phototemp INNER JOIN Objet ON Objet.id_objet = Phototemp.id_objet AND Phototemp.pk_photo = Photo.pk_photo
+##FROM Photo AS Phototemp WHERE Phototemp.pk_photo = Photo_qgis.pk_photo
 geom;         Int;               ;                  ST_AsText(geom)
 
+
 ###main
-FROM Photo LEFT JOIN Tcobjetressource ON Tcobjetressource.id_tcressource = Photo.id_ressource
+FROM Photo_qgis
+
+###with
+WITH Tcobjetressourcetemp AS ( SELECT lid_ressource, lid_objet FROM Tcobjetressource WHERE lpk_revision_end IS NULL)

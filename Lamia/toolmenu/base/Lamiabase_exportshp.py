@@ -67,7 +67,8 @@ class exportShapefileBaseWorker(object):
         self.createfilesdir = os.path.join(os.path.dirname(__file__), 'exporttools')
         for filename in glob.glob(os.path.join(self.createfilesdir, '*.txt')):
             basename = os.path.basename(filename).split('.')[0]
-            self.exportshapefiledialog.comboBox_type.addItems([basename])
+            if basename != 'README':
+                self.exportshapefiledialog.comboBox_type.addItems([basename])
 
 
     def launchDialog(self):
@@ -77,6 +78,7 @@ class exportShapefileBaseWorker(object):
             # print(reporttype, pdffile)
 
         if tabletype is not None and tabletype is not None and shpfile != '':
+            print('tabletype', tabletype, shpfile)
             if False:
                 self.worker = exportShapefileWorker(self.dbase, tabletype, pdffile)
                 self.thread = QtCore.QThread()
@@ -112,19 +114,18 @@ class exportShapefileBaseWorker(object):
 
 
     def prepareData(self,tabletype,  shpfile):
-
+        print('prepareData', tabletype, shpfile)
         debug = False
 
         self.champs = self.readChamp(tabletype)
-
+        print(self.champs )
         self.fieldsforshp = self.buildQgsFields(self.champs)
-
         sql = self.buildSql(self.champs)
-
+        print(sql)
         if debug: logging.getLogger('Lamia').debug('sql %s', sql)
-
         query = self.dbase.query(sql)
-        self.result = [row for row in query]
+
+        self.result = [list(row) for row in query]
 
         if debug: logging.getLogger('Lamia').debug('result %s', str(self.result))
 
@@ -219,10 +220,15 @@ class exportShapefileBaseWorker(object):
 
 
     def buildSql(self,champs):
-        sql = 'SELECT '
+        sql = ''
+
+        if 'with' in champs.keys():
+            sql += champs['with']
+
+        sql += ' SELECT '
 
         for table in champs.keys():
-            if table != 'main':
+            if table not in ['main','with']:
                 for i, name in enumerate(champs[table]['fields'].keys()):
                     attr = champs[table]['fields'][name]
                     if attr['value'] is None:
@@ -234,22 +240,57 @@ class exportShapefileBaseWorker(object):
                             sql += "( SELECT "
                             sql += attr['value'] + ' '
                             sql += champs[table]['sql'][0]
-
-                            sql += ' AND  Objet.datecreation <= ' + "'" + self.dbase.workingdate + "'"
-                            if self.dbase.dbasetype == 'postgis':
-                                sql += ' AND CASE WHEN Objet.datedestruction IS NOT NULL  '
-                                sql += 'THEN Objet.datedestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE TRUE END'
-                            elif self.dbase.dbasetype == 'spatialite':
-                                sql += ' AND CASE WHEN Objet.datedestruction IS NOT NULL  '
-                                sql += 'THEN Objet.datedestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE 1 END '
+                            sql += " AND "
+                            sql += self.dbase.dateVersionConstraintSQL()
+                            if False:
+                                sql += ' AND  Objet.datecreation <= ' + "'" + self.dbase.workingdate + "'"
+                                if self.dbase.dbasetype == 'postgis':
+                                    sql += ' AND CASE WHEN Objet.datedestruction IS NOT NULL  '
+                                    sql += 'THEN Objet.datedestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE TRUE END'
+                                elif self.dbase.dbasetype == 'spatialite':
+                                    sql += ' AND CASE WHEN Objet.datedestruction IS NOT NULL  '
+                                    sql += 'THEN Objet.datedestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE 1 END '
                             if len(champs[table]['sql'])>1:
-                                sql += champs[table]['sql'][1]
+                                sql += ' ' + champs[table]['sql'][1]
                             sql += '), '
+                    if champs[table]['fields'][name]['as'] is not None :
+                        sql = sql[:-2] + " AS " + champs[table]['fields'][name]['as'] + ", "
+
 
         sql = sql[:-2]
 
         #sql += ' FROM ' + champs.keys()[0]
         sql +=  ' ' + champs['main']
+
+
+        # export by zonegeo
+        boundinggeom = None
+        if len(self.dbase.dbasetables['Zonegeo']['layerqgis'].selectedFeatures()) >= 1:
+            fetids = []
+            currentfeats = self.dbase.dbasetables['Zonegeo']['layerqgis'].selectedFeatures()
+            for fet in currentfeats:
+                fetids.append(str(fet.id()))
+            #print(currentfeat['id_zonegeo'])
+            #fetid = currentfeat.id()
+            # fetid = 21
+            if False:
+                sqltemp = "SELECT ST_AsText(ST_MakeValid(Zonegeo.geom)) FROM Zonegeo WHERE pk_zonegeo = " + str(fetid)
+                query = self.dbase.query(sqltemp)
+                result = [row[0] for row in query][0]
+                boundinggeom = result
+
+            if 'WHERE' in champs['main']:
+                sql += " AND pk_zonegeo IN (" + ','.join(fetids) + ")"
+            else:
+                sql += " WHERE pk_zonegeo IN (" + ','.join(fetids) + ")"
+
+            if False:
+                if 'WHERE' in champs['main']:
+                    sql += " AND ST_WITHIN(ST_MakeValid(geom), ST_GeomFromText('" + boundinggeom + "',"+ str(self.dbase.crsnumber) + ")) "
+                else:
+                    sql += " WHERE ST_WITHIN(ST_MakeValid(geom), ST_GeomFromText('" + boundinggeom + "'," + str(self.dbase.crsnumber) + ")) "
+
+
 
         return sql
 
@@ -350,7 +391,7 @@ class exportShapefileBaseWorker(object):
                 continue
 
             else:                           # field constraint
-                if actualtable != 'main':
+                if actualtable not in ['main','with']:
                     linesplit = line.split(';')
                     champs[actualtable]['fields'][linesplit[0].strip()] = {}
 
@@ -366,6 +407,13 @@ class exportShapefileBaseWorker(object):
                         champs[actualtable]['fields'][linesplit[0].strip()]['value'] = linesplit[3].strip()
                     else:
                         champs[actualtable]['fields'][linesplit[0].strip()]['value'] = None
+
+                    if len(linesplit) == 5 and linesplit[4].strip() != '':
+                        champs[actualtable]['fields'][linesplit[0].strip()]['as'] = linesplit[4].strip()
+                    else:
+                        champs[actualtable]['fields'][linesplit[0].strip()]['as'] = None
+
+
                 else:
                     champs[actualtable] = line.strip()
 
@@ -384,7 +432,8 @@ class exportShapefileBaseWorker(object):
     def buildQgsFields(self, champs):
         fields = qgis.core.QgsFields()
         for table in champs.keys():
-            if table != 'geom' and table != 'main' :
+            #if table != 'geom' and table != 'main' :
+            if table not in ['geom', 'main', 'with']:
                 for i, name in enumerate(champs[table]['fields'].keys()):
                     typefield = eval('QtCore.QVariant.' + champs[table]['fields'][name]['type'])
                     fields.append(qgis.core.QgsField(name, typefield))
@@ -1494,8 +1543,8 @@ class exportShapefileBaseWorker(object):
             #feat.setAttributes(row)
             compteur = -1
             for table in champs.keys():
-
-                if table != 'geom' and table != 'main' and 'postpro' not in table :
+                #if table != 'geom' and table != 'main' and 'postpro' not in table :
+                if table not in['geom', 'main', 'with' ] and 'postpro' not in table:
                     for i, name in enumerate(champs[table]['fields'].keys()):
                         compteur += 1
                         #print(row)

@@ -20,6 +20,7 @@ import shutil
 import datetime
 import sys
 import logging
+
 logger = logging.getLogger("Lamia")
 logger.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s :: %(levelname)s :: %(module)s :: %(funcName)s :: %(message)s')
@@ -27,6 +28,7 @@ stream_handler = logging.StreamHandler(sys.stdout)
 stream_handler.setLevel(logging.DEBUG)
 stream_handler.setFormatter(formatter)
 logger.addHandler(stream_handler)
+
 debugtime = False
 
 

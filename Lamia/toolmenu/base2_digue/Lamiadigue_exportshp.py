@@ -29,17 +29,16 @@ class exportShapefileAssainissementWorker(exportShapefileBaseWorker):
         self.createfilesdir = os.path.join(os.path.dirname(__file__), 'exporttools')
         for filename in glob.glob(os.path.join(self.createfilesdir, '*.txt')):
             basename = os.path.basename(filename).split('.')[0]
-            self.exportshapefiledialog.comboBox_type.addItems([basename])
+            if basename != 'README':
+                self.exportshapefiledialog.comboBox_type.addItems([basename])
 
 
     def postprepareData(self,tabletype):
 
         if tabletype == 'Infralineaire_BM':
-            
-
+            tempfield = []
             #donnees profil
             if True:
-                tempfield = []
                 tempfield.append(qgis.core.QgsField('Hauteur', QtCore.QVariant.Double))          #0
                 tempfield.append(qgis.core.QgsField('Larcrete', QtCore.QVariant.Double))
                 # tempfield.append(qgis.core.QgsField('Larfranc', QtCore.QVariant.Double))
@@ -80,7 +79,7 @@ class exportShapefileAssainissementWorker(exportShapefileBaseWorker):
                     if False:
                         indexprofil = champs.index(['Infralineaire', 'lk_profil'])
                         lkprofil  = row[indexprofil]
-                    sql = 'SELECT lk_ressource4 FROM Infralineaire WHERE id_infralineaire = ' + str(row[0])
+                    sql = 'SELECT lid_ressource_4 FROM Infralineaire WHERE id_infralineaire = ' + str(row[0])
                     #print(sql)
                     query = self.dbase.query(sql)
                     #print('query',query)
@@ -88,18 +87,22 @@ class exportShapefileAssainissementWorker(exportShapefileBaseWorker):
 
                     if lkprofil is not None:
 
-                        sql = "SELECT id_graphique, typegraphique FROM Graphique  WHERE id_ressource = " + str(lkprofil)
+                        sql = "SELECT pk_graphique, typegraphique FROM Graphique_qgis  WHERE id_ressource = " + str(lkprofil)
                         query = self.dbase.query(sql)
                         resultrow = [row1 for row1 in query]
                         if len(resultrow)>0 and resultrow[0][1] == 'PTR':
-                            sql = "SELECT * FROM Graphiquedata WHERE id_graphique = " + str(resultrow[0][0])
+                            sql = "SELECT * FROM Graphiquedata WHERE lpk_graphique = " + str(resultrow[0][0])
                             sql += " ORDER BY id_graphiquedata"
                             query = self.dbase.query(sql)
-                            resultrow2 = [list(row2[4:]) for row2 in query]
+                            #resultrow2 = [list(row2[4:]) for row2 in query]
+                            resultrow2 = [list(row2[2:]) for row2 in query]
+
+
                             # row : [id, None, dx, dz, None, position, type1, type2, None, 1]
                             npresultrow = np.array(resultrow2)
                             #npresultrow = npresultrow[:,4:]
                             #print('npresultrow', npresultrow)
+
 
                             #largeur crete
                             index = np.where(npresultrow[:,5] == 'CRE')
@@ -293,6 +296,8 @@ class exportShapefileAssainissementWorker(exportShapefileBaseWorker):
                             niv_sur_av = round(datas[graphname]['y'][-1],2)
 
                     #result[i] = list(result[i])[:-1] + [niv_pro_am, niv_pro_av, niv_sur_am, niv_sur_av] + list(result[i])[-1:]
+                    # print([niv_pro_am, niv_pro_av, niv_sur_am, niv_sur_av])
+                    # print(self.result[i][-1:-1])
                     self.result[i][-1:-1] = [niv_pro_am, niv_pro_av, niv_sur_am, niv_sur_av]
 
                 profiletraverstool.rubberBand.reset(1)

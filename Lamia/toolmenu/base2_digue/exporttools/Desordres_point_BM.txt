@@ -1,6 +1,4 @@
 ###Desordre
-# FROM Desordre as desordretemp INNER JOIN Objet ON Objet.id_objet = desordretemp.id_objet AND desordretemp.id_desordre = Dernieresobservations_qgis.lk_desordre
-#FROM Equipement AS Equipementtemp INNER JOIN Objet ON Objet.id_objet = Equipementtemp.id_objet AND Equipementtemp.pk_equipement = Equipement.pk_equipement
 #nom              type               cst               valeur     
 id_desordre;         Int;                  ;     id_desordre        
 cote;      String;             cote  ;                  cote
@@ -11,16 +9,19 @@ typedes;      String;             typedes  ;                  typedes
 ###Observation
 #nom              type               cst               valeur    
 id_observation;         Int;                  ;     id_observation  
-dateobservation;      String;               ;                  dateobservation
+dateobservation;      String;               ;                  datetimeobservation
 source;      String;               ;                  source
 nombre;         Int;                  ;     nombre  
-gravite;      String;         gravite      ;                  Observation.gravite
+gravite;      String;         gravite      ;                  Observation_qgis.gravite
 evolution;      String;               ;                  evolution
 commentairesuite;      String;               ;                  commentairesuite
 
+###Zonegeo
+## FROM Zonegeo_qgis WHERE ST_WITHIN(ST_MakeValid(Desordre.geom),ST_MakeValid(Zonegeo_qgis.geom))
+pk_zonegeo;     Int;            ;        pk_zonegeo ;  pk_zonegeo
 
 ###Objet
-##FROM Objet WHERE  Objet.id_objet = Observation.id_objet
+##FROM Objet WHERE  Objet.pk_objet = Observation_qgis.pk_objet
 #nom              type               cst               valeur             
 id_objet;         Int;                  ;     id_objet         
 commentaire;      String;               ;                  commentaire
@@ -30,4 +31,4 @@ commentaire;      String;               ;                  commentaire
 geom;         Int;               ;                  ST_AsText(ST_MakeValid(geom))
 
 ###main
-FROM Observation INNER JOIN Desordre ON  Desordre.id_desordre = Observation.lk_desordre AND Observation.dateobservation = (SELECT dateobservation FROM Observation as Observationtemp WHERE Observationtemp.lk_desordre=Desordre.id_desordre ORDER BY dateobservation DESC LIMIT 1)   WHERE ST_GeometryType(ST_MakeValid(geom)) = 'POINT'
+FROM Observation_qgis INNER JOIN Desordre ON  Desordre.id_desordre = Observation_qgis.lid_desordre AND Observation_qgis.datetimeobservation = (SELECT datetimeobservation FROM Observation as Observationtemp WHERE Observationtemp.lid_desordre=Desordre.id_desordre ORDER BY datetimeobservation DESC LIMIT 1)   WHERE ST_GeometryType(ST_MakeValid(geom)) = 'POINT'

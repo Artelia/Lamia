@@ -28,7 +28,7 @@ import datetime
 import time
 import logging
 
-import PIL
+
 
 from collections import OrderedDict
 

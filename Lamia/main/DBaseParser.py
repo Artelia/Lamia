@@ -6,7 +6,8 @@ import os
 import sys
 import qgis
 import qgis.utils
-qgis.utils.uninstallErrorHook()     #for standart output
+if qgis.utils.iface is None:
+    qgis.utils.uninstallErrorHook()     #for standart output
 import math
 import shutil
 
@@ -1305,6 +1306,8 @@ class DBaseParser(QtCore.QObject):
         if int(str(self.qgisversion_int)[0:3]) < 220 and isinstance(attr, QtCore.QPyNullVariant):
             return True
         elif int(str(self.qgisversion_int)[0:3]) > 220 and isinstance(attr, QtCore.QVariant) and attr.isNull():
+            return True
+        elif (isinstance(attr,unicode) or isinstance(attr,str)) and (attr == 'NULL' or attr == '' or attr == 'None') :
             return True
         elif attr is None:
             return True

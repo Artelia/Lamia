@@ -1,29 +1,30 @@
 ###Infralineaire
-##FROM Infralineaire AS Infralineairetemp INNER JOIN Objet ON Objet.id_objet = Infralineairetemp.id_objet AND Infralineairetemp.pk_infralineaire = Infralineaire.pk_infralineaire
+##FROM Infralineaire_qgis AS Infralineairetemp WHERE  Infralineairetemp.pk_objet = Infralineaire_qgis.pk_objet
 #nom              type               cst               valeur                    
 id_infralineaire;         Int;                  ;     id_infralineaire
-lk_descriptionsystem1;    Int;                  ;     lk_descriptionsystem1
-lk_descriptionsystem2;    Int;                  ;     lk_descriptionsystem2
+id_dessys_1;    Int;                  ;     lid_descriptionsystem_1
+id_dessys_2;    Int;                  ;     lid_descriptionsystem_2
 test1;            Int;                  ;                
 test2;            Int;                  ;               CASE WHEN id_infralineaire IS NULL THEN 1 ELSE 0 END
 
 ###Descriptionsystem
-##FROM Descriptionsystem INNER JOIN Objet ON Objet.id_objet = Descriptionsystem.id_objet WHERE  Descriptionsystem.id_descriptionsystem = Infralineaire.id_infralineaire
+##FROM Descriptionsystem_qgis  WHERE  Descriptionsystem_qgis.pk_descriptionsystem = Infralineaire_qgis.lpk_descriptionsystem
 id_descriptionsystem;         Int;               ;                  id_descriptionsystem
 
 ###Objet
-##FROM Objet WHERE  Objet.id_objet = Infralineaire.id_objet
+##FROM Objet_qgis WHERE  Objet_qgis.pk_objet = Infralineaire_qgis.pk_objet
 #nom              type               cst               valeur                    
 id_objet;         Int;               ;                  id_objet
 commentaire;      String;               ;                  commentaire
 
-###Photo1
-##FROM Photo INNER JOIN Ressource ON Ressource.id_ressource = Photo.id_ressource  INNER JOIN Objet  ON Photo.id_objet = Objet.id_objet INNER JOIN Tcobjetressource ON Tcobjetressource.id_tcressource = Ressource.id_ressource WHERE Infralineaire.id_objet = Tcobjetressource.id_tcobjet; LIMIT 1 OFFSET 0
-fichier;         String;               ;                  numphoto
+#Photo crete
+#FROM Photo_qgis INNER JOIN Tcobjetressource ON Tcobjetressource.lid_ressource = Photo_qgis.id_ressource WHERE Infralineaire.id_objet = Tcobjetressource.lid_objet; LIMIT 1 OFFSET 0
+#FROM Photo_qgis  WHERE Infralineaire_qgis.lid_ressource_1 = Photo_qgis.id_ressource; LIMIT 1 OFFSET 0
+#fichier;         String;               ;                  file
 
 ###geom
-##FROM Infralineaire AS Infralineairetemp INNER JOIN Objet ON Objet.id_objet = Infralineairetemp.id_objet AND Infralineairetemp.pk_infralineaire = Infralineaire.pk_infralineaire
+##FROM Infralineaire_qgis AS Infralineairetemp WHERE Infralineairetemp.pk_objet = Infralineaire_qgis.pk_objet
 geom;         Int;               ;                  ST_AsText(geom)
 
 ###main
-FROM Infralineaire
+FROM Infralineaire_qgis
