@@ -25,11 +25,10 @@ elif sys.version_info.major == 3:
 
 def import_sirs():
     import_sirsDialog=ImportSirsDialog()
-    print('lancement de l import')
     import_sirsDialog.exec_()
     user, pwd, ip, port, nom_sirs, path_LAMIA, user_LAMIA, password_LAMIA, adresse_LAMIA, port_LAMIA, nom_LAMIA, srid, type_spatialite, type_postgis  = import_sirsDialog.dialogIsFinished()
 
-    print('parametres de l import :',user, pwd, ip, port, nom_sirs, path_LAMIA, user_LAMIA, password_LAMIA, adresse_LAMIA, port_LAMIA, nom_LAMIA, srid, type_spatialite, type_postgis)
+    print(user, pwd, ip, port, nom_sirs, path_LAMIA, user_LAMIA, password_LAMIA, adresse_LAMIA, port_LAMIA, nom_LAMIA, srid, type_spatialite, type_postgis)
 
     #user = "r.beckprotoy"
     #pwd = "CouchDb"
