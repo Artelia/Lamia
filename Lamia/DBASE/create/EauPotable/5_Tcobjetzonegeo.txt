@@ -1,4 +1,0 @@
-# Nom_champ             TypePostGis              TypeSpatialite                          Option
-###id_tcobjetzonegeo;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
-###id_tczonegeo;       INT;            INTEGER;                                              Zonegeo(id_zonegeo)
-###id_tcobjet;       INT;            INTEGER;                                              Objet(id_objet)

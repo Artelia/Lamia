@@ -1,4 +1,4 @@
-#DJAN  SELECT Rasters.*, Ressource.*, Objet.* FROM Rasters INNER JOIN Ressource ON Rasters.lpk_ressource = Ressource.pk_ressource INNER JOIN Objet ON Ressource.lpk_objet = Objet.pk_objet  WHERE Objet.lpk_revision_end IS NULL
+#DJAN  SELECT Rasters.*, Ressource.*, Objet.* FROM Rasters INNER JOIN Ressource ON Rasters.lpk_ressource = Ressource.pk_ressource INNER JOIN Objet ON Ressource.lpk_objet = Objet.pk_objet  WHERE Objet.lpk_revision_end IS NULL  AND Objet.datetimedestruction IS NULL
 #QGIS SELECT Rasters.*, Ressource.*, Objet.*FROM Rasters INNER JOIN Ressource ON Rasters.lpk_ressource = Ressource.pk_ressource INNER JOIN Objet ON Ressource.lpk_objet = Objet.pk_objet
 
 

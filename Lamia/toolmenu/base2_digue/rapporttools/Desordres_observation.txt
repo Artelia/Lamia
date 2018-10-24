@@ -1,8 +1,6 @@
 ###atlaslayersql
-WITH Objettemp AS (SELECT Objet.id_objet, Objet.commentaire FROM Objet )
-SELECT Observation_qgis.* ,Objettemp.commentaire 
+SELECT Observation_qgis.*  
 FROM Observation_qgis
-INNER JOIN Objettemp ON Observation_qgis.id_objet = Objettemp.id_objet
 WHERE Observation_qgis.id_observation = Observation_qgis.id_observation
 ###atlaslayerid
 id_observation

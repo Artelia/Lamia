@@ -1,0 +1,19 @@
+#DJAN SELECT Zonegeo.*, Objet.datecreation, Objet.datedestruction, Objet.commentaire, Objet.libelle  FROM Zonegeo INNER JOIN Objet ON Zonegeo.id_objet = Objet.id_objet
+#QGIS SELECT Zonegeo.*, Objet.datecreation, Objet.datedestruction FROM Zonegeo INNER JOIN Objet ON Zonegeo.id_objet = Objet.id_objet
+#SHOW YES
+# Nom_champ             TypePostGis              TypeSpatialite                            Option
+###id_zonegeo ;                SERIAL PRIMARY KEY;        INTEGER PRIMARY KEY AUTOINCREMENT
+###pays ;             VARCHAR(255);                TEXT
+###region ;             VARCHAR(255);                TEXT
+###commune ;             VARCHAR(255);                TEXT
+###nom ;             VARCHAR(255);                TEXT
+###populations ;             VARCHAR(255);                TEXT
+###contextesocioeco ;             VARCHAR(255);                TEXT
+###importancesociale ;           INT;                       INTEGER
+###importanceindustrielle ;           INT;                       INTEGER
+###type_zonegeo;             VARCHAR(255);                TEXT
+/;
+Zone de gestion;    GES
+Zone protegee;      PRO
+###id_objet ;           INT;                       INTEGER;                                  Objet(id_objet)
+###geom;              MULTIPOLYGON

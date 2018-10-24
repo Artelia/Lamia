@@ -1,0 +1,107 @@
+#DJAN SELECT  Desordre.* , Objet.datecreation, Objet.datedestruction, Objet.commentaire, Objet.libelle FROM Desordre INNER JOIN OBJET ON Desordre.id_objet = Objet.id_objet
+#QGIS SELECT  Desordre.* , Objet.datecreation, Objet.datedestruction FROM Desordre INNER JOIN OBJET ON Desordre.id_objet = Objet.id_objet
+#SHOW YES
+#SCAL 10000
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###id_desordre;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###groupedesordre;           VARCHAR(255);            TEXT
+Infralineaire; INF
+Ouvrage hydraulique;OH
+###cote;                VARCHAR(255);            TEXT
+/;
+Eau;RIV
+Terre;TER
+Etang;ETG
+Ocean;MER
+Deux cotes;DEU
+Crete;CRE
+Indefini;IND
+###position;           VARCHAR(255);            TEXT
+##cote
+/;                                 ;            ['','RIV','TER','DEU','MER','CRE','IND']
+Crete;                          CRE ;           ['CRE']
+Talus digue;                     TAD ;          ['RIV','TER','DEU','MER','ETG']
+Sommet risberme;                SOR ;           ['RIV','TER','DEU','MER','ETG']
+Talus risberme;                 TAR;            ['RIV','TER','DEU','MER','ETG']
+Talus risberme - pied ;          TRP;            ['RIV','TER','DEU','MER','ETG']
+Pied de digue;                  PDI;            ['RIV','TER','DEU','MER','ETG']
+Franc-bord;                     FRB ;           ['RIV','MER','ETG']
+Berge;                          BER;            ['RIV','MER','ETG']
+Hors digue;                     HOR;            ['IND']
+Plusieurs parties;              PLU;            ['IND']
+Indefini;                       IND;            ['IND']
+###catdes;               VARCHAR(255);             TEXT
+/;
+Erosion externe;                ERX
+Erosion interne;                ERI
+Affectant la structure;         DAF
+Lie a l entretien de la digue;  ENT
+Breche;                         BRE
+Autre;                          AUT
+###typedes;               VARCHAR(255);             TEXT
+##catdes
+/;                                       ;             ['']
+Erosion long. due au fleuve;          ERF;            ['ERX']
+Erosion long. autre;                  ERD;            ['ERX']
+Surverse directe   ;                  SUD;            ['ERX']
+Surverse par retour   ;               SUR;            ['ERX']
+Arrachement lie a une chute d arbre;  ARR;             ['ERX']
+Pietinements d animaux;               PIE;             ['ERX']
+Pietinements antropiques;             PIT;             ['ERX']
+Escaliers sauvages;                   ESS;             ['ERX']
+Indice de Ravinement;                 RAV;             ['ERX']
+Indice de fuite;                      IFU;             ['ERI']
+rupture de reseaux;                   RUP;             ['ERI']
+Sondage en cours de visite;           SDG;             ['ERI']
+Renard hydraulique;                   RDH;             ['ERI']
+Fontis;                               FON;             ['ERI']
+Canalisation HS;                      CHS;             ['ERI']
+Fosse en pied de digue;               FOS;             ['ERI']
+Canalisation traversante;             CAT;             ['ERI']
+Canalisation londitudinale;           CAL;             ['ERI']
+Souches;                              SOU;             ['ERI']
+Terrier d animaux fouisseurs;         TER;             ['ERI']
+Vegetation dangereuse;                VED;             ['ERI']
+Depression hors digue;                DEP;             ['ERI']
+Tete de piezometre;                   PZO;             ['ENT']
+Depot sauvage;                        DSA;             ['ENT']
+Passage d engins a moteur;            PAS;             ['ENT']
+Vandalisme sur voirie;                VAN;             ['ENT']
+Borne manquante;                      BMQ;             ['ENT']
+Borne deterioree;                     BDT;             ['ENT']
+Cloture sauvage;                      CLO;             ['ENT']
+Batiment encastre dans la digue;      BAT;             ['ENT']
+Labour;                               LAB;             ['ENT']
+Remblai non autorise contre digue;    REM;             ['ENT']
+Vegetation genante;                   VEG;             ['ENT']
+Mur de soutenement;                   MUR;             ['ENT']
+Crete bombee;                        CEB;               ['DAF']
+Point bas   ;                        PTB;               ['DAF']
+Alteration (pierre,beton,corrosion) ;ALT;               ['DAF']
+Mauvais contact entre deux elements ;DEC;               ['DAF']
+Dejointement ;                       DEJ;               ['DAF']
+Destructuration ouvrage ;            DES;               ['DAF']
+Prelevement de materiau de digue ;   PRV;               ['DAF']
+Fissure (terrain, structure rigide) ; FIS;               ['DAF']
+Corps etranger dangereux ;           COR;               ['DAF']
+Glissement, affaissement, tassement; MVT;               ['DAF']
+Vide important entre enrochements;   VID;               ['DAF']
+Nid de poule;                        NID;               ['DAF']
+Escalier maconne dans la digue;      ESC;               ['DAF']
+Breche par Renard Direct;               BRD;            ['BRE']
+Breche par Renard en Retour;            BRR;            ['BRE']
+Breche par Surverse Directe;            BSD;            ['BRE']
+Breche par SUrverse par Retour;         SUR;            ['BRE']
+Breche par cause indeterminee;          BRE;            ['BRE']
+Breche provoquee;                       BPR;            ['BRE']
+Breche par affouillement;               BAF;            ['BRE']
+En limite de surverse;                  ELS;            ['BRE']
+Inondation par refoulement;          INR;               ['AUT']
+Indefini;                            IND;               ['AUT']
+###id_objet;             INT ;                   INTEGER ;                               Objet(id_objet)
+###impact ;               VARCHAR(255);             TEXT
+###gravite ;               VARCHAR(255);             TEXT
+###priorite ;               VARCHAR(255);             TEXT
+###risques ;               VARCHAR(255);             TEXT
+###lk_descriptionsystem;    INT ;                  INTEGER;                            Descriptionsystem(id_descriptionsystem)
+###geom;                LINESTRING

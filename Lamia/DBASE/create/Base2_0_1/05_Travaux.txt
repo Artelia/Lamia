@@ -1,4 +1,4 @@
-#DJAN SELECT Travaux.* , Objet.* FROM  Travaux INNER JOIN Objet ON Travaux.lpk_objet = Objet.pk_objet  WHERE Objet.lpk_revision_end IS NULL
+#DJAN SELECT Travaux.* , Objet.* FROM  Travaux INNER JOIN Objet ON Travaux.lpk_objet = Objet.pk_objet  WHERE Objet.lpk_revision_end IS NULL  AND Objet.datetimedestruction IS NULL
 #QGIS SELECT  Travaux.* , Objet.*  FROM  Travaux INNER JOIN Objet ON Travaux.lpk_objet = Objet.pk_objet
 
 

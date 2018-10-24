@@ -1,0 +1,26 @@
+#DJAN 
+#QGIS  SELECT Pointtopo.* , Objet.datecreation, Objet.datedestruction FROM Pointtopo INNER JOIN Topographie ON Pointtopo.id_topographie = Topographie.id_topographie INNER JOIN Ressource ON Topographie.id_ressource = Ressource.id_ressource INNER JOIN Objet ON Topographie.id_objet = Objet.id_objet
+#SHOW YES
+#SCAL 10000
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###id_pointtopo;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###typepointtopo;                VARCHAR(255);            TEXT
+/;
+Crete;CRE 
+Terrain naturel cote terre ;TNT
+Niveau de protection;NIV
+Niveau de surete;SUR
+Autre;AUT 
+###x;                NUMERIC;            REAL
+###y;                NUMERIC;            REAL
+###zgps;                NUMERIC;            REAL
+###zwgs84;                NUMERIC;            REAL
+###raf09;                NUMERIC;            REAL
+###zmngf;                NUMERIC;            REAL
+###precision;                VARCHAR(255);            TEXT
+###dx;                NUMERIC;            REAL
+###dy;                NUMERIC;            REAL
+###dz;                NUMERIC;            REAL
+###hauteurperche;                NUMERIC;            REAL
+###id_topographie;       INT;            INTEGER;                                              Topographie(id_topographie)
+###geom;                POINT

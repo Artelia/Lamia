@@ -26,17 +26,17 @@ class TestMain(Test):
 
         #self.createMainWin()
 
-        self.dbase.printsql = False
+        self.dbase.printsql = True
         indexrapport = None
         for i, menutool in enumerate(self.wind.menutools):
             if 'printPDF' in menutool.__class__.__name__ :
                 indexrapport = i
                 break
 
-        self.wind.dbase.dbasetables['Zonegeo']['layerqgis'].selectByIds([7])
-        # Desordres Infralineaire Equipement_hydraulique
+        # self.wind.dbase.dbasetables['Zonegeo']['layerqgis'].selectByIds([20,21])
+        # Desordres Infralineaire Equipementhydraulique
         self.wind.menutools[indexrapport].pdffile = "c://testrapport.pdf"
-        self.wind.menutools[indexrapport].reporttype = 'Desordres'
+        self.wind.menutools[indexrapport].reporttype = 'Infralineaire'
         self.wind.menutools[indexrapport].work()
 
 

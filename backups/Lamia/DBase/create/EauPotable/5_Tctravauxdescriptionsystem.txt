@@ -1,0 +1,4 @@
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###id_tctravauxdescriptionsystem ;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_tctravaux;       INT;            INTEGER;                                              Travaux(id_travaux)
+###id_tcdescriptionsystem;       INT;            INTEGER;                                   Descriptionsystem(id_descriptionsystem)

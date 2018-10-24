@@ -40,6 +40,7 @@ class TestMain(Test):
                 spatialitefile = 'C://000_testdigue//temp_base2//test01.sqlite'
             elif typebase == 'Base2_digue':
                 spatialitefile = 'C://000_testdigue//temp_base2_digue//test01.sqlite'
+
             self.dbase.printsql = True
             self.dbase.createDbase(slfile=spatialitefile, crs=crs, worktype=typebase)
 

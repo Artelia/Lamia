@@ -1,0 +1,7 @@
+#DJAN SELECT Infralinemprise.*, Objet.datecreation, Objet.datedestruction FROM Infralinemprise, Objet,Infralineaire WHERE Infralinemprise.lk_infralineaire = Infralineaire.id_infralineaire AND Infralineaire.id_objet = Objet.id_objet
+#QGIS SELECT Infralinemprise.*, Objet.datecreation, Objet.datedestruction FROM Infralinemprise, Objet,Infralineaire WHERE Infralinemprise.lk_infralineaire = Infralineaire.id_infralineaire AND Infralineaire.id_objet = Objet.id_objet
+#SHOW YES
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###id_infralinemprise;   SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###lk_infralineaire;    INT ;                   INTEGER ;                               Infralineaire(id_infralineaire)
+###geom;                MULTIPOLYGON

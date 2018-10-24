@@ -136,14 +136,16 @@ class printPDFDigueWorker(printPDFBaseWorker):
         if True:
 
             # if 'lk_profil' in [field.name() for field in reportdic['atlaslayer'].fields()]:
-            sql = "SELECT lk_ressource4 FROM Infralineaire WHERE id_infralineaire = " + str(currentfeatureid)
+            # sql = "SELECT lk_ressource4 FROM Infralineaire WHERE id_infralineaire = " + str(currentfeatureid)
+            sql = "SELECT lid_ressource_4 FROM Infralineaire WHERE id_infralineaire = " + str(currentfeatureid)
             query = self.dbase.query(sql)
             result = [row for row in query]
             lkressourceprofile = result[0][0]
             # print('getPhoto',lkphoto )
 
             if not self.dbase.isAttributeNull(lkressourceprofile):
-                sql = "SELECT Ressource.file FROM Photo INNER JOIN Ressource ON Photo.id_ressource = Ressource.id_ressource WHERE Photo.id_ressource = "
+                # sql = "SELECT Ressource.file FROM Photo INNER JOIN Ressource ON Photo.id_ressource = Ressource.id_ressource WHERE Photo.id_ressource = "
+                sql = "SELECT file FROM Photo_qgis  WHERE id_ressource = "
                 sql += str(lkressourceprofile)
                 query = self.dbase.query(sql)
                 result = [row for row in query]
@@ -151,7 +153,8 @@ class printPDFDigueWorker(printPDFBaseWorker):
                     filephoto = result[0][0]
                     resfile = self.dbase.completePathOfFile(filephoto)
 
-                sql = "SELECT typegraphique, id_graphique FROM Graphique  WHERE id_ressource = " + str(lkressourceprofile)
+                # sql = "SELECT typegraphique, id_graphique FROM Graphique  WHERE id_ressource = " + str(lkressourceprofile)
+                sql = "SELECT typegraphique, id_graphique FROM Graphique_qgis  WHERE id_ressource = " + str(lkressourceprofile)
                 query = self.dbase.query(sql)
                 result = [row for row in query]
                 if len(result) > 0:

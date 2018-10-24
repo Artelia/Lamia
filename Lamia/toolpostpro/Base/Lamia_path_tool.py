@@ -848,7 +848,9 @@ class PathTool(AbstractInspectionDigueTool):
             label = []
             topoid = int(dataname.split('-')[0].strip())
             # print(topoid)
-            idressource = self.dbase.getLayerFeatureById('Topographie',int(topoid))['id_ressource']
+            topofet = self.dbase.getLayerFeatureById('Topographie',int(topoid))
+            idressource = self.dbase.getValuesFromPk('Topographie_qgis', 'id_ressource',topofet.id() )
+            # idressource = self.dbase.getLayerFeatureById('Topographie',int(topoid))['id_ressource']
             # print(idressource)
             nom = self.dbase.getLayerFeatureById('Ressource',idressource)['Description']
             # print(nom)

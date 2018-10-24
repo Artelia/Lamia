@@ -567,7 +567,11 @@ class DBaseParser(QtCore.QObject):
                         else:
                             self.dbasetables[tablename]['qgisPGviewsql'] = line[7:].strip()
                     elif line[0:5] == '#QGIS':
-                        self.dbasetables[tablename]['qgisviewsql'] = line[5:].strip()
+                        if 'qgisviewsql' in self.dbasetables[tablename].keys():
+                            self.dbasetables[tablename]['qgisviewsql'] += ' ' + line[5:].strip() + ' '
+                        else:
+                            self.dbasetables[tablename]['qgisviewsql'] = line[5:].strip()
+                        # self.dbasetables[tablename]['qgisviewsql'] = line[5:].strip()
                     elif line[0:5] == '#EXPO':
                         self.dbasetables[tablename]['exportviewsql'] = line[5:].strip()
                     elif line[0:5] == '#SCAL':
@@ -1389,6 +1393,8 @@ class DBaseParser(QtCore.QObject):
             nearestfet = self.getLayerFeatureByPk(dbasetablename, layernearestid[0])
         nearestfetgeom = nearestfet.geometry()
 
+
+
         # cas d'un point : le nearestNeighbor renvoi la bonne valeur
         if dbasetable['layerqgis'].geometryType() == 0:
             disfrompoint = nearestfetgeom.distance(point2geom)
@@ -1406,6 +1412,11 @@ class DBaseParser(QtCore.QObject):
                     nearestfetgeom = qgis.core.QgsGeometry.fromPointXY(qgis.core.QgsPointXY(nearestfetgeom.asPolyline()[0]))
 
             disfrompoint = nearestfetgeom.distance(point2geom)
+
+            if debug: logging.getLogger("Lamia").debug('nearestfetgeom - dist %s %s', str(nearestfetgeom.exportToWkt()), str(disfrompoint))
+            if disfrompoint < 0.1:
+                disfrompoint = 0.1
+
             bboxtofilter = point2geom.buffer(disfrompoint * 1.2, 12).boundingBox()
             idsintersectingbbox = spindex.intersects(bboxtofilter)
 

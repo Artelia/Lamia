@@ -1,0 +1,15 @@
+#DJAN  SELECT Rasters.*, Objet.datecreation, Objet.datedestruction, Objet.commentaire, Objet.libelle, Ressource.source,Ressource.dateressource,Ressource.contactadresse,Ressource.contactnom, Ressource.contactmail, Ressource.contacttel1, Ressource.contacttel2, Ressource.file,Ressource.description FROM Rasters INNER JOIN Ressource ON Ressource.id_ressource = Rasters.id_ressource INNER JOIN Objet ON Rasters.id_objet = Objet.id_objet
+#QGIS  SELECT Rasters.*, Objet.datecreation, Objet.datedestruction FROM Rasters INNER JOIN Ressource ON Ressource.id_ressource = Rasters.id_ressource INNER JOIN Objet ON Rasters.id_objet = Objet.id_objet
+# Nom_champ              TypePostGis            TypeSpatialite                        Option
+###id_rasters;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###typeraster;VARCHAR(255);TEXT
+/;
+Orthophoto de reference;ORF
+IGN25k de reference;IRF
+Lidar de reference;LRF
+Lidar;LID
+Orthophoto;ORT
+IGN25k;IGN
+Autre;AUT
+###id_objet;             INT ;                     INTEGER ;                                    Objet(id_objet)
+###id_ressource;        INT ;                       INTEGER;                                    Ressource(id_ressource)

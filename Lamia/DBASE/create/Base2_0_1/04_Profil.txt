@@ -1,4 +1,4 @@
-#DJAN  SELECT Profil.*, Descriptionsystem.*,  Objet.* FROM Profil INNER JOIN Descriptionsystem ON Profil.lpk_descriptionsystem = Descriptionsystem.pk_descriptionsystem INNER JOIN Objet ON Descriptionsystem.lpk_objet = Objet.pk_objet WHERE Objet.lpk_revision_end IS NULL
+#DJAN  SELECT Profil.*, Descriptionsystem.*,  Objet.* FROM Profil INNER JOIN Descriptionsystem ON Profil.lpk_descriptionsystem = Descriptionsystem.pk_descriptionsystem INNER JOIN Objet ON Descriptionsystem.lpk_objet = Objet.pk_objet WHERE Objet.lpk_revision_end IS NULL  AND Objet.datetimedestruction IS NULL
 #QGIS SELECT Profil.*, Descriptionsystem.*,  Objet.*  FROM Profil INNER JOIN Descriptionsystem ON Profil.lpk_descriptionsystem = Descriptionsystem.pk_descriptionsystem INNER JOIN Objet ON Descriptionsystem.lpk_objet = Objet.pk_objet
 
 #SHOW YES

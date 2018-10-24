@@ -1,4 +1,4 @@
-#DJAN  SELECT Graphique.*, Ressource.*,  Objet.*  FROM Graphique INNER JOIN Ressource ON Graphique.lpk_ressource = Ressource.pk_ressource INNER JOIN Objet ON Ressource.lpk_objet = Objet.pk_objet WHERE Objet.lpk_revision_end IS NULL
+#DJAN  SELECT Graphique.*, Ressource.*,  Objet.*  FROM Graphique INNER JOIN Ressource ON Graphique.lpk_ressource = Ressource.pk_ressource INNER JOIN Objet ON Ressource.lpk_objet = Objet.pk_objet WHERE Objet.lpk_revision_end IS NULL  AND Objet.datetimedestruction IS NULL
 #QGIS SELECT Graphique.*, Ressource.*,  Objet.*  FROM Graphique INNER JOIN Ressource ON Graphique.lpk_ressource = Ressource.pk_ressource INNER JOIN Objet ON Ressource.lpk_objet = Objet.pk_objet
 
 # Nom_champ              TypePostGis                 TypeSpatialite                               Option

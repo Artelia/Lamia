@@ -506,7 +506,7 @@ class printPDFBaseWorker(object):
         attention ce fichier doit avoir pour clé primaire l'id de la couche lamia et non le pk...
         :return: qgsvectorlayer qui servira à l'atlas
         """
-        debug = False
+        debug = True
 
         sql = self.atlasconfData['atlaslayersql']
 
@@ -1661,9 +1661,9 @@ class printPDFBaseWorker(object):
                         layersformapcomposer.append(coveragelayer)
 
                     elif layername == 'scan25':
-                        sql = "SELECT Ressource.file from Rasters"
-                        sql += " INNER JOIN Ressource ON Rasters.id_ressource = Ressource.id_ressource"
-                        sql += " WHERE Rasters.typeraster = 'IRF'"
+                        sql = "SELECT file from Rasters_qgis"
+                        # sql += " INNER JOIN Ressource ON Rasters.id_ressource = Ressource.id_ressource"
+                        sql += " WHERE typeraster = 'IRF'"
                         query = self.dbase.query(sql)
                         result = [row[0] for row in query]
                         if len(result) > 0:
@@ -1686,9 +1686,9 @@ class printPDFBaseWorker(object):
                                 if debug: logging.getLogger("Lamia").debug('no scan25 file')
 
                     elif layername == 'ortho':
-                        sql = "SELECT Ressource.file from Rasters"
-                        sql += " INNER JOIN Ressource ON Rasters.id_ressource = Ressource.id_ressource"
-                        sql += " WHERE Rasters.typeraster = 'ORF'"
+                        sql = "SELECT file from Rasters_qgis"
+                        # sql += " INNER JOIN Ressource ON Rasters.id_ressource = Ressource.id_ressource"
+                        sql += " WHERE typeraster = 'ORF'"
                         query = self.dbase.query(sql)
                         result = [row[0] for row in query]
                         if len(result) > 0:
@@ -2206,11 +2206,11 @@ class printPDFBaseWorker(object):
             sql += ' ' + self.parentprintPDFworker.atlasconfData['childprint']['optionsql']
         sql += '), Ressourcetemp AS( '
         sql += " SELECT Ressource.id_ressource, file FROM Ressource "
-        sql += " INNER JOIN Photo ON Photo.id_ressource = Ressource.id_ressource "
+        sql += " INNER JOIN Photo ON Photo.lpk_ressource = Ressource.pk_ressource "
         sql+=  "WHERE Photo.typephoto = 'PHO') "
         sql += " SELECT file  FROM Ressourcetemp, tempquery "
-        sql += " INNER JOIN Tcobjetressource ON id_tcressource = id_ressource "
-        sql += " WHERE id_objet = id_tcobjet "
+        sql += " INNER JOIN Tcobjetressource ON lid_ressource = id_ressource "
+        sql += " WHERE id_objet = lid_objet "
         #sql += ' AND ' + self.atlasconfData['atlaslayerid'] + ' = ' + str(atlasfeat.id())
         sql += ' AND ' + self.atlasconfData['atlaslayerid'] + ' = ' + str(atlasfeat[self.atlasconfData['atlaslayerid']])
 
@@ -2246,10 +2246,13 @@ class printPDFBaseWorker(object):
         sql += " SELECT Ressource.id_ressource, file FROM Ressource "
         sql+=  ") "
         sql += " SELECT file  FROM Ressourcetemp, tempquery "
-        sql += " INNER JOIN Tcobjetressource ON id_tcressource = id_ressource "
-        sql += " WHERE id_objet = id_tcobjet "
+        #sql += " INNER JOIN Tcobjetressource ON id_tcressource = id_ressource "
+        sql += " INNER JOIN Tcobjetressource ON lid_ressource = id_ressource "
+        # sql += " WHERE id_objet = id_tcobjet "
+        sql += " WHERE id_objet = lid_objet "
         sql += ' AND '
-        sql += 'id_ressource = ' + str(str(atlasfeat['lk_ressource' + str(photoid)]))
+        # sql += 'id_ressource = ' + str(str(atlasfeat['lk_ressource' + str(photoid)]))
+        sql += 'id_ressource = ' + str(str(atlasfeat['lid_ressource_' + str(photoid)]))
 
         if debug: self.logger.debug('sql  %s %s', str(photoid), str(sql))
         query = self.dbase.query(sql)

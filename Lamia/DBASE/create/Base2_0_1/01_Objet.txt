@@ -1,4 +1,4 @@
-#DJAN  SELECT * FROM Objet WHERE Objet.lpk_revision_end IS NULL
+#DJAN  SELECT * FROM Objet WHERE Objet.lpk_revision_end IS NULL  AND Objet.datetimedestruction IS NULL
 #QGIS SELECT * FROM Objet
 
 # Nom_champ                 TypePostGis          TypeSpatialite                       Option  Referecens/foreignkey

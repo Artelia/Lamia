@@ -1,4 +1,4 @@
-#DJAN  SELECT  Etudestrategie.*, Objet.* FROM Etudestrategie INNER JOIN Objet ON Etudestrategie.lpk_objet = Objet.pk_objet  WHERE Objet.lpk_revision_end IS NULL
+#DJAN  SELECT  Etudestrategie.*, Objet.* FROM Etudestrategie INNER JOIN Objet ON Etudestrategie.lpk_objet = Objet.pk_objet  WHERE Objet.lpk_revision_end IS NULL  AND Objet.datetimedestruction IS NULL
 #QGIS SELECT  Etudestrategie.*, Objet.* FROM Etudestrategie INNER JOIN Objet ON Etudestrategie.lpk_objet = Objet.pk_objet
 
 

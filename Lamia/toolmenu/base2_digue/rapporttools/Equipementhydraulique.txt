@@ -1,13 +1,11 @@
 ###atlaslayersql
-WITH Objettemp AS (SELECT Objet.id_objet, Objet.libelle, Objet.commentaire FROM Objet ),
-Gestionnaire AS (SELECT Intervenant.societe, Intervenant.nom  , Tcobjetintervenant.id_tcobjet 
+WITH Gestionnaire AS (SELECT Intervenant.societe, Intervenant.nom  , Tcobjetintervenant.lid_objet 
                  FROM Tcobjetintervenant  
-                 INNER JOIN Intervenant ON Tcobjetintervenant.id_tcintervenant = Intervenant.id_intervenant  
+                 INNER JOIN Intervenant ON Tcobjetintervenant.lid_intervenant = Intervenant.id_intervenant  
                  WHERE Tcobjetintervenant.fonction = 'GES' )
-SELECT Equipement_qgis.* , Objettemp.libelle, Objettemp.commentaire, Gestionnaire.societe, Gestionnaire.nom 
+SELECT Equipement_qgis.* , Gestionnaire.societe, Gestionnaire.nom 
 FROM Equipement_qgis 
-INNER JOIN Objettemp ON Equipement_qgis.id_objet = Objettemp.id_objet
-LEFT JOIN Gestionnaire ON Gestionnaire.id_tcobjet = Objettemp.id_objet
+LEFT JOIN Gestionnaire ON Gestionnaire.lid_objet = Equipement_qgis.id_objet
 WHERE ( Equipement_qgis.categorie = 'RHF' or Equipement_qgis.categorie = 'RHO' or Equipement_qgis.categorie = 'OUH')
 ###atlaslayerid
 id_equipement
@@ -15,7 +13,7 @@ id_equipement
 True
 ###ordering
 #type; constraint (qgis typo)
-autoalongpath;"lk_descriptionsystem" IS NULL
+autoalongpath;"lid_descriptionsystem" IS NULL
 ###atlaslayerstyle
 Equipementhydraulique_atlas.qml
 ###atlasdrivemap
@@ -31,7 +29,7 @@ map0    ;           ;             ; ['Infralineaire', 'ortho']
 photo1;photo1
 ###childprint
 #confname;                        linkcolumn;                               optionsql
-Equipementhydraulique_annexe;    Equipement_qgis.lk_descriptionsystem ;  
+Equipementhydraulique_annexe;    Equipement_qgis.lid_descriptionsystem ;  
 
 
 

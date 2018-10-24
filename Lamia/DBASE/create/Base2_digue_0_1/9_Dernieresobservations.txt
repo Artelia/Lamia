@@ -1,0 +1,31 @@
+#SHOW YES
+#QGIS    WITH Desordretemp AS (SELECT * FROM Desordre_qgis WHERE lpk_revision_end IS NULL) ,
+#QGIS   Observationtemp AS (SELECT Observation.*, Objet.commentaire FROM Observation INNER JOIN Objet ON objet.pk_objet = Observation.lpk_objet WHERE lpk_revision_end IS NULL) 
+#QGIS   SELECT  Desordretemp.pk_desordre,
+#QGIS          Desordretemp.id_desordre,
+#QGIS          Desordretemp.lpk_revision_begin,
+#QGIS          Desordretemp.lpk_revision_end,
+#QGIS          Desordretemp.cote ,
+#QGIS          Desordretemp.position, 
+#QGIS          Desordretemp.catdes,
+#QGIS          Desordretemp.typedes,
+#QGIS          ST_Buffer(ST_MakeValid(geom), 0.1) as geom,
+#QGIS          Observationtemp.datetimeobservation AS datetimecreation , 
+#QGIS           (SELECT MIN(Observationtempp.datetimeobservation) As datecreationtemp FROM Observation as Observationtempp 
+#QGIS               WHERE Observationtemp.lid_desordre =  Observationtempp.lid_desordre AND Observationtempp.datetimeobservation > Observationtemp.datetimeobservation ) AS datedestruction , 
+#QGIS           Observationtemp.id_observation, 
+#QGIS           Observationtemp.datetimeobservation, 
+#QGIS           Observationtemp.source, 
+#QGIS           Observationtemp.nombre, 
+#QGIS           Observationtemp.gravite,
+#QGIS           Observationtemp.commentaire,
+#QGIS           Observationtemp.evolution ,
+#QGIS           Observationtemp.typesuite ,
+#QGIS           Observationtemp.precisionsuite ,
+#QGIS           Observationtemp.commentairesuite 
+#QGIS   FROM Observationtemp  INNER JOIN Desordretemp ON Observationtemp.lid_desordre = Desordretemp.id_desordre 
+
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+# la creation a minima de ces champs est obligatoire si on veut creer la vue spatiale ... c comme ca
+###pk_dernieresobservations;      SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###geom;                MULTIPOLYGON

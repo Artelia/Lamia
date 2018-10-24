@@ -1,4 +1,4 @@
-#DJAN  SELECT  Marche.*, Objet.*  FROM Marche INNER JOIN Objet ON Marche.lpk_objet = Objet.pk_objet WHERE Objet.lpk_revision_end IS NULL
+#DJAN  SELECT  Marche.*, Objet.*  FROM Marche INNER JOIN Objet ON Marche.lpk_objet = Objet.pk_objet WHERE Objet.lpk_revision_end IS NULL  AND Objet.datetimedestruction IS NULL
 #QGIS SELECT Marche.*, Objet.*  FROM Marche INNER JOIN Objet ON Marche.lpk_objet = Objet.pk_objet
 
 # Nom_champ             TypePostGis              TypeSpatialite                          Option

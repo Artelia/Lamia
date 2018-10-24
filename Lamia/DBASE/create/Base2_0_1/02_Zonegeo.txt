@@ -1,4 +1,4 @@
-#DJAN SELECT Zonegeo.* , Objet.* FROM Zonegeo INNER JOIN Objet ON Zonegeo.lpk_objet = Objet.pk_objet WHERE Objet.lpk_revision_end IS NULL
+#DJAN SELECT Zonegeo.* , Objet.* FROM Zonegeo INNER JOIN Objet ON Zonegeo.lpk_objet = Objet.pk_objet WHERE Objet.lpk_revision_end IS NULL  AND Objet.datetimedestruction IS NULL
 #QGIS SELECT Zonegeo.* , Objet.*  FROM Zonegeo INNER JOIN Objet ON Zonegeo.lpk_objet = Objet.pk_objet
 
 

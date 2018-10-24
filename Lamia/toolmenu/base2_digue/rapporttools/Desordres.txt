@@ -24,7 +24,7 @@ map0    ;           ;             ; ['Infralineaire','Equipement', 'ortho']
 logo;logo
 ###childprint
 #confname;                linkcolumn;             optionsql
-Desordres_observation;    Observation_qgis.lk_desordre ; ORDER BY Observation_qgis.dateobservation DESC
+Desordres_observation;    Observation_qgis.lid_desordre ; ORDER BY Observation_qgis.datetimeobservation DESC
 
 
 

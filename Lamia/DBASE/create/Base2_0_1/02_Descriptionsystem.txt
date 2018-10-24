@@ -1,4 +1,4 @@
-#DJAN  SELECT Descriptionsystem.*, Objet.*  FROM Descriptionsystem INNER JOIN Objet ON Descriptionsystem.lpk_objet = Objet.pk_objet WHERE Objet.lpk_revision_end IS NULL
+#DJAN  SELECT Descriptionsystem.*, Objet.*  FROM Descriptionsystem INNER JOIN Objet ON Descriptionsystem.lpk_objet = Objet.pk_objet WHERE Objet.lpk_revision_end IS NULL AND Objet.datetimedestruction IS NULL
 #QGIS SELECT Descriptionsystem.*, Objet.*  FROM Descriptionsystem INNER JOIN Objet ON Descriptionsystem.lpk_objet = Objet.pk_objet
 
 # Nom_champ                      TypePostGis              TypeSpatialite                         Option

@@ -78,7 +78,7 @@ class exportShapefileBaseWorker(object):
             # print(reporttype, pdffile)
 
         if tabletype is not None and tabletype is not None and shpfile != '':
-            print('tabletype', tabletype, shpfile)
+            # print('tabletype', tabletype, shpfile)
             if False:
                 self.worker = exportShapefileWorker(self.dbase, tabletype, pdffile)
                 self.thread = QtCore.QThread()
@@ -114,14 +114,12 @@ class exportShapefileBaseWorker(object):
 
 
     def prepareData(self,tabletype,  shpfile):
-        print('prepareData', tabletype, shpfile)
+        # print('prepareData', tabletype, shpfile)
         debug = False
 
         self.champs = self.readChamp(tabletype)
-        print(self.champs )
         self.fieldsforshp = self.buildQgsFields(self.champs)
         sql = self.buildSql(self.champs)
-        print(sql)
         if debug: logging.getLogger('Lamia').debug('sql %s', sql)
         query = self.dbase.query(sql)
 

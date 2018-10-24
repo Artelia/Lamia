@@ -1,4 +1,0 @@
-# Nom_champ             TypePostGis              TypeSpatialite                          Option
-###id_tcetudetravaux;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
-###id_tcetudestrategie;       INT;            INTEGER;                                              Etudestrategie(id_etudestrategie)
-###id_tctravaux;       INT;            INTEGER;                                              Travaux(id_travaux)
