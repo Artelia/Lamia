@@ -1,8 +1,3 @@
+C:\Users\patrice.verchere\Documents\GitHub\Lamia\test\02_test_export\BD_totale.sqlite
 C://000_testdigue//temp_base2_digue//test01.sqlite
-C:\Users\patrice.verchere\Documents\GitHub\Lamia\Lamia\test\02_test_export\BD_totale.sqlite
-C:\Users\patrice.verchere\Documents\GitHub\Lamia\Lamia\test\02_test_importdb\test04\01_original\terrain.sqlite
-C:\Users\patrice.verchere\Documents\GitHub\Lamia\Lamia\test\02_test_importdb\test04\01_original\test01.sqlite
-C:/Users/patrice.verchere/Documents/GitHub/Lamia/Lamia/test/02_test_importdb/test04/01_original/test01.sqlite
-C://Users//patrice.verchere//Documents//GitHub//Lamia//Lamia//test//02_test_importdb//test01//02_modif//test01.sqlite
-C:\Users\patrice.verchere\Documents\GitHub\Lamia\Lamia\test\02_test_importdb\test03\to\test01_terrain.sqlite
 C:\000_testdigue\temp_base2_assainissement\test1.sqlite

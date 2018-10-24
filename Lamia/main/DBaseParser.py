@@ -230,7 +230,7 @@ class DBaseParser(QtCore.QObject):
         # Manage connection - creation and config
         if self.dbasetype == 'spatialite':
 
-            originalfile = os.path.join(os.path.dirname(__file__), '..', 'DBASE', 'DBase_ind0.sqlite')
+            originalfile = os.path.join(os.path.dirname(__file__), '..', 'DBASE', 'sqlite_base', 'DBase_ind0.sqlite')
             shutil.copyfile(originalfile, slfile)
 
             self.spatialitefile = slfile
