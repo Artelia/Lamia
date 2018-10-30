@@ -13,7 +13,8 @@
 	}],
 	"Observation": [{
 		"path": "_id",
-		"source": "id_desordre",
+		"source": "lid_desordre",
+        "destination": "id_desordre",
 		"table": "Desordre"
 	}]
 }

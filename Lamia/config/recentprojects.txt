@@ -1,3 +1,1 @@
-C:\Users\patrice.verchere\Documents\GitHub\Lamia\test\02_test_export\BD_totale.sqlite
-C://000_testdigue//temp_base2_digue//test01.sqlite
-C:\000_testdigue\temp_base2_assainissement\test1.sqlite
+C://Users//valentin.anjou//Desktop//test-sirs.sqlite

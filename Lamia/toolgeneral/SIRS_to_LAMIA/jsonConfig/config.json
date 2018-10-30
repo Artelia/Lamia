@@ -26,7 +26,7 @@
       "list" : "observations",
       "query_couch" : { "@class": "fr.sirs.core.model.Desordre"},
       "fields" : ["Objet", "date","evolution", "id",  "urgenceId abrege", "nombreDesordres"],
-      "query_sql" : "INSERT INTO Observation (lpk_objet, dateobservation, evolution, source, gravite, nombre) VALUES (?,?,?,?,?,?)"
+      "query_sql" : "INSERT INTO Observation (lpk_objet, datetimeobservation, evolution, source, gravite, nombre) VALUES (?,?,?,?,?,?)"
   },
   "Noeud" : {
     "query_couch": { "@class": "fr.sirs.core.model.BorneDigue" },
