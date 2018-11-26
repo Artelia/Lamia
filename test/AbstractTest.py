@@ -50,6 +50,7 @@ class Test(QtCore.QObject):
         qgis.core.QgsApplication.initQgis()
         self.canvas = qgis.gui.QgsMapCanvas()
         self.canvas.enableAntiAliasing(True)
+        self.canvas.setDestinationCrs(qgis.core.QgsCoordinateReferenceSystem(2154))
 
 
         self.testMethod()
@@ -80,7 +81,7 @@ class Test(QtCore.QObject):
 
     def loadLayersInCanvas(self):
 
-        self.canvas.setDestinationCrs(qgis.core.QgsCoordinateReferenceSystem(2154))
+
 
         layerstoadd = []
         for tablename in self.wind.dbase.dbasetables.keys():

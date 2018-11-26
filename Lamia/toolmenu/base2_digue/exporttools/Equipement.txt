@@ -25,4 +25,4 @@ fichier;         String;               ;                  numphoto
 geom;         Int;               ;                  ST_AsText(geom)
 
 ###main
-FROM Equipement
+FROM Equipement_now

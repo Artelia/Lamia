@@ -551,11 +551,18 @@ class InspectiondigueWindowWidget(QMainWindow):
             self.actionModeTerrain.setChecked(False)
             self.actionTTC.setChecked(False)
             self.actionModeExpert.setChecked(False)
+            if not self.desktopuiloaded:
+                self.loadUiDesktop()
+
+
 
         self.applyVisualMode()
 
     def applyVisualMode(self):
         if self.dbase.dbasetables is not None:
+            for tool in self.tools:
+                tool.changePropertiesWidget()
+
             for tablename in self.dbase.dbasetables.keys():
                 if 'widget' in self.dbase.dbasetables[tablename].keys():
                     if isinstance(self.dbase.dbasetables[tablename]['widget'], list):
@@ -563,8 +570,12 @@ class InspectiondigueWindowWidget(QMainWindow):
                             wdg.changePropertiesWidget()
                     else:
                         self.dbase.dbasetables[tablename]['widget'].changePropertiesWidget()
-            for tool in self.tools:
-                tool.changePropertiesWidget()
+
+
+
+
+
+
 
     def reinitCurrentPrestation(self):
         if self.dbase is not None:
@@ -743,10 +754,11 @@ class InspectiondigueWindowWidget(QMainWindow):
             'okok'.decode('utf-8')
         self.gpsutil.setCRS(self.dbase.qgiscrs)
         self.dbase.updateWorkingDate()
-        timestart = time.clock()
+        #timestart = time.clock()
+        timestart = self.dbase.getTimeNow()
 
 
-        if debugtime: logger.debug(' progress bar done %.3f', time.clock() - timestart)
+        if debugtime: logger.debug(' progress bar done %.3f', self.dbase.getTimeNow() - timestart)
 
 
         # ************************** LOAD LAYERS AND STYLES ***********************************
@@ -970,10 +982,11 @@ class InspectiondigueWindowWidget(QMainWindow):
 
 
     def loadUiField(self):
-        timestart = time.clock()
+        #timestart = time.clock()
+        timestart = self.dbase.getTimeNow()
 
 
-        if debugtime: logger.debug(' start %.3f', time.clock() - timestart)
+        if debugtime: logger.debug(' start %.3f', self.dbase.getTimeNow() - timestart)
 
         if self.dbase.qgsiface is not None:
             #if not self.dbase.standalone:
@@ -992,7 +1005,7 @@ class InspectiondigueWindowWidget(QMainWindow):
 
         i = 0
         for uifield in self.uifields:
-            if debugtime: logger.debug(' start %s %.3f', uifield.dbasetablename, time.clock() - timestart)
+            if debugtime: logger.debug(' start %s %.3f', uifield.dbasetablename, self.dbase.getTimeNow() - timestart)
             #try:
             dbasename = uifield.dbasetablename
             # print(dbasename)
@@ -1007,7 +1020,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                                                                          linkedtreewidget = self.ElemtreeWidget,
                                                                          gpsutil = self.gpsutil) )
 
-            if debugtime: logger.debug(' end %s %.3f', uifield.dbasetablename, time.clock() - timestart)
+            if debugtime: logger.debug(' end %s %.3f', uifield.dbasetablename, self.dbase.getTimeNow()  - timestart)
             i += 1
             self.setLoadingProgressBar(progress, i)
             #except Exception as e:
@@ -1031,6 +1044,8 @@ class InspectiondigueWindowWidget(QMainWindow):
 
 
     def loadUiDesktop(self):
+
+        debug = True
 
         if self.dbase.qgsiface is not None:
             #if not self.dbase.standalone:
@@ -1056,6 +1071,7 @@ class InspectiondigueWindowWidget(QMainWindow):
             self.menutools.append(menuclasse(dbase=self.dbase, windowdialog=self))
             i += 1
             self.setLoadingProgressBar(progress, i)
+            if debug : logger.debug(' loading %s', str(menuclasse))
 
         for uidpostpr in self.uipostpro:
             # print('uidpostpr', uidpostpr)
@@ -1066,6 +1082,8 @@ class InspectiondigueWindowWidget(QMainWindow):
             strtoexec = 'self.tools.append(' + 'self.' + uidpostpr.__name__.lower() + ')'
             # print(strtoexec)
             exec(strtoexec)
+
+            if debug: logger.debug(' loading %s', str(uidpostpr.__name__))
             # print('ok')
 
 
@@ -2133,9 +2151,9 @@ class LoadUiField(QtCore.QObject):
         self.gpsutil =dialog.gpsutil
 
     def loadUiField(self):
-        timestart = time.clock()
+        timestart = self.dbase.getTimeNow()
 
-        if debugtime: logger.debug(' start %.3f', time.clock() - timestart)
+        if debugtime: logger.debug(' start %.3f', self.dbase.getTimeNow()  - timestart)
 
         if self.dbase.qgsiface is not None:
             # if not self.dbase.standalone:
@@ -2154,7 +2172,7 @@ class LoadUiField(QtCore.QObject):
 
         i = 0
         for uifield in self.uifields:
-            if debugtime: logger.debug(' start %s %.3f', uifield.dbasetablename, time.clock() - timestart)
+            if debugtime: logger.debug(' start %s %.3f', uifield.dbasetablename, self.dbase.getTimeNow()  - timestart)
             # try:
             dbasename = uifield.dbasetablename
             # print(dbasename)
@@ -2162,7 +2180,7 @@ class LoadUiField(QtCore.QObject):
                                                                   dialog=self,
                                                                   linkedtreewidget=self.ElemtreeWidget,
                                                                   gpsutil=self.gpsutil)
-            if debugtime: logger.debug(' end %s %.3f', uifield.dbasetablename, time.clock() - timestart)
+            if debugtime: logger.debug(' end %s %.3f', uifield.dbasetablename, self.dbase.getTimeNow()  - timestart)
             i += 1
             self.setLoadingProgressBar(progress, i)
             # except Exception as e:

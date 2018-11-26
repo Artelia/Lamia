@@ -1,13 +1,10 @@
 ###Photo
-##FROM Photo AS Phototemp WHERE Phototemp.pk_photo = Photo_qgis.pk_photo
 #nom              type               cst               valeur                    
 id_photo;         Int;                  ;               id_photo
 
 
-
 ###Ressource
-
-## FROM Ressource As Ressourcetemp WHERE  Ressourcetemp.pk_ressource = Photo_qgis.pk_ressource
+## FROM Ressource  WHERE  Ressource.pk_ressource = Photo_now.pk_ressource
 #nom              type               cst               valeur                    
 id_ressource;         Int;                  ;               id_ressource
 source;         String;                  ;               source
@@ -18,21 +15,20 @@ descriptio;         String;                  ;               description
 
 
 ###Tcobjetressource
-## FROM Tcobjetressourcetemp WHERE Tcobjetressourcetemp.lid_ressource = Photo_qgis.id_ressource
+## FROM Tcobjetressourcetemp WHERE Tcobjetressourcetemp.lid_ressource = Photo_now.id_ressource
 lk_objet;         Int;                  ;               lid_objet
 
 ###Zonegeo
-## FROM Zonegeo_qgis WHERE ST_WITHIN(ST_MakeValid(Photo_qgis.geom),ST_MakeValid(Zonegeo_qgis.geom))
+## FROM Zonegeo_qgis WHERE ST_WITHIN(ST_MakeValid(Photo_now.geom),ST_MakeValid(Zonegeo_qgis.geom))
 pk_zonegeo;     Int;            ;        pk_zonegeo ;  pk_zonegeo
 
 
 ###geom
-##FROM Photo AS Phototemp WHERE Phototemp.pk_photo = Photo_qgis.pk_photo
 geom;         Int;               ;                  ST_AsText(geom)
 
 
 ###main
-FROM Photo_qgis
+FROM Photo_now
 
 ###with
 WITH Tcobjetressourcetemp AS ( SELECT lid_ressource, lid_objet FROM Tcobjetressource WHERE lpk_revision_end IS NULL)

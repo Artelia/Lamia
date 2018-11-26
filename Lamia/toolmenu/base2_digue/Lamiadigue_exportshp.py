@@ -11,7 +11,7 @@ import numpy as np
 import glob
 
 #from .tools.Lamia_exportshpdialog import ExportShapefileDialog
-from ..base.Lamiabase_exportshp import exportShapefileBaseWorker
+from ..base2.Lamiabase_exportshp import exportShapefileBaseWorker
 
 #class exportShapefileWorker(AbstractWorker):
 
@@ -53,10 +53,15 @@ class exportShapefileAssainissementWorker(exportShapefileBaseWorker):
                 tempfield.append(qgis.core.QgsField('Deseau', QtCore.QVariant.String))
 
                 #self.fieldsforshp += tempfield
+                # self.result[i][-1:-1] = [hauteurdigue, largcrete, typtater,typcrete,typtaeau,typeauba,typeberge,typepdberge,  Desterre, Descrete, Deseau  ]
 
                 for i, field in enumerate(tempfield):
                     self.fieldsforshp.append(field)
-                    self.champs['postpro'+str(i)] = None
+                    if False:
+                        self.champs['postpro'+str(i)] = None
+                    #self.champs.append({})
+                    self.champs.insert(-1,{})
+                    self.champs[-2]['table'] = 'postpro'+str(i)
                     #champs += [[],[],[],[],[],[],[],[],[],[], []]
                 # print('champs',champs)
 
@@ -256,6 +261,7 @@ class exportShapefileAssainissementWorker(exportShapefileBaseWorker):
                     # self.result[i] = self.result[i].insert(-2,[hauteurdigue, largcrete, typtater,typcrete,typtaeau,typeauba,typeberge,typepdberge,  Desterre, Descrete, Deseau  ])
             #niveau protection surete
             if True:
+                tempfield = []
                 tempfield.append(qgis.core.QgsField('niv_pro_am', QtCore.QVariant.Double))
                 tempfield.append(qgis.core.QgsField('niv_pro_av', QtCore.QVariant.Double))
                 tempfield.append(qgis.core.QgsField('niv_sur_am', QtCore.QVariant.Double))
@@ -264,7 +270,13 @@ class exportShapefileAssainissementWorker(exportShapefileBaseWorker):
 
                 for i, field in enumerate(tempfield):
                     self.fieldsforshp.append(field)
-                    self.champs['postpro'+str(i)] = None
+                    #self.champs['postpro'+str(i)] = None
+                    if False:
+                        self.champs['postpro'+str(i)] = None
+                    #self.champs.append({})
+                    self.champs.insert(-1,{})
+                    self.champs[-2]['table'] = 'postpro'+str(i)
+
 
                 pathtool = None
                 for i, tool in enumerate(self.windowdialog.tools):

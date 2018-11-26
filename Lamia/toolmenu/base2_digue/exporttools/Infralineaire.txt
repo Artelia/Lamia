@@ -1,5 +1,4 @@
 ###Infralineaire
-##FROM Infralineaire_qgis AS Infralineairetemp WHERE  Infralineairetemp.pk_objet = Infralineaire_qgis.pk_objet
 #nom              type               cst               valeur                    
 id_infralineaire;         Int;                  ;     id_infralineaire
 id_dessys_1;    Int;                  ;     lid_descriptionsystem_1
@@ -7,24 +6,25 @@ id_dessys_2;    Int;                  ;     lid_descriptionsystem_2
 test1;            Int;                  ;                
 test2;            Int;                  ;               CASE WHEN id_infralineaire IS NULL THEN 1 ELSE 0 END
 
-###Descriptionsystem
-##FROM Descriptionsystem_qgis  WHERE  Descriptionsystem_qgis.pk_descriptionsystem = Infralineaire_qgis.lpk_descriptionsystem
-id_descriptionsystem;         Int;               ;                  id_descriptionsystem
+
+###Zonegeo
+## FROM Zonegeo_now WHERE ST_WITHIN(ST_MakeValid(Infralineaire_now.geom),ST_MakeValid(Zonegeo_now.geom))
+pk_zonegeo;     Int;            ;        pk_zonegeo ;  pk_zonegeo
+secteur;     String;            ;        libelle
 
 ###Objet
-##FROM Objet_qgis WHERE  Objet_qgis.pk_objet = Infralineaire_qgis.pk_objet
+##FROM Objet WHERE  Objet.pk_objet = Infralineaire_now.pk_objet
 #nom              type               cst               valeur                    
 id_objet;         Int;               ;                  id_objet
 commentaire;      String;               ;                  commentaire
 
 #Photo crete
-#FROM Photo_qgis INNER JOIN Tcobjetressource ON Tcobjetressource.lid_ressource = Photo_qgis.id_ressource WHERE Infralineaire.id_objet = Tcobjetressource.lid_objet; LIMIT 1 OFFSET 0
-#FROM Photo_qgis  WHERE Infralineaire_qgis.lid_ressource_1 = Photo_qgis.id_ressource; LIMIT 1 OFFSET 0
-#fichier;         String;               ;                  file
+###Photo
+##FROM Photo_now  WHERE Infralineaire_now.lid_ressource_2 = Photo_now.id_ressource; LIMIT 1 OFFSET 0
+fichier;         String;               ;                  file
 
 ###geom
-##FROM Infralineaire_qgis AS Infralineairetemp WHERE Infralineairetemp.pk_objet = Infralineaire_qgis.pk_objet
 geom;         Int;               ;                  ST_AsText(geom)
 
 ###main
-FROM Infralineaire_qgis
+FROM Infralineaire_now

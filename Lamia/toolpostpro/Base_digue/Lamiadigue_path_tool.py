@@ -19,7 +19,7 @@ import networkx
 import numpy as np
 import shutil
 
-from ..Base.Lamia_path_tool import PathTool
+from ..Base2.Lamia_path_tool import PathTool
 
 # ********************************************************************************************************************
 # ********************************* Main Widget                *******************************************************

@@ -1,10 +1,9 @@
-###Equipement1
-##FROM Equipement_qgis AS Equipementtemp WHERE  Equipementtemp.pk_equipement = Equipement_qgis.pk_equipement
+###Equipement
 #nom              type               cst               valeur                    
 id_equipement;         Int;                  ;               id_equipement
 
 ###Objet
-##FROM Objet WHERE  Objet.pk_objet = Equipement_qgis.pk_objet
+##FROM Objet WHERE  Objet.pk_objet = Equipement_now.pk_objet
 #nom              type               cst               valeur                    
 id_objet;         Int;               ;                  id_objet
 datecreati;      String;               ;                  datetimecreation
@@ -13,7 +12,6 @@ commentaire;      String;               ;                  commentaire
 libelle;      String;               ;                  libelle
 
 ###Equipement
-##FROM Equipement_qgis AS Equipementtemp WHERE  Equipementtemp.pk_equipement = Equipement_qgis.pk_equipement
 #nom              type               cst               valeur                    
 id_descriptionsystem;     Int;               ;                  id_descriptionsystem
 cote;      String;             cote  ;                  cote
@@ -28,23 +26,23 @@ securite;      String;             securite  ;                  securite
 lk_descriptionsystem;     Int;               ;                  lid_descriptionsystem
 
 
-###Descriptionsystem
-##FROM Descriptionsystem WHERE  Descriptionsystem_qgis.pk_descriptionsystem = Equipement_qgis.lpk_descriptionsystem
-#id_descriptionsystem;         Int;               ;                  id_descriptionsystem
 
 ###Objet
-##FROM Objet_qgis WHERE  Objet_qgis.pk_objet = Equipement_qgis.pk_objet
+##FROM Objet WHERE  Objet.pk_objet = Equipement_now.pk_objet
 #nom              type               cst               valeur                    
 #id_objet;         Int;               ;                  id_objet
 #commentaire;      String;               ;                  commentaire
 
+
 ###Zonegeo
-## FROM Zonegeo_qgis WHERE ST_WITHIN(ST_MakeValid(Equipement_qgis.geom),ST_MakeValid(Zonegeo_qgis.geom))
+## FROM Zonegeo_qgis WHERE ST_WITHIN(ST_MakeValid(Equipement_now.geom),ST_MakeValid(Zonegeo_qgis.geom))
 pk_zonegeo;     Int;            ;        pk_zonegeo ;  pk_zonegeo
+secteur;     String;            ;        libelle
+
+
 
 ###geom
-##FROM Equipement_qgis AS Equipementtemp WHERE Equipementtemp.pk_objet = Equipement_qgis.pk_objet
 geom;         Int;               ;                  ST_AsText(geom)
 
 ###main
-FROM Equipement_qgis WHERE ST_GeometryType(ST_MakeValid(geom)) = 'LINESTRING'
+FROM Equipement_now WHERE ST_GeometryType(ST_MakeValid(geom)) = 'LINESTRING'

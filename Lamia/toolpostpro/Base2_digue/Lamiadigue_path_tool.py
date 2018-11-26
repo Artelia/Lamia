@@ -6,11 +6,11 @@ try:
 except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget, QLabel, QFrame, QTreeWidgetItem, QHeaderView)
 
-from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
+# from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
 import os
 import io
-from ...libs import pyqtgraph as pg
-from ...libs.pyqtgraph import exporters
+# from ...libs import pyqtgraph as pg
+# from ...libs.pyqtgraph import exporters
 
 import matplotlib
 matplotlib.use('Agg')
@@ -19,7 +19,7 @@ import networkx
 import numpy as np
 import shutil
 
-from ..Base.Lamia_path_tool import PathTool
+from ..Base2.Lamia_path_tool import PathTool
 
 # ********************************************************************************************************************
 # ********************************* Main Widget                *******************************************************

@@ -14,12 +14,33 @@ from ...toolabstract.Lamia_abstract_tool import AbstractLamiaTool
 import os
 import datetime
 import numpy as np
-from ...libs import pyqtgraph as pg
-pg.setConfigOption('background', 'w')
-from collections import OrderedDict
+import sys
+
+
+if False:
+    if sys.version_info.major == 2:
+        from ...libs import pyqtgraph as pg
+        pg.setConfigOption('background', 'w')
+    elif sys.version_info.major == 3:
+        from ...libs import pyqtgraph as pg
+        pg.setConfigOption('background', 'w')
+
+
 import matplotlib
-matplotlib.use('Agg')
+matplotlib.use('agg')
 import matplotlib.pyplot as plt
+font = {'family' : 'normal','weight' : 'bold','size'   : 8}
+matplotlib.rc('font', **font)
+#matplotlib.rc('xtick', labelsize=20)
+#matplotlib.rc('ytick', labelsize=20)
+
+if sys.version_info.major == 2:
+    from matplotlib.backends.backend_qt4agg import (FigureCanvasQTAgg as FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
+elif sys.version_info.major == 3:
+    from matplotlib.backends.backend_qt5agg import (FigureCanvasQTAgg as FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
+
+from collections import OrderedDict
+
 
 """
 ne permettre de la renseigner qu en etant une classe fille de leve topo - sinon pas de datecreation
@@ -94,17 +115,25 @@ class BaseGraphiqueTool(AbstractLamiaTool):
             self.userwdgfield.pushButton_delline.clicked.connect(self.removerow)
             self.enableTypeComboBox()
 
-            # Tools tab - temporal graph
-            self.pyqtgraphwdg = pg.PlotWidget()
-            #layout = QtGui.QVBoxLayout()
-            #layout.addWidget(self.pyqtgraphwdg)
-            self.vb = self.pyqtgraphwdg.getViewBox()
-            #self.userwdg.frame_graph.setLayout(layout)
-            self.userwdgfield.frame_graph.layout().addWidget(self.pyqtgraphwdg)
-            self.plotitem = []
+            if True:
+                self.figuretype = plt.figure()
+                self.axtype = self.figuretype.add_subplot(111)
+                self.mplfigure = FigureCanvas(self.figuretype)
+                self.userwdgfield.frame_graph.layout().addWidget(self.mplfigure)
+                self.toolbar = NavigationToolbar(self.mplfigure, self.userwdgfield.frame_graph)
+                self.userwdgfield.frame_graph.layout().addWidget(self.toolbar)
 
-            self.figuretype = plt.figure()
-            self.axtype = self.figuretype.add_subplot(111)
+            if False:
+                # Tools tab - temporal graph
+                self.pyqtgraphwdg = pg.PlotWidget()
+                #layout = QtGui.QVBoxLayout()
+                #layout.addWidget(self.pyqtgraphwdg)
+                self.vb = self.pyqtgraphwdg.getViewBox()
+                #self.userwdg.frame_graph.setLayout(layout)
+                self.userwdgfield.frame_graph.layout().addWidget(self.pyqtgraphwdg)
+                self.plotitem = []
+
+
 
 
             # ****************************************************************************************
@@ -142,7 +171,10 @@ class BaseGraphiqueTool(AbstractLamiaTool):
                     self.userwdgfield.tableWidget.setCellWidget(introw + 1, i, spinbox)
 
         header = self.userwdgfield.tableWidget.horizontalHeader()
-        header.setResizeMode(QHeaderView.ResizeToContents)
+        if sys.version_info.major == 2:
+            header.setResizeMode(QHeaderView.ResizeToContents)
+        elif sys.version_info.major == 3:
+            header.resizeSections(QHeaderView.ResizeToContents)
         header.setStretchLastSection(True)
 
         self.enableTypeComboBox()
@@ -168,7 +200,8 @@ class BaseGraphiqueTool(AbstractLamiaTool):
 
     def postInitFeatureProperties(self, feat):
 
-        self.pyqtgraphwdg.clear()
+        if False:
+            self.pyqtgraphwdg.clear()
         """
         if len(self.plotitem)>0:
             for plot in self.plotitem:
@@ -267,7 +300,6 @@ class BaseGraphiqueTool(AbstractLamiaTool):
 
 
     def showGraph(self,type, graphdata):
-        # print('showGraph')
 
         typetext = self.userwdgfield.comboBox_graphtype.currentText()
         type = self.dbase.getConstraintRawValueFromText(self.dbasetablename,'typegraphique',typetext)
@@ -276,36 +308,52 @@ class BaseGraphiqueTool(AbstractLamiaTool):
 
         result = graphdata
 
+        if True:
+            if self.currentFeature['typegraphique'] == 'PTR':
+                Xgraph = [0.0]
+                Zgraph = [0.0]
 
-        if self.currentFeature['typegraphique'] == 'SIM':
-            self.plotitem.append([self.pyqtgraphwdg.plot(result['x'], result['y'], pen=pg.mkPen('b', width=2)), result['x'], result['y']])
-            self.pyqtgraphwdg.autoRange()
+                for i in range(len(result['x'])):
+                    Xgraph.append(Xgraph[-1] + float(result['x'][i]))
+                    Zgraph.append(Zgraph[-1] + float(result['y'][i]))
 
-        if self.currentFeature['typegraphique'] == 'PTR':
-            Xgraph = [0.0]
-            Zgraph = [0.0]
 
-            for i in range(len(result['x'])):
-                Xgraph.append(Xgraph[-1] + float(result['x'][i]))
-                Zgraph.append(Zgraph[-1] + float(result['y'][i]))
+            self.axtype.clear()
+            self.axtype.plot(Xgraph, Zgraph)
+            self.axtype.grid()
+            self.figuretype.canvas.draw()
 
-            self.plotitem.append([self.pyqtgraphwdg.plot(Xgraph, Zgraph, pen=pg.mkPen('b', width=2)), Xgraph, Zgraph])
-            self.pyqtgraphwdg.autoRange()
-            # '<div style="text-align: center"><span style="color: #FFF;">This is the</span><br><span style="color: #FF0; font-size: 16pt;">PEAK</span></div>'
-            for i in range(len(Xgraph) -1):
-                #txtitem =  pg.TextItem('Test')
-                # print(i,result['index1'][i])
-                # txtitem = pg.TextItem(result['index1'][i],anchor = (Xgraph[i],Zgraph[i]))
 
-                html = '<div style="text-align: center"><span style="color:  #000000; font-size: 12pt;">' + result['index2'][i]
-                html +=      '</span><br><span style="color:  #000000; font-size: 12pt;">' + result['index3'][i] + '</span></div>'
-                #txtitem = pg.TextItem(result['index2'][i] + '\n' + result['index3'][i])
-                txtitem = pg.TextItem()
-                txtitem.setHtml(html)
-                txtitem.setPos(Xgraph[i],Zgraph[i])
-                #txtitem.setTextWidth(10)
-                #txtitem.setHtml('<div style="text-align: center"><span style="color:  #000000;">This is the</span><br><span style="color:  #000000; font-size: 16pt;">PEAK</span></div>')
-                self.pyqtgraphwdg.addItem( txtitem)
+        if False:
+            if self.currentFeature['typegraphique'] == 'SIM':
+                self.plotitem.append([self.pyqtgraphwdg.plot(result['x'], result['y'], pen=pg.mkPen('b', width=2)), result['x'], result['y']])
+                self.pyqtgraphwdg.autoRange()
+
+            if self.currentFeature['typegraphique'] == 'PTR':
+                Xgraph = [0.0]
+                Zgraph = [0.0]
+
+                for i in range(len(result['x'])):
+                    Xgraph.append(Xgraph[-1] + float(result['x'][i]))
+                    Zgraph.append(Zgraph[-1] + float(result['y'][i]))
+
+                self.plotitem.append([self.pyqtgraphwdg.plot(Xgraph, Zgraph, pen=pg.mkPen('b', width=2)), Xgraph, Zgraph])
+                self.pyqtgraphwdg.autoRange()
+                # '<div style="text-align: center"><span style="color: #FFF;">This is the</span><br><span style="color: #FF0; font-size: 16pt;">PEAK</span></div>'
+                for i in range(len(Xgraph) -1):
+                    #txtitem =  pg.TextItem('Test')
+                    # print(i,result['index1'][i])
+                    # txtitem = pg.TextItem(result['index1'][i],anchor = (Xgraph[i],Zgraph[i]))
+
+                    html = '<div style="text-align: center"><span style="color:  #000000; font-size: 12pt;">' + result['index2'][i]
+                    html +=      '</span><br><span style="color:  #000000; font-size: 12pt;">' + result['index3'][i] + '</span></div>'
+                    #txtitem = pg.TextItem(result['index2'][i] + '\n' + result['index3'][i])
+                    txtitem = pg.TextItem()
+                    txtitem.setHtml(html)
+                    txtitem.setPos(Xgraph[i],Zgraph[i])
+                    #txtitem.setTextWidth(10)
+                    #txtitem.setHtml('<div style="text-align: center"><span style="color:  #000000;">This is the</span><br><span style="color:  #000000; font-size: 16pt;">PEAK</span></div>')
+                    self.pyqtgraphwdg.addItem( txtitem)
 
 
 

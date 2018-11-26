@@ -59,20 +59,20 @@ class AbstractLamiaTool(QWidget):
         debugtime = False
 
         if debugtime:
-            timestart = time.clock()
+            timestart = self.dbase.getTimeNow()
 
         super(AbstractLamiaTool, self).__init__(parent)
 
         if debugtime:
             QApplication.processEvents()
-            logging.getLogger('Lamia').debug('Start init %s %.3f',self.dbasetablename,  time.clock() - timestart)
+            logging.getLogger('Lamia').debug('Start init %s %.3f',self.dbasetablename,  self.dbase.getTimeNow()  - timestart)
 
         uipath = os.path.join(os.path.dirname(__file__), '..', 'dialog', 'InspectionDigue_propertieswidget.ui')
         uic.loadUi(uipath, self)
 
         QApplication.processEvents()
         if debugtime:
-            logging.getLogger('Lamia').debug('step1 prop wdg %s %.3f', self.dbasetablename,time.clock() - timestart)
+            logging.getLogger('Lamia').debug('step1 prop wdg %s %.3f', self.dbasetablename,self.dbase.getTimeNow()  - timestart)
         # ***************************************************************
         # ******************   Variables def ****************************
         # ***************************************************************
@@ -149,7 +149,7 @@ class AbstractLamiaTool(QWidget):
 
         if debugtime:
             QApplication.processEvents()
-            logging.getLogger('Lamia').debug('step2 end var  %s %.3f', self.dbasetablename, time.clock() - timestart)
+            logging.getLogger('Lamia').debug('step2 end var  %s %.3f', self.dbasetablename, self.dbase.getTimeNow()  - timestart)
 
         #  tablewidget - expert widget
         self.tableWidget = QTableWidget()
@@ -166,7 +166,7 @@ class AbstractLamiaTool(QWidget):
 
         if debugtime:
             QApplication.processEvents()
-            logging.getLogger('Lamia').debug('step3 table wdg %s %.3f', self.dbasetablename, time.clock() - timestart)
+            logging.getLogger('Lamia').debug('step3 table wdg %s %.3f', self.dbasetablename, self.dbase.getTimeNow()  - timestart)
 
         # header.setResizeMode(2, QHeaderView.ResizeToContents)
         # header.setResizeMode(3, QHeaderView.ResizeToContents)
@@ -212,9 +212,9 @@ class AbstractLamiaTool(QWidget):
         # raw connection
         # *******************************************************
         # load tools - must be kept in this order
-        if debugtime: logging.getLogger('Lamia').debug('before initTool %s %.3f',self.dbasetablename, time.clock() - timestart)
+        if debugtime: logging.getLogger('Lamia').debug('before initTool %s %.3f',self.dbasetablename, self.dbase.getTimeNow()  - timestart)
         self.initTool()
-        if debugtime: logging.getLogger('Lamia').debug('After initTool %s %.3f',self.dbasetablename, time.clock() - timestart)
+        if debugtime: logging.getLogger('Lamia').debug('After initTool %s %.3f',self.dbasetablename, self.dbase.getTimeNow()  - timestart)
 
         # *******************************************************
         # Post inittool things
@@ -244,7 +244,7 @@ class AbstractLamiaTool(QWidget):
 
         if debugtime:
             QApplication.processEvents()
-            logging.getLogger('Lamia').debug('end change propertie wdg  %s %.3f',self.dbasetablename, time.clock() - timestart)
+            logging.getLogger('Lamia').debug('end change propertie wdg  %s %.3f',self.dbasetablename, self.dbase.getTimeNow()  - timestart)
 
 
         if True:
@@ -260,7 +260,7 @@ class AbstractLamiaTool(QWidget):
 
         if debugtime:
             QApplication.processEvents()
-            logging.getLogger('Lamia').debug('end init widget %s %.3f',self.dbasetablename, time.clock() - timestart)
+            logging.getLogger('Lamia').debug('end init widget %s %.3f',self.dbasetablename, self.dbase.getTimeNow()  - timestart)
 
 
     # ******************************************************************************************************************
@@ -295,11 +295,11 @@ class AbstractLamiaTool(QWidget):
         Function called when visual mode is changed
         """
         debug = False
-        timestart = time.clock()
+        timestart = self.dbase.getTimeNow()
 
         if debug:
             QApplication.processEvents()
-            logging.getLogger('Lamia').debug('Start init %s %.3f',self.dbasetablename,  time.clock() - timestart)
+            logging.getLogger('Lamia').debug('Start init %s %.3f',self.dbasetablename,  self.dbase.getTimeNow()  - timestart)
 
         # clear groupBox_properties
         if self.groupBox_properties.layout().count() > 0:
@@ -314,7 +314,7 @@ class AbstractLamiaTool(QWidget):
 
         if debug:
             QApplication.processEvents()
-            logging.getLogger('Lamia').debug('befor  set wdg  %s %.3f',self.dbasetablename,  time.clock() - timestart)
+            logging.getLogger('Lamia').debug('befor  set wdg  %s %.3f',self.dbasetablename,  self.dbase.getTimeNow()  - timestart)
 
 
 
@@ -335,7 +335,7 @@ class AbstractLamiaTool(QWidget):
                         self.dicttablefieldtoinit[key] = self.linkuserwdg[key]['widgets'].keys()
 
 
-            elif self.dbase.visualmode in [1,4]:
+            elif self.dbase.visualmode == 1:
                 self.initDesktopUI()
                 if self.userwdgdesktop is not None:
                     self.userwdg = self.userwdgdesktop
@@ -350,6 +350,22 @@ class AbstractLamiaTool(QWidget):
                     self.dbasechildwdg = self.dbasechildwdgfield
                 else:
                     self.dbasechildwdg = []
+
+
+            elif self.dbase.visualmode == 4:
+                self.initDesktopUI()
+
+                if self.userwdgfield is not None:
+                    self.userwdg = self.userwdgfield
+                    self.linkuserwdg = self.linkuserwdgfield
+                if self.dbasechildwdgfield is not None:
+                    self.dbasechildwdg = self.dbasechildwdgfield
+
+                self.dicttablefieldtoinit = {}
+                if self.linkuserwdg is not None:
+                    for key in self.linkuserwdg.keys():
+                        self.dicttablefieldtoinit[key] = self.linkuserwdg[key]['widgets'].keys()
+
             # load userwdg
             if self.userwdg is not None:
                 self.groupBox_properties.layout().addWidget(self.userwdg)
@@ -381,7 +397,7 @@ class AbstractLamiaTool(QWidget):
 
         if debug:
             QApplication.processEvents()
-            logging.getLogger('Lamia').debug('befor  changePropertiesWidget %s %.3f',self.dbasetablename,  time.clock() - timestart)
+            logging.getLogger('Lamia').debug('befor  changePropertiesWidget %s %.3f',self.dbasetablename, self.dbase.getTimeNow()  - timestart)
 
         # dbasechildwdg change
         for childwdg in self.dbasechildwdg:
@@ -389,7 +405,7 @@ class AbstractLamiaTool(QWidget):
 
         if debug:
             QApplication.processEvents()
-            logging.getLogger('Lamia').debug('after  changePropertiesWidget %s %.3f',self.dbasetablename,  time.clock() - timestart)
+            logging.getLogger('Lamia').debug('after  changePropertiesWidget %s %.3f',self.dbasetablename,  self.dbase.getTimeNow()  - timestart)
 
         # load the widgets in main tree
         if self.dbase.visualmode in self.visualmode:
@@ -408,7 +424,7 @@ class AbstractLamiaTool(QWidget):
 
         if debug:
             QApplication.processEvents()
-            logging.getLogger('Lamia').debug('end init %s %.3f',self.dbasetablename,  time.clock() - timestart)
+            logging.getLogger('Lamia').debug('end init %s %.3f',self.dbasetablename,  self.dbase.getTimeNow()  - timestart)
 
     def loadWidgetinMainTree(self):
         """
@@ -463,6 +479,11 @@ class AbstractLamiaTool(QWidget):
                 wdgitem = root
             # print('unload', self.dbasetablename, wdgitem.text(0))
             wdgitem.removeChild(self.qtreewidgetitem)
+
+            if wdgitem != self.windowdialog.MaintreeWidget.invisibleRootItem() and wdgitem.childCount() == 0:
+                self.windowdialog.MaintreeWidget.invisibleRootItem().removeChild(wdgitem)
+
+
             self.disconnectIdsGui()
 
 
@@ -1107,7 +1128,7 @@ class AbstractLamiaTool(QWidget):
         debug = False
 
         if debug :
-            timestart = time.clock()
+            timestart = self.dbase.getTimeNow()
 
         self.disconnectIdsGui()
 
@@ -1126,9 +1147,15 @@ class AbstractLamiaTool(QWidget):
             self.linkedtreewidget.setHeaderItem(QTreeWidgetItem(headerlist))
             header = self.linkedtreewidget.header()
             lenheaderlist = len(headerlist)
-            for i in range(lenheaderlist):
-                header.setResizeMode(i, QHeaderView.ResizeToContents)
-            header.setResizeMode(lenheaderlist-1, QHeaderView.Stretch)
+            if sys.version_info.major == 2:
+                for i in range(lenheaderlist):
+                    header.setResizeMode(i, QHeaderView.ResizeToContents)
+                header.setResizeMode(lenheaderlist-1, QHeaderView.Stretch)
+            elif  sys.version_info.major == 3:
+                for i in range(lenheaderlist):
+                    header.setSectionResizeMode(i, QHeaderView.ResizeToContents)
+                header.setSectionResizeMode(lenheaderlist-1, QHeaderView.Stretch)
+
             parentitem = self.linkedtreewidget.invisibleRootItem()
         elif (self.parentWidget is not None and self.parentWidget.linkedtreewidget is not None
                 and self.parentWidget.currentFeature is not None):
@@ -1183,7 +1210,7 @@ class AbstractLamiaTool(QWidget):
             self.initFeatureProperties(None)
 
 
-        if debug: logging.getLogger('Lamia').debug('end  %.3f', time.clock() - timestart)
+        if debug: logging.getLogger('Lamia').debug('end  %.3f', self.dbase.getTimeNow()  - timestart)
         self.connectIdsGui()
 
 
@@ -1836,7 +1863,7 @@ class AbstractLamiaTool(QWidget):
         debug = False
 
         if debug :
-            timestart = time.clock()
+            timestart = self.dbase.getTimeNow()
 
         #if debug: logging.getLogger("Lamia").debug('start points : %s', points)
         if debug: logging.getLogger("Lamia").debug('start')
@@ -1909,7 +1936,7 @@ class AbstractLamiaTool(QWidget):
             self.currentFeaturePK = self.currentFeature.id()
 
             if debug: logging.getLogger("Lamia").debug('saveQGisFeature done with geom  : %s',self.currentFeature.geometry().exportToWkt())
-            if debug: logging.getLogger('Lamia').debug('time  %.3f', time.clock() - timestart)
+            if debug: logging.getLogger('Lamia').debug('time  %.3f', self.dbase.getTimeNow()  - timestart)
 
             # *************************
             # save attributes
@@ -1924,7 +1951,7 @@ class AbstractLamiaTool(QWidget):
 
 
                 if debug: logging.getLogger("Lamia").debug('createParentFeature ok')
-                if debug: logging.getLogger('Lamia').debug('time  %.3f', time.clock() - timestart)
+                if debug: logging.getLogger('Lamia').debug('time  %.3f', self.dbase.getTimeNow()  - timestart)
 
             if False:
 
@@ -1937,7 +1964,7 @@ class AbstractLamiaTool(QWidget):
                     self.currentFeature = self.dbase.getLayerFeatureById(self.dbasetablename, self.currentFeature.id())
 
                 if debug: logging.getLogger("Lamia").debug('currentFeature updated')
-                if debug: logging.getLogger('Lamia').debug('time  %.3f', time.clock() - timestart)
+                if debug: logging.getLogger('Lamia').debug('time  %.3f', self.dbase.getTimeNow()  - timestart)
 
             if True:
                 self.saveFeatureProperties()
@@ -1945,7 +1972,7 @@ class AbstractLamiaTool(QWidget):
             if False:
 
                 if debug: logging.getLogger("Lamia").debug('saveFeatureProperties done')
-                if debug: logging.getLogger('Lamia').debug('time  %.3f', time.clock() - timestart)
+                if debug: logging.getLogger('Lamia').debug('time  %.3f', self.dbase.getTimeNow()  - timestart)
 
                 # self.currentFeature = self.dbasetable['layer'].getFeatures(qgis.core.QgsFeatureRequest(self.currentFeature.id())).next()
                 if self.dbase.revisionwork:
@@ -1959,7 +1986,7 @@ class AbstractLamiaTool(QWidget):
                     self.saveRessourceFile()
             if False:
                 if debug: logging.getLogger("Lamia").debug('saveRessourceFile done')
-                if debug: logging.getLogger('Lamia').debug('time  %.3f', time.clock() - timestart)
+                if debug: logging.getLogger('Lamia').debug('time  %.3f', self.dbase.getTimeNow()  - timestart)
 
                 # self.currentFeature = self.dbasetable['layer'].getFeatures(qgis.core.QgsFeatureRequest(self.currentFeature.id())).next()
                 if self.dbase.revisionwork:
@@ -1989,7 +2016,7 @@ class AbstractLamiaTool(QWidget):
                 self.postSaveFeature(self.savingnewfeature)
 
                 if debug: logging.getLogger("Lamia").debug('postSaveFeature done')
-                if debug: logging.getLogger('Lamia').debug('time  %.3f', time.clock() - timestart)
+                if debug: logging.getLogger('Lamia').debug('time  %.3f', self.dbase.getTimeNow()  - timestart)
             if False:
                 # reload entirely saved feature
                 self.initFeatureProperties(self.currentFeature)
@@ -2020,7 +2047,7 @@ class AbstractLamiaTool(QWidget):
                         # self.dbase.commit()
 
                 if debug: logging.getLogger("Lamia").debug('current prestation  done')
-                if debug: logging.getLogger('Lamia').debug('time  %.3f', time.clock() - timestart)
+                if debug: logging.getLogger('Lamia').debug('time  %.3f', self.dbase.getTimeNow()  - timestart)
 
                 # self.currentFeature = self.dbasetable['layer'].getFeatures(qgis.core.QgsFeatureRequest(self.currentFeature.id())).next()
                 if self.dbase.revisionwork:
@@ -2056,7 +2083,7 @@ class AbstractLamiaTool(QWidget):
                             self.dbase.commit()
 
                     if debug: logging.getLogger("Lamia").debug('datemodification done')
-                    if debug: logging.getLogger('Lamia').debug('time  %.3f', time.clock() - timestart)
+                    if debug: logging.getLogger('Lamia').debug('time  %.3f', self.dbase.getTimeNow()  - timestart)
 
 
             if True:
@@ -2064,7 +2091,7 @@ class AbstractLamiaTool(QWidget):
                 if self.savingnewfeature or self.savingnewfeatureVersion :
                     self.loadFeaturesinTreeWdg()
 
-                    if debug: logging.getLogger('Lamia').debug('new feat loadFeaturesinTreeWdg  %.3f', time.clock() - timestart)
+                    if debug: logging.getLogger('Lamia').debug('new feat loadFeaturesinTreeWdg  %.3f', self.dbase.getTimeNow()  - timestart)
                     if self.comboBox_featurelist.count() > 1:
                         #get id
                         sql = "SELECT id_" + self.dbasetablename.lower() + " FROM " + self.dbasetablename.lower() + "_qgis"
@@ -2087,11 +2114,11 @@ class AbstractLamiaTool(QWidget):
                 if showsavemessage:
                     self.windowdialog.normalMessage('Objet sauvegarde : ' + str(self.currentFeature.attributes()))
 
-                if debug: logging.getLogger('Lamia').debug('wait for repaint  %.3f', time.clock() - timestart)
+                if debug: logging.getLogger('Lamia').debug('wait for repaint  %.3f', self.dbase.getTimeNow()  - timestart)
 
                 self.dbasetable['layerqgis'].triggerRepaint()
 
-                if debug: logging.getLogger('Lamia').debug('end time  %.3f', time.clock() - timestart)
+                if debug: logging.getLogger('Lamia').debug('end time  %.3f', self.dbase.getTimeNow()  - timestart)
 
             # *************************
             # reinit things
@@ -3108,8 +3135,14 @@ class AbstractLamiaTool(QWidget):
             for point in points:
                 pointsmapcanvas.append(self.dbase.xform.transform(point))
             pointslayer = points
-        else:
+            """
+            else:
+                for point in points:
+                    pointslayer.append(self.dbase.xformreverse.transform(point))
+                pointsmapcanvas = points
+            """
 
+        else:
             if comefromcanvas:
                 pointsmapcanvas = points
                 for point in points:
@@ -3186,6 +3219,7 @@ class AbstractLamiaTool(QWidget):
         if debug: logging.getLogger("Lamia").debug('end canvas points : %s', pointsmapcanvas)
         if debug: logging.getLogger("Lamia").debug('end tempgeom : %s', self.toWKT(self.tempgeometry))
         #if debug: logging.getLogger("Lamia").debug('end tempgeom : %s', self.toWKT(self.tempgeometry))
+        # print(self.dbase.dbasetables['Infralineaire']['layer'].sourceCrs().authid() )
 
         self.mtool = None
 
@@ -3659,3 +3693,4 @@ class AbstractLamiaTool(QWidget):
             returnstr = geom.asWkt()
 
         return returnstr
+

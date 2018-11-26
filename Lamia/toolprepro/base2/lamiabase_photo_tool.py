@@ -14,6 +14,7 @@ from .lamiabase_photoviewer import PhotoViewer
 
 prefixhoto = ''
 numphoto = None
+import sys
 
 
 class BasePhotoTool(AbstractLamiaTool):
@@ -135,8 +136,16 @@ class BasePhotoTool(AbstractLamiaTool):
 
 
     def choosePhoto(self):
-        file, extension = self.windowdialog.qfiledlg.getOpenFileNameAndFilter(None, 'Choose the file', self.dbase.imagedirectory,
-                                                                 'Image (*.jpg)', '')
+
+        fiel = None
+        if sys.version_info.major == 2:
+            file, extension = self.windowdialog.qfiledlg.getOpenFileNameAndFilter(None, 'Choose the file', self.dbase.imagedirectory,
+                                                                     'Image (*.jpg)', '')
+        elif sys.version_info.major == 3:
+            file , extension= self.windowdialog.qfiledlg.getOpenFileName(None, 'Choose the file', self.dbase.imagedirectory,
+                                                                     'Image (*.jpg)', '')
+
+
         if file:
             self.userwdg.lineEdit_file.setText(os.path.normpath(file))
             self.showImageinLabelWidget(self.photowdg , self.userwdg.lineEdit_file.text())

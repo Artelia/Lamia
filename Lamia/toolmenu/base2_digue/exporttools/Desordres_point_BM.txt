@@ -12,16 +12,17 @@ id_observation;         Int;                  ;     id_observation
 dateobservation;      String;               ;                  datetimeobservation
 source;      String;               ;                  source
 nombre;         Int;                  ;     nombre  
-gravite;      String;         gravite      ;                  Observation_qgis.gravite
+gravite;      String;         gravite      ;                  Observation_now.gravite
 evolution;      String;               ;                  evolution
 commentairesuite;      String;               ;                  commentairesuite
 
 ###Zonegeo
-## FROM Zonegeo_qgis WHERE ST_WITHIN(ST_MakeValid(Desordre.geom),ST_MakeValid(Zonegeo_qgis.geom))
+## FROM Zonegeo_qgis WHERE ST_WITHIN(ST_MakeValid(Desordre_now.geom),ST_MakeValid(Zonegeo_qgis.geom))
 pk_zonegeo;     Int;            ;        pk_zonegeo ;  pk_zonegeo
+secteur;     String;            ;        libelle
 
 ###Objet
-##FROM Objet WHERE  Objet.pk_objet = Observation_qgis.pk_objet
+##FROM Objet WHERE  Objet.pk_objet = Observation_now.pk_objet
 #nom              type               cst               valeur             
 id_objet;         Int;                  ;     id_objet         
 commentaire;      String;               ;                  commentaire
@@ -31,4 +32,4 @@ commentaire;      String;               ;                  commentaire
 geom;         Int;               ;                  ST_AsText(ST_MakeValid(geom))
 
 ###main
-FROM Observation_qgis INNER JOIN Desordre ON  Desordre.id_desordre = Observation_qgis.lid_desordre AND Observation_qgis.datetimeobservation = (SELECT datetimeobservation FROM Observation as Observationtemp WHERE Observationtemp.lid_desordre=Desordre.id_desordre ORDER BY datetimeobservation DESC LIMIT 1)   WHERE ST_GeometryType(ST_MakeValid(geom)) = 'POINT'
+FROM Observation_now INNER JOIN Desordre_now ON  Desordre_now.id_desordre = Observation_now.lid_desordre AND Observation_now.datetimeobservation = (SELECT datetimeobservation FROM Observation_now as Observationtemp WHERE Observationtemp.lid_desordre=Desordre_now.id_desordre ORDER BY datetimeobservation DESC LIMIT 1)   WHERE ST_GeometryType(ST_MakeValid(geom)) = 'POINT'

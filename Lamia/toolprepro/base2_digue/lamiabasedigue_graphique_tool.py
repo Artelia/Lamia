@@ -14,8 +14,6 @@ from ..base2.lamiabase_graphique_tool import BaseGraphiqueTool
 import os
 import datetime
 import numpy as np
-from ...libs import pyqtgraph as pg
-pg.setConfigOption('background', 'w')
 from collections import OrderedDict
 import matplotlib
 matplotlib.use('Agg')

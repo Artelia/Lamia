@@ -38,8 +38,8 @@ class BaseInfraLineaireTool(AbstractLamiaTool):
     def initTool(self):
         # ****************************************************************************************
         # Main spec
-        timestart = time.clock()
-        if debugtime: logging.getLogger('Lamia').debug('Start init %s',str(round(time.clock() - timestart, 3)))
+        timestart = self.dbase.getTimeNow()
+        if debugtime: logging.getLogger('Lamia').debug('Start init %s',str(round(self.dbase.getTimeNow()  - timestart, 3)))
 
         self.CAT = 'Description'
         self.NAME = 'Troncon'

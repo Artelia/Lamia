@@ -19,6 +19,7 @@ class TestMain(Test):
         self.createWin()
 
         path = os.path.normpath("C://Users//patrice.verchere//Documents//GitHub//Lamia//Lamia//test//02_test_export//BD_totale.sqlite")
+        #path = "I://FLUVIAL//4352408_33_CCMA_VTA_Valeyrac//6_Reglementaire//62_Dessins//620_Qgis//total//vvvvv.sqlite"
         self.wind.dbase.loadQgisVectorLayers(path)
         self.wind.loadUiDesktop()
 
@@ -33,10 +34,10 @@ class TestMain(Test):
                 indexrapport = i
                 break
 
-        # self.wind.dbase.dbasetables['Zonegeo']['layerqgis'].selectByIds([20,21])
+        self.wind.dbase.dbasetables['Zonegeo']['layerqgis'].selectByIds([1])
         # Desordres Infralineaire Equipementhydraulique
         self.wind.menutools[indexrapport].pdffile = "c://testrapport.pdf"
-        self.wind.menutools[indexrapport].reporttype = 'Infralineaire'
+        self.wind.menutools[indexrapport].reporttype = 'Desordres'
         self.wind.menutools[indexrapport].work()
 
 

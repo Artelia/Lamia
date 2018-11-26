@@ -12,6 +12,9 @@ import datetime
 
 #pathfrom = "C://000_testdigue//convertBM//FROM//BD_SIJALAG_ind10.sqlite"
 pathfrom = "C://000_testdigue//convertBM2//FROM//BD_Begles_ind16.sqlite"
+pathfrom = "I://FLUVIAL//4352408_33_CCMA_VTA_Valeyrac//6_Reglementaire//62_Dessins//620_Qgis//Base_Valeyrac.sqlite"
+
+
 #pathfrom = "C://000_testdigue//convertBM2//FROM//BD_SIJALAG_ind14.sqlite"
 #pathfrom = "C://000_testdigue//convertBM2//FROM//BD_Rivedroite_ind5.sqlite"
 
@@ -20,6 +23,7 @@ dbaseparserfrom.loadQgisVectorLayers(pathfrom)
 
 #pathto = "C://000_testdigue//convertBM//TO//BD_SIJALAG_ind10.sqlite"
 pathto = "C://000_testdigue//convertBM2//TO//BD_Begles_ind17.sqlite"
+pathto = "I://FLUVIAL//4352408_33_CCMA_VTA_Valeyrac//6_Reglementaire//62_Dessins//620_Qgis//temp//ancien//val3.sqlite"
 #pathto = "C://000_testdigue//convertBM2//TO//BD_SIJALAG_ind15.sqlite"
 # pathto = "C://000_testdigue//convertBM2//TO//BD_Rivedroite_ind6.sqlite"
 
@@ -29,7 +33,7 @@ if True:
     #shutil.copyfile(originalfile, pathto)
     dbaseparserto = DBaseParser(None)
     # dbaseparserto.printsql = True
-    dbaseparserto.createDbase(slfile=pathto, crs=3945, worktype='Base2_digue', dbasetype='spatialite',
+    dbaseparserto.createDbase(slfile=pathto, crs=2154, worktype='Base2_digue', dbasetype='spatialite',
                            dbaseressourcesdirectory=None)
 
 
@@ -222,11 +226,11 @@ if True:
                 pkobjet = resulttemp[0][0]
 
                 sql = '''INSERT INTO Observation (id_observation, lpk_objet, 
-                          dateobservation,  source,  nombre,     gravite,   evolution,
+                          datetimeobservation,  source,  nombre,     gravite,   evolution,
                            typesuite, commentairesuite, lid_desordre  ) 
                         VALUES (?,?,?,?,?,?,?,?,?,?) '''
                 args = [                        result[0],        pkobjet,
-                            result[3], result[4],  result[5],   result[6],   result[7],
+                            result[3] + ' 00:00:00', result[4],  result[5],   result[6],   result[7],
                             result[9],result[8],    result[2]               ]
                 dbaseparserto.query(sql,args)
 

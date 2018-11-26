@@ -15,10 +15,15 @@ class TestMain(Test):
     def testMethod(self):
         self.createWin()
 
-        path = os.path.normpath("C://Users//patrice.verchere//Documents//GitHub//Lamia//test//02_test_export//BD_totale.sqlite")
+        path = os.path.normpath("C://Users//patrice.verchere//Documents//GitHub//Lamia//test//02_test_export//BD_totale1.sqlite")
+        # path = os.path.normpath("C://Users//patrice.verchere//Documents//GitHub//Lamia//test//02_test_importdb//test01//01_original//test01.sqlite")
+        #path = "I://FLUVIAL//4352408_33_CCMA_VTA_Valeyrac//6_Reglementaire//62_Dessins//620_Qgis//total//vvvvv.sqlite"
         self.dbase.loadQgisVectorLayers(path)
+        print('ok0')
 
         self.loadLayersInCanvas()
+
+        print('ok')
 
         self.createMainWin()
 
@@ -29,6 +34,12 @@ class TestMain(Test):
             self.dbase.query(sql)
 
 
+
+
+        # self.dbase.printsql = True
+        print('ok1')
+        print(self.dbase.canvas.mapSettings().destinationCrs().authid())
+        print(self.dbase.qgiscrs.authid())
         self.mainwin.exec_()
 
 

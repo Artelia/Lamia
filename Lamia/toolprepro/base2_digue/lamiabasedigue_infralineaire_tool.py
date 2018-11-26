@@ -139,7 +139,10 @@ class BaseDigueInfraLineaireTool(BaseInfraLineaireTool):
                 self.userwdgdesktop.stackedWidget_profiltravers.widget(0).layout().addWidget(self.croquisprofilwdg)
 
                 self.graphprofil = GraphiqueTool(dbase=self.dbase, parentwidget=self)
-                self.userwdgdesktop.stackedWidget_profiltravers.widget(1).layout().addWidget(self.graphprofil.pyqtgraphwdg)
+                if False:
+                    self.userwdgdesktop.stackedWidget_profiltravers.widget(1).layout().addWidget(self.graphprofil.pyqtgraphwdg)
+                else:
+                    self.userwdgdesktop.stackedWidget_profiltravers.widget(1).layout().addWidget(self.graphprofil.mplfigure)
                 # self.userwdg.frame_graph.layout().addWidget(self.pyqtgraphwdg)
 
             if True:
@@ -149,7 +152,8 @@ class BaseDigueInfraLineaireTool(BaseInfraLineaireTool):
                         pathtool = self.windowdialog.tools[i]
 
                 self.propertieswdgPROFILLONG = pathtool.__class__(dbase=self.dbase, parentwidget=self)
-                self.userwdgdesktop.tabWidget.widget(2).layout().addWidget(self.propertieswdgPROFILLONG.plotWdg)
+                # self.userwdgdesktop.tabWidget.widget(2).layout().addWidget(self.propertieswdgPROFILLONG.plotWdg)
+                self.userwdgdesktop.tabWidget.widget(2).layout().addWidget(self.propertieswdgPROFILLONG.mplfigure)
             else:
                 self.propertieswdgPROFILLONG = None
 
@@ -364,12 +368,12 @@ class BaseDigueInfraLineaireTool(BaseInfraLineaireTool):
 
                 #profil long
                 if self.propertieswdgPROFILLONG is not None:
-                    self.propertieswdgPROFILLONG.activateMouseTracking(0)
+                    #self.propertieswdgPROFILLONG.activateMouseTracking(0)
                     self.propertieswdgPROFILLONG.rubberbandtrack.hide()
                     self.propertieswdgPROFILLONG.rubberBand.reset(self.dbase.dbasetables['Infralineaire']['layer'].geometryType())
                     currentgeom = self.currentFeature.geometry().asPolyline()
                     self.propertieswdgPROFILLONG.computePath(list(currentgeom[0]), list(currentgeom[-1]))
-                    self.propertieswdgPROFILLONG.activateMouseTracking(2)
+                    #self.propertieswdgPROFILLONG.activateMouseTracking(2)
                     self.propertieswdgPROFILLONG.rubberbandtrack.hide()
                     self.propertieswdgPROFILLONG.rubberBand.reset(self.dbase.dbasetables['Infralineaire']['layer'].geometryType())
 

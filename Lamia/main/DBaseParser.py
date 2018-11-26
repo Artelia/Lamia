@@ -10,7 +10,7 @@ if qgis.utils.iface is None:
     qgis.utils.uninstallErrorHook()     #for standart output
 import math
 import shutil
-
+import re
 try:
     from pyspatialite import dbapi2 as db
     from pyspatialite.dbapi2 import *
@@ -336,7 +336,7 @@ class DBaseParser(QtCore.QObject):
                             self.commit()
 
         if dbaseressourcesdirectory is None and dbasetype == 'spatialite':
-            dbaseressourcesdirectorytemp2 = '.\DBspatialite'
+            dbaseressourcesdirectorytemp2 = './/DBspatialite'
         else:
             dbaseressourcesdirectorytemp2 = dbaseressourcesdirectorytemp
 
@@ -952,6 +952,8 @@ class DBaseParser(QtCore.QObject):
                 uri.setDataSource('', sql , 'geom' ,'',finaltableid)
             else:
                 uri.setDataSource('', sql, '', '', finaltableid)
+
+            print(uri.uri())
             layer = qgis.core.QgsVectorLayer(uri.uri(), tablename, 'spatialite')
 
         elif self.dbasetype == 'postgis':
@@ -969,7 +971,7 @@ class DBaseParser(QtCore.QObject):
     def query(self, sql,arguments=[], docommit=True):
 
         if self.printsql :
-            timestart = time.clock()
+            timestart = self.getTimeNow()
 
         if self.dbasetype == 'spatialite':
             # cursor = self.connSLITE.cursor()
@@ -978,7 +980,7 @@ class DBaseParser(QtCore.QObject):
                 self.SLITEcursor = self.connSLITE.cursor()
             try:
                 if self.printsql :
-                    logging.getLogger('Lamia').debug('%s %.3f', sql,  time.clock() - timestart)
+                    logging.getLogger('Lamia').debug('%s %.3f', sql,  self.getTimeNow() - timestart)
                 query = self.SLITEcursor.execute(sql,arguments)
                 returnquery = list(query)
                 if docommit:
@@ -1012,11 +1014,81 @@ class DBaseParser(QtCore.QObject):
                     if docommit:
                         self.commit()
                     if self.printsql:
-                        logging.getLogger('Lamia').debug('%s %.3f', sql, time.clock() - timestart)
+                        logging.getLogger('Lamia').debug('%s %.3f', sql, self.getTimeNow() - timestart)
                     return returnrows
                 except psycopg2.ProgrammingError as e:
                     print('error query', e)
                     return None
+
+
+
+    def updateQueryTableNow(self, sqlin, date=None):
+        #sqllist = sqlin.split(' ')
+        sqllist = re.split(' |,|\(|\)|\.|=', sqlin)
+        withsql = ''
+        alreadytables=[]
+        for sqlword in sqllist:
+            if '_now' in sqlword:
+                tablename=sqlword.split('_now')[0]
+                if tablename.lower() not in  alreadytables:
+                    alreadytables.append(tablename.lower())
+                    withsql +=  sqlword + " AS "
+                    withsql += " (SELECT * FROM " + tablename.lower() + "_qgis WHERE "
+                    withsql += self.dateVersionConstraintSQL(date)
+                    withsql += "), "
+
+        withsql = withsql[0:-2]
+        if False and withsql == '':
+            withsql = ''
+
+        sqltemp1 = self.splitSQLSelectFromWhereOrderby(sqlin)
+
+        sqlout = ''
+        if 'WITH' in sqltemp1.keys():
+            sqlout += 'WITH ' + sqltemp1['WITH']
+            sqlout += ', ' + withsql
+            sqlout += 'SELECT ' + sqltemp1['SELECT'] + ' FROM ' + sqltemp1['FROM']+ ' WHERE ' + sqltemp1['WHERE']
+            if 'ORDER' in sqltemp1.keys():
+                sqlout += ' ORDER BY ' + sqltemp1['ORDER']
+
+        elif withsql != '':
+            sqlout += 'WITH ' + withsql + sqlin
+
+        else:
+            sqlout += sqlin
+
+
+
+        return sqlout
+
+
+
+    def splitSQLSelectFromWhereOrderby(self,sqlin):
+        sqltemp = sqlin.split(' ')
+        indexparenthesis=0
+
+        specwords = ['WITH', 'SELECT', 'FROM', 'WHERE', 'GROUP','ORDER']
+        listres={}
+        actualsqlword = None
+        for sqlword in sqltemp:
+            if '(' in sqlword or ')' in sqlword:
+                indexparenthesis += sqlword.count('(')
+                indexparenthesis += - sqlword.count(')')
+                listres[actualsqlword] += ' ' + sqlword
+            elif  sqlword in specwords and indexparenthesis == 0 :
+                actualsqlword = sqlword
+                listres[actualsqlword] = ''
+            else:
+                if actualsqlword:
+                    listres[actualsqlword] += ' ' + sqlword
+
+        if 'GROUP' in listres.keys():
+            listres['GROUP'] = ' '.join(listres['GROUP'].strip().split(' ')[1:])
+
+        return listres
+
+
+
 
     def query2(self, sql):
         if self.dbasetype == 'spatialite':
@@ -1059,7 +1131,7 @@ class DBaseParser(QtCore.QObject):
 
     def _readRecentDBase(self):
         """
-        Lit le fichier des bases de données recentes et rempli le  menu\Fichier\base de données recentes
+        Lit le fichier des bases de données recentes et rempli le  menu//Fichier//base de données recentes
         """
         pathrecentproject = os.path.join(os.path.dirname(__file__), '..', 'config', 'recentprojects.txt')
         try:
@@ -1080,7 +1152,7 @@ class DBaseParser(QtCore.QObject):
                                 port=None, dbname=None, schema=None, user=None, password=None):
         """
         Methode appelée lors du chargement d'une BD lamia
-        Ajoute le chemin dans le fichier chargé dans Menu\Fichier\base de données recentes
+        Ajoute le chemin dans le fichier chargé dans Menu//Fichier//base de données recentes
         """
         if self.dbasetype == 'spatialite':
             if spatialitefile in self.recentsdbase:
@@ -1102,7 +1174,7 @@ class DBaseParser(QtCore.QObject):
     def _saveRecentDBase(self):
         """
         Sauve le path de la BD lamia en cours d'utilisation dans le ficier employé dans
-        menu\Fichier\base de données recentes
+        menu//Fichier//base de données recentes
         """
         pathrecentproject = os.path.join(os.path.dirname(__file__), '..', 'config', 'recentprojects.txt')
         file = open(pathrecentproject, "w")
@@ -1356,7 +1428,7 @@ class DBaseParser(QtCore.QObject):
 
         debug = False
         if debug:
-            timestart = time.clock()
+            timestart = self.getTimeNow()
 
         # vérifie que la table est spatiale
         if int(str(self.qgisversion_int)[0:3]) < 218:
@@ -1642,14 +1714,17 @@ class DBaseParser(QtCore.QObject):
 
 
 
-    def dateVersionConstraintSQL(self):
+    def dateVersionConstraintSQL(self, specialdate=None):
         """
         Crée une chaine à rajouter à la fin d'autre requetes pour spécifier la date et la version voulue
         :return: requete sql comprenant les éléments nécessaires pour filtrer les dates et les versions
         """
 
+        if specialdate is None or specialdate == 'now':
+            workingdatemodif = QtCore.QDate.fromString(self.workingdate, 'yyyy-MM-dd').addDays(1).toString('yyyy-MM-dd')
+        else:
+            workingdatemodif = QtCore.QDate.fromString(specialdate, 'dd/MM/yyyy').addDays(1).toString('yyyy-MM-dd')
 
-        workingdatemodif = QtCore.QDate.fromString(self.workingdate, 'yyyy-MM-dd').addDays(1).toString('yyyy-MM-dd')
 
 
         if self.version == '':
@@ -3103,16 +3178,28 @@ class DBaseParser(QtCore.QObject):
         restemp = []
 
         for l, res in enumerate(listofrawvalues):
+            if sys.version_info.major == 2:
+                if isinstance(res, str) or (isinstance(res, unicode) and listoffields[l] != 'geom'):
+                    restemp.append("'" + str(res).replace("'", "''") + "'")
+                elif listoffields[l] == 'geom' and res is not None:
+                    # print('geom', "ST_GeomFromText('" + res + "', " + str(self.crsnumber)  + ")")
+                    restemp.append("ST_GeomFromText('" + res + "', " + str(self.crsnumber) + ")")
+                elif res is None or res == '':
+                    restemp.append('NULL')
+                else:
+                    restemp.append(str(res))
 
-            if isinstance(res, str) or (isinstance(res, unicode) and listoffields[l] != 'geom'):
-                restemp.append("'" + str(res).replace("'", "''") + "'")
-            elif listoffields[l] == 'geom' and res is not None:
-                # print('geom', "ST_GeomFromText('" + res + "', " + str(self.crsnumber)  + ")")
-                restemp.append("ST_GeomFromText('" + res + "', " + str(self.crsnumber) + ")")
-            elif res is None or res == '':
-                restemp.append('NULL')
-            else:
-                restemp.append(str(res))
+            elif sys.version_info.major == 3:
+                #print(res, str(type(res)))
+                if isinstance(res, str)  and listoffields[l] != 'geom':
+                    restemp.append("'" + str(res).replace("'", "''") + "'")
+                elif listoffields[l] == 'geom' and res is not None:
+                    # print('geom', "ST_GeomFromText('" + res + "', " + str(self.crsnumber)  + ")")
+                    restemp.append("ST_GeomFromText('" + res + "', " + str(self.crsnumber) + ")")
+                elif res is None or res == '':
+                    restemp.append('NULL')
+                else:
+                    restemp.append(str(res))
 
         if type == 'INSERT':
             sql = "INSERT INTO " + tablename + '(' + ','.join(listoffields) + ')'
@@ -3191,4 +3278,8 @@ class DBaseParser(QtCore.QObject):
 
 
 
-
+    def getTimeNow(self):
+        if  sys.version_info.major == 2:
+            return time.clock()
+        elif sys.version_info.major == 3:
+            return time.process_time()

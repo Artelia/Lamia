@@ -11,7 +11,7 @@ import numpy as np
 import glob
 
 #from .tools.Lamia_exportshpdialog import ExportShapefileDialog
-from ..base.Lamiabase_rapport import printPDFBaseWorker
+from ..base2.Lamiabase_rapport import printPDFBaseWorker
 
 #class exportShapefileWorker(AbstractWorker):
 

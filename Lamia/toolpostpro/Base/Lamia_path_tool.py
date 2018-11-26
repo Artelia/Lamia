@@ -9,8 +9,19 @@ except ImportError:
 from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
 import os
 import io
-from ...libs import pyqtgraph as pg
-from ...libs.pyqtgraph import exporters
+import sys
+if False:
+    if sys.version_info.major == 2:
+        from ...libs import pyqtgraph as pg
+        from ...libs.pyqtgraph import exporters
+    elif sys.version_info.major == 3:
+        from ...libs import pyqtgraph as pg
+        pg.setConfigOption('background', 'w')
+
+if sys.version_info.major == 2:
+    from matplotlib.backends.backend_qt4agg import (FigureCanvasQTAgg as FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
+elif sys.version_info.major == 3:
+    from matplotlib.backends.backend_qt5agg import (FigureCanvasQTAgg as FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
 
 import matplotlib
 matplotlib.use('Agg')
@@ -102,21 +113,30 @@ class PathTool(AbstractInspectionDigueTool):
             self.userwdgfield.pushButton_pickend.clicked.connect(self.getPickResult)
 
             # plot
-            self.plotWdg = pg.PlotWidget()
-            datavline = pg.InfiniteLine(0, angle=90, pen=pg.mkPen('r', width=1), name='cross_vertical')
-            datahline = pg.InfiniteLine(0, angle=0, pen=pg.mkPen('r', width=1), name='cross_horizontal')
-            self.plotWdg.addItem(datavline)
-            self.plotWdg.addItem(datahline)
-            self.userwdgfield.frame_chart.layout().addWidget(self.plotWdg)
-            self.userwdgfield.checkBox_track.stateChanged.connect(self.activateMouseTracking)
-            self.doTracking = True
-            self.showcursor = True
+            if False:
+                self.plotWdg = pg.PlotWidget()
+                datavline = pg.InfiniteLine(0, angle=90, pen=pg.mkPen('r', width=1), name='cross_vertical')
+                datahline = pg.InfiniteLine(0, angle=0, pen=pg.mkPen('r', width=1), name='cross_horizontal')
+                self.plotWdg.addItem(datavline)
+                self.plotWdg.addItem(datahline)
+                self.userwdgfield.frame_chart.layout().addWidget(self.plotWdg)
+                self.userwdgfield.checkBox_track.stateChanged.connect(self.activateMouseTracking)
+                self.doTracking = True
+                self.showcursor = True
 
-            self.userwdgfield.comboBox_chart_theme.addItems(['Profil'])
-            self.userwdgfield.comboBox_chart_theme.currentIndexChanged.connect(self.computeGraph)
+                self.userwdgfield.comboBox_chart_theme.addItems(['Profil'])
+                self.userwdgfield.comboBox_chart_theme.currentIndexChanged.connect(self.computeGraph)
+            if True:
+                self.figuretype = plt.figure()
+                self.axtype = self.figuretype.add_subplot(111)
+                self.mplfigure = FigureCanvas(self.figuretype)
+                self.userwdgfield.frame_chart.layout().addWidget(self.mplfigure)
+                self.toolbar = NavigationToolbar(self.mplfigure, self.userwdgfield.frame_chart)
+                self.userwdgfield.frame_chart.layout().addWidget(self.toolbar)
 
+                self.userwdgfield.comboBox_chart_theme.currentIndexChanged.connect(self.computeGraph)
 
-
+    """
     def activateMouseTracking(self, state):
             try:
                 self.plotWdg.scene().sigMouseMoved.disconnect(self.mouseMovedPyQtGraph)
@@ -180,17 +200,23 @@ class PathTool(AbstractInspectionDigueTool):
                         geomforrubberband.transform(xform)
                         self.rubberbandtrack.setCenter(geomforrubberband.asPoint())
 
+    """
 
     def computeGraph(self):
         # print('computeGraph')
         # self.plotwdg = self.plotWdg
-        pitems = self.plotWdg.getPlotItem().listDataItems()
-        for item in pitems:
-            self.plotWdg.removeItem(item)
-        try:
-            self.plotWdg.scene().sigMouseMoved.disconnect(self.mouseMoved)
-        except:
-            pass
+
+        self.axtype.clear()
+
+        if False:
+            pitems = self.plotWdg.getPlotItem().listDataItems()
+            for item in pitems:
+                self.plotWdg.removeItem(item)
+            try:
+                self.plotWdg.scene().sigMouseMoved.disconnect(self.mouseMoved)
+            except:
+                pass
+
 
 
         datas = self.getGraphData()
@@ -198,20 +224,37 @@ class PathTool(AbstractInspectionDigueTool):
         #x=[0, self.geomfinal.length()]
         #y = [0,0]
         # self.plotWdg.plot(x, y, pen=pg.mkPen(model1.item(i, 1).data(Qt.BackgroundRole), width=2), name=tmp_name)
-        self.plotWdg.addLegend()
-        for dataname in datas.keys():
-            # print(dataname.split('-')[1])
-            if dataname.split('-')[1] == 'CRE':
-                penforgraph = pg.mkPen(color='k', width=3, style=QtCore.Qt.SolidLine)
-            elif dataname.split('-')[1] == 'TNT':
-                penforgraph = pg.mkPen(color='g',width=3, style=QtCore.Qt.SolidLine)
-            else:
-                penforgraph = pg.mkPen(color='b', width=3,style=QtCore.Qt.DashLine)
-            datavalues = datas[dataname]
-            self.plotWdg.plot(datavalues['x'], datavalues['y'], name=dataname, pen= penforgraph)
+        if False:
+            self.plotWdg.addLegend()
+            for dataname in datas.keys():
+                # print(dataname.split('-')[1])
+                if dataname.split('-')[1] == 'CRE':
+                    penforgraph = pg.mkPen(color='k', width=3, style=QtCore.Qt.SolidLine)
+                elif dataname.split('-')[1] == 'TNT':
+                    penforgraph = pg.mkPen(color='g',width=3, style=QtCore.Qt.SolidLine)
+                else:
+                    penforgraph = pg.mkPen(color='b', width=3,style=QtCore.Qt.DashLine)
+                datavalues = datas[dataname]
+                self.plotWdg.plot(datavalues['x'], datavalues['y'], name=dataname, pen= penforgraph)
 
-        self.plotWdg.getViewBox().autoRange(items=self.plotWdg.getPlotItem().listDataItems())
-        self.plotWdg.getViewBox().disableAutoRange()
+            self.plotWdg.getViewBox().autoRange(items=self.plotWdg.getPlotItem().listDataItems())
+            self.plotWdg.getViewBox().disableAutoRange()
+
+        if True:
+            for dataname in datas.keys():
+                # print(dataname.split('-')[1])
+                if False:
+                    if dataname.split('-')[1] == 'CRE':
+                        penforgraph = pg.mkPen(color='k', width=3, style=QtCore.Qt.SolidLine)
+                    elif dataname.split('-')[1] == 'TNT':
+                        penforgraph = pg.mkPen(color='g',width=3, style=QtCore.Qt.SolidLine)
+                    else:
+                        penforgraph = pg.mkPen(color='b', width=3,style=QtCore.Qt.DashLine)
+                datavalues = datas[dataname]
+
+                self.axtype.plot(datavalues['x'], datavalues['y'])
+                #self.axtype.grid()
+            self.figuretype.canvas.draw()
 
 
 

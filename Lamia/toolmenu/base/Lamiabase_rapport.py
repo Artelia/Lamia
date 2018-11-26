@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import qgis
+import qgis.core
 import os
 import re
 import logging
@@ -13,7 +14,7 @@ try:
 except ImportError as e:
     from qgis.PyQt.QtPrintSupport import QPrinter
     from qgis.PyQt.QtWidgets import  (QProgressBar, QApplication,QAction)
-from ...libs import pyqtgraph as pg
+# from ...libs import pyqtgraph as pg
 import networkx
 import numpy as np
 from collections import OrderedDict
@@ -205,13 +206,14 @@ class printPDFBaseWorker(object):
                                 # toexec = "self.atlasconfData['atlasdrivemap'][mapname]['typescale'] = qgis.core.QgsComposerMap."
                                 # toexec += self.atlasconfData['atlasdrivemap'][mapname]['typescale']
                                 toexec = "typescale = qgis.core.QgsComposerMap." + typescale
-                                exec (toexec)
+                                exec(toexec)
                             else:
                                 # toexec = "reportdic['atlastypescale'] = qgis.core.QgsLayoutItemMap." + reportdic['atlastypescale']
                                 #toexec = "self.atlasconfData['atlasdrivemap'][mapname]['typescale'] = qgis.core.QgsLayoutItemMap."
                                 #toexec += self.atlasconfData['atlasdrivemap'][mapname]['typescale']
-                                toexec = "typescale = qgis.core.QgsLayoutItemMap." + typescale
-                                exec (toexec)
+                                #toexec = "typescaletype = qgis.core.QgsLayoutItemMap." + typescale
+                                #exec(toexec)
+                                typescale = eval("qgis.core.QgsLayoutItemMap." + typescale)
 
                         self.confData[basename][actualdictkey][speclist[0].strip()]['minscale'] = minscale
                         self.confData[basename][actualdictkey][speclist[0].strip()]['typescale'] = typescale
@@ -226,6 +228,8 @@ class printPDFBaseWorker(object):
                     elif actualdictkey in ['images']:
                         speclist = line.split(';')
                         self.confData[basename][actualdictkey][speclist[0].strip()] = speclist[1].strip()
+
+            filetoread.close()
 
 
         # Update dialog
@@ -522,10 +526,17 @@ class printPDFBaseWorker(object):
 
         if debug: logging.getLogger("Lamia").debug('atlaslayer sql : %s', sql)
 
-        atlaslayer = self.dbase.createQgsVectorLayer(tablename='atlaslayer',
-                                                    isspatial=self.atlasconfData['spatial'],
-                                                    sql=sql,
-                                                    tableid=self.atlasconfData['atlaslayerid'])
+        if sys.version_info.major == 2:
+            atlaslayer = self.dbase.createQgsVectorLayer(tablename='atlaslayer',
+                                                        isspatial=self.atlasconfData['spatial'],
+                                                        sql=sql,
+                                                        tableid=self.atlasconfData['atlaslayerid'])
+        elif sys.version_info.major == 3:
+            print('okookok')
+            atlaslayer = self.dbase.createQgsVectorLayer(tablename='atlaslayer',
+                                                        isspatial=False,
+                                                        sql=sql,
+                                                        tableid=self.atlasconfData['atlaslayerid'])
 
         if debug: logging.getLogger("Lamia").debug('atlaslayer ids : %s', str([fet.id() for fet in atlaslayer.getFeatures() ]))
 
@@ -735,8 +746,6 @@ class printPDFBaseWorker(object):
         if progress is not None: self.dbase.qgsiface.messageBar().clearWidgets()
         # return
 
-
-
         for rastlayer in layertoremove:
             if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
                 qgis.core.QgsMapLayerRegistry.instance().removeMapLayer(rastlayer)
@@ -843,6 +852,10 @@ class printPDFBaseWorker(object):
                         finaltxt.append('/')
                     elif val == '':
                         finaltxt.append(' / ')
+                    elif field[0:8] == 'datetime':
+                        tempdate = '-'.join(val.split(' ')[0].split('-')[::-1])
+                        finaltxt.append(tempdate + ' ' + str(val.split(' ')[1]))
+
                     elif field[0:4] == 'date':
                         dateinverted = '-'.join(val.split('-')[::-1])
                         finaltxt.append(dateinverted)
@@ -1631,13 +1644,14 @@ class printPDFBaseWorker(object):
             for mapname in self.atlasconfData['atlasdrivemap'].keys():
                 # atlas.setComposerMap(newComposition.getComposerItemById(mapname))
                 newComposition.getComposerItemById(mapname).setAtlasDriven(True)
-                newComposition.getComposerItemById(mapname).setAtlasScalingMode(
-                    self.atlasconfData['atlasdrivemap'][mapname]['typescale'])
+                newComposition.getComposerItemById(mapname).setAtlasScalingMode(self.atlasconfData['atlasdrivemap'][mapname]['typescale'])
         else:
             for mapname in self.atlasconfData['atlasdrivemap'].keys():
                 temp1 = newComposition.itemById(mapname)
-                temp1.__class__ = qgis.core.QgsLayoutItemMap
+                # print(type(temp1))
+                # temp1.__class__ = qgis.core.QgsLayoutItemMap
                 newComposition.itemById(mapname).setAtlasDriven(True)
+                print(self.atlasconfData['atlasdrivemap'][mapname]['typescale'])
                 newComposition.itemById(mapname).setAtlasScalingMode(self.atlasconfData['atlasdrivemap'][mapname]['typescale'])
 
         return atlas
@@ -2042,10 +2056,14 @@ class printPDFBaseWorker(object):
         :param zonegeoid: l'id de la zone geo en cours de traitement
         """
         for mapname in self.atlasconfData['generalmap'].keys():
-            zonegeofet = self.dbase.dbasetables['Zonegeo']['layerqgis'].getFeatures(
-                qgis.core.QgsFeatureRequest(zonegeoid)).next()
-            layerext = zonegeofet.geometry().boundingBox()
-            layerext = layerext.buffer(layerext.height() / 10.0)
+            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                zonegeofet = self.dbase.dbasetables['Zonegeo']['layerqgis'].getFeatures(qgis.core.QgsFeatureRequest(zonegeoid)).next()
+                layerext = zonegeofet.geometry().boundingBox()
+                layerext = layerext.buffer(layerext.height() / 10.0)
+            else:
+                zonegeofet = self.dbase.dbasetables['Zonegeo']['layerqgis'].getFeatures(qgis.core.QgsFeatureRequest(zonegeoid)).__next__()
+                layerext = zonegeofet.geometry().boundingBox()
+                layerext = layerext.buffered(layerext.height() / 10.0)
             layerextgeom = qgis.core.QgsGeometry.fromRect(layerext)
             layerextgeomcanvas = layerextgeom.transform(self.dbase.xform)
             layerextgeomcanvasfinal = layerextgeom.boundingBox()
@@ -2053,7 +2071,7 @@ class printPDFBaseWorker(object):
                 newComposition.getComposerItemById(mapname).zoomToExtent(layerextgeomcanvasfinal)
             else:
                 temp1 = newComposition.itemById(mapname)
-                temp1.__class__ = qgis.core.QgsLayoutItemMap
+                #temp1.__class__ = qgis.core.QgsLayoutItemMap
                 temp1.zoomToExtent(layerextgeomcanvasfinal)
 
             # set min scale
@@ -2061,8 +2079,12 @@ class printPDFBaseWorker(object):
             for atlasmapitem in self.atlasconfData['atlasdrivemap'].keys():
                 if self.atlasconfData['atlasdrivemap'][atlasmapitem]['minscale'] > minscale:
                     minscale = self.atlasconfData['atlasdrivemap'][atlasmapitem]['minscale']
-            if newComposition.getComposerItemById(mapname).scale() < minscale * 5.0:
-                newComposition.getComposerItemById(mapname).setNewScale(minscale * 5.0)
+            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                if newComposition.getComposerItemById(mapname).scale() < minscale * 5.0:
+                    newComposition.getComposerItemById(mapname).setNewScale(minscale * 5.0)
+            else:
+                if newComposition.itemById(mapname).scale() < minscale * 5.0:
+                    newComposition.itemById(mapname).setNewScale(minscale * 5.0)
 
 
 
