@@ -1614,7 +1614,7 @@ class AbstractLamiaTool(QWidget):
         """
 
 
-        # print('initFeatureProperties',self.dbasetablename, feat)
+        print('initFeatureProperties',self.dbasetablename, feat)
 
         if self.dbasetable is not None:
             if self.linkuserwdg is None:
@@ -1645,7 +1645,7 @@ class AbstractLamiaTool(QWidget):
                 tablestoiterate = [inputtablename]
 
             #Then get values
-            #print('tablestoiterate', tablestoiterate)
+            print('tablestoiterate', tablestoiterate)
 
             for tablename in tablestoiterate:
                 dbasetable = self.dbase.dbasetables[tablename]

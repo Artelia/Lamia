@@ -1,0 +1,4 @@
+#groupe desordre est utilise  pour distinguer les desordres selon le type d equipement choisi - influe sur le stackedwidget de pyqt pour les observations
+###groupedesordre;           VARCHAR(255);            TEXT
+Infralineaire;INF
+###datetimecampagne;            TIMESTAMP ;                  TEXT

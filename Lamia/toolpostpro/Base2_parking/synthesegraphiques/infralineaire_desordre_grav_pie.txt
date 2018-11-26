@@ -1,0 +1,22 @@
+###Graphtype    pie
+###Graphoption  shadow=True, startangle=90
+###Title Desordres par gravite - Camembert
+
+###Graphsql
+
+WITH Desordreinfra AS ( SELECT Desordre_now.*, 
+                      (SELECT Infralineaire_now.pk_infralineaire FROM  Infralineaire_now , Desordre_now as Des WHERE Des.pk_desordre = Desordre_now.pk_desordre ORDER BY   ST_Distance(ST_MakeValid(Infralineaire_now.geom), ST_MakeValid(Des.geom)) ASC LIMIT 1) as pk_infralineaire
+                        FROM Desordre_now )
+
+SELECT DISTINCT(Desordreinfra.gravite), COUNT(Desordreinfra.gravite) 
+FROM Desordreinfra 
+INNER JOIN Observation_now ON Observation_now.lid_desordre = Desordreinfra.id_desordre  AND Observation_now.datetimeobservation = (SELECT datetimeobservation FROM Observation_now as Observationtemp WHERE Observationtemp.lid_desordre=Desordreinfra.id_desordre ORDER BY datetimeobservation DESC LIMIT 1)
+WHERE  Infralineaire.pk_infralineaire = Desordreinfra.pk_infralineaire AND Desordreinfra.groupedesordre = 'INF' GROUP BY Observation_now.gravite 
+
+###Cst
+
+###Color
+3;r
+2;o
+1;b
+

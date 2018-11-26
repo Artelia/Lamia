@@ -122,6 +122,8 @@ class BaseObservationTool(AbstractLamiaTool):
             #datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
             self.initFeatureProperties(feat, self.dbasetablename, 'datetimeobservation', datecreation)
 
+
+
         if ('groupedesordre' in self.dbase.dbasetables['Desordre']['fields'].keys()  ):
             if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
                 grpdes = self.parentWidget.currentFeature['groupedesordre']

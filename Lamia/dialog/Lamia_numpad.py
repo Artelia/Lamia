@@ -70,9 +70,14 @@ class NumPadDialog(QDialog):
 
         if self.result() == 1:
             # print('rrrr', self.textresult)
-            result = float(self.textresult)
-            self.lineEdit.clear()
-            return result
+            try:
+                result = float(self.textresult)
+                self.lineEdit.clear()
+                return result
+            except ValueError as e:
+                print('numpad error', e)
+                self.lineEdit.clear()
+                return None
         else:
             self.lineEdit.clear()
             return None

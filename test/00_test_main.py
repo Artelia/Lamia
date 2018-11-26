@@ -16,8 +16,8 @@ class TestMain(Test):
         self.createWin()
 
         path = os.path.normpath("C://Users//patrice.verchere//Documents//GitHub//Lamia//test//02_test_export//BD_totale1.sqlite")
-        # path = os.path.normpath("C://Users//patrice.verchere//Documents//GitHub//Lamia//test//02_test_importdb//test01//01_original//test01.sqlite")
-        #path = "I://FLUVIAL//4352408_33_CCMA_VTA_Valeyrac//6_Reglementaire//62_Dessins//620_Qgis//total//vvvvv.sqlite"
+        path = os.path.normpath("C://000_testdigue//temp_base2_parking//test01.sqlite")
+
         self.dbase.loadQgisVectorLayers(path)
         print('ok0')
 
@@ -37,9 +37,7 @@ class TestMain(Test):
 
 
         # self.dbase.printsql = True
-        print('ok1')
-        print(self.dbase.canvas.mapSettings().destinationCrs().authid())
-        print(self.dbase.qgiscrs.authid())
+        print('launch window')
         self.mainwin.exec_()
 
 
