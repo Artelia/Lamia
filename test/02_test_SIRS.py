@@ -24,7 +24,7 @@ class TestMain(Test):
         pwd = "geopw"
         ip = "127.0.0.1"
         port = "5984"
-        nom_sirs = "base_test1"
+        nom_sirs = "valence"
         path_LAMIA = "C://Users//valentin.anjou//Desktop//test-sirs.sqlite"
         user_LAMIA = ""
         password_LAMIA = ""

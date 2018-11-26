@@ -1,6 +1,6 @@
 # coding=utf-8
-from ...libs.cloudant_2_10 import Cloudant
-from ...libs.cloudant_2_10.query import Query
+from ...libs.cloudant import Cloudant
+from ...libs.cloudant.query import Query
 
 #from cloudant import Cloudant
 #from cloudant.query import Query

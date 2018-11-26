@@ -415,7 +415,7 @@ class FranceDiguetoLamia():
 
                             #Insertion dans la Tc
                             print("insertion dans la tc")
-                            query_to_run = "INSERT INTO Tcobjetressource (id_tcressource, id_tcobjet) VALUES ("
+                            query_to_run = "INSERT INTO Tcobjetressource (lid_ressource, lid_objet) VALUES ("
                             query_to_run=query_to_run+"'"+str(id_ressource_inseree)+"', "
                             query_to_run=query_to_run+"'"+str(self.fetchObservationConvertisseur(observation['id']))+"') "
 
@@ -428,7 +428,7 @@ class FranceDiguetoLamia():
                             print("insertion de la photo")
                             query_to_run = "INSERT INTO Photo (lpk_ressource, geom, typephoto) VALUES ("
                             query_to_run=query_to_run+"'"+str(id_ressource_inseree)+"', "
-                            query_to_run=query_to_run+"st_geomfromtext('POINT("+str(photo['longitudeMin'])+' '+str(photo['latitudeMin'])+")',"+str(self.srid)+"), "
+                            query_to_run=query_to_run+"ST_GeomFromText('POINT("+str(photo['longitudeMin'])+' '+str(photo['latitudeMin'])+")',"+str(self.srid)+"), "
                             query_to_run=query_to_run+"'PHO')"
                             print(query_to_run)
                             self.queryL.SLITEcursor.execute(query_to_run)
@@ -512,6 +512,7 @@ class FranceDiguetoLamia():
                     longitudeMin =str(geom_bornMax['geometry'][geom_bornMax['geometry'].find('(')+1:geom_bornMax['geometry'].find(' ')])
                     longitudeMax =str(geom_bornMax['geometry'][geom_bornMax['geometry'].find(' ')+1:geom_bornMax['geometry'].find(')')])
 
+
                 else:
 
                     latitudeMin = str(desordre_couch['latitudeMin'])
@@ -521,7 +522,7 @@ class FranceDiguetoLamia():
 
 
 
-                query = "UPDATE Desordre SET geom=st_geomfromtext('LINESTRING("
+                query = "UPDATE Desordre SET geom=ST_GeomFromText('LINESTRING("
                 query = query + longitudeMin +' '
                 query = query + latitudeMin +', '
                 query = query + longitudeMax +' '
@@ -529,6 +530,12 @@ class FranceDiguetoLamia():
                 query = query + ")', "+ str(self.srid)+")"
                 query = query + " WHERE id_desordre="+str(obj['sql']['id'])
 
+                if 'geometry' in desordre_couch.keys():
+                    if desordre_couch['geometry']!="":
+                        query = "UPDATE Desordre SET geom=ST_GeomFromText('"
+                        query = query + desordre_couch['geometry']
+                        query = query + "', "+ str(self.srid)+")"
+                        query = query + " WHERE id_desordre="+str(obj['sql']['id'])
 
                 print(query)
                 self.queryL.SLITEcursor.execute(query)
