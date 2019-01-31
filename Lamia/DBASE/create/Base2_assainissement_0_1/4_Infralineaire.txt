@@ -33,11 +33,11 @@ Indetermine;        99
 ###diametreNominal;        INT ;                       INTEGER
 ###formecanalisation;                VARCHAR(255);            TEXT
 /;
-Circulaire;CIR
-Aqueduc; AQU
-Ovoide;OVO
-Fosse enherbe; FOS
-Caniveau beton; FOB
+Circulaire        ;CIR
+Aqueduc           ; AQU
+Ovoide            ;OVO
+Fosse enherbe       ; FOS
+Caniveau beton      ; FOB
 ###hauteur;             REAL;                     DECIMAL
 ###anPoseSup;            DATE ;                  TEXT
 ###maitreOuvrage;                VARCHAR(255);            TEXT

@@ -13,6 +13,7 @@ import datetime
 #pathfrom = "C://000_testdigue//convertBM//FROM//BD_SIJALAG_ind10.sqlite"
 pathfrom = "C://000_testdigue//convertBM2//FROM//BD_Begles_ind16.sqlite"
 pathfrom = "I://FLUVIAL//4352408_33_CCMA_VTA_Valeyrac//6_Reglementaire//62_Dessins//620_Qgis//Base_Valeyrac.sqlite"
+pathfrom = "M://FR//BOR//VT//FLUVIAL//4352409_33_ASA_Baurech_EDD//6_Reglementaire//61_Calculs//lamia//baurech.sqlite"
 
 
 #pathfrom = "C://000_testdigue//convertBM2//FROM//BD_SIJALAG_ind14.sqlite"
@@ -24,6 +25,7 @@ dbaseparserfrom.loadQgisVectorLayers(pathfrom)
 #pathto = "C://000_testdigue//convertBM//TO//BD_SIJALAG_ind10.sqlite"
 pathto = "C://000_testdigue//convertBM2//TO//BD_Begles_ind17.sqlite"
 pathto = "I://FLUVIAL//4352408_33_CCMA_VTA_Valeyrac//6_Reglementaire//62_Dessins//620_Qgis//temp//ancien//val3.sqlite"
+pathto = "M://FR//BOR//VT//FLUVIAL//4352409_33_ASA_Baurech_EDD//6_Reglementaire//61_Calculs//lamia2//baurech2.sqlite"
 #pathto = "C://000_testdigue//convertBM2//TO//BD_SIJALAG_ind15.sqlite"
 # pathto = "C://000_testdigue//convertBM2//TO//BD_Rivedroite_ind6.sqlite"
 

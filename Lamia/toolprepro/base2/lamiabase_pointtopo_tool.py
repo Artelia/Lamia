@@ -18,6 +18,7 @@ class BasePointtopoTool(AbstractLamiaTool):
 
     LOADFIRST = False
     dbasetablename = 'Pointtopo'
+    specialfieldui = []
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
         super(BasePointtopoTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)

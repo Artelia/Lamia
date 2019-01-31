@@ -53,6 +53,7 @@ class BaseGraphiqueTool(AbstractLamiaTool):
 
     LOADFIRST = False
     dbasetablename = 'Graphique'
+    specialfieldui = []
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
         super(BaseGraphiqueTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)

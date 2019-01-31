@@ -21,6 +21,8 @@ class BasePhotoTool(AbstractLamiaTool):
 
     LOADFIRST = False
     dbasetablename = 'Photo'
+    specialfieldui = []
+
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
         super(BasePhotoTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
@@ -55,13 +57,12 @@ class BasePhotoTool(AbstractLamiaTool):
         if self.userwdgfield is None:
             self.userwdgfield = UserUI()
             self.linkuserwdgfield = {'Photo' : {'linkfield' : 'id_photo',
-                                             'widgets' : {}},
+                                             'widgets' : {'numphoto': self.userwdgfield.spinBox_numphoto}},
                                 'Objet' : {'linkfield' : 'id_objet',
                                           'widgets' : {}},
                                 'Ressource' : {'linkfield' : 'id_ressource',
                                           'widgets' : {'file': self.userwdgfield.lineEdit_file,
-                                                       'numphoto': self.userwdgfield.spinBox_numphoto,
-                                                        'dateressource' : self.userwdgfield.dateEdit}}}
+                                                        'datetimeressource' : self.userwdgfield.dateTimeEdit_date}}}
 
             self.userwdgfield.stackedWidget.setCurrentIndex(0)
             self.userwdgfield.pushButton_chooseph.clicked.connect(self.choosePhoto)
@@ -92,7 +93,6 @@ class BasePhotoTool(AbstractLamiaTool):
 
     def changeNumPhoto(self):
 
-        global prefixhoto
         global numphoto
 
         if numphoto is None:
@@ -153,11 +153,14 @@ class BasePhotoTool(AbstractLamiaTool):
 
     def lastPhoto(self):
         if self.dbase.imagedirectory is not None:
-            list_of_files = glob.glob(self.dbase.imagedirectory + "\*.jpg")
+            list_of_files = glob.glob(self.dbase.imagedirectory + "//*.jpg")
             try :
                 latest_file = max(list_of_files, key=os.path.getctime)
                 self.userwdg.lineEdit_file.setText(os.path.normpath(latest_file))
                 self.showImageinLabelWidget(self.photowdg , self.userwdg.lineEdit_file.text())
+                datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+                self.userwdg.dateTimeEdit_date.setDateTime(QtCore.QDateTime.fromString(datecreation, 'yyyy-MM-dd hh:mm:ss'))
+
             except ValueError:
                 pass
 
@@ -174,12 +177,12 @@ class BasePhotoTool(AbstractLamiaTool):
 
     def postInitFeatureProperties(self, feat):
 
-        global prefixhoto
         global numphoto
 
         if self.currentFeature is None:
-            datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
-            self.initFeatureProperties(feat, 'Ressource', 'dateressource', datecreation)
+            #datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
+            datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            self.initFeatureProperties(feat, 'Ressource', 'datetimeressource', datecreation)
 
             if numphoto is not None:
                 self.userwdgfield.spinBox_numphoto.setValue(numphoto)
@@ -253,16 +256,14 @@ class BasePhotoTool(AbstractLamiaTool):
 
 
     def postSaveFeature(self, boolnewfeature):
-        global prefixhoto
-        global numphoto
 
+        global numphoto
         if self.userwdgfield.spinBox_numphoto.value() == -1 :
             numphoto = None
         elif numphoto == self.userwdgfield.spinBox_numphoto.value():
             numphoto += 1
         else:
             numphoto = self.userwdgfield.spinBox_numphoto.value() + 1
-
 
 
     def deleteParentFeature(self):
@@ -298,6 +299,9 @@ class BasePhotoTool(AbstractLamiaTool):
         self.dbase.commit()
 
         return True
+
+
+
 
 class UserUI(QWidget):
     def __init__(self, parent=None):

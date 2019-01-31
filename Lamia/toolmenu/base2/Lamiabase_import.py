@@ -52,7 +52,7 @@ class importShapefileBaseWorker(object):
             [...[colonne1;colonne2]...]
         """
 
-        items = ("Points topo", "Infralineaire", 'Noeud')
+        items = ("Points topo", "Infralineaire", 'Noeud','Photos')
         item, ok = QInputDialog.getItem(None, "Choix de la table a importer",
                                         "list of languages", items, 0, False)
         if ok and item:
@@ -83,6 +83,8 @@ class importShapefileBaseWorker(object):
                 templinkuserwgd = self.dbase.dbasetables['Travaux']['widget'][0].linkuserwdg
             if item == "Environnement":
                 templinkuserwgd = self.dbase.dbasetables['Environnement']['widget'][0].linkuserwdg
+            if item == "Photos":
+                templinkuserwgd = self.dbase.dbasetables['Photos']['widget'][0].linkuserwdg
 
             self.importobjetdialog.tableWidget.setRowCount(0)
             self.importobjetdialog.tableWidget.setColumnCount(2)
@@ -184,14 +186,16 @@ class importShapefileBaseWorker(object):
                 if debug: logging.getLogger('Lamia').debug('feat %s', layerfeat.attributes())
                 self.setLoadingProgressBar(progress, compt)
                 #create objet
-                lastrevision = self.dbase.maxrevision
-                datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
-                lastobjetid = self.dbase.getLastId('Objet') + 1
-                sql = "INSERT INTO Objet (id_objet, id_revisionbegin, datecreation ) "
-                sql += "VALUES(" + str(lastobjetid) + "," + str(lastrevision) + ",'" + datecreation + "');"
-                query = self.dbase.query(sql)
-                #self.dbase.commit()
-                pkobjet = self.dbase.getLastRowId('Objet')
+                if False:
+                    lastrevision = self.dbase.maxrevision
+                    datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
+                    lastobjetid = self.dbase.getLastId('Objet') + 1
+                    sql = "INSERT INTO Objet (id_objet, id_revisionbegin, datecreation ) "
+                    sql += "VALUES(" + str(lastobjetid) + "," + str(lastrevision) + ",'" + datecreation + "');"
+                    query = self.dbase.query(sql)
+                    #self.dbase.commit()
+                    pkobjet = self.dbase.getLastRowId('Objet')
+                pkobjet = self.dbase.createNewObjet()
 
                 for i, table in enumerate(tables):
                     if table == 'Objet' and values[i] != '':
@@ -202,8 +206,12 @@ class importShapefileBaseWorker(object):
                 self.dbase.commit()
 
                 lastdescriptionsystemid = self.dbase.getLastId('Descriptionsystem') + 1
-                sql = "INSERT INTO Descriptionsystem (id_descriptionsystem, id_revisionbegin, id_objet) "
-                sql += "VALUES(" + str(lastdescriptionsystemid) + "," + str(lastrevision) + "," + str(lastobjetid) + ");"
+                if False:
+                    sql = "INSERT INTO Descriptionsystem (id_descriptionsystem, id_revisionbegin, id_objet) "
+                    sql += "VALUES(" + str(lastdescriptionsystemid) + "," + str(lastrevision) + "," + str(lastobjetid) + ");"
+                sql = "INSERT INTO Descriptionsystem (id_descriptionsystem, lpk_objet) "
+                sql += "VALUES(" + str(lastdescriptionsystemid) + "," + str(pkobjet) + ");"
+
                 query = self.dbase.query(sql)
                 #self.dbase.commit()
                 pkdessys= self.dbase.getLastRowId('Descriptionsystem')
@@ -223,9 +231,14 @@ class importShapefileBaseWorker(object):
                 geomsql = "ST_GeomFromText('"
                 geomsql += featgeomwkt
                 geomsql += "', " + str(self.dbase.crsnumber) + ")"
+                if False:
+                    sql = "INSERT INTO " + self.importtable + " (id_objet, id_descriptionsystem, id_revisionbegin, id_" + self.importtable.lower() + ", geom )"
+                    sql += " VALUES(" + str(lastobjetid) + "," + str(lastdescriptionsystemid) +',' + str(lastrevision) + "," + str(lastsubdescriptionsystemid) + ","
+                    sql += geomsql + ');'
 
-                sql = "INSERT INTO " + self.importtable + " (id_objet, id_descriptionsystem, id_revisionbegin, id_" + self.importtable.lower() + ", geom )"
-                sql += " VALUES(" + str(lastobjetid) + "," + str(lastdescriptionsystemid) +',' + str(lastrevision) + "," + str(lastsubdescriptionsystemid) + ","
+
+                sql = "INSERT INTO " + self.importtable + " ( lpk_descriptionsystem,  id_" + self.importtable.lower() + ", geom )"
+                sql += " VALUES("  + str(pkdessys) +',' + str(lastsubdescriptionsystemid) + ","
                 sql += geomsql + ');'
                 query = self.dbase.query(sql)
                 #self.dbase.commit()

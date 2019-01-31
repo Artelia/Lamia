@@ -107,8 +107,17 @@ class LinkageDialog(QDialog, FORM_CLASS):
 
         if self.widget.currentFeature is not None:
             if self.currentlinkage['tabletc'] is not None:
+                sqlidsource = "SELECT " + self.currentlinkage['idsource'] + " FROM " + self.widget.dbasetablename.lower() + "_qgis"
+                sqlidsource += " WHERE pk_" + self.widget.dbasetablename.lower() + " = " + str(self.widget.currentFeaturePK)
+                idsource = self.widget.dbase.query(sqlidsource)[0][0]
+
+                if False:
+                    sql = "SELECT pk_" + self.currenttype.lower()  +"," + ",".join(self.headerlist) + " FROM " + self.currentlinkage['tabletc']
+                    sql += " WHERE " + self.currentlinkage['idtcsource'] + " = " + str(self.widget.currentFeature[self.currentlinkage['idsource']])
+
                 sql = "SELECT pk_" + self.currenttype.lower()  +"," + ",".join(self.headerlist) + " FROM " + self.currentlinkage['tabletc']
-                sql += " WHERE " + self.currentlinkage['idtcsource'] + " = " + str(self.widget.currentFeature[self.currentlinkage['idsource']])
+                sql += " WHERE " + self.currentlinkage['idtcsource'] + " = " + str(idsource)
+
                 query = self.widget.dbase.query(sql)
                 ids = [row[0:len(self.headerlist)+1] for row in query]
                 # print('populate',ids)
@@ -254,7 +263,14 @@ class LinkageDialog(QDialog, FORM_CLASS):
 
 
         if self.currentlinkage['tabletc'] is not None:
-            sql = "DELETE FROM " + self.currentlinkage['tabletc']  + " WHERE  " + self.currentlinkage['idtcsource'] + " =  " + str(self.widget.currentFeature[self.currentlinkage['idsource']]) + ";"
+            sqlidsource = "SELECT " + self.currentlinkage['idsource'] + " FROM " + self.widget.dbasetablename.lower() + "_qgis"
+            sqlidsource += " WHERE pk_" + self.widget.dbasetablename.lower() + " = " + str(self.widget.currentFeaturePK)
+            idsource = self.widget.dbase.query(sqlidsource)[0][0]
+
+
+            if False:
+                sql = "DELETE FROM " + self.currentlinkage['tabletc']  + " WHERE  " + self.currentlinkage['idtcsource'] + " =  " + str(self.widget.currentFeature[self.currentlinkage['idsource']]) + ";"
+            sql = "DELETE FROM " + self.currentlinkage['tabletc'] + " WHERE  " + self.currentlinkage['idtcsource'] + " =  " + str(idsource) + ";"
             #sql = "INSERT INTO " + self.currentlinkage['tabletc'] + " (" + self.currentlinkage['idtcsource'] + "," +  self.currentlinkage['idtcdest'] + ") "
             #sql += "VALUES(" + str(self.currentFeature[self.currentlinkage['idsource']]) + "," + str(id) + " );"
             # print(sql)
@@ -289,7 +305,7 @@ class LinkageDialog(QDialog, FORM_CLASS):
                         rowvalues.append('NULL')
 
                 sql = "INSERT INTO " + self.currentlinkage['tabletc'] + " (" + self.currentlinkage['idtcsource'] + "," +  ",".join(self.headerlist) + ") "
-                sql += "VALUES(" + str(self.widget.currentFeature[self.currentlinkage['idsource']]) + "," + ",".join(rowvalues) + " );"
+                sql += "VALUES(" + str(idsource) + "," + ",".join(rowvalues) + " );"
                 # print(sql)
                 query = self.widget.dbase.query(sql)
                 self.widget.dbase.commit()

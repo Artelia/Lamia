@@ -9,9 +9,11 @@ import datetime
 import decimal
 import numpy as np
 import glob
+import shutil
 
 #from .tools.Lamia_exportshpdialog import ExportShapefileDialog
 from ..base2.Lamiabase_exportshp import exportShapefileBaseWorker
+
 
 #class exportShapefileWorker(AbstractWorker):
 
@@ -35,7 +37,7 @@ class exportShapefileAssainissementWorker(exportShapefileBaseWorker):
 
     def postprepareData(self,tabletype):
 
-        if tabletype == 'Infralineaire_BM':
+        if tabletype == 'BM_Infralineaire':
             tempfield = []
             #donnees profil
             if True:
@@ -48,9 +50,9 @@ class exportShapefileAssainissementWorker(exportShapefileBaseWorker):
                 tempfield.append(qgis.core.QgsField('typauba', QtCore.QVariant.String))
                 tempfield.append(qgis.core.QgsField('typberg', QtCore.QVariant.String))
                 tempfield.append(qgis.core.QgsField('typpdber', QtCore.QVariant.String))
-                tempfield.append(qgis.core.QgsField('Desterre', QtCore.QVariant.String))
-                tempfield.append(qgis.core.QgsField('Descrete', QtCore.QVariant.String))         #10
-                tempfield.append(qgis.core.QgsField('Deseau', QtCore.QVariant.String))
+                #tempfield.append(qgis.core.QgsField('Desterre', QtCore.QVariant.String))
+                #tempfield.append(qgis.core.QgsField('Descrete', QtCore.QVariant.String))         #10
+                #tempfield.append(qgis.core.QgsField('Deseau', QtCore.QVariant.String))
 
                 #self.fieldsforshp += tempfield
                 # self.result[i][-1:-1] = [hauteurdigue, largcrete, typtater,typcrete,typtaeau,typeauba,typeberge,typepdberge,  Desterre, Descrete, Deseau  ]
@@ -78,12 +80,10 @@ class exportShapefileAssainissementWorker(exportShapefileBaseWorker):
                     typeauba = ''
                     typeberge = ''
                     typepdberge = ''
-                    Desterre=''
-                    Descrete=''
-                    Deseau=''
-                    if False:
-                        indexprofil = champs.index(['Infralineaire', 'lk_profil'])
-                        lkprofil  = row[indexprofil]
+                    #Desterre=''
+                    #Descrete=''
+                    #Deseau=''
+
                     sql = 'SELECT lid_ressource_4 FROM Infralineaire WHERE id_infralineaire = ' + str(row[0])
                     #print(sql)
                     query = self.dbase.query(sql)
@@ -99,16 +99,8 @@ class exportShapefileAssainissementWorker(exportShapefileBaseWorker):
                             sql = "SELECT * FROM Graphiquedata WHERE lpk_graphique = " + str(resultrow[0][0])
                             sql += " ORDER BY id_graphiquedata"
                             query = self.dbase.query(sql)
-                            #resultrow2 = [list(row2[4:]) for row2 in query]
                             resultrow2 = [list(row2[2:]) for row2 in query]
-
-
-                            # row : [id, None, dx, dz, None, position, type1, type2, None, 1]
                             npresultrow = np.array(resultrow2)
-                            #npresultrow = npresultrow[:,4:]
-                            #print('npresultrow', npresultrow)
-
-
                             #largeur crete
                             index = np.where(npresultrow[:,5] == 'CRE')
                             largcrete = np.sum(npresultrow[:,2][index])
@@ -125,9 +117,6 @@ class exportShapefileAssainissementWorker(exportShapefileBaseWorker):
                             # print(hauteurdigue, largcrete, largfrancbord)
                             """
                             #description
-
-
-
 
                             listdescrtalusterre = ['dX;dZ;Partie;Type1;Type2']
                             listdescrcrete = ['dX;dZ;Partie;Type1;Type2']
@@ -220,45 +209,16 @@ class exportShapefileAssainissementWorker(exportShapefileBaseWorker):
                                                 typepdberge = 'mixte'
 
                             #description = '\n'.join(listdescr)
-
-                            Desterre = '\n'.join(listdescrtalusterre)
-                            Descrete = '\n'.join(listdescrcrete)
-                            Deseau = '\n'.join(listdescrtaluseau)
-
-
-
-
                             if False:
-                                print(listdescr)
+                                Desterre = '\n'.join(listdescrtalusterre)
+                                Descrete = '\n'.join(listdescrcrete)
+                                Deseau = '\n'.join(listdescrtaluseau)
 
-                                print(description)
-                                return
 
 
-                    """
-                    hauteurdigue = -1
-                    largcrete = -1
-                    largfrancbord = -1
-                    typtater=''
-                    typcrete=''
-                    typtaeau=''
-                    typeauba = ''
-                    typeberge = ''
-                    typepdberge = ''
-                    Desterre=''
-                    Descrete=''
-                    Deseau=''
-                    """
-                    if False:
-                        result[i] = list(result[i])[:-1] \
-                                    + [hauteurdigue, largcrete, typtater,typcrete,typtaeau,typeauba,typeberge,typepdberge,  Desterre, Descrete, Deseau  ] \
-                                    + list(result[i])[-1:]
-                        # print([hauteurdigue, largcrete, largfrancbord,typtater,typcrete,typtaeau, Desterre, Descrete, Deseau  ])
-
-                    #self.result[i] += [hauteurdigue, largcrete, typtater,typcrete,typtaeau,typeauba,typeberge,typepdberge,  Desterre, Descrete, Deseau  ]
                     self.result[i] = list(self.result[i])
-                    self.result[i][-1:-1] = [hauteurdigue, largcrete, typtater,typcrete,typtaeau,typeauba,typeberge,typepdberge,  Desterre, Descrete, Deseau  ]
-                    # self.result[i] = self.result[i].insert(-2,[hauteurdigue, largcrete, typtater,typcrete,typtaeau,typeauba,typeberge,typepdberge,  Desterre, Descrete, Deseau  ])
+                    self.result[i][-1:-1] = [hauteurdigue, largcrete, typtater,typcrete,typtaeau,typeauba,typeberge,typepdberge  ]
+
             #niveau protection surete
             if True:
                 tempfield = []
@@ -314,14 +274,42 @@ class exportShapefileAssainissementWorker(exportShapefileBaseWorker):
 
                 profiletraverstool.rubberBand.reset(1)
             
-            
-            
-            
-            
-            
-            
-            
-            
+            #export schema
+            if True :
+                #copy schema
+                indexrapport = None
+                for i, menutool in enumerate(self.windowdialog.menutools):
+                    if 'printPDFDigueWorker' in menutool.__class__.__name__:
+                        indexrapport = i
+                        break
+                exportrect = QtCore.QRect(0,0,200,200)
+
+
+                #create field
+                tempfield = []
+                tempfield.append(qgis.core.QgsField('schema', QtCore.QVariant.String))
+
+                for i, field in enumerate(tempfield):
+                    self.fieldsforshp.append(field)
+                    self.champs.insert(-1,{})
+                    self.champs[-2]['table'] = 'postpro'+str(i)
+
+                if not os.path.exists(os.path.join(os.path.dirname(self.pdffile), 'schema')):
+                    os.mkdir(os.path.join(os.path.dirname(self.pdffile), 'schema'))
+
+
+                for i, row in enumerate(self.result):
+                    resfile = self.windowdialog.menutools[indexrapport].getImageFileOfProfileTravers(row[0], exportrect)
+                    if resfile is not None:
+                        desfile = os.path.join(os.path.dirname(self.pdffile), 'schema', 'schema_id' + str(row[0]) + '.png')
+                        shutil.copyfile(resfile, desfile)
+
+                        reldestfile = os.path.join('.', 'schema', 'schema_id' + str(row[0]) + '.png')
+                        self.result[i][-1:-1] = [reldestfile]
+                    else:
+                        self.result[i][-1:-1] = [None]
+
+
 
 
 

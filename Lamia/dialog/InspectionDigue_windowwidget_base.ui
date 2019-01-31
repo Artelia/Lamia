@@ -504,7 +504,7 @@
    </widget>
    <widget class="QMenu" name="menuMode">
     <property name="title">
-     <string>Mode</string>
+     <string>Interface</string>
     </property>
     <addaction name="actionModeTerrain"/>
     <addaction name="actionTTC"/>

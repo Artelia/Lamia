@@ -63,6 +63,7 @@ Indetermine;        99
 Pluvial;                  PLU
 Eaux usees;               USE
 Unitaire;                 UNI
+Industriel;               IND
 ###contCanAss;                VARCHAR(255);            TEXT
 /;
 Eaux pluviales;     01

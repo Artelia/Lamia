@@ -17,6 +17,7 @@ class BaseRapportTool(AbstractLamiaTool):
 
     LOADFIRST = False
     dbasetablename = 'Rapport'
+    specialfieldui = []
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
         super(BaseRapportTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)

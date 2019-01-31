@@ -33,6 +33,7 @@ class BaseDigueInfraLineaireTool(BaseInfraLineaireTool):
 
     LOADFIRST = True
     dbasetablename = 'Infralineaire'
+    # specialfieldui=['2']
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
         super(BaseDigueInfraLineaireTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
@@ -71,8 +72,13 @@ class BaseDigueInfraLineaireTool(BaseInfraLineaireTool):
         pass
 
 
-    
     """
+
+
+
+
+
+
     def initFieldUI(self):
         # ****************************************************************************************
         #   userui Field
@@ -102,6 +108,8 @@ class BaseDigueInfraLineaireTool(BaseInfraLineaireTool):
 
                 self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
                 self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+
+
 
 
 

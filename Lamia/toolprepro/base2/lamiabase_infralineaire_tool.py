@@ -31,6 +31,7 @@ class BaseInfraLineaireTool(AbstractLamiaTool):
 
     LOADFIRST = True
     dbasetablename = 'Infralineaire'
+    specialfieldui = []
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
         super(BaseInfraLineaireTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)

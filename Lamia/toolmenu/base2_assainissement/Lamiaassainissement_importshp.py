@@ -11,7 +11,7 @@ import numpy as np
 import glob
 
 #from .tools.Lamia_exportshpdialog import ExportShapefileDialog
-from ..base.Lamiabase_import import importShapefileBaseWorker
+from ..base2.Lamiabase_import import importShapefileBaseWorker
 
 #class exportShapefileWorker(AbstractWorker):
 
@@ -42,20 +42,29 @@ class importShapefileAssainissementWorker(importShapefileBaseWorker):
             geomsql += "', " + str(self.dbase.crsnumber) + ")"
 
             # create objet
-            lastrevision = self.dbase.maxrevision
-            datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
-            lastobjetid = self.dbase.getLastId('Objet') + 1
-            sql = "INSERT INTO Objet (id_objet, id_revisionbegin, datecreation ) "
-            sql += "VALUES(" + str(lastobjetid) + "," + str(lastrevision) + ",'" + datecreation + "');"
-            query = self.dbase.query(sql)
-            # self.dbase.commit()
-            pkobjet = self.dbase.getLastRowId('Objet')
+            if False:
+                lastrevision = self.dbase.maxrevision
+                datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
+                lastobjetid = self.dbase.getLastId('Objet') + 1
+                sql = "INSERT INTO Objet (id_objet, id_revisionbegin, datecreation ) "
+                sql += "VALUES(" + str(lastobjetid) + "," + str(lastrevision) + ",'" + datecreation + "');"
+                query = self.dbase.query(sql)
+                # self.dbase.commit()
+                pkobjet = self.dbase.getLastRowId('Objet')
+            pkobjet = self.dbase.createNewObjet()
 
             #createdesordre
             lastdesordreid = self.dbase.getLastId('Desordre') + 1
-            sql = "INSERT INTO Desordre (id_desordre, id_objet, id_revisionbegin, lk_descriptionsystem, groupedesordre, geom ) "
-            sql += "VALUES(" + str(lastdesordreid) + ',' +  str(lastobjetid) + "," + str(lastrevision) + "," + str(iddescriptionsystem)
+            if False:
+                sql = "INSERT INTO Desordre (id_desordre, id_objet, id_revisionbegin, lk_descriptionsystem, groupedesordre, geom ) "
+                sql += "VALUES(" + str(lastdesordreid) + ',' +  str(lastobjetid) + "," + str(lastrevision) + "," + str(iddescriptionsystem)
+                sql += ",'NOD'," + geomsql + ");"
+
+
+            sql = "INSERT INTO Desordre (id_desordre, lpk_objet,  lid_descriptionsystem, groupedesordre, geom ) "
+            sql += "VALUES(" + str(lastdesordreid) + ',' + str(pkobjet) + "," + str(iddescriptionsystem)
             sql += ",'NOD'," + geomsql + ");"
+
             query = self.dbase.query(sql)
 
 

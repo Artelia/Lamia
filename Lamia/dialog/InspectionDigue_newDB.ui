@@ -63,6 +63,11 @@
           <string>Base2_assainissement</string>
          </property>
         </item>
+        <item>
+         <property name="text">
+          <string>Base2_parking</string>
+         </property>
+        </item>
        </widget>
       </item>
      </layout>

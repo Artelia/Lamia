@@ -1,8 +1,3 @@
-###depots;             INT ;                   INTEGER
-Aucun;0
-Leger;1
-Moyen;2
-Fort;3
 ###evolution;                VARCHAR(255);            TEXT
 ###commentaires;                VARCHAR(255);            TEXT
 ###typesuite;                VARCHAR(255);            TEXT
@@ -21,14 +16,87 @@ Scellement tampon;      SCT;['TVX']
 Etancheification branchement;   ETB;['TVX']
 Etancheification regard;   ETR;['TVX']
 ###suite;                VARCHAR(255);            TEXT
-###ECPPdepuisbranchement;                 INT ;                   INTEGER 
-###gcdegrade;                 INT ;                   INTEGER 
-###infiltration;                 INT ;                   INTEGER 
-###intrusionracine;                 INT ;                   INTEGER 
-###miseencharge;                 INT ;                   INTEGER
-###tamponendommage;                 INT ;                   INTEGER
-Bon; 0  
+
+
+
+# ****************** Etat *************************************
+###etatgeneral;                 INT ;                   INTEGER
+/;
+Bon; 2  
 Moyen;1
-Mauvais;2
-###Hdeuxs;                 INT ;                   INTEGER
-###Etatechelon;                 INT ;                   INTEGER
+Mauvais;0
+
+###etattampon;                 INT ;                   INTEGER
+/;
+Bon; 2  
+Moyen;1
+Mauvais;0
+
+###etatechelon;                 INT ;                   INTEGER
+/;
+Bon; 2  
+Moyen;1
+Mauvais;0
+
+###etatregard;                 INT ;                   INTEGER
+/;
+Bon; 2  
+Moyen;1
+Mauvais;0
+
+###etatcunette;                 INT ;                   INTEGER
+/           ;
+Bon         ; 3  
+Moyen           ; 2
+Mauvais     ;1
+Non visible;0
+
+###etatasservissement;                 INT ;                   INTEGER
+/;
+Bon; 2  
+Moyen;1
+Mauvais;0
+
+# ****************** Autres obs *************************************
+
+###hdeuxs;                 INT ;                   INTEGER
+/;
+Non;    0
+Oui;    1
+
+###miseencharge;                 INT ;                   INTEGER
+/;
+Non;    0
+Traces-suspicion; 1
+Oui;    2
+
+###depots;             INT ;                   INTEGER
+/;
+Aucun;0
+Leger;1
+Moyen;2
+Fort;3
+
+###ECPPdepuisbranchement;                 INT ;                   INTEGER 
+/;
+Non;    0
+Oui;    1
+
+###infiltration;                 INT ;                   INTEGER 
+/;
+Non;    0
+Oui;    1
+###intrusionracine;                 INT ;                   INTEGER 
+/;
+Non;    0
+Oui;    1
+
+###jugemententretien;                 INT ;                   INTEGER 
+/;
+Mauvais     ;1
+Moyen           ; 2
+Bon         ; 3  
+
+
+
+

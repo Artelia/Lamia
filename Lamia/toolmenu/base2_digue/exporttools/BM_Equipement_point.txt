@@ -1,0 +1,43 @@
+###Equipement
+#nom              type               cst               valeur                    
+id_equipement;         Int;                  ;               id_equipement
+id_descriptionsystem;     Int;               ;                  id_descriptionsystem
+id_objet;         Int;               ;                  id_objet
+
+###Objet
+##FROM Objet WHERE  Objet.pk_objet = Equipement_now.pk_objet
+#nom              type               cst               valeur                    
+datecreati;      String;               ;                  datetimecreation
+datedestru;      String;               ;                  datetimedestruction
+commentaire;      String;               ;                  commentaire
+libelle;      String;               ;                  libelle
+
+###Equipement
+#nom              type               cst               valeur                    
+cote;      String;             cote  ;                  cote
+position;      String;             position  ;                  position
+categorie;      String;             categorie  ;                  categorie
+typeequipement;      String;             typeequipement  ;                  typeequipement
+implantation;      String;             implantation  ;                  implantation
+ecoulement;      String;             ecoulement  ;                  ecoulement
+dimverti;      Double;               ;                  dimverti
+dimhori;      Double;               ;                  dimhori
+securite;      String;             securite  ;                  securite
+lid_descriptionsystem;     Int;               ;                  lid_descriptionsystem
+
+
+
+
+###Zonegeo
+## FROM Zonegeo_qgis WHERE ST_WITHIN(ST_MakeValid(Equipement_now.geom),ST_MakeValid(Zonegeo_qgis.geom))
+#pk_zonegeo;     Int;            ;        pk_zonegeo ;  pk_zonegeo
+secteur;     String;            ;        commune
+sssecteur;     String;            ;        libelle
+
+
+
+###geom
+geom;         Int;               ;                  ST_AsText(ST_MakeValid(geom))
+
+###main
+FROM Equipement_now WHERE ST_GeometryType(ST_MakeValid(geom)) = 'POINT'

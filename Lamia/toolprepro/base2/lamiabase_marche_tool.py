@@ -26,6 +26,7 @@ class BaseMarcheTool(AbstractLamiaTool):
 
     LOADFIRST = False
     dbasetablename = 'Marche'
+    specialfieldui = []
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
         super(BaseMarcheTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)

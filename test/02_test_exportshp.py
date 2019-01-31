@@ -20,6 +20,13 @@ class TestMain(Test):
         self.createWin()
 
         path = os.path.normpath("C://Users//patrice.verchere//Documents//GitHub//Lamia//test//02_test_export//BD_totale1.sqlite")
+        path = "C://000_testdigue//temp_base2_assainissement//test01.sqlite"
+        path = "M://FR//BOR//VT//URBAIN//4352329-33-GPMB-diag complet EU et EP-Bacalan, Le Verdon, Pauillac et Blaye//05-ETUDES//05-1-Dessins-plans//6-lamia//gpmb_ind0.sqlite"
+        path = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//BD_totale_ind6.sqlite"
+
+        path ="M://FR//BOR//VT//FLUVIAL//4352408_33_CCMA_VTA_Valeyrac//6_Reglementaire//61_Calculs//Lamia2//valeyrac_ind0.sqlite"
+        path = "M://FR//BOR//VT//FLUVIAL//4352408_33_CCMA_VTA_Valeyrac//6_Reglementaire//61_Calculs//Lamia2//valeyrac_ind0.sqlite"
+
         self.wind.dbase.loadQgisVectorLayers(path)
         self.wind.loadUiDesktop()
 
@@ -33,11 +40,21 @@ class TestMain(Test):
             if 'exportShapefile' in menutool.__class__.__name__ :
                 indexrapport = i
                 break
-        # Infralineaire_BM Equipement_point_BM Photo_BM Graphdata_BM Desordres_ligne_BM
-        shp = os.path.normpath("C://Users//patrice.verchere//Documents//GitHub//Lamia//Lamia//test//02_test_export//testshape.shp")
-        shp = os.path.normpath("C://testshape.shp")
+        # BM_Infralineaire
+        # BM_Photo   BM_TcObjetRessource  BM_Equipement_ligne   BM_Desordres_ligne  BM_Graphdata   BM_Observation
+        # 00_Desordres_observation_actif   00_Desordres_observation_total
+        typeexport = 'BM_Equipement_point'
+
+        if False:
+            rootpath = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//63_Rapports//20190200_BD_exportshp"
+            exportfile = os.path.join(rootpath, typeexport + ".shp")
+        if True:
+            rootpath = "C://000_testdigue//temp"
+            exportfile = os.path.join(rootpath, typeexport + ".shp")
+
+        #exportfile = os.path.normpath("C://testshape.shp")
         # self.wind.dbase.dbasetables['Zonegeo']['layerqgis'].selectByIds([5])
-        self.wind.menutools[indexrapport].prepareData('Desordres_ligne_BM', shp)
+        self.wind.menutools[indexrapport].prepareData(typeexport, exportfile)
 
 
 

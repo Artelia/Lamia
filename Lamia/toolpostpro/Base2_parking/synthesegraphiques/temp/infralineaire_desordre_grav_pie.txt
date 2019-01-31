@@ -1,0 +1,21 @@
+###Graphtype    pie
+###Graphoption  shadow=True, startangle=90
+###Title Desordres par gravite - Camembert
+
+###Graphsql
+
+WITH Infralineairetemp as (SELECT pk_infralineaire, id_descriptionsystem FROM Infralineaire_qgis) 
+SELECT  DISTINCT(Observation_now.lid_desordre), COUNT(Observation_now.lid_desordre) 
+FROM Desordre_now  
+INNER JOIN Observation_now ON Observation_now.lid_desordre = Desordre_now.id_desordre  AND Observation_now.datetimeobservation = (SELECT datetimeobservation FROM Observation_now as Observationtemp WHERE Observationtemp.lid_desordre=Desordre_now.id_desordre ORDER BY datetimeobservation DESC LIMIT 1)
+INNER JOIN Infralineairetemp ON Infralineairetemp.id_descriptionsystem = Desordre_now.lid_descriptionsystem 
+WHERE  Desordre_now.lid_descriptionsystem = Infralineairetemp.id_descriptionsystem AND Infralineairetemp.pk_infralineaire = Infralineaire.pk_infralineaire 
+GROUP BY Observation_now.lid_desordre
+
+###Cst
+
+###Color
+3;r
+2;o
+1;b
+

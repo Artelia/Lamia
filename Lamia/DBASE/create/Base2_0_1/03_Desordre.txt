@@ -15,7 +15,6 @@ Infralineaire;INF
 Noeud;NOD
 Equipement;EQP
 ###impact ;               VARCHAR(255);             TEXT
-###gravite ;               VARCHAR(255);             TEXT
 ###priorite ;               VARCHAR(255);             TEXT
 ###risques ;               VARCHAR(255);             TEXT
 

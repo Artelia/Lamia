@@ -1,24 +1,24 @@
 
 ###oh_etatvantellerie;                VARCHAR(255);            TEXT
 /;
-Vetuste;0
-Degradé;1
-Moyen;2
-Bon;3
+Vetuste     ;0
+Degradé     ;1
+Moyen           ;2
+Bon         ;3
 ###oh_etatvantelleriecom;                VARCHAR(255);            TEXT
 
 ###oh_etatgeniecivil;                VARCHAR(255);            TEXT
 /;
-Vetuste;0
-Degradé;1
-Moyen;2
-Bon;3
+Vetuste     ;0
+Degradé     ;1
+Moyen       ;2
+Bon     ;3
 ###oh_etatgeniecivilcom;                VARCHAR(255);            TEXT
 
 ###oh_testmanoeuvre;                VARCHAR(255);            TEXT
-Non manoeuvre; NMA
-Manoeuvre realisee; MOK
-Manoeuvre tentee mais non possible; MPP
+Non manoeuvre                       ; NMA
+Manoeuvre realisee                  ; MOK
+Manoeuvre tentee mais non possible ; MPP
 ###oh_testmanoeuvrecom;                VARCHAR(255);            TEXT
 
 ###oh_etancheite;                 INT ;                   INTEGER 

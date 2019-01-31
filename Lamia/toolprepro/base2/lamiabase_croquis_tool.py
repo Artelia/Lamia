@@ -22,6 +22,7 @@ class BaseCroquisTool(AbstractLamiaTool):
 
     LOADFIRST = False
     dbasetablename = 'Photo'
+    specialfieldui = []
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None, parentwidget=None, parent=None):
         super(BaseCroquisTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil, parentwidget, parent=parent)
@@ -85,8 +86,11 @@ class BaseCroquisTool(AbstractLamiaTool):
 
     def postInitFeatureProperties(self, feat):
         if self.currentFeature is None:
-            datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
-            self.initFeatureProperties(feat, 'Ressource', 'dateressource', datecreation)
+            #datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
+            #self.initFeatureProperties(feat, 'Ressource', 'dateressource', datecreation)
+
+            datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            self.initFeatureProperties(feat, 'Ressource', 'datetimeressource', datecreation)
 
             self.editorwindow.clear()
             self.photowdg.clear()
@@ -151,6 +155,7 @@ class BaseCroquisTool(AbstractLamiaTool):
         pkphoto = self.currentFeaturePK
         lastidphoto = self.dbase.getLastId('Photo') + 1
         datecreation = datetime.datetime.now().strftime("%Y-%m-%d")
+        datetimecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
 
         fileimage = os.path.join('.', self.dbasetablename, ''.join(datecreation.split('-')),
@@ -168,7 +173,7 @@ class BaseCroquisTool(AbstractLamiaTool):
         self.dbase.commit()
 
 
-        sql = "UPDATE Ressource SET  file = '" + fileimage + "', dateressource = '" + datecreation + "'"
+        sql = "UPDATE Ressource SET  file = '" + fileimage + "', datetimeressource = '" + datetimecreation + "'"
         sql += " WHERE pk_ressource = " + str(pkres) + ";"
         query = self.dbase.query(sql)
         self.dbase.commit()

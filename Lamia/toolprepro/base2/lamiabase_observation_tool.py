@@ -17,6 +17,9 @@ import datetime
 
 class BaseObservationTool(AbstractLamiaTool):
 
+    dbasetablename = 'Observation'
+    specialfieldui = []
+
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
         super(BaseObservationTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
@@ -179,12 +182,33 @@ class BaseObservationTool(AbstractLamiaTool):
 
 
     def postSaveFeature(self, boolnewfeature):
-        pass
+        if self.savingnewfeature:
+            # Case when a observation is defined in the past
+            pk_objet, creation , observation = self.dbase.getValuesFromPk('Observation_qgis',
+                                                            ['pk_objet','datetimecreation','datetimeobservation'],
+                                                            self.currentFeaturePK)
+
+            datetimecreation = QtCore.QDateTime.fromString(creation, 'yyyy-MM-dd hh:mm:ss')
+            datetimeobservation = QtCore.QDateTime.fromString(observation, 'yyyy-MM-dd hh:mm:ss')
+            if datetimecreation > datetimeobservation:
+                sql = "UPDATE Objet SET datetimecreation = '" + str(observation) + "'"
+                sql += " WHERE pk_objet = " + str(pk_objet)
+                self.dbase.query(sql)
+
+            if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
+                if self.parentWidget.dbasetablename == 'Desordre':
+                    pk_objet, descreation = self.dbase.getValuesFromPk('Desordre_qgis',
+                                                                                 ['pk_objet', 'datetimecreation'],
+                                                                                 self.parentWidget.currentFeaturePK)
+                    datetimecreation = QtCore.QDateTime.fromString(descreation, 'yyyy-MM-dd hh:mm:ss')
+                    if datetimecreation > datetimeobservation:
+                        sql = "UPDATE Objet SET datetimecreation = '" + str(observation) + "'"
+                        sql += " WHERE pk_objet = " + str(pk_objet)
+                        self.dbase.query(sql)
 
 
 
     def deleteParentFeature(self):
-
 
         sql = "SELECT pk_objet FROM Observation_qgis WHERE pk_observation = " + str(self.currentFeaturePK)
         pkobjet = self.dbase.query(sql)[0][0]

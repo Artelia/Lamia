@@ -294,7 +294,11 @@ class PathTool(AbstractInspectionDigueTool):
                 # iteration sur le premier et dernier point de la geometrie pour voir si l'infralineaire la plus
                 # proche est dans la list  geomprojectionids
                 for point in [geom[0], geom[-1]]:
-                    geompointequipement1 = qgis.core.QgsGeometry.fromPoint(point)
+                    if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                        geompointequipement1 = qgis.core.QgsGeometry.fromPoint(point)
+                    else:
+                        geompointequipement1 = qgis.core.QgsGeometry.fromPointXY(point)
+
                     nearestinfralinpk, dist = self.dbase.getNearestPk(self.dbase.dbasetables['Infralineaire'],
                                                                       'Infralineaire',
                                                                        point,

@@ -83,7 +83,7 @@ class SyntheseZonegeoTool(AbstractLamiaTool):
 
                 self.userwdgfield.splitter.setSizes([80, 200])
                 #  itemSelectionChanged ()
-                self.linkedtreewidget.itemSelectionChanged.connect(self.propertieswdgDESORDRE.itemChanged)
+
                 self.userwdgfield.lineEdit_option.returnPressed.connect(self.propertieswdgDESORDRE.getSyntheticResults)
 
 
@@ -103,6 +103,8 @@ class SyntheseZonegeoTool(AbstractLamiaTool):
             self.combowdg.currentIndexChanged.emit(0)
 
             self.linkedtreewidget.setSelectionMode(QAbstractItemView.ExtendedSelection)
+
+            self.linkedtreewidget.itemSelectionChanged.connect(self.propertieswdgDESORDRE.itemChanged)
 
 
 
@@ -252,6 +254,11 @@ class SyntheseZonegeoTool(AbstractLamiaTool):
         except:
             pass
 
+        try:
+            self.linkedtreewidget.itemSelectionChanged.disconnect(self.propertieswdgDESORDRE.itemChanged)
+        except:
+            pass
+
     def createParentFeature(self):
         pass
 
@@ -378,7 +385,8 @@ class DesordreSyntheseTool(AbstractLamiaTool):
                 self.propertieswdgPHOTOGRAPHIE.userwdgfield.label_5.setParent(None)
                 self.propertieswdgPHOTOGRAPHIE.userwdgfield.lineEdit_file.setParent(None)
                 self.propertieswdgPHOTOGRAPHIE.userwdgfield.pushButton_chooseph.setParent(None)
-                self.propertieswdgPHOTOGRAPHIE.userwdgfield.dateEdit.setEnabled(False)
+                #self.propertieswdgPHOTOGRAPHIE.userwdgfield.dateEdit.setEnabled(False)
+                self.propertieswdgPHOTOGRAPHIE.userwdgfield.dateTimeEdit_date.setEnabled(False)
                 self.userwdgfield.frame_photo.layout().addWidget(self.propertieswdgPHOTOGRAPHIE)
                 self.propertieswdgOBSERVATION.dbasechildwdg = [self.propertieswdgPHOTOGRAPHIE]
                 try:
@@ -529,9 +537,9 @@ class DesordreSyntheseTool(AbstractLamiaTool):
                 for line in filetoread:
                     if line[0:3] == '###':  # new field
                         actualdictkey = line[3:].strip().split(' ')[0]
-                        if actualdictkey in ['Graphsql']:
+                        if actualdictkey in ['Graphsql', 'Graphpython']:
                             currentgraphdata[actualdictkey] = ''
-                        elif actualdictkey in ['Graphtype','Graphoption','Title']:
+                        elif actualdictkey in ['Graphtype','Graphoption','Title','Graphcumulatif']:
                             currentgraphdata[actualdictkey] = ' '.join(line[3:].strip().split(' ')[1:]).strip()
                         elif actualdictkey in ['Cst','Color']:
                             currentgraphdata[actualdictkey] = {}
@@ -541,8 +549,10 @@ class DesordreSyntheseTool(AbstractLamiaTool):
                         continue
 
                     else:
-                        if actualdictkey == 'Graphsql':
+                        if actualdictkey in ['Graphsql'] :
                             currentgraphdata[actualdictkey] += line.strip() + ' '
+                        if actualdictkey in [ 'Graphpython'] :
+                            currentgraphdata[actualdictkey] += line
                         elif actualdictkey in ['Cst']:
                             currentgraphdata[actualdictkey][int(line.split(';')[0].strip())] =  line.split(';')[1].strip()
                         elif actualdictkey in ['Color']:
@@ -580,6 +590,7 @@ class DesordreSyntheseTool(AbstractLamiaTool):
         debug = False
 
         self.axtype.cla()
+        self.figuretype.canvas.draw()
 
         if not itemselected:
             itemselected = self.parentWidget.userwdgfield.treeWidget_desordres_2.currentItem()
@@ -596,6 +607,11 @@ class DesordreSyntheseTool(AbstractLamiaTool):
 
         objetid = [int(item.text(0)) for item in self.parentWidget.linkedtreewidget.selectedItems()]
 
+        # print(objetid)
+
+        if len(objetid) == 0:
+            return
+
         currentgraphdata = None
         if (self.activegraphcat in self.graphdata.keys()
                 and itemselected.text(1) in self.graphdata[self.activegraphcat]):
@@ -604,75 +620,98 @@ class DesordreSyntheseTool(AbstractLamiaTool):
         if not currentgraphdata:
             return
 
+        optiondict = {}
+        labels = None
         # PROCESS SQL
+        if 'Graphsql' in currentgraphdata.keys():
 
-        sql = currentgraphdata['Graphsql']
+            sql = currentgraphdata['Graphsql']
 
-        if len(objetid)==1:
-            tupleobjetid = '(' + str(objetid[0]) + ')'
-        else:
-            tupleobjetid = tuple(objetid)
+            if len(objetid)==1:
+                tupleobjetid = '(' + str(objetid[0]) + ')'
+            else:
+                tupleobjetid = tuple(objetid)
 
-        sqlid = " AND " + self.activegraphcat.title() + '.id_' + self.activegraphcat.lower() + " IN " + str(tupleobjetid)
+            sqlid = " AND " + self.activegraphcat.title() + '_qgis.id_' + self.activegraphcat.lower() + " IN " + str(tupleobjetid)
+            sqlid += " AND " + self.activegraphcat.title() + "_qgis.lpk_revision_end IS NULL "
 
-        # add activegraphcat in where clause
+            # add activegraphcat in where clause
 
-        sqltemp1 = self.dbase.splitSQLSelectFromWhereOrderby(sql)
-        sqlstandard = ''
-        if 'WITH' in sqltemp1.keys():
-            sqlstandard += "WITH " + sqltemp1['WITH']
-        sqlstandard += " SELECT " + sqltemp1['SELECT']
-        sqlstandard += " FROM " + sqltemp1['FROM'] + ', ' + self.activegraphcat.title()
-        sqlstandard += " WHERE " + sqltemp1['WHERE'] + sqlid
-        if 'GROUP' in sqltemp1.keys():
-            sqlstandard += ' GROUP BY ' + sqltemp1['GROUP']
+            sqltemp1 = self.dbase.splitSQLSelectFromWhereOrderby(sql)
 
-        result = []
+            if debug: logging.getLogger("Lamia").debug('sqlsplit : %s', str(sqltemp1))
 
-
-        #Process Options
-        optiontext = self.parentWidget.userwdgfield.lineEdit_option.text()
-        optiondict={}
-        if optiontext != '':
-            optiontxttemp1 = optiontext.split(';')
-            for option in optiontxttemp1:
-                if len(option.split('=')) == 2 :
-                    optiondict[option.split('=')[0]] = option.split('=')[1:][0]
-                else:
-                    print('error', option)
+            sqlstandard = ''
+            if 'WITH' in sqltemp1.keys():
+                sqlstandard += "WITH " + sqltemp1['WITH']
+            sqlstandard += " SELECT " + sqltemp1['SELECT']
+            sqlstandard += " FROM " + sqltemp1['FROM'] + ', ' + self.activegraphcat.title() + "_qgis "
+            sqlstandard += " WHERE " + sqltemp1['WHERE'] + sqlid
+            if 'GROUP' in sqltemp1.keys():
+                sqlstandard += ' GROUP BY ' + sqltemp1['GROUP']
 
 
-        if 'date' in optiondict.keys():
-            sqlfinal =[]
-            for date in optiondict['date'].split(','):
-                sqlfinal.append(self.dbase.updateQueryTableNow(sqlstandard,date))
-        else:
-            sqlfinal = [self.dbase.updateQueryTableNow(sqlstandard)]
 
-        if debug: logging.getLogger("Lamia").debug('sql : %s', str(sqlfinal))
 
-        #process results
+            #Process Options
+            optiontext = self.parentWidget.userwdgfield.lineEdit_option.text()
 
-        for sqltemp in sqlfinal :
-            query = self.dbase.query(sqltemp)
-            result.append([])
-            #tempresult = result[-1]
-
-            for row in query:
-                if row[0] is None:
-                    continue
-                result[-1].append([])
-                for i, res in enumerate(row):
-                    if i in currentgraphdata['Cst'].keys():
-                        table, field = currentgraphdata['Cst'][i].split('.')
-                        val = self.dbase.getConstraintTextFromRawValue(table, field, res)
-                        result[-1][-1].append(val)
+            if optiontext != '':
+                optiontxttemp1 = optiontext.split(';')
+                for option in optiontxttemp1:
+                    if len(option.split('=')) == 2 :
+                        optiondict[option.split('=')[0]] = option.split('=')[1:][0]
                     else:
-                        result[-1][-1].append(res)
+                        print('error', option)
+
+
+            if 'date' in optiondict.keys():
+                sqlfinal =[]
+                for date in optiondict['date'].split(','):
+                    sqlfinal.append(self.dbase.updateQueryTableNow(sqlstandard,date))
+            else:
+                sqlfinal = [self.dbase.updateQueryTableNow(sqlstandard)]
+
+            if debug: logging.getLogger("Lamia").debug('sql : %s', str(sqlfinal))
+            # print('sqlfinal', sqlfinal)
+
+            #process results
+            result = []
+            names = None
+
+            for sqltemp in sqlfinal :
+                query = self.dbase.query(sqltemp)
+                result.append([])
+                #tempresult = result[-1]
+
+                for row in query:
+                    if row[0] is None:
+                        continue
+                    result[-1].append([])
+                    for i, res in enumerate(row):
+
+                        if 'Cst' in currentgraphdata.keys() and i in currentgraphdata['Cst'].keys():
+                            table, field = currentgraphdata['Cst'][i].split('.')
+                            val = self.dbase.getConstraintTextFromRawValue(table, field, res)
+                            result[-1][-1].append(val)
+                        else:
+                            result[-1][-1].append(res)
+
+        elif 'Graphpython' in currentgraphdata.keys():
+            result=None
+
+            ns = {}
+            exec(currentgraphdata['Graphpython'], {'self': self},ns)
+            # print('res', ns)
+            tempfunction = ns['getResult']
+            result,labels = tempfunction(objetid)
+            # print('res2', result)
+
 
 
 
         if debug: logging.getLogger("Lamia").debug('sql result : %s', str(result))
+        if debug: logging.getLogger("Lamia").debug('sql labels : %s', str(labels))
 
         if currentgraphdata['Graphtype'] == 'pie':
             result = result[0]
@@ -695,41 +734,53 @@ class DesordreSyntheseTool(AbstractLamiaTool):
             # https://stackoverflow.com/questions/11273196/stacked-bar-chart-with-differently-ordered-colors-using-matplotlib
             # self.axtype.clear()
             self.axtype.cla()
+            if 'Graphcumulatif' in currentgraphdata.keys() and currentgraphdata['Graphcumulatif'] =='True' :
+                #get common label
+                resforbar=[]
+                for row in result:
+                    resforbar.append({})
+                    for res in row:
+                        resforbar[-1][str(res[0])] = res[1]
+                names = sorted(resforbar[0].keys())
+                values = np.array([[data[name] if name in data.keys() else 0 for name in names ] for data in resforbar ])
+                bottoms = np.insert(np.cumsum(values, axis=1), 0, 0, axis=1)[:, :-1]
 
-            #get common label
-            resforbar=[]
-            for row in result:
-                resforbar.append({})
-                for res in row:
-                    resforbar[-1][res[0]] = res[1]
-            names = sorted(resforbar[0].keys())
-            values = np.array([[data[name] if name in data.keys() else 0 for name in names ] for data in resforbar ])
-            bottoms = np.insert(np.cumsum(values, axis=1), 0, 0, axis=1)[:, :-1]
-
-            abscisse = np.arange(len(result))
-
-            if debug: logging.getLogger("Lamia").debug('bar result : %s %s', str(names), str(values))
-
-            for i, name in enumerate(names):
-                value = values[:,i]
-                bottom = bottoms[:,i]
-                # color
-                color = None
-                if 'Color' in currentgraphdata.keys():
-                    if name in currentgraphdata['Color'].keys():
-                        color = currentgraphdata['Color'][name]
-
-                if color:
-                    self.axtype.bar(abscisse, value, 0.8, bottom=bottom, label=name, color=color)
+                #labels:
+                if 'date' in optiondict.keys():
+                    labels = optiondict['date'].split(',')
+                elif labels is not None:
+                    labels = labels
                 else:
-                    self.axtype.bar(abscisse, value, 0.8, bottom=bottom, label=name)
+                    pass
+
+                abscisse = np.arange(len(result))
+
+                if debug: logging.getLogger("Lamia").debug('bar result : %s %s', str(names), str(values))
+
+                for i, name in enumerate(names):
+                    value = values[:,i]
+                    bottom = bottoms[:,i]
+                    # color
+                    color = None
+                    if 'Color' in currentgraphdata.keys():
+                        if name in currentgraphdata['Color'].keys():
+                            color = currentgraphdata['Color'][name]
+
+                    if color:
+                        self.axtype.bar(abscisse, value, 0.8, bottom=bottom, label=name, color=color)
+                    else:
+                        self.axtype.bar(abscisse, value, 0.8, bottom=bottom, label=name)
 
 
-            if 'date' in optiondict.keys():
-                self.axtype.set_xticks(abscisse)
-                self.axtype.set_xticklabels(tuple(optiondict['date'].split(',')))
+                if labels is not None:
+                    self.axtype.set_xticks(abscisse)
+                    self.axtype.set_xticklabels(tuple(labels))
+                else:
+                    self.axtype.set_xticks([])
+
+
             else:
-                self.axtype.set_xticks([])
+                pass
 
             self.axtype.axis('auto')
 

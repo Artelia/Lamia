@@ -18,7 +18,8 @@ import datetime
 
 
 class BaseAssainissementObservationTool(BaseObservationTool):
-
+    
+    specialfieldui = ['2']
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
         super(BaseAssainissementObservationTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
@@ -66,20 +67,33 @@ class BaseAssainissementObservationTool(BaseObservationTool):
                                              'widgets' : {'datetimeobservation' : self.userwdgfield.dateTimeEdit,
                                                           #'nombre' : self.userwdgfield.spinBox_nombre,
                                                         'gravite': self.userwdgfield.comboBox_urgence,
-                                                          'depots' : self.userwdgfield.comboBox_depot,
 
-                                                        'evolution': self.userwdgfield.textEdit_evolution,
-                                                        'commentaires': self.userwdgfield.textEdit_comm,
-                                                        'suite': self.userwdgfield.textEdit_suite,
+                                                          # regard
+                                                          'etattampon': [self.userwdgfield.comboBox_etattampon,
+                                                                         self.userwdgfield.comboBox_PRetattampon],
+                                                          'etatechelon': self.userwdgfield.comboBox_etatechelon,
+                                                          'etatregard': self.userwdgfield.comboBox_etatregard,
+                                                          'etatcunette': self.userwdgfield.comboBox_etatcunette,
+                                                          'ECPPdepuisbranchement': self.userwdgfield.comboBox_ecpp,
+                                                          'infiltration': self.userwdgfield.comboBox_infiltration,
+                                                          'intrusionracine': self.userwdgfield.comboBox_racines,
+
+                                                          'hdeuxs': self.userwdgfield.comboBox_h2s,
+                                                          'depots': [self.userwdgfield.comboBox_depot,
+                                                                     self.userwdgfield.comboBox_DSHencombrement],
+                                                          'miseencharge': self.userwdgfield.comboBox_miseencharge,
+                                                          'jugemententretien': self.userwdgfield.comboBox_entretiengeneral,
+
+                                                          # DIV
+                                                          'etatgeneral': self.userwdgfield.comboBox_DIVetatgeneral,
+
+                                                          #'evolution': self.userwdgfield.textEdit_evolution,
+                                                          #'commentaires': self.userwdgfield.textEdit_comm,
+                                                          #'suite': self.userwdgfield.textEdit_suite,
                                                           'typesuite': self.userwdgfield.comboBox_typesuite,
-                                                          'precisionsuite': self.userwdgfield.comboBox_precisionsuite,
+                                                          'precisionsuite': self.userwdgfield.comboBox_precisionsuite
 
-                                                          'ECPPdepuisbranchement': self.userwdgfield.checkBox_ecpp,
-                                                          'gcdegrade': self.userwdgfield.checkBox_gcdegrade,
-                                                          'infiltration': self.userwdgfield.checkBox_infiltration,
-                                                          'intrusionracine': self.userwdgfield.checkBox_racines,
-                                                          'miseencharge': self.userwdgfield.checkBox_charge,
-                                                          'tamponendommage': self.userwdgfield.checkBox_tamponendommage
+
                                                           }},
                                 'Objet' : {'linkfield' : 'id_objet',
                                           'widgets' : {'commentaire': self.userwdgfield.textEdit_comm}}}
@@ -96,7 +110,60 @@ class BaseAssainissementObservationTool(BaseObservationTool):
                 self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
                 self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
+    def initFieldUI_2(self):
+        # ****************************************************************************************
+        # userui Desktop
+        #if self.userwdgfield is None:
+        if not hasattr(self, 'userwdgfield_2'):
+            # ****************************************************************************************
+            # userui
+            self.userwdgfield_2 = UserUI_2()
+            self.linkuserwdgfield_2 = {'Observation': {'linkfield': 'id_observation',
+                                                     'widgets': {'datetimeobservation': self.userwdgfield_2.dateTimeEdit,
+                                                                 # 'nombre' : self.userwdgfield_2.spinBox_nombre,
+                                                                 'gravite': self.userwdgfield_2.comboBox_urgence,
+
+                                                                 #regard
+                                                                 'etattampon': [self.userwdgfield_2.comboBox_etattampon,
+                                                                                self.userwdgfield_2.comboBox_PRetattampon],
+                                                                 'etatechelon': self.userwdgfield_2.comboBox_etatechelon,
+                                                                 'etatregard': self.userwdgfield_2.comboBox_etatregard,
+                                                                 'etatcunette': self.userwdgfield_2.comboBox_etatcunette,
+                                                                 'hdeuxs': self.userwdgfield_2.comboBox_h2s,
+                                                                 'depots': [self.userwdgfield_2.comboBox_depot,
+                                                                            self.userwdgfield_2.comboBox_DSHencombrement],
+                                                                 'miseencharge': self.userwdgfield_2.comboBox_miseencharge,
+                                                                 'jugemententretien': self.userwdgfield_2.comboBox_entretiengeneral,
+
+                                                                 # PR
+                                                                 #'etattampon': self.userwdgfield_2.comboBox_PRetattampon,
+                                                                 'etatgeneral': [self.userwdgfield_2.comboBox_etatbache,
+                                                                                 self.userwdgfield_2.comboBox_DSHetageneral,
+                                                                                 self.userwdgfield_2.comboBox_DIVetatgeneral],
+                                                                 'etatasservissement': self.userwdgfield_2.comboBox_etatasservissement,
+
+                                                                 #DSH
+                                                                 # 'etatgeneral': self.userwdgfield_2.comboBox_DSHetageneral,
+                                                                 # 'ensablement': self.userwdgfield_2.comboBox_DSHencombrement,
+
+                                                                 #DIC
+                                                                 # 'etatgeneral': self.userwdgfield_2.comboBox_DIVetatgeneral,
+
+                                                                 }},
+                                     'Objet': {'linkfield': 'id_objet',
+                                               'widgets': {'commentaire': self.userwdgfield_2.textEdit_comm}}}
+
+            self.userwdgfield_2.toolButton_calc_nb.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield_2.spinBox_nombre))
+
+
+
+
+
+
+
     """
+    
     def postOnActivation(self):
             pass
 
@@ -108,11 +175,19 @@ class BaseAssainissementObservationTool(BaseObservationTool):
             sqlin += " ORDER BY dateobservation DESC"
         return sqlin
 
+        
+    """
 
     def postInitFeatureProperties(self, feat):
         if self.currentFeature is None:
-            datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
-            self.initFeatureProperties(feat, self.dbasetablename, 'dateobservation', datecreation)
+            datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            #datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
+            self.initFeatureProperties(feat, self.dbasetablename, 'datetimeobservation', datecreation)
+
+        self.updateObservationStackedWidget()
+
+
+    def updateObservationStackedWidget(self):
 
         if ('groupedesordre' in self.dbase.dbasetables['Desordre']['fields'].keys()  ):
             if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
@@ -124,7 +199,42 @@ class BaseAssainissementObservationTool(BaseObservationTool):
                 except:
                     pass
 
+                if self.userwdg == self.userwdgfield:
+                    if grpdes == 'NOD' and self.parentWidget.parentWidget is not None and self.parentWidget.parentWidget.currentFeature is not None:
+                        if self.parentWidget.parentWidget.dbasetablename == 'Noeud':
+                            #typenoeud = self.parentWidget.parentWidget.currentFeature['typeOuvrageAss']
+                            currenttext = self.parentWidget.parentWidget.userwdgfield.comboBox_typeOuvrageAss.currentText()
+                            # typenoeud = self.parentWidget.parentWidget.currentFeature['typeOuvrageAss']
+                            typenoeud = self.dbase.getConstraintRawValueFromText('Noeud', 'typeOuvrageAss', currenttext)
 
+                            if typenoeud in ['60','70', '71']:
+                                self.userwdgfield.stackedWidget_2.setCurrentIndex(0)
+                            elif typenoeud == '10':
+                                self.userwdgfield.stackedWidget_2.setCurrentIndex(1)
+                            else:
+                                self.userwdgfield.stackedWidget_2.setCurrentIndex(3)
+
+                elif hasattr(self, 'userwdgfield_2') and self.userwdg == self.userwdgfield_2 :
+                    if grpdes == 'NOD' and self.parentWidget.parentWidget is not None and self.parentWidget.parentWidget.currentFeature is not None:
+                        if self.parentWidget.parentWidget.dbasetablename == 'Noeud':
+                            currenttext = self.parentWidget.parentWidget.userwdgfield_2.comboBox_typeOuvrageAss.currentText()
+                            # typenoeud = self.parentWidget.parentWidget.currentFeature['typeOuvrageAss']
+                            typenoeud = self.dbase.getConstraintRawValueFromText('Noeud', 'typeOuvrageAss', currenttext)
+                            if typenoeud in ['60','70', '71']:
+                                self.userwdgfield_2.stackedWidget_2.setCurrentIndex(0)
+                            elif typenoeud == '10':
+                                self.userwdgfield_2.stackedWidget_2.setCurrentIndex(1)
+                            elif typenoeud == '21':
+                                self.userwdgfield_2.stackedWidget_2.setCurrentIndex(2)
+                            else:
+                                self.userwdgfield_2.stackedWidget_2.setCurrentIndex(3)
+
+
+
+
+
+
+    """
 
     def createParentFeature(self):
 
@@ -176,4 +286,10 @@ class UserUI(QWidget):
     def __init__(self, parent=None):
         super(UserUI, self).__init__(parent=parent)
         uipath = os.path.join(os.path.dirname(__file__), 'lamiabaseassainissement_observation_tool_ui.ui')
+        uic.loadUi(uipath, self)
+
+class UserUI_2(QWidget):
+    def __init__(self, parent=None):
+        super(UserUI_2, self).__init__(parent=parent)
+        uipath = os.path.join(os.path.dirname(__file__), 'lamiabaseassainissement_observation_tool_ui_2.ui')
         uic.loadUi(uipath, self)

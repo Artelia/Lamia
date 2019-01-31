@@ -68,6 +68,8 @@ class BaseParkingObservationTool(BaseObservationTool):
         pass
     
     """
+
+
     def initFieldUI(self):
         # ****************************************************************************************
         # userui Desktop
@@ -77,6 +79,7 @@ class BaseParkingObservationTool(BaseObservationTool):
             self.userwdgfield = UserUI()
             self.linkuserwdgfield = {'Observation' : {'linkfield' : 'id_observation',
                                              'widgets' : {'immatriculation' : self.userwdgfield.spinBox_immat,
+                                                          'illicite' : self.userwdgfield.checkBox_illicite,
                                                          'datetimeobservation' : self.userwdgfield.dateTimeEdit,
                                                           }},
                                 'Objet' : {'linkfield' : 'id_objet',
@@ -122,8 +125,7 @@ class BaseParkingObservationTool(BaseObservationTool):
         # print(number)
         if number:
             finalwdg.setValue(number)
-
-        self.saveFeature()
+            self.saveFeature()
 
 
 

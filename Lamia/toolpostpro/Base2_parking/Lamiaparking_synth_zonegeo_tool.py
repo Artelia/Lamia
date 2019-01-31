@@ -32,4 +32,8 @@ class ParkingSyntheseZonegeoTool(SyntheseZonegeoTool):
     def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
         super(ParkingSyntheseZonegeoTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
 
+
+    def initFieldUI(self):
+        super(ParkingSyntheseZonegeoTool, self).initFieldUI()
+        self.userwdgfield.tabWidget.removeTab(1)
         

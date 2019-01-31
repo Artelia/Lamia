@@ -143,7 +143,7 @@ class BasePhotoTool(AbstractInspectionDigueTool):
 
     def lastPhoto(self):
         if self.dbase.imagedirectory is not None:
-            list_of_files = glob.glob(self.dbase.imagedirectory + "\*.jpg")
+            list_of_files = glob.glob(self.dbase.imagedirectory + "//*.jpg")
             try :
                 latest_file = max(list_of_files, key=os.path.getctime)
                 self.userwdg.lineEdit_file.setText(os.path.normpath(latest_file))

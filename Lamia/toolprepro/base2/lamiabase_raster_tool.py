@@ -16,6 +16,7 @@ class BaseRasterTool(AbstractLamiaTool):
 
     LOADFIRST = True
     dbasetablename = 'Rasters'
+    specialfieldui = []
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
         super(BaseRasterTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
@@ -55,7 +56,7 @@ class BaseRasterTool(AbstractLamiaTool):
                                           'widgets' : {}},
                                 'Ressource' : {'linkfield' : 'id_ressource',
                                           'widgets' : {'file': self.userwdgfield.lineEdit_file,
-                                                     'dateressource': self.userwdgfield.dateEdit}}}
+                                                     'datetimeressource': self.userwdgfield.dateTimeEdit}}}
             self.userwdgfield.pushButton_chooseph.clicked.connect(self.chooseFile)
             self.userwdgfield.pushButton_loadraster.clicked.connect(self.loadRaster)
 
@@ -95,10 +96,13 @@ class BaseRasterTool(AbstractLamiaTool):
                 qgis.core.QgsMapLayerRegistry.instance().addMapLayer(rlayer, False)
             else:
                 qgis.core.QgsProject.instance().addMapLayer(rlayer, False)
+        if False:
+            root = qgis.core.QgsProject.instance().layerTreeRoot()
+            lamialegendgroup =  root.findGroup('Lamia')
+            lamialegendgroup.insertLayer(-1, rlayer)
+        if self.windowdialog.qgislegendnode is not None:
+            self.windowdialog.qgislegendnode.insertLayer(-1, rlayer)
 
-        root = qgis.core.QgsProject.instance().layerTreeRoot()
-        lamialegendgroup =  root.findGroup('Lamia')
-        lamialegendgroup.insertLayer(-1, rlayer)
 
     def chooseFile(self):
         file, extension = self.windowdialog.qfiledlg.getOpenFileNameAndFilter(None, 'Choose the file', self.dbase.imagedirectory,
@@ -110,9 +114,13 @@ class BaseRasterTool(AbstractLamiaTool):
     def postInitFeatureProperties(self, feat):
 
         if self.currentFeature is None:
-            datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
-            #self.initFeatureProperties(feat, 'dateressource', datecreation)
-            self.initFeatureProperties(feat, None , 'dateressource', datecreation)
+            if False:
+                datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
+                #self.initFeatureProperties(feat, 'dateressource', datecreation)
+                self.initFeatureProperties(feat, None , 'dateressource', datecreation)
+
+            datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            self.initFeatureProperties(feat, 'Ressource', 'datetimeressource', datecreation)
 
 
     def createParentFeature(self):

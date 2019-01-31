@@ -1,4 +1,5 @@
 ###depots;             INT ;                   INTEGER
+/;
 Aucun;0
 Leger;1
 Moyen;2
@@ -6,6 +7,7 @@ Fort;3
 ###evolution;                VARCHAR(255);            TEXT
 ###commentaires;                VARCHAR(255);            TEXT
 ###typesuite;                VARCHAR(255);            TEXT
+/;
 Aucune;         AUC
 Travaux;        TVX   
 Surveillance;   SUR
@@ -21,6 +23,7 @@ Scellement tampon;      SCT;['TVX']
 Etancheification branchement;   ETB;['TVX']
 Etancheification regard;   ETR;['TVX']
 ###suite;                VARCHAR(255);            TEXT
+
 ###ECPPdepuisbranchement;                 INT ;                   INTEGER 
 ###gcdegrade;                 INT ;                   INTEGER 
 ###infiltration;                 INT ;                   INTEGER 

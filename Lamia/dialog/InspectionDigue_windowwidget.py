@@ -7,11 +7,11 @@ from qgis.PyQt.QtCore import pyqtSignal
 try:
     from qgis.PyQt.QtGui import (QDockWidget, QMainWindow, QFileDialog, QLabel, QInputDialog,
                                  QComboBox,QTableWidgetItem,QProgressBar,QApplication,QToolBar,
-                                 QPushButton,QToolButton,QWidget, QMessageBox)
+                                 QPushButton,QToolButton,QWidget, QMessageBox, QAction)
 except ImportError:
     from qgis.PyQt.QtWidgets import (QDockWidget, QMainWindow, QFileDialog, QLabel, QInputDialog,
                                      QComboBox,QTableWidgetItem, QProgressBar,QApplication,QToolBar,
-                                     QPushButton,QToolButton,QWidget, QMessageBox)
+                                     QPushButton,QToolButton,QWidget, QMessageBox, QAction)
 
 # other libs import
 import os
@@ -132,6 +132,8 @@ class InspectiondigueWindowWidget(QMainWindow):
         #self.printrapportdialog = ImpressionRapportDialog()
         # self.exportshapefiledialog = ExportShapefileDialog()
         # self.importobjetdialog =ImportObjetDialog()
+        #qgis legend node
+        self.qgislegendnode = None
 
         #ui classes
         self.uifields = []
@@ -231,10 +233,12 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.action_Repertoire_photo.triggered.connect(self.setImageDir)
         #self.actionDate_de_travail.triggered.connect(self.setWorkingDate)
         self.toolButton_date.clicked.connect(self.setWorkingDate)
-        self.actionModeExpert.triggered.connect(self.setVisualMode)
-        self.actionTTC.triggered.connect(self.setVisualMode)
-        self.actionModeTerrain.triggered.connect(self.setVisualMode)
-        self.actionPosttraitement.triggered.connect(self.setVisualMode)
+        if True:
+            self.actionModeExpert.triggered.connect(self.setVisualMode)
+            self.actionTTC.triggered.connect(self.setVisualMode)
+            self.actionModeTerrain.triggered.connect(self.setVisualMode)
+            self.actionPosttraitement.triggered.connect(self.setVisualMode)
+
         self.actionReinitialier_prestation_courante.triggered.connect(self.reinitCurrentPrestation)
         self.actionHauteur_de_perche_GPS.triggered.connect(self.setHauteurPerche)
         self.action_taille_icone.triggered.connect(self.setLamiaIconSize)
@@ -510,71 +514,52 @@ class InspectiondigueWindowWidget(QMainWindow):
         pass
         """
 
+        if not isinstance(self.sender(), QAction):
+            return
+
+        actionname = self.sender().objectName()
+        actiontext = self.sender().text()
+
+        qactionchild = self.menuMode.actions()
+        for qact in qactionchild:
+            qact.setChecked(False)
+            if not reset and qact.text() == actiontext:
+                qact.setChecked(True)
+
         if reset:
             self.dbase.visualmode = 0
             self.actionModeTerrain.setChecked(True)
-            self.actionTTC.setChecked(False)
-            self.actionModeExpert.setChecked(False)
-            self.actionPosttraitement.setChecked(False)
             return
 
-
-        # print(self.sender.objectName())
-        actionname = self.sender().objectName()
-
-        if actionname == 'actionModeTerrain':
+        if "Terrain" in actiontext:
             self.dbase.visualmode = 0
-            self.actionModeTerrain.setChecked(True)
-            self.actionTTC.setChecked(False)
-            self.actionModeExpert.setChecked(False)
-            self.actionPosttraitement.setChecked(False)
-
-        elif actionname == 'actionTTC':
+        elif "Bureau" in actiontext:
             self.dbase.visualmode = 1
-            self.actionModeTerrain.setChecked(False)
-            self.actionTTC.setChecked(True)
-            self.actionModeExpert.setChecked(False)
-            self.actionPosttraitement.setChecked(False)
             if not self.desktopuiloaded:
                 self.loadUiDesktop()
-
-        elif actionname == 'actionModeExpert':
+        elif "Expert" in actiontext:
             self.dbase.visualmode = 2
-            self.actionModeTerrain.setChecked(False)
-            self.actionTTC.setChecked(False)
-            self.actionModeExpert.setChecked(True)
-            self.actionPosttraitement.setChecked(False)
-
-        elif actionname == 'actionPosttraitement':
+        elif "Post traitement" in actiontext:
             self.dbase.visualmode = 4
-            self.actionPosttraitement.setChecked(True)
-            self.actionModeTerrain.setChecked(False)
-            self.actionTTC.setChecked(False)
-            self.actionModeExpert.setChecked(False)
             if not self.desktopuiloaded:
                 self.loadUiDesktop()
 
+        self.applyVisualMode(actiontext)
 
 
-        self.applyVisualMode()
 
-    def applyVisualMode(self):
+    def applyVisualMode(self, actiontext=None):
         if self.dbase.dbasetables is not None:
             for tool in self.tools:
-                tool.changePropertiesWidget()
+                tool.changePropertiesWidget(actiontext)
 
             for tablename in self.dbase.dbasetables.keys():
                 if 'widget' in self.dbase.dbasetables[tablename].keys():
                     if isinstance(self.dbase.dbasetables[tablename]['widget'], list):
                         for wdg in self.dbase.dbasetables[tablename]['widget']:
-                            wdg.changePropertiesWidget()
+                            wdg.changePropertiesWidget(actiontext)
                     else:
-                        self.dbase.dbasetables[tablename]['widget'].changePropertiesWidget()
-
-
-
-
-
+                        self.dbase.dbasetables[tablename]['widget'].changePropertiesWidget(actiontext)
 
 
     def reinitCurrentPrestation(self):
@@ -740,10 +725,16 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.menuBases_recentes.triggered.connect(self.openFileFromMenu)
 
     def DBaseLoaded(self):
+        """
+        Load layers and put them in a legend group in qgis
+        Load all modules (prepro, postpro and menu)
+        Show field ui
+
+        :return:
+        """
 
         debug = False
         if debug: logging.getLogger('Lamia').debug('start')
-
 
         if False:
             qgis.utils.uninstallErrorHook()  # for standart output
@@ -752,23 +743,32 @@ class InspectiondigueWindowWidget(QMainWindow):
             print(sys.excepthook)
             print(sys.stderr)
             'okok'.decode('utf-8')
+
         self.gpsutil.setCRS(self.dbase.qgiscrs)
         self.dbase.updateWorkingDate()
-        #timestart = time.clock()
         timestart = self.dbase.getTimeNow()
-
 
         if debugtime: logger.debug(' progress bar done %.3f', self.dbase.getTimeNow() - timestart)
 
-
-        # ************************** LOAD LAYERS AND STYLES ***********************************
+        # ************************** Define qgis legend gourp and dock widget title ***********************************
 
         root = qgis.core.QgsProject.instance().layerTreeRoot()
         #root.addGroup('Lamia')
-        lamialegendgroup =  root.findGroup('Lamia')
-        if lamialegendgroup is None:
-            lamialegendgroup = root.insertGroup(0, 'Lamia')
+        if self.dbase.dbasetype == "spatialite":
+            groupname = 'Lamia_' + os.path.basename(self.dbase.spatialitefile)
+        elif self.dbase.dbasetype == "postgis":
+            groupname = 'Lamia_' + self.dbase.pgschema
 
+        #lamialegendgroup =  root.findGroup('Lamia')
+        lamialegendgroup = root.findGroup(groupname)
+        if lamialegendgroup is None:
+            lamialegendgroup = root.insertGroup(0, groupname)
+        self.qgislegendnode = lamialegendgroup
+
+        if self.dockwgt is not None:
+            self.dockwgt.setWindowTitle(groupname)
+
+        # ************************** LOAD LAYERS AND STYLES ***********************************
 
         for tablename in self.dbase.dbasetables:
             if self.dbase.dbasetables[tablename]['showinqgis']:
@@ -780,10 +780,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                     else:
                         qgis.core.QgsProject.instance().addMapLayer(self.dbase.dbasetables[tablename]['layerqgis'],
                                                                     False)
-
                 lamialegendgroup.addLayer(self.dbase.dbasetables[tablename]['layerqgis'])
-
-
             else:
                 if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
                     qgis.core.QgsMapLayerRegistry.instance().addMapLayer(self.dbase.dbasetables[tablename]['layer'],
@@ -791,7 +788,6 @@ class InspectiondigueWindowWidget(QMainWindow):
                 else:
                     qgis.core.QgsProject.instance().addMapLayer(self.dbase.dbasetables[tablename]['layer'],
                                                                 False)
-
             if False and 'scale' in self.dbase.dbasetables[tablename].keys():
                 self.dbase.dbasetables[tablename]['layerqgis'].setScaleBasedVisibility(True)
                 if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
@@ -799,16 +795,15 @@ class InspectiondigueWindowWidget(QMainWindow):
                 else:
                     self.dbase.dbasetables[tablename]['layerqgis'].setMinimumScale(self.dbase.dbasetables[tablename]['scale'])
 
-
         self.loadStyle()
 
-        # ************************** LOAD MODULES ********************************************
+        # ************************** LOAD prepro MODULES ********************************************
         if True:
-
 
             path = os.path.join(os.path.dirname(__file__), '..', 'toolprepro', self.dbase.type.lower())
             modules = glob.glob(path + "/*.py")
             __all__ = [os.path.basename(f)[:-3] for f in modules if os.path.isfile(f)]
+            interfacefielduisup=[]
 
             for x in __all__:
                 if debug: logging.getLogger('Lamia').debug('x %s', x)
@@ -824,6 +819,14 @@ class InspectiondigueWindowWidget(QMainWindow):
 
                 for name, obj in inspect.getmembers(moduletemp, inspect.isclass):
                     if moduletemp.__name__ == obj.__module__:
+
+                        try:
+                            tempspecialfieldui = obj.specialfieldui
+                            for elem in tempspecialfieldui:
+                                if elem not in interfacefielduisup:
+                                    interfacefielduisup.append(elem)
+                        except Exception:
+                            pass
                         try:
                             if obj.LOADFIRST:
                                 self.uifields.append(obj)
@@ -834,6 +837,16 @@ class InspectiondigueWindowWidget(QMainWindow):
 
             if debug: logging.getLogger('Lamia').debug('step1')
 
+        # add field ui in interface menu
+        for elem in interfacefielduisup :
+            tempaction = QAction("Terrain_" + elem , self)
+            tempaction.setCheckable(True)
+            self.menuMode.insertAction(self.actionTTC, tempaction)
+            tempaction.triggered.connect(self.setVisualMode)
+
+
+        # ************************** LOAD postpro MODULES ********************************************
+        if True:
             path = os.path.join(os.path.dirname(__file__), '..', 'toolpostpro',self.dbase.type)
             modules = glob.glob(path + "/*.py")
             __all__ = [os.path.basename(f)[:-3] for f in modules if os.path.isfile(f)]
@@ -853,43 +866,33 @@ class InspectiondigueWindowWidget(QMainWindow):
                         except AttributeError:
                             pass
 
-            if False:
-                print('*********** ui lodaded *************** ')
-                print(self.uifields)
-                print(self.uidesktop)
-                print(self.uipostpro)
-
-
-
-
-
             if debugtime: logger.debug('applyVisualMode %.3f', time.clock() - timestart)
 
 
-            # ************************** LOAD tools ********************************************
-            # print('******* LOAD tools ')
-            if True:
-                path = os.path.join(os.path.dirname(__file__), '..', 'toolmenu', self.dbase.type.lower())
-                # print(path)
-                modules = glob.glob(path + "/*.py")
-                __all__ = [os.path.basename(f)[:-3] for f in modules if os.path.isfile(f)]
+        # ************************** LOAD tools ********************************************
+        if True:
+            path = os.path.join(os.path.dirname(__file__), '..', 'toolmenu', self.dbase.type.lower())
+            # print(path)
+            modules = glob.glob(path + "/*.py")
+            __all__ = [os.path.basename(f)[:-3] for f in modules if os.path.isfile(f)]
 
-                for x in __all__:
-                    if self.dbase.qgsiface is not None:
-                        #if not self.dbase.standalone:
-                        exec('import Lamia.toolmenu.' + self.dbase.type.lower())
-                        moduletemp = importlib.import_module('.' + str(x), 'Lamia.toolmenu.' + self.dbase.type.lower() )
-                    else:
-                        exec('import Lamia.Lamia.toolmenu.' + self.dbase.type.lower() )
-                        moduletemp = importlib.import_module('.' + str(x), 'Lamia.Lamia.toolmenu.' + self.dbase.type.lower())
-                    for name, obj in inspect.getmembers(moduletemp, inspect.isclass):
-                        # print( moduletemp.__name__, obj.__module__)
-                        if moduletemp.__name__ == obj.__module__:
-                            # print('ok')
-                            # self.menutools.append(obj(dbase=self.dbase, windowdialog=self))
-                            self.menuclasses.append(obj)
+            for x in __all__:
+                if self.dbase.qgsiface is not None:
+                    #if not self.dbase.standalone:
+                    exec('import Lamia.toolmenu.' + self.dbase.type.lower())
+                    moduletemp = importlib.import_module('.' + str(x), 'Lamia.toolmenu.' + self.dbase.type.lower() )
+                else:
+                    exec('import Lamia.Lamia.toolmenu.' + self.dbase.type.lower() )
+                    moduletemp = importlib.import_module('.' + str(x), 'Lamia.Lamia.toolmenu.' + self.dbase.type.lower())
+                for name, obj in inspect.getmembers(moduletemp, inspect.isclass):
+                    # print( moduletemp.__name__, obj.__module__)
+                    if moduletemp.__name__ == obj.__module__:
+                        # print('ok')
+                        # self.menutools.append(obj(dbase=self.dbase, windowdialog=self))
+                        self.menuclasses.append(obj)
 
-            self.loadUiField()
+        # ************************** Show fields ui ********************************************
+        self.loadUiField()
 
 
 
@@ -900,9 +903,6 @@ class InspectiondigueWindowWidget(QMainWindow):
             pass
         self.comboBox_style.clear()
         stylepath = os.path.join(os.path.dirname(__file__), '..','DBASE', 'style', self.dbase.type)
-        # print([x[0] for x in os.walk(stylepath)])
-        #print([x[1] for x in os.walk(stylepath) if len(x[1])>0])
-
         styledirs = [x[1] for x in os.walk(stylepath) if len(x[1])>0]
         if len(styledirs)>0:
             styledirs = styledirs[0]
@@ -911,23 +911,19 @@ class InspectiondigueWindowWidget(QMainWindow):
             self.comboBox_style.currentIndexChanged.emit(0)
 
 
+
     def comboStyleChanged(self,comboindex):
-        #print('comboStyleChanged')
-        #print(comboindex)
-
+        """
+        Listener on style combobox changed
+        :param comboindex:
+        :return:
+        """
         styledir = self.comboBox_style.currentText()
-
         stylerep = os.path.join(os.path.dirname(__file__), '..', 'DBASE', 'style', self.dbase.type,styledir )
-
-        #print(stylerep)
 
         allfiles = [x[2] for x in os.walk(stylerep)][0]
         qmlfiles = [uknfile.split('.')[0] for uknfile in allfiles if uknfile.split('.')[1] == 'qml']
 
-        #print([x[2] for x in os.walk(stylerep)])
-
-        #print('qml',qmlfiles)
-        #print('inst', qgis.core.QgsProject.instance())
 
         for dbasetablename in self.dbase.dbasetables.keys():
             if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
@@ -948,9 +944,6 @@ class InspectiondigueWindowWidget(QMainWindow):
                 if 'layerqgis' in self.dbase.dbasetables[dbasetablename].keys() :
                     ltl = qgis.core.QgsProject.instance().layerTreeRoot().findLayer(self.dbase.dbasetables[dbasetablename]['layerqgis'].id())
                     if dbasetablename in qmlfiles:
-                        # pass
-                        # qgis.utils.iface.layerTreeView().currentNode().setItemVisibilityChecked(False)
-                        #qgis.utils.iface.layerTreeView().layerTreeModel().layerTreeModel().findLegendNode(self.dbase.dbasetables[dbasetablename]['layerqgis'].id()).layerNode ()
                         if ltl:
                             ltl.setItemVisibilityChecked(True)
                         stylepath = os.path.join(stylerep, dbasetablename + '.qml')
@@ -965,31 +958,14 @@ class InspectiondigueWindowWidget(QMainWindow):
             self.canvas.refreshAllLayers()
 
 
-        # print('comboStyleChanged finished')
-
-
-
-    def loadUiField2(self):
-        self.thread = QtCore.QThread()
-        self.worker = LoadUiField(self)
-        self.worker.moveToThread(self.thread)
-        self.thread.started.connect(self.worker.loadUiField)
-        self.worker.finished.connect(self.worker.deleteLater)
-        self.thread.finished.connect(self.thread.deleteLater)
-        self.worker.finished.connect(self.thread.quit)
-        self.thread.start()
-
-
 
     def loadUiField(self):
-        #timestart = time.clock()
+
         timestart = self.dbase.getTimeNow()
-
-
         if debugtime: logger.debug(' start %.3f', self.dbase.getTimeNow() - timestart)
 
+        # init progress bar
         if self.dbase.qgsiface is not None:
-            #if not self.dbase.standalone:
             progressMessageBar = self.dbase.qgsiface.messageBar().createMessage("Loading widget...")
             progress = QProgressBar()
             progress.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
@@ -1003,52 +979,29 @@ class InspectiondigueWindowWidget(QMainWindow):
         else:
             progress = None
 
+        #load ui fields
         i = 0
         for uifield in self.uifields:
             if debugtime: logger.debug(' start %s %.3f', uifield.dbasetablename, self.dbase.getTimeNow() - timestart)
-            #try:
             dbasename = uifield.dbasetablename
-            # print(dbasename)
-            if False:
-                self.dbase.dbasetables[dbasename]['widget'] = uifield(dbase = self.dbase,
-                                                                         dialog = self,
-                                                                         linkedtreewidget = self.ElemtreeWidget,
-                                                                         gpsutil = self.gpsutil)
-            else:
-                self.dbase.dbasetables[dbasename]['widget'].append( uifield(dbase = self.dbase,
-                                                                         dialog = self,
-                                                                         linkedtreewidget = self.ElemtreeWidget,
-                                                                         gpsutil = self.gpsutil) )
+            self.dbase.dbasetables[dbasename]['widget'].append( uifield(dbase = self.dbase,
+                                                                     dialog = self,
+                                                                     linkedtreewidget = self.ElemtreeWidget,
+                                                                     gpsutil = self.gpsutil) )
 
             if debugtime: logger.debug(' end %s %.3f', uifield.dbasetablename, self.dbase.getTimeNow()  - timestart)
             i += 1
             self.setLoadingProgressBar(progress, i)
-            #except Exception as e:
-            #     print('error load', e)
 
         if progress is not None: self.dbase.qgsiface.messageBar().clearWidgets()
 
 
-
-    """
-    def loadUiDesktop(self):
-        self.thread = QtCore.QThread()
-        self.worker = LoadUiDesktop(self.dbase, self.uidesktop, self.uipostpro)
-        self.worker.moveToThread(self.thread)
-        self.thread.started.connect(self.worker.loadUiDesktop)
-        self.worker.finished.connect(self.worker.deleteLater)
-        self.thread.finished.connect(self.thread.deleteLater)
-        self.worker.finished.connect(self.thread.quit)
-        self.thread.start()
-    """
-
-
     def loadUiDesktop(self):
 
-        debug = True
+        debug = False
 
+        # init progress bar
         if self.dbase.qgsiface is not None:
-            #if not self.dbase.standalone:
             progressMessageBar = self.dbase.qgsiface.messageBar().createMessage("Loading widget...")
             progress = QProgressBar()
             progress.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
@@ -1064,15 +1017,15 @@ class InspectiondigueWindowWidget(QMainWindow):
         else:
             progress = None
 
-
+        # load menu ui
         i = 0
-
         for menuclasse in self.menuclasses:
             self.menutools.append(menuclasse(dbase=self.dbase, windowdialog=self))
             i += 1
             self.setLoadingProgressBar(progress, i)
             if debug : logger.debug(' loading %s', str(menuclasse))
 
+        # load postpro ui
         for uidpostpr in self.uipostpro:
             # print('uidpostpr', uidpostpr)
             strtoexec = ('self.' + uidpostpr.__name__.lower() + " = uidpostpr(dbase = self.dbase, dialog = self,linkedtreewidget = self.ElemtreeWidget, gpsutil = self.gpsutil)")
@@ -1096,22 +1049,14 @@ class InspectiondigueWindowWidget(QMainWindow):
             i += 1
             self.setLoadingProgressBar(progress, i)
 
-
+        # load uidesktop ui
         for uidesktop in self.uidesktop:
             try:
                 dbasename = uidesktop.dbasetablename
-                if False:
-                    self.dbase.dbasetables[dbasename]['widget'] = uidesktop(dbase = self.dbase,
-                                                                             dialog = self,
-                                                                             linkedtreewidget = self.ElemtreeWidget,
-                                                                             gpsutil = self.gpsutil)
-                else:
-
-                    self.dbase.dbasetables[dbasename]['widget'].append(uidesktop(dbase = self.dbase,
-                                                                             dialog = self,
-                                                                             linkedtreewidget = self.ElemtreeWidget,
-                                                                             gpsutil = self.gpsutil))
-                # self.dbase.dbasetables[dbasename]['widget'].initWidgets()
+                self.dbase.dbasetables[dbasename]['widget'].append(uidesktop(dbase = self.dbase,
+                                                                         dialog = self,
+                                                                         linkedtreewidget = self.ElemtreeWidget,
+                                                                         gpsutil = self.gpsutil))
                 i += 1
                 self.setLoadingProgressBar(progress, i)
 
@@ -2112,6 +2057,23 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.MaintreeWidget.clear()
         self.ElemtreeWidget.clear()
         self.menuOutils.clear()
+
+        if self.dbase.dbasetype is not None:
+            if False:
+                root = qgis.core.QgsProject.instance().layerTreeRoot()
+                #root.addGroup('Lamia')
+                if self.dbasetype == "spatialite":
+                    groupname = 'Lamia_' + os.path.basename(self.spatialitefile)
+                elif self.dbasetype == "postgis":
+                    groupname = 'Lamia_' + self.pgschema
+
+                lamialegendgroup =  root.findGroup(groupname)
+
+                if lamialegendgroup is not None:
+                    lamialegendgroup.removeAllChildren()
+
+            if self.qgislegendnode is not None:
+                self.qgislegendnode.removeAllChildren()
 
         self.dbase.reInitDBase()
 

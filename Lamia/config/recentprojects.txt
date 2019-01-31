@@ -1,7 +1,10 @@
-C:\000_testdigue\temp_base2_parking\test01.sqlite
-C://000_testdigue//temp_base2_parking//test01.sqlite
-C:\Users\patrice.verchere\Documents\GitHub\Lamia\test\02_test_export\BD_totale1.sqlite
-C://000_testdigue//temp_base2_digue//test01.sqlite
-C:\Users\patrice.verchere\Documents\GitHub\Lamia\test\02_test_importdb\test01\01_original\test01.sqlite
-C:\Users\patrice.verchere\Documents\GitHub\Lamia\test\02_test_export\BD_totale.sqlite
-C:\000_testdigue\temp_base2_assainissement\test1.sqlite
+C://000_testdigue//temp_base2_ass2//test01.sqlite
+C://000_testdigue//Lamia2//valeyrac_ind0.sqlite
+C://000_testdigue//base2_ass//test01.sqlite
+M://FR//BOR//VT//FLUVIAL//4352408_33_CCMA_VTA_Valeyrac//6_Reglementaire//61_Calculs//Lamia2//valeyrac_ind0.sqlite
+M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//BD_totale_ind6.sqlite
+C://000_testdigue//BM//BD_totale_ind6_backup2.sqlite
+M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees_terrains//20181219_Garonne_RG//BD_totale_ind5.sqlite
+M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees_terrains//20181212_Jalle_Blanquefort//BD_totale_ind4.sqlite
+M://FR//BOR//VT//FLUVIAL//4352409_33_ASA_Baurech_EDD//6_Reglementaire//61_Calculs//lamia//baurech.sqlite
+C://00_Affaires//GPMB//lamia//gpmb_ind1.sqlite

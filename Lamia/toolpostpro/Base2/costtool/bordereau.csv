@@ -1,0 +1,4 @@
+SELECT * FROM Desordre_now INNER JOIN Observation_now ON;;;;;;;;;;;
+Coût;Coût (nombre);Coût (ST_Length(geom));Desordre;;;;;Observation;;;Infralineaire
+;;;groupedesordre;cote;position;catdes;typedes;nombre;ST_Length(geom);gravite;description1
+1000;500;200;INF;;;ENT;VEG;;;;DIG

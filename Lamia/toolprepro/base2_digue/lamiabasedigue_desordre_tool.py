@@ -16,7 +16,7 @@ from .lamiabasedigue_observation_tool import BaseDigueObservationTool
 import os
 import datetime
 import qgis
-
+from collections import OrderedDict
 
 
 
@@ -67,12 +67,12 @@ class BaseDigueDesordreTool(BaseDesordreTool):
             self.userwdgfield = UserUI()
 
             self.linkuserwdgfield = {'Desordre' : {'linkfield' : 'id_desordre',
-                                             'widgets' : {'groupedesordre': self.userwdgfield.comboBox_groupedes,
-                                                          'cote': self.userwdgfield.comboBox_cote,
-                                                          'position': self.userwdgfield.comboBox_position,
-                                                          'catdes': self.userwdgfield.comboBox_des_cat,
-                                                          'typedes': self.userwdgfield.comboBox_des_type
-                                                          }},
+                                             'widgets' : OrderedDict([('groupedesordre', self.userwdgfield.comboBox_groupedes),
+                                                                      ('cote', self.userwdgfield.comboBox_cote),
+                                                                      ('position', self.userwdgfield.comboBox_position),
+                                                                      ('catdes', self.userwdgfield.comboBox_des_cat),
+                                                                      ('typedes', self.userwdgfield.comboBox_des_type)])
+                                                          },
                                 'Objet' : {'linkfield' : 'id_objet',
                                           'widgets' : {}}}
 

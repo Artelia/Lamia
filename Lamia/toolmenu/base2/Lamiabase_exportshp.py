@@ -114,8 +114,8 @@ class exportShapefileBaseWorker(object):
 
     def prepareData(self, tabletype, shpfile):
         # print('prepareData', tabletype, shpfile)
-        debug = True
-
+        debug = False
+        self.pdffile = shpfile
         self.champs = self.readChamp(tabletype)
 
         self.fieldsforshp = self.buildQgsFields(self.champs)
@@ -170,7 +170,7 @@ class exportShapefileBaseWorker(object):
 
     def prepareData2(self,tabletype,  shpfile):
         # print('prepareData', tabletype, shpfile)
-        debug = True
+        debug = False
 
         self.champs = self.readChamp(tabletype)
 
@@ -433,7 +433,7 @@ class exportShapefileBaseWorker(object):
 
     def buildSql2(self,champs):
 
-        debug = True
+        debug = False
 
         sql = ''
 
@@ -1893,8 +1893,6 @@ class exportShapefileBaseWorker(object):
             #feat.setAttributes(row)
             compteur = -1
             #for table in champs.keys():
-
-
 
             for table in champs:
                 #if table != 'geom' and table != 'main' and 'postpro' not in table :

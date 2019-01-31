@@ -74,13 +74,18 @@ class BaseParkingDesordreTool(BaseDesordreTool):
             self.userwdgfield = UserUI()
 
             self.linkuserwdgfield = {'Desordre' : {'linkfield' : 'id_desordre',
-                                             'widgets' : {'groupedesordre': self.userwdgfield.comboBox_groupedes
+                                             'widgets' : {'groupedesordre': self.userwdgfield.comboBox_groupedes,
+                                                          'numrotation': self.userwdgfield.spinBox_num_rot
                                                           }},
                                 'Objet' : {'linkfield' : 'id_objet',
                                           'widgets' : {}}}
 
             self.userwdgfield.frame_2.setParent(None)
+            self.groupBox_geom.setParent(None)
             #self.userwdgfield.stackedWidget.setParent(None)
+
+            self.userwdgfield.toolButton_num_rot.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.spinBox_num_rot))
 
 
             #self.userwdgfield.comboBox_groupedes.currentIndexChanged.connect(self.changeGroupe)
@@ -132,35 +137,43 @@ class BaseParkingDesordreTool(BaseDesordreTool):
             if self.parentWidget.dbasetablename in ['Infralineaire']:
                 parentgeom = self.parentWidget.currentFeature.geometry()
                 # print(parentgeom.asPolyline())
-                self.setTempGeometry(parentgeom.asPolyline())
+                self.setTempGeometry(parentgeom.asPolyline(),comefromcanvas=False, showinrubberband=False)
 
 
     def updateDateCampagne(self):
-        # if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
-        liddesordre = self.dbase.getValuesFromPk('Desordre_qgis',
-                                                 ['id_desordre'],
-                                                 self.currentFeaturePK)
-        if not liddesordre:
-            self.userwdgfield.dateTimeEdit_start.setSpecialValueText(" ")
-            self.userwdgfield.dateTimeEdit_start.setDateTime(QtCore.QDateTime.fromString("01/01/0001 00:00:00", "dd/MM/yyyy hh:mm:ss") )
-            self.userwdgfield.dateTimeEdit_end.setSpecialValueText(" ")
-            self.userwdgfield.dateTimeEdit_end.setDateTime(QtCore.QDateTime.fromString("01/01/0001 00:00:00", "dd/MM/yyyy hh:mm:ss") )
-            return
+        if self.currentFeature is not None:
+            liddesordre = self.dbase.getValuesFromPk('Desordre_qgis',
+                                                     ['id_desordre'],
+                                                     self.currentFeaturePK)
+            if not liddesordre:
+                self.resetCampagneDateTime()
+                return
 
 
-        sql = "SELECT MIN(datetimeobservation), MAX(datetimeobservation) FROM Observation"
-        sql += " WHERE lid_desordre = " + str(liddesordre)
-        res = self.dbase.query(sql)
+            sql = "SELECT MIN(datetimeobservation), MAX(datetimeobservation) FROM Observation"
+            sql += " WHERE lid_desordre = " + str(liddesordre)
+            res = self.dbase.query(sql)
 
-        if res:
-            mindate, maxdate = res[0]
-            self.userwdgfield.dateTimeEdit_start.setDateTime(QtCore.QDateTime.fromString(mindate, 'yyyy-MM-dd hh:mm:ss'))
-            self.userwdgfield.dateTimeEdit_end.setDateTime(QtCore.QDateTime.fromString(maxdate, 'yyyy-MM-dd hh:mm:ss'))
+            if res:
+                mindate, maxdate = res[0]
+                if mindate and maxdate:
+                    self.userwdgfield.dateTimeEdit_start.setDateTime(QtCore.QDateTime.fromString(mindate, 'yyyy-MM-dd hh:mm:ss'))
+                    self.userwdgfield.dateTimeEdit_end.setDateTime(QtCore.QDateTime.fromString(maxdate, 'yyyy-MM-dd hh:mm:ss'))
+                else:
+                    self.resetCampagneDateTime()
+            else:
+                self.resetCampagneDateTime()
         else:
-            self.userwdgfield.dateTimeEdit_start.setSpecialValueText(" ")
-            self.userwdgfield.dateTimeEdit_start.setDateTime(QtCore.QDateTime.fromString("01/01/0001 00:00:00", "dd/MM/yyyy hh:mm:ss") )
-            self.userwdgfield.dateTimeEdit_end.setSpecialValueText(" ")
-            self.userwdgfield.dateTimeEdit_end.setDateTime(QtCore.QDateTime.fromString("01/01/0001 00:00:00", "dd/MM/yyyy hh:mm:ss") )
+            self.resetCampagneDateTime()
+
+
+
+    def resetCampagneDateTime(self):
+        self.userwdgfield.dateTimeEdit_start.setSpecialValueText(" ")
+        self.userwdgfield.dateTimeEdit_start.setDateTime(QtCore.QDateTime.fromString("01/01/0001 00:00:00", "dd/MM/yyyy hh:mm:ss"))
+        self.userwdgfield.dateTimeEdit_end.setSpecialValueText(" ")
+        self.userwdgfield.dateTimeEdit_end.setDateTime(QtCore.QDateTime.fromString("01/01/0001 00:00:00", "dd/MM/yyyy hh:mm:ss"))
+
     """
 
 

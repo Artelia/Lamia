@@ -3,10 +3,10 @@ WITH Gestionnaire AS (SELECT Intervenant.societe, Intervenant.nom  , Tcobjetinte
                  FROM Tcobjetintervenant  
                  INNER JOIN Intervenant ON Tcobjetintervenant.lid_intervenant = Intervenant.id_intervenant  
                  WHERE Tcobjetintervenant.fonction = 'GES' )
-SELECT Infralineaire_qgis.* , Gestionnaire.societe, Gestionnaire.nom 
-FROM Infralineaire_qgis 
-LEFT JOIN Gestionnaire ON Gestionnaire.lid_objet = Infralineaire_qgis.id_objet
-WHERE Infralineaire_qgis.id_infralineaire = Infralineaire_qgis.id_infralineaire
+SELECT Infralineaire_now.* , Gestionnaire.societe, Gestionnaire.nom 
+FROM Infralineaire_now 
+LEFT JOIN Gestionnaire ON Gestionnaire.lid_objet = Infralineaire_now.id_objet
+WHERE Infralineaire_now.id_infralineaire = Infralineaire_now.id_infralineaire
 ###atlaslayerid
 id_infralineaire
 ###spatial
@@ -25,9 +25,9 @@ map0    ;           ;             ; ['Infralineaire', 'ortho']
 #map0    ;           ;             ; []
 ###images
 #itemname   ; type
-photo;ressource2
+photo;Infralineaire_now.ressource2
 logo;logo
-graph;profile
+#graph;profile
 profiltravers;profiltravers
 ###childprint
 #confname;                linkcolumn;             optionsql

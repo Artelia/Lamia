@@ -50,7 +50,7 @@ class printPDFDigueWorker(printPDFBaseWorker):
                 else:
                     imageitem = newComposition.itemById(imageitemname)
                     # composeritem = newComposition.itemByUuid(compitemuuid)
-                    imageitem.__class__ = qgis.core.QgsLayoutItemPicture
+                    #imageitem.__class__ = qgis.core.QgsLayoutItemPicture
 
                 # print(imageitem, reportdic['images'][imageitemname])
                 imagefile = None
@@ -59,24 +59,38 @@ class printPDFDigueWorker(printPDFBaseWorker):
                     imagefile = self.atlasconfData['images'][imageitemname]
 
                 elif True and self.atlasconfData['images'][imageitemname] == 'profile':
-                    #try:
-                    imagefile = self.getImageFileOfProfile(atlas.currentGeometry(self.dbase.qgiscrs), imageitem)
-                    #except Exception as e:
-                    #    print(e)
+                    try:
+                        imagefile = self.getImageFileOfProfile(atlas.currentGeometry(self.dbase.qgiscrs), imageitem)
+                    except Exception as e:
+                        print('getImageFileOfProfile', e)
 
                 elif True and self.atlasconfData['images'][imageitemname] == 'profiltravers':
                     # imagefile = self.getImageFileOfProfileTravers(reportdic, currentfeature, imageitem)
-                    imagefile = self.getImageFileOfProfileTravers(atlasfeat, imageitem)
+                    #imagefile = self.getImageFileOfProfileTravers(atlasfeat, imageitem)
+                    imagefile = self.getImageFileOfProfileTravers(atlasfeat, imageitem.rect())
 
 
                 elif 'photo' in self.atlasconfData['images'][imageitemname]:
-                    photoid = int(self.atlasconfData['images'][imageitemname][5:])
-                    imagefile = self.getNumberedPhoto(atlasfeat, photoid)
+                    table = self.atlasconfData['images'][imageitemname].split('.')[0]
+                    photoid = int(self.atlasconfData['images'][imageitemname].split('.')[1][5:])
+                    imagefile = self.getNumberedPhoto(atlasfeat, table, photoid)
 
                 elif 'ressource' in self.atlasconfData['images'][imageitemname]:
-                    ressourcenum = int(self.atlasconfData['images'][imageitemname][9:])
+                    table = self.atlasconfData['images'][imageitemname].split('.')[0]
+                    ressourcenum = int(self.atlasconfData['images'][imageitemname].split('.')[1][9:])
                     #imagefile = self.getPhoto(reportdic, currentfeature)
-                    imagefile = self.getNumberedRessource(atlasfeat, ressourcenum)
+                    imagefile = self.getNumberedRessource(atlasfeat, table, ressourcenum)
+
+                    """
+                    elif 'photo' in self.atlasconfData['images'][imageitemname]:
+                        photoid = int(self.atlasconfData['images'][imageitemname][5:])
+                        imagefile = self.getNumberedPhoto(atlasfeat, photoid)
+    
+                    elif 'ressource' in self.atlasconfData['images'][imageitemname]:
+                        ressourcenum = int(self.atlasconfData['images'][imageitemname][9:])
+                        #imagefile = self.getPhoto(reportdic, currentfeature)
+                        imagefile = self.getNumberedRessource(atlasfeat, ressourcenum)
+                    """
 
                 elif self.atlasconfData['images'][imageitemname] == 'logo':
                     imagefile = os.path.join(os.path.dirname(__file__), '..','..', 'DBASE', 'rapport', 'utils', 'logo.jpg')
@@ -88,6 +102,8 @@ class printPDFDigueWorker(printPDFBaseWorker):
                         imageitem.updateItem()
                     else:
                         imageitem.refreshPicture()
+
+
 
 
 
@@ -128,10 +144,14 @@ class printPDFDigueWorker(printPDFBaseWorker):
 
 
     # def getImageFileOfProfileTravers(self,reportdic, feat,imageitem):
-    def getImageFileOfProfileTravers(self, atlasfeat, imageitem):
+    #def getImageFileOfProfileTravers(self, atlasfeat, imageitem):
+    def getImageFileOfProfileTravers(self, atlasfeat, qrect):
         resfile = None
         #print([field.name() for field in reportdic['atlaslayer'].fields()])
-        currentfeatureid = atlasfeat.id()
+        if isinstance(atlasfeat, qgis.core.QgsFeature):
+            currentfeatureid = atlasfeat.id()
+        elif isinstance(atlasfeat, int):
+            currentfeatureid = atlasfeat
         #if 'lk_profil' in self.dbase.dbasetables[reportdic['dbasename']]['fields'].keys():
         if True:
 
@@ -171,8 +191,8 @@ class printPDFDigueWorker(printPDFBaseWorker):
                     self.dbase.dbasetables['Graphique']['widget'][0].exportgraph(typegraphique,
                                                                                         datas,
                                                                                         exportfile,
-                                                                                        imageitem.rect().width(),
-                                                                                        imageitem.rect().height())
+                                                                                         qrect.width(),
+                                                                                         qrect.height())
                     resfile = exportfile
 
 

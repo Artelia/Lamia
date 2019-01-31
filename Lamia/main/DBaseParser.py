@@ -479,13 +479,13 @@ class DBaseParser(QtCore.QObject):
         createfilesdir, workversionmax = self.getMaxVersionRepository(self.type)
         createfilesdirbase, baseversionmax = self.getMaxVersionRepository(self.type.split('_')[0])
 
+
+
         if self.version is not None and (self.version < baseversionmax or self.workversion < workversionmax) :
             self.updateDBaseVersion()
 
         self.version = baseversionmax
         self.workversion = workversionmax
-
-
 
         if createfilesdirbase and createfilesdirbase != createfilesdir :
             parsertemp = DBaseParser(None)
@@ -953,7 +953,6 @@ class DBaseParser(QtCore.QObject):
             else:
                 uri.setDataSource('', sql, '', '', finaltableid)
 
-            print(uri.uri())
             layer = qgis.core.QgsVectorLayer(uri.uri(), tablename, 'spatialite')
 
         elif self.dbasetype == 'postgis':
@@ -1050,6 +1049,8 @@ class DBaseParser(QtCore.QObject):
             sqlout += 'SELECT ' + sqltemp1['SELECT'] + ' FROM ' + sqltemp1['FROM']+ ' WHERE ' + sqltemp1['WHERE']
             if 'ORDER' in sqltemp1.keys():
                 sqlout += ' ORDER BY ' + sqltemp1['ORDER']
+            if 'GROUP' in sqltemp1.keys():
+                sqlout += ' GROUP BY ' + sqltemp1['GROUP']
 
         elif withsql != '':
             sqlout += 'WITH ' + withsql + sqlin
@@ -1087,6 +1088,21 @@ class DBaseParser(QtCore.QObject):
 
         return listres
 
+    def rebuildSplittedQuery(self, sqlin):
+        sqlout = ''
+        if 'WITH' in sqlin.keys():
+            sqlout += ' WITH ' + sqlin['WITH']
+        if 'SELECT' in sqlin.keys():
+            sqlout += ' SELECT ' + sqlin['SELECT']
+        if 'FROM' in sqlin.keys():
+            sqlout += ' FROM ' + sqlin['FROM']
+        if 'WHERE' in sqlin.keys():
+            sqlout += ' WHERE ' + sqlin['WHERE']
+        if 'GROUP' in sqlin.keys():
+            sqlout += ' GROUP BY ' + sqlin['GROUP']
+        if 'ORDER' in sqlin.keys():
+            sqlout += ' ORDER BY ' + sqlin['ORDER']
+        return sqlout
 
 
 
@@ -1188,11 +1204,17 @@ class DBaseParser(QtCore.QObject):
 
 
     def reInitDBase(self):
-        root = qgis.core.QgsProject.instance().layerTreeRoot()
-        #root.addGroup('Lamia')
-        lamialegendgroup =  root.findGroup('Lamia')
-        if lamialegendgroup is not None:
-            lamialegendgroup.removeAllChildren()
+        if self.dbasetype is not None:
+            root = qgis.core.QgsProject.instance().layerTreeRoot()
+            #root.addGroup('Lamia')
+            if self.dbasetype == "spatialite":
+                groupname = 'Lamia_' + os.path.basename(self.spatialitefile)
+            elif self.dbasetype == "postgis":
+                groupname = 'Lamia_' + self.pgschema
+
+            lamialegendgroup =  root.findGroup(groupname)
+            if lamialegendgroup is not None:
+                lamialegendgroup.removeAllChildren()
 
         self.dbasetables = None
 
@@ -1363,8 +1385,14 @@ class DBaseParser(QtCore.QObject):
                 if isinstance(rawvalue, int) or isinstance(rawvalue, long):
                     rawvalue = str(rawvalue)
 
-                index = [value[1] for value in dbasetable['fields'][field]['Cst']].index(rawvalue)
-                return dbasetable['fields'][field]['Cst'][index][0]
+                try:
+                    index = [value[1] for value in dbasetable['fields'][field]['Cst']].index(rawvalue)
+                    return dbasetable['fields'][field]['Cst'][index][0]
+                except ValueError as e:
+                    if qgis.utils.iface is None:
+                        print('getConstraintTextFromRawValue error', table, field, e)
+                    return str(rawvalue)
+
             else:
                 return ''
         else:
@@ -1472,6 +1500,9 @@ class DBaseParser(QtCore.QObject):
             disfrompoint = nearestfetgeom.distance(point2geom)
             return layernearestid[0], disfrompoint
 
+
+
+
         # cas d'une ligne ou polygone : comme la recherce se fait su une boundingbox, il faut filtrer les
         # elements dans cette box
         else:
@@ -1498,6 +1529,7 @@ class DBaseParser(QtCore.QObject):
             distance = None
             nearestindex = None
             finalgeomispoint = False
+            distanceratio = 1.2
 
             for intersectingid in idsintersectingbbox:
                 ispoint = False
@@ -1507,10 +1539,15 @@ class DBaseParser(QtCore.QObject):
                     feat = self.getLayerFeatureByPk(dbasetablename, intersectingid)
                 featgeom = feat.geometry()
 
+                if debug: logging.getLogger("Lamia").debug('intersectingid %s  - is valid : %s - type : %s - multi : %s',
+                                                           str(intersectingid), str(featgeom.isGeosValid()),
+                                                           str(featgeom.type()), str(featgeom.isMultipart()))
+
                 if featgeom.isGeosValid():  # if not valid, return dist = -1...
                     dist = featgeom.distance(point2geom)
                 else:  # point
                     if featgeom.type() == 1 and not featgeom.isMultipart():
+
                         ispoint = True
                         if int(str(self.qgisversion_int)[0:3]) < 220:
                             if len(featgeom.asPolyline()) == 1:  # polyline of 1 point
@@ -1524,22 +1561,30 @@ class DBaseParser(QtCore.QObject):
                                 dist = qgis.core.QgsGeometry.fromPointXY(qgis.core.QgsPointXY(featgeom.asPolyline()[0])).distance(point2geom)
                     else:
                         continue
-
+                if debug: logging.getLogger("Lamia").debug('distance : %s - ispoint : %s', str(dist), str(ispoint))
                 # algo for keeping point in linestring layer as nearest
                 # if point is nearest than 1.2 x dist from nearest line
+                if debug: logging.getLogger("Lamia").debug('distance : %s - ispoint : %s - geomfinalispoint : %s - finaldist : %s' ,
+                                                           str(dist), str(ispoint), str(finalgeomispoint), str(distance))
                 if distance is None:
                     distance = dist
                     nearestindex = intersectingid
                     finalgeomispoint = ispoint
-                elif not finalgeomispoint and ispoint and dist < distance*1.2:
+                elif not finalgeomispoint and ispoint and dist < distance*distanceratio:
                     distance = dist
                     nearestindex = intersectingid
                     finalgeomispoint = True
-                elif dist < distance:
+                elif finalgeomispoint and not ispoint and dist < distance/distanceratio:
+                    distance = dist
+                    nearestindex = intersectingid
+                    finalgeomispoint = False
+                elif finalgeomispoint == ispoint and dist < distance:
                     distance = dist
                     nearestindex = intersectingid
                     finalgeomispoint = ispoint
 
+
+        if debug: logging.getLogger("Lamia").debug('nearestpk, dist %s %s', str(nearestindex), str(distance))
         return nearestindex, distance
 
     def areNodesEquals(self, node1, node2):
@@ -2077,6 +2122,7 @@ class DBaseParser(QtCore.QObject):
 
 
 
+
     def getParentTable(self, tablename):
         """
         Get Parents table name
@@ -2229,6 +2275,7 @@ class DBaseParser(QtCore.QObject):
                     results = dbaseparserfrom.query(sql)
                     resultpk = dbaseparserfrom.query(sqlpk)
 
+
                     strtofind = 'ST_AsText(ST_Transform(geom,' + str(self.crsnumber) + '))'
                     if strtofind in noncriticalfield:
                         noncriticalfield[noncriticalfield.index(strtofind)] = 'geom'
@@ -2268,6 +2315,7 @@ class DBaseParser(QtCore.QObject):
                                                                    str(indexlkparenttable))
 
                     # start the iteration in table lines
+                    # if results is not None:
                     for i, result in enumerate(results):
 
                         if i % 50 == 0 and debug: logging.getLogger("Lamia").debug(' result : %s  ', str(result))
@@ -3180,7 +3228,11 @@ class DBaseParser(QtCore.QObject):
         for l, res in enumerate(listofrawvalues):
             if sys.version_info.major == 2:
                 if isinstance(res, str) or (isinstance(res, unicode) and listoffields[l] != 'geom'):
-                    restemp.append("'" + str(res).replace("'", "''") + "'")
+                    if isinstance(res, unicode):
+                        restemp.append("'" + res.replace("'", "''") + "'")
+                    else:
+                        restemp.append("'" + str(res).replace("'", "''") + "'")
+
                 elif listoffields[l] == 'geom' and res is not None:
                     # print('geom', "ST_GeomFromText('" + res + "', " + str(self.crsnumber)  + ")")
                     restemp.append("ST_GeomFromText('" + res + "', " + str(self.crsnumber) + ")")
@@ -3247,7 +3299,8 @@ class DBaseParser(QtCore.QObject):
                 fromfilebase, fromext = os.path.splitext(fromfile)
                 tofilebase, toext = os.path.splitext(destinationfile)
 
-                if fromfilebase.split('_')[1] == 'croquis':
+
+                if len(fromfilebase.split('_')) > 1 and fromfilebase.split('_')[1] == 'croquis':
                     shutil.copy(fromfile, destinationfile)
                 else:
                     if withthumbnail in [0,1] and PILexists and fromext.lower() in ['.jpg', '.jpeg', '.png']:

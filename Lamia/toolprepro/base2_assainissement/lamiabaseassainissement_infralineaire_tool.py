@@ -205,10 +205,18 @@ class BaseAssainissementInfraLineaireTool(BaseInfraLineaireTool):
         # get the geometry before editing
         tempgeom=[]
         if self.tempgeometry is not None :
-            if len(self.tempgeometry.asPolyline())>0:
-                tempgeom = self.tempgeometry.asPolyline()
+            wkbtype = self.tempgeometry.wkbType()
+            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                if len(self.tempgeometry.asPolyline()) > 0:
+                    tempgeom = self.tempgeometry.asPolyline()
+                else:
+                    tempgeom = self.tempgeometry.asMultiPolyline()[0]
             else:
-                tempgeom = self.tempgeometry.asMultiPolyline()[0]
+                if wkbtype == qgis.core.QgsWkbTypes.Type.LineString :
+                    tempgeom = self.tempgeometry.asPolyline()
+                elif wkbtype == qgis.core.QgsWkbTypes.Type.MultiLineString :
+                    tempgeom = self.tempgeometry.asMultiPolyline()[0]
+
         elif self.currentFeature is not None and self.tempgeometry is  None:
             tempgeom = self.currentFeature.geometry().asPolyline()
 

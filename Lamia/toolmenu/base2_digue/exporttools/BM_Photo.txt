@@ -1,0 +1,22 @@
+###Photo
+#nom              type               cst               valeur                    
+id_photo;         Int;                  ;               id_photo
+id_objet;         Int;                  ;               id_objet
+
+###Ressource
+## FROM Ressource  WHERE  Ressource.pk_ressource = Photo_now.pk_ressource
+#nom              type               cst               valeur                    
+id_ressource;         Int;                  ;               id_ressource
+source;         String;                  ;               source
+datephoto;         String;                  ;               datetimeressource
+fichier;         String;                  ;               file
+descriptio;         String;                  ;               description
+
+
+
+###geom
+geom;         Int;               ;                  ST_AsText(geom)
+
+
+###main
+FROM Photo_now

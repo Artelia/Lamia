@@ -12,7 +12,7 @@ import glob
 
 #from .tools.Lamia_exportshpdialog import ExportShapefileDialog
 #from ..base.Lamiabase_import import importShapefileBaseWorker
-from ..base.Lamiabase_exportshp import exportShapefileBaseWorker
+from ..base2.Lamiabase_exportshp import exportShapefileBaseWorker
 
 #class exportShapefileWorker(AbstractWorker):
 

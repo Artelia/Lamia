@@ -8,6 +8,7 @@
 ###pk_photo;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
 ###id_photo;               INT ;                     INTEGER
 ###lpk_ressource;        INT ;                       INTEGER                                        ;Ressource(pk_ressource)
+###numphoto;             INT ;                     INTEGER
 
 ###typephoto;                VARCHAR(255);            TEXT
 Photo;PHO

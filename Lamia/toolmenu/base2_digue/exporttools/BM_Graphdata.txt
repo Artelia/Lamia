@@ -1,0 +1,17 @@
+###Graphiquedata
+
+#nom              type               cst               valeur                    
+id_graphiquedata;         Int;                  ;               pk_graphiquedata
+typedata;           String;typedata;                    typedata
+x;           Double;;                    x
+y;           Double;;                    y
+z;           Double;;                    z
+index1;           String;index1;                    index1
+index2;           String;index2;                    index2
+index3;           String;index3;                    index3
+
+###Infralineaire
+lid_infral;         Int;                  ;               Infralineaire_now.id_infralineaire
+
+###main
+FROM Graphiquedata INNER JOIN Graphique ON Graphiquedata.lpk_graphique = Graphique.pk_graphique INNER JOIN Ressource ON Graphique.lpk_ressource = Ressource.pk_ressource INNER JOIN Infralineaire_now ON Ressource.id_ressource = Infralineaire_now.lid_ressource_4

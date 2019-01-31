@@ -48,6 +48,8 @@ class AbstractLamiaTool(QWidget):
     currentFeatureChanged = QtCore.pyqtSignal()
     lamiageomChanged = QtCore.pyqtSignal()
 
+    specialfieldui = []
+
     def __init__(self, dbase=None, dialog=None, linkedtreewidget=None, gpsutil=None, parentwidget=None, parent=None):
         """
         Abstract class for working on table
@@ -290,7 +292,7 @@ class AbstractLamiaTool(QWidget):
     def magicFunction(self):
         pass
 
-    def changePropertiesWidget(self):
+    def changePropertiesWidget(self, interfacename=None):
         """
         Function called when visual mode is changed
         """
@@ -318,70 +320,106 @@ class AbstractLamiaTool(QWidget):
 
 
 
-        # load propoer widget
-        if self.dbase.visualmode in [0, 1, 4]:
-            # define self.userwdg, self.linkuserwdg and self.dbasechildwdg
-            if self.dbase.visualmode == 0:
-                self.initFieldUI()
-                if self.userwdgfield is not None:
-                    self.userwdg = self.userwdgfield
-                    self.linkuserwdg = self.linkuserwdgfield
-                if self.dbasechildwdgfield is not None:
-                    self.dbasechildwdg = self.dbasechildwdgfield
+        if True:
+            # load propoer widget
+            if self.dbase.visualmode in [0, 1, 4]:
+                # define self.userwdg, self.linkuserwdg and self.dbasechildwdg
+                if self.dbase.visualmode == 0:
+                    if False:
+                        self.initFieldUI()
+                        if self.userwdgfield is not None:
+                            self.userwdg = self.userwdgfield
+                            self.linkuserwdg = self.linkuserwdgfield
+                        if self.dbasechildwdgfield is not None:
+                            self.dbasechildwdg = self.dbasechildwdgfield
+
+                        self.dicttablefieldtoinit = {}
+                        if self.linkuserwdg is not None:
+                            for key in self.linkuserwdg.keys():
+                                self.dicttablefieldtoinit[key] = self.linkuserwdg[key]['widgets'].keys()
+
+
+
+                    if (interfacename is None
+                            or (interfacename is not None
+                                    and (len(interfacename.split('_')) == 1
+                                         or interfacename.split('_')[1] not in self.specialfieldui) )):
+                        self.initFieldUI()
+                        if self.userwdgfield is not None:
+                            self.userwdg = self.userwdgfield
+                            self.linkuserwdg = self.linkuserwdgfield
+
+                        if self.dbasechildwdgfield is not None:
+                            self.dbasechildwdg = self.dbasechildwdgfield
+
+                        self.dicttablefieldtoinit = {}
+                        if self.linkuserwdg is not None:
+                            for key in self.linkuserwdg.keys():
+                                self.dicttablefieldtoinit[key] = self.linkuserwdg[key]['widgets'].keys()
+                    else:
+                        typeinterface = interfacename.split('_')[1]
+                        exec('self.initFieldUI_' + str(typeinterface) + '()')
+                        exec('self.userwdg = self.userwdgfield_' + str(typeinterface))
+                        exec ('self.linkuserwdg = self.linkuserwdgfield_' + str(typeinterface))
+                        self.dbasechildwdg = self.dbasechildwdgfield
+
+                        self.dicttablefieldtoinit = {}
+                        if self.linkuserwdg is not None:
+                            for key in self.linkuserwdg.keys():
+                                self.dicttablefieldtoinit[key] = self.linkuserwdg[key]['widgets'].keys()
+
+
+                elif self.dbase.visualmode == 1:
+                    self.initDesktopUI()
+                    if self.userwdgdesktop is not None:
+                        self.userwdg = self.userwdgdesktop
+                        self.linkuserwdg = self.linkuserwdgdesktop
+
+                    else:
+                        self.userwdg = self.userwdgfield
+                        self.linkuserwdg = self.linkuserwdgfield
+
+                    if self.dbasechildwdgdesktop is not None:
+                        self.dbasechildwdg = self.dbasechildwdgfield + self.dbasechildwdgdesktop
+                    elif self.dbasechildwdgfield is not None:
+                        self.dbasechildwdg = self.dbasechildwdgfield
+                    else:
+                        self.dbasechildwdg = []
+
+
+                elif self.dbase.visualmode == 4:
+                    self.initDesktopUI()
+
+                    if self.userwdgfield is not None:
+                        self.userwdg = self.userwdgfield
+                        self.linkuserwdg = self.linkuserwdgfield
+                    if self.dbasechildwdgfield is not None:
+                        self.dbasechildwdg = self.dbasechildwdgfield
+
+                    self.dicttablefieldtoinit = {}
+                    if self.linkuserwdg is not None:
+                        for key in self.linkuserwdg.keys():
+                            self.dicttablefieldtoinit[key] = self.linkuserwdg[key]['widgets'].keys()
+
+                #init fields
+                self.initWidgetUI()
+
+                # load userwdg
+                if self.userwdg is not None:
+                    self.groupBox_properties.layout().addWidget(self.userwdg)
 
                 self.dicttablefieldtoinit = {}
                 if self.linkuserwdg is not None:
                     for key in self.linkuserwdg.keys():
                         self.dicttablefieldtoinit[key] = self.linkuserwdg[key]['widgets'].keys()
 
+            elif self.dbase.visualmode == 2:
+                self.groupBox_properties.layout().addWidget(self.tableWidget)
 
-            elif self.dbase.visualmode == 1:
-                self.initDesktopUI()
-                if self.userwdgdesktop is not None:
-                    self.userwdg = self.userwdgdesktop
-                    self.linkuserwdg = self.linkuserwdgdesktop
-                else:
-                    self.userwdg = self.userwdgfield
-                    self.linkuserwdg = self.linkuserwdgfield
-
-                if self.dbasechildwdgdesktop is not None:
-                    self.dbasechildwdg = self.dbasechildwdgfield + self.dbasechildwdgdesktop
-                elif self.dbasechildwdgfield is not None:
-                    self.dbasechildwdg = self.dbasechildwdgfield
-                else:
-                    self.dbasechildwdg = []
-
-
-            elif self.dbase.visualmode == 4:
-                self.initDesktopUI()
-
-                if self.userwdgfield is not None:
-                    self.userwdg = self.userwdgfield
-                    self.linkuserwdg = self.linkuserwdgfield
-                if self.dbasechildwdgfield is not None:
-                    self.dbasechildwdg = self.dbasechildwdgfield
-
-                self.dicttablefieldtoinit = {}
                 if self.linkuserwdg is not None:
                     for key in self.linkuserwdg.keys():
-                        self.dicttablefieldtoinit[key] = self.linkuserwdg[key]['widgets'].keys()
-
-            # load userwdg
-            if self.userwdg is not None:
-                self.groupBox_properties.layout().addWidget(self.userwdg)
-
-            self.dicttablefieldtoinit = {}
-            if self.linkuserwdg is not None:
-                for key in self.linkuserwdg.keys():
-                    self.dicttablefieldtoinit[key] = self.linkuserwdg[key]['widgets'].keys()
-
-        elif self.dbase.visualmode == 2:
-            self.groupBox_properties.layout().addWidget(self.tableWidget)
-
-            if self.linkuserwdg is not None:
-                for key in self.linkuserwdg.keys():
-                    self.dicttablefieldtoinit[key] = self.dbase.dbasetables[key]['fields'].keys()
-                    #listfieldname = [self.tableWidget.item(row, 0).text() for row in range(self.tableWidget.rowCount())]
+                        self.dicttablefieldtoinit[key] = self.dbase.dbasetables[key]['fields'].keys()
+                        #listfieldname = [self.tableWidget.item(row, 0).text() for row in range(self.tableWidget.rowCount())]
 
         # reconnect currentFeatureChanged signal to dbasechildwdg
         for childwdg in self.dbasechildwdg:
@@ -401,7 +439,7 @@ class AbstractLamiaTool(QWidget):
 
         # dbasechildwdg change
         for childwdg in self.dbasechildwdg:
-            childwdg.changePropertiesWidget()
+            childwdg.changePropertiesWidget(interfacename=interfacename)
 
         if debug:
             QApplication.processEvents()
@@ -532,73 +570,113 @@ class AbstractLamiaTool(QWidget):
                                 wdg.addItems([description[0] for description in dbasetable['fields'][field]['Cst']])
                         self.tableWidget.setCellWidget(rowPosition, 1, wdg)
 
-                        linkuserwdglist = []
-                        if self.linkuserwdgfield is not None or self.linkuserwdgdesktop is not None:
-                            if self.linkuserwdgfield is not None :
-                                linkuserwdglist.append(self.linkuserwdgfield)
-                            if self.linkuserwdgdesktop is not None:
-                                linkuserwdglist.append(self.linkuserwdgdesktop)
-                        elif self.linkuserwdg is not None:
-                            #else :
-                            linkuserwdglist.append(self.linkuserwdg)
-
-                        for linkuserwdg in linkuserwdglist:
-                            if (tablename in linkuserwdg.keys()
-                                    and field in linkuserwdg[tablename]['widgets'].keys()
-                                    and isinstance(linkuserwdg[tablename]['widgets'][field],QComboBox)):
-                                # if linkuserwdg[] is not None and field in linkuserwdg.keys():
-                                templist = [description[0] for description in dbasetable['fields'][field]['Cst']]
+                        if 'ParFldCst' in dbasetable['fields'][field].keys():
+                            # listfieldname = [fieldname for fieldname in dbasetable['fields'].keys()]
+                            listfieldname = [self.tableWidget.item(row, 0).text() for row in
+                                             range(self.tableWidget.rowCount())]
+                            # print(dbasetable['fields'])
+                            # print(listfieldname)
+                            # print(tablename + '.' + dbasetable['fields'][field]['ParFldCst'])
+                            indexparentfield = listfieldname.index(
+                                tablename + '.' + dbasetable['fields'][field]['ParFldCst'])
+                            nameparenttalbe, nameparentfield = listfieldname[indexparentfield].split('.')
+                            # print('indexparentfield', indexparentfield)
+                            comboparent = self.tableWidget.cellWidget(indexparentfield, 1)
+                            # print('okok',comboparent.objectName() )
+                            try:
+                                comboparent.currentIndexChanged.connect(self.comboparentValueChanged)
                                 if False:
-                                    if sys.version_info.major == 2:
-                                        templist = [str(description[0].encode('utf-8')) for description in dbasetable['fields'][field]['Cst']]
-                                    elif sys.version_info.major == 3:
-                                        templist = [description[0] for description in dbasetable['fields'][field]['Cst']]
-                                linkuserwdg[tablename]['widgets'][field].addItems(templist)
+                                    if isinstance(comboparent, QComboBox):
+                                        comboparent.currentIndexChanged.connect(self.comboparentValueChanged)
+                                    elif isinstance(comboparent, QSpinBox):
+                                        comboparent.valueChanged.connect(self.comboparentValueChanged)
+                            except Exception as e:
+                                if self.dbase.qgsiface is None:
+                                    logging.getLogger("Lamia").debug('error %s %s %s', e, tablename, field)
 
-                            if 'ParFldCst' in dbasetable['fields'][field].keys():
-                                # listfieldname = [fieldname for fieldname in dbasetable['fields'].keys()]
-                                listfieldname = [self.tableWidget.item(row, 0).text() for row in range(self.tableWidget.rowCount())]
-                                #print(dbasetable['fields'])
-                                #print(listfieldname)
-                                # print(tablename + '.' + dbasetable['fields'][field]['ParFldCst'])
-                                indexparentfield = listfieldname.index(tablename + '.' + dbasetable['fields'][field]['ParFldCst'])
-                                nameparenttalbe, nameparentfield = listfieldname[indexparentfield].split('.')
-                                # print('indexparentfield', indexparentfield)
-                                comboparent = self.tableWidget.cellWidget(indexparentfield, 1)
-                                # print('okok',comboparent.objectName() )
-                                try:
-                                    comboparent.currentIndexChanged.connect(self.comboparentValueChanged)
+
+
+                        if False:
+                            linkuserwdglist = []
+                            if self.linkuserwdgfield is not None or self.linkuserwdgdesktop is not None:
+                                if self.linkuserwdgfield is not None :
+                                    linkuserwdglist.append(self.linkuserwdgfield)
+                                if self.linkuserwdgdesktop is not None:
+                                    linkuserwdglist.append(self.linkuserwdgdesktop)
+                            elif self.linkuserwdg is not None:
+                                #else :
+                                linkuserwdglist.append(self.linkuserwdg)
+
+                            for linkuserwdg in linkuserwdglist:
+                                if (tablename in linkuserwdg.keys()
+                                        and field in linkuserwdg[tablename]['widgets'].keys()
+                                        and isinstance(linkuserwdg[tablename]['widgets'][field],QComboBox)):
+                                    # if linkuserwdg[] is not None and field in linkuserwdg.keys():
+                                    templist = [description[0] for description in dbasetable['fields'][field]['Cst']]
                                     if False:
-                                        if isinstance(comboparent, QComboBox):
-                                            comboparent.currentIndexChanged.connect(self.comboparentValueChanged)
-                                        elif  isinstance(comboparent, QSpinBox):
-                                            comboparent.valueChanged.connect(self.comboparentValueChanged)
-                                except Exception as e:
-                                    if self.dbase.qgsiface is None:
-                                        logging.getLogger("Lamia").debug('error %s %s %s', e, tablename, field)
-                                # userwidget
-                                if (tablename in linkuserwdg.keys() and 'widgets' in linkuserwdg[tablename].keys()
-                                        and nameparentfield in linkuserwdg[tablename]['widgets'].keys()
-                                        and isinstance(linkuserwdg[tablename]['widgets'][nameparentfield], QComboBox)):
-                                    linkuserwdg[tablename]['widgets'][nameparentfield].currentIndexChanged.connect(self.comboparentValueChanged)
+                                        if sys.version_info.major == 2:
+                                            templist = [str(description[0].encode('utf-8')) for description in dbasetable['fields'][field]['Cst']]
+                                        elif sys.version_info.major == 3:
+                                            templist = [description[0] for description in dbasetable['fields'][field]['Cst']]
+                                    linkuserwdg[tablename]['widgets'][field].addItems(templist)
+
+                                if 'ParFldCst' in dbasetable['fields'][field].keys():
+                                    # listfieldname = [fieldname for fieldname in dbasetable['fields'].keys()]
+                                    listfieldname = [self.tableWidget.item(row, 0).text() for row in range(self.tableWidget.rowCount())]
+                                    #print(dbasetable['fields'])
+                                    #print(listfieldname)
+                                    # print(tablename + '.' + dbasetable['fields'][field]['ParFldCst'])
+                                    indexparentfield = listfieldname.index(tablename + '.' + dbasetable['fields'][field]['ParFldCst'])
+                                    nameparenttalbe, nameparentfield = listfieldname[indexparentfield].split('.')
+                                    # print('indexparentfield', indexparentfield)
+                                    comboparent = self.tableWidget.cellWidget(indexparentfield, 1)
+                                    # print('okok',comboparent.objectName() )
+                                    try:
+                                        comboparent.currentIndexChanged.connect(self.comboparentValueChanged)
+                                        if False:
+                                            if isinstance(comboparent, QComboBox):
+                                                comboparent.currentIndexChanged.connect(self.comboparentValueChanged)
+                                            elif  isinstance(comboparent, QSpinBox):
+                                                comboparent.valueChanged.connect(self.comboparentValueChanged)
+                                    except Exception as e:
+                                        if self.dbase.qgsiface is None:
+                                            logging.getLogger("Lamia").debug('error %s %s %s', e, tablename, field)
+                                    # userwidget
+                                    if (tablename in linkuserwdg.keys() and 'widgets' in linkuserwdg[tablename].keys()
+                                            and nameparentfield in linkuserwdg[tablename]['widgets'].keys()
+                                            and isinstance(linkuserwdg[tablename]['widgets'][nameparentfield], QComboBox)):
+                                        linkuserwdg[tablename]['widgets'][nameparentfield].currentIndexChanged.connect(self.comboparentValueChanged)
 
                     elif 'INTEGER' in dbasetable['fields'][field]['SLtype']:
-                        if field[0:2].lower() == 'id':
+                        if field[0:3].lower() in ['id_', 'pk_'] or field[0:4].lower() in ['lpk_']:
                             item = QTableWidgetItem()
                             item.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
                             self.tableWidget.setItem(rowPosition, 1, item)
+
+                            wdg2 = QPushButton('Show')
+                            wdg2.setEnabled(False)
+                            self.tableWidget.setCellWidget(rowPosition, 2, wdg2)
+                            wdg2.clicked.connect(self.rawtablePushButtonClicked)
+
                         else:
                             wdg = QSpinBox()
                             wdg.setRange(-1, 9999999)
                             self.tableWidget.setCellWidget(rowPosition, 1, wdg)
-                        if 'Lk' in field[0:2]:
+
+                        if field[0:4].lower() in ['lid_']:
                             wdg2 = QPushButton('Pick')
+                            wdg2.setEnabled(False)
                             self.tableWidget.setCellWidget(rowPosition, 2, wdg2)
                             wdg2.clicked.connect(self.rawtablePushButtonClicked)
-                        if 'Id' in field[0:2] and len(field) > 2:
-                            wdg2 = QPushButton('Show')
-                            self.tableWidget.setCellWidget(rowPosition, 2, wdg2)
-                            wdg2.clicked.connect(self.rawtablePushButtonClicked)
+
+
+                        if False:
+                            if 'Id' in field[0:2] and len(field) > 2:
+                                wdg2 = QPushButton('Show')
+
+                                self.tableWidget.setCellWidget(rowPosition, 2, wdg2)
+                                wdg2.clicked.connect(self.rawtablePushButtonClicked)
+
                     elif 'TEXT' in dbasetable['fields'][field]['SLtype']:
                         if 'datetime' in field[0:8]:
                             wdg = QDateTimeEdit()
@@ -709,6 +787,105 @@ class AbstractLamiaTool(QWidget):
             self.pushButton_linkage.setEnabled(True)
         else:
             self.pushButton_linkage.setEnabled(False)
+
+
+    def initWidgetUI(self):
+
+        if self.linkuserwdg is None:
+            templinkuserwgd = {self.dbasetablename: None}
+        else:
+            templinkuserwgd = self.linkuserwdg
+
+
+        for tablename in templinkuserwgd:
+            if tablename in self.dbase.dbasetables.keys():
+                dbasetable = self.dbase.dbasetables[tablename]
+                for field in dbasetable['fields'].keys():
+                    if 'Cst' in dbasetable['fields'][field].keys():
+                        for linkuserwdg in [self.linkuserwdg]:
+                            if linkuserwdg is None or linkuserwdg.keys() is None:
+                                continue
+                            if (tablename in linkuserwdg.keys()
+                                    and field in linkuserwdg[tablename]['widgets'].keys() ):
+                                    # and isinstance(linkuserwdg[tablename]['widgets'][field], QComboBox)):
+
+                                wdgs = linkuserwdg[tablename]['widgets'][field]
+
+                                # combox filling with constraints
+                                if isinstance(wdgs, QComboBox) or (isinstance(wdgs, list) and isinstance(wdgs[0], QComboBox)):
+
+                                    templist = [description[0] for description in dbasetable['fields'][field]['Cst']]
+                                    if isinstance(wdgs, QComboBox):
+                                        wdgs = [wdgs]
+                                    for wdg in wdgs:
+                                        wdg.clear()
+                                        wdg.addItems(templist)
+
+                                # multiple wdg for field management
+                                if isinstance(wdgs, list):
+                                    if isinstance(wdgs[0], QComboBox):
+                                        for wdg in wdgs:
+                                            wdg.currentIndexChanged.connect(self.manageMultipleWidgetField)
+                                    elif isinstance(wdgs[0], QSpinBox) or isinstance(wdgs[0], QDoubleSpinBox):
+                                        for wdg in wdgs:
+                                            wdg.valueChanged.connect(self.manageMultipleWidgetField)
+
+
+
+                                if False:
+                                    if  ( isinstance(linkuserwdg[tablename]['widgets'][field], QComboBox)
+                                            or (isinstance(linkuserwdg[tablename]['widgets'][field], list) and isinstance(linkuserwdg[tablename]['widgets'][field][0], QComboBox))):
+                                        if isinstance(linkuserwdg[tablename]['widgets'][field], QComboBox):
+                                            combowdgs = [linkuserwdg[tablename]['widgets'][field]]
+                                        else:
+                                            combowdgs = linkuserwdg[tablename]['widgets'][field]
+                                        # if linkuserwdg[] is not None and field in linkuserwdg.keys():
+                                        templist = [description[0] for description in dbasetable['fields'][field]['Cst']]
+                                        for combowdg in combowdgs:
+                                            combowdg.clear()
+                                            combowdg.addItems(templist)
+
+                            if True and 'ParFldCst' in dbasetable['fields'][field].keys():
+                                nameparentfield = dbasetable['fields'][field]['ParFldCst']
+                                # userwidget
+                                if (tablename in linkuserwdg.keys() and 'widgets' in linkuserwdg[tablename].keys()
+                                        and nameparentfield in linkuserwdg[tablename]['widgets'].keys()
+                                        and isinstance(linkuserwdg[tablename]['widgets'][nameparentfield], QComboBox)):
+                                    linkuserwdg[tablename]['widgets'][nameparentfield].currentIndexChanged.connect(self.comboparentValueChanged)
+
+
+
+
+    def manageMultipleWidgetField(self):
+        senderwdg = self.sender()
+        #print('manageMultipleComboboxField', self.sender())
+
+        for tablename in self.linkuserwdg:
+            for fieldname in self.linkuserwdg[tablename]['widgets'].keys():
+                wdgs = self.linkuserwdg[tablename]['widgets'][fieldname]
+                if isinstance(wdgs, list) and senderwdg in wdgs:
+                    if isinstance(senderwdg, QComboBox):
+                        for wdg in wdgs:
+                            if wdg != senderwdg:
+                                try:
+                                    wdg.currentIndexChanged.disconnect(self.manageMultipleWidgetField)
+                                except:
+                                    pass
+                                wdg.setCurrentIndex(senderwdg.currentIndex())
+                                wdg.currentIndexChanged.connect(self.manageMultipleWidgetField)
+                        break
+                    elif isinstance(senderwdg, QSpinBox) or isinstance(senderwdg, QDoubleSpinBox):
+                        for wdg in wdgs:
+                            if wdg != senderwdg:
+                                try:
+                                    wdg.valueChanged.disconnect(self.manageMultipleWidgetField)
+                                except:
+                                    pass
+                                wdg.setValue(senderwdg.value())
+                                wdg.valueChanged.connect(self.manageMultipleWidgetField)
+                        break
+
+
 
 
     def manageLinkage(self):
@@ -828,6 +1005,9 @@ class AbstractLamiaTool(QWidget):
         # table
         senderwdg = self.sender()
         if isinstance(senderwdg, QComboBox) and senderwdg.count() == 0: #case triple descendant and parent not filled
+            return
+
+        if self.groupBox_properties.layout().itemAt(0) is None:
             return
 
         parenttablename = None
@@ -971,9 +1151,12 @@ class AbstractLamiaTool(QWidget):
                     #print('loadFeaturesinTreeWdg')
                     self.loadFeaturesinTreeWdg()
                     if self.comboBox_featurelist.count() > 0:
-                        if self.parentWidget is None and self.lastidselected is not None:
+                        if self.parentWidget is None and self.lastidselected is not None :
                             idwidgetindex = self.comboBox_featurelist.findText(str(self.lastidselected))
-                            self.comboBox_featurelist.setCurrentIndex(idwidgetindex)
+                            if idwidgetindex >= 0 : #-1 not found
+                                self.comboBox_featurelist.setCurrentIndex(idwidgetindex)
+                            else:
+                                self.comboBox_featurelist.currentIndexChanged.emit(0)
                         else:
                             self.comboBox_featurelist.currentIndexChanged.emit(0)
                             # self.comboBox_featurelist.setCurrentIndex(0)
@@ -1528,6 +1711,7 @@ class AbstractLamiaTool(QWidget):
             if debug: logging.getLogger("Lamia").debug('come from combobox')
             # print('item', item)
             # print('cc', item, ' _' ,[self.comboBox_featurelist.itemText(i) for i in range(self.comboBox_featurelist.count())])
+
             id = int(self.comboBox_featurelist.itemText(item))
             if self.linkedtreewidget is not None and isinstance(self.linkedtreewidget, QTreeWidget):
                 parentitem = self.linkedtreewidget.findItems(self.dbasetablename, QtCore.Qt.MatchExactly | QtCore.Qt.MatchRecursive, 0)[0]
@@ -1614,7 +1798,7 @@ class AbstractLamiaTool(QWidget):
         """
 
 
-        print('initFeatureProperties',self.dbasetablename, feat)
+        # print('initFeatureProperties',self.dbasetablename, feat)
 
         if self.dbasetable is not None:
             if self.linkuserwdg is None:
@@ -1645,7 +1829,7 @@ class AbstractLamiaTool(QWidget):
                 tablestoiterate = [inputtablename]
 
             #Then get values
-            print('tablestoiterate', tablestoiterate)
+            # print('tablestoiterate', tablestoiterate)
 
             for tablename in tablestoiterate:
                 dbasetable = self.dbase.dbasetables[tablename]
@@ -1699,7 +1883,12 @@ class AbstractLamiaTool(QWidget):
                                 and templinkuserwgd[tablename] is not None
                                 and 'widgets' in templinkuserwgd[tablename].keys()
                                 and field in  templinkuserwgd[tablename]['widgets'].keys()):
-                            self.setValueInWidget(templinkuserwgd[tablename]['widgets'][field], valuetoset, tablename,field)
+                            if isinstance(templinkuserwgd[tablename]['widgets'][field], list):
+                                self.setValueInWidget(templinkuserwgd[tablename]['widgets'][field][0], valuetoset, tablename, field)
+                                # for wdg in templinkuserwgd[tablename]['widgets'][field]:
+
+                            else:
+                                self.setValueInWidget(templinkuserwgd[tablename]['widgets'][field], valuetoset, tablename,field)
 
 
                     if self.dbase.visualmode == 2 :
@@ -1759,6 +1948,8 @@ class AbstractLamiaTool(QWidget):
         else:
             valuetoset = feat
         """
+
+
 
         # print('setValueInWidget',wdg.__class__ , table, field,valuetoset , type(valuetoset))
 
@@ -2282,7 +2473,8 @@ class AbstractLamiaTool(QWidget):
                                 newgeom = qgis.core.QgsGeometry.fromPolyline([sourceqgsgeom.asPoint(), sourceqgsgeom.asPoint()])
                                 targetgeomtext = newgeom.exportToWkt()
                             else:
-                                newgeom = qgis.core.QgsGeometry.fromPolylineXY([sourceqgsgeom.asPointXY(), sourceqgsgeom.asPointXY()])
+                                # newgeom = qgis.core.QgsGeometry.fromPolylineXY([sourceqgsgeom.asPointXY(), sourceqgsgeom.asPointXY()])
+                                newgeom = qgis.core.QgsGeometry.fromPolylineXY([sourceqgsgeom.asPoint(), sourceqgsgeom.asPoint()])
                                 targetgeomtext = newgeom.asWkt()
                     elif sourceqgsgeom.type() == 1:
                         sourceval = sourceqgsgeom.asPolyline()[0]
@@ -2292,7 +2484,8 @@ class AbstractLamiaTool(QWidget):
                                 newgeom = qgis.core.QgsGeometry.fromPolyline([sourceqgsgeom.asPoint(), sourceqgsgeom.asPoint()])
                                 targetgeomtext = newgeom.exportToWkt()
                             else:
-                                newgeom = qgis.core.QgsGeometry.fromPolylineXY([sourceqgsgeom.asPointXY(), sourceqgsgeom.asPointXY()])
+                                # newgeom = qgis.core.QgsGeometry.fromPolylineXY([sourceqgsgeom.asPointXY(), sourceqgsgeom.asPointXY()])
+                                newgeom = qgis.core.QgsGeometry.fromPolylineXY([sourceqgsgeom.asPoint(), sourceqgsgeom.asPoint()])
                                 targetgeomtext = newgeom.asWkt()
                         elif targetqgsgeom.type() == 1:
                             targetval = targetqgsgeom.asPolyline()[0]
@@ -2340,7 +2533,8 @@ class AbstractLamiaTool(QWidget):
                             newgeom = qgis.core.QgsGeometry.fromPolyline([qgsgeom.asPoint(), qgsgeom.asPoint()])
                             geomtext = newgeom.exportToWkt()
                         else:
-                            newgeom = qgis.core.QgsGeometry.fromPolylineXY([qgsgeom.asPointXY(), qgsgeom.asPointXY()])
+                            # newgeom = qgis.core.QgsGeometry.fromPolylineXY([qgsgeom.asPointXY(), qgsgeom.asPointXY()])
+                            newgeom = qgis.core.QgsGeometry.fromPolylineXY([qgsgeom.asPoint(), qgsgeom.asPoint()])
                             geomtext = newgeom.asWkt()
 
                     sql = self.dbase.createSetValueSentence(type='INSERT',
@@ -2392,8 +2586,8 @@ class AbstractLamiaTool(QWidget):
                                 newgeom = qgis.core.QgsGeometry.fromPolyline([qgsgeom.asPoint(), qgsgeom.asPoint()])
                                 equipgeomtext = newgeom.exportToWkt()
                             else:
-                                newgeom = qgis.core.QgsGeometry.fromPolylineXY(
-                                    [qgsgeom.asPointXY(), qgsgeom.asPointXY()])
+                                # newgeom = qgis.core.QgsGeometry.fromPolylineXY([qgsgeom.asPointXY(), qgsgeom.asPointXY()])
+                                newgeom = qgis.core.QgsGeometry.fromPolylineXY([qgsgeom.asPoint(), qgsgeom.asPoint()])
                                 equipgeomtext = newgeom.asWkt()
 
                         if equipgeomtext != desgeomtext:
@@ -2499,7 +2693,11 @@ class AbstractLamiaTool(QWidget):
 
             #update sql
             sql = "UPDATE "+ str(table).lower()  + " SET "
-            for i, field in enumerate(self.dbase.dbasetables[table]['fields'].keys()[1:]):
+            if (sys.version_info > (3, 0)):
+                fieldslist = list(self.dbase.dbasetables[table]['fields'].keys())[1:]
+            else:
+                fieldslist = self.dbase.dbasetables[table]['fields'].keys()[1:]
+            for i, field in enumerate(fieldslist):
                 if 'lpk_' in field :
                     continue
 
@@ -2622,7 +2820,10 @@ class AbstractLamiaTool(QWidget):
                     for i, field in enumerate(fieldnames):
                         if isinstance(result[i], str) or isinstance(result[i], unicode) :
                             if result[i] != '':
-                                resulttemp = "'" + result[i ] + "'"
+                                resultstring = result[i]
+                                if "'" in resultstring:
+                                    resultstring = "''".join(resultstring.split("'"))
+                                resulttemp = "'" + resultstring + "'"
                             else:
                                 resulttemp = 'NULL'
                         elif result[i ] is None:
@@ -2667,6 +2868,8 @@ class AbstractLamiaTool(QWidget):
                     else:
                         result.append(None)
 
+                print(tablename, result)
+
                 #tablepk
                 sql = "SELECT pk_" + str(tablename).lower() + " FROM " + str(self.dbasetablename).lower() + "_qgis"
                 sql += "  WHERE pk_" + self.dbasetablename.lower() + " = " + str(self.currentFeaturePK)
@@ -2675,10 +2878,18 @@ class AbstractLamiaTool(QWidget):
                 # update sql
                 sql = "UPDATE " + str(tablename).lower() + " SET "
                 for i, field in enumerate(dbasetable['fields'].keys()):
-                    if "pk_" in field or "lpk_" in field or "id_" in field:
+                    #if "pk_" in field or "lpk_" in field or "id_" in field:
+                    if field[0:3] in ['pk_', 'id_'] or field[0:4] in ['lpk_']:
                         continue
-                    if (isinstance(result[i ], str) or isinstance(result[i], unicode)) and result[i] != '':
+
+                    if isinstance(result[i], str):
                         if result[i] != '':
+                            resulttemp = "'" + result[i] + "'"
+                        else:
+                            resulttemp = 'NULL'
+
+                    elif isinstance(result[i], unicode):
+                        if result[i] != u'':
                             resulttemp = "'" + result[i] + "'"
                         else:
                             resulttemp = 'NULL'
@@ -2688,6 +2899,8 @@ class AbstractLamiaTool(QWidget):
                     else:
                         # print(type(result[i ]))
                         resulttemp = str(result[i])
+
+                    # print(field, i, type(result[i]), result[i], resulttemp)
 
                     sql += str(field) + " = " + resulttemp + ','
 
@@ -2714,7 +2927,12 @@ class AbstractLamiaTool(QWidget):
         # if 'Cst' in self.dbasetable['fields'][fieldname].keys():
         if 'Cst' in self.dbase.dbasetables[tablename]['fields'][fieldname].keys():
             # fieldvaluetosave = self._getConstraintRawValueFromText(tablename,fieldname, wdg.currentText())
-            fieldvaluetosave = self.dbase.getConstraintRawValueFromText(tablename, fieldname, wdg.currentText())
+            try:
+                if isinstance(wdg, list):
+                    wdg = wdg[0]
+                fieldvaluetosave = self.dbase.getConstraintRawValueFromText(tablename, fieldname, wdg.currentText())
+            except Exception as e:
+                print('error getValueFromWidget', tablename, fieldname, e)
             if False:
                 if isinstance(wdg, QComboBox):
                     fieldvaluetosave = self.dbase.getConstraintRawValueFromText(tablename, fieldname, wdg.currentText())
@@ -3526,7 +3744,10 @@ class AbstractLamiaTool(QWidget):
                 if type == 1 and len(geom.asPolyline()) == 2 and geom.asPolyline()[0] == geom.asPolyline()[1] :
                     #case when point stored in polyline
                     type = 0
-                    geom = qgis.core.QgsGeometry.fromPoint(geom.asPolyline()[0])
+                    if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                        geom = qgis.core.QgsGeometry.fromPoint(geom.asPolyline()[0])
+                    else:
+                        geom = qgis.core.QgsGeometry.fromPointXY(geom.asPolyline()[0])
                 if self.rubberBandBlink is not None:
                     self.rubberBandBlink.reset(type)
                 else:

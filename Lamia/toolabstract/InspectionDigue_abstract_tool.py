@@ -277,7 +277,7 @@ class AbstractInspectionDigueTool(QWidget):
     def magicFunction(self):
         pass
 
-    def changePropertiesWidget(self):
+    def changePropertiesWidget(self, interfacename=None):
         """
         Function called when visual mode is changed
         """

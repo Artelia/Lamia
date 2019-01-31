@@ -18,6 +18,8 @@ class TestMain(Test):
         path = os.path.normpath("C://Users//patrice.verchere//Documents//GitHub//Lamia//test//02_test_export//BD_totale1.sqlite")
         # path = os.path.normpath("C://Users//patrice.verchere//Documents//GitHub//Lamia//test//02_test_importdb//test01//01_original//test01.sqlite")
         #path = "I://FLUVIAL//4352408_33_CCMA_VTA_Valeyrac//6_Reglementaire//62_Dessins//620_Qgis//total//vvvvv.sqlite"
+        path = os.path.normpath("C://000_testdigue//temp_base2_parking//test01.sqlite")
+
         self.dbase.loadQgisVectorLayers(path)
         print('ok0')
 
@@ -83,10 +85,10 @@ class TestMain(Test):
                 #print(wdgitem.text(0))
                 wdg.linkedtreewidget.setCurrentItem(wdgitem)
 
-                wdg.userwdgfield.lineEdit_option.setText('date=31/12/2017,now')
+                #wdg.userwdgfield.lineEdit_option.setText('date=31/12/2017,now')
                 #wdg.userwdgfield.lineEdit_option.returnPressed.emit()
 
-                wdgitem2 = wdg.userwdgfield.treeWidget_desordres_2.invisibleRootItem().child(0)
+                wdgitem2 = wdg.userwdgfield.treeWidget_desordres_2.invisibleRootItem().child(1)
                 wdg.userwdgfield.treeWidget_desordres_2.setCurrentItem(wdgitem2)
 
 

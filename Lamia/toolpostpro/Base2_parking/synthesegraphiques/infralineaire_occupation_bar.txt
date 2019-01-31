@@ -1,0 +1,91 @@
+###Graphtype    stackedbar
+###Graphoption  shadow=True, startangle=90
+###Title Occupation de stationnement
+###Graphcumulatif   True
+
+
+###Graphpython
+def getResult(listobjetid):
+
+    if len(listobjetid) ==1:
+        strzonegeoid = '(' + str(listobjetid[0]) + ')'
+    else:
+        strzonegeoid = str(tuple(listobjetid))
+    
+    
+    sql = "SELECT infralineaire_now.pk_infralineaire FROM infralineaire_now "
+    sql += " WHERE infralineaire_now.id_infralineaire IN " + strzonegeoid
+
+    sql = self.dbase.updateQueryTableNow(sql)
+    res = self.dbase.query(sql)
+    # print(sql)
+    # print(res)
+    
+    names = []
+    result=[]
+    
+    for pkifralin, in res:
+        nbreplaces, iddessys = self.dbase.getValuesFromPk('Infralineaire_qgis', ['nbredeplaces','id_descriptionsystem'], pkifralin)
+        # print('nbreplaces', nbreplaces)
+        # emplacements occupes
+        sql = "SELECT pk_desordre, id_desordre, numrotation FROM Desordre_now WHERE lid_descriptionsystem = " + str(iddessys)
+        sql = self.dbase.updateQueryTableNow(sql)
+        res = self.dbase.query(sql)
+        # print(sql)
+        # print(res)
+
+        
+        for row in res:
+            numrota = row[2]
+            indexrota=None
+            if not numrota in names:
+                names.append(numrota)
+            else:
+                indexrota = names.index(numrota)
+            
+        
+            sqldatetimemin = "SELECT MIN(datetimeobservation) FROM Observation_now "
+            sqldatetimemin += " WHERE lid_desordre = " + str(row[1])
+            sqldatetimemin = self.dbase.updateQueryTableNow(sqldatetimemin)
+            datetimemin = self.dbase.query(sqldatetimemin)[0][0]
+            # print('res1', numrota, datetimemin )
+        
+            sqlnbreplaceslicites = "SELECT COUNT(id_observation) FROM Observation_now "
+            sqlnbreplaceslicites += " WHERE lid_desordre = " + str(row[1]) + " AND illicite = 0"
+            sqlnbreplaceslicites = self.dbase.updateQueryTableNow(sqlnbreplaceslicites)
+            nbreplaceslicites  = self.dbase.query(sqlnbreplaceslicites)[0][0]
+            # print('res2', nbreplaceslicites )
+            
+            sqlnbreplacesillicites = "SELECT COUNT(id_observation) FROM Observation_now "
+            sqlnbreplacesillicites += " WHERE lid_desordre = " + str(row[1]) + " AND illicite = 1"
+            sqlnbreplacesillicites = self.dbase.updateQueryTableNow(sqlnbreplacesillicites)
+            nbreplacesillicites  = self.dbase.query(sqlnbreplacesillicites)[0][0]
+            # print('res3', nbreplacesillicites )
+            
+            if  indexrota is None:
+                result.append([['0_nbreplaceslicites',nbreplaceslicites],
+                                ['1_nbreplacesillicites', nbreplacesillicites], 
+                                ['2_libre',nbreplaces-nbreplaceslicites-nbreplacesillicites]])
+            else:
+                result[indexrota][0][1] += nbreplaceslicites
+                result[indexrota][1][1] += nbreplacesillicites
+                result[indexrota][2][1] += nbreplaces-nbreplaceslicites-nbreplacesillicites
+            
+        
+    # print('resultfinal', result)
+    # print('resultfinal', names)
+        
+    return result, names
+    
+###Color
+#https://matplotlib.org/examples/color/named_colors.html
+0_nbreplaceslicites;red
+1_nbreplacesillicites;orange
+2_libre;yellow
+0;yellowgreen
+
+
+
+
+
+

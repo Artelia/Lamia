@@ -88,6 +88,7 @@ class Lamia:
 
         self.pluginIsActive = False
         self.dockwidget = None
+        self.lamiadocks=[]
 
 
     # noinspection PyMethodMayBeStatic
@@ -197,33 +198,41 @@ class Lamia:
         """
         Run method that loads and starts the plugin
         """
+        self.lamiadocks.append(InspectiondigueDockWidget(qgis.utils.iface.mapCanvas()))
+        #self.dockwidget = InspectiondigueDockWidget(qgis.utils.iface.mapCanvas())
 
-        if True and not self.pluginIsActive:
-            self.pluginIsActive = True
-
-            #print "** STARTING GPS2Point"
-
-            # dockwidget may not exist if:
-            #    first run of plugin
-            #    removed on close (see self.onClosePlugin method)
-            if False:
-                if self.dockwidget == None:
-                    # Create the dockwidget (after translation) and keep reference
-                    #self.dockwidget = GPS2PointDockWidget()
-                    self.dockwidget = InspectiondigueDockWidget(qgis.utils.iface.mapCanvas())
-                    if True:
-                        path = os.path.normpath('C://00_Affaires//travail_fiches//test//test2.sqlite')
-                        self.dockwidget.windowwidget.dbase.loadDbase(path)
-
-            self.dockwidget = InspectiondigueDockWidget(qgis.utils.iface.mapCanvas())
+        #self.iface.addDockWidget(Qt.RightDockWidgetArea, self.dockwidget)
+        self.iface.addDockWidget(Qt.RightDockWidgetArea, self.lamiadocks[-1])
+        self.lamiadocks[-1].show()
 
 
-            # connect to provide cleanup on closing of dockwidget
-            #self.dockwidget.closingPlugin.connect(self.onClosePlugin)
-            self.dockwidget.closingPlugin.connect(self.onClosePlugin)
+        if False:
+            if True and not self.pluginIsActive:
+                self.pluginIsActive = True
 
-            # show the dockwidget
-            # TODO: fix to allow choice of dock location
-            self.iface.addDockWidget(Qt.RightDockWidgetArea, self.dockwidget)
-            self.dockwidget.show()
+                #print "** STARTING GPS2Point"
+
+                # dockwidget may not exist if:
+                #    first run of plugin
+                #    removed on close (see self.onClosePlugin method)
+                if False:
+                    if self.dockwidget == None:
+                        # Create the dockwidget (after translation) and keep reference
+                        #self.dockwidget = GPS2PointDockWidget()
+                        self.dockwidget = InspectiondigueDockWidget(qgis.utils.iface.mapCanvas())
+                        if True:
+                            path = os.path.normpath('C://00_Affaires//travail_fiches//test//test2.sqlite')
+                            self.dockwidget.windowwidget.dbase.loadDbase(path)
+
+                self.dockwidget = InspectiondigueDockWidget(qgis.utils.iface.mapCanvas())
+
+
+                # connect to provide cleanup on closing of dockwidget
+                #self.dockwidget.closingPlugin.connect(self.onClosePlugin)
+                self.dockwidget.closingPlugin.connect(self.onClosePlugin)
+
+                # show the dockwidget
+                # TODO: fix to allow choice of dock location
+                self.iface.addDockWidget(Qt.RightDockWidgetArea, self.dockwidget)
+                self.dockwidget.show()
 

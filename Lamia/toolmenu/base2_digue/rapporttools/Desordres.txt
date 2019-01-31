@@ -13,18 +13,18 @@ autoalongpath;
 Desordres_atlas.qml
 ###atlasdrivemap
 #itemname;   minscale;   typescale;      layers
-map1;       2500;       Predefined      ;['atlaslayer','Infralineaire', 'scan25']
+map1;       2500;       Predefined      ;['atlaslayer','Infralineaire', 'ortho']
 #map1;       2500;       Predefined      ;[]
 ###generalmap
 #itemname;   minscale;   typescale; layers
-map0    ;           ;             ; ['Infralineaire','Equipement', 'ortho']
+map0    ;           ;             ; ['Infralineaire','Equipement', 'scan25']
 #map0    ;           ;             ; []
 ###images
 #itemname   ; type
 logo;logo
 ###childprint
 #confname;                linkcolumn;             optionsql
-#Desordres_observation;    Observation_qgis.lid_desordre ; ORDER BY Observation_qgis.datetimeobservation DESC
+Desordres_observation;    Observation_qgis.lid_desordre ; ORDER BY Observation_qgis.datetimeobservation DESC
 
 
 

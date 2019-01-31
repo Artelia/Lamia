@@ -1,28 +1,208 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis version="2.18.13" simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" readOnly="0" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+<qgis version="2.18.28" simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" readOnly="0" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
   <edittypes>
-    <edittype widgetv2type="TextEdit" name="ID">
+    <edittype widgetv2type="TextEdit" name="pk_photo">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="File">
+    <edittype widgetv2type="TextEdit" name="id_photo">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="IdObjet">
+    <edittype widgetv2type="TextEdit" name="lpk_ressource">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="IdRes">
+    <edittype widgetv2type="TextEdit" name="numphoto">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="LkObjet">
+    <edittype widgetv2type="TextEdit" name="typephoto">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="pk_ressource">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="id_ressource">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="lpk_objet">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="source">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="datetimeressource">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="contactadresse">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="contactnom">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="contactmail">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="contacttel1">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="contacttel2">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="file">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="description">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="lid_marche">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="pk_objet">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="id_objet">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="lpk_revision_begin">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="lpk_revision_end">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="datetimecreation">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="datetimemodification">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="datetimedestruction">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="commentaire">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="libelle">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="importid">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="importtable">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
   </edittypes>
-  <renderer-v2 forceraster="0" symbollevels="0" type="singleSymbol" enableorderby="0">
+  <renderer-v2 attr="day(now() - to_datetime(CASE WHEN  &quot;datetimeressource&quot;  IS NOT NULL THEN  &quot;datetimeressource&quot; ELSE  &quot;datetimecreation&quot; END))" forceraster="0" symbollevels="0" type="graduatedSymbol" graduatedMethod="GraduatedColor" enableorderby="0">
+    <ranges>
+      <range render="true" symbol="0" lower="0.000000000000000" upper="30.000000000000000" label="&lt; 1 mois"/>
+      <range render="true" symbol="1" lower="30.000000000000000" upper="90.000000000000000" label="1 - 3 mois"/>
+      <range render="true" symbol="2" lower="90.000000000000000" upper="180.000000000000000" label="3 - 6 mois"/>
+      <range render="true" symbol="3" lower="180.000000000000000" upper="365.000000000000000" label="6 - 12 mois"/>
+      <range render="true" symbol="4" lower="365.000000000000000" upper="730.000000000000000" label="1 - 2 ans"/>
+      <range render="true" symbol="5" lower="730.000000000000000" upper="9999999.000000000000000" label="> 2 ans"/>
+    </ranges>
     <symbols>
       <symbol alpha="1" clip_to_extent="1" type="marker" name="0">
         <layer pass="0" class="SvgMarker" locked="0">
           <prop k="angle" v="0"/>
-          <prop k="color" v="0,0,0,255"/>
+          <prop k="color" v="255,0,0,255"/>
+          <prop k="horizontal_anchor_point" v="1"/>
+          <prop k="name" v="shopping/shopping_photo.svg"/>
+          <prop k="offset" v="0,0"/>
+          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="outline_color" v="0,0,0,255"/>
+          <prop k="outline_width" v="0"/>
+          <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="outline_width_unit" v="MM"/>
+          <prop k="scale_method" v="diameter"/>
+          <prop k="size" v="5"/>
+          <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="size_unit" v="MM"/>
+          <prop k="vertical_anchor_point" v="1"/>
+        </layer>
+      </symbol>
+      <symbol alpha="1" clip_to_extent="1" type="marker" name="1">
+        <layer pass="0" class="SvgMarker" locked="0">
+          <prop k="angle" v="0"/>
+          <prop k="color" v="222,149,76,255"/>
+          <prop k="horizontal_anchor_point" v="1"/>
+          <prop k="name" v="shopping/shopping_photo.svg"/>
+          <prop k="offset" v="0,0"/>
+          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="outline_color" v="0,0,0,255"/>
+          <prop k="outline_width" v="0"/>
+          <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="outline_width_unit" v="MM"/>
+          <prop k="scale_method" v="diameter"/>
+          <prop k="size" v="5"/>
+          <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="size_unit" v="MM"/>
+          <prop k="vertical_anchor_point" v="1"/>
+        </layer>
+      </symbol>
+      <symbol alpha="1" clip_to_extent="1" type="marker" name="2">
+        <layer pass="0" class="SvgMarker" locked="0">
+          <prop k="angle" v="0"/>
+          <prop k="color" v="244,202,76,255"/>
+          <prop k="horizontal_anchor_point" v="1"/>
+          <prop k="name" v="shopping/shopping_photo.svg"/>
+          <prop k="offset" v="0,0"/>
+          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="outline_color" v="0,0,0,255"/>
+          <prop k="outline_width" v="0"/>
+          <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="outline_width_unit" v="MM"/>
+          <prop k="scale_method" v="diameter"/>
+          <prop k="size" v="5"/>
+          <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="size_unit" v="MM"/>
+          <prop k="vertical_anchor_point" v="1"/>
+        </layer>
+      </symbol>
+      <symbol alpha="1" clip_to_extent="1" type="marker" name="3">
+        <layer pass="0" class="SvgMarker" locked="0">
+          <prop k="angle" v="0"/>
+          <prop k="color" v="0,95,255,181"/>
+          <prop k="horizontal_anchor_point" v="1"/>
+          <prop k="name" v="shopping/shopping_photo.svg"/>
+          <prop k="offset" v="0,0"/>
+          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="outline_color" v="0,0,0,255"/>
+          <prop k="outline_width" v="0"/>
+          <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="outline_width_unit" v="MM"/>
+          <prop k="scale_method" v="diameter"/>
+          <prop k="size" v="5"/>
+          <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="size_unit" v="MM"/>
+          <prop k="vertical_anchor_point" v="1"/>
+        </layer>
+      </symbol>
+      <symbol alpha="0.690196" clip_to_extent="1" type="marker" name="4">
+        <layer pass="0" class="SvgMarker" locked="0">
+          <prop k="angle" v="0"/>
+          <prop k="color" v="0,153,102,255"/>
+          <prop k="horizontal_anchor_point" v="1"/>
+          <prop k="name" v="shopping/shopping_photo.svg"/>
+          <prop k="offset" v="0,0"/>
+          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="outline_color" v="0,0,0,255"/>
+          <prop k="outline_width" v="0"/>
+          <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="outline_width_unit" v="MM"/>
+          <prop k="scale_method" v="diameter"/>
+          <prop k="size" v="5"/>
+          <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="size_unit" v="MM"/>
+          <prop k="vertical_anchor_point" v="1"/>
+        </layer>
+      </symbol>
+      <symbol alpha="1" clip_to_extent="1" type="marker" name="5">
+        <layer pass="0" class="SvgMarker" locked="0">
+          <prop k="angle" v="0"/>
+          <prop k="color" v="181,181,181,255"/>
           <prop k="horizontal_anchor_point" v="1"/>
           <prop k="name" v="shopping/shopping_photo.svg"/>
           <prop k="offset" v="0,0"/>
@@ -40,8 +220,37 @@
         </layer>
       </symbol>
     </symbols>
+    <source-symbol>
+      <symbol alpha="1" clip_to_extent="1" type="marker" name="0">
+        <layer pass="0" class="SvgMarker" locked="0">
+          <prop k="angle" v="0"/>
+          <prop k="color" v="255,1,1,255"/>
+          <prop k="horizontal_anchor_point" v="1"/>
+          <prop k="name" v="shopping/shopping_photo.svg"/>
+          <prop k="offset" v="0,0"/>
+          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="outline_color" v="0,0,0,255"/>
+          <prop k="outline_width" v="0"/>
+          <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="outline_width_unit" v="MM"/>
+          <prop k="scale_method" v="diameter"/>
+          <prop k="size" v="5"/>
+          <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="size_unit" v="MM"/>
+          <prop k="vertical_anchor_point" v="1"/>
+        </layer>
+      </symbol>
+    </source-symbol>
+    <colorramp type="cpt-city" name="[source]">
+      <prop k="schemeName" v="grass/bgyr"/>
+      <prop k="variantName" v=""/>
+    </colorramp>
+    <invertedcolorramp value="1"/>
+    <mode name="pretty"/>
     <rotation/>
     <sizescale scalemethod="diameter"/>
+    <labelformat format=" %1 - %2 " trimtrailingzeroes="false" decimalplaces="2"/>
   </renderer-v2>
   <labeling type="simple"/>
   <customproperties>
@@ -215,6 +424,7 @@
   <SingleCategoryDiagramRenderer diagramType="Histogram" sizeLegend="0" attributeLegend="1">
     <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" sizeScale="0,0,0,0,0,0" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" lineSizeScale="0,0,0,0,0,0" sizeType="MM" lineSizeType="MM" minScaleDenominator="inf">
       <fontProperties description="MS Shell Dlg 2,8.25,-1,5,50,0,0,0,0,0" style=""/>
+      <attribute field="" color="#000000" label=""/>
     </DiagramCategory>
     <symbol alpha="1" clip_to_extent="1" type="marker" name="sizeSymbol">
       <layer pass="0" class="SimpleMarker" locked="0">
@@ -242,23 +452,71 @@
   <DiagramLayerSettings yPosColumn="-1" showColumn="-1" linePlacementFlags="10" placement="0" dist="0" xPosColumn="-1" priority="0" obstacle="0" zIndex="0" showAll="1"/>
   <annotationform></annotationform>
   <aliases>
-    <alias field="ID" index="0" name=""/>
-    <alias field="File" index="1" name=""/>
-    <alias field="IdObjet" index="2" name=""/>
-    <alias field="IdRes" index="3" name=""/>
-    <alias field="LkObjet" index="4" name=""/>
+    <alias field="pk_photo" index="0" name=""/>
+    <alias field="id_photo" index="1" name=""/>
+    <alias field="lpk_ressource" index="2" name=""/>
+    <alias field="numphoto" index="3" name=""/>
+    <alias field="typephoto" index="4" name=""/>
+    <alias field="pk_ressource" index="5" name=""/>
+    <alias field="id_ressource" index="6" name=""/>
+    <alias field="lpk_objet" index="7" name=""/>
+    <alias field="source" index="8" name=""/>
+    <alias field="datetimeressource" index="9" name=""/>
+    <alias field="contactadresse" index="10" name=""/>
+    <alias field="contactnom" index="11" name=""/>
+    <alias field="contactmail" index="12" name=""/>
+    <alias field="contacttel1" index="13" name=""/>
+    <alias field="contacttel2" index="14" name=""/>
+    <alias field="file" index="15" name=""/>
+    <alias field="description" index="16" name=""/>
+    <alias field="lid_marche" index="17" name=""/>
+    <alias field="pk_objet" index="18" name=""/>
+    <alias field="id_objet" index="19" name=""/>
+    <alias field="lpk_revision_begin" index="20" name=""/>
+    <alias field="lpk_revision_end" index="21" name=""/>
+    <alias field="datetimecreation" index="22" name=""/>
+    <alias field="datetimemodification" index="23" name=""/>
+    <alias field="datetimedestruction" index="24" name=""/>
+    <alias field="commentaire" index="25" name=""/>
+    <alias field="libelle" index="26" name=""/>
+    <alias field="importid" index="27" name=""/>
+    <alias field="importtable" index="28" name=""/>
   </aliases>
   <excludeAttributesWMS/>
   <excludeAttributesWFS/>
   <attributeactions default="-1"/>
   <attributetableconfig actionWidgetStyle="dropDown" sortExpression="" sortOrder="0">
     <columns>
-      <column width="-1" hidden="0" type="field" name="ID"/>
-      <column width="-1" hidden="0" type="field" name="File"/>
-      <column width="-1" hidden="0" type="field" name="IdObjet"/>
-      <column width="-1" hidden="0" type="field" name="IdRes"/>
-      <column width="-1" hidden="0" type="field" name="LkObjet"/>
       <column width="-1" hidden="1" type="actions"/>
+      <column width="-1" hidden="0" type="field" name="pk_photo"/>
+      <column width="-1" hidden="0" type="field" name="id_photo"/>
+      <column width="-1" hidden="0" type="field" name="lpk_ressource"/>
+      <column width="-1" hidden="0" type="field" name="typephoto"/>
+      <column width="-1" hidden="0" type="field" name="pk_ressource"/>
+      <column width="-1" hidden="0" type="field" name="id_ressource"/>
+      <column width="-1" hidden="0" type="field" name="lpk_objet"/>
+      <column width="-1" hidden="0" type="field" name="source"/>
+      <column width="-1" hidden="0" type="field" name="contactadresse"/>
+      <column width="-1" hidden="0" type="field" name="contactnom"/>
+      <column width="-1" hidden="0" type="field" name="contactmail"/>
+      <column width="-1" hidden="0" type="field" name="contacttel1"/>
+      <column width="-1" hidden="0" type="field" name="contacttel2"/>
+      <column width="-1" hidden="0" type="field" name="file"/>
+      <column width="-1" hidden="0" type="field" name="numphoto"/>
+      <column width="-1" hidden="0" type="field" name="description"/>
+      <column width="-1" hidden="0" type="field" name="lid_marche"/>
+      <column width="-1" hidden="0" type="field" name="pk_objet"/>
+      <column width="-1" hidden="0" type="field" name="id_objet"/>
+      <column width="-1" hidden="0" type="field" name="lpk_revision_begin"/>
+      <column width="-1" hidden="0" type="field" name="lpk_revision_end"/>
+      <column width="-1" hidden="0" type="field" name="datetimecreation"/>
+      <column width="-1" hidden="0" type="field" name="datetimemodification"/>
+      <column width="-1" hidden="0" type="field" name="datetimedestruction"/>
+      <column width="-1" hidden="0" type="field" name="commentaire"/>
+      <column width="-1" hidden="0" type="field" name="libelle"/>
+      <column width="-1" hidden="0" type="field" name="importid"/>
+      <column width="-1" hidden="0" type="field" name="importtable"/>
+      <column width="-1" hidden="0" type="field" name="datetimeressource"/>
     </columns>
   </attributetableconfig>
   <editform></editform>
@@ -289,11 +547,35 @@ def my_form_open(dialog, layer, feature):
     <fieldstyles/>
   </conditionalstyles>
   <defaults>
-    <default field="ID" expression=""/>
-    <default field="File" expression=""/>
-    <default field="IdObjet" expression=""/>
-    <default field="IdRes" expression=""/>
-    <default field="LkObjet" expression=""/>
+    <default field="pk_photo" expression=""/>
+    <default field="id_photo" expression=""/>
+    <default field="lpk_ressource" expression=""/>
+    <default field="numphoto" expression=""/>
+    <default field="typephoto" expression=""/>
+    <default field="pk_ressource" expression=""/>
+    <default field="id_ressource" expression=""/>
+    <default field="lpk_objet" expression=""/>
+    <default field="source" expression=""/>
+    <default field="datetimeressource" expression=""/>
+    <default field="contactadresse" expression=""/>
+    <default field="contactnom" expression=""/>
+    <default field="contactmail" expression=""/>
+    <default field="contacttel1" expression=""/>
+    <default field="contacttel2" expression=""/>
+    <default field="file" expression=""/>
+    <default field="description" expression=""/>
+    <default field="lid_marche" expression=""/>
+    <default field="pk_objet" expression=""/>
+    <default field="id_objet" expression=""/>
+    <default field="lpk_revision_begin" expression=""/>
+    <default field="lpk_revision_end" expression=""/>
+    <default field="datetimecreation" expression=""/>
+    <default field="datetimemodification" expression=""/>
+    <default field="datetimedestruction" expression=""/>
+    <default field="commentaire" expression=""/>
+    <default field="libelle" expression=""/>
+    <default field="importid" expression=""/>
+    <default field="importtable" expression=""/>
   </defaults>
   <previewExpression></previewExpression>
   <layerGeometryType>0</layerGeometryType>
