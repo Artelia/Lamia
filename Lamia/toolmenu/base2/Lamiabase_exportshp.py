@@ -144,7 +144,15 @@ class exportShapefileBaseWorker(object):
 
         for table in self.champs:
             if 'geom' in table['table']:
-                sql = 'SELECT ST_GeometryType(St_MakeValid(geom)) ' + champmain
+                sqlgeom = table['fields']['geom']['value']
+                if 'ST_AsText(' in sqlgeom :
+                    geomval = sqlgeom.split('ST_AsText(')[1][:-1]
+                    print(geomval)
+                else :
+                    geomval = 'geom'
+
+                #sql = 'SELECT ST_GeometryType(St_MakeValid(geom)) ' + champmain
+                sql = 'SELECT ST_GeometryType(St_MakeValid(' + geomval + ')) ' + champmain
                 sql = self.dbase.updateQueryTableNow(sql)
                 res = self.dbase.query(sql)[0][0]
                 # print('res',res)

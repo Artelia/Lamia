@@ -74,7 +74,7 @@ class BaseTopographieTool(AbstractLamiaTool):
                                 'Ressource' : {'linkfield' : 'id_ressource',
                                           'widgets' : {'file': self.userwdgfield.lineEdit_file,
                                                         'description': self.userwdgfield.lineEdit_nom,
-                                                        'dateressource': self.userwdgfield.dateEdit_date}}}
+                                                        'datetimeressource': self.userwdgfield.dateTimeEdit_date}}}
             self.userwdgfield.pushButton_chooseph.clicked.connect(self.choosePhoto)
             self.userwdgfield.pushButton_open.clicked.connect(self.openFile)
             self.userwdgfield.pushButton_ajoutpointGPS.clicked.connect(self.ajoutPointGPS)
@@ -183,9 +183,10 @@ class BaseTopographieTool(AbstractLamiaTool):
 
     def postInitFeatureProperties(self, feat):
         if self.currentFeature is None:
-            datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
+            # datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
+            datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
             #self.initFeatureProperties(feat, 'Ressource', 'dateressource', datecreation)
-            self.initFeatureProperties(feat, None, 'dateressource', datecreation)
+            self.initFeatureProperties(feat, None, 'datetimeressource', datecreation)
 
 
 

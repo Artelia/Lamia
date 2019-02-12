@@ -108,4 +108,6 @@ Hors digue;                     HOR;            ['IND']
 Plusieurs parties;              PLU;            ['IND']
 Indefini;                       IND;            ['IND']
 
+#photo defaut
+###lid_ressource_1;        INT ;                       INTEGER
 

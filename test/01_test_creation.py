@@ -14,11 +14,11 @@ class TestMain(Test):
     def testMethod(self):
         self.createWin()
         crs = 3945
-        # Digue VNF  Assainissement  Default Assainissement2 Base Base_default Base_assainissement Base2_digue Base2_Parking
-        typebase = 'Base2_assainissement'
+        # Digue VNF  Assainissement  Default Assainissement2 Base Base_default Base_assainissement Base2_digue Base2_parking
+        # Base2_tramway
+        typebase = 'Base2_tramway'
         # spatialite   postgis
         typedb = 'spatialite'
-
 
         if typedb == "spatialite":
             if typebase == 'VNF':
@@ -45,6 +45,8 @@ class TestMain(Test):
                 spatialitefile = 'C://000_testdigue//temp_base2_parking//test01.sqlite'
             elif typebase == 'Base2_assainissement':
                 spatialitefile = "C://000_testdigue//temp_base2_ass2//test01.sqlite"
+            elif typebase == 'Base2_tramway':
+                spatialitefile = "C://000_testdigue//temp_base2_tram2//test01.sqlite"
 
             self.dbase.printsql = True
             self.dbase.createDbase(slfile=spatialitefile, crs=crs, worktype=typebase)

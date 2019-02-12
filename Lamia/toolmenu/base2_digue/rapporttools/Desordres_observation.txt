@@ -18,9 +18,9 @@ False
 
 ###images
 #itemname   ; type
-photo1 ;photo1
-photo2;photo2
-photo3;photo3
+photo1 ;Observation_qgis.photo1
+photo2;Observation_qgis.photo2
+photo3;Observation_qgis.photo3
 
 ###childprint
 #confname;                linkcolumn;             optionsql

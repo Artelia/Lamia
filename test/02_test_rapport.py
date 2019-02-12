@@ -27,6 +27,7 @@ class TestMain(Test):
 
         path = "C://000_testdigue//temp_base2_ass2//test01.sqlite"
         #path = "C://000_testdigue//Lamia2//valeyrac_ind0.sqlite"
+        path = "M://FR//BOR//VT//FLUVIAL//4352409_33_ASA_Baurech_EDD//6_Reglementaire//61_Calculs//lamia//baurech.sqlite"
 
         self.wind.dbase.loadQgisVectorLayers(path)
         self.wind.loadUiDesktop()
@@ -45,8 +46,9 @@ class TestMain(Test):
         #self.wind.dbase.dbasetables['Zonegeo']['layerqgis'].selectByIds([1])
         # Desordres Infralineaire Equipementhydraulique
         # 01regard 01deshuileur  01posterefoulement
-        self.wind.menutools[indexrapport].pdffile = "C://000_testdigue//Lamia2//testrapport.pdf"
-        self.wind.menutools[indexrapport].reporttype = '01regard'
+        # self.wind.menutools[indexrapport].pdffile = "C://000_testdigue//Lamia2//testrapport.pdf"
+        self.wind.menutools[indexrapport].pdffile = "C://testrapport.pdf"
+        self.wind.menutools[indexrapport].reporttype = 'Desordres'
         self.wind.menutools[indexrapport].work()
 
 

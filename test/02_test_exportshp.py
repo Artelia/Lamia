@@ -26,7 +26,7 @@ class TestMain(Test):
 
         path ="M://FR//BOR//VT//FLUVIAL//4352408_33_CCMA_VTA_Valeyrac//6_Reglementaire//61_Calculs//Lamia2//valeyrac_ind0.sqlite"
         path = "M://FR//BOR//VT//FLUVIAL//4352408_33_CCMA_VTA_Valeyrac//6_Reglementaire//61_Calculs//Lamia2//valeyrac_ind0.sqlite"
-
+        path = 'C://000_testdigue//temp_base2_parking//test01.sqlite'
         self.wind.dbase.loadQgisVectorLayers(path)
         self.wind.loadUiDesktop()
 
@@ -43,7 +43,8 @@ class TestMain(Test):
         # BM_Infralineaire
         # BM_Photo   BM_TcObjetRessource  BM_Equipement_ligne   BM_Desordres_ligne  BM_Graphdata   BM_Observation
         # 00_Desordres_observation_actif   00_Desordres_observation_total
-        typeexport = 'BM_Equipement_point'
+        # Export_total
+        typeexport = 'Export_total'
 
         if False:
             rootpath = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//63_Rapports//20190200_BD_exportshp"

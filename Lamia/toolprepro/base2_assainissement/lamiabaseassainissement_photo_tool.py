@@ -55,18 +55,18 @@ class BaseAssainissementPhotoTool(BasePhotoTool):
             # ****************************************************************************************
             # child widgets
             pass
-        if False:
-            if self.parentWidget is not None and self.parentWidget.dbasetablename in ['']:
-                self.userwdgfield.pushButton_defaultphoto.clicked.connect(self.setDefaultPhoto)
-            else:
-                self.userwdgfield.pushButton_defaultphoto.setParent(None)
+            if False:
+                if self.parentWidget is not None and self.parentWidget.dbasetablename in ['']:
+                    self.userwdgfield.pushButton_defaultphoto.clicked.connect(self.setDefaultPhoto)
+                else:
+                    self.userwdgfield.pushButton_defaultphoto.setParent(None)
 
-        if True:
-            self.userwdgfield.pushButton_vueensemble.clicked.connect(self.setDefaultPhoto)
-            self.userwdgfield.pushButton_cuve.clicked.connect(self.setDefaultPhoto)
-            self.userwdgfield.pushButton_poires.clicked.connect(self.setDefaultPhoto)
-            self.userwdgfield.pushButton_vanne.clicked.connect(self.setDefaultPhoto)
-            self.userwdgfield.pushButton_armoire.clicked.connect(self.setDefaultPhoto)
+            if True:
+                self.userwdgfield.pushButton_vueensemble.clicked.connect(self.setDefaultPhoto)
+                self.userwdgfield.pushButton_cuve.clicked.connect(self.setDefaultPhoto)
+                self.userwdgfield.pushButton_poires.clicked.connect(self.setDefaultPhoto)
+                self.userwdgfield.pushButton_vanne.clicked.connect(self.setDefaultPhoto)
+                self.userwdgfield.pushButton_armoire.clicked.connect(self.setDefaultPhoto)
 
 
 
@@ -93,24 +93,23 @@ class BaseAssainissementPhotoTool(BasePhotoTool):
             self.windowdialog.errorMessage("Enregistrer d'abord la photo")
             return
 
-        sendername = self.sender().text()
+        sendername = self.sender().objectName()
 
 
         if self.parentWidget.currentFeature is not None:
             sql = "SELECT id_ressource FROM Photo_qgis WHERE pk_photo = " + str(self.currentFeaturePK)
             idressource = self.dbase.query(sql)[0][0]
             pkparentfeature=self.parentWidget.currentFeaturePK
-            # print('setDefaultPhoto',idphoto,idparentfeature)
 
-            if sendername == "Vue d'ensemble":
+            if sendername == "pushButton_vueensemble":
                 field = 'lid_ressource_1'
-            elif sendername == "Vue cuve":
+            elif sendername == "pushButton_cuve":
                 field = 'lid_ressource_2'
-            elif sendername == "Vue poires":
+            elif sendername == "pushButton_poires":
                 field = 'lid_ressource_4'
-            elif sendername == "Vue vanne":
+            elif sendername == "pushButton_vanne":
                 field = 'lid_ressource_5'
-            elif sendername == "vue armoire élec":
+            elif sendername == "pushButton_armoire":
                 field = 'lid_ressource_6'
 
             sql = "UPDATE " + str(self.parentWidget.dbasetablename) + " SET " + field +  " = " + str(idressource)

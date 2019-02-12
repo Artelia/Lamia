@@ -532,6 +532,9 @@ class DBaseParser(QtCore.QObject):
                 #file = open(filename, 'rb')
             compt = 0
             for line in file:
+                if sys.version_info.major == 2:
+                    line = line.decode('utf-8-sig')
+
                 if len(line.strip()) == 0:
                     continue
 
@@ -590,13 +593,17 @@ class DBaseParser(QtCore.QObject):
                     else:
                         self.dbasetables[tablename]['fields'][fieldname]['Cst'] = [[]]
 
-                    if sys.version_info.major == 2:
-                        linesplit = line.decode('utf-8').split(';')
-                    elif sys.version_info.major == 3:
-                        # print(line.__class__)
+                    if True:
                         linesplit = line.split(';')
-                        #print(type(linesplit[0]))
-                        #linesplit = line.decode('utf-8').split(';')
+
+                    if False:
+                        if sys.version_info.major == 2:
+                            linesplit = line.decode('utf-8').split(';')
+                        elif sys.version_info.major == 3:
+                            # print(line.__class__)
+                            linesplit = line.split(';')
+                            #print(type(linesplit[0]))
+                            #linesplit = line.decode('utf-8').split(';')
                     if debug: logging.getLogger("Lamia").debug('cst line split %s %s',fieldname, str(linesplit))
 
                     self.dbasetables[tablename]['fields'][fieldname]['Cst'][-1].append(linesplit[0].strip())
@@ -1397,7 +1404,16 @@ class DBaseParser(QtCore.QObject):
                 return ''
         else:
             if not self.isAttributeNull(rawvalue):
+                # print(table, field, rawvalue, type(rawvalue))
                 return rawvalue
+                if False:
+                    if sys.version_info.major == 2:
+                        if isinstance(rawvalue, unicode):
+                            return rawvalue.encode('utf-8')
+                        else:
+                            return rawvalue
+                else:
+                    return rawvalue
             else:
                 return ''
 

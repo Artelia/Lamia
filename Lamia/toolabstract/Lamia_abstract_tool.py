@@ -1359,7 +1359,10 @@ class AbstractLamiaTool(QWidget):
 
         # creation de la liste des elements qui figurent dans le linkedtreewidget
         lenqtreewidg = len(self.qtreewidgetfields) + 1
-        self.treefeatlist = [[id[0], QTreeWidgetItem([str(id[i]) for i in range(lenqtreewidg)])] for id in ids]
+        if sys.version_info.major == 2:
+            self.treefeatlist = [[id[0], QTreeWidgetItem([str(id[i]) if not isinstance(id[i], unicode) else id[i] for i in range(lenqtreewidg)])] for id in ids]
+        else:
+            self.treefeatlist = [[id[0], QTreeWidgetItem([str(id[i]) for i in range(lenqtreewidg)])] for id in ids]
 
         # ajout des ids dans le qtreewidgetitem parent
         if parentitem is not None:
@@ -1571,10 +1574,14 @@ class AbstractLamiaTool(QWidget):
                     res=res+[[]]
                     for id in row :
                         if j>0:
-                            try :
-                                res[i]+=[self.dbase.getConstraintTextFromRawValue(self.dbasetablename, self.qtreewidgetfields[j-1], ids[i][j])]
-                            except Exception as e:
-                                print(e)
+                            res[i] += [self.dbase.getConstraintTextFromRawValue(self.dbasetablename,
+                                                                                self.qtreewidgetfields[j - 1],
+                                                                                ids[i][j])]
+                            if False:
+                                try :
+                                    res[i]+=[self.dbase.getConstraintTextFromRawValue(self.dbasetablename, self.qtreewidgetfields[j-1], ids[i][j])]
+                                except Exception as e:
+                                    print(e)
                         else :
                             res[i]+=[ids[i][j]]
                         j=j+1

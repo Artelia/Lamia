@@ -67,7 +67,7 @@
        <widget class="QLineEdit" name="lineEdit_nom"/>
       </item>
       <item row="4" column="1" colspan="2">
-       <widget class="QDateEdit" name="dateEdit_date">
+       <widget class="QDateTimeEdit" name="dateTimeEdit_date">
         <property name="specialValueText">
          <string/>
         </property>
