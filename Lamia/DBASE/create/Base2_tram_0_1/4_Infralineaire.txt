@@ -1,0 +1,61 @@
+###typeSection;                INT;            INTEGER
+/;
+Alignement;             0
+Courbe;                 1
+###anneeMiseEnService;         TIMESTAMP ;                  TEXT
+###ligne;                      VARCHAR(255);            TEXT
+###pk;                         INT;            INTEGER
+###vitesseExploitation;        INT;            INTEGER
+###circulation;           VARCHAR(255);            TEXT
+/;
+Site propre;PRO
+Site partage;PAR
+Traversee routiere;TRA
+###typeRevetement;           VARCHAR(255);            TEXT
+Mineral odulaire;MOD
+Mineral non modulaire;NMO
+Vegetalise;VEG
+Ballast;BAL
+###presenceUO;                INT;            INTEGER
+Non;             0
+Oui;                 1
+###presenceFatigue;           VARCHAR(255);            TEXT
+/;
+Squat;SQT
+Head Check;HDC
+Autres;
+###precisionsFatigue;           VARCHAR(255);            TEXT
+###geoVoie;                INT;            INTEGER
+OK;             0
+NOK;                 1
+###etatRechargement;                INT;            INTEGER
+OK;             0
+NOK;                 1
+###precisionsRechargement;           VARCHAR(255);            TEXT
+###etatRevetement;           VARCHAR(255);            TEXT
+##typeRevetement
+Fissuration dans les joints;                                FJO; ['MOD']
+Degarnissage des joints;                                    DJO; ['MOD']
+Desafleurement entre paves ou entre dalles;                 DPD; ['MOD']
+Affaissemnt des paves et ou des dalles;                     APD; ['MOD']
+Ornierages plus ou moins avances;                           ORN; ['MOD']
+Dispariations de paves ou de dalles;                        DIP; ['MOD']
+Deformations (affaissements, flaches, ornierages);          DEF; ['NMO']
+Fissurations (longitundinales, transversales ou faiencage); FIS; ['NMO']
+Arrachements (nids de poule, pelades, plumages);            ARR; ['NMO']
+Remontees (ressuage);                                       REM; ['NMO']
+Dessechements;                                              DES; ['VEG']
+Apparitions d herbes folles;                                HER; ['VEG']
+Disparition du Vegetalise;                                  DIV; ['VEG']
+Mauvaise tonte;                                             TON; ['VEG']
+Tassement;                                                  TAS; ['BAL']
+Pollution;                                                  POL; ['BAL']
+###etatJointRailRevet;           VARCHAR(255);            TEXT
+Fissuration du joint;               FIS
+Degarnissage du joint;              DEG
+Absence du joint ou dechriement;    ABS
+###etatAssainissement;           VARCHAR(255);            TEXT
+Fissuration grille;                                     FIS
+Caniveau bouche - trace de mauvais ecoulement;          CAN
+Desafleurement decollement desserage grille;            DES
+Absence;                                                ABS

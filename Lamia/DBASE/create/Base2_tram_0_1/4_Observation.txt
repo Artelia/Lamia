@@ -1,0 +1,103 @@
+###objetEtude;           VARCHAR(255);            TEXT
+General Local; GEN
+General Equipement; GEE
+Poste HT; PHT
+Tableau Traction; TAB
+Transfo Traction; TRA
+Transfo Axuiliaire; TRX
+Basse Tension; BAT
+Armoire de controle de commande; COM
+Onduleurs; OND
+
+###typeDesordre;            INT;            INTEGER
+##objetEtude
+Presence de rongeurs;0; ['GEN']
+Infiltrations d'eau;1; ['GEN']
+Presence des extincteurs;2; ['GEN']
+Controles effectues;3; ['GEN']
+Test du système de detection des incendies concluant;4; ['GEN']
+Presence des plans du local et d'implantation des equipements;5; ['GEN']
+Etat des caniveaux, faux-planchers, cheminements;6; ['GEN']
+Etat des chemins de câbles et des goulottes;7; ['GEN']
+Eclairage normal;8; ['GEE']
+Eclairage de securite;9; ['GEE']
+Prises de courant;10; ['GEE']
+Peintures;11; ['GEE']
+Identifications des equipements;12; ['GEE']
+Etat de la barrette de terre;13; ['GEE']
+Etat des appareils de mesures;14; ['GEE']
+Etat des portes et des capots;15; ['GEE']
+Presence des panoplies de securite HT et Traction;16; ['GEE']
+Affichage du synoptique de l installation;17; ['GEE']
+Verrouillage des equipements;18; ['GEE']
+Reperage des cles de verrouillage;19; ['GEE']
+Presence d'affichage du chemin de cles et procedure de consignation;20; ['GEE']
+Etat visuel des cellules;21; ['PHT']
+Identification des cellules;22; ['PHT']
+Fonctionnement des voyants présence tension;23; ['PHT']
+Présence et état des accessoires du poste;24; ['PHT']
+Le nombre et le type des transformateurs;25; ['PHT']
+Fonctionnement des volets d'embrochage pour disjoncteurs débrochable;26; ['PHT']
+Etat du verrouillage et ouverture des portes des cellules sous tension;27; ['PHT']
+Etat des câbles;28; ['PHT']
+Présence et état des clés et serrures;29; ['PHT']
+Pression du gaz des cellules contenant du gaz SF6;30; ['PHT']
+Presence de volets de protection aux contacts directs;31; ['PHT']
+Etat des volets de protection aux contacts directs;32; ['PHT']
+Etat visuel des tableaux;33; ['TAB']
+Identification des équipements;34; ['TAB']
+Poussière dans les armoires;35; ['TAB']
+Etat des disjoncteurs et des sectionneurs;36; ['TAB']
+Etat de l'isolant entre le sol et les masse des tableaux;37; ['TAB']
+Présence et état des clés et serrures;38; ['TAB']
+Suivi visuel des circuits de terre;39; ['TAB']
+Etat des gaines de liaison BT à la partie mobile pour disjoncteur débrochables;40; ['TAB']
+Fonctionnement des volets d'embrochage pour disjoncteur débrochables;41; ['TAB']
+volets de protection aux contacts direct;42; ['TAB']
+Position de l'intervalle de décharge;43; ['TAB']
+Etat général;44; ['TRA']
+Plaques d'identification ;45; ['TRA']
+Verrouillage ;46; ['TRA']
+Système anti-vibration ;47; ['TRA']
+Bac de rétension ;48; ['TRA']
+Bruit anormal ;49; ['TRA']
+fonctionnement du relais de protection ;50; ['TRA']
+Niveau d'huile du transformateur ;51; ['TRA']
+Etat des câbles ;52; ['TRA']
+Etat général;53; ['TRX']
+Plaques d'identification;54; ['TRX']
+Verrouillage ;55; ['TRX']
+Système anti-vibration ;56; ['TRX']
+Bac de rétension ;57; ['TRX']
+Bruit anormal ;58; ['TRX']
+fonctionnement du relais de protection ;59; ['TRX']
+Niveau d'huile du transformateur ;60; ['TRX']
+Etat des câbles ;61; ['TRX']
+Etat des coffrets de distribution basse tension ;62; ['BAT']
+Homogénéité des composants de même fonction ;63; ['BAT']
+Etat du câblage, des goulottes, des marquages ;64; ['BAT']
+Fonctionnement des relais à fréquence élevée ;65; ['BAT']
+Etat visuel des tableaux ;66; ['COM']
+Présence de synoptique ;67; ['COM']
+Etat du câblage ;68; ['COM']
+Etat des batteries;69; ['OND']
+Etat des connexions ;70; ['OND']
+Etat du support ;71; ['OND']
+Accessoires entretien batteries ;72; ['OND']
+Aspect de l'onduleur ;73; ['OND']
+Oxydations ;74; ['OND']
+Etat de ses ventilations, filtres ;75; ['OND']
+Etat de son affichage ;76; ['OND']
+Documentation du matériel ;77; ['OND']
+
+
+
+###etat;            INT;            INTEGER
+##typeDesordre
+Oui/Correct/Present; 1;             ['0','1','2','3','4','5','6','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63','64','65','66','67','68','69','70','71','72','73','74','75','76','77']
+Non/Non conforme/Non present; 0;             ['0','1','2','3','4','5','6','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63','64','65','66','67','68','69','70','71','72','73','74','75','76','77']
+Fermé; FER;             ['7']
+Place libre; PLA;             ['7']
+Bien fixés; BFX;             ['7']
+
+
