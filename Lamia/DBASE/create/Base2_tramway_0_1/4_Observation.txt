@@ -1,0 +1,443 @@
+# ****************************************
+#                 voie - usure rail
+# ****************************************
+
+###presenceUO;                INT;            INTEGER
+OK;             0
+NOK;                 1
+
+###presenceFatigue;           VARCHAR(255);            TEXT
+/;
+Squat;SQT
+Head Check;HDC
+Autres;
+###precisionsFatigue;           VARCHAR(255);            TEXT
+###geoVoie;                INT;            INTEGER
+OK;             0
+NOK;                 1
+###etatRechargement;                INT;            INTEGER
+OK;             0
+NOK;                 1
+###precisionsRechargement;           VARCHAR(255);            TEXT
+
+
+
+# ****************************************
+#                 voie - etat revetement
+# ****************************************
+###rev_fissurations;                INT;            INTEGER
+/;
+Non;0
+Oui;1
+###rev_degarnissage;                INT;            INTEGER
+/;
+Non;0
+Oui;1
+###rev_desafleurement;                INT;            INTEGER
+/;
+Non;0
+Oui;1
+###rev_affaissement;                INT;            INTEGER
+/;
+Non;0
+Oui;1
+###rev_ornierage;                INT;            INTEGER
+/;
+Non;0
+Oui;1
+###rev_disparitions;                INT;            INTEGER
+/;
+Non;0
+Oui;1
+###rev_deformations;                INT;            INTEGER
+/;
+Non;0
+Oui;1
+###rev_arrachement;                INT;            INTEGER
+/;
+Non;0
+Oui;1
+###rev_remontees;                INT;            INTEGER
+/;
+Non;0
+Oui;1
+###rev_dessechement;                INT;            INTEGER
+/;
+Non;0
+Oui;1
+###rev_vegetation;                INT;            INTEGER
+/;
+Non;0
+Oui;1
+###rev_tonte;                INT;            INTEGER
+/;
+Non;0
+Oui;1
+###rev_tassement;                INT;            INTEGER
+/;
+Non;0
+Oui;1
+###rev_pollution;                INT;            INTEGER
+/;
+Non;0
+Oui;1
+
+# ****************************************
+#                 voie - etat equip
+# ****************************************
+###eqp_fissurationjoint;                INT;            INTEGER
+/;
+Non;0
+Oui;1
+###eqp_degarnissage;                INT;            INTEGER
+/;
+Non;0
+Oui;1
+###eqp_absencejoint;                INT;            INTEGER
+/;
+Non;0
+Oui;1
+###eqp_fissurationgrille;                INT;            INTEGER
+/;
+Non;0
+Oui;1
+###eqp_caniveaubouche;                INT;            INTEGER
+/;
+Non;0
+Oui;1
+###eqp_desaffleurement;                INT;            INTEGER
+/;
+Non;0
+Oui;1
+###eqp_absenceass;                INT;            INTEGER
+/;
+Non;0
+Oui;1
+
+# ****************************************
+#                 Eqt sur quai
+# ****************************************
+###etatEquipement;            INT;            INTEGER
+/;
+Mauvais;0
+Bon;1
+Tres bon;2
+
+
+
+
+
+
+# ****************************************
+#                  local
+# ****************************************
+###aspectlocalext;           VARCHAR(255);            TEXT
+###aspectlocalint;           VARCHAR(255);            TEXT
+###temperatureext;            INT;            INTEGER
+###temperatureint;            INT;            INTEGER
+###presencerongeurs;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###presencerongeurscomm;            VARCHAR(255);            TEXT
+###infiltrationeau;           VARCHAR(255);            TEXT
+###incendieextincteurs;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###incendiecontroles;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###incendietest;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###presenceplans;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###etatplancher;            INT;            INTEGER
+/;
+Passable;0
+Propre;1
+###etatchemincables;            INT;            INTEGER
+/;
+Fermé;0
+Bien fixé;1
+Place libre;1
+
+###etateclairage;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###etateclairagesecu;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###etatprisecourant;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###etatpeintures;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###etatidequipements;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###etatbaretteterre;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###etatappareilmesure;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###etatportesvoilee;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###etatportesetat;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###etatpanopliesecupresent;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###etatpanopliesecuauxnormes;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###etataffichagesynoptique;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###etatverouillage;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###etatclesverouillage;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###etatchemincle;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+
+
+
+# ****************************************
+#                  posteHT
+# ****************************************
+###cellulesetat;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###cellulesid;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###foncvoyanttension;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###etataccessoiresposte;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###nombretypetransfo;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###foncvoletembroch;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###etatverportescellules;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###etatcables;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###etatcleserure;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###pressiongaz;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###voletsprotecpresence;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###voletsprotecetat;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+
+# ****************************************
+#                  traction
+# ****************************************
+###etatvisueltab;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###equipeid;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###poussiere;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###etatdisjonct;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###etatisolants;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###presencecle;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###suivivisuterre;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###etatgainebt;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###fonctvoletembroch;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###voletproteccontact;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###positionintervdech;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+
+###transfoetatgen;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###transfoplaqueid;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###transfoverrou;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###transfoantivib;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###transfobacret;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###transfobruitanorm;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###transforelaisprotec;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###transfoniveauhuile;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###transfoetatcable;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+
+
+
+# ****************************************
+#                  posteBT
+# ****************************************
+###btgenhomogen;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###btgenetat;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###btgenetatcablage;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###btgenfoncfreqelev;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+
+###btarmetatvis;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###btarmsynop;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###btarmetatcabl;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+
+###btondetatbat;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###btondetatconnex;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###btondetatsupport;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###btondaccessbat;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###btondaspectond;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###btondoxydations;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###btondetatventil;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###btondetataffich;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+###btonddocmateriel;            INT;            INTEGER
+/;
+Non;0
+Oui;1
+
+
+

@@ -1,0 +1,6 @@
+###groupedesordre;           VARCHAR(255);            TEXT
+Infralineaire;INF
+Noeud station;NO1
+Noeud local;NO2
+Equipement station;EQ1
+Equipement local;EQ2

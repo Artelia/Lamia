@@ -1,5 +1,4 @@
 ###Noeud
-##FROM Noeud AS Noeudtemp INNER JOIN Objet ON Objet.id_objet = Noeudtemp.id_objet AND Noeudtemp.pk_noeud = Noeud.pk_noeud
 #nom              type               cst               valeur                    
 id_noeud;         Int;                  ;               id_noeud
 typeReseau;       String;           typeReseau;         typeReseau
@@ -11,15 +10,10 @@ alttamponouvrage;Double;                               ;     alttamponouvrage
 profradierouvrage;Double;                               ;     profradierouvrage
 altradierouvrage;Double;                               ;     CASE WHEN altradierouvrage IS NULL THEN Z - profradierouvrage ELSE altradierouvrage END
 accessibilite;       String;           accessibilite;         accessibilite
+environnement;       String;           environnement;         environnement
 
-test1;            Int;                  ;                
-test2;            Int;                  ;               CASE WHEN id_noeud IS NULL THEN 1 ELSE 0 END
-
-###Objet
-##FROM Objet WHERE  Objet.id_objet = Noeud.id_objet
-#nom              type               cst               valeur                    
 id_objet;         Int;               ;                  id_objet
-commentaire;      String;               ;                  commentaire
+commentaire;      String;               ;                  Noeud_now.commentaire
 
 
 ###Infralineaire1
@@ -49,13 +43,22 @@ libelle;       String;               ;                  libelle
 ###Observation
 ##FROM Observation INNER JOIN Desordre ON Desordre.id_desordre = Observation.lk_desordre INNER JOIN Objet  ON Observation.id_objet = Objet.id_objet WHERE Desordre.lk_descriptionsystem = Noeud.id_descriptionsystem
 #nom              type               cst               valeur                    
+etatgeneral;         String;             etatgeneral;             etatgeneral
+etattampon;         String;             etattampon;             etattampon
+etatechelon;         String;             etatechelon;             etatechelon
+etatregard;         String;             etatregard;             etatregard
+etatcunette;         String;             etatcunette;             etatcunette
+etatasservissement;         String;             etatasservissement;             etatasservissement
+
+hdeuxs;         String;             hdeuxs;             hdeuxs
+miseencharge;         String;             miseencharge;             miseencharge
 depots;         String;             depots;             depots
-ECPPdepuisbranchement;Int;          ;                   ECPPdepuisbranchement
-gcdegrade;Int;          ;                   gcdegrade
-infiltration;Int;          ;                   infiltration
-intrusionracine;Int;          ;                   intrusionracine
-miseencharge;Int;          ;                   miseencharge
-tamponendommage;Int;          ;                   tamponendommage
+ECPPdepuisbranchement;         String;             ECPPdepuisbranchement;             ECPPdepuisbranchement
+infiltration;         String;             infiltration;             infiltration
+intrusionracine;         String;             intrusionracine;             intrusionracine
+jugemententretien;         String;             jugemententretien;             jugemententretien
+
+evolution;         String;              ;             evolution
 
 
 
@@ -65,4 +68,4 @@ geom;         Int;               ;                  ST_AsText(geom)
 
 
 ###main
-FROM Noeud
+FROM Noeud_now

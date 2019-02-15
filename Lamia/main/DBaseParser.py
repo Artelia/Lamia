@@ -215,6 +215,8 @@ class DBaseParser(QtCore.QObject):
 
         if not os.path.isdir(dbaseressourcesdirectorytemp):
             os.makedirs(dbaseressourcesdirectorytemp)
+            configfir = os.path.join(dbaseressourcesdirectorytemp,'config')
+            os.makedirs(configfir)
             if False:
                 exportdir = os.path.join(dbaseressourcesdirectorytemp, 'backup')
                 if not os.path.isdir(exportdir):
@@ -433,7 +435,7 @@ class DBaseParser(QtCore.QObject):
                                       user=self.pguser, password=self.pgpassword)
 
 
-    def createDBDictionary(self, type):
+    def createDBDictionary(self, type, configdir=False):
         """!
         Read the files in ./DBASE/create
         A file describes the fields  like that:
@@ -473,25 +475,34 @@ class DBaseParser(QtCore.QObject):
 
 
         # first readfiles in ./DBASE\create directory and create self.dbasetables
-        self.type = type
-        self.dbasetables = {}
+        createfilesdir = None
 
-        createfilesdir, workversionmax = self.getMaxVersionRepository(self.type)
-        createfilesdirbase, baseversionmax = self.getMaxVersionRepository(self.type.split('_')[0])
+        if not configdir:
+
+            self.type = type
+            self.dbasetables = {}
+
+            createfilesdir, workversionmax = self.getMaxVersionRepository(self.type)
+            createfilesdirbase, baseversionmax = self.getMaxVersionRepository(self.type.split('_')[0])
 
 
 
-        if self.version is not None and (self.version < baseversionmax or self.workversion < workversionmax) :
-            self.updateDBaseVersion()
+            if self.version is not None and (self.version < baseversionmax or self.workversion < workversionmax) :
+                self.updateDBaseVersion()
 
-        self.version = baseversionmax
-        self.workversion = workversionmax
+            self.version = baseversionmax
+            self.workversion = workversionmax
 
-        if createfilesdirbase and createfilesdirbase != createfilesdir :
-            parsertemp = DBaseParser(None)
-            parsertemp.createDBDictionary(self.type.split('_')[0])
-            self.dbasetables = parsertemp.dbasetables
-            del parsertemp
+            if createfilesdirbase and createfilesdirbase != createfilesdir :
+                parsertemp = DBaseParser(None)
+                parsertemp.createDBDictionary(self.type.split('_')[0])
+                self.dbasetables = parsertemp.dbasetables
+                del parsertemp
+
+        else:
+            createfilesdir = os.path.join(self.dbaseressourcesdirectory,'config')
+            if not os.path.exists(createfilesdir):
+                return
 
 
         for filename in glob.glob(os.path.join(createfilesdir, '*.txt')):
@@ -618,6 +629,9 @@ class DBaseParser(QtCore.QObject):
 
         if "Revision" in self.dbasetables.keys():
             self.revisionwork = True
+
+
+
 
 
 
@@ -786,6 +800,7 @@ class DBaseParser(QtCore.QObject):
 
         if type is not None:
             self.createDBDictionary(type)
+            self.createDBDictionary(type, configdir=True)
 
             if self.revisionwork:
                 sql = "SELECT MAX(pk_revision) FROM Revision;"

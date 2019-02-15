@@ -60,6 +60,11 @@
         </item>
         <item>
          <property name="text">
+          <string>Base2_tramway</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
           <string>Base2_assainissement</string>
          </property>
         </item>

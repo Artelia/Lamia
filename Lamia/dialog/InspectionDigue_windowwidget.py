@@ -20,7 +20,7 @@ import shutil
 import datetime
 import sys
 import logging
-
+import math
 logger = logging.getLogger("Lamia")
 logger.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s :: %(levelname)s :: %(module)s :: %(funcName)s :: %(message)s')
@@ -176,8 +176,10 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.currentprestationlabel = QLabel('Prestation inactif')
         self.statusBar().addWidget(self.currentprestationlabel, 1)
 
-        self.GPSlabel = QLabel('GPS non connecte')
+        self.GPSlabel = QLabel(u'GPS non connecté')
         self.statusBar().addWidget(self.GPSlabel)
+        self.GPSlabelprecision = QLabel(u'Précision')
+        self.statusBar().addWidget(self.GPSlabelprecision)
 
         if debug: logging.getLogger('Lamia').debug('step1')
 
@@ -364,9 +366,42 @@ class InspectiondigueWindowWidget(QMainWindow):
 
     def GPSconnected(self,success):
         if success:
-            self.GPSlabel.setText('GPS connecte')
+            self.GPSlabel.setStyleSheet("QLabel { background-color : rgb(85, 255, 0);  }")  #vert
+            self.GPSlabel.setText(u'GPS connecté')
+            self.GPSlabelprecision.setStyleSheet("QLabel { background-color : red;  }")
+            self.GPSlabelprecision.setText(u'Précision : erreur')
+            self.gpsutil.gstsentence.connect(self.displayGPSPrecision)
         else:
-            self.GPSlabel.setText('GPS non connecte')
+            self.GPSlabel.setStyleSheet("QLabel { background-color : rgba(0, 0, 0, 0);  }")
+            self.GPSlabel.setText(u'GPS non connecté')
+            self.GPSlabelprecision.setStyleSheet("QLabel { background-color : rgba(0, 0, 0, 0);  }")
+            self.GPSlabelprecision.setText(u'Précision : Off')
+            try:
+                self.gpsutil.gstsentence.disconnect(self.displayGPSPrecision)
+            except:
+                pass
+
+
+    def displayGPSPrecision(self, gpsdict):
+        xprecision = gpsdict['xprecision']
+        yprecision = gpsdict['yprecision']
+        zprecision = gpsdict['zprecision']
+
+        try:
+            totalprecision = round(math.sqrt(xprecision**2 + yprecision**2 + zprecision**2),2)
+            if totalprecision < 0.1:
+                self.GPSlabelprecision.setStyleSheet("QLabel { background-color : rgb(85, 255, 0);  }") #vert
+            elif totalprecision < 0.4:
+                self.GPSlabelprecision.setStyleSheet("QLabel { background-color : yellow;  }")
+            elif totalprecision < 1.5:
+                self.GPSlabelprecision.setStyleSheet("QLabel { background-color : rgb(255, 170, 0);  }")
+            else:
+                self.GPSlabelprecision.setStyleSheet("QLabel { background-color : red;  }")
+            self.GPSlabelprecision.setText(u'Précision : ' + str(totalprecision) + ' m')
+
+        except:
+            self.GPSlabelprecision.setStyleSheet("QLabel { background-color : red;  }")
+            self.GPSlabelprecision.setText(u'Précision : erreur')
 
 
     """

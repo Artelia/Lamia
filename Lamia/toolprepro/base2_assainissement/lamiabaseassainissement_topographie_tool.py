@@ -75,7 +75,7 @@ class BaseAssainissementTopographieTool(BaseTopographieTool):
                                 'Ressource' : {'linkfield' : 'id_ressource',
                                           'widgets' : {'file': self.userwdgfield.lineEdit_file,
                                                         'description': self.userwdgfield.lineEdit_nom,
-                                                        'dateressource': self.userwdgfield.dateEdit_date}}}
+                                                        'datetimeressource': self.userwdgfield.dateTimeEdit_date}}}
             self.userwdgfield.pushButton_chooseph.clicked.connect(self.choosePhoto)
             self.userwdgfield.pushButton_open.clicked.connect(self.openFile)
             self.userwdgfield.pushButton_ajoutpointGPS.clicked.connect(self.ajoutPointGPS)

@@ -1,0 +1,1651 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>579</width>
+    <height>709</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="margin">
+    <number>3</number>
+   </property>
+   <item>
+    <widget class="QFrame" name="frame">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Date</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>Urgence</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="comboBox_urgence"/>
+      </item>
+      <item row="0" column="1">
+       <widget class="QDateTimeEdit" name="dateTimeEdit">
+        <property name="calendarPopup">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QStackedWidget" name="stackedWidget">
+     <property name="currentIndex">
+      <number>4</number>
+     </property>
+     <widget class="QWidget" name="page">
+      <layout class="QGridLayout" name="gridLayout" columnstretch="1,0,0">
+       <item row="1" column="0" colspan="3">
+        <widget class="QStackedWidget" name="stackedWidget_2">
+         <property name="currentIndex">
+          <number>1</number>
+         </property>
+         <widget class="QWidget" name="page_4">
+          <layout class="QGridLayout" name="gridLayout_5">
+           <item row="2" column="1">
+            <widget class="QTextEdit" name="textEdit_evolution">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>40</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QToolButton" name="toolButton_calc_nb">
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset>
+               <normaloff>:/plugins/Lamia/icons/numpad.png</normaloff>:/plugins/Lamia/icons/numpad.png</iconset>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>Nombre</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QSpinBox" name="spinBox_nombre">
+             <property name="minimum">
+              <number>-1</number>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_6">
+             <property name="text">
+              <string>Evolution</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="page_5">
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <item>
+            <widget class="QTabWidget" name="tabWidget">
+             <property name="currentIndex">
+              <number>0</number>
+             </property>
+             <widget class="QWidget" name="tab">
+              <attribute name="title">
+               <string>Usure des rails</string>
+              </attribute>
+              <layout class="QGridLayout" name="gridLayout_6">
+               <item row="4" column="1">
+                <widget class="QComboBox" name="comboBox_etatrechargement"/>
+               </item>
+               <item row="2" column="1">
+                <widget class="QLineEdit" name="lineEdit_precisionfatigue"/>
+               </item>
+               <item row="3" column="1">
+                <widget class="QComboBox" name="comboBox_geovoie"/>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_10">
+                 <property name="text">
+                  <string>Présence UO</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QComboBox" name="comboBox_presenceUO"/>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_11">
+                 <property name="text">
+                  <string>Présence fatigue</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="label_13">
+                 <property name="text">
+                  <string>Géométrie de la voie</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="label_12">
+                 <property name="text">
+                  <string>Précision fatigue</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QComboBox" name="comboBox_presencefatigue"/>
+               </item>
+               <item row="4" column="0">
+                <widget class="QLabel" name="label_14">
+                 <property name="text">
+                  <string>Etat du rechargement</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="0">
+                <widget class="QLabel" name="label_15">
+                 <property name="text">
+                  <string>Précision rechargement</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="1">
+                <widget class="QLineEdit" name="lineEdit_precisionrechargement"/>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="tab_2">
+              <attribute name="title">
+               <string>Etat du revêtement</string>
+              </attribute>
+              <layout class="QGridLayout" name="gridLayout_7">
+               <item row="0" column="1">
+                <widget class="QStackedWidget" name="stackedWidget_revet">
+                 <property name="currentIndex">
+                  <number>3</number>
+                 </property>
+                 <widget class="QWidget" name="modulaire">
+                  <layout class="QGridLayout" name="gridLayout_8">
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_16">
+                     <property name="text">
+                      <string>Fissurations dans les joints</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="label_17">
+                     <property name="text">
+                      <string>Dégarnissage des joint</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QComboBox" name="comboBox_rev_fissurations"/>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QComboBox" name="comboBox_rev_degarnissage"/>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="label_18">
+                     <property name="text">
+                      <string>Désafleurement entre pavés et/ou entre dalles</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QComboBox" name="comboBox_rev_desafleurement"/>
+                   </item>
+                   <item row="3" column="1">
+                    <widget class="QComboBox" name="comboBox_rev_affaissement"/>
+                   </item>
+                   <item row="3" column="0">
+                    <widget class="QLabel" name="label_19">
+                     <property name="text">
+                      <string>Affaissements des pavés et/ou des dalles le long des rails</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="1">
+                    <widget class="QComboBox" name="comboBox_rev_ornierage"/>
+                   </item>
+                   <item row="4" column="0">
+                    <widget class="QLabel" name="label_20">
+                     <property name="text">
+                      <string>Orniérages plus ou moins avancés</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="0">
+                    <widget class="QLabel" name="label_21">
+                     <property name="text">
+                      <string>Disparitions de pavés et/ou de dalles</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="1">
+                    <widget class="QComboBox" name="comboBox_rev_disparitions"/>
+                   </item>
+                  </layout>
+                 </widget>
+                 <widget class="QWidget" name="nonmodulaire">
+                  <layout class="QGridLayout" name="gridLayout_9">
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_22">
+                     <property name="text">
+                      <string>Déformations (affaissements, flaches, orniérage)</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="label_23">
+                     <property name="text">
+                      <string>Fissurations (longitudinales, transversales ou faïençage)</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QComboBox" name="comboBox_rev_deformations"/>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="label_24">
+                     <property name="text">
+                      <string>Arrachements (nids de poule, pelades, plumages)</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QComboBox" name="comboBox_rev_arrachement"/>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QComboBox" name="comboBox_rev_fissurations2"/>
+                   </item>
+                   <item row="3" column="0">
+                    <widget class="QLabel" name="label_25">
+                     <property name="text">
+                      <string>Remontées (ressuage)</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="1">
+                    <widget class="QComboBox" name="comboBox_rev_remontees"/>
+                   </item>
+                  </layout>
+                 </widget>
+                 <widget class="QWidget" name="vegetalise">
+                  <layout class="QGridLayout" name="gridLayout_10">
+                   <item row="0" column="1">
+                    <widget class="QComboBox" name="comboBox_rev_dessechement"/>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_26">
+                     <property name="text">
+                      <string>Dessèchements</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QComboBox" name="comboBox_rev_vegetation"/>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="label_28">
+                     <property name="text">
+                      <string>Disparition du végétal</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QComboBox" name="comboBox_rev_disparitions2"/>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="label_27">
+                     <property name="text">
+                      <string>Apparitions d'herbes folles</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="0">
+                    <widget class="QLabel" name="label_29">
+                     <property name="text">
+                      <string>Mauvaise tonte</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="1">
+                    <widget class="QComboBox" name="comboBox_rev_tonte"/>
+                   </item>
+                  </layout>
+                 </widget>
+                 <widget class="QWidget" name="ballast">
+                  <layout class="QGridLayout" name="gridLayout_11">
+                   <item row="0" column="1">
+                    <widget class="QComboBox" name="comboBox_rev_tassement"/>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_30">
+                     <property name="text">
+                      <string>Tassement</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="label_31">
+                     <property name="text">
+                      <string>Pollution</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QComboBox" name="comboBox_rev_pollution"/>
+                   </item>
+                  </layout>
+                 </widget>
+                 <widget class="QWidget" name="else"/>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="tab_3">
+              <attribute name="title">
+               <string>Etat des équipements</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="verticalLayout_4">
+               <item>
+                <widget class="QTabWidget" name="tabWidget_2">
+                 <property name="currentIndex">
+                  <number>0</number>
+                 </property>
+                 <widget class="QWidget" name="tab_4">
+                  <attribute name="title">
+                   <string>Joint rail/eqp</string>
+                  </attribute>
+                  <layout class="QGridLayout" name="gridLayout_12">
+                   <item row="1" column="1">
+                    <widget class="QComboBox" name="comboBox_eqp_degarnissage"/>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QComboBox" name="comboBox_eqp_fissurationjoint"/>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_32">
+                     <property name="text">
+                      <string>Fissurations du joint</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="label_33">
+                     <property name="text">
+                      <string>Dégarnissage du joint</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="label_34">
+                     <property name="text">
+                      <string>Absence du joint ou déchirement</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QComboBox" name="comboBox_eqp_absencejoint"/>
+                   </item>
+                  </layout>
+                 </widget>
+                 <widget class="QWidget" name="tab_5">
+                  <attribute name="title">
+                   <string>Assainissement</string>
+                  </attribute>
+                  <layout class="QGridLayout" name="gridLayout_13">
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_35">
+                     <property name="text">
+                      <string>Fissuration grille</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QComboBox" name="comboBox_eqp_caniveaubouche"/>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="label_37">
+                     <property name="text">
+                      <string>Désafleurement/Décollement/Desserage Grille</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QComboBox" name="comboBox_eqp_fissurationgrille"/>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="label_36">
+                     <property name="text">
+                      <string>Caniveau bouché - traçe d'un mauvais écoulement</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QComboBox" name="comboBox_eqp_desaffleurement"/>
+                   </item>
+                   <item row="3" column="0">
+                    <widget class="QLabel" name="label_38">
+                     <property name="text">
+                      <string>Absence</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="1">
+                    <widget class="QComboBox" name="comboBox_eqp_absenceass"/>
+                   </item>
+                  </layout>
+                 </widget>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="page_2">
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>NOD1</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="page_6">
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QTabWidget" name="tabWidget_3">
+         <property name="currentIndex">
+          <number>2</number>
+         </property>
+         <widget class="QWidget" name="tab_6">
+          <attribute name="title">
+           <string>Etat général local 1</string>
+          </attribute>
+          <layout class="QGridLayout" name="gridLayout_15">
+           <item row="2" column="2">
+            <widget class="QLabel" name="label_43">
+             <property name="text">
+              <string>Température intérieure</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QSpinBox" name="spinBox_tempext"/>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_39">
+             <property name="text">
+              <string>Aspect général extérieur</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QComboBox" name="comboBox_presrongeurs"/>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_42">
+             <property name="text">
+              <string>Température extérieure</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_41">
+             <property name="text">
+              <string>Aspect général intérieur</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="label_46">
+             <property name="text">
+              <string>Infiltration d'eau</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="label_45">
+             <property name="text">
+              <string>Présence de rongeurs _ commentaires</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_44">
+             <property name="text">
+              <string>Présence de rongeurs</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="3">
+            <widget class="QSpinBox" name="spinBox_tempint"/>
+           </item>
+           <item row="1" column="1" colspan="3">
+            <widget class="QLineEdit" name="lineEdit_aspectint"/>
+           </item>
+           <item row="0" column="1" colspan="3">
+            <widget class="QLineEdit" name="lineEdit_aspectext"/>
+           </item>
+           <item row="5" column="1" colspan="3">
+            <widget class="QLineEdit" name="lineEdit_presrongeurs"/>
+           </item>
+           <item row="6" column="1" colspan="3">
+            <widget class="QLineEdit" name="lineEdit_infiltration"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="tab_8">
+          <attribute name="title">
+           <string>Etat général local 2</string>
+          </attribute>
+          <layout class="QGridLayout" name="gridLayout_16">
+           <item row="1" column="1">
+            <widget class="QComboBox" name="comboBox_presplan"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_50">
+             <property name="text">
+              <string>Présence des plans du local et d'implantation des équipements  </string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_51">
+             <property name="text">
+              <string>Etat des caniveaux, faux-planchers, cheminements </string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0" colspan="2">
+            <widget class="QGroupBox" name="groupBox_2">
+             <property name="title">
+              <string>Incendie</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_17">
+              <item row="0" column="1">
+               <widget class="QComboBox" name="comboBox_extincpres"/>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_48">
+                <property name="text">
+                 <string>Controles effectués ?</string>
+                </property>
+                <property name="wordWrap">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QComboBox" name="comboBox_extinccontr"/>
+              </item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_47">
+                <property name="text">
+                 <string>Présence des extincteurs ? </string>
+                </property>
+                <property name="wordWrap">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_49">
+                <property name="text">
+                 <string>Test du système de detection des incendies : Concluant ?</string>
+                </property>
+                <property name="wordWrap">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QComboBox" name="comboBox_extincconclu"/>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_52">
+             <property name="text">
+              <string>Etat des chemins de câbles et des goulottes </string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QComboBox" name="comboBox_etatcan"/>
+           </item>
+           <item row="3" column="1">
+            <widget class="QComboBox" name="comboBox_etatchemins"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="tab_7">
+          <attribute name="title">
+           <string>Etat général Equipements</string>
+          </attribute>
+          <layout class="QGridLayout" name="gridLayout_18">
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_54">
+             <property name="text">
+              <string>Eclairage de sécurité - Opérationnel ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_55">
+             <property name="text">
+              <string>Prises de courant - Opérationnelles ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_53">
+             <property name="text">
+              <string>Eclairage normal - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_56">
+             <property name="text">
+              <string>Peintures - Rayures ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_57">
+             <property name="text">
+              <string>Identifications des équipements - Lisible ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="label_58">
+             <property name="text">
+              <string>Etat de la barrette de terre - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="0">
+            <widget class="QLabel" name="label_61">
+             <property name="text">
+              <string>Etat des portes et des capots - bon état ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="label_59">
+             <property name="text">
+              <string>Etat des appareils de mesures</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="0">
+            <widget class="QLabel" name="label_64">
+             <property name="text">
+              <string>Affichage du synoptique de l'installation - Présent et à jour ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0">
+            <widget class="QLabel" name="label_60">
+             <property name="text">
+              <string>Etat des portes et des capots - Voilés ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="0">
+            <widget class="QLabel" name="label_63">
+             <property name="text">
+              <string>Présence des panoplies de sécurité HT et Traction - Aux normes ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="0">
+            <widget class="QLabel" name="label_62">
+             <property name="text">
+              <string>Présence des panoplies de sécurité HT et Traction  - Présentes ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="12" column="0">
+            <widget class="QLabel" name="label_65">
+             <property name="text">
+              <string>Verrouillage des équipements - opérationnel ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="13" column="0">
+            <widget class="QLabel" name="label_66">
+             <property name="text">
+              <string>Repérage des clés de verrouillage - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="14" column="0">
+            <widget class="QLabel" name="label_67">
+             <property name="text">
+              <string>Présence d'affichage du chemin de clés et procédure de consignation - Présents?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QComboBox" name="comboBox_eclair"/>
+           </item>
+           <item row="1" column="1">
+            <widget class="QComboBox" name="comboBox_eclairsec"/>
+           </item>
+           <item row="2" column="1">
+            <widget class="QComboBox" name="comboBox_prisecour"/>
+           </item>
+           <item row="3" column="1">
+            <widget class="QComboBox" name="comboBox_peinture"/>
+           </item>
+           <item row="4" column="1">
+            <widget class="QComboBox" name="comboBox_idequip"/>
+           </item>
+           <item row="5" column="1">
+            <widget class="QComboBox" name="comboBox_baretteterre"/>
+           </item>
+           <item row="6" column="1">
+            <widget class="QComboBox" name="comboBox_appmesure"/>
+           </item>
+           <item row="7" column="1">
+            <widget class="QComboBox" name="comboBox_portesvoile"/>
+           </item>
+           <item row="8" column="1">
+            <widget class="QComboBox" name="comboBox_porteetat"/>
+           </item>
+           <item row="9" column="1">
+            <widget class="QComboBox" name="comboBox_panopsecupres"/>
+           </item>
+           <item row="10" column="1">
+            <widget class="QComboBox" name="comboBox_panopsecunomre"/>
+           </item>
+           <item row="11" column="1">
+            <widget class="QComboBox" name="comboBox_synopt"/>
+           </item>
+           <item row="12" column="1">
+            <widget class="QComboBox" name="comboBox_verouillage"/>
+           </item>
+           <item row="13" column="1">
+            <widget class="QComboBox" name="comboBox_verouillagecle"/>
+           </item>
+           <item row="14" column="1">
+            <widget class="QComboBox" name="comboBox_chemincle"/>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="page_3">
+      <layout class="QGridLayout" name="gridLayout_14">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_9">
+         <property name="text">
+          <string>Etat général</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="comboBox_etatequip"/>
+       </item>
+       <item row="1" column="0" colspan="2">
+        <spacer name="verticalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="page_7">
+      <layout class="QVBoxLayout" name="verticalLayout_5">
+       <item>
+        <widget class="QStackedWidget" name="stackedWidget_3">
+         <property name="currentIndex">
+          <number>4</number>
+         </property>
+         <widget class="QWidget" name="posteHT">
+          <layout class="QGridLayout" name="gridLayout_19">
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_68">
+             <property name="text">
+              <string>Identification des cellules - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_40">
+             <property name="text">
+              <string>Etat visuel des cellules  - bon ? </string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="0">
+            <widget class="QLabel" name="label_78">
+             <property name="text">
+              <string>Volets de protection aux contacts directs - Etat ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_69">
+             <property name="text">
+              <string>Fonctionnement des voyants présence tension - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_70">
+             <property name="text">
+              <string>Présence et état des accessoires du poste  - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="0">
+            <widget class="QLabel" name="label_76">
+             <property name="text">
+              <string>Pression du gaz des cellules contenant du gaz SF6  - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="0">
+            <widget class="QLabel" name="label_75">
+             <property name="text">
+              <string>Présence et état des clés et serrures  - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0">
+            <widget class="QLabel" name="label_74">
+             <property name="text">
+              <string>Etat des câbles  - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="label_73">
+             <property name="text">
+              <string>Etat du verrouillage et ouverture des portes des cellules sous tension  - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="label_72">
+             <property name="text">
+              <string>Fonctionnement des volets d'embrochage pour disjoncteurs débrochable  - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_71">
+             <property name="text">
+              <string>Le nombre et le type des transformateurs  - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="0">
+            <widget class="QLabel" name="label_77">
+             <property name="text">
+              <string>Volets de protection aux contacts directs - Présence ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QComboBox" name="comboBox_celvisu"/>
+           </item>
+           <item row="1" column="1">
+            <widget class="QComboBox" name="comboBox_celid"/>
+           </item>
+           <item row="2" column="1">
+            <widget class="QComboBox" name="comboBox_foncvoyanttension"/>
+           </item>
+           <item row="3" column="1">
+            <widget class="QComboBox" name="comboBox_etataccessposte"/>
+           </item>
+           <item row="4" column="1">
+            <widget class="QComboBox" name="comboBox_typetransfo"/>
+           </item>
+           <item row="5" column="1">
+            <widget class="QComboBox" name="comboBox_embrochage"/>
+           </item>
+           <item row="6" column="1">
+            <widget class="QComboBox" name="comboBox_verportescel"/>
+           </item>
+           <item row="7" column="1">
+            <widget class="QComboBox" name="comboBox_etatcables"/>
+           </item>
+           <item row="8" column="1">
+            <widget class="QComboBox" name="comboBox_etatcleserrure"/>
+           </item>
+           <item row="9" column="1">
+            <widget class="QComboBox" name="comboBox_presgaz"/>
+           </item>
+           <item row="10" column="1">
+            <widget class="QComboBox" name="comboBox_voletsprotecpres"/>
+           </item>
+           <item row="11" column="1">
+            <widget class="QComboBox" name="comboBox_voletprotectetat"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="traction_tab">
+          <layout class="QGridLayout" name="gridLayout_24">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_79">
+             <property name="text">
+              <string>Etat visuel des tableaux - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QComboBox" name="comboBox_etatvisueltab"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_80">
+             <property name="text">
+              <string>Identification des équipements  - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QComboBox" name="comboBox_equipeid"/>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_81">
+             <property name="text">
+              <string>Poussière dans les armoires  - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QComboBox" name="comboBox_poussiere"/>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_82">
+             <property name="text">
+              <string>Etat des disjoncteurs et des sectionneurs  - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QComboBox" name="comboBox_etatdisjonct"/>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_83">
+             <property name="text">
+              <string>Etat de l'isolant entre le sol et les masse des tableaux  - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QComboBox" name="comboBox_etatisolants"/>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="label_84">
+             <property name="text">
+              <string>Présence et état des clés et serrures  - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QComboBox" name="comboBox_presencecle"/>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="label_85">
+             <property name="text">
+              <string>Suivi visuel des circuits de terre  - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="QComboBox" name="comboBox_suivivisuterre"/>
+           </item>
+           <item row="7" column="0">
+            <widget class="QLabel" name="label_86">
+             <property name="text">
+              <string>Etat des gaines de liaison BT à la partie mobile pour disjoncteur débrochables  - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="1">
+            <widget class="QComboBox" name="comboBox_etatgainebt"/>
+           </item>
+           <item row="8" column="0">
+            <widget class="QLabel" name="label_87">
+             <property name="text">
+              <string>Fonctionnement des volets d'embrochage pour disjoncteur débrochables  - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="1">
+            <widget class="QComboBox" name="comboBox_fonctvoletembroch"/>
+           </item>
+           <item row="9" column="0">
+            <widget class="QLabel" name="label_88">
+             <property name="text">
+              <string>volets de protection aux contacts direct  - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="1">
+            <widget class="QComboBox" name="comboBox_voletproteccontact"/>
+           </item>
+           <item row="10" column="0">
+            <widget class="QLabel" name="label_89">
+             <property name="text">
+              <string>Position de l'intervalle de décharge - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="1">
+            <widget class="QComboBox" name="comboBox_positionintervdech"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="traction_transfo">
+          <layout class="QGridLayout" name="gridLayout_25">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_90">
+             <property name="text">
+              <string>Etat général - Correct ?</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QComboBox" name="comboBox_transfoetatgen"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_91">
+             <property name="text">
+              <string>Plaques d'identification - Présence et état</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QComboBox" name="comboBox_transfoplaqueid"/>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_92">
+             <property name="text">
+              <string>Verrouillage - opérationnel ?</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QComboBox" name="comboBox_transfoverrou"/>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_93">
+             <property name="text">
+              <string>Système anti-vibration - Présence  ?</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QComboBox" name="comboBox_transfoantivib"/>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_94">
+             <property name="text">
+              <string>Bac de rétension - Présence  ?</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QComboBox" name="comboBox_transfobacret"/>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="label_95">
+             <property name="text">
+              <string>Bruit anormal - Avéré ?</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QComboBox" name="comboBox_transfobruitanorm"/>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="label_96">
+             <property name="text">
+              <string>fonctionnement du relais de protection - Correct ?</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="QComboBox" name="comboBox_transforelaisprotec"/>
+           </item>
+           <item row="7" column="0">
+            <widget class="QLabel" name="label_97">
+             <property name="text">
+              <string>Niveau d'huile du transformateur - Correct ?</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="1">
+            <widget class="QComboBox" name="comboBox_transfoniveauhuile"/>
+           </item>
+           <item row="8" column="0">
+            <widget class="QLabel" name="label_98">
+             <property name="text">
+              <string>Etat des câbles - Correct ?</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="1">
+            <widget class="QComboBox" name="comboBox_transfoetatcable"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="posteBT">
+          <layout class="QGridLayout" name="gridLayout_20">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_108">
+             <property name="text">
+              <string>Etat des coffrets de distribution basse tension </string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_110">
+             <property name="text">
+              <string>Homogénéité des composants de même fonction </string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_109">
+             <property name="text">
+              <string>Etat du câblage, des goulottes, des marquages </string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_111">
+             <property name="text">
+              <string>Fonctionnement des relais à fréquence élevée ?</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QComboBox" name="comboBox_btgenetat"/>
+           </item>
+           <item row="1" column="1">
+            <widget class="QComboBox" name="comboBox_btgenhomogen"/>
+           </item>
+           <item row="2" column="1">
+            <widget class="QComboBox" name="comboBox_btgenetatcablage"/>
+           </item>
+           <item row="3" column="1">
+            <widget class="QComboBox" name="comboBox_btgenfoncfreqelev"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="bt_armoire">
+          <layout class="QGridLayout" name="gridLayout_21">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_99">
+             <property name="text">
+              <string>Etat visuel des tableaux </string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_100">
+             <property name="text">
+              <string>Présence de synoptique </string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_101">
+             <property name="text">
+              <string>Etat du câblage </string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QComboBox" name="comboBox_btarmetatvis"/>
+           </item>
+           <item row="1" column="1">
+            <widget class="QComboBox" name="comboBox_btarmsynop"/>
+           </item>
+           <item row="2" column="1">
+            <widget class="QComboBox" name="comboBox_btarmetatcabl"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="bt_ondul">
+          <layout class="QGridLayout" name="gridLayout_22">
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_103">
+             <property name="text">
+              <string>Etat des connexions - correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="label_112">
+             <property name="text">
+              <string>Etat de ses ventilations, filtres - correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_105">
+             <property name="text">
+              <string>Accessoires entretien batteries - présence ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="label_107">
+             <property name="text">
+              <string>Oxydations - correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_106">
+             <property name="text">
+              <string>Aspect de l'onduleur - correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_104">
+             <property name="text">
+              <string>Etat du support - correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_102">
+             <property name="text">
+              <string>Etat des batteries - correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="0">
+            <widget class="QLabel" name="label_114">
+             <property name="text">
+              <string>Documentation du matériel - présent ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0">
+            <widget class="QLabel" name="label_113">
+             <property name="text">
+              <string>Etat de son affichage - correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QComboBox" name="comboBox_btondetatbat"/>
+           </item>
+           <item row="1" column="1">
+            <widget class="QComboBox" name="comboBox_btondetatconnex"/>
+           </item>
+           <item row="2" column="1">
+            <widget class="QComboBox" name="comboBox_btondetatsupport"/>
+           </item>
+           <item row="3" column="1">
+            <widget class="QComboBox" name="comboBox_btondaccessbat"/>
+           </item>
+           <item row="4" column="1">
+            <widget class="QComboBox" name="comboBox_btondaspectond"/>
+           </item>
+           <item row="5" column="1">
+            <widget class="QComboBox" name="comboBox_btondoxydations"/>
+           </item>
+           <item row="6" column="1">
+            <widget class="QComboBox" name="comboBox_btondetatventil"/>
+           </item>
+           <item row="7" column="1">
+            <widget class="QComboBox" name="comboBox_btondetataffich"/>
+           </item>
+           <item row="8" column="1">
+            <widget class="QComboBox" name="comboBox_btonddocmateriel"/>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="frame_2">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_23">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>Commentaire</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QTextEdit" name="textEdit_comm">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>40</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>Suite à donner</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_4">
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_8">
+        <property name="text">
+         <string>Commentaire</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Type de suite</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="comboBox_typesuite"/>
+      </item>
+      <item row="1" column="1">
+       <widget class="QTextEdit" name="textEdit_suite">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>40</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

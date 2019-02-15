@@ -10,65 +10,61 @@ alttamponouvrage;Double;                               ;     alttamponouvrage
 profradierouvrage;Double;                               ;     profradierouvrage
 altradierouvrage;Double;                               ;     CASE WHEN altradierouvrage IS NULL THEN Z - profradierouvrage ELSE altradierouvrage END
 accessibilite;       String;           accessibilite;         accessibilite
+environnement;       String;           environnement;         environnement
 
-
-###Objet
-#nom              type               cst               valeur                    
-id_objet;         Int;               ;                  id_objet
-commentaire;      String;               ;                  commentaire
+id_objet;         Int;               ;                  Noeud_now.id_objet
+commentaire;      String;               ;                  Noeud_now.commentaire
 
 
 ###Infralineaire1
-##FROM Infralineaire_now   WHERE  Infralineaire_now.lid_descriptionsystem_2 =  Noeud_now.id_descriptionsystem ; LIMIT 1 OFFSET 0
+##FROM Infralineaire_now     WHERE  Infralineaire_now.lid_descriptionsystem_2 =  Noeud_now.id_descriptionsystem ; LIMIT 1 OFFSET 0
 profaval1;         Double;               ;                  profaval
-FE_AV_1;         Double;               ;                  CASE WHEN profaval IS NOT NULL THEN profradierouvrage - profaval ELSE NULL END
+FE_CHUTE1;         Double;               ;                  CASE WHEN profaval IS NOT NULL THEN profradierouvrage - profaval ELSE NULL END
 
 ###Infralineaire2
 ##FROM Infralineaire_now   WHERE  Infralineaire_now.lid_descriptionsystem_2 =  Noeud_now.id_descriptionsystem ; LIMIT 1 OFFSET 1
 profaval2;         Double;               ;                  profaval
-FE_AV_2;         Double;               ;                  CASE WHEN profaval IS NOT NULL THEN profradierouvrage - profaval ELSE NULL END
+FE_CHUTE2;         Double;               ;                  CASE WHEN profaval IS NOT NULL THEN profradierouvrage - profaval ELSE NULL END
 
 ###Infralineaire3
-##FROM Infralineaire_now   WHERE  Infralineaire_now.lid_descriptionsystem_2 =  Noeud_now.id_descriptionsystem ; LIMIT 1 OFFSET 2
-profaval3;         Double;               ;                  profaval
-FE_AV_3;         Double;               ;                  CASE WHEN profaval IS NOT NULL THEN profradierouvrage - profaval ELSE NULL END
+##FROM Infralineaire_now   WHERE  Infralineaire_now.lid_descriptionsystem_2 =  Noeud_now.id_descriptionsystem
+ART_NB_ARR;         Int;               ;                  COUNT(*)
 
-###Infralineaire4
-##FROM Infralineaire_now   WHERE  Infralineaire_now.lid_descriptionsystem_1 =  Noeud_now.id_descriptionsystem ; LIMIT 1 OFFSET 0
-profamont1;         Double;               ;                  profamont
-FE_AM_1;         Double;               ;                  CASE WHEN profamont IS NOT NULL THEN profradierouvrage - profamont ELSE NULL END
-
-###Infralineaire5
-##FROM Infralineaire_now   WHERE  Infralineaire_now.lid_descriptionsystem_1 =  Noeud_now.id_descriptionsystem ; LIMIT 1 OFFSET 1
-profamont2;         Double;               ;                  profamont
-FE_AM_2;         Double;               ;                  CASE WHEN profamont IS NOT NULL THEN profradierouvrage - profamont ELSE NULL END
-
-###Infralineaire6
-##FROM Infralineaire_now   WHERE  Infralineaire_now.lid_descriptionsystem_1 =  Noeud_now.id_descriptionsystem ; LIMIT 1 OFFSET 2
-profamont3;         Double;               ;                  profamont
-FE_AM_3;         Double;               ;                  CASE WHEN profamont IS NOT NULL THEN profradierouvrage - profamont ELSE NULL END
-
+###Photo1
+##FROM Photo_now  INNER JOIN Tcobjetressource ON Tcobjetressource.lid_ressource = Photo_now.id_ressource WHERE Noeud_now.id_objet = Tcobjetressource.lid_objet; LIMIT 1 OFFSET 0
+fichier;         String;               ;                  numphoto
 
 ###Zonegeo
-## FROM Zonegeo_qgis WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom),ST_MakeValid(Zonegeo_qgis.geom))
-pk_zonegeo;     Int;            ;        pk_zonegeo ;  pk_zonegeo
-secteur;     String;            ;        libelle
+##FROM Zonegeo_qgis  WHERE  ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo_qgis.geom)) AND Zonegeo_qgis.type_zonegeo = 'COL'
+#nom              type               cst               valeur                    
+id_zonegeo;       Int;               ;                  id_zonegeo
+libelle;       String;               ;                  libelle
 
 ###Observation
 ##FROM Observation_now INNER JOIN Desordre_now ON Desordre_now.id_desordre = Observation_now.lid_desordre  WHERE Desordre_now.lid_descriptionsystem = Noeud_now.id_descriptionsystem
 #nom              type               cst               valeur                    
+etatgeneral;         String;             etatgeneral;             etatgeneral
+etattampon;         String;             etattampon;             etattampon
+etatechelon;         String;             etatechelon;             etatechelon
+etatregard;         String;             etatregard;             etatregard
+etatcunette;         String;             etatcunette;             etatcunette
+etatasservissement;         String;             etatasservissement;             etatasservissement
+
+hdeuxs;         String;             hdeuxs;             hdeuxs
+miseencharge;         String;             miseencharge;             miseencharge
 depots;         String;             depots;             depots
-ECPPdepuisbranchement;Int;          ;                   ECPPdepuisbranchement
-gcdegrade;Int;          ;                   gcdegrade
-infiltration;Int;          ;                   infiltration
-intrusionracine;Int;          ;                   intrusionracine
-miseencharge;Int;          ;                   miseencharge
-tamponendommage;Int;          ;                   tamponendommage
+ECPPdepuisbranchement;         String;             ECPPdepuisbranchement;             ECPPdepuisbranchement
+infiltration;         String;             infiltration;             infiltration
+intrusionracine;         String;             intrusionracine;             intrusionracine
+jugemententretien;         String;             jugemententretien;             jugemententretien
+
+evolution;         String;              ;             evolution
 
 
 
 ###geom
-geom;         Int;               ;                  ST_AsText(geom)
+#FROM Noeud AS Noeudtemp INNER JOIN Objet ON Objet.id_objet = Noeudtemp.id_objet AND Noeudtemp.pk_noeud = Noeud.pk_noeud
+geom;         Int;               ;                  ST_AsText(Noeud_now.geom)
 
 
 ###main

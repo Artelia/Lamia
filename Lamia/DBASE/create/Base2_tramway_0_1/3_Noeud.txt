@@ -1,17 +1,33 @@
-###stationPCC;           VARCHAR(255);            TEXT
+
+###typenoeud;           VARCHAR(255);            TEXT
 Station;STA
-PCC;PCC
+Local;LOC
 ###typeLigne;           VARCHAR(255);            TEXT
 Bus;BUS
 Tram;TRA
 ###numLigne;           VARCHAR(255);            TEXT
-###visiteur;           VARCHAR(255);            TEXT
-###dateVisite;         TIMESTAMP ;                  TEXT
-###typeEquipement;           VARCHAR(255);            TEXT
-BIV;                            BIV
-Abris modulaires;               ABR
-Sonorisation;                   SON
-Cameras zones de manoeuvre;     CAM
+
+# ****************************************
+#                  Station
+# ****************************************
+# rien de plus
+
+# ****************************************
+#                  local
+# ****************************************
+
+###typelocal;           VARCHAR(255);            TEXT
+
+
+
+
+
+
+
+
+# ****************************************
+#                 a enlever
+# ****************************************
 
 
 
