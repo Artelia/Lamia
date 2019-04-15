@@ -33,7 +33,7 @@ class BaseParkingDesordreTool(BaseDesordreTool):
         self.NAME = 'Campagne de reconnaissance'
         #self.qtreewidgetfields = ['libelle']
         #self.linkedgeom = [['Desordre', 'lid_descriptionsystem']]
-        self.visualmode = []
+        self.visualmode = [1]
 
     """
     def initTool(self):

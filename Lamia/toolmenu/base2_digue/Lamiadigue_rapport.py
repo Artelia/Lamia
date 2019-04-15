@@ -93,7 +93,7 @@ class printPDFDigueWorker(printPDFBaseWorker):
                     """
 
                 elif self.atlasconfData['images'][imageitemname] == 'logo':
-                    imagefile = os.path.join(os.path.dirname(__file__), '..','..', 'DBASE', 'rapport', 'utils', 'logo.jpg')
+                    imagefile = os.path.join(os.path.dirname(__file__), '..','..', 'DBASE', 'utils', 'logo.jpg')
 
                 if imageitem is not None:
                     # print('ok',imagefile )

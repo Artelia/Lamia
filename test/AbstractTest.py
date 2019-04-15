@@ -40,9 +40,10 @@ class Test(QtCore.QObject):
         #print(qgisversion_int)
 
         if int(str(qgisversion_int)[0:3]) < 220:
-            qgis_path = "C://OSGeo4W64//apps//qgis-ltr"
+            qgis_path = "C://OSGeo4W64//apps//qgis218"
+            qgis_path = "C://Program Files//OSGeo4W64//apps//qgis-ltr"
         else:
-            qgis_path = "C://OSGeo4W64//apps//qgis"
+            qgis_path = "C://OSGeo4W64//apps//qgis-ltr"
             #os.environ["QT_QPA_PLATFORM"] = "offscreen"
 
         app = qgis.core.QgsApplication([], True)
@@ -66,6 +67,7 @@ class Test(QtCore.QObject):
 
     def createWin(self):
         self.wind = InspectiondigueWindowWidget(self.canvas)
+        self.wind.createDBase()
 
         stylesheet = """
                     QMainWindow{

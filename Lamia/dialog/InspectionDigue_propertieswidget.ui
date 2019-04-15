@@ -226,32 +226,6 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_savefeature">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>30</width>
-             <height>30</height>
-            </size>
-           </property>
-           <property name="toolTip">
-            <string>Sauvegarder un élément</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="icon">
-            <iconset>
-             <normaloff>:/plugins/Lamia/icons/save.png</normaloff>:/plugins/Lamia/icons/save.png</iconset>
-           </property>
-          </widget>
-         </item>
-         <item>
           <widget class="QPushButton" name="pushButton_deselect">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
@@ -280,6 +254,32 @@
            <property name="icon">
             <iconset>
              <normaloff>:/plugins/Lamia/icons/deselect.png</normaloff>:/plugins/Lamia/icons/deselect.png</iconset>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_savefeature">
+           <property name="minimumSize">
+            <size>
+             <width>60</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>60</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="toolTip">
+            <string>Sauvegarder un élément</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>:/plugins/Lamia/icons/save.png</normaloff>:/plugins/Lamia/icons/save.png</iconset>
            </property>
           </widget>
          </item>
@@ -503,6 +503,23 @@
           <width>24</width>
           <height>24</height>
          </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_editgeom">
+        <property name="maximumSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>:/plugins/Lamia/icons/mActionVertexTool2.svg</normaloff>:/plugins/Lamia/icons/mActionVertexTool2.svg</iconset>
         </property>
        </widget>
       </item>

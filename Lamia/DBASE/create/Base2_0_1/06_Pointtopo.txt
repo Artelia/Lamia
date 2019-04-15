@@ -23,5 +23,6 @@ Type1;TP1
 ###dy;                NUMERIC;            REAL
 ###dz;                NUMERIC;            REAL
 ###hauteurperche;                NUMERIC;            REAL
+###valeur;                NUMERIC;            REAL
 
 ###geom;                POINT

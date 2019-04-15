@@ -1,0 +1,21 @@
+###Photo
+#nom              type               cst               valeur                    
+id_photo;         Int;                  ;               id_photo
+id_objet;         Int;                  ;               id_objet
+
+
+#nom              type               cst               valeur                    
+id_ressource;         Int;                  ;               id_ressource
+source;         String;                  ;               'Artelia'
+datephoto;         String;                  ;               datetimeressource
+fichier;         String;                  ;               file
+descriptio;         String;                  ;               description
+
+
+
+###geom
+geom;         Int;               ;                  ST_AsText(geom)
+
+
+###main
+FROM Photo_now

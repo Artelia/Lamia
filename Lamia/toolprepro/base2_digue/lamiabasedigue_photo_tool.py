@@ -64,6 +64,8 @@ class BaseDiguePhotoTool(BasePhotoTool):
                 self.userwdgfield.pushButton_eau.clicked.connect(self.setDefaultPhoto)
                 self.userwdgfield.pushButton_crete.clicked.connect(self.setDefaultPhoto)
                 self.userwdgfield.pushButton_terre.clicked.connect(self.setDefaultPhoto)
+                self.userwdgfield.pushButton_defaultphoto.clicked.connect(self.setDefaultPhoto)
+
 
 
     def changeNumPhoto(self):

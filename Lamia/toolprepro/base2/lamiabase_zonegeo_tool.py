@@ -67,9 +67,9 @@ class BaseZonegeoTool(AbstractLamiaTool):
             # rem : il sera affiné le select avec le champ datetimecreation trouvé dans la requete
             # il faut que zone geo soit présent dans la requete
             self.stats = [['Infralineaire lineaire',
-                           ''' SELECT SUM(ST_Length(ST_MakeValid(Infralineaire_qgis.geom))) 
-                                FROM Infralineaire_qgis, Zonegeo 
-                                WHERE ST_WITHIN(ST_MakeValid(Infralineaire_qgis.geom), ST_MakeValid(Zonegeo.geom)) ''']
+                           ''' SELECT SUM(ST_Length(ST_MakeValid(Infralineaire_now.geom))) 
+                                FROM Infralineaire_now, Zonegeo 
+                                WHERE ST_WITHIN(ST_MakeValid(Infralineaire_now.geom), ST_MakeValid(Zonegeo.geom)) ''']
                            ]
 
             self.userwdgfield.tableWidget_stats.setRowCount(0)
@@ -93,16 +93,18 @@ class BaseZonegeoTool(AbstractLamiaTool):
 
     def postInitFeatureProperties(self, feat):
 
-        if feat is not None:
-
+        if feat is not None and not hasattr(self,'TOOLNAME'):
             #stat fill
             for i, stat in enumerate(self.stats) :
 
                 featpk = self.currentFeaturePK
                 sql = stat[1]
                 if sql != '':
-                    sql += ' AND Zonegeo.pk_zonegeo = ' + str(featpk) + ' AND '
-                    sql += self.dbase.dateVersionConstraintSQL()
+                    if False:
+                        sql += ' AND Zonegeo.pk_zonegeo = ' + str(featpk) + ' AND '
+                        sql += self.dbase.dateVersionConstraintSQL()
+                    sql += ' AND Zonegeo.pk_zonegeo = ' + str(featpk)
+                    sql = self.dbase.updateQueryTableNow(sql)
                     """
                     sql += ' AND  Objet.datetimecreation <= ' + "'" + self.dbase.workingdate + "'"
                     if self.dbase.dbasetype == 'postgis':

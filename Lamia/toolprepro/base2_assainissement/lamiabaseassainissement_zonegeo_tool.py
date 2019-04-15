@@ -47,129 +47,110 @@ class BaseAssainissementZonegeoTool(BaseZonegeoTool):
                                                         }}}
 
 
-            self.stats = [['EU - lineaire gravitaire', ''' SELECT SUM(ST_Length(ST_MakeValid(Infralineaire.geom))) 
-                                            FROM Infralineaire, Zonegeo 
-                                            INNER JOIN Objet ON Objet.id_objet = Infralineaire.id_objet 
-                                            WHERE ST_WITHIN(ST_MakeValid(Infralineaire.geom), ST_MakeValid(Zonegeo.geom))
-                                             AND Infralineaire.typeReseau = 'USE' AND Infralineaire.modeCirculation = 1 
+            self.stats = [['EU - lineaire gravitaire', ''' SELECT SUM(ST_Length(ST_MakeValid(Infralineaire_now.geom))) 
+                                            FROM Infralineaire_now, Zonegeo 
+                                            WHERE ST_WITHIN(ST_MakeValid(Infralineaire_now.geom), ST_MakeValid(Zonegeo.geom))
+                                             AND Infralineaire_now.typeReseau = 'USE' AND Infralineaire_now.modeCirculation = 1 
                                              AND branchement = 0 '''],
 
-                          ['EU - lineaire refoulement', ''' SELECT SUM(ST_Length(ST_MakeValid(Infralineaire.geom))) 
-                                                        FROM Infralineaire, Zonegeo 
-                                                        INNER JOIN Objet ON Objet.id_objet = Infralineaire.id_objet 
-                                                        WHERE ST_WITHIN(ST_MakeValid(Infralineaire.geom), ST_MakeValid(Zonegeo.geom))
-                                                         AND Infralineaire.typeReseau = 'USE' AND Infralineaire.modeCirculation = 2 
+                          ['EU - lineaire refoulement', ''' SELECT SUM(ST_Length(ST_MakeValid(Infralineaire_now.geom))) 
+                                                        FROM Infralineaire_now, Zonegeo 
+                                                        WHERE ST_WITHIN(ST_MakeValid(Infralineaire_now.geom), ST_MakeValid(Zonegeo.geom))
+                                                         AND Infralineaire_now.typeReseau = 'USE' AND Infralineaire_now.modeCirculation = 2 
                                                          AND branchement = 0  '''],
 
                           ['EU - regards ', ''' SELECT COUNT(*) 
-                                                                FROM Noeud, Zonegeo 
-                                                                INNER JOIN Objet ON Objet.id_objet = Noeud.id_objet 
-                                                                WHERE ST_WITHIN(ST_MakeValid(Noeud.geom), ST_MakeValid(Zonegeo.geom))
-                                                                 AND Noeud.typeOuvrageAss = '60' AND Noeud.typeReseau = 'USE' '''],
+                                                                FROM Noeud_now, Zonegeo 
+                                                                WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
+                                                                 AND Noeud_now.typeOuvrageAss = '60' AND Noeud_now.typeReseau = 'USE' '''],
 
                           ['EU - branchements ', ''' SELECT COUNT(*) 
-                                                  FROM Noeud, Zonegeo 
-                                                  INNER JOIN Objet ON Objet.id_objet = Noeud.id_objet 
-                                                  WHERE ST_WITHIN(ST_MakeValid(Noeud.geom), ST_MakeValid(Zonegeo.geom))
-                                                   AND Noeud.typeOuvrageAss = '61'  AND Noeud.typeReseau = 'USE'  '''],
+                                                  FROM Noeud_now, Zonegeo 
+                                                  WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
+                                                   AND Noeud_now.typeOuvrageAss = '61'  AND Noeud_now.typeReseau = 'USE'  '''],
 
                           ['EU - Postes de refoulement ', ''' SELECT COUNT(*) 
-                                              FROM Noeud, Zonegeo 
-                                              INNER JOIN Objet ON Objet.id_objet = Noeud.id_objet 
-                                              WHERE ST_WITHIN(ST_MakeValid(Noeud.geom), ST_MakeValid(Zonegeo.geom))
-                                               AND Noeud.typeOuvrageAss = '10'  AND Noeud.typeReseau = 'USE'   '''],
+                                              FROM Noeud_now, Zonegeo 
+                                              WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
+                                               AND Noeud_now.typeOuvrageAss = '10'  AND Noeud_now.typeReseau = 'USE'   '''],
 
 
                           ['EU - Deversoirs d orage ', ''' SELECT COUNT(*) 
-                                                            FROM Noeud, Zonegeo 
-                                                            INNER JOIN Objet ON Objet.id_objet = Noeud.id_objet 
-                                                            WHERE ST_WITHIN(ST_MakeValid(Noeud.geom), ST_MakeValid(Zonegeo.geom))
-                                                             AND Noeud.typeOuvrageAss = '40'  AND Noeud.typeReseau = 'USE'  '''],
+                                                            FROM Noeud_now, Zonegeo 
+                                                            WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
+                                                             AND Noeud_now.typeOuvrageAss = '40'  AND Noeud_now.typeReseau = 'USE'  '''],
 
                           ['EU - STEP ', ''' SELECT COUNT(*) 
-                                                                FROM Noeud, Zonegeo 
-                                                                INNER JOIN Objet ON Objet.id_objet = Noeud.id_objet 
-                                                                WHERE ST_WITHIN(ST_MakeValid(Noeud.geom), ST_MakeValid(Zonegeo.geom))
-                                                                 AND Noeud.typeOuvrageAss = '20' '''],
+                                                                FROM Noeud_now, Zonegeo 
+                                                                WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
+                                                                 AND Noeud_now.typeOuvrageAss = '20' '''],
 
-                          ['EP - lineaire collecteurs', ''' SELECT SUM(ST_Length(ST_MakeValid(Infralineaire.geom))) 
-                                            FROM Infralineaire, Zonegeo 
-                                            INNER JOIN Objet ON Objet.id_objet = Infralineaire.id_objet 
-                                            WHERE ST_WITHIN(ST_MakeValid(Infralineaire.geom), ST_MakeValid(Zonegeo.geom))
-                                             AND Infralineaire.typeReseau = 'PLU' AND branchement = 0  
-                                             AND Infralineaire.formecanalisation IN ('CIR', 'AQU', 'OVO') '''],
+                          ['EP - lineaire collecteurs', ''' SELECT SUM(ST_Length(ST_MakeValid(Infralineaire_now.geom))) 
+                                            FROM Infralineaire_now, Zonegeo 
+                                            WHERE ST_WITHIN(ST_MakeValid(Infralineaire_now.geom), ST_MakeValid(Zonegeo.geom))
+                                             AND Infralineaire_now.typeReseau = 'PLU' AND branchement = 0  
+                                             AND Infralineaire_now.formecanalisation IN ('CIR', 'AQU', 'OVO') '''],
 
-                          ['EP - lineaire fosses-caniveaux', ''' SELECT SUM(ST_Length(ST_MakeValid(Infralineaire.geom))) 
-                                                                  FROM Infralineaire, Zonegeo 
-                                                                  INNER JOIN Objet ON Objet.id_objet = Infralineaire.id_objet 
-                                                                  WHERE ST_WITHIN(ST_MakeValid(Infralineaire.geom), ST_MakeValid(Zonegeo.geom))
-                                                                   AND Infralineaire.typeReseau = 'PLU' AND branchement = 0  
-                                                                   AND Infralineaire.formecanalisation IN ('FOS', 'FOB') '''],
+                          ['EP - lineaire fosses-caniveaux', ''' SELECT SUM(ST_Length(ST_MakeValid(Infralineaire_now.geom))) 
+                                                                  FROM Infralineaire_now, Zonegeo 
+                                                                  WHERE ST_WITHIN(ST_MakeValid(Infralineaire_now.geom), ST_MakeValid(Zonegeo.geom))
+                                                                   AND Infralineaire_now.typeReseau = 'PLU' AND branchement = 0  
+                                                                   AND Infralineaire_now.formecanalisation IN ('FOS', 'FOB') '''],
 
 
                           ['EP - regards ', ''' SELECT COUNT(*) 
-                                                  FROM Noeud, Zonegeo 
-                                                  INNER JOIN Objet ON Objet.id_objet = Noeud.id_objet 
-                                                  WHERE ST_WITHIN(ST_MakeValid(Noeud.geom), ST_MakeValid(Zonegeo.geom))
-                                                   AND Noeud.typeOuvrageAss = '60'  AND Noeud.typeReseau = 'PLU'  '''],
+                                                  FROM Noeud_now, Zonegeo 
+                                                  WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
+                                                   AND Noeud_now.typeOuvrageAss = '60'  AND Noeud_now.typeReseau = 'PLU'  '''],
 
                           ['EP - branchements ', ''' SELECT COUNT(*) 
-                                                    FROM Noeud, Zonegeo 
-                                                    INNER JOIN Objet ON Objet.id_objet = Noeud.id_objet 
-                                                    WHERE ST_WITHIN(ST_MakeValid(Noeud.geom), ST_MakeValid(Zonegeo.geom))
-                                                     AND Noeud.typeOuvrageAss = '61'  AND Noeud.typeReseau = 'PLU'  '''],
+                                                    FROM Noeud_now, Zonegeo 
+                                                    WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
+                                                     AND Noeud_now.typeOuvrageAss = '61'  AND Noeud_now.typeReseau = 'PLU'  '''],
 
                           ['EP - grilles - avaloirs ', ''' SELECT COUNT(*) 
-                                                            FROM Noeud, Zonegeo 
-                                                            INNER JOIN Objet ON Objet.id_objet = Noeud.id_objet 
-                                                            WHERE ST_WITHIN(ST_MakeValid(Noeud.geom), ST_MakeValid(Zonegeo.geom))
-                                                             AND Noeud.typeOuvrageAss IN ('70','71','72')  AND Noeud.typeReseau = 'PLU'  '''],
+                                                            FROM Noeud_now, Zonegeo 
+                                                            WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
+                                                             AND Noeud_now.typeOuvrageAss IN ('70','71','72')  AND Noeud_now.typeReseau = 'PLU'  '''],
 
 
-                          ['UN - lineaire gravitaire', ''' SELECT SUM(ST_Length(ST_MakeValid(Infralineaire.geom))) 
-                                              FROM Infralineaire, Zonegeo 
-                                              INNER JOIN Objet ON Objet.id_objet = Infralineaire.id_objet 
-                                              WHERE ST_WITHIN(ST_MakeValid(Infralineaire.geom), ST_MakeValid(Zonegeo.geom))
-                                               AND Infralineaire.typeReseau = 'UNI' AND Infralineaire.modeCirculation = 1 
+                          ['UN - lineaire gravitaire', ''' SELECT SUM(ST_Length(ST_MakeValid(Infralineaire_now.geom))) 
+                                              FROM Infralineaire_now, Zonegeo 
+                                              WHERE ST_WITHIN(ST_MakeValid(Infralineaire_now.geom), ST_MakeValid(Zonegeo.geom))
+                                               AND Infralineaire_now.typeReseau = 'UNI' AND Infralineaire_now.modeCirculation = 1 
                                                AND branchement = 0  '''],
 
-                          ['UN - lineaire refoulement', ''' SELECT SUM(ST_Length(ST_MakeValid(Infralineaire.geom))) 
-                                                            FROM Infralineaire, Zonegeo 
-                                                            INNER JOIN Objet ON Objet.id_objet = Infralineaire.id_objet 
-                                                            WHERE ST_WITHIN(ST_MakeValid(Infralineaire.geom), ST_MakeValid(Zonegeo.geom))
-                                                             AND Infralineaire.typeReseau = 'UNI' AND Infralineaire.modeCirculation = 2 
+                          ['UN - lineaire refoulement', ''' SELECT SUM(ST_Length(ST_MakeValid(Infralineaire_now.geom))) 
+                                                            FROM Infralineaire_now, Zonegeo 
+                                                            WHERE ST_WITHIN(ST_MakeValid(Infralineaire_now.geom), ST_MakeValid(Zonegeo.geom))
+                                                             AND Infralineaire_now.typeReseau = 'UNI' AND Infralineaire_now.modeCirculation = 2 
                                                              AND branchement = 0  '''],
 
                           ['UN - regards ', ''' SELECT COUNT(*) 
-                                                FROM Noeud, Zonegeo 
-                                                INNER JOIN Objet ON Objet.id_objet = Noeud.id_objet 
-                                                WHERE ST_WITHIN(ST_MakeValid(Noeud.geom), ST_MakeValid(Zonegeo.geom))
-                                                 AND Noeud.typeOuvrageAss = '60'  AND Noeud.typeReseau = 'UNI'  '''],
+                                                FROM Noeud_now, Zonegeo 
+                                                WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
+                                                 AND Noeud_now.typeOuvrageAss = '60'  AND Noeud_now.typeReseau = 'UNI'  '''],
 
                           ['regards mixtes', ''' SELECT COUNT(*) /2 
-                                  FROM Noeud, Zonegeo 
-                                  INNER JOIN Objet ON Objet.id_objet = Noeud.id_objet 
-                                  WHERE ST_WITHIN(ST_MakeValid(Noeud.geom), ST_MakeValid(Zonegeo.geom))
-                                   AND Noeud.typeOuvrageAss = '62'   '''],
+                                  FROM Noeud_now, Zonegeo 
+                                  WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
+                                   AND Noeud_now.typeOuvrageAss = '62'   '''],
 
 
                           ['UN - branchements ', ''' SELECT COUNT(*) 
-                                                    FROM Noeud, Zonegeo 
-                                                    INNER JOIN Objet ON Objet.id_objet = Noeud.id_objet 
-                                                    WHERE ST_WITHIN(ST_MakeValid(Noeud.geom), ST_MakeValid(Zonegeo.geom))
-                                                     AND Noeud.typeOuvrageAss = '61'  AND Noeud.typeReseau = 'UNI'  '''],
+                                                    FROM Noeud_now, Zonegeo 
+                                                    WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
+                                                     AND Noeud_now.typeOuvrageAss = '61'  AND Noeud_now.typeReseau = 'UNI'  '''],
 
                           ['UN - Postes de refoulement ', ''' SELECT COUNT(*) 
-                                                            FROM Noeud, Zonegeo 
-                                                            INNER JOIN Objet ON Objet.id_objet = Noeud.id_objet 
-                                                            WHERE ST_WITHIN(ST_MakeValid(Noeud.geom), ST_MakeValid(Zonegeo.geom))
-                                                             AND Noeud.typeOuvrageAss = '10'  AND Noeud.typeReseau = 'UNI'   '''],
+                                                            FROM Noeud_now, Zonegeo 
+                                                            WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
+                                                             AND Noeud_now.typeOuvrageAss = '10'  AND Noeud_now.typeReseau = 'UNI'   '''],
 
                           ['UN - Deversoirs d orage ', ''' SELECT COUNT(*) 
-                                                              FROM Noeud, Zonegeo 
-                                                              INNER JOIN Objet ON Objet.id_objet = Noeud.id_objet 
-                                                              WHERE ST_WITHIN(ST_MakeValid(Noeud.geom), ST_MakeValid(Zonegeo.geom))
-                                                               AND Noeud.typeOuvrageAss = '40'  AND Noeud.typeReseau = 'UNI'  '''],
+                                                              FROM Noeud_now, Zonegeo 
+                                                              WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
+                                                               AND Noeud_now.typeOuvrageAss = '40'  AND Noeud_now.typeReseau = 'UNI'  '''],
 
                           ]
 

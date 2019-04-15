@@ -1,0 +1,126 @@
+﻿###diametre;               REAL;           DECIMAL
+###profondeur_generatrice;                 REAL;            DECIMAL
+###domaine;                VARCHAR(255);            TEXT
+/;
+Public;PUB
+Privé;PRI
+###branchement;        INT;            INTEGER
+Non;               0
+Oui;               1
+###protection_catodique;         INT;            INTEGER
+Oui;               1
+Non;               0
+Indéterminé;       2
+
+###mode_circulation;                VARCHAR(255);            TEXT
+/;
+Indéterminé;        IND
+Gravitaire;         GRA
+Forcé;              FOR
+Sous-vide;          VID
+Autre;              AUT
+###type_eau;                VARCHAR(255);            TEXT
+Eau potable;            POT
+/;
+Indeterminee;           IND
+Eau brute;              BRU
+Autre;                  AUT
+###fonction_cana;                VARCHAR(255);            TEXT
+/;
+Indeterminee;           IND
+Transport;              TRA
+Distribution;           DIS
+Autre;                  AUT
+
+
+###valeur_neuf;                REAL;            DECIMAL
+###nombre_compteurs;                    INT;            INTEGER
+###nb_branche;               INT;           INTEGER
+
+
+###materiau;                VARCHAR(255);            TEXT
+##branchement
+/;                                  ;[0,1]
+Indetermine;            IND         ;[0]
+Acier;                  ACI         ;[0]
+Amiante-ciment;         AMC         ;[0]
+Béton âme tôle;         BET         ;[0]
+Béton armé;             BEA         ;[0]
+Béton fibré;            BEF         ;[0]
+Béton non armé;         BEN         ;[0]
+Cuivre;                 CUI         ;[0]
+Fibre ciment;           FIC         ;[0]
+Fibre de verre;         FIV         ;[0]
+Fibrociment;            FIB         ;[0]
+Fonte ductile;          FOD         ;[0]
+Fonte grise;            FOG         ;[0]
+Gres;                   GRE         ;[0]
+Maconnerie;             MAC         ;[0]
+Meuliere;               MEU         ;[0]
+PEBD;                   PEB         ;[0]
+PEHD annelé;            PEH         ;[0]
+PP lisse;               PPL         ;[0]
+PRV A;                  PRA         ;[0]
+PRV B;                  PRB         ;[0]
+PVC ancien;             PVA         ;[0,1]
+PVC BO;                 PVB         ;[0,1]
+PVC U annelé;           PVU         ;[0,1]
+PVC U lisse;            PCU         ;[0,1]
+Tôle galvanisée;        TAG         ;[0]
+Autre;                  AUT         ;[0]
+Plomb;                     PLO       ;[1]
+Fer;                     FER      ;[1]
+Polyéthylène;             POL     ;[1]
+Afcodur;                 AFC     ;[1]
+PE anti-contaminant;     PAC     ;[1]
+PB revêtu;                 PBR     ;[1]
+
+###nature_bran;                  VARCHAR(255);            TEXT
+Plomb;                     PLO
+Fer;                     FER
+PVC;                     PVC
+Polyéthylène;             POL
+Afcodur;                 AFC
+PE anti-contaminant;     PAC
+PB revêtu;                 PBR
+
+###joint;                  VARCHAR(255);            TEXT
+/;
+Coulé au plomb;         COP
+Soudé;                  SOU
+Collé;                  COL
+Verrouillé;             VER
+Mécanique;              MEC
+Automatique;            AUT
+Inconnu;                INC
+###pression_min;               REAL;           DECIMAL
+###pression_max;               REAL;           DECIMAL
+
+
+
+###precision_diam;                  VARCHAR(255);            TEXT
+/;
+A;A
+B;B
+C;C
+NC;NC
+###precision_mat;                  VARCHAR(255);            TEXT
+/;
+A;A
+B;B
+C;C
+NC;NC
+###cla_press;                  VARCHAR(255);            TEXT
+/;  
+PN8     ;    PN8  
+PN10    ;    PN10
+PN12.5  ;    PN12
+PN16    ;    PN16
+PN24    ;    PN24
+PN25      ;  PN25  
+
+
+
+
+
+

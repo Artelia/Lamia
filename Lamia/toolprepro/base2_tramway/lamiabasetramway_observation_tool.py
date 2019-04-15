@@ -80,7 +80,7 @@ class BaseTramwayObservationTool(BaseObservationTool):
                                                           'eqp_fissurationgrille': self.userwdgfield.comboBox_eqp_fissurationgrille,
                                                           'eqp_caniveaubouche': self.userwdgfield.comboBox_eqp_caniveaubouche,
                                                           'eqp_desaffleurement': self.userwdgfield.comboBox_eqp_desaffleurement,
-                                                          'eqp_absenceass': self.userwdgfield.comboBox_rev_pollution,
+                                                          'eqp_absenceass': self.userwdgfield.comboBox_eqp_absenceass,
 
                                                           'etatEquipement': self.userwdgfield.comboBox_etatequip,
 

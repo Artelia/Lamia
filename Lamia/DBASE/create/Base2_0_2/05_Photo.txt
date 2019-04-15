@@ -1,0 +1,19 @@
+#DJAN  SELECT Photo.*, Ressource.*, Objet.*  FROM Photo INNER JOIN Ressource ON Photo.lpk_ressource = Ressource.pk_ressource INNER JOIN Objet ON Ressource.lpk_objet = Objet.pk_objet WHERE Objet.lpk_revision_end IS NULL  AND Objet.datetimedestruction IS NULL
+#QGIS SELECT Photo.*, Ressource.*, Objet.*   FROM Photo INNER JOIN Ressource ON Photo.lpk_ressource = Ressource.pk_ressource INNER JOIN Objet ON Ressource.lpk_objet = Objet.pk_objet
+
+#SHOW YES
+#SCAL 10000
+
+# Nom_champ              TypePostGis                 TypeSpatialite                               Option
+###pk_photo;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_photo;               INT ;                     INTEGER
+###lpk_ressource;        INT ;                       INTEGER                                        ;Ressource(pk_ressource)
+###numphoto;             INT ;                     INTEGER
+
+###typephoto;                VARCHAR(255);            TEXT
+Photo;PHO
+Croquis;CRO
+Video;VID
+
+
+###geom;                POINT

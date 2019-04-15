@@ -125,6 +125,9 @@ class BaseTramwayEquipementTool(BaseEquipementTool):
 
 
     def postInitFeatureProperties(self, feat):
+
+        self.userwdgfield.comboBox_cat.currentIndexChanged.emit(-1)
+
         if self.parentWidget is not None and self.parentWidget.currentFeaturePK is not None:
             if self.parentWidget.dbasetablename == 'Noeud':
                 parentcat = self.parentWidget.userwdgfield.comboBox_typenoeud.currentText()

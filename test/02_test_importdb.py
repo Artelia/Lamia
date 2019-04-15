@@ -19,13 +19,20 @@ class TestMain(Test):
         self.createWin()
         # spatialite postgis
         typedb = 'spatialite'
-        testcherche = 'importnouvelle'
+
+
+        # export  importnouvelle
+        testcherche = 'importterrain'
 
         if typedb == "spatialite":
             pathexport = os.path.join(os.path.dirname(__file__), '02_test_importdb', 'test01', '01_original',
                                       'test01.sqlite')
-            pathimportterrain = os.path.join(os.path.dirname(__file__), '02_test_importdb', 'test01',
-                                             '03_fusion_modif_terrain', 'test01.sqlite')
+            pathexport = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//BD_totale_ind6.sqlite"
+
+
+            #pathimportterrain = os.path.join(os.path.dirname(__file__), '02_test_importdb', 'test01','03_fusion_modif_terrain', 'test01.sqlite')
+
+            pathimportterrain = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees_ind1//BD_totale_ind6.sqlite"
 
 
 
@@ -34,13 +41,12 @@ class TestMain(Test):
                 self.wind.dbase.loadQgisVectorLayers(pathexport)
 
             elif testcherche == 'importterrain':
-
-                pathmodif = os.path.join(os.path.dirname(__file__), '02_test_importdb', 'test01', '02_modif',
-                                         'test01.sqlite')
-
-                dirtodelete = os.path.dirname(pathimportterrain)
-                shutil.rmtree(dirtodelete, ignore_errors=True)
-                shutil.copytree(os.path.dirname(pathmodif), dirtodelete)
+                pass
+                if False:
+                    pathmodif = os.path.join(os.path.dirname(__file__), '02_test_importdb', 'test01', '02_modif','test01.sqlite')
+                    dirtodelete = os.path.dirname(pathimportterrain)
+                    shutil.rmtree(dirtodelete, ignore_errors=True)
+                    shutil.copytree(os.path.dirname(pathmodif), dirtodelete)
 
                 self.wind.dbase.loadQgisVectorLayers(pathimportterrain)
 
@@ -71,11 +77,13 @@ class TestMain(Test):
 
         if testcherche == 'export':
             pathtoexport = os.path.join(os.path.dirname(__file__), '02_test_importdb', 'test01', '02_terrain','test01_terrain.sqlite')
+            pathtoexport = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//20190321_exportterrain//export01.sqlite"
             self.wind.dbase.exportDbase(pathtoexport)
-            pathmodif = os.path.join(os.path.dirname(__file__), '02_test_importdb', 'test01', '02_modif','test01_modif.sqlite')
-            dirtodelete = os.path.dirname(pathmodif)
-            shutil.rmtree(dirtodelete, ignore_errors=True)
-            shutil.copytree(os.path.dirname(pathexport), dirtodelete)
+            if False:
+                pathmodif = os.path.join(os.path.dirname(__file__), '02_test_importdb', 'test01', '02_modif','test01_modif.sqlite')
+                dirtodelete = os.path.dirname(pathmodif)
+                shutil.rmtree(dirtodelete, ignore_errors=True)
+                shutil.copytree(os.path.dirname(pathexport), dirtodelete)
             print('finisehd')
 
         elif testcherche == 'exporttotal':
@@ -85,7 +93,12 @@ class TestMain(Test):
             print('finisehd')
 
         elif testcherche == 'importterrain':
-            pathterrain = os.path.join(os.path.dirname(__file__), '02_test_importdb', 'test01', '02_terrain', 'test01_terrain.sqlite')
+
+            # pathterrain = os.path.join(os.path.dirname(__file__), '02_test_importdb', 'test01', '02_terrain', 'test01_terrain.sqlite')
+
+            pathterrain = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees_terrains//201903252627_Terrain_JRS//export_BD_BM_mars2019.sqlite"
+            #pathterrain = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees_terrains//201903252627_Terrain_SPS//export_BD_BM_mars2019.sqlite"
+            #pathterrain = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees_terrains//20190325_Terrain_HDA//export_BD_BM_mars2019.sqlite"
             self.wind.importDBase(slfile=pathterrain, typeimport='import_terrain')
 
         elif testcherche == 'importnouvelle':

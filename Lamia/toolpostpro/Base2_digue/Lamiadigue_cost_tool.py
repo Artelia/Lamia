@@ -33,3 +33,5 @@ class DigueCostTool(CostTool):
         super(DigueCostTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
 
         
+    def postInit(self):
+        self.pathbpu = os.path.join(os.path.dirname(__file__), 'costtool', 'bordereau.csv')

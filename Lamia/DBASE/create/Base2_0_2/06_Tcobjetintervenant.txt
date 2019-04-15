@@ -1,0 +1,17 @@
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+#DJAN  SELECT * FROM Tcobjetintervenant   WHERE lpk_revision_end IS NULL
+#QGIS SELECT * FROM Tcobjetintervenant
+###pk_tcobjetintervenant;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###lpk_revision_begin;        INT ;                   INTEGER;                              Revision(pk_revision)
+###lpk_revision_end;          INT ;                   INTEGER;                              Revision(pk_revision)
+
+###lid_intervenant;       INT;            INTEGER
+###lid_objet;       INT;            INTEGER
+###fonction;                VARCHAR(255);            TEXT
+/;
+Maitre d ouvrage;MOA
+Maitre d oeuvre;MOE
+Gestionnaire;GES
+Proprietaire;PRO
+Prestataire;PRE
+Sous traitant;STT

@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/plugins/Lamia" >
         <file>icons/icon.png</file>
+        <file>icons/icon_petit.png</file>
         <file>icons/profil_digue.png</file>
         <file>icons/Add_48x48.png</file>
         <file>icons/Delete_48x48.png</file>
@@ -16,11 +17,14 @@
         <file>icons/mActionCapturePolygon.svg</file>
         <file>icons/mActionAddNodesItem1.svg</file>
         <file>icons/mActionAddNodesItemGPS.svg</file>
+        <file>icons/mActionVertexTool2.svg</file>
         <file>icons/numpad.png</file>
         <file>icons/link.svg</file>
         <file>icons/main.png</file>
         <file>icons/eye2.svg</file>
         <file>icons/Calendar_icon.png</file>
         <file>icons/deselect.png</file>
+        <file>icons/logo2.png</file>
+        <file>icons/logo3.png</file>
     </qresource>
 </RCC>

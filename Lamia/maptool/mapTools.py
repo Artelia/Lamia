@@ -71,6 +71,22 @@ import qgis.utils
 """
 
 
+class mapToolEdit(qgis.gui.QgsMapToolEdit):
+
+    def __init__(self, canvas=None, layer=None, onTrackEdited=None):
+        qgis.gui.QgsMapToolEdit.__init__(self, canvas)
+        self.onTrackEdited = onTrackEdited
+        self.dragging      = False
+        self.feature       = None
+        self.vertex        = None
+        #self.setLayer(layer)
+        self.setCursor(QtCore.Qt.CrossCursor)
+
+
+
+
+
+
 class mapToolCapture(qgis.gui.QgsMapToolCapture):
     stopCapture = QtCore.pyqtSignal(list)
 

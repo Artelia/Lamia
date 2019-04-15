@@ -1,0 +1,36 @@
+###atlaslayersql
+WITH Gestionnaire AS (SELECT Intervenant.societe, Intervenant.nom  , Tcobjetintervenant.lid_objet 
+                 FROM Tcobjetintervenant  
+                 INNER JOIN Intervenant ON Tcobjetintervenant.lid_intervenant = Intervenant.id_intervenant  
+                 WHERE Tcobjetintervenant.fonction = 'GES' )
+SELECT Infralineaire_now.* , Gestionnaire.societe, Gestionnaire.nom 
+FROM Infralineaire_now 
+LEFT JOIN Gestionnaire ON Gestionnaire.lid_objet = Infralineaire_now.id_objet
+WHERE Infralineaire_now.id_infralineaire = Infralineaire_now.id_infralineaire
+###atlaslayerid
+id_infralineaire
+###spatial
+True
+###ordering
+autopath
+###atlaslayerstyle
+Infralineaire_atlas.qml
+###atlasdrivemap
+#itemname;   minscale;   typescale;      layers
+map1;       2500;       Predefined      ;['atlaslayer', 'Equipement', 'scan25']
+#map1;       2500;       Predefined      ;[]
+###generalmap
+#itemname;   minscale;   typescale; layers
+map0    ;           ;             ; ['Infralineaire', 'ortho']
+#map0    ;           ;             ; []
+###images
+#itemname   ; type
+photo;Infralineaire_now.ressource2
+logo;logo
+#graph;profile
+profiltravers;profiltravers
+###childprint
+#confname;                linkcolumn;             optionsql
+
+
+

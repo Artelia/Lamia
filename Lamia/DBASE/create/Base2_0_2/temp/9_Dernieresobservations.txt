@@ -1,0 +1,29 @@
+#SHOW YES
+#QGIS 
+#QGISSL  SELECT Observation.* , 
+#QGISSL  ST_Buffer(ST_MakeValid(geom), 0.1) as geom,
+#QGISSL  Observation.dateobservation AS datecreation,
+#QGISSL (SELECT MIN(Observationtemp.dateobservation) As datecreationtemp 
+#QGISSL         FROM Observation as Observationtemp   
+#QGISSL         WHERE Observation.lk_desordre =  Observationtemp.lk_desordre AND Observationtemp.dateobservation > Observation.dateobservation ) AS datedestruction,
+#QGISSL  MAX(Observation.id_revisionbegin, Desordre.id_revisionbegin) AS revisionbegin,
+#QGISSL  CASE WHEN MIN(Observation.id_revisionend, Desordre.id_revisionend) IS NOT NULL
+#QGISSL      THEN MIN(Observation.id_revisionend, Desordre.id_revisionend)
+#QGISSL      ELSE CASE WHEN  Observation.id_revisionend IS NOT NULL 
+#QGISSL              THEN Observation.id_revisionend
+#QGISSL              ELSE Desordre.id_revisionend END 
+#QGISSL          END AS revisionend
+#QGISSL  FROM Observation
+#QGISSL INNER JOIN Desordre ON Observation.lk_desordre = Desordre.id_desordre  
+#QGISSL  AND CASE WHEN Observation.id_revisionend IS NOT NULL 
+#QGISSL          THEN CASE WHEN Desordre.id_revisionend IS NOT NULL 
+#QGISSL                      THEN Desordre.id_revisionbegin < Observation.id_revisionend   AND Desordre.id_revisionend > Observation.id_revisionbegin
+#QGISSL                      ELSE  Desordre.id_revisionbegin < Observation.id_revisionend   END
+#QGISSL          ELSE   CASE WHEN Desordre.id_revisionend IS NOT NULL 
+#QGISSL              THEN Desordre.id_revisionend > Observation.id_revisionbegin   
+#QGISSL              ELSE 1 END
+#QGISSL          END
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+# la creation a minima de ces champs est obligatoire si on veut creer la vue spatiale ... c comme ca
+###id_dernieresobservations;      SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###geom;                MULTIPOLYGON

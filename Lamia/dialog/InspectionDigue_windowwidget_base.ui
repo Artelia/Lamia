@@ -6,12 +6,18 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>641</width>
-    <height>649</height>
+    <width>405</width>
+    <height>404</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
+  </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-image: url(logo2.png)</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout" stretch="0">
@@ -175,6 +181,17 @@
                    <height>16777215</height>
                   </size>
                  </property>
+                 <property name="autoFillBackground">
+                  <bool>false</bool>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-image: url(:/plugins/Lamia/icons/logo3.png);
+background-repeat: repeat-no;
+background-position: center center;
+background-color: rgb(255, 255, 255);
+
+</string>
+                 </property>
                  <property name="iconSize">
                   <size>
                    <width>32</width>
@@ -286,6 +303,18 @@
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
+                 <property name="layoutDirection">
+                  <enum>Qt::LeftToRight</enum>
+                 </property>
+                 <property name="autoFillBackground">
+                  <bool>true</bool>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-image: url(:/plugins/Lamia/icons/icon_petit.png);
+background-repeat: repeat-no;
+background-position: center center;
+background-color: rgb(255, 255, 255);</string>
+                 </property>
                  <property name="iconSize">
                   <size>
                    <width>64</width>
@@ -318,6 +347,9 @@
           </layout>
          </widget>
          <widget class="QStackedWidget" name="stackedWidget_main">
+          <property name="styleSheet">
+           <string notr="true">background-image: url(:/plugins/Lamia/icons/logo2.png);</string>
+          </property>
           <property name="currentIndex">
            <number>0</number>
           </property>
@@ -450,7 +482,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>641</width>
+     <width>405</width>
      <height>21</height>
     </rect>
    </property>
@@ -518,15 +550,9 @@
     <addaction name="actionAide"/>
     <addaction name="actionA_propos"/>
    </widget>
-   <widget class="QMenu" name="menuOutils">
-    <property name="title">
-     <string>Outils</string>
-    </property>
-   </widget>
    <addaction name="menuFichiers"/>
    <addaction name="menuMode"/>
    <addaction name="menuPreferences"/>
-   <addaction name="menuOutils"/>
    <addaction name="menuAide"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>

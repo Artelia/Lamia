@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>579</width>
-    <height>709</height>
+    <width>422</width>
+    <height>518</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,22 +26,18 @@
       <enum>QFrame::Raised</enum>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
+      <property name="margin">
+       <number>3</number>
+      </property>
       <item row="0" column="0">
        <widget class="QLabel" name="label">
         <property name="text">
          <string>Date</string>
         </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_5">
-        <property name="text">
-         <string>Urgence</string>
+        <property name="wordWrap">
+         <bool>true</bool>
         </property>
        </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QComboBox" name="comboBox_urgence"/>
       </item>
       <item row="0" column="1">
        <widget class="QDateTimeEdit" name="dateTimeEdit">
@@ -50,16 +46,35 @@
         </property>
        </widget>
       </item>
+      <item row="0" column="2">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>Urgence</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QComboBox" name="comboBox_urgence"/>
+      </item>
      </layout>
     </widget>
    </item>
    <item>
     <widget class="QStackedWidget" name="stackedWidget">
      <property name="currentIndex">
-      <number>4</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="page">
       <layout class="QGridLayout" name="gridLayout" columnstretch="1,0,0">
+       <property name="margin">
+        <number>3</number>
+       </property>
+       <property name="spacing">
+        <number>3</number>
+       </property>
        <item row="1" column="0" colspan="3">
         <widget class="QStackedWidget" name="stackedWidget_2">
          <property name="currentIndex">
@@ -67,6 +82,9 @@
          </property>
          <widget class="QWidget" name="page_4">
           <layout class="QGridLayout" name="gridLayout_5">
+           <property name="margin">
+            <number>3</number>
+           </property>
            <item row="2" column="1">
             <widget class="QTextEdit" name="textEdit_evolution">
              <property name="sizePolicy">
@@ -115,10 +133,26 @@
              </property>
             </widget>
            </item>
+           <item row="3" column="1">
+            <spacer name="verticalSpacer_11">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
           </layout>
          </widget>
          <widget class="QWidget" name="page_5">
           <layout class="QVBoxLayout" name="verticalLayout_3">
+           <property name="margin">
+            <number>3</number>
+           </property>
            <item>
             <widget class="QTabWidget" name="tabWidget">
              <property name="currentIndex">
@@ -129,11 +163,37 @@
                <string>Usure des rails</string>
               </attribute>
               <layout class="QGridLayout" name="gridLayout_6">
+               <property name="margin">
+                <number>3</number>
+               </property>
+               <item row="4" column="2">
+                <widget class="QLabel" name="label_15">
+                 <property name="text">
+                  <string>Précision rechargement</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="3">
+                <widget class="QLineEdit" name="lineEdit_precisionfatigue"/>
+               </item>
+               <item row="1" column="2">
+                <widget class="QLabel" name="label_12">
+                 <property name="text">
+                  <string>Précision fatigue</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="3">
+                <widget class="QLineEdit" name="lineEdit_precisionrechargement"/>
+               </item>
                <item row="4" column="1">
                 <widget class="QComboBox" name="comboBox_etatrechargement"/>
-               </item>
-               <item row="2" column="1">
-                <widget class="QLineEdit" name="lineEdit_precisionfatigue"/>
                </item>
                <item row="3" column="1">
                 <widget class="QComboBox" name="comboBox_geovoie"/>
@@ -171,16 +231,6 @@
                  </property>
                 </widget>
                </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="label_12">
-                 <property name="text">
-                  <string>Précision fatigue</string>
-                 </property>
-                 <property name="wordWrap">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
                <item row="1" column="1">
                 <widget class="QComboBox" name="comboBox_presencefatigue"/>
                </item>
@@ -194,18 +244,18 @@
                  </property>
                 </widget>
                </item>
-               <item row="5" column="0">
-                <widget class="QLabel" name="label_15">
-                 <property name="text">
-                  <string>Précision rechargement</string>
+               <item row="5" column="2">
+                <spacer name="verticalSpacer_7">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
                  </property>
-                 <property name="wordWrap">
-                  <bool>true</bool>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
                  </property>
-                </widget>
-               </item>
-               <item row="5" column="1">
-                <widget class="QLineEdit" name="lineEdit_precisionrechargement"/>
+                </spacer>
                </item>
               </layout>
              </widget>
@@ -217,7 +267,7 @@
                <item row="0" column="1">
                 <widget class="QStackedWidget" name="stackedWidget_revet">
                  <property name="currentIndex">
-                  <number>3</number>
+                  <number>0</number>
                  </property>
                  <widget class="QWidget" name="modulaire">
                   <layout class="QGridLayout" name="gridLayout_8">
@@ -281,6 +331,19 @@
                    <item row="5" column="1">
                     <widget class="QComboBox" name="comboBox_rev_disparitions"/>
                    </item>
+                   <item row="6" column="0">
+                    <spacer name="verticalSpacer_8">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
                   </layout>
                  </widget>
                  <widget class="QWidget" name="nonmodulaire">
@@ -325,10 +388,26 @@
                    <item row="3" column="1">
                     <widget class="QComboBox" name="comboBox_rev_remontees"/>
                    </item>
+                   <item row="4" column="0">
+                    <spacer name="verticalSpacer_9">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
                   </layout>
                  </widget>
                  <widget class="QWidget" name="vegetalise">
                   <layout class="QGridLayout" name="gridLayout_10">
+                   <item row="3" column="1">
+                    <widget class="QComboBox" name="comboBox_rev_tonte"/>
+                   </item>
                    <item row="0" column="1">
                     <widget class="QComboBox" name="comboBox_rev_dessechement"/>
                    </item>
@@ -366,22 +445,25 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="3" column="1">
-                    <widget class="QComboBox" name="comboBox_rev_tonte"/>
+                   <item row="4" column="0">
+                    <spacer name="verticalSpacer_10">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                    </spacer>
                    </item>
                   </layout>
                  </widget>
                  <widget class="QWidget" name="ballast">
                   <layout class="QGridLayout" name="gridLayout_11">
-                   <item row="0" column="1">
-                    <widget class="QComboBox" name="comboBox_rev_tassement"/>
-                   </item>
-                   <item row="0" column="0">
-                    <widget class="QLabel" name="label_30">
-                     <property name="text">
-                      <string>Tassement</string>
-                     </property>
-                    </widget>
+                   <item row="1" column="1">
+                    <widget class="QComboBox" name="comboBox_rev_pollution"/>
                    </item>
                    <item row="1" column="0">
                     <widget class="QLabel" name="label_31">
@@ -390,8 +472,28 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="1" column="1">
-                    <widget class="QComboBox" name="comboBox_rev_pollution"/>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_30">
+                     <property name="text">
+                      <string>Tassement</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QComboBox" name="comboBox_rev_tassement"/>
+                   </item>
+                   <item row="2" column="1">
+                    <spacer name="verticalSpacer_4">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                    </spacer>
                    </item>
                   </layout>
                  </widget>
@@ -415,23 +517,13 @@
                    <string>Joint rail/eqp</string>
                   </attribute>
                   <layout class="QGridLayout" name="gridLayout_12">
-                   <item row="1" column="1">
-                    <widget class="QComboBox" name="comboBox_eqp_degarnissage"/>
-                   </item>
-                   <item row="0" column="1">
-                    <widget class="QComboBox" name="comboBox_eqp_fissurationjoint"/>
+                   <item row="2" column="1">
+                    <widget class="QComboBox" name="comboBox_eqp_absencejoint"/>
                    </item>
                    <item row="0" column="0">
                     <widget class="QLabel" name="label_32">
                      <property name="text">
                       <string>Fissurations du joint</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="0">
-                    <widget class="QLabel" name="label_33">
-                     <property name="text">
-                      <string>Dégarnissage du joint</string>
                      </property>
                     </widget>
                    </item>
@@ -442,8 +534,31 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="2" column="1">
-                    <widget class="QComboBox" name="comboBox_eqp_absencejoint"/>
+                   <item row="0" column="1">
+                    <widget class="QComboBox" name="comboBox_eqp_fissurationjoint"/>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QComboBox" name="comboBox_eqp_degarnissage"/>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="label_33">
+                     <property name="text">
+                      <string>Dégarnissage du joint</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="1">
+                    <spacer name="verticalSpacer_6">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                    </spacer>
                    </item>
                   </layout>
                  </widget>
@@ -492,6 +607,19 @@
                    <item row="3" column="1">
                     <widget class="QComboBox" name="comboBox_eqp_absenceass"/>
                    </item>
+                   <item row="4" column="1">
+                    <spacer name="verticalSpacer_5">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
                   </layout>
                  </widget>
                 </widget>
@@ -508,6 +636,9 @@
      </widget>
      <widget class="QWidget" name="page_2">
       <layout class="QGridLayout" name="gridLayout_2">
+       <property name="margin">
+        <number>3</number>
+       </property>
        <item row="0" column="0">
         <widget class="QLabel" name="label_3">
          <property name="text">
@@ -532,10 +663,13 @@
      </widget>
      <widget class="QWidget" name="page_6">
       <layout class="QVBoxLayout" name="verticalLayout_2">
+       <property name="margin">
+        <number>3</number>
+       </property>
        <item>
         <widget class="QTabWidget" name="tabWidget_3">
          <property name="currentIndex">
-          <number>2</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="tab_6">
           <attribute name="title">
@@ -547,6 +681,9 @@
              <property name="text">
               <string>Température intérieure</string>
              </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
             </widget>
            </item>
            <item row="2" column="1">
@@ -556,6 +693,9 @@
             <widget class="QLabel" name="label_39">
              <property name="text">
               <string>Aspect général extérieur</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -567,12 +707,18 @@
              <property name="text">
               <string>Température extérieure</string>
              </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
             </widget>
            </item>
            <item row="1" column="0">
             <widget class="QLabel" name="label_41">
              <property name="text">
               <string>Aspect général intérieur</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -581,6 +727,9 @@
              <property name="text">
               <string>Infiltration d'eau</string>
              </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
             </widget>
            </item>
            <item row="5" column="0">
@@ -588,12 +737,18 @@
              <property name="text">
               <string>Présence de rongeurs _ commentaires</string>
              </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
             </widget>
            </item>
            <item row="4" column="0">
             <widget class="QLabel" name="label_44">
              <property name="text">
               <string>Présence de rongeurs</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -612,6 +767,19 @@
            <item row="6" column="1" colspan="3">
             <widget class="QLineEdit" name="lineEdit_infiltration"/>
            </item>
+           <item row="7" column="1">
+            <spacer name="verticalSpacer_12">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
           </layout>
          </widget>
          <widget class="QWidget" name="tab_8">
@@ -619,29 +787,6 @@
            <string>Etat général local 2</string>
           </attribute>
           <layout class="QGridLayout" name="gridLayout_16">
-           <item row="1" column="1">
-            <widget class="QComboBox" name="comboBox_presplan"/>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_50">
-             <property name="text">
-              <string>Présence des plans du local et d'implantation des équipements  </string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_51">
-             <property name="text">
-              <string>Etat des caniveaux, faux-planchers, cheminements </string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
            <item row="0" column="0" colspan="2">
             <widget class="QGroupBox" name="groupBox_2">
              <property name="title">
@@ -700,11 +845,47 @@
              </property>
             </widget>
            </item>
+           <item row="1" column="1">
+            <widget class="QComboBox" name="comboBox_presplan"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_50">
+             <property name="text">
+              <string>Présence des plans du local et d'implantation des équipements  </string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_51">
+             <property name="text">
+              <string>Etat des caniveaux, faux-planchers, cheminements </string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
            <item row="2" column="1">
             <widget class="QComboBox" name="comboBox_etatcan"/>
            </item>
            <item row="3" column="1">
             <widget class="QComboBox" name="comboBox_etatchemins"/>
+           </item>
+           <item row="4" column="1">
+            <spacer name="verticalSpacer_13">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
            </item>
           </layout>
          </widget>
@@ -713,7 +894,7 @@
            <string>Etat général Equipements</string>
           </attribute>
           <layout class="QGridLayout" name="gridLayout_18">
-           <item row="1" column="0">
+           <item row="0" column="2">
             <widget class="QLabel" name="label_54">
              <property name="text">
               <string>Eclairage de sécurité - Opérationnel ?</string>
@@ -743,30 +924,10 @@
              </property>
             </widget>
            </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="label_56">
-             <property name="text">
-              <string>Peintures - Rayures ?</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
            <item row="4" column="0">
             <widget class="QLabel" name="label_57">
              <property name="text">
               <string>Identifications des équipements - Lisible ?</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="0">
-            <widget class="QLabel" name="label_58">
-             <property name="text">
-              <string>Etat de la barrette de terre - Correct ?</string>
              </property>
              <property name="wordWrap">
               <bool>true</bool>
@@ -793,26 +954,6 @@
              </property>
             </widget>
            </item>
-           <item row="11" column="0">
-            <widget class="QLabel" name="label_64">
-             <property name="text">
-              <string>Affichage du synoptique de l'installation - Présent et à jour ?</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="7" column="0">
-            <widget class="QLabel" name="label_60">
-             <property name="text">
-              <string>Etat des portes et des capots - Voilés ?</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
            <item row="10" column="0">
             <widget class="QLabel" name="label_63">
              <property name="text">
@@ -823,30 +964,10 @@
              </property>
             </widget>
            </item>
-           <item row="9" column="0">
-            <widget class="QLabel" name="label_62">
-             <property name="text">
-              <string>Présence des panoplies de sécurité HT et Traction  - Présentes ?</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
            <item row="12" column="0">
             <widget class="QLabel" name="label_65">
              <property name="text">
               <string>Verrouillage des équipements - opérationnel ?</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="13" column="0">
-            <widget class="QLabel" name="label_66">
-             <property name="text">
-              <string>Repérage des clés de verrouillage - Correct ?</string>
              </property>
              <property name="wordWrap">
               <bool>true</bool>
@@ -866,47 +987,107 @@
            <item row="0" column="1">
             <widget class="QComboBox" name="comboBox_eclair"/>
            </item>
-           <item row="1" column="1">
-            <widget class="QComboBox" name="comboBox_eclairsec"/>
-           </item>
            <item row="2" column="1">
             <widget class="QComboBox" name="comboBox_prisecour"/>
-           </item>
-           <item row="3" column="1">
-            <widget class="QComboBox" name="comboBox_peinture"/>
            </item>
            <item row="4" column="1">
             <widget class="QComboBox" name="comboBox_idequip"/>
            </item>
-           <item row="5" column="1">
-            <widget class="QComboBox" name="comboBox_baretteterre"/>
-           </item>
            <item row="6" column="1">
             <widget class="QComboBox" name="comboBox_appmesure"/>
-           </item>
-           <item row="7" column="1">
-            <widget class="QComboBox" name="comboBox_portesvoile"/>
            </item>
            <item row="8" column="1">
             <widget class="QComboBox" name="comboBox_porteetat"/>
            </item>
-           <item row="9" column="1">
-            <widget class="QComboBox" name="comboBox_panopsecupres"/>
-           </item>
            <item row="10" column="1">
             <widget class="QComboBox" name="comboBox_panopsecunomre"/>
-           </item>
-           <item row="11" column="1">
-            <widget class="QComboBox" name="comboBox_synopt"/>
            </item>
            <item row="12" column="1">
             <widget class="QComboBox" name="comboBox_verouillage"/>
            </item>
-           <item row="13" column="1">
-            <widget class="QComboBox" name="comboBox_verouillagecle"/>
-           </item>
            <item row="14" column="1">
             <widget class="QComboBox" name="comboBox_chemincle"/>
+           </item>
+           <item row="0" column="3">
+            <widget class="QComboBox" name="comboBox_eclairsec"/>
+           </item>
+           <item row="2" column="2">
+            <widget class="QLabel" name="label_56">
+             <property name="text">
+              <string>Peintures - Rayures ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="3">
+            <widget class="QComboBox" name="comboBox_peinture"/>
+           </item>
+           <item row="4" column="2">
+            <widget class="QLabel" name="label_58">
+             <property name="text">
+              <string>Etat de la barrette de terre - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="3">
+            <widget class="QComboBox" name="comboBox_baretteterre"/>
+           </item>
+           <item row="6" column="2">
+            <widget class="QLabel" name="label_60">
+             <property name="text">
+              <string>Etat des portes et des capots - Voilés ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="3">
+            <widget class="QComboBox" name="comboBox_portesvoile"/>
+           </item>
+           <item row="8" column="2">
+            <widget class="QLabel" name="label_62">
+             <property name="text">
+              <string>Présence des panoplies de sécurité HT et Traction  - Présentes ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="3">
+            <widget class="QComboBox" name="comboBox_panopsecupres"/>
+           </item>
+           <item row="10" column="2">
+            <widget class="QLabel" name="label_64">
+             <property name="text">
+              <string>Affichage du synoptique de l'installation - Présent et à jour ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="3">
+            <widget class="QComboBox" name="comboBox_synopt"/>
+           </item>
+           <item row="12" column="2">
+            <widget class="QLabel" name="label_66">
+             <property name="text">
+              <string>Repérage des clés de verrouillage - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="12" column="3">
+            <widget class="QComboBox" name="comboBox_verouillagecle"/>
            </item>
           </layout>
          </widget>
@@ -916,6 +1097,9 @@
      </widget>
      <widget class="QWidget" name="page_3">
       <layout class="QGridLayout" name="gridLayout_14">
+       <property name="margin">
+        <number>3</number>
+       </property>
        <item row="0" column="0">
         <widget class="QLabel" name="label_9">
          <property name="text">
@@ -943,37 +1127,20 @@
      </widget>
      <widget class="QWidget" name="page_7">
       <layout class="QVBoxLayout" name="verticalLayout_5">
+       <property name="margin">
+        <number>3</number>
+       </property>
        <item>
         <widget class="QStackedWidget" name="stackedWidget_3">
          <property name="currentIndex">
-          <number>4</number>
+          <number>3</number>
          </property>
          <widget class="QWidget" name="posteHT">
           <layout class="QGridLayout" name="gridLayout_19">
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_68">
-             <property name="text">
-              <string>Identification des cellules - Correct ?</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
            <item row="0" column="0">
             <widget class="QLabel" name="label_40">
              <property name="text">
               <string>Etat visuel des cellules  - bon ? </string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="11" column="0">
-            <widget class="QLabel" name="label_78">
-             <property name="text">
-              <string>Volets de protection aux contacts directs - Etat ?</string>
              </property>
              <property name="wordWrap">
               <bool>true</bool>
@@ -990,26 +1157,6 @@
              </property>
             </widget>
            </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="label_70">
-             <property name="text">
-              <string>Présence et état des accessoires du poste  - Correct ?</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="9" column="0">
-            <widget class="QLabel" name="label_76">
-             <property name="text">
-              <string>Pression du gaz des cellules contenant du gaz SF6  - Correct ?</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
            <item row="8" column="0">
             <widget class="QLabel" name="label_75">
              <property name="text">
@@ -1020,30 +1167,10 @@
              </property>
             </widget>
            </item>
-           <item row="7" column="0">
-            <widget class="QLabel" name="label_74">
-             <property name="text">
-              <string>Etat des câbles  - Correct ?</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
            <item row="6" column="0">
             <widget class="QLabel" name="label_73">
              <property name="text">
               <string>Etat du verrouillage et ouverture des portes des cellules sous tension  - Correct ?</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="0">
-            <widget class="QLabel" name="label_72">
-             <property name="text">
-              <string>Fonctionnement des volets d'embrochage pour disjoncteurs débrochable  - Correct ?</string>
              </property>
              <property name="wordWrap">
               <bool>true</bool>
@@ -1073,38 +1200,111 @@
            <item row="0" column="1">
             <widget class="QComboBox" name="comboBox_celvisu"/>
            </item>
-           <item row="1" column="1">
-            <widget class="QComboBox" name="comboBox_celid"/>
-           </item>
            <item row="2" column="1">
             <widget class="QComboBox" name="comboBox_foncvoyanttension"/>
-           </item>
-           <item row="3" column="1">
-            <widget class="QComboBox" name="comboBox_etataccessposte"/>
            </item>
            <item row="4" column="1">
             <widget class="QComboBox" name="comboBox_typetransfo"/>
            </item>
-           <item row="5" column="1">
-            <widget class="QComboBox" name="comboBox_embrochage"/>
-           </item>
            <item row="6" column="1">
             <widget class="QComboBox" name="comboBox_verportescel"/>
-           </item>
-           <item row="7" column="1">
-            <widget class="QComboBox" name="comboBox_etatcables"/>
            </item>
            <item row="8" column="1">
             <widget class="QComboBox" name="comboBox_etatcleserrure"/>
            </item>
-           <item row="9" column="1">
-            <widget class="QComboBox" name="comboBox_presgaz"/>
-           </item>
            <item row="10" column="1">
             <widget class="QComboBox" name="comboBox_voletsprotecpres"/>
            </item>
-           <item row="11" column="1">
+           <item row="0" column="2">
+            <widget class="QLabel" name="label_68">
+             <property name="text">
+              <string>Identification des cellules - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QComboBox" name="comboBox_celid"/>
+           </item>
+           <item row="2" column="2">
+            <widget class="QLabel" name="label_70">
+             <property name="text">
+              <string>Présence et état des accessoires du poste  - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="3">
+            <widget class="QComboBox" name="comboBox_etataccessposte"/>
+           </item>
+           <item row="4" column="2">
+            <widget class="QLabel" name="label_72">
+             <property name="text">
+              <string>Fonctionnement des volets d'embrochage pour disjoncteurs débrochable  - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="3">
+            <widget class="QComboBox" name="comboBox_embrochage"/>
+           </item>
+           <item row="6" column="2">
+            <widget class="QLabel" name="label_74">
+             <property name="text">
+              <string>Etat des câbles  - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="3">
+            <widget class="QComboBox" name="comboBox_etatcables"/>
+           </item>
+           <item row="8" column="2">
+            <widget class="QLabel" name="label_76">
+             <property name="text">
+              <string>Pression du gaz des cellules contenant du gaz SF6  - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="3">
+            <widget class="QComboBox" name="comboBox_presgaz"/>
+           </item>
+           <item row="10" column="2">
+            <widget class="QLabel" name="label_78">
+             <property name="text">
+              <string>Volets de protection aux contacts directs - Etat ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="3">
             <widget class="QComboBox" name="comboBox_voletprotectetat"/>
+           </item>
+           <item row="11" column="1">
+            <spacer name="verticalSpacer_14">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
            </item>
           </layout>
          </widget>
@@ -1123,19 +1323,6 @@
            <item row="0" column="1">
             <widget class="QComboBox" name="comboBox_etatvisueltab"/>
            </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_80">
-             <property name="text">
-              <string>Identification des équipements  - Correct ?</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QComboBox" name="comboBox_equipeid"/>
-           </item>
            <item row="2" column="0">
             <widget class="QLabel" name="label_81">
              <property name="text">
@@ -1148,19 +1335,6 @@
            </item>
            <item row="2" column="1">
             <widget class="QComboBox" name="comboBox_poussiere"/>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="label_82">
-             <property name="text">
-              <string>Etat des disjoncteurs et des sectionneurs  - Correct ?</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QComboBox" name="comboBox_etatdisjonct"/>
            </item>
            <item row="4" column="0">
             <widget class="QLabel" name="label_83">
@@ -1175,19 +1349,6 @@
            <item row="4" column="1">
             <widget class="QComboBox" name="comboBox_etatisolants"/>
            </item>
-           <item row="5" column="0">
-            <widget class="QLabel" name="label_84">
-             <property name="text">
-              <string>Présence et état des clés et serrures  - Correct ?</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="1">
-            <widget class="QComboBox" name="comboBox_presencecle"/>
-           </item>
            <item row="6" column="0">
             <widget class="QLabel" name="label_85">
              <property name="text">
@@ -1200,19 +1361,6 @@
            </item>
            <item row="6" column="1">
             <widget class="QComboBox" name="comboBox_suivivisuterre"/>
-           </item>
-           <item row="7" column="0">
-            <widget class="QLabel" name="label_86">
-             <property name="text">
-              <string>Etat des gaines de liaison BT à la partie mobile pour disjoncteur débrochables  - Correct ?</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="7" column="1">
-            <widget class="QComboBox" name="comboBox_etatgainebt"/>
            </item>
            <item row="8" column="0">
             <widget class="QLabel" name="label_87">
@@ -1227,19 +1375,6 @@
            <item row="8" column="1">
             <widget class="QComboBox" name="comboBox_fonctvoletembroch"/>
            </item>
-           <item row="9" column="0">
-            <widget class="QLabel" name="label_88">
-             <property name="text">
-              <string>volets de protection aux contacts direct  - Correct ?</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="9" column="1">
-            <widget class="QComboBox" name="comboBox_voletproteccontact"/>
-           </item>
            <item row="10" column="0">
             <widget class="QLabel" name="label_89">
              <property name="text">
@@ -1253,6 +1388,84 @@
            <item row="10" column="1">
             <widget class="QComboBox" name="comboBox_positionintervdech"/>
            </item>
+           <item row="2" column="2">
+            <widget class="QLabel" name="label_82">
+             <property name="text">
+              <string>Etat des disjoncteurs et des sectionneurs  - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QLabel" name="label_80">
+             <property name="text">
+              <string>Identification des équipements  - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="3">
+            <widget class="QComboBox" name="comboBox_etatgainebt"/>
+           </item>
+           <item row="4" column="3">
+            <widget class="QComboBox" name="comboBox_presencecle"/>
+           </item>
+           <item row="8" column="3">
+            <widget class="QComboBox" name="comboBox_voletproteccontact"/>
+           </item>
+           <item row="8" column="2">
+            <widget class="QLabel" name="label_88">
+             <property name="text">
+              <string>volets de protection aux contacts direct  - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="3">
+            <widget class="QComboBox" name="comboBox_etatdisjonct"/>
+           </item>
+           <item row="0" column="3">
+            <widget class="QComboBox" name="comboBox_equipeid"/>
+           </item>
+           <item row="4" column="2">
+            <widget class="QLabel" name="label_84">
+             <property name="text">
+              <string>Présence et état des clés et serrures  - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="2">
+            <widget class="QLabel" name="label_86">
+             <property name="text">
+              <string>Etat des gaines de liaison BT à la partie mobile pour disjoncteur débrochables  - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="1">
+            <spacer name="verticalSpacer_15">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
           </layout>
          </widget>
          <widget class="QWidget" name="traction_transfo">
@@ -1262,90 +1475,130 @@
              <property name="text">
               <string>Etat général - Correct ?</string>
              </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
             </widget>
            </item>
            <item row="0" column="1">
             <widget class="QComboBox" name="comboBox_transfoetatgen"/>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_91">
-             <property name="text">
-              <string>Plaques d'identification - Présence et état</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QComboBox" name="comboBox_transfoplaqueid"/>
            </item>
            <item row="2" column="0">
             <widget class="QLabel" name="label_92">
              <property name="text">
               <string>Verrouillage - opérationnel ?</string>
              </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
             </widget>
            </item>
            <item row="2" column="1">
             <widget class="QComboBox" name="comboBox_transfoverrou"/>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="label_93">
-             <property name="text">
-              <string>Système anti-vibration - Présence  ?</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QComboBox" name="comboBox_transfoantivib"/>
            </item>
            <item row="4" column="0">
             <widget class="QLabel" name="label_94">
              <property name="text">
               <string>Bac de rétension - Présence  ?</string>
              </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
             </widget>
            </item>
            <item row="4" column="1">
             <widget class="QComboBox" name="comboBox_transfobacret"/>
-           </item>
-           <item row="5" column="0">
-            <widget class="QLabel" name="label_95">
-             <property name="text">
-              <string>Bruit anormal - Avéré ?</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="1">
-            <widget class="QComboBox" name="comboBox_transfobruitanorm"/>
            </item>
            <item row="6" column="0">
             <widget class="QLabel" name="label_96">
              <property name="text">
               <string>fonctionnement du relais de protection - Correct ?</string>
              </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
             </widget>
            </item>
            <item row="6" column="1">
             <widget class="QComboBox" name="comboBox_transforelaisprotec"/>
-           </item>
-           <item row="7" column="0">
-            <widget class="QLabel" name="label_97">
-             <property name="text">
-              <string>Niveau d'huile du transformateur - Correct ?</string>
-             </property>
-            </widget>
-           </item>
-           <item row="7" column="1">
-            <widget class="QComboBox" name="comboBox_transfoniveauhuile"/>
            </item>
            <item row="8" column="0">
             <widget class="QLabel" name="label_98">
              <property name="text">
               <string>Etat des câbles - Correct ?</string>
              </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
             </widget>
            </item>
            <item row="8" column="1">
             <widget class="QComboBox" name="comboBox_transfoetatcable"/>
+           </item>
+           <item row="6" column="3">
+            <widget class="QComboBox" name="comboBox_transfoniveauhuile"/>
+           </item>
+           <item row="0" column="2">
+            <widget class="QLabel" name="label_91">
+             <property name="text">
+              <string>Plaques d'identification - Présence et état</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="2">
+            <widget class="QLabel" name="label_95">
+             <property name="text">
+              <string>Bruit anormal - Avéré ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="3">
+            <widget class="QComboBox" name="comboBox_transfobruitanorm"/>
+           </item>
+           <item row="2" column="3">
+            <widget class="QComboBox" name="comboBox_transfoantivib"/>
+           </item>
+           <item row="6" column="2">
+            <widget class="QLabel" name="label_97">
+             <property name="text">
+              <string>Niveau d'huile du transformateur - Correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QLabel" name="label_93">
+             <property name="text">
+              <string>Système anti-vibration - Présence  ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QComboBox" name="comboBox_transfoplaqueid"/>
+           </item>
+           <item row="9" column="1">
+            <spacer name="verticalSpacer_16">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
            </item>
           </layout>
          </widget>
@@ -1356,12 +1609,18 @@
              <property name="text">
               <string>Etat des coffrets de distribution basse tension </string>
              </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
             </widget>
            </item>
            <item row="1" column="0">
             <widget class="QLabel" name="label_110">
              <property name="text">
               <string>Homogénéité des composants de même fonction </string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -1370,12 +1629,18 @@
              <property name="text">
               <string>Etat du câblage, des goulottes, des marquages </string>
              </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
             </widget>
            </item>
            <item row="3" column="0">
             <widget class="QLabel" name="label_111">
              <property name="text">
               <string>Fonctionnement des relais à fréquence élevée ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -1391,6 +1656,19 @@
            <item row="3" column="1">
             <widget class="QComboBox" name="comboBox_btgenfoncfreqelev"/>
            </item>
+           <item row="4" column="0">
+            <spacer name="verticalSpacer_17">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
           </layout>
          </widget>
          <widget class="QWidget" name="bt_armoire">
@@ -1400,6 +1678,9 @@
              <property name="text">
               <string>Etat visuel des tableaux </string>
              </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
             </widget>
            </item>
            <item row="1" column="0">
@@ -1407,12 +1688,18 @@
              <property name="text">
               <string>Présence de synoptique </string>
              </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
             </widget>
            </item>
            <item row="2" column="0">
             <widget class="QLabel" name="label_101">
              <property name="text">
               <string>Etat du câblage </string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -1425,44 +1712,27 @@
            <item row="2" column="1">
             <widget class="QComboBox" name="comboBox_btarmetatcabl"/>
            </item>
+           <item row="3" column="0">
+            <spacer name="verticalSpacer_18">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
           </layout>
          </widget>
          <widget class="QWidget" name="bt_ondul">
           <layout class="QGridLayout" name="gridLayout_22">
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_103">
-             <property name="text">
-              <string>Etat des connexions - correct ?</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
            <item row="6" column="0">
             <widget class="QLabel" name="label_112">
              <property name="text">
               <string>Etat de ses ventilations, filtres - correct ?</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="label_105">
-             <property name="text">
-              <string>Accessoires entretien batteries - présence ?</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="0">
-            <widget class="QLabel" name="label_107">
-             <property name="text">
-              <string>Oxydations - correct ?</string>
              </property>
              <property name="wordWrap">
               <bool>true</bool>
@@ -1509,7 +1779,74 @@
              </property>
             </widget>
            </item>
-           <item row="7" column="0">
+           <item row="0" column="1">
+            <widget class="QComboBox" name="comboBox_btondetatbat"/>
+           </item>
+           <item row="2" column="1">
+            <widget class="QComboBox" name="comboBox_btondetatsupport"/>
+           </item>
+           <item row="4" column="1">
+            <widget class="QComboBox" name="comboBox_btondaspectond"/>
+           </item>
+           <item row="6" column="1">
+            <widget class="QComboBox" name="comboBox_btondetatventil"/>
+           </item>
+           <item row="8" column="1">
+            <widget class="QComboBox" name="comboBox_btonddocmateriel"/>
+           </item>
+           <item row="9" column="0">
+            <spacer name="verticalSpacer_19">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="0" column="2">
+            <widget class="QLabel" name="label_103">
+             <property name="text">
+              <string>Etat des connexions - correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QComboBox" name="comboBox_btondetatconnex"/>
+           </item>
+           <item row="2" column="2">
+            <widget class="QLabel" name="label_105">
+             <property name="text">
+              <string>Accessoires entretien batteries - présence ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="3">
+            <widget class="QComboBox" name="comboBox_btondaccessbat"/>
+           </item>
+           <item row="4" column="2">
+            <widget class="QLabel" name="label_107">
+             <property name="text">
+              <string>Oxydations - correct ?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="3">
+            <widget class="QComboBox" name="comboBox_btondoxydations"/>
+           </item>
+           <item row="6" column="2">
             <widget class="QLabel" name="label_113">
              <property name="text">
               <string>Etat de son affichage - correct ?</string>
@@ -1519,32 +1856,8 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QComboBox" name="comboBox_btondetatbat"/>
-           </item>
-           <item row="1" column="1">
-            <widget class="QComboBox" name="comboBox_btondetatconnex"/>
-           </item>
-           <item row="2" column="1">
-            <widget class="QComboBox" name="comboBox_btondetatsupport"/>
-           </item>
-           <item row="3" column="1">
-            <widget class="QComboBox" name="comboBox_btondaccessbat"/>
-           </item>
-           <item row="4" column="1">
-            <widget class="QComboBox" name="comboBox_btondaspectond"/>
-           </item>
-           <item row="5" column="1">
-            <widget class="QComboBox" name="comboBox_btondoxydations"/>
-           </item>
-           <item row="6" column="1">
-            <widget class="QComboBox" name="comboBox_btondetatventil"/>
-           </item>
-           <item row="7" column="1">
+           <item row="6" column="3">
             <widget class="QComboBox" name="comboBox_btondetataffich"/>
-           </item>
-           <item row="8" column="1">
-            <widget class="QComboBox" name="comboBox_btonddocmateriel"/>
            </item>
           </layout>
          </widget>
@@ -1563,6 +1876,12 @@
       <enum>QFrame::Raised</enum>
      </property>
      <layout class="QGridLayout" name="gridLayout_23">
+      <property name="margin">
+       <number>3</number>
+      </property>
+      <property name="spacing">
+       <number>3</number>
+      </property>
       <item row="0" column="0">
        <widget class="QLabel" name="label_7">
         <property name="text">
@@ -1595,6 +1914,9 @@
       <string>Suite à donner</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_4">
+      <property name="margin">
+       <number>3</number>
+      </property>
       <item row="1" column="0">
        <widget class="QLabel" name="label_8">
         <property name="text">

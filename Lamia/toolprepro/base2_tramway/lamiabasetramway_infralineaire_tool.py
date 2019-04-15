@@ -7,7 +7,7 @@ import logging
 import time
 debugtime = False
 """
-
+from __future__ import unicode_literals
 from qgis.PyQt import uic, QtCore, QtGui
 
 try:
@@ -73,6 +73,20 @@ class BaseTramwayInfraLineaireTool(BaseInfraLineaireTool):
                                      'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
                                                            'widgets': {}}}
 
+            self.userwdgfield.toolButton_pk.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_pk))
+            self.userwdgfield.toolButton_vit.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_vitessseexploit))
+
+            self.userwdgfield.toolButton_tangente.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_tangente))
+            self.userwdgfield.toolButton_deviation.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_deviation))
+            self.userwdgfield.toolButton_rayon.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_rayon))
+
+
+
             self.dbasechildwdgfield = []
 
             if self.parentWidget is None:
@@ -106,8 +120,6 @@ class BaseTramwayInfraLineaireTool(BaseInfraLineaireTool):
             self.userwdgfield.stackedWidget.setCurrentIndex(0)
 
     def typeRevetementChanged(self, combovalue=None):
-
-        print(self.propertieswdgDesordre.propertieswdgOBSERVATION2.userwdgfield.comboBox_urgence.currentText())
 
         if self.userwdgfield.comboBox_typerevet.currentText() == 'Mineral modulaire':
             self.propertieswdgDesordre.propertieswdgOBSERVATION2.userwdgfield.stackedWidget_revet.setCurrentIndex(0)

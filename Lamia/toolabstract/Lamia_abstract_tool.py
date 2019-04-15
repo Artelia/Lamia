@@ -9,12 +9,12 @@ try:
     from qgis.PyQt.QtGui import (QWidget, QTreeWidgetItem, QMessageBox, QFileDialog, QTableWidget,
                                  QHeaderView, QComboBox, QSpinBox, QCheckBox, QPushButton, QDateEdit,QDateTimeEdit, QTextEdit,
                                  QDoubleSpinBox, QDialog, QVBoxLayout, QTreeWidget, QLineEdit, QCheckBox,
-                                 QLabel, QMessageBox, QTextBrowser, QTableWidgetItem,QApplication,QToolButton)
+                                 QLabel, QMessageBox, QTextBrowser, QTableWidgetItem,QApplication,QToolButton, QAbstractItemView)
 except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget, QTreeWidgetItem, QMessageBox, QFileDialog, QTableWidget,
                                      QHeaderView, QComboBox, QSpinBox,QCheckBox, QPushButton, QDateEdit,QDateTimeEdit, QTextEdit,
                                      QDoubleSpinBox, QDialog, QVBoxLayout, QTreeWidget, QLineEdit, QCheckBox,
-                                     QLabel, QMessageBox, QTextBrowser, QTableWidgetItem,QApplication,QToolButton)
+                                     QLabel, QMessageBox, QTextBrowser, QTableWidgetItem,QApplication,QToolButton, QAbstractItemView)
 import os
 import sys
 import qgis
@@ -110,6 +110,8 @@ class AbstractLamiaTool(QWidget):
         self.dbtablename = None
         #  iconpath -  can be implemented
         self.iconpath = None
+        # enable multipleselection in ElemtreeWidget
+        self.multipleselection = False
         #  Main window widget
         self.windowdialog = None
         if dialog is not None:
@@ -268,6 +270,7 @@ class AbstractLamiaTool(QWidget):
     # ******************************************************************************************************************
     # **********************************    Init methods        ********************************************************
     # ******************************************************************************************************************
+
 
     def initTool(self):
         """!
@@ -477,7 +480,13 @@ class AbstractLamiaTool(QWidget):
             arb = [self.CAT, self.NAME]
             if self.qtreewidgetitem is None:
                 self.qtreewidgetitem = QTreeWidgetItem()
-                self.qtreewidgetitem.setText(0, arb[-1])
+                if sys.version_info.major == 2:
+                    if  isinstance(arb[-1], unicode):
+                        self.qtreewidgetitem.setText(0, arb[-1])
+                    else:
+                        self.qtreewidgetitem.setText(0, str(arb[-1]))
+                else:
+                    self.qtreewidgetitem.setText(0, arb[-1])
                 if False:
                     self.qtreewidgetitem.setFlags(self.qtreewidgetitem.flags() | QtCore.Qt.ItemIsUserCheckable)
                     self.qtreewidgetitem.setCheckState(0, QtCore.Qt.Unchecked)
@@ -728,6 +737,11 @@ class AbstractLamiaTool(QWidget):
             self.pushButton_rajoutPoint.clicked.connect(self.addPoint)
             # self.pushButton_rajoutPointGPS.clicked.connect(self.captureGeometry)
 
+            if self.LineENABLED or self.PolygonENABLED:
+                self.pushButton_editgeom.setEnabled(True)
+                self.pushButton_editgeom.clicked.connect(self.windowdialog.editFeature)
+            else:
+                self.pushButton_editgeom.setEnabled(False)
 
 
             if self.PointENABLED:
@@ -889,6 +903,9 @@ class AbstractLamiaTool(QWidget):
 
 
     def manageLinkage(self):
+        if self.currentFeature is None:
+            return
+
         if self.dbase.revisionwork:
             self.currentid = int(self.currentFeature['id_' + self.dbasetablename.lower()])
         else:
@@ -1040,6 +1057,7 @@ class AbstractLamiaTool(QWidget):
             if self.dbase.qgsiface is None:
                 logging.getLogger("Lamia").debug('error %s %s %s', e, parenttablename, parentfieldname)
             return
+
         if False:
             if isinstance(senderwdg, QComboBox):
                 parentcstvalue = self.dbase.getConstraintRawValueFromText(parenttablename, parentfieldname, senderwdg.currentText())
@@ -1066,6 +1084,7 @@ class AbstractLamiaTool(QWidget):
             for childfieldname in childfieldnames:
                 if dbasetable['fields'][parentfieldname]['SLtype'] == 'INTEGER' and parentcstvalue != '' and parentcstvalue is not None:
                     parentcstvalue = int(parentcstvalue)
+
                 listtoadd = [value[0] for value in dbasetable['fields'][childfieldname]['Cst'] if parentcstvalue in value[2]]
                 if False:
                     if sys.version_info.major == 2:
@@ -1118,22 +1137,28 @@ class AbstractLamiaTool(QWidget):
             if debug: logging.getLogger("Lamia").debug('step 1 %s %s, %s', param1.text(0),param1 == self.qtreewidgetitem, param2)
 
             if param2 == self.qtreewidgetitem:
+                if debug and param2 : logging.getLogger("Lamia").debug('step 2 desactivation %s ', param2.text(0))
                 self.onDesactivationRaw()
                 self.postOnDesactivation()
                 if param2 == param1:
                     self.lastidselected = None
 
             if param1 == self.qtreewidgetitem :
-                if debug: logging.getLogger("Lamia").debug('step 2 %s %s', param1.text(0), param2)
+                if debug: logging.getLogger("Lamia").debug('step 3 activation %s %s', param1.text(0), param2)
                 # manage display in canvas
                 self._checkLayerVisibility()
+                if self.linkedtreewidget is not None :
+                    if self.multipleselection  :
+                        self.linkedtreewidget.setSelectionMode(QAbstractItemView.ExtendedSelection)
+                    else:
+                        self.linkedtreewidget.setSelectionMode(QAbstractItemView.SingleSelection)
 
                 # add child widget
                 self.loadChildWidgets()
 
                 # manage widget display
                 if self.windowdialog is not None :
-                    if self.dbasetable is not None:
+                    if self.dbasetable is not None and not hasattr(self, 'TOOLNAME'):
                         self.windowdialog.stackedWidget_main.setCurrentIndex(0)
                         if self.windowdialog.MaintabWidget.widget(0).layout().count() > 0:
                             self.windowdialog.MaintabWidget.widget(0).layout().itemAt(0).widget().setParent(None)
@@ -1166,6 +1191,8 @@ class AbstractLamiaTool(QWidget):
 
                     else:
                         self.initFeatureProperties(None)
+                else:
+                    self.linkedtreewidget.clear()
 
                 #change active layer in canvas
                 if qgis.utils.iface is not None and self.dbasetable is not None and self.dbasetable['showinqgis']:
@@ -1215,10 +1242,14 @@ class AbstractLamiaTool(QWidget):
         self.tempgeometry = None
 
         # disconnection
-        try:
-            self.linkedtreewidget.currentItemChanged.disconnect(self.featureSelected)
-        except:
-            pass
+        self.disconnectIdsGui()
+        if False:
+            try:
+                # self.linkedtreewidget.currentItemChanged.disconnect(self.featureSelected)
+                self.linkedtreewidget.itemSelectionChanged.disconnect(self.featureSelected)
+
+            except:
+                pass
 
 
 
@@ -1405,7 +1436,8 @@ class AbstractLamiaTool(QWidget):
         pass
         """
         try:
-            self.linkedtreewidget.currentItemChanged.disconnect(self.featureSelected)
+            #self.linkedtreewidget.currentItemChanged.disconnect(self.featureSelected)
+            self.linkedtreewidget.itemSelectionChanged.disconnect(self.featureSelected)
         except:
             pass
         try:
@@ -1427,7 +1459,9 @@ class AbstractLamiaTool(QWidget):
         #print('connectIdsGui', self.NAME)
 
         if self.linkedtreewidget is not None and isinstance(self.linkedtreewidget, QTreeWidget):
-            self.linkedtreewidget.currentItemChanged.connect(self.featureSelected)
+            #self.linkedtreewidget.currentItemChanged.connect(self.featureSelected)
+            self.linkedtreewidget.itemSelectionChanged.connect(self.featureSelected)
+
 
         self.comboBox_featurelist.currentIndexChanged.connect(self.featureSelected)
 
@@ -1466,7 +1500,8 @@ class AbstractLamiaTool(QWidget):
     def loadIds(self):
 
         ids = []
-        if self.dbasetable is not None:
+        #if self.dbasetable is not None:
+        if self.dbasetablename is not None:
             strid = 'id_' + self.dbasetablename.lower()
             sql = "SELECT " + strid
             if len(self.qtreewidgetfields)>0 :
@@ -1633,6 +1668,8 @@ class AbstractLamiaTool(QWidget):
         """
         debug = False
 
+        if self.linkedtreewidget is not None and self.sender() == self.linkedtreewidget:
+            item = self.linkedtreewidget.currentItem()
 
         if False:       #for debug - to know where it s coming from
             parenttemp = self
@@ -1644,8 +1681,11 @@ class AbstractLamiaTool(QWidget):
             # print('featureSelected', strtemp, self.sender().objectName(), item)
             if isinstance(item, QTreeWidgetItem):
                 print(item.text(0))
-
+        if debug: logging.getLogger("Lamia").debug('*******')
+        #if debug : logging.getLogger("Lamia").debug('start sender : %s', self.sender(), self.sender().objectName())
         if debug: logging.getLogger("Lamia").debug('start %s %s %s %s', self.dbasetablename, item, type(item), str(itemisid))
+        if debug and isinstance(item, QTreeWidgetItem) : logging.getLogger("Lamia").debug('start item.text : %s', item.text(0))
+
 
         # ************** init thing *********************************
         # remove selection in canvas
@@ -1670,6 +1710,7 @@ class AbstractLamiaTool(QWidget):
             self.comboBox_featurelist.removeItem(self.comboBox_featurelist.count()-1)
 
         # ************** get id selected and link treewidget and combobox *********************************
+
         if isinstance(item, QTreeWidgetItem) and item.parent() is not None:
             # print('featsel',item.parent().text(0),self.dbasetablename)
             if item.parent().text(0) == self.dbasetablename:    # treewdgitem has no parent
@@ -1716,15 +1757,15 @@ class AbstractLamiaTool(QWidget):
                 return
         elif isinstance(item, int) and not itemisid:        #feature selected with combobox
             if debug: logging.getLogger("Lamia").debug('come from combobox')
-            # print('item', item)
+            #print('item', item, type(item))
             # print('cc', item, ' _' ,[self.comboBox_featurelist.itemText(i) for i in range(self.comboBox_featurelist.count())])
-
-            id = int(self.comboBox_featurelist.itemText(item))
-            if self.linkedtreewidget is not None and isinstance(self.linkedtreewidget, QTreeWidget):
-                parentitem = self.linkedtreewidget.findItems(self.dbasetablename, QtCore.Qt.MatchExactly | QtCore.Qt.MatchRecursive, 0)[0]
-                indexchild = [parentitem.child(i).text(0) for i in range(parentitem.childCount())].index(str(id))
-                itemtodisplay = parentitem.child(indexchild)
-                self.linkedtreewidget.setCurrentItem(itemtodisplay)
+            if item >=0:
+                id = int(self.comboBox_featurelist.itemText(item))
+                if self.linkedtreewidget is not None and isinstance(self.linkedtreewidget, QTreeWidget):
+                    parentitem = self.linkedtreewidget.findItems(self.dbasetablename, QtCore.Qt.MatchExactly | QtCore.Qt.MatchRecursive, 0)[0]
+                    indexchild = [parentitem.child(i).text(0) for i in range(parentitem.childCount())].index(str(id))
+                    itemtodisplay = parentitem.child(indexchild)
+                    self.linkedtreewidget.setCurrentItem(itemtodisplay)
         elif isinstance(itemisid, bool) and itemisid:
             id = item
         elif isinstance(itemisid, QTreeWidgetItem):
@@ -1738,7 +1779,13 @@ class AbstractLamiaTool(QWidget):
 
 
         # **************** gui things when selected ***************************************************************
-        if self.dbasetable is not None:                             #widget has dbasetable linked
+        #if self.dbasetable is not None and not hasattr(self, 'TOOLNAME'):                             #widget has dbasetable linked
+        if self.dbasetable is not None :
+            try:
+                test = id
+            except UnboundLocalError:
+                return
+
             if id is not None:        # item clicked in treewidget
                 self.lastidselected = id
                 # print('self.lastidselected', self.dbasetablename, self.lastidselected)
@@ -1750,10 +1797,20 @@ class AbstractLamiaTool(QWidget):
                 # print('id', id, pk,self.currentFeaturePK)
 
                 if self.parentWidget is None:
-                    if int(str(self.dbase.qgisversion_int)[0:3]) < 218:
-                        self.dbasetable['layerqgis'].setSelectedFeatures([self.currentFeature.id()])
+                    if self.multipleselection :
+                        ids = [int(item.text(0)) for item in self.linkedtreewidget.selectedItems()]
+                        pks = [self.dbase.getLayerFeatureById(self.dbasetablename, id).id() for id in ids]
+
+                        self.dbasetable['layerqgis'].selectByIds(pks)
+                        # print('***', ids, pk)
                     else:
-                        self.dbasetable['layerqgis']. selectByIds([self.currentFeature.id()])
+                        self.dbasetable['layerqgis'].selectByIds([self.currentFeature.id()])
+
+                    if False:
+                        if int(str(self.dbase.qgisversion_int)[0:3]) < 218:
+                            self.dbasetable['layerqgis'].setSelectedFeatures([self.currentFeature.id()])
+                        else:
+                            self.dbasetable['layerqgis'].selectByIds([self.currentFeature.id()])
                 if self.linkagespec is not None:
                     self.pushButton_linkage.setEnabled(True)
 
@@ -1853,6 +1910,7 @@ class AbstractLamiaTool(QWidget):
 
                     sql = "SELECT " + ','.join(fieldstoiterate) + " FROM " + self.dbasetablename + "_qgis "
                     sql += " WHERE pk_" + self.dbasetablename.lower() + " = " + str(feat.id())
+
                     result = self.dbase.query(sql)[0]
 
                 else:
@@ -2079,10 +2137,19 @@ class AbstractLamiaTool(QWidget):
         # *************************
         # set geometry first - if geometry false or error :  return and noing is created/modified
         # create self.currentFeature if newfeature case (with only geometry info)
-        
-        geometryisvalid = self.setGeometryToFeature()
-        if not geometryisvalid:
-            return
+
+        if self.windowdialog.editfeatureworking:
+            #tempgeom = self.windowdialog.editfeaturelayer.selectedFeatures()[0].geometry()
+            self.windowdialog.closeEditFeature(savechanges=True)
+            self.currentFeaturePK = self.currentFeature.id()
+            self.currentFeature = self.dbase.getLayerFeatureByPk(self.dbasetablename, self.currentFeaturePK)
+
+        else:
+            geometryisvalid = self.setGeometryToFeature()
+            if not geometryisvalid:
+                return
+
+
         
         if False:
 
@@ -2698,29 +2765,51 @@ class AbstractLamiaTool(QWidget):
             sql += " WHERE pk_" + str(table).lower() + " = " + str(pkoldtable)
             result = self.dbase.query(sql)[0]
 
+            fieldslist = self.dbase.getColumns(table)
             #update sql
             sql = "UPDATE "+ str(table).lower()  + " SET "
-            if (sys.version_info > (3, 0)):
-                fieldslist = list(self.dbase.dbasetables[table]['fields'].keys())[1:]
-            else:
-                fieldslist = self.dbase.dbasetables[table]['fields'].keys()[1:]
+
+            if False:
+                if (sys.version_info > (3, 0)):
+                    fieldslist = list(self.dbase.dbasetables[table]['fields'].keys())[1:]
+                else:
+                    fieldslist = self.dbase.dbasetables[table]['fields'].keys()[1:]
+
             for i, field in enumerate(fieldslist):
-                if 'lpk_' in field :
+                if 'pk_' in field or 'geom' in field :
                     continue
 
                 resulttemp = 'NULL'
-                if isinstance(result[i+1], str) or isinstance(result[i+1], unicode):
-                    resulttemp = "'" + result[i+1] + "'"
-                elif result[i+1] is None :
+                if isinstance(result[i ], str) or isinstance(result[i ], unicode):
+                    resulttemp = "'" + result[i ] + "'"
+                elif result[i ] is None:
                     resulttemp = 'NULL'
                 else:
                     # print(type(result[i+1]))
-                    resulttemp = str(result[i+1])
+                    resulttemp = str(result[i ])
 
                 sql += str(field) + " = " + resulttemp + ','
 
+            if False:
+                for i, field in enumerate(fieldslist):
+                    if 'lpk_' in field :
+                        continue
+
+                    resulttemp = 'NULL'
+                    if isinstance(result[i+1], str) or isinstance(result[i+1], unicode):
+                        resulttemp = "'" + result[i+1] + "'"
+                    elif result[i+1] is None :
+                        resulttemp = 'NULL'
+                    else:
+                        # print(type(result[i+1]))
+                        resulttemp = str(result[i+1])
+
+                    print(field, resulttemp)
+                    sql += str(field) + " = " + resulttemp + ','
+
             sql = sql[:-1]  #remove last ,
             sql += " WHERE pk_" + str(table) + " = " + str(pknewtable)
+
             self.dbase.query(sql)
 
             if table == 'Objet':
@@ -2767,10 +2856,6 @@ class AbstractLamiaTool(QWidget):
         else:
             # return dbasetablelayer.getFeatures(qgis.core.QgsFeatureRequest(feat.id())).next()
             return self.dbase.getLayerFeatureByPk(table, feat.id())
-
-
-
-
 
 
     def saveFeatureProperties(self):
@@ -2875,7 +2960,7 @@ class AbstractLamiaTool(QWidget):
                     else:
                         result.append(None)
 
-                print(tablename, result)
+                # print(tablename, result)
 
                 #tablepk
                 sql = "SELECT pk_" + str(tablename).lower() + " FROM " + str(self.dbasetablename).lower() + "_qgis"
@@ -3048,6 +3133,7 @@ class AbstractLamiaTool(QWidget):
         self.addedFeatureid = id
 
     def deselectFeature(self):
+        self.windowdialog.closeEditFeature()
 
         if self.currentFeature is not None:
             if self.rubberBand:
@@ -3453,7 +3539,73 @@ class AbstractLamiaTool(QWidget):
         self.pointEmitter.canvasClicked.connect(self.selectPickedFeature)
         self.canvas.setMapTool(self.pointEmitter)
 
+
+
+
     def selectPickedFeature(self, point, button=None):
+
+        # layername = self.picklayername
+
+        # self.pickfield
+
+        if self.pickfield is not None:
+            distance = None
+            nearestid = None
+            layernearist = None
+            for layername in self.pickTable[self.pickfield].keys():
+                nearid, dist = self.dbase.dbasetables[layername]['widget'].getNearestId(point)
+                if distance is None:
+                    layernearist = layername
+                    distance = dist
+                    nearestid = nearid
+                elif dist < distance:
+                    layernearist = layername
+                    distance = dist
+                    nearestid = nearid
+            layer = self.dbase.dbasetables[layernearist]['layer']
+            idtoget = self.pickTable[self.pickfield][layernearist]
+            # nearestfeature = layer.getFeatures(qgis.core.QgsFeatureRequest(nearestid)).next()
+            nearestfeature = self.dbase.getLayerFeatureById(layernearist, nearestid)
+            nearattributevalue = nearestfeature[idtoget]
+            if int(str(self.dbase.qgisversion_int)[0:3]) < 218:
+                layer.setSelectedFeatures([nearestfeature.id()])
+            else:
+                layer.selectByIds([nearestfeature.id()])
+            # print('selectPickedFeature',layernearist, idtoget ,nearattributevalue)
+            self.initFeatureProperties(self.currentFeature,
+                                       tablename=self.dbasetablename,
+                                       fieldname=self.pickfield,
+                                       value=nearattributevalue)
+            self.pickfield = None
+            self.canvas.unsetMapTool(self.pointEmitter)
+            try:
+                self.pointEmitter.canvasClicked.disconnect(self.selectPickedFeature)
+            except:
+                pass
+
+        else:
+            # not used yet
+            print('selectPickedFeature no pickfield')
+            # nearestid = self.getNearestId(point, layername)
+            nearestid = self.getNearestId(point)
+            if int(str(self.dbase.qgisversion_int)[0:3]) < 218:
+                layer.setSelectedFeatures([nearestid])
+            else:
+                layer.selectByIds([nearestid])
+            self.pickspinbox.setValue(nearestid)
+
+            self.canvas.unsetMapTool(self.pointEmitter)
+            try:
+                self.pointEmitter.canvasClicked.disconnect(self.selectPickedFeature)
+            except:
+                pass
+            self.picklayername = None
+            self.pickspinbox = None
+
+
+
+
+    def selectPickedFeature2(self, point, button=None):
 
         # layername = self.picklayername
 
@@ -3629,7 +3781,6 @@ class AbstractLamiaTool(QWidget):
         if file is not None and len(file) > 0:
             if file[0] == '.':
                 file = os.path.join(self.dbase.dbaseressourcesdirectory,file)
-
             else:
                 if os.path.isfile(file):
                     filename = os.path.basename(file)
@@ -3649,9 +3800,6 @@ class AbstractLamiaTool(QWidget):
 
                         destinationfile = os.path.join(destinationdir,filename)
                         shutil.copy(file,destinationfile)
-
-
-
 
                     finalname = os.path.join('.',os.path.relpath(destinationfile, self.dbase.dbaseressourcesdirectory ))
                     # print(finalname)

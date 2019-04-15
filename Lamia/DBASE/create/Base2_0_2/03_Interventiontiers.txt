@@ -1,0 +1,21 @@
+#DJAN SELECT Interventiontiers.*, Objet.* FROM  Interventiontiers INNER JOIN Objet ON Interventiontiers.lpk_objet = Objet.pk_objet  WHERE Objet.lpk_revision_end IS NULL  AND Objet.datetimedestruction IS NULL
+#QGIS SELECT Interventiontiers.*, Objet.* FROM  Interventiontiers INNER JOIN Objet ON Interventiontiers.lpk_objet = Objet.pk_objet
+
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###pk_interventiontiers;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_interventiontiers;            INT ;                   INTEGER
+###lpk_objet ;           INT;                       INTEGER                                  ; Objet(pk_objet)
+
+###urgence;                VARCHAR(255);            TEXT
+###estimationcouts;           NUMERIC;            REAL
+###estimationduree;           NUMERIC;            REAL
+###dateestimationecheance;            DATE ;                  TEXT
+###phase;                VARCHAR(255);            TEXT
+/;              
+Non programme;  NON
+Programme;      PRO
+Conception;     ETU
+Realisation;    REA
+Receptionne;    REC
+###datedebut;            DATE ;                  TEXT
+###datefin;            DATE ;                  TEXT

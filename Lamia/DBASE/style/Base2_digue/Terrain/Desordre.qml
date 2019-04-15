@@ -1,7 +1,28 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis version="2.18.18" simplifyAlgorithm="0" minimumScale="0" maximumScale="10000" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" readOnly="0" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="1" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+<qgis version="2.18.19" simplifyAlgorithm="0" minimumScale="0" maximumScale="10000" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" readOnly="0" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="1" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
   <edittypes>
+    <edittype widgetv2type="TextEdit" name="pk_desordre">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
     <edittype widgetv2type="TextEdit" name="id_desordre">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="lpk_objet">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="groupedesordre">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="impact">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="priorite">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="risques">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="lid_descriptionsystem">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="cote">
@@ -16,28 +37,37 @@
     <edittype widgetv2type="TextEdit" name="typedes">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
+    <edittype widgetv2type="TextEdit" name="pk_objet">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
     <edittype widgetv2type="TextEdit" name="id_objet">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="impact">
+    <edittype widgetv2type="TextEdit" name="lpk_revision_begin">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="gravite">
+    <edittype widgetv2type="TextEdit" name="lpk_revision_end">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="priorite">
+    <edittype widgetv2type="TextEdit" name="datetimecreation">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="risques">
+    <edittype widgetv2type="TextEdit" name="datetimemodification">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="lk_descriptionsystem">
+    <edittype widgetv2type="TextEdit" name="datetimedestruction">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="datecreation">
+    <edittype widgetv2type="TextEdit" name="commentaire">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="datedestruction">
+    <edittype widgetv2type="TextEdit" name="libelle">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="importid">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="importtable">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
   </edittypes>
@@ -102,7 +132,7 @@
               <prop k="color" v="255,0,0,255"/>
               <prop k="horizontal_anchor_point" v="1"/>
               <prop k="joinstyle" v="bevel"/>
-              <prop k="name" v="star"/>
+              <prop k="name" v="triangle"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
               <prop k="offset_unit" v="MM"/>
@@ -112,7 +142,7 @@
               <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
               <prop k="outline_width_unit" v="MM"/>
               <prop k="scale_method" v="diameter"/>
-              <prop k="size" v="3"/>
+              <prop k="size" v="4"/>
               <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
               <prop k="size_unit" v="MM"/>
               <prop k="vertical_anchor_point" v="1"/>
@@ -322,19 +352,29 @@
   <DiagramLayerSettings yPosColumn="-1" showColumn="-1" linePlacementFlags="10" placement="2" dist="0" xPosColumn="-1" priority="0" obstacle="0" zIndex="0" showAll="1"/>
   <annotationform></annotationform>
   <aliases>
-    <alias field="id_desordre" index="0" name=""/>
-    <alias field="cote" index="1" name=""/>
-    <alias field="position" index="2" name=""/>
-    <alias field="catdes" index="3" name=""/>
-    <alias field="typedes" index="4" name=""/>
-    <alias field="id_objet" index="5" name=""/>
-    <alias field="impact" index="6" name=""/>
-    <alias field="gravite" index="7" name=""/>
-    <alias field="priorite" index="8" name=""/>
-    <alias field="risques" index="9" name=""/>
-    <alias field="lk_descriptionsystem" index="10" name=""/>
-    <alias field="datecreation" index="11" name=""/>
-    <alias field="datedestruction" index="12" name=""/>
+    <alias field="pk_desordre" index="0" name=""/>
+    <alias field="id_desordre" index="1" name=""/>
+    <alias field="lpk_objet" index="2" name=""/>
+    <alias field="groupedesordre" index="3" name=""/>
+    <alias field="impact" index="4" name=""/>
+    <alias field="priorite" index="5" name=""/>
+    <alias field="risques" index="6" name=""/>
+    <alias field="lid_descriptionsystem" index="7" name=""/>
+    <alias field="cote" index="8" name=""/>
+    <alias field="position" index="9" name=""/>
+    <alias field="catdes" index="10" name=""/>
+    <alias field="typedes" index="11" name=""/>
+    <alias field="pk_objet" index="12" name=""/>
+    <alias field="id_objet" index="13" name=""/>
+    <alias field="lpk_revision_begin" index="14" name=""/>
+    <alias field="lpk_revision_end" index="15" name=""/>
+    <alias field="datetimecreation" index="16" name=""/>
+    <alias field="datetimemodification" index="17" name=""/>
+    <alias field="datetimedestruction" index="18" name=""/>
+    <alias field="commentaire" index="19" name=""/>
+    <alias field="libelle" index="20" name=""/>
+    <alias field="importid" index="21" name=""/>
+    <alias field="importtable" index="22" name=""/>
   </aliases>
   <excludeAttributesWMS/>
   <excludeAttributesWFS/>
@@ -349,12 +389,22 @@
       <column width="-1" hidden="0" type="field" name="typedes"/>
       <column width="-1" hidden="0" type="field" name="id_objet"/>
       <column width="-1" hidden="0" type="field" name="impact"/>
-      <column width="-1" hidden="0" type="field" name="gravite"/>
       <column width="-1" hidden="0" type="field" name="priorite"/>
       <column width="-1" hidden="0" type="field" name="risques"/>
-      <column width="-1" hidden="0" type="field" name="datecreation"/>
-      <column width="-1" hidden="0" type="field" name="datedestruction"/>
-      <column width="-1" hidden="0" type="field" name="lk_descriptionsystem"/>
+      <column width="-1" hidden="0" type="field" name="pk_desordre"/>
+      <column width="-1" hidden="0" type="field" name="lpk_objet"/>
+      <column width="-1" hidden="0" type="field" name="groupedesordre"/>
+      <column width="-1" hidden="0" type="field" name="lid_descriptionsystem"/>
+      <column width="-1" hidden="0" type="field" name="pk_objet"/>
+      <column width="-1" hidden="0" type="field" name="lpk_revision_begin"/>
+      <column width="-1" hidden="0" type="field" name="lpk_revision_end"/>
+      <column width="-1" hidden="0" type="field" name="datetimecreation"/>
+      <column width="-1" hidden="0" type="field" name="datetimemodification"/>
+      <column width="-1" hidden="0" type="field" name="datetimedestruction"/>
+      <column width="-1" hidden="0" type="field" name="commentaire"/>
+      <column width="-1" hidden="0" type="field" name="libelle"/>
+      <column width="-1" hidden="0" type="field" name="importid"/>
+      <column width="-1" hidden="0" type="field" name="importtable"/>
     </columns>
   </attributetableconfig>
   <editform></editform>
@@ -385,19 +435,29 @@ def my_form_open(dialog, layer, feature):
     <fieldstyles/>
   </conditionalstyles>
   <defaults>
+    <default field="pk_desordre" expression=""/>
     <default field="id_desordre" expression=""/>
+    <default field="lpk_objet" expression=""/>
+    <default field="groupedesordre" expression=""/>
+    <default field="impact" expression=""/>
+    <default field="priorite" expression=""/>
+    <default field="risques" expression=""/>
+    <default field="lid_descriptionsystem" expression=""/>
     <default field="cote" expression=""/>
     <default field="position" expression=""/>
     <default field="catdes" expression=""/>
     <default field="typedes" expression=""/>
+    <default field="pk_objet" expression=""/>
     <default field="id_objet" expression=""/>
-    <default field="impact" expression=""/>
-    <default field="gravite" expression=""/>
-    <default field="priorite" expression=""/>
-    <default field="risques" expression=""/>
-    <default field="lk_descriptionsystem" expression=""/>
-    <default field="datecreation" expression=""/>
-    <default field="datedestruction" expression=""/>
+    <default field="lpk_revision_begin" expression=""/>
+    <default field="lpk_revision_end" expression=""/>
+    <default field="datetimecreation" expression=""/>
+    <default field="datetimemodification" expression=""/>
+    <default field="datetimedestruction" expression=""/>
+    <default field="commentaire" expression=""/>
+    <default field="libelle" expression=""/>
+    <default field="importid" expression=""/>
+    <default field="importtable" expression=""/>
   </defaults>
   <previewExpression>COALESCE("ID", '&lt;NULL>')</previewExpression>
   <layerGeometryType>1</layerGeometryType>

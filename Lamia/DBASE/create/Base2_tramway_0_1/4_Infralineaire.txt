@@ -20,7 +20,7 @@ Traversee routiere;TRA
 /;
 Mineral modulaire;MOD
 Mineral non modulaire;NMO
-Végétalise;VEG
+Végétalisé;VEG
 Ballast;BAL
 ###presenceUO;                INT;            INTEGER
 Non;             0

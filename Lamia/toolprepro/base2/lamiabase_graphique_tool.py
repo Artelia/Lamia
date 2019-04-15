@@ -109,7 +109,8 @@ class BaseGraphiqueTool(AbstractLamiaTool):
                                                   ('y','X'),
                                                   ('index1', 'Position'),
                                                   ('index2',  'Nature'),
-                                                  ('index3', 'Materiau')])
+                                                  ('index3', 'Materiau'),
+                                                    ('index4', 'Cote') ])
                                       }
 
             self.userwdgfield.pushButton_addline.clicked.connect(self.addrow)

@@ -69,7 +69,7 @@ from ..toolgeneral.LAMIA_to_SIRS.LtFD import *
 import time
 
 from ..gps.GPSutil import GpsUtil
-from ..maptool.mapTools import mapToolCapture
+from ..maptool.mapTools import mapToolCapture, mapToolEdit
 
 
 class InspectiondigueWindowWidget(QMainWindow):
@@ -111,8 +111,9 @@ class InspectiondigueWindowWidget(QMainWindow):
         # self.pointEmitter = None
         self.pointEmitter = qgis.gui.QgsMapToolEmitPoint(self.canvas)
         # The DBase parser
-        self.dbase = DBaseParser(self.canvas)
+        self.dbase = None
         self.importexportdbase = None
+        self.recentsdbase = []
         # The GPS util
         self.gpsutil = GpsUtil()
         self.gpsutil.hauteurperche = 2.0    #defaultvalue
@@ -142,15 +143,8 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.menuclasses = []
         self.desktopuiloaded = False
 
-        # icon size changed
-        if False and self.dbase.qgsiface is not None:
-            mainwindow = self.dbase.qgsiface.mainWindow()
-            toolbars = mainwindow.findChildren(QToolBar)
-            toolbars[0].iconSizeChanged.connect(self.themechanged)
-            #self.dbase.qgsiface.currentThemeChanged.connect(self.themechanged)
 
-
-        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+        if sys.version_info.major == 2:
             self.crsselector = qgis.gui.QgsGenericProjectionSelector()
         else:
             self.crsselector = qgis.gui.QgsProjectionSelectionDialog()
@@ -158,20 +152,24 @@ class InspectiondigueWindowWidget(QMainWindow):
 
         # the qgis editing maptool
         self.cadwdg = qgis.gui.QgsAdvancedDigitizingDockWidget(self.canvas)
-        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+        if sys.version_info.major == 2:
             self.mtoolpoint = mapToolCapture(self.canvas, self.cadwdg,
                                              qgis.gui.QgsMapToolAdvancedDigitizing.CapturePoint)
             self.mtoolline = mapToolCapture(self.canvas, self.cadwdg,
                                             qgis.gui.QgsMapToolAdvancedDigitizing.CaptureLine)
             self.mtoolpolygon = mapToolCapture(self.canvas, self.cadwdg,
                                                qgis.gui.QgsMapToolAdvancedDigitizing.CapturePolygon)
-        else:
+        elif sys.version_info.major == 3:
             self.mtoolpoint = mapToolCapture(self.canvas, self.cadwdg,
                                              qgis.gui.QgsMapToolCapture.CapturePoint)
             self.mtoolline = mapToolCapture(self.canvas, self.cadwdg,
                                             qgis.gui.QgsMapToolCapture.CaptureLine)
             self.mtoolpolygon = mapToolCapture(self.canvas, self.cadwdg,
                                                qgis.gui.QgsMapToolCapture.CapturePolygon)
+
+        self.mtooledit = mapToolEdit(canvas=self.canvas)
+        self.editfeatureworking = False
+        self.editfeaturelayer = None
 
         self.currentprestationlabel = QLabel('Prestation inactif')
         self.statusBar().addWidget(self.currentprestationlabel, 1)
@@ -187,21 +185,15 @@ class InspectiondigueWindowWidget(QMainWindow):
         # ******************   Actions  ****************************
         # ***************************************************************
         self.MaintreeWidget.expandAll()
+        self.MaintreeWidget.currentItemChanged.connect(self.closeEditFeature)
         self.actionModeTerrain.setChecked(True)
 
         # ***************************************************************
         # ******************   Signals ****************************
         # ***************************************************************
-        #qgis signals
-        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-            self.canvas.destinationCrsChanged.connect(self.dbase.updateQgsCoordinateTransformFromLayerToCanvas)
-        else:
-            qgis.core.QgsProject.instance().crsChanged.connect(self.dbase.updateQgsCoordinateTransformFromLayerToCanvas)
-        # DBase signals
-        self.dbase.recentDBaseChanged.connect(self.updateRecentDBaseMenu)
-        self.dbase.dBaseLoaded.connect(self.DBaseLoaded)
-        self.dbase.errorMessage.connect(self.errorMessage)
-        self.dbase.normalMessage.connect(self.normalMessage)
+
+
+
 
         # QT signals
         self.actionNouvelle_base.triggered.connect(self.newDbase)
@@ -221,17 +213,18 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.actionImporter_et_mettre_jour_la_base.triggered.connect(self.importDBase)
         self.actionExporter_la_base.triggered.connect(self.exportDBase)
 
-
+        """
         if self.dbase.dbasetype == 'postgis':
             self.actionMode_hors_ligne_Reconnexion.setEnabled(True)
         else:
             #self.actionMode_hors_ligne_Reconnexion.setEnabled(True)
             self.actionMode_hors_ligne_Reconnexion.setEnabled(True)
         self.actionMode_hors_ligne_Reconnexion.triggered.connect(self.modeHorsLigne)
-
+        """
 
         #self.pushButton_zoomFeature.clicked.connect(self.zoomToFeature)
         self.pushButton_selectfeat.clicked.connect(self.selectFeature)
+        #self.toolButton_edit.clicked.connect(self.editFeature)
         self.action_Repertoire_photo.triggered.connect(self.setImageDir)
         #self.actionDate_de_travail.triggered.connect(self.setWorkingDate)
         self.toolButton_date.clicked.connect(self.setWorkingDate)
@@ -248,18 +241,69 @@ class InspectiondigueWindowWidget(QMainWindow):
         # other
         self.gpsutil.GPSConnected.connect(self.GPSconnected)
         # init
+        self._readRecentDBase()
         self.updateRecentDBaseMenu()
         self.splitter_2.setSizes([80, 200])
+
+
+        if debug: logging.getLogger('Lamia').debug('end')
+
+
+    def createDBase(self):
+
+        self.dbase = DBaseParser(self.canvas)
+
+        #clear all
+        self.MaintreeWidget.clear()
+        self.ElemtreeWidget.clear()
+
+        self.setVisualMode(reset=True)
+        self.desktopuiloaded = False
+
+        self.uifields = []
+        self.uidesktop = []
+        self.uipostpro = []
+        self.menuclasses = []
+        self.tools = []
+        self.menutools = []
+
+        if self.dbase.dbasetype is not None:
+            if False:
+                root = qgis.core.QgsProject.instance().layerTreeRoot()
+                #root.addGroup('Lamia')
+                if self.dbasetype == "spatialite":
+                    groupname = 'Lamia_' + os.path.basename(self.spatialitefile)
+                elif self.dbasetype == "postgis":
+                    groupname = 'Lamia_' + self.pgschema
+
+                lamialegendgroup =  root.findGroup(groupname)
+
+                if lamialegendgroup is not None:
+                    lamialegendgroup.removeAllChildren()
+
+        self.cleanLayerTree()
+
+
+        # DBase signals
+        # self.dbase.recentDBaseChanged.connect(self.updateRecentDBaseMenu)
+        self.dbase.dBaseLoaded.connect(self.DBaseLoaded)
+        self.dbase.errorMessage.connect(self.errorMessage)
+        self.dbase.normalMessage.connect(self.normalMessage)
+
+        self._readRecentDBase()
+
+        #qgis signals
+        if sys.version_info.major == 2:
+            self.canvas.destinationCrsChanged.connect(self.dbase.updateQgsCoordinateTransformFromLayerToCanvas)
+        elif sys.version_info.major == 3:
+            qgis.core.QgsProject.instance().crsChanged.connect(self.dbase.updateQgsCoordinateTransformFromLayerToCanvas)
+
+
         # camera path
         if QtCore.QSettings().value("InspectionDigue/picturepath") is not None:
             self.dbase.imagedirectory = os.path.normpath(QtCore.QSettings().value("InspectionDigue/picturepath"))
         else:
             self.dbase.imagedirectory = None
-
-
-
-        if debug: logging.getLogger('Lamia').debug('end')
-
 
 
     def themechanged(self, iconwidth):
@@ -404,122 +448,6 @@ class InspectiondigueWindowWidget(QMainWindow):
             self.GPSlabelprecision.setText(u'Précision : erreur')
 
 
-    """
-    def loadTools(self, filetype=None):
-
-
-        import glob, inspect, importlib
-
-        self.unloadTools()
-        if False :
-            #self.normalMessage('Loading tools')
-            path = os.path.join(os.path.dirname(__file__), '..', 'tools')
-            modules = glob.glob(path+"/*.py")
-            __all__ = [os.path.basename(f)[:-3] for f in modules if os.path.isfile(f)]
-            for x in __all__:
-                #print('file',x)
-                moduletemp = importlib.import_module('.' + str(x), 'InspectionDigue.tools')
-                for name, obj in inspect.getmembers(moduletemp, inspect.isclass):
-                    if moduletemp.__name__ == obj.__module__:
-                        try:
-                            #print('obj',self.tools,obj, self.dbase,self )
-                            tempobjt = obj(self.dbase, self)
-                            if tempobjt.CAT is not None:
-                                self.tools.append(tempobjt)
-
-                        except Exception as e:
-                            #self.errorMessage('Error importing tool - ' + str(x) + ' : ' + str(e))
-                            print('moduletemp',e)
-
-
-
-                if False:
-                    try:
-                        moduletemp = importlib.import_module('.' + str(x), 'InspectionDigue.tools')
-                        for name, obj in inspect.getmembers(moduletemp, inspect.isclass):
-                            if moduletemp.__name__ == obj.__module__:
-
-                                print('obj',self.tools,obj, self.dbase,self )
-                                self.tools.append(obj(self.dbase, self, self.dbase.qgsiface.mapCanvas() ))
-
-
-                                if False:
-
-                                    try:  # case obj has NAME
-                                        istool = obj.NAME
-                                        #print(obj, istool)
-                                        if filetype is None and istool is not None:
-
-                                            print('obj',self.tools,obj, self.dbase,self )
-                                            self.tools.append(obj(self.dbase, self))
-
-                                        else:   # specific software tool
-                                            try:    # case obj has SOFTWARE
-                                                print('obj',x,obj.CAT,obj.NAME)
-                                                if len(obj.SOFTWARE) > 0 and filetype in obj.SOFTWARE:
-                                                    try:
-                                                        #self.tools.append(obj(self.meshlayer, self))
-                                                        self.tools.append(obj(self.dbase, self))
-                                                    except Exception as e:
-                                                        #self.errorMessage(istool + ' : ' + str(e))
-                                                        print('soft',e)
-                                                elif len(obj.SOFTWARE) == 0:
-                                                    try:
-                                                        #self.tools.append(obj(self.meshlayer, self))
-                                                        self.tools.append(obj(self.dbase, self))
-                                                    except Exception as e:
-                                                        #self.errorMessage(istool + ' : ' + str(e))
-                                                        print('nosoft',e)
-                                            except:
-                                                pass
-                                    except Exception as e:
-                                        pass
-                    except Exception as e:
-                        #self.errorMessage('Error importing tool - ' + str(x) + ' : ' + str(e))
-                        print('moduletemp',e)
-            #self.normalMessage('Tools loaded')
-
-        if False:
-            if  False:
-                from ..tools.InspectionDigue_troncons_tool import tronconsTool
-                self.tools.append(tronconsTool(self.dbase, self, self.ElemtreeWidget,  parent=self))
-            if False:
-                from ..tools.InspectionDigue_desordres_tool import desordresTool
-                self.tools.append(desordresTool(self.dbase, self, self.ElemtreeWidget,parent = self) )
-            if False:
-                from ..tools.InspectionDigue_desordres_obs_tool import desordresobsTool
-                self.tools.append(desordresobsTool(self.dbase, self, self.ElemtreeWidget,parent=self))
-            if False:
-                from ..tools.InspectionDigue_photographies_tool import photographiesTool
-                self.tools.append(photographiesTool(self.dbase, self, self.ElemtreeWidget,parent=self))
-            if False:
-                from ..tools.InspectionDigue_reseaux_spe_tool import reseauxspeTool
-                self.tools.append(reseauxspeTool(self.dbase, self, self.ElemtreeWidget,parent=self))
-            if False:
-                from ..tools.InspectionDigue_reseaux_tool import reseauxTool
-                self.tools.append(reseauxTool(self.dbase, self, self.ElemtreeWidget,parent=self))
-            if True:
-                from ..tools.InspectionDigue_structures_tool import structuresTool
-                #self.tools.append(structuresTool(self.dbase, self, self.ElemtreeWidget,parent=self))
-                self.tools.append(structuresTool(self.dbase, self, self.ElemtreeWidget))
-
-            if True:
-                from ..tools.InspectionDigue_photos_tool import PhotosTool
-                #self.tools.append(structuresTool(self.dbase, self, self.ElemtreeWidget,parent=self))
-                self.tools.append(PhotosTool(self.dbase, self, self.ElemtreeWidget))
-
-            if False:
-                try:
-                    from ..tools.InspectionDigue_analyse import AnalyseDesordresTool
-                    self.tools.append(AnalyseDesordresTool(self.dbase, self, self.ElemtreeWidget,parent=self))
-                except:
-                    print("analyse non charge")
-
-            for tool in self.tools:
-                #pass
-                tool.loadWidgetinMainTree()
-
-    """
 
     def unloadTools(self):
         """!
@@ -602,6 +530,8 @@ class InspectiondigueWindowWidget(QMainWindow):
             self.dbase.currentprestationid = None
             self.currentprestationlabel.setText('Prestation inactif')
 
+
+
     def setHauteurPerche(self):
         num, ok = QInputDialog.getDouble(self,
                                          "Hauteur de perche",
@@ -640,8 +570,7 @@ class InspectiondigueWindowWidget(QMainWindow):
         # print(self.sender().text())
         # new db dialog
 
-        #reset dbase
-        self.reinitDBase()
+
 
         self.newDBDialog.exec_()
         dbtype, type = self.newDBDialog.dialogIsFinished()
@@ -649,10 +578,10 @@ class InspectiondigueWindowWidget(QMainWindow):
             return
         # crs selector
         self.crsselector.exec_()
-        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+        if sys.version_info.major == 2:
             crs = self.crsselector.selectedAuthId()
             crsnumber = int(crs.split(':')[1])
-        else:
+        elif sys.version_info.major == 3:
             crs = self.crsselector.crs().authid()
             crsnumber = int(crs.split(':')[1])
         # ressources directory
@@ -666,14 +595,21 @@ class InspectiondigueWindowWidget(QMainWindow):
             resdir = None
 
         # dialogs finished - reinit base
-        self.dbase.reInitDBase()
-
+        #self.dbase.reInitDBase()
+        #reset dbase
+        #self.createDBase()
 
 
         # create database
         if dbtype == 'spatialite':
             spatialitefile = self.qfiledlg.getSaveFileName(self, 'InspectionDigue nouveau', '', '*.sqlite')
+            #print('spatialitefile', spatialitefile)
+            if sys.version_info.major == 3 and len(spatialitefile)>0:
+                spatialitefile = spatialitefile[0]
+
             if spatialitefile:
+                # reset dbase
+                self.createDBase()
                 # originalfile = os.path.join(os.path.dirname(__file__), '..', 'DBASE', 'DBase_ind0.sqlite')
                 # shutil.copyfile(originalfile, spatialitefile)
 
@@ -698,6 +634,8 @@ class InspectiondigueWindowWidget(QMainWindow):
                     print('schema existe deja - choisir un autre schema')
                 else:
                     self.normalMessage('Creation de la base de donnees...')
+                    # reset dbase
+                    self.createDBase()
                     QApplication.processEvents()
 
                     self.dbase.createDbase(crs=crsnumber, worktype=type, dbasetype='postgis', dbname=nom, schema=schema,
@@ -714,12 +652,15 @@ class InspectiondigueWindowWidget(QMainWindow):
         """
 
         #reset dbase
-        self.reinitDBase()
+        #reset dbase
+
 
         filetoopen = action.text()
         if len(filetoopen.split(';')) == 1:
+            self.createDBase()
             self.dbase.loadQgisVectorLayers(filetoopen)
         else:
+            self.createDBase()
             db, user, password = filetoopen.split(';')
             nom, schema = db.split('@')[0].split('.')
             adresse, port = db.split('@')[1].split(':')
@@ -728,17 +669,19 @@ class InspectiondigueWindowWidget(QMainWindow):
 
     #
     def loadSLDbase(self):
-        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+
+        if sys.version_info.major == 2:
             file, extension = self.qfiledlg.getOpenFileNameAndFilter(None, 'Choose the file', '',
                                                                      'Spatialite (*.sqlite)', '')
-        else:
+        elif sys.version_info.major == 3:
             file , extension= self.qfiledlg.getOpenFileName(None, 'Choose the file', '',
                                                                      'Spatialite (*.sqlite)', '')
             print(file)
         if file:
             # reset dbase
-            self.reinitDBase()
-
+            #self.reinitDBase()
+            # reset dbase
+            self.createDBase()
             self.dbase.loadQgisVectorLayers(file)
 
     def loadPGDbase(self):
@@ -747,7 +690,8 @@ class InspectiondigueWindowWidget(QMainWindow):
         adresse, port, nom, schema, user, password = self.connDialog.dialogIsFinished()
         if adresse is not None and port is not None and nom is not None and user is not None and password is not None:
             # reset dbase
-            self.reinitDBase()
+            # reset dbase
+            self.createDBase()
 
             self.dbase.loadQgisVectorLayers(file=None, dbasetype='postgis', host=adresse, port=port, dbname=nom,
                                             schema=schema, user=user, password=password)
@@ -755,9 +699,77 @@ class InspectiondigueWindowWidget(QMainWindow):
     def updateRecentDBaseMenu(self):
         self.menuBases_recentes.triggered.disconnect(self.openFileFromMenu)
         self.menuBases_recentes.clear()
-        for telem in self.dbase.recentsdbase:
+        for telem in self.recentsdbase:
             self.menuBases_recentes.addAction(telem)
         self.menuBases_recentes.triggered.connect(self.openFileFromMenu)
+
+
+    def _readRecentDBase(self):
+        """
+        Lit le fichier des bases de données recentes et rempli le  menu//Fichier//base de données recentes
+        """
+        pathrecentproject = os.path.join(os.path.dirname(__file__), '..', 'config', 'recentprojects.txt')
+        try:
+            file = open(pathrecentproject, "r")
+            lines = file.readlines()
+            file.close()
+            self.recentsdbase = []
+            for line in lines:
+                if os.path.isfile(line.strip()):
+                    self.recentsdbase.append(line.strip())
+                elif len(line.split(';')) == 3:
+                    self.recentsdbase.append(line.strip())
+        except :
+            pass
+        # self.recentDBaseChanged.emit()
+        self.updateRecentDBaseMenu()
+
+    def _AddDbaseInRecentsDBase(self, spatialitefile=None, host='localhost',
+                                port=None, dbname=None, schema=None, user=None, password=None):
+        """
+        Methode appelée lors du chargement d'une BD lamia
+        Ajoute le chemin dans le fichier chargé dans Menu//Fichier//base de données recentes
+        """
+        if self.dbase.dbasetype == 'spatialite':
+            if spatialitefile in self.recentsdbase:
+                index = self.recentsdbase.index(spatialitefile)
+                del self.recentsdbase[index]
+            self.recentsdbase.insert(0, spatialitefile)
+            self._saveRecentDBase()
+            # self.recentDBaseChanged.emit()
+            self.updateRecentDBaseMenu()
+        elif self.dbase.dbasetype == 'postgis':
+            name = dbname + '.' +schema  + '@' + host + ':' + str(port) + ';' + user + ';' + password
+            if name in self.recentsdbase:
+                index = self.recentsdbase.index(name)
+                del self.recentsdbase[index]
+            self.recentsdbase.insert(0, name)
+            self._saveRecentDBase()
+            # self.recentDBaseChanged.emit()
+            self.updateRecentDBaseMenu()
+
+
+    def _saveRecentDBase(self):
+        """
+        Sauve le path de la BD lamia en cours d'utilisation dans le ficier employé dans
+        menu//Fichier//base de données recentes
+        """
+        pathrecentproject = os.path.join(os.path.dirname(__file__), '..', 'config', 'recentprojects.txt')
+        file = open(pathrecentproject, "w")
+        for i, path in enumerate(self.recentsdbase):
+            if i > 10:
+                break
+            if not path == '':
+                file.write(path + '\n')
+        file.close()
+        # self.recentDBaseChanged.emit()
+        self.updateRecentDBaseMenu()
+
+
+
+
+
+
 
     def DBaseLoaded(self):
         """
@@ -779,9 +791,20 @@ class InspectiondigueWindowWidget(QMainWindow):
             print(sys.stderr)
             'okok'.decode('utf-8')
 
+        self._AddDbaseInRecentsDBase(spatialitefile=self.dbase.spatialitefile,
+                                     host=self.dbase.pghost,
+                                     port=self.dbase.pgport,
+                                     dbname=self.dbase.pgdb,
+                                     schema=self.dbase.pgschema,
+                                     user=self.dbase.pguser,
+                                     password=self.dbase.pgpassword)
+
         self.gpsutil.setCRS(self.dbase.qgiscrs)
         self.dbase.updateWorkingDate()
         timestart = self.dbase.getTimeNow()
+
+        self.MaintreeWidget.setStyleSheet("")
+        self.ElemtreeWidget.setStyleSheet("")
 
         if debugtime: logger.debug(' progress bar done %.3f', self.dbase.getTimeNow() - timestart)
 
@@ -823,18 +846,12 @@ class InspectiondigueWindowWidget(QMainWindow):
                 else:
                     qgis.core.QgsProject.instance().addMapLayer(self.dbase.dbasetables[tablename]['layer'],
                                                                 False)
-            if False and 'scale' in self.dbase.dbasetables[tablename].keys():
-                self.dbase.dbasetables[tablename]['layerqgis'].setScaleBasedVisibility(True)
-                if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                    self.dbase.dbasetables[tablename]['layerqgis'].setMaximumScale(self.dbase.dbasetables[tablename]['scale'])
-                else:
-                    self.dbase.dbasetables[tablename]['layerqgis'].setMinimumScale(self.dbase.dbasetables[tablename]['scale'])
+
 
         self.loadStyle()
 
         # ************************** LOAD prepro MODULES ********************************************
         if True:
-
             path = os.path.join(os.path.dirname(__file__), '..', 'toolprepro', self.dbase.type.lower())
             modules = glob.glob(path + "/*.py")
             __all__ = [os.path.basename(f)[:-3] for f in modules if os.path.isfile(f)]
@@ -895,17 +912,21 @@ class InspectiondigueWindowWidget(QMainWindow):
                     moduletemp = importlib.import_module('.' + str(x), 'Lamia.Lamia.toolpostpro.' + self.dbase.type)
                 for name, obj in inspect.getmembers(moduletemp, inspect.isclass):
                     if moduletemp.__name__ == obj.__module__:
-                        try:
-                            if self.dbase.type.lower() in obj.DBASES:
-                                self.uipostpro.append(obj)
-                        except AttributeError:
-                            pass
+                        if hasattr(obj,'TOOLNAME'):
+                            self.uipostpro.append(obj)
+                            # print(type(obj), obj.__class__)
+                        if False:
+                            try:
+                                if self.dbase.type.lower() in obj.DBASES:
+                                    self.uipostpro.append(obj)
+                            except AttributeError:
+                                pass
 
             if debugtime: logger.debug('applyVisualMode %.3f', time.clock() - timestart)
 
 
         # ************************** LOAD tools ********************************************
-        if True:
+        if False:
             path = os.path.join(os.path.dirname(__file__), '..', 'toolmenu', self.dbase.type.lower())
             # print(path)
             modules = glob.glob(path + "/*.py")
@@ -1160,9 +1181,75 @@ class InspectiondigueWindowWidget(QMainWindow):
             self.canvas.mapToolSet.connect(self.toolsetChanged)
             self.canvas.setMapTool(self.pointEmitter)
 
+    def editFeature(self):
+        if self.editfeatureworking == True :
+            return
+
+
+        self.editfeatureworking = False
+
+        """
+        if True:
+            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                qgis.core.QgsMapLayerRegistry.instance().addMapLayer(self.dbase.dbasetables[tablename]['layerqgis'],
+                                                                     False)
+            else:
+                qgis.core.QgsProject.instance().addMapLayer(self.dbase.dbasetables[tablename]['layerqgis'],
+                                                            False)
+        lamialegendgroup.addLayer(self.dbase.dbasetables[tablename]['layerqgis'])
+        """
+
+
+        if self.stackedWidget_main.currentIndex() == 0:
+            wdg = self.MaintabWidget.widget(0).layout().itemAt(0).widget()
+
+            self.editfeaturelayer = qgis.core.QgsVectorLayer(wdg.dbasetable['layer'].source(),
+                                                             wdg.dbasetable['layer'].name() + '_edit',
+                                                             wdg.dbasetable['layer'].providerType())
+
+            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                qgis.core.QgsMapLayerRegistry.instance().addMapLayer(self.editfeaturelayer,False)
+                self.editfeaturetreelayer = self.qgislegendnode.insertLayer(0,self.editfeaturelayer)
+                if self.dbase.qgsiface is not None :
+                    self.dbase.qgsiface.setActiveLayer(self.editfeaturelayer)
+                    self.editfeaturelayer.startEditing()
+                    self.dbase.qgsiface.actionNodeTool().trigger()
+            else:
+                qgis.core.QgsProject.instance().addMapLayer(self.editfeaturelayer, False)
+                self.editfeaturetreelayer = self.qgislegendnode.insertLayer(0,self.editfeaturelayer)
+                if self.dbase.qgsiface is not None :
+                    self.dbase.qgsiface.setActiveLayer(self.editfeaturelayer)
+                    self.editfeaturelayer.startEditing()
+                    self.dbase.qgsiface.actionVertexTool().trigger()
+
+            self.editfeatureworking = True
+
+
+    def closeEditFeature(self, maintreewdgindex=None, savechanges=False):
+
+        if self.editfeatureworking:
+            self.editfeatureworking = False
+            if isinstance(savechanges,bool) and savechanges:
+                self.editfeaturelayer.commitChanges()
+            else:
+                self.editfeaturelayer.rollBack()
+            self.qgislegendnode.removeLayer(self.editfeaturelayer)
+
 
     def selectPickedFeature(self, point):
         # print('select',point.x(), point.y())
+        debug = False
+        if debug: logging.getLogger("Lamia").debug('Start %s', str(point))
+
+        addselection = False
+        modifiers = QApplication.keyboardModifiers()
+        #print('modif')
+        #if modifiers == QtCore.Qt.ShiftModifier:
+        if modifiers == QtCore.Qt.ControlModifier:
+            # print('Ctrl+Click')
+            addselection = True
+
+
 
         if False:
             self.canvas.unsetMapTool(self.pointEmitter)
@@ -1171,15 +1258,22 @@ class InspectiondigueWindowWidget(QMainWindow):
             except:
                 pass
         # print('windowd selectPickedFeature',self.stackedWidget_main.currentIndex() )
-        if self.stackedWidget_main.currentIndex() == 0:
+        if self.stackedWidget_main.currentIndex() == 0  :
+
             wdg = self.MaintabWidget.widget(0).layout().itemAt(0).widget()
             layer = wdg.dbasetable['layerqgis']
-            #nearestid, dist = wdg.getNearestId(point)
+
+            if debug: logging.getLogger("Lamia").debug('dabsetable %s', str(wdg.dbasetablename))
+
             point2 = self.pointEmitter.toLayerCoordinates(wdg.dbasetable['layerqgis'], point)
+
             nearestpk, dist = self.dbase.getNearestPk(wdg.dbasetable,
                                                       wdg.dbasetablename,
                                                       point2,
                                                       False)
+
+            if debug: logging.getLogger("Lamia").debug('nearest pk %s , dist %s', str(nearestpk), str(dist))
+
             if self.dbase.revisionwork:
                 feat = self.dbase.getLayerFeatureByPk(wdg.dbasetablename, nearestpk)
                 featid = feat['id_' + wdg.dbasetablename]
@@ -1187,12 +1281,64 @@ class InspectiondigueWindowWidget(QMainWindow):
             else:
                 featid = nearestpk
 
-            itemindex = wdg.comboBox_featurelist.findText(str(featid))
-            wdg.comboBox_featurelist.setCurrentIndex(itemindex)
+            if wdg.linkedtreewidget is not None:
+                items = wdg.linkedtreewidget.findItems(str(featid),QtCore.Qt.MatchExactly | QtCore.Qt.MatchRecursive)
+                for item in items:
+                    if item.parent() is not None and item.parent().text(0) == wdg.dbasetablename:
+                        wdg.linkedtreewidget.setCurrentItem(item)
+                        #wdg.linkedtreewidget.setItemSelected(item, True)
+                        # print('ok')
+                        break
+
+                # print('item', item.text(0))
+                #self.linkedtreewidget.setSelectionMode(QAbstractItemView.ExtendedSelection)
+
+
+            if False:
+                itemindex = wdg.comboBox_featurelist.findText(str(featid))
+                wdg.comboBox_featurelist.setCurrentIndex(itemindex)
+
+
 
         elif self.stackedWidget_main.currentIndex() == 1:
+
             wdg = self.stackedWidget_main.widget(1).layout().itemAt(0).widget()
-            wdg.selectPickedFeature(point)
+            if False:
+                wdg.selectPickedFeature(point)
+
+            layer = self.dbase.dbasetables[wdg.dbasetablename]['layerqgis']
+
+            point2 = self.pointEmitter.toLayerCoordinates(layer, point)
+
+            nearestpk, dist = self.dbase.getNearestPk(self.dbase.dbasetables[wdg.dbasetablename],
+                                                      wdg.dbasetablename,
+                                                      point2,
+                                                      False)
+
+            if debug: logging.getLogger("Lamia").debug('nearest pk %s , dist %s', str(nearestpk), str(dist))
+
+            if self.dbase.revisionwork:
+                feat = self.dbase.getLayerFeatureByPk(wdg.dbasetablename, nearestpk)
+                featid = feat['id_' + wdg.dbasetablename]
+                # print('sel',featid)
+            else:
+                featid = nearestpk
+
+            if wdg.linkedtreewidget is not None:
+                items = wdg.linkedtreewidget.findItems(str(featid), QtCore.Qt.MatchExactly | QtCore.Qt.MatchRecursive)
+                for item in items:
+                    if item.parent() is not None and item.parent().text(0) == wdg.dbasetablename:
+                        wdg.linkedtreewidget.setCurrentItem(item)
+                        # wdg.linkedtreewidget.setItemSelected(item, True)
+                        #print('ok')
+                        break
+
+                #print('item', item.text(0))
+
+
+
+
+
 
         if False:
             self.canvas.unsetMapTool( self.pointEmitter )
@@ -1203,8 +1349,13 @@ class InspectiondigueWindowWidget(QMainWindow):
             except:
                 pass
 
+
+
+
     def toolsetChanged(self, newtool, oldtool=None):
         # print('toolsetchanged', newtool,oldtool )
+        self.closeEditFeature()
+
         if newtool != self.pointEmitter :
             if False:
                 try:
@@ -1306,78 +1457,15 @@ class InspectiondigueWindowWidget(QMainWindow):
 
         QApplication.processEvents()
 
-    """
-    def printRapport(self, reporttype=None, pdffile=None):
-        if reporttype is None or pdffile is None:
-            self.printrapportdialog.exec_()
-            reporttype, pdffile = self.printrapportdialog.dialogIsFinished()
-            # print(reporttype, pdffile)
-
-        if reporttype is not None and pdffile is not None and pdffile != '':
-            if False:
-                self.worker = printPDFWorker(self.dbase, qgis.core.QgsProject.instance(), self.canvas, reporttype, pdffile,self)
-                self.thread = QtCore.QThread()
-                self.worker.moveToThread(self.thread)
-                self.worker.finished.connect(self.exportPDFFinished)
-                self.worker.error.connect(self.printError)
-                self.worker.message.connect(self.printMessage)
-                self.worker.finished.connect(self.exportPDFFinished)
-                self.worker.finished.connect(self.worker.deleteLater)
-                self.thread.finished.connect(self.thread.deleteLater)
-                self.worker.finished.connect(self.thread.quit)
-
-                self.thread.started.connect(self.worker.run)
-
-                self.thread.start()
-            if False:
-                self.worker = printPDFWorker(self.dbase, qgis.core.QgsProject.instance(), self.canvas, reporttype, pdffile,self)
-                self.worker.finished.connect(self.exportPDFFinished)
-                self.worker.error.connect(self.printError)
-                self.worker.message.connect(self.printMessage)
-                self.worker.run()
-            if True:
-                self.worker = printPDFWorker(self.dbase, qgis.core.QgsProject.instance(), self.canvas, reporttype,
-                                             pdffile, self)
-                self.worker.work()
-    """
 
 
-    """
-    def exportShapefile(self,tabletype=None, pdffile=None):
-        if tabletype is None or pdffile is None:
-            self.exportshapefiledialog.exec_()
-            tabletype, pdffile = self.exportshapefiledialog.dialogIsFinished()
-            # print(reporttype, pdffile)
+    def cleanLayerTree(self):
+        if self.qgislegendnode is not None:
+            self.qgislegendnode.removeAllChildren()
+            root = qgis.core.QgsProject.instance().layerTreeRoot()
+            root.removeChildNode(self.qgislegendnode)
 
-        if tabletype is not None and pdffile is not None and pdffile != '':
-            if False:
-                self.worker = exportShapefileWorker(self.dbase, tabletype, pdffile)
-                self.thread = QtCore.QThread()
-                self.worker.moveToThread(self.thread)
-                self.worker.finished.connect(self.exportPDFFinished)
-                self.worker.error.connect(self.printError)
-                self.worker.message.connect(self.printMessage)
-                self.worker.finished.connect(self.exportPDFFinished)
-                self.worker.finished.connect(self.worker.deleteLater)
-                self.thread.finished.connect(self.thread.deleteLater)
-                self.worker.finished.connect(self.thread.quit)
-                self.thread.started.connect(self.worker.run)
-                self.thread.start()
-            if False:
-                self.worker = exportShapefileWorker(self.dbase, self, tabletype, pdffile)
-                self.worker.finished.connect(self.exportPDFFinished)
-                self.worker.error.connect(self.printError)
-                self.worker.message.connect(self.printMessage)
-                self.worker.run()
-            if True:
-                self.worker = exportShapefileWorker(self.dbase, self, tabletype, pdffile)
-                self.worker.work()
-    """
 
-    def reInitWindows(self):
-        root = qgis.core.QgsProject.instance().layerTreeRoot()
-        grp = root.findGroup('Lamia')
-        qgis.core.QgsProject.instance().layerTreeRoot().removeChildNode(grp)
 
 
 
@@ -2001,7 +2089,7 @@ class InspectiondigueWindowWidget(QMainWindow):
 
         if self.sender() is not None:
             actionname = self.sender().objectName()
-            print(actionname,slfile )
+            #print(actionname,slfile )
 
             if actionname == 'actionImporter_et_ajouter_la_base':
                 typeimport = "nouvelle"
@@ -2109,6 +2197,8 @@ class InspectiondigueWindowWidget(QMainWindow):
 
             if self.qgislegendnode is not None:
                 self.qgislegendnode.removeAllChildren()
+                root = qgis.core.QgsProject.instance().layerTreeRoot()
+                root.removeChildNode(self.qgislegendnode)
 
         self.dbase.reInitDBase()
 

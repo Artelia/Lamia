@@ -10,7 +10,8 @@ NOK;                 1
 /;
 Squat;SQT
 Head Check;HDC
-Autres;
+Négatif;NEG
+Autres;AUT
 ###precisionsFatigue;           VARCHAR(255);            TEXT
 ###geoVoie;                INT;            INTEGER
 OK;             0
@@ -26,93 +27,93 @@ NOK;                 1
 #                 voie - etat revetement
 # ****************************************
 ###rev_fissurations;                INT;            INTEGER
-/;
 Non;0
 Oui;1
+/;
 ###rev_degarnissage;                INT;            INTEGER
-/;
 Non;0
 Oui;1
+/;
 ###rev_desafleurement;                INT;            INTEGER
-/;
 Non;0
 Oui;1
+/;
 ###rev_affaissement;                INT;            INTEGER
-/;
 Non;0
 Oui;1
+/;
 ###rev_ornierage;                INT;            INTEGER
-/;
 Non;0
 Oui;1
+/;
 ###rev_disparitions;                INT;            INTEGER
-/;
 Non;0
 Oui;1
+/;
 ###rev_deformations;                INT;            INTEGER
-/;
 Non;0
 Oui;1
+/;
 ###rev_arrachement;                INT;            INTEGER
-/;
 Non;0
 Oui;1
+/;
 ###rev_remontees;                INT;            INTEGER
-/;
 Non;0
 Oui;1
+/;
 ###rev_dessechement;                INT;            INTEGER
-/;
 Non;0
 Oui;1
+/;
 ###rev_vegetation;                INT;            INTEGER
-/;
 Non;0
 Oui;1
+/;
 ###rev_tonte;                INT;            INTEGER
-/;
 Non;0
 Oui;1
+/;
 ###rev_tassement;                INT;            INTEGER
-/;
 Non;0
 Oui;1
+/;
 ###rev_pollution;                INT;            INTEGER
-/;
 Non;0
 Oui;1
+/;
 
 # ****************************************
 #                 voie - etat equip
 # ****************************************
 ###eqp_fissurationjoint;                INT;            INTEGER
-/;
 Non;0
 Oui;1
+/;
 ###eqp_degarnissage;                INT;            INTEGER
-/;
 Non;0
 Oui;1
+/;
 ###eqp_absencejoint;                INT;            INTEGER
-/;
 Non;0
 Oui;1
+/;
 ###eqp_fissurationgrille;                INT;            INTEGER
-/;
 Non;0
 Oui;1
+/;
 ###eqp_caniveaubouche;                INT;            INTEGER
-/;
 Non;0
 Oui;1
+/;
 ###eqp_desaffleurement;                INT;            INTEGER
-/;
 Non;0
 Oui;1
+/;
 ###eqp_absenceass;                INT;            INTEGER
-/;
 Non;0
 Oui;1
+/;
 
 # ****************************************
 #                 Eqt sur quai

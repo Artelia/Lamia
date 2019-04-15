@@ -1,0 +1,25 @@
+###groupedesordre;           VARCHAR(255);            TEXT
+Canalisation;            INF
+Appareillage;            APP
+Ouvrage;            OUV
+
+###type_desordre;           VARCHAR(255);            TEXT
+Indéterminée;            IND
+Casse longitudinale;        CAL
+Casse nette;            CAN
+Déboîtement;            DEB
+Fissure;            FIS
+Joint;                JOI
+Percement;            PER
+Autre;                 AUT
+###cause_desordre;           VARCHAR(255);            TEXT
+/;
+Indéterminée;            IND
+Détérioration par un tiers;     TIE
+Corrosion interne;        COI
+Corrosion externe;         COE
+Mouvement de terrain;        MOU
+Surpression;            SUR
+Poinçonnement;            POI
+Défaut matériau;        DEF
+Autre;                 AUT

@@ -1,0 +1,12 @@
+#DJAN  SELECT Modele.* ,Ressource.*, Objet.*  FROM Modele INNER JOIN Ressource ON Modele.lpk_ressource = Ressource.pk_ressource INNER JOIN Objet ON Ressource.lpk_objet = Objet.pk_objet WHERE Objet.lpk_revision_end IS NULL  AND Objet.datetimedestruction IS NULL
+#QGIS SELECT Modele.* ,Ressource.*, Objet.*  FROM Modele INNER JOIN Ressource ON Modele.lpk_ressource = Ressource.pk_ressource INNER JOIN Objet ON Ressource.lpk_objet = Objet.pk_objet
+
+
+# Nom_champ              TypePostGis                 TypeSpatialite                               Option
+###pk_modele;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_modele;            INT ;                     INTEGER
+###lpk_ressource;        INT ;                       INTEGER                                        ;Ressource(pk_ressource)
+
+###logiciel;             VARCHAR(255);                TEXT
+###scenario ;             VARCHAR(255);                TEXT
+###conclusions;             VARCHAR(255);                TEXT

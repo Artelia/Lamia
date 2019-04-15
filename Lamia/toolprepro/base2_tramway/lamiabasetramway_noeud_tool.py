@@ -114,7 +114,7 @@ class BaseTramwayNoeudTool(BaseNoeudTool):
                     qgsline = qgis.core.QgsGeometry.fromPolyline([qgspoint,qgspoint])
                     geomtext = qgsline.exportToWkt()
                 elif sys.version_info.major == 3:
-                    qgspoint = qgis.core.QgsGeometry.fromWkt(geomtext).asPointXY()
+                    qgspoint = qgis.core.QgsGeometry.fromWkt(geomtext).asPoint()
                     qgsline = qgis.core.QgsGeometry.fromPolylineXY([qgspoint,qgspoint])
                     geomtext = qgsline.asWkt()
 

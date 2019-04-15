@@ -11,6 +11,7 @@ Ponctuel - Particulier;                    OUP
 /;                                  ;               ['','OUH','OUP','RTE','RHF','RHO','OUT']
 Clapet;                       CLA;                ['OUH']
 Vanne;                       VAN;                ['OUH']
+Exutoire;                       EXU;                ['OUH']
 Borne incendie;               BIN;                ['OUH']
 Fosse de decantation;         FOD;                ['OUH']
 Poste de refoulement, pompage;POS;                ['OUH']
@@ -81,8 +82,10 @@ Indefini;                       IND;               ['RHF']
 ###dimhori;           NUMERIC;            REAL
 ###securite;            VARCHAR(255);            TEXT
 /;                                  
-Visitable en securite;   1
+Visitable en securite;   2
+Non visitable - cadenassé;1
 Non visitable en securite;  0
+
 
 ###cote;                VARCHAR(255);            TEXT
 /;

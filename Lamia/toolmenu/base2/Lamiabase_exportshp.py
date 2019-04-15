@@ -118,9 +118,12 @@ class exportShapefileBaseWorker(object):
         self.pdffile = shpfile
         self.champs = self.readChamp(tabletype)
 
+
         self.fieldsforshp = self.buildQgsFields(self.champs)
         sql = self.buildSql(self.champs)
         if debug: logging.getLogger('Lamia').debug('sql %s', sql)
+
+
 
         query = self.dbase.query(sql)
 
@@ -166,6 +169,9 @@ class exportShapefileBaseWorker(object):
                         geomtype = qgis.core.QgsWkbTypes.LineString
                     elif res == 'POINT':
                         geomtype = qgis.core.QgsWkbTypes.Point
+
+
+
 
         self.fillShapefile(shpfile,
                            geomtype,
@@ -627,6 +633,8 @@ class exportShapefileBaseWorker(object):
             else:                           # field constraint
                 if actualtable not in ['main','with']:
                     linesplit = line.split(';')
+
+
                     champs[-1]['fields'][linesplit[0].strip()] = {}
 
                     if linesplit[1].strip() != '':
@@ -752,7 +760,6 @@ class exportShapefileBaseWorker(object):
 
 
 
-
     def buildQgsFields(self, champs):
         fields = qgis.core.QgsFields()
         for i, table in enumerate(champs):
@@ -760,8 +767,13 @@ class exportShapefileBaseWorker(object):
             if table['table'] not in ['geom', 'main', 'with']:
                 #print(i, champs[i])
                 for j, name in enumerate(table['fields'].keys()):
+                    if name in [field.name() for field in fields]:
+                        self.windowdialog.errorMessage("ATTENTION Champ " + name + " deja utilise")
+
                     typefield = eval('QtCore.QVariant.' + table['fields'][name]['type'])
                     fields.append(qgis.core.QgsField(name, typefield))
+
+
         return fields
 
 
@@ -1877,6 +1889,7 @@ class exportShapefileBaseWorker(object):
                                                     self.dbase.qgiscrs,
                                                    driverName="ESRI Shapefile")
 
+
         # print('*************')
         # print(len(fields.toList()))
 
@@ -2183,3 +2196,8 @@ class exportShapefileBaseWorker(object):
             boundinggeom = result
 
         return boundinggeom
+
+    """
+        if linesplit[0].strip() in champs[-1]['fields'].keys():
+        self.windowdialog.errorMessage("ATTENTION Champ" + str(linesplit[0].strip()) + "deja utilise")
+    """

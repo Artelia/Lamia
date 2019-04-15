@@ -12,6 +12,7 @@ from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigu
 import os
 import io
 import sys
+
 if False:
     if sys.version_info.major == 2:
         from ...libs import pyqtgraph as pg
@@ -41,6 +42,7 @@ import logging
 class PathTool(AbstractInspectionDigueTool):
 
     DBASES = ['digue','base_digue']
+    TOOLNAME = 'Networktool'
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
         super(PathTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
@@ -88,7 +90,7 @@ class PathTool(AbstractInspectionDigueTool):
 
         self.postOnActivation()
         
-        self.iconpath = os.path.join(os.path.dirname(__file__), 'lamiabase_croquis_tool_icon.png')
+        self.iconpath = os.path.join(os.path.dirname(__file__), 'Lamia_path_tool_icon.png')
 
         # ****************************************************************************************
         # properties ui
@@ -275,6 +277,9 @@ class PathTool(AbstractInspectionDigueTool):
                                      'y' : pk de la couche layertoproject (choisi pour être id_..)
                                      'xy' : list with [x,y]
         """
+        debug = False
+        if debug:  logging.getLogger("Lamia").debug('start')
+
         datas = {}
         if geomprojection is not None:
             # init la valeur retournée
@@ -863,11 +868,11 @@ class PathTool(AbstractInspectionDigueTool):
     def postOnDesactivation(self):
         if self.rubberBand is not None:
             self.rubberBand.reset(self.dbase.dbasetables['Infralineaire']['layer'].geometryType())
-
-        try:
-            self.plotWdg.scene().sigMouseMoved.disconnect(self.mouseMovedPyQtGraph)
-        except Exception as e:
-            print(e)
+        if False:
+            try:
+                self.plotWdg.scene().sigMouseMoved.disconnect(self.mouseMovedPyQtGraph)
+            except Exception as e:
+                print(e)
         try:
             self.pointEmitter.canvasClicked.disconnect(self.selectPickedFeature)
         except Exception as e:
@@ -958,7 +963,7 @@ class PathTool(AbstractInspectionDigueTool):
 
     def resizewidget(self,w,h):
 
-        if True:
+        if False:
             self.plotWdg.resize(w, h)
         if True:
             win = pg.GraphicsWindow()

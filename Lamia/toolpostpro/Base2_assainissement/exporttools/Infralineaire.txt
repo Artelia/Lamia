@@ -1,0 +1,31 @@
+###Infralineaire
+#nom              type               cst               valeur                    
+id_infralineaire;         Int;                  ;     id_infralineaire
+lk_descriptionsystem1;    Int;                  ;     lid_descriptionsystem_1
+lk_descriptionsystem2;    Int;                  ;     lid_descriptionsystem_2
+typeReseau;               String;   typeReseau   ;     typeReseau
+modeCirculation;        String;   modeCirculation ;     modeCirculation
+formecanalisation;               String;   formecanalisation   ;     formecanalisation
+diametreNominal;               Double;      ;     diametreNominal
+hauteur;               Double;       ;     hauteur
+anPoseSup;               String;       ;     anPoseSup
+materiau;               String;      materiau   ;     materiau
+branchement;               String;         ;     CASE WHEN branchement = 0 THEN 'Principal' ELSE 'Branchement' END
+longueur;Double;     ;ST_Length(geom)
+
+
+###Descriptionsystem
+id_descriptionsystem;         Int;               ;                  id_descriptionsystem
+
+###Objet
+#nom              type               cst               valeur                    
+id_objet;         Int;               ;                  id_objet
+commentaire;      String;               ;                  commentaire
+
+
+
+###geom
+geom;         Int;               ;                  ST_AsText(geom)
+
+###main
+FROM Infralineaire_now

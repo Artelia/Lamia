@@ -1,0 +1,56 @@
+###Equipement
+#nom              type               cst               valeur     
+id_equipement; Int;                 ;                   id_equipement
+cote;      String;             cote  ;                  Equipement_now.cote
+position;      String;             position  ;                  Equipement_now.position
+categorie;      String;             categorie  ;                  categorie
+typeequipement;      String;             typeequipement  ;                  typeequipement
+implantation;      String;             implantation  ;                  implantation
+ecoulement;      String;             ecoulement  ;                  ecoulement
+dimverti;      Double;               ;                  CASE WHEN dimverti > 0 THEN dimverti ELSE NULL END
+dimhori;      Double;               ;                  CASE WHEN dimhori > 0 THEN dimhori ELSE NULL END
+securite;      String;             securite  ;                  securite
+lid_descriptionsystem;     Int;               ;                  Equipement_now.lid_descriptionsystem
+
+
+
+###Desordre
+#nom              type               cst               valeur     
+
+
+###Observation
+#nom              type               cst               valeur     
+datetimeobservation;      String;               ;                  datetimeobservation
+source;                   String;               ;                  source
+nombre;                   Int;               ;                  CASE WHEN nombre >0 THEN nombre ELSE NULL END
+gravite;                  String;       gravite        ;                  gravite
+commentaire2;              String;               ;                  Observation_now.commentaire
+evolution;                  String;               ;                  evolution
+typesuite;                  String;       typesuite        ;                  typesuite
+precisionsuite;                   String;               ;                  precisionsuite
+commentairesuite;                  String;               ;                  commentairesuite
+
+oh_etatvantellerie      ;      String;     oh_etatvantellerie          ;                  oh_etatvantellerie    
+oh_etatvantelleriecom   ;      String;                               ;                  oh_etatvantelleriecom 
+oh_etatgeniecivil       ;      String;       oh_etatgeniecivil        ;                  oh_etatgeniecivil     
+oh_etatgeniecivilcom    ;      String;                               ;                  oh_etatgeniecivilcom  
+oh_testmanoeuvre        ;      String;    oh_testmanoeuvre        ;                  oh_testmanoeuvre      
+oh_testmanoeuvrecom     ;      String;                             ;                  oh_testmanoeuvrecom   
+oh_etancheite           ;      Int    ;                             ;                  oh_etancheite         
+oh_etancheitecom        ;      String;                             ;                  oh_etancheitecom      
+
+
+
+
+###Zonegeo
+## FROM Zonegeo_qgis WHERE ST_WITHIN(ST_MakeValid(Desordre_now.geom),ST_MakeValid(Zonegeo_qgis.geom))
+#pk_zonegeo;     Int;            ;        pk_zonegeo ;  pk_zonegeo
+sssecteur;     String;            ;        libelle
+
+
+###geom
+geom;         Int;               ;                  ST_AsText(ST_MakeValid(Equipement_now.geom))
+
+###main
+FROM Equipement_now LEFT JOIN Desordre_now ON  Desordre_now.lid_descriptionsystem = Equipement_now.id_descriptionsystem LEFT JOIN Observation_now ON Desordre_now.id_desordre = Observation_now.lid_desordre AND Observation_now.datetimeobservation = (SELECT datetimeobservation FROM Observation as Observationtemp WHERE Observationtemp.lid_desordre=Desordre_now.id_desordre ORDER BY datetimeobservation DESC LIMIT 1) WHERE Equipement_now.typeequipement IN ('CLA', 'VAN', 'EXU')
+

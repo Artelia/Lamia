@@ -1,0 +1,168 @@
+﻿###type_equipement;           VARCHAR(255);            TEXT
+Ventouse;            VEN
+Vanne;                VAN
+Vidange;            VID
+Régulateur de Pression;        REG
+Hydrant;            HYD
+Compteur;            COM
+Débitmètre;            DEB
+Chloration;            CHL
+Robinet de prise en charge;    RPC
+Equipements spéciaux;        SPE
+Autre;                AUT
+Indéterminé;            IND
+
+###diametre_entree;               REAL;           DECIMAL
+###diametre_sortie;               REAL;           DECIMAL
+###profondeur;             REAL;            DECIMAL
+###lid_cana1;               INT;           INTEGER
+###lid_cana2;               INT;           INTEGER
+###ss_type_equipement;           VARCHAR(255);            TEXT
+##type_equipement
+/;                                  ;               ['','VEN','VAN','VID','REG','HYD','COM','CHL','RPC','SPE']
+Auto;                        AUT;               ['VEN']
+Manuelle;                    MAN;               ['VEN']
+Opercule;             OPE;        ['VAN']
+Papillon;              PAP;        ['VAN']
+Purge;                 PUR;        ['VID']
+Vidange;             VID;        ['VID']
+Stabilisateur amont;          SAM;        ['REG']
+Stabilisateur aval;          SAV;        ['REG']
+Stabilisateur amont-aval;    SAA;        ['REG']
+Limiteur de débit;         LID;        ['REG']
+Robinet altimétrique;        ROA;        ['REG']
+Vanne de survitesse;         VAS;        ['REG']
+Clapet;              CLA;        ['REG']
+Disonnecteur;             DIS;        ['REG']
+Soupape de décharge;         SOU;        ['REG']
+Réducteur de pression;       RED;        ['REG']
+Bouche Incendie;             BOU;        ['HYD']
+Poteau Incendie;             PIN;        ['HYD']
+Individuel;                  IDV;        ['COM']
+Divisionnaire;               DIV;        ['COM']
+Gazeux;                      GAZ;        ['CHL']
+Eau de javel;                JAV;        ['CHL']
+Prise en charge;             PRI;        ['RPC']
+Robinet quart de tour;       RQT;        ['RPC']
+Céne de réduction;           COR;        ['SPE']
+Raccord;                     RAC;        ['SPE']
+Plaque pleine;               PLA;        ['SPE']
+
+###nature_reseau;             VARCHAR(255);            TEXT
+AEP;                 AEP
+/;
+Incendie;            INC
+Industriel;         INS
+Autre;                 AUT
+
+###acces;           VARCHAR(255);            TEXT
+##type_equipement
+/;                                  ;               ['','VEN','VAN','VID','REG','HYD','COM','CHL','RPC','SPE']
+Bouche à clé;              BAC;            ['VAN','VID']
+Regard individuel;                    REG;            ['VAN','VID','COM']
+Regard partagé;                    REP;            ['VAN','VID','COM']
+Intérieur;                 INT;            ['COM']
+Indéterminé;               IND;            ['VAN','VID','COM']
+
+
+
+# Champs Hydrant #########################
+###id_cana_sig_sdis;           INT;            INTEGER
+###id_eap;           INT;            INTEGER
+###date_essai;              DATE ;            TEXT
+###conformite;           INT;            INTEGER
+/;
+Oui;               1
+Non;               0
+Indéterminé;         IND
+###debit;             REAL;            DECIMAL
+###pese;             REAL;            DECIMAL
+###date_pese;             DATE;            TEXT
+
+
+# Champs Ventouse #########################
+###consigne_aval;             REAL;            DECIMAL
+###altimetrie;             REAL;            DECIMAL
+###consigne_amont;             REAL;            DECIMAL
+
+
+
+# Champs Vanne #########################
+###position;            INT;            INTEGER
+Oui;               1
+Non;               0
+
+
+
+
+# Champs Vidange #########################
+###exutoire;             VARCHAR(255);            TEXT
+
+
+
+# Champs compteurs #########################
+###dimensions;             REAL;            DECIMAL
+###tete_emettrice;             INT;            INTEGER
+Oui;               1
+Non;               0
+Indéterminé;         IND
+###numero;             INT;            INTEGER
+###equipable;            INT;            INTEGER
+Oui;               1
+Non;               0
+Indéterminé;       2
+
+
+
+
+# Champs RPC #########################
+###collier;                INT;            INTEGER
+Oui;               1
+Non;               0
+Indéterminé;       2
+
+
+
+# Champs Vannes et Compteurs #########################
+###localisation;             VARCHAR(255);            TEXT
+/;
+Parking;        PAR
+Herbe;          HER
+Bâtiment;       BAT
+Chemin piéton;      CHE
+Route carossable;   ROU
+Voies ferrées;      VOI
+###pres_echelon;             INT;            INTEGER
+##acces
+\;                      ;['','BAC','REG','INT','IND']
+Oui;               1        ;['REG']
+Non;               0        ;['REG']
+Indéterminé;       2        ;['REG']
+###accessibilite;               INT;            INTEGER
+Oui;               1
+Non;               0
+Indéterminé;       2
+###manipulable;               INT;            INTEGER
+Oui;               1
+Non;               0
+Indéterminé;       2
+
+
+
+# Champs Hydrant et Compteurs #########################
+###marque;             VARCHAR(255);            TEXT
+###type;             VARCHAR(255);            TEXT
+
+
+# Champs Chloration et Compteurs #########################
+###entreprise;             VARCHAR(255);            TEXT
+###telerelevage;              INT;            INTEGER
+Oui;               1
+Non;               0
+Indéterminé;       2
+###organes_associes;             VARCHAR(255);            TEXT
+
+
+
+
+

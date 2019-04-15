@@ -48,6 +48,7 @@ class SyntheseZonegeoTool(AbstractLamiaTool):
         # self.magicfunctionENABLED = True
         # self.linkagespec = None
         # self.pickTable = None
+        self.multipleselection = True
 
         # ****************************************************************************************
         # properties ui
@@ -72,7 +73,11 @@ class SyntheseZonegeoTool(AbstractLamiaTool):
                 self.userwdgfield.comboBox_objetrequest.currentIndexChanged.connect(self.postOnActivation)
 
             if True:
+
                 self.combowdg = QComboBox()
+                self.windowdialog.frame_4.layout().insertWidget(0, self.combowdg)
+                self.combowdg.setVisible(False)
+
 
                 self.propertieswdgDESORDRE = DesordreSyntheseTool(dbase=self.dbase,
                                                                   linkedtreewidget=self.userwdgfield.treeWidget_desordres,
@@ -89,6 +94,7 @@ class SyntheseZonegeoTool(AbstractLamiaTool):
 
 
 
+
     def postOnActivation(self):
 
         if True:
@@ -97,14 +103,18 @@ class SyntheseZonegeoTool(AbstractLamiaTool):
             self.userwdgfield.treeWidget_desordres.clear()
 
             # self.combowdg = QComboBox()
+            self.combowdg.clear()
             self.combowdg.addItems(['Zone geographique','Troncon'])
-            self.windowdialog.frame_4.layout().insertWidget(0,self.combowdg )
+            #self.windowdialog.frame_4.layout().insertWidget(0,self.combowdg )
+            self.combowdg.setVisible(True)
             self.combowdg.currentIndexChanged.connect(self.comboWidgetTypeChanged)
             self.combowdg.currentIndexChanged.emit(0)
 
             self.linkedtreewidget.setSelectionMode(QAbstractItemView.ExtendedSelection)
-
             self.linkedtreewidget.itemSelectionChanged.connect(self.propertieswdgDESORDRE.itemChanged)
+
+            if False and qgis.utils.iface is not None :
+                qgis.utils.iface.setActiveLayer(self.dbasetables['Zonegeo']['layerqgis'])
 
 
 
@@ -171,6 +181,7 @@ class SyntheseZonegeoTool(AbstractLamiaTool):
                     pass
 
 
+
     def comboWidgetTypeChanged(self, index ):
         if False:
             self.loadFeaturesinTreeWdg()
@@ -205,11 +216,15 @@ class SyntheseZonegeoTool(AbstractLamiaTool):
                     sql += "," + ','.join(self.qtreewidgetfields)
                 sql += " FROM Infralineaire_now"
 
+                self.dbasetablename = 'Infralineaire'
+
             elif self.combowdg.currentText() == 'Zone geographique':
                 sql = "SELECT id_zonegeo "
                 if len(self.qtreewidgetfields) > 0:
                     sql += "," + ','.join(self.qtreewidgetfields)
                 sql += " FROM zonegeo_qgis WHERE lpk_revision_end IS NULL"
+
+                self.dbasetablename = 'Zonegeo'
 
             sql = self.dbase.updateQueryTableNow(sql)
             query = self.dbase.query(sql)
@@ -245,7 +260,8 @@ class SyntheseZonegeoTool(AbstractLamiaTool):
 
     def postOnDesactivation(self):
 
-        self.combowdg.setParent(None)
+        #self.combowdg.setParent(None)
+        self.combowdg.setVisible(False)
 
         self.linkedtreewidget.setSelectionMode(QAbstractItemView.SingleSelection)
 
@@ -258,6 +274,8 @@ class SyntheseZonegeoTool(AbstractLamiaTool):
             self.linkedtreewidget.itemSelectionChanged.disconnect(self.propertieswdgDESORDRE.itemChanged)
         except:
             pass
+
+
 
     def createParentFeature(self):
         pass
@@ -292,6 +310,8 @@ class UserUI(QWidget):
         # self.setupUi(self)
         uipath = os.path.join(os.path.dirname(__file__), 'synthesedesordre','analysedesordresTool.ui')
         uic.loadUi(uipath, self)
+
+
 
 # ********************************************************************************************************************
 # ********************************* Desordre widget            *******************************************************
@@ -472,6 +492,7 @@ class DesordreSyntheseTool(AbstractLamiaTool):
 
         if self.parentWidget is not None:
             self.activegraphcat = None
+
             if self.parentWidget.combowdg.currentText() == 'Troncon':
                 self.activegraphcat = 'infralineaire'
             elif self.parentWidget.combowdg.currentText() == 'Zone geographique':

@@ -84,7 +84,7 @@ class InspectiondigueDockWidget(QDockWidget):
 
 
             self.windowwidget.dbase.reInitDBase()
-            self.windowwidget.reInitWindows()
+            self.windowwidget.cleanLayerTree()
 
         self.windowwidget.gpsutil.closeConnection()
         self.closingPlugin.emit()

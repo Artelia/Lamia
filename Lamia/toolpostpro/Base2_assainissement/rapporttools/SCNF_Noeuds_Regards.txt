@@ -1,0 +1,29 @@
+###atlaslayersql
+SELECT Noeud_qgis.* 
+FROM Noeud_qgis 
+WHERE Noeud_qgis.id_noeud = Noeud_qgis.id_noeud 
+###atlaslayerid
+id_noeud
+###spatial
+True
+
+###atlaslayerstyle
+Noeuds_atlas.qml
+###atlasdrivemap
+#itemname;   minscale;   typescale;      layers
+map1;       500;       Predefined      ;['atlaslayer', 'Equipement','Infralineaire', 'ortho']
+#map1;       2500;       Predefined      ;[]
+###generalmap
+#itemname;   minscale;   typescale; layers
+map0    ;           ;             ; ['Noeud','Infralineaire', 'scan25']
+#map0    ;           ;             ; []
+###images
+#itemname   ; type
+schema;schema_noeud
+logo;logo
+tab;tableauinf
+###childprint
+#confname;                linkcolumn;             optionsql
+
+
+

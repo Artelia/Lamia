@@ -45,7 +45,7 @@ class DBaseParser(QtCore.QObject):
     the database parser
     """
 
-    recentDBaseChanged = QtCore.pyqtSignal()
+    # recentDBaseChanged = QtCore.pyqtSignal()
     dBaseLoaded = QtCore.pyqtSignal()
     errorMessage = QtCore.pyqtSignal(str)
     normalMessage = QtCore.pyqtSignal(str)
@@ -129,7 +129,7 @@ class DBaseParser(QtCore.QObject):
         self.currentrevision = None
         self.maxrevision = 0
 
-        self._readRecentDBase()
+        #self._readRecentDBase()
 
         # getqgisversion : ex : 21820
         try:
@@ -209,18 +209,24 @@ class DBaseParser(QtCore.QObject):
         # manage ressource directory
         dbaseressourcesdirectorytemp = None
         if dbaseressourcesdirectory is None and dbasetype == 'spatialite':
-            dbaseressourcesdirectorytemp = os.path.join(os.path.dirname(slfile), 'DBspatialite')
+            dbaseressourcesdirectorytemp = os.path.join(os.path.dirname(slfile), u'DBspatialite')
         else:
             dbaseressourcesdirectorytemp = dbaseressourcesdirectory
 
         if not os.path.isdir(dbaseressourcesdirectorytemp):
             os.makedirs(dbaseressourcesdirectorytemp)
-            configfir = os.path.join(dbaseressourcesdirectorytemp,'config')
-            os.makedirs(configfir)
-            if False:
-                exportdir = os.path.join(dbaseressourcesdirectorytemp, 'backup')
-                if not os.path.isdir(exportdir):
-                    os.makedirs(exportdir)
+            configdir = os.path.join(dbaseressourcesdirectorytemp,'config')
+            os.makedirs(configdir)
+            #tool dir
+            dbasedir = os.path.join(configdir,'dbase')
+            os.makedirs(dbasedir)
+            rapportdir = os.path.join(configdir,'rappporttools')
+            os.makedirs(rapportdir)
+            styledir = os.path.join(configdir,'styles')
+            os.makedirs(styledir)
+            importdir = os.path.join(configdir,'importtools')
+            os.makedirs(importdir)
+
 
         # sql file contains output of dbase creation script
         sqlfile = os.path.join(dbaseressourcesdirectorytemp, 'sqlcreation.txt')
@@ -424,6 +430,14 @@ class DBaseParser(QtCore.QObject):
                         self.query(sql)
                         self.commit()
 
+            #spatialindex
+            if 'spatialindex' in self.dbasetables[dbname].keys():
+                sql = "SELECT CreateSpatialIndex('" + dbname + "','geom')"
+                openedsqlfile.write(sql + '\n')
+                self.query(sql)
+
+
+
         openedsqlfile.close()
 
 
@@ -435,7 +449,7 @@ class DBaseParser(QtCore.QObject):
                                       user=self.pguser, password=self.pgpassword)
 
 
-    def createDBDictionary(self, type, configdir=False):
+    def createDBDictionary(self, type, configdir=False, baseversiontoread=None, workversiontoread=None):
         """!
         Read the files in ./DBASE/create
         A file describes the fields  like that:
@@ -458,6 +472,7 @@ class DBaseParser(QtCore.QObject):
                           'layerdjango' : view layer with parent fields
                           'showinqgis' : display layer in canvas
                           'scale' : visibility scale
+                          'spatialindex' : create a spatialite spatial index
                           'fields' : OrderedDict{...{fieldname : {'PGtype' : PostGis type (integer not null...)
                                                                   'SLtype' : spatialite type (integer not null...)
                                                                   'FK' (optional) : foreign key definition
@@ -478,36 +493,56 @@ class DBaseParser(QtCore.QObject):
         createfilesdir = None
 
         if not configdir:
+            if baseversiontoread is None:
+                self.type = type
+                self.dbasetables = {}
 
-            self.type = type
-            self.dbasetables = {}
-
-            createfilesdir, workversionmax = self.getMaxVersionRepository(self.type)
-            createfilesdirbase, baseversionmax = self.getMaxVersionRepository(self.type.split('_')[0])
+                createfilesdir, workversionmax = self.getMaxVersionRepository(self.type)
+                createfilesdirbase, baseversionmax = self.getMaxVersionRepository(self.type.split('_')[0])
 
 
 
-            if self.version is not None and (self.version < baseversionmax or self.workversion < workversionmax) :
-                self.updateDBaseVersion()
+                if (self.version is not None
+                        and (self.version < baseversionmax or self.workversion < workversionmax)) :
+                    self.updateDBaseVersion()
 
-            self.version = baseversionmax
-            self.workversion = workversionmax
+                self.version = baseversionmax
+                self.workversion = workversionmax
 
-            if createfilesdirbase and createfilesdirbase != createfilesdir :
-                parsertemp = DBaseParser(None)
-                parsertemp.createDBDictionary(self.type.split('_')[0])
-                self.dbasetables = parsertemp.dbasetables
-                del parsertemp
+                if createfilesdirbase and createfilesdirbase != createfilesdir :    #cas de la lecture du bd enfant
+                    parsertemp = DBaseParser(None)
+                    parsertemp.createDBDictionary(self.type.split('_')[0])
+                    self.dbasetables = parsertemp.dbasetables
+                    del parsertemp
+            else:
+                self.type = type
+                self.dbasetables = {}
+                createfilesdir, workversionmax = self.getMaxVersionRepository(self.type)
+                createfilesdirbase, baseversionmax = self.getMaxVersionRepository(self.type.split('_')[0])
+
+
+                createfilesdirbase = os.path.join(os.path.dirname(createfilesdir),  self.type.split('_')[0] +'_' + baseversiontoread)
+                createfilesdir = None
+                if workversiontoread is not None:
+                    createfilesdir = os.path.join(os.path.dirname(createfilesdirbase),self.type + '_' + workversiontoread)
+
+                if createfilesdirbase and createfilesdirbase != createfilesdir :    #cas de la lecture du bd enfant
+                    parsertemp = DBaseParser(None)
+                    parsertemp.createDBDictionary(self.type.split('_')[0], baseversiontoread=baseversiontoread,workversiontoread=baseversiontoread)
+                    self.dbasetables = parsertemp.dbasetables
+                    del parsertemp
+
+
+
 
         else:
-            createfilesdir = os.path.join(self.dbaseressourcesdirectory,'config')
+            createfilesdir = os.path.join(self.dbaseressourcesdirectory,'config','dbase')
             if not os.path.exists(createfilesdir):
                 return
 
 
         for filename in glob.glob(os.path.join(createfilesdir, '*.txt')):
 
-            # print(filename)
             basename = os.path.basename(filename).split('.')[0]
             if debug: logging.getLogger("Lamia").debug('filename %s',basename )
             temp = basename.split('_')
@@ -594,6 +629,10 @@ class DBaseParser(QtCore.QObject):
                         value = line[5:].strip()
                         if value == 'YES':
                             self.dbasetables[tablename]['showinqgis'] = True
+                    elif line[0:13] == '#SPATIALINDEX':
+                        value = line[13:].strip()
+                        if value == 'YES':
+                            self.dbasetables[tablename]['spatialindex'] = True
                     else:
                         continue
 
@@ -763,8 +802,7 @@ class DBaseParser(QtCore.QObject):
 
         if debug: logging.getLogger('Lamia').debug('step1')
 
-        self._AddDbaseInRecentsDBase(spatialitefile=file, host=host, port=port, dbname=dbname, schema=schema, user=user,
-                                     password=password)
+        # self._AddDbaseInRecentsDBase(spatialitefile=file, host=host, port=port, dbname=dbname, schema=schema, user=user,password=password)
         # self.reInitDBase()
 
         version = None
@@ -826,16 +864,17 @@ class DBaseParser(QtCore.QObject):
                     uri = qgis.core.QgsDataSourceUri()
                 if self.dbasetype == 'spatialite':
                     uri.setDatabase(file)
+
                     # raw layer
-                    #if geom is not None:
+
                     if self.isTableSpatial(tablename):
                         uri.setDataSource('', str(tablename), 'geom')
                     else:
                         uri.setDataSource('', str(tablename), '')
+
                     self.dbasetables[tablename]['layer'] = qgis.core.QgsVectorLayer(uri.uri(), tablename, 'spatialite')
 
                     # view layer qgis
-                    #if geom is not None:
 
                     #get id column
                     idcolumnname = self.getFirstIdColumn(tablename + '_qgis')
@@ -862,6 +901,8 @@ class DBaseParser(QtCore.QObject):
                         # uri.setDataSource('', str(tablename) + '_django', '', '', "id_" + str(tablename).lower())
                         uri.setDataSource('', str(tablename) + '_django', '', '', idcolumnname)
                     self.dbasetables[tablename]['layerdjango'] = qgis.core.QgsVectorLayer(uri.uri(), tablename, 'spatialite')
+
+
 
 
                 elif self.dbasetype == 'postgis':
@@ -976,6 +1017,8 @@ class DBaseParser(QtCore.QObject):
                 uri.setDataSource('', sql, '', '', finaltableid)
 
             layer = qgis.core.QgsVectorLayer(uri.uri(), tablename, 'spatialite')
+
+
 
         elif self.dbasetype == 'postgis':
             uri.setConnection(self.pghost, str(self.pgport), self.pgdb, self.pguser, self.pgpassword)
@@ -1166,77 +1209,66 @@ class DBaseParser(QtCore.QObject):
         elif self.dbasetype == 'postgis':
             self.connPGis.commit()
 
+    if False:
+        def _readRecentDBase(self):
+            """
+            Lit le fichier des bases de données recentes et rempli le  menu//Fichier//base de données recentes
+            """
+            pathrecentproject = os.path.join(os.path.dirname(__file__), '..', 'config', 'recentprojects.txt')
+            try:
+                file = open(pathrecentproject, "r")
+                lines = file.readlines()
+                file.close()
+                self.recentsdbase = []
+                for line in lines:
+                    if os.path.isfile(line.strip()):
+                        self.recentsdbase.append(line.strip())
+                    elif len(line.split(';')) == 3:
+                        self.recentsdbase.append(line.strip())
+            except :
+                pass
+            self.recentDBaseChanged.emit()
 
-    def _readRecentDBase(self):
-        """
-        Lit le fichier des bases de données recentes et rempli le  menu//Fichier//base de données recentes
-        """
-        pathrecentproject = os.path.join(os.path.dirname(__file__), '..', 'config', 'recentprojects.txt')
-        try:
-            file = open(pathrecentproject, "r")
-            lines = file.readlines()
+        def _AddDbaseInRecentsDBase(self, spatialitefile=None, host='localhost',
+                                    port=None, dbname=None, schema=None, user=None, password=None):
+            """
+            Methode appelée lors du chargement d'une BD lamia
+            Ajoute le chemin dans le fichier chargé dans Menu//Fichier//base de données recentes
+            """
+            if self.dbasetype == 'spatialite':
+                if spatialitefile in self.recentsdbase:
+                    index = self.recentsdbase.index(spatialitefile)
+                    del self.recentsdbase[index]
+                self.recentsdbase.insert(0, spatialitefile)
+                self._saveRecentDBase()
+                self.recentDBaseChanged.emit()
+            elif self.dbasetype == 'postgis':
+                name = dbname + '.' +schema  + '@' + host + ':' + str(port) + ';' + user + ';' + password
+                if name in self.recentsdbase:
+                    index = self.recentsdbase.index(name)
+                    del self.recentsdbase[index]
+                self.recentsdbase.insert(0, name)
+                self._saveRecentDBase()
+                self.recentDBaseChanged.emit()
+
+
+        def _saveRecentDBase(self):
+            """
+            Sauve le path de la BD lamia en cours d'utilisation dans le ficier employé dans
+            menu//Fichier//base de données recentes
+            """
+            pathrecentproject = os.path.join(os.path.dirname(__file__), '..', 'config', 'recentprojects.txt')
+            file = open(pathrecentproject, "w")
+            for i, path in enumerate(self.recentsdbase):
+                if i > 10:
+                    break
+                if not path == '':
+                    file.write(path + '\n')
             file.close()
-            self.recentsdbase = []
-            for line in lines:
-                if os.path.isfile(line.strip()):
-                    self.recentsdbase.append(line.strip())
-                elif len(line.split(';')) == 3:
-                    self.recentsdbase.append(line.strip())
-        except :
-            pass
-        self.recentDBaseChanged.emit()
-
-    def _AddDbaseInRecentsDBase(self, spatialitefile=None, host='localhost',
-                                port=None, dbname=None, schema=None, user=None, password=None):
-        """
-        Methode appelée lors du chargement d'une BD lamia
-        Ajoute le chemin dans le fichier chargé dans Menu//Fichier//base de données recentes
-        """
-        if self.dbasetype == 'spatialite':
-            if spatialitefile in self.recentsdbase:
-                index = self.recentsdbase.index(spatialitefile)
-                del self.recentsdbase[index]
-            self.recentsdbase.insert(0, spatialitefile)
-            self._saveRecentDBase()
             self.recentDBaseChanged.emit()
-        elif self.dbasetype == 'postgis':
-            name = dbname + '.' +schema  + '@' + host + ':' + str(port) + ';' + user + ';' + password
-            if name in self.recentsdbase:
-                index = self.recentsdbase.index(name)
-                del self.recentsdbase[index]
-            self.recentsdbase.insert(0, name)
-            self._saveRecentDBase()
-            self.recentDBaseChanged.emit()
-
-
-    def _saveRecentDBase(self):
-        """
-        Sauve le path de la BD lamia en cours d'utilisation dans le ficier employé dans
-        menu//Fichier//base de données recentes
-        """
-        pathrecentproject = os.path.join(os.path.dirname(__file__), '..', 'config', 'recentprojects.txt')
-        file = open(pathrecentproject, "w")
-        for i, path in enumerate(self.recentsdbase):
-            if i > 10:
-                break
-            if not path == '':
-                file.write(path + '\n')
-        file.close()
-        self.recentDBaseChanged.emit()
 
 
     def reInitDBase(self):
-        if self.dbasetype is not None:
-            root = qgis.core.QgsProject.instance().layerTreeRoot()
-            #root.addGroup('Lamia')
-            if self.dbasetype == "spatialite":
-                groupname = 'Lamia_' + os.path.basename(self.spatialitefile)
-            elif self.dbasetype == "postgis":
-                groupname = 'Lamia_' + self.pgschema
-
-            lamialegendgroup =  root.findGroup(groupname)
-            if lamialegendgroup is not None:
-                lamialegendgroup.removeAllChildren()
 
         self.dbasetables = None
 
@@ -1510,6 +1542,7 @@ class DBaseParser(QtCore.QObject):
 
         # créé l'index spatial
         spindex = qgis.core.QgsSpatialIndex(dbasetable['layerqgis'].getFeatures())
+
         layernearestid = spindex.nearestNeighbor(point2, 1)
 
         #on cherche la geometry du nearestid
@@ -1522,6 +1555,7 @@ class DBaseParser(QtCore.QObject):
             nearestfet = self.getLayerFeatureById(dbasetablename, layernearestid[0])
         else:
             nearestfet = self.getLayerFeatureByPk(dbasetablename, layernearestid[0])
+
         nearestfetgeom = nearestfet.geometry()
 
 
@@ -1693,10 +1727,16 @@ class DBaseParser(QtCore.QObject):
         :param fid: le pk dont on veut le feature
         :return: le QgsFeature associé au pk demandé
         """
+        #print('featpk')
+        debug = False
+        if debug : logging.getLogger("Lamia").debug('Start %s %s', str(layername), str(fid))
+
         if int(str(self.qgisversion_int)[0:3]) < 220:
             return self.dbasetables[layername]['layer'].getFeatures(qgis.core.QgsFeatureRequest(fid)).next()
+
         else:
             return self.dbasetables[layername]['layer'].getFeature(fid)
+
 
     def getValuesFromPk(self, dbasename, fields, pk):
         if isinstance(fields, str):
@@ -2148,9 +2188,52 @@ class DBaseParser(QtCore.QObject):
 
 
     def updateDBaseVersion(self):
-        print('DBASE need an update')
+
+        self.normalMessage.emit("Mise à jour de la base de données...")
+        debug = False
+        if debug: logging.getLogger("Lamia").debug('DBASE need an update')
+
+        createfilesdir, workversionmax = self.getMaxVersionRepository(self.type)
+        createfilesdirbase, baseversionmax = self.getMaxVersionRepository(self.type.split('_')[0])
+
+        if debug: logging.getLogger("Lamia").debug('main version projet : %s, new : %s', str(self.version), str(baseversionmax))
+        if debug: logging.getLogger("Lamia").debug('work version projet : %s, new : %s', str(self.workversion), str(workversionmax))
 
 
+
+        self.createDBDictionary(self.type, baseversiontoread=self.version, workversiontoread=self.workversion )
+        dictold = dict(self.dbasetables)
+        self.createDBDictionary(self.type, baseversiontoread=baseversionmax, workversiontoread=workversionmax)
+        dictnew = dict(self.dbasetables)
+
+
+        results=[]
+
+        for table in dictnew.keys():
+            for field in dictnew[table]['fields']:
+                if field not in dictold[table]['fields'].keys():
+                    results.append([table, field])
+
+        if debug: logging.getLogger("Lamia").debug('diff : %s',str(results))
+
+
+        for table, field in results:
+            sql = 'ALTER TABLE ' + table + ' ADD COLUMN ' + field + ' '
+            if self.dbasetype == 'spatialite':
+                sql += dictnew[table]['fields'][field]['SLtype']
+            elif self.dbasetype == 'postgis':
+                sql += dictnew[table]['fields'][field]['PGtype']
+            self.query(sql)
+
+
+
+        sql = "UPDATE Basedonnees SET version = '" + str(baseversionmax) + "'"
+        if workversionmax is not None:
+            sql += ",workversion = '" + str(workversionmax) + "'"
+
+        self.query(sql)
+
+        self.normalMessage.emit("Mise à jour de la base de données terminée")
 
 
 
@@ -2974,7 +3057,14 @@ class DBaseParser(QtCore.QObject):
                                 if noncriticalfield[l] == 'lpk_revision_begin':
                                     restemp.append(str(1))
                                 elif isinstance(res, str) or  ( isinstance(res, unicode) and noncriticalfield[l] != 'geom') :
-                                    restemp.append("'" + str(res).replace("'","''") + "'")
+                                    if sys.version_info.major == 2:
+                                        if isinstance(res, unicode):
+                                            restemp.append("'" + res.replace("'","''") + "'")
+                                        else:
+                                            restemp.append("'" + str(res).replace("'", "''") + "'")
+                                    else:
+                                        restemp.append("'" + str(res).replace("'", "''") + "'")
+
                                 elif noncriticalfield[l] == 'geom' and res is not None:
                                     # print('geom', "ST_GeomFromText('" + res + "', " + str(self.crsnumber)  + ")")
                                     restemp.append("ST_GeomFromText('" + res + "', " + str(self.crsnumber)  + ")")
@@ -3315,8 +3405,10 @@ class DBaseParser(QtCore.QObject):
 
         fromfile = fromfile
         fromdir =  os.path.dirname(fromfile)
+        fromfilename, fromfileext = os.path.splitext(os.path.basename(fromfile))
         destinationfile = tofile
         destinationdir = os.path.dirname(destinationfile)
+        destinationfilename, destinationfileext = os.path.splitext(os.path.basename(destinationfile))
 
         if os.path.isfile(fromfile):
 
@@ -3333,6 +3425,16 @@ class DBaseParser(QtCore.QObject):
 
                 if len(fromfilebase.split('_')) > 1 and fromfilebase.split('_')[1] == 'croquis':
                     shutil.copy(fromfile, destinationfile)
+
+                elif fromext in ['.shp']:
+                    dirfiles = [f for f in os.listdir(fromdir) if os.path.isfile(os.path.join(fromdir,f))]
+                    for dirfile in dirfiles:
+                        dirfilebase, dirfileext = os.path.splitext(dirfile)
+                        if dirfilebase == fromfilename:
+                            fromshpfile = os.path.join(fromdir,dirfilebase + dirfileext )
+                            toshpfile = os.path.join(destinationdir,destinationfilename + dirfileext)
+                            shutil.copy(fromshpfile, toshpfile)
+
                 else:
                     if withthumbnail in [0,1] and PILexists and fromext.lower() in ['.jpg', '.jpeg', '.png']:
 

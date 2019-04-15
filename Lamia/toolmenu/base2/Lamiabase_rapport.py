@@ -86,6 +86,8 @@ class printPDFBaseWorker(object):
                 self.painter = self.painter
                 #self.idparent = idparent
                 #self.parentheightpx = parentheightpx
+
+        self.idecalage = 0
         if self.parentprintPDFworker is None:
             self.printer = QPrinter()
             self.painter = QtGui.QPainter()
@@ -525,9 +527,19 @@ class printPDFBaseWorker(object):
         if self.parentprintPDFworker is not None:
             sql += ' AND ' + self.parentprintPDFworker.atlasconfData['childprint']['linkcolumn']
             #sql += ' = ' + str(self.parentprintPDFworker.currentid)
-            linktablename = self.parentprintPDFworker.atlasconfData['childprint']['linkcolumn'].split('_')[-1]
-            sql += ' = ' + str(self.parentprintPDFworker.currentatlasfeat['id_' + linktablename])
-            sql += ' ' + self.parentprintPDFworker.atlasconfData['childprint']['optionsql']
+            if False:
+                linktablename = self.parentprintPDFworker.atlasconfData['childprint']['linkcolumn'].split('_')[-1]
+                sql += ' = ' + str(self.parentprintPDFworker.currentatlasfeat['id_' + linktablename])
+                sql += ' ' + self.parentprintPDFworker.atlasconfData['childprint']['optionsql']
+            if True:
+                linkcolumnname = self.parentprintPDFworker.atlasconfData['childprint']['linkcolumn'].split('.')[-1]
+                if linkcolumnname.split('_')[0] in ['lpk', 'lid']:
+                    linkcolumnname = linkcolumnname[1:]
+                else:
+                    self.windowdialog.errorMessage('Erreur sur la champs de liaison childprint')
+                    return False
+                sql += ' = ' + str(self.parentprintPDFworker.currentatlasfeat[linkcolumnname])
+                sql += ' ' + self.parentprintPDFworker.atlasconfData['childprint']['optionsql']
 
         if debug: logging.getLogger("Lamia").debug('atlaslayer sql : %s', sql)
 
@@ -542,6 +554,7 @@ class printPDFBaseWorker(object):
                                                         sql=sql,
                                                         tableid=self.atlasconfData['atlaslayerid'])
 
+        if debug: logging.getLogger("Lamia").debug('atlaslayer pk index : %s', str(atlaslayer.dataProvider().pkAttributeIndexes()))
         if debug: logging.getLogger("Lamia").debug('atlaslayer ids : %s', str([fet.id() for fet in atlaslayer.getFeatures() ]))
 
         return atlaslayer
@@ -557,7 +570,7 @@ class printPDFBaseWorker(object):
             stop10 = False
         else:
             debug = True  # True False
-            stop10 = False
+            stop10 = True
 
 
         if debug: logging.getLogger("Lamia").debug('started')
@@ -668,30 +681,41 @@ class printPDFBaseWorker(object):
             self.heightpx = 0
             self.currentpageheightpx = 0
 
-
+        indexpagetotal = -1
 
         for zonegeoid in idsforreportdict.keys():
             #set generalmap extent to zonegeo
+
             if zonegeoid > 0:
                 self.setGeneralMapExtentByZonegeo(newComposition,zonegeoid)
                 if debug: self.logger.debug('setGeneralMapExtentByZonegeo done')
 
 
             for indexpage, featid in enumerate(idsforreportdict[zonegeoid]):
-                if debug: self.logger.debug('featid %s', str(featid))
-                if stop10 and indexpage == 10: break
+                indexpagetotal += 1
+                if debug: self.logger.debug('featid %s , indexpage %s', str(featid), str(indexpage))
+                if stop10 and indexpage == 6: break
+
                 self.currentid = featid
                 compt += 1
                 if self.parentprintPDFworker is None:
                     self.setLoadingProgressBar(progress, compt)
 
-                request = qgis.core.QgsFeatureRequest().setFilterExpression('"' + self.atlasconfData['atlaslayerid'] + '" = ' + str(featid))
-                # print('request',request)
+                if False:
+                    request = qgis.core.QgsFeatureRequest().setFilterExpression('"' + self.atlasconfData['atlaslayerid'] + '" = ' + str(featid))
+                if True:
+                    request = qgis.core.QgsFeatureRequest(featid)
+
+                # if debug: logging.getLogger("Lamia").debug('request %s', self.atlasconfData['atlaslayerid'] + '" = ' + str(featid))
+
                 if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
                     #atlasfeat = reportdic['atlaslayer'].getFeatures(qgis.core.QgsFeatureRequest(featid)).next()
                     self.currentatlasfeat = coveragelayer.getFeatures(qgis.core.QgsFeatureRequest(request)).next()
                 else:
                     #atlasfeat = next(reportdic['atlaslayer'].getFeatures(qgis.core.QgsFeatureRequest(featid)))
+                    requ = coveragelayer.getFeatures(qgis.core.QgsFeatureRequest(request))
+                    #print('res',[fet.id() for fet in requ])
+                    #print('res',[fet['id_desordre'] for fet in coveragelayer.getFeatures()])
                     self.currentatlasfeat = coveragelayer.getFeatures(qgis.core.QgsFeatureRequest(request)).__next__()
 
                 # print('fetaatr', atlasfeat.attributes())
@@ -755,7 +779,6 @@ class printPDFBaseWorker(object):
                                     if currentmapscale >= scale:
                                         continue
                                     else:
-                                        print('scalepply', currentmapscale, scale)
                                         newComposition.itemById(mapname).setScale(scale)
                                         break
 
@@ -763,7 +786,7 @@ class printPDFBaseWorker(object):
 
                 self.processLamiaVars(newComposition, dictfields, self.currentatlasfeat)
 
-                self.printAtlasPage(newComposition,exporter, indexpage, idecalage)
+                self.printAtlasPage(newComposition,exporter, indexpagetotal, indexpage, idecalage)
 
 
         # ********************* close printing  *****************************
@@ -811,7 +834,7 @@ class printPDFBaseWorker(object):
                     imagefile = self.getNumberedPhoto(atlasfeat, photonmum)
 
                 elif self.atlasconfData['images'][imageitemname] == 'logo':
-                    imagefile = os.path.join(os.path.dirname(__file__), '..','..', 'DBASE', 'rapport', 'utils', 'logo.jpg')
+                    imagefile = os.path.join(os.path.dirname(__file__), '..','..', 'DBASE', 'utils', 'logo.jpg')
 
                 if imageitem is not None:
                     # print('ok',imagefile )
@@ -842,6 +865,8 @@ class printPDFBaseWorker(object):
         """
 
         debug = False
+        atlasfeatid = atlasfeat.id()
+        atlasfeatpk = atlasfeat[self.atlasconfData['atlaslayerid']]
 
         for compitemuuid in dictfields.keys():
             if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
@@ -879,9 +904,9 @@ class printPDFBaseWorker(object):
                         tempsplittedquery = self.dbase.splitSQLSelectFromWhereOrderby(self.atlasconfData['atlaslayersql'])
                         tempsplittedquery['SELECT'] = table + '.' + field
                         if 'WHERE' in tempsplittedquery.keys():
-                            tempsplittedquery['WHERE'] += ' AND ' + self.atlasconfData['atlaslayerid'] + ' = ' + str(atlasfeat.id())
+                            tempsplittedquery['WHERE'] += ' AND ' + self.atlasconfData['atlaslayerid'] + ' = ' + str(atlasfeatpk)
                         else:
-                            tempsplittedquery['WHERE'] =  self.atlasconfData['atlaslayerid'] + ' = ' + str( atlasfeat.id())
+                            tempsplittedquery['WHERE'] =  self.atlasconfData['atlaslayerid'] + ' = ' + str( atlasfeatpk)
                         #tempsplittedquery['FROM'] = table
                         sql = self.dbase.rebuildSplittedQuery(tempsplittedquery)
                         sql = self.dbase.updateQueryTableNow(sql)
@@ -911,22 +936,37 @@ class printPDFBaseWorker(object):
                         finaltxt.append(unicode(val))
 
                 elif 'lamiasql.' in temptxt:
+                    if False:
+                        sql = ' WITH tempquery AS ('
+                        sql += self.atlasconfData['atlaslayersql']
 
-                    sql = ' WITH tempquery AS ('
-                    sql += self.atlasconfData['atlaslayersql']
+                        sql += ' AND '
+                        sql += self.dbase.dateVersionConstraintSQL()
+                        if self.parentprintPDFworker is not None:
+                            sql += ' AND ' + self.parentprintPDFworker.atlasconfData['childprint']['linkcolumn']
+                            # sql += ' = ' + str(self.parentprintPDFworker.currentid)
+                            # sql += ' = ' + str(self.parentprintPDFworker.currentid)
+                            linktablename = self.parentprintPDFworker.atlasconfData['childprint']['linkcolumn'].split('_')[-1]
+                            sql += ' = ' + str(self.parentprintPDFworker.currentatlasfeat['id_' + linktablename])
+                            sql += ' ' + self.parentprintPDFworker.atlasconfData['childprint']['optionsql']
+                        sql += ') '
+                        sql += temptxt[9:]
+                        sql += ' AND ' + self.atlasconfData['atlaslayerid'] + ' = ' + str(atlasfeatpk)
 
-                    sql += ' AND '
-                    sql += self.dbase.dateVersionConstraintSQL()
-                    if self.parentprintPDFworker is not None:
-                        sql += ' AND ' + self.parentprintPDFworker.atlasconfData['childprint']['linkcolumn']
-                        # sql += ' = ' + str(self.parentprintPDFworker.currentid)
-                        # sql += ' = ' + str(self.parentprintPDFworker.currentid)
-                        linktablename = self.parentprintPDFworker.atlasconfData['childprint']['linkcolumn'].split('_')[-1]
-                        sql += ' = ' + str(self.parentprintPDFworker.currentatlasfeat['id_' + linktablename])
-                        sql += ' ' + self.parentprintPDFworker.atlasconfData['childprint']['optionsql']
-                    sql += ') '
-                    sql += temptxt[9:]
-                    sql += ' AND ' + self.atlasconfData['atlaslayerid'] + ' = ' + str(atlasfeat.id())
+
+                    if True:
+                        tempsplittedquery = self.dbase.splitSQLSelectFromWhereOrderby(self.atlasconfData['atlaslayersql'])
+                        #tempsplittedquery['SELECT'] = table + '.' + field
+                        tempsplittedquery['SELECT'] = '(' + temptxt[9:] + ')'
+
+
+                        if 'WHERE' in tempsplittedquery.keys():
+                            tempsplittedquery['WHERE'] += ' AND ' + self.atlasconfData['atlaslayerid'] + ' = ' + str(atlasfeatpk)
+                        else:
+                            tempsplittedquery['WHERE'] =  self.atlasconfData['atlaslayerid'] + ' = ' + str( atlasfeatpk)
+                        #tempsplittedquery['FROM'] = table
+                        sql = self.dbase.rebuildSplittedQuery(tempsplittedquery)
+                        sql = self.dbase.updateQueryTableNow(sql)
 
                     if debug: self.logger.debug('lamiasql %s', str(sql))
 
@@ -1341,6 +1381,7 @@ class printPDFBaseWorker(object):
                 exporter = qgis.core.QgsLayoutExporter(newComposition)
                 settings = qgis.core.QgsLayoutExporter.PdfExportSettings()
                 printsettings = qgis.core.QgsLayoutExporter.PrintExportSettings()
+
                 if self.idparent is None:
                     #newComposition.beginPrintAsPDF(self.printer, self.pdffile)
 
@@ -1354,6 +1395,7 @@ class printPDFBaseWorker(object):
                     self.printer.setOutputFileName(self.pdffile)
                     paperWidth = newComposition.pageCollection().page(0).pageSize().width()
                     paperHeight = newComposition.pageCollection().page(0).pageSize().height()
+
                     self.printer.setPaperSize(QtCore.QSizeF(paperWidth, paperHeight), QPrinter.Millimeter)
                     self.printer.setFullPage(True)
 
@@ -1625,6 +1667,9 @@ class printPDFBaseWorker(object):
         :return: the composition created
         """
 
+        debug = False
+        if debug: self.logger.debug('started')
+
         if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
             newComposition = qgis.core.QgsComposition(mapsettings)
         else:
@@ -1641,6 +1686,9 @@ class printPDFBaseWorker(object):
         template_file.open(QtCore.QIODevice.ReadOnly | QtCore.QIODevice.Text)
         template_content = template_file.readAll()
         template_file.close()
+
+        if debug: self.logger.debug('template read')
+
         if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
             document = QtXml.QDomDocument()
             document.setContent(template_content)
@@ -1765,8 +1813,8 @@ class printPDFBaseWorker(object):
                             if os.path.isfile(fileraster):
                                 rlayer = qgis.core.QgsRasterLayer(fileraster,
                                                                   os.path.basename(fileraster).split('.')[0])
-
-                                rlayer.renderer().setOpacity(0.5)
+                                if self.dbase.qgsiface is not None:
+                                    rlayer.renderer().setOpacity(0.5)
                                 if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
                                     qgis.core.QgsMapLayerRegistry.instance().addMapLayer(rlayer, False)
                                 else:
@@ -1910,7 +1958,7 @@ class printPDFBaseWorker(object):
         if self.dbase.qgsiface is not None:
             debug = False
         else:
-            debug = False  #True false
+            debug = True  #True false
         orderedids=OrderedDict()
 
         if debug : self.logger.debug('start')
@@ -2004,6 +2052,7 @@ class printPDFBaseWorker(object):
                         if not shortestpathedges[0:2] in infralinfaces.tolist():
                             shortestpathedgesreversed = shortestpathedges[::-1]
                             #id = self.windowdialog.pathtool.getIdsFromPath(shortestpathedgesreversed, ids, infralinfaces,reverseinfralinfaces)
+
                             pathids = pathtool.getIdsFromPath(shortestpathedgesreversed, ids, infralinfaces,reverseinfralinfaces)
 
 
@@ -2020,6 +2069,7 @@ class printPDFBaseWorker(object):
                                                                     geomprojectionids=list(pathids[:, 0]),
                                                                     layertoproject=coveragelayer,
                                                                     constraint=self.atlasconfData['ordering'].split(';')[1])
+
                             # print('ids infralin',list(pathids[:, 0]) )
                             # print('datas', datas)
                             res = [int(id) for id in datas['id']]
@@ -2083,6 +2133,9 @@ class printPDFBaseWorker(object):
             exporter = qgis.core.QgsLayoutExporter(newComposition)
             settings = qgis.core.QgsLayoutExporter.PdfExportSettings()
             printsettings = qgis.core.QgsLayoutExporter.PrintExportSettings()
+
+
+
             if self.parentprintPDFworker is None:
                 # newComposition.beginPrintAsPDF(self.printer, self.pdffile)
 
@@ -2096,11 +2149,14 @@ class printPDFBaseWorker(object):
                 self.printer.setOutputFileName(self.pdffile)
                 paperWidth = newComposition.pageCollection().page(0).pageSize().width()
                 paperHeight = newComposition.pageCollection().page(0).pageSize().height()
+                if debug: self.logger.debug('print size %s %s', str(paperWidth), str(paperHeight))
                 self.printer.setPaperSize(QtCore.QSizeF(paperWidth, paperHeight), QPrinter.Millimeter)
                 self.printer.setFullPage(True)
 
                 printReady = self.painter.begin(self.printer)
                 if debug: self.logger.debug('print ready %s', printReady)
+
+
         return exporter
 
     def setGeneralMapExtentByZonegeo(self, newComposition, zonegeoid):
@@ -2110,12 +2166,13 @@ class printPDFBaseWorker(object):
         :param zonegeoid: l'id de la zone geo en cours de traitement
         """
         for mapname in self.atlasconfData['generalmap'].keys():
+            pkzonegeofet = self.dbase.getLayerFeatureById('Zonegeo', zonegeoid).id()
             if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                zonegeofet = self.dbase.dbasetables['Zonegeo']['layerqgis'].getFeatures(qgis.core.QgsFeatureRequest(zonegeoid)).next()
+                zonegeofet = self.dbase.dbasetables['Zonegeo']['layerqgis'].getFeatures(qgis.core.QgsFeatureRequest(pkzonegeofet)).next()
                 layerext = zonegeofet.geometry().boundingBox()
                 layerext = layerext.buffer(layerext.height() / 10.0)
             else:
-                zonegeofet = self.dbase.dbasetables['Zonegeo']['layerqgis'].getFeatures(qgis.core.QgsFeatureRequest(zonegeoid)).__next__()
+                zonegeofet = self.dbase.dbasetables['Zonegeo']['layerqgis'].getFeatures(qgis.core.QgsFeatureRequest(pkzonegeofet)).__next__()
                 layerext = zonegeofet.geometry().boundingBox()
                 layerext = layerext.buffered(layerext.height() / 10.0)
             layerextgeom = qgis.core.QgsGeometry.fromRect(layerext)
@@ -2147,7 +2204,7 @@ class printPDFBaseWorker(object):
 
 
 
-    def printAtlasPage(self,newComposition,exporter, indexpage, idecalage):
+    def printAtlasPage(self,newComposition,exporter, indexpagetotal, indexpage, idecalage):
         """
         Realise l'impression de la composition sur pdf
         Dans le cas de childprint, appele le printPDFBaseWorker chargé de faire l'impression des childs
@@ -2161,9 +2218,8 @@ class printPDFBaseWorker(object):
             printsettings = qgis.core.QgsLayoutExporter.PrintExportSettings()
 
         if self.parentprintPDFworker is None:
-            if indexpage > 0:
+            if indexpagetotal > 0:
                 self.printer.newPage()
-
             if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
                 newComposition.doPrint(self.printer, self.painter)
             else:
@@ -2174,28 +2230,37 @@ class printPDFBaseWorker(object):
             # print('height', self.parentheightpx,selfheightpx , self.painter.device().height())
             # selfheightpx = newComposition.compositionBounds().height()/ 25.4 * 96 * 1.08
             pageheightmm = self.printer.paperRect(QPrinter.Millimeter).height()
+
             if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
                 selfheightpx = newComposition.compositionBounds().height() / pageheightmm * self.painter.device().height()
             else:
                 selfheightpx = newComposition.layoutBounds().height() / pageheightmm * self.painter.device().height()
 
-            verticalpositionpx = self.currentpageheightpx + (indexpage - idecalage + 1) * selfheightpx
+            verticalpositionpx = self.currentpageheightpx + (indexpage - self.idecalage + 1) * selfheightpx
             #verticalpositionpx = self.parentprintPDFworker.heightpx + (indexpage - idecalage + 1) * selfheightpx
             # print('temp', self.idparent,verticalpositionpx, self.painter.device().height() )
+            # print(self.currentpageheightpx, indexpage, self.idecalage)
+            # print(selfheightpx, verticalpositionpx, self.painter.device().height())
+
             if verticalpositionpx > self.painter.device().height():
                 # print('***************************************************** attention *****************************')
                 self.printer.newPage()
                 self.currentpageheightpx = 0
-                idecalage = indexpage
+                self.idecalage = indexpage
 
-            self.painter.translate(0, self.currentpageheightpx + (indexpage - idecalage) * selfheightpx)
+
+            self.painter.translate(0, self.currentpageheightpx + (indexpage - self.idecalage) * selfheightpx)
             if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
                 newComposition.doPrint(self.printer, self.painter)
             else:
                 exporter.renderPage(self.painter, 0)
-                eval('exporter.print(self.printer, printsettings )')
 
-            self.painter.translate(0, -self.currentpageheightpx - (indexpage - idecalage) * selfheightpx)
+                beforeheight, beforewidth = self.printer.paperRect(QPrinter.Millimeter).height(),self.printer.paperRect(QPrinter.Millimeter).width()
+                eval('exporter.print(self.printer, printsettings )')
+                self.printer.setPaperSize(QtCore.QSizeF(beforewidth, beforeheight), QPrinter.Millimeter)
+                self.printer.setFullPage(True)
+
+            self.painter.translate(0, -self.currentpageheightpx - (indexpage - self.idecalage) * selfheightpx)
 
         # childprint
         if True:

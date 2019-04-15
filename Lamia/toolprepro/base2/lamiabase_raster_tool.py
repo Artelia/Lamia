@@ -53,7 +53,7 @@ class BaseRasterTool(AbstractLamiaTool):
                                              'widgets' : {
                                             'typeraster' : self.userwdgfield.comboBox_type}},
                                 'Objet' : {'linkfield' : 'id_objet',
-                                          'widgets' : {}},
+                                          'widgets' : {'libelle' : self.userwdgfield.lineEdit_libelle}},
                                 'Ressource' : {'linkfield' : 'id_ressource',
                                           'widgets' : {'file': self.userwdgfield.lineEdit_file,
                                                      'datetimeressource': self.userwdgfield.dateTimeEdit}}}
@@ -67,29 +67,10 @@ class BaseRasterTool(AbstractLamiaTool):
     def postOnDesactivation(self):
         pass
 
+
     def loadRaster(self,feat = None):
-        if feat is None or  isinstance(feat,bool):
-            if self.currentFeature is not None:
-                #sql = "SELECT file FROM Ressource WHERE id_ressource = " + str(self.currentFeature['id_ressource'])
-                sql = "SELECT file FROM Rasters_qgis WHERE pk_rasters = " + str(self.currentFeaturePK)
-                query = self.dbase.query(sql)
-                filetemp = [row[0] for row in query][0]
-                file = self.dbase.completePathOfFile(filetemp)
-            else:
-                return
-        else:
-            #file = self.dbase.completePathOfFile(feat['file'])
-            # sql = "SELECT file FROM Ressource WHERE id_ressource = " + str(self.currentFeature['id_ressource'])
-            sql = "SELECT file FROM Rasters_qgis WHERE pk_rasters = " + str(self.currentFeaturePK)
-            query = self.dbase.query(sql)
-            filetemp = [row[0] for row in query][0]
-            file = self.dbase.completePathOfFile(filetemp)
-
-        basename = os.path.basename(file).split('.')[0]
-        rlayer = qgis.core.QgsRasterLayer(file, basename)
-
-
-
+        libelle = self.userwdgfield.lineEdit_libelle.text()
+        rlayer = self.createMapLayer()
 
         if True:
             if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
@@ -104,11 +85,84 @@ class BaseRasterTool(AbstractLamiaTool):
             self.windowdialog.qgislegendnode.insertLayer(-1, rlayer)
 
 
+
+    def createMapLayer(self,libelle = None):
+
+        typefonddeplan = None
+        if libelle is None:
+            if self.currentFeature is not None:
+                #sql = "SELECT file FROM Ressource WHERE id_ressource = " + str(self.currentFeature['id_ressource'])
+                sql = "SELECT file FROM Rasters_qgis WHERE pk_rasters = " + str(self.currentFeaturePK)
+                query = self.dbase.query(sql)
+                filetemp = [row[0] for row in query][0]
+                layfile = self.dbase.completePathOfFile(filetemp)
+            else:
+                return
+        else:
+            sql = "SELECT typeraster, file FROM Rasters_qgis WHERE libelle = '" + str(libelle) + "'"
+            query = self.dbase.query(sql)
+            typefonddeplan, filetemp = query[0]
+            layfile = self.dbase.completePathOfFile(filetemp)
+
+        if False:
+            if feat is None or  isinstance(feat,bool):
+                if self.currentFeature is not None:
+                    #sql = "SELECT file FROM Ressource WHERE id_ressource = " + str(self.currentFeature['id_ressource'])
+                    sql = "SELECT file FROM Rasters_qgis WHERE pk_rasters = " + str(self.currentFeaturePK)
+                    query = self.dbase.query(sql)
+                    filetemp = [row[0] for row in query][0]
+                    file = self.dbase.completePathOfFile(filetemp)
+                else:
+                    return
+            else:
+                #file = self.dbase.completePathOfFile(feat['file'])
+                # sql = "SELECT file FROM Ressource WHERE id_ressource = " + str(self.currentFeature['id_ressource'])
+                sql = "SELECT file FROM Rasters_qgis WHERE pk_rasters = " + str(self.currentFeaturePK)
+                query = self.dbase.query(sql)
+                filetemp = [row[0] for row in query][0]
+                file = self.dbase.completePathOfFile(filetemp)
+
+        basename = os.path.basename(layfile).split('.')[0]
+
+        rlayer = None
+
+        if libelle is not None:
+            layername = libelle
+            if typefonddeplan == 'SHP':
+                rlayer = qgis.core.QgsVectorLayer(layfile, 'test' , "ogr")
+                qmlfile = os.path.splitext(layfile)[0] + '.qml'
+                if os.path.isfile(qmlfile):
+                    rlayer.loadNamedStyle(qmlfile)
+
+        else:
+            currentmaplayertype = self.userwdgfield.comboBox_type.currentText()
+            if currentmaplayertype.split('-')[0] == 'Raster' :
+                rlayer = qgis.core.QgsRasterLayer(layfile, basename)
+            elif currentmaplayertype.split('-')[0] == 'Vecteur' :
+                if self.userwdgfield.lineEdit_libelle.text() == '':
+                    layername = basename
+                else:
+                    layername = self.userwdgfield.lineEdit_libelle.text()
+
+                if currentmaplayertype.split('-')[1] == 'Shapefile' :
+                    rlayer = qgis.core.QgsVectorLayer(layfile, layername ,"ogr")
+                    qmlfile = os.path.splitext(layfile)[0] + '.qml'
+                    if os.path.isfile(qmlfile):
+                        rlayer.loadNamedStyle(qmlfile)
+
+        return rlayer
+
+
+
+
+
     def chooseFile(self):
         file, extension = self.windowdialog.qfiledlg.getOpenFileNameAndFilter(None, 'Choose the file', self.dbase.imagedirectory,
                                                                  'All (*.*)', '')
         if file:
             self.userwdg.lineEdit_file.setText(os.path.normpath(file))
+
+
 
 
     def postInitFeatureProperties(self, feat):

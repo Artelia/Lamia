@@ -80,3 +80,7 @@ Vegetalise enherbe;  VET
 Vegetalise arbustif;  VEA
 Vegetalise boise;  VEB
 ###index4;                VARCHAR(255);            TEXT
+/;
+Eau;RIV
+Terre;TER
+Crête;CRE
