@@ -19,7 +19,7 @@ import datetime
 
 class BaseAssainissementObservationTool(BaseObservationTool):
     
-    specialfieldui = ['2']
+    #specialfieldui = ['2']
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
         super(BaseAssainissementObservationTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
@@ -59,57 +59,113 @@ class BaseAssainissementObservationTool(BaseObservationTool):
     def initFieldUI(self):
         # ****************************************************************************************
         # userui Desktop
-        if self.userwdgfield is None:
-            # ****************************************************************************************
-            # userui
-            self.userwdgfield = UserUI()
-            self.linkuserwdgfield = {'Observation' : {'linkfield' : 'id_observation',
-                                             'widgets' : {'datetimeobservation' : self.userwdgfield.dateTimeEdit,
-                                                          #'nombre' : self.userwdgfield.spinBox_nombre,
-                                                        'gravite': self.userwdgfield.comboBox_urgence,
-
-                                                          # regard
-                                                          'etattampon': [self.userwdgfield.comboBox_etattampon,
-                                                                         self.userwdgfield.comboBox_PRetattampon],
-                                                          'etatechelon': self.userwdgfield.comboBox_etatechelon,
-                                                          'etatregard': self.userwdgfield.comboBox_etatregard,
-                                                          'etatcunette': self.userwdgfield.comboBox_etatcunette,
-                                                          'ECPPdepuisbranchement': self.userwdgfield.comboBox_ecpp,
-                                                          'infiltration': self.userwdgfield.comboBox_infiltration,
-                                                          'intrusionracine': self.userwdgfield.comboBox_racines,
-
-                                                          'hdeuxs': self.userwdgfield.comboBox_h2s,
-                                                          'depots': [self.userwdgfield.comboBox_depot,
-                                                                     self.userwdgfield.comboBox_DSHencombrement],
-                                                          'miseencharge': self.userwdgfield.comboBox_miseencharge,
-                                                          'jugemententretien': self.userwdgfield.comboBox_entretiengeneral,
-
-                                                          # DIV
-                                                          'etatgeneral': self.userwdgfield.comboBox_DIVetatgeneral,
-
-                                                          #'evolution': self.userwdgfield.textEdit_evolution,
-                                                          #'commentaires': self.userwdgfield.textEdit_comm,
-                                                          #'suite': self.userwdgfield.textEdit_suite,
-                                                          'typesuite': self.userwdgfield.comboBox_typesuite,
-                                                          'precisionsuite': self.userwdgfield.comboBox_precisionsuite
 
 
-                                                          }},
-                                'Objet' : {'linkfield' : 'id_objet',
-                                          'widgets' : {'commentaire': self.userwdgfield.textEdit_comm}}}
+        if self.dbase.variante in [None, 'Lamia']:
+            if self.userwdgfield is None:
+                # ****************************************************************************************
+                # userui
+                self.userwdgfield = UserUI()
+                self.linkuserwdgfield = {'Observation' : {'linkfield' : 'id_observation',
+                                                 'widgets' : {'datetimeobservation' : self.userwdgfield.dateTimeEdit,
+                                                              #'nombre' : self.userwdgfield.spinBox_nombre,
+                                                            'gravite': self.userwdgfield.comboBox_urgence,
+    
+                                                              # regard
+                                                              'etattampon': [self.userwdgfield.comboBox_etattampon,
+                                                                             self.userwdgfield.comboBox_PRetattampon],
+                                                              'etatechelon': self.userwdgfield.comboBox_etatechelon,
+                                                              'etatregard': self.userwdgfield.comboBox_etatregard,
+                                                              'etatcunette': self.userwdgfield.comboBox_etatcunette,
+                                                              'ECPPdepuisbranchement': self.userwdgfield.comboBox_ecpp,
+                                                              'infiltration': self.userwdgfield.comboBox_infiltration,
+                                                              'intrusionracine': self.userwdgfield.comboBox_racines,
+    
+                                                              'hdeuxs': self.userwdgfield.comboBox_h2s,
+                                                              'depots': [self.userwdgfield.comboBox_depot,
+                                                                         self.userwdgfield.comboBox_DSHencombrement],
+                                                              'miseencharge': self.userwdgfield.comboBox_miseencharge,
+                                                              'jugemententretien': self.userwdgfield.comboBox_entretiengeneral,
+    
+                                                              # DIV
+                                                              'etatgeneral': self.userwdgfield.comboBox_DIVetatgeneral,
+    
+                                                              #'evolution': self.userwdgfield.textEdit_evolution,
+                                                              #'commentaires': self.userwdgfield.textEdit_comm,
+                                                              #'suite': self.userwdgfield.textEdit_suite,
+                                                              'typesuite': self.userwdgfield.comboBox_typesuite,
+                                                              'precisionsuite': self.userwdgfield.comboBox_precisionsuite
+    
+    
+                                                              }},
+                                    'Objet' : {'linkfield' : 'id_objet',
+                                              'widgets' : {'commentaire': self.userwdgfield.textEdit_comm}}}
+    
+                self.userwdgfield.toolButton_calc_nb.clicked.connect(
+                    lambda: self.windowdialog.showNumPad(self.userwdgfield.spinBox_nombre))
+    
+                # ****************************************************************************************
+                # child widgets
+                self.dbasechildwdgfield=[]
+                if self.parentWidget is not None:
+                    self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, parentwidget=self)
+                    self.dbasechildwdgfield = [self.propertieswdgPHOTOGRAPHIE]
+                    self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
+                    self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+                    
+        elif self.dbase.variante in ['2018_SNCF']:
+            if self.userwdgfield is None:
+                # ****************************************************************************************
+                # userui
+                self.userwdgfield = UserUI_2()
+                self.linkuserwdgfield = {'Observation': {'linkfield': 'id_observation',
+                                                           'widgets': {
+                                                               'datetimeobservation': self.userwdgfield.dateTimeEdit,
+                                                               # 'nombre' : self.userwdgfield.spinBox_nombre,
+                                                               'gravite': self.userwdgfield.comboBox_urgence,
 
-            self.userwdgfield.toolButton_calc_nb.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.userwdgfield.spinBox_nombre))
+                                                               # regard
+                                                               'etattampon': [self.userwdgfield.comboBox_etattampon,
+                                                                              self.userwdgfield.comboBox_PRetattampon],
+                                                               'etatechelon': self.userwdgfield.comboBox_etatechelon,
+                                                               'etatregard': self.userwdgfield.comboBox_etatregard,
+                                                               'etatcunette': self.userwdgfield.comboBox_etatcunette,
+                                                               'hdeuxs': self.userwdgfield.comboBox_h2s,
+                                                               'depots': [self.userwdgfield.comboBox_depot,
+                                                                          self.userwdgfield.comboBox_DSHencombrement],
+                                                               'miseencharge': self.userwdgfield.comboBox_miseencharge,
+                                                               'jugemententretien': self.userwdgfield.comboBox_entretiengeneral,
 
-            # ****************************************************************************************
-            # child widgets
-            self.dbasechildwdgfield=[]
-            if self.parentWidget is not None:
-                self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, parentwidget=self)
-                self.dbasechildwdgfield = [self.propertieswdgPHOTOGRAPHIE]
-                self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
-                self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+                                                               # PR
+                                                               # 'etattampon': self.userwdgfield.comboBox_PRetattampon,
+                                                               'etatgeneral': [self.userwdgfield.comboBox_etatbache,
+                                                                               self.userwdgfield.comboBox_DSHetageneral,
+                                                                               self.userwdgfield.comboBox_DIVetatgeneral],
+                                                               'etatasservissement': self.userwdgfield.comboBox_etatasservissement,
 
+                                                               # DSH
+                                                               # 'etatgeneral': self.userwdgfield.comboBox_DSHetageneral,
+                                                               # 'ensablement': self.userwdgfield.comboBox_DSHencombrement,
+
+                                                               # DIC
+                                                               # 'etatgeneral': self.userwdgfield.comboBox_DIVetatgeneral,
+
+                                                               }},
+                                           'Objet': {'linkfield': 'id_objet',
+                                                     'widgets': {'commentaire': self.userwdgfield.textEdit_comm}}}
+
+                self.userwdgfield.toolButton_calc_nb.clicked.connect(
+                    lambda: self.windowdialog.showNumPad(self.userwdgfield.spinBox_nombre))
+
+                self.dbasechildwdgfield = []
+                if self.parentWidget is not None:
+                    self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, parentwidget=self)
+                    self.dbasechildwdgfield = [self.propertieswdgPHOTOGRAPHIE]
+                    self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
+                    self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+
+
+    """
     def initFieldUI_2(self):
         # ****************************************************************************************
         # userui Desktop
@@ -156,7 +212,7 @@ class BaseAssainissementObservationTool(BaseObservationTool):
             self.userwdgfield_2.toolButton_calc_nb.clicked.connect(
                 lambda: self.windowdialog.showNumPad(self.userwdgfield_2.spinBox_nombre))
 
-
+    """
 
 
 
@@ -199,7 +255,8 @@ class BaseAssainissementObservationTool(BaseObservationTool):
                 except:
                     pass
 
-                if self.userwdg == self.userwdgfield:
+                #if self.userwdg == self.userwdgfield:
+                if self.dbase.variante in [None, 'Lamia']:
                     if grpdes == 'NOD' and self.parentWidget.parentWidget is not None and self.parentWidget.parentWidget.currentFeature is not None:
                         if self.parentWidget.parentWidget.dbasetablename == 'Noeud':
                             #typenoeud = self.parentWidget.parentWidget.currentFeature['typeOuvrageAss']
@@ -214,7 +271,8 @@ class BaseAssainissementObservationTool(BaseObservationTool):
                             else:
                                 self.userwdgfield.stackedWidget_2.setCurrentIndex(3)
 
-                elif hasattr(self, 'userwdgfield_2') and self.userwdg == self.userwdgfield_2 :
+                #elif hasattr(self, 'userwdgfield_2') and self.userwdg == self.userwdgfield_2 :
+                elif self.dbase.variante in ['2018_SNCF']:
                     if grpdes == 'NOD' and self.parentWidget.parentWidget is not None and self.parentWidget.parentWidget.currentFeature is not None:
                         if self.parentWidget.parentWidget.dbasetablename == 'Noeud':
                             currenttext = self.parentWidget.parentWidget.userwdgfield_2.comboBox_typeOuvrageAss.currentText()

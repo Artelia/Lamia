@@ -1,0 +1,9 @@
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+#DJAN  SELECT * FROM Tcobjetzonegeo   WHERE lpk_revision_end IS NULL
+#QGIS SELECT * FROM Tcobjetzonegeo
+###pk_tcobjetzonegeo;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###lpk_revision_begin;        INT ;                   INTEGER;                              Revision(pk_revision)
+###lpk_revision_end;          INT ;                   INTEGER;                              Revision(pk_revision)
+
+###lid_zonegeo;       INT;            INTEGER
+###lid_objet;       INT;            INTEGER

@@ -1,0 +1,30 @@
+#DJAN  SELECT Photo.*, Objet.datecreation, Objet.datedestruction, Objet.commentaire, Objet.libelle, Ressource.source,Ressource.dateressource,Ressource.contactadresse,Ressource.contactnom, Ressource.contactmail, Ressource.contacttel1, Ressource.contacttel2, Ressource.file,Ressource.description,Ressource.lk_marche  FROM Photo INNER JOIN Ressource ON Ressource.id_ressource = Photo.id_ressource INNER JOIN Objet ON Photo.id_objet = Objet.id_objet
+#QGIS  SELECT Photo.*, Objet.datecreation, Objet.datedestruction, Ressource.lk_marche  FROM Photo INNER JOIN Ressource ON Ressource.id_ressource = Photo.id_ressource INNER JOIN Objet ON Photo.id_objet = Objet.id_objet
+#SHOW YES
+#SCAL 10000
+# Nom_champ              TypePostGis                 TypeSpatialite                               Option
+###id_photo;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###typephoto;                VARCHAR(255);            TEXT
+Photo;PHO
+Croquis;CRO
+Video;VID
+###id_objet;             INT ;                     INTEGER ;                                    Objet(id_objet)
+###id_ressource;        INT ;                       INTEGER;                                    Ressource(id_ressource)
+###content_type;                VARCHAR(255);            TEXT
+###chemin;                VARCHAR(255);            TEXT
+###nom_fichier;                VARCHAR(255);            TEXT
+###file;                      BYTEA         ; BLOB
+###list_document;             INT;                    INTEGER
+/;                                    ; ['']
+1;1
+###list_photo;             INT;                    INTEGER
+/;                                    ; ['']
+Photo de type miniature : id_ouvrage + '_300.jpg ;                                                                                      1
+Photo au format de depart : id_ouvrage (le fichier n a pas d extension);                                                                2
+Photo_1.jpg qui est la photo du commentaire : partie.photo_1;                                                                           3
+Photo_2 .jpg qui est la photo du commentaire : partie.photo_2;                                                                          4
+photo de type 'desordre_ + id_equipement + desordre.type + '.jpg  qui font reference aux desordres de l ouvrage;                        5
+photo de type 'composant_  + id_equipement + '.jpg  qui font reference aux composants de l ouvrage;                                     6
+Photo_1.jpg qui est la photo de l' quipement = 'equipement_ + id_equipement_photo1' + .jpg;                                             7
+Photo_2.jpg qui est la photo de l' quipement = 'equipement_ + id_equipement_photo2' + .jpg;                                             8
+photo de type 'desordre_' + id_equipement + id_propriete + '.jpg' qui font reference aux desordres d'un ouvrage lineaire;               9

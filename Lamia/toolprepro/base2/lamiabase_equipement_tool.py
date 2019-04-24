@@ -39,11 +39,15 @@ class BaseEquipementTool(AbstractLamiaTool):
         # self.PolygonENABLED = True
         # self.magicfunctionENABLED = True
         self.linkagespec = {'Equipement': {'tabletc': None,
-                                           'idsource': 'lid_descriptionsystem',
+                                           'idsource': 'lid_descriptionsystem_1',
                                            'idtcsource': None,
                                            'iddest': 'id_descriptionsystem',
                                            'idtcdest': None,
-                                           'desttable': ['Equipement','Noeud','Infralineaire']}}
+                                           'desttable': ['Equipement','Noeud','Infralineaire']}
+
+
+
+                            }
         # self.pickTable = None
         self.debug = False
         self.iconpath = os.path.join(os.path.dirname(__file__), 'lamiabase_equipement_tool_icon.svg')
@@ -149,7 +153,7 @@ class BaseEquipementTool(AbstractLamiaTool):
                 sql += " WHERE pk_" + self.parentWidget.dbasetablename.lower() + " = " + str(self.parentWidget.currentFeaturePK)
                 parentid = self.dbase.query(sql)[0][0]
                 #currentparentlinkfield = self.parentWidget.currentFeature['id_descriptionsystem']
-                sql = "UPDATE Equipement SET lid_descriptionsystem = " + str(parentid)
+                sql = "UPDATE Equipement SET lid_descriptionsystem_1 = " + str(parentid)
                 sql += " WHERE pk_equipement = " + str(pkequip)
                 self.dbase.query(sql)
                 self.dbase.commit()

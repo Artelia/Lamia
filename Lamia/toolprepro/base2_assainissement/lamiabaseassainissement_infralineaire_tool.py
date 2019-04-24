@@ -85,7 +85,7 @@ class BaseAssainissementInfraLineaireTool(BaseInfraLineaireTool):
                                                                    'formecanalisation': self.userwdgfield.comboBox_formecana,
 
                                                                  'materiau': self.userwdgfield.comboBox_materiau,
-                                                                   'anPoseInf': self.userwdgfield.dateEdit_anneepose,
+                                                                   #'anPoseInf': self.userwdgfield.dateEdit_anneepose,
 
 
                                                                    'diametreNominal': self.userwdgfield.doubleSpinBox_diametreNominal,
@@ -102,7 +102,10 @@ class BaseAssainissementInfraLineaireTool(BaseInfraLineaireTool):
                                      'Objet': {'linkfield': 'id_objet',
                                                'widgets': {'commentaire':self.userwdgfield.textBrowser_commentaire}},
                                      'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
-                                                           'widgets': {}}}
+                                                           'widgets': {
+                                                               'annee_debut_pose': self.userwdgfield.dateEdit_anneepose,
+
+                                                           }}}
 
 
 

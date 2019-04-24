@@ -819,7 +819,6 @@ class PathTool(AbstractInspectionDigueTool):
             sql += self.dbase.dateVersionConstraintSQL()
             if listids is not None:
                 sql += " AND Infralineaire_qgis.id_infralineaire IN " + str(tuple(listids))
-
         query = self.dbase.query(sql)
         if len(query)>0:
             rawpoints = np.array([[[float(elem1) for elem1 in row[1].split('(')[1][:-1].split(' ')],

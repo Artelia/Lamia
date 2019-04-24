@@ -1,0 +1,26 @@
+#DJAN  SELECT Descriptionsystem.id_descriptionsystem FROM Descriptionsystem
+#QGIS SELECT Descriptionsystem.*, Descriptionsystem.id_revisionbegin AS revisionbegin , Descriptionsystem.id_revisionend AS revisionend FROM Descriptionsystem
+
+# Nom_champ                      TypePostGis              TypeSpatialite                         Option
+###pk_descriptionsystem;         SERIAL PRIMARY KEY;         INTEGER PRIMARY KEY AUTOINCREMENT
+###id_descriptionsystem;                 INT;                            INTEGER
+###id_revisionbegin;        INT ;                   INTEGER;                              Revision(pk_revision)
+###id_revisionend;          INT ;                   INTEGER;                              Revision(pk_revision)
+###id_objet;                 INT;                            INTEGER
+
+###importancestrat ;             VARCHAR(255);                TEXT
+###etatfonct ;             VARCHAR(255);                TEXT
+###qualitegeolocXY;           NUMERIC;                    REAL
+/;
+Classe A;                 1
+Classe B;                 2
+Classe C;                 3
+###qualiteGeolocZ;        INT ;                       INTEGER
+/;
+Classe A;                 1
+Classe B;                 2
+Classe C;                 3
+###dateGeoloc;            DATE ;                  TEXT
+###sourceGeoloc;                VARCHAR(255);            TEXT
+###parametres ;             VARCHAR(255);                TEXT
+###listeparametres ;             VARCHAR(255);                TEXT

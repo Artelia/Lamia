@@ -1,0 +1,68 @@
+#DJAN SELECT  Desordre.* , Objet.datecreation, Objet.datedestruction, Objet.commentaire, Objet.libelle FROM Desordre INNER JOIN OBJET ON Desordre.id_objet = Objet.id_objet
+#QGIS SELECT  Desordre.* , Objet.datecreation, Objet.datedestruction FROM Desordre INNER JOIN OBJET ON Desordre.id_objet = Objet.id_objet
+#SHOW YES
+#SCAL 10000
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###id_desordre;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_objet;             INT ;                   INTEGER ;                               Objet(id_objet)
+###ouvrage;             INT ;                   INTEGER
+###equipement;             INT ;                   INTEGER
+Renseignements generaux;              60000
+Donnees d exploitation;               60134
+Caracteristiques geometriques;        3
+Donnees reglementaires;               60120
+Chenal de navigation;                 60121
+Pied de berge - Rive droite;          60122
+Pied de berge - Rive gauche;          60123
+Talus expose;                         60124
+Crete;                                60125
+Corps de digue;                       60126
+Talus aval digue;                     60127
+Contre-fosse;                         60128
+Connexion au terrain naturel;         60129
+Elements de securite;                 60130
+Franchissement et ouvrages divers;    60131
+###partie;             INT ;                   INTEGER
+###lk_infralineaire;             INT ;                   INTEGER;                               Infralineaire(id_infralineaire)
+###lk_equipement;             INT ;                   INTEGER;                               Equipement(id_equipement)
+###pk_debut;             INT ;                   INTEGER
+###pk_fin;             INT ;                   INTEGER
+###ordre;             INT ;                   INTEGER
+###desordre;             INT ;                   INTEGER
+##equipement
+/;                                                                                                  ;                   ['']
+Genie Civil - Degradation du genie civil;                                                           1;                  [60131]
+Genie Civil - Deterioration d'elements mecaniques, d'equipements;                                   2;                  [60122,60123,60124,60131]
+Genie Civil - Rupture, casse d'element;                                                             3;                  [60122,60123,60124,60125,60126,60127,60128,60129,60130]
+Genie Civil - Degradation de surface, epaufrure, trous, dechirure,pourissement;                     4;                  [60122,60123,60124,60125,60126,60127,60128,60129,60130]
+Genie Civil - Fissuration;                                                                          5;                  [60122,60123,60124,60125,60126,60127,60128,60129,60130]
+Genie Civil - Dejointement;                                                                         6;                  [60122,60123,60124,60125,60126,60127,60128,60129,60130]
+Genie Civil - Erosion, ravinement, affouillement;                                                   7;                  [60122,60123,60124,60125,60126,60127,60128,60129]
+Genie Civil - Corrosion;                                                                            8;                  [60122,60123,60124]
+Environnement - Vegetation dense;                                                                   9;                  [60122,60123,60124,60125,60126,60127,60128,60129]
+Environnement - Arbres penches, desequilibres;                                                      11;                 [60122,60123,60124,60125,60126,60127,60128,60129]
+Environnement - Systeme racinaire à l'origine d'une degradation;                                    13;                 [60122,60123,60124,60127,60128,60129]
+Environnement - Souches, arbres morts, arbres pourris;                                              15;                 [60122,60123,60124,60125,60126,60127,60128,60129]
+Environnement - Obstables, encombres;                                                               16;                 [60122,60123,60124,60125,60126,60127,60128,60129]
+Environnement - Terrier ou galerie d'animaux fouisseurs;                                            17;                 [60122,60123,60124,60125,60126,60127,60128,60129]
+Environnement - Pietinement d'animaux;                                                              18;                 [60125,60126]
+Environnement - Envasement, dysfonctionnement de la frayere du aux usages VNF;                      19;                 [60131]
+Etancheite - Indice de renard hydraulique;                                                          20;                 [60122,60123,60124,60125,60126,60127]
+Etancheite - Fuite par le fond;                                                                     21;                 [60132,60121]
+Exploitation - Mouillage insuffisant;                                                               22;                 [60132,60121]
+Exploitation - Atterissement;                                                                       23;                 [60132,60121]
+Exploitation - Presence d'obstacle, epave, encombre;                                                24;                 [60132,60121]
+Securite - Element saillant;                                                                        25;                 [60122,60123,60125,60126,60127]
+Securite - Rique de chute d'elements sur la voie d'eau;                                             26;                 [60124,60125,60126,60131]
+Securite - Rique de collision, d'arrachement de reseaux;                                            27;                 [60125,60126,60131]
+Securite - Absence de l'equipement;                                                                 28;                 [60130]
+Securite - Deterioration de l'equipement;                                                           29;                 [60130]
+Securite - Non-conformite de l'equipement;                                                          30;                 [60130]
+Stabilite, deformation - Deversement, renversement;                                                 31;                 [60122,60123,60124,60127,60128,60129]
+Stabilite, deformation - Glissement, eboulement;                                                    32;                 [60122,60123,60124,60125,60126,60127,60128,60129]
+Stabilite, deformation - Soulevement;                                                               33;                 [60122,60123,60124,60125,60126,60127,60128,60129]
+Stabilite, deformation - Fontis, effondrement;                                                      34;                 [60122,60123,60124,60125,60126,60127,60128,60129]
+Stabilite, deformation - Affouillement;                                                             35;                 [60122,60123,60124,60127,60128,60129]
+Stabilite, deformation - Desalignement, desorganisation entre elements;                             36;                 [60122,60123,60124,60125,60126,60127,60128,60129]
+Stabilite, deformation - Tassement;                                                                 37;                 [60125,60126]
+Stabilite, deformation - Non visible, indetermine;                                                   41;                 [60122,60123,60124,60125,60126,60127,60128,60129,60130,60131]

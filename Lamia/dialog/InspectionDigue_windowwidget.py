@@ -306,6 +306,8 @@ class InspectiondigueWindowWidget(QMainWindow):
             self.dbase.imagedirectory = None
 
 
+
+
     def themechanged(self, iconwidth):
         if isinstance(iconwidth, int):
             newsize = QtCore.QSize(iconwidth, iconwidth)
@@ -570,10 +572,12 @@ class InspectiondigueWindowWidget(QMainWindow):
         # print(self.sender().text())
         # new db dialog
 
-
-
+        #self.newDBDialog.dbase = self.dbase
+        self.newDBDialog.comboBox_type.currentIndexChanged.emit(0)
         self.newDBDialog.exec_()
-        dbtype, type = self.newDBDialog.dialogIsFinished()
+        dbtype, worktype, vartype = self.newDBDialog.dialogIsFinished()
+
+        print('**',dbtype,worktype, vartype  )
         if dbtype is None and type is None:
             return
         # crs selector
@@ -586,7 +590,7 @@ class InspectiondigueWindowWidget(QMainWindow):
             crsnumber = int(crs.split(':')[1])
         # ressources directory
         if dbtype == 'postgis':
-            resdir = self.qfiledlg.getExistingDirectory(self, "Selectionner le reperoire des ressources")
+            resdir = self.qfiledlg.getExistingDirectory(self, "Selectionner le repertoire des ressources")
             if resdir:
                 resdir = str(resdir)
             else:
@@ -606,18 +610,21 @@ class InspectiondigueWindowWidget(QMainWindow):
             #print('spatialitefile', spatialitefile)
             if sys.version_info.major == 3 and len(spatialitefile)>0:
                 spatialitefile = spatialitefile[0]
+            self.createDBase()
 
             if spatialitefile:
                 # reset dbase
-                self.createDBase()
+                # self.createDBase()
                 # originalfile = os.path.join(os.path.dirname(__file__), '..', 'DBASE', 'DBase_ind0.sqlite')
                 # shutil.copyfile(originalfile, spatialitefile)
 
                 self.normalMessage(' Creation de la base de donnees...')
                 QApplication.processEvents()
+                #resdir = self.createRessourcesDir(dbtype,resdir, spatialitefile, vardir=vardir )
 
-                self.dbase.createDbase(slfile=spatialitefile, crs=crsnumber, worktype=type, dbasetype='spatialite',
-                                       dbaseressourcesdirectory = resdir)
+
+                self.dbase.createDbase(slfile=spatialitefile, crs=crsnumber, worktype=worktype, dbasetype='spatialite',
+                                       dbaseressourcesdirectory = resdir, variante=vartype)
                 if False:
                     self.loadQgisVectorLayers(file=self.dbase.spatialitefile, dbasetype=self.dbase.dbasetype,
                                               host=self.dbase.pghost, port=self.dbase.pgport, dbname=self.dbase.pgdb, schema=self.dbase.pgschema,
@@ -638,13 +645,56 @@ class InspectiondigueWindowWidget(QMainWindow):
                     self.createDBase()
                     QApplication.processEvents()
 
-                    self.dbase.createDbase(crs=crsnumber, worktype=type, dbasetype='postgis', dbname=nom, schema=schema,
+                    #resdir = self.createRessourcesDir(dbtype, resdir,vardir=vardir)
+
+                    self.dbase.createDbase(crs=crsnumber, worktype=worktype, dbasetype='postgis', dbname=nom, schema=schema,
                                            user=user, host=adresse, password=password, dbaseressourcesdirectory=resdir,
-                                           port=port)
+                                           port=port,variante=vartype)
+
+
+
                     if False:
                         self.loadQgisVectorLayers(file=self.dbase.spatialitefile, dbasetype=self.dbase.dbasetype,
                                                   host=self.dbase.pghost, port=self.dbase.pgport, dbname=self.dbase.pgdb, schema=self.dbase.pgschema,
                                                   user=self.dbase.pguser, password=self.dbase.pgpassword)
+
+
+
+    def createRessourcesDir(self, dbasetype,dbaseressourcesdirectory, slfile=None,vardir=None):
+        dbaseressourcesdirectorytemp = None
+
+        if dbaseressourcesdirectory is None and dbasetype == 'spatialite':
+            dbaseressourcesdirectorytemp = os.path.join(os.path.dirname(slfile), u'DBspatialite')
+        else:
+            dbaseressourcesdirectorytemp = dbaseressourcesdirectory
+
+        if not os.path.isdir(dbaseressourcesdirectorytemp):
+            os.makedirs(dbaseressourcesdirectorytemp)
+            configdir = os.path.join(dbaseressourcesdirectorytemp, 'config')
+            os.makedirs(configdir)
+            # tool dir
+            dbasedir = os.path.join(configdir, 'dbase')
+            os.makedirs(dbasedir)
+
+            rapportdir = os.path.join(configdir, 'rappporttools')
+            os.makedirs(rapportdir)
+            styledir = os.path.join(configdir, 'styles')
+            os.makedirs(styledir)
+            importdir = os.path.join(configdir, 'importtools')
+            os.makedirs(importdir)
+
+        if vardir is not None:
+            dirfiles = [f for f in os.listdir(vardir) if os.path.isfile(os.path.join(vardir, f))]
+            for dirfile in dirfiles:
+                fromfile = os.path.join(vardir, dirfile)
+                tofile = os.path.join(dbaseressourcesdirectorytemp,'config','dbase', dirfile)
+                shutil.copy(fromfile, tofile)
+
+
+
+        return dbaseressourcesdirectorytemp
+
+
 
     def openFileFromMenu(self, action):
         """

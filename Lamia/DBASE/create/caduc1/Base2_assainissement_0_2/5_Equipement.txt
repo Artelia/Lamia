@@ -1,0 +1,65 @@
+###categorie;           VARCHAR(255);            TEXT
+Noeud;NOD
+###typeReseau;                VARCHAR(255);            TEXT
+/;
+Pluvial;                  PLU
+Eaux usees;               USE
+Unitaire;                 UNI
+Industriel;                 IND
+###typeAppAss;             INT ;                     INTEGER 
+/;
+Point de branchement;       1
+Ventouse;                   2
+Vanne;                      3
+Debitmetre;                 4
+Chasse d eau;               5
+Dessableur;                 6
+Deversoir;                  7
+Siphon;                     8
+Autre;                      0
+Puits d'infiltration;       20
+Indetermine;                99
+# *****************
+# General
+###largeur;             REAL;                     DECIMAL
+###longueur;             REAL;                     DECIMAL
+###presencealarme;             INT ;                     INTEGER 
+# PR : photo ensemble
+###lid_ressource_1;        INT ;                       INTEGER
+# PR : photo cuve
+###lid_ressource_2;        INT ;                       INTEGER
+# PR : photo cuve 2
+###lid_ressource_3;        INT ;                       INTEGER
+# PR : photo poire
+###lid_ressource_4;        INT ;                       INTEGER
+# PR : photo vanne
+###lid_ressource_5;        INT ;                       INTEGER
+# PR : photo armoire
+###lid_ressource_6;        INT ;                       INTEGER
+
+# *****************
+# Poste refoulement
+###PRenvironnement;                VARCHAR(255);            TEXT
+Parking;                    PAR
+Herbe;                      HER
+Batiment;                   BAT
+Chemin pieton;              CHE
+Route carrossable;          RCA
+Voie ferre;                 VFE
+###PRgeometrietampon;                VARCHAR(255);            TEXT
+Carre;                      CAR
+Circulaire;                 CIR
+###PRsurverse;             INT ;                     INTEGER 
+###PRmateriau;                VARCHAR(255);            TEXT
+###PRposteelectrique;                VARCHAR(255);            TEXT
+###PRnbrepoires;             INT ;                     INTEGER 
+###PRtelegestion;             INT ;                     INTEGER 
+###PRnbrepompes;             INT ;                     INTEGER 
+
+# *****************
+# Debourbeur desuileur
+###DSHroleouvrage;                VARCHAR(255);            TEXT
+
+
+
+

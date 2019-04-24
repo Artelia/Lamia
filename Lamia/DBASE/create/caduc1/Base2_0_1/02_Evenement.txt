@@ -1,0 +1,14 @@
+#DJAN SELECT  Evenement.*, Objet.* FROM Evenement INNER JOIN Objet ON Evenement.lpk_objet = Objet.pk_objet WHERE Objet.lpk_revision_end IS NULL AND Objet.datetimedestruction IS NULL
+#QGIS SELECT  Evenement.*, Objet.* FROM Evenement INNER JOIN Objet ON Evenement.lpk_objet = Objet.pk_objet
+
+
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###pk_evenement;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_evenement;             INT ;                   INTEGER
+###lpk_objet;             INT ;                   INTEGER                               ; Objet(pk_objet)
+
+###description ;                VARCHAR(255);            TEXT
+###gravite ;             INT ;                   INTEGER
+###ref ;                VARCHAR(255);            TEXT
+###listeparametres ;                VARCHAR(255);            TEXT
+###parametres ;                VARCHAR(255);            TEXT

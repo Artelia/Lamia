@@ -1,0 +1,107 @@
+#DJAN  SELECT Profil.*, Objet.datecreation, Objet.datedestruction, Objet.commentaire, Objet.libelle, Descriptionsystem.importancestrat, Descriptionsystem.etatfonct,  Descriptionsystem.parametres, Descriptionsystem.listeparametres FROM Profil INNER JOIN Descriptionsystem ON Profil.id_descriptionsystem = Descriptionsystem.id_descriptionsystem INNER JOIN Objet ON Objet.id_objet = Profil.id_objet
+# For qgis
+#QGISSL SELECT Profil.*, Objet.datecreation, Objet.datedestruction , Objet.libelle,
+#QGISSL MAX(Profil.id_revisionbegin, Descriptionsystem.id_revisionbegin) AS temprevisionbegin,
+#QGISSL CASE WHEN MIN(Profil.id_revisionend, Descriptionsystem.id_revisionend) NOT NULL
+#QGISSL     THEN MIN(Profil.id_revisionend, Descriptionsystem.id_revisionend)
+#QGISSL     ELSE CASE WHEN  Profil.id_revisionend NOT NULL 
+#QGISSL             THEN Profil.id_revisionend
+#QGISSL             ELSE Descriptionsystem.id_revisionend END 
+#QGISSL         END AS temprevisionend,
+#QGISSL MAX(Profil.id_revisionbegin, Descriptionsystem.id_revisionbegin, Objet.id_revisionbegin) AS revisionbegin,
+#QGISSL CASE WHEN MIN(Profil.id_revisionend, Descriptionsystem.id_revisionend, Objet.id_revisionend) NOT NULL
+#QGISSL     THEN MIN(Profil.id_revisionend, Descriptionsystem.id_revisionend, Objet.id_revisionend) 
+#QGISSL     ELSE CASE WHEN  Profil.id_revisionend NOT NULL 
+#QGISSL             THEN CASE WHEN Descriptionsystem.id_revisionend NOT NULL
+#QGISSL                         THEN MIN(Profil.id_revisionend, Descriptionsystem.id_revisionend)
+#QGISSL                         ELSE CASE WHEN Objet.id_revisionend NOT null
+#QGISSL                             THEN MIN(Profil.id_revisionend, Objet.id_revisionend)
+#QGISSL                             ELSE Profil.id_revisionend END
+#QGISSL                         END 
+#QGISSL             ELSE CASE WHEN Descriptionsystem.id_revisionend NOT NULL
+#QGISSL                 THEN MIN(Objet.id_revisionend, Descriptionsystem.id_revisionend)
+#QGISSL                 ELSE  Objet.id_revisionend END  
+#QGISSL             END 
+#QGISSL         END AS revisionend
+#QGISSL FROM Profil
+#QGISSL INNER JOIN Descriptionsystem ON 
+#QGISSL Profil.id_descriptionsystem= Descriptionsystem.id_descriptionsystem
+#QGISSL AND CASE WHEN Profil.id_revisionend NOT NULL 
+#QGISSL         THEN CASE WHEN Descriptionsystem.id_revisionend NOT NULL 
+#QGISSL                     THEN Descriptionsystem.id_revisionbegin < Profil.id_revisionend   AND Descriptionsystem.id_revisionend > Profil.id_revisionbegin
+#QGISSL                     ELSE  Descriptionsystem.id_revisionbegin < Profil.id_revisionend   END
+#QGISSL         ELSE   CASE WHEN Descriptionsystem.id_revisionend NOT NULL 
+#QGISSL             THEN Descriptionsystem.id_revisionend > Profil.id_revisionbegin   
+#QGISSL             ELSE 1 END
+#QGISSL         END
+#QGISSL INNER JOIN Objet ON Profil.id_objet = Objet.id_objet
+#QGISSL AND CASE WHEN temprevisionend NOT NULL 
+#QGISSL         THEN CASE WHEN Objet.id_revisionend NOT NULL 
+#QGISSL                     THEN Objet.id_revisionbegin < temprevisionend   AND Objet.id_revisionend > temprevisionbegin
+#QGISSL                     ELSE  Objet.id_revisionbegin < temprevisionend   END
+#QGISSL         ELSE   CASE WHEN Objet.id_revisionend NOT NULL 
+#QGISSL                     THEN Objet.id_revisionend > temprevisionbegin   
+#QGISSL         ELSE 1 END
+#QGISSL         END
+
+
+#QGISPG WITH Profiltemp AS (
+#QGISPG  SELECT Profil.*, 
+#QGISPG  greatest(Profil.id_revisionbegin, Descriptionsystem.id_revisionbegin) AS temprevisionbegin,
+#QGISPG  CASE WHEN least(Profil.id_revisionend, Descriptionsystem.id_revisionend) IS NOT NULL
+#QGISPG      THEN least(Profil.id_revisionend, Descriptionsystem.id_revisionend)
+#QGISPG      ELSE CASE WHEN  Profil.id_revisionend IS NOT NULL 
+#QGISPG              THEN Profil.id_revisionend
+#QGISPG              ELSE Descriptionsystem.id_revisionend END 
+#QGISPG          END AS temprevisionend
+#QGISPG  FROM Profil
+#QGISPG  INNER JOIN Descriptionsystem ON 
+#QGISPG  Profil.id_descriptionsystem= Descriptionsystem.id_descriptionsystem
+#QGISPG  AND CASE WHEN Profil.id_revisionend IS NOT NULL 
+#QGISPG          THEN CASE WHEN Descriptionsystem.id_revisionend IS NOT NULL 
+#QGISPG                      THEN Descriptionsystem.id_revisionbegin < Profil.id_revisionend   AND Descriptionsystem.id_revisionend > Profil.id_revisionbegin
+#QGISPG                      ELSE  Descriptionsystem.id_revisionbegin < Profil.id_revisionend   END
+#QGISPG          ELSE   CASE WHEN Descriptionsystem.id_revisionend IS NOT NULL 
+#QGISPG              THEN Descriptionsystem.id_revisionend > Profil.id_revisionbegin   
+#QGISPG              ELSE true END
+#QGISPG          END)
+#QGISPG SELECT Profiltemp.*, Objet.datecreation, Objet.datedestruction, Objet.libelle,
+#QGISPG  greatest(Profiltemp.temprevisionbegin, Objet.id_revisionbegin) AS revisionbegin,
+#QGISPG  CASE WHEN least(Profiltemp.temprevisionend, Objet.id_revisionend) IS NOT NULL
+#QGISPG      THEN least(Profiltemp.temprevisionend, Objet.id_revisionend)
+#QGISPG      ELSE CASE WHEN  Profiltemp.temprevisionend IS NOT NULL 
+#QGISPG              THEN Profiltemp.temprevisionend
+#QGISPG              ELSE Objet.id_revisionend END 
+#QGISPG          END AS revisionend
+#QGISPG FROM Profiltemp
+#QGISPG INNER JOIN Objet ON Profiltemp.id_objet = Objet.id_objet
+#QGISPG   AND CASE WHEN Profiltemp.temprevisionend IS NOT NULL 
+#QGISPG          THEN CASE WHEN Objet.id_revisionend IS NOT NULL 
+#QGISPG                      THEN Objet.id_revisionbegin < Profiltemp.temprevisionend   AND Objet.id_revisionend > Profiltemp.temprevisionbegin
+#QGISPG                      ELSE  Objet.id_revisionbegin < Profiltemp.temprevisionend   END
+#QGISPG          ELSE   CASE WHEN Objet.id_revisionend IS NOT NULL 
+#QGISPG                      THEN Objet.id_revisionend > Profiltemp.temprevisionbegin   
+#QGISPG          ELSE true END
+#QGISPG          END
+
+
+
+
+#SHOW YES
+
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###pk_profil;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_profil;             INT ;                   INTEGER
+###id_revisionbegin;        INT ;                   INTEGER;                              Revision(pk_revision)
+###id_revisionend;          INT ;                   INTEGER
+###id_objet;             INT ;                   INTEGER
+###id_descriptionsystem; INT ;                   INTEGER
+
+###date;                DATE;                   TEXT
+###type;           VARCHAR(255);           TEXT
+Graphique;        GRA
+Croquis;        CRO
+Image;      PHO
+###lk_descriptionsystem;           INT ;                   INTEGER
+
+###geom;               LINESTRING

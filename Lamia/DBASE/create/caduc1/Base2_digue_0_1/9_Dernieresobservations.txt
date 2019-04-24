@@ -1,0 +1,24 @@
+#SHOW YES
+#QGIS WITH Desordrenow AS (SELECT  Desordre.pk_desordre, Desordre.id_desordre, Desordre.groupedesordre, Desordre.lid_descriptionsystem,  
+#QGIS                       Desordre.cote, Desordre.position, Desordre.catdes, Desordre.typedes, 
+#QGIS                       Objet.lpk_revision_begin, Objet.lpk_revision_end, Objet.commentaire as Desordre_commentaire, Objet.datetimedestruction as desordredatetimedestruction 
+#QGIS                                 FROM Desordre INNER JOIN Objet ON Desordre.lpk_objet = Objet.pk_objet  
+#QGIS                                 WHERE Objet.lpk_revision_end IS NULL) ,
+#QGIS  Observationnow AS (SELECT Observation.*, Objet.commentaire as Observation_commentaire,
+#QGIS                               ( SELECT MIN(Observationnowp.datetimeobservation) As datecreationtemp FROM Observation as Observationnowp 
+#QGIS                               WHERE Observation.lid_desordre =  Observationnowp.lid_desordre AND Observationnowp.datetimeobservation > Observation.datetimeobservation ) AS datetimedestructiontemp
+#QGIS                                FROM Observation INNER JOIN Objet ON objet.pk_objet = Observation.lpk_objet 
+#QGIS                                WHERE lpk_revision_end IS NULL) 
+#QGIS                                
+#QGIS  SELECT  Observationnow.*, 
+#QGIS          ST_Buffer(ST_MakeValid(Desordre.geom), 0.1) as geom,   
+#QGIS              Desordrenow.*,
+#QGIS            Observationnow.datetimeobservation AS datetimecreation , 
+#QGIS             (CASE WHEN Observationnow.datetimedestructiontemp IS NULL THEN Desordrenow.desordredatetimedestruction  ELSE Observationnow.datetimedestructiontemp END) AS datetimedestruction 
+#QGIS          
+#QGIS  FROM  Observationnow  INNER JOIN Desordrenow ON Observationnow.lid_desordre = Desordrenow.id_desordre INNER JOIN Desordre ON Desordre.pk_desordre = Desordrenow.pk_desordre 
+
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+# la creation a minima de ces champs est obligatoire si on veut creer la vue spatiale ... c comme ca
+###pk_dernieresobservations;      SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###geom;                MULTIPOLYGON

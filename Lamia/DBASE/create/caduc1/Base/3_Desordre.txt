@@ -1,0 +1,63 @@
+#DJAN SELECT  Desordre.* , Objet.datecreation, Objet.datedestruction, Objet.commentaire, Objet.libelle FROM Desordre INNER JOIN OBJET ON Desordre.id_objet = Objet.id_objet
+# For qgis
+#QGISSL SELECT Desordre.* , Objet.datecreation, Objet.datedestruction, Objet.libelle, 
+#QGISSL MAX(Desordre.id_revisionbegin, Objet.id_revisionbegin) AS revisionbegin,
+#QGISSL CASE WHEN MIN(Desordre.id_revisionend, Objet.id_revisionend) IS NOT NULL
+#QGISSL     THEN MIN(Desordre.id_revisionend, Objet.id_revisionend)
+#QGISSL     ELSE CASE WHEN  Desordre.id_revisionend IS NOT NULL 
+#QGISSL             THEN Desordre.id_revisionend
+#QGISSL             ELSE Objet.id_revisionend END 
+#QGISSL         END AS revisionend
+#QGISSL FROM Desordre
+#QGISSL INNER JOIN Objet ON Desordre.id_objet= Objet.id_objet
+#QGISSL AND CASE WHEN Desordre.id_revisionend IS NOT NULL 
+#QGISSL         THEN CASE WHEN Objet.id_revisionend IS NOT NULL 
+#QGISSL                     THEN Objet.id_revisionbegin < Desordre.id_revisionend   AND Objet.id_revisionend > Desordre.id_revisionbegin
+#QGISSL                     ELSE  Objet.id_revisionbegin < Desordre.id_revisionend   END
+#QGISSL         ELSE   CASE WHEN Objet.id_revisionend IS NOT NULL 
+#QGISSL             THEN Objet.id_revisionend > Desordre.id_revisionbegin   
+#QGISSL             ELSE 1 END
+#QGISSL         END
+
+#QGISPG SELECT Desordre.* , Objet.datecreation, Objet.datedestruction, Objet.libelle, 
+#QGISPG greatest(Desordre.id_revisionbegin, Objet.id_revisionbegin) AS revisionbegin,
+#QGISPG CASE WHEN least(Desordre.id_revisionend, Objet.id_revisionend) IS NOT NULL
+#QGISPG     THEN least(Desordre.id_revisionend, Objet.id_revisionend)
+#QGISPG     ELSE CASE WHEN  Desordre.id_revisionend IS NOT NULL 
+#QGISPG             THEN Desordre.id_revisionend
+#QGISPG             ELSE Objet.id_revisionend END 
+#QGISPG         END AS revisionend
+#QGISPG FROM Desordre
+#QGISPG INNER JOIN Objet ON Desordre.id_objet= Objet.id_objet
+#QGISPG AND CASE WHEN Desordre.id_revisionend IS NOT NULL 
+#QGISPG         THEN CASE WHEN Objet.id_revisionend IS NOT NULL 
+#QGISPG                     THEN Objet.id_revisionbegin < Desordre.id_revisionend   AND Objet.id_revisionend > Desordre.id_revisionbegin
+#QGISPG                     ELSE  Objet.id_revisionbegin < Desordre.id_revisionend   END
+#QGISPG         ELSE   CASE WHEN Objet.id_revisionend IS NOT NULL 
+#QGISPG             THEN Objet.id_revisionend > Desordre.id_revisionbegin   
+#QGISPG             ELSE true END
+#QGISPG         END
+
+#SHOW YES
+#SCAL 10000
+
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###pk_desordre;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_desordre;           INT ;                   INTEGER 
+###id_revisionbegin;        INT ;                   INTEGER;                              Revision(pk_revision)
+###id_revisionend;          INT ;                   INTEGER
+###id_objet;             INT ;                   INTEGER 
+
+#groupe desordre est utilise  pour distinguer les desordres selon le type d equipement choisi - influe sur le stackedwidget de pyqt pour les observations
+###groupedesordre;           VARCHAR(255);            TEXT
+Infralineaire;INF
+Noeud;NOD
+Equipement;EQP
+###impact ;               VARCHAR(255);             TEXT
+###gravite ;               VARCHAR(255);             TEXT
+###priorite ;               VARCHAR(255);             TEXT
+###risques ;               VARCHAR(255);             TEXT
+
+###lk_descriptionsystem;    INT ;                  INTEGER
+
+###geom;                LINESTRING

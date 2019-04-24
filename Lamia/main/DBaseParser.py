@@ -30,6 +30,10 @@ try:
 except:
     PILexists = False
 
+if sys.version_info.major == 2:
+    from ..libs import xlrd
+else:
+    import xlrd
 
 
 import psycopg2
@@ -50,7 +54,19 @@ class DBaseParser(QtCore.QObject):
     errorMessage = QtCore.pyqtSignal(str)
     normalMessage = QtCore.pyqtSignal(str)
 
-    def __init__(self,canvas):
+    pgtypetosltype = {'VARCHAR' : 'TEXT',
+                      'INT' : 'INTEGER',
+                      'SERIAL PRIMARY KEY' : 'INTEGER PRIMARY KEY AUTOINCREMENT',
+                      'TIMESTAMP' : 'TEXT',
+                      'TEXT' : 'TEXT',
+                      'TIMESTAMP WITH TIME ZONE' : 'TEXT',
+                      'REAL': 'REAL',
+                      'NUMERIC': 'REAL',
+                      'BOOLEAN' : 'INTEGER'}
+
+
+
+    def __init__(self,canvas=None):
         """
         Init func
         """
@@ -72,6 +88,8 @@ class DBaseParser(QtCore.QObject):
         self.pgpassword = None
         #  working dir
         self.dbaseressourcesdirectory = None
+        self.variante = None
+        self.variantespossibles=[]
         #  not used yet
         self.searchbuffer = 20
         # used to define the working date in db
@@ -129,6 +147,7 @@ class DBaseParser(QtCore.QObject):
         self.currentrevision = None
         self.maxrevision = 0
 
+        self.xlsreader = True
         #self._readRecentDBase()
 
         # getqgisversion : ex : 21820
@@ -184,7 +203,7 @@ class DBaseParser(QtCore.QObject):
 
     def createDbase(self, slfile=None, crs=None, worktype=None, dbasetype='spatialite',
                     dbname=None, schema=None, user=None, host='localhost', port=None, password=None,    # postgis
-                    dbaseressourcesdirectory=None):
+                    dbaseressourcesdirectory=None, variante=None):
         """
         pass
         :param slfile:
@@ -203,29 +222,37 @@ class DBaseParser(QtCore.QObject):
         debug = False
         if debug: logging.getLogger("Lamia").debug('started')
 
+        self.variante = variante
         # create dbasedict
-        self.createDBDictionary(worktype)
-
-        # manage ressource directory
-        dbaseressourcesdirectorytemp = None
-        if dbaseressourcesdirectory is None and dbasetype == 'spatialite':
-            dbaseressourcesdirectorytemp = os.path.join(os.path.dirname(slfile), u'DBspatialite')
+        if not self.xlsreader:
+            self.createDBDictionary(worktype)
         else:
-            dbaseressourcesdirectorytemp = dbaseressourcesdirectory
+            self.createDBDictionary2(worktype)
 
-        if not os.path.isdir(dbaseressourcesdirectorytemp):
-            os.makedirs(dbaseressourcesdirectorytemp)
-            configdir = os.path.join(dbaseressourcesdirectorytemp,'config')
-            os.makedirs(configdir)
-            #tool dir
-            dbasedir = os.path.join(configdir,'dbase')
-            os.makedirs(dbasedir)
-            rapportdir = os.path.join(configdir,'rappporttools')
-            os.makedirs(rapportdir)
-            styledir = os.path.join(configdir,'styles')
-            os.makedirs(styledir)
-            importdir = os.path.join(configdir,'importtools')
-            os.makedirs(importdir)
+        if False:
+            # manage ressource directory
+            dbaseressourcesdirectorytemp = None
+            if dbaseressourcesdirectory is None and dbasetype == 'spatialite':
+                dbaseressourcesdirectorytemp = os.path.join(os.path.dirname(slfile), u'DBspatialite')
+            else:
+                dbaseressourcesdirectorytemp = dbaseressourcesdirectory
+
+            if not os.path.isdir(dbaseressourcesdirectorytemp):
+                os.makedirs(dbaseressourcesdirectorytemp)
+                configdir = os.path.join(dbaseressourcesdirectorytemp,'config')
+                os.makedirs(configdir)
+                #tool dir
+                dbasedir = os.path.join(configdir,'dbase')
+                os.makedirs(dbasedir)
+                rapportdir = os.path.join(configdir,'rappporttools')
+                os.makedirs(rapportdir)
+                styledir = os.path.join(configdir,'styles')
+                os.makedirs(styledir)
+                importdir = os.path.join(configdir,'importtools')
+                os.makedirs(importdir)
+
+        # dbaseressourcesdirectorytemp = dbaseressourcesdirectory
+        dbaseressourcesdirectorytemp = self.createRessourcesDir(dbasetype, dbaseressourcesdirectory, slfile=slfile)
 
 
         # sql file contains output of dbase creation script
@@ -359,9 +386,13 @@ class DBaseParser(QtCore.QObject):
         else:
             versionsql = "'" + str(self.version) + "'"
             workversionsql = "'" + str(self.workversion) + "'"
-            sql = "INSERT INTO Basedonnees (metier,repertoireressources,crs, version, workversion) "
+            if self.variante is None:
+                variantesql = 'NULL'
+            else:
+                variantesql = "'" + self.variante + "'"
+            sql = "INSERT INTO Basedonnees (metier,repertoireressources,crs, version, workversion, variante) "
             sql += "VALUES('" + worktype + "','" + dbaseressourcesdirectorytemp2 + "'," + str(crs) + "," + versionsql
-            sql += "," + workversionsql + ");"
+            sql += "," + workversionsql +  ',' + variantesql + ")"
             self.query(sql)
             self.commit()
 
@@ -447,6 +478,502 @@ class DBaseParser(QtCore.QObject):
             self.loadQgisVectorLayers(file=self.spatialitefile, dbasetype=self.dbasetype,
                                       host=self.pghost, port=self.pgport, dbname=self.pgdb, schema=self.pgschema,
                                       user=self.pguser, password=self.pgpassword)
+
+
+
+    def createRessourcesDir(self, dbasetype, dbaseressourcesdirectory, slfile=None):
+        dbaseressourcesdirectorytemp = None
+
+        if dbaseressourcesdirectory is None and dbasetype == 'spatialite':
+            dbaseressourcesdirectorytemp = os.path.join(os.path.dirname(slfile), u'DBspatialite')
+        else:
+            dbaseressourcesdirectorytemp = dbaseressourcesdirectory
+
+        if not os.path.isdir(dbaseressourcesdirectorytemp):
+            os.makedirs(dbaseressourcesdirectorytemp)
+        configdir = os.path.join(dbaseressourcesdirectorytemp, 'config')
+        if not os.path.isdir(configdir):
+            os.makedirs(configdir)
+        # tool dir
+        dbasedir = os.path.join(configdir, 'dbase')
+        if not os.path.isdir(dbasedir):
+            os.makedirs(dbasedir)
+
+        rapportdir = os.path.join(configdir, 'rappporttools')
+        if not os.path.isdir(rapportdir):
+            os.makedirs(rapportdir)
+
+        styledir = os.path.join(configdir, 'styles')
+        if not os.path.isdir(styledir):
+            os.makedirs(styledir)
+
+        importdir = os.path.join(configdir, 'importtools')
+        if not os.path.isdir(importdir):
+            os.makedirs(importdir)
+
+
+        return dbaseressourcesdirectorytemp
+
+
+
+    def createDBDictionary2(self, type, configdir=False, baseversiontoread=None, workversiontoread=None,chekupdate=True):
+        """!
+        Read the files in ./DBASE/create
+        A file describes the fields  like that:
+        #comment
+        ###Field_name;PG_type;SL_type;Foreignkey_type
+        ## parent field - used for ui - enable to sort the child fields depending the parent field    (optional)
+        constraint value description;constraint value value;[depending parent field value]
+
+        And fill the var self.dbasetables which is a dictionnary like that :
+        {...{tablename : {'order' : order,
+                          'geom' : geometry type ,
+                          'widget' : the table widget,
+                          'djangoviewsql' : sql statement for initial django view creation
+                          'qgisviewsql' : sql statement for initial qgis view creation
+                          'qgisSLviewsql' : sql statement for initial qgis view creation - spatialite compatible
+                          'qgisPGviewsql' : sql statement for initial qgis view creation - postgis compatible
+                          'exportviewsql' : sql statement for initial special view creation
+                          'layer' : real layer
+                          'layerqgis' : view layer with parent fields
+                          'layerdjango' : view layer with parent fields
+                          'showinqgis' : display layer in canvas
+                          'scale' : visibility scale
+                          'spatialindex' : create a spatialite spatial index
+                          'fields' : OrderedDict{...{fieldname : {'PGtype' : PostGis type (integer not null...)
+                                                                  'SLtype' : spatialite type (integer not null...)
+                                                                  'FK' (optional) : foreign key definition
+                                                                  'ParFldCst (optional) : name of the parent field for contraint
+                                                                  'Cst' (optional) : list of constraint : [description,value,[parent field consraint value]}
+                                                 ...}
+
+                          }
+         ...}
+
+        """
+        debug = False
+        if debug: logging.getLogger("Lamia").debug('started')
+
+
+
+        # first readfiles in ./DBASE\create directory and create self.dbasetables
+        createfilesdir = None
+
+        if not configdir:
+            if baseversiontoread is None:
+                self.type = type
+                self.dbasetables = {}
+
+                workversionmax, createfilesdir = self.getVersionRepositories2(self.type)[-1]
+                baseversionmax, createfilesdirbase = self.getVersionRepositories2(self.type.split('_')[0])[-1]
+
+                if (chekupdate and self.version is not None
+                        and (self.version < baseversionmax or self.workversion < workversionmax)) :
+                    self.updateDBaseVersion2()
+
+                self.version = baseversionmax
+                self.workversion = workversionmax
+
+                if debug: logging.getLogger("Lamia").debug('baseversion : %s, workversion : %s', str(self.version ), str(self.workversion ))
+
+                if createfilesdirbase and createfilesdirbase != createfilesdir :    #cas de la lecture du bd enfant
+                    parsertemp = DBaseParser(None)
+                    parsertemp.createDBDictionary2(self.type.split('_')[0])
+                    self.dbasetables = parsertemp.dbasetables
+                    del parsertemp
+            else:
+                self.type = type
+                self.dbasetables = {}
+
+                baseversions = self.getVersionRepositories2(self.type.split('_')[0])
+                workversions = self.getVersionRepositories2(self.type)
+                baseversionnumbers = [elem[0] for elem in baseversions]
+                workversionnumbers = [elem[0] for elem in workversions]
+
+
+                createfilesdirbase = baseversions[baseversionnumbers.index(baseversiontoread)][1]
+                createfilesdir = workversions[workversionnumbers.index(workversiontoread)][1]
+
+                if createfilesdirbase != createfilesdir:
+                    #createfilesdir = workversions[workversionnumbers.index(workversiontoread)][1]
+                    parsertemp = DBaseParser(None)
+                    parsertemp.createDBDictionary2(self.type.split('_')[0], baseversiontoread=baseversiontoread,workversiontoread=baseversiontoread)
+                    self.dbasetables = parsertemp.dbasetables
+                    del parsertemp
+
+
+        else:
+            createfilesdir = os.path.join(self.dbaseressourcesdirectory,'config','dbase')
+            if not os.path.exists(createfilesdir):
+                return
+
+
+
+        if debug: logging.getLogger("Lamia").debug('createfilesdir : %s', str(createfilesdir))
+
+        self.readDbDictionnary(createfilesdir)
+
+
+
+    def readDbDictionnary(self, dictfile=None, vartoread=None):
+
+        debug = False
+        if dictfile is None or not os.path.isfile(dictfile):
+            return
+
+        xlsbook = xlrd.open_workbook(dictfile)
+
+        for sheet in xlsbook.sheets():
+            tablename = sheet.name.split('_')
+            fieldname = None
+            cstcolumntoread = None
+            order = None
+            # print(tablename)
+            if len(tablename) == 1:  # non table file
+                continue
+            else:
+                order = tablename[0]
+                tablename = '_'.join(tablename[1:])
+
+
+            #print(tablename)
+            # print(self.dbasetables)
+
+            if tablename not in self.dbasetables.keys():
+                self.dbasetables[tablename] = {}
+                self.dbasetables[tablename]['order'] = int(order)
+                self.dbasetables[tablename]['fields'] = OrderedDict()
+                self.dbasetables[tablename]['showinqgis'] = False
+                self.dbasetables[tablename]['widget'] = []
+                self.dbasetables[tablename]['row_variantes'] = -1
+
+            for row in range(sheet.nrows):
+
+
+                firstcol =  sheet.cell_value(row, 0)
+                if len(firstcol) > 0 and firstcol[0] == '#':  # comment - pass
+                    if firstcol.strip() == '#DJAN':
+                        #self.dbasetables[tablename]['djangoviewsql'] = line[5:].strip()
+                        self.dbasetables[tablename]['djangoviewsql'] = sheet.cell_value(row, 1).strip()
+                    elif firstcol.strip() == '#QGISSL':
+                        if 'qgisSLviewsql' in self.dbasetables[tablename].keys():
+                            self.dbasetables[tablename]['qgisSLviewsql'] += ' ' + sheet.cell_value(row, 1).strip() + ' '
+                        else:
+                            self.dbasetables[tablename]['qgisSLviewsql'] = sheet.cell_value(row, 1).strip()
+                    elif firstcol.strip() == '#QGISPG':
+                        if 'qgisPGviewsql' in self.dbasetables[tablename].keys():
+                            self.dbasetables[tablename]['qgisPGviewsql'] += ' ' + sheet.cell_value(row, 1).strip() + ' '
+                        else:
+                            self.dbasetables[tablename]['qgisPGviewsql'] = sheet.cell_value(row, 1).strip()
+                    elif firstcol.strip() == '#QGIS':
+                        if 'qgisviewsql' in self.dbasetables[tablename].keys():
+                            self.dbasetables[tablename]['qgisviewsql'] += ' ' + sheet.cell_value(row, 1).strip() + ' '
+                        else:
+                            self.dbasetables[tablename]['qgisviewsql'] = sheet.cell_value(row, 1).strip()
+                        # self.dbasetables[tablename]['qgisviewsql'] = line[5:].strip()
+                    elif firstcol.strip() == '#EXPO':
+                        self.dbasetables[tablename]['exportviewsql'] = sheet.cell_value(row, 1).strip()
+                    elif firstcol.strip() == '#SCAL':
+                        self.dbasetables[tablename]['scale'] = float(sheet.cell_value(row, 1).strip())
+                    elif firstcol.strip() == '#SHOW':
+                        value = sheet.cell_value(row, 1).strip().strip()
+                        if value == 'YES':
+                            self.dbasetables[tablename]['showinqgis'] = True
+                    elif firstcol.strip() == '#SPATIALINDEX':
+                        value = sheet.cell_value(row, 1).strip()
+                        if value == 'YES':
+                            self.dbasetables[tablename]['spatialindex'] = True
+                    elif firstcol.strip() == '#VARIANTES':
+                        for colnbr in range(1,sheet.ncols):
+                            value = sheet.cell_value(row, colnbr)
+                            if value.strip() != '' :
+                                self.dbasetables[tablename]['row_variantes'] = row
+                                if value not in self.variantespossibles:
+                                    self.variantespossibles.append(sheet.cell_value(row, colnbr).strip())
+
+
+
+
+                    else:
+                        continue
+
+                else:
+                    if firstcol != '':
+                        fieldname = sheet.cell_value(row, 0).strip()
+                        cstcolumntoread = None
+                        if fieldname == 'geom':
+                            self.dbasetables[tablename]['geom'] = sheet.cell_value(row, 1).strip()
+                            continue
+
+                        self.dbasetables[tablename]['fields'][fieldname] = {}
+                        self.dbasetables[tablename]['fields'][fieldname]['PGtype'] = sheet.cell_value(row, 1).strip() # the pg type
+
+                        #self.dbasetables[tablename]['fields'][fieldname]['SLtype'] = linesplit[2].strip()  # the spatialite type
+                        # the foreign key
+                        if sheet.cell_value(row, 2).strip() != '':
+                            self.dbasetables[tablename]['fields'][fieldname]['FK'] = sheet.cell_value(row, 2).strip()
+
+                        if sheet.cell_value(row, 4).strip() != '':
+                            self.dbasetables[tablename]['fields'][fieldname]['ParFldCst'] = sheet.cell_value(row, 4).strip()
+
+                        """
+                        try:
+                            sheet.cell_value(row, 5).strip()
+                        except :
+                            valetmp = sheet.cell_value(row, 5)
+                            print(valetmp, valetmp.__class__,tablename, fieldname )
+                        """
+
+                        if False and sheet.cell_value(row, 5).strip() != '':
+
+
+                            if 'Cst' in self.dbasetables[tablename]['fields'][fieldname].keys():
+                                self.dbasetables[tablename]['fields'][fieldname]['Cst'].append([])
+                            else:
+                                self.dbasetables[tablename]['fields'][fieldname]['Cst'] = [[]]
+
+                            showvalue = self.convertxlsdataToString(sheet.cell_value(row, 5))
+                            datavalue = self.convertxlsdataToString(sheet.cell_value(row, 6))
+                            self.dbasetables[tablename]['fields'][fieldname]['Cst'][-1].append(showvalue.strip())
+                            self.dbasetables[tablename]['fields'][fieldname]['Cst'][-1].append(datavalue.strip())
+
+                            if sheet.cell_value(row, 7).strip() != '':
+                                self.dbasetables[tablename]['fields'][fieldname]['Cst'][-1].append(eval(sheet.cell_value(row, 7).strip()))
+                            else:
+                                self.dbasetables[tablename]['fields'][fieldname]['Cst'][-1].append(None)
+
+                        cstcolumntoread = self.readConstraints(tablename,fieldname, sheet, row, cstcolumntoread)
+
+
+
+
+
+                    else:
+                        # if fieldname in self.dbasetables[tablename]['fields'].keys():
+                        if fieldname is not None:
+                            self.readConstraints(tablename,fieldname,sheet, row,cstcolumntoread)
+
+                        if False:
+                            if sheet.cell_value(row, 5).strip() != '':
+                                self.dbasetables[tablename]['fields'][fieldname]['Cst'].append([])
+                                # value = sheet.cell_value(row, 6)
+                                showvalue = self.convertxlsdataToString(sheet.cell_value(row, 5))
+                                datavalue = self.convertxlsdataToString(sheet.cell_value(row, 6))
+                                self.dbasetables[tablename]['fields'][fieldname]['Cst'][-1].append(showvalue.strip())
+                                self.dbasetables[tablename]['fields'][fieldname]['Cst'][-1].append(datavalue.strip())
+                                if sheet.cell_value(row, 7).strip() != '':
+                                    self.dbasetables[tablename]['fields'][fieldname]['Cst'][-1].append(eval(sheet.cell_value(row, 7).strip() ))
+                                else:
+                                    self.dbasetables[tablename]['fields'][fieldname]['Cst'][-1].append(None)
+
+
+
+
+
+
+        if False:
+            for filename in glob.glob(os.path.join(createfilesdir, '*.txt')):
+                if True:
+                    basename = os.path.basename(filename).split('.')[0]
+                    if debug: logging.getLogger("Lamia").debug('filename %s',basename )
+                    temp = basename.split('_')
+                    if len(temp) == 1:  # non table file
+                        continue
+                    elif len(temp) == 3:  # underscore in the name
+                        temp[1]+='_'
+                        temp[1]+=temp[2]
+                    elif len(temp) == 4:  # underscore in the name
+                        temp[1]+='_'
+                        temp[1]+=temp[2]
+                        temp[1]+='_'
+                        temp[1]+=temp[3]
+                    elif len(temp) == 5:  # underscore in the name
+                        temp[1]+='_'
+                        temp[1]+=temp[2]
+                        temp[1]+='_'
+                        temp[1]+=temp[3]
+                        temp[1]+='_'
+                        temp[1]+=temp[4]
+                    tablename = temp[1]
+                    if tablename not in self.dbasetables.keys():
+                        self.dbasetables[tablename] = {}
+                        self.dbasetables[tablename]['order'] = int(temp[0])
+                        self.dbasetables[tablename]['fields'] = OrderedDict()
+                        self.dbasetables[tablename]['showinqgis'] = False
+                        self.dbasetables[tablename]['widget'] = []
+                    # self.dbasetables[tablename]['exportviewsql'] = []
+                if sys.version_info.major == 2:
+                    file = open(filename, 'r')
+                elif sys.version_info.major == 3:
+                    file = open(filename, 'r',encoding="utf-8")
+                    #file = open(filename, 'rb')
+                compt = 0
+                for line in file:
+                    if sys.version_info.major == 2:
+                        line = line.decode('utf-8-sig')
+
+                    if len(line.strip()) == 0:
+                        continue
+
+                    if line[0:3] == '###':          # new field
+                        line = line[3:].strip()
+                        linesplit = line.split(';')
+                        fieldname = linesplit[0].strip()
+                        if debug: logging.getLogger("Lamia").debug('fieldname %s', fieldname)
+                        if fieldname == 'geom':
+                            self.dbasetables[tablename]['geom'] = linesplit[1].strip()
+                            continue
+                        self.dbasetables[tablename]['fields'][fieldname] = {}
+                        self.dbasetables[tablename]['fields'][fieldname]['PGtype'] = linesplit[1].strip()  # the pg type
+                        self.dbasetables[tablename]['fields'][fieldname]['SLtype'] = linesplit[2].strip()  # the spatialite type
+                        # the foreign key
+                        if len(linesplit) > 3:
+                            self.dbasetables[tablename]['fields'][fieldname]['FK'] = linesplit[3].strip()
+
+                    elif line[0:2] == '##':         # parent field constraint name
+                        self.dbasetables[tablename]['fields'][fieldname]['ParFldCst'] = line[2:].strip()
+
+                    elif line[0] == '#':            # comment - pass
+                        if line[0:5] == '#DJAN':
+                            self.dbasetables[tablename]['djangoviewsql'] = line[5:].strip()
+                        elif line[0:7] == '#QGISSL':
+                            if 'qgisSLviewsql' in self.dbasetables[tablename].keys():
+                                self.dbasetables[tablename]['qgisSLviewsql'] += ' ' + line[7:].strip() + ' '
+                            else:
+                                self.dbasetables[tablename]['qgisSLviewsql'] = line[7:].strip()
+                        elif line[0:7] == '#QGISPG':
+                            if 'qgisPGviewsql' in self.dbasetables[tablename].keys():
+                                self.dbasetables[tablename]['qgisPGviewsql'] += ' ' + line[7:].strip() + ' '
+                            else:
+                                self.dbasetables[tablename]['qgisPGviewsql'] = line[7:].strip()
+                        elif line[0:5] == '#QGIS':
+                            if 'qgisviewsql' in self.dbasetables[tablename].keys():
+                                self.dbasetables[tablename]['qgisviewsql'] += ' ' + line[5:].strip() + ' '
+                            else:
+                                self.dbasetables[tablename]['qgisviewsql'] = line[5:].strip()
+                            # self.dbasetables[tablename]['qgisviewsql'] = line[5:].strip()
+                        elif line[0:5] == '#EXPO':
+                            self.dbasetables[tablename]['exportviewsql'] = line[5:].strip()
+                        elif line[0:5] == '#SCAL':
+                            self.dbasetables[tablename]['scale'] = float(line[5:].strip())
+                        elif line[0:5] == '#SHOW':
+                            value = line[5:].strip()
+                            if value == 'YES':
+                                self.dbasetables[tablename]['showinqgis'] = True
+                        elif line[0:13] == '#SPATIALINDEX':
+                            value = line[13:].strip()
+                            if value == 'YES':
+                                self.dbasetables[tablename]['spatialindex'] = True
+                        else:
+                            continue
+
+
+                    else:                           # field constraint
+                        if 'Cst' in self.dbasetables[tablename]['fields'][fieldname].keys():
+                            self.dbasetables[tablename]['fields'][fieldname]['Cst'].append([])
+                        else:
+                            self.dbasetables[tablename]['fields'][fieldname]['Cst'] = [[]]
+
+                        if True:
+                            linesplit = line.split(';')
+
+                        if False:
+                            if sys.version_info.major == 2:
+                                linesplit = line.decode('utf-8').split(';')
+                            elif sys.version_info.major == 3:
+                                # print(line.__class__)
+                                linesplit = line.split(';')
+                                #print(type(linesplit[0]))
+                                #linesplit = line.decode('utf-8').split(';')
+                        if debug: logging.getLogger("Lamia").debug('cst line split %s %s',fieldname, str(linesplit))
+
+                        self.dbasetables[tablename]['fields'][fieldname]['Cst'][-1].append(linesplit[0].strip())
+                        self.dbasetables[tablename]['fields'][fieldname]['Cst'][-1].append(linesplit[1].strip())
+                        if len(linesplit) > 2:
+                            self.dbasetables[tablename]['fields'][fieldname]['Cst'][-1].append(eval(linesplit[2].strip()))
+                        else:
+                            self.dbasetables[tablename]['fields'][fieldname]['Cst'][-1].append(None)
+                    compt += 1
+
+                file.close()
+
+        if "Revision" in self.dbasetables.keys():
+            self.revisionwork = True
+
+
+        if debug:
+            for key in self.dbasetables.keys():
+                logging.getLogger("Lamia").debug('dbasetables %s : %s', str(key), str(self.dbasetables[key]))
+
+
+    def readConstraints(self, tablename,fieldname  ,sheet, xlrow,cstcolumntoread=None):
+
+        # dbasefield self.dbasetables[tablename]['fields'][fieldname]
+        colindexvariante = cstcolumntoread
+        dbasefield = self.dbasetables[tablename]['fields'][fieldname]
+
+        if colindexvariante is None:
+            colindexvariante = None
+            if self.variante is None:
+                colindexvariante = 5
+            else:
+                if self.dbasetables[tablename]['row_variantes'] >= 0 :
+                    rowvariantes = self.dbasetables[tablename]['row_variantes']
+                    if self.variante =='Lamia':
+                        colindexvariante = 5
+                    else:
+                        for col in range(sheet.ncols):
+                            try:
+                                if (sheet.cell_value(rowvariantes,col ) == self.variante
+                                        and sheet.cell_value(xlrow,col ) != '' ):
+                                    colindexvariante = col
+                                    # print('colindexvariante', tablename, fieldname, colindexvariante)
+                                    break
+                            except:
+                                print('error',tablename,fieldname ,self.variante )
+                        if colindexvariante is None:
+                            colindexvariante = 5
+
+
+
+        if unicode(sheet.cell_value(xlrow, colindexvariante)).strip() != '':
+            if 'Cst' in dbasefield.keys():
+                dbasefield['Cst'].append([])
+            else:
+                dbasefield['Cst'] = [[]]
+
+
+            showvalue = self.convertxlsdataToString(sheet.cell_value(xlrow, colindexvariante))
+            datavalue = self.convertxlsdataToString(sheet.cell_value(xlrow, colindexvariante +1 ))
+            dbasefield['Cst'][-1].append(showvalue.strip())
+            dbasefield['Cst'][-1].append(datavalue.strip())
+
+            if sheet.cell_value(xlrow, colindexvariante + 2).strip() != '':
+                dbasefield['Cst'][-1].append(eval(sheet.cell_value(xlrow, colindexvariante + 2).strip()))
+            else:
+                dbasefield['Cst'][-1].append(None)
+
+        return colindexvariante
+
+
+    def convertxlsdataToString(self, data):
+        # print('data', data, data.__class__)
+        if sys.version_info.major == 2:
+            if data is None:
+                data = ''
+            elif isinstance(data, unicode):
+                data = data
+            elif isinstance(data, float):
+                data = str(data).rstrip('0').rstrip('.')
+            else:
+                data = str(data)
+        else:
+            data = str(data)
+
+        return data
+
+
+
 
 
     def createDBDictionary(self, type, configdir=False, baseversiontoread=None, workversiontoread=None):
@@ -702,7 +1229,16 @@ class DBaseParser(QtCore.QObject):
         sql['main'] += name + '('
 
         for key in dbasetable['fields']:
-            sql['main'] += key + ' ' + dbasetable['fields'][key]['SLtype'] + ','
+            if self.xlsreader:
+                sltype = None
+                if dbasetable['fields'][key]['PGtype'] in self.pgtypetosltype.keys():
+                    sltype = self.pgtypetosltype[dbasetable['fields'][key]['PGtype']]
+                elif 'VARCHAR' in dbasetable['fields'][key]['PGtype']:
+                    sltype = 'TEXT'
+                # print(name,key, dbasetable['fields'][key]['PGtype'], sltype )
+                sql['main'] += key + ' ' + sltype + ','
+            else:
+                sql['main'] += key + ' ' + dbasetable['fields'][key]['SLtype'] + ','
             if 'FK' in dbasetable['fields'][key].keys():
                 listFK.append('FOREIGN KEY(' + key + ') REFERENCES ' + dbasetable['fields'][key]['FK'])
 
@@ -762,7 +1298,7 @@ class DBaseParser(QtCore.QObject):
         return sql
 
 
-    def loadQgisVectorLayers(self, file=None, dbasetype='spatialite',
+    def loadQgisVectorLayers(self, file=None, dbasetype='spatialite', variante=None,
                              host='localhost', port=None, dbname=None, schema=None, user=None, password=None):
         """!
         Load dbase as Qgis layers
@@ -807,17 +1343,30 @@ class DBaseParser(QtCore.QObject):
 
         version = None
         workversion = None
+        variante = None
 
+
+        sql = "SELECT metier, repertoireressources,crs, version   FROM Basedonnees;"
+        query = self.query(sql)
+        type, resdir, crs , version  = [row[0:4] for row in query][0]
+
+        sql = "SELECT  workversion  FROM Basedonnees;"
+        query = self.query(sql)
+        workversion  = [row[0] for row in query][0]
 
         try:
-            sql = "SELECT metier, repertoireressources,crs, version , workversion FROM Basedonnees;"
+            sql = "SELECT  variante  FROM Basedonnees;"
             query = self.query(sql)
-            type, resdir, crs , version, workversion = [row[0:5] for row in query][0]
+            variante  = [row[0] for row in query][0]
+        except:
+            pass
+
+        """
         except:
             sql = "SELECT metier, repertoireressources,crs, version FROM Basedonnees;"
             query = self.query(sql)
             type, resdir, crs , version= [row[0:4] for row in query][0]
-
+        """
 
 
         if resdir[0] == '.' and self.dbasetype == 'spatialite':
@@ -828,23 +1377,31 @@ class DBaseParser(QtCore.QObject):
         self.qgiscrs = qgis.core.QgsCoordinateReferenceSystem(self.crsnumber)
         self.version = version
         self.workversion = workversion
+        self.variante = variante
 
         if self.qgsiface is None:
-            print(type, resdir, crs , version, workversion)
+            print(type, resdir, crs , version, workversion, variante)
 
-
+        self.createRessourcesDir(self.dbasetype,self.dbaseressourcesdirectory )
 
         if debug: logging.getLogger('Lamia').debug('step2')
 
         if type is not None:
-            self.createDBDictionary(type)
-            self.createDBDictionary(type, configdir=True)
+            if not self.xlsreader:
+                self.createDBDictionary(type)
+                self.createDBDictionary(type, configdir=True)
+            else:
+                self.createDBDictionary2(type)
+                self.createDBDictionary2(type, configdir=True)
+
+
 
             if self.revisionwork:
                 sql = "SELECT MAX(pk_revision) FROM Revision;"
                 query = self.query(sql)
                 self.currentrevision = query[0][0]
                 if debug: logging.getLogger('Lamia').debug('rev : %s', str(self.currentrevision) )
+
 
             # create a list of tables to load
             if False:
@@ -1111,7 +1668,7 @@ class DBaseParser(QtCore.QObject):
         if 'WITH' in sqltemp1.keys():
             sqlout += 'WITH ' + sqltemp1['WITH']
             sqlout += ', ' + withsql
-            sqlout += 'SELECT ' + sqltemp1['SELECT'] + ' FROM ' + sqltemp1['FROM']+ ' WHERE ' + sqltemp1['WHERE']
+            sqlout += ' SELECT ' + sqltemp1['SELECT'] + ' FROM ' + sqltemp1['FROM']+ ' WHERE ' + sqltemp1['WHERE']
             if 'ORDER' in sqltemp1.keys():
                 sqlout += ' ORDER BY ' + sqltemp1['ORDER']
             if 'GROUP' in sqltemp1.keys():
@@ -2187,9 +2744,195 @@ class DBaseParser(QtCore.QObject):
         return repository, version
 
 
+
+    def getVersionRepositories2(self, typemetier):
+        """
+        REcherche dans Lamia/DBASE/create le repertoire qui correspond au typemetier, avec la plus grande version
+        s'il n'y a pas de version (lamia avant sept.2018) , renvoi le repertoire avec version = None
+
+        :param typemetier:
+        :return:
+        """
+        debug = False
+        results = []
+
+        createfilesdir = os.path.join(os.path.dirname(__file__), '..', 'DBASE', 'create')
+        if debug: logging.getLogger("Lamia").debug('dbase dir : %s', str(createfilesdir))
+
+        if False:
+            listrep = os.listdir(createfilesdir)
+            for rep in listrep:
+                if len(rep.split('_')) > 2 :
+                    if typemetier == '_'.join(rep.split('_')[:-2]) :
+                        versiontemp = '_'.join(rep.split('_')[-2:])
+                        if versiontemp > version:
+                            repository = os.path.join(createfilesdir,rep)
+                            version = versiontemp
+                else:
+                    if typemetier == rep :
+                        repository = os.path.join(createfilesdir,rep)
+
+        listfiles = os.listdir(createfilesdir)
+        for filename in listfiles:
+            filepath = os.path.join(createfilesdir,filename )
+            filebasename, ext = os.path.splitext(filename)
+
+            if os.path.isfile(filepath) and ext in ['.xls', '.xlsx']:
+                filebasenamesplitted = filebasename.split('_')
+                if (len(filebasenamesplitted) > 2 and filebasenamesplitted[-2].isdigit() and filebasenamesplitted[-1].isdigit()
+                        and typemetier == '_'.join(filebasenamesplitted[:-2]) ):     #case child of dabse2
+                    versiontemp = '_'.join(filebasename.split('_')[-2:])
+                    repository = os.path.join(createfilesdir, filename)
+                    results.append([versiontemp, repository])
+
+                if False:
+                    if len(filebasename.split('_')) > 2 :
+                        if typemetier == '_'.join(filebasename.split('_')[:-2]) :
+
+                            versiontemp = '_'.join(filebasename.split('_')[-2:])
+                            repository = os.path.join(createfilesdir, filename)
+                            results.append([versiontemp,repository ])
+
+                            if False and versiontemp > version:
+                                repository = os.path.join(createfilesdir,filename)
+                                version = versiontemp
+                    else:
+                        if typemetier == filebasename :
+                            repository = os.path.join(createfilesdir,filename)
+
+        if debug: logging.getLogger("Lamia").debug('results: %s', str(results))
+
+        results.sort()
+
+        if debug: logging.getLogger("Lamia").debug('results: %s', str(results))
+
+        return results
+
+
+
+    def updateDBaseVersion2(self):
+
+        self.normalMessage.emit("Mise à jour de la base de données...")
+
+        debug = True
+
+        if debug: logging.getLogger("Lamia").debug('DBASE need an update')
+
+        workversions = self.getVersionRepositories2(self.type)
+        baseversions = self.getVersionRepositories2(self.type.split('_')[0])
+
+        workversionmax,  createfilesdir, = workversions[-1]
+        baseversionmax, createfilesdirbase = baseversions[-1]
+
+        if debug: logging.getLogger("Lamia").debug('main version projet : %s, new : %s', str(self.version),
+                                                   str(baseversionmax))
+        if debug: logging.getLogger("Lamia").debug('work version projet : %s, new : %s', str(self.workversion),
+                                                   str(workversionmax))
+
+        indexbaseversion = [ver[0] for ver in baseversions].index(self.version)
+        indexworkversion = [ver[0] for ver in workversions].index(self.workversion)
+
+        for indexversion in range(indexbaseversion, len(baseversions) -1 ):
+            self.updateTables('base',
+                              baseversions[indexversion][0],
+                              baseversions[indexversion +1][0] )
+
+
+        for indexversion in range(indexworkversion, len(workversions) -1 ):
+            self.updateTables('metier',
+                              workversions[indexworkversion][0],
+                              workversions[indexworkversion + 1][0])
+
+
+        self.normalMessage.emit("Mise à jour de la base de données terminée")
+
+
+
+    def updateTables(self, typebase, oldversion, newversion ):
+
+        debug = False
+        if debug: logging.getLogger("Lamia").debug(' %s - old : %s, new : %s', str(typebase), str(oldversion), str(newversion))
+        if self.qgsiface is None:
+            print('type base :',str(typebase), ' - oldversion : ', str(oldversion), ' - newversion ', str(newversion))
+
+
+        baseversions = self.getVersionRepositories2(self.type.split('_')[0])
+        workversions = self.getVersionRepositories2(self.type)
+
+
+        if typebase == 'base':
+            indexnewversion = [ver[0] for ver in baseversions].index(newversion)
+            filenewversion = baseversions[indexnewversion][1]
+            #updates new columsns
+            self.createDBDictionary2(self.type, baseversiontoread=oldversion, workversiontoread=self.workversion)
+            dictold = dict(self.dbasetables)
+            self.createDBDictionary2(self.type, baseversiontoread=newversion, workversiontoread=self.workversion)
+            dictnew = dict(self.dbasetables)
+        elif typebase == 'metier':
+            indexnewversion = [ver[0] for ver in workversions].index(newversion)
+            filenewversion = workversions[indexnewversion][1]
+            #updates new columsns
+            self.createDBDictionary2(self.type, baseversiontoread=self.version, workversiontoread=oldversion)
+            dictold = dict(self.dbasetables)
+            self.createDBDictionary2(self.type, baseversiontoread=self.version, workversiontoread=newversion)
+            dictnew = dict(self.dbasetables)
+
+
+
+        results = []
+
+        for table in dictnew.keys():
+            for field in dictnew[table]['fields']:
+                if field not in dictold[table]['fields'].keys():
+                    results.append([table, field])
+
+        if debug: logging.getLogger("Lamia").debug('diff : %s', str(results))
+        if self.qgsiface is None:
+            print('diff :',str(results))
+
+        for table, field in results:
+            sql = 'ALTER TABLE ' + table + ' ADD COLUMN ' + field + ' '
+            if self.dbasetype == 'spatialite':
+                if 'VARCHAR' in dictnew[table]['fields'][field]['PGtype']:
+                    sql += ' TEXT '
+                else:
+                    sql += self.pgtypetosltype[dictnew[table]['fields'][field]['PGtype']]
+            elif self.dbasetype == 'postgis':
+                sql += dictnew[table]['fields'][field]['PGtype']
+            self.query(sql)
+
+        # read potential python file
+        pythonfile, ext = os.path.splitext(filenewversion)
+        pythonfile = pythonfile + '.txt'
+
+        if os.path.isfile(pythonfile):
+            pyfile = open(pythonfile,'r')
+            text = pyfile.read()
+            pyfile.close()
+            exec (text)
+
+
+        #update version
+        if typebase == 'base':
+            self.version = newversion
+            self.workversion = self.workversion
+        elif typebase == 'metier':
+            self.version = self.version
+            self.workversion = newversion
+
+        sql = "UPDATE Basedonnees SET version = '" + str(self.version) + "'"
+        if self.workversion is not None:
+            sql += ",workversion = '" + str(self.workversion) + "'"
+
+        self.query(sql)
+
+
+
     def updateDBaseVersion(self):
 
         self.normalMessage.emit("Mise à jour de la base de données...")
+
+
         debug = False
         if debug: logging.getLogger("Lamia").debug('DBASE need an update')
 
@@ -2200,11 +2943,19 @@ class DBaseParser(QtCore.QObject):
         if debug: logging.getLogger("Lamia").debug('work version projet : %s, new : %s', str(self.workversion), str(workversionmax))
 
 
+        if not self.xlsreader:
+            self.createDBDictionary(self.type, baseversiontoread=self.version, workversiontoread=self.workversion)
+            dictold = dict(self.dbasetables)
+            self.createDBDictionary(self.type, baseversiontoread=baseversionmax, workversiontoread=workversionmax)
+            dictnew = dict(self.dbasetables)
+        else:
+            self.createDBDictionary2(self.type, baseversiontoread=self.version, workversiontoread=self.workversion)
+            dictold = dict(self.dbasetables)
+            self.createDBDictionary2(self.type, baseversiontoread=baseversionmax, workversiontoread=workversionmax)
+            dictnew = dict(self.dbasetables)
 
-        self.createDBDictionary(self.type, baseversiontoread=self.version, workversiontoread=self.workversion )
-        dictold = dict(self.dbasetables)
-        self.createDBDictionary(self.type, baseversiontoread=baseversionmax, workversiontoread=workversionmax)
-        dictnew = dict(self.dbasetables)
+
+
 
 
         results=[]
@@ -2220,7 +2971,10 @@ class DBaseParser(QtCore.QObject):
         for table, field in results:
             sql = 'ALTER TABLE ' + table + ' ADD COLUMN ' + field + ' '
             if self.dbasetype == 'spatialite':
-                sql += dictnew[table]['fields'][field]['SLtype']
+                if self.xlsreader:
+                    sql += self.pgtypetosltype[dictnew[table]['fields'][field]['PGtype']]
+                else:
+                    sql += dictnew[table]['fields'][field]['SLtype']
             elif self.dbasetype == 'postgis':
                 sql += dictnew[table]['fields'][field]['PGtype']
             self.query(sql)
@@ -2234,6 +2988,9 @@ class DBaseParser(QtCore.QObject):
         self.query(sql)
 
         self.normalMessage.emit("Mise à jour de la base de données terminée")
+
+
+
 
 
 

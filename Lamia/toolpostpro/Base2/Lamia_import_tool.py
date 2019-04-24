@@ -31,6 +31,7 @@ from ...toolabstract.Lamia_abstract_tool import AbstractLamiaTool
 
 
 class ImportTool(AbstractLamiaTool):
+    TOOLNAME = 'Importtools'
     DBASES = ['digue', 'base_digue', 'base2_digue', 'base2_parking']
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None, parentwidget=None, parent=None):
@@ -93,9 +94,9 @@ class ImportTool(AbstractLamiaTool):
             self.userwdgfield.comboBox_typeimport.addItems(items)
 
             if self.dbase.qgsiface is None :
-                self.userwdgfield.pushButton_import.clicked.connect(self.showTable)
-            else:
                 self.userwdgfield.pushButton_import.clicked.connect(self.showFlowChart)
+            else:
+                self.userwdgfield.pushButton_import.clicked.connect(self.showTable)
             self.userwdgfield.pushButton_importer.clicked.connect(self.work)
 
             self.dialogui = DialogUI()
@@ -511,7 +512,7 @@ class ImportTool(AbstractLamiaTool):
 
         if debug: logging.getLogger('Lamia').debug('start %s', str(self.results))
 
-
+        self.importtable = self.userwdgfield.comboBox_typeimport.currentText()
 
         tablestemp = [result[0].split('.')[0] for result in self.results]
 

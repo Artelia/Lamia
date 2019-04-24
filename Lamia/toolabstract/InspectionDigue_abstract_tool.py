@@ -528,7 +528,8 @@ class AbstractInspectionDigueTool(QWidget):
                                         and isinstance(linkuserwdg[tablename]['widgets'][nameparentfield], QComboBox)):
                                     linkuserwdg[tablename]['widgets'][nameparentfield].currentIndexChanged.connect(self.comboparentValueChanged)
 
-                    elif 'INTEGER' in dbasetable['fields'][field]['SLtype']:
+                    #elif 'INTEGER' in dbasetable['fields'][field]['SLtype']:
+                    elif 'INT' in dbasetable['fields'][field]['PGtype'] or 'BOOLEAN' in dbasetable['fields'][field]['PGtype']:
                         if field[0:2].lower() == 'id':
                             item = QTableWidgetItem()
                             item.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
@@ -545,7 +546,10 @@ class AbstractInspectionDigueTool(QWidget):
                             wdg2 = QPushButton('Show')
                             self.tableWidget.setCellWidget(rowPosition, 2, wdg2)
                             wdg2.clicked.connect(self.rawtablePushButtonClicked)
-                    elif 'TEXT' in dbasetable['fields'][field]['SLtype']:
+                    #elif 'TEXT' in dbasetable['fields'][field]['SLtype']:
+                    elif ('VARCHAR' in dbasetable['fields'][field]['PGtype']
+                            or 'TIMESTAMP' in dbasetable['fields'][field]['PGtype']
+                            or 'TEXT' in dbasetable['fields'][field]['PGtype']):
                         if 'date' in field[0:4]:
                             wdg = QDateEdit()
                             wdg.setSpecialValueText(" ")
@@ -562,14 +566,21 @@ class AbstractInspectionDigueTool(QWidget):
                                 wdg = QPushButton('Open')
                                 self.tableWidget.setCellWidget(rowPosition, 3, wdg)
                                 wdg.clicked.connect(self.rawtablePushButtonClicked)
-                    elif 'DECIMAL'  in dbasetable['fields'][field]['SLtype']:
+                    elif ('NUMERIC' in dbasetable['fields'][field]['PGtype']
+                            or 'REAL' in dbasetable['fields'][field]['PGtype']):
                         wdg = QDoubleSpinBox()
                         wdg.setRange(-1, 9999999)
                         self.tableWidget.setCellWidget(rowPosition, 1, wdg)
-                    elif 'REAL' in dbasetable['fields'][field]['SLtype']:
-                        wdg = QDoubleSpinBox()
-                        wdg.setRange(-1, 9999999)
-                        self.tableWidget.setCellWidget(rowPosition, 1, wdg)
+
+                    if False:
+                        if 'DECIMAL'  in dbasetable['fields'][field]['SLtype']:
+                            wdg = QDoubleSpinBox()
+                            wdg.setRange(-1, 9999999)
+                            self.tableWidget.setCellWidget(rowPosition, 1, wdg)
+                        elif 'REAL' in dbasetable['fields'][field]['SLtype']:
+                            wdg = QDoubleSpinBox()
+                            wdg.setRange(-1, 9999999)
+                            self.tableWidget.setCellWidget(rowPosition, 1, wdg)
 
                     if 'FK' in dbasetable['fields'][field].keys():
                         # print(dbasetable['fields'][field]['FK'].split('(')[0])

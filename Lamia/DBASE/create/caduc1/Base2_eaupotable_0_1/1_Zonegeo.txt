@@ -1,0 +1,4 @@
+###code_voie;             VARCHAR(255);                TEXT
+###nom_rue;             VARCHAR(255);                TEXT
+###nom_couche;             VARCHAR(255);                TEXT
+###lien;             VARCHAR(255);                TEXT

@@ -92,13 +92,21 @@ class BaseParkingInfraLineaireTool(BaseInfraLineaireTool):
                                                                                ('typestationnement', self.userwdgfield.comboBox_typestationnement),
                                                                                ('zonage', self.userwdgfield.comboBox_zonage),
                                                                                ('zonageautre', self.userwdgfield.lineEdit_zonage),
-                                                                               ('nbredeplaces', self.userwdgfield.spinBox_nbreplace)])},
+                                                                               ('nbredeplaces', self.userwdgfield.spinBox_nbreplace),
+                                                                               ('parite',self.userwdgfield.lineEdit_parite),
+                                                                               ('idseg',self.userwdgfield.lineEdit_idseg)])},
                                      'Objet': {'linkfield': 'id_objet',
                                                'widgets': {'libelle': self.userwdgfield.lineEdit_nom,
                                                            #'commentaire':self.userwdgfield.textBrowser_commentaire
+                                                           'importid' : self.userwdgfield.spinBox_idimport
                                                            }},
                                      'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
-                                                           'widgets': {}}}
+                                                           'widgets': {
+                                                                       'rue_libelle': self.userwdgfield.lineEdit_rue,
+                                                                       'rue_libdebut': self.userwdgfield.lineEdit_ruedeb,
+                                                                       'rue_libfin': self.userwdgfield.lineEdit_ruefin,
+                                                                       'rue_complement': self.userwdgfield.lineEdit_ruecomplement,
+                                                                        }}}
 
             self.dbasechildwdgfield = []
 

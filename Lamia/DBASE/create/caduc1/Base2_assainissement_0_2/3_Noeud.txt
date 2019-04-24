@@ -1,0 +1,226 @@
+###altradierouvrage;             REAL;                     DECIMAL
+###alttamponouvrage;             REAL;                     DECIMAL
+###profradierouvrage;             REAL;                     DECIMAL
+###typeReseau;                VARCHAR(255);            TEXT
+/;
+Pluvial;                  PLU
+Eaux usees;               USE
+Unitaire;                 UNI
+Industriel;               IND
+
+###typeOuvrageAss;                VARCHAR(255);            TEXT
+/;
+Regard;                    60
+Branchement;                61
+Regard mixte EP EU;         62
+Avaloir;                   70
+Grille;                     71
+Grille avaloir;             72
+Tete de buse;               73
+Gouttière;                  74
+Poste de refoulement;       10
+Station d epuration;       20
+Débourbeur/déshuileur;     21
+Fosse sceptique;            22
+Bassin de stockage;        30
+Deversoir d orage;         40
+Rejet;                     50
+Puisard;                   51
+Autre;                     00
+Indetermine;               99
+
+###accessibilite;                VARCHAR(255);            TEXT
+/;
+Ouvrable;                   OUV
+Ouvrable non visitable;     OUN
+En privé;                   PRI
+Non ouvrable;               NOU
+Non vu;                     NVU
+
+###environnement;                VARCHAR(255);            TEXT
+/;
+Parking;                    PAR
+Herbe;                      HER
+Bâtiment;                   BAT
+Chemin piéton;              CHE
+Route carrossable;          RCA
+Voie ferrées;                 VFE
+
+
+###largeur;             REAL;                     DECIMAL
+###longueur;             REAL;                     DECIMAL
+# PR : photo ensemble
+###lid_ressource_1;        INT ;                       INTEGER
+# PR : photo cuve
+###lid_ressource_2;        INT ;                       INTEGER
+# PR : photo cuve 2
+###lid_ressource_3;        INT ;                       INTEGER
+# PR : photo poire
+###lid_ressource_4;        INT ;                       INTEGER
+# PR : photo vanne
+###lid_ressource_5;        INT ;                       INTEGER
+# PR : photo armoire
+###lid_ressource_6;        INT ;                       INTEGER
+
+# *****************
+# Regard
+
+###formetampon;                VARCHAR(255);            TEXT
+/;
+Carre;                      CAR
+Circulaire;                 CIR
+
+###presenceechelon;             INT ;                     INTEGER
+/;
+Non;    0
+Oui;    1
+###presencecrosse;             INT ;                     INTEGER
+/;
+Non;    0
+Oui;    1
+###presencecunette;             INT ;                     INTEGER
+/;
+Non;    0
+Oui;    1
+
+###formeregard;                VARCHAR(255);            TEXT
+/;
+Carre;                      CAR
+Circulaire;                 CIR
+###cloisonsiphoide;             INT ;                     INTEGER
+##typeOuvrageAss
+/;                     ;['','60','61','62','70','71','72','73','10','20','30','40','50','00','99']
+Non;    0;          ['61']
+Oui;    1;          ['61']
+###couvercle;             INT ;                     INTEGER
+##typeOuvrageAss
+/;                     ;['','60','61','62','70','71','72','73','10','20','30','40','50','00','99']
+Non;    0;          ['61']
+Oui;    1;          ['61']
+
+
+
+
+
+# *****************
+# Poste refoulement
+
+# Exterieur *********
+###PRcloture;             INT ;                     INTEGER 
+/;
+Non;    0
+Oui;    1
+###PRarriveeep;             INT ;                     INTEGER 
+/;
+Non;    0
+Oui;    1
+###PRverouille;             INT ;                     INTEGER 
+/;
+Non;    0
+Oui;    1
+
+# armoireelectrique *********
+###PRarmoireelec;                 INT ;                     INTEGER 
+/;
+Non;    0
+Oui;    1
+###PRarmoireelecverouillee;                 INT ;                     INTEGER 
+/;
+Non;    0
+Oui;    1
+###PRtelegestion;             INT ;                     INTEGER 
+/;
+Non;    0
+Oui;    1
+###PRtelegestioncommentaire;                VARCHAR(255);            TEXT
+###PRpermutautopompe;         INT ;                     INTEGER 
+/;
+Non;    0
+Oui;    1
+###PRtypeasservissementpompe;                VARCHAR(255);            TEXT
+/;
+Sonde de niveau;    SNV
+Sonde Piezo ;    PIE
+Sonde ultrason;   SOS
+Autre;             AUT
+###PRnbrepoires;             INT ;                     INTEGER 
+###PRtypeasservissementsecourspompe;                VARCHAR(255);            TEXT
+/;
+Non;                NON
+Sonde de niveau;    SNV
+Sonde Piezo ;    PIE
+Sonde ultrason;   SOS
+Autre;             AUT
+
+
+# interieur *********
+###PRmateriau;                VARCHAR(255);            TEXT
+/;
+Béton;    BET
+Béton revêtu;    BER
+Polyester;      POL
+###PRgrilleantichute;             INT ;                     INTEGER 
+/;
+Non;    0
+Oui;    1
+###PRsurverse;             INT ;                     INTEGER 
+/;
+Non;    0
+Oui;    1
+###PRpanierdegrilleur;             INT ;                     INTEGER 
+/;
+Non;    0
+Oui;    1
+###PRnbrepompes;             INT ;                     INTEGER 
+
+###PRpompebarreguidage;             INT ;                     INTEGER 
+/;
+Non;    0
+Oui;    1
+###PRpompechainerelevage;             INT ;                     INTEGER 
+/;
+Non;    0
+Oui;    1
+
+# Chambre a vannes *********
+###PRclapet;             INT ;                     INTEGER 
+/;
+Non;    0
+Oui;    1
+###PRvannes;             INT ;                     INTEGER 
+/;
+Non;    0
+Oui;    1
+###PRprisepression;             INT ;                     INTEGER 
+/;
+Non;    0
+Oui;    1
+
+
+# *****************
+# Debourbeur desuileur
+###DSHroleouvrage;                VARCHAR(255);            TEXT
+# DSHautomate: idem presenceautomate
+# DSHalarme : idem presencealarme
+# DSHmateriau : idem PRmateriau
+
+
+# *****************
+# divers
+###presencealarme;             INT ;                     INTEGER 
+/;
+Non;    0
+Oui;    1
+###presenceautomate;             INT ;                     INTEGER 
+/;
+Non;    0
+Oui;    1
+
+
+
+###X;             REAL;                     DECIMAL
+###dX;             REAL;                     DECIMAL
+###Y;             REAL;                     DECIMAL
+###dY;             REAL;                     DECIMAL
+###Z;             REAL;                     DECIMAL
+###dZ;             REAL;                     DECIMAL

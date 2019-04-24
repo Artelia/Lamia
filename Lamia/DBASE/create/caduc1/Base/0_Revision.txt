@@ -1,0 +1,4 @@
+# Nom_champ                 TypePostGis          TypeSpatialite                       Option  Referecens/foreignkey
+###pk_revision;                SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###daterevision;            DATE ;                  TEXT
+###commentaire;             VARCHAR(255);           TEXT

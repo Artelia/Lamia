@@ -1,0 +1,17 @@
+#DJAN  SELECT * FROM Objet WHERE Objet.lpk_revision_end IS NULL  AND Objet.datetimedestruction IS NULL
+#QGIS SELECT * FROM Objet
+
+# Nom_champ                 TypePostGis          TypeSpatialite                       Option  Referecens/foreignkey
+###pk_objet;                SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_objet;                INT ;                   INTEGER
+###lpk_revision_begin;        INT ;                   INTEGER;                              Revision(pk_revision)
+###lpk_revision_end;          INT ;                   INTEGER;                              Revision(pk_revision)
+
+###datetimecreation;            TIMESTAMP ;                  TEXT
+###datetimemodification;        TIMESTAMP ;                  TEXT
+###datetimedestruction;         TIMESTAMP ;                  TEXT 
+###commentaire;             VARCHAR(255);           TEXT
+###libelle;                VARCHAR(255);           TEXT
+
+###importid;                 INT;                            INTEGER
+###importtable;                VARCHAR(255);           TEXT

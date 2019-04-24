@@ -1,0 +1,9 @@
+###visiteur;           VARCHAR(255);            TEXT
+###dateVisite;         TIMESTAMP ;                  TEXT
+###numLigne;           VARCHAR(255);            TEXT
+###nomLocal;            VARCHAR(255);           TEXT
+###typeLocal;            VARCHAR(255);           TEXT
+###aspectGeneralInt;            VARCHAR(255);           TEXT
+###AspectGeneralExt;            VARCHAR(255);           TEXT
+###TempInt;            INT;            INTEGER
+###TempExt;            INT;            INTEGER

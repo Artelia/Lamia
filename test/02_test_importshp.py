@@ -20,8 +20,7 @@ class TestMain(Test):
     def testMethod(self):
         self.createWin()
 
-        path = os.path.normpath("C://Users//patrice.verchere//Documents//GitHub//Lamia//test//02_test_export//BD_totale1.sqlite")
-        path = "C://000_testdigue//temp_base2_assainissement//test02.sqlite"
+        path = "C://000_testdigue//temp_base2_parking//test01.sqlite"
 
         self.wind.dbase.loadQgisVectorLayers(path)
         self.wind.loadUiDesktop()
@@ -31,14 +30,25 @@ class TestMain(Test):
         #self.createMainWin()
 
         self.dbase.printsql = False
-        indexrapport = None
-        for i, menutool in enumerate(self.wind.menutools):
-            if 'importShapefile' in menutool.__class__.__name__ :
-                indexrapport = i
+
+        wdg = None
+        for i, tool in enumerate(self.wind.tools):
+            print(tool.__class__.__name__)
+            if 'ImportTool' in tool.__class__.__name__:
+                print('ok')
+                wdg = self.wind.tools[i]
                 break
+
+        if False:
+            indexrapport = None
+            for i, menutool in enumerate(self.wind.menutools):
+                if 'importShapefile' in menutool.__class__.__name__ :
+                    indexrapport = i
+                    break
         # Infralineaire_BM Equipement_point_BM Photo_BM Graphdata_BM Desordres_ligne_BM
 
-        layer = qgis.core.QgsVectorLayer("C://000_testdigue//testnoeud.shp", 'test', "ogr")
+        layer = qgis.core.QgsVectorLayer("U://FR//BOR//VT//PVR//Brest//SIG brest//stat_l_Saint_Marc.shp", 'test', "ogr")
+
 
 
         if True:
@@ -106,8 +116,8 @@ class TestMain(Test):
                          [u'Descriptionsystem.listeparametres', u'']]
 
         # self.wind.dbase.dbasetables['Zonegeo']['layerqgis'].selectByIds([5])
-        self.wind.menutools[indexrapport].importtable = 'Noeud'
-        self.wind.menutools[indexrapport].work(linknoeud, layer)
+        wdg.importtable = 'Infralineaire'
+        wdg.work(layer)
 
 
 

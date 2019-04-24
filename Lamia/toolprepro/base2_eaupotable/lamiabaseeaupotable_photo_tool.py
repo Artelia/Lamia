@@ -31,11 +31,12 @@ class BaseEaupotablePhotoTool(BasePhotoTool):
         if self.userwdgfield is None:
             self.userwdgfield = UserUI()
             self.linkuserwdgfield = {'Photo' : {'linkfield' : 'id_photo',
-                                             'widgets' : {'numphoto': self.userwdgfield.spinBox_numphoto}},
+                                             'widgets' : {}},
                                 'Objet' : {'linkfield' : 'id_objet',
                                           'widgets' : {}},
                                 'Ressource' : {'linkfield' : 'id_ressource',
                                           'widgets' : {'file': self.userwdgfield.lineEdit_file,
+                                                       'numressource': self.userwdgfield.spinBox_numphoto,
                                                         'datetimeressource' : self.userwdgfield.dateTimeEdit_date}}}
 
             self.userwdgfield.stackedWidget.setCurrentIndex(0)

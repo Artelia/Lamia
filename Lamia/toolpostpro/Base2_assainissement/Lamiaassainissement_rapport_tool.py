@@ -229,13 +229,16 @@ class printPDFBaseWorker(printPDFBaseWorker):
             lastlinepoly = self.uniqueSortedDatas(data)
             # print(data)
             # print(lastlinepoly)
-            lastlinevector = lastlinepoly[1] - lastlinepoly[0]
-            # print('lastlinevector',lastlinevector)
-            angle = self.py_ang(lastlinevector, np.array([1, 0]))
+            if len(lastlinepoly) >= 2:
+                lastlinevector = lastlinepoly[1] - lastlinepoly[0]
+                # print('lastlinevector',lastlinevector)
+                angle = self.py_ang(lastlinevector, np.array([1, 0]))
 
-            if not noeudorientenord and compt == 0:
-                initialangle = angle
-            resultlinesout.append([id, angle - initialangle])
+                if not noeudorientenord and compt == 0:
+                    initialangle = angle
+                resultlinesout.append([id, angle - initialangle])
+            else :
+                self.windowdialog.errorMessage('schema error - pk infra : ' + str(fetinfra.id()) + ' - polyline trop courte...')
 
         sql = "SELECT pk_infralineaire, id_infralineaire FROM Infralineaire WHERE lid_descriptionsystem_2 = "
         sql += str(iddessys)
@@ -257,10 +260,14 @@ class printPDFBaseWorker(printPDFBaseWorker):
             lastlinepoly = self.uniqueSortedDatas(data)
             # print(data)
             # print(lastlinepoly)
-            lastlinevector = lastlinepoly[-2] - lastlinepoly[-1]
-            # print('lastlinevector', lastlinevector)
-            angle = self.py_ang(lastlinevector, np.array([1, 0]))
-            resultlinesin.append([id, angle - initialangle])
+            if len(lastlinepoly)>=2:
+                lastlinevector = lastlinepoly[-2] - lastlinepoly[-1]
+                # print('lastlinevector', lastlinevector)
+                angle = self.py_ang(lastlinevector, np.array([1, 0]))
+                resultlinesin.append([id, angle - initialangle])
+            else :
+                self.windowdialog.errorMessage('schema error - pk infra : ' + str( fetinfra.id()) +  ' - polyline trop courte...')
+
 
         if debug: logging.getLogger("Lamia").debug('resultlinesout : %s', str(resultlinesout))
         if debug: logging.getLogger("Lamia").debug('resultlinesin : %s', str(resultlinesin))

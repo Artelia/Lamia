@@ -502,7 +502,7 @@ class printPDFBaseWorker(object):
             for indexpage, featid in enumerate(idsforreportdict[zonegeoid]):
                 indexpagetotal += 1
                 if debug: self.logger.debug('featid %s , indexpage %s', str(featid), str(indexpage))
-                if stop10 and indexpage == 20: break
+                if False and stop10 and indexpage == 20: break
 
                 self.currentid = featid
                 compt += 1

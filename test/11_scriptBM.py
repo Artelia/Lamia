@@ -15,7 +15,7 @@ class TestMain(Test):
     def testMethod(self):
         self.createWin()
         path = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//BD_totale_ind6.sqlite"
-        self.dbase.loadQgisVectorLayers(path)
+        #self.dbase.loadQgisVectorLayers(path)
         #print('ok0')
         #self.loadLayersInCanvas()
         #print('ok')
@@ -23,8 +23,17 @@ class TestMain(Test):
         #self.mainwin.resize(QtCore.QSize(1000,800))
 
         self.dbase.printsql = False
-        self.scriptBM()
+        #self.scriptBM()
         #self.mainwin.exec_()
+        self.runDictionnary()
+
+
+    def runDictionnary(self):
+        self.dbase.xlsreader = True
+        self.dbase.createDBDictionary2('Base2_digue')
+
+
+
         
     def scriptBM(self):
         sql = "SELECT lpk_graphique FROM Graphiquedata GROUP BY lpk_graphique"

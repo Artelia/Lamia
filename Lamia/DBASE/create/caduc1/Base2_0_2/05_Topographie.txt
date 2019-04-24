@@ -1,0 +1,8 @@
+#DJAN  SELECT Topographie.*, Ressource.*, Objet.* FROM Topographie INNER JOIN Ressource ON Topographie.lpk_ressource = Ressource.pk_ressource INNER JOIN Objet ON Ressource.lpk_objet = Objet.pk_objet  WHERE Objet.lpk_revision_end IS NULL  AND Objet.datetimedestruction IS NULL
+#QGIS SELECT Topographie.*, Ressource.*, Objet.* FROM Topographie INNER JOIN Ressource ON Topographie.lpk_ressource = Ressource.pk_ressource INNER JOIN Objet ON Ressource.lpk_objet = Objet.pk_objet
+
+
+# Nom_champ              TypePostGis                 TypeSpatialite                               Option
+###pk_topographie;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_topographie;          INT ;                     INTEGER
+###lpk_ressource;        INT ;                       INTEGER                                        ;Ressource(pk_ressource)

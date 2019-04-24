@@ -656,7 +656,9 @@ class AbstractLamiaTool(QWidget):
                                             and isinstance(linkuserwdg[tablename]['widgets'][nameparentfield], QComboBox)):
                                         linkuserwdg[tablename]['widgets'][nameparentfield].currentIndexChanged.connect(self.comboparentValueChanged)
 
-                    elif 'INTEGER' in dbasetable['fields'][field]['SLtype']:
+                    #elif 'INTEGER' in dbasetable['fields'][field]['SLtype']:
+                    #elif 'INTEGER' in self.dbase.pgtypetosltype[dbasetable['fields'][field]['PGtype']]:
+                    elif 'INTEGER' in dbasetable['fields'][field]['PGtype']:
                         if field[0:3].lower() in ['id_', 'pk_'] or field[0:4].lower() in ['lpk_']:
                             item = QTableWidgetItem()
                             item.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
@@ -686,7 +688,9 @@ class AbstractLamiaTool(QWidget):
                                 self.tableWidget.setCellWidget(rowPosition, 2, wdg2)
                                 wdg2.clicked.connect(self.rawtablePushButtonClicked)
 
-                    elif 'TEXT' in dbasetable['fields'][field]['SLtype']:
+                    #elif 'TEXT' in dbasetable['fields'][field]['SLtype']:
+                    #elif 'TEXT' in self.dbase.pgtypetosltype[dbasetable['fields'][field]['PGtype']]:
+                    elif 'VARCHAR' in dbasetable['fields'][field]['PGtype']:
                         if 'datetime' in field[0:8]:
                             wdg = QDateTimeEdit()
                             wdg.setSpecialValueText(" ")
@@ -709,15 +713,22 @@ class AbstractLamiaTool(QWidget):
                                 wdg = QPushButton('Open')
                                 self.tableWidget.setCellWidget(rowPosition, 3, wdg)
                                 wdg.clicked.connect(self.rawtablePushButtonClicked)
-                    elif 'DECIMAL'  in dbasetable['fields'][field]['SLtype']:
+                    #elif ('DECIMAL'  in dbasetable['fields'][field]['SLtype']
+                    #        or 'REAL' in dbasetable['fields'][field]['SLtype']):
+                    #elif ('DECIMAL' in self.dbase.pgtypetosltype[dbasetable['fields'][field]['PGtype']]
+                    #        or 'REAL' in self.dbase.pgtypetosltype[dbasetable['fields'][field]['PGtype']] ):
+                    elif ('NUMERIC'  in dbasetable['fields'][field]['PGtype']
+                                or 'REAL' in dbasetable['fields'][field]['PGtype']):
+
                         wdg = QDoubleSpinBox()
                         wdg.setRange(-1, 9999999)
                         self.tableWidget.setCellWidget(rowPosition, 1, wdg)
+                    """
                     elif 'REAL' in dbasetable['fields'][field]['SLtype']:
                         wdg = QDoubleSpinBox()
                         wdg.setRange(-1, 9999999)
                         self.tableWidget.setCellWidget(rowPosition, 1, wdg)
-
+                    """
                     if 'FK' in dbasetable['fields'][field].keys():
                         # print(dbasetable['fields'][field]['FK'].split('(')[0])
                         self.fktables.append(dbasetable['fields'][field]['FK'].split('(')[0])
@@ -1082,7 +1093,8 @@ class AbstractLamiaTool(QWidget):
         if comefromrawtable:
             listfieldname = [self.tableWidget.item(row, 0).text() for row in range(self.tableWidget.rowCount())]
             for childfieldname in childfieldnames:
-                if dbasetable['fields'][parentfieldname]['SLtype'] == 'INTEGER' and parentcstvalue != '' and parentcstvalue is not None:
+                #if dbasetable['fields'][parentfieldname]['SLtype'] == 'INTEGER' and parentcstvalue != '' and parentcstvalue is not None:
+                if dbasetable['fields'][parentfieldname]['PGtype'] == 'INT' and parentcstvalue != '' and parentcstvalue is not None:
                     parentcstvalue = int(parentcstvalue)
 
                 listtoadd = [value[0] for value in dbasetable['fields'][childfieldname]['Cst'] if parentcstvalue in value[2]]
@@ -1101,7 +1113,8 @@ class AbstractLamiaTool(QWidget):
         else:
             for childfieldname in childfieldnames:
 
-                if dbasetable['fields'][parentfieldname]['SLtype'] == 'INTEGER' and parentcstvalue != '' and parentcstvalue is not None:
+                #if dbasetable['fields'][parentfieldname]['SLtype'] == 'INTEGER' and parentcstvalue != '' and parentcstvalue is not None:
+                if dbasetable['fields'][parentfieldname]['PGtype'] == 'INT' and parentcstvalue != '' and parentcstvalue is not None:
                     parentcstvalue = int(parentcstvalue)
                 listtoadd = [value[0] for value in dbasetable['fields'][childfieldname]['Cst'] if parentcstvalue in value[2]]
                 if False:
@@ -1114,6 +1127,7 @@ class AbstractLamiaTool(QWidget):
                 if childfieldname in self.linkuserwdg[parenttablename]['widgets']:
                     combochild = self.linkuserwdg[parenttablename]['widgets'][childfieldname]
                     combochild.clear()
+
                     if len(listtoadd) > 0:
                         combochild.addItems(listtoadd)
 

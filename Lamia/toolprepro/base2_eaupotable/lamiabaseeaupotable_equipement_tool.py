@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-
+from __future__ import unicode_literals
+import qgis
 from qgis.PyQt import uic, QtCore
 
 try:
@@ -14,10 +15,11 @@ from ..base2.lamiabase_equipement_tool import BaseEquipementTool
 
 from .lamiabaseeaupotable_photo_tool import BaseEaupotablePhotoTool as BasePhotoTool
 from .lamiabaseeaupotable_croquis_tool import BaseEaupotableCroquisTool as BaseCroquisTool
+from .lamiabaseeaupotable_desordre_tool import BaseEaupotableDesordreTool
 
 import os
 import datetime
-
+from collections import OrderedDict
 
 
 
@@ -65,11 +67,12 @@ class BaseEaupotableEquipementTool(BaseEquipementTool):
             self.userwdgfield = UserUI()
             self.linkuserwdgfield = {'Equipement' : {'linkfield' : 'id_equipement',
                                              'widgets' : {
-                                                            'type_equipement': self.userwdgfield.comboBox_cat,
+                                                            'categorie': self.userwdgfield.comboBox_cat,
                                                             'ss_type_equipement': self.userwdgfield.comboBox_soustype,
                                                             'acces': self.userwdgfield.comboBox_acces,
                                                             'diametre_entree': self.userwdgfield.doubleSpinBox_diam,
                                                             'diametre_sortie': self.userwdgfield.doubleSpinBox_diamsor,
+                                                           'profondeur' : self.userwdgfield.doubleSpinBox_prof,
                                                             'nature_reseau': self.userwdgfield.comboBox_nature_reseau,
                                                         'pres_echelon': self.userwdgfield.comboBox_echelon,
                                                             #ventouse
@@ -130,6 +133,8 @@ class BaseEaupotableEquipementTool(BaseEquipementTool):
                 lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_diam))
             self.userwdgfield.toolButton_diamsor.clicked.connect(
                 lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_diamsor))
+            self.userwdgfield.toolButton_prof.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_prof))
 
             self.userwdgfield.toolButton_altim.clicked.connect(
                 lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_altim))
@@ -143,10 +148,28 @@ class BaseEaupotableEquipementTool(BaseEquipementTool):
 
             self.userwdgfield.comboBox_cat.currentIndexChanged.connect(self.changeCategorie)
 
+            self.allaccessfields = OrderedDict(self.dbasetable['fields']['acces'])
+
 
             # ****************************************************************************************
             # child widgets
             self.dbasechildwdgfield = []
+
+            self.propertieswdgDesordre = BaseEaupotableDesordreTool(dbase=self.dbase, gpsutil=self.gpsutil,
+                                                                        parentwidget=self)
+            self.propertieswdgDesordre.NAME = None
+            self.propertieswdgDesordre.userwdgfield.frame_2.setParent(None)
+            self.propertieswdgDesordre.userwdgfield.stackedWidget.setVisible(False)
+            self.propertieswdgDesordre.groupBox_elements.setParent(None)
+            self.propertieswdgDesordre.pushButton_addFeature.setEnabled(False)
+            self.propertieswdgDesordre.pushButton_delFeature.setEnabled(False)
+            self.propertieswdgDesordre.comboBox_featurelist.setEnabled(False)
+            self.propertieswdgDesordre.groupBox_geom.setParent(None)
+            self.userwdgfield.tabWidget_2.widget(1).layout().addWidget(self.propertieswdgDesordre)
+
+            self.dbasechildwdgfield.append(self.propertieswdgDesordre)
+
+
             self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
             self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
 
@@ -156,23 +179,76 @@ class BaseEaupotableEquipementTool(BaseEquipementTool):
             if False and self.parentWidget is None:
                 self.pushButton_addFeature.setEnabled(False)
 
+    """
+    def changeCategorie(self,intcat):
+        super(BaseEaupotableEquipementTool,self ).changeCategorie(intcat)
+        #self.postInitFeatureProperties(None)
+    """
 
 
 
     def postInitFeatureProperties(self, feat):
-        if feat is None and self.comboBox_featurelist.currentText() == self.newentrytext :
-            if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
-                if self.parentWidget.dbasetablename == 'Noeud':
-                    # get geom
-                    noeudfet = self.dbase.getLayerFeatureByPk('Noeud', self.parentWidget.currentFeaturePK)
-                    if False:
-                        if not self.dbase.revisionwork:
-                            noeudfet = self.dbase.getLayerFeatureById('Noeud', self.parentWidget.currentFeature.id())
-                        else:
-                            noeudfet = self.dbase.getLayerFeatureByPk('Noeud', self.parentWidget.currentFeature.id())
-                    neudfetgeom = noeudfet.geometry().asPoint()
-                    self.createorresetRubberband(1)
-                    self.setTempGeometry([neudfetgeom,neudfetgeom],False)
+
+        if self.currentFeaturePK is not None:
+            lid_dessys = self.dbase.getValuesFromPk('Equipement_qgis',['lid_descriptionsystem_1'],self.currentFeaturePK)
+            if lid_dessys is not None:
+                self.userwdgfield.comboBox_acces.setEnabled(False)
+            else:
+                self.userwdgfield.comboBox_acces.setEnabled(True)
+        else:
+            self.userwdgfield.comboBox_acces.setEnabled(True)
+
+
+        if (self.parentWidget is not None and self.parentWidget.currentFeature is not None
+                and self.parentWidget.dbasetablename == 'Noeud'):
+            type_ouvrage = self.dbase.getValuesFromPk('Noeud_qgis',
+                                                        ['type_ouvrage'],
+                                                        self.parentWidget.currentFeaturePK)
+            if type_ouvrage == 'CHE':
+
+                self.dbase.dbasetables['Equipement']['fields']['acces'] = OrderedDict([('PGtype', 'VARCHAR(255'),('ParFldCst','categorie'),('Cst',[[u'Chambre enterrée/regard', 'CHE',['','VEN','VAN','VID','REG','HYD','COM','CHL','RPC','SPE']]])])
+
+                self.userwdgfield.comboBox_cat.currentIndexChanged.emit(self.userwdgfield.comboBox_cat.currentIndex())
+                self.userwdgfield.comboBox_acces.setEnabled(False)
+
+            else:
+                if self.dbasetable['fields']['acces'] != self.allaccessfields:
+                    self.dbasetable['fields']['acces'] = self.allaccessfields
+                    self.userwdgfield.comboBox_cat.currentIndexChanged.emit(self.userwdgfield.comboBox_cat.currentIndex())
+        else:
+            if self.dbasetable['fields']['acces'] != self.allaccessfields:
+                self.dbasetable['fields']['acces'] = self.allaccessfields
+                self.userwdgfield.comboBox_cat.currentIndexChanged.emit(self.userwdgfield.comboBox_cat.currentIndex())
+
+
+
+
+    def postSaveFeature(self, boolnewfeature):
+        # save a disorder on first creation
+        if self.savingnewfeature and not self.savingnewfeatureVersion:
+            pkobjet = self.dbase.createNewObjet()
+            lastiddesordre = self.dbase.getLastId('Desordre') + 1
+            geomtext, iddessys = self.dbase.getValuesFromPk('Equipement_qgis',
+                                                            ['ST_AsText(geom)', 'id_descriptionsystem'],
+                                                            self.currentFeaturePK)
+            qgsgeom = qgis.core.QgsGeometry.fromWkt(geomtext)
+            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                newgeom = qgis.core.QgsGeometry.fromPolyline([qgsgeom.asPoint(), qgsgeom.asPoint()])
+                newgeomwkt = newgeom.exportToWkt()
+            else:
+                #newgeom = qgis.core.QgsGeometry.fromPolylineXY([qgsgeom.asPointXY(), qgsgeom.asPointXY()])
+                newgeom = qgis.core.QgsGeometry.fromPolylineXY([qgsgeom.asPoint(), qgsgeom.asPoint()])
+                newgeomwkt = newgeom.asWkt()
+
+            sql = self.dbase.createSetValueSentence(type='INSERT',
+                                                    tablename='Desordre',
+                                                    listoffields=['id_desordre', 'lpk_objet', 'groupedesordre',
+                                                                  'lid_descriptionsystem', 'geom'],
+                                                    listofrawvalues=[lastiddesordre, pkobjet, 'EQP',
+                                                                     iddessys, newgeomwkt])
+            self.dbase.query(sql)
+
+
 
 
 

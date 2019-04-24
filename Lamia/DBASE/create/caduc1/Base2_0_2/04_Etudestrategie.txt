@@ -1,0 +1,14 @@
+#DJAN  SELECT  Etudestrategie.*, Objet.* FROM Etudestrategie INNER JOIN Objet ON Etudestrategie.lpk_objet = Objet.pk_objet  WHERE Objet.lpk_revision_end IS NULL  AND Objet.datetimedestruction IS NULL
+#QGIS SELECT  Etudestrategie.*, Objet.* FROM Etudestrategie INNER JOIN Objet ON Etudestrategie.lpk_objet = Objet.pk_objet
+
+
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###pk_etudestrategie;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_etudestrategie;             INT ;                   INTEGER
+###lpk_objet;             INT ;                   INTEGER                               ; Objet(pk_objet)
+
+###investissements;                VARCHAR(255);            TEXT
+###chronologie;                VARCHAR(255);            TEXT
+###note;                VARCHAR(255);            TEXT
+
+###lid_marche;           INT ;                   INTEGER

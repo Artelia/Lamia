@@ -1,0 +1,90 @@
+#DJAN  SELECT Infralineaire.*, Objet.datecreation, Objet.datedestruction, Objet.commentaire, Objet.libelle, Descriptionsystem.importancestrat, Descriptionsystem.etatfonct, Descriptionsystem.datederniereobs, Descriptionsystem.qualitegeoloc, Descriptionsystem.parametres, Descriptionsystem.listeparametres FROM Infralineaire INNER JOIN Descriptionsystem ON Infralineaire.id_descriptionsystem = Descriptionsystem.id_descriptionsystem INNER JOIN Objet ON Objet.id_objet = Infralineaire.id_objet
+#QGIS  SELECT Infralineaire.*, Objet.datecreation, Objet.datedestruction FROM Infralineaire INNER JOIN Descriptionsystem ON Infralineaire.id_descriptionsystem = Descriptionsystem.id_descriptionsystem INNER JOIN Objet ON Objet.id_objet = Infralineaire.id_objet
+#SHOW YES
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###id_infralineaire;    SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_objet;             INT ;                     INTEGER ;                                    Objet(id_objet)
+###id_descriptionsystem;        INT ;                       INTEGER;                            Descriptionsystem(id_descriptionsystem)
+###ouvrage;             INT ;                   INTEGER
+###visite_par;          VARCHAR(255);                TEXT
+###visite_date;         DATE;                       TEXT
+###modified;             INT ;                   INTEGER
+/;
+True;     1
+False;    0
+###commentaire;          VARCHAR(255);                TEXT
+###nature;             INT ;                   INTEGER
+/;
+Bief;     60
+###art_pk_debut;           NUMERIC;            REAL
+###art_pk_fin;           NUMERIC;            REAL
+###troncon_georef;             INT ;                   INTEGER
+###lst_statut_ouvrage;             INT ;                   INTEGER
+###date_construction ;             VARCHAR(255);                TEXT
+###nombre_sas;             INT ;                   INTEGER
+###sig;             VARCHAR(255);                TEXT
+###parent;             INT ;                   INTEGER
+###organisme_georef;             VARCHAR(255);                TEXT
+###nbre_pass;             INT ;                   INTEGER
+###lst_gabarit;             INT ;                   INTEGER
+###gabarit_passe;             INT ;                   INTEGER
+###mode_expl_manuel_barrage;          VARCHAR(255);                TEXT
+###nb_vannes;             INT ;                   INTEGER
+###largeur;             INT ;                   INTEGER
+###nbre_voute;             INT ;                   INTEGER
+###site;             INT ;                   INTEGER
+###lieu_de_stockage_batardeaux;          VARCHAR(255);                TEXT
+###longueur_bief;             INT ;                   INTEGER
+###largeur_bief;             INT ;                   INTEGER
+###bief_georef;          VARCHAR(255);                TEXT
+###statut_donnees;          VARCHAR(255);                TEXT
+###reference_ouvrage_validee;             INT ;                   INTEGER
+###user_login;          VARCHAR(255);                TEXT
+###date_validation;                TIMESTAMP;              TEXT
+###identifiant_local;          VARCHAR(255);                TEXT
+###ttr_calcule;             INT ;                   INTEGER
+###ttr_pmp;             INT ;                   INTEGER
+###remise_en_etat;             INT ;                   INTEGER
+###equivalent_temps_plein;             INT ;                   INTEGER
+###date_calcul_indicateur;                TIMESTAMP;              TEXT
+###respect_debit;             INT ;                   INTEGER
+/;
+True;     1
+False;    0
+###ampli_jour_ouv;             INT ;                   INTEGER
+###classe_prev;          VARCHAR(255);                TEXT
+###classe_off;          VARCHAR(255);                TEXT
+###validateur;          VARCHAR(255);                TEXT
+###proprietaire;          VARCHAR(255);                TEXT
+###exploitant;          VARCHAR(255);                TEXT
+###autre_proprietaire;          VARCHAR(255);                TEXT
+###autre_exploitant;          VARCHAR(255);                TEXT
+###autre_gestionnaire;          VARCHAR(255);                TEXT
+###fiabilite_classe_number;             INT ;                   INTEGER
+/;
+True;     1
+False;    0
+###note_ief;             INT ;                   INTEGER
+###forcage_ief;             INT ;                   INTEGER
+###point_kilometrique;             INT ;                   INTEGER
+###point_kilometrique_pr;             INT ;                   INTEGER
+###point_kilometrique_abs;             INT ;                   INTEGER
+###toponyme_1;          VARCHAR(255);                TEXT
+###toponyme_2;          VARCHAR(255);                TEXT
+###lst_caracteristique;             INT ;                   INTEGER
+###fiabilite_note;             INT ;                   INTEGER
+###fiabilite_classe;          VARCHAR(255);                TEXT
+###origine;             INT ;                   INTEGER
+###caracteristique;          VARCHAR(255);                TEXT
+###latitude;             INT ;                   INTEGER
+###longitude;             INT ;                   INTEGER
+###enable_optionale_equipment;             INT ;                   INTEGER
+/;
+True;     1
+False;    0
+###famille;             INT ;                   INTEGER
+###exploit_mode;          VARCHAR(255);                TEXT
+###service_offer;          VARCHAR(255);                TEXT
+###km_point_start;             INT ;                   INTEGER
+###km_point_end;             INT ;                   INTEGER
+###real_length;             INT ;                   INTEGER

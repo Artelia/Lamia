@@ -1,0 +1,27 @@
+#DJAN 
+#QGIS  SELECT Pointtopo.* , Pointtopo.id_revisionbegin AS revisionbegin, Pointtopo.id_revisionend AS revisionend, Objet.datecreation, Objet.datedestruction FROM Pointtopo INNER JOIN Topographie ON Pointtopo.id_topographie = Topographie.id_topographie INNER JOIN Ressource ON Topographie.id_ressource = Ressource.id_ressource INNER JOIN Objet ON Topographie.id_objet = Objet.id_objet
+#SHOW YES
+#SCAL 10000
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###pk_pointtopo;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_pointtopo;       INT;            INTEGER
+###id_revisionbegin;        INT ;                   INTEGER;                              Revision(pk_revision)
+###id_revisionend;          INT ;                   INTEGER
+###id_topographie;       INT;            INTEGER
+
+###typepointtopo;                VARCHAR(255);            TEXT
+Autre;AUT
+Type1;TP1 
+###x;                NUMERIC;            REAL
+###y;                NUMERIC;            REAL
+###zgps;                NUMERIC;            REAL
+###zwgs84;                NUMERIC;            REAL
+###raf09;                NUMERIC;            REAL
+###zmngf;                NUMERIC;            REAL
+###precision;                VARCHAR(255);            TEXT
+###dx;                NUMERIC;            REAL
+###dy;                NUMERIC;            REAL
+###dz;                NUMERIC;            REAL
+###hauteurperche;                NUMERIC;            REAL
+
+###geom;                POINT

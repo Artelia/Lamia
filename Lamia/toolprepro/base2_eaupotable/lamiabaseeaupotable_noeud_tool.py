@@ -18,7 +18,8 @@ from .lamiabaseeaupotable_photo_tool import BaseEaupotablePhotoTool as BasePhoto
 from .lamiabaseeaupotable_croquis_tool import BaseEaupotableCroquisTool as BaseCroquisTool
 #from ..base.lamiabase_croquis_tool import BaseCroquisTool
 #from .lamiabaseeaupotable_desordre_tool import BaseAssainissementDesordreTool
-#from .lamiabaseeaupotable_equipement_tool import BaseAssainissementEquipementTool
+from .lamiabaseeaupotable_equipement_tool import BaseEaupotableEquipementTool
+from .lamiabaseeaupotable_desordre_tool import BaseEaupotableDesordreTool
 import sys
 
 
@@ -53,6 +54,13 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
         # self.pickTable = None
         self.iconpath = os.path.join(os.path.dirname(__file__),'..','base', 'lamiabase_noeud_tool_icon.svg')
         # self.linkedgeom = [['Equipement', 'lid_descriptionsystem'],['Desordre', 'lid_descriptionsystem']]
+
+        self.linkagespec = {'Descriptionsystem': {'tabletc': None,
+                                           'idsource': 'lid_descriptionsystem_1',
+                                           'idtcsource': None,
+                                           'iddest': 'id_descriptionsystem',
+                                           'idtcdest': None,
+                                           'desttable': ['Equipement','Noeud']}}
 
         if False:
             self.initialtypeohassdict = list(self.dbase.dbasetables['Noeud']['fields']['typeOuvrageAss']['Cst'])
@@ -162,6 +170,8 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
                                                           'nb_compteur': self.userwdgfield.doubleSpinBox_nbrecompteur,
                                                           'fonctionnement': self.userwdgfield.comboBox_fonct,
 
+                                                          'profondeur': self.userwdgfield.doubleSpinBox_prof
+
                                                           }},
                                         'Objet': {'linkfield': 'id_objet',
                                                   'widgets': {
@@ -194,9 +204,8 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
             self.userwdgfield.toolButton_nbrecompteur.clicked.connect(
                 lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_nbrecompteur))
 
-
-
-
+            self.userwdgfield.toolButton_prof.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_prof))
 
 
 
@@ -209,12 +218,28 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
             # child widgets
             self.dbasechildwdgfield = []
 
+            self.propertieswdgDesordre = BaseEaupotableDesordreTool(dbase=self.dbase, gpsutil=self.gpsutil,
+                                                                        parentwidget=self)
+            self.propertieswdgDesordre.userwdgfield.frame_2.setParent(None)
+            self.propertieswdgDesordre.userwdgfield.stackedWidget.setVisible(False)
+            self.propertieswdgDesordre.groupBox_elements.setParent(None)
+            self.propertieswdgDesordre.pushButton_addFeature.setEnabled(False)
+            self.propertieswdgDesordre.pushButton_delFeature.setEnabled(False)
+            self.propertieswdgDesordre.comboBox_featurelist.setEnabled(False)
+            self.propertieswdgDesordre.groupBox_geom.setParent(None)
+            self.dbasechildwdgfield.append(self.propertieswdgDesordre)
+
+            self.propertieswdgEquipement = BaseEaupotableEquipementTool(dbase=self.dbase, parentwidget=self)
+            self.dbasechildwdgfield.append(self.propertieswdgEquipement)
+
             self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
             self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
 
 
             self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
             self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+
+
 
 
             if False:
@@ -271,8 +296,10 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
             self.userwdgfield.stackedWidget.setCurrentIndex(1)
         elif currenttext in ['Chambre de comptage']:
             self.userwdgfield.stackedWidget.setCurrentIndex(2)
-        else:
+        elif currenttext in [u'Chambre enterrée/regard']:
             self.userwdgfield.stackedWidget.setCurrentIndex(3)
+        else:
+            self.userwdgfield.stackedWidget.setCurrentIndex(4)
 
 
         #self.propertieswdgDesordre.propertieswdgOBSERVATION2.updateObservationStackedWidget()
@@ -566,7 +593,7 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
 
         self.dbase.dbasetables['Infralineaire']['layerqgis'].triggerRepaint()
         # save a disorder on first creation
-        if False and self.savingnewfeature and not self.savingnewfeatureVersion:
+        if True and self.savingnewfeature and not self.savingnewfeatureVersion:
             pkobjet = self.dbase.createNewObjet()
             lastiddesordre = self.dbase.getLastId('Desordre') + 1
             geomtext, iddessys = self.dbase.getValuesFromPk('Noeud_qgis',

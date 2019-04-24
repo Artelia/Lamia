@@ -1,0 +1,13 @@
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###id_projet;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###nom ;                VARCHAR(255);            TEXT
+###datatype ;                VARCHAR(255);            TEXT
+###version ;                REAL;            REAL
+###dateversion ;                TIMESTAMP WITH TIME ZONE;            DATE
+###referantartelia ;                VARCHAR(255);            TEXT
+###contactartelia ;                VARCHAR(255);            TEXT
+###datecreation ;                TIMESTAMP WITH TIME ZONE;            DATE
+###client ;                VARCHAR(255);            TEXT
+###contactclient ;                VARCHAR(255);            TEXT
+###localisation ;                VARCHAR(255);            TEXT
+###nomDB ;                VARCHAR(255);            TEXT

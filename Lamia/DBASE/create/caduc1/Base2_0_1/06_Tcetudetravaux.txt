@@ -1,0 +1,10 @@
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+#DJAN  SELECT * FROM Tcetudetravaux   WHERE lpk_revision_end IS NULL
+#QGIS SELECT * FROM Tcetudetravaux
+###pk_tcetudetravaux;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###lpk_revision_begin;        INT ;                   INTEGER;                              Revision(pk_revision)
+###lpk_revision_end;          INT ;                   INTEGER;                              Revision(pk_revision)
+
+
+###lid_etudestrategie;       INT;            INTEGER
+###lid_travaux;       INT;            INTEGER

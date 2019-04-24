@@ -1,0 +1,20 @@
+#DJAN  SELECT  Ressource.*, Objet.* FROM Ressource INNER JOIN Objet ON Ressource.lpk_objet = Objet.pk_objet   WHERE Objet.lpk_revision_end IS NULL  AND Objet.datetimedestruction IS NULL
+#QGIS SELECT Ressource.*, Objet.*  FROM Ressource INNER JOIN Objet ON Ressource.lpk_objet = Objet.pk_objet
+
+
+# Nom_champ              TypePostGis             TypeSpatialite                          Option
+###pk_ressource;        SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_ressource;    INT;            INTEGER
+###lpk_objet ;           INT;                       INTEGER                                  ; Objet(pk_objet)
+
+###source ;             VARCHAR(255);                TEXT
+###datetimeressource;            TIMESTAMP ;                  TEXT
+###contactadresse ;             VARCHAR(255);                TEXT
+###contactnom ;             VARCHAR(255);                TEXT
+###contactmail ;             VARCHAR(255);                TEXT
+###contacttel1 ;             VARCHAR(255);                TEXT
+###contacttel2 ;             VARCHAR(255);                TEXT
+###file;                      VARCHAR(255);                TEXT
+###description ;             VARCHAR(255);                TEXT
+
+###lid_marche;       INT;            INTEGER

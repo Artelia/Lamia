@@ -61,21 +61,25 @@ class BaseEaupotableObservationTool(BaseObservationTool):
             # userui
             self.userwdgfield = UserUI()
             self.linkuserwdgfield = {'Observation' : {'linkfield' : 'id_observation',
-                                             'widgets' : {'datetimeobservation' : self.userwdgfield.dateTimeEdit,
-                                                          'nombre' : self.userwdgfield.spinBox_nombre,
+                                             'widgets' : {
+                                                        #general
+                                                        'datetimeobservation' : self.userwdgfield.dateTimeEdit,
                                                         'gravite': self.userwdgfield.comboBox_urgence,
 
-                                                        'oh_etatvantellerie' : self.userwdgfield.comboBox_etatvantellerie,
-                                                        'oh_etatvantelleriecom': self.userwdgfield.textBrowser_vanteleriecom,
-                                                          'oh_etatgeniecivil': self.userwdgfield.comboBox_etatGC,
-                                                          'oh_etatgeniecivilcom': self.userwdgfield.textBrowser_etatGC,
-                                                          'oh_testmanoeuvre': self.userwdgfield.comboBox_manoeuvre,
-                                                          'oh_testmanoeuvrecom': self.userwdgfield.textBrowser_manoeuvre,
-                                                          'oh_etancheite': self.userwdgfield.checkBox_etancheite,
-                                                          'oh_etancheitecom': self.userwdgfield.textBrowser__etancheite,
+                                                         # infra
+                                                          'nombre': self.userwdgfield.spinBox_nombre,
+                                                          'evolution': self.userwdgfield.textEdit_evolution,
+                                                        #noeud
+                                                        'etattampon' : self.userwdgfield.comboBox_etattampon,
+                                                       'etatregard': self.userwdgfield.comboBox_etatregard,
+
+                                                        #equip
+                                                          'etatgeneral': [self.userwdgfield.comboBox_etatgen,
+                                                                          self.userwdgfield.comboBox_etatgen2],
+                                                           'indexcompteur': self.userwdgfield.spinBox_indexcompteur,
 
 
-                                                        'evolution': self.userwdgfield.textEdit_evolution,
+                                                        #general
                                                         'typesuite': self.userwdgfield.comboBox_typesuite,
                                                         'commentairesuite': self.userwdgfield.textEdit_suite}},
                                 'Objet' : {'linkfield' : 'id_objet',
@@ -83,6 +87,9 @@ class BaseEaupotableObservationTool(BaseObservationTool):
 
             self.userwdgfield.toolButton_calc_nb.clicked.connect(
                 lambda: self.windowdialog.showNumPad(self.userwdgfield.spinBox_nombre))
+
+            self.userwdgfield.toolButton_indexcompteur.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.spinBox_indexcompteur))
 
             # ****************************************************************************************
             # child widgets
@@ -93,6 +100,53 @@ class BaseEaupotableObservationTool(BaseObservationTool):
                 self.dbasechildwdgfield = [self.propertieswdgPHOTOGRAPHIE]
                 self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
                 self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+
+
+    def postInitFeatureProperties(self, feat):
+        super(BaseEaupotableObservationTool, self).postInitFeatureProperties(feat)
+        self.updateObservationStackedWidget()
+
+    def updateObservationStackedWidget(self):
+
+        if ('groupedesordre' in self.dbase.dbasetables['Desordre']['fields'].keys()  ):
+            if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
+                grpdes = self.parentWidget.currentFeature['groupedesordre']
+                grpdescst = [elem[1] for elem in self.dbase.dbasetables['Desordre']['fields']['groupedesordre']['Cst']]
+                indexgrp = grpdescst.index(grpdes)
+                try:
+                    self.userwdgfield.stackedWidget.setCurrentIndex(indexgrp)
+                except:
+                    pass
+                if grpdes == 'EQP' and self.parentWidget.parentWidget is not None and self.parentWidget.parentWidget.currentFeature is not None:
+                    if self.parentWidget.parentWidget.dbasetablename == 'Equipement':
+                        #typenoeud = self.parentWidget.parentWidget.currentFeature['typeOuvrageAss']
+                        currenttext = self.parentWidget.parentWidget.userwdgfield.comboBox_cat.currentText()
+                        # typenoeud = self.parentWidget.parentWidget.currentFeature['typeOuvrageAss']
+                        typeeqp = self.dbase.getConstraintRawValueFromText('Equipement', 'categorie', currenttext)
+
+                        if typeeqp in ['VEN', 'VAN', 'VID','REG','HYD','CHL','RPC','SPE','AUT','IND']:
+                            self.userwdgfield.stackedWidget_2.setCurrentIndex(0)
+                        elif typeeqp in ['COM', 'DEB']:
+                            self.userwdgfield.stackedWidget_2.setCurrentIndex(1)
+                        else:
+                            self.userwdgfield.stackedWidget_2.setCurrentIndex(2)
+
+
+
+
+
+                if grpdes == 'NOD' and self.parentWidget.parentWidget is not None and self.parentWidget.parentWidget.currentFeature is not None:
+                    if self.parentWidget.parentWidget.dbasetablename == 'Noeud':
+                        #typenoeud = self.parentWidget.parentWidget.currentFeature['typeOuvrageAss']
+                        currenttext = self.parentWidget.parentWidget.userwdgfield.comboBox_typeouvrage.currentText()
+                        # typenoeud = self.parentWidget.parentWidget.currentFeature['typeOuvrageAss']
+                        typenoeud = self.dbase.getConstraintRawValueFromText('Noeud', 'type_ouvrage', currenttext)
+
+                        if typenoeud in ['CHE']:
+                            self.userwdgfield.stackedWidget_3.setCurrentIndex(0)
+                        else:
+                            self.userwdgfield.stackedWidget_3.setCurrentIndex(1)
+
 
     """
     def postOnActivation(self):

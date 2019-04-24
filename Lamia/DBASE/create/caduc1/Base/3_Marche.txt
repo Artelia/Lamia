@@ -1,0 +1,48 @@
+#DJAN  SELECT  Marche.*, Objet.datecreation, Objet.datedestruction, Objet.commentaire, Objet.libelle  FROM Marche INNER JOIN  Objet ON  Marche.id_objet = Objet.id_objet
+# For qgis
+#QGISSL SELECT Marche.* , Objet.datecreation, Objet.datedestruction, Objet.libelle,
+#QGISSL MAX(Marche.id_revisionbegin, Objet.id_revisionbegin) AS revisionbegin,
+#QGISSL CASE WHEN MIN(Marche.id_revisionend, Objet.id_revisionend) IS NOT NULL
+#QGISSL     THEN MIN(Marche.id_revisionend, Objet.id_revisionend)
+#QGISSL     ELSE CASE WHEN  Marche.id_revisionend IS NOT NULL 
+#QGISSL             THEN Marche.id_revisionend
+#QGISSL             ELSE Objet.id_revisionend END 
+#QGISSL         END AS revisionend
+#QGISSL FROM Marche
+#QGISSL INNER JOIN Objet ON Marche.id_objet= Objet.id_objet
+#QGISSL AND CASE WHEN Marche.id_revisionend IS NOT NULL 
+#QGISSL         THEN CASE WHEN Objet.id_revisionend IS NOT NULL 
+#QGISSL                     THEN Objet.id_revisionbegin < Marche.id_revisionend   AND Objet.id_revisionend > Marche.id_revisionbegin
+#QGISSL                     ELSE  Objet.id_revisionbegin < Marche.id_revisionend   END
+#QGISSL         ELSE   CASE WHEN Objet.id_revisionend IS NOT NULL 
+#QGISSL             THEN Objet.id_revisionend > Marche.id_revisionbegin   
+#QGISSL             ELSE 1 END
+#QGISSL         END
+
+#QGISPG SELECT Marche.* , Objet.datecreation, Objet.datedestruction, Objet.libelle,
+#QGISPG greatest(Marche.id_revisionbegin, Objet.id_revisionbegin) AS revisionbegin,
+#QGISPG CASE WHEN least(Marche.id_revisionend, Objet.id_revisionend) IS NOT NULL
+#QGISPG     THEN least(Marche.id_revisionend, Objet.id_revisionend)
+#QGISPG     ELSE CASE WHEN  Marche.id_revisionend IS NOT NULL 
+#QGISPG             THEN Marche.id_revisionend
+#QGISPG             ELSE Objet.id_revisionend END 
+#QGISPG         END AS revisionend
+#QGISPG FROM Marche
+#QGISPG INNER JOIN Objet ON Marche.id_objet= Objet.id_objet
+#QGISPG AND CASE WHEN Marche.id_revisionend IS NOT NULL 
+#QGISPG         THEN CASE WHEN Objet.id_revisionend IS NOT NULL 
+#QGISPG                     THEN Objet.id_revisionbegin < Marche.id_revisionend   AND Objet.id_revisionend > Marche.id_revisionbegin
+#QGISPG                     ELSE  Objet.id_revisionbegin < Marche.id_revisionend   END
+#QGISPG         ELSE   CASE WHEN Objet.id_revisionend IS NOT NULL 
+#QGISPG             THEN Objet.id_revisionend > Marche.id_revisionbegin   
+#QGISPG             ELSE true END
+#QGISPG         END
+
+# Nom_champ             TypePostGis              TypeSpatialite                          Option
+###pk_marche;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
+###id_marche;               INT ;                   INTEGER
+###id_revisionbegin;        INT ;                   INTEGER;                              Revision(pk_revision)
+###id_revisionend;          INT ;                   INTEGER
+###id_objet;             INT ;                   INTEGER 
+
+###datemarche;                DATE ;                  TEXT
