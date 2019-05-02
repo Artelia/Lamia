@@ -4,5 +4,5 @@
 #############
 
 *.py[cod]
-/Lamia/toolpostpro/*/*amc_tools.*
+/Lamia/toolpostpro/*/*amc_tools*
 /Lamia/toolpostpro/*/amctools
