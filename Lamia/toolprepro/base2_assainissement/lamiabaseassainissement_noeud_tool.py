@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 
 from qgis.PyQt import uic, QtCore
 
@@ -52,7 +53,7 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
         # self.linkagespec = None
         # self.pickTable = None
         self.iconpath = os.path.join(os.path.dirname(__file__),'..','base', 'lamiabase_noeud_tool_icon.svg')
-        self.linkedgeom = [['Equipement', 'lid_descriptionsystem'],['Desordre', 'lid_descriptionsystem']]
+        self.linkedgeom = [['Equipement', 'lid_descriptionsystem_1'],['Desordre', 'lid_descriptionsystem']]
 
         if False:
             self.initialtypeohassdict = list(self.dbase.dbasetables['Noeud']['fields']['typeOuvrageAss']['Cst'])
@@ -213,7 +214,7 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
 
             #self.dbase.dbasetables['Noeud']['fields']['typeOuvrageAss']['Cst'] = self.initialtypeohassdict
 
-        if self.dbase.variante in ['2018_SNCF']:
+        elif self.dbase.variante in ['2018_SNCF']:
             if self.userwdgfield is None:
                 self.userwdgfield = UserUI_2()
                 self.linkuserwdgfield = {'Noeud': {'linkfield': 'id_noeud',
@@ -347,125 +348,146 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
 
             #self.dbase.dbasetables['Noeud']['fields']['typeOuvrageAss']['Cst'] = self.modifiedtypeohassdict
 
-    """
-    def initFieldUI_2(self):
-        # ****************************************************************************************
-        #   userui Field
-        if not hasattr(self, 'userwdgfield_2'):
-            self.userwdgfield_2 = UserUI_2()
-            self.linkuserwdgfield_2 = {'Noeud' : {'linkfield' : 'id_noeud',
-                                             'widgets' : {
-                                                         'typeReseau': self.userwdgfield_2.comboBox_typeReseau,
-                                                        'environnement' : self.userwdgfield_2.comboBox_environnement,
-                                                         'typeOuvrageAss': self.userwdgfield_2.comboBox_typeOuvrageAss,
-                                                        'formetampon': self.userwdgfield_2.comboBox_Formetampon,
-                                                         'accessibilite': self.userwdgfield_2.comboBox_accessibilite,
 
-                                                        #regard
-                                                        'presenceechelon' : self.userwdgfield_2.comboBox_echelon,
-                                                        'presencecrosse': self.userwdgfield_2.comboBox_crosse,
-                                                          # 'presencecunette': self.userwdgfield.comboBox_cunette,
-                                                         'formeregard': self.userwdgfield_2.comboBox_formeregard,
-                                                         #'formeregard': self.userwdgfield.comboBox_formeregard,
-
-                                                         # branchement
-                                                         #'cloisonsiphoide': self.userwdgfield.comboBox_cloisonsiphoide,
-                                                         #'couvercle': self.userwdgfield.comboBox_couvercle,
-
-                                                        #PR
-                                                        # 'PRcloture': self.userwdgfield.comboBox_cloture,
-                                                        # 'PRverouille': self.userwdgfield.comboBox_verouille,
-
-                                                        'PRarmoireelec': self.userwdgfield_2.comboBox_posteelec,
-                                                       # 'PRarmoireelecverouillee': self.userwdgfield.comboBox_armoire_verouille,
-                                                        'PRtelegestion': [self.userwdgfield_2.comboBox_telegestion,self.userwdgfield_2.comboBox_DSHalarme],
-                                                       'PRtelegestioncommentaire': self.userwdgfield_2.textBrowser_telegestioncom,
-                                                         # 'PRpermutautopompe': self.userwdgfield.comboBox_permut_pompes,
-
-                                                        'PRmateriau': [self.userwdgfield_2.comboBox_PRmateriau,self.userwdgfield_2.comboBox_DSH_materiau],
-                                                        # 'PRgrilleantichute': self.userwdgfield.comboBox_antichute,
-                                                        # 'PRpanierdegrilleur': self.userwdgfield.comboBox_panierdegrileur,
-                                                         'PRtypeasservissementpompe': self.userwdgfield_2.comboBox_typeasservissement,
-                                                         'PRnbrepoires': self.userwdgfield_2.spinBox_poires,
-                                                         'PRsurverse': self.userwdgfield_2.comboBox_surverse,
-
-                                                        #'PRpompebarreguidage': self.userwdgfield.comboBox_barrresguidage,
-                                                        # 'PRpompechainerelevage': self.userwdgfield.comboBox_pompe_relevage,
-                                                         'PRnbrepompes': self.userwdgfield_2.spinBox_pompes,
-
-                                                         #'PRclapet': self.userwdgfield.comboBox_vanne_clapet,
-                                                         #'PRvannes': self.userwdgfield.comboBox_vanne_vanne,
-                                                         #'PRprisepression': self.userwdgfield.comboBox_vanne_prisepression,
-
-                                                        #DSH
-                                                        # DSH materiau : self.userwdgfield_2.comboBox_DSH_materiau cf PR
-                                                        #'DSHpresencealarme': self.userwdgfield_2.comboBox_DSHalarme,
-                                                         'presenceautomate': self.userwdgfield_2.comboBox_automate,
+        elif self.dbase.variante in ['CD41']:
+            if self.userwdgfield is None:
+                self.userwdgfield = UserUI_3()
+                self.linkuserwdgfield = {'Noeud': {'linkfield': 'id_noeud',
+                                                     'widgets': {
+                                                         'domaine': self.userwdgfield.comboBox_domaine,
+                                                         'typeReseau': self.userwdgfield.comboBox_typeReseau,
+                                                         'environnement': self.userwdgfield.comboBox_environnement,
+                                                         'typeOuvrageAss': self.userwdgfield.comboBox_typeOuvrageAss,
+                                                         'soustypeOuvrageAss': self.userwdgfield.comboBox_soustype,
 
 
-                                                        # autre
-                                                        'profradierouvrage': self.userwdgfield_2.doubleSpinBox_profradierouvrage,
-                                                         'largeur': self.userwdgfield_2.doubleSpinBox_largeur,
-                                                         'longueur': self.userwdgfield_2.doubleSpinBox_longueur,
-
-                                                         'X': self.userwdgfield_2.doubleSpinBox_X,
-                                                         'dX': self.userwdgfield_2.doubleSpinBox_dX,
-                                                         'Y': self.userwdgfield_2.doubleSpinBox_Y,
-                                                         'dY': self.userwdgfield_2.doubleSpinBox_dY,
-                                                         'Z': self.userwdgfield_2.doubleSpinBox_Z,
-                                                         'dZ': self.userwdgfield_2.doubleSpinBox_dZ,
+                                                         # regard
+                                                         'accessibilite': [self.userwdgfield.comboBox_accessibilite,
+                                                                           self.userwdgfield.comboBox_accessibilite2],
+                                                         'regard_materiau': self.userwdgfield.comboBox_reg_materiau,
+                                                                # diam_regard : longeur
+                                                         'tampon_type': self.userwdgfield.comboBox_typetampon,
+                                                         'tampon_diam': self.userwdgfield.doubleSpinBox_diamtampon,
+                                                         'presenceechelon': self.userwdgfield.comboBox_echelon,
 
 
-                                                        }},
-                                'Objet' : {'linkfield' : 'id_objet',
-                                          'widgets' : {'libelle' : self.userwdgfield_2.lineEdit_libelle,
-                                                       'commentaire' : self.userwdgfield_2.textBrowser_commentaire}},
-                                'Descriptionsystem' : {'linkfield' : 'id_descriptionsystem',
-                                          'widgets' : {}}}
+                                                        # Equipement
 
-            self.userwdgfield_2.toolButton_longueur.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.userwdgfield_2.doubleSpinBox_longueur))
-            self.userwdgfield_2.toolButton_largeur.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.userwdgfield_2.doubleSpinBox_largeur))
-            self.userwdgfield_2.toolButton_calc.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.userwdgfield_2.doubleSpinBox_profradierouvrage))
-
-            self.userwdgfield_2.toolButton_poires.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.userwdgfield_2.spinBox_poires))
-            self.userwdgfield_2.toolButton_pompes.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.userwdgfield_2.spinBox_pompes))
+                                                         #ouvrage de regul
+                                                         'PRtelegestion': self.userwdgfield.comboBox_telegestion_2,
+                                                         'prof01': self.userwdgfield.comboBox_telegestion_2,
 
 
+                                                         #PR
+                                                         'Prcapacitenominale': self.userwdgfield.doubleSpinBox_capanom,
+                                                         'PRnbrepompes': self.userwdgfield.spinBox_pompes2,
+                                                         'PRtraitHdeuxs': self.userwdgfield.comboBox_traithdeuxs,
+                                                         'PRsurverse': self.userwdgfield.comboBox_surverse2,
 
-            self.userwdgfield_2.comboBox_typeOuvrageAss.currentIndexChanged.connect(self.fieldui2TypeOhChanged)
+                                                         #avaloir
+                                                         'decantation': self.userwdgfield.comboBox_decant,
+                                                         #dimgrille : longeur
+
+
+                                                         # autre
+                                                         'profradierouvrage': self.userwdgfield.doubleSpinBox_profradierouvrage,
+                                                         'largeur': self.userwdgfield.doubleSpinBox_largeur,
+                                                         'longueur': self.userwdgfield.doubleSpinBox_longueur,
+
+                                                         'X': self.userwdgfield.doubleSpinBox_X,
+                                                         'dX': self.userwdgfield.doubleSpinBox_dX,
+                                                         'Y': self.userwdgfield.doubleSpinBox_Y,
+                                                         'dY': self.userwdgfield.doubleSpinBox_dY,
+                                                         'Z': self.userwdgfield.doubleSpinBox_Z,
+                                                         'dZ': self.userwdgfield.doubleSpinBox_dZ,
+
+                                                     }},
+                                           'Objet': {'linkfield': 'id_objet',
+                                                     'widgets': {
+                                                                 'commentaire': self.userwdgfield.textBrowser_commentaire
+                                                                }},
+                                           'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
+                                                                 'widgets': {}}}
+
+                self.userwdgfield.toolButton_longueur.clicked.connect(
+                    lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_longueur))
+
+                self.userwdgfield.toolButton_diamtampon.clicked.connect(
+                    lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_diamtampon))
+
+                self.userwdgfield.toolButton_profsurverse.clicked.connect(
+                    lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_profsurverse))
+
+                self.userwdgfield.toolButton_capanom.clicked.connect(
+                    lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_capanom))
+                self.userwdgfield.toolButton_pompes2.clicked.connect(
+                    lambda: self.windowdialog.showNumPad(self.userwdgfield.spinBox_pompes2))
 
 
 
 
-        self.gpswidget = {'x' : {'widget' : self.userwdgfield_2.label_X,
-                                 'gga' : 'Xcrs'},
-                          'y': {'widget': self.userwdgfield_2.label_Y,
-                                'gga': 'Ycrs'},
-                          'zmngf': {'widget': self.userwdgfield_2.label_Z,
-                                'gga': 'zmNGF'},
-                          'dx': {'widget': self.userwdgfield_2.label_dX,
-                                'gst': 'xprecision'},
-                          'dy': {'widget': self.userwdgfield_2.label_dY,
-                                'gst': 'yprecision'},
-                          'dz': {'widget': self.userwdgfield_2.label_dZ,
-                                'gst': 'zprecision'},
-                          'zgps': {'widget': self.userwdgfield_2.label_zgps,
-                                 'gga': 'elevation'},
-                          'zwgs84': {'widget': self.userwdgfield_2.label_zwgs84,
-                                   'gga': 'deltageoid'},
-                          'raf09': {'widget': self.userwdgfield_2.label_raf09,
-                                   'gga': 'RAF09'},
-                          'hauteurperche': {'widget': self.userwdgfield_2.label_hautperche,
-                                    'gga': 'hauteurperche'}
-                          }
 
-        self.dbase.dbasetables['Noeud']['fields']['typeOuvrageAss']['Cst'] = self.modifiedtypeohassdict
-    """
+                self.userwdgfield.toolButton_largeur.clicked.connect(
+                    lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_largeur))
+                self.userwdgfield.toolButton_calc.clicked.connect(
+                    lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_profradierouvrage))
+
+
+
+                self.userwdgfield.comboBox_typeOuvrageAss.currentIndexChanged.connect(self.fieldui3TypeOhChanged)
+
+
+
+               # ****************************************************************************************
+                # child widgets
+                self.dbasechildwdgfield = []
+
+                self.propertieswdgDesordre = BaseAssainissementDesordreTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
+                self.propertieswdgDesordre.userwdgfield.frame_2.setParent(None)
+                self.propertieswdgDesordre.groupBox_elements.setParent(None)
+                self.propertieswdgDesordre.pushButton_addFeature.setEnabled(False)
+                self.propertieswdgDesordre.pushButton_delFeature.setEnabled(False)
+                self.propertieswdgDesordre.comboBox_featurelist.setEnabled(False)
+                self.propertieswdgDesordre.groupBox_geom.setParent(None)
+                self.dbasechildwdgfield.append(self.propertieswdgDesordre)
+
+                self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
+                self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
+
+
+                self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
+                self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+
+
+            self.gpswidget = {'x': {'widget': self.userwdgfield.label_X,
+                                    'gga': 'Xcrs'},
+                              'y': {'widget': self.userwdgfield.label_Y,
+                                    'gga': 'Ycrs'},
+                              'zmngf': {'widget': self.userwdgfield.label_Z,
+                                        'gga': 'zmNGF'},
+                              'dx': {'widget': self.userwdgfield.label_dX,
+                                     'gst': 'xprecision'},
+                              'dy': {'widget': self.userwdgfield.label_dY,
+                                     'gst': 'yprecision'},
+                              'dz': {'widget': self.userwdgfield.label_dZ,
+                                     'gst': 'zprecision'},
+                              'zgps': {'widget': self.userwdgfield.label_zgps,
+                                       'gga': 'elevation'},
+                              'zwgs84': {'widget': self.userwdgfield.label_zwgs84,
+                                         'gga': 'deltageoid'},
+                              'raf09': {'widget': self.userwdgfield.label_raf09,
+                                        'gga': 'RAF09'},
+                              'hauteurperche': {'widget': self.userwdgfield.label_hautperche,
+                                                'gga': 'hauteurperche'}}
+
+
+
+
+
+
+
+
+
 
 
 
@@ -508,6 +530,28 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
             self.userwdgfield.stackedWidget.setCurrentIndex(3)
 
         self.propertieswdgDesordre.propertieswdgOBSERVATION2.updateObservationStackedWidget()
+
+
+    def fieldui3TypeOhChanged(self, comboindex):
+        #print(self.userwdgfield_2.comboBox_typeOuvrageAss.currentText())
+        currenttext = self.userwdgfield.comboBox_typeOuvrageAss.currentText()
+        if currenttext in ['Regard']:
+            self.userwdgfield.stackedWidget.setCurrentIndex(0)
+        elif currenttext in ['']:
+            self.userwdgfield.stackedWidget.setCurrentIndex(1)
+        elif currenttext in [u'Ouvrage de régulation']:
+            self.userwdgfield.stackedWidget.setCurrentIndex(2)
+        elif currenttext in [u'Poste de refoulement']:
+            self.userwdgfield.stackedWidget.setCurrentIndex(3)
+        elif currenttext in [u'Avaloir']:
+            self.userwdgfield.stackedWidget.setCurrentIndex(4)
+        else:
+            self.userwdgfield.stackedWidget.setCurrentIndex(5)
+
+        self.propertieswdgDesordre.propertieswdgOBSERVATION2.updateObservationStackedWidget()
+
+
+
 
 
 
@@ -973,5 +1017,11 @@ class UserUI(QWidget):
 class UserUI_2(QWidget):
     def __init__(self, parent=None):
         super(UserUI_2, self).__init__(parent=parent)
-        uipath = os.path.join(os.path.dirname(__file__), 'lamiabaseassainissement_noeud_tool_ui_2.ui')
+        uipath = os.path.join(os.path.dirname(__file__), 'lamiabaseassainissement_noeud_tool_ui_2018SNCF.ui')
+        uic.loadUi(uipath, self)
+
+class UserUI_3(QWidget):
+    def __init__(self, parent=None):
+        super(UserUI_3, self).__init__(parent=parent)
+        uipath = os.path.join(os.path.dirname(__file__), 'lamiabaseassainissement_noeud_tool_ui_CD41.ui')
         uic.loadUi(uipath, self)

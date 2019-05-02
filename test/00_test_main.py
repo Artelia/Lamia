@@ -28,7 +28,7 @@ class TestMain(Test):
         # path = "C://000_testdigue//testdigue//BD_totale_ind6.sqlite"
 
         # choice
-        path = "C://000_testdigue//0_bastien//LANDY.sqlite"
+        path = "C://000_testdigue//temp_base2_aep//test01.sqlite"
 
         self.dbase.xlsreader = True
         self.dbase.loadQgisVectorLayers(path)

@@ -626,8 +626,9 @@ class printPDFBaseWorker(object):
                     imageitem = newComposition.getComposerItemById(imageitemname)
                 else:
                     imageitem = newComposition.itemById(imageitemname)
+                    # print('****', imageitem.__class__)
                     # composeritem = newComposition.itemByUuid(compitemuuid)
-                    imageitem.__class__ = qgis.core.QgsLayoutItemPicture
+                    #imageitem.__class__ = qgis.core.QgsLayoutItemPicture
 
                 # print(imageitem, reportdic['images'][imageitemname])
                 imageresult = None

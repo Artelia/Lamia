@@ -16,9 +16,9 @@ class TestMain(Test):
         crs = 3945
         # Digue VNF  Assainissement  Default Assainissement2 Base Base_default Base_assainissement Base2_digue Base2_parking
         # Base2_tramway Base2_eaupotable Base2_assainissement
-        typebase = 'Base2_eaupotable'
+        typebase = 'Base2_assainissement'
         # CD41
-        variante = None
+        variante = 'CD41'
         # spatialite   postgis
 
         typedb = 'spatialite'

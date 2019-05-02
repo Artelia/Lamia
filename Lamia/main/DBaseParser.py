@@ -957,7 +957,7 @@ class DBaseParser(QtCore.QObject):
 
 
     def convertxlsdataToString(self, data):
-        # print('data', data, data.__class__)
+        #print('data0', data, data.__class__)
         if sys.version_info.major == 2:
             if data is None:
                 data = ''
@@ -968,8 +968,16 @@ class DBaseParser(QtCore.QObject):
             else:
                 data = str(data)
         else:
-            data = str(data)
+            if data is None:
+                data = ''
+            elif isinstance(data, str):
+                data = data
+            elif isinstance(data, float):
+                data = str(data).rstrip('0').rstrip('.')
+            else:
+                data = str(data)
 
+        #print('data1', data, data.__class__)
         return data
 
 
@@ -1974,7 +1982,7 @@ class DBaseParser(QtCore.QObject):
             return dbasetable['fields'][field]['Cst'][index][1]
         except ValueError as e:
             if self.qgsiface is None :
-                logging.getLogger("Lamia").debug('error %s %s %s',e, table,field )
+                logging.getLogger("Lamia").debug('error %s %s %s %s',e, table,field , str([value[0] for value in dbasetable['fields'][field]['Cst']] ))
             return None
 
     def getConstraintTextFromRawValue(self, table, field, rawvalue):
@@ -2001,7 +2009,7 @@ class DBaseParser(QtCore.QObject):
                     return dbasetable['fields'][field]['Cst'][index][0]
                 except ValueError as e:
                     if qgis.utils.iface is None:
-                        print('getConstraintTextFromRawValue error', table, field, e)
+                        print('getConstraintTextFromRawValue error', table, field, e, [value[1] for value in dbasetable['fields'][field]['Cst']])
                     return str(rawvalue)
 
             else:

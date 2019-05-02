@@ -184,7 +184,11 @@ class AMCWindow(QDialog):
 
         #scriptvl = '?' + str(QtCore.QUrl.toPercentEncoding('&'.join([layers[key] for key in layers.keys()])))
         scriptvl = '?' + '&'.join([layers[key] for key in layers.keys()])
-        scriptvl += "&query=" + str(QtCore.QUrl.toPercentEncoding(sqlfinal))
+        if sys.version_info.major == 2:
+            scriptvl += "&query=" + str(QtCore.QUrl.toPercentEncoding(sqlfinal))
+        elif sys.version_info.major == 3:
+            scriptvl += '&query=' + QtCore.QUrl.toPercentEncoding(sqlfinal).data().decode('utf-8')
+        #scriptvl += "&query=" + QtCore.QUrl.toPercentEncoding(sqlfinal)
 
         if debug: logging.getLogger("Lamia").debug('scriptvl %s', str(scriptvl))
 
@@ -226,7 +230,8 @@ class AMCWindow(QDialog):
 
                         print('rawtablename',rawtablename,tablenamevlayer)
 
-                        if True:
+
+                        if sys.version_info.major == 2:
                             if self.dbase.isTableSpatial(rawtablename):
                                 vlayerlayer += str(QtCore.QUrl.toPercentEncoding("dbname='" + self.dbase.spatialitefile
                                                                                  + "' key ='pk_" + rawtablename.lower() +"' "
@@ -237,7 +242,17 @@ class AMCWindow(QDialog):
                                                                                  + "' key ='pk_" + rawtablename.lower() +"' "
                                                                                  + 'table="' + tablenamevlayer.lower() + '"'
                                                                                  + ' () sql='))
-
+                        elif sys.version_info.major == 3:
+                            if self.dbase.isTableSpatial(rawtablename):
+                                vlayerlayer += QtCore.QUrl.toPercentEncoding("dbname='" + self.dbase.spatialitefile
+                                                                                 + "' key ='pk_" + rawtablename.lower() +"' "
+                                                                                 + 'table="' + tablenamevlayer.lower() + '"'
+                                                                                 + ' (geom) sql=').data().decode('utf-8')
+                            else:
+                                vlayerlayer += QtCore.QUrl.toPercentEncoding("dbname='" + self.dbase.spatialitefile
+                                                                                 + "' key ='pk_" + rawtablename.lower() +"' "
+                                                                                 + 'table="' + tablenamevlayer.lower() + '"'
+                                                                                 + ' () sql=').data().decode('utf-8')
 
 
 

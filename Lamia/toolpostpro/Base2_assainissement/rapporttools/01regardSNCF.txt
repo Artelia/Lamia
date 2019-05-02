@@ -21,7 +21,7 @@ map0;       250;       Predefined      ;['atlaslayer', 'Equipement', 'Infralinea
 #map0    ;           ;             ; []
 ###images
 #itemname   ; type
-ressource1;Noeud_now.ressource1
+#ressource1;Noeud_now.ressource1
 photo1;Noeud_now.photo1
 schema;schema_noeud
 tab;tableau_infralin

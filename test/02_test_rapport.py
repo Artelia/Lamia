@@ -78,7 +78,7 @@ class TestMain(Test):
 
             if True:
                 # 01regard
-                indexrapport = wdg.userwdgfield.comboBox_type.findText('01regard')
+                indexrapport = wdg.userwdgfield.comboBox_type.findText('01regardSNCF')
                 wdg.userwdgfield.comboBox_type.setCurrentIndex(indexrapport)
 
                 wdg.userwdgfield.pushButton_export.clicked.emit(True)
