@@ -26,7 +26,6 @@ from .amctools.amcwindow import AMCWindow
 #test gitignore
 
 
-
 class AmcTool(AbstractLamiaTool):
     TOOLNAME = 'amctools'
 
