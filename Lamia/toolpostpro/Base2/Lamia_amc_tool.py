@@ -24,6 +24,7 @@ from ...toolabstract.Lamia_abstract_tool import AbstractLamiaTool
 from .amctools.amcwindow import AMCWindow
 
 #test gitignore
+#test gitignore
 
 
 class AmcTool(AbstractLamiaTool):
