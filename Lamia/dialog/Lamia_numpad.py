@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+# -*- coding: utf-8 -*-
+
 """
 This file is part of LAMIA.
 
@@ -23,30 +26,9 @@ This file is part of LAMIA.
  """
 
 
-# -*- coding: utf-8 -*-
-"""
-/***************************************************************************
- PostTelemac
-                                 A QGIS plugin
- Post Traitment or Telemac
-                              -------------------
-        begin                : 2015-07-07
-        git sha              : $Format:%H$
-        copyright            : (C) 2015 by Artelia
-        email                : patrice.Verchere@arteliagroup.com
- ***************************************************************************/
 
- ***************************************************************************/
- Implementation of QgsPluginLayer class, used to show selafin res
-
-Versions :
-Impl
-0.0 : debut
-
- ***************************************************************************/
-"""
 #unicode behaviour
-from __future__ import unicode_literals
+
 # from PyQt4 import uic, QtGui
 from qgis.PyQt import uic, QtCore, QtGui
 try:

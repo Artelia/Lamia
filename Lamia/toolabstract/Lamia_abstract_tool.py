@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 """
 This file is part of LAMIA.
 
@@ -23,9 +25,9 @@ This file is part of LAMIA.
  """
 
 
-# -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
+
+
 # from PyQt4 import uic, QtCore, QtGui
 from qgis.PyQt import uic, QtCore, QtGui
 

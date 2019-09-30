@@ -552,6 +552,10 @@ class InspectiondigueWindowWidget(QMainWindow):
                         self.dbase.dbasetables[tablename]['widget'].changePropertiesWidget(actiontext)
 
 
+
+
+
+
     def reinitCurrentPrestation(self):
         if self.dbase is not None:
             self.dbase.currentprestationid = None
