@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from qgis.PyQt import uic, QtCore
-
+import qgis
 try:
     from qgis.PyQt.QtGui import (QWidget)
 except ImportError:
@@ -14,6 +14,7 @@ from ..base2.lamiabase_equipement_tool import BaseEquipementTool
 
 from .lamiabaseassainissement_photo_tool import BaseAssainissementPhotoTool as BasePhotoTool
 from .lamiabaseassainissement_croquis_tool import BaseAssainissementCroquisTool as BaseCroquisTool
+from .lamiabaseassainissement_desordre_tool import BaseAssainissementDesordreTool
 
 import os
 import datetime
@@ -26,6 +27,11 @@ class BaseAssainissementEquipementTool(BaseEquipementTool):
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
         super(BaseAssainissementEquipementTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
+
+    def initTool(self):
+        super(BaseAssainissementEquipementTool, self).initTool()
+        self.LineENABLED = False
+
 
     """
     def initTool(self):
@@ -57,34 +63,82 @@ class BaseAssainissementEquipementTool(BaseEquipementTool):
     def initFieldUI(self):
         # ****************************************************************************************
         #   userui Field
-        if self.userwdgfield is None:
-            # ****************************************************************************************
-            # userui
-            self.userwdgfield = UserUI()
-            self.linkuserwdgfield = {'Equipement' : {'linkfield' : 'id_equipement',
-                                             'widgets' : {'categorie': self.userwdgfield.comboBox_cat,
-                                                          'typeReseau': self.userwdgfield.comboBox_typeres,
-                                                          'typeAppAss': self.userwdgfield.comboBox_typeapp
-                                                          }},
-                                'Objet' : {'linkfield' : 'id_objet',
-                                          'widgets' : {'commentaire': self.userwdgfield.textBrowser_comm}},
-                                'Descriptionsystem' : {'linkfield' : 'id_descriptionsystem',
-                                          'widgets' : {}}}
-            self.userwdgfield.comboBox_cat.currentIndexChanged.connect(self.changeCategorie)
+        if self.dbase.variante in [None, 'Lamia','2018_SNCF']:
+            if self.userwdgfield is None:
+                # ****************************************************************************************
+                # userui
+                self.userwdgfield = UserUI()
+                self.linkuserwdgfield = {'Equipement' : {'linkfield' : 'id_equipement',
+                                                 'widgets' : {'categorie': self.userwdgfield.comboBox_cat,
+                                                              'typeReseau': self.userwdgfield.comboBox_typeres,
+                                                              'typeAppAss': self.userwdgfield.comboBox_typeapp
+                                                              }},
+                                    'Objet' : {'linkfield' : 'id_objet',
+                                              'widgets' : {'commentaire': self.userwdgfield.textBrowser_comm}},
+                                    'Descriptionsystem' : {'linkfield' : 'id_descriptionsystem',
+                                              'widgets' : {}}}
+                self.userwdgfield.comboBox_cat.currentIndexChanged.connect(self.changeCategorie)
 
+
+                # ****************************************************************************************
+                # child widgets
+                self.dbasechildwdgfield = []
+                self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
+                self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
+
+                self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
+                self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+
+                if self.parentWidget is None:
+                    self.pushButton_addFeature.setEnabled(False)
+
+        elif self.dbase.variante in ['CD41']:
+            # userui
+            self.userwdgfield = UserUI_2()
+            self.linkuserwdgfield = {'Equipement': {'linkfield': 'id_equipement',
+                                                    'widgets': {
+                                                                'categorie': self.userwdgfield.comboBox_cat,
+                                                                'domaine': self.userwdgfield.comboBox_domaine,
+                                                                'environnement': self.userwdgfield.comboBox_implant,
+
+
+                                                                'typeReseau': self.userwdgfield.comboBox_typeres,
+                                                                'typeAppAss': self.userwdgfield.comboBox_typeapp,
+
+                                                                'accessibilite': self.userwdgfield.comboBox_access
+
+                                                                }},
+                                     'Objet': {'linkfield': 'id_objet',
+                                               'widgets': {'commentaire': self.userwdgfield.textBrowser_comm}},
+                                     'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
+                                                           'widgets': {}}}
+            self.userwdgfield.comboBox_cat.currentIndexChanged.connect(self.changeCategorie)
 
             # ****************************************************************************************
             # child widgets
             self.dbasechildwdgfield = []
+
+            self.propertieswdgDesordre = BaseAssainissementDesordreTool(dbase=self.dbase, gpsutil=self.gpsutil,
+                                                                        parentwidget=self)
+            self.propertieswdgDesordre.userwdgfield.frame_2.setParent(None)
+            self.propertieswdgDesordre.groupBox_elements.setParent(None)
+            self.propertieswdgDesordre.pushButton_addFeature.setEnabled(False)
+            self.propertieswdgDesordre.pushButton_delFeature.setEnabled(False)
+            self.propertieswdgDesordre.comboBox_featurelist.setEnabled(False)
+            self.propertieswdgDesordre.groupBox_geom.setParent(None)
+            self.dbasechildwdgfield.append(self.propertieswdgDesordre)
+
+
             self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
             self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
 
             self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
             self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
-            if self.parentWidget is None:
-                self.pushButton_addFeature.setEnabled(False)
 
+
+            if False and self.parentWidget is None:
+                self.pushButton_addFeature.setEnabled(False)
 
 
 
@@ -102,6 +156,36 @@ class BaseAssainissementEquipementTool(BaseEquipementTool):
                     neudfetgeom = noeudfet.geometry().asPoint()
                     self.createorresetRubberband(1)
                     self.setTempGeometry([neudfetgeom,neudfetgeom],False)
+
+
+
+    def postSaveFeature(self, boolnewfeature):
+        if self.dbase.variante in ['CD41']:
+            # save a disorder on first creation
+            if self.savingnewfeature and not self.savingnewfeatureVersion:
+                pkobjet = self.dbase.createNewObjet()
+                lastiddesordre = self.dbase.getLastId('Desordre') + 1
+                geomtext, iddessys = self.dbase.getValuesFromPk('Equipement_qgis',
+                                                                ['ST_AsText(geom)', 'id_descriptionsystem'],
+                                                                self.currentFeaturePK)
+                qgsgeom = qgis.core.QgsGeometry.fromWkt(geomtext)
+                if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                    #newgeom = qgis.core.QgsGeometry.fromPolyline([qgsgeom.asPoint(), qgsgeom.asPoint()])
+                    newgeom = qgis.core.QgsGeometry(qgsgeom)
+                    newgeomwkt = newgeom.exportToWkt()
+                else:
+                    # newgeom = qgis.core.QgsGeometry.fromPolylineXY([qgsgeom.asPointXY(), qgsgeom.asPointXY()])
+                    #newgeom = qgis.core.QgsGeometry.fromPolylineXY([qgsgeom.asPoint(), qgsgeom.asPoint()])
+                    newgeom = qgis.core.QgsGeometry(qgsgeom)
+                    newgeomwkt = newgeom.asWkt()
+
+                sql = self.dbase.createSetValueSentence(type='INSERT',
+                                                        tablename='Desordre',
+                                                        listoffields=['id_desordre', 'lpk_objet', 'groupedesordre',
+                                                                      'lid_descriptionsystem', 'geom'],
+                                                        listofrawvalues=[lastiddesordre, pkobjet, 'EQP',
+                                                                         iddessys, newgeomwkt])
+                self.dbase.query(sql)
 
 
 
@@ -185,4 +269,10 @@ class UserUI(QWidget):
     def __init__(self, parent=None):
         super(UserUI, self).__init__(parent=parent)
         uipath = os.path.join(os.path.dirname(__file__), 'lamiabaseassainissement_equipement_tool_ui.ui')
+        uic.loadUi(uipath, self)
+
+class UserUI_2(QWidget):
+    def __init__(self, parent=None):
+        super(UserUI_2, self).__init__(parent=parent)
+        uipath = os.path.join(os.path.dirname(__file__), 'lamiabaseassainissement_equipement_tool_ui_CD41.ui')
         uic.loadUi(uipath, self)

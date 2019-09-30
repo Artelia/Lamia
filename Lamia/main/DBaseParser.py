@@ -26,6 +26,7 @@ except ImportError:
 
 try:
     import PIL
+    import PIL.Image
     PILexists = True
 except:
     PILexists = False
@@ -463,9 +464,12 @@ class DBaseParser(QtCore.QObject):
 
             #spatialindex
             if 'spatialindex' in self.dbasetables[dbname].keys():
-                sql = "SELECT CreateSpatialIndex('" + dbname + "','geom')"
-                openedsqlfile.write(sql + '\n')
-                self.query(sql)
+                if self.dbasetype == 'spatialite':
+                    sql = "SELECT CreateSpatialIndex('" + dbname + "','geom')"
+                    openedsqlfile.write(sql + '\n')
+                    self.query(sql)
+                elif self.dbasetype == 'postgis':
+                    pass
 
 
 
@@ -570,6 +574,8 @@ class DBaseParser(QtCore.QObject):
                 if (chekupdate and self.version is not None
                         and (self.version < baseversionmax or self.workversion < workversionmax)) :
                     self.updateDBaseVersion2()
+
+
 
                 self.version = baseversionmax
                 self.workversion = workversionmax
@@ -750,7 +756,7 @@ class DBaseParser(QtCore.QObject):
 
                     else:
                         # if fieldname in self.dbasetables[tablename]['fields'].keys():
-                        if fieldname is not None:
+                        if fieldname is not None and fieldname != 'geom':
                             self.readConstraints(tablename,fieldname,sheet, row,cstcolumntoread)
 
                         if False:
@@ -909,6 +915,7 @@ class DBaseParser(QtCore.QObject):
     def readConstraints(self, tablename,fieldname  ,sheet, xlrow,cstcolumntoread=None):
 
         # dbasefield self.dbasetables[tablename]['fields'][fieldname]
+        # print('readConstraints',tablename,fieldname  ,sheet, xlrow)
         colindexvariante = cstcolumntoread
         dbasefield = self.dbasetables[tablename]['fields'][fieldname]
 
@@ -1358,9 +1365,13 @@ class DBaseParser(QtCore.QObject):
         query = self.query(sql)
         type, resdir, crs , version  = [row[0:4] for row in query][0]
 
-        sql = "SELECT  workversion  FROM Basedonnees;"
-        query = self.query(sql)
-        workversion  = [row[0] for row in query][0]
+        try:
+            sql = "SELECT  workversion  FROM Basedonnees;"
+            query = self.query(sql)
+            workversion  = [row[0] for row in query][0]
+        except TypeError:
+            return
+
 
         try:
             sql = "SELECT  variante  FROM Basedonnees;"
@@ -1404,6 +1415,8 @@ class DBaseParser(QtCore.QObject):
 
 
 
+
+
             if self.revisionwork:
                 sql = "SELECT MAX(pk_revision) FROM Revision;"
                 query = self.query(sql)
@@ -1444,15 +1457,39 @@ class DBaseParser(QtCore.QObject):
                     #get id column
                     idcolumnname = self.getFirstIdColumn(tablename + '_qgis')
                     # print('***', tablename + '_qgis' , idcolumnname)
+                    #if sys.version_info.major == 2:       #bug on qgis 3
+                    if True:
+                        if self.isTableSpatial(str(tablename)+'_qgis'):
+                            if 'spatialindex' in self.dbasetables[tablename].keys() and sys.version_info.major == 3:    #qis 3 bug
+                                uri.setDataSource('', '(SELECT * FROM ' + str(tablename) + '_qgis)', 'geom', '',idcolumnname)
+                            else:
+                                uri.setDataSource('', str(tablename) + '_qgis', 'geom', '', idcolumnname)
 
-                    if self.isTableSpatial(str(tablename)+'_qgis'):
-                        #uri.setDataSource('', str(tablename)+'_qgis', 'geom', '', "id_" + str(tablename).lower())
-                        uri.setDataSource('', str(tablename) + '_qgis', 'geom', '', idcolumnname)
+                            if False:
+                                if 'spatialindex' in self.dbasetables[tablename].keys() and sys.version_info.major == 3:
+                                    uri.setDataSource('', str(tablename) + '_qgis', 'geometry', '', idcolumnname)
+                                else:
+                                    #uri.setDataSource('', str(tablename)+'_qgis', 'geom', '', "id_" + str(tablename).lower())
+                                    uri.setDataSource('', str(tablename) + '_qgis', 'geom', '', idcolumnname)
 
-                    else:
-                        #uri.setDataSource('', str(tablename) + '_qgis', '', '', "id_" + str(tablename).lower())
-                        uri.setDataSource('', str(tablename) + '_qgis', '', '', idcolumnname)
-                    self.dbasetables[tablename]['layerqgis'] = qgis.core.QgsVectorLayer(uri.uri(), tablename, 'spatialite')
+                        else:
+                            #uri.setDataSource('', str(tablename) + '_qgis', '', '', "id_" + str(tablename).lower())
+                            uri.setDataSource('', str(tablename) + '_qgis', '', '', idcolumnname)
+
+                        self.dbasetables[tablename]['layerqgis'] = qgis.core.QgsVectorLayer(uri.uri(), tablename, 'spatialite')
+
+
+                    if False:
+                        if sys.version_info.major == 3:
+                            if self.isTableSpatial(str(tablename) + '_qgis'):
+                                # uri.setDataSource('', str(tablename)+'_qgis', 'geom', '', "id_" + str(tablename).lower())
+                                uri.setDataSource('', '(SELECT * FROM ' + str(tablename) + '_qgis)', 'geom', '', idcolumnname)
+
+                            else:
+                                # uri.setDataSource('', str(tablename) + '_qgis', '', '', "id_" + str(tablename).lower())
+                                uri.setDataSource('', '(SELECT * FROM ' + str(tablename) + '_qgis)', '', '', idcolumnname)
+                            self.dbasetables[tablename]['layerqgis'] = qgis.core.QgsVectorLayer(uri.uri(), tablename,
+                                                                                                'spatialite')
 
                     # view layer django
                     idcolumnname = self.getFirstIdColumn(tablename + '_django')
@@ -1616,11 +1653,13 @@ class DBaseParser(QtCore.QObject):
                     self.commit()
 
                 return returnquery
-            except OperationalError as e:
+            except (OperationalError ,IntegrityError) as e:
                 if self.qgsiface is None:
                     print(sql)
                     print('error query', e)
                 return None
+
+
 
 
         elif self.dbasetype == 'postgis':
@@ -1629,8 +1668,12 @@ class DBaseParser(QtCore.QObject):
                 # connectstr += self.pghost + "' password='" + self.pgpassword + "'"
                 # self.connPGis = psycopg2.connect(connectstr)
                 self.PGiscursor = self.connPGis.cursor()
+
             try:
+                if self.printsql :
+                    logging.getLogger('Lamia').debug('%s %.3f', sql,  self.getTimeNow() - timestart)
                 self.PGiscursor.execute(sql)
+
             except psycopg2.ProgrammingError as e:
                 print('error', sql)
                 print('error query', e)
@@ -1994,6 +2037,8 @@ class DBaseParser(QtCore.QObject):
         :return: la valeur textuelle
         """
         # print('_getConstraintTextFromRawValue',table, self.dbasetables[table]['fields'][field], rawvalue,field)
+        # print('_getConstraintTextFromRawValue',table, field, rawvalue )
+
         if (table in self.dbasetables.keys()
             and field in self.dbasetables[table]['fields'].keys()
             and 'Cst' in self.dbasetables[table]['fields'][field].keys()):
@@ -2294,6 +2339,10 @@ class DBaseParser(QtCore.QObject):
         """
         #print('featpk')
         debug = False
+
+        if fid is None:
+            return None
+
         if debug : logging.getLogger("Lamia").debug('Start %s %s', str(layername), str(fid))
 
         if int(str(self.qgisversion_int)[0:3]) < 220:
@@ -2304,7 +2353,8 @@ class DBaseParser(QtCore.QObject):
 
 
     def getValuesFromPk(self, dbasename, fields, pk):
-        if isinstance(fields, str):
+        # print('getValuesFromPk',type(fields) )
+        if isinstance(fields, str) or isinstance(fields, unicode):
             fields = [fields]
         sql = " SELECT " + ','.join(fields) + " FROM " + dbasename
         sql += " WHERE pk_" + dbasename.split('_')[0].lower()

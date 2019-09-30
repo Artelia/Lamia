@@ -69,8 +69,8 @@ class CostTool(AbstractLamiaTool):
 
         # ****************************************************************************************
         # properties ui
-        self.groupBox_geom.setParent(None)
         self.groupBox_elements.setParent(None)
+        self.frame_editing.setParent(None)
         self.multipleselection = True
         self.combotypeitems = ['Zone geographique','Troncon']
 

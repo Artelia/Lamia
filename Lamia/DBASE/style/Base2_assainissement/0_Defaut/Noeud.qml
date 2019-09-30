@@ -1,5 +1,5 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis version="2.18.28" simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" readOnly="0" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+<qgis version="2.18.19" simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" readOnly="0" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
   <edittypes>
     <edittype widgetv2type="TextEdit" name="pk_noeud">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
@@ -19,13 +19,25 @@
     <edittype widgetv2type="TextEdit" name="profradierouvrage">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
+    <edittype widgetv2type="TextEdit" name="alt01">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="prof01">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
     <edittype widgetv2type="TextEdit" name="typeReseau">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="typeOuvrageAss">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
+    <edittype widgetv2type="TextEdit" name="soustypeOuvrageAss">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
     <edittype widgetv2type="TextEdit" name="accessibilite">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="domaine">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="environnement">
@@ -55,7 +67,19 @@
     <edittype widgetv2type="TextEdit" name="lid_ressource_6">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="formetampon">
+    <edittype widgetv2type="TextEdit" name="tampon_forme">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="tampon_type">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="tampon_diam">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="regard_materiau">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="regard_forme">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="presenceechelon">
@@ -67,13 +91,13 @@
     <edittype widgetv2type="TextEdit" name="presencecunette">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="formeregard">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
     <edittype widgetv2type="TextEdit" name="cloisonsiphoide">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="couvercle">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="Prcapacitenominale">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="PRcloture">
@@ -83,6 +107,9 @@
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="PRverouille">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="PRtraitHdeuxs">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="PRarmoireelec">
@@ -148,6 +175,9 @@
     <edittype widgetv2type="TextEdit" name="presenceautomate">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
+    <edittype widgetv2type="TextEdit" name="decantation">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
     <edittype widgetv2type="TextEdit" name="X">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
@@ -193,10 +223,40 @@
     <edittype widgetv2type="TextEdit" name="sourceGeoloc">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
+    <edittype widgetv2type="TextEdit" name="enservice">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="annee_debut_pose">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="annee_fin_pose">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="precision_pose">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="date_miseHorsService">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
     <edittype widgetv2type="TextEdit" name="parametres">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="listeparametres">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="rue_libelle">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="rue_libdebut">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="rue_libfin">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="rue_complement">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="intervenant_1">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="pk_objet">
@@ -236,14 +296,14 @@
   <renderer-v2 forceraster="0" symbollevels="0" type="RuleRenderer" enableorderby="0">
     <rules key="{8d79bb70-3d56-44a7-9b09-ed3642611a95}">
       <rule filter=" &quot;typeOuvrageAss&quot;  = '60' " key="{1dbda66e-9a74-48f9-931e-359c3ca31688}" symbol="0" label="Regard">
-        <rule filter="&quot;typeReseau&quot; = 'PLU' " key="{2f18122b-dd99-49f4-9f49-5c1ba68999f1}" symbol="1" label="Eaux pluviales"/>
-        <rule filter="&quot;typeReseau&quot; = 'USE' " key="{33ab6e33-05b3-4826-a9fe-446f501c5585}" symbol="2" label="Eaux Usées"/>
-        <rule filter="&quot;typeReseau&quot; = 'UNI' " key="{ee98eb47-0dd6-4716-8f4f-8a966360e411}" symbol="3" label="Unitaire"/>
+        <rule filter="&quot;typeReseau&quot; IN ('PLU','03)" key="{2f18122b-dd99-49f4-9f49-5c1ba68999f1}" symbol="1" label="Eaux pluviales"/>
+        <rule filter="&quot;typeReseau&quot; IN ('USE' ,'02')" key="{33ab6e33-05b3-4826-a9fe-446f501c5585}" symbol="2" label="Eaux Usées"/>
+        <rule filter="&quot;typeReseau&quot; IN ('UNI','01')" key="{ee98eb47-0dd6-4716-8f4f-8a966360e411}" symbol="3" label="Unitaire"/>
       </rule>
       <rule filter=" &quot;typeOuvrageAss&quot;  = '61' " key="{da89f3f5-899c-4070-bbb0-0d08ed5e159b}" symbol="4" label="Branchement">
-        <rule filter="&quot;typeReseau&quot; = 'USE' " key="{784d2d51-4a31-4b8d-be70-5cd59a64570e}" symbol="5" label="Eaux usées"/>
-        <rule filter="&quot;typeReseau&quot; = 'UNI' " key="{ac6f9fb3-11f6-457b-a295-ded6e65ecbad}" symbol="6" label="Unitaire"/>
-        <rule filter="&quot;typeReseau&quot; = 'PLU' " key="{9a43a2a7-1ee2-4e2d-be41-f7e57678b539}" symbol="7" label="Pluviale"/>
+        <rule filter="&quot;typeReseau&quot; IN ('USE' ,'02')" key="{784d2d51-4a31-4b8d-be70-5cd59a64570e}" symbol="5" label="Eaux usées"/>
+        <rule filter="&quot;typeReseau&quot; IN ('UNI','01')" key="{ac6f9fb3-11f6-457b-a295-ded6e65ecbad}" symbol="6" label="Unitaire"/>
+        <rule filter="&quot;typeReseau&quot; IN ('PLU','03)" key="{9a43a2a7-1ee2-4e2d-be41-f7e57678b539}" symbol="7" label="Pluviale"/>
       </rule>
       <rule filter=" &quot;typeOuvrageAss&quot;  = '71' " key="{d8ead72a-2cb5-4161-ba84-6386fbecff6e}" symbol="8" label="Grille"/>
       <rule filter=" &quot;typeOuvrageAss&quot;  = '70' " key="{25f9f3c2-695e-4992-ab82-9f7b79884c7c}" symbol="9" label="Avaloir"/>
@@ -1230,77 +1290,97 @@
     <alias field="altradierouvrage" index="3" name=""/>
     <alias field="alttamponouvrage" index="4" name=""/>
     <alias field="profradierouvrage" index="5" name=""/>
-    <alias field="typeReseau" index="6" name=""/>
-    <alias field="typeOuvrageAss" index="7" name=""/>
-    <alias field="accessibilite" index="8" name=""/>
-    <alias field="environnement" index="9" name=""/>
-    <alias field="largeur" index="10" name=""/>
-    <alias field="longueur" index="11" name=""/>
-    <alias field="lid_ressource_1" index="12" name=""/>
-    <alias field="lid_ressource_2" index="13" name=""/>
-    <alias field="lid_ressource_3" index="14" name=""/>
-    <alias field="lid_ressource_4" index="15" name=""/>
-    <alias field="lid_ressource_5" index="16" name=""/>
-    <alias field="lid_ressource_6" index="17" name=""/>
-    <alias field="formetampon" index="18" name=""/>
-    <alias field="presenceechelon" index="19" name=""/>
-    <alias field="presencecrosse" index="20" name=""/>
-    <alias field="presencecunette" index="21" name=""/>
-    <alias field="formeregard" index="22" name=""/>
-    <alias field="cloisonsiphoide" index="23" name=""/>
-    <alias field="couvercle" index="24" name=""/>
-    <alias field="PRcloture" index="25" name=""/>
-    <alias field="PRarriveeep" index="26" name=""/>
-    <alias field="PRverouille" index="27" name=""/>
-    <alias field="PRarmoireelec" index="28" name=""/>
-    <alias field="PRarmoireelecverouillee" index="29" name=""/>
-    <alias field="PRtelegestion" index="30" name=""/>
-    <alias field="PRtelegestioncommentaire" index="31" name=""/>
-    <alias field="PRpermutautopompe" index="32" name=""/>
-    <alias field="PRtypeasservissementpompe" index="33" name=""/>
-    <alias field="PRnbrepoires" index="34" name=""/>
-    <alias field="PRtypeasservissementsecourspompe" index="35" name=""/>
-    <alias field="PRmateriau" index="36" name=""/>
-    <alias field="PRgrilleantichute" index="37" name=""/>
-    <alias field="PRsurverse" index="38" name=""/>
-    <alias field="PRpanierdegrilleur" index="39" name=""/>
-    <alias field="PRnbrepompes" index="40" name=""/>
-    <alias field="PRpompebarreguidage" index="41" name=""/>
-    <alias field="PRpompechainerelevage" index="42" name=""/>
-    <alias field="PRclapet" index="43" name=""/>
-    <alias field="PRvannes" index="44" name=""/>
-    <alias field="PRprisepression" index="45" name=""/>
-    <alias field="DSHroleouvrage" index="46" name=""/>
-    <alias field="presencealarme" index="47" name=""/>
-    <alias field="presenceautomate" index="48" name=""/>
-    <alias field="X" index="49" name=""/>
-    <alias field="dX" index="50" name=""/>
-    <alias field="Y" index="51" name=""/>
-    <alias field="dY" index="52" name=""/>
-    <alias field="Z" index="53" name=""/>
-    <alias field="dZ" index="54" name=""/>
-    <alias field="pk_descriptionsystem" index="55" name=""/>
-    <alias field="id_descriptionsystem" index="56" name=""/>
-    <alias field="lpk_objet" index="57" name=""/>
-    <alias field="importancestrat" index="58" name=""/>
-    <alias field="etatfonct" index="59" name=""/>
-    <alias field="qualitegeolocXY" index="60" name=""/>
-    <alias field="qualiteGeolocZ" index="61" name=""/>
-    <alias field="dateGeoloc" index="62" name=""/>
-    <alias field="sourceGeoloc" index="63" name=""/>
-    <alias field="parametres" index="64" name=""/>
-    <alias field="listeparametres" index="65" name=""/>
-    <alias field="pk_objet" index="66" name=""/>
-    <alias field="id_objet" index="67" name=""/>
-    <alias field="lpk_revision_begin" index="68" name=""/>
-    <alias field="lpk_revision_end" index="69" name=""/>
-    <alias field="datetimecreation" index="70" name=""/>
-    <alias field="datetimemodification" index="71" name=""/>
-    <alias field="datetimedestruction" index="72" name=""/>
-    <alias field="commentaire" index="73" name=""/>
-    <alias field="libelle" index="74" name=""/>
-    <alias field="importid" index="75" name=""/>
-    <alias field="importtable" index="76" name=""/>
+    <alias field="alt01" index="6" name=""/>
+    <alias field="prof01" index="7" name=""/>
+    <alias field="typeReseau" index="8" name=""/>
+    <alias field="typeOuvrageAss" index="9" name=""/>
+    <alias field="soustypeOuvrageAss" index="10" name=""/>
+    <alias field="accessibilite" index="11" name=""/>
+    <alias field="domaine" index="12" name=""/>
+    <alias field="environnement" index="13" name=""/>
+    <alias field="largeur" index="14" name=""/>
+    <alias field="longueur" index="15" name=""/>
+    <alias field="lid_ressource_1" index="16" name=""/>
+    <alias field="lid_ressource_2" index="17" name=""/>
+    <alias field="lid_ressource_3" index="18" name=""/>
+    <alias field="lid_ressource_4" index="19" name=""/>
+    <alias field="lid_ressource_5" index="20" name=""/>
+    <alias field="lid_ressource_6" index="21" name=""/>
+    <alias field="tampon_forme" index="22" name=""/>
+    <alias field="tampon_type" index="23" name=""/>
+    <alias field="tampon_diam" index="24" name=""/>
+    <alias field="regard_materiau" index="25" name=""/>
+    <alias field="regard_forme" index="26" name=""/>
+    <alias field="presenceechelon" index="27" name=""/>
+    <alias field="presencecrosse" index="28" name=""/>
+    <alias field="presencecunette" index="29" name=""/>
+    <alias field="cloisonsiphoide" index="30" name=""/>
+    <alias field="couvercle" index="31" name=""/>
+    <alias field="Prcapacitenominale" index="32" name=""/>
+    <alias field="PRcloture" index="33" name=""/>
+    <alias field="PRarriveeep" index="34" name=""/>
+    <alias field="PRverouille" index="35" name=""/>
+    <alias field="PRtraitHdeuxs" index="36" name=""/>
+    <alias field="PRarmoireelec" index="37" name=""/>
+    <alias field="PRarmoireelecverouillee" index="38" name=""/>
+    <alias field="PRtelegestion" index="39" name=""/>
+    <alias field="PRtelegestioncommentaire" index="40" name=""/>
+    <alias field="PRpermutautopompe" index="41" name=""/>
+    <alias field="PRtypeasservissementpompe" index="42" name=""/>
+    <alias field="PRnbrepoires" index="43" name=""/>
+    <alias field="PRtypeasservissementsecourspompe" index="44" name=""/>
+    <alias field="PRmateriau" index="45" name=""/>
+    <alias field="PRgrilleantichute" index="46" name=""/>
+    <alias field="PRsurverse" index="47" name=""/>
+    <alias field="PRpanierdegrilleur" index="48" name=""/>
+    <alias field="PRnbrepompes" index="49" name=""/>
+    <alias field="PRpompebarreguidage" index="50" name=""/>
+    <alias field="PRpompechainerelevage" index="51" name=""/>
+    <alias field="PRclapet" index="52" name=""/>
+    <alias field="PRvannes" index="53" name=""/>
+    <alias field="PRprisepression" index="54" name=""/>
+    <alias field="DSHroleouvrage" index="55" name=""/>
+    <alias field="presencealarme" index="56" name=""/>
+    <alias field="presenceautomate" index="57" name=""/>
+    <alias field="decantation" index="58" name=""/>
+    <alias field="X" index="59" name=""/>
+    <alias field="dX" index="60" name=""/>
+    <alias field="Y" index="61" name=""/>
+    <alias field="dY" index="62" name=""/>
+    <alias field="Z" index="63" name=""/>
+    <alias field="dZ" index="64" name=""/>
+    <alias field="pk_descriptionsystem" index="65" name=""/>
+    <alias field="id_descriptionsystem" index="66" name=""/>
+    <alias field="lpk_objet" index="67" name=""/>
+    <alias field="importancestrat" index="68" name=""/>
+    <alias field="etatfonct" index="69" name=""/>
+    <alias field="qualitegeolocXY" index="70" name=""/>
+    <alias field="qualiteGeolocZ" index="71" name=""/>
+    <alias field="dateGeoloc" index="72" name=""/>
+    <alias field="sourceGeoloc" index="73" name=""/>
+    <alias field="enservice" index="74" name=""/>
+    <alias field="annee_debut_pose" index="75" name=""/>
+    <alias field="annee_fin_pose" index="76" name=""/>
+    <alias field="precision_pose" index="77" name=""/>
+    <alias field="date_miseHorsService" index="78" name=""/>
+    <alias field="parametres" index="79" name=""/>
+    <alias field="listeparametres" index="80" name=""/>
+    <alias field="rue_libelle" index="81" name=""/>
+    <alias field="rue_libdebut" index="82" name=""/>
+    <alias field="rue_libfin" index="83" name=""/>
+    <alias field="rue_complement" index="84" name=""/>
+    <alias field="intervenant_1" index="85" name=""/>
+    <alias field="pk_objet" index="86" name=""/>
+    <alias field="id_objet" index="87" name=""/>
+    <alias field="lpk_revision_begin" index="88" name=""/>
+    <alias field="lpk_revision_end" index="89" name=""/>
+    <alias field="datetimecreation" index="90" name=""/>
+    <alias field="datetimemodification" index="91" name=""/>
+    <alias field="datetimedestruction" index="92" name=""/>
+    <alias field="commentaire" index="93" name=""/>
+    <alias field="libelle" index="94" name=""/>
+    <alias field="importid" index="95" name=""/>
+    <alias field="importtable" index="96" name=""/>
   </aliases>
   <excludeAttributesWMS/>
   <excludeAttributesWFS/>
@@ -1334,11 +1414,9 @@
       <column width="-1" hidden="0" type="field" name="lid_ressource_4"/>
       <column width="-1" hidden="0" type="field" name="lid_ressource_5"/>
       <column width="-1" hidden="0" type="field" name="lid_ressource_6"/>
-      <column width="-1" hidden="0" type="field" name="formetampon"/>
       <column width="-1" hidden="0" type="field" name="presenceechelon"/>
       <column width="-1" hidden="0" type="field" name="presencecrosse"/>
       <column width="-1" hidden="0" type="field" name="presencecunette"/>
-      <column width="-1" hidden="0" type="field" name="formeregard"/>
       <column width="-1" hidden="0" type="field" name="cloisonsiphoide"/>
       <column width="-1" hidden="0" type="field" name="couvercle"/>
       <column width="-1" hidden="0" type="field" name="PRcloture"/>
@@ -1385,6 +1463,28 @@
       <column width="-1" hidden="0" type="field" name="libelle"/>
       <column width="-1" hidden="0" type="field" name="importid"/>
       <column width="-1" hidden="0" type="field" name="importtable"/>
+      <column width="-1" hidden="0" type="field" name="alt01"/>
+      <column width="-1" hidden="0" type="field" name="prof01"/>
+      <column width="-1" hidden="0" type="field" name="soustypeOuvrageAss"/>
+      <column width="-1" hidden="0" type="field" name="domaine"/>
+      <column width="-1" hidden="0" type="field" name="tampon_forme"/>
+      <column width="-1" hidden="0" type="field" name="tampon_type"/>
+      <column width="-1" hidden="0" type="field" name="tampon_diam"/>
+      <column width="-1" hidden="0" type="field" name="regard_materiau"/>
+      <column width="-1" hidden="0" type="field" name="regard_forme"/>
+      <column width="-1" hidden="0" type="field" name="Prcapacitenominale"/>
+      <column width="-1" hidden="0" type="field" name="PRtraitHdeuxs"/>
+      <column width="-1" hidden="0" type="field" name="decantation"/>
+      <column width="-1" hidden="0" type="field" name="enservice"/>
+      <column width="-1" hidden="0" type="field" name="annee_debut_pose"/>
+      <column width="-1" hidden="0" type="field" name="annee_fin_pose"/>
+      <column width="-1" hidden="0" type="field" name="precision_pose"/>
+      <column width="-1" hidden="0" type="field" name="date_miseHorsService"/>
+      <column width="-1" hidden="0" type="field" name="rue_libelle"/>
+      <column width="-1" hidden="0" type="field" name="rue_libdebut"/>
+      <column width="-1" hidden="0" type="field" name="rue_libfin"/>
+      <column width="-1" hidden="0" type="field" name="rue_complement"/>
+      <column width="-1" hidden="0" type="field" name="intervenant_1"/>
     </columns>
   </attributetableconfig>
   <editform>U:/00_QGis/30_Urbain/Regards EU</editform>
@@ -1562,9 +1662,13 @@ def my_form_open(dialog, layer, feature):
     <default field="altradierouvrage" expression=""/>
     <default field="alttamponouvrage" expression=""/>
     <default field="profradierouvrage" expression=""/>
+    <default field="alt01" expression=""/>
+    <default field="prof01" expression=""/>
     <default field="typeReseau" expression=""/>
     <default field="typeOuvrageAss" expression=""/>
+    <default field="soustypeOuvrageAss" expression=""/>
     <default field="accessibilite" expression=""/>
+    <default field="domaine" expression=""/>
     <default field="environnement" expression=""/>
     <default field="largeur" expression=""/>
     <default field="longueur" expression=""/>
@@ -1574,16 +1678,21 @@ def my_form_open(dialog, layer, feature):
     <default field="lid_ressource_4" expression=""/>
     <default field="lid_ressource_5" expression=""/>
     <default field="lid_ressource_6" expression=""/>
-    <default field="formetampon" expression=""/>
+    <default field="tampon_forme" expression=""/>
+    <default field="tampon_type" expression=""/>
+    <default field="tampon_diam" expression=""/>
+    <default field="regard_materiau" expression=""/>
+    <default field="regard_forme" expression=""/>
     <default field="presenceechelon" expression=""/>
     <default field="presencecrosse" expression=""/>
     <default field="presencecunette" expression=""/>
-    <default field="formeregard" expression=""/>
     <default field="cloisonsiphoide" expression=""/>
     <default field="couvercle" expression=""/>
+    <default field="Prcapacitenominale" expression=""/>
     <default field="PRcloture" expression=""/>
     <default field="PRarriveeep" expression=""/>
     <default field="PRverouille" expression=""/>
+    <default field="PRtraitHdeuxs" expression=""/>
     <default field="PRarmoireelec" expression=""/>
     <default field="PRarmoireelecverouillee" expression=""/>
     <default field="PRtelegestion" expression=""/>
@@ -1605,6 +1714,7 @@ def my_form_open(dialog, layer, feature):
     <default field="DSHroleouvrage" expression=""/>
     <default field="presencealarme" expression=""/>
     <default field="presenceautomate" expression=""/>
+    <default field="decantation" expression=""/>
     <default field="X" expression=""/>
     <default field="dX" expression=""/>
     <default field="Y" expression=""/>
@@ -1620,8 +1730,18 @@ def my_form_open(dialog, layer, feature):
     <default field="qualiteGeolocZ" expression=""/>
     <default field="dateGeoloc" expression=""/>
     <default field="sourceGeoloc" expression=""/>
+    <default field="enservice" expression=""/>
+    <default field="annee_debut_pose" expression=""/>
+    <default field="annee_fin_pose" expression=""/>
+    <default field="precision_pose" expression=""/>
+    <default field="date_miseHorsService" expression=""/>
     <default field="parametres" expression=""/>
     <default field="listeparametres" expression=""/>
+    <default field="rue_libelle" expression=""/>
+    <default field="rue_libdebut" expression=""/>
+    <default field="rue_libfin" expression=""/>
+    <default field="rue_complement" expression=""/>
+    <default field="intervenant_1" expression=""/>
     <default field="pk_objet" expression=""/>
     <default field="id_objet" expression=""/>
     <default field="lpk_revision_begin" expression=""/>

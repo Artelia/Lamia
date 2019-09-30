@@ -181,8 +181,8 @@ class BasePhotoTool(AbstractLamiaTool):
         global numphoto
 
         if self.currentFeature is None:
-            #datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
-            datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
+            #datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
             self.initFeatureProperties(feat, 'Ressource', 'datetimeressource', datecreation)
 
             if numphoto is not None:

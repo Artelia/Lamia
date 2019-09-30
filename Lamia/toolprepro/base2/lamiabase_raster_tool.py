@@ -7,7 +7,7 @@ except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget)
 #from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
 from ...toolabstract.Lamia_abstract_tool import AbstractLamiaTool
-import os
+import os, sys
 import datetime
 
 
@@ -157,8 +157,12 @@ class BaseRasterTool(AbstractLamiaTool):
 
 
     def chooseFile(self):
-        file, extension = self.windowdialog.qfiledlg.getOpenFileNameAndFilter(None, 'Choose the file', self.dbase.imagedirectory,
-                                                                 'All (*.*)', '')
+        if sys.version_info.major == 2:
+            file, extension = self.windowdialog.qfiledlg.getOpenFileNameAndFilter(None, 'Choose the file', self.dbase.imagedirectory,
+                                                                     'All (*.*)', '')
+        elif sys.version_info.major == 3:
+            file, extension = self.windowdialog.qfiledlg.getOpenFileName(None, 'Choose the file', self.dbase.imagedirectory,
+                                                                     'All (*.*)', '')
         if file:
             self.userwdg.lineEdit_file.setText(os.path.normpath(file))
 

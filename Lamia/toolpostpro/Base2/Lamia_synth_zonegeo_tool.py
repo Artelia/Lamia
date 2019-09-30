@@ -17,7 +17,7 @@ if False:
     from ..toolabstract.inspectiondigue_abstractworker import AbstractWorker
 if True:
     from ...toolprepro.base2.lamiabase_photo_tool  import BasePhotoTool
-    from ...toolprepro.base.lamiabase_observation_tool import BaseObservationTool
+    from ...toolprepro.base2.lamiabase_observation_tool import BaseObservationTool
     #from ...toolabstract.inspectiondigue_abstractworker import AbstractWorker
 import io
 import matplotlib
@@ -31,6 +31,8 @@ import matplotlib.pyplot as plt
 
 class SyntheseZonegeoTool(AbstractLamiaTool):
 
+    TOOLNAME = 'GRAPHS'
+
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
         super(SyntheseZonegeoTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
@@ -40,7 +42,7 @@ class SyntheseZonegeoTool(AbstractLamiaTool):
         # ****************************************************************************************
         # Main spec
         self.CAT = 'Synthese'
-        self.NAME = 'Desordres'
+        self.NAME = 'Graphiques'
         self.visualmode = [4]
         # self.PointENABLED = True
         # self.LineENABLED = True
@@ -52,8 +54,8 @@ class SyntheseZonegeoTool(AbstractLamiaTool):
 
         # ****************************************************************************************
         # properties ui
-        self.groupBox_geom.setParent(None)
         self.groupBox_elements.setParent(None)
+        self.frame_editing.setParent(None)
         
         self.iconpath = os.path.join(os.path.dirname(__file__), 'lamiabase_croquis_tool_icon.png')
         self.qtreewidgetfields = ['libelle']

@@ -1,3 +1,0 @@
-###type_zonegeo;             VARCHAR(255);                TEXT
-Commune;                 COM
-Systeme de collecte;      COL

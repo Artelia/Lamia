@@ -31,9 +31,16 @@ class TestMain(Test):
         path = "M://FR//BOR//VT//FLUVIAL//4352409_33_ASA_Baurech_EDD//6_Reglementaire//61_Calculs//lamia//baurech.sqlite"
         path = "U://FR//BOR//VT//PVR//20_LAMIA//0_Github//Lamia//test//99_scriptqgis//baurech.sqlite"
 
-        path = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//BD_totale_ind6.sqlite"
+        path = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//BD_totale_ind7.sqlite"
         # path = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonneestest//BD_totale_ind6.sqlite"
-        path = "C://000_testdigue//0_bastien//LANDY.sqlite"
+        # path = "C://000_testdigue//0_bastien//LANDY.sqlite"
+
+        path = "M://FR//BOR//VT//FLUVIAL//4352471-33-SMBVJCC_Risque_inondation_Cartillon_Castelnau//10-Cartographie//QGis//BV_Medoc.sqlite"
+        path = "U://FR//BOR//VT//PVR//20_LAMIA//1_DOC//tramway//sauvegarde_190507//SMTCG_Inspection_Voie.sqlite"
+
+        path = "M://FR//BOR//VT//FLUVIAL//4352571-CARA_La_Tremblade_VTA_Mus_de_Loup//10-Cartographie//Qgis//musduloup//musloup.sqlite"
+        path = "C://000_testdigue//Manon_AEP//EAU POTABLE S1.sqlite"
+        path = "C://000_testdigue//tram_bordeaux//Tram.sqlite"
 
 
         self.wind.dbase.loadQgisVectorLayers(path)
@@ -55,12 +62,12 @@ class TestMain(Test):
                 if 'printPDF' in menutool.__class__.__name__ :
                     indexrapport = i
                     break
-            self.wind.dbase.dbasetables['Zonegeo']['layerqgis'].selectByIds([22,23,24])
+            self.wind.dbase.dbasetables['Zonegeo']['layerqgis'].selectByIds([22])
             # Desordres Infralineaire Equipementhydraulique
             # 01regard 01deshuileur  01posterefoulement
             # self.wind.menutools[indexrapport].pdffile = "C://000_testdigue//Lamia2//testrapport.pdf"
             self.wind.menutools[indexrapport].pdffile = "C://testrapport.pdf"
-            self.wind.menutools[indexrapport].reporttype = 'Desordres'
+            self.wind.menutools[indexrapport].reporttype = 'Infralineaire'
             self.wind.menutools[indexrapport].work()
 
 
@@ -77,13 +84,15 @@ class TestMain(Test):
             self.wind.MaintreeWidget.setCurrentItem(wdg.qtreewidgetitem)
 
             if True:
-                # 01regard
-                indexrapport = wdg.userwdgfield.comboBox_type.findText('01regardSNCF')
+                # 01regard  Infralineaire Equipementhydraulique   EquipementCompteur   EquipementVanne
+                # EquipementRegulation  EquipementHydrant NoeudRegard
+                indexrapport = wdg.userwdgfield.comboBox_type.findText('Infralineaire')
                 wdg.userwdgfield.comboBox_type.setCurrentIndex(indexrapport)
 
                 wdg.userwdgfield.pushButton_export.clicked.emit(True)
 
         #self.mainwin.exec_()
+
 
 
 

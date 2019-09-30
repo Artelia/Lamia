@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import qgis
+import qgis, sys
 from qgis.PyQt import uic, QtGui, QtCore
 try:
     from qgis.PyQt.QtGui import (QWidget, QLabel, QFrame, QTreeWidgetItem, QHeaderView)
@@ -37,8 +37,12 @@ class AssainissementImportTool(ImportTool):
             featgeom = layerfeat.geometry()
 
             success = featgeom.transform(self.xform)
-            featgeomlinestring = qgis.core.QgsGeometry.fromPolyline([featgeom.asPoint(), featgeom.asPoint()])
-            featgeomwkt = featgeomlinestring.exportToWkt()
+            if sys.version_info.major == 2:
+                featgeomlinestring = qgis.core.QgsGeometry.fromPolyline([featgeom.asPoint(), featgeom.asPoint()])
+                featgeomwkt = featgeomlinestring.exportToWkt()
+            elif sys.version_info.major == 3:
+                featgeomlinestring = qgis.core.QgsGeometry.fromPolylineXY([featgeom.asPoint(), featgeom.asPoint()])
+                featgeomwkt = featgeomlinestring.asWkt()
             geomsql = "ST_GeomFromText('"
             geomsql += featgeomwkt
             geomsql += "', " + str(self.dbase.crsnumber) + ")"

@@ -3,7 +3,7 @@
 # qgis pyqt import
 from qgis.PyQt import QtGui, uic, QtCore
 from unicodedata import normalize
-from qgis.PyQt.QtCore import pyqtSignal
+from qgis.PyQt.QtCore import pyqtSignal, QCoreApplication
 try:
     from qgis.PyQt.QtGui import (QDockWidget, QMainWindow, QFileDialog, QLabel, QInputDialog,
                                  QComboBox,QTableWidgetItem,QProgressBar,QApplication,QToolBar,
@@ -171,12 +171,12 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.editfeatureworking = False
         self.editfeaturelayer = None
 
-        self.currentprestationlabel = QLabel('Prestation inactif')
+        self.currentprestationlabel = QLabel(self.tr('Prestation inactif'))
         self.statusBar().addWidget(self.currentprestationlabel, 1)
 
-        self.GPSlabel = QLabel(u'GPS non connecté')
+        self.GPSlabel = QLabel(self.tr(u'GPS non connecté'))
         self.statusBar().addWidget(self.GPSlabel)
-        self.GPSlabelprecision = QLabel(u'Précision')
+        self.GPSlabelprecision = QLabel(self.tr(u'Précision'))
         self.statusBar().addWidget(self.GPSlabelprecision)
 
         if debug: logging.getLogger('Lamia').debug('step1')
@@ -538,7 +538,8 @@ class InspectiondigueWindowWidget(QMainWindow):
         num, ok = QInputDialog.getDouble(self,
                                          "Hauteur de perche",
                                          "Rentrer la hauteur de perche GPS",
-                                         self.gpsutil.hauteurperche)
+                                         self.gpsutil.hauteurperche,
+                                         decimals=2)
         if ok:
             # self.dbase.hauteurperche = num
             self.gpsutil.hauteurperche = num
@@ -577,8 +578,8 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.newDBDialog.exec_()
         dbtype, worktype, vartype = self.newDBDialog.dialogIsFinished()
 
-        print('**',dbtype,worktype, vartype  )
-        if dbtype is None and type is None:
+        # print('**',dbtype,worktype, vartype  )
+        if dbtype is None :
             return
         # crs selector
         self.crsselector.exec_()
@@ -606,7 +607,7 @@ class InspectiondigueWindowWidget(QMainWindow):
 
         # create database
         if dbtype == 'spatialite':
-            spatialitefile = self.qfiledlg.getSaveFileName(self, 'InspectionDigue nouveau', '', '*.sqlite')
+            spatialitefile = self.qfiledlg.getSaveFileName(self, 'Lamia nouveau', '', '*.sqlite')
             #print('spatialitefile', spatialitefile)
             if sys.version_info.major == 3 and len(spatialitefile)>0:
                 spatialitefile = spatialitefile[0]
@@ -635,6 +636,7 @@ class InspectiondigueWindowWidget(QMainWindow):
             self.connDialog.exec_()
             adresse, port, nom, schema, user, password = self.connDialog.dialogIsFinished()
             if adresse is not None and port is not None and nom is not None and user is not None and password is not None:
+                self.createDBase()
                 databaseexists, schemaexists = self.dbase.checkIfPGShcemaExists(host=adresse, dbname=nom, schema=schema,
                                                                                 user=user, password=password)
                 if  schemaexists :
@@ -642,7 +644,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                 else:
                     self.normalMessage('Creation de la base de donnees...')
                     # reset dbase
-                    self.createDBase()
+                    #self.createDBase()
                     QApplication.processEvents()
 
                     #resdir = self.createRessourcesDir(dbtype, resdir,vardir=vardir)
@@ -886,8 +888,9 @@ class InspectiondigueWindowWidget(QMainWindow):
                         qgis.core.QgsMapLayerRegistry.instance().addMapLayer(self.dbase.dbasetables[tablename]['layerqgis'],
                                                                              False)
                     else:
-                        qgis.core.QgsProject.instance().addMapLayer(self.dbase.dbasetables[tablename]['layerqgis'],
-                                                                    False)
+                        qgis.core.QgsProject.instance().addMapLayer(self.dbase.dbasetables[tablename]['layerqgis'], False)
+
+
                 lamialegendgroup.addLayer(self.dbase.dbasetables[tablename]['layerqgis'])
             else:
                 if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
@@ -975,27 +978,6 @@ class InspectiondigueWindowWidget(QMainWindow):
             if debugtime: logger.debug('applyVisualMode %.3f', time.clock() - timestart)
 
 
-        # ************************** LOAD tools ********************************************
-        if False:
-            path = os.path.join(os.path.dirname(__file__), '..', 'toolmenu', self.dbase.type.lower())
-            # print(path)
-            modules = glob.glob(path + "/*.py")
-            __all__ = [os.path.basename(f)[:-3] for f in modules if os.path.isfile(f)]
-
-            for x in __all__:
-                if self.dbase.qgsiface is not None:
-                    #if not self.dbase.standalone:
-                    exec('import Lamia.toolmenu.' + self.dbase.type.lower())
-                    moduletemp = importlib.import_module('.' + str(x), 'Lamia.toolmenu.' + self.dbase.type.lower() )
-                else:
-                    exec('import Lamia.Lamia.toolmenu.' + self.dbase.type.lower() )
-                    moduletemp = importlib.import_module('.' + str(x), 'Lamia.Lamia.toolmenu.' + self.dbase.type.lower())
-                for name, obj in inspect.getmembers(moduletemp, inspect.isclass):
-                    # print( moduletemp.__name__, obj.__module__)
-                    if moduletemp.__name__ == obj.__module__:
-                        # print('ok')
-                        # self.menutools.append(obj(dbase=self.dbase, windowdialog=self))
-                        self.menuclasses.append(obj)
 
         # ************************** Show fields ui ********************************************
         self.loadUiField()
@@ -1324,6 +1306,9 @@ class InspectiondigueWindowWidget(QMainWindow):
 
             if debug: logging.getLogger("Lamia").debug('nearest pk %s , dist %s', str(nearestpk), str(dist))
 
+            if nearestpk is None:   #no element in table
+                return
+
             if self.dbase.revisionwork:
                 feat = self.dbase.getLayerFeatureByPk(wdg.dbasetablename, nearestpk)
                 featid = feat['id_' + wdg.dbasetablename]
@@ -1384,8 +1369,6 @@ class InspectiondigueWindowWidget(QMainWindow):
                         break
 
                 #print('item', item.text(0))
-
-
 
 
 
@@ -2152,7 +2135,7 @@ class InspectiondigueWindowWidget(QMainWindow):
 
             self.newDBDialog.comboBox_type.setEnabled(False)
             self.newDBDialog.exec_()
-            dbasetype, type = self.newDBDialog.dialogIsFinished()
+            dbasetype, type, variante = self.newDBDialog.dialogIsFinished()
             self.newDBDialog.comboBox_type.setEnabled(True)
             if dbasetype is None and type is None:
                 return
@@ -2168,9 +2151,12 @@ class InspectiondigueWindowWidget(QMainWindow):
 
             # create database
             if dbasetype == 'spatialite':
-                spatialitefile, extension = self.qfiledlg.getOpenFileNameAndFilter(None, 'Export vers', '',
-                                                                               'Spatialite (*.sqlite)', '')
-
+                if sys.version_info.major == 2:
+                    spatialitefile, extension = self.qfiledlg.getOpenFileNameAndFilter(None, 'Export vers', '',
+                                                                                   'Spatialite (*.sqlite)', '')
+                elif sys.version_info.major == 3:
+                    spatialitefile, extension = self.qfiledlg.getOpenFileName(None, 'Export vers', '',
+                                                                                   'Spatialite (*.sqlite)', '')
                 if spatialitefile:
                     slfile = spatialitefile
 
@@ -2205,7 +2191,7 @@ class InspectiondigueWindowWidget(QMainWindow):
             actionname = self.sender().objectName()
             # print(actionname )
 
-        spatialitefile = self.qfiledlg.getSaveFileName(self, 'InspectionDigue nouveau', '', '*.sqlite')
+        spatialitefile = self.qfiledlg.getSaveFileName(self, 'Lamia nouveau', '', '*.sqlite')
 
         if spatialitefile:
             slfile = spatialitefile
@@ -2275,6 +2261,10 @@ class InspectiondigueWindowWidget(QMainWindow):
             self.__init__(self.canvas)
 
 
+    def tr(self, message):
+        return QCoreApplication.translate('InspectiondigueWindowWidget', message)
+
+
 class LoadUiField(QtCore.QObject):
 
     finished = QtCore.pyqtSignal()
@@ -2325,3 +2315,6 @@ class LoadUiField(QtCore.QObject):
 
         if progress is not None: self.dbase.qgsiface.messageBar().clearWidgets()
         self.finished.emit()
+
+
+

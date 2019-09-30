@@ -56,43 +56,120 @@ class BaseDigueObservationTool(BaseObservationTool):
     def initFieldUI(self):
         # ****************************************************************************************
         # userui Desktop
-        if self.userwdgfield is None:
-            # ****************************************************************************************
-            # userui
-            self.userwdgfield = UserUI()
-            self.linkuserwdgfield = {'Observation' : {'linkfield' : 'id_observation',
-                                             'widgets' : {'datetimeobservation' : self.userwdgfield.dateTimeEdit,
-                                                          'nombre' : self.userwdgfield.spinBox_nombre,
-                                                        'gravite': self.userwdgfield.comboBox_urgence,
+        if self.dbase.variante in [None, 'Lamia']:
+            if self.userwdgfield is None:
+                # ****************************************************************************************
+                # userui
+                self.userwdgfield = UserUI()
+                self.linkuserwdgfield = {'Observation': {'linkfield': 'id_observation',
+                                                         'widgets': {
+                                                             'datetimeobservation': self.userwdgfield.dateTimeEdit,
+                                                             'nombre': self.userwdgfield.spinBox_nombre,
+                                                             'longueurdes': self.userwdgfield.doubleSpinBox_longueur,
+                                                             'gravite': self.userwdgfield.comboBox_urgence,
 
-                                                        'oh_etatvantellerie' : self.userwdgfield.comboBox_etatvantellerie,
-                                                        'oh_etatvantelleriecom': self.userwdgfield.textBrowser_vanteleriecom,
-                                                          'oh_etatgeniecivil': self.userwdgfield.comboBox_etatGC,
-                                                          'oh_etatgeniecivilcom': self.userwdgfield.textBrowser_etatGC,
-                                                          'oh_testmanoeuvre': self.userwdgfield.comboBox_manoeuvre,
-                                                          'oh_testmanoeuvrecom': self.userwdgfield.textBrowser_manoeuvre,
-                                                          'oh_etancheite': self.userwdgfield.checkBox_etancheite,
-                                                          'oh_etancheitecom': self.userwdgfield.textBrowser__etancheite,
+                                                             'oh_etatgeneral': self.userwdgfield.comboBox_etatgen,
+                                                             'oh_etatgeneralcom': self.userwdgfield.textBrowser_etatgencom,
+
+                                                             'oh_etatvantellerie': self.userwdgfield.comboBox_etatvantellerie,
+                                                             'oh_etatvantelleriecom': self.userwdgfield.textBrowser_vanteleriecom,
+                                                             'oh_etatgeniecivil': [self.userwdgfield.comboBox_etatGC,
+                                                                                   self.userwdgfield.comboBox_etatGC_2],
+                                                             'oh_etatgeniecivilcom': [
+                                                                 self.userwdgfield.textBrowser_etatGC,
+                                                                 self.userwdgfield.textBrowser_etatGC_2],
+                                                             'oh_testmanoeuvre': self.userwdgfield.comboBox_manoeuvre,
+                                                             'oh_testmanoeuvrecom': self.userwdgfield.textBrowser_manoeuvre,
+                                                             'oh_etancheite': self.userwdgfield.checkBox_etancheite,
+                                                             'oh_etancheitecom': self.userwdgfield.textBrowser__etancheite,
+                                                             'oh_ecoulement': [self.userwdgfield.comboBox_envas,
+                                                                               self.userwdgfield.comboBox_envas2],
+                                                             'oh_ecoulementcom': [
+                                                                 self.userwdgfield.textBrowser_envascom,
+                                                                 self.userwdgfield.textBrowser_envascom2],
+
+                                                             'evolution': self.userwdgfield.textEdit_evolution,
+                                                             'typesuite': self.userwdgfield.comboBox_typesuite,
+                                                             'commentairesuite': self.userwdgfield.textEdit_suite}},
+                                         'Objet': {'linkfield': 'id_objet',
+                                                   'widgets': {'commentaire': self.userwdgfield.textEdit_comm}}}
+
+                self.userwdgfield.toolButton_calc_nb.clicked.connect(
+                    lambda: self.windowdialog.showNumPad(self.userwdgfield.spinBox_nombre))
+                self.userwdgfield.toolButton_longueur.clicked.connect(
+                    lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_longueur))
+
+                # ****************************************************************************************
+                # child widgets
+                self.dbasechildwdgfield=[]
+                # if self.parentWidget is not None:
+                if self.parentWidget is None or self.parentWidget is not None and self.parentWidget.dbasetablename == 'Desordre':
+                    self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase,gpsutil=self.gpsutil, parentwidget=self)
+                    self.dbasechildwdgfield = [self.propertieswdgPHOTOGRAPHIE]
+                    self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
+                    self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
 
-                                                        'evolution': self.userwdgfield.textEdit_evolution,
-                                                        'typesuite': self.userwdgfield.comboBox_typesuite,
-                                                        'commentairesuite': self.userwdgfield.textEdit_suite}},
-                                'Objet' : {'linkfield' : 'id_objet',
-                                          'widgets' : {'commentaire': self.userwdgfield.textEdit_comm}}}
 
-            self.userwdgfield.toolButton_calc_nb.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.userwdgfield.spinBox_nombre))
 
-            # ****************************************************************************************
-            # child widgets
-            self.dbasechildwdgfield=[]
-            # if self.parentWidget is not None:
-            if self.parentWidget is None or self.parentWidget is not None and self.parentWidget.dbasetablename == 'Desordre':
-                self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase,gpsutil=self.gpsutil, parentwidget=self)
-                self.dbasechildwdgfield = [self.propertieswdgPHOTOGRAPHIE]
-                self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
-                self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+
+
+
+        elif self.dbase.variante in ['SIRS']:
+            if self.userwdgfield is None:
+                # ****************************************************************************************
+                # userui
+                self.userwdgfield = UserUISirs()
+
+                self.linkuserwdgfield = {'Observation' : {'linkfield' : 'id_observation',
+                                                 'widgets' : {'datetimeobservation' : self.userwdgfield.dateTimeEdit,
+                                                              'nombre' : self.userwdgfield.spinBox_nombre,
+                                                            'gravite': self.userwdgfield.comboBox_urgence,
+
+                                                            'oh_etatvantellerie' : self.userwdgfield.comboBox_etatvantellerie,
+                                                            'oh_etatvantelleriecom': self.userwdgfield.textBrowser_vanteleriecom,
+                                                              'oh_etatgeniecivil': self.userwdgfield.comboBox_etatGC,
+                                                              'oh_etatgeniecivilcom': self.userwdgfield.textBrowser_etatGC,
+                                                              'oh_testmanoeuvre': self.userwdgfield.comboBox_manoeuvre,
+                                                              'oh_testmanoeuvrecom': self.userwdgfield.textBrowser_manoeuvre,
+                                                              'oh_etancheite': self.userwdgfield.checkBox_etancheite,
+                                                              'oh_etancheitecom': self.userwdgfield.textBrowser__etancheite,
+
+
+                                                            'evolution': self.userwdgfield.textEdit_evolution,
+                                                            'typesuite': self.userwdgfield.comboBox_typesuite,
+                                                            'commentairesuite': self.userwdgfield.textEdit_suite}},
+                                    'Objet' : {'linkfield' : 'id_objet',
+                                              'widgets' : {'commentaire': self.userwdgfield.textEdit_comm}}}
+
+
+                self.userwdgfield.toolButton_calc_nb.clicked.connect(
+                    lambda: self.windowdialog.showNumPad(self.userwdgfield.spinBox_nombre))
+
+                # ****************************************************************************************
+                # child widgets
+                self.dbasechildwdgfield = []
+                # if self.parentWidget is not None:
+                if self.parentWidget is None or self.parentWidget is not None and self.parentWidget.dbasetablename == 'Desordre':
+                    self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, gpsutil=self.gpsutil,
+                                                                   parentwidget=self)
+                    self.dbasechildwdgfield = [self.propertieswdgPHOTOGRAPHIE]
+                    self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
+                    self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+
+
+
+
+    def equipementTypeChanged(self, currentindex):
+        currenttext = self.parentWidget.parentWidget.userwdgfield.comboBox_type.currentText()
+        if currenttext in ['Vanne', 'Clapet']:
+            self.userwdgfield.stackedWidget_2.setCurrentIndex(1)
+        elif currenttext in ['Exutoire']:
+            self.userwdgfield.stackedWidget_2.setCurrentIndex(2)
+        else :
+            self.userwdgfield.stackedWidget_2.setCurrentIndex(0)
+
+
 
     """
     def postOnActivation(self):
@@ -174,4 +251,10 @@ class UserUI(QWidget):
     def __init__(self, parent=None):
         super(UserUI, self).__init__(parent=parent)
         uipath = os.path.join(os.path.dirname(__file__), 'lamiabasedigue_observation_tool_ui.ui')
+        uic.loadUi(uipath, self)
+
+class UserUISirs(QWidget):
+    def __init__(self, parent=None):
+        super(UserUI, self).__init__(parent=parent)
+        uipath = os.path.join(os.path.dirname(__file__), 'lamiabasedigue_observation_tool_ui_SIRS.ui')
         uic.loadUi(uipath, self)

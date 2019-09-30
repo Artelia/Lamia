@@ -1,9 +1,0 @@
-#DJAN  SELECT Etudestrategie.*, Objet.datecreation, Objet.datedestruction, Objet.commentaire, Objet.libelle  FROM Etudestrategie  INNER JOIN Objet ON Objet.id_objet = Etudestrategie.id_objet
-#QGIS  SELECT Etudestrategie.*, Objet.datecreation, Objet.datedestruction FROM Etudestrategie  INNER JOIN Objet ON Objet.id_objet = Etudestrategie.id_objet
-# Nom_champ             TypePostGis              TypeSpatialite                          Option
-###id_etudestrategie;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
-###investissements;                VARCHAR(255);            TEXT
-###chronologie;                VARCHAR(255);            TEXT
-###note;                VARCHAR(255);            TEXT
-###id_objet;             INT ;                   INTEGER ;                               Objet(id_objet)
-###lk_marche;           INT ;                   INTEGER ;                               Marche(id_marche)

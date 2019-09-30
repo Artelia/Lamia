@@ -1,1 +1,0 @@
-#EXPO SELECT Photo.id_photo AS id_fichier, Photo.content_type, RTRIM(Ressource.file, REPLACE(Ressource.file, '\', '')) AS chemin, REPLACE (Ressource.file, RTRIM(Ressource.file, REPLACE(Ressource.file, '\', '')),'') AS nom_fichier, Photo.file as file FROM Photo INNER JOIN Ressource ON Photo.id_ressource = Ressource.id_ressource

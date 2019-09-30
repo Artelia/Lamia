@@ -7,25 +7,16 @@
     <edittype widgetv2type="TextEdit" name="id_infralineaire">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="id_revisionbegin">
+    <edittype widgetv2type="TextEdit" name="lpk_descriptionsystem">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="id_revisionend">
+    <edittype widgetv2type="TextEdit" name="lid_ressource_1">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="id_objet">
+    <edittype widgetv2type="TextEdit" name="lid_descriptionsystem_1">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="id_descriptionsystem">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="lk_ressource1">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="lk_descriptionsystem1">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="lk_descriptionsystem2">
+    <edittype widgetv2type="TextEdit" name="lid_descriptionsystem_2">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="materiau">
@@ -40,34 +31,13 @@
     <edittype widgetv2type="TextEdit" name="hauteur">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="anPoseSup">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="maitreOuvrage">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="exploitant">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="enService">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
     <edittype widgetv2type="TextEdit" name="branchement">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="modeCirculation">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="anPoseInf">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="longueur">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
     <edittype widgetv2type="TextEdit" name="typeReseau">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="contCanAss">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="fonctionCannAss">
@@ -85,22 +55,118 @@
     <edittype widgetv2type="TextEdit" name="profaval">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="datecreation">
+    <edittype widgetv2type="TextEdit" name="domaine">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="datedestruction">
+    <edittype widgetv2type="TextEdit" name="implantation">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="temprevisionbegin">
+    <edittype widgetv2type="TextEdit" name="visitable">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="temprevisionend">
+    <edittype widgetv2type="TextEdit" name="litdepose">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="revisionbegin">
+    <edittype widgetv2type="TextEdit" name="typesol">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="revisionend">
+    <edittype widgetv2type="TextEdit" name="etatsol">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="pk_descriptionsystem">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="id_descriptionsystem">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="lpk_objet">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="importancestrat">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="etatfonct">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="qualitegeolocXY">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="qualiteGeolocZ">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="dateGeoloc">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="sourceGeoloc">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="enservice">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="annee_debut_pose">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="annee_fin_pose">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="precision_pose">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="date_miseHorsService">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="parametres">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="listeparametres">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="rue_libelle">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="rue_libdebut">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="rue_libfin">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="rue_complement">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="intervenant_1">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="pk_objet">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="id_objet">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="lpk_revision_begin">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="lpk_revision_end">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="datetimecreation">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="datetimemodification">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="datetimedestruction">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="commentaire">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="libelle">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="importid">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="importtable">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
   </edittypes>
@@ -108,26 +174,26 @@
     <rules key="{5e78f11d-4178-4ed7-8af6-f80178c4ba25}">
       <rule filter=" &quot;branchement&quot; = 1" key="{c647d32b-b632-485f-bd3c-91150bd75a8b}" symbol="0" label="Branchement">
         <rule filter="&quot;lk_descriptionsystem1&quot; IS NOT NULL AND &quot;lk_descriptionsystem2&quot; IS NOT NULL" key="{c64b87c5-2e70-47ec-a94f-a9b46d7ca120}" symbol="1">
-          <rule filter="&quot;typeReseau&quot; = 'USE'" key="{9739976b-e285-47e5-a9b3-f03be0ead4d2}" symbol="2" label="Eaux usées"/>
-          <rule filter="&quot;typeReseau&quot; = 'UNI'" key="{b58611c9-3fed-43bb-b53c-b9e470bd0e7a}" symbol="3" label="Unitaire"/>
-          <rule filter="&quot;typeReseau&quot; = 'PLU'" key="{79228b2f-3bcc-41db-b9b2-7a63236519b9}" symbol="4" label="Eaux pluviales"/>
+          <rule filter="&quot;typeReseau&quot; IN ('USE','02')" key="{9739976b-e285-47e5-a9b3-f03be0ead4d2}" symbol="2" label="Eaux usées"/>
+          <rule filter="&quot;typeReseau&quot; IN ('UNI','01')" key="{b58611c9-3fed-43bb-b53c-b9e470bd0e7a}" symbol="3" label="Unitaire"/>
+          <rule filter="&quot;typeReseau&quot; IN ('PLU','03')" key="{79228b2f-3bcc-41db-b9b2-7a63236519b9}" symbol="4" label="Eaux pluviales"/>
         </rule>
         <rule filter="Else" key="{766e1a38-f6d0-4e9e-9f69-8e4b0e647dbd}" symbol="5">
-          <rule filter="&quot;typeReseau&quot; = 'USE'" key="{056c6700-936d-4dc5-94bb-444be6ac21c1}" symbol="6" label="Eaux usées"/>
-          <rule filter="&quot;typeReseau&quot; = 'UNI'" key="{d02aedf7-0a96-43e6-b6e4-05de94c29c01}" symbol="7" label="Unitaire"/>
-          <rule filter="&quot;typeReseau&quot; = 'PLU'" key="{e5d88765-3a5e-45c9-9d40-4f4ccb76f3d1}" symbol="8" label="Eaux pluviales"/>
+          <rule filter="&quot;typeReseau&quot; IN ('USE','02')" key="{056c6700-936d-4dc5-94bb-444be6ac21c1}" symbol="6" label="Eaux usées"/>
+          <rule filter="&quot;typeReseau&quot; IN ('UNI','01')" key="{d02aedf7-0a96-43e6-b6e4-05de94c29c01}" symbol="7" label="Unitaire"/>
+          <rule filter="&quot;typeReseau&quot; IN ('PLU','03')" key="{e5d88765-3a5e-45c9-9d40-4f4ccb76f3d1}" symbol="8" label="Eaux pluviales"/>
         </rule>
       </rule>
       <rule filter="Else" key="{06826450-6078-4741-8f6d-022aaa3d991c}" symbol="9" label="Branchement">
         <rule filter="&quot;lk_descriptionsystem1&quot; IS NOT NULL AND &quot;lk_descriptionsystem2&quot; IS NOT NULL" key="{88663e10-e0fc-4596-9b17-73b72cdd6b17}" symbol="10">
-          <rule filter="&quot;typeReseau&quot; = 'USE'" key="{1a389d12-0d10-440b-bc98-99359171cecd}" symbol="11" label="Eaux usées"/>
-          <rule filter="&quot;typeReseau&quot; = 'UNI'" key="{68b407af-ccdc-4174-9cf3-b76afd97b02a}" symbol="12" label="Unitaire"/>
-          <rule filter="&quot;typeReseau&quot; = 'PLU'" key="{63296647-4e1b-4afe-b24e-22e8e31ff386}" symbol="13" label="Eaux pluviales"/>
+          <rule filter="&quot;typeReseau&quot; IN ('USE','02')" key="{1a389d12-0d10-440b-bc98-99359171cecd}" symbol="11" label="Eaux usées"/>
+          <rule filter="&quot;typeReseau&quot; IN ('UNI','01')" key="{68b407af-ccdc-4174-9cf3-b76afd97b02a}" symbol="12" label="Unitaire"/>
+          <rule filter="&quot;typeReseau&quot; IN ('PLU','03')" key="{63296647-4e1b-4afe-b24e-22e8e31ff386}" symbol="13" label="Eaux pluviales"/>
         </rule>
         <rule filter="Else" key="{33f84cfd-6977-4c2a-9cb5-fc1b120f5186}" symbol="14">
-          <rule filter="&quot;typeReseau&quot; = 'USE'" key="{d06eff82-6570-49e6-a3db-2f57ba6f18f1}" symbol="15" label="Eaux usées"/>
-          <rule filter="&quot;typeReseau&quot; = 'UNI'" key="{a3ec9bfa-cfb2-481e-bc88-423fe89f7a96}" symbol="16" label="Unitaire"/>
-          <rule filter="&quot;typeReseau&quot; = 'PLU'" key="{ef6bee90-5a09-4ab1-84ff-7d215157c8fb}" symbol="17" label="Eaux pluviales"/>
+          <rule filter="&quot;typeReseau&quot; IN ('USE','02')" key="{d06eff82-6570-49e6-a3db-2f57ba6f18f1}" symbol="15" label="Eaux usées"/>
+          <rule filter="&quot;typeReseau&quot; IN ('UNI','01')" key="{a3ec9bfa-cfb2-481e-bc88-423fe89f7a96}" symbol="16" label="Unitaire"/>
+          <rule filter="&quot;typeReseau&quot; IN ('PLU','03')" key="{ef6bee90-5a09-4ab1-84ff-7d215157c8fb}" symbol="17" label="Eaux pluviales"/>
         </rule>
       </rule>
       <rule filter="Else" key="{146b5a78-5b72-4838-8cb1-ae306bc010b5}" symbol="18"/>
@@ -1153,38 +1219,60 @@
   <aliases>
     <alias field="pk_infralineaire" index="0" name=""/>
     <alias field="id_infralineaire" index="1" name=""/>
-    <alias field="id_revisionbegin" index="2" name=""/>
-    <alias field="id_revisionend" index="3" name=""/>
-    <alias field="id_objet" index="4" name=""/>
-    <alias field="id_descriptionsystem" index="5" name=""/>
-    <alias field="lk_ressource1" index="6" name=""/>
-    <alias field="lk_descriptionsystem1" index="7" name=""/>
-    <alias field="lk_descriptionsystem2" index="8" name=""/>
-    <alias field="materiau" index="9" name=""/>
-    <alias field="diametreNominal" index="10" name=""/>
-    <alias field="formecanalisation" index="11" name=""/>
-    <alias field="hauteur" index="12" name="Hauteur de l'aqueduc / bâti"/>
-    <alias field="anPoseSup" index="13" name=""/>
-    <alias field="maitreOuvrage" index="14" name=""/>
-    <alias field="exploitant" index="15" name=""/>
-    <alias field="enService" index="16" name=""/>
-    <alias field="branchement" index="17" name=""/>
-    <alias field="modeCirculation" index="18" name=""/>
-    <alias field="anPoseInf" index="19" name=""/>
-    <alias field="longueur" index="20" name=""/>
-    <alias field="typeReseau" index="21" name=""/>
-    <alias field="contCanAss" index="22" name=""/>
-    <alias field="fonctionCannAss" index="23" name=""/>
-    <alias field="altAmont" index="24" name=""/>
-    <alias field="altAval" index="25" name=""/>
-    <alias field="profamont" index="26" name=""/>
-    <alias field="profaval" index="27" name=""/>
-    <alias field="datecreation" index="28" name=""/>
-    <alias field="datedestruction" index="29" name=""/>
-    <alias field="temprevisionbegin" index="30" name=""/>
-    <alias field="temprevisionend" index="31" name=""/>
-    <alias field="revisionbegin" index="32" name=""/>
-    <alias field="revisionend" index="33" name=""/>
+    <alias field="lpk_descriptionsystem" index="2" name=""/>
+    <alias field="lid_ressource_1" index="3" name=""/>
+    <alias field="lid_descriptionsystem_1" index="4" name=""/>
+    <alias field="lid_descriptionsystem_2" index="5" name=""/>
+    <alias field="materiau" index="6" name=""/>
+    <alias field="diametreNominal" index="7" name=""/>
+    <alias field="formecanalisation" index="8" name=""/>
+    <alias field="hauteur" index="9" name="Hauteur de l'aqueduc / bâti"/>
+    <alias field="branchement" index="10" name=""/>
+    <alias field="modeCirculation" index="11" name=""/>
+    <alias field="typeReseau" index="12" name=""/>
+    <alias field="fonctionCannAss" index="13" name=""/>
+    <alias field="altAmont" index="14" name=""/>
+    <alias field="altAval" index="15" name=""/>
+    <alias field="profamont" index="16" name=""/>
+    <alias field="profaval" index="17" name=""/>
+    <alias field="domaine" index="18" name=""/>
+    <alias field="implantation" index="19" name=""/>
+    <alias field="visitable" index="20" name=""/>
+    <alias field="litdepose" index="21" name=""/>
+    <alias field="typesol" index="22" name=""/>
+    <alias field="etatsol" index="23" name=""/>
+    <alias field="pk_descriptionsystem" index="24" name=""/>
+    <alias field="id_descriptionsystem" index="25" name=""/>
+    <alias field="lpk_objet" index="26" name=""/>
+    <alias field="importancestrat" index="27" name=""/>
+    <alias field="etatfonct" index="28" name=""/>
+    <alias field="qualitegeolocXY" index="29" name=""/>
+    <alias field="qualiteGeolocZ" index="30" name=""/>
+    <alias field="dateGeoloc" index="31" name=""/>
+    <alias field="sourceGeoloc" index="32" name=""/>
+    <alias field="enservice" index="33" name=""/>
+    <alias field="annee_debut_pose" index="34" name=""/>
+    <alias field="annee_fin_pose" index="35" name=""/>
+    <alias field="precision_pose" index="36" name=""/>
+    <alias field="date_miseHorsService" index="37" name=""/>
+    <alias field="parametres" index="38" name=""/>
+    <alias field="listeparametres" index="39" name=""/>
+    <alias field="rue_libelle" index="40" name=""/>
+    <alias field="rue_libdebut" index="41" name=""/>
+    <alias field="rue_libfin" index="42" name=""/>
+    <alias field="rue_complement" index="43" name=""/>
+    <alias field="intervenant_1" index="44" name=""/>
+    <alias field="pk_objet" index="45" name=""/>
+    <alias field="id_objet" index="46" name=""/>
+    <alias field="lpk_revision_begin" index="47" name=""/>
+    <alias field="lpk_revision_end" index="48" name=""/>
+    <alias field="datetimecreation" index="49" name=""/>
+    <alias field="datetimemodification" index="50" name=""/>
+    <alias field="datetimedestruction" index="51" name=""/>
+    <alias field="commentaire" index="52" name=""/>
+    <alias field="libelle" index="53" name=""/>
+    <alias field="importid" index="54" name=""/>
+    <alias field="importtable" index="55" name=""/>
   </aliases>
   <excludeAttributesWMS/>
   <excludeAttributesWFS/>
@@ -1199,33 +1287,55 @@
       <column width="-1" hidden="0" type="field" name="diametreNominal"/>
       <column width="-1" hidden="0" type="field" name="formecanalisation"/>
       <column width="-1" hidden="0" type="field" name="hauteur"/>
-      <column width="-1" hidden="0" type="field" name="anPoseSup"/>
-      <column width="-1" hidden="0" type="field" name="maitreOuvrage"/>
-      <column width="-1" hidden="0" type="field" name="exploitant"/>
-      <column width="-1" hidden="0" type="field" name="enService"/>
       <column width="-1" hidden="0" type="field" name="branchement"/>
       <column width="-1" hidden="0" type="field" name="modeCirculation"/>
-      <column width="-1" hidden="0" type="field" name="anPoseInf"/>
-      <column width="-1" hidden="0" type="field" name="longueur"/>
       <column width="-1" hidden="0" type="field" name="typeReseau"/>
-      <column width="-1" hidden="0" type="field" name="contCanAss"/>
       <column width="-1" hidden="0" type="field" name="fonctionCannAss"/>
       <column width="-1" hidden="0" type="field" name="altAmont"/>
       <column width="-1" hidden="0" type="field" name="altAval"/>
       <column width="-1" hidden="0" type="field" name="profamont"/>
       <column width="-1" hidden="0" type="field" name="profaval"/>
-      <column width="-1" hidden="0" type="field" name="datecreation"/>
-      <column width="-1" hidden="0" type="field" name="datedestruction"/>
       <column width="-1" hidden="0" type="field" name="pk_infralineaire"/>
-      <column width="-1" hidden="0" type="field" name="id_revisionbegin"/>
-      <column width="-1" hidden="0" type="field" name="id_revisionend"/>
-      <column width="-1" hidden="0" type="field" name="lk_ressource1"/>
-      <column width="-1" hidden="0" type="field" name="lk_descriptionsystem1"/>
-      <column width="-1" hidden="0" type="field" name="lk_descriptionsystem2"/>
-      <column width="-1" hidden="0" type="field" name="temprevisionbegin"/>
-      <column width="-1" hidden="0" type="field" name="temprevisionend"/>
-      <column width="-1" hidden="0" type="field" name="revisionbegin"/>
-      <column width="-1" hidden="0" type="field" name="revisionend"/>
+      <column width="-1" hidden="0" type="field" name="lpk_descriptionsystem"/>
+      <column width="-1" hidden="0" type="field" name="lid_ressource_1"/>
+      <column width="-1" hidden="0" type="field" name="lid_descriptionsystem_1"/>
+      <column width="-1" hidden="0" type="field" name="lid_descriptionsystem_2"/>
+      <column width="-1" hidden="0" type="field" name="domaine"/>
+      <column width="-1" hidden="0" type="field" name="implantation"/>
+      <column width="-1" hidden="0" type="field" name="visitable"/>
+      <column width="-1" hidden="0" type="field" name="litdepose"/>
+      <column width="-1" hidden="0" type="field" name="typesol"/>
+      <column width="-1" hidden="0" type="field" name="etatsol"/>
+      <column width="-1" hidden="0" type="field" name="pk_descriptionsystem"/>
+      <column width="-1" hidden="0" type="field" name="lpk_objet"/>
+      <column width="-1" hidden="0" type="field" name="importancestrat"/>
+      <column width="-1" hidden="0" type="field" name="etatfonct"/>
+      <column width="-1" hidden="0" type="field" name="qualitegeolocXY"/>
+      <column width="-1" hidden="0" type="field" name="qualiteGeolocZ"/>
+      <column width="-1" hidden="0" type="field" name="dateGeoloc"/>
+      <column width="-1" hidden="0" type="field" name="sourceGeoloc"/>
+      <column width="-1" hidden="0" type="field" name="enservice"/>
+      <column width="-1" hidden="0" type="field" name="annee_debut_pose"/>
+      <column width="-1" hidden="0" type="field" name="annee_fin_pose"/>
+      <column width="-1" hidden="0" type="field" name="precision_pose"/>
+      <column width="-1" hidden="0" type="field" name="date_miseHorsService"/>
+      <column width="-1" hidden="0" type="field" name="parametres"/>
+      <column width="-1" hidden="0" type="field" name="listeparametres"/>
+      <column width="-1" hidden="0" type="field" name="rue_libelle"/>
+      <column width="-1" hidden="0" type="field" name="rue_libdebut"/>
+      <column width="-1" hidden="0" type="field" name="rue_libfin"/>
+      <column width="-1" hidden="0" type="field" name="rue_complement"/>
+      <column width="-1" hidden="0" type="field" name="intervenant_1"/>
+      <column width="-1" hidden="0" type="field" name="pk_objet"/>
+      <column width="-1" hidden="0" type="field" name="lpk_revision_begin"/>
+      <column width="-1" hidden="0" type="field" name="lpk_revision_end"/>
+      <column width="-1" hidden="0" type="field" name="datetimecreation"/>
+      <column width="-1" hidden="0" type="field" name="datetimemodification"/>
+      <column width="-1" hidden="0" type="field" name="datetimedestruction"/>
+      <column width="-1" hidden="0" type="field" name="commentaire"/>
+      <column width="-1" hidden="0" type="field" name="libelle"/>
+      <column width="-1" hidden="0" type="field" name="importid"/>
+      <column width="-1" hidden="0" type="field" name="importtable"/>
     </columns>
   </attributetableconfig>
   <editform>../../Données/Tables ARTELIA2</editform>
@@ -1258,7 +1368,7 @@ def my_form_open(dialog, layer, feature):
       <attributeEditorField showLabel="1" index="-1" name="FORME_CANA"/>
       <attributeEditorField showLabel="1" index="-1" name="DIAMETRE"/>
       <attributeEditorField showLabel="1" index="-1" name="MATERIAUX"/>
-      <attributeEditorField showLabel="1" index="12" name="HAUTEUR"/>
+      <attributeEditorField showLabel="1" index="9" name="HAUTEUR"/>
       <attributeEditorField showLabel="1" index="-1" name="LARGEUR"/>
       <attributeEditorField showLabel="1" index="-1" name="ANNEEPOSE"/>
       <attributeEditorField showLabel="1" index="-1" name="OBSERVATIO"/>
@@ -1272,38 +1382,60 @@ def my_form_open(dialog, layer, feature):
   <defaults>
     <default field="pk_infralineaire" expression=""/>
     <default field="id_infralineaire" expression=""/>
-    <default field="id_revisionbegin" expression=""/>
-    <default field="id_revisionend" expression=""/>
-    <default field="id_objet" expression=""/>
-    <default field="id_descriptionsystem" expression=""/>
-    <default field="lk_ressource1" expression=""/>
-    <default field="lk_descriptionsystem1" expression=""/>
-    <default field="lk_descriptionsystem2" expression=""/>
+    <default field="lpk_descriptionsystem" expression=""/>
+    <default field="lid_ressource_1" expression=""/>
+    <default field="lid_descriptionsystem_1" expression=""/>
+    <default field="lid_descriptionsystem_2" expression=""/>
     <default field="materiau" expression=""/>
     <default field="diametreNominal" expression=""/>
     <default field="formecanalisation" expression=""/>
     <default field="hauteur" expression=""/>
-    <default field="anPoseSup" expression=""/>
-    <default field="maitreOuvrage" expression=""/>
-    <default field="exploitant" expression=""/>
-    <default field="enService" expression=""/>
     <default field="branchement" expression=""/>
     <default field="modeCirculation" expression=""/>
-    <default field="anPoseInf" expression=""/>
-    <default field="longueur" expression=""/>
     <default field="typeReseau" expression=""/>
-    <default field="contCanAss" expression=""/>
     <default field="fonctionCannAss" expression=""/>
     <default field="altAmont" expression=""/>
     <default field="altAval" expression=""/>
     <default field="profamont" expression=""/>
     <default field="profaval" expression=""/>
-    <default field="datecreation" expression=""/>
-    <default field="datedestruction" expression=""/>
-    <default field="temprevisionbegin" expression=""/>
-    <default field="temprevisionend" expression=""/>
-    <default field="revisionbegin" expression=""/>
-    <default field="revisionend" expression=""/>
+    <default field="domaine" expression=""/>
+    <default field="implantation" expression=""/>
+    <default field="visitable" expression=""/>
+    <default field="litdepose" expression=""/>
+    <default field="typesol" expression=""/>
+    <default field="etatsol" expression=""/>
+    <default field="pk_descriptionsystem" expression=""/>
+    <default field="id_descriptionsystem" expression=""/>
+    <default field="lpk_objet" expression=""/>
+    <default field="importancestrat" expression=""/>
+    <default field="etatfonct" expression=""/>
+    <default field="qualitegeolocXY" expression=""/>
+    <default field="qualiteGeolocZ" expression=""/>
+    <default field="dateGeoloc" expression=""/>
+    <default field="sourceGeoloc" expression=""/>
+    <default field="enservice" expression=""/>
+    <default field="annee_debut_pose" expression=""/>
+    <default field="annee_fin_pose" expression=""/>
+    <default field="precision_pose" expression=""/>
+    <default field="date_miseHorsService" expression=""/>
+    <default field="parametres" expression=""/>
+    <default field="listeparametres" expression=""/>
+    <default field="rue_libelle" expression=""/>
+    <default field="rue_libdebut" expression=""/>
+    <default field="rue_libfin" expression=""/>
+    <default field="rue_complement" expression=""/>
+    <default field="intervenant_1" expression=""/>
+    <default field="pk_objet" expression=""/>
+    <default field="id_objet" expression=""/>
+    <default field="lpk_revision_begin" expression=""/>
+    <default field="lpk_revision_end" expression=""/>
+    <default field="datetimecreation" expression=""/>
+    <default field="datetimemodification" expression=""/>
+    <default field="datetimedestruction" expression=""/>
+    <default field="commentaire" expression=""/>
+    <default field="libelle" expression=""/>
+    <default field="importid" expression=""/>
+    <default field="importtable" expression=""/>
   </defaults>
   <previewExpression>COALESCE( "TYP_RESEAU", '&lt;NULL>' )</previewExpression>
   <layerGeometryType>1</layerGeometryType>

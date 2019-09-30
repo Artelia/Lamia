@@ -52,7 +52,7 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
         self.magicfunctionENABLED = True
         # self.linkagespec = None
         # self.pickTable = None
-        self.iconpath = os.path.join(os.path.dirname(__file__),'..','base', 'lamiabase_noeud_tool_icon.svg')
+        self.iconpath = os.path.join(os.path.dirname(__file__),'..','base2', 'lamiabase_noeud_tool_icon.svg')
         self.linkedgeom = [['Equipement', 'lid_descriptionsystem_1'],['Desordre', 'lid_descriptionsystem']]
 
         if False:
@@ -83,14 +83,14 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
                                                              'typeReseau': self.userwdgfield.comboBox_typeReseau,
                                                             'environnement' : self.userwdgfield.comboBox_environnement,
                                                              'typeOuvrageAss': self.userwdgfield.comboBox_typeOuvrageAss,
-                                                            'formetampon': self.userwdgfield.comboBox_Formetampon,
+                                                            'tampon_forme': self.userwdgfield.comboBox_Formetampon,
                                                              'accessibilite': self.userwdgfield.comboBox_accessibilite,
 
                                                             #regard
                                                             'presenceechelon' : self.userwdgfield.comboBox_echelon,
                                                             'presencecrosse': self.userwdgfield.comboBox_crosse,
                                                              'presencecunette': self.userwdgfield.comboBox_cunette,
-                                                            'formeregard': self.userwdgfield.comboBox_formeregard,
+                                                            'regard_forme': self.userwdgfield.comboBox_formeregard,
 
                                                             #branchement
                                                              'cloisonsiphoide': self.userwdgfield.comboBox_cloisonsiphoide,
@@ -222,14 +222,14 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
                                                          'typeReseau': self.userwdgfield.comboBox_typeReseau,
                                                          'environnement': self.userwdgfield.comboBox_environnement,
                                                          'typeOuvrageAss': self.userwdgfield.comboBox_typeOuvrageAss,
-                                                         'formetampon': self.userwdgfield.comboBox_Formetampon,
+                                                         'tampon_forme': self.userwdgfield.comboBox_Formetampon,
                                                          'accessibilite': self.userwdgfield.comboBox_accessibilite,
 
                                                          # regard
                                                          'presenceechelon': self.userwdgfield.comboBox_echelon,
                                                          'presencecrosse': self.userwdgfield.comboBox_crosse,
                                                          # 'presencecunette': self.userwdgfield.comboBox_cunette,
-                                                         'formeregard': self.userwdgfield.comboBox_formeregard,
+                                                         'regard_forme': self.userwdgfield.comboBox_formeregard,
                                                          # 'formeregard': self.userwdgfield.comboBox_formeregard,
 
                                                          # branchement
@@ -501,9 +501,13 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
             self.userwdgfield.stackedWidget.setCurrentIndex(1)
         elif currenttext in ['Poste de refoulement']:
             self.userwdgfield.stackedWidget.setCurrentIndex(2)
-        elif sys.version_info < (3, 0) and currenttext in ['Débourbeur/déshuileur'.decode('utf8')]:
-            self.userwdgfield.stackedWidget.setCurrentIndex(3)
-        elif sys.version_info > (3, 0) and currenttext in ['Débourbeur/déshuileur']:
+            """
+            elif sys.version_info < (3, 0) and currenttext in ['Débourbeur/déshuileur'.decode('utf8')]:
+                self.userwdgfield.stackedWidget.setCurrentIndex(3)
+            elif sys.version_info > (3, 0) and currenttext in ['Débourbeur/déshuileur']:
+                self.userwdgfield.stackedWidget.setCurrentIndex(3)
+            """
+        elif currenttext in ['Débourbeur/déshuileur']:
             self.userwdgfield.stackedWidget.setCurrentIndex(3)
         else:
             self.userwdgfield.stackedWidget.setCurrentIndex(4)
@@ -522,9 +526,13 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
             self.userwdgfield.stackedWidget.setCurrentIndex(0)
         elif currenttext in ['Poste de refoulement']:
             self.userwdgfield.stackedWidget.setCurrentIndex(1)
-        elif sys.version_info < (3, 0) and currenttext in ['Débourbeur/déshuileur'.decode('utf8')]:
-            self.userwdgfield.stackedWidget.setCurrentIndex(2)
-        elif sys.version_info > (3, 0) and currenttext in ['Débourbeur/déshuileur']:
+            """
+            elif sys.version_info < (3, 0) and currenttext in ['Débourbeur/déshuileur'.decode('utf8')]:
+                self.userwdgfield.stackedWidget.setCurrentIndex(2)
+            elif sys.version_info > (3, 0) and currenttext in ['Débourbeur/déshuileur']:
+                self.userwdgfield.stackedWidget.setCurrentIndex(2)
+        """
+        elif currenttext in [u'Débourbeur/déshuileur']:
             self.userwdgfield.stackedWidget.setCurrentIndex(2)
         else:
             self.userwdgfield.stackedWidget.setCurrentIndex(3)
@@ -604,7 +612,7 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
 
         #adapt linked infralin geoemtry
         if self.currentFeature is not None:
-            nodeiddessys = self.dbase.getValuesFromPk('Noeud_qgis','id_descriptionsystem',self.currentFeaturePK )
+            nodeiddessys = self.dbase.getValuesFromPk('Noeud_qgis',['id_descriptionsystem'],self.currentFeaturePK )
             nodegeom = self.currentFeature.geometry().asPoint()
 
             # iterate on lid_descriptionsystem_1 and lid_descriptionsystem_2

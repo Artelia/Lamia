@@ -21,7 +21,7 @@ import logging
 # from ..base.lamiabase_photo_tool import BasePhotoTool
 from .lamiabasedigue_photo_tool import BaseDiguePhotoTool as BasePhotoTool
 from .lamiabasedigue_croquis_tool import BaseDigueCroquisTool as BaseCroquisTool
-from ..base.lamiabase_photoviewer import PhotoViewer
+from ..base2.lamiabase_photoviewer import PhotoViewer
 from .lamiabasedigue_graphique_tool import BaseGraphiqueTool as GraphiqueTool
 from .lamiabasedigue_profil_tool import BaseDigueProfilTool as ProfilTool
 from collections import OrderedDict
@@ -97,7 +97,7 @@ class BaseDigueInfraLineaireTool(BaseInfraLineaireTool):
                                                'widgets': {'libelle': self.userwdgfield.lineEdit_nom,
                                                            'commentaire':self.userwdgfield.textBrowser_commentaire}},
                                      'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
-                                                           'widgets': {}}}
+                                                           'widgets': {'annee_fin_pose' : self.userwdgfield.dateEdit_datecontruct}}}
 
             self.dbasechildwdgfield = []
 
@@ -135,7 +135,7 @@ class BaseDigueInfraLineaireTool(BaseInfraLineaireTool):
                                                  'widgets': {'libelle': self.userwdgdesktop.lineEdit_nom,
                                                              'commentaire': self.userwdgdesktop.textBrowser_comm}},
                                        'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
-                                                             'widgets': {}}}
+                                                             'widgets': {'annee_fin_pose' : self.userwdgfield.dateEdit_datecontruct}}}
 
             self.userwdgdesktop.pushButton_defineinter.clicked.connect(self.manageLinkage)
 

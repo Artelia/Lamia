@@ -1,0 +1,204 @@
+<Composer title="Composeur 1" visible="1">
+ <Composition resizeToContentsMarginLeft="0" snapping="0" showPages="1" guidesVisible="1" resizeToContentsMarginTop="0" worldFileMap="" alignmentSnap="1" printResolution="300" paperWidth="210" gridVisible="0" snapGridOffsetX="0" smartGuides="1" snapGridOffsetY="0" resizeToContentsMarginRight="0" snapTolerancePixels="5" printAsRaster="0" generateWorldFile="0" paperHeight="90" numPages="1" snapGridResolution="10" resizeToContentsMarginBottom="0">
+  <symbol alpha="1" clip_to_extent="1" type="fill" name="">
+   <layer pass="0" class="SimpleFill" locked="0">
+    <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
+    <prop k="color" v="255,255,255,255"/>
+    <prop k="joinstyle" v="miter"/>
+    <prop k="offset" v="0,0"/>
+    <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+    <prop k="offset_unit" v="MM"/>
+    <prop k="outline_color" v="0,0,0,255"/>
+    <prop k="outline_style" v="no"/>
+    <prop k="outline_width" v="0.26"/>
+    <prop k="outline_width_unit" v="MM"/>
+    <prop k="style" v="solid"/>
+   </layer>
+  </symbol>
+  <ComposerLabel valign="32" marginX="1" marginY="1" labelText="Ballast&#xa;Tassement : #lamia.Observation_now.rev_tassement#&#xa;Pollution : #lamia.Observation_now.rev_pollution#&#xa;" htmlState="0" halign="1">
+   <LabelFont description="Arial,10,-1,5,50,0,0,0,0,0" style=""/>
+   <FontColor red="0" blue="0" green="0"/>
+   <ComposerItem pagey="-86.4591" page="1" id="" lastValidViewScaleFactor="-1" positionMode="0" positionLock="false" x="203.322" y="-86.4591" visibility="1" zValue="79" background="false" transparency="0" frameJoinStyle="miter" blendMode="0" width="42.412" outlineWidth="0.3" excludeFromExports="0" uuid="{9c928077-c86d-433c-b847-c62754d40b02}" height="47.0302" itemRotation="0" frame="false" pagex="203.322">
+    <FrameColor alpha="255" red="0" blue="0" green="0"/>
+    <BackgroundColor alpha="255" red="255" blue="255" green="255"/>
+    <dataDefinedTransparency expr="CASE WHEN &quot;typeRevetement&quot; = 'VEG' THEN 0 ELSE 100 END" field="" active="false" useExpr="true"/>
+    <customproperties/>
+   </ComposerItem>
+  </ComposerLabel>
+  <ComposerLabel valign="32" marginX="1" marginY="1" labelText="Mineral modulaire&#xa;Fissurations : #lamia.Observation_now.rev_fissurations#&#xa;Dégarnissage : #lamia.Observation_now.rev_degarnissage#&#xa;Désaffleurement : #lamia.Observation_now.rev_desafleurement#&#xa;Affaissement : #lamia.Observation_now.rev_affaissement# &#xa;Orniérage : #lamia.Observation_now.rev_ornierage# &#xa;Disparitions : #lamia.Observation_now.rev_disparitions# " htmlState="0" halign="1">
+   <LabelFont description="Arial,10,-1,5,50,0,0,0,0,0" style=""/>
+   <FontColor red="0" blue="0" green="0"/>
+   <ComposerItem pagey="-86.4591" page="1" id="" lastValidViewScaleFactor="-1" positionMode="0" positionLock="false" x="152.05" y="-86.4591" visibility="1" zValue="64" background="false" transparency="0" frameJoinStyle="miter" blendMode="0" width="42.412" outlineWidth="0.3" excludeFromExports="0" uuid="{7b2b2e48-2efa-4628-9bc2-af02ab449462}" height="47.0302" itemRotation="0" frame="false" pagex="152.05">
+    <FrameColor alpha="255" red="0" blue="0" green="0"/>
+    <BackgroundColor alpha="255" red="255" blue="255" green="255"/>
+    <dataDefinedTransparency expr="CASE WHEN &quot;typeRevetement&quot; = 'VEG' THEN 0 ELSE 100 END" field="" active="false" useExpr="true"/>
+    <customproperties/>
+   </ComposerItem>
+  </ComposerLabel>
+  <ComposerLabel valign="32" marginX="1" marginY="1" labelText="Mineral non modulaire&#xa;Déformations : #lamia.Observation_now.rev_deformations#&#xa;Fissurations : #lamia.Observation_now.rev_fissurations#&#xa;Arrachements : #lamia.Observation_now.rev_arrachement#&#xa;Remontées : #lamia.Observation_now.rev_remontees#" htmlState="0" halign="1">
+   <LabelFont description="Arial,10,-1,5,50,0,0,0,0,0" style=""/>
+   <FontColor red="0" blue="0" green="0"/>
+   <ComposerItem pagey="-84.0427" page="1" id="" lastValidViewScaleFactor="-1" positionMode="0" positionLock="false" x="98.9914" y="-84.0427" visibility="1" zValue="50" background="false" transparency="0" frameJoinStyle="miter" blendMode="0" width="42.412" outlineWidth="0.3" excludeFromExports="0" uuid="{c561bc0e-ef6e-4da4-81d8-d387a995e18e}" height="47.0302" itemRotation="0" frame="false" pagex="98.9914">
+    <FrameColor alpha="255" red="0" blue="0" green="0"/>
+    <BackgroundColor alpha="255" red="255" blue="255" green="255"/>
+    <dataDefinedTransparency expr="CASE WHEN &quot;typeRevetement&quot; = 'VEG' THEN 0 ELSE 100 END" field="" active="false" useExpr="true"/>
+    <customproperties/>
+   </ComposerItem>
+  </ComposerLabel>
+  <ComposerLabel valign="32" marginX="1" marginY="1" labelText="Revètement végétalisé:&#xa;Dessèchement : #lamia.Observation_now.rev_dessechement#&#xa;Herbes folles : #lamia.Observation_now.rev_vegetation#&#xa;Disparition du végétal : #lamia.Observation_now.rev_disparitions#&#xa;Mauvaise tonte : #lamia.Observation_now.rev_tonte#" htmlState="0" halign="1">
+   <LabelFont description="Arial,10,-1,5,50,0,0,0,0,0" style=""/>
+   <FontColor red="0" blue="0" green="0"/>
+   <ComposerItem pagey="-84.0427" page="1" id="" lastValidViewScaleFactor="-1" positionMode="0" positionLock="false" x="46.9409" y="-84.0427" visibility="1" zValue="37" background="false" transparency="0" frameJoinStyle="miter" blendMode="0" width="42.412" outlineWidth="0.3" excludeFromExports="0" uuid="{d31089e5-7514-41a0-824c-08d0df7b0a6a}" height="47.0302" itemRotation="0" frame="false" pagex="46.9409">
+    <FrameColor alpha="255" red="0" blue="0" green="0"/>
+    <BackgroundColor alpha="255" red="255" blue="255" green="255"/>
+    <dataDefinedTransparency expr="CASE WHEN &quot;typeRevetement&quot; = 'VEG' THEN 0 ELSE 100 END" field="" active="false" useExpr="true"/>
+    <customproperties/>
+   </ComposerItem>
+  </ComposerLabel>
+  <ComposerShape shapeType="1" cornerRadius="0">
+   <symbol alpha="1" clip_to_extent="1" type="fill" name="">
+    <layer pass="0" class="SimpleFill" locked="0">
+     <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
+     <prop k="color" v="255,255,255,255"/>
+     <prop k="joinstyle" v="miter"/>
+     <prop k="offset" v="0,0"/>
+     <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+     <prop k="offset_unit" v="MM"/>
+     <prop k="outline_color" v="0,0,0,255"/>
+     <prop k="outline_style" v="solid"/>
+     <prop k="outline_width" v="0.3"/>
+     <prop k="outline_width_unit" v="MM"/>
+     <prop k="style" v="no"/>
+    </layer>
+   </symbol>
+   <ComposerItem pagey="6.89446" page="1" id="" lastValidViewScaleFactor="-1" positionMode="0" positionLock="true" x="9.9999" y="6.89446" visibility="1" zValue="32" background="true" transparency="0" frameJoinStyle="miter" blendMode="0" width="66.941" outlineWidth="0.3" excludeFromExports="0" uuid="{b76bc54c-1828-47b8-b8b4-6c95e8075fcc}" height="46.7302" itemRotation="0" frame="false" pagex="9.9999">
+    <FrameColor alpha="255" red="0" blue="0" green="0"/>
+    <BackgroundColor alpha="255" red="255" blue="255" green="255"/>
+    <customproperties/>
+   </ComposerItem>
+  </ComposerShape>
+  <ComposerLabel valign="32" marginX="1" marginY="1" labelText="Equipements - Joint rail.Eqp&#xa;fissuration du joint&#xa;Dégarnissage du joint&#xa;Abscence ou déchirement&#xa;Equipements - Assainissement&#xa;Fissuration grille&#xa;Caniveau bouché&#xa;Désaffleurement&#xa;Absence" htmlState="0" halign="1">
+   <LabelFont description="Arial,10,-1,5,50,0,0,0,0,0" style=""/>
+   <FontColor red="0" blue="0" green="0"/>
+   <ComposerItem pagey="6.74446" page="1" id="" lastValidViewScaleFactor="-1" positionMode="0" positionLock="false" x="77.0909" y="6.74446" visibility="1" zValue="28" background="false" transparency="0" frameJoinStyle="miter" blendMode="0" width="51.9482" outlineWidth="0.3" excludeFromExports="0" uuid="{ecb10da8-f81e-4dec-937b-e519ec9420c4}" height="47.0588" itemRotation="0" frame="false" pagex="77.0909">
+    <FrameColor alpha="255" red="0" blue="0" green="0"/>
+    <BackgroundColor alpha="255" red="255" blue="255" green="255"/>
+    <customproperties/>
+   </ComposerItem>
+  </ComposerLabel>
+  <ComposerLabel valign="128" marginX="1" marginY="1" labelText="Photographies" htmlState="0" halign="4">
+   <LabelFont description="Arial,10,-1,5,75,0,0,0,0,0" style=""/>
+   <FontColor red="0" blue="0" green="0"/>
+   <ComposerItem pagey="89.8398" page="1" id="" lastValidViewScaleFactor="-1" positionMode="0" positionLock="false" x="10" y="89.8398" visibility="1" zValue="28" background="true" transparency="0" frameJoinStyle="miter" blendMode="0" width="35.9151" outlineWidth="0.3" excludeFromExports="0" uuid="{82ab6d47-f2e2-4ca3-852d-ca1de8ea74a7}" height="6.72339" itemRotation="270" frame="true" pagex="10">
+    <FrameColor alpha="255" red="0" blue="0" green="0"/>
+    <BackgroundColor alpha="179" red="110" blue="0" green="170"/>
+    <customproperties/>
+   </ComposerItem>
+  </ComposerLabel>
+  <ComposerPicture resizeMode="0" svgBorderWidth="0.2" pictureRotation="0" pictureWidth="35.6778" svgFillColor="255,255,255,255" svgBorderColor="0,0,0,255" northMode="0" file="." northOffset="0" pictureHeight="35.8967" mapId="-1" anchorPoint="0">
+   <ComposerItem pagey="53.9533" page="1" id="photo3" lastValidViewScaleFactor="-1" positionMode="0" positionLock="false" x="140" y="53.9533" visibility="1" zValue="26" background="false" transparency="0" frameJoinStyle="miter" blendMode="0" width="60" outlineWidth="0.3" excludeFromExports="0" uuid="{217ebde1-6147-44dc-8adf-22a00b60af30}" height="35.8967" itemRotation="0" frame="true" pagex="140">
+    <FrameColor alpha="255" red="0" blue="0" green="0"/>
+    <BackgroundColor alpha="255" red="255" blue="255" green="255"/>
+    <dataDefinedSource expr="" field="" active="false" useExpr="true"/>
+    <customproperties/>
+   </ComposerItem>
+  </ComposerPicture>
+  <ComposerLabel valign="32" marginX="1" marginY="1" labelText="&#xa;#lamia.Observation_now.eqp_fissurationjoint#&#xa;#lamia.Observation_now.eqp_degarnissage#&#xa;#lamia.Observation_now.eqp_absencejoint#&#xa;&#xa;#lamia.Observation_now.eqp_fissurationgrille#&#xa;#lamia.Observation_now.eqp_caniveaubouche#&#xa;#lamia.Observation_now.eqp_desaffleurement#&#xa;#lamia.Observation_now.eqp_absenceass#&#xa;" htmlState="0" halign="1">
+   <LabelFont description="Arial,10,-1,5,50,0,0,0,0,0" style=""/>
+   <FontColor red="0" blue="0" green="0"/>
+   <ComposerItem pagey="6.74446" page="1" id="" lastValidViewScaleFactor="-1" positionMode="0" positionLock="false" x="125.069" y="6.74446" visibility="1" zValue="21" background="false" transparency="0" frameJoinStyle="miter" blendMode="0" width="32.6691" outlineWidth="0.3" excludeFromExports="0" uuid="{a0f456c7-686c-4280-b176-e755b8765cf7}" height="47.0302" itemRotation="0" frame="false" pagex="125.069">
+    <FrameColor alpha="255" red="0" blue="0" green="0"/>
+    <BackgroundColor alpha="255" red="255" blue="255" green="255"/>
+    <customproperties/>
+   </ComposerItem>
+  </ComposerLabel>
+  <ComposerShape shapeType="1" cornerRadius="0">
+   <symbol alpha="1" clip_to_extent="1" type="fill" name="">
+    <layer pass="0" class="SimpleFill" locked="0">
+     <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
+     <prop k="color" v="255,255,255,255"/>
+     <prop k="joinstyle" v="miter"/>
+     <prop k="offset" v="0,0"/>
+     <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+     <prop k="offset_unit" v="MM"/>
+     <prop k="outline_color" v="0,0,0,255"/>
+     <prop k="outline_style" v="solid"/>
+     <prop k="outline_width" v="0.3"/>
+     <prop k="outline_width_unit" v="MM"/>
+     <prop k="style" v="no"/>
+    </layer>
+   </symbol>
+   <ComposerItem pagey="6.89446" page="1" id="" lastValidViewScaleFactor="-1" positionMode="0" positionLock="true" x="77.2409" y="6.89446" visibility="1" zValue="20" background="true" transparency="0" frameJoinStyle="miter" blendMode="0" width="80.347" outlineWidth="0.3" excludeFromExports="0" uuid="{245f8207-a54b-4076-ba1b-0e011084f885}" height="46.7588" itemRotation="0" frame="false" pagex="77.2409">
+    <FrameColor alpha="255" red="0" blue="0" green="0"/>
+    <BackgroundColor alpha="255" red="255" blue="255" green="255"/>
+    <customproperties/>
+   </ComposerItem>
+  </ComposerShape>
+  <ComposerPicture resizeMode="0" svgBorderWidth="0.2" pictureRotation="0" pictureWidth="35.6778" svgFillColor="255,255,255,255" svgBorderColor="0,0,0,255" northMode="0" file="." northOffset="0" pictureHeight="35.8967" mapId="-1" anchorPoint="0">
+   <ComposerItem pagey="53.9533" page="1" id="photo2" lastValidViewScaleFactor="-1" positionMode="0" positionLock="false" x="78.4243" y="53.9533" visibility="1" zValue="16" background="false" transparency="0" frameJoinStyle="miter" blendMode="0" width="60" outlineWidth="0.3" excludeFromExports="0" uuid="{0df8dd5b-956d-4c27-b8ac-79f8d4e1a323}" height="35.8967" itemRotation="0" frame="true" pagex="78.4243">
+    <FrameColor alpha="255" red="0" blue="0" green="0"/>
+    <BackgroundColor alpha="255" red="255" blue="255" green="255"/>
+    <dataDefinedSource expr="" field="" active="false" useExpr="true"/>
+    <customproperties/>
+   </ComposerItem>
+  </ComposerPicture>
+  <ComposerLabel valign="32" marginX="1" marginY="1" labelText="&#xa;#lamia.Observation_now.presenceUO#&#xa;#lamia.Observation_now.presenceFatigue#&#xa;#lamia.Observation_now.precisionsFatigue#&#xa;#lamia.Observation_now.geoVoie#&#xa;#lamia.Observation_now.etatRechargement#&#xa;#lamia.Observation_now.precisionsRechargement#" htmlState="0" halign="1">
+   <LabelFont description="Arial,10,-1,5,50,0,0,0,0,0" style=""/>
+   <FontColor red="0" blue="0" green="0"/>
+   <ComposerItem pagey="6.74446" page="1" id="" lastValidViewScaleFactor="-1" positionMode="0" positionLock="false" x="45.833" y="6.74446" visibility="1" zValue="15" background="false" transparency="0" frameJoinStyle="miter" blendMode="0" width="31.2579" outlineWidth="0.3" excludeFromExports="0" uuid="{55640e4d-75f0-4801-b6fb-3b788ed23114}" height="47.0302" itemRotation="0" frame="false" pagex="45.833">
+    <FrameColor alpha="255" red="0" blue="0" green="0"/>
+    <BackgroundColor alpha="255" red="255" blue="255" green="255"/>
+    <customproperties/>
+   </ComposerItem>
+  </ComposerLabel>
+  <ComposerLabel valign="32" marginX="1" marginY="1" labelText="Caractéristiques de l'observation - [%format_date('#lamia.Observation_now.datetimeobservation#','dd.MM.yyyy')%]" htmlState="0" halign="1">
+   <LabelFont description="Arial,10,-1,5,75,0,0,0,0,0" style=""/>
+   <FontColor red="0" blue="0" green="0"/>
+   <ComposerItem pagey="0.15" page="1" id="" lastValidViewScaleFactor="-1" positionMode="0" positionLock="false" x="10.0751" y="0.15" visibility="1" zValue="14" background="true" transparency="0" frameJoinStyle="miter" blendMode="0" width="190" outlineWidth="0.3" excludeFromExports="0" uuid="{f784a3d0-ddcd-4583-b9fc-1bf86e54b66c}" height="6.44446" itemRotation="0" frame="true" pagex="10.0751">
+    <FrameColor alpha="255" red="0" blue="0" green="0"/>
+    <BackgroundColor alpha="179" red="110" blue="0" green="170"/>
+    <customproperties/>
+   </ComposerItem>
+  </ComposerLabel>
+  <ComposerLabel valign="32" marginX="1" marginY="1" labelText="Rail&#xa;Présence UO&#xa;Présence Fatigue&#xa;Commentaire fatigue&#xa;Géométrie de la voie&#xa;Etat du rechargement&#xa;commentaire rechargement" htmlState="0" halign="1">
+   <LabelFont description="Arial,10,-1,5,50,0,0,0,0,0" style=""/>
+   <FontColor red="0" blue="0" green="0"/>
+   <ComposerItem pagey="6.74446" page="1" id="" lastValidViewScaleFactor="-1" positionMode="0" positionLock="false" x="9.8499" y="6.74446" visibility="1" zValue="13" background="false" transparency="0" frameJoinStyle="miter" blendMode="0" width="35.9831" outlineWidth="0.3" excludeFromExports="0" uuid="{f966c82f-62fd-4dec-9bfd-8595155a0bd6}" height="47.0302" itemRotation="0" frame="false" pagex="9.8499">
+    <FrameColor alpha="255" red="0" blue="0" green="0"/>
+    <BackgroundColor alpha="255" red="255" blue="255" green="255"/>
+    <customproperties/>
+   </ComposerItem>
+  </ComposerLabel>
+  <ComposerShape shapeType="1" cornerRadius="0">
+   <symbol alpha="1" clip_to_extent="1" type="fill" name="">
+    <layer pass="0" class="SimpleFill" locked="0">
+     <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
+     <prop k="color" v="255,255,255,255"/>
+     <prop k="joinstyle" v="miter"/>
+     <prop k="offset" v="0,0"/>
+     <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+     <prop k="offset_unit" v="MM"/>
+     <prop k="outline_color" v="0,0,0,255"/>
+     <prop k="outline_style" v="solid"/>
+     <prop k="outline_width" v="0.3"/>
+     <prop k="outline_width_unit" v="MM"/>
+     <prop k="style" v="no"/>
+    </layer>
+   </symbol>
+   <ComposerItem pagey="6.89446" page="1" id="" lastValidViewScaleFactor="-1" positionMode="0" positionLock="false" x="9.9999" y="6.89446" visibility="1" zValue="10" background="true" transparency="0" frameJoinStyle="miter" blendMode="0" width="190" outlineWidth="0.3" excludeFromExports="0" uuid="{02db433f-192f-4340-a5b2-d96476581629}" height="46.7302" itemRotation="0" frame="false" pagex="9.9999">
+    <FrameColor alpha="255" red="0" blue="0" green="0"/>
+    <BackgroundColor alpha="255" red="255" blue="255" green="255"/>
+    <customproperties/>
+   </ComposerItem>
+  </ComposerShape>
+  <ComposerPicture resizeMode="0" svgBorderWidth="0.2" pictureRotation="0" pictureWidth="35.6778" svgFillColor="255,255,255,255" svgBorderColor="0,0,0,255" northMode="0" file="." northOffset="0" pictureHeight="35.8967" mapId="-1" anchorPoint="0">
+   <ComposerItem pagey="53.9533" page="1" id="photo1" lastValidViewScaleFactor="-1" positionMode="0" positionLock="false" x="16.9409" y="53.9533" visibility="1" zValue="6" background="false" transparency="0" frameJoinStyle="miter" blendMode="0" width="60" outlineWidth="0.3" excludeFromExports="0" uuid="{045c0015-7154-4af4-a77d-1dec2c0dd6bc}" height="35.8967" itemRotation="0" frame="true" pagex="16.9409">
+    <FrameColor alpha="255" red="0" blue="0" green="0"/>
+    <BackgroundColor alpha="255" red="255" blue="255" green="255"/>
+    <dataDefinedSource expr="" field="" active="false" useExpr="true"/>
+    <customproperties/>
+   </ComposerItem>
+  </ComposerPicture>
+  <customproperties/>
+ </Composition>
+</Composer>

@@ -15,10 +15,10 @@ class TestMain(Test):
         self.createWin()
         crs = 3945
         # Digue VNF  Assainissement  Default Assainissement2 Base Base_default Base_assainissement Base2_digue Base2_parking
-        # Base2_tramway Base2_eaupotable Base2_assainissement
+        # Base2_tramway Base2_eaupotable Base2_assainissement Base2_eclairagepublic
         typebase = 'Base2_assainissement'
-        # CD41
-        variante = 'CD41'
+        # CD41 Lamia Reseau_chaleur
+        variante = 'Lamia'
         # spatialite   postgis
 
         typedb = 'spatialite'
@@ -52,9 +52,11 @@ class TestMain(Test):
                 spatialitefile = "C://000_testdigue//temp_base2_tram2//test01.sqlite"
             elif typebase == 'Base2_eaupotable':
                 spatialitefile = "C://000_testdigue//temp_base2_aep//test01.sqlite"
+            elif typebase == 'Base2_eclairagepublic':
+                spatialitefile = "C://000_testdigue//temp_base2_eclairagepublic//test01.sqlite"
 
             self.dbase.printsql = True
-            self.dbase.xlsreader = True
+            #self.dbase.xlsreader = True
 
             dbaseressourcesdirectory = os.path.join(os.path.dirname(spatialitefile),'DBspatialite')
 
@@ -80,7 +82,7 @@ class TestMain(Test):
             if typebase == 'Base2_digue':
                 self.dbase.printsql = True
                 self.dbase.createDbase(crs=crs, worktype=typebase, dbasetype='postgis', dbname='PVR_test',
-                                       schema='lamia_base2_digue',
+                                       schema='digue3',
                                        user='postgres', host='localhost',
                                        password='PVR',
                                        dbaseressourcesdirectory='c://000_testdigue//temp_postgis//digue')

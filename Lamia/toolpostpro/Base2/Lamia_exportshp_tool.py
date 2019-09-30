@@ -43,8 +43,8 @@ class ExportShapefileTool(AbstractLamiaTool):
 
         # ****************************************************************************************
         # properties ui
-        self.groupBox_geom.setParent(None)
         self.groupBox_elements.setParent(None)
+        self.frame_editing.setParent(None)
 
         self.qfiledlg = self.windowdialog.qfiledlg
 
@@ -83,7 +83,6 @@ class ExportShapefileTool(AbstractLamiaTool):
         #self.createfilesdir = os.path.join(os.path.dirname(__file__), 'exporttools')
         self.userwdgfield.comboBox_type.clear()
         for workdir in [self.confdatamain, self.confdataproject]:
-
             for filename in glob.glob(os.path.join(workdir, '*.txt')):
                 basename = os.path.basename(filename).split('.')[0]
                 if basename != 'README':

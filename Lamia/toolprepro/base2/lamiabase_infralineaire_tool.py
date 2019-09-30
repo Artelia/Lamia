@@ -56,6 +56,7 @@ class BaseInfraLineaireTool(AbstractLamiaTool):
                                            'iddest' : 'id_intervenant',
                                            'idtcdest' : 'id_tcintervenant',
                                            'desttable' : ['Intervenant']}
+
                                             }
         self.pickTable = {'LkZoneGeo': {'ZONEGEO': 'ID'}}
         self.debug = False

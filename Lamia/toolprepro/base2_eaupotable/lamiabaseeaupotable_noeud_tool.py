@@ -43,7 +43,7 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
         # Main spec
 
         self.CAT = 'Description'
-        self.NAME = 'Noeud'
+        self.NAME = 'Ouvrages'
         self.dbasetablename = 'Noeud'
         self.visualmode = [0, 1, 2]
         self.PointENABLED = True
@@ -52,7 +52,7 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
         self.magicfunctionENABLED = True
         # self.linkagespec = None
         # self.pickTable = None
-        self.iconpath = os.path.join(os.path.dirname(__file__),'..','base', 'lamiabase_noeud_tool_icon.svg')
+        self.iconpath = os.path.join(os.path.dirname(__file__), 'lamiabaseeaupotable_noeud_tool_icon.png')
         # self.linkedgeom = [['Equipement', 'lid_descriptionsystem'],['Desordre', 'lid_descriptionsystem']]
 
         self.linkagespec = {'Descriptionsystem': {'tabletc': None,
@@ -170,7 +170,15 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
                                                           'nb_compteur': self.userwdgfield.doubleSpinBox_nbrecompteur,
                                                           'fonctionnement': self.userwdgfield.comboBox_fonct,
 
-                                                          'profondeur': self.userwdgfield.doubleSpinBox_prof
+                                                          'profondeur': self.userwdgfield.doubleSpinBox_prof,
+
+                                                          'X': self.userwdgfield.doubleSpinBox_X,
+                                                          'dX': self.userwdgfield.doubleSpinBox_dX,
+                                                          'Y': self.userwdgfield.doubleSpinBox_Y,
+                                                          'dY': self.userwdgfield.doubleSpinBox_dY,
+                                                          'Z': self.userwdgfield.doubleSpinBox_Z,
+                                                          'dZ': self.userwdgfield.doubleSpinBox_dZ,
+
 
                                                           }},
                                         'Objet': {'linkfield': 'id_objet',

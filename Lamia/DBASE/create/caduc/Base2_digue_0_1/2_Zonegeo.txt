@@ -1,4 +1,0 @@
-###typezonegeo;             VARCHAR(255);                TEXT
-Commune;    COM
-Zone de gestion;      GES
-Zone protegee;      PRO

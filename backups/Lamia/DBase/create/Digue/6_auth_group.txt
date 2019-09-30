@@ -1,3 +1,0 @@
-# Nom_champ             TypePostGis              TypeSpatialite                          Option
-###id;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
-###name ;                VARCHAR(80);            TEXT

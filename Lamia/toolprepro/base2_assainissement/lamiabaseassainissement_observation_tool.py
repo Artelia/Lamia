@@ -188,6 +188,10 @@ class BaseAssainissementObservationTool(BaseObservationTool):
                                                                'miseencharge': self.userwdgfield.comboBox_miseencharge,
                                                                'jugemententretien': self.userwdgfield.comboBox_entretiengeneral,
 
+                                                               #eqp
+                                                               'ouvertureequipement': self.userwdgfield.comboBox_etatouv
+                                                               #'etat': self.userwdgfield.comboBox_etatgeneral,
+
 
 
                                                                }},

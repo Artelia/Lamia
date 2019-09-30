@@ -7,7 +7,7 @@ try:
 except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget, QInputDialog)
 #from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
-from ..base.lamiabase_intervenant_tool import BaseIntervenantTool
+from ..base2.lamiabase_intervenant_tool import BaseIntervenantTool
 import os
 import datetime
 

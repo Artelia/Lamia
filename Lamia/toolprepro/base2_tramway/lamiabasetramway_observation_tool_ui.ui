@@ -6,15 +6,24 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>422</width>
-    <height>518</height>
+    <width>520</width>
+    <height>477</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
-   <property name="margin">
+   <property name="leftMargin">
+    <number>3</number>
+   </property>
+   <property name="topMargin">
+    <number>3</number>
+   </property>
+   <property name="rightMargin">
+    <number>3</number>
+   </property>
+   <property name="bottomMargin">
     <number>3</number>
    </property>
    <item>
@@ -26,7 +35,16 @@
       <enum>QFrame::Raised</enum>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
-      <property name="margin">
+      <property name="leftMargin">
+       <number>3</number>
+      </property>
+      <property name="topMargin">
+       <number>3</number>
+      </property>
+      <property name="rightMargin">
+       <number>3</number>
+      </property>
+      <property name="bottomMargin">
        <number>3</number>
       </property>
       <item row="0" column="0">
@@ -65,11 +83,20 @@
    <item>
     <widget class="QStackedWidget" name="stackedWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>4</number>
      </property>
      <widget class="QWidget" name="page">
       <layout class="QGridLayout" name="gridLayout" columnstretch="1,0,0">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>3</number>
+       </property>
+       <property name="topMargin">
+        <number>3</number>
+       </property>
+       <property name="rightMargin">
+        <number>3</number>
+       </property>
+       <property name="bottomMargin">
         <number>3</number>
        </property>
        <property name="spacing">
@@ -82,7 +109,16 @@
          </property>
          <widget class="QWidget" name="page_4">
           <layout class="QGridLayout" name="gridLayout_5">
-           <property name="margin">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>3</number>
+           </property>
+           <property name="rightMargin">
+            <number>3</number>
+           </property>
+           <property name="bottomMargin">
             <number>3</number>
            </property>
            <item row="2" column="1">
@@ -150,7 +186,16 @@
          </widget>
          <widget class="QWidget" name="page_5">
           <layout class="QVBoxLayout" name="verticalLayout_3">
-           <property name="margin">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>3</number>
+           </property>
+           <property name="rightMargin">
+            <number>3</number>
+           </property>
+           <property name="bottomMargin">
             <number>3</number>
            </property>
            <item>
@@ -163,21 +208,36 @@
                <string>Usure des rails</string>
               </attribute>
               <layout class="QGridLayout" name="gridLayout_6">
-               <property name="margin">
+               <property name="leftMargin">
                 <number>3</number>
                </property>
-               <item row="4" column="2">
-                <widget class="QLabel" name="label_15">
+               <property name="topMargin">
+                <number>3</number>
+               </property>
+               <property name="rightMargin">
+                <number>3</number>
+               </property>
+               <property name="bottomMargin">
+                <number>3</number>
+               </property>
+               <item row="1" column="3">
+                <widget class="QLineEdit" name="lineEdit_precisionfatigue"/>
+               </item>
+               <item row="0" column="1">
+                <widget class="QComboBox" name="comboBox_presenceUO"/>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_11">
                  <property name="text">
-                  <string>Précision rechargement</string>
+                  <string>Présence fatigue</string>
                  </property>
                  <property name="wordWrap">
                   <bool>true</bool>
                  </property>
                 </widget>
                </item>
-               <item row="1" column="3">
-                <widget class="QLineEdit" name="lineEdit_precisionfatigue"/>
+               <item row="3" column="1">
+                <widget class="QComboBox" name="comboBox_geovoie"/>
                </item>
                <item row="1" column="2">
                 <widget class="QLabel" name="label_12">
@@ -189,14 +249,396 @@
                  </property>
                 </widget>
                </item>
-               <item row="4" column="3">
-                <widget class="QLineEdit" name="lineEdit_precisionrechargement"/>
-               </item>
-               <item row="4" column="1">
-                <widget class="QComboBox" name="comboBox_etatrechargement"/>
-               </item>
-               <item row="3" column="1">
-                <widget class="QComboBox" name="comboBox_geovoie"/>
+               <item row="5" column="0" colspan="4">
+                <widget class="QStackedWidget" name="stackedWidget_4">
+                 <property name="currentIndex">
+                  <number>2</number>
+                 </property>
+                 <widget class="QWidget" name="page_11"/>
+                 <widget class="QWidget" name="page_12">
+                  <layout class="QGridLayout" name="gridLayout_30">
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_133">
+                     <property name="text">
+                      <string>Ornière porteuse</string>
+                     </property>
+                     <property name="wordWrap">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QComboBox" name="comboBox_ornporteuse"/>
+                   </item>
+                   <item row="1" column="1">
+                    <spacer name="verticalSpacer_7">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                  </layout>
+                 </widget>
+                 <widget class="QWidget" name="page_13">
+                  <layout class="QGridLayout" name="gridLayout_31">
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <item row="1" column="8">
+                    <widget class="QToolButton" name="toolButton_V2DW1">
+                     <property name="text">
+                      <string>...</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="5">
+                    <widget class="QDoubleSpinBox" name="doubleSpinBox_V2GW1">
+                     <property name="minimum">
+                      <double>-1.000000000000000</double>
+                     </property>
+                     <property name="maximum">
+                      <double>999999.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="0">
+                    <widget class="QLabel" name="label_141">
+                     <property name="text">
+                      <string>W3</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="2">
+                    <widget class="QToolButton" name="toolButton_V1GW1">
+                     <property name="text">
+                      <string>...</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="0">
+                    <widget class="QLabel" name="label_142">
+                     <property name="text">
+                      <string>W4</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="3">
+                    <widget class="QDoubleSpinBox" name="doubleSpinBox_V1DW1">
+                     <property name="minimum">
+                      <double>-1.000000000000000</double>
+                     </property>
+                     <property name="maximum">
+                      <double>999999.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="7">
+                    <widget class="QDoubleSpinBox" name="doubleSpinBox_V2DW1">
+                     <property name="minimum">
+                      <double>-1.000000000000000</double>
+                     </property>
+                     <property name="maximum">
+                      <double>999999.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="label_139">
+                     <property name="text">
+                      <string>W1</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="3" colspan="2">
+                    <widget class="QLabel" name="label_135">
+                     <property name="text">
+                      <string>V1 - droit</string>
+                     </property>
+                     <property name="wordWrap">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="6">
+                    <widget class="QToolButton" name="toolButton_V2GW2">
+                     <property name="text">
+                      <string>...</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="label_140">
+                     <property name="text">
+                      <string>W2</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="6">
+                    <widget class="QToolButton" name="toolButton_V2GW1">
+                     <property name="text">
+                      <string>...</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QDoubleSpinBox" name="doubleSpinBox_V1GW1">
+                     <property name="minimum">
+                      <double>-1.000000000000000</double>
+                     </property>
+                     <property name="maximum">
+                      <double>999999.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="5">
+                    <widget class="QDoubleSpinBox" name="doubleSpinBox_V2GW3">
+                     <property name="minimum">
+                      <double>-1.000000000000000</double>
+                     </property>
+                     <property name="maximum">
+                      <double>999999.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QDoubleSpinBox" name="doubleSpinBox_V1GW2">
+                     <property name="minimum">
+                      <double>-1.000000000000000</double>
+                     </property>
+                     <property name="maximum">
+                      <double>999999.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="1">
+                    <widget class="QDoubleSpinBox" name="doubleSpinBox_V1GW3">
+                     <property name="minimum">
+                      <double>-1.000000000000000</double>
+                     </property>
+                     <property name="maximum">
+                      <double>999999.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="2">
+                    <widget class="QToolButton" name="toolButton_V1GW2">
+                     <property name="text">
+                      <string>...</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="3">
+                    <widget class="QDoubleSpinBox" name="doubleSpinBox_V1DW3">
+                     <property name="minimum">
+                      <double>-1.000000000000000</double>
+                     </property>
+                     <property name="maximum">
+                      <double>999999.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="3">
+                    <widget class="QDoubleSpinBox" name="doubleSpinBox_V1DW2">
+                     <property name="minimum">
+                      <double>-1.000000000000000</double>
+                     </property>
+                     <property name="maximum">
+                      <double>999999.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="2">
+                    <widget class="QToolButton" name="toolButton_V1GW4">
+                     <property name="text">
+                      <string>...</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="1">
+                    <widget class="QDoubleSpinBox" name="doubleSpinBox_V1GW4">
+                     <property name="minimum">
+                      <double>-1.000000000000000</double>
+                     </property>
+                     <property name="maximum">
+                      <double>999999.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="3">
+                    <widget class="QDoubleSpinBox" name="doubleSpinBox_V1DW4">
+                     <property name="minimum">
+                      <double>-1.000000000000000</double>
+                     </property>
+                     <property name="maximum">
+                      <double>999999.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="2">
+                    <widget class="QToolButton" name="toolButton_V1GW3">
+                     <property name="text">
+                      <string>...</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="6">
+                    <widget class="QToolButton" name="toolButton_V2GW4">
+                     <property name="text">
+                      <string>...</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="5" colspan="2">
+                    <widget class="QLabel" name="label_136">
+                     <property name="text">
+                      <string>V2 - gauche</string>
+                     </property>
+                     <property name="wordWrap">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="7" colspan="2">
+                    <widget class="QLabel" name="label_137">
+                     <property name="text">
+                      <string>V2 - droit</string>
+                     </property>
+                     <property name="wordWrap">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="4">
+                    <widget class="QToolButton" name="toolButton_V1DW2">
+                     <property name="text">
+                      <string>...</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="4">
+                    <widget class="QToolButton" name="toolButton_V1DW3">
+                     <property name="text">
+                      <string>...</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="6">
+                    <widget class="QToolButton" name="toolButton_V2GW3">
+                     <property name="text">
+                      <string>...</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1" colspan="2">
+                    <widget class="QLabel" name="label_134">
+                     <property name="text">
+                      <string>V1 - gauche</string>
+                     </property>
+                     <property name="wordWrap">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="4">
+                    <widget class="QToolButton" name="toolButton_V1DW1">
+                     <property name="text">
+                      <string>...</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="5">
+                    <widget class="QDoubleSpinBox" name="doubleSpinBox_V2GW2">
+                     <property name="minimum">
+                      <double>-1.000000000000000</double>
+                     </property>
+                     <property name="maximum">
+                      <double>999999.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="5">
+                    <widget class="QDoubleSpinBox" name="doubleSpinBox_V2GW4">
+                     <property name="minimum">
+                      <double>-1.000000000000000</double>
+                     </property>
+                     <property name="maximum">
+                      <double>999999.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="4">
+                    <widget class="QToolButton" name="toolButton_V1DW4">
+                     <property name="text">
+                      <string>...</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="7">
+                    <widget class="QDoubleSpinBox" name="doubleSpinBox_V2DW2">
+                     <property name="minimum">
+                      <double>-1.000000000000000</double>
+                     </property>
+                     <property name="maximum">
+                      <double>999999.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="7">
+                    <widget class="QDoubleSpinBox" name="doubleSpinBox_V2DW3">
+                     <property name="minimum">
+                      <double>-1.000000000000000</double>
+                     </property>
+                     <property name="maximum">
+                      <double>999999.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="7">
+                    <widget class="QDoubleSpinBox" name="doubleSpinBox_V2DW4">
+                     <property name="minimum">
+                      <double>-1.000000000000000</double>
+                     </property>
+                     <property name="maximum">
+                      <double>999999.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="8">
+                    <widget class="QToolButton" name="toolButton_V2DW2">
+                     <property name="text">
+                      <string>...</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="8">
+                    <widget class="QToolButton" name="toolButton_V2DW3">
+                     <property name="text">
+                      <string>...</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="8">
+                    <widget class="QToolButton" name="toolButton_V2DW4">
+                     <property name="text">
+                      <string>...</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </widget>
                </item>
                <item row="0" column="0">
                 <widget class="QLabel" name="label_10">
@@ -208,13 +650,26 @@
                  </property>
                 </widget>
                </item>
-               <item row="0" column="1">
-                <widget class="QComboBox" name="comboBox_presenceUO"/>
+               <item row="1" column="1">
+                <widget class="QComboBox" name="comboBox_presencefatigue"/>
                </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="label_11">
+               <item row="4" column="2">
+                <widget class="QLabel" name="label_15">
                  <property name="text">
-                  <string>Présence fatigue</string>
+                  <string>Précision rechargement</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <widget class="QComboBox" name="comboBox_etatrechargement"/>
+               </item>
+               <item row="4" column="0">
+                <widget class="QLabel" name="label_14">
+                 <property name="text">
+                  <string>Etat du rechargement</string>
                  </property>
                  <property name="wordWrap">
                   <bool>true</bool>
@@ -231,31 +686,8 @@
                  </property>
                 </widget>
                </item>
-               <item row="1" column="1">
-                <widget class="QComboBox" name="comboBox_presencefatigue"/>
-               </item>
-               <item row="4" column="0">
-                <widget class="QLabel" name="label_14">
-                 <property name="text">
-                  <string>Etat du rechargement</string>
-                 </property>
-                 <property name="wordWrap">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="5" column="2">
-                <spacer name="verticalSpacer_7">
-                 <property name="orientation">
-                  <enum>Qt::Vertical</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>20</width>
-                   <height>40</height>
-                  </size>
-                 </property>
-                </spacer>
+               <item row="4" column="3">
+                <widget class="QLineEdit" name="lineEdit_precisionrechargement"/>
                </item>
               </layout>
              </widget>
@@ -267,7 +699,7 @@
                <item row="0" column="1">
                 <widget class="QStackedWidget" name="stackedWidget_revet">
                  <property name="currentIndex">
-                  <number>0</number>
+                  <number>4</number>
                  </property>
                  <widget class="QWidget" name="modulaire">
                   <layout class="QGridLayout" name="gridLayout_8">
@@ -497,6 +929,43 @@
                    </item>
                   </layout>
                  </widget>
+                 <widget class="QWidget" name="platelage">
+                  <layout class="QGridLayout" name="gridLayout_28">
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="label_130">
+                     <property name="text">
+                      <string>Déformation</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QComboBox" name="comboBox_decompo"/>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_129">
+                     <property name="text">
+                      <string>Décomposition</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QComboBox" name="comboBox_deform"/>
+                   </item>
+                   <item row="2" column="1">
+                    <spacer name="verticalSpacer_22">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                  </layout>
+                 </widget>
                  <widget class="QWidget" name="else"/>
                 </widget>
                </item>
@@ -510,23 +979,13 @@
                <item>
                 <widget class="QTabWidget" name="tabWidget_2">
                  <property name="currentIndex">
-                  <number>0</number>
+                  <number>1</number>
                  </property>
                  <widget class="QWidget" name="tab_4">
                   <attribute name="title">
                    <string>Joint rail/eqp</string>
                   </attribute>
                   <layout class="QGridLayout" name="gridLayout_12">
-                   <item row="2" column="1">
-                    <widget class="QComboBox" name="comboBox_eqp_absencejoint"/>
-                   </item>
-                   <item row="0" column="0">
-                    <widget class="QLabel" name="label_32">
-                     <property name="text">
-                      <string>Fissurations du joint</string>
-                     </property>
-                    </widget>
-                   </item>
                    <item row="2" column="0">
                     <widget class="QLabel" name="label_34">
                      <property name="text">
@@ -536,6 +995,13 @@
                    </item>
                    <item row="0" column="1">
                     <widget class="QComboBox" name="comboBox_eqp_fissurationjoint"/>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_32">
+                     <property name="text">
+                      <string>Fissurations du joint</string>
+                     </property>
+                    </widget>
                    </item>
                    <item row="1" column="1">
                     <widget class="QComboBox" name="comboBox_eqp_degarnissage"/>
@@ -547,7 +1013,10 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="3" column="1">
+                   <item row="2" column="1">
+                    <widget class="QComboBox" name="comboBox_eqp_absencejoint"/>
+                   </item>
+                   <item row="4" column="1">
                     <spacer name="verticalSpacer_6">
                      <property name="orientation">
                       <enum>Qt::Vertical</enum>
@@ -559,6 +1028,34 @@
                       </size>
                      </property>
                     </spacer>
+                   </item>
+                   <item row="3" column="0" colspan="2">
+                    <widget class="QStackedWidget" name="stackedWidget_5">
+                     <property name="currentIndex">
+                      <number>1</number>
+                     </property>
+                     <widget class="QWidget" name="page_14"/>
+                     <widget class="QWidget" name="page_15">
+                      <layout class="QGridLayout" name="gridLayout_32">
+                       <property name="leftMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="rightMargin">
+                        <number>0</number>
+                       </property>
+                       <item row="0" column="0">
+                        <widget class="QLabel" name="label_138">
+                         <property name="text">
+                          <string>Graisseur de voie</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="0" column="1">
+                        <widget class="QComboBox" name="comboBox_graisseur"/>
+                       </item>
+                      </layout>
+                     </widget>
+                    </widget>
                    </item>
                   </layout>
                  </widget>
@@ -622,6 +1119,262 @@
                    </item>
                   </layout>
                  </widget>
+                 <widget class="QWidget" name="tab_10">
+                  <attribute name="title">
+                   <string>Dispositif fin de voie</string>
+                  </attribute>
+                  <layout class="QGridLayout" name="gridLayout_29">
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_131">
+                     <property name="text">
+                      <string>Heurtoir</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="label_132">
+                     <property name="text">
+                      <string>Taquet d'arrêt</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QComboBox" name="comboBox_taquet"/>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QComboBox" name="comboBox_heurtoir"/>
+                   </item>
+                   <item row="2" column="1">
+                    <spacer name="verticalSpacer_23">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                  </layout>
+                 </widget>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="tab_9">
+              <attribute name="title">
+               <string>Etat de l'appareil</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="verticalLayout_6">
+               <item>
+                <widget class="QStackedWidget" name="stackedWidget_appareil">
+                 <property name="currentIndex">
+                  <number>1</number>
+                 </property>
+                 <widget class="QWidget" name="page_8"/>
+                 <widget class="QWidget" name="page_9">
+                  <layout class="QGridLayout" name="gridLayout_26">
+                   <item row="1" column="3">
+                    <widget class="QLineEdit" name="lineEdit_pointeaig"/>
+                   </item>
+                   <item row="3" column="0">
+                    <widget class="QLabel" name="label_121">
+                     <property name="text">
+                      <string>Pointe de coeur</string>
+                     </property>
+                     <property name="wordWrap">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QComboBox" name="comboBox_pointeaig"/>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QComboBox" name="comboBox_talonaig"/>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="label_119">
+                     <property name="text">
+                      <string>Talon d'aiguille</string>
+                     </property>
+                     <property name="wordWrap">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="2">
+                    <widget class="QLabel" name="label_116">
+                     <property name="text">
+                      <string>Précision</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="3">
+                    <widget class="QLineEdit" name="lineEdit_talonaig"/>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="label_117">
+                     <property name="text">
+                      <string>Pointe d'aiguille</string>
+                     </property>
+                     <property name="wordWrap">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="3">
+                    <widget class="QLineEdit" name="lineEdit_coteprotec"/>
+                   </item>
+                   <item row="2" column="2">
+                    <widget class="QLabel" name="label_120">
+                     <property name="text">
+                      <string>Précision</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="2">
+                    <widget class="QLabel" name="label_118">
+                     <property name="text">
+                      <string>Précision</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="1">
+                    <widget class="QComboBox" name="comboBox_pointecoeur"/>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QComboBox" name="comboBox_coteprotec"/>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_115">
+                     <property name="text">
+                      <string>Côte de protection</string>
+                     </property>
+                     <property name="wordWrap">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="3">
+                    <widget class="QLineEdit" name="lineEdit_pointecoeur"/>
+                   </item>
+                   <item row="4" column="0">
+                    <widget class="QLabel" name="label_123">
+                     <property name="text">
+                      <string>Patte de lièvre</string>
+                     </property>
+                     <property name="wordWrap">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="2">
+                    <widget class="QLabel" name="label_122">
+                     <property name="text">
+                      <string>Précision</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="1">
+                    <widget class="QComboBox" name="comboBox_pattelievre"/>
+                   </item>
+                   <item row="4" column="2">
+                    <widget class="QLabel" name="label_124">
+                     <property name="text">
+                      <string>Précision</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="0">
+                    <widget class="QLabel" name="label_125">
+                     <property name="text">
+                      <string>Présence d'un capot de protection</string>
+                     </property>
+                     <property name="wordWrap">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="3">
+                    <widget class="QLineEdit" name="lineEdit_pattelievre"/>
+                   </item>
+                   <item row="5" column="1">
+                    <widget class="QComboBox" name="comboBox_capotprotec"/>
+                   </item>
+                   <item row="6" column="0">
+                    <spacer name="verticalSpacer_20">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                  </layout>
+                 </widget>
+                 <widget class="QWidget" name="page_10">
+                  <layout class="QGridLayout" name="gridLayout_27">
+                   <item row="1" column="1">
+                    <widget class="QComboBox" name="comboBox_contrerail"/>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QComboBox" name="comboBox_ouverture"/>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="label_128">
+                     <property name="text">
+                      <string>Etat de l'ouverture</string>
+                     </property>
+                     <property name="wordWrap">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QComboBox" name="comboBox_zonetransit"/>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="label_127">
+                     <property name="text">
+                      <string>Etat du contre-rail</string>
+                     </property>
+                     <property name="wordWrap">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_126">
+                     <property name="text">
+                      <string>Zone de transition</string>
+                     </property>
+                     <property name="wordWrap">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="0">
+                    <spacer name="verticalSpacer_21">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                  </layout>
+                 </widget>
                 </widget>
                </item>
               </layout>
@@ -636,7 +1389,16 @@
      </widget>
      <widget class="QWidget" name="page_2">
       <layout class="QGridLayout" name="gridLayout_2">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>3</number>
+       </property>
+       <property name="topMargin">
+        <number>3</number>
+       </property>
+       <property name="rightMargin">
+        <number>3</number>
+       </property>
+       <property name="bottomMargin">
         <number>3</number>
        </property>
        <item row="0" column="0">
@@ -663,7 +1425,13 @@
      </widget>
      <widget class="QWidget" name="page_6">
       <layout class="QVBoxLayout" name="verticalLayout_2">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>3</number>
+       </property>
+       <property name="bottomMargin">
         <number>3</number>
        </property>
        <item>
@@ -1097,7 +1865,16 @@
      </widget>
      <widget class="QWidget" name="page_3">
       <layout class="QGridLayout" name="gridLayout_14">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>3</number>
+       </property>
+       <property name="rightMargin">
+        <number>3</number>
+       </property>
+       <property name="bottomMargin">
         <number>3</number>
        </property>
        <item row="0" column="0">
@@ -1127,7 +1904,16 @@
      </widget>
      <widget class="QWidget" name="page_7">
       <layout class="QVBoxLayout" name="verticalLayout_5">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>3</number>
+       </property>
+       <property name="rightMargin">
+        <number>3</number>
+       </property>
+       <property name="bottomMargin">
         <number>3</number>
        </property>
        <item>
@@ -1876,7 +2662,16 @@
       <enum>QFrame::Raised</enum>
      </property>
      <layout class="QGridLayout" name="gridLayout_23">
-      <property name="margin">
+      <property name="leftMargin">
+       <number>3</number>
+      </property>
+      <property name="topMargin">
+       <number>3</number>
+      </property>
+      <property name="rightMargin">
+       <number>3</number>
+      </property>
+      <property name="bottomMargin">
        <number>3</number>
       </property>
       <property name="spacing">
@@ -1914,7 +2709,16 @@
       <string>Suite à donner</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_4">
-      <property name="margin">
+      <property name="leftMargin">
+       <number>3</number>
+      </property>
+      <property name="topMargin">
+       <number>3</number>
+      </property>
+      <property name="rightMargin">
+       <number>3</number>
+      </property>
+      <property name="bottomMargin">
        <number>3</number>
       </property>
       <item row="1" column="0">

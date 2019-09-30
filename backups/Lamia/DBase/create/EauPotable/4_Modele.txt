@@ -1,9 +1,0 @@
-#DJAN  SELECT Modele.*, Objet.datecreation, Objet.datedestruction, Objet.commentaire, Objet.libelle, Ressource.source,Ressource.dateressource,Ressource.contactadresse,Ressource.contactnom, Ressource.contactmail, Ressource.contacttel1, Ressource.contacttel2, Ressource.file,Ressource.description,Ressource.lk_marche  FROM Modele INNER JOIN Ressource ON Ressource.id_ressource = Modele.id_ressource INNER JOIN Objet ON Modele.id_objet = Objet.id_objet
-#QGIS  SELECT Modele.*, Objet.datecreation, Objet.datedestruction  FROM Modele INNER JOIN Ressource ON Ressource.id_ressource = Modele.id_ressource INNER JOIN Objet ON Modele.id_objet = Objet.id_objet
-# Nom_champ              TypePostGis                 TypeSpatialite                               Option
-###id_modele;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
-###logiciel;             VARCHAR(255);                TEXT
-###scenario ;             VARCHAR(255);                TEXT
-###conclusions;             VARCHAR(255);                TEXT
-###id_objet;             INT ;                     INTEGER ;                                    Objet(id_objet)
-###id_ressource;        INT ;                       INTEGER;                                    Ressource(id_ressource)

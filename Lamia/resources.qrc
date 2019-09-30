@@ -26,5 +26,8 @@
         <file>icons/deselect.png</file>
         <file>icons/logo2.png</file>
         <file>icons/logo3.png</file>
+        <file>icons/Copy.png</file>
+        <file>icons/Copyselection.png</file>
+        <file>icons/Paste.png</file>
     </qresource>
 </RCC>

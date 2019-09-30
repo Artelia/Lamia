@@ -1,7 +1,0 @@
-#DJAN  SELECT  Bdd.*, Objet.*, Ressource.* FROM Bdd INNER JOIN Ressource ON Ressource.id_ressource = Bdd.id_ressource INNER JOIN  Objet ON  Bdd.id_objet = Objet.id_objet
-# QGIS  SELECT  Bdd.*, Objet.datetimecreation, Objet.datetimedestruction, Ressource.lid_marche  FROM Bdd INNER JOIN Ressource ON Ressource.id_ressource = Bdd.id_ressource INNER JOIN  Objet ON  Bdd.id_objet = Objet.id_objet
-# Nom_champ             TypePostGis              TypeSpatialite                          Option
-###id_bdd;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
-###id_objet;             INT ;                   INTEGER 
-###id_ressource;             INT ;                   INTEGER 
-###bdd ;                VARCHAR(100);            TEXT

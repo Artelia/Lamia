@@ -88,6 +88,7 @@ class BaseEquipementTool(AbstractLamiaTool):
 
 
     def changeCategorie(self,intcat):
+
         pagecount = self.userwdg.stackedWidget.count()
         if intcat >= pagecount -1 :
             self.userwdg.stackedWidget.setCurrentIndex(pagecount -1)

@@ -40,57 +40,133 @@ class BaseDigueEquipementTool(BaseEquipementTool):
     def initFieldUI(self):
         # ****************************************************************************************
         #   userui Field
-        if self.userwdgfield is None:
-            # ****************************************************************************************
-            # userui
-            self.userwdgfield = UserUI()
-            self.linkuserwdgfield = {'Equipement' : {'linkfield' : 'id_equipement',
-                                             'widgets' : {'categorie': self.userwdgfield.comboBox_cat,
-                                                          'cote': self.userwdgfield.comboBox_cote,
-                                                          'position': self.userwdgfield.comboBox_position,
-                                                          'typeequipement': self.userwdgfield.comboBox_type,
-                                                          'implantation': self.userwdgfield.comboBox_implantation,
-                                                          'ecoulement': self.userwdgfield.comboBox_ecoulement,
-                                                          'utilisation': self.userwdgfield.comboBox_utilisation,
-                                                          'dimverti': self.userwdgfield.doubleSpinBox_dimvert,
-                                                          'dimhori': self.userwdgfield.doubleSpinBox_dimhoriz,
-                                                          'securite': self.userwdgfield.comboBox_securite
-                                                          }},
-                                'Objet' : {'linkfield' : 'id_objet',
-                                          'widgets' : {'commentaire': self.userwdgfield.textBrowser_comm}},
-                                'Descriptionsystem' : {'linkfield' : 'id_descriptionsystem',
-                                          'widgets' : {}}}
-            self.userwdgfield.comboBox_cat.currentIndexChanged.connect(self.changeCategorie)
-            self.userwdgfield.toolButton_calch.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_dimvert))
-            self.userwdgfield.toolButton__calcv.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_dimhoriz))
+        if self.dbase.variante in [None, 'Lamia']:
+            if self.userwdgfield is None:
+                # ****************************************************************************************
+                # userui
+                self.userwdgfield = UserUI()
+                self.linkuserwdgfield = {'Equipement' : {'linkfield' : 'id_equipement',
+                                                 'widgets' : {'categorie': self.userwdgfield.comboBox_cat,
+                                                              'cote': self.userwdgfield.comboBox_cote,
+                                                              'position': self.userwdgfield.comboBox_position,
+                                                              'typeequipement': self.userwdgfield.comboBox_type,
+                                                              'implantation': self.userwdgfield.comboBox_implantation,
+                                                              'ecoulement': self.userwdgfield.comboBox_ecoulement,
+                                                              'utilisation': self.userwdgfield.comboBox_utilisation,
+                                                              'dimverti': [self.userwdgfield.doubleSpinBox_dimvert,
+                                                                           self.userwdgfield.doubleSpinBox_dimvert_2],
+                                                              'dimhori': [self.userwdgfield.doubleSpinBox_dimhoriz,
+                                                                          self.userwdgfield.doubleSpinBox_dimhoriz2],
+
+                                                              'soustype': self.userwdgfield.comboBox_soustype,
+                                                              'fildeau': self.userwdgfield.doubleSpinBox_fildeau,
+                                                              'securite': self.userwdgfield.comboBox_securite,
 
 
-            # ****************************************************************************************
-            # child widgets
+                                                              }},
+                                    'Objet' : {'linkfield' : 'id_objet',
+                                              'widgets' : {'commentaire': self.userwdgfield.textBrowser_comm}},
+                                    'Descriptionsystem' : {'linkfield' : 'id_descriptionsystem',
+                                              'widgets' : {}}}
+                self.userwdgfield.comboBox_cat.currentIndexChanged.connect(self.changeCategorie)
+                self.userwdgfield.toolButton_calch.clicked.connect(
+                    lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_dimvert))
+                self.userwdgfield.toolButton__calcv.clicked.connect(
+                    lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_dimhoriz))
 
-            self.dbasechildwdgfield = []
+                self.userwdgfield.toolButton_calch_2.clicked.connect(
+                    lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_dimvert_2))
+                self.userwdgfield.toolButton_dimhoriz2.clicked.connect(
+                    lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_dimhoriz2))
+                self.userwdgfield.toolButton_fildeau.clicked.connect(
+                    lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_fildeau))
 
-            # if True:
+                self.userwdgfield.comboBox_type.currentIndexChanged.connect(self.typeponctuelChanged)
 
-            if self.parentWidget is None:
-                self.propertieswdgDesordre = BaseDigueDesordreTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
-                self.propertieswdgDesordre.userwdgfield.frame_2.setParent(None)
-                self.propertieswdgDesordre.pushButton_addFeature.setEnabled(False)
-                self.propertieswdgDesordre.pushButton_delFeature.setEnabled(False)
-                self.propertieswdgDesordre.comboBox_featurelist.setEnabled(False)
-                self.propertieswdgDesordre.groupBox_geom.setParent(None)
-                self.dbasechildwdgfield.append(self.propertieswdgDesordre)
+                # ****************************************************************************************
+                # child widgets
 
-                self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
-                self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
+                self.dbasechildwdgfield = []
 
-                self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
-                self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+                # if True:
 
-                self.propertieswdgEQUIPEMENT = BaseDigueEquipementTool(dbase=self.dbase, parentwidget=self)
-                self.dbasechildwdgfield.append(self.propertieswdgEQUIPEMENT)
+                if self.parentWidget is None:
+                    self.propertieswdgDesordre = BaseDigueDesordreTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
+                    self.propertieswdgDesordre.userwdgfield.frame_2.setParent(None)
+                    self.propertieswdgDesordre.pushButton_addFeature.setEnabled(False)
+                    self.propertieswdgDesordre.pushButton_delFeature.setEnabled(False)
+                    self.propertieswdgDesordre.comboBox_featurelist.setEnabled(False)
+                    self.propertieswdgDesordre.groupBox_geom.setParent(None)
+                    self.dbasechildwdgfield.append(self.propertieswdgDesordre)
+
+                    self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
+                    self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
+
+                    self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
+                    self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+
+                    self.propertieswdgEQUIPEMENT = BaseDigueEquipementTool(dbase=self.dbase, parentwidget=self)
+                    self.dbasechildwdgfield.append(self.propertieswdgEQUIPEMENT)
+
+
+                    self.userwdgfield.comboBox_type.currentIndexChanged.connect(self.propertieswdgDesordre.propertieswdgOBSERVATION2.equipementTypeChanged)
+
+        elif self.dbase.variante in ['SIRS']:
+            if self.userwdgfield is None:
+                # ****************************************************************************************
+                # userui
+                self.userwdgfield = UserUISirs()
+                self.linkuserwdgfield = {'Equipement': {'linkfield': 'id_equipement',
+                                                        'widgets': {'categorie': self.userwdgfield.comboBox_cat,
+                                                                    'cote': self.userwdgfield.comboBox_cote,
+                                                                    'position': self.userwdgfield.comboBox_position,
+                                                                    'typeequipement': self.userwdgfield.comboBox_type,
+                                                                    'implantation': self.userwdgfield.comboBox_implantation,
+                                                                    'ecoulement': self.userwdgfield.comboBox_ecoulement,
+                                                                    'utilisation': self.userwdgfield.comboBox_utilisation,
+                                                                    'dimverti': self.userwdgfield.doubleSpinBox_dimvert,
+                                                                    'dimhori': self.userwdgfield.doubleSpinBox_dimhoriz,
+                                                                    'securite': self.userwdgfield.comboBox_securite
+                                                                    }},
+                                         'Objet': {'linkfield': 'id_objet',
+                                                   'widgets': {'commentaire': self.userwdgfield.textBrowser_comm}},
+                                         'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
+                                                               'widgets': {}}}
+                self.userwdgfield.comboBox_cat.currentIndexChanged.connect(self.changeCategorie)
+                self.userwdgfield.toolButton_calch.clicked.connect(
+                    lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_dimvert))
+                self.userwdgfield.toolButton__calcv.clicked.connect(
+                    lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_dimhoriz))
+
+                # ****************************************************************************************
+                # child widgets
+
+                self.dbasechildwdgfield = []
+
+                # if True:
+
+                if self.parentWidget is None:
+                    self.propertieswdgDesordre = BaseDigueDesordreTool(dbase=self.dbase, gpsutil=self.gpsutil,
+                                                                       parentwidget=self)
+                    self.propertieswdgDesordre.userwdgfield.frame_2.setParent(None)
+                    self.propertieswdgDesordre.pushButton_addFeature.setEnabled(False)
+                    self.propertieswdgDesordre.pushButton_delFeature.setEnabled(False)
+                    self.propertieswdgDesordre.comboBox_featurelist.setEnabled(False)
+                    self.propertieswdgDesordre.groupBox_geom.setParent(None)
+                    self.dbasechildwdgfield.append(self.propertieswdgDesordre)
+
+                    self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, gpsutil=self.gpsutil,
+                                                                   parentwidget=self)
+                    self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
+
+                    self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
+                    self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+
+                    self.propertieswdgEQUIPEMENT = BaseDigueEquipementTool(dbase=self.dbase, parentwidget=self)
+                    self.dbasechildwdgfield.append(self.propertieswdgEQUIPEMENT)
+
+                    self.userwdgfield.comboBox_type.currentIndexChanged.connect(
+                        self.propertieswdgDesordre.propertieswdgOBSERVATION2.equipementTypeChanged)
 
 
     def postSaveFeature(self, boolnewfeature):
@@ -116,13 +192,21 @@ class BaseDigueEquipementTool(BaseEquipementTool):
                 self.dbase.query(sql)
 
 
-
+    def typeponctuelChanged(self, comboindex):
+        if self.userwdgfield.comboBox_type.currentText() in ['Clapet', 'Vanne', 'Exutoire']:
+            self.userwdgfield.stackedWidget_2.setCurrentIndex(0)
+        else:
+            self.userwdgfield.stackedWidget_2.setCurrentIndex(1)
 
     def changeCategorie(self,intcat):
         if 'Ponctuel' in self.userwdg.comboBox_cat.currentText():
             self.userwdg.stackedWidget.setCurrentIndex(1)
             self.pushButton_addPoint.setEnabled(True)
             self.pushButton_addLine.setEnabled(False)
+
+
+
+
         elif 'Lineaire' in self.userwdg.comboBox_cat.currentText():
             self.userwdg.stackedWidget.setCurrentIndex(0)
             self.pushButton_addPoint.setEnabled(False)
@@ -130,6 +214,7 @@ class BaseDigueEquipementTool(BaseEquipementTool):
         else:
             self.pushButton_addPoint.setEnabled(False)
             self.pushButton_addLine.setEnabled(False)
+
 
 
     def postInitFeatureProperties(self, feat):
@@ -220,4 +305,10 @@ class UserUI(QWidget):
     def __init__(self, parent=None):
         super(UserUI, self).__init__(parent=parent)
         uipath = os.path.join(os.path.dirname(__file__), 'lamiabasedigue_equipement_tool_ui.ui')
+        uic.loadUi(uipath, self)
+
+class UserUISirs(QWidget):
+    def __init__(self, parent=None):
+        super(UserUI, self).__init__(parent=parent)
+        uipath = os.path.join(os.path.dirname(__file__), 'lamiabasedigue_equipement_tool_ui_SIRS.ui')
         uic.loadUi(uipath, self)

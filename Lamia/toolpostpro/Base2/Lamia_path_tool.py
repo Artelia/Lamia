@@ -94,8 +94,8 @@ class PathTool(AbstractInspectionDigueTool):
 
         # ****************************************************************************************
         # properties ui
-        self.groupBox_geom.setParent(None)
-        # self.groupBox_elements.setParent(None)
+        self.groupBox_elements.setParent(None)
+        self.frame_editing.setParent(None)
 
     def initFieldUI(self):
 
@@ -619,6 +619,7 @@ class PathTool(AbstractInspectionDigueTool):
 
         self.computePath(point1, point2)
 
+
     def computePath(self,  point1, point2, alsocomputegraph=True):
         """
         Calcul le plus court chemin entre point1 et point2
@@ -818,12 +819,37 @@ class PathTool(AbstractInspectionDigueTool):
             sql += ' WHERE '
             sql += self.dbase.dateVersionConstraintSQL()
             if listids is not None:
-                sql += " AND Infralineaire_qgis.id_infralineaire IN " + str(tuple(listids))
+                if len(listids) == 1 :
+                    sql += " AND Infralineaire_qgis.id_infralineaire = " + str(listids[0])
+                else:
+
+                    sql += " AND Infralineaire_qgis.id_infralineaire IN " + str(tuple(listids))
+
         query = self.dbase.query(sql)
+        # print('sql', sql, query)
         if len(query)>0:
-            rawpoints = np.array([[[float(elem1) for elem1 in row[1].split('(')[1][:-1].split(' ')],
-                                [float(elem2) for elem2 in row[2].split('(')[1][:-1].split(' ')]] for row in query])
-            ids = np.array([row[0] for row in query])
+            rawpoints = []
+            ids=[]
+            if True:
+                for row in query :
+                    # print(row[1], row[2])
+                    #print([float(elem1) for elem1 in row[1].split('(')[1][:-1].split(' ')])
+                    if row[1] is not None and row[2] is not None :
+                        rawpoints.append([[float(elem1) for elem1 in row[1].split('(')[1][:-1].split(' ')],
+                                          [float(elem2) for elem2 in row[2].split('(')[1][:-1].split(' ')]])
+                        #startpoints.append([float(elem1) for elem1 in row[1].split('(')[1][:-1].split(' ')])
+                        #endpoints.append([float(elem2) for elem2 in row[2].split('(')[1][:-1].split(' ')])
+                        ids.append(row[0])
+                    #print([float(elem1) for elem1 in row[1].split('(')[1][:-1].split(' ')])
+                    #print([float(elem2) for elem2 in row[2].split('(')[1][:-1].split(' ')])
+            if False:
+                rawpoints = np.array([[[float(elem1) for elem1 in row[1].split('(')[1][:-1].split(' ')],
+                                    [float(elem2) for elem2 in row[2].split('(')[1][:-1].split(' ')]] for row in query])
+                ids = np.array([row[0] for row in query])
+
+            ids = np.array(ids)
+            rawpoints = np.array(rawpoints)
+
             # create 1d array with startxy1, startxy2, ..., startxyn, endxy1, endxyy2, ...,endxyn
             pointstemp = np.append(rawpoints[:,0], rawpoints[:,1] ,axis = 0)
             # convert to string to manage np.unique with couple of xy

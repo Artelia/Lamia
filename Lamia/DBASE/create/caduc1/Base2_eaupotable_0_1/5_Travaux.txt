@@ -1,2 +1,0 @@
-###date_reparation;            DATE ;                  TEXT
-###moa_reparation;                VARCHAR(255);           TEXT

@@ -8,7 +8,7 @@ import qgis.gui
 import qgis.utils
 import shutil
 from qgis.PyQt import uic, QtCore
-
+from qgis.PyQt.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, Qt
 
 from Lamia.Lamia.dialog.InspectionDigue_windowwidget import InspectiondigueWindowWidget
 
@@ -28,6 +28,9 @@ class Test(QtCore.QObject):
         QtCore.QObject.__init__(self)
         self.wind = None
         self.dbase = None
+        self.app = None
+
+
 
 
 
@@ -46,20 +49,42 @@ class Test(QtCore.QObject):
             qgis_path = "C://OSGeo4W64//apps//qgis-ltr"
             #os.environ["QT_QPA_PLATFORM"] = "offscreen"
 
-        app = qgis.core.QgsApplication([], True)
+        self.app = qgis.core.QgsApplication([], True)
         qgis.core.QgsApplication.setPrefixPath(qgis_path, True)
         qgis.core.QgsApplication.initQgis()
         self.canvas = qgis.gui.QgsMapCanvas()
         self.canvas.enableAntiAliasing(True)
         self.canvas.setDestinationCrs(qgis.core.QgsCoordinateReferenceSystem(2154))
 
+        self.loadLocale()
+
 
         self.testMethod()
         #program.run(self.canvas, True, "spatialite")
-        app.exec_()
+        self.app.exec_()
         qgis.core.QgsApplication.exitQgis()
         print('Test fini')
 
+    def loadLocale(self):
+        # initialize locale
+        # locale = QSettings().value('locale/userLocale')[0:2]
+        locale = 'fr'
+        plugin_dir = os.path.join(os.path.dirname(__file__),'..', 'Lamia')
+        locale_path = os.path.join(
+            plugin_dir,
+            'i18n',
+            'Lamia_{}.qm'.format(locale))
+
+        print(locale_path,qVersion() )
+
+        if os.path.exists(locale_path):
+            print('ok')
+            self.translator = QTranslator()
+            self.translator.load(locale_path)
+
+            if qVersion() > '4.3.3':
+                QCoreApplication.installTranslator(self.translator)
+                #self.app.installTranslator(self.translator)
 
     def testMethod(self):
         pass

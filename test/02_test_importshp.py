@@ -20,14 +20,15 @@ class TestMain(Test):
     def testMethod(self):
         self.createWin()
 
-        path = "C://000_testdigue//temp_base2_parking//test01.sqlite"
+        path = "C://000_testdigue//temp_base2_ass2//test01.sqlite"
 
         self.wind.dbase.loadQgisVectorLayers(path)
-        self.wind.loadUiDesktop()
+        self.loadLayersInCanvas()
+        self.createMainWin()
 
-        #self.loadLayersInCanvas()
-
-        #self.createMainWin()
+        if True:       # test of desktop version
+            self.wind.loadUiDesktop()
+            self.dbase.visualmode = 4
 
         self.dbase.printsql = False
 
@@ -39,16 +40,23 @@ class TestMain(Test):
                 wdg = self.wind.tools[i]
                 break
 
+        wdg.changePropertiesWidget()
+        self.wind.MaintreeWidget.setCurrentItem(wdg.qtreewidgetitem)
+
+
+
         if False:
             indexrapport = None
             for i, menutool in enumerate(self.wind.menutools):
                 if 'importShapefile' in menutool.__class__.__name__ :
                     indexrapport = i
                     break
+
+
         # Infralineaire_BM Equipement_point_BM Photo_BM Graphdata_BM Desordres_ligne_BM
-
-        layer = qgis.core.QgsVectorLayer("U://FR//BOR//VT//PVR//Brest//SIG brest//stat_l_Saint_Marc.shp", 'test', "ogr")
-
+        layerpath = "M://FR//BOR//VT//URBAIN//4352329-33-GPMB-diag complet EU et EP-Bacalan, Le Verdon, Pauillac et Blaye//05-ETUDES//05-1-Dessins-plans//3-Autocad//Travail PLA//ART_TRAITEMENT_backup.shp"
+        layer = qgis.core.QgsVectorLayer(layerpath, 'test', "ogr")
+        wdg.currentlayer = layer
 
 
         if True:
@@ -116,8 +124,16 @@ class TestMain(Test):
                          [u'Descriptionsystem.listeparametres', u'']]
 
         # self.wind.dbase.dbasetables['Zonegeo']['layerqgis'].selectByIds([5])
-        wdg.importtable = 'Infralineaire'
-        wdg.work(layer)
+        #wdg.importtable = 'Infralineaire'
+        indextxt = wdg.userwdgfield.comboBox_typeimport.findText('Infralineaire')
+        wdg.userwdgfield.comboBox_typeimport.setCurrentIndex(indextxt)
+        wdg.showTable()
+
+        #wdg.work(layer=layer, linktable=linkinfra)
+
+        self.mainwin.exec_()
+
+
 
 
 

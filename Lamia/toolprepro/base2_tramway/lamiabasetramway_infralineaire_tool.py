@@ -61,8 +61,10 @@ class BaseTramwayInfraLineaireTool(BaseInfraLineaireTool):
                                                                    'circulation': self.userwdgfield.comboBox_circulation,
                                                                    'typeRevetement': self.userwdgfield.comboBox_typerevet,
 
-                                                                   'tangente': self.userwdgfield.doubleSpinBox_tangente,
-                                                                   'rayon': self.userwdgfield.doubleSpinBox_rayon,
+                                                                   'tangentetxt': self.userwdgfield.lineEdit_tangente,
+                                                                   'rayon': [self.userwdgfield.doubleSpinBox_rayon,
+                                                                             self.userwdgfield.doubleSpinBox_rayoncourbcourb],
+                                                                   'deviationtype': self.userwdgfield.comboBox_devtype,
                                                                    'deviation': self.userwdgfield.doubleSpinBox_deviation,
                                                                    'manoeuvre': self.userwdgfield.comboBox_manoeuvre,
 
@@ -78,12 +80,16 @@ class BaseTramwayInfraLineaireTool(BaseInfraLineaireTool):
             self.userwdgfield.toolButton_vit.clicked.connect(
                 lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_vitessseexploit))
 
-            self.userwdgfield.toolButton_tangente.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_tangente))
             self.userwdgfield.toolButton_deviation.clicked.connect(
                 lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_deviation))
             self.userwdgfield.toolButton_rayon.clicked.connect(
                 lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_rayon))
+            self.userwdgfield.toolButton_rayoncourb.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_rayoncourbcourb))
+
+            self.userwdgfield.toolButton_angle.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_angle))
+
 
 
 
@@ -114,10 +120,43 @@ class BaseTramwayInfraLineaireTool(BaseInfraLineaireTool):
 
 
     def typeSectionChanged(self, combovalue=None):
-        if self.userwdgfield.comboBox_typesection.currentText() == 'Appareil de voie':
-            self.userwdgfield.stackedWidget.setCurrentIndex(1)
-        else:
+        if self.userwdgfield.comboBox_typesection.currentText() in ['Courbe']:
             self.userwdgfield.stackedWidget.setCurrentIndex(0)
+        elif self.userwdgfield.comboBox_typesection.currentText() in ['Appareil de voie']:
+            self.userwdgfield.stackedWidget.setCurrentIndex(1)
+        elif self.userwdgfield.comboBox_typesection.currentText() in ['Traversée oblique']:
+            self.userwdgfield.stackedWidget.setCurrentIndex(2)
+        else:
+            self.userwdgfield.stackedWidget.setCurrentIndex(3)
+
+
+        if self.userwdgfield.comboBox_typesection.currentText() in ['Appareil de voie']:
+            self.propertieswdgDesordre.propertieswdgOBSERVATION2.userwdgfield.tabWidget.setTabEnabled(3,True)
+            self.propertieswdgDesordre.propertieswdgOBSERVATION2.userwdgfield.stackedWidget_appareil.setCurrentIndex(1)
+        elif self.userwdgfield.comboBox_typesection.currentText() in ['Appareil de dilatation']:
+            self.propertieswdgDesordre.propertieswdgOBSERVATION2.userwdgfield.tabWidget.setTabEnabled(3, True)
+            self.propertieswdgDesordre.propertieswdgOBSERVATION2.userwdgfield.stackedWidget_appareil.setCurrentIndex(2)
+        else:
+            self.propertieswdgDesordre.propertieswdgOBSERVATION2.userwdgfield.tabWidget.setTabEnabled(3, False)
+            self.propertieswdgDesordre.propertieswdgOBSERVATION2.userwdgfield.stackedWidget_appareil.setCurrentIndex(0)
+
+        if self.userwdgfield.comboBox_typesection.currentText() in ['Fin de voie']:
+            self.propertieswdgDesordre.propertieswdgOBSERVATION2.userwdgfield.tabWidget_2.setTabEnabled(2, True)
+        else:
+            self.propertieswdgDesordre.propertieswdgOBSERVATION2.userwdgfield.tabWidget_2.setTabEnabled(2, False)
+
+        if self.userwdgfield.comboBox_typesection.currentText() in ['Traversée oblique']:
+            self.propertieswdgDesordre.propertieswdgOBSERVATION2.userwdgfield.stackedWidget_4.setCurrentIndex(1)
+        elif self.userwdgfield.comboBox_typesection.currentText() in ['Courbe']:
+            self.propertieswdgDesordre.propertieswdgOBSERVATION2.userwdgfield.stackedWidget_4.setCurrentIndex(2)
+        else:
+            self.propertieswdgDesordre.propertieswdgOBSERVATION2.userwdgfield.stackedWidget_4.setCurrentIndex(0)
+
+        if self.userwdgfield.comboBox_typesection.currentText() in ['Courbe']:
+            self.propertieswdgDesordre.propertieswdgOBSERVATION2.userwdgfield.stackedWidget_5.setCurrentIndex(1)
+        else:
+            self.propertieswdgDesordre.propertieswdgOBSERVATION2.userwdgfield.stackedWidget_5.setCurrentIndex(0)
+
 
     def typeRevetementChanged(self, combovalue=None):
 
@@ -129,8 +168,10 @@ class BaseTramwayInfraLineaireTool(BaseInfraLineaireTool):
             self.propertieswdgDesordre.propertieswdgOBSERVATION2.userwdgfield.stackedWidget_revet.setCurrentIndex(2)
         elif self.userwdgfield.comboBox_typerevet.currentText() == 'Ballast':
             self.propertieswdgDesordre.propertieswdgOBSERVATION2.userwdgfield.stackedWidget_revet.setCurrentIndex(3)
-        else:
+        elif self.userwdgfield.comboBox_typerevet.currentText() == 'Platelage':
             self.propertieswdgDesordre.propertieswdgOBSERVATION2.userwdgfield.stackedWidget_revet.setCurrentIndex(4)
+        else:
+            self.propertieswdgDesordre.propertieswdgOBSERVATION2.userwdgfield.stackedWidget_revet.setCurrentIndex(5)
 
 
     def postSaveFeature(self, boolnewfeature):

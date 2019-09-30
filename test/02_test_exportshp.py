@@ -32,6 +32,9 @@ class TestMain(Test):
 
         path = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//BD_totale_ind6.sqlite"
 
+        path = "C://000_testdigue//0_bastien//LANDY.sqlite"
+        path = "C://000_testdigue//Manon_AEP//EAU POTABLE S1.sqlite"
+
         self.wind.dbase.loadQgisVectorLayers(path)
         self.wind.loadUiDesktop()
 
@@ -43,12 +46,6 @@ class TestMain(Test):
 
         self.dbase.printsql = False
 
-        if False:
-            indexrapport = None
-            for i, menutool in enumerate(self.wind.menutools):
-                if 'exportShapefile' in menutool.__class__.__name__ :
-                    indexrapport = i
-                    break
 
         wdg = None
         for i, tool in enumerate(self.wind.tools):
@@ -64,10 +61,10 @@ class TestMain(Test):
         # BM_Photo   BM_TcObjetRessource  BM_Graphdata   BM_TcObjetRessource
         #  BM_Desordres_ligne    BM_Desordres_point   BM_Observation
         # 00_Desordres_observation_actif   00_Desordres_observation_total  00_Equipement_observation_actif
-        # Export_total
-        typeexport = 'BM_Equipement_ligne'
+        # Export_total      Infralineaire    Noeud      Equipement
+        typeexport = 'Equipement'
 
-        if True:
+        if False:
             rootpath = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//63_Rapports//20190200_BD_exportshp//20190415_ind1"
             exportfile = os.path.join(rootpath, typeexport + ".shp")
         if False:
@@ -75,7 +72,11 @@ class TestMain(Test):
 
             exportfile = os.path.join(rootpath, typeexport + ".shp")
 
-        #exportfile = os.path.normpath("C://testshape.shp")
+        if False:
+            rootpath = "C:"
+            exportfile = os.path.join(rootpath, typeexport + ".shp")
+
+        exportfile = os.path.normpath("C://testshape.shp")
         # self.wind.dbase.dbasetables['Zonegeo']['layerqgis'].selectByIds([5])
         wdg.userwdgfield.lineEdit_nom.setText(exportfile)
 

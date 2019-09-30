@@ -45,7 +45,7 @@ class BaseTramwayDesordreTool(BaseDesordreTool):
                                           'widgets' : {}}}
 
             self.userwdgfield.comboBox_groupedes.currentIndexChanged.connect(self.changeGroupe)
-
+            self.groupBox_attributes.setParent(None)
 
             # ****************************************************************************************
             # child widgets

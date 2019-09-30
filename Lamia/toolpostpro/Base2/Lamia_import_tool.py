@@ -73,8 +73,9 @@ class ImportTool(AbstractLamiaTool):
 
         # ****************************************************************************************
         # properties ui
-        self.groupBox_geom.setParent(None)
         self.groupBox_elements.setParent(None)
+        self.frame_editing.setParent(None)
+
 
 
 
@@ -90,14 +91,17 @@ class ImportTool(AbstractLamiaTool):
             self.userwdgfield = UserUI()
             self.userwdgfield.toolButton_update.clicked.connect(self.updateTable)
 
-            items = ["Points topo", "Infralineaire", 'Noeud', 'Photo']
+            items = [ "Infralineaire", 'Noeud', 'Equipement', 'Photo']
             self.userwdgfield.comboBox_typeimport.addItems(items)
 
-            if self.dbase.qgsiface is None :
-                self.userwdgfield.pushButton_import.clicked.connect(self.showFlowChart)
-            else:
-                self.userwdgfield.pushButton_import.clicked.connect(self.showTable)
+            # methode 1
+            self.userwdgfield.pushButton_import.clicked.connect(self.showTable)
             self.userwdgfield.pushButton_importer.clicked.connect(self.work)
+
+            #flowchart
+            self.userwdgfield.pushButton_flowchart.clicked.connect(self.showFlowChart)
+
+
 
             self.dialogui = DialogUI()
 
@@ -111,7 +115,10 @@ class ImportTool(AbstractLamiaTool):
         self.userwdgfield.comboBox_tableimport.clear()
 
         if self.dbase.qgsiface is not None:
-            layers = self.dbase.qgsiface.legendInterface().layers()
+            if sys.version_info.major == 2:
+                layers = self.dbase.qgsiface.legendInterface().layers()
+            elif sys.version_info.major == 3:
+                layers = [tree_layer.layer() for tree_layer in qgis.core.QgsProject.instance().layerTreeRoot().findLayers()]
             layqgis=[]
             for tablename in self.dbase.dbasetables.keys():
                 layqgis.append(self.dbase.dbasetables[tablename]['layerqgis'])
@@ -293,7 +300,7 @@ class ImportTool(AbstractLamiaTool):
 
         self.dialog.exec_()
         output = self.fc.output()
-        print(output)
+        # print(output)
 
     def fcNodeAdded(self,flowchart, action, node):
         if node.nodeName == 'AttributeReaderNode':
@@ -323,10 +330,18 @@ class ImportTool(AbstractLamiaTool):
 
     def defineCurrentLayer(self):
         item = self.userwdgfield.comboBox_typeimport.currentText()
-        self.currentlayer = None
+
         if self.dbase.qgsiface is not None:
+            self.currentlayer = None
+
+            if sys.version_info.major == 2:
+                layers = self.dbase.qgsiface.legendInterface().layers()
+            elif sys.version_info.major == 3:
+                layers = [tree_layer.layer() for tree_layer in qgis.core.QgsProject.instance().layerTreeRoot().findLayers()]
+
+
             # if not self.dbase.standalone:
-            for lay in self.dbase.qgsiface.legendInterface().layers():
+            for lay in layers:
                 if self.userwdgfield.comboBox_tableimport.currentText() == lay.name():
                     self.currentlayer = lay
                     break
@@ -334,36 +349,48 @@ class ImportTool(AbstractLamiaTool):
             if self.currentlayer  is None:
                 return
         else:  # debug outside qgis
-            layerpath = os.path.join(os.path.dirname(__file__), '..','..','..','test','importtool','testshape.shp')
-            self.currentlayer = qgis.core.QgsVectorLayer(layerpath, 'test', 'ogr')
+            pass
+            if False:
+                layerpath = os.path.join(os.path.dirname(__file__), '..','..','..','test','importtool','testshape.shp')
+                self.currentlayer = qgis.core.QgsVectorLayer(layerpath, 'test', 'ogr')
             # currentlayerfieldsname = ['', 'ALTINGF', 'typ']
 
 
 
     def showTable(self):
-        item = self.userwdgfield.comboBox_typeimport.currentText()
-        self.currentlayer = None
-        if self.dbase.qgsiface is not None:
-            # if not self.dbase.standalone:
-            for lay in self.dbase.qgsiface.legendInterface().layers():
-                if self.userwdgfield.comboBox_tableimport.currentText() == lay.name():
-                    self.currentlayer = lay
-                    break
+        self.defineCurrentLayer()
 
-            if self.currentlayer  is None:
-                return
-        else:  # debug outside qgis
-            layerpath = os.path.join(os.path.dirname(__file__), '..','..','..','test','importtool','testshape.shp')
-            self.currentlayer = qgis.core.QgsVectorLayer(layerpath, 'test', 'ogr')
-            # currentlayerfieldsname = ['', 'ALTINGF', 'typ']
+        if False:
+            item = self.userwdgfield.comboBox_typeimport.currentText()
+            self.currentlayer = None
+            if self.dbase.qgsiface is not None:
+                # if not self.dbase.standalone:
+                if sys.version_info.major == 2:
+                    layers = self.dbase.qgsiface.legendInterface().layers()
+                elif sys.version_info.major == 3:
+                    layers = [tree_layer.layer() for tree_layer in qgis.core.QgsProject.instance().layerTreeRoot().findLayers()]
 
-        currentlayerfields = self.currentlayer .fields()
+
+                for lay in layers:
+                    if self.userwdgfield.comboBox_tableimport.currentText() == lay.name():
+                        self.currentlayer = lay
+                        break
+
+
+                if self.currentlayer  is None:
+                    return
+            else:  # debug outside qgis
+                layerpath = os.path.join(os.path.dirname(__file__), '..','..','..','test','importtool','testshape.shp')
+                self.currentlayer = qgis.core.QgsVectorLayer(layerpath, 'test', 'ogr')
+                # currentlayerfieldsname = ['', 'ALTINGF', 'typ']
+
+        currentlayerfields = self.currentlayer.fields()
         currentlayerfieldsname = [''] + [field.name() for field in currentlayerfields]
         # combofield = QComboBox([''] + currentlayerfieldsname)
 
-
+        item = self.userwdgfield.comboBox_typeimport.currentText()
         if item == "Points topo":
-            print('ok')
+            # print('ok')
             templinkuserwgd = self.dbase.dbasetables['Topographie']['widget'][0].propertieswdgPOINTTOPO.linkuserwdg
         if item == "Infralineaire":
             templinkuserwgd = self.dbase.dbasetables['Infralineaire']['widget'][0].linkuserwdg
@@ -430,7 +457,7 @@ class ImportTool(AbstractLamiaTool):
     def editFields(self):
         pushbuttonsender = self.sender()
         pushbuttonname = pushbuttonsender.objectName()
-        print(pushbuttonname)
+        # print(pushbuttonname)
 
         self.dialogui.tableWidget_from.clear()
         self.dialogui.tableWidget_to.clear()
@@ -439,15 +466,15 @@ class ImportTool(AbstractLamiaTool):
 
         #fill tableWidget_from in dialog
         for  row in range(self.userwdgfield.tableWidget.rowCount()):
-            print('cell',self.userwdgfield.tableWidget.cellWidget(row, 2))
+            # print('cell',self.userwdgfield.tableWidget.cellWidget(row, 2))
             if self.userwdgfield.tableWidget.cellWidget(row, 2) == pushbuttonsender:
                 layerfromfield = self.userwdgfield.tableWidget.cellWidget(row, 1).currentText()
                 layerfromfieldindex = self.userwdgfield.tableWidget.cellWidget(row, 1).currentIndex() -1
-                print(layerfromfield)
+                # print(layerfromfield)
                 break
         uniquevalues = self.currentlayer.uniqueValues(layerfromfieldindex)
-        print('uniquevalues',uniquevalues)
-        print([type(uniquevalue) for uniquevalue in uniquevalues])
+        # print('uniquevalues',uniquevalues)
+        # print([type(uniquevalue) for uniquevalue in uniquevalues])
         nullinlist=False
         for uniquevalue in uniquevalues:
             if self.dbase.isAttributeNull(uniquevalue):
@@ -490,7 +517,7 @@ class ImportTool(AbstractLamiaTool):
 
 
 
-    def work(self,layer=None):
+    def work(self,layer=None,linktable=None):
         """
 
         :param linktable: une liste qui correspond au tableau du dialog :
@@ -502,13 +529,16 @@ class ImportTool(AbstractLamiaTool):
 
 
         self.results = []
-        for row in range(self.userwdgfield.tableWidget.rowCount()):
-            if self.userwdgfield.tableWidget.cellWidget(row, 1) is not None:
-                self.results.append([self.userwdgfield.tableWidget.item(row, 0).text(),
-                               self.userwdgfield.tableWidget.cellWidget(row, 1).currentText()])
-            else:
-                self.results.append([self.userwdgfield.tableWidget.item(row, 0).text(),
-                               self.userwdgfield.tableWidget.item(row, 1).text()])
+        if linktable is None:
+            for row in range(self.userwdgfield.tableWidget.rowCount()):
+                if self.userwdgfield.tableWidget.cellWidget(row, 1) is not None:
+                    self.results.append([self.userwdgfield.tableWidget.item(row, 0).text(),
+                                   self.userwdgfield.tableWidget.cellWidget(row, 1).currentText()])
+                else:
+                    self.results.append([self.userwdgfield.tableWidget.item(row, 0).text(),
+                                   self.userwdgfield.tableWidget.item(row, 1).text()])
+        else:
+            self.results = linktable
 
         if debug: logging.getLogger('Lamia').debug('start %s', str(self.results))
 
@@ -542,7 +572,11 @@ class ImportTool(AbstractLamiaTool):
         progress = self.initProgressBar(len([fet for fet in layer.getFeatures()]))
         layerfromfieldsname = [field.name() for field in layer.fields()]
         #print('layerfromfieldsname',layerfromfieldsname)
-        self.xform = qgis.core.QgsCoordinateTransform(layer.crs(), self.dbase.qgiscrs)
+        if sys.version_info.major == 2:
+            self.xform = qgis.core.QgsCoordinateTransform(layer.crs(), self.dbase.qgiscrs)
+        elif sys.version_info.major == 3:
+            self.xform = qgis.core.QgsCoordinateTransform(layer.crs(), self.dbase.qgiscrs,qgis.core.QgsProject.instance())
+
         if len(layer.selectedFeatures()) == 0:
             feats  = layer.getFeatures()
         else:
@@ -572,7 +606,8 @@ class ImportTool(AbstractLamiaTool):
 
                 for i, table in enumerate(tables):
                     if table == 'Objet' and values[i] != '':
-                        sql = "UPDATE Objet SET " + fields[i] + " = " + str(layerfeat[values[i]])
+                        #sql = "UPDATE Objet SET " + fields[i] + " = " + str(layerfeat[values[i]])
+                        sql = "UPDATE Objet SET " + fields[i] + " = " + self.convertDataType(table,fields[i], layerfeat[values[i]])
                         sql += " WHERE pk_objet = " + str(pkobjet)
 
                         query = self.dbase.query(sql, docommit=False)
@@ -591,7 +626,8 @@ class ImportTool(AbstractLamiaTool):
 
                 for i, table in enumerate(tables):
                     if table == 'Descriptionsystem' and values[i] != '':
-                        sql = "UPDATE Descriptionsystem SET " + fields[i] + " = " + str(layerfeat[values[i]])
+                        #sql = "UPDATE Descriptionsystem SET " + fields[i] + " = " + str(layerfeat[values[i]])
+                        sql = "UPDATE Descriptionsystem SET " + fields[i] + " = " + self.convertDataType(table,fields[i], layerfeat[values[i]])
                         sql += " WHERE pk_descriptionsystem = " + str(pkdessys)
                         query = self.dbase.query(sql, docommit=False)
                 self.dbase.commit()
@@ -600,10 +636,13 @@ class ImportTool(AbstractLamiaTool):
                 #geom
                 featgeom = layerfeat.geometry()
                 success = featgeom.transform(self.xform)
-                featgeomwkt = featgeom.exportToWkt()
-                geomsql = "ST_GeomFromText('"
+                if sys.version_info.major == 2:
+                    featgeomwkt = featgeom.exportToWkt()
+                elif sys.version_info.major == 3:
+                    featgeomwkt = featgeom.asWkt()
+                geomsql = "CastToXY(ST_GeomFromText('"
                 geomsql += featgeomwkt
-                geomsql += "', " + str(self.dbase.crsnumber) + ")"
+                geomsql += "', " + str(self.dbase.crsnumber) + "))"
                 if False:
                     sql = "INSERT INTO " + self.importtable + " (id_objet, id_descriptionsystem, id_revisionbegin, id_" + self.importtable.lower() + ", geom )"
                     sql += " VALUES(" + str(lastobjetid) + "," + str(lastdescriptionsystemid) +',' + str(lastrevision) + "," + str(lastsubdescriptionsystemid) + ","
@@ -619,7 +658,7 @@ class ImportTool(AbstractLamiaTool):
 
                 for i, table in enumerate(tables):
                     if table == self.importtable and values[i] != '':
-                        sql = "UPDATE " + self.importtable + " SET " + fields[i] + " = " + str(layerfeat[values[i]])
+                        sql = "UPDATE " + self.importtable + " SET " + fields[i] + " = " + self.convertDataType(table,fields[i], layerfeat[values[i]])
                         sql += " WHERE pk_" + self.importtable + " = " + str(pksubdessys)
                         query = self.dbase.query(sql, docommit=False)
                 self.dbase.commit()
@@ -702,6 +741,20 @@ class ImportTool(AbstractLamiaTool):
         if progress is not None: self.dbase.qgsiface.messageBar().clearWidgets()
         if debug: logging.getLogger('Lamia').debug('end')
 
+
+
+    def convertDataType(self, table,field, value):
+        typevalue = self.dbase.dbasetables[table]['fields'][field]['PGtype']
+        if 'VARCHAR' in typevalue:
+            returnvalue = "'" + str(value) + "'"
+        elif 'TIMESTAMP' in typevalue:
+            returnvalue = "'" + str(value) + "'"
+        elif 'TEXT' in typevalue:
+            returnvalue = "'" + str(value) + "'"
+        else:
+            returnvalue = str(value)
+
+        return returnvalue
 
 
     def postImport(self,layerfeat, pkobjet=None, pkdessys=None, pksubdessys=None):

@@ -311,10 +311,10 @@ class BaseGraphiqueTool(AbstractLamiaTool):
         result = graphdata
 
         if True:
-            if self.currentFeature['typegraphique'] == 'PTR':
-                Xgraph = [0.0]
-                Zgraph = [0.0]
+            Xgraph = [0.0]
+            Zgraph = [0.0]
 
+            if self.currentFeature['typegraphique'] == 'PTR':
                 for i in range(len(result['x'])):
                     Xgraph.append(Xgraph[-1] + float(result['x'][i]))
                     Zgraph.append(Zgraph[-1] + float(result['y'][i]))

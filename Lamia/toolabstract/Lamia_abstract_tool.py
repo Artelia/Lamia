@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 # from PyQt4 import uic, QtCore, QtGui
 from qgis.PyQt import uic, QtCore, QtGui
 
-
 try:
     from qgis.PyQt.QtGui import (QWidget, QTreeWidgetItem, QMessageBox, QFileDialog, QTableWidget,
                                  QHeaderView, QComboBox, QSpinBox, QCheckBox, QPushButton, QDateEdit,QDateTimeEdit, QTextEdit,
@@ -26,7 +25,7 @@ import shutil
 import datetime
 
 import time
-import logging
+import logging, pprint
 
 
 
@@ -185,6 +184,7 @@ class AbstractLamiaTool(QWidget):
         # self.dbaseressourcesfield = None
         self.mtool = None
         self.rubberBandBlink = None
+        self.capturetype = None
 
         # ***** QGis var
         #  qgis map canvas
@@ -211,6 +211,8 @@ class AbstractLamiaTool(QWidget):
         self.pointEmitter = qgis.gui.QgsMapToolEmitPoint(self.canvas)   # maptoolused for picking
         self.currentmaptool = None      # qgsmaptoolcapture used for capturing
         self.visualmode = [0, 1, 2]
+        #for coping
+        self.deepcopy = []
 
         # *******************************************************
         # raw connection
@@ -228,8 +230,18 @@ class AbstractLamiaTool(QWidget):
             self.pushButton_addFeature.clicked.connect(self.addFeature)
             self.pushButton_delFeature.clicked.connect(self.deleteFeature)
             self.pushButton_deselect.clicked.connect(self.deselectFeature)
+
+            self.pushButton_copy.clicked.connect(self.copyAtributes)
+            self.pushButton_paste.clicked.connect(self.pasteAtributes)
+
             if self.dbasetablename in self.dbase.dbasetables.keys():
                 self.dbasetable = self.dbase.dbasetables[self.dbasetablename]
+
+        if len(self.deepcopy) == 0 :
+            self.frame_deepcopy.setVisible(False)
+        else:
+            self.pushButton_deepcopy.clicked.connect(self.deepCopy)
+            self.pushButton_deepcopyselect.clicked.connect(self.deepCopy)
 
         #work even with postpro tool
         if True:
@@ -309,6 +321,7 @@ class AbstractLamiaTool(QWidget):
         # clear groupBox_properties
         if self.groupBox_properties.layout().count() > 0:
             self.groupBox_properties.layout().itemAt(0).widget().setParent(None)
+            #self.groupBox_properties.layout().itemAt(0).widget().setVisible(False)
 
         # disconnect currentFeatureChanged signal to dbasechildwdg
         for childwdg in self.dbasechildwdg:
@@ -795,7 +808,10 @@ class AbstractLamiaTool(QWidget):
 
         else:
             self.groupBox_geom.setParent(None)
+            #self.groupBox_geom.setVisible(False)
             self.pushButton_goto.setEnabled(False)
+
+
 
         # GPS
         if self.gpsutil is not None and (self.gpswidget is not None or (self.dbasetable is not None and 'geom' in self.dbasetable.keys())):
@@ -826,25 +842,38 @@ class AbstractLamiaTool(QWidget):
             if tablename in self.dbase.dbasetables.keys():
                 dbasetable = self.dbase.dbasetables[tablename]
                 for field in dbasetable['fields'].keys():
-                    if 'Cst' in dbasetable['fields'][field].keys():
+
+                    if True:
                         for linkuserwdg in [self.linkuserwdg]:
                             if linkuserwdg is None or linkuserwdg.keys() is None:
                                 continue
+
                             if (tablename in linkuserwdg.keys()
-                                    and field in linkuserwdg[tablename]['widgets'].keys() ):
-                                    # and isinstance(linkuserwdg[tablename]['widgets'][field], QComboBox)):
+                                    and field in linkuserwdg[tablename]['widgets'].keys()):
 
                                 wdgs = linkuserwdg[tablename]['widgets'][field]
 
-                                # combox filling with constraints
-                                if isinstance(wdgs, QComboBox) or (isinstance(wdgs, list) and isinstance(wdgs[0], QComboBox)):
+                                if 'Cst' in dbasetable['fields'][field].keys():
 
-                                    templist = [description[0] for description in dbasetable['fields'][field]['Cst']]
-                                    if isinstance(wdgs, QComboBox):
-                                        wdgs = [wdgs]
-                                    for wdg in wdgs:
-                                        wdg.clear()
-                                        wdg.addItems(templist)
+                                    # combox filling with constraints
+                                    if isinstance(wdgs, QComboBox) or (
+                                            isinstance(wdgs, list) and isinstance(wdgs[0], QComboBox)):
+
+                                        templist = [description[0] for description in
+                                                    dbasetable['fields'][field]['Cst']]
+                                        if isinstance(wdgs, QComboBox):
+                                            wdgs = [wdgs]
+                                        for wdg in wdgs:
+                                            wdg.clear()
+                                            wdg.addItems(templist)
+
+                                if 'ParFldCst' in dbasetable['fields'][field].keys():
+                                    nameparentfield = dbasetable['fields'][field]['ParFldCst']
+                                    # userwidget
+                                    if (tablename in linkuserwdg.keys() and 'widgets' in linkuserwdg[tablename].keys()
+                                            and nameparentfield in linkuserwdg[tablename]['widgets'].keys()
+                                            and isinstance(linkuserwdg[tablename]['widgets'][nameparentfield], QComboBox)):
+                                        linkuserwdg[tablename]['widgets'][nameparentfield].currentIndexChanged.connect(self.comboparentValueChanged)
 
                                 # multiple wdg for field management
                                 if isinstance(wdgs, list):
@@ -857,33 +886,69 @@ class AbstractLamiaTool(QWidget):
 
 
 
-                                if False:
-                                    if  ( isinstance(linkuserwdg[tablename]['widgets'][field], QComboBox)
-                                            or (isinstance(linkuserwdg[tablename]['widgets'][field], list) and isinstance(linkuserwdg[tablename]['widgets'][field][0], QComboBox))):
-                                        if isinstance(linkuserwdg[tablename]['widgets'][field], QComboBox):
-                                            combowdgs = [linkuserwdg[tablename]['widgets'][field]]
-                                        else:
-                                            combowdgs = linkuserwdg[tablename]['widgets'][field]
-                                        # if linkuserwdg[] is not None and field in linkuserwdg.keys():
-                                        templist = [description[0] for description in dbasetable['fields'][field]['Cst']]
-                                        for combowdg in combowdgs:
-                                            combowdg.clear()
-                                            combowdg.addItems(templist)
 
-                            if True and 'ParFldCst' in dbasetable['fields'][field].keys():
-                                nameparentfield = dbasetable['fields'][field]['ParFldCst']
-                                # userwidget
-                                if (tablename in linkuserwdg.keys() and 'widgets' in linkuserwdg[tablename].keys()
-                                        and nameparentfield in linkuserwdg[tablename]['widgets'].keys()
-                                        and isinstance(linkuserwdg[tablename]['widgets'][nameparentfield], QComboBox)):
-                                    linkuserwdg[tablename]['widgets'][nameparentfield].currentIndexChanged.connect(self.comboparentValueChanged)
+                    if False:
+                        if 'Cst' in dbasetable['fields'][field].keys():
+                            for linkuserwdg in [self.linkuserwdg]:
+                                if linkuserwdg is None or linkuserwdg.keys() is None:
+                                    continue
+
+                                if (tablename in linkuserwdg.keys()
+                                        and field in linkuserwdg[tablename]['widgets'].keys() ):
+                                        # and isinstance(linkuserwdg[tablename]['widgets'][field], QComboBox)):
+
+                                    wdgs = linkuserwdg[tablename]['widgets'][field]
+
+                                    # combox filling with constraints
+                                    if isinstance(wdgs, QComboBox) or (isinstance(wdgs, list) and isinstance(wdgs[0], QComboBox)):
+
+                                        templist = [description[0] for description in dbasetable['fields'][field]['Cst']]
+                                        if isinstance(wdgs, QComboBox):
+                                            wdgs = [wdgs]
+                                        for wdg in wdgs:
+                                            wdg.clear()
+                                            wdg.addItems(templist)
+
+                                    # multiple wdg for field management
+                                    if False and isinstance(wdgs, list):
+                                        if isinstance(wdgs[0], QComboBox):
+                                            for wdg in wdgs:
+                                                wdg.currentIndexChanged.connect(self.manageMultipleWidgetField)
+                                        elif isinstance(wdgs[0], QSpinBox) or isinstance(wdgs[0], QDoubleSpinBox):
+                                            for wdg in wdgs:
+                                                wdg.valueChanged.connect(self.manageMultipleWidgetField)
+
+
+
+                                    if False:
+                                        if  ( isinstance(linkuserwdg[tablename]['widgets'][field], QComboBox)
+                                                or (isinstance(linkuserwdg[tablename]['widgets'][field], list) and isinstance(linkuserwdg[tablename]['widgets'][field][0], QComboBox))):
+                                            if isinstance(linkuserwdg[tablename]['widgets'][field], QComboBox):
+                                                combowdgs = [linkuserwdg[tablename]['widgets'][field]]
+                                            else:
+                                                combowdgs = linkuserwdg[tablename]['widgets'][field]
+                                            # if linkuserwdg[] is not None and field in linkuserwdg.keys():
+                                            templist = [description[0] for description in dbasetable['fields'][field]['Cst']]
+                                            for combowdg in combowdgs:
+                                                combowdg.clear()
+                                                combowdg.addItems(templist)
+
+                                if True and 'ParFldCst' in dbasetable['fields'][field].keys():
+                                    nameparentfield = dbasetable['fields'][field]['ParFldCst']
+                                    # userwidget
+                                    if (tablename in linkuserwdg.keys() and 'widgets' in linkuserwdg[tablename].keys()
+                                            and nameparentfield in linkuserwdg[tablename]['widgets'].keys()
+                                            and isinstance(linkuserwdg[tablename]['widgets'][nameparentfield], QComboBox)):
+                                        linkuserwdg[tablename]['widgets'][nameparentfield].currentIndexChanged.connect(self.comboparentValueChanged)
+
+
 
 
 
 
     def manageMultipleWidgetField(self):
         senderwdg = self.sender()
-        #print('manageMultipleComboboxField', self.sender())
+        # print('manageMultipleComboboxField', self.sender())
 
         for tablename in self.linkuserwdg:
             for fieldname in self.linkuserwdg[tablename]['widgets'].keys():
@@ -1000,6 +1065,7 @@ class AbstractLamiaTool(QWidget):
             if 'widget' in self.dbase.dbasetables[FKtable].keys():
                 wdg = self.dbase.dbasetables[FKtable]['widget']
                 wdg.setParent(None)
+                #wdg.setVisible(False)
                 if True:
                     self.disconnectIdsGui()
                     wdg.disconnectIdsGui()
@@ -1031,6 +1097,12 @@ class AbstractLamiaTool(QWidget):
         manage constrained combobox
         """
         # table
+        debug = False
+
+        if debug :
+            senderwdg = self.sender()
+            print('**', senderwdg.objectName())
+
         senderwdg = self.sender()
         if isinstance(senderwdg, QComboBox) and senderwdg.count() == 0: #case triple descendant and parent not filled
             return
@@ -1117,6 +1189,7 @@ class AbstractLamiaTool(QWidget):
                 if dbasetable['fields'][parentfieldname]['PGtype'] == 'INT' and parentcstvalue != '' and parentcstvalue is not None:
                     parentcstvalue = int(parentcstvalue)
                 listtoadd = [value[0] for value in dbasetable['fields'][childfieldname]['Cst'] if parentcstvalue in value[2]]
+
                 if False:
                     if sys.version_info.major == 2:
                         listtoadd = [value[0] for value in dbasetable['fields'][childfieldname]['Cst'] if parentcstvalue in value[2]]
@@ -1174,15 +1247,32 @@ class AbstractLamiaTool(QWidget):
                 if self.windowdialog is not None :
                     if self.dbasetable is not None and not hasattr(self, 'TOOLNAME'):
                         self.windowdialog.stackedWidget_main.setCurrentIndex(0)
-                        if self.windowdialog.MaintabWidget.widget(0).layout().count() > 0:
-                            self.windowdialog.MaintabWidget.widget(0).layout().itemAt(0).widget().setParent(None)
-                        self.windowdialog.MaintabWidget.widget(0).layout().addWidget(self)
+                        if True:
+                            if self.windowdialog.MaintabWidget.widget(0).layout().count() > 0:
+                                self.windowdialog.MaintabWidget.widget(0).layout().itemAt(0).widget().setParent(None)
+                                #self.windowdialog.MaintabWidget.widget(0).layout().itemAt(0).widget().hide()
+                            self.windowdialog.MaintabWidget.widget(0).layout().addWidget(self)
+                        else:
+                            for child in self.windowdialog.MaintabWidget.widget(0).layout().children():
+                                child.hide()
+                            if not self in self.windowdialog.MaintabWidget.widget(0).layout().children():
+                                self.windowdialog.MaintabWidget.widget(0).layout().addWidget(self)
+                                self.show()
+
                         self.windowdialog.MaintabWidget.setCurrentIndex(0)
                     else:
                         self.windowdialog.stackedWidget_main.setCurrentIndex(1)
-                        if self.windowdialog.stackedWidget_main.widget(1).layout().count() > 0:
-                            self.windowdialog.stackedWidget_main.widget(1).layout().itemAt(0).widget().setParent(None)
-                        self.windowdialog.stackedWidget_main.widget(1).layout().addWidget(self)
+                        if True:
+                            if self.windowdialog.stackedWidget_main.widget(1).layout().count() > 0:
+                                self.windowdialog.stackedWidget_main.widget(1).layout().itemAt(0).widget().setParent(None)
+                                # self.windowdialog.stackedWidget_main.widget(1).layout().itemAt(0).widget().setVisible(False)
+                            self.windowdialog.stackedWidget_main.widget(1).layout().addWidget(self)
+                        else:
+                            for child in self.windowdialog.MaintabWidget.widget(1).layout().children():
+                                child.hide()
+                            if not self in self.windowdialog.MaintabWidget.widget(1).layout().children():
+                                self.windowdialog.MaintabWidget.widget(1).layout().addWidget(self)
+                                self.show()
 
                 # load feature in bottom qtreewidget
                 if (self.dbasetable is not None
@@ -1438,8 +1528,8 @@ class AbstractLamiaTool(QWidget):
         else:
             self.groupBox_properties.setEnabled(False)
             self.groupBox_geom.setEnabled(False)
+            self.currentFeature = None
             self.initFeatureProperties(None)
-
 
         if debug: logging.getLogger('Lamia').debug('end  %.3f', self.dbase.getTimeNow()  - timestart)
         self.connectIdsGui()
@@ -1566,7 +1656,19 @@ class AbstractLamiaTool(QWidget):
                         #sql += str(linkagedest)
                         #TODO versionning
 
+                    elif linkagetemp['tabletc'] == 'within':
+                        sqltemp = " SELECT "+ linkagetemp['iddest']
+                        if len(self.qtreewidgetfields) > 0:
+                            sqltemp += "," + ','.join(self.qtreewidgetfields)
+                        sqltemp += " FROM " + self.dbasetablename.lower() + "_now" + ', ' + self.parentWidget.dbasetablename.lower()
+                        sqltemp += " WHERE ST_WITHIN(ST_MakeValid(" + self.parentWidget.dbasetablename.lower() + ".geom) , "
+                        sqltemp += "ST_MakeValid(" + self.dbasetablename.lower() + "_now.geom) )"
+                        # sqltemp += " AND pk_" + self.dbasetablename.lower() + " = " + str(self.currentFeaturePK)
+                        sqltemp += " AND pk_" + self.parentWidget.dbasetablename.lower() + " = " + str(self.parentWidget.currentFeaturePK)
 
+                        sqltemp = self.dbase.updateQueryTableNow(sqltemp)
+                        sql = sqltemp
+                        # res = self.dbase.query(sqltemp)
 
                     else:
                         #get parent feature field for link
@@ -1576,7 +1678,6 @@ class AbstractLamiaTool(QWidget):
                         sqltemp += str(self.parentWidget.currentFeaturePK)
                         res = self.dbase.query(sqltemp)
                         linkidparent = res[0][0]
-
 
                         sqltemp = "SELECT " + linkagetemp['idtcsource'] + " FROM " + linkagetemp['tabletc']
                         sqltemp += " WHERE " + linkagetemp['idtcdest'] + " = "
@@ -1708,7 +1809,11 @@ class AbstractLamiaTool(QWidget):
         # init thing
         self.disconnectIdsGui()
         self.beforesavingFeature = None
+        #case deep copy
+        self.deepCopyDisconnect()
         # reinit current feature
+
+
 
         if False:
             savedcurrentFeature = None
@@ -1911,6 +2016,7 @@ class AbstractLamiaTool(QWidget):
 
             for tablename in tablestoiterate:
                 dbasetable = self.dbase.dbasetables[tablename]
+
                 if len(self.dicttablefieldtoinit[tablename]) == 0 :
                     continue
 
@@ -1928,6 +2034,7 @@ class AbstractLamiaTool(QWidget):
                     result = self.dbase.query(sql)[0]
 
                 else:
+
                     if fieldname is None:
                         fieldstoiterate = self.dicttablefieldtoinit[tablename]
                     else:
@@ -2210,6 +2317,7 @@ class AbstractLamiaTool(QWidget):
         if self.dbasetable is not None:
             # manage version
             self.currentFeature, self.currentFeaturePK = self.manageFeatureCreationOrUpdate()
+
             #get feature of dbasetablename saved (only geom saved)
             self.currentFeature = self.saveQGisFeature(self.dbasetablename, self.currentFeature)
             self.currentFeaturePK = self.currentFeature.id()
@@ -2845,7 +2953,8 @@ class AbstractLamiaTool(QWidget):
 
         dbasetablelayer = self.dbase.dbasetables[table]['layer']
 
-        if debug: logging.getLogger("Lamia").debug('start : %s %s %s', table, str(feat.id()) , feat.attributes())
+        if debug: logging.getLogger("Lamia").debug('start : %s %s %s %s',
+                                                   table, str(feat.id()) , feat.attributes(), feat.geometry())
 
         dbasetablelayer.startEditing()
 
@@ -3055,6 +3164,8 @@ class AbstractLamiaTool(QWidget):
                 fieldvaluetosave = None
         else:
             # print ('saveFeatureProperties - instance', wdg)
+            if isinstance(wdg, list):
+                wdg = wdg[0]
             if isinstance(wdg, QSpinBox) and wdg.value() > -1:
                 fieldvaluetosave = int(wdg.value() )
             elif isinstance(wdg, QDoubleSpinBox) and wdg.value() > -1:
@@ -3078,15 +3189,21 @@ class AbstractLamiaTool(QWidget):
                 # fieldvaluetosave = wdg.date().toString('yyyy-MM-dd')
                 fieldvaluetosave = wdg.dateTime().toString( 'yyyy-MM-dd hh:mm:ss')
 
+        # print ('saveFeatureProperties', tablename, fieldname, fieldvaluetosave)
+
         return fieldvaluetosave
 
 
 
-    def deleteFeature(self):
-        message = "Supprimer completement l'element (yes) ou l'archiver (no) ? "
-        reply = QMessageBox.question(self, "Su",
-                                           message,
-                                           QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
+    def deleteFeature(self, signalreceiver=None, showmessage=True):
+
+        if showmessage :
+            message = "Supprimer completement l'element (yes) ou l'archiver (no) ? "
+            reply = QMessageBox.question(self, "Su",
+                                               message,
+                                               QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
+        else:
+            reply = QMessageBox.Yes
 
         # current version
         sql = "SELECT lpk_revision_begin, pk_objet FROM " + self.dbasetablename.lower() + "_qgis"
@@ -3148,6 +3265,8 @@ class AbstractLamiaTool(QWidget):
 
     def deselectFeature(self):
         self.windowdialog.closeEditFeature()
+        #case deepcopy
+        self.deepCopyDisconnect()
 
         if self.currentFeature is not None:
             if self.rubberBand:
@@ -3294,10 +3413,16 @@ class AbstractLamiaTool(QWidget):
                 # get the geometry before editing
                 initialgeom = []
                 if self.tempgeometry is not None:
-                    if len(self.tempgeometry.asPolyline()) > 0:
-                        initialgeom = self.tempgeometry.asPolyline()
+                    if sys.version_info.major == 2:
+                        if len(self.tempgeometry.asPolyline()) > 0:
+                            initialgeom = self.tempgeometry.asPolyline()
+                        else:
+                            initialgeom = self.tempgeometry.asMultiPolyline()[0]
                     else:
-                        initialgeom = self.tempgeometry.asMultiPolyline()[0]
+                        if not self.tempgeometry.isMultipart () :
+                            initialgeom = self.tempgeometry.asPolyline()
+                        else:
+                            initialgeom = self.tempgeometry.asMultiPolyline()[0]
                 elif self.currentFeature is not None and self.tempgeometry is None:
                     initialgeom = self.currentFeature.geometry().asPolyline()
 
@@ -3321,7 +3446,7 @@ class AbstractLamiaTool(QWidget):
         source = self.sender()
         # print(source.objectName())
 
-        if source.objectName() != 'pushButton_rajoutPoint':
+        if source is not None and source.objectName() != 'pushButton_rajoutPoint':
             listpointinitialgeometry = []
 
         # print('captureGeometry', connectint, listpointinitialgeometry, type)
@@ -3440,7 +3565,11 @@ class AbstractLamiaTool(QWidget):
 
         pointsmapcanvas = []
         pointslayer=[]
-        type = self.dbasetable['layer'].geometryType()
+        if self.capturetype is None:
+            type = self.dbasetable['layer'].geometryType()
+        else:
+            type = self.capturetype
+
 
         # case point in line layer
         if len(points)==2 and points[0] == points[1]:
@@ -3547,6 +3676,8 @@ class AbstractLamiaTool(QWidget):
         # print(self.dbase.dbasetables['Infralineaire']['layer'].sourceCrs().authid() )
 
         self.mtool = None
+
+
 
 
     def pickFeature(self):
@@ -3892,6 +4023,89 @@ class AbstractLamiaTool(QWidget):
             return False
     """
 
+
+
+    def copyAtributes(self):
+        # print('copy')
+        self.templinkuserwdg = {}
+        if False:
+            pass
+            """
+                      # print ('saveFeatureProperties - instance', wdg)
+                if isinstance(wdg, list):
+                    wdg = wdg[0]
+                if isinstance(wdg, QSpinBox) and wdg.value() > -1:
+                    fieldvaluetosave = int(wdg.value() )
+                elif isinstance(wdg, QDoubleSpinBox) and wdg.value() > -1:
+                    fieldvaluetosave = float(wdg.value())
+                elif isinstance(wdg, QTextEdit) or isinstance(wdg, QTextBrowser):
+                    fieldvaluetosave = wdg.toPlainText()
+                elif isinstance(wdg, QLineEdit):
+                    fieldvaluetosave = wdg.text()
+                elif isinstance(wdg, QCheckBox) :
+                    value = wdg.checkState()
+                    if int(value):
+                        fieldvaluetosave = 1
+                    else:
+                        fieldvaluetosave = 0
+    
+                elif isinstance(wdg, QDateEdit) and wdg.findChild(QLineEdit).text() != ' ':
+                    #fieldvaluetosave = wdg.date().toString('yyyy-MM-dd')
+                    fieldvaluetosave = wdg.date().toString('yyyy-MM-dd')
+    
+                elif isinstance(wdg, QDateTimeEdit) and wdg.findChild(QLineEdit).text() != ' ':
+                    # fieldvaluetosave = wdg.date().toString('yyyy-MM-dd')
+                    fieldvaluetosave = wdg.dateTime().toString( 'yyyy-MM-dd hh:mm:ss')
+            
+            """
+
+        for tablename in self.linkuserwdg.keys():
+            for field in self.linkuserwdg[tablename]['widgets'].keys():
+                wdg = self.linkuserwdg[tablename]['widgets'][field]
+                if isinstance(wdg, QComboBox):
+                    self.templinkuserwdg[wdg] = wdg.currentIndex()
+                elif isinstance(wdg, QSpinBox) or isinstance(wdg, QDoubleSpinBox):
+                    self.templinkuserwdg[wdg] = wdg.value()
+                elif isinstance(wdg, QTextEdit) or isinstance(wdg, QTextBrowser):
+                    self.templinkuserwdg[wdg] = wdg.toPlainText()
+                elif isinstance(wdg, QLineEdit):
+                    self.templinkuserwdg[wdg] = wdg.text()
+                elif isinstance(wdg, QCheckBox) :
+                    self.templinkuserwdg[wdg] = wdg.checkState()
+                elif isinstance(wdg, QDateEdit) :
+                    self.templinkuserwdg[wdg] = wdg.date()
+                elif isinstance(wdg, QDateTimeEdit):
+                    self.templinkuserwdg[wdg] = wdg.dateTime()
+
+        #print(self.templinkuserwdg)
+        return self.templinkuserwdg
+
+
+    def pasteAtributes(self, signalclick=None, dicttopaste=None):
+        if dicttopaste is None:
+            dicttopaste = self.templinkuserwdg
+            
+        
+        if dicttopaste is not None:
+            for tablename in self.linkuserwdg.keys():
+                for field in self.linkuserwdg[tablename]['widgets'].keys():
+                    wdg = self.linkuserwdg[tablename]['widgets'][field]
+                    if isinstance(wdg, QComboBox):
+                        wdg.setCurrentIndex(dicttopaste[wdg])
+                    elif isinstance(wdg, QSpinBox) or isinstance(wdg, QDoubleSpinBox):
+                        wdg.setValue(dicttopaste[wdg])
+                    elif isinstance(wdg, QTextEdit) or isinstance(wdg, QTextBrowser):
+                        wdg.setText(dicttopaste[wdg])
+                    elif isinstance(wdg, QLineEdit):
+                        wdg.setText(dicttopaste[wdg])
+                    elif isinstance(wdg, QCheckBox) :
+                        wdg.setCheckState(dicttopaste[wdg])
+                    elif isinstance(wdg, QDateEdit) :
+                        wdg.setDate(dicttopaste[wdg])
+                    elif isinstance(wdg, QDateTimeEdit):
+                        wdg.setDateTime(dicttopaste[wdg])
+
+
     def goToFeaturePressed(self):
 
         if self.currentFeature is not None:
@@ -4083,4 +4297,212 @@ class AbstractLamiaTool(QWidget):
             returnstr = geom.asWkt()
 
         return returnstr
+
+    def deepCopy(self):
+        self.deepCopySave()
+
+        tempsender = self.sender()
+
+        if tempsender == self.pushButton_deepcopy :
+            self.deepCopyLoad()
+        elif tempsender == self.pushButton_deepcopyselect :
+            currentpk = self.currentFeaturePK
+            self.capturetype = 2
+            self.captureGeometry(type=2)
+            self.lamiageomChanged.connect(self.deepcopymultipleselection)
+
+
+
+
+
+
+
+    def deepcopymultipleselection(self):
+        try:
+            self.lamiageomChanged.disconnect(self.deepcopymultipleselection)
+        except:
+            pass
+        self.capturetype = None
+
+        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+            geomtext = self.tempgeometry.exportToWkt()
+        else:
+            geomtext = self.tempgeometry.asWkt()
+
+        self.tempgeometry = None
+        currentid = self.dbase.getValuesFromPk(self.dbasetablename, 'id_' + self.dbasetablename.lower(),self.currentFeaturePK)
+
+        sql = "SELECT id_" + self.dbasetablename.lower() + " FROM " + self.dbasetablename
+        sql += " WHERE ST_WITHIN(ST_MakeValid(geom), ST_GeomFromText('" + geomtext + "',"+str(self.dbase.crsnumber) + "))"
+        ressql = self.dbase.query(sql)
+        if len(ressql)>0 :
+            res = [elem[0] for elem in ressql]
+
+            for feat_id in res :
+                if feat_id != currentid :
+                    idselected = feat_id
+                    self.deepCopyLoad(parentIdtocopyinto=idselected)
+
+        self.createorresetRubberband(2)
+        self.featureSelected(item=currentid, itemisid=True)
+        self.dbasetable['layerqgis'].triggerRepaint()
+
+
+    def deepCopySave(self, signalclik=None, table=None,deepcopydict=None,parentwidg=None):
+
+        debug = False
+        if debug: print('**** deepCopy ****', table,deepcopydict,parentwidg  )
+
+        if table is None:
+            self.deepcopydict = {}
+            self.deepcopydict[self.dbasetablename] = [{'pk': None, 'attributes':None, 'childs': {}}]
+            self.deepcopydict[self.dbasetablename][-1]['pk'] = self.currentFeaturePK
+            self.deepcopydict[self.dbasetablename][-1]['attributes'] = self.copyAtributes()
+
+            self.deepCopySave(table=self.deepcopy, deepcopydict=self.deepcopydict[self.dbasetablename][-1]['childs'],parentwidg=self)
+
+
+        elif isinstance(table, list) and len(table) >0 and isinstance(table[0],list):
+            for elemlist in table:
+                self.deepCopySave(table=elemlist, deepcopydict=deepcopydict, parentwidg=parentwidg)
+
+        else:
+            currentable = table[0]
+
+            for tempwdg in parentwidg.dbasechildwdg:
+                if tempwdg.dbasetablename == currentable:
+                    ids = [elem[0] for elem in tempwdg.treefeatlist]
+                    deepcopydict[currentable] =  []
+                    for id in ids:
+                        tempwdg.featureSelected(item=id, itemisid=True)
+                        deepcopydict[currentable].append({'pk': None, 'attributes':None, 'childs': {}})
+                        deepcopydict[currentable][-1]['attributes'] = tempwdg.copyAtributes()
+
+                        if isinstance(table,list) and len(table)>1:
+                            self.deepCopySave(table=table[1:], deepcopydict=deepcopydict[currentable][-1]['childs'],parentwidg=tempwdg)
+
+
+
+
+        if debug and table is None:
+            pprint.pprint( self.deepcopydict)
+
+
+
+    def deepCopyLoad(self, deepcopydict=None, parentwdg=None,parentIdtocopyinto=None):
+
+        debug = False
+        debugsavedelete=False
+
+        if debug :
+            if deepcopydict :
+                print('deepCopyLoad', deepcopydict.keys(), parentwdg)
+            else:
+                print('deepCopyLoad', deepcopydict, parentwdg)
+
+
+        if deepcopydict is None:
+
+            if parentIdtocopyinto is None:
+                deepcopydict = self.deepcopydict
+                self.featureSelected()
+            else:
+                deepcopydict = self.deepcopydict
+                self.featureSelected(item=parentIdtocopyinto, itemisid=True)
+
+            attributes = deepcopydict[self.dbasetablename][0]['attributes']
+            self.pasteAtributes(dicttopaste=attributes)
+
+            if debug: pprint.pprint(self.deepcopydict)
+
+            if 'childs' in deepcopydict[self.dbasetablename][0].keys():
+                dicttosend = deepcopydict[self.dbasetablename][0]['childs']
+            else:
+                dicttosend = None
+
+            if self.tempgeometry is None and parentIdtocopyinto is None:
+                if debug : print('No geom')
+                self.captureGeometry(type=0)
+                self.currentmaptool.stopCapture.connect(lambda: self.deepCopySaveFeat(self,dicttosend))
+                if debugsavedelete: print('capture', self.dbasetablename, 'dictnone')
+            else:
+                if debug: print('geom')
+                self.deepCopySaveFeat(self,dicttosend)
+
+
+        else:
+            for tablename in deepcopydict.keys():
+                for tempwdg in parentwdg.dbasechildwdg:
+                    if tempwdg.dbasetablename == tablename:
+                        originaltreefeatlist = list(tempwdg.treefeatlist)
+                        lastcount = 0
+                        for i, elem in enumerate(deepcopydict[tablename]):
+                            lastcount = i
+                            if 'childs' in elem.keys():
+                                dicttosend = elem['childs']
+                            else:
+                                dicttosend = None
+
+                            attributes = deepcopydict[tablename][i]['attributes']
+
+                            if i<len(originaltreefeatlist):
+                                if debug : print('geom already')
+                                tempwdg.featureSelected( item=originaltreefeatlist[i][0], itemisid=True)
+                                tempwdg.pasteAtributes(dicttopaste=attributes)
+                                if debugsavedelete: print('ecrase', tempwdg.dbasetablename, i,len(originaltreefeatlist) )
+                                self.deepCopySaveFeat(tempwdg, dicttosend)
+                            else:
+                                tempwdg.featureSelected()
+                                tempwdg.pasteAtributes(dicttopaste=attributes)
+                                if debugsavedelete: print('cree', tempwdg.dbasetablename, i, len(originaltreefeatlist))
+
+                                if tempwdg.tempgeometry is None and self.dbase.isTableSpatial(tablename):
+                                    if debug: print('No geom')
+                                    tempwdg.captureGeometry(type=0)
+                                    tempwdg.currentmaptool.stopCapture.connect(lambda: self.deepCopySaveFeat(tempwdg, dicttosend))
+                                else:
+                                    if debug: print('geom already')
+                                    self.deepCopySaveFeat(tempwdg, dicttosend)
+
+                        if lastcount < len(originaltreefeatlist)-1 and parentIdtocopyinto is None:
+                            for j in list(range(lastcount+1,len(originaltreefeatlist))):
+                                if debugsavedelete:  print('delete', tempwdg.dbasetablename, j,
+                                                                   len(originaltreefeatlist),
+                                                                   originaltreefeatlist,
+                                                                   originaltreefeatlist[j][0])
+                                tempwdg.featureSelected(item=originaltreefeatlist[j][0], itemisid=True)
+
+                                tempwdg.deleteFeature(showmessage=False)
+
+
+
+
+
+    def deepCopySaveFeat(self,currentwdg, deepcopydict):
+        try:
+            currentwdg.stopCapture.disconnect()
+        except:
+            pass
+
+        # print('save', currentwdg.dbasetablename, currentwdg.tempgeometry)
+
+        if currentwdg == self:
+            currentwdg.saveFeature(showsavemessage=True)
+        else:
+            currentwdg.saveFeature(showsavemessage=False)
+
+        if deepcopydict is not None and deepcopydict != {}:
+            self.deepCopyLoad(deepcopydict=deepcopydict, parentwdg=currentwdg)
+
+
+    def deepCopyDisconnect(self):
+        try:
+            self.currentmaptool.stopCapture.disconnect()
+        except:
+            pass
+
+
+
+    def tr(self, message):
+        return QtCore.QCoreApplication.translate('AbstractLamiaTool', message)
 

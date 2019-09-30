@@ -60,6 +60,11 @@
         </item>
         <item>
          <property name="text">
+          <string>Base2_eclairagepublic</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
           <string>Base2_eaupotable</string>
          </property>
         </item>

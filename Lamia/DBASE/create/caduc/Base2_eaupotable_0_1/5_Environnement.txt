@@ -1,2 +1,0 @@
-###nom_couche;                VARCHAR(255);           TEXT
-###lien;                VARCHAR(255);           TEXT

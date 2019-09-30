@@ -50,6 +50,27 @@ class BaseTramwayObservationTool(BaseObservationTool):
                                                           'geoVoie': self.userwdgfield.comboBox_geovoie,
                                                           'etatRechargement': self.userwdgfield.comboBox_etatrechargement,
                                                           'precisionsRechargement': self.userwdgfield.lineEdit_precisionrechargement,
+                                                          'orniereporteuse': self.userwdgfield.comboBox_ornporteuse,
+
+                                                          'usure_V1GW1': self.userwdgfield.doubleSpinBox_V1GW1,
+                                                              'usure_V1GW2': self.userwdgfield.doubleSpinBox_V1GW2,
+                                                          'usure_V1GW3': self.userwdgfield.doubleSpinBox_V1GW3,
+                                                              'usure_V1GW4': self.userwdgfield.doubleSpinBox_V1GW4,
+                                                          'usure_V1DW1': self.userwdgfield.doubleSpinBox_V1DW1,
+                                                             'usure_V1DW2': self.userwdgfield.doubleSpinBox_V1DW2,
+                                                          'usure_V1DW3': self.userwdgfield.doubleSpinBox_V1DW3,
+                                                              'usure_V1DW4': self.userwdgfield.doubleSpinBox_V1DW4,
+                                                          'usure_V2GW1': self.userwdgfield.doubleSpinBox_V2GW1,
+                                                              'usure_V2GW2': self.userwdgfield.doubleSpinBox_V2GW2,
+                                                          'usure_V2GW3': self.userwdgfield.doubleSpinBox_V2GW3,
+                                                              'usure_V2GW4': self.userwdgfield.doubleSpinBox_V2GW4,
+                                                          'usure_V2DW1': self.userwdgfield.doubleSpinBox_V2DW1,
+                                                              'usure_V2DW2': self.userwdgfield.doubleSpinBox_V2DW2,
+                                                          'usure_V2DW3': self.userwdgfield.doubleSpinBox_V2DW3,
+                                                              'usure_V2DW4': self.userwdgfield.doubleSpinBox_V2DW4,
+
+
+
 
                                                           'rev_fissurations': [self.userwdgfield.comboBox_rev_fissurations,
                                                                                self.userwdgfield.comboBox_rev_fissurations2],
@@ -73,6 +94,10 @@ class BaseTramwayObservationTool(BaseObservationTool):
                                                           'rev_tassement': self.userwdgfield.comboBox_rev_tassement,
                                                           'rev_pollution': self.userwdgfield.comboBox_rev_pollution,
 
+                                                          'rev_decomposition': self.userwdgfield.comboBox_decompo,
+                                                          'rev_deformation': self.userwdgfield.comboBox_deform,
+
+
                                                           'eqp_fissurationjoint': self.userwdgfield.comboBox_eqp_fissurationjoint,
                                                           'eqp_degarnissage': self.userwdgfield.comboBox_eqp_degarnissage,
                                                           'eqp_absencejoint': self.userwdgfield.comboBox_eqp_absencejoint,
@@ -82,7 +107,35 @@ class BaseTramwayObservationTool(BaseObservationTool):
                                                           'eqp_desaffleurement': self.userwdgfield.comboBox_eqp_desaffleurement,
                                                           'eqp_absenceass': self.userwdgfield.comboBox_eqp_absenceass,
 
+                                                          'eqp_heurtoir': self.userwdgfield.comboBox_heurtoir,
+                                                          'eqp_taquet': self.userwdgfield.comboBox_taquet,
+
+                                                          'eqp_graisseurvoie': self.userwdgfield.comboBox_graisseur,
+
+
+
                                                           'etatEquipement': self.userwdgfield.comboBox_etatequip,
+
+                                                          'app_coteprotection': self.userwdgfield.comboBox_coteprotec,
+                                                          'app_coteprotectioncom': self.userwdgfield.lineEdit_coteprotec,
+                                                          'app_pointeaiguille': self.userwdgfield.comboBox_pointeaig,
+                                                          'app_pointeaiguillecom': self.userwdgfield.lineEdit_pointeaig,
+                                                          'app_talonaiguille': self.userwdgfield.comboBox_talonaig,
+                                                          'app_talonaiguillecom': self.userwdgfield.lineEdit_talonaig,
+                                                          'app_pointecoeur': self.userwdgfield.comboBox_pointecoeur,
+                                                          'app_pointecoeurcom': self.userwdgfield.lineEdit_pointecoeur,
+                                                          'app_pattelievre': self.userwdgfield.comboBox_pattelievre,
+                                                          'app_pattelievrecom': self.userwdgfield.lineEdit_pattelievre,
+                                                          'app_capotprotec': self.userwdgfield.comboBox_capotprotec,
+
+                                                          'app_zonetransition': self.userwdgfield.comboBox_zonetransit,
+                                                          'app_contrerail': self.userwdgfield.comboBox_contrerail,
+                                                          'app_ouverture': self.userwdgfield.comboBox_ouverture,
+
+
+
+
+
 
                                                           'aspectlocalext': self.userwdgfield.lineEdit_aspectext,
                                                           'aspectlocalint': self.userwdgfield.lineEdit_aspectint,
@@ -173,6 +226,44 @@ class BaseTramwayObservationTool(BaseObservationTool):
 
             self.userwdgfield.toolButton_calc_nb.clicked.connect(
                 lambda: self.windowdialog.showNumPad(self.userwdgfield.spinBox_nombre))
+
+            self.userwdgfield.toolButton_V1GW1.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_V1GW1))
+            self.userwdgfield.toolButton_V1GW2.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_V1GW2))
+            self.userwdgfield.toolButton_V1GW3.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_V1GW3))
+            self.userwdgfield.toolButton_V1GW4.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_V1GW4))
+            
+            self.userwdgfield.toolButton_V1DW1.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_V1DW1))
+            self.userwdgfield.toolButton_V1DW2.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_V1DW2))
+            self.userwdgfield.toolButton_V1DW3.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_V1DW3))
+            self.userwdgfield.toolButton_V1DW4.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_V1DW4))
+
+            self.userwdgfield.toolButton_V2GW1.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_V2GW1))
+            self.userwdgfield.toolButton_V2GW2.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_V2GW2))
+            self.userwdgfield.toolButton_V2GW3.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_V2GW3))
+            self.userwdgfield.toolButton_V2GW4.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_V2GW4))
+
+            self.userwdgfield.toolButton_V2DW1.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_V2DW1))
+            self.userwdgfield.toolButton_V2DW2.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_V2DW2))
+            self.userwdgfield.toolButton_V2DW3.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_V2DW3))
+            self.userwdgfield.toolButton_V2DW4.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_V2DW4))
+
+            self.groupBox_attributes.setParent(None)
 
             if self.parentWidget is not None :
                 if self.parentWidget.parentWidget is not None :

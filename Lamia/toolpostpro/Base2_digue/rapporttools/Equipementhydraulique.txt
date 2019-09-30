@@ -12,8 +12,8 @@ id_equipement
 ###spatial
 True
 ###ordering
-#type; constraint (qgis typo)
-autoalongpath;"lid_descriptionsystem" IS NULL
+#type;               constraint (qgis typo)
+autoalongpath;      "lid_descriptionsystem_1" IS NULL
 ###atlaslayerstyle
 Equipementhydraulique_atlas.qml
 ###atlasdrivemap
@@ -29,7 +29,7 @@ map0    ;           ;             ; ['Infralineaire', 'ortho']
 photo1;Equipement_now.photo1
 ###childprint
 #confname;                        linkcolumn;                               optionsql
-Equipementhydraulique_annexe;    Equipement_now.lid_descriptionsystem ;  
+Equipementhydraulique_annexe;    Equipement_now.lid_descriptionsystem_1 ;  
 
 
 

@@ -140,6 +140,7 @@ class BaseEaupotableObservationTool(BaseObservationTool):
                         #typenoeud = self.parentWidget.parentWidget.currentFeature['typeOuvrageAss']
                         currenttext = self.parentWidget.parentWidget.userwdgfield.comboBox_typeouvrage.currentText()
                         # typenoeud = self.parentWidget.parentWidget.currentFeature['typeOuvrageAss']
+
                         typenoeud = self.dbase.getConstraintRawValueFromText('Noeud', 'type_ouvrage', currenttext)
 
                         if typenoeud in ['CHE']:

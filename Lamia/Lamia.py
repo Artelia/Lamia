@@ -68,7 +68,7 @@ class Lamia:
         locale_path = os.path.join(
             self.plugin_dir,
             'i18n',
-            'Lamia{}.qm'.format(locale))
+            'Lamia_{}.qm'.format(locale))
 
         if os.path.exists(locale_path):
             self.translator = QTranslator()

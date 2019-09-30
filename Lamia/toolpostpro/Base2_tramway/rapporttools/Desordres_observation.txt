@@ -1,0 +1,31 @@
+###atlaslayersql
+SELECT *  
+FROM Observation_now
+INNER JOIN Desordre_now ON Desordre_now.id_desordre = Observation_now.lid_desordre
+INNER JOIN Infralineaire_now ON Infralineaire_now.id_descriptionsystem = Desordre_now.lid_descriptionsystem
+###atlaslayerid
+id_observation
+###spatial
+False
+###ordering
+
+###atlaslayerstyle
+
+###atlasdrivemap
+#itemname;   minscale;   typescale;      layers
+
+###generalmap
+#itemname;   minscale;   typescale; layers
+
+###images
+#itemname   ; type
+photo1 ;Observation_now.photo1
+photo2;Observation_now.photo2
+photo3;Observation_now.photo3
+
+###childprint
+#confname;                linkcolumn;             optionsql
+
+
+
+

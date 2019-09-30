@@ -1,4 +1,0 @@
-# Nom_champ             TypePostGis              TypeSpatialite                          Option
-###session_key ;                VARCHAR(40);            TEXT
-###session_data ;                TEXT;            TEXT
-###expire_date ;                TIMESTAMP WITH TIME ZONE;            DATE

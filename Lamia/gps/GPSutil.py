@@ -42,6 +42,8 @@ class GpsUtil(QtCore.QObject):
     gstsentence = QtCore.pyqtSignal(dict)
     GPSConnected = pyqtSignal(bool)
 
+    delay_time = 5
+
     def __init__(self):
         """Constructor."""
         super(QtCore.QObject,self).__init__()
@@ -51,6 +53,7 @@ class GpsUtil(QtCore.QObject):
         self.wgs84CRS = qgis.core.QgsCoordinateReferenceSystem(4326)
         self.xform = None
         self.currentpoint = None
+        self.alarm = None
 
         self.receiveGPGGA = False
         self.receiveGPGST = False
@@ -99,7 +102,7 @@ class GpsUtil(QtCore.QObject):
 
 
     def connectionLost(self):
-        print('connectionLost')
+
         try:
             self.connection.nmeaSentenceReceived.disconnect(self.collectNMEA)
             self.connection.stateChanged.disconnect(self.gpsStateChanged)
@@ -111,6 +114,10 @@ class GpsUtil(QtCore.QObject):
 
         self.currentpoint = None
         self.GPSConnected.emit(False)
+
+
+
+
 
     def connectToGPS(self):
 
@@ -131,6 +138,7 @@ class GpsUtil(QtCore.QObject):
                 self.receiveGPGGA = False
                 self.receiveGPGST = False
                 self.connection.nmeaSentenceReceived.connect(self.collectNMEA)
+
                 #self.connection.stateChanged.connect(self.gpsStateChanged)
                 self.connection.destroyed.connect(self.connectionLost)
                 self.GPSConnected.emit(True)
@@ -154,6 +162,9 @@ class GpsUtil(QtCore.QObject):
             self.GPSConnected.emit(False)
     """
 
+
+
+
     def closeConnection(self):
         try:
             self.connection.nmeaSentenceReceived.disconnect(self.collectNMEA)
@@ -170,17 +181,26 @@ class GpsUtil(QtCore.QObject):
 
     def collectNMEA(self, sentence):
 
+        #send deconnection if no signal in delay_time s
+        if sys.version_info.major == 2 and isinstance(self.alarm, threading._Timer):
+            self.alarm.cancel()
+        elif sys.version_info.major == 3 and isinstance(self.alarm, threading.Timer):
+            self.alarm.cancel()
+        self.alarm = threading.Timer(self.delay_time, self.connectionLost)
+        self.alarm.start()
+
+
         if not self.receiveGPGGA:
             self.ggasentence.emit(self.getQgsResult())
 
-        if sentence.split(',')[0] == '$GPGGA':
+        if sentence.split(',')[0][3:] == 'GGA':
             self.receiveGPGGA = True
             #self.lineEdit_gga.setText(sentence)
             resultGGA = self.getGPGGAResult(sentence.split(','))
             #self.label_Z.setText(str(round(self.resultGGA['elevation'], 2)))
             self.ggasentence.emit(resultGGA)
 
-        if sentence.split(',')[0] == '$GPGST':
+        if sentence.split(',')[0][3:] == 'GST':
             self.receiveGPGST = True
             #self.lineEdit_gst.setText(sentence)
             resultGST = self.getGPGSTResult(sentence.split(','))
@@ -188,6 +208,7 @@ class GpsUtil(QtCore.QObject):
             #self.label_YP.setText(str(round(self.resultGST['yprecision'], 2)))
             #self.label_ZP.setText(str(round(self.resultGST['zprecision'], 2)))
             self.gstsentence.emit(resultGST)
+
 
     def getQgsResult(self):
         try:
@@ -330,8 +351,6 @@ class GpsUtil(QtCore.QObject):
 
 
 
-
-
             
     def errorMessage(self,text):
 
@@ -344,3 +363,5 @@ class GpsUtil(QtCore.QObject):
                                                       level=qgis.core.Qgis.Warning, duration=3)
         else:
             print('ErrorMessage', text)
+
+

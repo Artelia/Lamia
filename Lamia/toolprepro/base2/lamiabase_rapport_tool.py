@@ -44,31 +44,38 @@ class BaseRapportTool(AbstractLamiaTool):
                                            'idtcsource': None,
                                            'iddest': 'id_marche',
                                            'idtcdest': None,
-                                           'desttable': ['Marche']}}
+                                           'desttable': ['Marche']},
+                            'Rapport': {'tabletc': 'within',
+                                                   'idsource': 'id_rapport',
+                                                   'idtcsource': None,
+                                                   'iddest': 'id_rapport',
+                                                   'idtcdest': None,
+                                                   'desttable': ['Infralineaire','Noeud','Equipement']}
+                            }
 
         # ****************************************************************************************
         #properties ui
         self.iconpath = os.path.join(os.path.dirname(__file__), 'lamiabase_rapport_tool_icon.png')
         self.qtreewidgetfields = ['libelle']
 
-    def initDesktopUI(self):
+    def initFieldUI(self):
         # ****************************************************************************************
         # userui Desktop
-        if self.userwdgdesktop is None:
+        if self.userwdgfield is None:
             # ****************************************************************************************
             # userui
-            self.userwdgdesktop = UserUI()
-            self.userwdgdesktop.pushButton_chooseph.clicked.connect(self.choosePhoto)
-            self.userwdgdesktop.pushButton_openph.clicked.connect(self.openFile)
+            self.userwdgfield = UserUI()
+            self.userwdgfield.pushButton_chooseph.clicked.connect(self.choosePhoto)
+            self.userwdgfield.pushButton_openph.clicked.connect(self.openFile)
 
-            self.linkuserwdgdesktop = {'Rapport' : {'linkfield' : 'id_rapport',
+            self.linkuserwdgfield = {'Rapport' : {'linkfield' : 'id_rapport',
                                              'widgets' : { }},
                                 'Objet' : {'linkfield' : 'id_objet',
-                                          'widgets' : {'libelle' : self.userwdgdesktop.lineEdit_nom}},
+                                          'widgets' : {'libelle' : self.userwdgfield.lineEdit_nom}},
                                 'Ressource' : {'linkfield' : 'id_ressource',
-                                          'widgets' : {'file': self.userwdgdesktop.lineEdit_file,
-                                                        'description': self.userwdgdesktop.lineEdit_description,
-                                                        'dateressource': self.userwdgdesktop.dateEdit}}}
+                                          'widgets' : {'file': self.userwdgfield.lineEdit_file,
+                                                        'description': self.userwdgfield.lineEdit_description,
+                                                        'datetimeressource': self.userwdgfield.dateTimeEdit}}}
 
             # ****************************************************************************************
             # child widgets
@@ -82,7 +89,7 @@ class BaseRapportTool(AbstractLamiaTool):
         pass
 
     def openFile(self):
-        filepath = self.completePathOfFile(self.userwdg.lineEdit_file.text())
+        filepath = self.dbase.completePathOfFile(self.userwdg.lineEdit_file.text())
         if filepath != '':
             os.startfile(filepath)
 
@@ -96,8 +103,8 @@ class BaseRapportTool(AbstractLamiaTool):
 
     def postInitFeatureProperties(self, feat):
         if self.currentFeature is None:
-            datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
-            self.initFeatureProperties(feat, 'Ressource', 'dateressource', datecreation)
+            datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            self.initFeatureProperties(feat, 'Ressource', 'datetimeressource', datecreation)
 
 
 

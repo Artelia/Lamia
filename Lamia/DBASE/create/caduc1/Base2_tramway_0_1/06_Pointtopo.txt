@@ -1,5 +1,0 @@
-###typepointtopo;                VARCHAR(255);            TEXT
-Voie 1 fil GAUCHE;V1G
-Voie 1 fil DROIT;V1D
-Voie 2 fil GAUCHE;V2G
-Voie 2 fil DROIT;V1D

@@ -31,6 +31,13 @@ class BaseEaupotableEquipementTool(BaseEquipementTool):
     def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
         super(BaseEaupotableEquipementTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
 
+
+    def initTool(self):
+        super(BaseEaupotableEquipementTool, self).initTool()
+        self.NAME = 'Organes'
+        self.magicfunctionENABLED = True
+
+
     """
     def initTool(self):
         # ****************************************************************************************
@@ -116,9 +123,14 @@ class BaseEaupotableEquipementTool(BaseEquipementTool):
                                                  #'entreprise': self.userwdgfield.lineEdit_entreprise2,
                                                  #'telerelevage': self.userwdgfield.comboBox_telerelevage2,
                                                  # robinet de prise en charge
-                                                 'collier': self.userwdgfield.comboBox_collier
+                                                 'collier': self.userwdgfield.comboBox_collier,
 
-
+                                                 'X': self.userwdgfield.doubleSpinBox_X,
+                                                 'dX': self.userwdgfield.doubleSpinBox_dX,
+                                                 'Y': self.userwdgfield.doubleSpinBox_Y,
+                                                 'dY': self.userwdgfield.doubleSpinBox_dY,
+                                                 'Z': self.userwdgfield.doubleSpinBox_Z,
+                                                 'dZ': self.userwdgfield.doubleSpinBox_dZ
 
 
                                                           }},
@@ -147,6 +159,7 @@ class BaseEaupotableEquipementTool(BaseEquipementTool):
 
 
             self.userwdgfield.comboBox_cat.currentIndexChanged.connect(self.changeCategorie)
+            self.userwdgfield.pushButton_getGPS.clicked.connect(self.getGPSValue)
 
             self.allaccessfields = OrderedDict(self.dbasetable['fields']['acces'])
 
@@ -179,12 +192,27 @@ class BaseEaupotableEquipementTool(BaseEquipementTool):
             if False and self.parentWidget is None:
                 self.pushButton_addFeature.setEnabled(False)
 
-    """
-    def changeCategorie(self,intcat):
-        super(BaseEaupotableEquipementTool,self ).changeCategorie(intcat)
-        #self.postInitFeatureProperties(None)
-    """
-
+        self.gpswidget = {'x' : {'widget' : self.userwdgfield.label_X,
+                                 'gga' : 'Xcrs'},
+                          'y': {'widget': self.userwdgfield.label_Y,
+                                'gga': 'Ycrs'},
+                          'zmngf': {'widget': self.userwdgfield.label_Z,
+                                'gga': 'zmNGF'},
+                          'dx': {'widget': self.userwdgfield.label_dX,
+                                'gst': 'xprecision'},
+                          'dy': {'widget': self.userwdgfield.label_dY,
+                                'gst': 'yprecision'},
+                          'dz': {'widget': self.userwdgfield.label_dZ,
+                                'gst': 'zprecision'},
+                          'zgps': {'widget': self.userwdgfield.label_zgps,
+                                 'gga': 'elevation'},
+                          'zwgs84': {'widget': self.userwdgfield.label_zwgs84,
+                                   'gga': 'deltageoid'},
+                          'raf09': {'widget': self.userwdgfield.label_raf09,
+                                   'gga': 'RAF09'},
+                          'hauteurperche': {'widget': self.userwdgfield.label_hautperche,
+                                    'gga': 'hauteurperche'}
+                          }
 
 
     def postInitFeatureProperties(self, feat):
@@ -237,7 +265,13 @@ class BaseEaupotableEquipementTool(BaseEquipementTool):
                 newgeomwkt = newgeom.exportToWkt()
             else:
                 #newgeom = qgis.core.QgsGeometry.fromPolylineXY([qgsgeom.asPointXY(), qgsgeom.asPointXY()])
-                newgeom = qgis.core.QgsGeometry.fromPolylineXY([qgsgeom.asPoint(), qgsgeom.asPoint()])
+                #newgeom = qgis.core.QgsGeometry.fromPolylineXY([qgsgeom.asPoint(), qgsgeom.asPoint()])
+                # print('geom',qgsgeom.asWkt() )
+                if qgsgeom.type() == 0: #point
+                    newgeom = qgis.core.QgsGeometry.fromPolylineXY([qgsgeom.asPoint(), qgsgeom.asPoint()])
+                elif qgsgeom.type() == 1: #line
+                    aspoint = qgsgeom.asPolyline()[0]
+                    newgeom = qgis.core.QgsGeometry.fromPolylineXY([aspoint, aspoint])
                 newgeomwkt = newgeom.asWkt()
 
             sql = self.dbase.createSetValueSentence(type='INSERT',
@@ -250,6 +284,65 @@ class BaseEaupotableEquipementTool(BaseEquipementTool):
 
 
 
+
+
+    def changeCategorie(self, intcat):
+        if self.dbase.variante in [None, 'Lamia']:
+            pagecount = self.userwdg.stackedWidget.count()
+            if intcat >= pagecount -1 :
+                self.userwdg.stackedWidget.setCurrentIndex(pagecount -1)
+            else:
+                self.userwdg.stackedWidget.setCurrentIndex(intcat)
+        elif self.dbase.variante in ['Reseau_chaleur']:
+            pagecount = self.userwdg.stackedWidget.count()
+            currentindex = self.userwdgfield.comboBox_cat.currentIndex()
+            if currentindex >= 2:
+                self.userwdg.stackedWidget.setCurrentIndex(pagecount - 1)
+            else:
+                self.userwdg.stackedWidget.setCurrentIndex(intcat)
+
+
+    def magicFunction(self):
+        self.featureSelected()
+        #self.lastPhoto()
+        self.addGPSPoint()
+        self.saveFeature()
+
+
+    def addGPSPoint(self):
+        if self.gpsutil.currentpoint is None:
+            self.windowdialog.errorMessage('GPS non connecte')
+            return
+
+        self.createorresetRubberband(0)
+
+        layerpoint = self.gpsutil.currentpoint
+
+
+        self.setTempGeometry([layerpoint],False)
+
+        self.getGPSValue()
+
+
+    def getGPSValue(self):
+        self.assignValue(self.userwdgfield.label_X, self.userwdgfield.doubleSpinBox_X)
+        self.assignValue(self.userwdgfield.label_dX, self.userwdgfield.doubleSpinBox_dX)
+        self.assignValue(self.userwdgfield.label_Y, self.userwdgfield.doubleSpinBox_Y)
+        self.assignValue(self.userwdgfield.label_dY, self.userwdgfield.doubleSpinBox_dY)
+        self.assignValue(self.userwdgfield.label_Z, self.userwdgfield.doubleSpinBox_Z)
+        self.assignValue(self.userwdgfield.label_dZ, self.userwdgfield.doubleSpinBox_dZ)
+
+
+    def assignValue(self,wdgfrom, wdgto):
+        if self.isfloat(wdgfrom.text()):
+            wdgto.setValue(float(wdgfrom.text()))
+
+    def isfloat(self,value):
+        try:
+            float(value)
+            return True
+        except ValueError:
+            return False
 
 
     """

@@ -54,8 +54,8 @@ class RapportTool(AbstractLamiaTool):
 
         # ****************************************************************************************
         # properties ui
-        self.groupBox_geom.setParent(None)
         self.groupBox_elements.setParent(None)
+        self.frame_editing.setParent(None)
 
         self.qfiledlg = self.windowdialog.qfiledlg
         self.confData = None
@@ -333,19 +333,29 @@ class printPDFBaseWorker(object):
         sql = self.dbase.updateQueryTableNow(sql)
 
         if self.parentprintPDFworker is not None:
-            sql += ' AND ' + self.parentprintPDFworker.atlasconfData['childprint']['linkcolumn']
+            sqlsplitted = self.dbase.splitSQLSelectFromWhereOrderby(sql)
+            if 'WHERE' in sqlsplitted.keys():
+                sql += ' AND '
+            else:
+                sql += ' WHERE '
+
+            sql +=  self.parentprintPDFworker.atlasconfData['childprint']['linkcolumn']
             #sql += ' = ' + str(self.parentprintPDFworker.currentid)
             if False:
                 linktablename = self.parentprintPDFworker.atlasconfData['childprint']['linkcolumn'].split('_')[-1]
                 sql += ' = ' + str(self.parentprintPDFworker.currentatlasfeat['id_' + linktablename])
                 sql += ' ' + self.parentprintPDFworker.atlasconfData['childprint']['optionsql']
             if True:
+
                 linkcolumnname = self.parentprintPDFworker.atlasconfData['childprint']['linkcolumn'].split('.')[-1]
                 if linkcolumnname.split('_')[0] in ['lpk', 'lid']:
-                    linkcolumnname = linkcolumnname[1:]
+                    linkcolumnname = '_'.join(linkcolumnname[1:].split('_')[0:2])
                 else:
                     self.windowdialog.errorMessage('Erreur sur la champs de liaison childprint')
                     return False
+
+                # print([fld.name() for fld in self.parentprintPDFworker.currentatlasfeat.fields()])
+                
                 sql += ' = ' + str(self.parentprintPDFworker.currentatlasfeat[linkcolumnname])
                 sql += ' ' + self.parentprintPDFworker.atlasconfData['childprint']['optionsql']
 
@@ -375,10 +385,10 @@ class printPDFBaseWorker(object):
         """
         if self.dbase.qgsiface is not None:
             debug = False
-            stop10 = False
+            stop10 = None
         else:
             debug = True  # True False
-            stop10 = True
+            stop10 = 5
 
 
         if debug: logging.getLogger("Lamia").debug('started')
@@ -501,8 +511,11 @@ class printPDFBaseWorker(object):
 
             for indexpage, featid in enumerate(idsforreportdict[zonegeoid]):
                 indexpagetotal += 1
-                if debug: self.logger.debug('featid %s , indexpage %s', str(featid), str(indexpage))
-                if False and stop10 and indexpage == 20: break
+                if debug: self.logger.debug('featid %s , indexpage %s', str(featid), str(indexpagetotal))
+                # print('indexpagetotal == stop10',indexpagetotal >= stop10)
+
+                if  stop10 is not None and indexpagetotal >= stop10:
+                    break
 
                 self.currentid = featid
                 compt += 1
@@ -1198,6 +1211,7 @@ class printPDFBaseWorker(object):
         for i, tool in enumerate(self.windowdialog.tools):
             if 'PathTool' in tool.__class__.__name__ :
                 pathtool = self.windowdialog.tools[i]
+                break
         #self.windowdialog.pathtool.computeNXGraphForAll()
         pathtool.computeNXGraphForAll()
 
@@ -1564,19 +1578,18 @@ class printPDFBaseWorker(object):
                 tempsplittedquery['WHERE'] += ' AND ' + self.atlasconfData['atlaslayerid'] + ' = ' + str(atlasfeat.id())
             else:
                 tempsplittedquery['WHERE'] = self.atlasconfData['atlaslayerid'] + ' = ' + str(atlasfeat.id())
+            #tempsplittedquery['WHERE'] += " AND typephoto = 'PHO'"
             # tempsplittedquery['FROM'] = table
             sql = self.dbase.rebuildSplittedQuery(tempsplittedquery)
             sql = self.dbase.updateQueryTableNow(sql)
             query = self.dbase.query(sql)
             idobjet = [row[0] for row in query][0]
 
-            sql = "SELECT file FROM Ressource_now INNER JOIN Tcobjetressource ON lid_ressource = id_ressource"
-            sql += " WHERE Tcobjetressource.lid_objet = " + str(idobjet)
+            sql = "SELECT file FROM Photo_now INNER JOIN Tcobjetressource ON lid_ressource = id_ressource"
+            sql += " WHERE Tcobjetressource.lid_objet = " + str(idobjet) + " AND typephoto = 'PHO'"
             sql = self.dbase.updateQueryTableNow(sql)
             query = self.dbase.query(sql)
             result = [row for row in query]
-
-
 
 
 

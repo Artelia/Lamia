@@ -85,28 +85,33 @@ class BaseCroquisTool(AbstractLamiaTool):
         return sqlin
 
     def postInitFeatureProperties(self, feat):
+
         if self.currentFeature is None:
             #datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
             #self.initFeatureProperties(feat, 'Ressource', 'dateressource', datecreation)
 
             datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
             self.initFeatureProperties(feat, 'Ressource', 'datetimeressource', datecreation)
-
             self.editorwindow.clear()
             self.photowdg.clear()
+
 
         else:
             sql = "SELECT file FROM photo_qgis  WHERE pk_photo = " + str(self.currentFeaturePK)
             file = self.dbase.query(sql)[0][0]
-
             if False:
                 sql = "SELECT file FROM Ressource  WHERE id_ressource = " + str(feat['id_ressource']) + ";"
                 query = self.dbase.query(sql)
                 result = [row[0] for row in query]
                 file = result[0]
-            if os.path.isfile(self.dbase.completePathOfFile(file)):
+            if file is not None and file != '' and os.path.isfile(self.dbase.completePathOfFile(file)) :
                 self.editorwindow.openImage(self.dbase.completePathOfFile(file))
                 self.showImageinLabelWidget(self.photowdg, self.dbase.completePathOfFile(file))
+            else:
+                self.editorwindow.clear()
+                self.photowdg.clear()
+
+
 
 
     def editPhoto(self):

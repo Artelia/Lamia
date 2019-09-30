@@ -24,7 +24,7 @@ from ..base2.lamiabase_infralineaire_tool import BaseInfraLineaireTool
 #from ..base.lamiabase_croquis_tool import BaseCroquisTool
 from .lamiabaseassainissement_photo_tool import BaseAssainissementPhotoTool as BasePhotoTool
 from .lamiabaseassainissement_croquis_tool import BaseAssainissementCroquisTool as BaseCroquisTool
-
+from .lamiabaseassainissement_rapport_tool import BaseAssainissementRapportTool
 
 
 class BaseAssainissementInfraLineaireTool(BaseInfraLineaireTool):
@@ -75,65 +75,135 @@ class BaseAssainissementInfraLineaireTool(BaseInfraLineaireTool):
     def initFieldUI(self):
         # ****************************************************************************************
         #   userui Field
-        if self.userwdgfield is None:
-            self.userwdgfield = UserUIField()
+        if self.dbase.variante in [None, 'Lamia','2018_SNCF']:
+            if self.userwdgfield is None:
+                self.userwdgfield = UserUIField()
 
-            self.linkuserwdgfield = {'Infralineaire': {'linkfield': 'id_infralineaire',
-                                                       'widgets': { 'typeReseau': self.userwdgfield.comboBox_typeReseau,
-                                                                   'branchement': self.userwdgfield.comboBox_branch,
-                                                                   'modeCirculation': self.userwdgfield.comboBox_typeecoul,
-                                                                   'formecanalisation': self.userwdgfield.comboBox_formecana,
+                self.linkuserwdgfield = {'Infralineaire': {'linkfield': 'id_infralineaire',
+                                                           'widgets': { 'typeReseau': self.userwdgfield.comboBox_typeReseau,
+                                                                       'branchement': self.userwdgfield.comboBox_branch,
+                                                                       'modeCirculation': self.userwdgfield.comboBox_typeecoul,
+                                                                       'formecanalisation': self.userwdgfield.comboBox_formecana,
 
-                                                                 'materiau': self.userwdgfield.comboBox_materiau,
-                                                                   #'anPoseInf': self.userwdgfield.dateEdit_anneepose,
+                                                                     'materiau': self.userwdgfield.comboBox_materiau,
+                                                                       #'anPoseInf': self.userwdgfield.dateEdit_anneepose,
 
 
-                                                                   'diametreNominal': self.userwdgfield.doubleSpinBox_diametreNominal,
-                                                                   'hauteur': self.userwdgfield.doubleSpinBox_haut,
-                                                                   # 'largeur': self.userwdgfield.doubleSpinBox_larg,
+                                                                       'diametreNominal': self.userwdgfield.doubleSpinBox_diametreNominal,
+                                                                       'hauteur': self.userwdgfield.doubleSpinBox_haut,
+                                                                       # 'largeur': self.userwdgfield.doubleSpinBox_larg,
 
-                                                                   # 'altAmont': self.userwdgfield.doubleSpinBox_altAmont,
-                                                                   # 'altAmont': self.userwdgfield.doubleSpinBox_altAval,
-                                                                   'profamont': self.userwdgfield.doubleSpinBox_profamont,
-                                                                   'profaval': self.userwdgfield.doubleSpinBox_profaval,
-                                                                   'lid_descriptionsystem_1': self.userwdgfield.spinBox_lk_noeud1,
-                                                                   'lid_descriptionsystem_2': self.userwdgfield.spinBox_lk_noeud2
-                                                                 }},
-                                     'Objet': {'linkfield': 'id_objet',
-                                               'widgets': {'commentaire':self.userwdgfield.textBrowser_commentaire}},
-                                     'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
+                                                                       # 'altAmont': self.userwdgfield.doubleSpinBox_altAmont,
+                                                                       # 'altAmont': self.userwdgfield.doubleSpinBox_altAval,
+                                                                       'profamont': self.userwdgfield.doubleSpinBox_profamont,
+                                                                       'profaval': self.userwdgfield.doubleSpinBox_profaval,
+                                                                       'lid_descriptionsystem_1': self.userwdgfield.spinBox_lk_noeud1,
+                                                                       'lid_descriptionsystem_2': self.userwdgfield.spinBox_lk_noeud2
+                                                                     }},
+                                         'Objet': {'linkfield': 'id_objet',
+                                                   'widgets': {'commentaire':self.userwdgfield.textBrowser_commentaire}},
+                                         'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
+                                                               'widgets': {
+                                                                   'annee_debut_pose': self.userwdgfield.dateEdit_anneepose,
+
+                                                               }}}
+
+
+
+
+                self.userwdgfield.toolButton_calc_diam.clicked.connect(lambda : self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_diametreNominal))
+
+                self.userwdgfield.toolButton_calc_haut.clicked.connect(
+                    lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_haut))
+
+
+                self.userwdgfield.toolButton_prof_amont.clicked.connect(
+                    lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_profamont))
+
+                self.userwdgfield.toolButton_prof_aval.clicked.connect(
+                    lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_profaval))
+
+                self.userwdgfield.toolButton_pickam.clicked.connect(self.pickToNode)
+                self.userwdgfield.toolButton_pickav.clicked.connect(self.pickToNode)
+
+
+                self.dbasechildwdgfield = []
+
+                self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
+                self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
+
+
+                self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
+                self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+
+                self.propertieswdgRAPPORT= BaseAssainissementRapportTool(dbase=self.dbase, parentwidget=self)
+                self.dbasechildwdgfield.append(self.propertieswdgRAPPORT)
+
+        elif self.dbase.variante in ['CD41']:
+
+            if self.userwdgfield is None:
+                self.userwdgfield = UserUIField_2()
+
+                self.linkuserwdgfield = {'Infralineaire': {'linkfield': 'id_infralineaire',
                                                            'widgets': {
-                                                               'annee_debut_pose': self.userwdgfield.dateEdit_anneepose,
+                                                               'typeReseau': self.userwdgfield.comboBox_typeReseau,
+                                                               'branchement': self.userwdgfield.comboBox_branch,
 
-                                                           }}}
-
-
-
-
-            self.userwdgfield.toolButton_calc_diam.clicked.connect(lambda : self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_diametreNominal))
-
-            self.userwdgfield.toolButton_calc_haut.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_haut))
+                                                               'domaine': self.userwdgfield.comboBox_domaine,
+                                                               'implantation': self.userwdgfield.comboBox_implant,
+                                                               'modeCirculation': self.userwdgfield.comboBox_typeecoul,
+                                                               'fonctionCannAss': self.userwdgfield.comboBox_fonction,
 
 
-            self.userwdgfield.toolButton_prof_amont.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_profamont))
-
-            self.userwdgfield.toolButton_prof_aval.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_profaval))
-
-            self.userwdgfield.toolButton_pickam.clicked.connect(self.pickToNode)
-            self.userwdgfield.toolButton_pickav.clicked.connect(self.pickToNode)
 
 
-            self.dbasechildwdgfield = []
 
-            self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
-            self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
+                                                               'materiau': self.userwdgfield.comboBox_materiau,
+                                                               # 'anPoseInf': self.userwdgfield.dateEdit_anneepose,
 
+                                                               'diametreNominal': self.userwdgfield.doubleSpinBox_diametreNominal,
+                                                               'hauteur': self.userwdgfield.doubleSpinBox_haut,
+                                                               # 'largeur': self.userwdgfield.doubleSpinBox_larg,
 
-            self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
-            self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+                                                               # 'altAmont': self.userwdgfield.doubleSpinBox_altAmont,
+                                                               # 'altAmont': self.userwdgfield.doubleSpinBox_altAval,
+                                                               'profamont': self.userwdgfield.doubleSpinBox_profamont,
+                                                               'profaval': self.userwdgfield.doubleSpinBox_profaval,
+                                                               'lid_descriptionsystem_1': self.userwdgfield.spinBox_lk_noeud1,
+                                                               'lid_descriptionsystem_2': self.userwdgfield.spinBox_lk_noeud2
+                                                               }},
+                                         'Objet': {'linkfield': 'id_objet',
+                                                   'widgets': {
+                                                       'commentaire': self.userwdgfield.textBrowser_commentaire}},
+                                         'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
+                                                               'widgets': {
+                                                                   'annee_debut_pose': self.userwdgfield.dateEdit_anneepose,
+
+                                                               }}}
+
+                self.userwdgfield.toolButton_calc_diam.clicked.connect(
+                    lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_diametreNominal))
+
+                self.userwdgfield.toolButton_calc_haut.clicked.connect(
+                    lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_haut))
+
+                self.userwdgfield.toolButton_prof_amont.clicked.connect(
+                    lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_profamont))
+
+                self.userwdgfield.toolButton_prof_aval.clicked.connect(
+                    lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_profaval))
+
+                self.userwdgfield.toolButton_pickam.clicked.connect(self.pickToNode)
+                self.userwdgfield.toolButton_pickav.clicked.connect(self.pickToNode)
+
+                self.dbasechildwdgfield = []
+
+                self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, gpsutil=self.gpsutil,
+                                                               parentwidget=self)
+                self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
+
+                self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
+                self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
 
 
@@ -156,7 +226,8 @@ class BaseAssainissementInfraLineaireTool(BaseInfraLineaireTool):
 
         if debug: logging.getLogger("Lamia").debug('edit mode %s', str(editingnode))
 
-        if self.userwdgfield.comboBox_branch.currentText()=='Faux' or editingnode == 1:
+        #if self.userwdgfield.comboBox_branch.currentText()=='Faux' or editingnode == 1:
+        if self.userwdgfield.comboBox_branch.currentText() in ['Faux','Non'] or editingnode == 1:
             nearestnodeid, distance  = self.dbase.getNearestPk(self.dbase.dbasetables['Noeud'],
                                                   'Noeud',
                                                   point)
@@ -345,7 +416,8 @@ class BaseAssainissementInfraLineaireTool(BaseInfraLineaireTool):
 
         indexnode1 = self.userwdgfield.spinBox_lk_noeud1.value()
         if indexnode1 > -1 :
-            if self.userwdgfield.comboBox_branch.currentText() == 'Faux':
+            #if self.userwdgfield.comboBox_branch.currentText() == 'Faux':
+            if self.userwdgfield.comboBox_branch.currentText() in ['Faux','Non']:
                 sql = "SELECT id_noeud FROM Noeud_qgis WHERE id_descriptionsystem = " + str(indexnode1)
                 #sql = "SELECT pk_noeud FROM Noeud_qgis WHERE id_descriptionsystem = " + str(indexnode1)
                 #sql += " AND "
@@ -423,7 +495,8 @@ class BaseAssainissementInfraLineaireTool(BaseInfraLineaireTool):
 
         indexnode2 = self.userwdgfield.spinBox_lk_noeud2.value()
         if indexnode2 > -1:
-            if self.userwdgfield.comboBox_branch.currentText() == 'Faux':
+            #if self.userwdgfield.comboBox_branch.currentText() == 'Faux':
+            if self.userwdgfield.comboBox_branch.currentText() in ['Faux','Non']:
                 sql = "SELECT id_noeud FROM Noeud_qgis WHERE id_descriptionsystem = " + str(indexnode2)
                 query = self.dbase.query(sql)
                 ids = [row for row in query]
@@ -551,7 +624,7 @@ class BaseAssainissementInfraLineaireTool(BaseInfraLineaireTool):
 
         fetiddessys = self.dbase.getValuesFromPk('Infralineaire_qgis', 'id_descriptionsystem', pkinfralin)
         dbasetablelayer = self.dbase.dbasetables['Infralineaire']['layer']
-        print('moveBranchement1', pkinfralin, fetiddessys)
+        # print('moveBranchement1', pkinfralin, fetiddessys)
         # sql = "SELECT id_infralineaire FROM Infralineaire WHERE lk_descriptionsystem2 = " + str(infrafet['id_descriptionsystem'])
         sql = "SELECT pk_infralineaire, id_infralineaire FROM Infralineaire_qgis WHERE lid_descriptionsystem_2 = " + str( fetiddessys)
         sql += " AND "
@@ -561,7 +634,7 @@ class BaseAssainissementInfraLineaireTool(BaseInfraLineaireTool):
         result2 = self.dbase.query(sql)
         # for fetid2 in result2:
         for fetpk2, fetid2 in result2:
-            print('moveBranchement2',fetpk2,fetid2 )
+            # print('moveBranchement2',fetpk2,fetid2 )
             # infrafet = self.dbase.getLayerFeatureById('Infralineaire', fetid2)
             self.dbase.createNewLineVersion('Infralineaire', fetpk2)
             fetpk2 = self.dbase.getLayerFeatureById('Infralineaire', fetid2).id()
@@ -709,3 +782,9 @@ class UserUIField(QWidget):
         uipath = os.path.join(os.path.dirname(__file__), 'lamiabaseassainissement_infralineaire_tool_ui.ui')
         uic.loadUi(uipath, self)
 
+
+class UserUIField_2(QWidget):
+    def __init__(self, parent=None):
+        super(UserUIField_2, self).__init__(parent=parent)
+        uipath = os.path.join(os.path.dirname(__file__), 'lamiabaseassainissement_infralineaire_tool_ui_CD41.ui')
+        uic.loadUi(uipath, self)

@@ -1,9 +1,0 @@
-# Nom_champ             TypePostGis              TypeSpatialite                          Option
-#DJAN  SELECT * FROM Tctravauxdescriptionsystem   WHERE lpk_revision_end IS NULL
-#QGIS SELECT * FROM Tctravauxdescriptionsystem
-###pk_tctravauxdescriptionsystem ;                  SERIAL PRIMARY KEY;     INTEGER PRIMARY KEY AUTOINCREMENT
-###lpk_revision_begin;        INT ;                   INTEGER;                              Revision(pk_revision)
-###lpk_revision_end;          INT ;                   INTEGER;                              Revision(pk_revision)
-
-###lid_travaux;       INT;            INTEGER
-###lid_descriptionsystem;       INT;            INTEGER

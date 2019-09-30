@@ -107,9 +107,7 @@ class newDBDialog(QDialog):
         #combovarindex = self.comboBox_var.currentIndex()
         #vardir = self.varlist[combovarindex][1]
 
-
-
-        if (self.result() == 1):
+        if (self.result() == QDialog.Accepted):
             return (self.comboBox_dbtype.currentText(),
                     self.comboBox_type.currentText(),
                     self.comboBox_var.currentText())
