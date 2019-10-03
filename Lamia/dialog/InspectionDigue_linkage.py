@@ -40,10 +40,10 @@ import os
 import qgis.gui
 
 
-FORM_CLASS, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'InspectionDigue_linkage.ui'))
+# FORM_CLASS, _ = uic.loadUiType(os.path.join(os.path.dirname(__file__), 'InspectionDigue_linkage.ui'))
 
-class LinkageDialog(QDialog, FORM_CLASS):
+# class LinkageDialog(QDialog, FORM_CLASS):
+class LinkageDialog(QDialog):
 
     def __init__(self, widget, parent=None):
         """Constructor."""
@@ -53,9 +53,12 @@ class LinkageDialog(QDialog, FORM_CLASS):
         # self.<objectname>, and you can use autoconnect slots - see
         # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
         # #widgets-and-dialogs-with-auto-connect
-        self.setupUi(self)
-        self.finished.connect(self.dialogIsFinished)
         self.widget = widget
+        path = os.path.join(os.path.dirname(__file__), 'InspectionDigue_linkage.ui')
+        uic.loadUi(path, self)
+        # self.setupUi(self)
+        self.finished.connect(self.dialogIsFinished)
+        
 
         self.comboBox_linktype.addItems(self.widget.linkagespec.keys())
         """

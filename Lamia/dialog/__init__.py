@@ -23,4 +23,4 @@ This file is part of LAMIA.
  """
 
 
-from .Lamia_numpad import *
+#from .Lamia_numpad import *

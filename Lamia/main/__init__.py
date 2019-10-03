@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 This file is part of LAMIA.
 
@@ -23,11 +25,7 @@ This file is part of LAMIA.
  """
 
 
-# -*- coding: utf-8 -*-
 
-"""
-test
 
-"""
 
-from .DBaseParser import *
+# import DBaseParser

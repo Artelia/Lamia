@@ -1,5 +1,7 @@
-from __future__ import unicode_literals
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
+
 """
 This file is part of LAMIA.
 
@@ -23,9 +25,6 @@ This file is part of LAMIA.
   * SPDX-License-Identifier: GPL-3.0-or-later
   * License-Filename: LICENSING.md
  """
-
-
-
 
 
 from qgis.PyQt import QtCore
@@ -72,8 +71,9 @@ import logging
 #logger = logging.getLogger("Lamia")
 
 
+
 class DBaseParser(QtCore.QObject):
-    """!
+    """
     the database parser
     """
 
@@ -649,6 +649,12 @@ class DBaseParser(QtCore.QObject):
 
 
     def readDbDictionnary(self, dictfile=None, vartoread=None):
+        """
+
+        :param dictfile:
+        :param vartoread:
+        :return:
+        """
 
         debug = False
         if dictfile is None or not os.path.isfile(dictfile):

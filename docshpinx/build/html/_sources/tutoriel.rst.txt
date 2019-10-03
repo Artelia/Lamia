@@ -1,22 +1,106 @@
 Tutoriel
 ========
 
+Installation
+------------
+
+Prérequis : Librairies osgeo nécessaires
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+LAMIA est un module complémentaire pour Qgis 2.18 et supérieures se manifestant sous la forme d’un panneau supplémentaire dans l’application.
 
 
-Librairies osgeo nécessaires 
------------------------------
+Il
+s'agit donc dans un premier temps d'installer QGis 2.18.
 
-.... 
-
-.. image:: DIGUES_decomposition_transversale.jpg
+*   Pour windows, nous vous recommendons l'installateur osgeo4w. Cette installateur permet également l'installation des libraiies compélmentaires à QGIs permettant le fonctionnement de Lamia.
 
 
-.. figure:: DIGUES_decomposition_transversale.jpg
-   :scale: 50 %
-   :alt: map to buried treasure
 
-   This is the caption of the figure (a simple paragraph).
+*   Sous linux, une installation via apt-get est recommendée.
 
-   
-Installation dans Qgis 
------------------------
+
+
+
+Pour installer LAMIA, les bibliothèques suivantes sont nécessaires :
+
+*   pyqgis
+
+
+
+*   Numpy
+
+
+
+*   Matplotlib
+
+
+
+*   Networkx
+
+
+
+*   Xlrd (excel reader)
+
+
+
+*   Pillow
+
+
+
+
+Ces librairies sont installables à partir de l'installateur osgeo4w pour windows.
+
+
+
+Lancement de Lamia
+~~~~~~~~~~~~~~~~~~
+
+Si vous disposez de toutes ces bibliothèques et que le python que Qgis utilise y a bien accès, il vous suffit d’ajouter LAMIA au dossier des extensions Qgis pour pouvoir commencer à l’utiliser.
+
+
+Vous pouvez aussi télécharger LAMIA directement depuis le dépôt des extensions officielles Qgis.
+
+
+La base de données
+------------------
+
+
+|10000000000006130000032E7295F17AD75EE661_jpg|
+
+L'organisation générale
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Le schéma ci-dessus montre l'architecture générale de la base de données. On retrouve quatre grands groupes de tables.
+
+*   Les tables dédiées à la description du patrimoine (en bleu), comprenant les noeuds et les ronçons topologiques, ainsi que des éléments autres;
+
+
+
+*   Les tables servant à poiner vers des ressources diverses (en violet) , telles des photos, des plans, des rapports....
+
+
+
+*   Les tables de gestion, comme le intervenants ou les zones géograpiques (en blanc à gauche);
+
+
+
+*   Les tables liées à l'état et aux interventions sur le réseau (désodre, observation, travaux,..).
+
+
+
+
+La table Objet
+~~~~~~~~~~~~~~
+
+Lors de la création d'un élément dans un table quelconque, il est créé un élément dans la table objet. Cet élément est renseigné avec une clé primaire, une date de création, une date de version...
+
+
+
+
+
+
+.. |10000000000006130000032E7295F17AD75EE661_jpg| image:: images/10000000000006130000032E7295F17AD75EE661.jpg
+    :width: 17cm
+    :height: 8.899cm
+

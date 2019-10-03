@@ -1,6 +1,20 @@
-lancer makehtml.bat depuis le shell osgeo4w
+Génération de la doc
 
-le fichier de conf est dans \source\conf.py
+Prérequis :
+avoir sphinx et odt2sphinx
+(les installer avec pip dans l'environnement osgeo4w )
 
-pour autodocumenter une classe:
-1 mettre from "classe" import * dans le __init__.py du module
+Ensuite mettre à jour le fichier libreoffice documentation.odt2sphinx
+
+Enfin lancer makehtml.bat depuis le shell osgeo4w qui execute :
+la conversion de l'odt vers des fichiers .rst lisibles par sphinx
+la génération des pages html de documentation.
+
+la page d'acceuil html est dans ./build\html/index.html
+
+
+NB :
+
+1 - le fichier de conf est dans \source\conf.py
+2 -  pour autodocumenter une classe:
+    1 mettre from "classe" import * dans le __init__.py du module

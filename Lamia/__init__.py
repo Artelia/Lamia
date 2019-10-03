@@ -28,7 +28,7 @@ This file is part of LAMIA.
 MainModule core
 """
 
-from .Lamia import *
+#from .Lamia import *
 
 
 # noinspection PyPep8Naming

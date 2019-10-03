@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 This file is part of LAMIA.
 
@@ -27,4 +29,4 @@ This file is part of LAMIA.
 MainModule core
 """
 
-from .InspectionDigue_abstract_tool import *
+# import AbstractLamiaTool

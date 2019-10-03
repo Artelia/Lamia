@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 """
 This file is part of LAMIA.
 
@@ -23,7 +26,7 @@ This file is part of LAMIA.
  """
 
 
-# -*- coding: utf-8 -*-
+
 
 # qgis pyqt import
 from qgis.PyQt import QtGui, uic, QtCore
@@ -196,12 +199,12 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.editfeatureworking = False
         self.editfeaturelayer = None
 
-        self.currentprestationlabel = QLabel(self.tr('Prestation inactif'))
+        self.currentprestationlabel = QLabel(self.tr(u'Prestation inactif'))
         self.statusBar().addWidget(self.currentprestationlabel, 1)
 
-        self.GPSlabel = QLabel(self.tr(u'GPS non connecté'))
+        self.GPSlabel = QLabel(self.tr('GPS non connecté'))
         self.statusBar().addWidget(self.GPSlabel)
-        self.GPSlabelprecision = QLabel(self.tr(u'Précision'))
+        self.GPSlabelprecision = QLabel(self.tr('Précision'))
         self.statusBar().addWidget(self.GPSlabelprecision)
 
         if debug: logging.getLogger('Lamia').debug('step1')
@@ -1474,7 +1477,7 @@ class InspectiondigueWindowWidget(QMainWindow):
                 print('export fini')
 
     def openHelp(self):
-        path = os.path.join(os.path.dirname(__file__),'..','html','index.html')
+        path = os.path.join(os.path.dirname(__file__),'..','doc_html','index.html')
         os.startfile(path)
 
 

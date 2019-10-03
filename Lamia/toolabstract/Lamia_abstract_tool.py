@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+
 """
 This file is part of LAMIA.
 
@@ -28,7 +29,6 @@ This file is part of LAMIA.
 
 
 
-# from PyQt4 import uic, QtCore, QtGui
 from qgis.PyQt import uic, QtCore, QtGui
 
 try:
@@ -65,8 +65,6 @@ debugconnector = False
 class AbstractLamiaTool(QWidget):
     """
     AbstractInspectionDigueTool
-
-    aussi
     """
 
 

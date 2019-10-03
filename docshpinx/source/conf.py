@@ -40,7 +40,7 @@ sys.path.insert(0, path)
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx.ext.autodoc']
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.napoleon',  'sphinx.ext.coverage',]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -123,7 +123,9 @@ html_sidebars = {
 
 # -- Mock ------------------------------------------
 #autodoc_mock_imports = ["qgis","Lamia.dialog"]
-autodoc_mock_imports = ["qgis"]
+autodoc_mock_imports = ["qgis", "numpy", "pprint",
+                        "PyQt.QtCore", "PIL", "logging", "xlrd" ]
+
 
 # -- Options for HTMLHelp output ------------------------------------------
 
