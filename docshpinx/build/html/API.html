@@ -1,8 +1,8 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9" lang="fr" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="fr" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
   
@@ -17,41 +17,36 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Recherche" href="search.html"/>
-    <link rel="top" title="Documentation LAMIA 1.0" href="index.html"/>
-        <link rel="prev" title="Developpement" href="Developpement.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="prev" title="Developpement" href="Developpement.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -95,9 +90,9 @@
 <li class="toctree-l1"><a class="reference internal" href="Tutoriel.html">Tutoriel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Developpement.html">Developpement</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-Lamia.main.DBaseParser">Class DBaseParser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#class-dbaseparser">Class DBaseParser</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-Lamia.dialog.InspectionDigue_windowwidget">Class InspectionDigue_windowwidget</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-Lamia.toolabstract.Lamia_abstract_tool">Class Lamia_abstract_tool</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#class-lamia-abstract-tool">Class Lamia_abstract_tool</a></li>
 </ul>
 </li>
 </ul>
@@ -111,7 +106,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">LAMIA</a>
@@ -119,9 +114,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -165,170 +161,40 @@
             
   <div class="section" id="api">
 <h1>API<a class="headerlink" href="#api" title="Lien permanent vers ce titre">¶</a></h1>
-<div class="section" id="module-Lamia.main.DBaseParser">
-<span id="class-dbaseparser"></span><h2>Class DBaseParser<a class="headerlink" href="#module-Lamia.main.DBaseParser" title="Lien permanent vers ce titre">¶</a></h2>
+<div class="section" id="class-dbaseparser">
+<h2>Class DBaseParser<a class="headerlink" href="#class-dbaseparser" title="Lien permanent vers ce titre">¶</a></h2>
 <dl class="class">
 <dt id="Lamia.main.DBaseParser.DBaseParser">
-<em class="property">class </em><code class="descclassname">Lamia.main.DBaseParser.</code><code class="descname">DBaseParser</code><span class="sig-paren">(</span><em>canvas=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser" title="Lien permanent vers cette définition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">Lamia.main.DBaseParser.</code><code class="sig-name descname">DBaseParser</code><span class="sig-paren">(</span><em class="sig-param">canvas=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser" title="Lien permanent vers cette définition">¶</a></dt>
 <dd><p>the database parser</p>
-<dl class="method">
-<dt id="Lamia.main.DBaseParser.DBaseParser.areNodesEquals">
-<code class="descname">areNodesEquals</code><span class="sig-paren">(</span><em>node1</em>, <em>node2</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.areNodesEquals" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>Fonction pour examiner l’égalité géographique de deux points.
-Nécessaire car parfois les arrondis des coordonnées géographiques font que deux points égaux ont une
-différence de qques micromètres
-:param node1: point1 (list 2x1)
-:param node2: point2 (list 2x1)
-:return: Boolean, en fonction de l’égalité geographique des points</p>
+<dl class="attribute">
+<dt id="Lamia.main.DBaseParser.DBaseParser.visualmode">
+<code class="sig-name descname">visualmode</code><em class="property"> = None</em><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.visualmode" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>visual mode used in ui</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="Lamia.main.DBaseParser.DBaseParser.checkIfPGShcemaExists">
-<code class="descname">checkIfPGShcemaExists</code><span class="sig-paren">(</span><em>dbname=None</em>, <em>schema=None</em>, <em>user=None</em>, <em>host=u'localhost'</em>, <em>password=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.checkIfPGShcemaExists" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Paramètres:</th><td class="field-body"><ul class="first simple">
-<li><strong>dbname</strong> – </li>
-<li><strong>schema</strong> – </li>
-<li><strong>user</strong> – </li>
-<li><strong>host</strong> – </li>
-<li><strong>password</strong> – </li>
+<code class="sig-name descname">checkIfPGShcemaExists</code><span class="sig-paren">(</span><em class="sig-param">dbname=None</em>, <em class="sig-param">schema=None</em>, <em class="sig-param">user=None</em>, <em class="sig-param">host='localhost'</em>, <em class="sig-param">password=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.checkIfPGShcemaExists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.checkIfPGShcemaExists" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dbname</strong> – </p></li>
+<li><p><strong>schema</strong> – </p></li>
+<li><p><strong>user</strong> – </p></li>
+<li><p><strong>host</strong> – </p></li>
+<li><p><strong>password</strong> – </p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Renvoie:</th><td class="field-body"><p class="first last">tuple (database exists, schema exists)</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="Lamia.main.DBaseParser.DBaseParser.commit">
-<code class="descname">commit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.commit" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>Methode invoquée pour faire des commits dans la BD lamia en cours d’utilisation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="Lamia.main.DBaseParser.DBaseParser.completePathOfFile">
-<code class="descname">completePathOfFile</code><span class="sig-paren">(</span><em>filetoprocess</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.completePathOfFile" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>Génère le path complet du filetoprocess demandé. Utile quand on a un chemin relatif
-:param filetoprocess: le chemin rentré (relatif ou absolu)
-:return: le chemin absolu</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="Lamia.main.DBaseParser.DBaseParser.copyRessourceFile">
-<code class="descname">copyRessourceFile</code><span class="sig-paren">(</span><em>fromfile</em>, <em>tofile</em>, <em>withthumbnail=0</em>, <em>copywholedirforraster=False</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.copyRessourceFile" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Paramètres:</th><td class="field-body"><ul class="first simple">
-<li><strong>fromrep</strong> – </li>
-<li><strong>fromfile</strong> – </li>
-<li><strong>torep</strong> – </li>
-<li><strong>withthumbnail</strong> – 0 : copy  file + create thumbnail ; 1 : copy only thumnail; 2 : copyonly file</li>
-<li><strong>copywholedirforraster</strong> – </li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Renvoie:</th><td class="field-body"><p class="first last"></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="Lamia.main.DBaseParser.DBaseParser.createDBDictionary">
-<code class="descname">createDBDictionary</code><span class="sig-paren">(</span><em>type</em>, <em>configdir=False</em>, <em>baseversiontoread=None</em>, <em>workversiontoread=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.createDBDictionary" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>!
-Read the files in ./DBASE/create
-A file describes the fields  like that:
-#comment
-###Field_name;PG_type;SL_type;Foreignkey_type
-## parent field - used for ui - enable to sort the child fields depending the parent field    (optional)
-constraint value description;constraint value value;[depending parent field value]</p>
-<p>And fill the var self.dbasetables which is a dictionnary like that :
-{…{tablename : {“order” : order,</p>
-<blockquote>
-<div><blockquote>
-<div><p>“geom” : geometry type ,
-“widget” : the table widget,
-“djangoviewsql” : sql statement for initial django view creation
-“qgisviewsql” : sql statement for initial qgis view creation
-“qgisSLviewsql” : sql statement for initial qgis view creation - spatialite compatible
-“qgisPGviewsql” : sql statement for initial qgis view creation - postgis compatible
-“exportviewsql” : sql statement for initial special view creation
-“layer” : real layer
-“layerqgis” : view layer with parent fields
-“layerdjango” : view layer with parent fields
-“showinqgis” : display layer in canvas
-“scale” : visibility scale
-“spatialindex” : create a spatialite spatial index
-“fields” : OrderedDict{…{fieldname : {“PGtype” : PostGis type (integer not null…)</p>
-<blockquote>
-<div><blockquote>
-<div>“SLtype” : spatialite type (integer not null…)
-“FK” (optional) : foreign key definition
-“ParFldCst (optional) : name of the parent field for contraint
-“Cst” (optional) : list of constraint : [description,value,[parent field consraint value]}</div></blockquote>
-<p>…}</p>
-</div></blockquote>
-<p>}</p>
-</div></blockquote>
-<p>…}</p>
-</div></blockquote>
-</dd></dl>
-
-<dl class="method">
-<dt id="Lamia.main.DBaseParser.DBaseParser.createDBDictionary2">
-<code class="descname">createDBDictionary2</code><span class="sig-paren">(</span><em>type</em>, <em>configdir=False</em>, <em>baseversiontoread=None</em>, <em>workversiontoread=None</em>, <em>chekupdate=True</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.createDBDictionary2" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>!
-Read the files in ./DBASE/create
-A file describes the fields  like that:
-#comment
-###Field_name;PG_type;SL_type;Foreignkey_type
-## parent field - used for ui - enable to sort the child fields depending the parent field    (optional)
-constraint value description;constraint value value;[depending parent field value]</p>
-<p>And fill the var self.dbasetables which is a dictionnary like that :
-{…{tablename : {“order” : order,</p>
-<blockquote>
-<div><blockquote>
-<div><p>“geom” : geometry type ,
-“widget” : the table widget,
-“djangoviewsql” : sql statement for initial django view creation
-“qgisviewsql” : sql statement for initial qgis view creation
-“qgisSLviewsql” : sql statement for initial qgis view creation - spatialite compatible
-“qgisPGviewsql” : sql statement for initial qgis view creation - postgis compatible
-“exportviewsql” : sql statement for initial special view creation
-“layer” : real layer
-“layerqgis” : view layer with parent fields
-“layerdjango” : view layer with parent fields
-“showinqgis” : display layer in canvas
-“scale” : visibility scale
-“spatialindex” : create a spatialite spatial index
-“fields” : OrderedDict{…{fieldname : {“PGtype” : PostGis type (integer not null…)</p>
-<blockquote>
-<div><blockquote>
-<div>“SLtype” : spatialite type (integer not null…)
-“FK” (optional) : foreign key definition
-“ParFldCst (optional) : name of the parent field for contraint
-“Cst” (optional) : list of constraint : [description,value,[parent field consraint value]}</div></blockquote>
-<p>…}</p>
-</div></blockquote>
-<p>}</p>
-</div></blockquote>
-<p>…}</p>
-</div></blockquote>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>tuple (database exists, schema exists)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="Lamia.main.DBaseParser.DBaseParser.createDbase">
-<code class="descname">createDbase</code><span class="sig-paren">(</span><em>slfile=None</em>, <em>crs=None</em>, <em>worktype=None</em>, <em>dbasetype=u'spatialite'</em>, <em>dbname=None</em>, <em>schema=None</em>, <em>user=None</em>, <em>host=u'localhost'</em>, <em>port=None</em>, <em>password=None</em>, <em>dbaseressourcesdirectory=None</em>, <em>variante=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.createDbase" title="Lien permanent vers cette définition">¶</a></dt>
+<code class="sig-name descname">createDbase</code><span class="sig-paren">(</span><em class="sig-param">slfile=None</em>, <em class="sig-param">crs=None</em>, <em class="sig-param">worktype=None</em>, <em class="sig-param">dbasetype='spatialite'</em>, <em class="sig-param">dbname=None</em>, <em class="sig-param">schema=None</em>, <em class="sig-param">user=None</em>, <em class="sig-param">host='localhost'</em>, <em class="sig-param">port=None</em>, <em class="sig-param">password=None</em>, <em class="sig-param">dbaseressourcesdirectory=None</em>, <em class="sig-param">variante=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.createDbase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.createDbase" title="Lien permanent vers cette définition">¶</a></dt>
 <dd><p>pass
 :param slfile:
 :param crs:
@@ -345,24 +211,153 @@ constraint value description;constraint value value;[depending parent field valu
 </dd></dl>
 
 <dl class="method">
-<dt id="Lamia.main.DBaseParser.DBaseParser.dateVersionConstraintSQL">
-<code class="descname">dateVersionConstraintSQL</code><span class="sig-paren">(</span><em>specialdate=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.dateVersionConstraintSQL" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>Crée une chaine à rajouter à la fin d’autre requetes pour spécifier la date et la version voulue
-:return: requete sql comprenant les éléments nécessaires pour filtrer les dates et les versions</p>
+<dt id="Lamia.main.DBaseParser.DBaseParser.createDBDictionary2">
+<code class="sig-name descname">createDBDictionary2</code><span class="sig-paren">(</span><em class="sig-param">type</em>, <em class="sig-param">configdir=False</em>, <em class="sig-param">baseversiontoread=None</em>, <em class="sig-param">workversiontoread=None</em>, <em class="sig-param">chekupdate=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.createDBDictionary2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.createDBDictionary2" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>!
+Read the files in ./DBASE/create
+A file describes the fields  like that:
+#comment
+###Field_name;PG_type;SL_type;Foreignkey_type
+## parent field - used for ui - enable to sort the child fields depending the parent field    (optional)
+constraint value description;constraint value value;[depending parent field value]</p>
+<p>And fill the var self.dbasetables which is a dictionnary like that :
+{…{tablename : {“order” : order,</p>
+<blockquote>
+<div><blockquote>
+<div><p>“geom” : geometry type ,
+“widget” : the table widget,
+“djangoviewsql” : sql statement for initial django view creation
+“qgisviewsql” : sql statement for initial qgis view creation
+“qgisSLviewsql” : sql statement for initial qgis view creation - spatialite compatible
+“qgisPGviewsql” : sql statement for initial qgis view creation - postgis compatible
+“exportviewsql” : sql statement for initial special view creation
+“layer” : real layer
+“layerqgis” : view layer with parent fields
+“layerdjango” : view layer with parent fields
+“showinqgis” : display layer in canvas
+“scale” : visibility scale
+“spatialindex” : create a spatialite spatial index
+“fields” : OrderedDict{…{fieldname : {“PGtype” : PostGis type (integer not null…)</p>
+<blockquote>
+<div><blockquote>
+<div><p>“SLtype” : spatialite type (integer not null…)
+“FK” (optional) : foreign key definition
+“ParFldCst (optional) : name of the parent field for contraint
+“Cst” (optional) : list of constraint : [description,value,[parent field consraint value]}</p>
+</div></blockquote>
+<p>…}</p>
+</div></blockquote>
+<p>}</p>
+</div></blockquote>
+<p>…}</p>
+</div></blockquote>
 </dd></dl>
 
 <dl class="method">
-<dt id="Lamia.main.DBaseParser.DBaseParser.featureAdded">
-<code class="descname">featureAdded</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.featureAdded" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>Méthode connectée au signal featureAdded d’un qgsvectorlayer pour connaitre le pk du feature ajouté
-assigne cette valeur à self.featureaddedid
-:param id: le pk fourni par le signal</p>
+<dt id="Lamia.main.DBaseParser.DBaseParser.readDbDictionnary">
+<code class="sig-name descname">readDbDictionnary</code><span class="sig-paren">(</span><em class="sig-param">dictfile=None</em>, <em class="sig-param">vartoread=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.readDbDictionnary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.readDbDictionnary" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dictfile</strong> – </p></li>
+<li><p><strong>vartoread</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.main.DBaseParser.DBaseParser.createDBDictionary">
+<code class="sig-name descname">createDBDictionary</code><span class="sig-paren">(</span><em class="sig-param">type</em>, <em class="sig-param">configdir=False</em>, <em class="sig-param">baseversiontoread=None</em>, <em class="sig-param">workversiontoread=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.createDBDictionary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.createDBDictionary" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>!
+Read the files in ./DBASE/create
+A file describes the fields  like that:
+#comment
+###Field_name;PG_type;SL_type;Foreignkey_type
+## parent field - used for ui - enable to sort the child fields depending the parent field    (optional)
+constraint value description;constraint value value;[depending parent field value]</p>
+<p>And fill the var self.dbasetables which is a dictionnary like that :
+{…{tablename : {“order” : order,</p>
+<blockquote>
+<div><blockquote>
+<div><p>“geom” : geometry type ,
+“widget” : the table widget,
+“djangoviewsql” : sql statement for initial django view creation
+“qgisviewsql” : sql statement for initial qgis view creation
+“qgisSLviewsql” : sql statement for initial qgis view creation - spatialite compatible
+“qgisPGviewsql” : sql statement for initial qgis view creation - postgis compatible
+“exportviewsql” : sql statement for initial special view creation
+“layer” : real layer
+“layerqgis” : view layer with parent fields
+“layerdjango” : view layer with parent fields
+“showinqgis” : display layer in canvas
+“scale” : visibility scale
+“spatialindex” : create a spatialite spatial index
+“fields” : OrderedDict{…{fieldname : {“PGtype” : PostGis type (integer not null…)</p>
+<blockquote>
+<div><blockquote>
+<div><p>“SLtype” : spatialite type (integer not null…)
+“FK” (optional) : foreign key definition
+“ParFldCst (optional) : name of the parent field for contraint
+“Cst” (optional) : list of constraint : [description,value,[parent field consraint value]}</p>
+</div></blockquote>
+<p>…}</p>
+</div></blockquote>
+<p>}</p>
+</div></blockquote>
+<p>…}</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.main.DBaseParser.DBaseParser.loadQgisVectorLayers">
+<code class="sig-name descname">loadQgisVectorLayers</code><span class="sig-paren">(</span><em class="sig-param">file=None</em>, <em class="sig-param">dbasetype='spatialite'</em>, <em class="sig-param">variante=None</em>, <em class="sig-param">host='localhost'</em>, <em class="sig-param">port=None</em>, <em class="sig-param">dbname=None</em>, <em class="sig-param">schema=None</em>, <em class="sig-param">user=None</em>, <em class="sig-param">password=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.loadQgisVectorLayers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.loadQgisVectorLayers" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>!
+Load dbase as Qgis layers
+put the layer in self.dbasetables[“layer”]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.main.DBaseParser.DBaseParser.vacuum">
+<code class="sig-name descname">vacuum</code><span class="sig-paren">(</span><em class="sig-param">table</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.vacuum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.vacuum" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Methode invoquée pour faire des vacuum dans la BD lamia en cours d’utilisation</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.main.DBaseParser.DBaseParser.commit">
+<code class="sig-name descname">commit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.commit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.commit" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Methode invoquée pour faire des commits dans la BD lamia en cours d’utilisation</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.main.DBaseParser.DBaseParser.reInitDBase2">
+<code class="sig-name descname">reInitDBase2</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.reInitDBase2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.reInitDBase2" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Methode appelée lors d’un changement de base de données
+Reinitialise toutes les variables</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.main.DBaseParser.DBaseParser.updateWorkingDate">
+<code class="sig-name descname">updateWorkingDate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.updateWorkingDate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.updateWorkingDate" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Methode appelée lorsque la date de travail (self.workingdate) ou la version de travail (self.currentrevision)
+est modifiée
+Change les filtres de toutes les tables qgis en fonction</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.main.DBaseParser.DBaseParser.updateQgsCoordinateTransformFromLayerToCanvas">
+<code class="sig-name descname">updateQgsCoordinateTransformFromLayerToCanvas</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.updateQgsCoordinateTransformFromLayerToCanvas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.updateQgsCoordinateTransformFromLayerToCanvas" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Methode appellée lorsque le crs du canvas qgis change
+met à jour self.xform et self.xformreverse pour effectuer les transformations crs canvas &lt;-&gt; crs lamia</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="Lamia.main.DBaseParser.DBaseParser.getConstraintRawValueFromText">
-<code class="descname">getConstraintRawValueFromText</code><span class="sig-paren">(</span><em>table</em>, <em>field</em>, <em>txt</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.getConstraintRawValueFromText" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>Convertie la valeur textuelle  txt de la table lamia «&nbsp;table&nbsp;» vers sa valeur trigramme
+<code class="sig-name descname">getConstraintRawValueFromText</code><span class="sig-paren">(</span><em class="sig-param">table</em>, <em class="sig-param">field</em>, <em class="sig-param">txt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.getConstraintRawValueFromText"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.getConstraintRawValueFromText" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Convertie la valeur textuelle  txt de la table lamia « table » vers sa valeur trigramme
 :param table: la table lamia considérée
 :param field: la colonne considérée
 :param txt: la valeur textuelle
@@ -371,8 +366,8 @@ assigne cette valeur à self.featureaddedid
 
 <dl class="method">
 <dt id="Lamia.main.DBaseParser.DBaseParser.getConstraintTextFromRawValue">
-<code class="descname">getConstraintTextFromRawValue</code><span class="sig-paren">(</span><em>table</em>, <em>field</em>, <em>rawvalue</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.getConstraintTextFromRawValue" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>Convertie le trigramme rawvalue de la table lamia «&nbsp;table&nbsp;» vers sa valeur textuelle
+<code class="sig-name descname">getConstraintTextFromRawValue</code><span class="sig-paren">(</span><em class="sig-param">table</em>, <em class="sig-param">field</em>, <em class="sig-param">rawvalue</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.getConstraintTextFromRawValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.getConstraintTextFromRawValue" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Convertie le trigramme rawvalue de la table lamia « table » vers sa valeur textuelle
 :param table: la table lamia considérée
 :param field: la colonne considérée
 :param rawvalue: le trigramme ou valeur stockée considérée
@@ -380,106 +375,24 @@ assigne cette valeur à self.featureaddedid
 </dd></dl>
 
 <dl class="method">
-<dt id="Lamia.main.DBaseParser.DBaseParser.getFirstIdColumn">
-<code class="descname">getFirstIdColumn</code><span class="sig-paren">(</span><em>tablename</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.getFirstIdColumn" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>Permet d’avoir la premiere colonne de la table lamia tablename avec <a href="#id1"><span class="problematic" id="id2">pk_</span></a> en prefixe
-:param tablename: la table lamia
-:return: le nom du premier champ trouvé avec <a href="#id3"><span class="problematic" id="id4">pk_</span></a> en sufixe</p>
+<dt id="Lamia.main.DBaseParser.DBaseParser.isAttributeNull">
+<code class="sig-name descname">isAttributeNull</code><span class="sig-paren">(</span><em class="sig-param">attr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.isAttributeNull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.isAttributeNull" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Vérifie si un qgisfeature attribute est NULL - piégeux car le NULL peu prendre plusieurs formes
+:param attr: get an qgisfeature attribute
+:return: True if NULL, else False</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="Lamia.main.DBaseParser.DBaseParser.getLastId">
-<code class="descname">getLastId</code><span class="sig-paren">(</span><em>table</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.getLastId" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>renvoi l’id maximum de la table lamia demandée
-:param table: la table lamia dont on veut l’id max
-:return: l’id max</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="Lamia.main.DBaseParser.DBaseParser.getLastPk">
-<code class="descname">getLastPk</code><span class="sig-paren">(</span><em>table</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.getLastPk" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>renvoi le pk maximum de la table lamia demandée
-:param table: la table lamia dont on veut le pk max
-:return: le pk max</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="Lamia.main.DBaseParser.DBaseParser.getLastRowId">
-<code class="descname">getLastRowId</code><span class="sig-paren">(</span><em>table=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.getLastRowId" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>Renvoi le dernier pk ajouté dans la table lamia “table”
-:param table: la table dont on veut le dernier pk ajouté
-:return: le dernier pk ajouté</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="Lamia.main.DBaseParser.DBaseParser.getLatestVersion">
-<code class="descname">getLatestVersion</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.getLatestVersion" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>Renvoi la version max de la table Revision
-:return: la version max de la table Revision</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="Lamia.main.DBaseParser.DBaseParser.getLayerFeatureById">
-<code class="descname">getLayerFeatureById</code><span class="sig-paren">(</span><em>layername</em>, <em>fid</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.getLayerFeatureById" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>Renvoie le QgsFeature de la table lamia nommée layername dont le id est fid
-Remarque : on demande ici l’id et non la cle primaire de la table
-Remarquebis : on fait la requete sur le qgsvectorlayer de la table (dans self.dbasetables[layername][“layerqgis”])</p>
-<blockquote>
-<div>du coup, comme ce qgsvectorlayer dispose déjà d’un filtre en fonction de la date et de la version,
-pas besoin de requeter en plus sur ce sujet</div></blockquote>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Paramètres:</th><td class="field-body"><ul class="first simple">
-<li><strong>layername</strong> – le nom de la table dans la BD lamia</li>
-<li><strong>fid</strong> – le id dont on veut le feature</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Renvoie:</th><td class="field-body"><p class="first last">le QgsFeature associé au id demandé</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="Lamia.main.DBaseParser.DBaseParser.getLayerFeatureByPk">
-<code class="descname">getLayerFeatureByPk</code><span class="sig-paren">(</span><em>layername</em>, <em>fid</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.getLayerFeatureByPk" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>Renvoie le QgsFeature de la table lamia nommée layername dont le pk est fid
-:param layername: le nom de la table dans la BD lamia
-:param fid: le pk dont on veut le feature
-:return: le QgsFeature associé au pk demandé</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="Lamia.main.DBaseParser.DBaseParser.getMaxRevision">
-<code class="descname">getMaxRevision</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.getMaxRevision" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>Renvoi la version max de la table Revision
-:return: la version max de la table Revision</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="Lamia.main.DBaseParser.DBaseParser.getMaxVersionRepository">
-<code class="descname">getMaxVersionRepository</code><span class="sig-paren">(</span><em>typemetier</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.getMaxVersionRepository" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>REcherche dans Lamia/DBASE/create le repertoire qui correspond au typemetier, avec la plus grande version
-s’il n’y a pas de version (lamia avant sept.2018) , renvoi le repertoire avec version = None</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Paramètres:</th><td class="field-body"><strong>typemetier</strong> – </td>
-</tr>
-<tr class="field-even field"><th class="field-name">Renvoie:</th><td class="field-body"></td>
-</tr>
-</tbody>
-</table>
+<dt id="Lamia.main.DBaseParser.DBaseParser.isTableSpatial">
+<code class="sig-name descname">isTableSpatial</code><span class="sig-paren">(</span><em class="sig-param">tablename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.isTableSpatial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.isTableSpatial" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Permet de savoir si une table lamia est spatiale en cherchant le mot clé “geom” dans la liste des colonnes
+:param tablename: la table à analyser
+:return: True si “geom” est trouvé, False sinon</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="Lamia.main.DBaseParser.DBaseParser.getNearestPk">
-<code class="descname">getNearestPk</code><span class="sig-paren">(</span><em>dbasetable</em>, <em>dbasetablename</em>, <em>point</em>, <em>comefromcanvas=True</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.getNearestPk" title="Lien permanent vers cette définition">¶</a></dt>
+<code class="sig-name descname">getNearestPk</code><span class="sig-paren">(</span><em class="sig-param">dbasetable</em>, <em class="sig-param">dbasetablename</em>, <em class="sig-param">point</em>, <em class="sig-param">comefromcanvas=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.getNearestPk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.getNearestPk" title="Lien permanent vers cette définition">¶</a></dt>
 <dd><p>Permet d’avoir le pk du feature le plus proche du qgsvectorlayer correspondant à dbasetablename
 pas besoin de filtre sur les dates et versions on travaille avec le qgsectorlyaer de la table
 qui dispose déjà d’un filtre en fonction de la date et de la version
@@ -491,61 +404,174 @@ qui dispose déjà d’un filtre en fonction de la date et de la version
 </dd></dl>
 
 <dl class="method">
+<dt id="Lamia.main.DBaseParser.DBaseParser.areNodesEquals">
+<code class="sig-name descname">areNodesEquals</code><span class="sig-paren">(</span><em class="sig-param">node1</em>, <em class="sig-param">node2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.areNodesEquals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.areNodesEquals" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Fonction pour examiner l’égalité géographique de deux points.
+Nécessaire car parfois les arrondis des coordonnées géographiques font que deux points égaux ont une
+différence de qques micromètres
+:param node1: point1 (list 2x1)
+:param node2: point2 (list 2x1)
+:return: Boolean, en fonction de l’égalité geographique des points</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.main.DBaseParser.DBaseParser.getLayerFeatureById">
+<code class="sig-name descname">getLayerFeatureById</code><span class="sig-paren">(</span><em class="sig-param">layername</em>, <em class="sig-param">fid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.getLayerFeatureById"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.getLayerFeatureById" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Renvoie le QgsFeature de la table lamia nommée layername dont le id est fid
+Remarque : on demande ici l’id et non la cle primaire de la table
+Remarquebis : on fait la requete sur le qgsvectorlayer de la table (dans self.dbasetables[layername][“layerqgis”])</p>
+<blockquote>
+<div><p>du coup, comme ce qgsvectorlayer dispose déjà d’un filtre en fonction de la date et de la version,
+pas besoin de requeter en plus sur ce sujet</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>layername</strong> – le nom de la table dans la BD lamia</p></li>
+<li><p><strong>fid</strong> – le id dont on veut le feature</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>le QgsFeature associé au id demandé</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.main.DBaseParser.DBaseParser.getLayerFeatureByPk">
+<code class="sig-name descname">getLayerFeatureByPk</code><span class="sig-paren">(</span><em class="sig-param">layername</em>, <em class="sig-param">fid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.getLayerFeatureByPk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.getLayerFeatureByPk" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Renvoie le QgsFeature de la table lamia nommée layername dont le pk est fid
+:param layername: le nom de la table dans la BD lamia
+:param fid: le pk dont on veut le feature
+:return: le QgsFeature associé au pk demandé</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.main.DBaseParser.DBaseParser.dateVersionConstraintSQL">
+<code class="sig-name descname">dateVersionConstraintSQL</code><span class="sig-paren">(</span><em class="sig-param">specialdate=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.dateVersionConstraintSQL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.dateVersionConstraintSQL" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Crée une chaine à rajouter à la fin d’autre requetes pour spécifier la date et la version voulue
+:return: requete sql comprenant les éléments nécessaires pour filtrer les dates et les versions</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.main.DBaseParser.DBaseParser.completePathOfFile">
+<code class="sig-name descname">completePathOfFile</code><span class="sig-paren">(</span><em class="sig-param">filetoprocess</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.completePathOfFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.completePathOfFile" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Génère le path complet du filetoprocess demandé. Utile quand on a un chemin relatif
+:param filetoprocess: le chemin rentré (relatif ou absolu)
+:return: le chemin absolu</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.main.DBaseParser.DBaseParser.getLastId">
+<code class="sig-name descname">getLastId</code><span class="sig-paren">(</span><em class="sig-param">table</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.getLastId"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.getLastId" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>renvoi l’id maximum de la table lamia demandée
+:param table: la table lamia dont on veut l’id max
+:return: l’id max</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.main.DBaseParser.DBaseParser.getLastPk">
+<code class="sig-name descname">getLastPk</code><span class="sig-paren">(</span><em class="sig-param">table</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.getLastPk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.getLastPk" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>renvoi le pk maximum de la table lamia demandée
+:param table: la table lamia dont on veut le pk max
+:return: le pk max</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.main.DBaseParser.DBaseParser.getLastRowId">
+<code class="sig-name descname">getLastRowId</code><span class="sig-paren">(</span><em class="sig-param">table=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.getLastRowId"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.getLastRowId" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Renvoi le dernier pk ajouté dans la table lamia “table”
+:param table: la table dont on veut le dernier pk ajouté
+:return: le dernier pk ajouté</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.main.DBaseParser.DBaseParser.getFirstIdColumn">
+<code class="sig-name descname">getFirstIdColumn</code><span class="sig-paren">(</span><em class="sig-param">tablename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.getFirstIdColumn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.getFirstIdColumn" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Permet d’avoir la premiere colonne de la table lamia tablename avec <a href="#id1"><span class="problematic" id="id2">pk_</span></a> en prefixe
+:param tablename: la table lamia
+:return: le nom du premier champ trouvé avec <a href="#id3"><span class="problematic" id="id4">pk_</span></a> en sufixe</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.main.DBaseParser.DBaseParser.getLatestVersion">
+<code class="sig-name descname">getLatestVersion</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.getLatestVersion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.getLatestVersion" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Renvoi la version max de la table Revision
+:return: la version max de la table Revision</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.main.DBaseParser.DBaseParser.getMaxRevision">
+<code class="sig-name descname">getMaxRevision</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.getMaxRevision"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.getMaxRevision" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Renvoi la version max de la table Revision
+:return: la version max de la table Revision</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.main.DBaseParser.DBaseParser.featureAdded">
+<code class="sig-name descname">featureAdded</code><span class="sig-paren">(</span><em class="sig-param">id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.featureAdded"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.featureAdded" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Méthode connectée au signal featureAdded d’un qgsvectorlayer pour connaitre le pk du feature ajouté
+assigne cette valeur à self.featureaddedid
+:param id: le pk fourni par le signal</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.main.DBaseParser.DBaseParser.getMaxVersionRepository">
+<code class="sig-name descname">getMaxVersionRepository</code><span class="sig-paren">(</span><em class="sig-param">typemetier</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.getMaxVersionRepository"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.getMaxVersionRepository" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>REcherche dans Lamia/DBASE/create le repertoire qui correspond au typemetier, avec la plus grande version
+s’il n’y a pas de version (lamia avant sept.2018) , renvoi le repertoire avec version = None</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>typemetier</strong> – </p>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.main.DBaseParser.DBaseParser.getVersionRepositories2">
+<code class="sig-name descname">getVersionRepositories2</code><span class="sig-paren">(</span><em class="sig-param">typemetier</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.getVersionRepositories2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.getVersionRepositories2" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>REcherche dans Lamia/DBASE/create le repertoire qui correspond au typemetier, avec la plus grande version
+s’il n’y a pas de version (lamia avant sept.2018) , renvoi le repertoire avec version = None</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>typemetier</strong> – </p>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="Lamia.main.DBaseParser.DBaseParser.getParentTable">
-<code class="descname">getParentTable</code><span class="sig-paren">(</span><em>tablename</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.getParentTable" title="Lien permanent vers cette définition">¶</a></dt>
+<code class="sig-name descname">getParentTable</code><span class="sig-paren">(</span><em class="sig-param">tablename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.getParentTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.getParentTable" title="Lien permanent vers cette définition">¶</a></dt>
 <dd><p>Get Parents table name
 :param tablename:
 :return:</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="Lamia.main.DBaseParser.DBaseParser.getVersionRepositories2">
-<code class="descname">getVersionRepositories2</code><span class="sig-paren">(</span><em>typemetier</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.getVersionRepositories2" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>REcherche dans Lamia/DBASE/create le repertoire qui correspond au typemetier, avec la plus grande version
-s’il n’y a pas de version (lamia avant sept.2018) , renvoi le repertoire avec version = None</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Paramètres:</th><td class="field-body"><strong>typemetier</strong> – </td>
-</tr>
-<tr class="field-even field"><th class="field-name">Renvoie:</th><td class="field-body"></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="Lamia.main.DBaseParser.DBaseParser.importDbase">
-<code class="descname">importDbase</code><span class="sig-paren">(</span><em>dbaseparserfrom</em>, <em>typeimport=u'nouvelle'</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.importDbase" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Paramètres:</th><td class="field-body"><ul class="first simple">
-<li><strong>dbaseparserfrom</strong> – </li>
-<li><strong>typeimport</strong> – nouvelle import_terrain</li>
+<code class="sig-name descname">importDbase</code><span class="sig-paren">(</span><em class="sig-param">dbaseparserfrom</em>, <em class="sig-param">typeimport='nouvelle'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.importDbase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.importDbase" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dbaseparserfrom</strong> – </p></li>
+<li><p><strong>typeimport</strong> – nouvelle import_terrain</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Renvoie:</th><td class="field-body"><p class="first last"></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="Lamia.main.DBaseParser.DBaseParser.isAttributeNull">
-<code class="descname">isAttributeNull</code><span class="sig-paren">(</span><em>attr</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.isAttributeNull" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>Vérifie si un qgisfeature attribute est NULL - piégeux car le NULL peu prendre plusieurs formes
-:param attr: get an qgisfeature attribute
-:return: True if NULL, else False</p>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="Lamia.main.DBaseParser.DBaseParser.isInConflict">
-<code class="descname">isInConflict</code><span class="sig-paren">(</span><em>dbaseparserfrom</em>, <em>conflictobjetid</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.isInConflict" title="Lien permanent vers cette définition">¶</a></dt>
+<code class="sig-name descname">isInConflict</code><span class="sig-paren">(</span><em class="sig-param">dbaseparserfrom</em>, <em class="sig-param">conflictobjetid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.isInConflict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.isInConflict" title="Lien permanent vers cette définition">¶</a></dt>
 <dd><p>cases: (datet : datetravail)
 MAin                                             Import
 case n° datem       revbegin    revend          datem       revbegin    revend      Action                              Action on import                    Action if main retained
@@ -553,89 +579,46 @@ case n° datem       revbegin    revend          datem       revbegin    revend 
 2       &gt;datet      11                          &lt;datet      1                       only main modified - ok             /                                   /
 3       &lt;datet      11                          &gt;datet      1           2           only import modified ok             close lastrev and create new rev    /</p>
 <blockquote>
-<div>&gt;datet      2</div></blockquote>
-<dl class="docutils">
-<dt>4       suppr                                   &gt;datet      1           2           conflict                            add new rev with same id            close new rev</dt>
-<dd>&gt;datet      2</dd>
-<dt>5       &gt;datet      11          12              &gt;datet      1           2           conflict                            rewrite main new rev                rewrite new rev with main</dt>
-<dd>&gt;datet      12                          &gt;datet      2</dd>
-<dt>6       &gt;datet      11          12              &gt;datet      1           2           conflict                            add new rev                         close new rev</dt>
-<dd>&gt;datet      2</dd>
+<div><p>&gt;datet      2</p>
+</div></blockquote>
+<dl class="simple">
+<dt>4       suppr                                   &gt;datet      1           2           conflict                            add new rev with same id            close new rev</dt><dd><p>&gt;datet      2</p>
+</dd>
+<dt>5       &gt;datet      11          12              &gt;datet      1           2           conflict                            rewrite main new rev                rewrite new rev with main</dt><dd><p>&gt;datet      12                          &gt;datet      2</p>
+</dd>
+<dt>6       &gt;datet      11          12              &gt;datet      1           2           conflict                            add new rev                         close new rev</dt><dd><p>&gt;datet      2</p>
+</dd>
 </dl>
 <p>7       suppr                                   &gt;datet      1           2           ok : deleted on main and import     /                                   /
 8       &gt;datet      11          12              &gt;datet      1           2           conflict                            close lastrev                      write new rev with main</p>
 <blockquote>
-<div>&gt;datet      12</div></blockquote>
+<div><p>&gt;datet      12</p>
+</div></blockquote>
 <p>9       &gt;datet      11                          &gt;datet      1           2           conflit                             close lastrev                       unclose lastrev
 10      &gt;datet      11          12              &gt;datet      1           2           ok : deleted on main and import     /                                   /
 11      &gt;datet      11          12              &gt;datet      1           2           conlit                              add new rev                         /  close las rev</p>
 <blockquote>
-<div>&gt;datet      2</div></blockquote>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Paramètres:</th><td class="field-body"><ul class="first simple">
-<li><strong>dbaseparserfrom</strong> – </li>
-<li><strong>conflictobjetid</strong> – </li>
+<div><p>&gt;datet      2</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dbaseparserfrom</strong> – </p></li>
+<li><p><strong>conflictobjetid</strong> – </p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Renvoie:</th><td class="field-body"><p class="first last"></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="Lamia.main.DBaseParser.DBaseParser.isTableSpatial">
-<code class="descname">isTableSpatial</code><span class="sig-paren">(</span><em>tablename</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.isTableSpatial" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>Permet de savoir si une table lamia est spatiale en cherchant le mot clé “geom” dans la liste des colonnes
-:param tablename: la table à analyser
-:return: True si “geom” est trouvé, False sinon</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="Lamia.main.DBaseParser.DBaseParser.loadQgisVectorLayers">
-<code class="descname">loadQgisVectorLayers</code><span class="sig-paren">(</span><em>file=None</em>, <em>dbasetype=u'spatialite'</em>, <em>variante=None</em>, <em>host=u'localhost'</em>, <em>port=None</em>, <em>dbname=None</em>, <em>schema=None</em>, <em>user=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.loadQgisVectorLayers" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>!
-Load dbase as Qgis layers
-put the layer in self.dbasetables[“layer”]</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="Lamia.main.DBaseParser.DBaseParser.reInitDBase2">
-<code class="descname">reInitDBase2</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.reInitDBase2" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>Methode appelée lors d’un changement de base de données
-Reinitialise toutes les variables</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="Lamia.main.DBaseParser.DBaseParser.readDbDictionnary">
-<code class="descname">readDbDictionnary</code><span class="sig-paren">(</span><em>dictfile=None</em>, <em>vartoread=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.readDbDictionnary" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Paramètres:</th><td class="field-body"><ul class="first simple">
-<li><strong>dictfile</strong> – </li>
-<li><strong>vartoread</strong> – </li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Renvoie:</th><td class="field-body"><p class="first last"></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="Lamia.main.DBaseParser.DBaseParser.resolveConflict">
-<code class="descname">resolveConflict</code><span class="sig-paren">(</span><em>dbaseparserfrom</em>, <em>conflictobjetids</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.resolveConflict" title="Lien permanent vers cette définition">¶</a></dt>
+<code class="sig-name descname">resolveConflict</code><span class="sig-paren">(</span><em class="sig-param">dbaseparserfrom</em>, <em class="sig-param">conflictobjetids</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.resolveConflict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.resolveConflict" title="Lien permanent vers cette définition">¶</a></dt>
 <dd><blockquote>
-<div>conflictobjetpks[importid][“fields”] =  listfields</div></blockquote>
+<div><p>conflictobjetpks[importid][“fields”] =  listfields</p>
+</div></blockquote>
 <p>conflictobjetpks[importid][“mainvalue”] = listvaluemain
 conflictobjetpks[importid][“importvalue”] = listvalueimport
 :param dbaseparserfrom:
@@ -644,24 +627,22 @@ conflictobjetpks[importid][“importvalue”] = listvalueimport
 </dd></dl>
 
 <dl class="method">
-<dt id="Lamia.main.DBaseParser.DBaseParser.updateQgsCoordinateTransformFromLayerToCanvas">
-<code class="descname">updateQgsCoordinateTransformFromLayerToCanvas</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.updateQgsCoordinateTransformFromLayerToCanvas" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>Methode appellée lorsque le crs du canvas qgis change
-met à jour self.xform et self.xformreverse pour effectuer les transformations crs canvas &lt;-&gt; crs lamia</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="Lamia.main.DBaseParser.DBaseParser.updateWorkingDate">
-<code class="descname">updateWorkingDate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.updateWorkingDate" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>Methode appelée lorsque la date de travail (self.workingdate) ou la version de travail (self.currentrevision)
-est modifiée
-Change les filtres de toutes les tables qgis en fonction</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="Lamia.main.DBaseParser.DBaseParser.vacuum">
-<code class="descname">vacuum</code><span class="sig-paren">(</span><em>table</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.vacuum" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>Methode invoquée pour faire des vacuum dans la BD lamia en cours d’utilisation</p>
+<dt id="Lamia.main.DBaseParser.DBaseParser.copyRessourceFile">
+<code class="sig-name descname">copyRessourceFile</code><span class="sig-paren">(</span><em class="sig-param">fromfile</em>, <em class="sig-param">tofile</em>, <em class="sig-param">withthumbnail=0</em>, <em class="sig-param">copywholedirforraster=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/main/DBaseParser.html#DBaseParser.copyRessourceFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.main.DBaseParser.DBaseParser.copyRessourceFile" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fromrep</strong> – </p></li>
+<li><p><strong>fromfile</strong> – </p></li>
+<li><p><strong>torep</strong> – </p></li>
+<li><p><strong>withthumbnail</strong> – 0 : copy  file + create thumbnail ; 1 : copy only thumnail; 2 : copyonly file</p></li>
+<li><p><strong>copywholedirforraster</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -671,258 +652,457 @@ Change les filtres de toutes les tables qgis en fonction</p>
 <span id="class-inspectiondigue-windowwidget"></span><h2>Class InspectionDigue_windowwidget<a class="headerlink" href="#module-Lamia.dialog.InspectionDigue_windowwidget" title="Lien permanent vers ce titre">¶</a></h2>
 <dl class="class">
 <dt id="Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget">
-<em class="property">class </em><code class="descclassname">Lamia.dialog.InspectionDigue_windowwidget.</code><code class="descname">InspectiondigueWindowWidget</code><span class="sig-paren">(</span><em>canvas</em>, <em>dockwgt=None</em>, <em>parent=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget" title="Lien permanent vers cette définition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">Lamia.dialog.InspectionDigue_windowwidget.</code><code class="sig-name descname">InspectiondigueWindowWidget</code><span class="sig-paren">(</span><em class="sig-param">canvas</em>, <em class="sig-param">dockwgt=None</em>, <em class="sig-param">parent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/dialog/InspectionDigue_windowwidget.html#InspectiondigueWindowWidget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget" title="Lien permanent vers cette définition">¶</a></dt>
 <dd><p>the main window widget</p>
 <dl class="method">
-<dt id="Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget.DBaseLoaded">
-<code class="descname">DBaseLoaded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget.DBaseLoaded" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>Load layers and put them in a legend group in qgis
-Load all modules (prepro, postpro and menu)
-Show field ui</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Renvoie:</th><td class="field-body"></td>
-</tr>
-</tbody>
-</table>
+<dt id="Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget.setWorkingDate">
+<code class="sig-name descname">setWorkingDate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/dialog/InspectionDigue_windowwidget.html#InspectiondigueWindowWidget.setWorkingDate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget.setWorkingDate" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>pass</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget.closeEvent">
-<code class="descname">closeEvent</code><span class="sig-paren">(</span><em>event</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget.closeEvent" title="Lien permanent vers cette définition">¶</a></dt>
+<code class="sig-name descname">closeEvent</code><span class="sig-paren">(</span><em class="sig-param">event</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/dialog/InspectionDigue_windowwidget.html#InspectiondigueWindowWidget.closeEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget.closeEvent" title="Lien permanent vers cette définition">¶</a></dt>
 <dd><p>PyQt closeEvent - called when the windowdialog is closed
 Unloads the tools widgets</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget.comboStyleChanged">
-<code class="descname">comboStyleChanged</code><span class="sig-paren">(</span><em>comboindex</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget.comboStyleChanged" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>Listener on style combobox changed
-:param comboindex:
-:return:</p>
+<dt id="Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget.unloadTools">
+<code class="sig-name descname">unloadTools</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/dialog/InspectionDigue_windowwidget.html#InspectiondigueWindowWidget.unloadTools"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget.unloadTools" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>!
+Clears self.tools and clear the ui (tools widget and windowswidget)
+Called before loadTools</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget.setVisualMode">
+<code class="sig-name descname">setVisualMode</code><span class="sig-paren">(</span><em class="sig-param">tempres=None</em>, <em class="sig-param">reset=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/dialog/InspectionDigue_windowwidget.html#InspectiondigueWindowWidget.setVisualMode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget.setVisualMode" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>pass</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget.newDbase">
-<code class="descname">newDbase</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget.newDbase" title="Lien permanent vers cette définition">¶</a></dt>
+<code class="sig-name descname">newDbase</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/dialog/InspectionDigue_windowwidget.html#InspectiondigueWindowWidget.newDbase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget.newDbase" title="Lien permanent vers cette définition">¶</a></dt>
 <dd><p>pass</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget.openFileFromMenu">
-<code class="descname">openFileFromMenu</code><span class="sig-paren">(</span><em>action</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget.openFileFromMenu" title="Lien permanent vers cette définition">¶</a></dt>
+<code class="sig-name descname">openFileFromMenu</code><span class="sig-paren">(</span><em class="sig-param">action</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/dialog/InspectionDigue_windowwidget.html#InspectiondigueWindowWidget.openFileFromMenu"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget.openFileFromMenu" title="Lien permanent vers cette définition">¶</a></dt>
 <dd><p>pass</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget.setVisualMode">
-<code class="descname">setVisualMode</code><span class="sig-paren">(</span><em>tempres=None</em>, <em>reset=False</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget.setVisualMode" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>pass</p>
+<dt id="Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget.DBaseLoaded">
+<code class="sig-name descname">DBaseLoaded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/dialog/InspectionDigue_windowwidget.html#InspectiondigueWindowWidget.DBaseLoaded"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget.DBaseLoaded" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Load layers and put them in a legend group in qgis
+Load all modules (prepro, postpro and menu)
+Show field ui</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie</dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
-<dt id="Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget.setWorkingDate">
-<code class="descname">setWorkingDate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget.setWorkingDate" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>pass</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget.unloadTools">
-<code class="descname">unloadTools</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget.unloadTools" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>!
-Clears self.tools and clear the ui (tools widget and windowswidget)
-Called before loadTools</p>
+<dt id="Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget.comboStyleChanged">
+<code class="sig-name descname">comboStyleChanged</code><span class="sig-paren">(</span><em class="sig-param">comboindex</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/dialog/InspectionDigue_windowwidget.html#InspectiondigueWindowWidget.comboStyleChanged"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget.comboStyleChanged" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Listener on style combobox changed
+:param comboindex:
+:return:</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="Lamia.dialog.InspectionDigue_windowwidget.LoadUiField">
-<em class="property">class </em><code class="descclassname">Lamia.dialog.InspectionDigue_windowwidget.</code><code class="descname">LoadUiField</code><span class="sig-paren">(</span><em>dialog</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.dialog.InspectionDigue_windowwidget.LoadUiField" title="Lien permanent vers cette définition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">Lamia.dialog.InspectionDigue_windowwidget.</code><code class="sig-name descname">LoadUiField</code><span class="sig-paren">(</span><em class="sig-param">dialog</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/dialog/InspectionDigue_windowwidget.html#LoadUiField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.dialog.InspectionDigue_windowwidget.LoadUiField" title="Lien permanent vers cette définition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
-<div class="section" id="module-Lamia.toolabstract.Lamia_abstract_tool">
-<span id="class-lamia-abstract-tool"></span><h2>Class Lamia_abstract_tool<a class="headerlink" href="#module-Lamia.toolabstract.Lamia_abstract_tool" title="Lien permanent vers ce titre">¶</a></h2>
+<div class="section" id="class-lamia-abstract-tool">
+<h2>Class Lamia_abstract_tool<a class="headerlink" href="#class-lamia-abstract-tool" title="Lien permanent vers ce titre">¶</a></h2>
 <dl class="class">
 <dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool">
-<em class="property">class </em><code class="descclassname">Lamia.toolabstract.Lamia_abstract_tool.</code><code class="descname">AbstractLamiaTool</code><span class="sig-paren">(</span><em>dbase=None</em>, <em>dialog=None</em>, <em>linkedtreewidget=None</em>, <em>gpsutil=None</em>, <em>parentwidget=None</em>, <em>parent=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>AbstractInspectionDigueTool</p>
+<em class="property">class </em><code class="sig-prename descclassname">Lamia.toolabstract.Lamia_abstract_tool.</code><code class="sig-name descname">AbstractLamiaTool</code><span class="sig-paren">(</span><em class="sig-param">dbase=None</em>, <em class="sig-param">dialog=None</em>, <em class="sig-param">linkedtreewidget=None</em>, <em class="sig-param">gpsutil=None</em>, <em class="sig-param">parentwidget=None</em>, <em class="sig-param">parent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>This class is the abstract class for every widget loaded in the right part of te dockwidget.
+If you want another widget, you have :</p>
+<ul class="simple">
+<li><p>create a file in Lamia.toolpostpro.[the_job]</p></li>
+<li><p>Fill it with the following code :</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ExampleTool</span><span class="p">(</span><span class="n">AbstractLamiaTool</span><span class="p">):</span>
+    <span class="n">TOOLNAME</span> <span class="o">=</span> <span class="s1">&#39;test_module&#39;</span>          <span class="c1">#is TOOLNAME exists, lamia recognize it as postpro tool</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dbase</span><span class="p">,</span> <span class="n">dialog</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">linkedtreewidget</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">gpsutil</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">parentwidget</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ExampleTool</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dbase</span><span class="p">,</span> <span class="n">dialog</span><span class="p">,</span> <span class="n">linkedtreewidget</span><span class="p">,</span> <span class="n">gpsutil</span><span class="p">,</span><span class="n">parentwidget</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">initTool</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>     <span class="c1"># it s inside this function that we configure the minimal behaviour</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">CAT</span> <span class="o">=</span> <span class="s1">&#39;Synthese&#39;</span>       <span class="c1">#The first col tree widget in the left side of lamia dock</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;Couts&#39;</span>        <span class="c1">#The second col tree widget in the left side of lamia dock</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">visualmode</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span>       <span class="c1"># put in list in which visual mode you want to see the widget (4 for post pro)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">groupBox_elements</span><span class="o">.</span><span class="n">setParent</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span>      <span class="c1"># disable managing part of he widget</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_editing</span><span class="o">.</span><span class="n">setParent</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span>          <span class="c1"># disable editing part of he widget</span>
+
+    <span class="k">def</span> <span class="nf">initFieldUI</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>      <span class="c1"># load the widget to appear</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">userwdgfield</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">userwdgfield</span> <span class="o">=</span> <span class="n">UserUI</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">UserUI</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>                  <span class="c1">#load the ui made with QT Designer</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">UserUI</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
+        <span class="n">uipath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;test_module.ui&#39;</span><span class="p">)</span>
+        <span class="n">uic</span><span class="o">.</span><span class="n">loadUi</span><span class="p">(</span><span class="n">uipath</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+</pre></div>
+</div>
 <dl class="method">
-<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.captureGeometry">
-<code class="descname">captureGeometry</code><span class="sig-paren">(</span><em>connectint=0</em>, <em>listpointinitialgeometry=[]</em>, <em>type=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.captureGeometry" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>!</p>
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.initTool">
+<code class="sig-name descname">initTool</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.initTool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.initTool" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Function to be overloaded in herited class. thie function is called during he __init__ function.
+You can specify :</p>
+<ul class="simple">
+<li><p>self.CAT = “Ressources” # the name of the fist column QTreeWidget in upper left part of Lamia dock</p></li>
+<li><p>self.NAME = “Croquis”     # the name of the second column QTreeWidget in upper left part of Lamia dock</p></li>
+<li><p>self.visualmode = [ 1, 2] # the visual modes you want this widget to appear (1 : prepro, 2 desktop, 4 postpro)</p></li>
+<li><p>self.iconpath = [file_path]     # the file path of the Icon of the second column QTreeWidget in upper left part of Lamia dock</p></li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.initFieldUI">
+<code class="sig-name descname">initFieldUI</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.initFieldUI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.initFieldUI" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Function called during the first loading of the lamia dbase. It loads the widgets in self.userwdgfield variable</p>
+<p>Exemple of minimal code :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">userwdgfield</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>       <span class="c1">#prevent to load multiple times</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">userwdgfield</span> <span class="o">=</span> <span class="n">UserUI</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.initDesktopUI">
+<code class="sig-name descname">initDesktopUI</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.initDesktopUI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.initDesktopUI" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Function called When destop visual mode is loaded. function to be overload if desktop widget is different from
+base widget. You must load the widget in  self.userwdgdesktop variable</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.magicFunction">
+<code class="sig-name descname">magicFunction</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.magicFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.magicFunction" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Function called when the magic icon is clicked. function to be overload you want a special action</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.changePropertiesWidget">
-<code class="descname">changePropertiesWidget</code><span class="sig-paren">(</span><em>interfacename=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.changePropertiesWidget" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>Function called when visual mode is changed</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.comboparentValueChanged">
-<code class="descname">comboparentValueChanged</code><span class="sig-paren">(</span><em>index</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.comboparentValueChanged" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>!
-manage constrained combobox</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.connectIdsGui">
-<code class="descname">connectIdsGui</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.connectIdsGui" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>pass</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.disconnectIdsGui">
-<code class="descname">disconnectIdsGui</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.disconnectIdsGui" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>pass</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.featureSelected">
-<code class="descname">featureSelected</code><span class="sig-paren">(</span><em>item=None</em>, <em>itemisid=False</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.featureSelected" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>Action when a feature is selected somewhere
-&#64;param item : if none, add new feature else show properties of id selected</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.initFeatureProperties">
-<code class="descname">initFeatureProperties</code><span class="sig-paren">(</span><em>feat</em>, <em>inputtablename=None</em>, <em>fieldname=None</em>, <em>value=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.initFeatureProperties" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>!
-Load the feature attributes in the widget - feat is None is a new feature and default values are loaded
-&#64;param feat : the feature to be displayed</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.initTool">
-<code class="descname">initTool</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.initTool" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>!
-Abstract method - must be implemented
-Load widget and icons and init things
-must contain :</p>
-<blockquote>
-<div>self.setupUi(self)
-self.iconpath = “…path to icon…”</div></blockquote>
-</dd></dl>
-
-<dl class="method">
-<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.initWidgets">
-<code class="descname">initWidgets</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.initWidgets" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><dl class="docutils">
-<dt>Init default table</dt>
-<dd><p class="first">1
-when field contain “Id…” : add show button
-when field contain “Lk…” : add Pick button
-when field contain “File…” : add File button
-2
-when field is integer : put spinbox
-when filed is text:</p>
-<blockquote class="last">
-<div>when filed is “Date….&nbsp;» : put qdateedit
-when constrained filed : put combo
-else : put textedit</div></blockquote>
+<code class="sig-name descname">changePropertiesWidget</code><span class="sig-paren">(</span><em class="sig-param">interfacename=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.changePropertiesWidget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.changePropertiesWidget" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Function activated when visual mode is changed. Assign self.userwdgfield  or self.userwdgdesktop  to
+self.userwdg which is the current widget used.
+Activate changePropertiesWidget for the self.dbasechildwdg also.</p>
+<p>visualmode = 0 is for base interface
+visualmode = 1 is for destop interface
+visualmode = 4 is for postpro interface</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>interfacename</strong> – TODO</p>
 </dd>
 </dl>
-<p>Init widget geometry buttons</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.loadChildFeatureinWidget">
-<code class="descname">loadChildFeatureinWidget</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.loadChildFeatureinWidget" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>pass</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.loadFeaturesinTreeWdg">
-<code class="descname">loadFeaturesinTreeWdg</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.loadFeaturesinTreeWdg" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>!
-load features in self.linkedtreewidget
-called whenever the list need to be reinitialized (ex : click in maintreewidget,…)</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.loadWidgetinMainTree">
-<code class="descname">loadWidgetinMainTree</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.loadWidgetinMainTree" title="Lien permanent vers cette définition">¶</a></dt>
+<code class="sig-name descname">loadWidgetinMainTree</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.loadWidgetinMainTree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.loadWidgetinMainTree" title="Lien permanent vers cette définition">¶</a></dt>
 <dd><p>Called on the widget creation in windowsdialog
-DO:
 load the widget in the main stacked widget
 call onActivationRaw when qtreewidgetitem is clicked in MaintreeWidget</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.manageFeatureCreationOrUpdate">
-<code class="descname">manageFeatureCreationOrUpdate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.manageFeatureCreationOrUpdate" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Renvoie:</th><td class="field-body"></td>
-</tr>
-</tbody>
-</table>
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.unloadWidgetinMainTree">
+<code class="sig-name descname">unloadWidgetinMainTree</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.unloadWidgetinMainTree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.unloadWidgetinMainTree" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Unload the widget in the main stacked widget</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.initWidgets">
+<code class="sig-name descname">initWidgets</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.initWidgets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.initWidgets" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Called by  __init__
+Init QTableWidget for « pro » interface
+Init widget geometry buttons
+Init GPS management
+Init magic function</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.initWidgetUI">
+<code class="sig-name descname">initWidgetUI</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.initWidgetUI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.initWidgetUI" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Called by changePropertiesWidget</p>
+<ul class="simple">
+<li><p>Init combobox with default values</p></li>
+<li><p>Init Parent/child combobox behaviour</p></li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.manageMultipleWidgetField">
+<code class="sig-name descname">manageMultipleWidgetField</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.manageMultipleWidgetField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.manageMultipleWidgetField" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Activated by widget.valueChanged or widget.currentIndexChanged signal</p>
+<p>Manage multiple combobox or spinbox linked to one table field</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.comboparentValueChanged">
+<code class="sig-name descname">comboparentValueChanged</code><span class="sig-paren">(</span><em class="sig-param">index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.comboparentValueChanged"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.comboparentValueChanged" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Activated by currentIndexChanged</p>
+<p>Manage paret/child combobox</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.manageLinkage">
+<code class="sig-name descname">manageLinkage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.manageLinkage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.manageLinkage" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Called by self.pushButton_linkage.clicked.connect(self.manageLinkage)</p>
+<p>Open dialog when linkage button is clicked</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.initLinkageFromGeometry">
+<code class="sig-name descname">initLinkageFromGeometry</code><span class="sig-paren">(</span><em class="sig-param">linkagekey</em>, <em class="sig-param">idsourcevalue=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.initLinkageFromGeometry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.initLinkageFromGeometry" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>?
+:param linkagekey:
+:param idsourcevalue:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.rawtablePushButtonClicked">
+<code class="sig-name descname">rawtablePushButtonClicked</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.rawtablePushButtonClicked"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.rawtablePushButtonClicked" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Pro interface - click manager</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.onActivationRaw">
-<code class="descname">onActivationRaw</code><span class="sig-paren">(</span><em>param1</em>, <em>param2=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.onActivationRaw" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>Mangage the activation of tool when tool’s icon is clicked on main tree widget
-Do:
-display tool widget
-load features in ElemtreeWidget
-connect ElemtreeWidget click to featureSelected
-TODO : display or not the layer</p>
+<code class="sig-name descname">onActivationRaw</code><span class="sig-paren">(</span><em class="sig-param">param1</em>, <em class="sig-param">param2=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.onActivationRaw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.onActivationRaw" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Manage the activation of widget when tool’s icon is clicked on main QTreeWidget</p>
+<p>Do:</p>
+<ul class="simple">
+<li><p>display tool widget</p></li>
+<li><p>load features in ElemtreeWidget</p></li>
+<li><p>connect ElemtreeWidget click to featureSelected</p></li>
+<li><p>Finaly, call postOnActivation method, which is a function to be overloaded</p></li>
+</ul>
+<p>TODO : display or not the layer</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>param1</strong> – a QTreeWidgetItem (the one activated in main QTreeWidget)</p></li>
+<li><p><strong>param2</strong> – a QTreeWidgetItem (the one desactivated in main QTreeWidget)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.loadChildWidgets">
+<code class="sig-name descname">loadChildWidgets</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.loadChildWidgets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.loadChildWidgets" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Load the childs widgets - called by onActivationRaw</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.postOnActivation">
-<code class="descname">postOnActivation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.postOnActivation" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>!
-Abstract method - must be implemented
+<code class="sig-name descname">postOnActivation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.postOnActivation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.postOnActivation" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Abstract method - must be implemented
 called by onActivationRaw</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.onDesactivationRaw">
+<code class="sig-name descname">onDesactivationRaw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.onDesactivationRaw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.onDesactivationRaw" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Called by onActivationRaw when idetifying he deselected item</p>
+<p>Reinit things (rubberband, disconnect signals)</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.postOnDesactivation">
-<code class="descname">postOnDesactivation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.postOnDesactivation" title="Lien permanent vers cette définition">¶</a></dt>
+<code class="sig-name descname">postOnDesactivation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.postOnDesactivation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.postOnDesactivation" title="Lien permanent vers cette définition">¶</a></dt>
 <dd><p>!
 Abstract method - must be implemented
 called by onDesactivationRaw</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.rawtablePushButtonClicked">
-<code class="descname">rawtablePushButtonClicked</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.rawtablePushButtonClicked" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>!
-Raw table click manager</p>
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.loadChildFeatureinWidget">
+<code class="sig-name descname">loadChildFeatureinWidget</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.loadChildFeatureinWidget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.loadChildFeatureinWidget" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Called by currentFeatureChanged emited by parent widget if it exists
+Call loadFeaturesinTreeWdg
+Manage behaviour of the widget
+emit currentFeatureChanged for child widgets</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.loadFeaturesinTreeWdg">
+<code class="sig-name descname">loadFeaturesinTreeWdg</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.loadFeaturesinTreeWdg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.loadFeaturesinTreeWdg" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>load features in self.linkedtreewidget
+called whenever the list need to be reinitialized (ex : click in maintreewidget,…)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.disconnectIdsGui">
+<code class="sig-name descname">disconnectIdsGui</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.disconnectIdsGui"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.disconnectIdsGui" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Disconnect self.featureSelected from main QTreeWidget and comboBox_featurelist</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.connectIdsGui">
+<code class="sig-name descname">connectIdsGui</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.connectIdsGui"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.connectIdsGui" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Connect self.featureSelected from main QTreeWidget and comboBox_featurelist</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.updateWorkingDate">
+<code class="sig-name descname">updateWorkingDate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.updateWorkingDate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.updateWorkingDate" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>No more used</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.loadIds">
+<code class="sig-name descname">loadIds</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.loadIds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.loadIds" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Called by loadFeaturesinTreeWdg</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie</dt>
+<dd class="field-odd"><p>ids : an array of the wanted ids, with eventualy more value defined in self.qtreewidgetfields</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.postloadIds">
+<code class="sig-name descname">postloadIds</code><span class="sig-paren">(</span><em class="sig-param">sqlin</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.postloadIds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.postloadIds" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Enable to modify the sql used to get ids</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>sqlin</strong> – the normal sql generated by loadIds</p>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>the modified sql tu use in loadIds</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.featureSelected">
+<code class="sig-name descname">featureSelected</code><span class="sig-paren">(</span><em class="sig-param">item=None</em>, <em class="sig-param">itemisid=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.featureSelected"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.featureSelected" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Action when a feature is selected somewhere (Main QTreeWidget, ids-Combobox)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>item</strong> – a QTreeWidgetItem or a Combobox index</p></li>
+<li><p><strong>itemisid</strong> – if True, item is an pk</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.createParentFeature">
+<code class="sig-name descname">createParentFeature</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.createParentFeature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.createParentFeature" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Create a new line in Objet table</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.initFeatureProperties">
+<code class="sig-name descname">initFeatureProperties</code><span class="sig-paren">(</span><em class="sig-param">feat</em>, <em class="sig-param">inputtablename=None</em>, <em class="sig-param">fieldname=None</em>, <em class="sig-param">value=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.initFeatureProperties"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.initFeatureProperties" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Called by featureSelected
+Fill the fields in the widget</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>feat</strong> – the selected  QgsFeature - if None it s a new feature</p></li>
+<li><p><strong>inputtablename</strong> – To init a specific table with specific field and a specific value</p></li>
+<li><p><strong>fieldname</strong> – specific field</p></li>
+<li><p><strong>value</strong> – specific value</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.setValueInWidget">
+<code class="sig-name descname">setValueInWidget</code><span class="sig-paren">(</span><em class="sig-param">wdg</em>, <em class="sig-param">valuetoset</em>, <em class="sig-param">table</em>, <em class="sig-param">field</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.setValueInWidget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.setValueInWidget" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Called by initFeatureProperties when iterating the fields</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>wdg</strong> – the widget to set a value to</p></li>
+<li><p><strong>valuetoset</strong> – the value</p></li>
+<li><p><strong>table</strong> – the table of the value</p></li>
+<li><p><strong>field</strong> – the field of the value</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.saveFeature">
-<code class="descname">saveFeature</code><span class="sig-paren">(</span><em>pushbuttonsignal=0</em>, <em>showsavemessage=True</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.saveFeature" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>!
-Action when save feature is clicked</p>
-<p>Actions :
-1 - creating fet and save properties</p>
+<code class="sig-name descname">saveFeature</code><span class="sig-paren">(</span><em class="sig-param">pushbuttonsignal=0</em>, <em class="sig-param">showsavemessage=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.saveFeature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.saveFeature" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Action when save feature is clicked</p>
+<ol class="arabic">
+<li><p>Create feat and save properties. Manage versioning:</p>
 <blockquote>
-<div>new version : save old version(just revision_end) -&gt; create new and copy old feat to new -&gt; save properties
-new : createnew and save properties
-existing : save properties</div></blockquote>
-<p>2 - reload treewidget and widget with new feat properties</p>
+<div><p>new version : save old version(just revision_end) -&gt; create new and copy old feat to new -&gt; save properties</p>
+<p>new : createnew and save properties</p>
+<p>existing : save properties</p>
+</div></blockquote>
+</li>
+<li><p>reload treewidget and widget with new feat properties</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pushbuttonsignal</strong> – to catch a button signal</p></li>
+<li><p><strong>showsavemessage</strong> – show save message in qgis interface</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
-<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.saveFeatureProperties">
-<code class="descname">saveFeatureProperties</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.saveFeatureProperties" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>!
-Core method for saving feature properties</p>
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.manageFeatureCreationOrUpdate">
+<code class="sig-name descname">manageFeatureCreationOrUpdate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.manageFeatureCreationOrUpdate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.manageFeatureCreationOrUpdate" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Called by saveFeature - Manage versioning</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.manageGeomOfLinkedFeat">
+<code class="sig-name descname">manageGeomOfLinkedFeat</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.manageGeomOfLinkedFeat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.manageGeomOfLinkedFeat" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Manage linked geom between parent table and chidl table
+linkage eom is defined by self.linkedgeom variable</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.setGeometryToFeature">
+<code class="sig-name descname">setGeometryToFeature</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.setGeometryToFeature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.setGeometryToFeature" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Methode pour assigner le self.tempgeometry au self.currenfeature
+cree le self.currenfeature si besoin
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.updateParentFeature">
+<code class="sig-name descname">updateParentFeature</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.updateParentFeature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.updateParentFeature" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Renvoie</dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.saveQGisFeature">
-<code class="descname">saveQGisFeature</code><span class="sig-paren">(</span><em>table</em>, <em>feat</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.saveQGisFeature" title="Lien permanent vers cette définition">¶</a></dt>
+<code class="sig-name descname">saveQGisFeature</code><span class="sig-paren">(</span><em class="sig-param">table</em>, <em class="sig-param">feat</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.saveQGisFeature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.saveQGisFeature" title="Lien permanent vers cette définition">¶</a></dt>
 <dd><p>Premiere etape de la sauvegarde : sauvegarde le qgsfeature de la table en cours d’edition
 Return le currentFeature
 :param table:
@@ -931,46 +1111,27 @@ Return le currentFeature
 </dd></dl>
 
 <dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.saveFeatureProperties">
+<code class="sig-name descname">saveFeatureProperties</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.saveFeatureProperties"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.saveFeatureProperties" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>!
+Core method for saving feature properties</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.captureGeometry">
+<code class="sig-name descname">captureGeometry</code><span class="sig-paren">(</span><em class="sig-param">connectint=0</em>, <em class="sig-param">listpointinitialgeometry=[]</em>, <em class="sig-param">type=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.captureGeometry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.captureGeometry" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>!</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.saveRessourceFile">
-<code class="descname">saveRessourceFile</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.saveRessourceFile" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><dl class="docutils">
-<dt>self.dbaseressourcesfield = {“tablefilefield” <span class="classifier-delimiter">:</span> <span class="classifier">“File”,</span></dt>
-<dd>“idforparent” : “IdObjet”,
+<code class="sig-name descname">saveRessourceFile</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.saveRessourceFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.saveRessourceFile" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><dl class="simple">
+<dt>self.dbaseressourcesfield = {“tablefilefield”<span class="classifier">“File”,</span></dt><dd><p>“idforparent” : “IdObjet”,
 “parenttablename” : “OBJET”,
-“datefield” : “DateCreation”}</dd>
+“datefield” : “DateCreation”}</p>
+</dd>
 </dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.setGeometryToFeature">
-<code class="descname">setGeometryToFeature</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.setGeometryToFeature" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>Methode pour assigner le self.tempgeometry au self.currenfeature
-cree le self.currenfeature si besoin
-:return:</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.setValueInWidget">
-<code class="descname">setValueInWidget</code><span class="sig-paren">(</span><em>wdg</em>, <em>valuetoset</em>, <em>table</em>, <em>field</em><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.setValueInWidget" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><dl class="docutils">
-<dt>if isinstance(feat, qgis.core.QgsFeature):</dt>
-<dd>valuetoset = feat[field]</dd>
-<dt>else:</dt>
-<dd>valuetoset = feat</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.updateParentFeature">
-<code class="descname">updateParentFeature</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.updateParentFeature" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Renvoie:</th><td class="field-body"></td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 </dd></dl>
@@ -980,16 +1141,14 @@ cree le self.currenfeature si besoin
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="Developpement.html" class="btn btn-neutral" title="Developpement" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="Developpement.html" class="btn btn-neutral float-left" title="Developpement" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -998,11 +1157,11 @@ cree le self.currenfeature si besoin
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Artelia.
+        &copy; Copyright 2018, Artelia
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -1015,38 +1174,15 @@ cree le self.currenfeature si besoin
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'1.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="_static/language_data.js"></script>
-      <script type="text/javascript" src="_static/translations.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

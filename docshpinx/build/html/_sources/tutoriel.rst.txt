@@ -7,11 +7,9 @@ Installation
 Prérequis : Librairies osgeo nécessaires
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-LAMIA est un module complémentaire pour Qgis 2.18 et supérieures se manifestant sous la forme d’un panneau supplémentaire dans l’application.
+LAMIA est un module complémentaire pour Qgis 2.18 et supérieures se manifestant sous la forme d’un panneau supplémentaire dans l’application. 
 
-
-Il
-s'agit donc dans un premier temps d'installer QGis 2.18.
+Il s'agit donc dans un premier temps d'installer QGis 2.18. 
 
 *   Pour windows, nous vous recommendons l'installateur osgeo4w. Cette installateur permet également l'installation des libraiies compélmentaires à QGIs permettant le fonctionnement de Lamia.
 
@@ -22,7 +20,7 @@ s'agit donc dans un premier temps d'installer QGis 2.18.
 
 
 
-Pour installer LAMIA, les bibliothèques suivantes sont nécessaires :
+Pour installer LAMIA, les bibliothèques suivantes sont nécessaires : 
 
 *   pyqgis
 
@@ -56,10 +54,10 @@ Ces librairies sont installables à partir de l'installateur osgeo4w pour window
 Lancement de Lamia
 ~~~~~~~~~~~~~~~~~~
 
-Si vous disposez de toutes ces bibliothèques et que le python que Qgis utilise y a bien accès, il vous suffit d’ajouter LAMIA au dossier des extensions Qgis pour pouvoir commencer à l’utiliser.
+Si vous disposez de toutes ces bibliothèques et que le python que Qgis utilise y a bien accès, il vous suffit d’ajouter LAMIA au dossier des extensions Qgis pour pouvoir commencer à l’utiliser. 
 
 
-Vous pouvez aussi télécharger LAMIA directement depuis le dépôt des extensions officielles Qgis.
+Vous pouvez aussi télécharger LAMIA directement depuis le dépôt des extensions officielles Qgis. 
 
 
 La base de données
@@ -71,7 +69,7 @@ La base de données
 L'organisation générale
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Le schéma ci-dessus montre l'architecture générale de la base de données. On retrouve quatre grands groupes de tables.
+Le schéma ci-dessus montre l'architecture générale de la base de données. On retrouve quatre grands groupes de tables. 
 
 *   Les tables dédiées à la description du patrimoine (en bleu), comprenant les noeuds et les ronçons topologiques, ainsi que des éléments autres;
 

@@ -1,8 +1,8 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9" lang="fr" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="fr" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
   
@@ -17,42 +17,37 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Recherche" href="search.html"/>
-    <link rel="top" title="Documentation LAMIA 1.0" href="index.html"/>
-        <link rel="next" title="Developpement" href="Developpement.html"/>
-        <link rel="prev" title="Démarche générale, license" href="D_marche_g_n_rale__license.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="next" title="Developpement" href="Developpement.html" />
+    <link rel="prev" title="Démarche générale, license" href="D_marche_g_n_rale__license.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -119,7 +114,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">LAMIA</a>
@@ -127,9 +122,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -178,20 +174,19 @@
 <div class="section" id="prerequis-librairies-osgeo-necessaires">
 <h3>Prérequis : Librairies osgeo nécessaires<a class="headerlink" href="#prerequis-librairies-osgeo-necessaires" title="Lien permanent vers ce titre">¶</a></h3>
 <p>LAMIA est un module complémentaire pour Qgis 2.18 et supérieures se manifestant sous la forme d’un panneau supplémentaire dans l’application.</p>
-<p>Il
-s’agit donc dans un premier temps d’installer QGis 2.18.</p>
+<p>Il s’agit donc dans un premier temps d’installer QGis 2.18.</p>
 <ul class="simple">
-<li>Pour windows, nous vous recommendons l’installateur osgeo4w. Cette installateur permet également l’installation des libraiies compélmentaires à QGIs permettant le fonctionnement de Lamia.</li>
-<li>Sous linux, une installation via apt-get est recommendée.</li>
+<li><p>Pour windows, nous vous recommendons l’installateur osgeo4w. Cette installateur permet également l’installation des libraiies compélmentaires à QGIs permettant le fonctionnement de Lamia.</p></li>
+<li><p>Sous linux, une installation via apt-get est recommendée.</p></li>
 </ul>
 <p>Pour installer LAMIA, les bibliothèques suivantes sont nécessaires :</p>
 <ul class="simple">
-<li>pyqgis</li>
-<li>Numpy</li>
-<li>Matplotlib</li>
-<li>Networkx</li>
-<li>Xlrd (excel reader)</li>
-<li>Pillow</li>
+<li><p>pyqgis</p></li>
+<li><p>Numpy</p></li>
+<li><p>Matplotlib</p></li>
+<li><p>Networkx</p></li>
+<li><p>Xlrd (excel reader)</p></li>
+<li><p>Pillow</p></li>
 </ul>
 <p>Ces librairies sont installables à partir de l’installateur osgeo4w pour windows.</p>
 </div>
@@ -208,10 +203,10 @@ s’agit donc dans un premier temps d’installer QGis 2.18.</p>
 <h3>L’organisation générale<a class="headerlink" href="#l-organisation-generale" title="Lien permanent vers ce titre">¶</a></h3>
 <p>Le schéma ci-dessus montre l’architecture générale de la base de données. On retrouve quatre grands groupes de tables.</p>
 <ul class="simple">
-<li>Les tables dédiées à la description du patrimoine (en bleu), comprenant les noeuds et les ronçons topologiques, ainsi que des éléments autres;</li>
-<li>Les tables servant à poiner vers des ressources diverses (en violet) , telles des photos, des plans, des rapports….</li>
-<li>Les tables de gestion, comme le intervenants ou les zones géograpiques (en blanc à gauche);</li>
-<li>Les tables liées à l’état et aux interventions sur le réseau (désodre, observation, travaux,..).</li>
+<li><p>Les tables dédiées à la description du patrimoine (en bleu), comprenant les noeuds et les ronçons topologiques, ainsi que des éléments autres;</p></li>
+<li><p>Les tables servant à poiner vers des ressources diverses (en violet) , telles des photos, des plans, des rapports….</p></li>
+<li><p>Les tables de gestion, comme le intervenants ou les zones géograpiques (en blanc à gauche);</p></li>
+<li><p>Les tables liées à l’état et aux interventions sur le réseau (désodre, observation, travaux,..).</p></li>
 </ul>
 </div>
 <div class="section" id="la-table-objet">
@@ -223,9 +218,7 @@ s’agit donc dans un premier temps d’installer QGis 2.18.</p>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -234,7 +227,7 @@ s’agit donc dans un premier temps d’installer QGis 2.18.</p>
         <a href="Developpement.html" class="btn btn-neutral float-right" title="Developpement" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="D_marche_g_n_rale__license.html" class="btn btn-neutral" title="Démarche générale, license" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="D_marche_g_n_rale__license.html" class="btn btn-neutral float-left" title="Démarche générale, license" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -243,11 +236,11 @@ s’agit donc dans un premier temps d’installer QGis 2.18.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Artelia.
+        &copy; Copyright 2018, Artelia
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -260,38 +253,15 @@ s’agit donc dans un premier temps d’installer QGis 2.18.</p>
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'1.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="_static/language_data.js"></script>
-      <script type="text/javascript" src="_static/translations.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

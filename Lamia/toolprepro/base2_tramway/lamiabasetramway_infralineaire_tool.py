@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 """
 This file is part of LAMIA.
 
@@ -23,7 +26,7 @@ This file is part of LAMIA.
  """
 
 
-# -*- coding: utf-8 -*-
+
 """
 
 
@@ -32,7 +35,7 @@ import logging
 import time
 debugtime = False
 """
-from __future__ import unicode_literals
+
 from qgis.PyQt import uic, QtCore, QtGui
 
 try:

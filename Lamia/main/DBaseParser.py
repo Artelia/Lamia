@@ -95,6 +95,8 @@ class DBaseParser(QtCore.QObject):
 
 
     def __init__(self,canvas=None):
+
+
         """
         Init func
         """
@@ -104,7 +106,7 @@ class DBaseParser(QtCore.QObject):
         # the dictionnary of dbase
         self.dbasetables = None
         self.imagedirectory = None
-        # visual mode used in ui
+        #:visual mode used in ui
         self.visualmode = 0
         # dabse type Digue Assainissement
         self.type = None
@@ -189,6 +191,9 @@ class DBaseParser(QtCore.QObject):
 
     def checkIfPGShcemaExists(self, dbname=None, schema=None, user=None,
                               host='localhost', password=None):
+
+
+
         """
         :param dbname:
         :param schema:

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 This file is part of LAMIA.
 
@@ -23,7 +25,7 @@ This file is part of LAMIA.
  """
 
 
-# -*- coding: utf-8 -*-
+
 """
 
 
@@ -122,7 +124,8 @@ class BaseDigueInfraLineaireTool(BaseInfraLineaireTool):
                                                'widgets': {'libelle': self.userwdgfield.lineEdit_nom,
                                                            'commentaire':self.userwdgfield.textBrowser_commentaire}},
                                      'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
-                                                           'widgets': {'annee_fin_pose' : self.userwdgfield.dateEdit_datecontruct}}}
+                                                           'widgets': {'annee_fin_pose' : self.userwdgfield.dateEdit_datecontruct,
+                                                                       'etatfonct': self.userwdgfield.comboBox_etat_fonc}}}
 
             self.dbasechildwdgfield = []
 
@@ -160,7 +163,8 @@ class BaseDigueInfraLineaireTool(BaseInfraLineaireTool):
                                                  'widgets': {'libelle': self.userwdgdesktop.lineEdit_nom,
                                                              'commentaire': self.userwdgdesktop.textBrowser_comm}},
                                        'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
-                                                             'widgets': {'annee_fin_pose' : self.userwdgfield.dateEdit_datecontruct}}}
+                                                             'widgets': {'annee_fin_pose' : self.userwdgfield.dateEdit_datecontruct,
+                                                                         'etatfonct': self.userwdgdesktop.comboBox_etat_fonc}}}
 
             self.userwdgdesktop.pushButton_defineinter.clicked.connect(self.manageLinkage)
 

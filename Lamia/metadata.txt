@@ -11,7 +11,7 @@ name=Lamia
 qgisMinimumVersion=2.14
 qgisMaximumVersion=3.99
 description=lamia
-version=0.109
+version=0.110
 author=ARTELIA
 email=patrice.verchere@arteliagroup.com
 
@@ -25,6 +25,7 @@ repository=erg
 
 # Uncomment the following line and add your changelog:
 # changelog=
+0.110 : tram expor shp; sew axport shp, levee db modif
 0.109 : ass, eclairage bug fix
 0.108 : export tram
 0.107 : copy to selection bug fix

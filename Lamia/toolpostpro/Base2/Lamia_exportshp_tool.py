@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 This file is part of LAMIA.
 
@@ -23,7 +25,7 @@ This file is part of LAMIA.
  """
 
 
-# -*- coding: utf-8 -*-
+
 
 
 
@@ -474,6 +476,7 @@ class ExportShapefileTool(AbstractLamiaTool):
                             feat[compteur] = self.dbase.getConstraintTextFromRawValue(table['table'],
                                                                                table['fields'][name]['cst'],
                                                                                row[compteur])
+
                         else:
                             feat[compteur] = row[compteur]
                 elif 'postpro' in table['table']  :

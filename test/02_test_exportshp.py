@@ -34,6 +34,7 @@ class TestMain(Test):
 
         path = "C://000_testdigue//0_bastien//LANDY.sqlite"
         path = "C://000_testdigue//Manon_AEP//EAU POTABLE S1.sqlite"
+        path = "C://000_testdigue//temp_base2_tram2//test01.sqlite"
 
         self.wind.dbase.loadQgisVectorLayers(path)
         self.wind.loadUiDesktop()
@@ -61,8 +62,8 @@ class TestMain(Test):
         # BM_Photo   BM_TcObjetRessource  BM_Graphdata   BM_TcObjetRessource
         #  BM_Desordres_ligne    BM_Desordres_point   BM_Observation
         # 00_Desordres_observation_actif   00_Desordres_observation_total  00_Equipement_observation_actif
-        # Export_total      Infralineaire    Noeud      Equipement
-        typeexport = 'Equipement'
+        # Export_total      Infralineaire    Noeud      Equipement      Export_total
+        typeexport = 'Export_total'
 
         if False:
             rootpath = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//63_Rapports//20190200_BD_exportshp//20190415_ind1"

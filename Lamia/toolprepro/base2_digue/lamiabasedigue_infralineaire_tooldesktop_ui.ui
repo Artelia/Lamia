@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>480</width>
-    <height>414</height>
+    <width>440</width>
+    <height>542</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -75,25 +75,22 @@
           <enum>QFrame::Raised</enum>
          </property>
          <layout class="QGridLayout" name="gridLayout_2" columnstretch="1,10,0,0">
-          <item row="0" column="0">
-           <widget class="QLabel" name="label">
+          <item row="0" column="2">
+           <widget class="QLabel" name="label_3">
             <property name="text">
-             <string>Type</string>
+             <string>Constitution</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_4">
-            <property name="text">
-             <string>Classement</string>
+          <item row="2" column="3">
+           <widget class="QDateEdit" name="dateEdit_datecontruct">
+            <property name="calendarPopup">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
-           <widget class="QComboBox" name="comboBox_classement"/>
-          </item>
-          <item row="0" column="1">
-           <widget class="QComboBox" name="comboBox_type"/>
+          <item row="0" column="3">
+           <widget class="QComboBox" name="comboBox_contitution"/>
           </item>
           <item row="2" column="2">
            <widget class="QLabel" name="label_11">
@@ -102,22 +99,35 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="2">
-           <widget class="QLabel" name="label_3">
+          <item row="0" column="1">
+           <widget class="QComboBox" name="comboBox_type"/>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label">
             <property name="text">
-             <string>Constitution</string>
+             <string>Type</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="3">
-           <widget class="QComboBox" name="comboBox_contitution"/>
+          <item row="2" column="1">
+           <widget class="QComboBox" name="comboBox_classement"/>
           </item>
-          <item row="2" column="3">
-           <widget class="QDateEdit" name="dateEdit_datecontruct">
-            <property name="calendarPopup">
-             <bool>true</bool>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>Classement</string>
             </property>
            </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_12">
+            <property name="text">
+             <string>Etat général</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QComboBox" name="comboBox_etat_fonc"/>
           </item>
          </layout>
         </widget>

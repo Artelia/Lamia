@@ -8,7 +8,6 @@ modeCirculation;        String;   modeCirculation ;     modeCirculation
 formecanalisation;               String;   formecanalisation   ;     formecanalisation
 diametreNominal;               Double;      ;     diametreNominal
 hauteur;               Double;       ;     hauteur
-anPoseSup;               String;       ;     anPoseSup
 materiau;               String;      materiau   ;     materiau
 branchement;               String;         ;     CASE WHEN branchement = 0 THEN 'Principal' ELSE 'Branchement' END
 
@@ -18,11 +17,19 @@ branchement;               String;         ;     CASE WHEN branchement = 0 THEN 
 
 ###Descriptionsystem
 id_descriptionsystem;         Int;               ;                  Infralineaire_now.id_descriptionsystem
+annee_debut_pose;         String;               ;                  Infralineaire_now.annee_debut_pose
+date_miseHorsService;         String;               ;                  Infralineaire_now.date_miseHorsService
+
+
 
 ###Objet
 #nom              type               cst               valeur                    
 id_objet;         Int;               ;                  Infralineaire_now.id_objet
 commentaire;      String;               ;                  Infralineaire_now.commentaire
+datetimecreation;      String;               ;                  Infralineaire_now.datetimecreation
+datetimemodification;      String;               ;                  Infralineaire_now.datetimemodification
+
+
 
 ###Infralineaire1
 #nom              type               cst               valeur  

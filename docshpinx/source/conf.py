@@ -40,7 +40,10 @@ sys.path.insert(0, path)
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.napoleon',  'sphinx.ext.coverage',]
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.napoleon', 
+              'sphinx.ext.coverage'
+              ,'sphinx.ext.viewcode'
+              ]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -86,6 +89,9 @@ pygments_style = 'sphinx'
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = False
 
+# Not alphabetycal ordrer
+autodoc_member_order = 'bysource'
+
 
 # -- Options for HTML output ----------------------------------------------
 
@@ -123,8 +129,8 @@ html_sidebars = {
 
 # -- Mock ------------------------------------------
 #autodoc_mock_imports = ["qgis","Lamia.dialog"]
-autodoc_mock_imports = ["qgis", "numpy", "pprint",
-                        "PyQt.QtCore", "PIL", "logging", "xlrd" ]
+autodoc_mock_imports = ["qgis", "numpy", "pprint","pyspatialite","psycopg2","sqlite3","glob", "collections",
+                        "PyQt.QtCore", "PIL", "logging", "xlrd", "math", "re", "os", "sys", "shutils" ]
 
 
 # -- Options for HTMLHelp output ------------------------------------------

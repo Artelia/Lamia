@@ -38,8 +38,7 @@ class TestMain(Test):
         # path = "C://000_testdigue//tram_bordeaux//Tram.sqlite
 
         # choice
-        path = "C://000_testdigue//temp_base2_eclairagepublic//test01.sqlite"
-
+        path = "C://000_testdigue//testdigue//BD_totale_ind6.sqlite"
 
 
 

@@ -93,6 +93,7 @@ class RstFile(object):
         return '"%s"' % '\\n'.join(self.lines)
 
     def _addline(self, line):
+        # print('RstFile', '_addline', line, self.current_index)
         if self.current_index == -1:
             self.lines.append(line)
         else:
@@ -117,16 +118,21 @@ class RstFile(object):
         self._addline(line)
         self.line_started = True
 
-    def append(self, line=''):
-        self.current._append(line)
+    def append(self, line='', dostrip=True):
+        self.current._append(line, dostrip)
 
-    def _append(self, line=''):
+    def _append(self, line='', dostrip=True):
         
         #modif PVR
-        if line and line[0:4] == '    ':
-            line = line.rstrip(' \n')
-        else:
-            line = line.strip(' \n')
+        if dostrip:
+            if line and line[0:4] == '    ':
+                line = line.rstrip(' \n')
+            else:
+                line = line.strip(' \n')
+            
+        if len(line) and line[0] in ['*',"'"] and line[-1] in ['*',"'"]:
+            # print('line##', line)
+            line = ' ' + line + ' '
         
         if self.line_started:
             self.lines[-1] += line
@@ -400,14 +406,16 @@ class SphinxWriter(object):
     def bool_option(self, name):
         return self.options.get(name, False)
 
-    def append(self, text):
-        self.current_file.append(text)
+    def append(self, text, dostrip=True):
+        # print('SphinxWriter', 'append', text)
+        self.current_file.append(text, dostrip)
 
     def add_image(self, fname, fcontent, width=None, height=None):
         self.current_file.add_image(fname, fcontent,
                                     width=width, height=height)
 
     def add_text(self, text, font_style=None):
+        # print('SphinxWriter', 'add_text', text, self.current_file.line_started)
         if font_style == 'italic':
             text = '*' + text + '*'
         elif font_style == 'underline':
@@ -417,7 +425,7 @@ class SphinxWriter(object):
         elif font_style == 'fixed':
             text = '``' + text + '``'
         # print('add_text', text,'-')
-        self.append(text)
+        self.append(text, dostrip=False)
 
     def h0(self, text):
         self.current_file.heading(text, 0)
@@ -452,14 +460,27 @@ class SphinxWriter(object):
         self.current_file.a(href, text)
 
     def p_start(self):
+        # print('SphinxWriter', 'p_start')
         #self.current_file.start_bloc()
         pass
 
     def p_end(self):
         #pvr
-        pass
+        # print('SphinxWriter', 'p_end')
         #self.current_file.end_bloc()
         self.current_file.append()
+        
+    def span_start(self):
+        if len(self.current_file.lines):
+            self.current_file.line_started = True
+            # print('span_start', self.current_file.lines)
+        # print('SphinxWriter', 'span_start')
+        
+    def span_end(self):
+        # print('SphinxWriter', 'span_end')
+        pass
+        
+
 
     def directive(self, *args, **kw):
         self.current_file.directive(*args, **kw)
@@ -582,6 +603,7 @@ class ODTReader(object):
         self.done = False
         
         self.text_append = None
+        self.isrootnode = False
 
     def _load_xml(self, fname):
         buffer = self.archive.read(fname)
@@ -686,6 +708,7 @@ class ODTReader(object):
         self.call_visitor(triggername)
 
     def recurse_node(self, node):
+        # print('ODTReader', 'recurse_node',node.text, self.isrootnode, self.visitor.writer.xmltype )
         # print('recurse_node', node.tag)
         # case new pararaph : clean text_append and reurn whole line
         if node.tag in ['{%(text)s}p' % self.ns]:
@@ -715,17 +738,23 @@ class ODTReader(object):
         for i, child in enumerate(node.getchildren()):
             self.handle_node(child)
             if child.tail:
-                #modif PVR
-                #take care indent
-                previousspace = child.get('{%(text)s}c' % self.ns)
-                temptxt = child.tail
-                if  previousspace and int(previousspace)%4 == 0 : 
-                    temptxt = ' ' * int(previousspace) + temptxt
-                #case line begining with #
-                if self.text_append is not None:
-                    self.text_append += temptxt
-                else:
-                    self.call_visitor('on_text', temptxt, font_style=font_style)
+                self.visitor.writer.current_file.line_started = True
+                self.call_visitor('on_text', child.tail, font_style=font_style)
+                if False:
+                    #modif PVR
+                    #take care indent
+                    previousspace = child.get('{%(text)s}c' % self.ns)
+                    temptxt = child.tail
+                    if  previousspace and int(previousspace)%4 == 0 : 
+                        temptxt = ' ' * int(previousspace) + temptxt
+                    #case line begining with #
+                    if self.text_append is not None:
+                        self.text_append += temptxt
+                    else:
+                        if len(self.visitor.writer.current_file.lines) :
+                            self.visitor.writer.current_file.lines[-1] += ' '
+                            self.visitor.writer.current_file.line_started = True
+                        self.call_visitor('on_text', temptxt, font_style=font_style)
         
             
             
@@ -771,10 +800,36 @@ class ODTReader(object):
         return style['numbered']
 
     def handle_node(self, node):
+        
+        #self.isrootnode = rootnode
+        #if rootnode:
+        #    self.rootkind = None
+        #print('handle_node', node.tag )
+        
         if node.tag in [
                 '{%(text)s}span' % self.ns,
                 '{%(text)s}s' % self.ns]:
-            self.recurse_node(node)
+                
+            if node.get('{%(text)s}c' % self.ns):
+                self.start_visit('span')
+                spaces = node.get('{%(text)s}c' % self.ns)
+                self.call_visitor('on_text', ' ' * int(spaces), font_style=None)
+                self.end_visit('span')
+                self.visitor.writer.current_file.line_started = True
+                return
+                
+            self.start_visit('span')
+            
+            if node.get('{%(text)s}c' % self.ns):
+                spaces = node.get('{%(text)s}c' % self.ns)
+                self.call_visitor('on_text', ' ' * int(spaces), font_style=None)
+                self.visitor.writer.current_file.line_started = True
+            else:
+                self.recurse_node(node)
+                
+            self.end_visit('span')
+            
+            
         if node.tag == '{%(draw)s}frame' % self.ns:
             children = node.getchildren()
             if len(children) == 1 \
@@ -810,6 +865,7 @@ class ODTReader(object):
             self.recurse_node(node)
             self.end_visit('list_item')
             self.end_visit(kind)
+            
         if node.tag in (
                 '{%(text)s}p' % self.ns,
                 '{%(text)s}h' % self.ns):
@@ -920,11 +976,21 @@ class Converter(object):
         self.writer.end_bloc()
 
     def on_p_start(self):
+        # print('Converter', 'on_p_start')
         self.set_last_bloc()
         self.writer.p_start()
 
     def on_p_end(self):
+        # print('Converter', 'on_p_end')
         self.writer.p_end()
+        
+    def on_span_start(self):
+        # print('Converter', 'on_span_start')
+        self.writer.span_start()
+        
+    def on_span_end(self):
+        # print('Converter', 'on_span_end')
+        self.writer.span_end()
 
     def on_a_start(self, href):
         assert self.a_href is None, "Nested anchors are not supported"
@@ -1003,9 +1069,11 @@ class Converter(object):
         self.writer.h6(self._get_buffer())
 
     def on_list_start(self, numbered):
+        # print('Converter', 'on_list_start')
         self.numbered_list = numbered
 
     def on_list_end(self):
+        # print('Converter', 'on_list_end')
         pass
 
     def on_list_item_start(self):

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 This file is part of LAMIA.
 
@@ -23,7 +25,7 @@ This file is part of LAMIA.
  """
 
 
-# -*- coding: utf-8 -*-
+
 
 from qgis.PyQt import uic, QtCore
 
@@ -96,7 +98,8 @@ class BaseDigueDesordreTool(BaseDesordreTool):
                                                                       ('cote', self.userwdgfield.comboBox_cote),
                                                                       ('position', self.userwdgfield.comboBox_position),
                                                                       ('catdes', self.userwdgfield.comboBox_des_cat),
-                                                                      ('typedes', self.userwdgfield.comboBox_des_type)])
+                                                                      ('typedes', self.userwdgfield.comboBox_des_type),
+                                                                      ('sstypedes', self.userwdgfield.comboBox_sstypedes)])
                                                           },
                                 'Objet' : {'linkfield' : 'id_objet',
                                           'widgets' : {}}}

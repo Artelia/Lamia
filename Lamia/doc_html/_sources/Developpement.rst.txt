@@ -6,7 +6,7 @@ Fonctionnement général
 
 Le code repose principalement sur trois classes.
 
-*   La classe « Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget », qui est chargée au démarrage. Il s’agit du QDockWidget apparaissant au click sur l’icone Lamia dans l’interface QGis.
+*   La classe « Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget », qui est chargée au démarrage. Il s’agit du QDockWidget apparaissant au click sur l’icone Lamia dans l’interface QGis. 
 
 
 
@@ -21,97 +21,84 @@ Le code repose principalement sur trois classes.
 L’activité lors de l’ouverture de la base de données est schématisée ci-dessous :
 
 |100000000000035B0000022573534E11B79297C1_png|
+ *InspectiondigueWindowWidget*  est créé lors de l’ouverture de Lamia. Au chargement/création de la base de données, la classe DBaseParser est créée en variable  *d’InspectiondigueWindowWidget*  et cette classe se charge de la création et de la lecture de la base de données.
 
-*InspectiondigueWindowWidget*
-
-est créé lors de l’ouverture de Lamia. Au chargement/création de la base de données, la classe DBaseParser est créée en variable
-*d’InspectiondigueWindowWidget*
-et cette classe se charge de la création et de la lecture de la base de données.
-
-Ensuite,
-* InspectiondigueWindowWidget.DBaseLoaded*
-
-charge l’ensemble des widgets (tous héritant de AbstractLamiaTool) apparaissant dans l’écran en bas à droite du
-*InspectiondigueWindowWidget*
-.
+Ensuite, * InspectiondigueWindowWidget.DBaseLoaded*  charge l’ensemble des widgets (tous héritant de AbstractLamiaTool) apparaissant dans l’écran en bas à droite du  *InspectiondigueWindowWidget* .
 
 
 Ainsi, le code est structuré de la façon suivante :
 
 
-+------------------+-------------------------------------------------------------------------------------------------------------------------------------+
-| **Dossier**      | **Contenu**                                                                                                                         |
-|                  |                                                                                                                                     |
-+------------------+-------------------------------------------------------------------------------------------------------------------------------------+
-| +---dialog       | Contient les fichiers sources des interfaces graphiques des boites de dialogues de LAMIA ainsi que les codes python pour les gérer. |
-|                  |                                                                                                                                     |
-|                  |                                                                                                                                     |
-|                  | Il contient notamment                                                                                                               |
-|                  | *InspectiondigueWindowWidget*                                                                                                       |
-|                  |  .                                                                                                                                  |
-|                  |                                                                                                                                     |
-+------------------+-------------------------------------------------------------------------------------------------------------------------------------+
-| +---main         | Contient le main de LAMIA qui importe le DBaseParser et le DBaseParser qui initialise l'environnement LAMIA.                        |
-|                  |                                                                                                                                     |
-|                  |                                                                                                                                     |
-+------------------+-------------------------------------------------------------------------------------------------------------------------------------+
-| +---toolabstract | Contient Lamia_abstract_tool.py qui est la classe abstraite dont héritent tous les widgets présents en bas à droite de              |
-|                  | *InspectiondigueWindowWidget*                                                                                                       |
-|                  |  .                                                                                                                                  |
-|                  |                                                                                                                                     |
-+------------------+-------------------------------------------------------------------------------------------------------------------------------------+
++------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+|  **Dossier**     |  **Contenu**                                                                                                                                         |
+|                  |                                                                                                                                                      |
++------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+| +---dialog       | Contient les fichiers sources des interfaces graphiques des boites de dialogues de LAMIA ainsi que les codes python pour les gérer.                  |
+|                  |                                                                                                                                                      |
+|                  |                                                                                                                                                      |
+|                  | Il contient notamment InspectiondigueWindowWidget .                                                                                                  |
+|                  |                                                                                                                                                      |
++------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+| +---main         | Contient le main de LAMIA qui importe le DBaseParser et le DBaseParser qui initialise l'environnement LAMIA.                                         |
+|                  |                                                                                                                                                      |
+|                  |                                                                                                                                                      |
++------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+| +---toolabstract | Contient Lamia_abstract_tool.py qui est la classe abstraite dont héritent tous les widgets présents en bas à droite de InspectiondigueWindowWidget . |
+|                  |                                                                                                                                                      |
++------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 
 Les éléments propres à la création et à la manipulation de la base de données sont ici :
 
-
 +-----------------+------------------------------------------------------------------------------------------------------------+
-| **Dossier**     | **Contenu**                                                                                                |
+|  **Dossier**    |  **Contenu**                                                                                               |
 |                 |                                                                                                            |
 +-----------------+------------------------------------------------------------------------------------------------------------+
 | +---DBASE       | Dossier contenant tous les éléments nécessaires à la création des bases de données                         |
 |                 |                                                                                                            |
 +-----------------+------------------------------------------------------------------------------------------------------------+
 | |               | Dossier contenant les bordereaux de prix permettant le chiffrage automatique des travaux                   |
+|                 |                                                                                                            |
 | +---BPU         |                                                                                                            |
 |                 |                                                                                                            |
 +-----------------+------------------------------------------------------------------------------------------------------------+
 | |               | Dossier contenant tous les fichiers excel embarquant la description des tables ainsi que les nomenclatures |
+|                 |                                                                                                            |
 | +---create      |                                                                                                            |
 |                 |                                                                                                            |
 +-----------------+------------------------------------------------------------------------------------------------------------+
 | |               | Dossier contenant la base SQLITE utilisée pour amorcée la création des bases de données                    |
+|                 |                                                                                                            |
 | +---sqlite_base |                                                                                                            |
 |                 |                                                                                                            |
 +-----------------+------------------------------------------------------------------------------------------------------------+
 | |               | Contient les feuilles de styles utilisées pour l'affichage de l'interface LAMIA                            |
+|                 |                                                                                                            |
 | +---style       |                                                                                                            |
 |                 |                                                                                                            |
 +-----------------+------------------------------------------------------------------------------------------------------------+
 | |               | Contient des ressources d'affichage                                                                        |
+|                 |                                                                                                            |
 | \---utils       |                                                                                                            |
 |                 |                                                                                                            |
 +-----------------+------------------------------------------------------------------------------------------------------------+
 
-
-Tous les widgets apparaissant en
-bas à droite d’
-*InspectiondigueWindowWidget*
- et héritant de AbstractLamiaTool sont stockés ici :
-
+Tous les widgets apparaissant en bas à droite d’ *InspectiondigueWindowWidget*  et héritant de AbstractLamiaTool sont stockés ici :
 
 +-------------------+--------------------------------------------------------------------------------------------------------------------------+
-| **Dossier**       | **Contenu**                                                                                                              |
+|  **Dossier**      |  **Contenu**                                                                                                             |
 |                   |                                                                                                                          |
 +-------------------+--------------------------------------------------------------------------------------------------------------------------+
 | +---toolpostpro   | Outils de post-production (synthèses, exports, rapports, …)                                                              |
 |                   |                                                                                                                          |
 +-------------------+--------------------------------------------------------------------------------------------------------------------------+
 | |                 | Outils génériques d'import, d'export, de synthèse, de gestion des paths, de génération des rapports, d'étude de coûts, … |
+|                   |                                                                                                                          |
 | +---Base2         |                                                                                                                          |
 |                   |                                                                                                                          |
 +-------------------+--------------------------------------------------------------------------------------------------------------------------+
 | |                 | Outils de post-traitement adaptés au métier.                                                                             |
+|                   |                                                                                                                          |
 | +---[Type métier] |                                                                                                                          |
 |                   |                                                                                                                          |
 +-------------------+--------------------------------------------------------------------------------------------------------------------------+
@@ -119,10 +106,12 @@ bas à droite d’
 |                   |                                                                                                                          |
 +-------------------+--------------------------------------------------------------------------------------------------------------------------+
 | |                 | Outils génériques                                                                                                        |
+|                   |                                                                                                                          |
 | +---Base2         |                                                                                                                          |
 |                   |                                                                                                                          |
 +-------------------+--------------------------------------------------------------------------------------------------------------------------+
 | |                 | Outils d’alimentation de la base de données adaptés au métier.                                                           |
+|                   |                                                                                                                          |
 | +---[Type métier] |                                                                                                                          |
 |                   |                                                                                                                          |
 +-------------------+--------------------------------------------------------------------------------------------------------------------------+
@@ -130,9 +119,8 @@ bas à droite d’
 
 En plus de ces packages, les packages suivants sont également utilisés.
 
-
 +-----------------------------+------------------------------------------------------------------------------------------------------------+
-| **Dossier**                 | **Contenu**                                                                                                |
+|  **Dossier**                |  **Contenu**                                                                                               |
 |                             |                                                                                                            |
 +-----------------------------+------------------------------------------------------------------------------------------------------------+
 | +---config                  | Stock les données récemment utilisées à conserver en mémoire comme l'adresse des dernières bases utilisées |
@@ -154,18 +142,22 @@ En plus de ces packages, les packages suivants sont également utilisés.
 |                             |                                                                                                            |
 +-----------------------------+------------------------------------------------------------------------------------------------------------+
 | |                           | Librairie de connexion à une base NoSQL (lien avec SIRS Digues)                                            |
+|                             |                                                                                                            |
 | +---cloudant                |                                                                                                            |
 |                             |                                                                                                            |
 +-----------------------------+------------------------------------------------------------------------------------------------------------+
 | |                           | Librairie de connexion à une base NoSQL (lien avec SIRS Digues)                                            |
+|                             |                                                                                                            |
 | +---cloudant_2_10           |                                                                                                            |
 |                             |                                                                                                            |
 +-----------------------------+------------------------------------------------------------------------------------------------------------+
 | |                           | Librairie de génération de graphiques                                                                      |
+|                             |                                                                                                            |
 | +---pyqtgraph               |                                                                                                            |
 |                             |                                                                                                            |
 +-----------------------------+------------------------------------------------------------------------------------------------------------+
 | |                           | Librairie de lecture de fichier Excel utilisée pour la création des bases de données                       |
+|                             |                                                                                                            |
 | \---xlrd                    |                                                                                                            |
 |                             |                                                                                                            |
 +-----------------------------+------------------------------------------------------------------------------------------------------------+
@@ -176,19 +168,23 @@ En plus de ces packages, les packages suivants sont également utilisés.
 |                             |                                                                                                            |
 +-----------------------------+------------------------------------------------------------------------------------------------------------+
 | |                           | Permet de faire la passerelle depuis LAMIA vers SIRS Digues                                                |
+|                             |                                                                                                            |
 | +---LAMIA_to_SIRS           |                                                                                                            |
 |                             |                                                                                                            |
 +-----------------------------+------------------------------------------------------------------------------------------------------------+
 | |                           | Permet de faire la passerelle depuis LAMIA vers SIRS Digues V1.7                                           |
+|                             |                                                                                                            |
 | +---LAMIA_to_SIRS_VCouch1_7 |                                                                                                            |
 |                             |                                                                                                            |
 +-----------------------------+------------------------------------------------------------------------------------------------------------+
 | |                           | Permet de faire la passerelle depuis SIRS Digues vers LAMIA                                                |
+|                             |                                                                                                            |
 | +---SIRS_to_LAMIA           |                                                                                                            |
 |                             |                                                                                                            |
 +-----------------------------+------------------------------------------------------------------------------------------------------------+
 | |                           | Permet de faire la passerelle depuis SIRS Digues vers                                                      |
-| \---SIRS_to_LAMIA_VCouch1_7 | LAMIA                                                                                                      |
+|                             | LAMIA                                                                                                      |
+| \---SIRS_to_LAMIA_VCouch1_7 |                                                                                                            |
 |                             |                                                                                                            |
 +-----------------------------+------------------------------------------------------------------------------------------------------------+
 
@@ -212,59 +208,32 @@ Ce fichier aura la structure minimale suivante :
 .. code-block:: python
 
     import os
-
     from ...toolabstract.Lamia_abstract_tool import AbstractLamiaTool
-
     from qgis.PyQt import uic
-
     from qgis.PyQt.QtWidgets import (QWidget)
-
-
-    class CostTool(AbstractLamiaTool):
-
+        class CostTool(AbstractLamiaTool):
         TOOLNAME = 'test_module'
-
-
-        def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
-
+          def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
             super(CostTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
-
-
-        def initTool(self):
-
+          def initTool(self):
             # ****************************************************************************************
-
             # Main spec
-
             self.CAT = 'Synthese'
-
             self.NAME = 'Couts'
-
             self.visualmode = [4]
 
-
             self.groupBox_elements.setParent(None)
-
             self.frame_editing.setParent(None)
 
-
             def initFieldUI(self):
-
             if self.userwdgfield is None:
-
             self.userwdgfield = UserUI()
 
-
     class UserUI(QWidget):
-
         def __init__(self, parent=None):
-
             super(UserUI, self).__init__(parent=parent)
-
             # self.setupUi(self)
-
             uipath = os.path.join(os.path.dirname(__file__), 'test_module.ui')
-
             uic.loadUi(uipath, self)
 
 .. |100000000000035B0000022573534E11B79297C1_png| image:: images/100000000000035B0000022573534E11B79297C1.png

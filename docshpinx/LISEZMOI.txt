@@ -1,7 +1,7 @@
 Génération de la doc
 
 Prérequis :
-avoir sphinx et odt2sphinx
+avoir sphinx 
 (les installer avec pip dans l'environnement osgeo4w )
 
 Ensuite mettre à jour le fichier libreoffice documentation.odt2sphinx
@@ -9,8 +9,16 @@ Ensuite mettre à jour le fichier libreoffice documentation.odt2sphinx
 Enfin lancer makehtml.bat depuis le shell osgeo4w qui execute :
 la conversion de l'odt vers des fichiers .rst lisibles par sphinx
 la génération des pages html de documentation.
+la copie vers /lamia/doc_html
 
 la page d'acceuil html est dans ./build\html/index.html
+
+
+NB : pour que ca marche sous github il faut :
+aller dans les options et cocher "publier master"
+créer un fichier index.html à la racine qui renvoi vers Lamia/doc_html/index.html
+rajouter un fichier .nojekyll à la racine et dans Lamia/doc_html
+
 
 
 NB :

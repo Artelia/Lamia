@@ -6,15 +6,24 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>317</width>
-    <height>340</height>
+    <width>461</width>
+    <height>418</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2" stretch="20">
-   <property name="margin">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
     <number>0</number>
    </property>
    <item>
@@ -26,7 +35,16 @@
       <enum>QFrame::Raised</enum>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
-      <property name="margin">
+      <property name="leftMargin">
+       <number>3</number>
+      </property>
+      <property name="topMargin">
+       <number>3</number>
+      </property>
+      <property name="rightMargin">
+       <number>3</number>
+      </property>
+      <property name="bottomMargin">
        <number>3</number>
       </property>
       <item>
@@ -51,7 +69,16 @@
              <enum>QFrame::Raised</enum>
             </property>
             <layout class="QGridLayout" name="gridLayout_3" columnstretch="1,10">
-             <property name="margin">
+             <property name="leftMargin">
+              <number>3</number>
+             </property>
+             <property name="topMargin">
+              <number>3</number>
+             </property>
+             <property name="rightMargin">
+              <number>3</number>
+             </property>
+             <property name="bottomMargin">
               <number>3</number>
              </property>
              <item row="0" column="1">
@@ -83,6 +110,13 @@
                  <property name="spacing">
                   <number>3</number>
                  </property>
+                 <item row="4" column="0">
+                  <widget class="QLabel" name="label">
+                   <property name="text">
+                    <string>Sous-type</string>
+                   </property>
+                  </widget>
+                 </item>
                  <item row="1" column="0">
                   <widget class="QLabel" name="label_5">
                    <property name="text">
@@ -115,6 +149,9 @@
                     <string>Type</string>
                    </property>
                   </widget>
+                 </item>
+                 <item row="4" column="1" colspan="2">
+                  <widget class="QComboBox" name="comboBox_sstypedes"/>
                  </item>
                 </layout>
                </widget>
@@ -164,7 +201,16 @@
               <string>Observation</string>
              </attribute>
              <layout class="QGridLayout" name="gridLayout" columnstretch="0">
-              <property name="margin">
+              <property name="leftMargin">
+               <number>3</number>
+              </property>
+              <property name="topMargin">
+               <number>3</number>
+              </property>
+              <property name="rightMargin">
+               <number>3</number>
+              </property>
+              <property name="bottomMargin">
                <number>3</number>
               </property>
              </layout>
@@ -174,7 +220,16 @@
               <string>Photos associées</string>
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_3">
-              <property name="margin">
+              <property name="leftMargin">
+               <number>3</number>
+              </property>
+              <property name="topMargin">
+               <number>3</number>
+              </property>
+              <property name="rightMargin">
+               <number>3</number>
+              </property>
+              <property name="bottomMargin">
                <number>3</number>
               </property>
              </layout>
@@ -184,7 +239,16 @@
               <string>Croquis</string>
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_4">
-              <property name="margin">
+              <property name="leftMargin">
+               <number>3</number>
+              </property>
+              <property name="topMargin">
+               <number>3</number>
+              </property>
+              <property name="rightMargin">
+               <number>3</number>
+              </property>
+              <property name="bottomMargin">
                <number>3</number>
               </property>
              </layout>

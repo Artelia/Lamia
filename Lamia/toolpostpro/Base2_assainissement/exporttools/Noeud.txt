@@ -14,6 +14,8 @@ environnement;       String;           environnement;         environnement
 
 id_objet;         Int;               ;                  Noeud_now.id_objet
 commentaire;      String;               ;                  Noeud_now.commentaire
+datetimecreation;      String;               ;                  Noeud_now.datetimecreation
+datetimemodification;      String;               ;                  Noeud_now.datetimemodification
 
 
 ###Infralineaire1
@@ -32,10 +34,10 @@ ART_NB_ARR;         Int;               ;                  COUNT(*)
 
 ###Photo1
 ##FROM Photo_now  INNER JOIN Tcobjetressource ON Tcobjetressource.lid_ressource = Photo_now.id_ressource WHERE Noeud_now.id_objet = Tcobjetressource.lid_objet; LIMIT 1 OFFSET 0
-fichier;         String;               ;                  numphoto
+fichier;         String;               ;                  numressource
 
 ###Zonegeo
-##FROM Zonegeo_qgis  WHERE  ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo_qgis.geom)) AND Zonegeo_qgis.type_zonegeo = 'COL'
+##FROM Zonegeo_qgis  WHERE  ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo_qgis.geom)) AND Zonegeo_qgis.typezonegeo = 'COL'
 #nom              type               cst               valeur                    
 id_zonegeo;       Int;               ;                  id_zonegeo
 libelle;       String;               ;                  libelle

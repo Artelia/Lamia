@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+
+
 """
 This file is part of LAMIA.
 
@@ -23,7 +26,7 @@ This file is part of LAMIA.
  """
 
 
-# -*- coding: utf-8 -*-
+
 
 from qgis.PyQt import uic, QtGui
 try:
