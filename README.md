@@ -12,3 +12,9 @@ We aim at providing the public and private sectors with an easy-to-use tool to c
 
 # LICENSING 
 LAMIA is an open-source project developped and maintained by Artelia Group, under the  GNU GPL v3 (or later) licence. 
+
+# Documentation
+
+Documentation is available here : 
+HTML:
+<a href="Lamia/doc_html/index.html">Documenation</a>
