@@ -265,8 +265,6 @@ class BaseEaupotableNoeudTool(BaseNoeudTool):
                 self.userwdgfield.comboBox_cat.currentIndexChanged.emit(self.userwdgfield.comboBox_cat.currentIndex())
 
 
-
-
     def postSaveFeature(self, boolnewfeature):
 
         # save a disorder on first creation
@@ -327,6 +325,8 @@ class BaseEaupotableNoeudTool(BaseNoeudTool):
 
 
     def addGPSPoint(self):
+        if self.gpsutil is None:
+            return
         if self.gpsutil.currentpoint is None:
             self.windowdialog.errorMessage('GPS non connecte')
             return
