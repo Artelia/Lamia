@@ -142,6 +142,9 @@
           </item>
           <item row="0" column="1">
            <widget class="QDoubleSpinBox" name="doubleSpinBox_diametre">
+            <property name="decimals">
+             <number>3</number>
+            </property>
             <property name="minimum">
              <double>-1.000000000000000</double>
             </property>

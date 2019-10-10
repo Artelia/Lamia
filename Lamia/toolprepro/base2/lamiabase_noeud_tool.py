@@ -153,6 +153,20 @@ class BaseNoeudTool(AbstractLamiaTool):
         query = self.dbase.query(sql)
         self.dbase.commit()
 
+        if  self.parentWidget is not None and self.parentWidget.currentFeature is not None:
+            # if "lid_descriptionsystem" in self.dbase.dbasetables[self.parentWidget.dbasetablename]['fields'].keys():
+            if 'Descriptionsystem' in self.dbase.getParentTable(self.parentWidget.dbasetablename):
+
+                #parentid
+                sql = "SELECT id_descriptionsystem FROM " + self.parentWidget.dbasetablename.lower() + "_qgis"
+                sql += " WHERE pk_" + self.parentWidget.dbasetablename.lower() + " = " + str(self.parentWidget.currentFeaturePK)
+                parentid = self.dbase.query(sql)[0][0]
+                #currentparentlinkfield = self.parentWidget.currentFeature['id_descriptionsystem']
+                sql = "UPDATE Noeud SET lid_descriptionsystem_1 = " + str(parentid)
+                sql += " WHERE pk_noeud = " + str(pknoeud)
+                self.dbase.query(sql)
+                self.dbase.commit()
+
 
 
 

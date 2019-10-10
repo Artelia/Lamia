@@ -1086,50 +1086,383 @@ linkage eom is defined by self.linkedgeom variable</p>
 <dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.setGeometryToFeature">
 <code class="sig-name descname">setGeometryToFeature</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.setGeometryToFeature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.setGeometryToFeature" title="Lien permanent vers cette définition">¶</a></dt>
 <dd><p>Methode pour assigner le self.tempgeometry au self.currenfeature
-cree le self.currenfeature si besoin
-:return:</p>
+cree le self.currenfeature si besoin</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.updateParentFeature">
 <code class="sig-name descname">updateParentFeature</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.updateParentFeature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.updateParentFeature" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Renvoie</dt>
-<dd class="field-odd"><p></p>
-</dd>
-</dl>
+<dd><p>Method called by saveFeature
+Update the parent tables and manage versioning</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.saveQGisFeature">
 <code class="sig-name descname">saveQGisFeature</code><span class="sig-paren">(</span><em class="sig-param">table</em>, <em class="sig-param">feat</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.saveQGisFeature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.saveQGisFeature" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>Premiere etape de la sauvegarde : sauvegarde le qgsfeature de la table en cours d’edition
-Return le currentFeature
-:param table:
-:param feat:
-:return:</p>
+<dd><p>Method called by saveFeature</p>
+<p>Save the edited QgsFeature</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>table</strong> – the edited table</p></li>
+<li><p><strong>feat</strong> – the edited QgsFeature</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>the saved QgsFeature with geometry</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.saveFeatureProperties">
 <code class="sig-name descname">saveFeatureProperties</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.saveFeatureProperties"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.saveFeatureProperties" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>!
-Core method for saving feature properties</p>
+<dd><p>Method called by saveFeature</p>
+<p>Method for saving feature properties of the ui in the tables</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.postSaveFeature">
+<code class="sig-name descname">postSaveFeature</code><span class="sig-paren">(</span><em class="sig-param">boolnewfeature</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.postSaveFeature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.postSaveFeature" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Method called by saveFeature</p>
+<p>To be overloaded if special actions have to be done after raw savin of the feature</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>boolnewfeature</strong> – if it s a new feature</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.getValueFromWidget">
+<code class="sig-name descname">getValueFromWidget</code><span class="sig-paren">(</span><em class="sig-param">wdg</em>, <em class="sig-param">tablename</em>, <em class="sig-param">fieldname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.getValueFromWidget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.getValueFromWidget" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Method to obtain the savable value of a property widget</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>wdg</strong> – the property widget</p></li>
+<li><p><strong>tablename</strong> – the table name  linked with th widget</p></li>
+<li><p><strong>fieldname</strong> – the field name  linked with th widget</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>The value of the widget, in good format for saving</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.deleteFeature">
+<code class="sig-name descname">deleteFeature</code><span class="sig-paren">(</span><em class="sig-param">signalreceiver=None</em>, <em class="sig-param">showmessage=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.deleteFeature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.deleteFeature" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Method called by cliking on Save Button</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>signalreceiver</strong> – the signal emited by the button</p></li>
+<li><p><strong>showmessage</strong> – show a confirmation dialog or not</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.deleteParentFeature">
+<code class="sig-name descname">deleteParentFeature</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.deleteParentFeature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.deleteParentFeature" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Method called by deleteFeature</p>
+<p>To be overloaded if the parents tables need deleting also</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie</dt>
+<dd class="field-odd"><p>True if method is overloaded, else False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.getFeatureAddedId">
+<code class="sig-name descname">getFeatureAddedId</code><span class="sig-paren">(</span><em class="sig-param">id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.getFeatureAddedId"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.getFeatureAddedId" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Simple method to catch he id of the fresh saved qgsfeature</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>id</strong> – the id send by qgis signal</p>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>the QgsFeature id</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.deselectFeature">
+<code class="sig-name descname">deselectFeature</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.deselectFeature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.deselectFeature" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Method called by deselect Button</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.addFeature">
+<code class="sig-name descname">addFeature</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.addFeature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.addFeature" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Method called by add Feature Button</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.addGPSPoint">
+<code class="sig-name descname">addGPSPoint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.addGPSPoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.addGPSPoint" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Method called by add GPS Point Button</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.addPoint">
+<code class="sig-name descname">addPoint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.addPoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.addPoint" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Method called by Add Point Button</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.captureGeometry">
 <code class="sig-name descname">captureGeometry</code><span class="sig-paren">(</span><em class="sig-param">connectint=0</em>, <em class="sig-param">listpointinitialgeometry=[]</em>, <em class="sig-param">type=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.captureGeometry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.captureGeometry" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>!</p>
+<dd><p>Method called when capturing geometry is needed (add/extent point, line, polygon…)
+Launch the capture tool</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>connectint</strong> – Catching widget signal</p></li>
+<li><p><strong>listpointinitialgeometry</strong> – list of geometry to be extended, if new empty list</p></li>
+<li><p><strong>type</strong> – geom type (point, line, polygone)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.createorresetRubberband">
+<code class="sig-name descname">createorresetRubberband</code><span class="sig-paren">(</span><em class="sig-param">type=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.createorresetRubberband"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.createorresetRubberband" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Reset the rubberband</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>type</strong> – geom type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.setTempGeometry">
+<code class="sig-name descname">setTempGeometry</code><span class="sig-paren">(</span><em class="sig-param">points</em>, <em class="sig-param">comefromcanvas=True</em>, <em class="sig-param">showinrubberband=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.setTempGeometry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.setTempGeometry" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Called when self.currentmaptool has finished capturing</p>
+<p>Assign the geometry to self.tempgeometry</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>points</strong> – the list of points coming from the currentmaptool</p></li>
+<li><p><strong>comefromcanvas</strong> – True if come from canvas (need od reprojection)</p></li>
+<li><p><strong>showinrubberband</strong> – True if the temp geometry will be visible with the rubberband</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.pickFeature">
+<code class="sig-name descname">pickFeature</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.pickFeature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.pickFeature" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Called by button of pro interface for picking a feature</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.selectPickedFeature">
+<code class="sig-name descname">selectPickedFeature</code><span class="sig-paren">(</span><em class="sig-param">point</em>, <em class="sig-param">button=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.selectPickedFeature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.selectPickedFeature" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Method of pro interface</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>point</strong> – </p></li>
+<li><p><strong>button</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.zoomToFeature">
+<code class="sig-name descname">zoomToFeature</code><span class="sig-paren">(</span><em class="sig-param">fid=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.zoomToFeature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.zoomToFeature" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Called by zoom to Button</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>fid</strong> – the id of feature we want to zoom to</p>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.saveRessourceFile">
 <code class="sig-name descname">saveRessourceFile</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.saveRessourceFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.saveRessourceFile" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><dl class="simple">
-<dt>self.dbaseressourcesfield = {“tablefilefield”<span class="classifier">“File”,</span></dt><dd><p>“idforparent” : “IdObjet”,
-“parenttablename” : “OBJET”,
-“datefield” : “DateCreation”}</p>
+<dd><p>Called by saveFeature
+If ressource file is not in the dbase directory, save it in the dbase directory</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.showImageinLabelWidget">
+<code class="sig-name descname">showImageinLabelWidget</code><span class="sig-paren">(</span><em class="sig-param">wdg</em>, <em class="sig-param">savedfile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.showImageinLabelWidget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.showImageinLabelWidget" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Show the image file in the text widget
+Manage thumbnail image</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>wdg</strong> – the text widget</p></li>
+<li><p><strong>savedfile</strong> – the image file</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.copyAtributes">
+<code class="sig-name descname">copyAtributes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.copyAtributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.copyAtributes" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Copy he atributes of the ui in self.templinkuserwdg</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie</dt>
+<dd class="field-odd"><p>self.templinkuserwdg</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.pasteAtributes">
+<code class="sig-name descname">pasteAtributes</code><span class="sig-paren">(</span><em class="sig-param">signalclick=None</em>, <em class="sig-param">dicttopaste=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.pasteAtributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.pasteAtributes" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Paste atributes saved in self.templinkuserwdg</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>signalclick</strong> – catch emitter signal</p></li>
+<li><p><strong>dicttopaste</strong> – the dictionnary to paste</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.goToFeaturePressed">
+<code class="sig-name descname">goToFeaturePressed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.goToFeaturePressed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.goToFeaturePressed" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Called on gotofeature Button pressed
+Show featue in rubberband</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.goToFeatureReleased">
+<code class="sig-name descname">goToFeatureReleased</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.goToFeatureReleased"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.goToFeatureReleased" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Called on gotofeature Button released
+Reset ruberband</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.displayGPS">
+<code class="sig-name descname">displayGPS</code><span class="sig-paren">(</span><em class="sig-param">active</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.displayGPS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.displayGPS" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Called on GPs connection
+Print GPS things in widgets defined by self.gpswidget</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>active</strong> – True ig a NMEA sentence is received in less than 5 s, else False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.displayGGA">
+<code class="sig-name descname">displayGGA</code><span class="sig-paren">(</span><em class="sig-param">dictgga</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.displayGGA"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.displayGGA" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Called by displayGPS</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>dictgga</strong> – the dict where widgets to display gga are defined</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.displayGST">
+<code class="sig-name descname">displayGST</code><span class="sig-paren">(</span><em class="sig-param">dictgst</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.displayGST"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.displayGST" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Called by displayGPS</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>dictgst</strong> – the dict where widgets to display gst are defined</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.getPkFromId">
+<code class="sig-name descname">getPkFromId</code><span class="sig-paren">(</span><em class="sig-param">layername</em>, <em class="sig-param">inputid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.getPkFromId"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.getPkFromId" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Method to get pk of feature by id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>layername</strong> – </p></li>
+<li><p><strong>inputid</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.themechanged">
+<code class="sig-name descname">themechanged</code><span class="sig-paren">(</span><em class="sig-param">iconwidth</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.themechanged"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.themechanged" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Change icon width - activated by windowswidget</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>iconwidth</strong> – the icon width we want</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.toWKT">
+<code class="sig-name descname">toWKT</code><span class="sig-paren">(</span><em class="sig-param">geom</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.toWKT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.toWKT" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>convenient method working for qgis 2 and 3</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>geom</strong> – the QgsGeometry</p>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>the wkt</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.deepCopy">
+<code class="sig-name descname">deepCopy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.deepCopy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.deepCopy" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Called by deep copy Button</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.deepcopymultipleselection">
+<code class="sig-name descname">deepcopymultipleselection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.deepcopymultipleselection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.deepcopymultipleselection" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Called by deepCopy</p>
+<p>copy to multiple objects</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.deepCopySave">
+<code class="sig-name descname">deepCopySave</code><span class="sig-paren">(</span><em class="sig-param">signalclik=None</em>, <em class="sig-param">table=None</em>, <em class="sig-param">deepcopydict=None</em>, <em class="sig-param">parentwidg=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lamia/toolabstract/Lamia_abstract_tool.html#AbstractLamiaTool.deepCopySave"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.toolabstract.Lamia_abstract_tool.AbstractLamiaTool.deepCopySave" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Save properties of the copied feature</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>signalclik</strong> – catch emitter signal</p></li>
+<li><p><strong>table</strong> – </p></li>
+<li><p><strong>deepcopydict</strong> – </p></li>
+<li><p><strong>parentwidg</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p></p>
 </dd>
 </dl>
 </dd></dl>

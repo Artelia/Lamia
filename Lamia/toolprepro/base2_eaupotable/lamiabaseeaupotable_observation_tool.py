@@ -144,12 +144,14 @@ class BaseEaupotableObservationTool(BaseObservationTool):
                     self.userwdgfield.stackedWidget.setCurrentIndex(indexgrp)
                 except:
                     pass
-                if grpdes == 'EQP' and self.parentWidget.parentWidget is not None and self.parentWidget.parentWidget.currentFeature is not None:
-                    if self.parentWidget.parentWidget.dbasetablename == 'Equipement':
+
+
+                if grpdes == 'NOD' and self.parentWidget.parentWidget is not None and self.parentWidget.parentWidget.currentFeature is not None:
+                    if self.parentWidget.parentWidget.dbasetablename == 'Noeud':
                         #typenoeud = self.parentWidget.parentWidget.currentFeature['typeOuvrageAss']
                         currenttext = self.parentWidget.parentWidget.userwdgfield.comboBox_cat.currentText()
                         # typenoeud = self.parentWidget.parentWidget.currentFeature['typeOuvrageAss']
-                        typeeqp = self.dbase.getConstraintRawValueFromText('Equipement', 'categorie', currenttext)
+                        typeeqp = self.dbase.getConstraintRawValueFromText('Noeud', 'categorie', currenttext)
 
                         if typeeqp in ['VEN', 'VAN', 'VID','REG','HYD','CHL','RPC','SPE','AUT','IND']:
                             self.userwdgfield.stackedWidget_2.setCurrentIndex(0)
@@ -162,13 +164,13 @@ class BaseEaupotableObservationTool(BaseObservationTool):
 
 
 
-                if grpdes == 'NOD' and self.parentWidget.parentWidget is not None and self.parentWidget.parentWidget.currentFeature is not None:
-                    if self.parentWidget.parentWidget.dbasetablename == 'Noeud':
+                if grpdes == 'EQP' and self.parentWidget.parentWidget is not None and self.parentWidget.parentWidget.currentFeature is not None:
+                    if self.parentWidget.parentWidget.dbasetablename == 'Equipement':
                         #typenoeud = self.parentWidget.parentWidget.currentFeature['typeOuvrageAss']
                         currenttext = self.parentWidget.parentWidget.userwdgfield.comboBox_typeouvrage.currentText()
                         # typenoeud = self.parentWidget.parentWidget.currentFeature['typeOuvrageAss']
 
-                        typenoeud = self.dbase.getConstraintRawValueFromText('Noeud', 'type_ouvrage', currenttext)
+                        typenoeud = self.dbase.getConstraintRawValueFromText('Equipement', 'type_ouvrage', currenttext)
 
                         if typenoeud in ['CHE']:
                             self.userwdgfield.stackedWidget_3.setCurrentIndex(0)

@@ -75,6 +75,7 @@ class BaseObservationTool(AbstractLamiaTool):
                                            'iddest' : 'id_marche',
                                            'idtcdest' : None,
                                            'desttable' : ['Marche']} }
+
         self.iconpath = os.path.join(os.path.dirname(__file__), 'lamiabase_observation_tool_icon.png')
 
         # ****************************************************************************************

@@ -1177,6 +1177,7 @@ class AbstractLamiaTool(QWidget):
         emit currentFeatureChanged for child widgets
 
         """
+
         debug = False
         if debug: logging.getLogger("Lamia").debug('Start %s',self.dbasetablename)
 
@@ -1257,6 +1258,7 @@ class AbstractLamiaTool(QWidget):
 
         # selection of particular feature to load (if parentfeature, or window only mode)
         ids = self.loadIds()
+
 
         # creation de la liste des elements qui figurent dans le linkedtreewidget
         lenqtreewidg = len(self.qtreewidgetfields) + 1
@@ -1496,7 +1498,6 @@ class AbstractLamiaTool(QWidget):
         :param itemisid: if True, item is an pk
 
         """
-
         debug = False
 
         if self.linkedtreewidget is not None and self.sender() == self.linkedtreewidget:
@@ -1578,7 +1579,8 @@ class AbstractLamiaTool(QWidget):
             # print('cc', item, ' _' ,[self.comboBox_featurelist.itemText(i) for i in range(self.comboBox_featurelist.count())])
             if item >=0:
                 id = int(self.comboBox_featurelist.itemText(item))
-                if self.linkedtreewidget is not None and isinstance(self.linkedtreewidget, QTreeWidget):
+                if self.linkedtreewidget is not None and isinstance(self.linkedtreewidget, QTreeWidget) :
+                    # id = int(itemtext)
                     parentitem = self.linkedtreewidget.findItems(self.dbasetablename, QtCore.Qt.MatchExactly | QtCore.Qt.MatchRecursive, 0)[0]
                     indexchild = [parentitem.child(i).text(0) for i in range(parentitem.childCount())].index(str(id))
                     itemtodisplay = parentitem.child(indexchild)
@@ -2251,10 +2253,11 @@ class AbstractLamiaTool(QWidget):
 
 
     def setGeometryToFeature(self):
+
         """
         Methode pour assigner le self.tempgeometry au self.currenfeature
         cree le self.currenfeature si besoin
-        :return:
+
         """
 
         # geometry conversion first
@@ -2264,8 +2267,6 @@ class AbstractLamiaTool(QWidget):
         elif (self.tempgeometry is not None and self.dbasetable['geom'] in ['MULTIPOLYGON']
                 and not self.tempgeometry.isMultipart()):
             success = self.tempgeometry.convertToMultiType()
-
-        # print(self.dbasetable['geom'],self.tempgeometry.type() ,self.tempgeometry.asPoint())
 
         if (self.dbasetable is not None and 'geom' in self.dbasetable.keys() and self.dbasetable['geom'] == 'LINESTRING'
             and self.tempgeometry is not None and self.tempgeometry.type() == 0): # case point in linestring layer
@@ -2303,8 +2304,9 @@ class AbstractLamiaTool(QWidget):
 
     def updateParentFeature(self):
         """
+        Method called by saveFeature
+        Update the parent tables and manage versioning
 
-        :return:
         """
 
 
@@ -2319,8 +2321,6 @@ class AbstractLamiaTool(QWidget):
         sql += " SET id_" + self.dbasetablename.lower() + " = " + str(lastid)
         sql += " WHERE pk_" + self.dbasetablename.lower()  + " = " + str(self.currentFeaturePK)
         self.dbase.query(sql)
-
-        # print(self.dbase.getParentTable(self.dbasetablename))
 
         tables = [self.dbasetablename] + self.dbase.getParentTable(self.dbasetablename)
         for table in tables:
@@ -2340,12 +2340,6 @@ class AbstractLamiaTool(QWidget):
             #update sql
             sql = "UPDATE "+ str(table).lower()  + " SET "
 
-            if False:
-                if (sys.version_info > (3, 0)):
-                    fieldslist = list(self.dbase.dbasetables[table]['fields'].keys())[1:]
-                else:
-                    fieldslist = self.dbase.dbasetables[table]['fields'].keys()[1:]
-
             for i, field in enumerate(fieldslist):
                 if 'pk_' in field or 'geom' in field :
                     continue
@@ -2361,23 +2355,6 @@ class AbstractLamiaTool(QWidget):
 
                 sql += str(field) + " = " + resulttemp + ','
 
-            if False:
-                for i, field in enumerate(fieldslist):
-                    if 'lpk_' in field :
-                        continue
-
-                    resulttemp = 'NULL'
-                    if isinstance(result[i+1], str) or isinstance(result[i+1], unicode):
-                        resulttemp = "'" + result[i+1] + "'"
-                    elif result[i+1] is None :
-                        resulttemp = 'NULL'
-                    else:
-                        # print(type(result[i+1]))
-                        resulttemp = str(result[i+1])
-
-                    print(field, resulttemp)
-                    sql += str(field) + " = " + resulttemp + ','
-
             sql = sql[:-1]  #remove last ,
             sql += " WHERE pk_" + str(table) + " = " + str(pknewtable)
 
@@ -2389,13 +2366,16 @@ class AbstractLamiaTool(QWidget):
                 self.dbase.query(sql)
 
 
+
     def saveQGisFeature(self, table, feat):
         """
-        Premiere etape de la sauvegarde : sauvegarde le qgsfeature de la table en cours d'edition
-        Return le currentFeature
-        :param table:
-        :param feat:
-        :return:
+        Method called by saveFeature
+
+        Save the edited QgsFeature
+
+        :param table: the edited table
+        :param feat:  the edited QgsFeature
+        :return:    the saved QgsFeature with geometry
         """
 
         debug = False
@@ -2423,56 +2403,39 @@ class AbstractLamiaTool(QWidget):
         if debug: logging.getLogger("Lamia").debug('table, feat.id addedfeatureid : %s %s %s', table, str(feat.id()), str(self.addedFeatureid))
 
         if self.addedFeatureid is not None:
-            # return dbasetablelayer.getFeatures(qgis.core.QgsFeatureRequest(self.addedFeatureid)).next()
             return self.dbase.getLayerFeatureByPk(table, self.addedFeatureid)
         else:
-            # return dbasetablelayer.getFeatures(qgis.core.QgsFeatureRequest(feat.id())).next()
             return self.dbase.getLayerFeatureByPk(table, feat.id())
 
 
     def saveFeatureProperties(self):
-        """!
-        Core method for saving feature properties
-
         """
+        Method called by saveFeature
 
-        # pro editing
-        # self.dbasetable['layer'].raiseError.connect(self.errorMessage)
-        # with qgis.core.edit(self.dbasetable['layer']):
+        Method for saving feature properties of the ui in the tables
+        """
 
         debug = False
 
 
-        # if self.tabWidget_properties.currentIndex() == 0 :
         self.dbasetable['layer'].startEditing()
 
         if self.dbase.visualmode in [0, 1]:
             if self.linkuserwdg is not None:
                 for i, tablename in enumerate(self.linkuserwdg.keys()):
                     if debug: logging.getLogger("Lamia").debug('start : %s', tablename)
-                    # print('attrs',self.currentFeature.attributes())
-                    #featid = self.currentFeature[self.linkuserwdg[tablename]['linkfield']]
                     featpk = self.currentFeaturePK
-                    # if debug: logging.getLogger("Lamia").debug('start : %s %s %s', tablename,self.linkuserwdg[tablename]['linkfield'],str(featid))
-                    # feature = self.dbase.dbasetables[tablename]['layer'].getFeatures(qgis.core.QgsFeatureRequest(featid)).next()
-                    #feature = self.dbase.getLayerFeatureById(tablename, featid)
-
-                    # if debug: logging.getLogger("Lamia").debug('feat linked : %s %s', str(feature.id()), str(feature.attributes()))
                     fieldnames = self.linkuserwdg[tablename]['widgets'].keys()
                     if len(fieldnames) == 0:
                         continue
-
-
                     result = []
                     for fieldname in fieldnames:
                         fieldvaluetosave = self.getValueFromWidget(self.linkuserwdg[tablename]['widgets'][fieldname],
                                                                    tablename,
                                                                    fieldname)
                         if fieldvaluetosave is not None:
-                            #feature[fieldname] = fieldvaluetosave
                             result.append(fieldvaluetosave)
                         else:
-                            #feature[fieldname] = None
                             result.append(None)
                     #tablepk
                     sql = "SELECT pk_" + str(tablename).lower() + " FROM " + str(self.dbasetablename).lower() + "_qgis"
@@ -2503,8 +2466,6 @@ class AbstractLamiaTool(QWidget):
                     sql += " WHERE pk_" + str(tablename) + " = " + str(tablepk)
                     self.dbase.query(sql)
 
-                    #self.saveQGisFeature(tablename, feature)
-
 
         if self.dbase.visualmode == 2:
             if self.linkuserwdg is None:
@@ -2516,10 +2477,6 @@ class AbstractLamiaTool(QWidget):
 
             for i, tablename in enumerate(templinkuserwgd.keys()):
                 dbasetable = self.dbase.dbasetables[tablename]
-
-                #featid = self.currentFeature[templinkuserwgd[tablename]['linkfield']]
-                # feature = self.dbase.dbasetables[tablename]['layer'].getFeatures(qgis.core.QgsFeatureRequest(featid)).next()
-                #feature = self.dbase.getLayerFeatureById(tablename, featid)
                 result = []
                 for j, field in enumerate(dbasetable['fields'].keys()):
                     itemindex = listfieldname.index(tablename + '.' + field)
@@ -2527,12 +2484,9 @@ class AbstractLamiaTool(QWidget):
                                                                tablename,
                                                                field)
                     if fieldvaluetosave is not None:
-                        #feature.setAttribute(field, fieldvaluetosave)
                         result.append(fieldvaluetosave)
                     else:
                         result.append(None)
-
-                # print(tablename, result)
 
                 #tablepk
                 sql = "SELECT pk_" + str(tablename).lower() + " FROM " + str(self.dbasetablename).lower() + "_qgis"
@@ -2542,30 +2496,22 @@ class AbstractLamiaTool(QWidget):
                 # update sql
                 sql = "UPDATE " + str(tablename).lower() + " SET "
                 for i, field in enumerate(dbasetable['fields'].keys()):
-                    #if "pk_" in field or "lpk_" in field or "id_" in field:
                     if field[0:3] in ['pk_', 'id_'] or field[0:4] in ['lpk_']:
                         continue
-
                     if isinstance(result[i], str):
                         if result[i] != '':
                             resulttemp = "'" + result[i] + "'"
                         else:
                             resulttemp = 'NULL'
-
                     elif isinstance(result[i], unicode):
                         if result[i] != u'':
                             resulttemp = "'" + result[i] + "'"
                         else:
                             resulttemp = 'NULL'
-
                     elif result[i ] is None:
                         resulttemp = 'NULL'
                     else:
-                        # print(type(result[i ]))
                         resulttemp = str(result[i])
-
-                    # print(field, i, type(result[i]), result[i], resulttemp)
-
                     sql += str(field) + " = " + resulttemp + ','
 
                 sql = sql[:-1]  # remove last ,
@@ -2574,45 +2520,38 @@ class AbstractLamiaTool(QWidget):
 
 
 
-                # print('save',tablename,feature.attributes())
-                #self.saveQGisFeature(tablename, feature)
-
-
-
     def postSaveFeature(self, boolnewfeature):
+        """
+        Method called by saveFeature
+
+        To be overloaded if special actions have to be done after raw savin of the feature
+
+        :param boolnewfeature: if it s a new feature
+        """
         pass
 
 
     def getValueFromWidget(self, wdg, tablename, fieldname):
+        """
+        Method to obtain the savable value of a property widget
+
+        :param wdg: the property widget
+        :param tablename: the table name  linked with th widget
+        :param fieldname: the field name  linked with th widget
+        :return: The value of the widget, in good format for saving
+        """
 
         fieldvaluetosave = None
-        # print ('saveFeatureProperties - dbasekeys', self.dbasetable['fields'][fieldname].keys() )
-
-        # if 'Cst' in self.dbasetable['fields'][fieldname].keys():
         if 'Cst' in self.dbase.dbasetables[tablename]['fields'][fieldname].keys():
-            # fieldvaluetosave = self._getConstraintRawValueFromText(tablename,fieldname, wdg.currentText())
             try:
                 if isinstance(wdg, list):
                     wdg = wdg[0]
                 fieldvaluetosave = self.dbase.getConstraintRawValueFromText(tablename, fieldname, wdg.currentText())
             except Exception as e:
                 print('error getValueFromWidget', tablename, fieldname, e)
-            if False:
-                if isinstance(wdg, QComboBox):
-                    fieldvaluetosave = self.dbase.getConstraintRawValueFromText(tablename, fieldname, wdg.currentText())
-                elif isinstance(wdg, QCheckBox):
-                    fieldvaluetosave = int(wdg.isChecked())
-
-            if False:
-                try:
-                    fieldvaluetosave = self.dbase.getConstraintRawValueFromText(tablename, fieldname, wdg.currentText())
-                except AttributeError as e:
-                    print(self.dbase.dbasetables[tablename]['fields'][fieldname])
-                    print('error',tablename, fieldname)
             if fieldvaluetosave == '':
                 fieldvaluetosave = None
         else:
-            # print ('saveFeatureProperties - instance', wdg)
             if isinstance(wdg, list):
                 wdg = wdg[0]
             if isinstance(wdg, QSpinBox) and wdg.value() > -1:
@@ -2629,22 +2568,23 @@ class AbstractLamiaTool(QWidget):
                     fieldvaluetosave = 1
                 else:
                     fieldvaluetosave = 0
-
             elif isinstance(wdg, QDateEdit) and wdg.findChild(QLineEdit).text() != ' ':
-                #fieldvaluetosave = wdg.date().toString('yyyy-MM-dd')
                 fieldvaluetosave = wdg.date().toString('yyyy-MM-dd')
-
             elif isinstance(wdg, QDateTimeEdit) and wdg.findChild(QLineEdit).text() != ' ':
-                # fieldvaluetosave = wdg.date().toString('yyyy-MM-dd')
                 fieldvaluetosave = wdg.dateTime().toString( 'yyyy-MM-dd hh:mm:ss')
-
-        # print ('saveFeatureProperties', tablename, fieldname, fieldvaluetosave)
 
         return fieldvaluetosave
 
 
 
     def deleteFeature(self, signalreceiver=None, showmessage=True):
+        """
+        Method called by cliking on Save Button
+
+        :param signalreceiver: the signal emited by the button
+        :param showmessage: show a confirmation dialog or not
+        :return:
+        """
 
         if showmessage :
             message = "Supprimer completement l'element (yes) ou l'archiver (no) ? "
@@ -2661,13 +2601,8 @@ class AbstractLamiaTool(QWidget):
 
 
         if reply == QMessageBox.Yes:
-            # self.windowdialog.errorMessage("pas encore disponible")
-
-            #get lpk_revision_begin - if equal to current version complete deletion , Otherwise  set lpk_revision_end to
-
             if lpkrevbegin == self.dbase.maxrevision:
                 if self.deleteParentFeature():
-                    #fetid = self.currentFeature.id()
                     sql = "DELETE FROM  " + self.dbasetablename + " WHERE pk_" + self.dbasetablename + " = " + str(self.currentFeaturePK)
                     self.dbase.query(sql)
                 else:
@@ -2682,13 +2617,9 @@ class AbstractLamiaTool(QWidget):
 
 
         elif reply == QMessageBox.No:
-            # if lpkrevbegin == self.dbase.maxrevision:
-            #idobjet = self.currentFeature['id_objet']
             sql = "SELECT pk_objet FROM " + self.dbasetablename.lower() + "_qgis"
             sql += " WHERE pk_" + self.dbasetablename.lower() + " = " + str(self.currentFeaturePK)
             pkobjet = self.dbase.query(sql)[0][0]
-
-            #datesuppr = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
             datesuppr = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
             sql = "UPDATE Objet SET datetimedestruction = '" + datesuppr + "'"
@@ -2696,8 +2627,6 @@ class AbstractLamiaTool(QWidget):
             sql += " WHERE pk_objet = " + str(pkobjet)
 
             self.dbase.query(sql)
-            # self.dbase.commit()
-
 
         self.canvas.refresh()
         self.loadChildFeatureinWidget()
@@ -2705,14 +2634,32 @@ class AbstractLamiaTool(QWidget):
 
 
     def deleteParentFeature(self):
+        """
+        Method called by deleteFeature
+
+        To be overloaded if the parents tables need deleting also
+
+        :return: True if method is overloaded, else False
+        """
+
         return False
 
 
     def getFeatureAddedId(self,id):
-        # print('getFeatureAddedId',id)
+        """
+        Simple method to catch he id of the fresh saved qgsfeature
+
+        :param id: the id send by qgis signal
+        :return: the QgsFeature id
+        """
+
         self.addedFeatureid = id
 
     def deselectFeature(self):
+        """
+        Method called by deselect Button
+
+        """
         self.windowdialog.closeEditFeature()
         #case deepcopy
         self.deepCopyDisconnect()
@@ -2723,7 +2670,6 @@ class AbstractLamiaTool(QWidget):
             self.featureSelected(self.currentFeature.id(),True)
         else:
             if self.lastidselected is not None:
-                # print('self.lastidselected', self.lastidselected)
                 if self.rubberBand:
                     self.rubberBand.reset(0)
                 if self.parentWidget is None and self.lastidselected is not None:
@@ -2734,78 +2680,27 @@ class AbstractLamiaTool(QWidget):
 
 
     def addFeature(self):
+        """
+        Method called by add Feature Button
+
+        """
         self.featureSelected()
 
-    """
-    def errorMessage(self, text):
-        if qgis.utils.iface is not None:
-            qgis.utils.iface.messageBar().pushMessage("InspectionDigue", text,
-                                                      level=qgis.gui.QgsMessageBar.CRITICAL, duration=3)
-        else:
-            print('ErrorMessage', text)
-
-    def warningMessage(self, text):
-        if qgis.utils.iface is not None:
-            qgis.utils.iface.messageBar().pushMessage("InspectionDigue", text,
-                                                      level=qgis.gui.QgsMessageBar.WARNING, duration=3)
-        else:
-            print('ErrorMessage', text)
-
-    def normalMessage(self, text):
-        if qgis.utils.iface is not None:
-            qgis.utils.iface.messageBar().pushMessage("InspectionDigue", text,
-                                                      level=qgis.gui.QgsMessageBar.INFO, duration=3)
-        else:
-            print('normalMessage', text)
-    """
 
     def addGPSPoint(self):
+        """
+        Method called by add GPS Point Button
+
+        """
         if self.gpsutil.currentpoint is None:
             self.windowdialog.errorMessage('GPS non connecte')
             return
+
         type = self.dbasetable['layer'].geometryType()
-
-        if False:
-            if self.rubberBand is not None:
-                self.rubberBand.reset(type)
-            else:
-                self.rubberBand = qgis.gui.QgsRubberBand(self.canvas,type)
-            self.rubberBand.setWidth(5)
-            self.rubberBand.setColor(QtGui.QColor("magenta"))
-
-        if False:
-            if self.rubberBand is not None:
-                self.rubberBand.reset(type)
-            else:
-                self.rubberBand = qgis.gui.QgsRubberBand(self.canvas,type)
-            self.rubberBand.setWidth(5)
-            self.rubberBand.setColor(QtGui.QColor("magenta"))
-
         self.createorresetRubberband(type)
-
-
-        # xform = qgis.core.QgsCoordinateTransform(self.dbase.qgiscrs, self.canvas.mapSettings().destinationCrs())
-        #gpspoint = self.gpsutil.currentpoint
-        # mappoint = self.gpsutil.currentpoint
         layerpoint = self.gpsutil.currentpoint
 
-        # print('1', layerpoint)
-
-        if False:
-
-            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                success = qgis.core.QgsGeometry.fromPoint(layerpoint).transform(self.dbase.xform)
-            else:
-                success = qgis.core.QgsGeometry.fromPointXY(layerpoint).transform(self.dbase.xform)
-
-        # print('2', layerpoint)
-
-        # success = qgis.core.QgsGeometry.fromPoint(mappoint).transform(self.dbase.xformreverse)
-        # print(qgis.core.QgsGeometry.fromPoint(mappoint).exportToWkt() )
-        # mappointgeometry = qgis.core.QgsGeometry.fromPoint(mappoint)
-       # mappoint =  mappoint.asPoint()
-
-        if type == 0 :       # POINT
+        if type == 0:       # POINT
             self.setTempGeometry([layerpoint],False)
 
         elif type == 1:      # LINE
@@ -2815,9 +2710,6 @@ class AbstractLamiaTool(QWidget):
                 pass
             if self.currentFeature is not None and self.currentFeature.geometry() is not None:
                 geom = self.currentFeature.geometry()
-                #print(geom.exportToWkt())
-                # success = geom.transform(xform)
-                # success = geom.transform(self.dbase.xform)
                 geompoly = geom.asPolyline()
                 geompoly.append(layerpoint)
                 self.setTempGeometry(geompoly,False)
@@ -2831,51 +2723,34 @@ class AbstractLamiaTool(QWidget):
                     geompoly.append(layerpoint)
                     self.setTempGeometry(geompoly,False)
 
+
+
+
     def addPoint(self):
-        # print('addPoint')
+        """
+        Method called by Add Point Button
+        """
+
         type = self.dbasetable['layer'].geometryType()
-
-        if False:
-            if self.rubberBand is not None:
-                self.rubberBand.reset(type)
-            else:
-                self.rubberBand = qgis.gui.QgsRubberBand(self.canvas,type)
-            self.rubberBand.setWidth(5)
-            self.rubberBand.setColor(QtGui.QColor("magenta"))
-
-        if False:
-            if self.rubberBand is not None:
-                self.rubberBand.reset(type)
-            else:
-                self.rubberBand = qgis.gui.QgsRubberBand(self.canvas,type)
-            self.rubberBand.setWidth(5)
-            self.rubberBand.setColor(QtGui.QColor("magenta"))
-
         self.createorresetRubberband(type)
 
-
-
         if type == 1:      # LINE
-            if False:
-                initialgeom = self.currentFeature.geometry().asPolyline()
-            if True:
-                # get the geometry before editing
-                initialgeom = []
-                if self.tempgeometry is not None:
-                    if sys.version_info.major == 2:
-                        if len(self.tempgeometry.asPolyline()) > 0:
-                            initialgeom = self.tempgeometry.asPolyline()
-                        else:
-                            initialgeom = self.tempgeometry.asMultiPolyline()[0]
+            # get the geometry before editing
+            initialgeom = []
+            if self.tempgeometry is not None:
+                if sys.version_info.major == 2:
+                    if len(self.tempgeometry.asPolyline()) > 0:
+                        initialgeom = self.tempgeometry.asPolyline()
                     else:
-                        if not self.tempgeometry.isMultipart () :
-                            initialgeom = self.tempgeometry.asPolyline()
-                        else:
-                            initialgeom = self.tempgeometry.asMultiPolyline()[0]
-                elif self.currentFeature is not None and self.tempgeometry is None:
-                    initialgeom = self.currentFeature.geometry().asPolyline()
+                        initialgeom = self.tempgeometry.asMultiPolyline()[0]
+                else:
+                    if not self.tempgeometry.isMultipart () :
+                        initialgeom = self.tempgeometry.asPolyline()
+                    else:
+                        initialgeom = self.tempgeometry.asMultiPolyline()[0]
+            elif self.currentFeature is not None and self.tempgeometry is None:
+                initialgeom = self.currentFeature.geometry().asPolyline()
 
-            # print(initialgeom)
             mapgeometry = []
             for point in initialgeom:
                 if self.dbase.qgsiface is None and int(str(self.dbase.qgisversion_int)[0:3]) < 220 : #bug for standalone
@@ -2887,18 +2762,19 @@ class AbstractLamiaTool(QWidget):
 
 
     def captureGeometry(self,connectint=0, listpointinitialgeometry=[], type=None):
-        """!
+        """
+        Method called when capturing geometry is needed (add/extent point, line, polygon...)
+        Launch the capture tool
 
+        :param connectint: Catching widget signal
+        :param listpointinitialgeometry: list of geometry to be extended, if new empty list
+        :param type: geom type (point, line, polygone)
         """
 
-
         source = self.sender()
-        # print(source.objectName())
 
         if source is not None and source.objectName() != 'pushButton_rajoutPoint':
             listpointinitialgeometry = []
-
-        # print('captureGeometry', connectint, listpointinitialgeometry, type)
 
         if type is None:
             if 'Point' in source.objectName():
@@ -2908,85 +2784,40 @@ class AbstractLamiaTool(QWidget):
             elif 'Polygon' in source.objectName():
                 type = 2
 
-
-        # pushButton_rajoutPointGPS
-
-        # self.actuallayerindex = self.dbaseused['type'].index(typename)
-
-        # rubberband things
-        if False:
-            if self.rubberBand is not None:
-                self.rubberBand.reset(type)
-            else:
-                self.rubberBand = qgis.gui.QgsRubberBand(self.canvas,type)
-            self.rubberBand.setWidth(5)
-            self.rubberBand.setColor(QtGui.QColor("magenta"))
-
         self.createorresetRubberband(type)
 
-        if False:
+        try:
+            if type == qgis.core.QgsWkbTypes.PointGeometry:
+                self.currentmaptool = self.mtoolpoint
+            elif type == qgis.core.QgsWkbTypes.LineGeometry:
+                self.currentmaptool = self.mtoolline
+            elif type == qgis.core.QgsWkbTypes.PolygonGeometry:
+                self.currentmaptool = self.mtoolpolygon
+            else:
+                return
+        except:
+            if type == qgis.core.QGis.Point:
+                self.currentmaptool = self.mtoolpoint
+            elif type == qgis.core.QGis.Line:
+                self.currentmaptool = self.mtoolline
+            elif type == qgis.core.QGis.Polygon:
+                self.currentmaptool = self.mtoolpolygon
+            else:
+                return
 
-            try:
-                if type == qgis.core.QgsWkbTypes.PointGeometry :
-                    mode = qgis.gui.QgsMapToolAdvancedDigitizing.CapturePoint
-                elif type == qgis.core.QgsWkbTypes.LineGeometry  :
-                    mode = qgis.gui.QgsMapToolAdvancedDigitizing.CaptureLine
-                elif type == qgis.core.QgsWkbTypes.PolygonGeometry   :
-                    mode = qgis.gui.QgsMapToolAdvancedDigitizing.CapturePolygon
-                else:
-                    return
-            except:
-                if type == qgis.core.QGis.Point :
-                    mode = qgis.gui.QgsMapToolAdvancedDigitizing.CapturePoint
-                elif type == qgis.core.QGis.Line  :
-                    mode = qgis.gui.QgsMapToolAdvancedDigitizing.CaptureLine
-                elif type == qgis.core.QGis.Polygon   :
-                    mode = qgis.gui.QgsMapToolAdvancedDigitizing.CapturePolygon
-                else:
-                    return
-
-        # print('cadwdg')
-        # self.cadwdg = qgis.gui.QgsAdvancedDigitizingDockWidget(self.canvas)
-        # self.cadwdg.show()
-        # print('capture')
-        # self.mtool = mapToolCapture( self.canvas, qgis.utils.iface.cadDockWidget(), mode , self.layers[self.actuallayerindex] )
-        if False:
-            self.mtool = mapToolCapture(self.canvas, self.cadwdg, mode, self.dbasetable['layer'])
-            # self.mtool = qgis.gui.QgsMapToolCapture(self.canvas, self.cadwdg, mode)
-            self.canvas.setMapTool(self.mtool)
-            self.mtool.stopCapture.connect(self.setTempGeometry)
-            # self.mtool.activate()
-            self.mtool.startCapturing()
-        if True:
-            try:
-                if type == qgis.core.QgsWkbTypes.PointGeometry:
-                    self.currentmaptool = self.mtoolpoint
-                elif type == qgis.core.QgsWkbTypes.LineGeometry:
-                    self.currentmaptool = self.mtoolline
-                elif type == qgis.core.QgsWkbTypes.PolygonGeometry:
-                    self.currentmaptool = self.mtoolpolygon
-                else:
-                    return
-            except:
-                if type == qgis.core.QGis.Point:
-                    self.currentmaptool = self.mtoolpoint
-                elif type == qgis.core.QGis.Line:
-                    self.currentmaptool = self.mtoolline
-                elif type == qgis.core.QGis.Polygon:
-                    self.currentmaptool = self.mtoolpolygon
-                else:
-                    return
-
-            if self.canvas.mapTool() != self.currentmaptool:
-                self.canvas.setMapTool(self.currentmaptool)
-            self.currentmaptool.stopCapture.connect(self.setTempGeometry)
-            # self.mtool.activate()
-            self.currentmaptool.mappoints = listpointinitialgeometry
-            # self.currentmaptool.setMapPoints(listpointinitialgeometry)
-            self.currentmaptool.startCapturing()
+        if self.canvas.mapTool() != self.currentmaptool:
+            self.canvas.setMapTool(self.currentmaptool)
+        self.currentmaptool.stopCapture.connect(self.setTempGeometry)
+        self.currentmaptool.mappoints = listpointinitialgeometry
+        self.currentmaptool.startCapturing()
 
 
     def createorresetRubberband(self,type=0):
+        """
+        Reset the rubberband
+
+        :param type: geom type
+        """
         if self.rubberBand is not None:
             self.rubberBand.reset(type)
         else:
@@ -2997,14 +2828,21 @@ class AbstractLamiaTool(QWidget):
 
 
     def setTempGeometry(self, points, comefromcanvas=True, showinrubberband=True):
+        """
+        Called when self.currentmaptool has finished capturing
 
+        Assign the geometry to self.tempgeometry
+
+        :param points: the list of points coming from the currentmaptool
+        :param comefromcanvas: True if come from canvas (need od reprojection)
+        :param showinrubberband: True if the temp geometry will be visible with the rubberband
+
+        """
 
 
         debug = False
 
         if debug: logging.getLogger("Lamia").debug('start points : %s %s', self.dbasetablename, points)
-
-
 
         if self.currentmaptool is not None:
             try:
@@ -3019,7 +2857,6 @@ class AbstractLamiaTool(QWidget):
         else:
             type = self.capturetype
 
-
         # case point in line layer
         if len(points)==2 and points[0] == points[1]:
             #self.rubberBand.reset(0)
@@ -3027,7 +2864,6 @@ class AbstractLamiaTool(QWidget):
             type = 0.5
         elif len(points) == 1 and self.dbasetable['geom'] == 'LINESTRING':
             points.append(points[0])
-            #self.rubberBand.reset(0)
             self.createorresetRubberband(0)
             type = 0.5
         else:
@@ -3038,13 +2874,6 @@ class AbstractLamiaTool(QWidget):
             for point in points:
                 pointsmapcanvas.append(self.dbase.xform.transform(point))
             pointslayer = points
-            """
-            else:
-                for point in points:
-                    pointslayer.append(self.dbase.xformreverse.transform(point))
-                pointsmapcanvas = points
-            """
-
         else:
             if comefromcanvas:
                 pointsmapcanvas = points
@@ -3054,31 +2883,6 @@ class AbstractLamiaTool(QWidget):
                 pointslayer = points
                 for point in points:
                     pointsmapcanvas.append(self.dbase.xform.transform(point))
-
-        if False:
-            if comefromcanvas:
-                if self.dbase.qgsiface is None: #for stadalone app bug
-                    for point in points:
-                        pointsmapcanvas.append(self.dbase.xform.transform(point))
-                    pointslayer = points
-                else:
-                    pointsmapcanvas = points
-                    for point in points:
-                        pointslayer.append(self.dbase.xformreverse.transform(point))
-            else:
-                if self.dbase.qgsiface is None: #for stadalone app bug
-                    for point in points:
-                        pointsmapcanvas.append(self.dbase.xform.transform(point))
-                    pointslayer = points
-                else:
-                    pointslayer = points
-                    for point in points:
-                        pointsmapcanvas.append(self.dbase.xform.transform(point))
-
-
-        #self.currentmaptool.mappoints = []
-        #print('pointslayer',pointslayer)
-        #print('pointsmapcanvas', pointsmapcanvas)
 
         if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
             if type == 0:
@@ -3121,8 +2925,6 @@ class AbstractLamiaTool(QWidget):
         if debug: logging.getLogger("Lamia").debug('end layer points : %s', pointslayer)
         if debug: logging.getLogger("Lamia").debug('end canvas points : %s', pointsmapcanvas)
         if debug: logging.getLogger("Lamia").debug('end tempgeom : %s', self.toWKT(self.tempgeometry))
-        #if debug: logging.getLogger("Lamia").debug('end tempgeom : %s', self.toWKT(self.tempgeometry))
-        # print(self.dbase.dbasetables['Infralineaire']['layer'].sourceCrs().authid() )
 
         self.mtool = None
 
@@ -3130,80 +2932,23 @@ class AbstractLamiaTool(QWidget):
 
 
     def pickFeature(self):
+        """
+        Called by button of pro interface for picking a feature
+
+
+        """
         self.pointEmitter.canvasClicked.connect(self.selectPickedFeature)
         self.canvas.setMapTool(self.pointEmitter)
 
 
-
-
     def selectPickedFeature(self, point, button=None):
+        """
+        Method of pro interface
 
-        # layername = self.picklayername
-
-        # self.pickfield
-
-        if self.pickfield is not None:
-            distance = None
-            nearestid = None
-            layernearist = None
-            for layername in self.pickTable[self.pickfield].keys():
-                nearid, dist = self.dbase.dbasetables[layername]['widget'].getNearestId(point)
-                if distance is None:
-                    layernearist = layername
-                    distance = dist
-                    nearestid = nearid
-                elif dist < distance:
-                    layernearist = layername
-                    distance = dist
-                    nearestid = nearid
-            layer = self.dbase.dbasetables[layernearist]['layer']
-            idtoget = self.pickTable[self.pickfield][layernearist]
-            # nearestfeature = layer.getFeatures(qgis.core.QgsFeatureRequest(nearestid)).next()
-            nearestfeature = self.dbase.getLayerFeatureById(layernearist, nearestid)
-            nearattributevalue = nearestfeature[idtoget]
-            if int(str(self.dbase.qgisversion_int)[0:3]) < 218:
-                layer.setSelectedFeatures([nearestfeature.id()])
-            else:
-                layer.selectByIds([nearestfeature.id()])
-            # print('selectPickedFeature',layernearist, idtoget ,nearattributevalue)
-            self.initFeatureProperties(self.currentFeature,
-                                       tablename=self.dbasetablename,
-                                       fieldname=self.pickfield,
-                                       value=nearattributevalue)
-            self.pickfield = None
-            self.canvas.unsetMapTool(self.pointEmitter)
-            try:
-                self.pointEmitter.canvasClicked.disconnect(self.selectPickedFeature)
-            except:
-                pass
-
-        else:
-            # not used yet
-            print('selectPickedFeature no pickfield')
-            # nearestid = self.getNearestId(point, layername)
-            nearestid = self.getNearestId(point)
-            if int(str(self.dbase.qgisversion_int)[0:3]) < 218:
-                layer.setSelectedFeatures([nearestid])
-            else:
-                layer.selectByIds([nearestid])
-            self.pickspinbox.setValue(nearestid)
-
-            self.canvas.unsetMapTool(self.pointEmitter)
-            try:
-                self.pointEmitter.canvasClicked.disconnect(self.selectPickedFeature)
-            except:
-                pass
-            self.picklayername = None
-            self.pickspinbox = None
-
-
-
-
-    def selectPickedFeature2(self, point, button=None):
-
-        # layername = self.picklayername
-
-        # self.pickfield
+        :param point:
+        :param button:
+        :return:
+        """
 
         if self.pickfield is not None:
             distance = None
@@ -3228,7 +2973,6 @@ class AbstractLamiaTool(QWidget):
                 layer.setSelectedFeatures([nearestfeature.id()])
             else:
                 layer.selectByIds([nearestfeature.id()])
-            # print('selectPickedFeature',layernearist, idtoget ,nearattributevalue)
             self.initFeatureProperties(self.currentFeature,
                                        tablename=self.dbasetablename,
                                        fieldname=self.pickfield,
@@ -3242,8 +2986,6 @@ class AbstractLamiaTool(QWidget):
 
         else:
             # not used yet
-            print('selectPickedFeature no pickfield')
-            # nearestid = self.getNearestId(point, layername)
             nearestid = self.getNearestId(point)
             if int(str(self.dbase.qgisversion_int)[0:3]) < 218:
                 layer.setSelectedFeatures([nearestid])
@@ -3259,66 +3001,19 @@ class AbstractLamiaTool(QWidget):
             self.picklayername = None
             self.pickspinbox = None
 
-    """
-    def getNearestId(self, point, comefromcanvas=True):
-        if int(str(self.dbase.qgisversion_int)[0:3]) < 218:
-            isspatial = self.dbasetable['layerqgis'].geometryType()  < 3
-        else:
-            isspatial = self.dbasetable['layerqgis'].isSpatial()
-        if not isspatial:
-            return None, None
-
-        nearestid = []
-        if comefromcanvas:
-            point2 = self.pointEmitter.toLayerCoordinates(self.dbasetable['layerqgis'], point)
-        else:
-            point2 = point
-
-        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-            point2geom = qgis.core.QgsGeometry.fromPoint(point2)
-        else:
-            point2geom = qgis.core.QgsGeometry.fromPointXY(point2)
-        spIndex = qgis.core.QgsSpatialIndex(self.dbasetable['layerqgis'].getFeatures())
-        layernearestids = spIndex.nearestNeighbor(point2, 5)
-        # print('getNearestId',layernearestids)
-        distance = None
-        nearestindex = None
-        # geom = None
-
-        if len(layernearestids)>0:
-            for layernearestid in layernearestids:
-                # feat = self.dbasetable['layerview'].getFeatures(qgis.core.QgsFeatureRequest(layernearestid)).next()
-                feat = self.getLayerFeatureById(self.dbasetablename, layernearestid)
-                featgeom = feat.geometry()
-                # print(featgeom.asPolyline())
-                if featgeom.isGeosValid():   #if not valid, return dist = -1...
-                    dist = featgeom.distance(point2geom)
-                else:   #point
-                    if featgeom.type() == 1 and not featgeom.isMultipart():
-                        if len(featgeom.asPolyline()) == 1: #polyline of 1 point
-                            dist = qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(featgeom.asPolyline()[0])).distance(point2geom)
-                        elif len(featgeom.asPolyline()) == 2 and featgeom.asPolyline()[0] == featgeom.asPolyline()[1]:
-                            dist = qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(featgeom.asPolyline()[0])).distance(point2geom)
-                    else:
-                        continue
-                # print('getNearestId',feat.geometry().isGeosValid(), layernearestid,dist )
-                if distance is None:
-                    distance = dist
-                    nearestindex = layernearestid
-                elif dist < distance:
-                    distance = dist
-                    nearestindex = layernearestid
-        return nearestindex, distance
-    """
 
 
     def zoomToFeature(self,fid=None):
-        #self.canvas.zoomToFeatureIds(self.layers[self.actuallayerindex], [self.currentFeature.id()] )
-        #xform = qgis.core.QgsCoordinateTransform(self.dbase.qgiscrs, self.canvas.mapSettings().destinationCrs())
+        """
+        Called by zoom to Button
+
+        :param fid: the id of feature we want to zoom to
+        :return:
+        """
+
         if fid is None:
             feat = self.currentFeature
         else:
-            # feat = self.dbase.getLayerFeatureById(self.dbasetablename,fid )
             pk = self.getPkFromId(self.dbasetablename,fid)
             feat = self.dbase.getLayerFeatureByPk(self.dbasetablename,pk )
         # point2 = xform.transform(feat.geometry().centroid().asPoint())
@@ -3332,20 +3027,16 @@ class AbstractLamiaTool(QWidget):
 
 
     def saveRessourceFile(self):
-        # get date
         """
-        self.dbaseressourcesfield = {'tablefilefield' : 'File',
-                                     'idforparent' : 'IdObjet',
-                                     'parenttablename' : 'OBJET',
-                                     'datefield' : 'DateCreation'}
-        """
+        Called by saveFeature
+        If ressource file is not in the dbase directory, save it in the dbase directory
 
-        #sql = "SELECT datetimecreation FROM Objet WHERE id_objet = " + str(self.currentFeature['id_objet'])
+        """
+        # get date
         sql = "SELECT datetimecreation FROM " + self.dbasetablename.lower() + "_qgis"
         sql += " WHERE pk_"+ self.dbasetablename.lower() + " = " + str(self.currentFeaturePK)
         query = self.dbase.query(sql)
         result = [row[0] for row in query]
-        # print(result[0].__class__)
 
         if len(result) > 0:
             # date = result[0]
@@ -3358,7 +3049,6 @@ class AbstractLamiaTool(QWidget):
 
         date = ''.join(datevalue.split('-'))
 
-        #sql = "SELECT id_ressource, file FROM Ressource WHERE id_ressource = " + str(self.currentFeature['id_ressource'])
         sql = "SELECT pk_ressource, id_ressource, file FROM " + self.dbasetablename.lower() + "_qgis"
         sql += " WHERE pk_"+ self.dbasetablename.lower() + " = " + str(self.currentFeaturePK)
         query = self.dbase.query(sql)
@@ -3371,7 +3061,6 @@ class AbstractLamiaTool(QWidget):
         if int(str(self.dbase.qgisversion_int)[0:3]) < 220 and isinstance(file, QtCore.QPyNullVariant):
             file = None
 
-        # if file is not None and not isinstance(file,QtCore.QPyNullVariant) and len(file) > 0:
         if file is not None and len(file) > 0:
             if file[0] == '.':
                 file = os.path.join(self.dbase.dbaseressourcesdirectory,file)
@@ -3387,30 +3076,12 @@ class AbstractLamiaTool(QWidget):
                                                    withthumbnail=0,
                                                    copywholedirforraster=False)
 
-                    if False:
-                        if not os.path.exists(destinationdir):
-                            os.makedirs(destinationdir)
-                        # filename = self.currentFeature['ID']
-
-                        destinationfile = os.path.join(destinationdir,filename)
-                        shutil.copy(file,destinationfile)
 
                     finalname = os.path.join('.',os.path.relpath(destinationfile, self.dbase.dbaseressourcesdirectory ))
-                    # print(finalname)
-
-                    # sql = "INSERT INTO Ressource (File) VALUES('test1') WHERE ;"
                     sql = "UPDATE Ressource SET file = '" + finalname + "' WHERE pk_ressource = " +  str(pkressource) + ";"
                     query = self.dbase.query(sql)
-                    # self.dbase.commit()
-
-                    if False:
-                        with qgis.core.edit(self.dbasetable['layer']):
-                            self.currentFeature.setAttribute(self.dbaseressourcesfield['tablefilefield'], finalname)
-                            success = self.dbasetable['layer'].updateFeature(self.currentFeature)
 
                     if self.beforesavingFeature is not None:
-                        # oldfile = self.beforesavingFeature[self.dbaseressourcesfield['tablefilefield']]
-                        # sql = "SELECT file FROM Ressource  WHERE id_ressource = " +  str(idressource) + ";"
                         sql = "SELECT file FROM Ressource  WHERE pk_ressource = " + str(pkressource) + ";"
                         query = self.dbase.query(sql)
                         result = [row[0] for row in query]
@@ -3429,6 +3100,14 @@ class AbstractLamiaTool(QWidget):
 
 
     def showImageinLabelWidget(self,wdg,savedfile):
+        """
+        Show the image file in the text widget
+        Manage thumbnail image
+
+        :param wdg: the text widget
+        :param savedfile: the image file
+
+        """
         filetoshow = self.dbase.completePathOfFile(savedfile)
         possiblethumbnail,ext = os.path.splitext(filetoshow)
         if os.path.isfile(possiblethumbnail + "_thumbnail.png"):
@@ -3441,72 +3120,16 @@ class AbstractLamiaTool(QWidget):
             wdg.clear()
             wdg.setText('Image non trouvee')
 
-    """
-    def completePathOfFile(self,file):
-        completefile = ''
-        if int(str(self.dbase.qgisversion_int)[0:3]) < 220 and isinstance(file, QtCore.QPyNullVariant):
-            file = None
-
-        #if file is None or isinstance(file,QtCore.QPyNullVariant):
-        if file is None:
-            return completefile
-        if len(file)>0:
-            if file[0] == '.':
-                completefile = os.path.join(self.dbase.dbaseressourcesdirectory, file)
-            else:
-                completefile = file
-
-            completefile = os.path.normpath(completefile)
-        return completefile
-    """
-
-    """
-    def isAttributeNull(self,attr):
-        if int(str(self.dbase.qgisversion_int)[0:3]) < 220 and isinstance(attr, QtCore.QPyNullVariant):
-            return True
-        elif int(str(self.dbase.qgisversion_int)[0:3]) > 220 and isinstance(attr, QtCore.QVariant) and attr.isNull():
-            return True
-        elif attr is None:
-            return True
-        else:
-            return False
-    """
-
 
 
     def copyAtributes(self):
-        # print('copy')
+        """
+        Copy he atributes of the ui in self.templinkuserwdg
+
+        :return: self.templinkuserwdg
+        """
+
         self.templinkuserwdg = {}
-        if False:
-            pass
-            """
-                      # print ('saveFeatureProperties - instance', wdg)
-                if isinstance(wdg, list):
-                    wdg = wdg[0]
-                if isinstance(wdg, QSpinBox) and wdg.value() > -1:
-                    fieldvaluetosave = int(wdg.value() )
-                elif isinstance(wdg, QDoubleSpinBox) and wdg.value() > -1:
-                    fieldvaluetosave = float(wdg.value())
-                elif isinstance(wdg, QTextEdit) or isinstance(wdg, QTextBrowser):
-                    fieldvaluetosave = wdg.toPlainText()
-                elif isinstance(wdg, QLineEdit):
-                    fieldvaluetosave = wdg.text()
-                elif isinstance(wdg, QCheckBox) :
-                    value = wdg.checkState()
-                    if int(value):
-                        fieldvaluetosave = 1
-                    else:
-                        fieldvaluetosave = 0
-    
-                elif isinstance(wdg, QDateEdit) and wdg.findChild(QLineEdit).text() != ' ':
-                    #fieldvaluetosave = wdg.date().toString('yyyy-MM-dd')
-                    fieldvaluetosave = wdg.date().toString('yyyy-MM-dd')
-    
-                elif isinstance(wdg, QDateTimeEdit) and wdg.findChild(QLineEdit).text() != ' ':
-                    # fieldvaluetosave = wdg.date().toString('yyyy-MM-dd')
-                    fieldvaluetosave = wdg.dateTime().toString( 'yyyy-MM-dd hh:mm:ss')
-            
-            """
 
         for tablename in self.linkuserwdg.keys():
             for field in self.linkuserwdg[tablename]['widgets'].keys():
@@ -3526,11 +3149,17 @@ class AbstractLamiaTool(QWidget):
                 elif isinstance(wdg, QDateTimeEdit):
                     self.templinkuserwdg[wdg] = wdg.dateTime()
 
-        #print(self.templinkuserwdg)
         return self.templinkuserwdg
 
 
     def pasteAtributes(self, signalclick=None, dicttopaste=None):
+        """
+        Paste atributes saved in self.templinkuserwdg
+
+        :param signalclick: catch emitter signal
+        :param dicttopaste: the dictionnary to paste
+
+        """
         if dicttopaste is None:
             dicttopaste = self.templinkuserwdg
             
@@ -3556,15 +3185,15 @@ class AbstractLamiaTool(QWidget):
 
 
     def goToFeaturePressed(self):
+        """
+        Called on gotofeature Button pressed
+        Show featue in rubberband
+
+        """
 
         if self.currentFeature is not None:
             self.zoomToFeature()
-            """
-            xform = qgis.core.QgsCoordinateTransform(self.dbase.qgiscrs, self.canvas.mapSettings().destinationCrs())
-            point2 = xform.transform(self.currentFeature.geometry().centroid().asPoint())
-            self.canvas.setCenter(point2)
-            self.canvas.refresh()
-            """
+
             if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
                 selectedfeatureids = self.dbasetable['layer'].selectedFeaturesIds()
             else:
@@ -3586,17 +3215,17 @@ class AbstractLamiaTool(QWidget):
                     self.rubberBandBlink = qgis.gui.QgsRubberBand(self.canvas, type)
                 self.rubberBandBlink.setWidth(5)
                 self.rubberBandBlink.setColor(QtGui.QColor("magenta"))
-                # xform = qgis.core.QgsCoordinateTransform(self.dbase.qgiscrs,self.canvas.mapSettings().destinationCrs())
-                # geom = qgis.core.QgsGeometry(self.currentFeature.geometry())
-                # print(geom.exportToWkt())
-                # success = geom.transform(xform)
                 success = geom.transform(self.dbase.xform)
-                # print(geom.exportToWkt())
                 self.rubberBandBlink.addGeometry(geom, None)
                 self.rubberBandBlink.show()
                 self.canvas.refresh()
 
     def goToFeatureReleased(self):
+        """
+        Called on gotofeature Button released
+        Reset ruberband
+
+        """
         if self.rubberBandBlink is not None:
             type = self.dbasetable['layer'].geometryType()
             self.rubberBandBlink.reset(type)
@@ -3604,11 +3233,15 @@ class AbstractLamiaTool(QWidget):
 
 
     def displayGPS(self, active):
+        """
+        Called on GPs connection
+        Print GPS things in widgets defined by self.gpswidget
+
+        :param active: True ig a NMEA sentence is received in less than 5 s, else False
+
+        """
         if active:
-            #self.normalMessage('GPS connecte')
-            #print('acative', self.dbasetablename, self.gpswidget)
             if self.gpswidget is not None:
-                #print('active gps',self.dbasetablename)
                 for key in self.gpswidget.keys():
                     if self.gpswidget[key]['widget'] is not None:
                         self.gpswidget[key]['widget'].setEnabled(True)
@@ -3616,7 +3249,6 @@ class AbstractLamiaTool(QWidget):
                 self.gpsutil.gstsentence.connect(self.displayGST)
             self.pushButton_rajoutPointGPS.setEnabled(True)
         else:
-            #self.warningMessage('GPS deconnecte')
             self.pushButton_rajoutPointGPS.setEnabled(False)
             if self.gpswidget is not None:
                 try:
@@ -3635,6 +3267,11 @@ class AbstractLamiaTool(QWidget):
 
 
     def displayGGA(self, dictgga):
+        """
+        Called by displayGPS
+
+        :param dictgga: the dict where widgets to display gga are defined
+        """
         for key in self.gpswidget.keys():
             if 'gga' in self.gpswidget[key].keys() and self.gpswidget[key]['widget'] is not None:
                 if dictgga[self.gpswidget[key]['gga']] is not None:
@@ -3642,32 +3279,16 @@ class AbstractLamiaTool(QWidget):
                         self.gpswidget[key]['widget'].setText(str(round(dictgga[self.gpswidget[key]['gga']], 2)))
                     except KeyError:
                         pass
-
-                    if False:
-                        if key == 'zmngf' :
-                            try:
-                                self.gpswidget[key]['widget'].setText(str(round(dictgga[self.gpswidget[key]['gga']],2)))
-                            except KeyError:
-                                pass
-                        elif key == 'zgps' :
-                            try:
-                                self.gpswidget[key]['widget'].setText(str(round(dictgga[self.gpswidget[key]['gga']],2)))
-                            except KeyError:
-                                pass
-                        elif key == 'hauteurperche' :
-                            try:
-                                self.gpswidget[key]['widget'].setText(str(round(dictgga[self.gpswidget[key]['gga']],2)))
-                            except KeyError:
-                                pass
-                        else:
-                            try:
-                                self.gpswidget[key]['widget'].setText(str(round(dictgga[self.gpswidget[key]['gga']],2)))
-                            except KeyError:
-                                pass
                 else:
                     self.gpswidget[key]['widget'].setText('/')
 
+
     def displayGST(self, dictgst):
+        """
+        Called by displayGPS
+
+        :param dictgst: the dict where widgets to display gst are defined
+        """
         for key in self.gpswidget.keys():
             if 'gst' in self.gpswidget[key].keys() and self.gpswidget[key]['widget'] is not None:
                 if dictgst[self.gpswidget[key]['gst']] is not None:
@@ -3675,18 +3296,16 @@ class AbstractLamiaTool(QWidget):
                 else:
                     self.gpswidget[key]['widget'].setText('/')
 
-    """
-    def getLayerFeatureById(self,layername,fid):
-        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-            return self.dbase.dbasetables[layername]['layer'].getFeatures(qgis.core.QgsFeatureRequest(fid)).next()
-        else:
-            return self.dbase.dbasetables[layername]['layer'].getFeature(fid)
-    """
-
-
 
 
     def getPkFromId(self, layername, inputid):
+        """
+        Method to get pk of feature by id
+
+        :param layername:
+        :param inputid:
+        :return:
+        """
 
         sql = "SELECT pk_" + str(layername).lower() + " FROM " + str(layername).lower() + "_qgis "
         sql += "WHERE id_" + str(layername).lower() + " = " + str(inputid)
@@ -3700,9 +3319,6 @@ class AbstractLamiaTool(QWidget):
 
     def getDBaseChildWidget(self,keywidget):
         wdg = self.dbasechildwdg[keywidget]
-        # print(self.dbasechildwdg)
-        # print(keywidget, wdg, isinstance(wdg,list))
-        # print(self.dbase.dbasetables['Photo']['widget'])
 
         if isinstance(wdg,list) and len(wdg)>0:
             return wdg[self.dbasechildwdg[keywidget][1]]
@@ -3713,6 +3329,11 @@ class AbstractLamiaTool(QWidget):
 
 
     def themechanged(self,iconwidth):
+        """
+        Change icon width - activated by windowswidget
+
+        :param iconwidth: the icon width we want
+        """
 
         if isinstance(iconwidth, int):
             newsize = QtCore.QSize(iconwidth, iconwidth)
@@ -3739,6 +3360,12 @@ class AbstractLamiaTool(QWidget):
             wdg.themechanged(iconwidth)
 
     def toWKT(self, geom):
+        """
+        convenient method working for qgis 2 and 3
+
+        :param geom: the QgsGeometry
+        :return: the wkt
+        """
         returnstr = ''
         if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
             returnstr = geom.exportToWkt()
@@ -3748,6 +3375,10 @@ class AbstractLamiaTool(QWidget):
         return returnstr
 
     def deepCopy(self):
+        """
+        Called by deep copy Button
+
+        """
         self.deepCopySave()
 
         tempsender = self.sender()
@@ -3761,12 +3392,13 @@ class AbstractLamiaTool(QWidget):
             self.lamiageomChanged.connect(self.deepcopymultipleselection)
 
 
-
-
-
-
-
     def deepcopymultipleselection(self):
+        """
+        Called by deepCopy
+
+        copy to multiple objects
+
+        """
         try:
             self.lamiageomChanged.disconnect(self.deepcopymultipleselection)
         except:
@@ -3798,6 +3430,16 @@ class AbstractLamiaTool(QWidget):
 
 
     def deepCopySave(self, signalclik=None, table=None,deepcopydict=None,parentwidg=None):
+        """
+        Save properties of the copied feature
+
+
+        :param signalclik: catch emitter signal
+        :param table:
+        :param deepcopydict:
+        :param parentwidg:
+        :return:
+        """
 
         debug = False
         if debug: print('**** deepCopy ****', table,deepcopydict,parentwidg  )

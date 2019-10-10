@@ -27,55 +27,71 @@ This file is part of LAMIA.
 
 
 
+
+import qgis
 from qgis.PyQt import uic, QtCore
 
 try:
-    from qgis.PyQt.QtGui import (QWidget, QPushButton)
+    from qgis.PyQt.QtGui import (QWidget)
 except ImportError:
-    from qgis.PyQt.QtWidgets import (QWidget, QPushButton)
+    from qgis.PyQt.QtWidgets import (QWidget)
 #from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
-from ..base2.lamiabase_noeud_tool import BaseNoeudTool
+from ..base2.lamiabase_equipement_tool import BaseEquipementTool
 
-import os
-import qgis
-from collections import OrderedDict
-import datetime
 # from ..base.lamiabase_photo_tool import BasePhotoTool
+# from ..base.lamiabase_croquis_tool import BaseCroquisTool
+
 from .lamiabaseeaupotable_photo_tool import BaseEaupotablePhotoTool as BasePhotoTool
 from .lamiabaseeaupotable_croquis_tool import BaseEaupotableCroquisTool as BaseCroquisTool
-#from ..base.lamiabase_croquis_tool import BaseCroquisTool
-#from .lamiabaseeaupotable_desordre_tool import BaseAssainissementDesordreTool
-# from .lamiabaseeaupotable_equipement_tool import BaseEaupotableEquipementTool
 from .lamiabaseeaupotable_desordre_tool import BaseEaupotableDesordreTool
-import sys
+
+import os
+import datetime
+from collections import OrderedDict
 
 
 
-class BaseEaupotableNoeudTool(BaseNoeudTool):
+class BaseEaupotableEquipementTool(BaseEquipementTool):
 
     LOADFIRST = True
-    dbasetablename = 'Noeud'
-    #specialfieldui = ['2']
-    #workversionmin = '0_1'
-    #workversionmax = '0_1'
-
+    dbasetablename = 'Equipement'
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
-        super(BaseEaupotableNoeudTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
+        super(BaseEaupotableEquipementTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
 
 
     def initTool(self):
-        super(BaseEaupotableNoeudTool, self).initTool()
+        super(BaseEaupotableEquipementTool, self).initTool()
         self.NAME = 'Organes'
         self.magicfunctionENABLED = True
 
-        self.linkagespec = {'Equipement': {'tabletc': None,
-                                           'idsource': 'lid_descriptionsystem_1',
-                                           'idtcsource': None,
-                                           'iddest': 'id_descriptionsystem',
-                                           'idtcdest': None,
-                                           'desttable': ['Equipement','Infralineaire']}}
 
+    """
+    def initTool(self):
+        # ****************************************************************************************
+        # Main spec
+
+        self.CAT = 'Description'
+        self.NAME = 'Equipement'
+        self.dbasetablename = 'Equipement'
+        self.PointENABLED = True
+        self.LineENABLED = True
+        # self.PolygonENABLED = True
+        # self.magicfunctionENABLED = True
+        self.linkagespec = {'Equipement': {'tabletc': None,
+                                           'idsource': 'lk_equipement',
+                                           'idtcsource': None,
+                                           'iddest': 'id_equipement',
+                                           'idtcdest': None,
+                                           'desttable': ['Equipement']}}
+        # self.pickTable = None
+        self.debug = False
+        self.iconpath = os.path.join(os.path.dirname(__file__), 'lamiadefault_equipement_tool_icon.svg')
+
+        # ****************************************************************************************
+        #properties ui
+        pass
+    """
 
     def initFieldUI(self):
         # ****************************************************************************************
@@ -84,13 +100,11 @@ class BaseEaupotableNoeudTool(BaseNoeudTool):
             # ****************************************************************************************
             # userui
             self.userwdgfield = UserUI()
-            self.linkuserwdgfield = {'Noeud' : {'linkfield' : 'id_noeud',
+            self.linkuserwdgfield = {'Equipement' : {'linkfield' : 'id_equipement',
                                              'widgets' : {
                                                             'categorie': self.userwdgfield.comboBox_cat,
-                                                            'fonction': self.userwdgfield.comboBox_fonction,
                                                             'ss_type_equipement': self.userwdgfield.comboBox_soustype,
                                                             'acces': self.userwdgfield.comboBox_acces,
-                                                            'forme_acces': self.userwdgfield.comboBox_formeaccess,
                                                             'diametre_entree': self.userwdgfield.doubleSpinBox_diam,
                                                             'diametre_sortie': self.userwdgfield.doubleSpinBox_diamsor,
                                                            'profondeur' : self.userwdgfield.doubleSpinBox_prof,
@@ -232,7 +246,7 @@ class BaseEaupotableNoeudTool(BaseNoeudTool):
     def postInitFeatureProperties(self, feat):
 
         if self.currentFeaturePK is not None:
-            lid_dessys = self.dbase.getValuesFromPk('Noeud_qgis',['lid_descriptionsystem_1'],self.currentFeaturePK)
+            lid_dessys = self.dbase.getValuesFromPk('Equipement_qgis',['lid_descriptionsystem_1'],self.currentFeaturePK)
             if lid_dessys is not None:
                 self.userwdgfield.comboBox_acces.setEnabled(False)
             else:
@@ -242,15 +256,13 @@ class BaseEaupotableNoeudTool(BaseNoeudTool):
 
 
         if (self.parentWidget is not None and self.parentWidget.currentFeature is not None
-                and self.parentWidget.dbasetablename == 'Equipement'):
-
-            type_ouvrage = self.dbase.getValuesFromPk('Equipement_qgis',
+                and self.parentWidget.dbasetablename == 'Noeud'):
+            type_ouvrage = self.dbase.getValuesFromPk('Noeud_qgis',
                                                         ['type_ouvrage'],
                                                         self.parentWidget.currentFeaturePK)
-
             if type_ouvrage == 'CHE':
 
-                self.dbase.dbasetables['Noeud']['fields']['acces'] = OrderedDict([('PGtype', 'VARCHAR(255'),('ParFldCst','categorie'),('Cst',[[u'Chambre enterrée/regard', 'CHE',['','VEN','VAN','VID','REG','HYD','COM','CHL','RPC','SPE']]])])
+                self.dbase.dbasetables['Equipement']['fields']['acces'] = OrderedDict([('PGtype', 'VARCHAR(255'),('ParFldCst','categorie'),('Cst',[[u'Chambre enterrée/regard', 'CHE',['','VEN','VAN','VID','REG','HYD','COM','CHL','RPC','SPE']]])])
 
                 self.userwdgfield.comboBox_cat.currentIndexChanged.emit(self.userwdgfield.comboBox_cat.currentIndex())
                 self.userwdgfield.comboBox_acces.setEnabled(False)
@@ -268,12 +280,11 @@ class BaseEaupotableNoeudTool(BaseNoeudTool):
 
 
     def postSaveFeature(self, boolnewfeature):
-
         # save a disorder on first creation
         if self.savingnewfeature and not self.savingnewfeatureVersion:
             pkobjet = self.dbase.createNewObjet()
             lastiddesordre = self.dbase.getLastId('Desordre') + 1
-            geomtext, iddessys = self.dbase.getValuesFromPk('Noeud_qgis',
+            geomtext, iddessys = self.dbase.getValuesFromPk('Equipement_qgis',
                                                             ['ST_AsText(geom)', 'id_descriptionsystem'],
                                                             self.currentFeaturePK)
             qgsgeom = qgis.core.QgsGeometry.fromWkt(geomtext)
@@ -295,7 +306,7 @@ class BaseEaupotableNoeudTool(BaseNoeudTool):
                                                     tablename='Desordre',
                                                     listoffields=['id_desordre', 'lpk_objet', 'groupedesordre',
                                                                   'lid_descriptionsystem', 'geom'],
-                                                    listofrawvalues=[lastiddesordre, pkobjet, 'NOD',
+                                                    listofrawvalues=[lastiddesordre, pkobjet, 'EQP',
                                                                      iddessys, newgeomwkt])
             self.dbase.query(sql)
 
@@ -362,15 +373,84 @@ class BaseEaupotableNoeudTool(BaseNoeudTool):
             return False
 
 
+    """
+    def changeCategorie(self,intcat):
+        self.userwdg.stackedWidget.setCurrentIndex(intcat)
+
+
+    def postOnActivation(self):
+        pass
+
+    def postOnDesactivation(self):
+        pass
 
 
 
+    def postInitFeatureProperties(self, feat):
+        pass
 
+    def createParentFeature(self):
+
+        lastrevision = self.dbase.getLastPk('Revision')
+        datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
+        lastobjetid = self.dbase.getLastId('Objet') + 1
+        sql = "INSERT INTO Objet (id_objet, id_revisionbegin, datecreation ) "
+        sql += "VALUES(" + str(lastobjetid) + "," + str(lastrevision) + ",'" + datecreation + "');"
+        query = self.dbase.query(sql)
+        self.dbase.commit()
+        # idobjet = self.dbase.getLastRowId('Objet')
+
+        # sql = "INSERT INTO Descriptionsystem (id_objet) VALUES(" + str(idobjet) + ");"
+        lastdescriptionsystemid = self.dbase.getLastId('Descriptionsystem') + 1
+        sql = "INSERT INTO Descriptionsystem (id_descriptionsystem, id_revisionbegin, id_objet) "
+        sql += "VALUES(" + str(lastdescriptionsystemid) + "," + str(lastrevision) + "," + str(lastobjetid) + ");"
+        query = self.dbase.query(sql)
+        self.dbase.commit()
+        # idsys = self.dbase.getLastRowId('Descriptionsystem')
+
+        pkequip = self.currentFeature.id()
+        lastidequip = self.dbase.getLastId('Equipement') + 1
+
+        sql = "UPDATE Equipement SET id_objet = " + str(lastobjetid) + ","
+        sql += "id_descriptionsystem = " + str(lastdescriptionsystemid) + ","
+        sql += "id_equipement = " + str(lastidequip) + ","
+        sql += "id_revisionbegin = " + str(lastrevision)
+        sql += " WHERE pk_equipement = " + str(pkequip) + ";"
+        query = self.dbase.query(sql)
+        self.dbase.commit()
+
+
+        if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
+            currentparentlinkfield = self.parentWidget.currentFeature['id_descriptionsystem']
+            sql = "UPDATE Equipement SET lk_descriptionsystem = " + str(currentparentlinkfield)
+            sql += " WHERE pk_equipement = " + str(pkequip)
+            self.dbase.query(sql)
+            self.dbase.commit()
+
+
+    def postSaveFeature(self, boolnewfeature):
+        pass
+
+
+    def deleteParentFeature(self):
+        idobjet = self.currentFeature['id_objet']
+
+        sql = "DELETE FROM Objet WHERE id_objet = " + str(idobjet) + ";"
+        query = self.dbase.query(sql)
+        self.dbase.commit()
+
+        sql = "DELETE FROM Descriptionsystem WHERE id_objet = " + str(idobjet) + ";"
+        query = self.dbase.query(sql)
+        self.dbase.commit()
+
+        return True
+
+
+    """
 
 
 class UserUI(QWidget):
     def __init__(self, parent=None):
         super(UserUI, self).__init__(parent=parent)
-        uipath = os.path.join(os.path.dirname(__file__), 'lamiabaseeaupotable_noeud_tool_ui.ui')
+        uipath = os.path.join(os.path.dirname(__file__), 'lamiabaseeaupotable_equipement_tool_ui.ui')
         uic.loadUi(uipath, self)
-
