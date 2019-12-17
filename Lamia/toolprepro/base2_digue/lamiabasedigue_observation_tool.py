@@ -196,6 +196,29 @@ class BaseDigueObservationTool(BaseObservationTool):
         else :
             self.userwdgfield.stackedWidget_2.setCurrentIndex(0)
 
+    def postInitFeatureProperties(self, feat):
+        super(BaseDigueObservationTool, self).postInitFeatureProperties(feat)
+        iddesordre = self.dbase.getValuesFromPk('Observation_qgis', 'lid_desordre', self.currentFeaturePK)
+        if iddesordre is not None:
+            sql = """
+                  SELECT Equipement_now.typeequipement FROM Equipement_now, Desordre_now 
+                  WHERE Desordre_now.lid_descriptionsystem = Equipement_now.id_descriptionsystem
+                  AND Desordre_now.id_desordre = 
+                  """
+            sql+= str(iddesordre)
+            sql = self.dbase.updateQueryTableNow(sql)
+            res = self.dbase.query(sql)
+            if len(res)>0:
+                currenttext = res[0][0]
+                if currenttext in ['VAN', 'CLA']:
+                    self.userwdgfield.stackedWidget_2.setCurrentIndex(1)
+                elif currenttext in ['EXU']:
+                    self.userwdgfield.stackedWidget_2.setCurrentIndex(2)
+                else :
+                    self.userwdgfield.stackedWidget_2.setCurrentIndex(0)
+
+
+
 
 
     """
@@ -282,6 +305,6 @@ class UserUI(QWidget):
 
 class UserUISirs(QWidget):
     def __init__(self, parent=None):
-        super(UserUI, self).__init__(parent=parent)
+        super(UserUISirs, self).__init__(parent=parent)
         uipath = os.path.join(os.path.dirname(__file__), 'lamiabasedigue_observation_tool_ui_SIRS.ui')
         uic.loadUi(uipath, self)

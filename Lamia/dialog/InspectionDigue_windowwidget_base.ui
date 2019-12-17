@@ -670,6 +670,7 @@ background-color: rgb(255, 255, 255);</string>
     </property>
     <addaction name="actionAide"/>
     <addaction name="actionA_propos"/>
+    <addaction name="actionTables_et_champs"/>
    </widget>
    <addaction name="menuFichiers"/>
    <addaction name="menuMode"/>
@@ -856,6 +857,11 @@ background-color: rgb(255, 255, 255);</string>
   <action name="actionImporter_et_mettre_jour_la_base">
    <property name="text">
     <string>Importer l'inspection terrain</string>
+   </property>
+  </action>
+  <action name="actionTables_et_champs">
+   <property name="text">
+    <string>Tables et champs</string>
    </property>
   </action>
  </widget>

@@ -15,8 +15,8 @@ class TestMain(Test):
         self.createWin()
         crs = 3945
         # Digue VNF  Assainissement  Default Assainissement2 Base Base_default Base_assainissement Base2_digue Base2_parking
-        # Base2_tramway Base2_eaupotable Base2_assainissement Base2_eclairagepublic
-        typebase = 'Base2_eaupotable'
+        # Base2_tramway Base2_eaupotable Base2_assainissement Base2_eclairagepublic Base2_chantiertram
+        typebase = 'Base2_chantiertram'
         # CD41 Lamia Reseau_chaleur
         variante = 'Lamia'
         # spatialite   postgis
@@ -54,6 +54,9 @@ class TestMain(Test):
                 spatialitefile = "C://000_testdigue//temp_base2_aep//test01.sqlite"
             elif typebase == 'Base2_eclairagepublic':
                 spatialitefile = "C://000_testdigue//temp_base2_eclairagepublic//test01.sqlite"
+            elif typebase == 'Base2_chantiertram':
+                spatialitefile = "C://000_testdigue//temp_base2_chantiertram//test01.sqlite"
+
 
             self.dbase.printsql = True
             #self.dbase.xlsreader = True

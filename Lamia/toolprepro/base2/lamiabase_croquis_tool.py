@@ -40,7 +40,9 @@ import os
 import qgis
 import datetime
 from .lamiabase_photoviewer import PhotoViewer
-
+import PIL
+from PIL import ImageGrab
+from PIL.ImageQt import ImageQt
 
 # FORM_CLASS3, _ = uic.loadUiType(os.path.join(os.path.dirname(__file__), 'FreeHandEditorToolUser.ui'))
 
@@ -91,11 +93,13 @@ class BaseCroquisTool(AbstractLamiaTool):
                                 'Ressource' : {'linkfield' : 'id_ressource',
                                           'widgets' : {}}}
 
-            self.groupBox_geom.setParent(None)
+            # self.groupBox_geom.setParent(None)
+            self.frame_editing.setVisible(False)
             self.userwdgfield.stackedWidget.setCurrentIndex(1)
 
             self.userwdgfield.pushButton_open.clicked.connect(self.openPhoto)
             self.userwdgfield.pushButton_edit.clicked.connect(self.editPhoto)
+            self.userwdgfield.pushButton_getfromclipboard.clicked.connect(self.pasteImage)
             self.editorwindow = ScribbleMainWindow(parentwdg=self)
             self.photowdg = PhotoViewer()
             self.userwdgfield.frame_cr.layout().addWidget(self.photowdg)
@@ -119,8 +123,11 @@ class BaseCroquisTool(AbstractLamiaTool):
 
             datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
             self.initFeatureProperties(feat, 'Ressource', 'datetimeressource', datecreation)
+            self.editorwindow.reinitSize()
             self.editorwindow.clear()
             self.photowdg.clear()
+
+
 
 
         else:
@@ -139,10 +146,30 @@ class BaseCroquisTool(AbstractLamiaTool):
                 self.photowdg.clear()
 
 
+    def pasteImage(self):
+        pilimage = PIL.ImageGrab.grabclipboard()
+        if pilimage is not None:
+            im = ImageQt(pilimage )
+            # self.editorwindow.scribbleArea
+            #self.image = loadedImage
+            #self.modified = False
+            #self.update()
+            self.editorwindow.setImage(im)
+            #self.editorwindow.scribbleArea.image = im
+            #self.editorwindow.scribbleArea.update()
+            self.photowdg.clear()
+            self.photowdg.setPixmap(im)
+
+            self.editPhoto()
 
 
     def editPhoto(self):
-        self.editorwindow.show()
+        if self.dbase.qgsiface is not None :
+            self.editorwindow.show()
+        else:
+            self.editorwindow.setWindowModality(QtCore.Qt.ApplicationModal)
+            self.editorwindow.show()
+
 
     def openPhoto(self):
         if False:
@@ -211,17 +238,18 @@ class BaseCroquisTool(AbstractLamiaTool):
         self.dbase.commit()
 
         if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
+            # self.linkagespec = {'Tcobjetressource'
+            if 'Tcobjetressource' in self.linkagespec.keys():
+                #get parent id_objet
+                sql = " SELECT id_objet FROM " + self.parentWidget.dbasetablename.lower() + "_qgis"
+                sql += " WHERE pk_" + self.parentWidget.dbasetablename.lower() + " = " + str(self.parentWidget.currentFeaturePK)
+                currentparentlinkfield = self.dbase.query(sql)[0][0]
 
-            #get parent id_objet
-            sql = " SELECT id_objet FROM " + self.parentWidget.dbasetablename.lower() + "_qgis"
-            sql += " WHERE pk_" + self.parentWidget.dbasetablename.lower() + " = " + str(self.parentWidget.currentFeaturePK)
-            currentparentlinkfield = self.dbase.query(sql)[0][0]
-
-            #currentparentlinkfield = self.parentWidget.currentFeature['id_objet']
-            sql = "INSERT INTO Tcobjetressource(lpk_revision_begin, lid_objet, lid_ressource) "
-            sql += " VALUES(" + str(self.dbase.maxrevision) + "," + str(currentparentlinkfield) + ',' + str(lastressourceid) + ")"
-            query = self.dbase.query(sql)
-            self.dbase.commit()
+                #currentparentlinkfield = self.parentWidget.currentFeature['id_objet']
+                sql = "INSERT INTO Tcobjetressource(lpk_revision_begin, lid_objet, lid_ressource) "
+                sql += " VALUES(" + str(self.dbase.maxrevision) + "," + str(currentparentlinkfield) + ',' + str(lastressourceid) + ")"
+                query = self.dbase.query(sql)
+                self.dbase.commit()
 
 
         if False:
@@ -350,6 +378,12 @@ class ScribbleMainWindow(QMainWindow):
         self.clearAction.triggered.connect(self.scribbleArea.clearImage)
         self.toolbar.addAction(self.clearAction)
 
+        self.reinitAction = QAction('reinit', self)
+        self.reinitAction.triggered.connect(self.scribbleArea.reinit)
+        self.toolbar.addAction(self.reinitAction)
+
+    def reinitSize(self):
+        self.scribbleArea.reinitSize()
 
 
     def saveImage(self,file):
@@ -360,6 +394,9 @@ class ScribbleMainWindow(QMainWindow):
 
     def openImage(self,file):
         self.scribbleArea.openImage(file)
+
+    def setImage(self, qimage):
+        self.scribbleArea.setImage(qimage)
 
     def closeEvent(self, event):
         self.parentwdg.photowdg.clear()
@@ -387,21 +424,41 @@ class ScribbleArea(QWidget):
         self.image = QtGui.QImage(imageSize, QtGui.QImage.Format_RGB32)
         self.lastPoint = QtCore.QPoint()
 
-    def openImage(self, fileName):
+        self.currentfilename=None
+
+
+    def openImage(self, fileName=None):
         loadedImage = QtGui.QImage()
         if not loadedImage.load(fileName):
             return False
+        self.currentfilename = fileName
+        return self.setImage(loadedImage)
 
+
+
+    def reinit(self):
+        if self.currentfilename is not None:
+            self.openImage(self.currentfilename)
+
+    def reinitSize(self):
+        self.setFixedSize(500, 500)
+        self.mainWindow.resize(500, 500)
+        imageSize = QtCore.QSize(500, 500)
+        self.image = QtGui.QImage(imageSize, QtGui.QImage.Format_RGB32)
+
+    def setImage(self, loadedImage):
         w = loadedImage.width()
         h = loadedImage.height()
+        self.setFixedSize(w, h)
         self.mainWindow.resize(w, h)
 
-#       newSize = loadedImage.size().expandedTo(self.size())
-#       self.resizeImage(loadedImage, newSize)
+        #       newSize = loadedImage.size().expandedTo(self.size())
+        #       self.resizeImage(loadedImage, newSize)
         self.image = loadedImage
         self.modified = False
         self.update()
         return True
+
 
     def saveImage(self, fileName, fileFormat):
         if self.image.save(fileName, fileFormat):

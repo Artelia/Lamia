@@ -40,7 +40,7 @@ except ImportError:
                                      QHeaderView, QComboBox, QSpinBox,QCheckBox, QPushButton, QDateEdit,QDateTimeEdit, QTextEdit,
                                      QDoubleSpinBox, QDialog, QVBoxLayout, QTreeWidget, QLineEdit, QCheckBox,
                                      QLabel, QMessageBox, QTextBrowser, QTableWidgetItem,QApplication,QToolButton, QAbstractItemView)
-import os, sys, logging, pprint, shutil, datetime
+import os, sys, logging, pprint, shutil, datetime, time
 
 from ..dialog.InspectionDigue_linkage import LinkageDialog
 from ..maptool.mapTools import mapToolCapture
@@ -92,6 +92,8 @@ class AbstractLamiaTool(QWidget):
     saveFeatureSignal = QtCore.pyqtSignal()
     currentFeatureChanged = QtCore.pyqtSignal()
     lamiageomChanged = QtCore.pyqtSignal()
+    postInitFeaturePropertiesActivated = QtCore.pyqtSignal()
+
     specialfieldui = []
 
 
@@ -239,7 +241,10 @@ class AbstractLamiaTool(QWidget):
 
         # ***** QGis var
         #  qgis map canvas
-        self.canvas = self.windowdialog.canvas
+        if self.windowdialog is not None:
+            self.canvas = self.windowdialog.canvas
+        else:
+            self.canvas = None
         # layer shown in cnvas or not
         self.layerdisplayed = False
         # capture mode
@@ -254,11 +259,14 @@ class AbstractLamiaTool(QWidget):
         # the dbasetable - loaded once a dbase is loaded in DBaseParser
         self.dbasetable = None
         # use for picking
-        self.pointEmitter = qgis.gui.QgsMapToolEmitPoint(self.canvas)   # maptoolused for picking
+        if self.canvas is not None:
+            self.pointEmitter = qgis.gui.QgsMapToolEmitPoint(self.canvas)   # maptoolused for picking
         self.currentmaptool = None      # qgsmaptoolcapture used for capturing
         self.visualmode = [0, 1, 2]
         #for coping
         self.deepcopy = []
+        #for lid choosers
+        self.lamiawidgets = []
 
         # *******************************************************
         # raw connection
@@ -279,6 +287,8 @@ class AbstractLamiaTool(QWidget):
 
             self.pushButton_copy.clicked.connect(self.copyAtributes)
             self.pushButton_paste.clicked.connect(self.pasteAtributes)
+
+            self.pushButton_impression.clicked.connect(self.printWidget)
 
             if self.dbasetablename in self.dbase.dbasetables.keys():
                 self.dbasetable = self.dbase.dbasetables[self.dbasetablename]
@@ -497,9 +507,12 @@ class AbstractLamiaTool(QWidget):
         if self.linkedtreewidget is not None:
             tempitem = self.linkedtreewidget.currentItem()
             if tempitem is not None and self.windowdialog.MaintreeWidget.currentItem() == self.qtreewidgetitem:
-                tempitemid = int(tempitem.text(0))
-                self.onActivationRaw(self.windowdialog.MaintreeWidget.currentItem())
-                self.comboBox_featurelist.setCurrentIndex(self.comboBox_featurelist.findText(str(tempitemid)))
+                try:
+                    tempitemid = int(tempitem.text(0))
+                    self.onActivationRaw(self.windowdialog.MaintreeWidget.currentItem())
+                    self.comboBox_featurelist.setCurrentIndex(self.comboBox_featurelist.findText(str(tempitemid)))
+                except ValueError as e:
+                    pass
 
         if debug:
             QApplication.processEvents()
@@ -1178,12 +1191,15 @@ class AbstractLamiaTool(QWidget):
 
         """
 
+
         debug = False
+
         if debug: logging.getLogger("Lamia").debug('Start %s',self.dbasetablename)
+        if debug: starttime = time.time()
 
         self.loadFeaturesinTreeWdg()
 
-        if (self.comboBox_featurelist.count() > 0 and self.comboBox_featurelist.itemText(0) != ''):
+        if (self.comboBox_featurelist.count() > 0 and self.comboBox_featurelist.itemText(0) != '') or hasattr(self, 'TOOLNAME'):
             self.setEnabled(True)
             self.comboBox_featurelist.currentIndexChanged.emit(0)
         else:
@@ -1201,6 +1217,8 @@ class AbstractLamiaTool(QWidget):
             else:
                 self.setEnabled(True)
 
+        if debug: logging.getLogger("Lamia").debug('End %s %s', self.dbasetablename, str(time.time() -starttime ))
+
         self.currentFeatureChanged.emit()
 
 
@@ -1213,8 +1231,7 @@ class AbstractLamiaTool(QWidget):
 
         debug = False
 
-        if debug :
-            timestart = self.dbase.getTimeNow()
+        if debug: timestart = self.dbase.getTimeNow()
 
         self.disconnectIdsGui()
 
@@ -1285,6 +1302,8 @@ class AbstractLamiaTool(QWidget):
                 # print(parentqtreewdgitem.text(0))
 
             parentqtreewdgitem.addChildren([elem[1] for elem in self.treefeatlist])
+
+        if debug: logging.getLogger('Lamia').debug('feat list %s', str(self.treefeatlist))
 
         # enable/disable le widget selon que des ids ont ete trouves
         if len(self.treefeatlist) > 0:
@@ -1359,7 +1378,6 @@ class AbstractLamiaTool(QWidget):
         :return: ids : an array of the wanted ids, with eventualy more value defined in self.qtreewidgetfields
         """
 
-
         ids = []
         if self.dbasetablename is not None:
             strid = 'id_' + self.dbasetablename.lower()
@@ -1385,7 +1403,11 @@ class AbstractLamiaTool(QWidget):
                         #linkagedest
                         sqltemp = " SELECT " + linkagetemp['iddest'] + " FROM " + self.parentWidget.dbasetablename.lower() + '_qgis'
                         sqltemp += " WHERE pk_" + self.parentWidget.dbasetablename.lower() + " = " + str(self.parentWidget.currentFeaturePK)
+
                         linkagedest = self.dbase.query(sqltemp)[0][0]
+                        if linkagedest is None:
+                            # print('None find')
+                            return []
                         sql += " AND " + linkagetemp['idsource'] + " = " + str(linkagedest)
                         #TODO versionning
 
@@ -1423,6 +1445,7 @@ class AbstractLamiaTool(QWidget):
                             sqltemp += " ELSE 1 END"
 
                         query = self.dbase.query(sqltemp)
+
                         if len(query) > 0 :
                             idstemp = [str(row[0]) for row in query]
                             idssql = '(' + ','.join(idstemp) + ')'
@@ -1528,6 +1551,7 @@ class AbstractLamiaTool(QWidget):
             self.comboBox_featurelist.removeItem(self.comboBox_featurelist.count()-1)
 
         # ************** get id selected and link treewidget and combobox *********************************
+        id = None
 
         if isinstance(item, QTreeWidgetItem) and item.parent() is not None:
             # print('featsel',item.parent().text(0),self.dbasetablename)
@@ -1575,16 +1599,16 @@ class AbstractLamiaTool(QWidget):
                 return
         elif isinstance(item, int) and not itemisid:        #feature selected with combobox
             if debug: logging.getLogger("Lamia").debug('come from combobox')
-            #print('item', item, type(item))
-            # print('cc', item, ' _' ,[self.comboBox_featurelist.itemText(i) for i in range(self.comboBox_featurelist.count())])
-            if item >=0:
+
+            if item >= 0:
                 id = int(self.comboBox_featurelist.itemText(item))
                 if self.linkedtreewidget is not None and isinstance(self.linkedtreewidget, QTreeWidget) :
-                    # id = int(itemtext)
+
                     parentitem = self.linkedtreewidget.findItems(self.dbasetablename, QtCore.Qt.MatchExactly | QtCore.Qt.MatchRecursive, 0)[0]
                     indexchild = [parentitem.child(i).text(0) for i in range(parentitem.childCount())].index(str(id))
                     itemtodisplay = parentitem.child(indexchild)
                     self.linkedtreewidget.setCurrentItem(itemtodisplay)
+
         elif isinstance(itemisid, bool) and itemisid:
             id = item
         elif isinstance(itemisid, QTreeWidgetItem):
@@ -1749,6 +1773,10 @@ class AbstractLamiaTool(QWidget):
                                 else:
                                     self.tableWidget.item(itemindex, 1).setText(str(valuetoset))
 
+        #lidchoosers
+        for lidchooser in self.lamiawidgets:
+            lidchooser.initProperties()
+
         # current prestation case:
         self.pushButton_savefeature.setEnabled(True)
 
@@ -1877,10 +1905,12 @@ class AbstractLamiaTool(QWidget):
             timestart = self.dbase.getTimeNow()
         if debug: logging.getLogger("Lamia").debug('start')
 
+
         self.canvas.freeze(True)
 
         if self.dbasetable is not None :
             if self.currentFeature is not None:
+                self.currentFeature = self.dbase.getLayerFeatureByPk(self.dbasetablename, self.currentFeaturePK)
                 self.beforesavingFeature = qgis.core.QgsFeature(self.currentFeature)
                 self.beforesavingFeaturePK = self.currentFeature.id()
             else:
@@ -1910,7 +1940,8 @@ class AbstractLamiaTool(QWidget):
             self.currentFeature = self.saveQGisFeature(self.dbasetablename, self.currentFeature)
             self.currentFeaturePK = self.currentFeature.id()
 
-            if debug: logging.getLogger("Lamia").debug('saveQGisFeature done with geom  : %s',self.currentFeature.geometry().exportToWkt())
+
+            # if debug: logging.getLogger("Lamia").debug('saveQGisFeature done with geom  : %s',self.currentFeature.geometry().exportToWkt())
             if debug: logging.getLogger('Lamia').debug('time  %.3f', self.dbase.getTimeNow()  - timestart)
 
             # *************************
@@ -1951,6 +1982,8 @@ class AbstractLamiaTool(QWidget):
                 sql = "UPDATE Objet SET datetimemodification = '" + datemodif + "'  WHERE pk_objet = " + str(pkobjet) + ";"
                 self.dbase.query(sql)
                 self.dbase.commit()
+
+
 
             # then reload with saved attributes
             if self.savingnewfeature or self.savingnewfeatureVersion :
@@ -2277,6 +2310,19 @@ class AbstractLamiaTool(QWidget):
                 self.tempgeometry = qgis.core.QgsGeometry.fromPolylineXY([self.tempgeometry.asPoint(),
                                                                         self.tempgeometry.asPoint()])
 
+        #remove duplicate from linestring
+        if True:
+            if self.tempgeometry is not None and self.dbasetable['geom'] in [ 'LINESTRING'] :
+                if sys.version_info.major == 3:
+                    geomaspoly  = self.tempgeometry.asPolyline()
+                    geomfinal = [geomaspoly[0]]
+                    if not self.dbase.areNodesEquals(geomaspoly[0], geomaspoly[-1]):
+                        for index in range(len(geomaspoly) -1 ):
+                            if not self.dbase.areNodesEquals(geomaspoly[index], geomaspoly[index +1] ):
+                                geomfinal.append(geomaspoly[index +1])
+                    self.tempgeometry = qgis.core.QgsGeometry.fromPolylineXY(geomfinal)
+
+
         if self.dbasetable is not None:
 
             if self.currentFeature is None:
@@ -2286,7 +2332,14 @@ class AbstractLamiaTool(QWidget):
                     self.currentFeature.setGeometry(self.tempgeometry)
                     pass
                 else:
-                    if 'geom' in self.dbasetable.keys() and self.groupBox_geom.parent() is not None:
+                    """
+                    if ('geom' in self.dbasetable.keys()  
+                            and (self.groupBox_geom.parent() is not None or self.groupBox_geom.isVisible()
+                                or self.frame_editing.isVisible())):
+                    """
+                    if ('geom' in self.dbasetable.keys()
+                            and (self.frame_editing.isVisible() and self.groupBox_geom.isVisible() and self.groupBox_geom.parent() )
+                            and ((hasattr(self,'CHECKGEOM') and self.CHECKGEOM == True) or not hasattr(self,'CHECKGEOM'))):
                         self.windowdialog.errorMessage('Pas de geometrie selectionnee !!')
                         self.currentFeature = None
                         self.canvas.freeze(False)
@@ -2466,6 +2519,10 @@ class AbstractLamiaTool(QWidget):
                     sql += " WHERE pk_" + str(tablename) + " = " + str(tablepk)
                     self.dbase.query(sql)
 
+            # lidchoosers
+            for lidchooser in self.lamiawidgets:
+                lidchooser.saveProperties()
+
 
         if self.dbase.visualmode == 2:
             if self.linkuserwdg is None:
@@ -2585,6 +2642,9 @@ class AbstractLamiaTool(QWidget):
         :param showmessage: show a confirmation dialog or not
         :return:
         """
+        
+        if self.currentFeaturePK is None:
+            return
 
         if showmessage :
             message = "Supprimer completement l'element (yes) ou l'archiver (no) ? "
@@ -2692,7 +2752,7 @@ class AbstractLamiaTool(QWidget):
         Method called by add GPS Point Button
 
         """
-        if self.gpsutil.currentpoint is None:
+        if self.gpsutil and self.gpsutil.currentpoint is None:
             self.windowdialog.errorMessage('GPS non connecte')
             return
 
@@ -3017,10 +3077,16 @@ class AbstractLamiaTool(QWidget):
             pk = self.getPkFromId(self.dbasetablename,fid)
             feat = self.dbase.getLayerFeatureByPk(self.dbasetablename,pk )
         # point2 = xform.transform(feat.geometry().centroid().asPoint())
-        if feat.geometry().centroid() is not None:
+
+        if feat.geometry().centroid() is not None and not feat.geometry().centroid().isNull():
             point2 = self.dbase.xform.transform(feat.geometry().centroid().asPoint())
         else:
-            point2 = self.dbase.xform.transform(feat.geometry().vertexAt(0) )
+            # print(feat.geometry().asWkt())
+            if sys.version_info.major == 2:
+                point2 = self.dbase.xform.transform(feat.geometry().vertexAt(0) )
+            elif sys.version_info.major == 3:
+                point2 = self.dbase.xform.transform(qgis.core.QgsPointXY(feat.geometry().vertexAt(0)))
+                # print('**', point2)
         self.canvas.setCenter(point2)
         self.canvas.refresh()
 
@@ -3592,7 +3658,8 @@ class AbstractLamiaTool(QWidget):
         except:
             pass
 
-
+    def printWidget(self):
+        pass
 
     def tr(self, message):
         return QtCore.QCoreApplication.translate('AbstractLamiaTool', message)

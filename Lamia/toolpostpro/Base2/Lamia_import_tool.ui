@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>644</width>
+    <width>478</width>
     <height>656</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" stretch="1,10">
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="1,10,0">
    <item>
     <widget class="QFrame" name="frame">
      <property name="frameShape">
@@ -90,6 +90,38 @@
           </widget>
          </item>
         </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_3">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="title">
+      <string>VALIDATION (vérifier avec l'interface terrain, ne rien enregistrer et revenir ici)</string>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QPushButton" name="pushButton_validimport">
+        <property name="text">
+         <string>Valider l'import</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_rollback">
+        <property name="text">
+         <string>Annuler l'import</string>
+        </property>
        </widget>
       </item>
      </layout>

@@ -41,7 +41,9 @@ class TestMain(Test):
         path = "M://FR//BOR//VT//FLUVIAL//4352571-CARA_La_Tremblade_VTA_Mus_de_Loup//10-Cartographie//Qgis//musduloup//musloup.sqlite"
         path = "C://000_testdigue//Manon_AEP//EAU POTABLE S1.sqlite"
         path = "C://000_testdigue//tram_bordeaux//Tram.sqlite"
-
+        path = "C://000_testdigue//testdigue//BD_totale_ind6.sqlite"
+        path = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//BD_totale_ind8.sqlite"
+        path = "C://000_testdigue//temp_base2_chantiertram//test01.sqlite"
 
         self.wind.dbase.loadQgisVectorLayers(path)
         self.wind.loadUiDesktop()
@@ -85,9 +87,9 @@ class TestMain(Test):
 
             if True:
                 # 01regard  Infralineaire Equipementhydraulique   EquipementCompteur   EquipementVanne
-                # EquipementRegulation  EquipementHydrant NoeudRegard
-                indexrapport = wdg.userwdgfield.comboBox_type.findText('Infralineaire')
-                wdg.userwdgfield.comboBox_type.setCurrentIndex(indexrapport)
+                # EquipementRegulation  EquipementHydrant NoeudRegard nonconformite
+                indexrapport = wdg.filemanager.comboBox_files.findText('nonconformite')
+                wdg.filemanager.comboBox_files.setCurrentIndex(indexrapport)
 
                 wdg.userwdgfield.pushButton_export.clicked.emit(True)
 

@@ -29,5 +29,6 @@
         <file>icons/Copy.png</file>
         <file>icons/Copyselection.png</file>
         <file>icons/Paste.png</file>
+        <file>icons/print.png</file>
     </qresource>
 </RCC>

@@ -35,11 +35,15 @@ class TestMain(Test):
         path = "C://000_testdigue//0_bastien//LANDY.sqlite"
         path = "C://000_testdigue//Manon_AEP//EAU POTABLE S1.sqlite"
         path = "C://000_testdigue//temp_base2_tram2//test01.sqlite"
+        path = "C://000_testdigue//0_bastien//LANDY.sqlite"
+        path = "M://FR//BOR//VT//URBAIN//4352502-87-CDC_HLEM//5_ETUDES//51_SIG//SQLITE//Berneuil//Berneuil.sqlite"
 
         self.wind.dbase.loadQgisVectorLayers(path)
         self.wind.loadUiDesktop()
 
         self.createMainWin()
+
+
 
         if True:       # test of desktop version
             self.wind.loadUiDesktop()
@@ -63,7 +67,7 @@ class TestMain(Test):
         #  BM_Desordres_ligne    BM_Desordres_point   BM_Observation
         # 00_Desordres_observation_actif   00_Desordres_observation_total  00_Equipement_observation_actif
         # Export_total      Infralineaire    Noeud      Equipement      Export_total
-        typeexport = 'Export_total'
+        typeexport = 'Infralineaire'
 
         if False:
             rootpath = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//63_Rapports//20190200_BD_exportshp//20190415_ind1"

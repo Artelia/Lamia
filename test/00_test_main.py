@@ -5,6 +5,8 @@ from Lamia.test.AbstractTest import Test
 import os
 import datetime
 from qgis.PyQt import  QtCore
+import profile
+
 
 
 class TestMain(Test):
@@ -38,12 +40,17 @@ class TestMain(Test):
         # path = "C://000_testdigue//tram_bordeaux//Tram.sqlite
 
         # choice
-        # path = "C://000_testdigue//temp_base2_aep//test01.sqlite"
+        path = "C://000_testdigue//temp_base2_ass2//test01.sqlite"
 
-        path = "C://000_testdigue//00_testAEP//AEP.sqlite"
-
-
-
+        # path = "C://000_Modwenne//Lamia//test01.sqlite"
+        # path = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//BD_totale_ind8.sqlite"
+        # path = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees_terrains//20191105_Terrain//Terrain_VTA_11_2019.sqlite"
+        path = "C://000_Modwenne//test01.sqlite"
+        path = "C://000_Modwenne//lamiatest01//test01.sqlite"
+        # path = "M://FR//BOR//VT//MOE//4352678-33-CD33_VTA_digue_bas_Medoc//05-ETP ou ETUDES//05-1-Plans//1-Divers-travail//SAUVEGARDE TERRAIN//bas_medoc.sqlite"
+        path = "C://000_testdigue//temp_base2_chantiertram//test01.sqlite"
+        # path = "C://000_testdigue//testdigue//BD_totale_ind6.sqlite"
+        path = "C://BM//pourimport//BD_totale_ind8.sqlite"
 
         # self.dbase.xlsreader = True
         self.dbase.loadQgisVectorLayers(path)
@@ -56,12 +63,24 @@ class TestMain(Test):
         print('ok')
 
         self.createMainWin()
-        self.mainwin.resize(QtCore.QSize(1000,800))
+        self.mainwin.resize(QtCore.QSize(1400,1000))
 
-        if False:       # test of desktop version
+        if False:       # test of post pro version
             self.wind.loadUiDesktop()
             self.dbase.visualmode = 4
             self.wind.applyVisualMode()
+
+            if True:
+                wdg = None
+                for i, tool in enumerate(self.wind.tools):
+                    print(tool.__class__.__name__)
+                    if 'ImportTool' in tool.__class__.__name__:
+                        print('ok')
+                        wdg = self.wind.tools[i]
+                        break
+
+                wdg.changePropertiesWidget()
+                self.wind.MaintreeWidget.setCurrentItem(wdg.qtreewidgetitem)
 
         # eventualy add new version
         if False:

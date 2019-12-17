@@ -42,6 +42,7 @@ from ...toolabstract.Lamia_abstract_tool import AbstractLamiaTool
 import os
 import io
 import sys
+
 if False:
     if sys.version_info.major == 2:
         from ...libs import pyqtgraph as pg

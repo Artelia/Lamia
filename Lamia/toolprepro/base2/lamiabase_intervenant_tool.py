@@ -75,20 +75,23 @@ class BaseIntervenantTool(AbstractLamiaTool):
         #properties ui
         pass
 
-    def initDesktopUI(self):
+    def initFieldUI(self):
         # ****************************************************************************************
         #   userui Field
-        if self.userwdgdesktop is None:
+        if self.userwdgfield is None:
             # ****************************************************************************************
             # userui
-            self.userwdgdesktop = UserUI()
+            self.userwdgfield = UserUI()
 
-            self.linkuserwdgdesktop = {'Intervenant': {'linkfield': 'id_intervenant',
-                                                  'widgets': {'nom' : self.userwdgdesktop.lineEdit_nom,
-                                                              'societe': self.userwdgdesktop.lineEdit_societe,
-                                                              'adresse': self.userwdgdesktop.lineEdit_adresse,
-                                                              'fax': self.userwdgdesktop.lineEdit_mail,
-                                                              'tel': self.userwdgdesktop.lineEdit_tel,}},
+            self.linkuserwdgfield = {'Intervenant': {'linkfield': 'id_intervenant',
+                                                  'widgets': {'nom' : self.userwdgfield.lineEdit_nom,
+                                                              'societe': self.userwdgfield.lineEdit_societe,
+                                                              'fonction': self.userwdgfield.lineEdit_fonction,
+                                                              'adresse': self.userwdgfield.lineEdit_adresse,
+                                                              'tel': self.userwdgfield.lineEdit_tel,
+                                                              'courriel': self.userwdgfield.lineEdit_mail,
+                                                              'fax': self.userwdgfield.lineEdit_fax,
+                                                              }},
                                 'Objet': {'linkfield': 'id_objet',
                                           'widgets': {}}}
 

@@ -92,7 +92,9 @@ class BaseMarcheTool(AbstractLamiaTool):
             self.userwdgfield = UserUI()
             self.linkuserwdgfield = {'Marche' : {'linkfield' : 'id_marche',
                                              'widgets' : {
-                                                          'datemarche' : self.userwdgfield.dateEdit_date}},
+                                                          'datemarche' : self.userwdgfield.dateEdit_date,
+                                                          'numero_marche': self.userwdgfield.lineEdit_nummarche,
+                                             }},
                                 'Objet' : {'linkfield' : 'id_objet',
                                           'widgets' : {'libelle': self.userwdgfield.lineEdit_nom}}}
             self.userwdgfield.pushButton_currentPrestation.clicked.connect(self.defineCurrentPrestation)
@@ -130,14 +132,16 @@ class BaseMarcheTool(AbstractLamiaTool):
             datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
             self.initFeatureProperties(feat, self.dbasetablename, 'datemarche', datecreation)
         else:
-            sql = "SELECT Tcobjetintervenant.fonction, Intervenant.nom,Intervenant.societe  FROM Tcobjetintervenant "
-            sql += " INNER JOIN Intervenant ON Tcobjetintervenant.id_tcintervenant = Intervenant.id_intervenant "
-            sql += "WHERE id_tcobjet = " + str(self.currentFeature['id_objet'])
-            query = self.dbase.query(sql)
-            result = "\n".join([str(row) for row in query])
-            self.userwdg.textBrowser_intervenants.clear()
-            self.userwdg.textBrowser_intervenants.append(result)
-
+            try:
+                sql = "SELECT Tcobjetintervenant.fonction, Intervenant.nom,Intervenant.societe  FROM Tcobjetintervenant "
+                sql += " INNER JOIN Intervenant ON Tcobjetintervenant.id_tcintervenant = Intervenant.id_intervenant "
+                sql += "WHERE id_tcobjet = " + str(self.currentFeature['id_objet'])
+                query = self.dbase.query(sql)
+                result = "\n".join([str(row) for row in query])
+                self.userwdg.textBrowser_intervenants.clear()
+                self.userwdg.textBrowser_intervenants.append(result)
+            except KeyError as e:
+                print('postInitFeatureProperties', e)
 
     def createParentFeature(self):
         pkobjet = self.dbase.createNewObjet()

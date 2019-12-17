@@ -83,7 +83,7 @@ from .Lamia_iconsize import IconSizeDialog
 
 from .InspectionDigue_newDB import newDBDialog
 from .InspectionDigue_getDate import getDateDialog
-
+from .lamia_tablefield_dialog import LamiaTableFieldDialog
 
 # from ..toolgeneral.InspectionDigue_rapport import printPDFWorker
 # from ..toolgeneral.InspectionDigue_exportshp import exportShapefileWorker
@@ -155,6 +155,8 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.numpaddialog = NumPadDialog()
         # the postgis connection dialog
         self.connDialog = ConnexionPGDialog()
+        #table/field dialog
+        self.tablefielddialog = LamiaTableFieldDialog(self.dbase)
         #iconsize
         self.iconsizedialog = IconSizeDialog(self)
         # for printing reports
@@ -228,6 +230,7 @@ class InspectiondigueWindowWidget(QMainWindow):
         self.actionSpatialite.triggered.connect(self.loadSLDbase)
         self.actionPostgis.triggered.connect(self.loadPGDbase)
         self.actionAide.triggered.connect(self.openHelp)
+        self.actionTables_et_champs.triggered.connect(self.openTableFieldDialog)
         self.menuBases_recentes.triggered.connect(self.openFileFromMenu)
         # self.actionExporter_base.triggered.connect(self.exportBase)
         # self.actionImprimer_rapport.triggered.connect(self.printRapport)
@@ -639,9 +642,12 @@ class InspectiondigueWindowWidget(QMainWindow):
 
         # create database
         if dbtype == 'spatialite':
-            spatialitefile = self.qfiledlg.getSaveFileName(self, 'Lamia nouveau', '', '*.sqlite')
+            if sys.version_info.major == 2:
+                spatialitefile = self.qfiledlg.getSaveFileName(self, 'Lamia nouveau', '', '*.sqlite')
+            elif sys.version_info.major == 3:
+                spatialitefile, fileext = self.qfiledlg.getSaveFileName(self, 'Lamia nouveau', '', '*.sqlite')
             #print('spatialitefile', spatialitefile)
-            if sys.version_info.major == 3 and len(spatialitefile)>0:
+            if False and sys.version_info.major == 3 and len(spatialitefile)>0:
                 spatialitefile = spatialitefile[0]
             self.createDBase()
 
@@ -1454,8 +1460,10 @@ class InspectiondigueWindowWidget(QMainWindow):
     def exportBase(self):
 
         #exportfile, extension = self.qfiledlg.getOpenFileNameAndFilter(None, 'Export vers', '','Spatialite (*.sqlite)', '')
-
-        exportfile = self.qfiledlg.getSaveFileName(self, 'Lamia exporter vers', '', '*.sqlite')
+        if sys.version_info.major == 2:
+            exportfile = self.qfiledlg.getSaveFileName(self, 'Lamia exporter vers', '', '*.sqlite')
+        elif sys.version_info.major == 3:
+            exportfile, fileext = self.qfiledlg.getSaveFileName(self, 'Lamia exporter vers', '', '*.sqlite')
 
         if exportfile:
             self.exportdbase = DBaseParser()
@@ -2222,8 +2230,10 @@ class InspectiondigueWindowWidget(QMainWindow):
         if self.sender() is not None:
             actionname = self.sender().objectName()
             # print(actionname )
-
-        spatialitefile = self.qfiledlg.getSaveFileName(self, 'Lamia nouveau', '', '*.sqlite')
+        if sys.version_info.major == 2:
+            spatialitefile = self.qfiledlg.getSaveFileName(self, 'Lamia nouveau', '', '*.sqlite')
+        elif sys.version_info.major == 3:
+            spatialitefile, fileext = self.qfiledlg.getSaveFileName(self, 'Lamia nouveau', '', '*.sqlite')
 
         if spatialitefile:
             slfile = spatialitefile
@@ -2291,6 +2301,22 @@ class InspectiondigueWindowWidget(QMainWindow):
             self.ElemtreeWidget.clear()
             # self.dbase = DBaseParser(self.canvas)
             self.__init__(self.canvas)
+
+
+    def openTableFieldDialog(self):
+        self.tablefielddialog.dbase = self.dbase
+        self.tablefielddialog.update()
+        if self.dbase.qgsiface is not None:
+            self.tablefielddialog.setWindowModality(QtCore.Qt.NonModal)
+            self.tablefielddialog.show()
+        else:
+            self.tablefielddialog.exec_()
+
+
+
+
+
+
 
 
     def tr(self, message):

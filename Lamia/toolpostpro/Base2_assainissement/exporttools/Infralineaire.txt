@@ -1,7 +1,7 @@
 ###Infralineaire
 #nom              type               cst               valeur                    
 id_infralineaire;         Int;                  ;     id_infralineaire
-lk_descriptionsystem1;    Int;                  ;     lid_descriptionsystem_1
+lk_descriptionsystem1;    Int;                  ;     Infralineaire_now.lid_descriptionsystem_1
 lk_descriptionsystem2;    Int;                  ;     lid_descriptionsystem_2
 typeReseau;               String;   typeReseau   ;     Infralineaire_now.typeReseau
 modeCirculation;        String;   modeCirculation ;     modeCirculation

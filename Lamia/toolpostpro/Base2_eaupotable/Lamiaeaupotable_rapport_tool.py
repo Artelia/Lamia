@@ -31,14 +31,15 @@ class EaupotableRapportTool(RapportTool):
 class printPDFBaseWorker(printPDFBaseWorker):
 
 
-    def __init__(self, dbase, windowdialog=None, parentprintPDFworker=None, confData=None, pdffile=None, reporttype=None,templatedir=None):
+    def __init__(self, dbase, windowdialog=None, parentprintPDFworker=None, confData=None, pdffile=None, reporttype=None,templatedir=None,idlist=None):
         super(printPDFBaseWorker, self).__init__(dbase=dbase,
                                                  windowdialog=windowdialog,
                                                  parentprintPDFworker=parentprintPDFworker,
                                                  confData=confData,
                                                  pdffile=pdffile,
                                                  reporttype=reporttype,
-                                                 templatedir=templatedir)
+                                                 templatedir=templatedir,
+                                                 idlist=idlist)
 
 
     def tableau_organeregard(self):

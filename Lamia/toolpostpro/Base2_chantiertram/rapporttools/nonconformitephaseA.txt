@@ -1,0 +1,47 @@
+
+###atlaslayersql
+# requete sql pour définir la table utilisée pour l'atlas
+SELECT Desordre_now.* , NCA.*
+FROM Desordre_now
+LEFT JOIN Marche_now ON Desordre_now.lid_marche = Marche_now.id_marche
+LEFT JOIN Observation_now as NCA ON NCA.lid_desordre = Desordre_now.id_desordre and NCA.typeobservation = 'NCA' 
+LEFT JOIN Intervenant_now as NCAinterv ON NCAinterv.id_intervenant = NCA.lid_intervenant_1
+WHERE groupedesordre = 'NCO'
+###atlaslayerid
+# l'identifiant de l'atalslayer
+pk_desordre
+###spatial
+# indique si l'atalslayer est une couche spatiale ou pas
+True
+###ordering
+# type d'ordonnancement si rien : par id croissant, sinon  autoalongpath
+#type; constraint (qgis typo)
+# autoalongpath;
+###atlaslayerstyle
+#un style particulier pour l'atlaslayer
+Desordres_atlas.qml
+###atlasdrivemap
+# caractéristiques de la carte (map) qui suit les objets de l'atlas
+#itemname;   minscale;   typescale;      layers
+map1;       2500;       Predefined      ;['atlaslayer','Infralineaire', 'scan25']
+###generalmap
+# caractéristiques de la carte (map) générale
+# itemname;   minscale;   typescale; layers
+map0    ;           ;             ; ['Desordre', 'scan25']
+#map0    ;           ;             ; []
+###images
+# traitement des éléments de type image
+#itemname   ; type
+logo1;logo
+logo2;logo
+logo3;logo
+extrait_plan;NCA.croquis1
+NCA_ressource1;NCA.photo1
+NCA_ressource2;NCA.photo2
+NCA_ressource3;NCA.photo3
+NCA_signature;NCA.ressource1
+
+###childprint
+# impression à la suite d'autres conf d'impression
+#confname;                linkcolumn;             optionsql
+#Desordres_observation;    Observation_now.lid_desordre ; ORDER BY Observation_now.datetimeobservation DESC

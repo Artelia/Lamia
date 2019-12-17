@@ -458,6 +458,8 @@ class Flowchart(Node):
         state['outputNode'] = self.outputNode.saveState()
         
         return state
+
+
       
     def restoreState(self, state, clear=False):
         self.blockSignals(True)

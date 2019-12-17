@@ -33,7 +33,7 @@ import qgis
 import os
 from qgis.PyQt import QtGui, uic, QtCore, QtXml
 from collections import OrderedDict
-import sys, glob, inspect, logging
+import sys, glob, inspect, logging, textwrap
 
 try:
     from qgis.PyQt.QtGui import (QAction, QWidget)
@@ -41,6 +41,7 @@ except ImportError:
     from qgis.PyQt.QtWidgets import (QAction, QWidget)
 
 from ...toolabstract.Lamia_abstract_tool import AbstractLamiaTool
+from ...lamiautils.abstractfilemanager import AbstractFileManager
 
 
 class ExportShapefileTool(AbstractLamiaTool):
@@ -73,6 +74,11 @@ class ExportShapefileTool(AbstractLamiaTool):
         self.groupBox_elements.setParent(None)
         self.frame_editing.setParent(None)
 
+        self.filemanager = ExportShpfileManager(self.windowdialog, self, '.txt')
+
+
+
+
         self.qfiledlg = self.windowdialog.qfiledlg
 
         self.confdatamain = os.path.join(os.path.dirname(inspect.getsourcefile(self.__class__)), self.TOOLNAME)
@@ -89,6 +95,9 @@ class ExportShapefileTool(AbstractLamiaTool):
             self.userwdgfield.toolButton_filechooser.clicked.connect(self.chooseFile)
 
             self.userwdgfield.pushButton_export.clicked.connect(self.prepareData)
+
+            self.userwdgfield.groupBox_filemanager.layout().addWidget(self.filemanager)
+
 
 
     def chooseFile(self):
@@ -108,15 +117,17 @@ class ExportShapefileTool(AbstractLamiaTool):
 
     def postOnActivation(self):
         #self.createfilesdir = os.path.join(os.path.dirname(__file__), 'exporttools')
-        self.userwdgfield.comboBox_type.clear()
-        for workdir in [self.confdatamain, self.confdataproject]:
-            for filename in glob.glob(os.path.join(workdir, '*.txt')):
-                basename = os.path.basename(filename).split('.')[0]
-                if basename != 'README':
-                    #self.exportshapefiledialog.comboBox_type.addItems([basename])
-                    if workdir == self.confdataproject:
-                        basename = '*' + basename
-                    self.userwdgfield.comboBox_type.addItems([basename])
+        self.filemanager.reset()
+        if False:
+            self.userwdgfield.comboBox_type.clear()
+            for workdir in [self.confdatamain, self.confdataproject]:
+                for filename in glob.glob(os.path.join(workdir, '*.txt')):
+                    basename = os.path.basename(filename).split('.')[0]
+                    if basename != 'README':
+                        #self.exportshapefiledialog.comboBox_type.addItems([basename])
+                        if workdir == self.confdataproject:
+                            basename = '*' + basename
+                        self.userwdgfield.comboBox_type.addItems([basename])
 
 
 
@@ -126,19 +137,24 @@ class ExportShapefileTool(AbstractLamiaTool):
         debug = False
 
         shpfile = self.userwdgfield.lineEdit_nom.text()
-        tabletype = self.userwdgfield.comboBox_type.currentText()
 
-        if tabletype[0] == '*':
-            tabletype = tabletype[1:]
-            self.createfilesdir = self.confdataproject
-        else:
-            tabletype = tabletype
-            self.createfilesdir = self.confdatamain
+
+        #tabletype = self.userwdgfield.comboBox_type.currentText()
+        tabletype = self.filemanager.getCurrentText()
+        tabletypepath = self.filemanager.getCurrentPath()
+
+        if False:
+            if tabletype[0] == '*':
+                tabletype = tabletype[1:]
+                self.createfilesdir = self.confdataproject
+            else:
+                tabletype = tabletype
+                self.createfilesdir = self.confdatamain
 
 
 
         self.pdffile = shpfile
-        self.champs = self.readChamp(tabletype)
+        self.champs = self.readChamp(tabletypepath)
 
 
         self.fieldsforshp = self.buildQgsFields(self.champs)
@@ -223,7 +239,8 @@ class ExportShapefileTool(AbstractLamiaTool):
         #self.createfilesdir = os.path.join(os.path.dirname(__file__), 'exporttools')
         #for filename in glob.glob(os.path.join(self.createfilesdir, '*.txt')):
         # print(self.createfilesdir, table + '.txt')
-        filename = os.path.join(self.createfilesdir, table + '.txt')
+        # filename = os.path.join(self.createfilesdir, table + '.txt')
+        filename = table
 
         if sys.version_info.major == 2:
             file = open(filename, 'r')
@@ -493,8 +510,6 @@ class ExportShapefileTool(AbstractLamiaTool):
 
 
 
-
-
 class UserUI(QWidget):
     def __init__(self, parent=None):
         super(UserUI, self).__init__(parent=parent)
@@ -502,4 +517,75 @@ class UserUI(QWidget):
         uipath = os.path.join(os.path.dirname(__file__), 'Lamia_exportshp_tool.ui')
         uic.loadUi(uipath, self)
 
+
+class ExportShpfileManager(AbstractFileManager):
+
+    def __init__(self,  mainwindows=None, parentwdg=None, fileext=None):
+        super(ExportShpfileManager, self).__init__(mainwindows, parentwdg, fileext)
+
+
+    def new(self):
+
+        if not os.path.exists(self.confdataproject):
+            os.mkdir(self.confdataproject)
+
+        if sys.version_info.major == 2:
+            confpath, confext = self.qfiledialog.getSaveFileName(None, 'Choose the file', self.confdataproject,
+                                                                     'txt (*.txt)', '')
+        elif sys.version_info.major == 3:
+            confpath , confext= self.qfiledialog.getSaveFileName(None, 'Choose the file', self.confdataproject,
+                                                                     'txt (*.txt)', '')
+
+        if confpath:
+            conf_file = open(confpath, 'w', encoding="utf-8")
+            conftxt =   """
+                        # les lignes de commentaires commencent par #
+                        
+                        # la requete sql créée est formée ainsi :
+                        #   SELECT [enumération des valeursql]
+                        #   FROM [requete ecrite dans le ###main]
+                        
+                        # Le choix des champs à selectionner pour l'export se fait ainsi :
+                        # ex :
+                        # ###Noeud 
+                        # #nom              ;type (Int, Double, String);  cst (nom du champ pour convertion trigamme); valeursql                    
+                        # id_noeud;          Int;                      ;               id_noeud
+                        
+                        # avec :
+                        # ###Noeud : nom de la table utilisée par convertir les trigrammes vers valeur texte
+                        # nom : le nom du champ dans le shp
+                        # type : le type dans le shp  : Int, Double, String
+                        # champ de convertion : le nom du champ pour la convertion du trigramme vers du texte
+                        # valeursql : la valeur (en sql) à prendre : peut etre un champ de la table, ou une requete sql
+                        
+                        # Pour choisir la géométrie considérée pour le shp 
+                        # ###geom
+                        # geom;         Int;               ;                  ST_AsText(Noeud_now.geom)
+                        
+                        # Enfin décrirer la requete FROM ..
+                        # ###main 
+                        # FROM Noeud_now
+                        
+                        # ici la requete utilisée pour la création du shp est 
+                        # SELECT id_noeud FROM Noeud_now 
+                        
+                        # ex :
+
+                        ###Noeud 
+                        #nom              ;type     ;champ de convertion trigramme ? ; valeursql
+                        id_noeud         ; Int      ;                                ; id_noeud
+                        
+                        ###geom
+                        geom;         Int;               ;                  ST_AsText(Noeud_now.geom)
+                        
+                        ###main 
+                        FROM Noeud_now
+                        """
+            conf_file.write(textwrap.dedent(conftxt))
+            conf_file.close()
+
+            self.reset()
+            txttofind = self.projectcharacter + os.path.splitext(os.path.basename(confpath))[0]
+            indexcombo = self.comboBox_files.findText(txttofind)
+            self.comboBox_files.setCurrentIndex(indexcombo)
 

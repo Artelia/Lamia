@@ -34,8 +34,8 @@ except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget)
 #from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
 from ...toolabstract.Lamia_abstract_tool import AbstractLamiaTool
-import os
-import datetime
+import os, sys, datetime
+
 
 
 
@@ -62,10 +62,10 @@ class BaseRapportTool(AbstractLamiaTool):
         # self.magicfunctionENABLED = True
         self.linkagespec = {'Tcobjetressource' : {'tabletc' : 'Tcobjetressource',
                                            'idsource' : 'id_ressource',
-                                       'idtcsource' : 'id_tcressource',
+                                       'idtcsource' : 'lid_ressource',
                                            'iddest' : 'id_objet',
-                                       'idtcdest' : 'id_tcobjet',
-                                           'desttable' : ['Infralineaire','Equipement']},
+                                       'idtcdest' : 'lid_objet',
+                                           'desttable' : ['Infralineaire','Equipement','Observation']},
                             'Marche': {'tabletc': None,
                                            'idsource': 'lk_marche',
                                            'idtcsource': None,
@@ -122,8 +122,14 @@ class BaseRapportTool(AbstractLamiaTool):
 
 
     def choosePhoto(self):
-        file, extension = self.windowdialog.qfiledlg.getOpenFileNameAndFilter(None, 'Choose the file', self.dbase.imagedirectory,
-                                                                 'All (*.*)', '')
+
+        if sys.version_info.major == 2:
+            file, extension = self.windowdialog.qfiledlg.getOpenFileNameAndFilter(None, 'Choose the file', self.dbase.imagedirectory,
+                                                                     'All (*.*)', '')
+        elif sys.version_info.major == 3:
+            file , extension= self.windowdialog.qfiledlg.getOpenFileName(None, 'Choose the file', self.dbase.imagedirectory,
+                                                                     'All (*.*)', '')
+
         if file:
             self.userwdg.lineEdit_file.setText(os.path.normpath(file))
 
@@ -166,10 +172,44 @@ class BaseRapportTool(AbstractLamiaTool):
         query = self.dbase.query(sql)
         self.dbase.commit()
 
+        if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
+
+            #get parent id_objet
+            sql = " SELECT id_objet FROM " + self.parentWidget.dbasetablename.lower() + "_qgis"
+            sql += " WHERE pk_" + self.parentWidget.dbasetablename.lower() + " = " + str(self.parentWidget.currentFeaturePK)
+            currentparentlinkfield = self.dbase.query(sql)[0][0]
+
+            #currentparentlinkfield = self.parentWidget.currentFeature['id_objet']
+            sql = "INSERT INTO Tcobjetressource(lpk_revision_begin, lid_objet, lid_ressource) "
+            sql += " VALUES(" + str(self.dbase.maxrevision) + "," + str(currentparentlinkfield) + ',' + str(lastressourceid) + ")"
+            query = self.dbase.query(sql)
+            self.dbase.commit()
 
 
+    def deleteParentFeature(self):
+
+        sql = "SELECT pk_objet, pk_ressource, id_ressource FROM Rapport_qgis WHERE pk_rapport= " + str(self.currentFeaturePK)
+        pkobjet, pkressource, idressource = self.dbase.query(sql)[0]
+        #idobjet = self.currentFeature['id_objet']
+        #idressource = self.currentFeature['id_ressource']
+
+        sql = "DELETE FROM Objet WHERE pk_objet = " + str(pkobjet)
+        query = self.dbase.query(sql)
+        self.dbase.commit()
+
+        sql = "DELETE FROM Ressource WHERE pk_ressource = " + str(pkressource)
+        query = self.dbase.query(sql)
+        self.dbase.commit()
+
+        sql = "DELETE FROM Tcobjetressource WHERE id_tcressource = " + str(idressource)
+        sql += " AND lpk_revision_begin <= " + str(self.dbase.maxrevision)
+        sql += " AND lpk_revision_end IS  NULL "
 
 
+        query = self.dbase.query(sql)
+        self.dbase.commit()
+
+        return True
 
 
 

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 from ..Qt import QtCore, QtGui
 from ..graphicsItems.GraphicsObject import GraphicsObject
 from .. import functions as fn
@@ -301,10 +302,12 @@ class Node(QtCore.QObject):
                 out = self.processBypassed(vals)
             else:
                 out = self.process(**strDict(vals))
-                if False:
+
+                if False:   #PVR
                     if len(vals.keys())<=1:
                         out = self.process(**strDict(vals))
                     else:
+                        #sys print(strDict(vals))
                         out = self.process(strDict(vals))
             #print "  output:", out
             if out is not None:
@@ -378,8 +381,13 @@ class Node(QtCore.QObject):
         pos = self.graphicsItem().pos()
         state = {'pos': (pos.x(), pos.y()), 'bypass': self.isBypassed()}
         termsEditable = self._allowAddInput | self._allowAddOutput
-        for term in self._inputs.values() + self._outputs.values():
-            termsEditable |= term._renamable | term._removable | term._multiable
+
+        if sys.version_info.major == 2:
+            for term in self._inputs.values() + self._outputs.values():
+                termsEditable |= term._renamable | term._removable | term._multiable
+        elif sys.version_info.major == 3:
+            for term in list(self._inputs.values()) + list(self._outputs.values()):
+                termsEditable |= term._renamable | term._removable | term._multiable
         if termsEditable:
             state['terminals'] = self.saveTerminals()
         return state

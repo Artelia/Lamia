@@ -189,7 +189,108 @@ En plus de ces packages, les packages suivants sont également utilisés.
 +-----------------------------+------------------------------------------------------------------------------------------------------------+
 
 
+Installation de l’environnement de développement - windows
+----------------------------------------------------------
 
+Install de QGis
+~~~~~~~~~~~~~~~
+Il faut tout d’abord installer qgis à l’aide l’`installateur OSGEO <https://www.qgis.org/en/site/forusers/download.html>`_.
+
+
+Choisir « Advanced install », et au dernier écran, choisir l’installation de :
+
+*   Dans Desktop :
+
+    *   qgis
+
+
+
+    *   grass
+
+
+
+
+
+*   Dans libs :
+
+    *   python3-networkx
+
+
+
+    *   python3-numpy
+
+
+
+    *   python3-pillow
+
+
+
+    *   python3-matplotlib
+
+
+
+    *   python3-numpy
+
+
+
+    *   python3-xlrd
+
+
+
+
+
+Install de Pycharm
+~~~~~~~~~~~~~~~~~~
+
+Installer pycharm CE depuis leur `site internet <https://www.jetbrains.com/pycharm/download/#section=windows>`_.
+
+
+Script pour démarrer PyCharm
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Afin de se faciliter la vie , il faut lancer pycharm avec le script suivant à mettre dans un .bat :
+
+.. code-block:: python
+
+    @echo off
+    REM Mettre ici le chemin vers l’install OSGEO
+    SET OSGEO4W_ROOT=C:\OSGeo4W64
+
+    REM adapter selon votre version de python et version de grass
+    call "%OSGEO4W_ROOT%"\bin\o4w_env.bat
+    call "%OSGEO4W_ROOT%"\apps\grass\grass-7.6.0\etc\env.bat
+    @echo off
+    path %PATH%;%OSGEO4W_ROOT%\apps\qgis-ltr\bin
+    path %PATH%;%OSGEO4W_ROOT%\apps\grass\grass-7.6.0\lib
+    path %PATH%;%OSGEO4W_ROOT%\apps\Qt5\bin
+    set PYTHONPATH=%PYTHONPATH%;%OSGEO4W_ROOT%\apps\qgis-ltr\python;
+    set PYTHONPATH=%PYTHONPATH%;%OSGEO4W_ROOT%\apps\Python37\lib\site-packages
+    set QGIS_PREFIX_PATH=%OSGEO4W_ROOT%\apps\qgis
+    SET QT_PLUGIN_PATH=%OSGEO4W_ROOT%\apps\Qt5\plugins
+    SET QGIS_DISABLE_MESSAGE_HOOKS=1
+    set PYTHONHOME=%OSGEO4W_ROOT%\apps\Python37
+
+    REM A adapter selon votre install de Pycharm
+    start "PyCharm aware of Quantum GIS" /B "C:\Program Files\JetBrains\PyCharm Community Edition 2019.1.2\bin\pycharm64.exe" %*
+
+
+Configuration de PyCharm
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Créer un nouveau projet. Le chemin du projet doit pointer sur un répertoire contenant le clone github de `Lamia <https://github.com/Artelia/Lamia>`_. Ainsi, il sera créé un répertoire (Github p.ex), contenant un fichier __init__.py vide, et contenant un sous répertoire Lamia contenant le clone de github. 
+Choisir l’interpréteur python en allant dans File/settings/Project/project interpreter et créer un interpreteur en pointant sur le PYTHONHOME défini dans le .bat de lancement de PyCharm.
+
+
+Test de la configuration
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Ouvrir le fichier Github/Lamia/test/00_test_main.py. 
+
+Définir la variable path de la méthode testMethod vers un fichier lamia valide. 
+
+Lancer le script.
+
+Si tout se passe bien, Lamia se lance !!
 
 
 Cas pratique : création d’un nouveau module de post-traitement

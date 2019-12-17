@@ -956,7 +956,10 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
             self.dbase.createNewLineVersion('Infralineaire', fetpk2)
             fetpk2 = self.dbase.getLayerFeatureById('Infralineaire', fetid2).id()
             infrafet = self.dbase.getLayerFeatureByPk('Infralineaire', fetpk2)
-            infrafetpoint1 = qgis.core.QgsGeometry().fromPoint(infrafet.geometry().asPolyline()[0])
+            if sys.version_info.major == 2:
+                infrafetpoint1 = qgis.core.QgsGeometry().fromPoint(infrafet.geometry().asPolyline()[0])
+            elif sys.version_info.major == 3:
+                infrafetpoint1 = qgis.core.QgsGeometry().fromPointXY(infrafet.geometry().asPolyline()[0])
             # newgeom2 = newgeom.shortestLine(infrafetpoint1)
             newgeom2 = infrafetpoint1.shortestLine(newgeom)
             dbasetablelayer.startEditing()

@@ -26,24 +26,19 @@ This file is part of LAMIA.
   * License-Filename: LICENSING.md
  """
 
-
-from qgis.PyQt import QtCore
-import os
-import sys
 import qgis
 import qgis.utils
+from qgis.PyQt import QtCore
+
 if qgis.utils.iface is None:
     qgis.utils.uninstallErrorHook()     #for standart output
-import math
-import shutil
-import re
+
 try:
     from pyspatialite import dbapi2 as db
     from pyspatialite.dbapi2 import *
 except ImportError:
     import sqlite3
     from sqlite3 import *
-    print('spatialite not enabled')
 
 try:
     from qgis.PyQt.QtGui import (QMessageBox, QProgressBar, QApplication)
@@ -57,18 +52,11 @@ try:
 except:
     PILexists = False
 
-if sys.version_info.major == 2:
-    from ..libs import xlrd
-else:
-    import xlrd
-
-
-import psycopg2
-import glob
 from collections import OrderedDict
+import os, sys, math, shutil, re, psycopg2, glob, logging, datetime, xlrd
 
-import logging
-#logger = logging.getLogger("Lamia")
+
+
 
 
 
@@ -81,6 +69,7 @@ class DBaseParser(QtCore.QObject):
     dBaseLoaded = QtCore.pyqtSignal()
     errorMessage = QtCore.pyqtSignal(str)
     normalMessage = QtCore.pyqtSignal(str)
+    errorquerymessage = QtCore.pyqtSignal(str)
 
     pgtypetosltype = {'VARCHAR' : 'TEXT',
                       'INT' : 'INTEGER',
@@ -177,6 +166,7 @@ class DBaseParser(QtCore.QObject):
         self.currentrevision = None
         self.maxrevision = 0
 
+        self.forcenocommit=False
         self.xlsreader = True
         #self._readRecentDBase()
 
@@ -515,6 +505,46 @@ class DBaseParser(QtCore.QObject):
                                       host=self.pghost, port=self.pgport, dbname=self.pgdb, schema=self.pgschema,
                                       user=self.pguser, password=self.pgpassword)
 
+    def connectToDBase(self, slfile=None,
+                    dbname=None, schema=None, user=None, host='localhost', port=None, password=None,    # postgis
+                    ):
+        # Manage connection - creation and config
+        if slfile is None:
+            self.dbasetype = 'postgis'
+        else:
+            self.dbasetype = 'spatialite'
+
+        if self.dbasetype == 'spatialite':
+            self.spatialitefile = slfile
+            if sys.version_info.major == 2:
+                self.connSLITE = db.connect(slfile)
+            elif sys.version_info.major == 3:  # python 3
+                self.connSLITE = sqlite3.dbapi2.connect(slfile)
+                self.connSLITE.enable_load_extension(True)
+                self.connSLITE.execute("SELECT load_extension('mod_spatialite')")
+            self.SLITEcursor = self.connSLITE.cursor()
+
+        elif self.dbasetype == 'postgis':
+            self.dbasetype = 'postgis'
+            self.pghost = host
+            self.pgdb = dbname
+            self.pguser = user
+            self.pgpassword = password
+            self.pgport = port
+            self.pgschema = schema
+            # connexion
+            # connect to postgres for checking database existence
+            connectstr = "dbname='postgres' user='" + user + "' host='" + host + "' password='" + password + "'"
+            connpgis = psycopg2.connect(connectstr)
+            pgiscursor = connpgis.cursor()
+            connpgis.autocommit = True
+
+            # connexion to database
+            connectstr = "dbname='" + self.pgdb + "' user='" + user + "' host='" + host
+            connectstr += "' password='" + password + "'"
+            self.connPGis = psycopg2.connect(connectstr)
+            self.PGiscursor = self.connPGis.cursor()
+
 
 
     def createRessourcesDir(self, dbasetype, dbaseressourcesdirectory, slfile=None):
@@ -691,6 +721,8 @@ class DBaseParser(QtCore.QObject):
                 self.dbasetables[tablename]['widget'] = []
                 self.dbasetables[tablename]['row_variantes'] = -1
 
+            firstqgsviewoccurrence = True
+
             for row in range(sheet.nrows):
 
 
@@ -710,6 +742,10 @@ class DBaseParser(QtCore.QObject):
                         else:
                             self.dbasetables[tablename]['qgisPGviewsql'] = sheet.cell_value(row, 1).strip()
                     elif firstcol.strip() == '#QGIS':
+                        if firstqgsviewoccurrence:
+                            firstqgsviewoccurrence = False
+                            self.dbasetables[tablename]['qgisviewsql'] = ''
+
                         if 'qgisviewsql' in self.dbasetables[tablename].keys():
                             self.dbasetables[tablename]['qgisviewsql'] += ' ' + sheet.cell_value(row, 1).strip() + ' '
                         else:
@@ -1658,6 +1694,9 @@ class DBaseParser(QtCore.QObject):
 
             layer = qgis.core.QgsVectorLayer(uri.uri(), tablename, 'spatialite')
 
+            print('**', layer.featureCount())
+            print(sql)
+
 
 
         elif self.dbasetype == 'postgis':
@@ -1684,17 +1723,20 @@ class DBaseParser(QtCore.QObject):
                 self.SLITEcursor = self.connSLITE.cursor()
             try:
                 if self.printsql :
-                    logging.getLogger('Lamia').debug('%s %.3f', sql,  self.getTimeNow() - timestart)
+                    logging.getLogger('Lamia').debug('%s - %s %.3f', docommit, sql,  self.getTimeNow() - timestart)
+
                 query = self.SLITEcursor.execute(sql,arguments)
                 returnquery = list(query)
-                if docommit:
+                if docommit and self.forcenocommit == False:
                     self.commit()
 
                 return returnquery
             except (OperationalError ,IntegrityError) as e:
+                self.errorquerymessage.emit(str(e))
                 if self.qgsiface is None:
                     print(sql)
                     print('error query', e)
+
                 return None
 
 
@@ -1728,6 +1770,7 @@ class DBaseParser(QtCore.QObject):
                     return returnrows
                 except psycopg2.ProgrammingError as e:
                     print('error query', e)
+                    self.errorquerymessage.emit(str(e))
                     return None
 
 
@@ -1743,7 +1786,8 @@ class DBaseParser(QtCore.QObject):
                 if tablename.lower() not in  alreadytables:
                     alreadytables.append(tablename.lower())
                     withsql +=  sqlword + " AS "
-                    withsql += " (SELECT * FROM " + tablename.lower() + "_qgis WHERE "
+                    withsql += " (SELECT * FROM " + tablename + "_qgis WHERE "
+                    # withsql += " (SELECT * FROM " + tablename + "_qgis WHERE "
                     withsql += self.dateVersionConstraintSQL(date)
                     withsql += "), "
 
@@ -1787,8 +1831,8 @@ class DBaseParser(QtCore.QObject):
                 indexparenthesis += sqlword.count('(')
                 indexparenthesis += - sqlword.count(')')
                 listres[actualsqlword] += ' ' + sqlword
-            elif  sqlword in specwords and indexparenthesis == 0 :
-                actualsqlword = sqlword
+            elif  sqlword.strip() in specwords and indexparenthesis == 0 :
+                actualsqlword = sqlword.strip()
                 listres[actualsqlword] = ''
             else:
                 if actualsqlword:
@@ -2061,10 +2105,14 @@ class DBaseParser(QtCore.QObject):
         try:
             index = [value[0] for value in dbasetable['fields'][field]['Cst']].index(txt)
             return dbasetable['fields'][field]['Cst'][index][1]
-        except ValueError as e:
-            if self.qgsiface is None :
+        except ValueError  as e:
+            if False and self.qgsiface is None:
                 logging.getLogger("Lamia").debug('error %s %s %s %s',e, table,field , str([value[0] for value in dbasetable['fields'][field]['Cst']] ))
             return None
+        except KeyError as e:
+            if False and self.qgsiface is None:
+                logging.getLogger("Lamia").debug('error %s %s %s %s',e, table,field , 'No contraint')
+            return txt
 
     def getConstraintTextFromRawValue(self, table, field, rawvalue):
         """
@@ -2409,15 +2457,17 @@ class DBaseParser(QtCore.QObject):
             else:
                 return tuple([None]*len(fields))
 
-    def createNewObjet(self):
+    def createNewObjet(self, docommit=True):
         datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         lastobjetid = self.getLastId('Objet') + 1
         sql = "INSERT INTO Objet (id_objet, lpk_revision_begin, datetimecreation, datetimemodification ) "
         sql += "VALUES(" + str(lastobjetid) + "," + str(self.maxrevision) + ",'" + datecreation + "','" + datecreation + "' )"
-        self.query(sql)
+        self.query(sql, docommit=docommit)
         #self.dbase.commit()
         pkobjet = self.getLastRowId('Objet')
         return pkobjet
+
+
 
     def createNewLineVersion(self,dbname, rawpk):
 
@@ -2564,7 +2614,7 @@ class DBaseParser(QtCore.QObject):
         :return: l'id max
         """
         sql = "SELECT MAX(id_" + table.lower() + ") FROM " + str(table)
-        query = self.query(sql)
+        query = self.query(sql, docommit=False)
         result = [row[0] for row in query]
         if len(result)>0 and result[0] is not  None:
             return result[0]
@@ -2594,7 +2644,7 @@ class DBaseParser(QtCore.QObject):
         id = None
         if self.dbasetype == 'spatialite':
             sql = 'SELECT last_insert_rowid()'
-            query = self.query(sql)
+            query = self.query(sql, docommit=False)
             id = [row[0] for row in query][0]
         elif self.dbasetype == 'postgis':
             tablelower = table.lower()
@@ -2602,7 +2652,7 @@ class DBaseParser(QtCore.QObject):
                 sql = "SELECT currval('" + tablelower + "_id_" + tablelower + "_seq');"
             else:
                 sql = "SELECT currval('" + tablelower + "_pk_" + tablelower + "_seq');"
-            query = self.query(sql)
+            query = self.query(sql, docommit=False)
             id = [row[0] for row in query][0]
         return id
 
@@ -2910,7 +2960,7 @@ class DBaseParser(QtCore.QObject):
 
         self.normalMessage.emit("Mise à jour de la base de données...")
 
-        debug = True
+        debug = False
 
         if debug: logging.getLogger("Lamia").debug('DBASE need an update')
 
@@ -3196,7 +3246,6 @@ class DBaseParser(QtCore.QObject):
 
 
                     if debug: logging.getLogger("Lamia").debug(' ******************* %s *********  ', dbname)
-                    # self.normalMessage.emit("Chargement de " + str(dbname))
 
                     # initialisation des variables génerales
                     importdictid[dbname.lower()] = {}
@@ -3255,6 +3304,7 @@ class DBaseParser(QtCore.QObject):
                     importid = None             # the id in the table lines iteration
                     parenttable = None          # the parent table of actual table - defined as lpk_(parenttable)
                     indexlkparenttable = None   # the index of parent table in pkidfields
+
                     if typeimport == 'import_terrain':
                         # get resultsid and indexidfield
                         if "id_" + dbname.lower() in pkidfields:
@@ -3574,6 +3624,9 @@ class DBaseParser(QtCore.QObject):
         importpkobjetsql = dbaseparserfrom.query(sql)
 
 
+
+
+
         if False:
             sql = " SELECT pk_objet FROM Objet WHERE id_objet = " + str(conflictobjetid)
             sql += " AND lpk_revision_end IS NULL"
@@ -3613,16 +3666,21 @@ class DBaseParser(QtCore.QObject):
             if revendimport is not None and revendmain is not None:     # main and import has been deleted - non conflict
                 return False, None, None, None
 
+            # construct column names (usefull if both tables are not in same order)
+            # allfields = ', '.join(self.getAllFields(mainconflictdbname))
+            allfieldslist = self.getAllFields(mainconflictdbname)
+
 
             # values from child table
-            sql = "SELECT * FROM " + mainconflictdbname.lower() + "_qgis"
+            sql = "SELECT " + ', '.join(allfieldslist) + " FROM " + mainconflictdbname.lower() + "_qgis"
             sql += " WHERE pk_" + mainconflictdbname.lower() + " = " + str(mainconflictpk)
             resmain = self.query(sql)[0]
-            sql = "SELECT * FROM " + importconflictdbname.lower() + "_qgis"
+            sql = "SELECT " + ', '.join(allfieldslist) + " FROM " + importconflictdbname.lower() + "_qgis"
             sql += " WHERE pk_" + importconflictdbname.lower() + " = " + str(importconflictpk)
             resimport = dbaseparserfrom.query(sql)[0]
 
-            fields = self.getColumns(mainconflictdbname.lower() + "_qgis")
+            # fields = self.getColumns(mainconflictdbname.lower() + "_qgis")
+            fields = allfieldslist
 
             # get geom
             resgeom1, resgeom2 = None, None
@@ -3658,15 +3716,19 @@ class DBaseParser(QtCore.QObject):
             mainconflictdbname, mainconflictpk = self.searchChildfeatureFromPkObjet(dbaseparserfrom, mainpkobjet)
             importconflictdbname, importconflictpk = self.searchChildfeatureFromPkObjet(dbaseparserfrom, importpkobjet)
 
+            # construct column names (usefull if both tables are not in same order)
+            allfieldslist = self.getAllFields(mainconflictdbname)
+
             # values from child table
-            sql = "SELECT * FROM " + mainconflictdbname.lower() + "_qgis"
+            sql = "SELECT " + ', '.join(allfieldslist) + " FROM " + mainconflictdbname.lower() + "_qgis"
             sql += " WHERE pk_" + mainconflictdbname.lower() + " = " + str(mainconflictpk)
             resmain = dbaseparserfrom.query(sql)[0]
-            sql = "SELECT * FROM " + importconflictdbname.lower() + "_qgis"
+            sql = "SELECT " + ', '.join(allfieldslist) + " FROM " + importconflictdbname.lower() + "_qgis"
             sql += " WHERE pk_" + importconflictdbname.lower() + " = " + str(importconflictpk)
             resimport = dbaseparserfrom.query(sql)[0]
 
-            fields = self.getColumns(mainconflictdbname.lower() + "_qgis")
+            # fields = self.getColumns(mainconflictdbname.lower() + "_qgis")
+            fields = allfieldslist
 
             # get geom
             resgeom1, resgeom2 = None, None
@@ -3685,7 +3747,10 @@ class DBaseParser(QtCore.QObject):
         conflict1values = []  # conflict value in main table
         conflict2values = []  # conflict value in import table
         conflictfields = []  # conflict fields in import table
+
+
         for i, restemp in enumerate(resmain):
+
             if (fields[i] not in ['geom', 'datetimecreation', 'datetimemodification']
                     and fields[i][0:3] != "pk_" and fields[i][0:4] != "lpk_"
                     and restemp != resimport[i]):
@@ -3707,6 +3772,16 @@ class DBaseParser(QtCore.QObject):
             return True, conflictfields, conflict1values, conflict2values
         else:
             return False, None, None, None
+
+
+    def getAllFields(self, dbasetablename):
+        parenttables = self.getParentTable(dbasetablename)[::-1] + [dbasetablename]
+        fieldlist = []
+        for tablename in parenttables:
+            fieldlist += list(self.dbasetables[tablename]['fields'].keys())
+        return fieldlist
+
+
 
 
     def resolveConflict(self,dbaseparserfrom,conflictobjetids ):
@@ -3892,7 +3967,6 @@ class DBaseParser(QtCore.QObject):
                     else:
                         sql = "SELECT " + ','.join(noncriticalfield) + " FROM " + dbname.lower()
 
-
                     results = self.query(sql)
 
                     if 'ST_AsText(ST_Transform(geom,' + str(self.crsnumber) + '))' in noncriticalfield :
@@ -3909,7 +3983,8 @@ class DBaseParser(QtCore.QObject):
                             for l, res in enumerate(result):
                                 if noncriticalfield[l] == 'lpk_revision_begin':
                                     restemp.append(str(1))
-                                elif isinstance(res, str) or  ( isinstance(res, unicode) and noncriticalfield[l] != 'geom') :
+                                    # elif isinstance(res, str) or  ( isinstance(res, unicode) and noncriticalfield[l] != 'geom') :
+                                elif (isinstance(res, str) or isinstance(res, unicode)) and noncriticalfield[l] != 'geom':
                                     if sys.version_info.major == 2:
                                         if isinstance(res, unicode):
                                             restemp.append("'" + res.replace("'","''") + "'")
@@ -4129,7 +4204,9 @@ class DBaseParser(QtCore.QObject):
                         else:
                             fields.append(field)
                             values.append(str(  listofrawvalues[k]    ))
+
                             print('error lid_' )
+                            # print(dictid[field.split('_')[1]].keys())
                             print('base : ' ,tablename, ' - column : ', field, ' - lid value : ',listofrawvalues[k]  )
 
                 else:

@@ -165,7 +165,7 @@ class BasePhotoTool(AbstractLamiaTool):
 
     def choosePhoto(self):
 
-        fiel = None
+        file = None
         if sys.version_info.major == 2:
             file, extension = self.windowdialog.qfiledlg.getOpenFileNameAndFilter(None, 'Choose the file', self.dbase.imagedirectory,
                                                                      'Image (*.jpg)', '')

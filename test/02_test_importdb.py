@@ -32,7 +32,7 @@ class TestMain(Test):
 
             #pathimportterrain = os.path.join(os.path.dirname(__file__), '02_test_importdb', 'test01','03_fusion_modif_terrain', 'test01.sqlite')
 
-            pathimportterrain = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees_ind1//BD_totale_ind6.sqlite"
+            pathimportterrain = "C://BM//pourimport//BD_totale_ind8.sqlite"
 
 
 
@@ -43,7 +43,10 @@ class TestMain(Test):
             elif testcherche == 'importterrain':
                 pass
                 if False:
-                    pathmodif = os.path.join(os.path.dirname(__file__), '02_test_importdb', 'test01', '02_modif','test01.sqlite')
+                    # pathmodif = os.path.join(os.path.dirname(__file__), '02_test_importdb', 'test01', '02_modif','test01.sqlite')
+                    pathmodif = "C://BM//original//BD_totale_ind8.sqlite"
+                    pathimportterrain = "C://BM//pourimport//BD_totale_ind8.sqlite"
+
                     dirtodelete = os.path.dirname(pathimportterrain)
                     shutil.rmtree(dirtodelete, ignore_errors=True)
                     shutil.copytree(os.path.dirname(pathmodif), dirtodelete)
@@ -96,9 +99,22 @@ class TestMain(Test):
 
             # pathterrain = os.path.join(os.path.dirname(__file__), '02_test_importdb', 'test01', '02_terrain', 'test01_terrain.sqlite')
 
-            pathterrain = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees_terrains//201903252627_Terrain_JRS//export_BD_BM_mars2019.sqlite"
+            # pathterrain = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees_terrains//201903252627_Terrain_JRS//export_BD_BM_mars2019.sqlite"
             #pathterrain = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees_terrains//201903252627_Terrain_SPS//export_BD_BM_mars2019.sqlite"
             #pathterrain = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees_terrains//20190325_Terrain_HDA//export_BD_BM_mars2019.sqlite"
+
+            pathterrain = "C://BM//Terrain _SPS//20191120//Test_FJE.sqlite"
+            pathterrain = "C://BM//Terrain_JRS//20191120//Test_FJE.sqlite"
+            pathterrain = "C://BM//Terrain _SPS//20191107//Terrain_VTA_11_2019_FJE.sqlite"
+            pathterrain = "C://BM//Terrain_JRS//20191107//Terrain_VTA_11_2019_JDE.sqlite"
+            pathterrain = "C://BM//Rive_Droite//Test_JDE.sqlite"
+
+
+
+            # UPDATE OBJET SET lpk_revision_begin = 2 WHERE datetimecreation > '2019-11-05 00:00:00' AND datetimecreation != 'None'
+            # UPDATE TcObjetRessource SET lpk_revision_begin = 2
+
+
             self.wind.importDBase(slfile=pathterrain, typeimport='import_terrain')
 
         elif testcherche == 'importnouvelle':

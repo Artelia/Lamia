@@ -42,11 +42,45 @@ app = QtWidgets.QApplication(sys.argv)
 dialog = QtWidgets.QMainWindow()
 mainWidget = QtWidgets.QWidget()
 dialog.setCentralWidget(mainWidget)
-ComboBox = CheckableComboBox(mainWidget)
-button = QtGui.QPushButton(mainWidget)
-button.clicked.connect(actionbuutton)
-for i in range(6):
-    ComboBox.addItem("Combobox Item " + str(i))
+
+vbox = QtWidgets.QVBoxLayout()
+mainWidget.setLayout(vbox)
+
+ComboBox = CheckableComboBox()
+button = QtWidgets.QPushButton()
+
+vbox.addWidget(ComboBox)
+vbox.addWidget(button)
+
+
+if True:
+    for i in range(6):
+        ComboBox.addItem("Combobox Item " + str(i))
+
+
+if False:
+
+    model = QtGui.QStandardItemModel()
+    ComboBox.setModel(model)
+
+    view = QtWidgets.QTreeView()
+    view.header().hide()
+    view.setRootIsDecorated(False)
+    ComboBox.setView(view)
+
+
+
+    button.clicked.connect(actionbuutton)
+    for i in range(6):
+        #ComboBox.addItem("Combobox Item " + str(i))
+        text_item = QtGui.QStandardItem('111')
+        text_item2 = QtGui.QStandardItem('111')
+        model.appendRow([text_item,text_item2 ])
+        # ComboBox.model().insertRow(-1,'popo')
+
+
+#ComboBox.setModelColumn(3)
+
 
 dialog.show()
 sys.exit(app.exec_())

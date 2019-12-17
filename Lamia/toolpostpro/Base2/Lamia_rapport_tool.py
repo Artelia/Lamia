@@ -44,10 +44,10 @@ except ImportError as e:
 import networkx
 import numpy as np
 from collections import OrderedDict
-import glob, sys, logging, inspect
+import glob, sys, logging, inspect, textwrap
 
 from ...toolabstract.Lamia_abstract_tool import AbstractLamiaTool
-
+from ...lamiautils.abstractfilemanager import AbstractFileManager
 
 
 
@@ -83,6 +83,8 @@ class RapportTool(AbstractLamiaTool):
         self.groupBox_elements.setParent(None)
         self.frame_editing.setParent(None)
 
+        self.filemanager = ExportRapportFileManager(self.windowdialog, self, '.txt')
+
         self.qfiledlg = self.windowdialog.qfiledlg
         self.confData = None
 
@@ -104,10 +106,12 @@ class RapportTool(AbstractLamiaTool):
             self.userwdgfield = UserUI()
             self.userwdgfield.toolButton_filechooser.clicked.connect(self.chooseFile)
 
+            self.userwdgfield.groupBox_filemanager.layout().addWidget(self.filemanager)
+
             self.userwdgfield.pushButton_export.clicked.connect(self.launchRapport)
 
             if self.dbase.qgsiface is None:
-                self.userwdgfield.lineEdit_nom.setText('c://test_rapport.pdf')
+                self.userwdgfield.lineEdit_nom.setText('c://000_testdigue//test_rapport.pdf')
 
 
     def chooseFile(self):
@@ -124,10 +128,14 @@ class RapportTool(AbstractLamiaTool):
 
     def postOnActivation(self):
 
+        self.userwdgfield.setEnabled(True)
+        self.filemanager.reset()
+
         self.createconfData()
 
         #self.linkedtreewidget.setSelectionMode(QAbstractItemView.ExtendedSelection)
         self.linkedtreewidget.itemSelectionChanged.connect(self.itemChanged)
+
 
     def postInitFeatureProperties(self, feat):
         pass
@@ -173,7 +181,7 @@ class RapportTool(AbstractLamiaTool):
         if debug: logging.getLogger("Lamia").debug('started')
 
         self.confData = {}
-        self.userwdgfield.comboBox_type.clear()
+        # self.userwdgfield.comboBox_type.clear()
 
         for workdir in [self.confdatamain, self.confdataproject ]:
             for filename in glob.glob(os.path.join(workdir, '*.txt')):
@@ -233,7 +241,7 @@ class RapportTool(AbstractLamiaTool):
 
                 filetoread.close()
 
-                if self.userwdgfield is not None:
+                if False and self.userwdgfield is not None:
                     if len(basename.split('_')) == 1:
                         if workdir == self.confdataproject:
                             basename = '*' + basename
@@ -254,9 +262,13 @@ class RapportTool(AbstractLamiaTool):
 
     def launchRapport(self):
         pdffile = self.userwdgfield.lineEdit_nom.text()
-        reporttype = self.userwdgfield.comboBox_type.currentText()
+        # reporttype = self.userwdgfield.comboBox_type.currentText()
 
-        if reporttype[0] == '*':
+        # print(self.confData.keys())
+
+        reporttype = self.filemanager.getCurrentText()
+
+        if reporttype[0] == self.filemanager.projectcharacter:
             createfilesdir = self.confdataproject
             reporttype = reporttype[1:]
         else:
@@ -268,7 +280,8 @@ class RapportTool(AbstractLamiaTool):
                                                                              confData=self.confData,
                                                                              pdffile=pdffile,
                                                                              reporttype=reporttype,
-                                                                              templatedir=createfilesdir )
+                                                                              templatedir=createfilesdir ,
+                                                                              idlist=None)
 
         self.impressionpdfworker.work()
 
@@ -299,11 +312,13 @@ class printPDFBaseWorker(object):
                  confData=None,
                  pdffile=None,
                  reporttype=None,
-                 templatedir=None):
+                 templatedir=None,
+                 idlist=None):
 
         self.dbase = dbase
         self.windowdialog = windowdialog
         self.parentprintPDFworker = parentprintPDFworker
+        self.idlist = idlist
 
         self.project = qgis.core.QgsProject.instance()
         self.canvas = self.dbase.canvas
@@ -414,7 +429,7 @@ class printPDFBaseWorker(object):
             stop10 = None
         else:
             debug = True  # True False
-            stop10 = 5
+            stop10 = 3
 
 
         if debug: logging.getLogger("Lamia").debug('started')
@@ -422,6 +437,8 @@ class printPDFBaseWorker(object):
         layertoremove = []
         if self.parentprintPDFworker is not None:
             self.reporttype = self.parentprintPDFworker.atlasconfData['childprint']['confname']
+
+
 
         self.atlasconfData = self.confData[self.reporttype]
 
@@ -449,8 +466,10 @@ class printPDFBaseWorker(object):
 
 
         # ********************* ordering ids for pdf *****************************
-
-        idsforreportdict = self.getOrderedIdsForAtlas(coveragelayer)
+        if self.idlist is None :
+            idsforreportdict = self.getOrderedIdsForAtlas(coveragelayer)
+        else:
+            idsforreportdict = self.idlist
 
 
         if False:
@@ -681,10 +700,15 @@ class printPDFBaseWorker(object):
                     table = self.atlasconfData['images'][imageitemname].split('.')[0]
                     photoid = int(self.atlasconfData['images'][imageitemname].split('.')[-1][5:])
                     imageresult = self.getNumberedPhoto(atlasfeat, table, photoid)
+                elif 'croquis' in self.atlasconfData['images'][imageitemname]:
+                    table = self.atlasconfData['images'][imageitemname].split('.')[0]
+                    photoid = int(self.atlasconfData['images'][imageitemname].split('.')[-1][7:])
+                    imageresult = self.getNumberedCroquis(atlasfeat, table, photoid)
 
                 elif 'ressource' in self.atlasconfData['images'][imageitemname]:
                     table = self.atlasconfData['images'][imageitemname].split('.')[0]
-                    ressourcenum = int(self.atlasconfData['images'][imageitemname].split('.')[-1][9:])
+                    #ressourcenum = int(self.atlasconfData['images'][imageitemname].split('.')[-1][9:])
+                    ressourcenum = self.atlasconfData['images'][imageitemname].split('.')[-1][9:]
                     #imageresult = self.getPhoto(reportdic, currentfeature)
                     imageresult = self.getNumberedRessource(atlasfeat, table, ressourcenum)
 
@@ -758,7 +782,8 @@ class printPDFBaseWorker(object):
                 composeritem = newComposition.getComposerItemByUuid(compitemuuid)
             else:
                 composeritem = newComposition.itemByUuid(compitemuuid)
-                composeritem.__class__ = qgis.core.QgsLayoutItemLabel
+                # composeritem.__class__ = qgis.core.QgsLayoutItemLabel
+
             finaltxt = []
             for temptxt in dictfields[compitemuuid]:
                 if 'lamia.' in temptxt:
@@ -802,6 +827,21 @@ class printPDFBaseWorker(object):
                     query = self.dbase.query(sql)
                     valtemp = [row[0] for row in query][0]
                     rawtable = table.split('_')[0]  #split in cas _qgis table
+
+                    if not rawtable in self.dbase.dbasetables.keys():   # case as in sql query
+                        atlassql = self.atlasconfData['atlaslayersql']
+                        atlassqlsplitted = atlassql.split('as')
+                        for i, elem in enumerate(atlassqlsplitted):
+                            if i == 0 :
+                                continue
+                            if elem.strip().split(' ')[0] == rawtable:
+                                possibletable = atlassqlsplitted[i-1].strip().split(' ')[-1].split('_')[0]
+                                if possibletable in self.dbase.dbasetables.keys():
+                                    rawtable = possibletable
+                                    break
+
+
+
                     val = self.dbase.getConstraintTextFromRawValue(rawtable, field, valtemp)
 
                     if unicode(val).lstrip("-").isdigit() and float(val) == -1.:
@@ -867,8 +907,19 @@ class printPDFBaseWorker(object):
                     finaltxt.append(temptxt)
             if debug: self.logger.debug('result %s', str(finaltxt))
             txt = ''.join(finaltxt)
-            composeritem.setText(txt)
 
+            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                labelclasstxt = qgis.core.QgsComposerLabel
+                labelclasshtml = qgis.core.QgsComposerFrame
+            else:
+                labelclasstxt = qgis.core.QgsLayoutItemLabel
+                labelclasshtml = qgis.core.QgsLayoutFrame
+
+            if isinstance(composeritem, labelclasstxt):
+                composeritem.setText(txt)
+            elif isinstance(composeritem, labelclasshtml) or isinstance(composeritem, qgis._core.QgsLayoutFrame):
+                composeritem.multiFrame().setHtml(txt)
+                composeritem.multiFrame().loadHtml()
 
 
 
@@ -1079,14 +1130,22 @@ class printPDFBaseWorker(object):
         if True:
             for composeritem in newComposition.items():
                 if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                    labelclass = qgis.core.QgsComposerLabel
+                    labelclasstxt = qgis.core.QgsComposerLabel
+                    labelclasshtml = qgis.core.QgsComposerFrame
                 else:
-                    labelclass = qgis.core.QgsLayoutItemLabel
-                if isinstance(composeritem, labelclass):
+                    labelclasstxt = qgis.core.QgsLayoutItemLabel
+                    labelclasshtml = qgis.core.QgsLayoutFrame
+
+                if isinstance(composeritem, labelclasstxt) :
                     # print(composeritem.text())
                     if "#lamia" in composeritem.text():
                         txtsplit = composeritem.text().split('#')
                         dictfields[composeritem.uuid()] = txtsplit
+                elif isinstance(composeritem, labelclasshtml):
+                    if "#lamia" in composeritem.multiFrame().html():
+                        txtsplit = composeritem.multiFrame().html().split('#')
+                        dictfields[composeritem.uuid()] = txtsplit
+
         return dictfields
 
 
@@ -1102,7 +1161,10 @@ class printPDFBaseWorker(object):
         debug = False
 
         orderedids = OrderedDict()
-        if self.parentprintPDFworker is None and self.atlasconfData['spatial'] and 'ordering' in self.atlasconfData.keys():
+        # if self.parentprintPDFworker is None and self.atlasconfData['spatial'] and 'ordering' in self.atlasconfData.keys():
+        # print('**', self.atlasconfData['ordering'])
+        if (self.parentprintPDFworker is None and self.atlasconfData['spatial']
+                and 'ordering' in self.atlasconfData.keys() and self.atlasconfData['ordering'] != ''):
             idszonegeoselected=[]
             if len(self.dbase.dbasetables['Zonegeo']['layerqgis'].selectedFeatures()) > 0:
                 idszonegeoselected = [int(feat['id_zonegeo']) for feat in self.dbase.dbasetables['Zonegeo']['layerqgis'].selectedFeatures()]
@@ -1444,12 +1506,17 @@ class printPDFBaseWorker(object):
         if self.parentprintPDFworker is None:
             if indexpagetotal > 0:
                 self.printer.newPage()
+
             if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
                 newComposition.doPrint(self.printer, self.painter)
             else:
-                # newComposition.doPrint(self.printer, self.painter)
-                exporter.renderPage(self.painter, 0)
-                eval('exporter.print(self.printer, printsettings )')
+                for numpage in range(newComposition.pageCollection().pageCount()):
+                    if numpage>0:
+                        self.printer.newPage()
+                    # newComposition.pageCollection()
+                    # newComposition.doPrint(self.printer, self.painter)
+                    exporter.renderPage(self.painter, numpage)
+                    eval('exporter.print(self.printer, printsettings )')
         else:
             # print('height', self.parentheightpx,selfheightpx , self.painter.device().height())
             # selfheightpx = newComposition.compositionBounds().height()/ 25.4 * 96 * 1.08
@@ -1558,7 +1625,7 @@ class printPDFBaseWorker(object):
 
 
 
-    def getNumberedPhoto(self, atlasfeat, table, photoid):
+    def getNumberedPhoto(self, atlasfeat, table, photoid, typeressource = 'PHO'):
         # print('getNumberedPhoto', photoid)
         debug = False
 
@@ -1609,12 +1676,16 @@ class printPDFBaseWorker(object):
             sql = self.dbase.rebuildSplittedQuery(tempsplittedquery)
             sql = self.dbase.updateQueryTableNow(sql)
             query = self.dbase.query(sql)
+            if len(query) == 0:
+                return None
             idobjet = [row[0] for row in query][0]
 
             sql = "SELECT file FROM Photo_now INNER JOIN Tcobjetressource ON lid_ressource = id_ressource"
-            sql += " WHERE Tcobjetressource.lid_objet = " + str(idobjet) + " AND typephoto = 'PHO'"
+            sql += " WHERE Tcobjetressource.lid_objet = " + str(idobjet) + " AND typephoto = '" + typeressource + "'"
             sql = self.dbase.updateQueryTableNow(sql)
             query = self.dbase.query(sql)
+            if query is None:
+                return None
             result = [row for row in query]
 
 
@@ -1628,6 +1699,10 @@ class printPDFBaseWorker(object):
         if debug: self.logger.debug('resfile  %s', str(resfile))
         return resfile
 
+
+
+    def getNumberedCroquis(self, atlasfeat, table, photoid):
+        return self.getNumberedPhoto(atlasfeat, table, photoid, typeressource='CRO')
 
 
 
@@ -1724,10 +1799,13 @@ class printPDFBaseWorker(object):
             else:
                 tempsplittedquery['WHERE'] = self.atlasconfData['atlaslayerid'] + ' = ' + str(atlasfeat.id())
             # tempsplittedquery['FROM'] = table
+
             sql = self.dbase.rebuildSplittedQuery(tempsplittedquery)
             sql = self.dbase.updateQueryTableNow(sql)
 
             query = self.dbase.query(sql)
+            if len(query) == 0:
+                return None
             idressource = [row[0] for row in query][0]
 
             if not self.dbase.isAttributeNull(idressource):
@@ -1805,3 +1883,72 @@ class printPDFBaseWorker(object):
             if self.dbase.qgsiface is None:
                 logging.getLogger('Lamia').info('Generation du pdf %d', val )
         QApplication.processEvents()
+
+
+class ExportRapportFileManager(AbstractFileManager):
+
+    def __init__(self, mainwindows=None, parentwdg=None, fileext=None):
+        super(ExportRapportFileManager, self).__init__(mainwindows, parentwdg, fileext)
+
+
+    def new(self):
+
+        if not os.path.exists(self.confdataproject):
+            os.mkdir(self.confdataproject)
+
+        if sys.version_info.major == 2:
+            confpath, confext = self.qfiledialog.getSaveFileName(None, 'Choose the file', self.confdataproject,
+                                                                 'txt (*.txt)', '')
+        elif sys.version_info.major == 3:
+            confpath, confext = self.qfiledialog.getSaveFileName(None, 'Choose the file', self.confdataproject,
+                                                                 'txt (*.txt)', '')
+
+        if confpath:
+            conf_file = open(confpath, 'w', encoding="utf-8")
+            conftxt =   """
+                        ###atlaslayersql
+                        # requete sql pour définir la table utilisée pour l'atlas
+                        SELECT Desordre_now.* 
+                        FROM Desordre_now
+                        WHERE groupedesordre = 'INF'
+                        ###atlaslayerid
+                        # l'identifiant de l'atalslayer
+                        id_desordre
+                        ###spatial
+                        # indique si l'atalslayer est une couche spatiale ou pas
+                        True
+                        ###ordering
+                        # type d'ordonnancement si rien : par id croissant, sinon  autoalongpath
+                        #type; constraint (qgis typo)
+                        autoalongpath;
+                        ###atlaslayerstyle
+                        #un style particulier pour l'atlaslayer
+                        Desordres_atlas.qml
+                        ###atlasdrivemap
+                        # caractéristiques de la carte (map) qui suit les objets de l'atlas
+                        #itemname;   minscale;   typescale;      layers
+                        map1;       2500;       Predefined      ;['atlaslayer','Infralineaire', 'ortho']
+                        ###generalmap
+                        # caractéristiques de la carte (map) générale
+                        # itemname;   minscale;   typescale; layers
+                        map0    ;           ;             ; ['Infralineaire','Equipement', 'scan25']
+                        #map0    ;           ;             ; []
+                        ###images
+                        # traitement des éléments de type image
+                        #itemname   ; type
+                        logo;logo
+                        ###childprint
+                        # impression à la suite d'autres conf d'impression
+                        #confname;                linkcolumn;             optionsql
+                        Desordres_observation;    Observation_now.lid_desordre ; ORDER BY Observation_now.datetimeobservation DESC
+                        """
+
+            conf_file.write(textwrap.dedent(conftxt))
+            conf_file.close()
+
+            self.reset()
+
+            txttofind = self.projectcharacter+ os.path.splitext(os.path.basename(confpath))[0]
+            indexcombo = self.comboBox_files.findText(txttofind)
+            self.comboBox_files.setCurrentIndex(indexcombo)
+

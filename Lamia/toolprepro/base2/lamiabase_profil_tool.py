@@ -94,7 +94,7 @@ class BaseProfilTool(AbstractLamiaTool):
 
             self.userwdgfield = UserUI()
             self.linkuserwdgfield = {'Profil' : {'linkfield' : 'id_profil',
-                                             'widgets' : {'date': self.userwdgfield.dateEdit,
+                                             'widgets' : {'dateprofil': self.userwdgfield.dateEdit,
                                                           'type': self.userwdgfield.comboBox_type}},
                                 'Objet' : {'linkfield' : 'id_objet',
                                           'widgets' : {}},

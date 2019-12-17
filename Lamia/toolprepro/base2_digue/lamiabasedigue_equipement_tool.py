@@ -334,6 +334,6 @@ class UserUI(QWidget):
 
 class UserUISirs(QWidget):
     def __init__(self, parent=None):
-        super(UserUI, self).__init__(parent=parent)
+        super(UserUISirs, self).__init__(parent=parent)
         uipath = os.path.join(os.path.dirname(__file__), 'lamiabasedigue_equipement_tool_ui_SIRS.ui')
         uic.loadUi(uipath, self)

@@ -29,8 +29,12 @@ qgis.core.QgsApplication.setPrefixPath(qgis_path, True)
 qgis.core.QgsApplication.initQgis()
 
 
+# sourcepath = "C://000_testdigue//0_caroline2//sqlitein"
+# exportpath = 'C://000_testdigue//0_caroline2//res'
 
-
+sourcepath = "M://FR//BOR//VT//URBAIN//4352240_87_NOBLAT_EtudeAEP_EU_EP//5_Etude//01_SIG//SIG ASS NOBLAT//NOBLAT SIG ASS ARTELIA//Sqlite a transformer"
+exportpath = "M://FR//BOR//VT//URBAIN//4352240_87_NOBLAT_EtudeAEP_EU_EP//5_Etude//01_SIG//SIG ASS NOBLAT//NOBLAT SIG ASS ARTELIA//Shape final"
+exportpath = "M://FR//BOR//VT//URBAIN//4352240_87_NOBLAT_EtudeAEP_EU_EP//5_Etude//01_SIG//SIG ASS NOBLAT//NOBLAT SIG ASS ARTELIA//shapefinal2"
 
 def ExportOldLamiaNode(fileoldlamia):
 
@@ -88,13 +92,22 @@ def ExportOldLamiaNode(fileoldlamia):
         sql = "SELECT Noeud_qgis.id_descriptionsystem, ST_AsText(Noeud_qgis.geom), "
         #       'ART_ID_ART',
         sql += "id_noeud,   "
+
         # 'ART_NB_ARR',
-        sql += " CASE WHEN Noeud_qgis.typeOuvrageAss IN('60','62') THEN COUNT(id_infralineaire) END ,"
+        if False:
+            sql += " CASE WHEN Noeud_qgis.typeOuvrageAss IN('60','62') THEN COUNT(id_infralineaire) END ,"
+        if True:
+            sql += """
+                    CASE WHEN Noeud_qgis.typeOuvrageAss IN('60','62') THEN
+                    ( SELECT COUNT(temp1.id_infralineaire) FROM Infralineaire_qgis as temp1 
+                    WHERE ST_Intersects(ST_EndPoint(temp1.geom), ST_Buffer(Noeud_qgis.geom,0.01) ))
+                    END ,
+                    """
         # 'ART_PROF_A'
         sql += " CASE WHEN Noeud_qgis.typeOuvrageAss IN('60','62') THEN profradierouvrage END ,"
         #       'ART_DEPOTS',
         sql += """
-                CASE WHEN Noeud_qgis.typeOuvrageAss IN('60','62') THEN 
+                CASE WHEN Noeud_qgis.typeOuvrageAss IN('60','62') AND Noeud_qgis.accessibilite IN ('OUV') THEN 
                     CASE WHEN depots = 0 THEN 'Aucun'
                     WHEN depots = 1 THEN 'Léger'
                     WHEN depots = 2 THEN 'Moyen' 
@@ -156,7 +169,7 @@ def ExportOldLamiaNode(fileoldlamia):
                 """
         # 'NB_ANO_REU',
         sql += """
-                CASE WHEN Noeud_qgis.typeOuvrageAss IN('60','62') THEN 
+                CASE WHEN Noeud_qgis.typeOuvrageAss IN('60','62') AND Noeud_qgis.accessibilite IN ('OUV') THEN 
                     ((CASE WHEN Observation_qgis.ECPPdepuisbranchement IS NULL THEN 0 ELSE 1 END)
                     + (CASE WHEN Observation_qgis.gcdegrade IS NULL THEN 0 ELSE 1 END)
                     + (CASE WHEN Observation_qgis.infiltration IS NULL THEN 0 ELSE 1 END)
@@ -171,7 +184,7 @@ def ExportOldLamiaNode(fileoldlamia):
 
         #       # 'ANOM_EU1',
         sql += """
-        CASE WHEN Noeud_qgis.typeOuvrageAss IN('60','62') THEN 
+        CASE WHEN Noeud_qgis.typeOuvrageAss IN('60','62') AND Noeud_qgis.accessibilite IN ('OUV') THEN 
             ( WITH temp1(test) AS 
             ( VALUES ( CASE WHEN Observation_qgis.ECPPdepuisbranchement IS NOT NULL THEN 'Eaux claires parasites' END), 
                     ( CASE WHEN Observation_qgis.gcdegrade IS NOT NULL THEN 'Génie civil dégradé' END), 
@@ -184,7 +197,7 @@ def ExportOldLamiaNode(fileoldlamia):
         """
         #  'ANOM_EU2',
         sql += """
-        CASE WHEN Noeud_qgis.typeOuvrageAss IN('60','62') THEN 
+        CASE WHEN Noeud_qgis.typeOuvrageAss IN('60','62') AND Noeud_qgis.accessibilite IN ('OUV') THEN 
             ( WITH temp1(test) AS 
             ( VALUES ( CASE WHEN Observation_qgis.ECPPdepuisbranchement IS NOT NULL THEN 'Eaux claires parasites' END), 
                     ( CASE WHEN Observation_qgis.gcdegrade IS NOT NULL THEN 'Génie civil dégradé' END), 
@@ -197,13 +210,17 @@ def ExportOldLamiaNode(fileoldlamia):
         
         """
 
+
         #       # 'Topo_Z_TN',
-        sql += "Round(Noeud_qgis.Z,2),"
+        sql += "Round(Noeud_qgis.Z,2) - 2.0,"
+
         #       'CHUTE_REU',
         sql += """
-                CASE WHEN Noeud_qgis.typeOuvrageAss IN('60','62') THEN 
+                CASE WHEN Noeud_qgis.typeOuvrageAss IN('60','62') AND Noeud_qgis.accessibilite IN ('OUV')  THEN 
                     CASE WHEN (SELECT temp1.profaval FROM Infralineaire_qgis as temp1 WHERE  temp1.profaval is NOT NULL AND  temp1.lk_descriptionsystem2  = Noeud_qgis.id_descriptionsystem LIMIT 1 OFFSET 0)
-                    IS NOT NULL THEN 'oui' ELSE 'non' END 
+                    IS NOT NULL THEN 'oui' 
+                    ELSE (CASE WHEN Noeud_qgis.accessibilite = 'SVO' THEN NULL ELSE 'non'  END )
+                    END 
                 END,
                 """
         #       'FE_CHUTE1', en fait prof
@@ -215,19 +232,23 @@ def ExportOldLamiaNode(fileoldlamia):
         #     Position horaire chute 1, 2 et 3
         sql += " NULL, NULL, NULL,  "
         # 'PRO_FE_REU',
-        sql += "CASE WHEN Noeud_qgis.typeOuvrageAss IN('60','62') THEN  Noeud_qgis.Z - Noeud_qgis.profradierouvrage END,  "
+        sql += "CASE WHEN Noeud_qgis.typeOuvrageAss IN('60','62') THEN  Noeud_qgis.Z -2.0 - Noeud_qgis.profradierouvrage END,  "
         # 'ES_REU',
-        sql += "NULL,  "
+        sql += """ 
+                CASE WHEN Noeud_qgis.typeOuvrageAss IN('60','62') AND Noeud_qgis.accessibilite IN ('OUV') THEN 
+                    CASE WHEN Observation_qgis.miseencharge IS NULL   THEN 'non' ELSE 'oui' END 
+                END,
+        """
         # 'Tete_REU',
         sql += """
-                CASE WHEN Noeud_qgis.typeOuvrageAss IN('60','62') THEN 
+                CASE WHEN Noeud_qgis.typeOuvrageAss IN('60','62') AND Noeud_qgis.accessibilite IN ('OUV') THEN 
                     CASE WHEN (SELECT temp1.pk_infralineaire FROM Infralineaire_qgis as temp1 WHERE temp1.lk_descriptionsystem2  = Noeud_qgis.id_descriptionsystem) IS NULL THEN 'oui' ELSE 'non' 
                     END
                 END,
                 """
         # 'Sec_REU',
         sql += """ 
-                CASE WHEN Noeud_qgis.typeOuvrageAss IN('60','62') THEN 
+                CASE WHEN Noeud_qgis.typeOuvrageAss IN('60','62') AND Noeud_qgis.accessibilite IN ('OUV') THEN 
                     CASE WHEN Observation_qgis.ECPPdepuisbranchement IS NULL   THEN 'non' ELSE 'oui' END 
                 END,
         """
@@ -239,7 +260,7 @@ def ExportOldLamiaNode(fileoldlamia):
                 WHEN Noeud_qgis.typeOuvrageAss = '60' THEN 'Regard'
                 WHEN Noeud_qgis.typeOuvrageAss = '62' THEN 'Regard'
                 WHEN Noeud_qgis.typeOuvrageAss = '61' THEN 'Branchement'
-                WHEN Noeud_qgis.typeOuvrageAss = '40' THEN 'Ouvrage spécial'
+                WHEN Noeud_qgis.typeOuvrageAss in ('10','20','30','40') THEN 'Ouvrage spécial'
                  ELSE 'Ouvrage EP'
                  END ,
         """
@@ -264,10 +285,10 @@ def ExportOldLamiaNode(fileoldlamia):
         # 'COTE_TN', 'COTE_FE_BR',
         sql += """
                 CASE WHEN Noeud_qgis.typeOuvrageAss = '61' THEN
-                    round(Noeud_qgis.Z,2)
+                    round(Noeud_qgis.Z,2) - 2.0 
                 END,
                 CASE WHEN Noeud_qgis.typeOuvrageAss = '61' THEN
-                    round(Noeud_qgis.Z - Noeud_qgis.profradierouvrage,2) 
+                    round(Noeud_qgis.Z - Noeud_qgis.profradierouvrage - 2.0 ,2) 
                 END,
                 
             """
@@ -332,10 +353,10 @@ def ExportOldLamiaNode(fileoldlamia):
 
             # 'COT_TN_OUV' en fait prof , 'COT_FE_OUV' en fait null,
             sql += " CASE WHEN Noeud_qgis.typeOuvrageAss NOT IN ('60', '61','62', '40')  THEN "
-            sql += " Noeud_qgis.Z "
+            sql += " Noeud_qgis.Z -2.0 "
             sql += " END, "
             sql += " CASE WHEN Noeud_qgis.typeOuvrageAss NOT IN ('60', '61','62', '40')  THEN "
-            sql += " Noeud_qgis.Z - Noeud_qgis.profradierouvrage"
+            sql += " Noeud_qgis.Z - 2.0 - Noeud_qgis.profradierouvrage"
             sql += " END, "
 
         if True:
@@ -377,20 +398,29 @@ def ExportOldLamiaNode(fileoldlamia):
                 END ,
     
                 """
+
+
             # # 'ACCES_OUV',
             sql += " CASE WHEN Noeud_qgis.typeOuvrageAss NOT IN ('60', '61','62', '40')  THEN "
             sql += " (CASE WHEN  Noeud_qgis.accessibilite = 'OUV' THEN 'ouvrable' ELSE 'non ouvrable' END )  "
             sql += " END, "
             # 'OBSERV_OUV',
             sql += " CASE WHEN Noeud_qgis.typeOuvrageAss NOT IN ('60', '61', '62','40')  THEN "
-            sql += " Observation_qgis.commentaires   "
+            sql += " Observation_qgis.commentaires  || (SELECT Objet.commentaire FROM Objet WHERE Objet.id_objet = Noeud_qgis.id_objet)"
             sql += " END, "
+
             # 'TYP_OUV_SP', 'OBS_OUVSP', 'TYP_RESEAU']
-            sql += " CASE WHEN Noeud_qgis.typeOuvrageAss = 40  THEN "
-            sql += " Noeud_qgis.typeOuvrageAss   "
-            sql += " END, "
-            sql += " CASE WHEN Noeud_qgis.typeOuvrageAss = 40  THEN "
-            sql += " Observation_qgis.commentaires   "
+            sql += """ CASE WHEN Noeud_qgis.typeOuvrageAss IN (10,20,30,40)  THEN (
+                            CASE WHEN Noeud_qgis.typeOuvrageAss = 10 THEN 'Poste de refoulement' 
+                                 WHEN Noeud_qgis.typeOuvrageAss = 20 THEN "Station d'épuration" 
+                                 WHEN Noeud_qgis.typeOuvrageAss = 30 THEN 'Bassin de stockage' 
+                                 WHEN Noeud_qgis.typeOuvrageAss = 40 THEN 'Deversoir d orage' END )
+                        END,
+            """
+
+
+            sql += " CASE WHEN Noeud_qgis.typeOuvrageAss IN (10,20,30,40) THEN "
+            sql += " Observation_qgis.commentaires  ||  (SELECT Objet.commentaire FROM Objet WHERE Objet.id_objet = Noeud_qgis.id_objet)"
             sql += " END, "
             # 'TYP_RESEAU']
             sql += "CASE  "
@@ -423,17 +453,17 @@ def ExportOldLamiaNode(fileoldlamia):
 
 
 
-        fileto = os.path.join(os.path.normpath('C:\\000_testdigue\\0_caroline2\\res'), basename+'_' + sqlitebasename + '.shp')
+        fileto = os.path.join(os.path.normpath(exportpath), basename+'_' + sqlitebasename + '.shp')
         print(fileto)
 
     if True:
 
         for ext in ['.shp', '.dbf', '.qpj', '.prj', '.shx']:
             try:
-                os.remove(os.path.join('C://000_testdigue//0_caroline2//res', basename+'_' + sqlitebasename +ext))
+                os.remove(os.path.join(exportpath, basename+'_' + sqlitebasename +ext))
             except :
                 pass
-            copyfile(fileraw + ext, os.path.join('C://000_testdigue//0_caroline2//res', basename+'_' + sqlitebasename +ext))
+            copyfile(fileraw + ext, os.path.join(exportpath, basename+'_' + sqlitebasename +ext))
 
     if True:
 
@@ -517,7 +547,7 @@ def ExportOldLamiaLine(fileoldlamia):
             WHEN materiau = '26' THEN 'PVC U annele'
             WHEN materiau = '27' THEN 'PVC U lisse'
             WHEN materiau = '28' THEN 'Tole galvanisee'
-            ELSE 'Indéterminé' 
+            ELSE (CASE WHEN formecanalisation = 'FOS' THEN NULL ELSE 'Indéterminé' END)
             END,
 
             """
@@ -547,17 +577,17 @@ def ExportOldLamiaLine(fileoldlamia):
 
 
 
-        fileto = os.path.join(os.path.normpath('C:\\000_testdigue\\0_caroline2\\res'), basename+'_' + sqlitebasename + '.shp')
+        fileto = os.path.join(exportpath, basename+'_' + sqlitebasename + '.shp')
         print(fileto)
 
     if True:
 
         for ext in ['.shp', '.dbf', '.qpj', '.prj', '.shx']:
             try:
-                os.remove(os.path.join('C://000_testdigue//0_caroline2//res', basename+'_' + sqlitebasename +ext))
+                os.remove(os.path.join(exportpath, basename+'_' + sqlitebasename +ext))
             except :
                 pass
-            copyfile(fileraw + ext, os.path.join('C://000_testdigue//0_caroline2//res', basename+'_' + sqlitebasename +ext))
+            copyfile(fileraw + ext, os.path.join(exportpath, basename+'_' + sqlitebasename +ext))
 
     if True:
 
@@ -590,11 +620,11 @@ def ExportOldLamiaLine(fileoldlamia):
 
 
 print('start')
-sourcedir = "C://000_testdigue//0_caroline2//sqlitein"
-onlyfiles = [f for f in os.listdir(sourcedir) if os.path.isfile(os.path.join(sourcedir, f))]
+
+onlyfiles = [f for f in os.listdir(sourcepath) if os.path.isfile(os.path.join(sourcepath, f))]
 print(onlyfiles)
 for sqlfile in onlyfiles:
-    ExportOldLamiaNode(os.path.join(sourcedir, sqlfile))
-    ExportOldLamiaLine(os.path.join(sourcedir, sqlfile))
+    ExportOldLamiaNode(os.path.join(sourcepath, sqlfile))
+    ExportOldLamiaLine(os.path.join(sourcepath, sqlfile))
 
 print('ok')
