@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from Lamia.test.AbstractTest import Test
+from test.AbstractTest import Test
 import os
 import datetime
 from qgis.PyQt import  QtCore

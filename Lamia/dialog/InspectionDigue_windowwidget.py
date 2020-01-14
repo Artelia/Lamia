@@ -957,8 +957,8 @@ class InspectiondigueWindowWidget(QMainWindow):
                     # moduletemp = importlib.import_module('.' + str(x), 'Lamia.toolprepro.' + self.dbase.type.lower())
                     # moduletemp = importlib.import_module('.' + str(x), '..toolprepro.' + self.dbase.type.lower())
                 else:
-                    exec('import Lamia.Lamia.toolprepro.' + self.dbase.type.lower())
-                    moduletemp = importlib.import_module('.' + str(x), 'Lamia.Lamia.toolprepro.' + self.dbase.type.lower())
+                    exec('import Lamia.toolprepro.' + self.dbase.type.lower())
+                    moduletemp = importlib.import_module('.' + str(x), 'Lamia.toolprepro.' + self.dbase.type.lower())
 
                 for name, obj in inspect.getmembers(moduletemp, inspect.isclass):
                     if moduletemp.__name__ == obj.__module__:
@@ -999,8 +999,8 @@ class InspectiondigueWindowWidget(QMainWindow):
                     exec('import Lamia.toolpostpro.' + self.dbase.type)
                     moduletemp = importlib.import_module('.' + str(x), 'Lamia.toolpostpro.' + self.dbase.type )
                 else:
-                    exec('import Lamia.Lamia.toolpostpro.' + self.dbase.type )
-                    moduletemp = importlib.import_module('.' + str(x), 'Lamia.Lamia.toolpostpro.' + self.dbase.type)
+                    exec('import Lamia.toolpostpro.' + self.dbase.type )
+                    moduletemp = importlib.import_module('.' + str(x), 'Lamia.toolpostpro.' + self.dbase.type)
                 for name, obj in inspect.getmembers(moduletemp, inspect.isclass):
                     if moduletemp.__name__ == obj.__module__:
                         if hasattr(obj,'TOOLNAME'):

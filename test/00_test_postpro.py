@@ -49,7 +49,7 @@ class TestMain(Test):
             self.widget = ImportTool(self.dbase, dialog=self.wind)
         #amctool
         if True:
-            from Lamia.Lamia.toolpostpro.Base2.Lamia_amc_tool import AmcTool
+            from Lamia.toolpostpro.Base2.Lamia_amc_tool import AmcTool
             self.widget = AmcTool(self.dbase, dialog=self.wind)
             self.widget.filemanager.reset()
             self.widget.editAMC()
