@@ -180,24 +180,19 @@
 <span class="sd">  * License-Filename: LICENSING.md</span>
 <span class="sd"> &quot;&quot;&quot;</span>
 
-
-<span class="kn">from</span> <span class="nn">qgis.PyQt</span> <span class="k">import</span> <span class="n">QtCore</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">qgis</span>
 <span class="kn">import</span> <span class="nn">qgis.utils</span>
+<span class="kn">from</span> <span class="nn">qgis.PyQt</span> <span class="k">import</span> <span class="n">QtCore</span>
+
 <span class="k">if</span> <span class="n">qgis</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">iface</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">qgis</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">uninstallErrorHook</span><span class="p">()</span>     <span class="c1">#for standart output</span>
-<span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">import</span> <span class="nn">re</span>
+
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">pyspatialite</span> <span class="k">import</span> <span class="n">dbapi2</span> <span class="k">as</span> <span class="n">db</span>
     <span class="kn">from</span> <span class="nn">pyspatialite.dbapi2</span> <span class="k">import</span> <span class="o">*</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">sqlite3</span>
     <span class="kn">from</span> <span class="nn">sqlite3</span> <span class="k">import</span> <span class="o">*</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;spatialite not enabled&#39;</span><span class="p">)</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">qgis.PyQt.QtGui</span> <span class="k">import</span> <span class="p">(</span><span class="n">QMessageBox</span><span class="p">,</span> <span class="n">QProgressBar</span><span class="p">,</span> <span class="n">QApplication</span><span class="p">)</span>
@@ -211,18 +206,17 @@
 <span class="k">except</span><span class="p">:</span>
     <span class="n">PILexists</span> <span class="o">=</span> <span class="kc">False</span>
 
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">math</span><span class="o">,</span> <span class="nn">shutil</span><span class="o">,</span> <span class="nn">re</span><span class="o">,</span> <span class="nn">psycopg2</span><span class="o">,</span> <span class="nn">glob</span><span class="o">,</span> <span class="nn">logging</span><span class="o">,</span> <span class="nn">datetime</span>
+
 <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">major</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">..libs</span> <span class="k">import</span> <span class="n">xlrd</span>
 <span class="k">else</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">xlrd</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">xlrd</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">..libs</span> <span class="k">import</span> <span class="n">xlrd</span>
 
-
-<span class="kn">import</span> <span class="nn">psycopg2</span>
-<span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
-
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="c1">#logger = logging.getLogger(&quot;Lamia&quot;)</span>
 
 
 
@@ -235,6 +229,7 @@
     <span class="n">dBaseLoaded</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">pyqtSignal</span><span class="p">()</span>
     <span class="n">errorMessage</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
     <span class="n">normalMessage</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+    <span class="n">errorquerymessage</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
 
     <span class="n">pgtypetosltype</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;VARCHAR&#39;</span> <span class="p">:</span> <span class="s1">&#39;TEXT&#39;</span><span class="p">,</span>
                       <span class="s1">&#39;INT&#39;</span> <span class="p">:</span> <span class="s1">&#39;INTEGER&#39;</span><span class="p">,</span>
@@ -331,6 +326,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">currentrevision</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">maxrevision</span> <span class="o">=</span> <span class="mi">0</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">forcenocommit</span><span class="o">=</span><span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">xlsreader</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="c1">#self._readRecentDBase()</span>
 
@@ -669,6 +665,46 @@
                                       <span class="n">host</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pghost</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pgport</span><span class="p">,</span> <span class="n">dbname</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pgdb</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pgschema</span><span class="p">,</span>
                                       <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pguser</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pgpassword</span><span class="p">)</span></div>
 
+    <span class="k">def</span> <span class="nf">connectToDBase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">dbname</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>    <span class="c1"># postgis</span>
+                    <span class="p">):</span>
+        <span class="c1"># Manage connection - creation and config</span>
+        <span class="k">if</span> <span class="n">slfile</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetype</span> <span class="o">=</span> <span class="s1">&#39;postgis&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetype</span> <span class="o">=</span> <span class="s1">&#39;spatialite&#39;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetype</span> <span class="o">==</span> <span class="s1">&#39;spatialite&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spatialitefile</span> <span class="o">=</span> <span class="n">slfile</span>
+            <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">major</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">connSLITE</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">slfile</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">major</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>  <span class="c1"># python 3</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">connSLITE</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">dbapi2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">slfile</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">connSLITE</span><span class="o">.</span><span class="n">enable_load_extension</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">connSLITE</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT load_extension(&#39;mod_spatialite&#39;)&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">SLITEcursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connSLITE</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetype</span> <span class="o">==</span> <span class="s1">&#39;postgis&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetype</span> <span class="o">=</span> <span class="s1">&#39;postgis&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pghost</span> <span class="o">=</span> <span class="n">host</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pgdb</span> <span class="o">=</span> <span class="n">dbname</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pguser</span> <span class="o">=</span> <span class="n">user</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pgpassword</span> <span class="o">=</span> <span class="n">password</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pgport</span> <span class="o">=</span> <span class="n">port</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pgschema</span> <span class="o">=</span> <span class="n">schema</span>
+            <span class="c1"># connexion</span>
+            <span class="c1"># connect to postgres for checking database existence</span>
+            <span class="n">connectstr</span> <span class="o">=</span> <span class="s2">&quot;dbname=&#39;postgres&#39; user=&#39;&quot;</span> <span class="o">+</span> <span class="n">user</span> <span class="o">+</span> <span class="s2">&quot;&#39; host=&#39;&quot;</span> <span class="o">+</span> <span class="n">host</span> <span class="o">+</span> <span class="s2">&quot;&#39; password=&#39;&quot;</span> <span class="o">+</span> <span class="n">password</span> <span class="o">+</span> <span class="s2">&quot;&#39;&quot;</span>
+            <span class="n">connpgis</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">connectstr</span><span class="p">)</span>
+            <span class="n">pgiscursor</span> <span class="o">=</span> <span class="n">connpgis</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+            <span class="n">connpgis</span><span class="o">.</span><span class="n">autocommit</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="c1"># connexion to database</span>
+            <span class="n">connectstr</span> <span class="o">=</span> <span class="s2">&quot;dbname=&#39;&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">pgdb</span> <span class="o">+</span> <span class="s2">&quot;&#39; user=&#39;&quot;</span> <span class="o">+</span> <span class="n">user</span> <span class="o">+</span> <span class="s2">&quot;&#39; host=&#39;&quot;</span> <span class="o">+</span> <span class="n">host</span>
+            <span class="n">connectstr</span> <span class="o">+=</span> <span class="s2">&quot;&#39; password=&#39;&quot;</span> <span class="o">+</span> <span class="n">password</span> <span class="o">+</span> <span class="s2">&quot;&#39;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connPGis</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">connectstr</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">PGiscursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connPGis</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
 
 
     <span class="k">def</span> <span class="nf">createRessourcesDir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dbasetype</span><span class="p">,</span> <span class="n">dbaseressourcesdirectory</span><span class="p">,</span> <span class="n">slfile</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -845,6 +881,8 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;widget&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;row_variantes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
 
+            <span class="n">firstqgsviewoccurrence</span> <span class="o">=</span> <span class="kc">True</span>
+
             <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sheet</span><span class="o">.</span><span class="n">nrows</span><span class="p">):</span>
 
 
@@ -864,6 +902,10 @@
                         <span class="k">else</span><span class="p">:</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;qgisPGviewsql&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sheet</span><span class="o">.</span><span class="n">cell_value</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
                     <span class="k">elif</span> <span class="n">firstcol</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;#QGIS&#39;</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">firstqgsviewoccurrence</span><span class="p">:</span>
+                            <span class="n">firstqgsviewoccurrence</span> <span class="o">=</span> <span class="kc">False</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;qgisviewsql&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
                         <span class="k">if</span> <span class="s1">&#39;qgisviewsql&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;qgisviewsql&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">sheet</span><span class="o">.</span><span class="n">cell_value</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
                         <span class="k">else</span><span class="p">:</span>
@@ -1812,6 +1854,9 @@
 
             <span class="n">layer</span> <span class="o">=</span> <span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsVectorLayer</span><span class="p">(</span><span class="n">uri</span><span class="o">.</span><span class="n">uri</span><span class="p">(),</span> <span class="n">tablename</span><span class="p">,</span> <span class="s1">&#39;spatialite&#39;</span><span class="p">)</span>
 
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;**&#39;</span><span class="p">,</span> <span class="n">layer</span><span class="o">.</span><span class="n">featureCount</span><span class="p">())</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+
 
 
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetype</span> <span class="o">==</span> <span class="s1">&#39;postgis&#39;</span><span class="p">:</span>
@@ -1838,17 +1883,20 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">SLITEcursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connSLITE</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">printsql</span> <span class="p">:</span>
-                    <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;Lamia&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%.3f</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">sql</span><span class="p">,</span>  <span class="bp">self</span><span class="o">.</span><span class="n">getTimeNow</span><span class="p">()</span> <span class="o">-</span> <span class="n">timestart</span><span class="p">)</span>
+                    <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;Lamia&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> - </span><span class="si">%s</span><span class="s1"> </span><span class="si">%.3f</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">docommit</span><span class="p">,</span> <span class="n">sql</span><span class="p">,</span>  <span class="bp">self</span><span class="o">.</span><span class="n">getTimeNow</span><span class="p">()</span> <span class="o">-</span> <span class="n">timestart</span><span class="p">)</span>
+
                 <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">SLITEcursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span><span class="n">arguments</span><span class="p">)</span>
                 <span class="n">returnquery</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">docommit</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">docommit</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">forcenocommit</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 
                 <span class="k">return</span> <span class="n">returnquery</span>
             <span class="k">except</span> <span class="p">(</span><span class="n">OperationalError</span> <span class="p">,</span><span class="n">IntegrityError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">errorquerymessage</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">qgsiface</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;error query&#39;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+
                 <span class="k">return</span> <span class="kc">None</span>
 
 
@@ -1882,6 +1930,7 @@
                     <span class="k">return</span> <span class="n">returnrows</span>
                 <span class="k">except</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">ProgrammingError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;error query&#39;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">errorquerymessage</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
                     <span class="k">return</span> <span class="kc">None</span>
 
 
@@ -1897,7 +1946,7 @@
                 <span class="k">if</span> <span class="n">tablename</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span>  <span class="n">alreadytables</span><span class="p">:</span>
                     <span class="n">alreadytables</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tablename</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
                     <span class="n">withsql</span> <span class="o">+=</span>  <span class="n">sqlword</span> <span class="o">+</span> <span class="s2">&quot; AS &quot;</span>
-                    <span class="n">withsql</span> <span class="o">+=</span> <span class="s2">&quot; (SELECT * FROM &quot;</span> <span class="o">+</span> <span class="n">tablename</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;_qgis WHERE &quot;</span>
+                    <span class="n">withsql</span> <span class="o">+=</span> <span class="s2">&quot; (SELECT * FROM &quot;</span> <span class="o">+</span> <span class="n">tablename</span> <span class="o">+</span> <span class="s2">&quot;_qgis WHERE &quot;</span>
                     <span class="c1"># withsql += &quot; (SELECT * FROM &quot; + tablename + &quot;_qgis WHERE &quot;</span>
                     <span class="n">withsql</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dateVersionConstraintSQL</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
                     <span class="n">withsql</span> <span class="o">+=</span> <span class="s2">&quot;), &quot;</span>
@@ -1942,8 +1991,8 @@
                 <span class="n">indexparenthesis</span> <span class="o">+=</span> <span class="n">sqlword</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;(&#39;</span><span class="p">)</span>
                 <span class="n">indexparenthesis</span> <span class="o">+=</span> <span class="o">-</span> <span class="n">sqlword</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;)&#39;</span><span class="p">)</span>
                 <span class="n">listres</span><span class="p">[</span><span class="n">actualsqlword</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">sqlword</span>
-            <span class="k">elif</span>  <span class="n">sqlword</span> <span class="ow">in</span> <span class="n">specwords</span> <span class="ow">and</span> <span class="n">indexparenthesis</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">:</span>
-                <span class="n">actualsqlword</span> <span class="o">=</span> <span class="n">sqlword</span>
+            <span class="k">elif</span>  <span class="n">sqlword</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">in</span> <span class="n">specwords</span> <span class="ow">and</span> <span class="n">indexparenthesis</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">:</span>
+                <span class="n">actualsqlword</span> <span class="o">=</span> <span class="n">sqlword</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
                 <span class="n">listres</span><span class="p">[</span><span class="n">actualsqlword</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">actualsqlword</span><span class="p">:</span>
@@ -2216,10 +2265,14 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">dbasetable</span><span class="p">[</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">field</span><span class="p">][</span><span class="s1">&#39;Cst&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">txt</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">dbasetable</span><span class="p">[</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">field</span><span class="p">][</span><span class="s1">&#39;Cst&#39;</span><span class="p">][</span><span class="n">index</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
-        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">qgsiface</span> <span class="ow">is</span> <span class="kc">None</span> <span class="p">:</span>
+        <span class="k">except</span> <span class="ne">ValueError</span>  <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="kc">False</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">qgsiface</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;error </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">e</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span><span class="n">field</span> <span class="p">,</span> <span class="nb">str</span><span class="p">([</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">dbasetable</span><span class="p">[</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">field</span><span class="p">][</span><span class="s1">&#39;Cst&#39;</span><span class="p">]]</span> <span class="p">))</span>
-            <span class="k">return</span> <span class="kc">None</span></div>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="kc">False</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">qgsiface</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;error </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">e</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span><span class="n">field</span> <span class="p">,</span> <span class="s1">&#39;No contraint&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">txt</span></div>
 
 <div class="viewcode-block" id="DBaseParser.getConstraintTextFromRawValue"><a class="viewcode-back" href="../../../API.html#Lamia.main.DBaseParser.DBaseParser.getConstraintTextFromRawValue">[docs]</a>    <span class="k">def</span> <span class="nf">getConstraintTextFromRawValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">rawvalue</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -2564,15 +2617,17 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="nb">tuple</span><span class="p">([</span><span class="kc">None</span><span class="p">]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">fields</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">createNewObjet</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">createNewObjet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">docommit</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="n">datecreation</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">))</span>
         <span class="n">lastobjetid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getLastId</span><span class="p">(</span><span class="s1">&#39;Objet&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;INSERT INTO Objet (id_objet, lpk_revision_begin, datetimecreation, datetimemodification ) &quot;</span>
         <span class="n">sql</span> <span class="o">+=</span> <span class="s2">&quot;VALUES(&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">lastobjetid</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maxrevision</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;,&#39;&quot;</span> <span class="o">+</span> <span class="n">datecreation</span> <span class="o">+</span> <span class="s2">&quot;&#39;,&#39;&quot;</span> <span class="o">+</span> <span class="n">datecreation</span> <span class="o">+</span> <span class="s2">&quot;&#39; )&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="n">docommit</span><span class="o">=</span><span class="n">docommit</span><span class="p">)</span>
         <span class="c1">#self.dbase.commit()</span>
         <span class="n">pkobjet</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getLastRowId</span><span class="p">(</span><span class="s1">&#39;Objet&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">pkobjet</span>
+
+
 
     <span class="k">def</span> <span class="nf">createNewLineVersion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dbname</span><span class="p">,</span> <span class="n">rawpk</span><span class="p">):</span>
 
@@ -2719,7 +2774,7 @@
 <span class="sd">        :return: l&#39;id max</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT MAX(id_&quot;</span> <span class="o">+</span> <span class="n">table</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;) FROM &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
-        <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="n">docommit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">query</span><span class="p">]</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span> <span class="ow">and</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span>  <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -2749,7 +2804,7 @@
         <span class="nb">id</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetype</span> <span class="o">==</span> <span class="s1">&#39;spatialite&#39;</span><span class="p">:</span>
             <span class="n">sql</span> <span class="o">=</span> <span class="s1">&#39;SELECT last_insert_rowid()&#39;</span>
-            <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="n">docommit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             <span class="nb">id</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">query</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetype</span> <span class="o">==</span> <span class="s1">&#39;postgis&#39;</span><span class="p">:</span>
             <span class="n">tablelower</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
@@ -2757,7 +2812,7 @@
                 <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT currval(&#39;&quot;</span> <span class="o">+</span> <span class="n">tablelower</span> <span class="o">+</span> <span class="s2">&quot;_id_&quot;</span> <span class="o">+</span> <span class="n">tablelower</span> <span class="o">+</span> <span class="s2">&quot;_seq&#39;);&quot;</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT currval(&#39;&quot;</span> <span class="o">+</span> <span class="n">tablelower</span> <span class="o">+</span> <span class="s2">&quot;_pk_&quot;</span> <span class="o">+</span> <span class="n">tablelower</span> <span class="o">+</span> <span class="s2">&quot;_seq&#39;);&quot;</span>
-            <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="n">docommit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             <span class="nb">id</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">query</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">return</span> <span class="nb">id</span></div>
 
@@ -3065,7 +3120,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">normalMessage</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="s2">&quot;Mise à jour de la base de données...&quot;</span><span class="p">)</span>
 
-        <span class="n">debug</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">debug</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;DBASE need an update&#39;</span><span class="p">)</span>
 
@@ -3351,7 +3406,6 @@
 
 
                     <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39; ******************* </span><span class="si">%s</span><span class="s1"> *********  &#39;</span><span class="p">,</span> <span class="n">dbname</span><span class="p">)</span>
-                    <span class="c1"># self.normalMessage.emit(&quot;Chargement de &quot; + str(dbname))</span>
 
                     <span class="c1"># initialisation des variables génerales</span>
                     <span class="n">importdictid</span><span class="p">[</span><span class="n">dbname</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span> <span class="o">=</span> <span class="p">{}</span>
@@ -3410,6 +3464,7 @@
                     <span class="n">importid</span> <span class="o">=</span> <span class="kc">None</span>             <span class="c1"># the id in the table lines iteration</span>
                     <span class="n">parenttable</span> <span class="o">=</span> <span class="kc">None</span>          <span class="c1"># the parent table of actual table - defined as lpk_(parenttable)</span>
                     <span class="n">indexlkparenttable</span> <span class="o">=</span> <span class="kc">None</span>   <span class="c1"># the index of parent table in pkidfields</span>
+
                     <span class="k">if</span> <span class="n">typeimport</span> <span class="o">==</span> <span class="s1">&#39;import_terrain&#39;</span><span class="p">:</span>
                         <span class="c1"># get resultsid and indexidfield</span>
                         <span class="k">if</span> <span class="s2">&quot;id_&quot;</span> <span class="o">+</span> <span class="n">dbname</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">pkidfields</span><span class="p">:</span>
@@ -3729,6 +3784,9 @@
         <span class="n">importpkobjetsql</span> <span class="o">=</span> <span class="n">dbaseparserfrom</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
 
 
+
+
+
         <span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
             <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot; SELECT pk_objet FROM Objet WHERE id_objet = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">conflictobjetid</span><span class="p">)</span>
             <span class="n">sql</span> <span class="o">+=</span> <span class="s2">&quot; AND lpk_revision_end IS NULL&quot;</span>
@@ -3768,16 +3826,21 @@
             <span class="k">if</span> <span class="n">revendimport</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">revendmain</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>     <span class="c1"># main and import has been deleted - non conflict</span>
                 <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
 
+            <span class="c1"># construct column names (usefull if both tables are not in same order)</span>
+            <span class="c1"># allfields = &#39;, &#39;.join(self.getAllFields(mainconflictdbname))</span>
+            <span class="n">allfieldslist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getAllFields</span><span class="p">(</span><span class="n">mainconflictdbname</span><span class="p">)</span>
+
 
             <span class="c1"># values from child table</span>
-            <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM &quot;</span> <span class="o">+</span> <span class="n">mainconflictdbname</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;_qgis&quot;</span>
+            <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT &quot;</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">allfieldslist</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; FROM &quot;</span> <span class="o">+</span> <span class="n">mainconflictdbname</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;_qgis&quot;</span>
             <span class="n">sql</span> <span class="o">+=</span> <span class="s2">&quot; WHERE pk_&quot;</span> <span class="o">+</span> <span class="n">mainconflictdbname</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot; = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">mainconflictpk</span><span class="p">)</span>
             <span class="n">resmain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM &quot;</span> <span class="o">+</span> <span class="n">importconflictdbname</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;_qgis&quot;</span>
+            <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT &quot;</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">allfieldslist</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; FROM &quot;</span> <span class="o">+</span> <span class="n">importconflictdbname</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;_qgis&quot;</span>
             <span class="n">sql</span> <span class="o">+=</span> <span class="s2">&quot; WHERE pk_&quot;</span> <span class="o">+</span> <span class="n">importconflictdbname</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot; = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">importconflictpk</span><span class="p">)</span>
             <span class="n">resimport</span> <span class="o">=</span> <span class="n">dbaseparserfrom</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
-            <span class="n">fields</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getColumns</span><span class="p">(</span><span class="n">mainconflictdbname</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;_qgis&quot;</span><span class="p">)</span>
+            <span class="c1"># fields = self.getColumns(mainconflictdbname.lower() + &quot;_qgis&quot;)</span>
+            <span class="n">fields</span> <span class="o">=</span> <span class="n">allfieldslist</span>
 
             <span class="c1"># get geom</span>
             <span class="n">resgeom1</span><span class="p">,</span> <span class="n">resgeom2</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
@@ -3813,15 +3876,19 @@
             <span class="n">mainconflictdbname</span><span class="p">,</span> <span class="n">mainconflictpk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">searchChildfeatureFromPkObjet</span><span class="p">(</span><span class="n">dbaseparserfrom</span><span class="p">,</span> <span class="n">mainpkobjet</span><span class="p">)</span>
             <span class="n">importconflictdbname</span><span class="p">,</span> <span class="n">importconflictpk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">searchChildfeatureFromPkObjet</span><span class="p">(</span><span class="n">dbaseparserfrom</span><span class="p">,</span> <span class="n">importpkobjet</span><span class="p">)</span>
 
+            <span class="c1"># construct column names (usefull if both tables are not in same order)</span>
+            <span class="n">allfieldslist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getAllFields</span><span class="p">(</span><span class="n">mainconflictdbname</span><span class="p">)</span>
+
             <span class="c1"># values from child table</span>
-            <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM &quot;</span> <span class="o">+</span> <span class="n">mainconflictdbname</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;_qgis&quot;</span>
+            <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT &quot;</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">allfieldslist</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; FROM &quot;</span> <span class="o">+</span> <span class="n">mainconflictdbname</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;_qgis&quot;</span>
             <span class="n">sql</span> <span class="o">+=</span> <span class="s2">&quot; WHERE pk_&quot;</span> <span class="o">+</span> <span class="n">mainconflictdbname</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot; = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">mainconflictpk</span><span class="p">)</span>
             <span class="n">resmain</span> <span class="o">=</span> <span class="n">dbaseparserfrom</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM &quot;</span> <span class="o">+</span> <span class="n">importconflictdbname</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;_qgis&quot;</span>
+            <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT &quot;</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">allfieldslist</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; FROM &quot;</span> <span class="o">+</span> <span class="n">importconflictdbname</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;_qgis&quot;</span>
             <span class="n">sql</span> <span class="o">+=</span> <span class="s2">&quot; WHERE pk_&quot;</span> <span class="o">+</span> <span class="n">importconflictdbname</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot; = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">importconflictpk</span><span class="p">)</span>
             <span class="n">resimport</span> <span class="o">=</span> <span class="n">dbaseparserfrom</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
-            <span class="n">fields</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getColumns</span><span class="p">(</span><span class="n">mainconflictdbname</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;_qgis&quot;</span><span class="p">)</span>
+            <span class="c1"># fields = self.getColumns(mainconflictdbname.lower() + &quot;_qgis&quot;)</span>
+            <span class="n">fields</span> <span class="o">=</span> <span class="n">allfieldslist</span>
 
             <span class="c1"># get geom</span>
             <span class="n">resgeom1</span><span class="p">,</span> <span class="n">resgeom2</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
@@ -3840,7 +3907,10 @@
         <span class="n">conflict1values</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># conflict value in main table</span>
         <span class="n">conflict2values</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># conflict value in import table</span>
         <span class="n">conflictfields</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># conflict fields in import table</span>
+
+
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">restemp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">resmain</span><span class="p">):</span>
+
             <span class="k">if</span> <span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;geom&#39;</span><span class="p">,</span> <span class="s1">&#39;datetimecreation&#39;</span><span class="p">,</span> <span class="s1">&#39;datetimemodification&#39;</span><span class="p">]</span>
                     <span class="ow">and</span> <span class="n">fields</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;pk_&quot;</span> <span class="ow">and</span> <span class="n">fields</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;lpk_&quot;</span>
                     <span class="ow">and</span> <span class="n">restemp</span> <span class="o">!=</span> <span class="n">resimport</span><span class="p">[</span><span class="n">i</span><span class="p">]):</span>
@@ -3862,6 +3932,16 @@
             <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="n">conflictfields</span><span class="p">,</span> <span class="n">conflict1values</span><span class="p">,</span> <span class="n">conflict2values</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span></div>
+
+
+    <span class="k">def</span> <span class="nf">getAllFields</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dbasetablename</span><span class="p">):</span>
+        <span class="n">parenttables</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getParentTable</span><span class="p">(</span><span class="n">dbasetablename</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">dbasetablename</span><span class="p">]</span>
+        <span class="n">fieldlist</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">tablename</span> <span class="ow">in</span> <span class="n">parenttables</span><span class="p">:</span>
+            <span class="n">fieldlist</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;fields&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">fieldlist</span>
+
+
 
 
 <div class="viewcode-block" id="DBaseParser.resolveConflict"><a class="viewcode-back" href="../../../API.html#Lamia.main.DBaseParser.DBaseParser.resolveConflict">[docs]</a>    <span class="k">def</span> <span class="nf">resolveConflict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dbaseparserfrom</span><span class="p">,</span><span class="n">conflictobjetids</span> <span class="p">):</span>
@@ -4047,7 +4127,6 @@
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT &quot;</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">noncriticalfield</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; FROM &quot;</span> <span class="o">+</span> <span class="n">dbname</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
-
                     <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
 
                     <span class="k">if</span> <span class="s1">&#39;ST_AsText(ST_Transform(geom,&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">crsnumber</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;))&#39;</span> <span class="ow">in</span> <span class="n">noncriticalfield</span> <span class="p">:</span>
@@ -4064,7 +4143,8 @@
                             <span class="k">for</span> <span class="n">l</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
                                 <span class="k">if</span> <span class="n">noncriticalfield</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;lpk_revision_begin&#39;</span><span class="p">:</span>
                                     <span class="n">restemp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-                                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span>  <span class="p">(</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">unicode</span><span class="p">)</span> <span class="ow">and</span> <span class="n">noncriticalfield</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;geom&#39;</span><span class="p">)</span> <span class="p">:</span>
+                                    <span class="c1"># elif isinstance(res, str) or  ( isinstance(res, unicode) and noncriticalfield[l] != &#39;geom&#39;) :</span>
+                                <span class="k">elif</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">unicode</span><span class="p">))</span> <span class="ow">and</span> <span class="n">noncriticalfield</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;geom&#39;</span><span class="p">:</span>
                                     <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">major</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
                                         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">unicode</span><span class="p">):</span>
                                             <span class="n">restemp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span> <span class="o">+</span> <span class="n">res</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span><span class="s2">&quot;&#39;&#39;&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;&#39;&quot;</span><span class="p">)</span>
@@ -4284,7 +4364,9 @@
                         <span class="k">else</span><span class="p">:</span>
                             <span class="n">fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
                             <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span>  <span class="n">listofrawvalues</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>    <span class="p">))</span>
+
                             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;error lid_&#39;</span> <span class="p">)</span>
+                            <span class="c1"># print(dictid[field.split(&#39;_&#39;)[1]].keys())</span>
                             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;base : &#39;</span> <span class="p">,</span><span class="n">tablename</span><span class="p">,</span> <span class="s1">&#39; - column : &#39;</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="s1">&#39; - lid value : &#39;</span><span class="p">,</span><span class="n">listofrawvalues</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>  <span class="p">)</span>
 
                 <span class="k">else</span><span class="p">:</span>

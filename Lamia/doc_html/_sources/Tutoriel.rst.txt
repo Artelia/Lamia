@@ -64,7 +64,7 @@ La base de données
 ------------------
 
 
-|10000000000006130000032E7295F17AD75EE661_jpg|
+|10000000000006130000032E84898FD094C51C15_jpg|
 
 L'organisation générale
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -106,26 +106,26 @@ Créer sa première base de données
 
 Au lancement de Qgis, la première étape est donc de démarrer LAMIA en cliquant sur l’icône du plugin.
 
-|10000000000003340000018BE3506783BA2E5C50_png|
+|10000000000003340000018B760F28229874C417_png|
 
 Un nouveau panneau va s’ouvrir sur la droite de l’écran, qui contiendra le plugin.
 
 
-|10000000000003090000019ED08ABF9073F2F6DE_png|
+|10000000000003090000019ED34C0AA82D11E213_png|
 
 
 Vous êtes ensuite prêt à créer votre première base de données. Pour cela, rendez-vous dans le menu FICHIERS/NOUVELLE BASE de LAMIA.
 
 Une nouvelle boite de dialogue apparait alors.
 
-|10000000000001DF00000197D5AA65D7A1CCA972_png|
+|10000000000001DF00000197C36F8704C29C5671_png|
 
 
 Ici, sélectionnez le type de base de données (par défaut, choisissez une base en spatialite, qui sera créée en local sur votre poste ou votre tablette) et le type de données à rentrer dans la base. Ici nous étudions une base de données Digues.
 
 LAMIA vous demande alors de lui préciser le système de coordonnées qu’elle doit utiliser.
 
-|10000000000002F20000024239C4A4DC26F91B23_png|
+|10000000000002F20000024294FEAEFA32FE0E79_png|
 
 Nous vous conseillons d’utiliser un système de coordonnées classique. Dans le cas contraire, Qgis peut ne pas réussir à définir proprement les géométries et ne pas être capable de récupérer les informations que vous allez rentrer. Le Lambert 93 ici utilisé est une référence fiable (EPSG :2154)
 
@@ -145,12 +145,12 @@ Choix de la police d’interface
 
 Dès maintenant, nous vous conseillons d’augmenter la police de Qgis. Pour cela, rendez-vous dans le menu PREFERENCES de Qgis.
 
-|100000000000039D000000A6F147B97DB03026E5_png|
+|100000000000039D000000A6145CCA0FAADAA5F3_png|
 
 Dans ce menu, sélectionner la taille de la police et choisissez une valeur qui vous convient. Nous vous conseillons de commencer par tester une taille 13.
 
 
-|100000000000039E000001FAA679440F06566E54_png|
+|100000000000039E000001FA9F2022D1734C060D_png|
 
 Vous pouvez également augmenter la taille des icônes pour la faire passer à 36 ou 48.
 
@@ -173,21 +173,21 @@ En cas d’utilisation d’un GPS, et après l’avoir correctement configuré (
 1. aller dans Préférences/Hauteur de perche et saisir la hauteur de la perche GPS.
 2. Dans Qgis, aller dans le menu Vue/Panneau et cliquer sur information GPS. Un panneau apparaîtra permettant de connecter Qgis au GPS. Clicker sur connecter. Le petit rectangle grisé en haut à droite passe au vert lorsque la conenction avec le GPS est établie.
 
-|10000000000002A70000010F5757B31CC403A08F_png|
+|10000000000002A70000010F4851A8DB4C77CE1D_png|
 
 3. Dans les menus Lamia, aller dans Préférences/se connecter au GPS pour connecter Lamia au Gps reconnu par Qgis.
 
 Si le GPS est opérationnel, en bas de la fentre Lamia GPS connecté apparaît en vert. Il redevient grisé si Lamia perd le signal GPS.
 
 
-|10000000000002A900000057449D4E7F9BFCA2E8_png|
+|10000000000002A9000000579F3B9001CBC63EF0_png|
 
 Découverte de l’interface
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Cette interface peut se décomposer en plusieurs parties :
 
-|10000000000004050000022A343E695E57ABF43E_png|
+|10000000000004050000022A0300C3D5F0472CA5_png|
 
 1. Cartographie QGIS
 Ce cadre contient l’ensemble des informations géographiques et l’interface SIG classique. Vous pouvez y traiter vos couches Qgis comme dans n’importe quel SIG et y placer directement vos géométries LAMIA par simple clic.
@@ -259,7 +259,7 @@ La logique générale est toujours la même, et est expliquée ici.
 1. Tout d’abord, on choisit le type d’élément à renseigner, p.ex ici un équipement 
 
 
-|10000000000005AA000002B96FD580B369B4704F_png|
+|10000000000005AA000002B9BF7241689B42235F_png|
 
 Deux onglets apparaissent dans la fenêtre de droite : un onglet « Principal » et « Tables enfants ».
 
@@ -278,7 +278,7 @@ Il faut sélectionner l’onglet « Principal ».
 
 On va d’abord créer un nouvel objet. Pour cela on utilise la barre d’outil suivante :
 
-|10000000000002E7000000D8A32F87A49BEDA50A_png|
+|10000000000002E7000000D891501C02957EE6F3_png|
 
 *    **Pour créer un nouvel objet, cliquer sur le 4 (+).** 
 
@@ -315,7 +315,7 @@ On va d’abord créer un nouvel objet. Pour cela on utilise la barre d’outil 
 
 3. Ensuite, on va saisir la localisation de l’élément principal à l’aide du panneau en dessous :
 
-|100000000000018E0000008D7AFC76658FE30722_png|
+|100000000000018E0000008D816B8C367A0FD4F0_png|
 
 *   les boutons 1, 2 et 3 servent à créer respectivement un point, une ligne ou un polygone
 
@@ -340,12 +340,12 @@ On va d’abord créer un nouvel objet. Pour cela on utilise la barre d’outil 
 
 5. On sauvegarde !!!
 
-|100000000000003C00000018C4E3A667918442B7_png|
+|100000000000003C000000181F946EC676A9E4DF_png|
 
 
 6. On va dans l’onglet « tables enfants »
 
-|10000000000005A5000002B7A9E8E70FEC3288FE_png|
+|10000000000005A5000002B7B782A2ED1192CAF2_png|
 7. Et on recommence la création/la saisie de la géométrie/la saisie du formulaire/l’enregistrement comme pour l’élément principal.
 
 
@@ -391,7 +391,7 @@ Création du fichier rapport_toto.qpt
 
 
 
-*   |100000000000001F0000001D9D58256347DB07D0_png|Renseigner la zone de texte
+*   |100000000000001F0000001D608AD7BDFD792DA0_png|Renseigner la zone de texte
 
 
 
@@ -403,7 +403,7 @@ Par exemple, pour avoir le diamètre nominal d’une canalisation, faire #lamia.
 
 Ex :
 
-|1000000000000179000000FACF294BEFEC1754C9_png|
+|1000000000000179000000FA9AFC6676D160909E_png|
 
 Cette zone de texte sera remplacée par les champs voulus lors de l’impression du rapport.
 
@@ -414,11 +414,11 @@ NB : le nom des tables et des champs se trouvent dans les fichiers excel dans L
 
 il convient de créer une image
 
-|100000000000001900000019D05F337B750E9A78_png|
+|1000000000000019000000193E5468FD53954B67_png|
 
 Ensuite, dans ses propriétés, nous lui donnerons un identifiant unque qui nous permettra de configurer ce qui apparaît dans l’image 
 
-|100000000000017B0000019885D965BB4907FA31_png|
+|100000000000017B000001982BA227EF19B5EEDC_png|
 
 
 Création du fichier rapport_toto.txt
@@ -500,7 +500,7 @@ Ex :
 
 photo1;Equipement_now.photo1
 
-ici , l’image avec pour identifiant « photo1 » sera rempli avec la première photo liée de l’équipement en cours de parcours par l’atals.
+ici , l’image avec pour identifiant « photo1 » sera rempli avec la première photo liée de l’équipement en cours de parcours par l’atlas.
 
 *   ###childprint
 
@@ -550,97 +550,97 @@ Exemple complet de fichier de configuration :
     Equipementhydraulique_annexe;    Equipement_now.lid_descriptionsystem_1 ; 
 
 
-.. |10000000000006130000032E7295F17AD75EE661_jpg| image:: images/10000000000006130000032E7295F17AD75EE661.jpg
+.. |10000000000006130000032E84898FD094C51C15_jpg| image:: images/10000000000006130000032E84898FD094C51C15.jpg
     :width: 17cm
     :height: 8.899cm
 
 
-.. |10000000000003340000018BE3506783BA2E5C50_png| image:: images/10000000000003340000018BE3506783BA2E5C50.png
+.. |10000000000003340000018B760F28229874C417_png| image:: images/10000000000003340000018B760F28229874C417.png
     :width: 13.36cm
     :height: 6.436cm
 
 
-.. |10000000000003090000019ED08ABF9073F2F6DE_png| image:: images/10000000000003090000019ED08ABF9073F2F6DE.png
+.. |10000000000003090000019ED34C0AA82D11E213_png| image:: images/10000000000003090000019ED34C0AA82D11E213.png
     :width: 14.785cm
     :height: 7.878cm
 
 
-.. |10000000000001DF00000197D5AA65D7A1CCA972_png| image:: images/10000000000001DF00000197D5AA65D7A1CCA972.png
+.. |10000000000001DF00000197C36F8704C29C5671_png| image:: images/10000000000001DF00000197C36F8704C29C5671.png
     :width: 7.246cm
     :height: 6.158cm
 
 
-.. |10000000000002F20000024239C4A4DC26F91B23_png| image:: images/10000000000002F20000024239C4A4DC26F91B23.png
+.. |10000000000002F20000024294FEAEFA32FE0E79_png| image:: images/10000000000002F20000024294FEAEFA32FE0E79.png
     :width: 9.088cm
     :height: 6.966cm
 
 
-.. |100000000000039D000000A6F147B97DB03026E5_png| image:: images/100000000000039D000000A6F147B97DB03026E5.png
+.. |100000000000039D000000A6145CCA0FAADAA5F3_png| image:: images/100000000000039D000000A6145CCA0FAADAA5F3.png
     :width: 17cm
     :height: 3.05cm
 
 
-.. |100000000000039E000001FAA679440F06566E54_png| image:: images/100000000000039E000001FAA679440F06566E54.png
+.. |100000000000039E000001FA9F2022D1734C060D_png| image:: images/100000000000039E000001FA9F2022D1734C060D.png
     :width: 13.568cm
     :height: 7.414cm
 
 
-.. |10000000000002A70000010F5757B31CC403A08F_png| image:: images/10000000000002A70000010F5757B31CC403A08F.png
+.. |10000000000002A70000010F4851A8DB4C77CE1D_png| image:: images/10000000000002A70000010F4851A8DB4C77CE1D.png
     :width: 11.848cm
     :height: 4.729cm
 
 
-.. |10000000000002A900000057449D4E7F9BFCA2E8_png| image:: images/10000000000002A900000057449D4E7F9BFCA2E8.png
+.. |10000000000002A9000000579F3B9001CBC63EF0_png| image:: images/10000000000002A9000000579F3B9001CBC63EF0.png
     :width: 17cm
     :height: 2.171cm
 
 
-.. |10000000000004050000022A343E695E57ABF43E_png| image:: images/10000000000004050000022A343E695E57ABF43E.png
+.. |10000000000004050000022A0300C3D5F0472CA5_png| image:: images/10000000000004050000022A0300C3D5F0472CA5.png
     :width: 17cm
     :height: 9.151cm
 
 
-.. |10000000000005AA000002B96FD580B369B4704F_png| image:: images/10000000000005AA000002B96FD580B369B4704F.png
+.. |10000000000005AA000002B9BF7241689B42235F_png| image:: images/10000000000005AA000002B9BF7241689B42235F.png
     :width: 14.64cm
     :height: 7.036cm
 
 
-.. |10000000000002E7000000D8A32F87A49BEDA50A_png| image:: images/10000000000002E7000000D8A32F87A49BEDA50A.png
+.. |10000000000002E7000000D891501C02957EE6F3_png| image:: images/10000000000002E7000000D891501C02957EE6F3.png
     :width: 15.208cm
     :height: 4.42cm
 
 
-.. |100000000000018E0000008D7AFC76658FE30722_png| image:: images/100000000000018E0000008D7AFC76658FE30722.png
+.. |100000000000018E0000008D816B8C367A0FD4F0_png| image:: images/100000000000018E0000008D816B8C367A0FD4F0.png
     :width: 8.243cm
     :height: 2.921cm
 
 
-.. |100000000000003C00000018C4E3A667918442B7_png| image:: images/100000000000003C00000018C4E3A667918442B7.png
+.. |100000000000003C000000181F946EC676A9E4DF_png| image:: images/100000000000003C000000181F946EC676A9E4DF.png
     :width: 1.588cm
     :height: 0.635cm
 
 
-.. |10000000000005A5000002B7A9E8E70FEC3288FE_png| image:: images/10000000000005A5000002B7A9E8E70FEC3288FE.png
+.. |10000000000005A5000002B7B782A2ED1192CAF2_png| image:: images/10000000000005A5000002B7B782A2ED1192CAF2.png
     :width: 17cm
     :height: 8.176cm
 
 
-.. |100000000000001F0000001D9D58256347DB07D0_png| image:: images/100000000000001F0000001D9D58256347DB07D0.png
+.. |100000000000001F0000001D608AD7BDFD792DA0_png| image:: images/100000000000001F0000001D608AD7BDFD792DA0.png
     :width: 0.82cm
     :height: 0.767cm
 
 
-.. |1000000000000179000000FACF294BEFEC1754C9_png| image:: images/1000000000000179000000FACF294BEFEC1754C9.png
+.. |1000000000000179000000FA9AFC6676D160909E_png| image:: images/1000000000000179000000FA9AFC6676D160909E.png
     :width: 6.114cm
     :height: 4.053cm
 
 
-.. |100000000000001900000019D05F337B750E9A78_png| image:: images/100000000000001900000019D05F337B750E9A78.png
+.. |1000000000000019000000193E5468FD53954B67_png| image:: images/1000000000000019000000193E5468FD53954B67.png
     :width: 0.661cm
     :height: 0.661cm
 
 
-.. |100000000000017B0000019885D965BB4907FA31_png| image:: images/100000000000017B0000019885D965BB4907FA31.png
+.. |100000000000017B000001982BA227EF19B5EEDC_png| image:: images/100000000000017B000001982BA227EF19B5EEDC.png
     :width: 6.175cm
     :height: 6.648cm
 

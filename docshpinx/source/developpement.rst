@@ -20,7 +20,7 @@ Le code repose principalement sur trois classes.
 
 L’activité lors de l’ouverture de la base de données est schématisée ci-dessous :
 
-|100000000000035B0000022573534E11B79297C1_png|
+|100000000000035B00000225B974C2810960DA56_png|
  *InspectiondigueWindowWidget*  est créé lors de l’ouverture de Lamia. Au chargement/création de la base de données, la classe DBaseParser est créée en variable  *d’InspectiondigueWindowWidget*  et cette classe se charge de la création et de la lecture de la base de données.
 
 Ensuite, * InspectiondigueWindowWidget.DBaseLoaded*  charge l’ensemble des widgets (tous héritant de AbstractLamiaTool) apparaissant dans l’écran en bas à droite du  *InspectiondigueWindowWidget* .
@@ -277,9 +277,35 @@ Afin de se faciliter la vie , il faut lancer pycharm avec le script suivant à m
 Configuration de PyCharm
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
+Installation sans gihub intéré à pycharm
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 Créer un nouveau projet. Le chemin du projet doit pointer sur un répertoire contenant le clone github de `Lamia <https://github.com/Artelia/Lamia>`_. Ainsi, il sera créé un répertoire (Github p.ex), contenant un fichier __init__.py vide, et contenant un sous répertoire Lamia contenant le clone de github. 
 Choisir l’interpréteur python en allant dans File/settings/Project/project interpreter et créer un interpreteur en pointant sur le PYTHONHOME défini dans le .bat de lancement de PyCharm.
 
+Installation avec gihub intégré à pycharm, derrière un proxy
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+Télécharger git et l’installer.
+
+Dans pycharm\settings\Appearance\sysem settings\http proxy renseigner l’adresse et la port du proxy
+
+Dans pycharm\settings\version control\git définir le répertoire où est installé git.exe
+
+Dans pycharm\settings\version control\github ajouter votre compte github
+
+Ensuite, créer un fichier .gitconfig dans votre répertoire « users » (c:/users/ « votre login ») avec dedans :
+
+.. code-block:: python
+
+    [user]
+                   name = toto
+                   email = toto.tata@mongroup.com
+    [http]
+                   proxy = http://XX.XX.XX.XX:XXXX
+
+Enfin, lancer pycharm, aller dans VCS\get from version control… et choisir le projet github à cloner et le répertoire de destination
 
 Test de la configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -291,6 +317,12 @@ Définir la variable path de la méthode testMethod vers un fichier lamia valide
 Lancer le script.
 
 Si tout se passe bien, Lamia se lance !!
+
+
+faire fonctionner pip
+~~~~~~~~~~~~~~~~~~~~~
+
+Si pip ne marche pas, ouvrir le fichier OSGeo4W64\\apps\\Python37\\Scripts\pip3.exe, rechercher « c : » et remplacer le path à la suite par le bon path.
 
 
 Cas pratique : création d’un nouveau module de post-traitement
@@ -337,7 +369,7 @@ Ce fichier aura la structure minimale suivante :
             uipath = os.path.join(os.path.dirname(__file__), 'test_module.ui')
             uic.loadUi(uipath, self)
 
-.. |100000000000035B0000022573534E11B79297C1_png| image:: images/100000000000035B0000022573534E11B79297C1.png
+.. |100000000000035B00000225B974C2810960DA56_png| image:: images/100000000000035B00000225B974C2810960DA56.png
     :width: 13.996cm
     :height: 8.945cm
 

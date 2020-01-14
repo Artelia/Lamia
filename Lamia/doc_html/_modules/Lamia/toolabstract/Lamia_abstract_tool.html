@@ -194,7 +194,7 @@
                                      <span class="n">QHeaderView</span><span class="p">,</span> <span class="n">QComboBox</span><span class="p">,</span> <span class="n">QSpinBox</span><span class="p">,</span><span class="n">QCheckBox</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QDateEdit</span><span class="p">,</span><span class="n">QDateTimeEdit</span><span class="p">,</span> <span class="n">QTextEdit</span><span class="p">,</span>
                                      <span class="n">QDoubleSpinBox</span><span class="p">,</span> <span class="n">QDialog</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QTreeWidget</span><span class="p">,</span> <span class="n">QLineEdit</span><span class="p">,</span> <span class="n">QCheckBox</span><span class="p">,</span>
                                      <span class="n">QLabel</span><span class="p">,</span> <span class="n">QMessageBox</span><span class="p">,</span> <span class="n">QTextBrowser</span><span class="p">,</span> <span class="n">QTableWidgetItem</span><span class="p">,</span><span class="n">QApplication</span><span class="p">,</span><span class="n">QToolButton</span><span class="p">,</span> <span class="n">QAbstractItemView</span><span class="p">)</span>
-<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">logging</span><span class="o">,</span> <span class="nn">pprint</span><span class="o">,</span> <span class="nn">shutil</span><span class="o">,</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">logging</span><span class="o">,</span> <span class="nn">pprint</span><span class="o">,</span> <span class="nn">shutil</span><span class="o">,</span> <span class="nn">datetime</span><span class="o">,</span> <span class="nn">time</span>
 
 <span class="kn">from</span> <span class="nn">..dialog.InspectionDigue_linkage</span> <span class="k">import</span> <span class="n">LinkageDialog</span>
 <span class="kn">from</span> <span class="nn">..maptool.mapTools</span> <span class="k">import</span> <span class="n">mapToolCapture</span>
@@ -246,6 +246,8 @@
     <span class="n">saveFeatureSignal</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">pyqtSignal</span><span class="p">()</span>
     <span class="n">currentFeatureChanged</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">pyqtSignal</span><span class="p">()</span>
     <span class="n">lamiageomChanged</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">pyqtSignal</span><span class="p">()</span>
+    <span class="n">postInitFeaturePropertiesActivated</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">pyqtSignal</span><span class="p">()</span>
+
     <span class="n">specialfieldui</span> <span class="o">=</span> <span class="p">[]</span>
 
 
@@ -393,7 +395,10 @@
 
         <span class="c1"># ***** QGis var</span>
         <span class="c1">#  qgis map canvas</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">windowdialog</span><span class="o">.</span><span class="n">canvas</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">windowdialog</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">windowdialog</span><span class="o">.</span><span class="n">canvas</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="c1"># layer shown in cnvas or not</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">layerdisplayed</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="c1"># capture mode</span>
@@ -408,11 +413,14 @@
         <span class="c1"># the dbasetable - loaded once a dbase is loaded in DBaseParser</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dbasetable</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="c1"># use for picking</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pointEmitter</span> <span class="o">=</span> <span class="n">qgis</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">QgsMapToolEmitPoint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="p">)</span>   <span class="c1"># maptoolused for picking</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pointEmitter</span> <span class="o">=</span> <span class="n">qgis</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">QgsMapToolEmitPoint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="p">)</span>   <span class="c1"># maptoolused for picking</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">currentmaptool</span> <span class="o">=</span> <span class="kc">None</span>      <span class="c1"># qgsmaptoolcapture used for capturing</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">visualmode</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
         <span class="c1">#for coping</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">deepcopy</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1">#for lid choosers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lamiawidgets</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="c1"># *******************************************************</span>
         <span class="c1"># raw connection</span>
@@ -433,6 +441,8 @@
 
             <span class="bp">self</span><span class="o">.</span><span class="n">pushButton_copy</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">copyAtributes</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pushButton_paste</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pasteAtributes</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">pushButton_impression</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">printWidget</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetablename</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">dbasetables</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">dbasetable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dbasetablename</span><span class="p">]</span>
@@ -651,9 +661,12 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">linkedtreewidget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">tempitem</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linkedtreewidget</span><span class="o">.</span><span class="n">currentItem</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">tempitem</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">windowdialog</span><span class="o">.</span><span class="n">MaintreeWidget</span><span class="o">.</span><span class="n">currentItem</span><span class="p">()</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">qtreewidgetitem</span><span class="p">:</span>
-                <span class="n">tempitemid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tempitem</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">onActivationRaw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">windowdialog</span><span class="o">.</span><span class="n">MaintreeWidget</span><span class="o">.</span><span class="n">currentItem</span><span class="p">())</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">comboBox_featurelist</span><span class="o">.</span><span class="n">setCurrentIndex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">comboBox_featurelist</span><span class="o">.</span><span class="n">findText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tempitemid</span><span class="p">)))</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">tempitemid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tempitem</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">onActivationRaw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">windowdialog</span><span class="o">.</span><span class="n">MaintreeWidget</span><span class="o">.</span><span class="n">currentItem</span><span class="p">())</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">comboBox_featurelist</span><span class="o">.</span><span class="n">setCurrentIndex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">comboBox_featurelist</span><span class="o">.</span><span class="n">findText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tempitemid</span><span class="p">)))</span>
+                <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="k">pass</span>
 
         <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
             <span class="n">QApplication</span><span class="o">.</span><span class="n">processEvents</span><span class="p">()</span>
@@ -1332,12 +1345,15 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
+
         <span class="n">debug</span> <span class="o">=</span> <span class="kc">False</span>
+
         <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Start </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">dbasetablename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="n">starttime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">loadFeaturesinTreeWdg</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">comboBox_featurelist</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">comboBox_featurelist</span><span class="o">.</span><span class="n">itemText</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">comboBox_featurelist</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">comboBox_featurelist</span><span class="o">.</span><span class="n">itemText</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;TOOLNAME&#39;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">comboBox_featurelist</span><span class="o">.</span><span class="n">currentIndexChanged</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1355,6 +1371,8 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;End </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetablename</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span><span class="n">starttime</span> <span class="p">))</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">currentFeatureChanged</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span></div>
 
 
@@ -1367,8 +1385,7 @@
 
         <span class="n">debug</span> <span class="o">=</span> <span class="kc">False</span>
 
-        <span class="k">if</span> <span class="n">debug</span> <span class="p">:</span>
-            <span class="n">timestart</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">getTimeNow</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="n">timestart</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">getTimeNow</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">disconnectIdsGui</span><span class="p">()</span>
 
@@ -1439,6 +1456,8 @@
                 <span class="c1"># print(parentqtreewdgitem.text(0))</span>
 
             <span class="n">parentqtreewdgitem</span><span class="o">.</span><span class="n">addChildren</span><span class="p">([</span><span class="n">elem</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">treefeatlist</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;Lamia&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;feat list </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">treefeatlist</span><span class="p">))</span>
 
         <span class="c1"># enable/disable le widget selon que des ids ont ete trouves</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">treefeatlist</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -1513,7 +1532,6 @@
 <span class="sd">        :return: ids : an array of the wanted ids, with eventualy more value defined in self.qtreewidgetfields</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-
         <span class="n">ids</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetablename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">strid</span> <span class="o">=</span> <span class="s1">&#39;id_&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetablename</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
@@ -1539,7 +1557,11 @@
                         <span class="c1">#linkagedest</span>
                         <span class="n">sqltemp</span> <span class="o">=</span> <span class="s2">&quot; SELECT &quot;</span> <span class="o">+</span> <span class="n">linkagetemp</span><span class="p">[</span><span class="s1">&#39;iddest&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; FROM &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">parentWidget</span><span class="o">.</span><span class="n">dbasetablename</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;_qgis&#39;</span>
                         <span class="n">sqltemp</span> <span class="o">+=</span> <span class="s2">&quot; WHERE pk_&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">parentWidget</span><span class="o">.</span><span class="n">dbasetablename</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot; = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parentWidget</span><span class="o">.</span><span class="n">currentFeaturePK</span><span class="p">)</span>
+
                         <span class="n">linkagedest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sqltemp</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="n">linkagedest</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="c1"># print(&#39;None find&#39;)</span>
+                            <span class="k">return</span> <span class="p">[]</span>
                         <span class="n">sql</span> <span class="o">+=</span> <span class="s2">&quot; AND &quot;</span> <span class="o">+</span> <span class="n">linkagetemp</span><span class="p">[</span><span class="s1">&#39;idsource&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">linkagedest</span><span class="p">)</span>
                         <span class="c1">#TODO versionning</span>
 
@@ -1577,6 +1599,7 @@
                             <span class="n">sqltemp</span> <span class="o">+=</span> <span class="s2">&quot; ELSE 1 END&quot;</span>
 
                         <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sqltemp</span><span class="p">)</span>
+
                         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">query</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">:</span>
                             <span class="n">idstemp</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">query</span><span class="p">]</span>
                             <span class="n">idssql</span> <span class="o">=</span> <span class="s1">&#39;(&#39;</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">idstemp</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span>
@@ -1682,6 +1705,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">comboBox_featurelist</span><span class="o">.</span><span class="n">removeItem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">comboBox_featurelist</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="c1"># ************** get id selected and link treewidget and combobox *********************************</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">QTreeWidgetItem</span><span class="p">)</span> <span class="ow">and</span> <span class="n">item</span><span class="o">.</span><span class="n">parent</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># print(&#39;featsel&#39;,item.parent().text(0),self.dbasetablename)</span>
@@ -1729,16 +1753,16 @@
                 <span class="k">return</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">itemisid</span><span class="p">:</span>        <span class="c1">#feature selected with combobox</span>
             <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;come from combobox&#39;</span><span class="p">)</span>
-            <span class="c1">#print(&#39;item&#39;, item, type(item))</span>
-            <span class="c1"># print(&#39;cc&#39;, item, &#39; _&#39; ,[self.comboBox_featurelist.itemText(i) for i in range(self.comboBox_featurelist.count())])</span>
-            <span class="k">if</span> <span class="n">item</span> <span class="o">&gt;=</span><span class="mi">0</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="n">item</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="nb">id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">comboBox_featurelist</span><span class="o">.</span><span class="n">itemText</span><span class="p">(</span><span class="n">item</span><span class="p">))</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">linkedtreewidget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">linkedtreewidget</span><span class="p">,</span> <span class="n">QTreeWidget</span><span class="p">)</span> <span class="p">:</span>
-                    <span class="c1"># id = int(itemtext)</span>
+
                     <span class="n">parentitem</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linkedtreewidget</span><span class="o">.</span><span class="n">findItems</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dbasetablename</span><span class="p">,</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">MatchExactly</span> <span class="o">|</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">MatchRecursive</span><span class="p">,</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
                     <span class="n">indexchild</span> <span class="o">=</span> <span class="p">[</span><span class="n">parentitem</span><span class="o">.</span><span class="n">child</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">parentitem</span><span class="o">.</span><span class="n">childCount</span><span class="p">())]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
                     <span class="n">itemtodisplay</span> <span class="o">=</span> <span class="n">parentitem</span><span class="o">.</span><span class="n">child</span><span class="p">(</span><span class="n">indexchild</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">linkedtreewidget</span><span class="o">.</span><span class="n">setCurrentItem</span><span class="p">(</span><span class="n">itemtodisplay</span><span class="p">)</span>
+
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">itemisid</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> <span class="ow">and</span> <span class="n">itemisid</span><span class="p">:</span>
             <span class="nb">id</span> <span class="o">=</span> <span class="n">item</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">itemisid</span><span class="p">,</span> <span class="n">QTreeWidgetItem</span><span class="p">):</span>
@@ -1903,6 +1927,10 @@
                                 <span class="k">else</span><span class="p">:</span>
                                     <span class="bp">self</span><span class="o">.</span><span class="n">tableWidget</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">itemindex</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">valuetoset</span><span class="p">))</span>
 
+        <span class="c1">#lidchoosers</span>
+        <span class="k">for</span> <span class="n">lidchooser</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lamiawidgets</span><span class="p">:</span>
+            <span class="n">lidchooser</span><span class="o">.</span><span class="n">initProperties</span><span class="p">()</span>
+
         <span class="c1"># current prestation case:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pushButton_savefeature</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
@@ -2031,10 +2059,12 @@
             <span class="n">timestart</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">getTimeNow</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">)</span>
 
+
         <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">freeze</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetable</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentFeature</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">currentFeature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">getLayerFeatureByPk</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dbasetablename</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentFeaturePK</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">beforesavingFeature</span> <span class="o">=</span> <span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsFeature</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">currentFeature</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">beforesavingFeaturePK</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentFeature</span><span class="o">.</span><span class="n">id</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
@@ -2064,7 +2094,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">currentFeature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">saveQGisFeature</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dbasetablename</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentFeature</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">currentFeaturePK</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentFeature</span><span class="o">.</span><span class="n">id</span><span class="p">()</span>
 
-            <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;saveQGisFeature done with geom  : </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">currentFeature</span><span class="o">.</span><span class="n">geometry</span><span class="p">()</span><span class="o">.</span><span class="n">exportToWkt</span><span class="p">())</span>
+
+            <span class="c1"># if debug: logging.getLogger(&quot;Lamia&quot;).debug(&#39;saveQGisFeature done with geom  : %s&#39;,self.currentFeature.geometry().exportToWkt())</span>
             <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;Lamia&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;time  </span><span class="si">%.3f</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">getTimeNow</span><span class="p">()</span>  <span class="o">-</span> <span class="n">timestart</span><span class="p">)</span>
 
             <span class="c1"># *************************</span>
@@ -2105,6 +2136,8 @@
                 <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;UPDATE Objet SET datetimemodification = &#39;&quot;</span> <span class="o">+</span> <span class="n">datemodif</span> <span class="o">+</span> <span class="s2">&quot;&#39;  WHERE pk_objet = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">pkobjet</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;;&quot;</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+
 
             <span class="c1"># then reload with saved attributes</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">savingnewfeature</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">savingnewfeatureVersion</span> <span class="p">:</span>
@@ -2431,6 +2464,19 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">tempgeometry</span> <span class="o">=</span> <span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsGeometry</span><span class="o">.</span><span class="n">fromPolylineXY</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">tempgeometry</span><span class="o">.</span><span class="n">asPoint</span><span class="p">(),</span>
                                                                         <span class="bp">self</span><span class="o">.</span><span class="n">tempgeometry</span><span class="o">.</span><span class="n">asPoint</span><span class="p">()])</span>
 
+        <span class="c1">#remove duplicate from linestring</span>
+        <span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tempgeometry</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetable</span><span class="p">[</span><span class="s1">&#39;geom&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span> <span class="s1">&#39;LINESTRING&#39;</span><span class="p">]</span> <span class="p">:</span>
+                <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">major</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                    <span class="n">geomaspoly</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tempgeometry</span><span class="o">.</span><span class="n">asPolyline</span><span class="p">()</span>
+                    <span class="n">geomfinal</span> <span class="o">=</span> <span class="p">[</span><span class="n">geomaspoly</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">areNodesEquals</span><span class="p">(</span><span class="n">geomaspoly</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">geomaspoly</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+                        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">geomaspoly</span><span class="p">)</span> <span class="o">-</span><span class="mi">1</span> <span class="p">):</span>
+                            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">areNodesEquals</span><span class="p">(</span><span class="n">geomaspoly</span><span class="p">[</span><span class="n">index</span><span class="p">],</span> <span class="n">geomaspoly</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="p">):</span>
+                                <span class="n">geomfinal</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">geomaspoly</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">tempgeometry</span> <span class="o">=</span> <span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsGeometry</span><span class="o">.</span><span class="n">fromPolylineXY</span><span class="p">(</span><span class="n">geomfinal</span><span class="p">)</span>
+
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetable</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentFeature</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -2440,7 +2486,14 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">currentFeature</span><span class="o">.</span><span class="n">setGeometry</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tempgeometry</span><span class="p">)</span>
                     <span class="k">pass</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="s1">&#39;geom&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetable</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">groupBox_geom</span><span class="o">.</span><span class="n">parent</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                    if (&#39;geom&#39; in self.dbasetable.keys()  </span>
+<span class="sd">                            and (self.groupBox_geom.parent() is not None or self.groupBox_geom.isVisible()</span>
+<span class="sd">                                or self.frame_editing.isVisible())):</span>
+<span class="sd">                    &quot;&quot;&quot;</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;geom&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetable</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+                            <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frame_editing</span><span class="o">.</span><span class="n">isVisible</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">groupBox_geom</span><span class="o">.</span><span class="n">isVisible</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">groupBox_geom</span><span class="o">.</span><span class="n">parent</span><span class="p">()</span> <span class="p">)</span>
+                            <span class="ow">and</span> <span class="p">((</span><span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s1">&#39;CHECKGEOM&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">CHECKGEOM</span> <span class="o">==</span> <span class="kc">True</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s1">&#39;CHECKGEOM&#39;</span><span class="p">))):</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">windowdialog</span><span class="o">.</span><span class="n">errorMessage</span><span class="p">(</span><span class="s1">&#39;Pas de geometrie selectionnee !!&#39;</span><span class="p">)</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">currentFeature</span> <span class="o">=</span> <span class="kc">None</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">freeze</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
@@ -2620,6 +2673,10 @@
                     <span class="n">sql</span> <span class="o">+=</span> <span class="s2">&quot; WHERE pk_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">tablename</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">tablepk</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
 
+            <span class="c1"># lidchoosers</span>
+            <span class="k">for</span> <span class="n">lidchooser</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lamiawidgets</span><span class="p">:</span>
+                <span class="n">lidchooser</span><span class="o">.</span><span class="n">saveProperties</span><span class="p">()</span>
+
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">visualmode</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">linkuserwdg</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -2739,6 +2796,9 @@
 <span class="sd">        :param showmessage: show a confirmation dialog or not</span>
 <span class="sd">        :return:</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentFeaturePK</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
 
         <span class="k">if</span> <span class="n">showmessage</span> <span class="p">:</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Supprimer completement l&#39;element (yes) ou l&#39;archiver (no) ? &quot;</span>
@@ -2846,7 +2906,7 @@
 <span class="sd">        Method called by add GPS Point Button</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gpsutil</span><span class="o">.</span><span class="n">currentpoint</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gpsutil</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">gpsutil</span><span class="o">.</span><span class="n">currentpoint</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">windowdialog</span><span class="o">.</span><span class="n">errorMessage</span><span class="p">(</span><span class="s1">&#39;GPS non connecte&#39;</span><span class="p">)</span>
             <span class="k">return</span>
 
@@ -3171,10 +3231,16 @@
             <span class="n">pk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPkFromId</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dbasetablename</span><span class="p">,</span><span class="n">fid</span><span class="p">)</span>
             <span class="n">feat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">getLayerFeatureByPk</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dbasetablename</span><span class="p">,</span><span class="n">pk</span> <span class="p">)</span>
         <span class="c1"># point2 = xform.transform(feat.geometry().centroid().asPoint())</span>
-        <span class="k">if</span> <span class="n">feat</span><span class="o">.</span><span class="n">geometry</span><span class="p">()</span><span class="o">.</span><span class="n">centroid</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="n">feat</span><span class="o">.</span><span class="n">geometry</span><span class="p">()</span><span class="o">.</span><span class="n">centroid</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">feat</span><span class="o">.</span><span class="n">geometry</span><span class="p">()</span><span class="o">.</span><span class="n">centroid</span><span class="p">()</span><span class="o">.</span><span class="n">isNull</span><span class="p">():</span>
             <span class="n">point2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">xform</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">feat</span><span class="o">.</span><span class="n">geometry</span><span class="p">()</span><span class="o">.</span><span class="n">centroid</span><span class="p">()</span><span class="o">.</span><span class="n">asPoint</span><span class="p">())</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">point2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">xform</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">feat</span><span class="o">.</span><span class="n">geometry</span><span class="p">()</span><span class="o">.</span><span class="n">vertexAt</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">)</span>
+            <span class="c1"># print(feat.geometry().asWkt())</span>
+            <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">major</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">point2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">xform</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">feat</span><span class="o">.</span><span class="n">geometry</span><span class="p">()</span><span class="o">.</span><span class="n">vertexAt</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">major</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="n">point2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">xform</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsPointXY</span><span class="p">(</span><span class="n">feat</span><span class="o">.</span><span class="n">geometry</span><span class="p">()</span><span class="o">.</span><span class="n">vertexAt</span><span class="p">(</span><span class="mi">0</span><span class="p">)))</span>
+                <span class="c1"># print(&#39;**&#39;, point2)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">setCenter</span><span class="p">(</span><span class="n">point2</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span></div>
 
@@ -3746,7 +3812,8 @@
         <span class="k">except</span><span class="p">:</span>
             <span class="k">pass</span>
 
-
+    <span class="k">def</span> <span class="nf">printWidget</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
 
     <span class="k">def</span> <span class="nf">tr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">QCoreApplication</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="s1">&#39;AbstractLamiaTool&#39;</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span></div>

@@ -95,8 +95,13 @@
 <li class="toctree-l3"><a class="reference internal" href="#install-de-qgis">Install de QGis</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#install-de-pycharm">Install de Pycharm</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#script-pour-demarrer-pycharm">Script pour démarrer PyCharm</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#configuration-de-pycharm">Configuration de PyCharm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configuration-de-pycharm">Configuration de PyCharm</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#installation-sans-gihub-intere-a-pycharm">Installation sans gihub intéré à pycharm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#installation-avec-gihub-integre-a-pycharm-derriere-un-proxy">Installation avec gihub intégré à pycharm, derrière un proxy</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#test-de-la-configuration">Test de la configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#faire-fonctionner-pip">faire fonctionner pip</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#cas-pratique-creation-dun-nouveau-module-de-post-traitement">Cas pratique : création d’un nouveau module de post-traitement</a></li>
@@ -179,7 +184,7 @@
 </ul>
 <p>L’activité lors de l’ouverture de la base de données est schématisée ci-dessous :</p>
 <dl class="simple">
-<dt><a class="reference internal" href="_images/100000000000035B0000022573534E11B79297C1.png"><img alt="100000000000035B0000022573534E11B79297C1_png" src="_images/100000000000035B0000022573534E11B79297C1.png" style="width: 13.996cm; height: 8.945cm;" /></a></dt><dd><p><em>InspectiondigueWindowWidget</em>  est créé lors de l’ouverture de Lamia. Au chargement/création de la base de données, la classe DBaseParser est créée en variable  <em>d’InspectiondigueWindowWidget</em>  et cette classe se charge de la création et de la lecture de la base de données.</p>
+<dt><a class="reference internal" href="_images/100000000000035B00000225B974C2810960DA56.png"><img alt="100000000000035B00000225B974C2810960DA56_png" src="_images/100000000000035B00000225B974C2810960DA56.png" style="width: 13.996cm; height: 8.945cm;" /></a></dt><dd><p><em>InspectiondigueWindowWidget</em>  est créé lors de l’ouverture de Lamia. Au chargement/création de la base de données, la classe DBaseParser est créée en variable  <em>d’InspectiondigueWindowWidget</em>  et cette classe se charge de la création et de la lecture de la base de données.</p>
 </dd>
 </dl>
 <p>Ensuite, * InspectiondigueWindowWidget.DBaseLoaded*  charge l’ensemble des widgets (tous héritant de AbstractLamiaTool) apparaissant dans l’écran en bas à droite du  <em>InspectiondigueWindowWidget</em> .</p>
@@ -453,8 +458,27 @@ start &quot;PyCharm aware of Quantum GIS&quot; /B &quot;C:\Program Files\JetBrai
 </div>
 <div class="section" id="configuration-de-pycharm">
 <h3>Configuration de PyCharm<a class="headerlink" href="#configuration-de-pycharm" title="Lien permanent vers ce titre">¶</a></h3>
+<div class="section" id="installation-sans-gihub-intere-a-pycharm">
+<h4>Installation sans gihub intéré à pycharm<a class="headerlink" href="#installation-sans-gihub-intere-a-pycharm" title="Lien permanent vers ce titre">¶</a></h4>
 <p>Créer un nouveau projet. Le chemin du projet doit pointer sur un répertoire contenant le clone github de <a class="reference external" href="https://github.com/Artelia/Lamia">Lamia</a>. Ainsi, il sera créé un répertoire (Github p.ex), contenant un fichier __init__.py vide, et contenant un sous répertoire Lamia contenant le clone de github.
 Choisir l’interpréteur python en allant dans File/settings/Project/project interpreter et créer un interpreteur en pointant sur le PYTHONHOME défini dans le .bat de lancement de PyCharm.</p>
+</div>
+<div class="section" id="installation-avec-gihub-integre-a-pycharm-derriere-un-proxy">
+<h4>Installation avec gihub intégré à pycharm, derrière un proxy<a class="headerlink" href="#installation-avec-gihub-integre-a-pycharm-derriere-un-proxy" title="Lien permanent vers ce titre">¶</a></h4>
+<p>Télécharger git et l’installer.</p>
+<p>Dans pycharmsettingsAppearancesysem settingshttp proxy renseigner l’adresse et la port du proxy</p>
+<p>Dans pycharmsettingsversion controlgit définir le répertoire où est installé git.exe</p>
+<p>Dans pycharmsettingsversion controlgithub ajouter votre compte github</p>
+<p>Ensuite, créer un fichier .gitconfig dans votre répertoire « users » (c:/users/ « votre login ») avec dedans :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">user</span><span class="p">]</span>
+               <span class="n">name</span> <span class="o">=</span> <span class="n">toto</span>
+               <span class="n">email</span> <span class="o">=</span> <span class="n">toto</span><span class="o">.</span><span class="n">tata</span><span class="nd">@mongroup.com</span>
+<span class="p">[</span><span class="n">http</span><span class="p">]</span>
+               <span class="n">proxy</span> <span class="o">=</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">XX</span><span class="o">.</span><span class="n">XX</span><span class="o">.</span><span class="n">XX</span><span class="o">.</span><span class="n">XX</span><span class="p">:</span><span class="n">XXXX</span>
+</pre></div>
+</div>
+<p>Enfin, lancer pycharm, aller dans VCSget from version control… et choisir le projet github à cloner et le répertoire de destination</p>
+</div>
 </div>
 <div class="section" id="test-de-la-configuration">
 <h3>Test de la configuration<a class="headerlink" href="#test-de-la-configuration" title="Lien permanent vers ce titre">¶</a></h3>
@@ -462,6 +486,10 @@ Choisir l’interpréteur python en allant dans File/settings/Project/project in
 <p>Définir la variable path de la méthode testMethod vers un fichier lamia valide.</p>
 <p>Lancer le script.</p>
 <p>Si tout se passe bien, Lamia se lance !!</p>
+</div>
+<div class="section" id="faire-fonctionner-pip">
+<h3>faire fonctionner pip<a class="headerlink" href="#faire-fonctionner-pip" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Si pip ne marche pas, ouvrir le fichier OSGeo4W64\apps\Python37\Scriptspip3.exe, rechercher « c : » et remplacer le path à la suite par le bon path.</p>
 </div>
 </div>
 <div class="section" id="cas-pratique-creation-dun-nouveau-module-de-post-traitement">
