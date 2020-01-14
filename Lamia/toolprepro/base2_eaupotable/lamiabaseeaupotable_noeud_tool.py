@@ -192,7 +192,8 @@ class BaseEaupotableNoeudTool(BaseNoeudTool):
             self.propertieswdgDesordre.pushButton_delFeature.setEnabled(False)
             self.propertieswdgDesordre.comboBox_featurelist.setEnabled(False)
             self.propertieswdgDesordre.groupBox_geom.setParent(None)
-            self.userwdgfield.tabWidget_2.widget(1).layout().addWidget(self.propertieswdgDesordre)
+            self.propertieswdgDesordre.frame_editing.setVisible(False)
+            self.userwdgfield.tabWidget_2.widget(2).layout().addWidget(self.propertieswdgDesordre)
 
             self.dbasechildwdgfield.append(self.propertieswdgDesordre)
 
@@ -302,19 +303,47 @@ class BaseEaupotableNoeudTool(BaseNoeudTool):
 
 
     def changeCategorie(self, intcat):
-        if self.dbase.variante in [None, 'Lamia']:
-            pagecount = self.userwdg.stackedWidget.count()
-            if intcat >= pagecount -1 :
-                self.userwdg.stackedWidget.setCurrentIndex(pagecount -1)
-            else:
-                self.userwdg.stackedWidget.setCurrentIndex(intcat)
-        elif self.dbase.variante in ['Reseau_chaleur']:
-            pagecount = self.userwdg.stackedWidget.count()
-            currentindex = self.userwdgfield.comboBox_cat.currentIndex()
-            if currentindex >= 2:
-                self.userwdg.stackedWidget.setCurrentIndex(pagecount - 1)
-            else:
-                self.userwdg.stackedWidget.setCurrentIndex(intcat)
+
+        typeeqt = self.userwdgfield.comboBox_cat.itemText(intcat)
+        rawtypeeqt = self.dbase.getConstraintRawValueFromText('Noeud', 'categorie', typeeqt)
+        pagecount = self.userwdgfield.stackedWidget.count()
+        for pageindex in range(pagecount):
+            wdgname = self.userwdgfield.stackedWidget.widget(pageindex).objectName()
+            if wdgname == rawtypeeqt:
+                self.userwdgfield.stackedWidget.setCurrentIndex(pageindex)
+                return
+        self.userwdgfield.stackedWidget.setCurrentIndex(pagecount)
+
+        if False:
+            if self.dbase.variante in [None, 'Lamia']:
+                print('change')
+                typeeqt = self.userwdgfield.comboBox_cat.itemText(intcat)
+                rawtypeeqt = self.dbase.getConstraintRawValueFromText('Noeud', 'categorie',typeeqt)
+                pagecount = self.userwdgfield.stackedWidget.count()
+                print(rawtypeeqt)
+                for pageindex in range(pagecount):
+                    wdgname = self.userwdgfield.stackedWidget.widget(pageindex).objectName()
+                    if wdgname == rawtypeeqt:
+                        self.userwdgfield.stackedWidget.setCurrentIndex(pageindex)
+                        return
+                self.userwdgfield.stackedWidget.setCurrentIndex(pagecount)
+
+
+                if False:
+                    pagecount = self.userwdg.stackedWidget.count()
+                    if intcat >= pagecount -1 :
+                        self.userwdg.stackedWidget.setCurrentIndex(pagecount -1)
+                    else:
+                        self.userwdg.stackedWidget.setCurrentIndex(intcat)
+
+
+            elif self.dbase.variante in ['Reseau_chaleur']:
+                pagecount = self.userwdg.stackedWidget.count()
+                currentindex = self.userwdgfield.comboBox_cat.currentIndex()
+                if currentindex >= 2:
+                    self.userwdg.stackedWidget.setCurrentIndex(pagecount - 1)
+                else:
+                    self.userwdg.stackedWidget.setCurrentIndex(intcat)
 
 
     def magicFunction(self):

@@ -1,11 +1,10 @@
+C://000_testdigue//temp_base2_ass2//test01.sqlite
 C://000_testdigue//temp_base2_chantiertram//test01.sqlite
-C://BM//pourimport//BD_totale_ind8.sqlite
 C://000_testdigue//testdigue//BD_totale_ind6.sqlite
 M://FR//BOR//VT//MOE//4352678-33-CD33_VTA_digue_bas_Medoc//05-ETP ou ETUDES//05-1-Plans//1-Divers-travail//SAUVEGARDE TERRAIN//bas_medoc.sqlite
 C://000_Modwenne//lamiatest01//test01.sqlite
 C://000_Modwenne//test01.sqlite
 C://000_Modwenne//Lamia//test01.sqlite
 C://000_Modwenne//Lamia2//test01.sqlite
-C://000_testdigue//temp_base2_ass2//test01.sqlite
 C:/000_Modwenne/Lamia/test01.sqlite
 C://000_testdigue//temp_base2_digue//test01.sqlite

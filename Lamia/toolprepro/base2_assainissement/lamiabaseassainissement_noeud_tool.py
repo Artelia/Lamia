@@ -80,13 +80,6 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
         self.iconpath = os.path.join(os.path.dirname(__file__),'..','base2', 'lamiabase_noeud_tool_icon.svg')
         self.linkedgeom = [['Equipement', 'lid_descriptionsystem_1'],['Desordre', 'lid_descriptionsystem']]
 
-        if False:
-            self.initialtypeohassdict = list(self.dbase.dbasetables['Noeud']['fields']['typeOuvrageAss']['Cst'])
-            self.modifiedtypeohassdict = []
-            for cst in self.initialtypeohassdict:
-                if cst[1] in ['','60', '70', '71','74', '21','22', '10', '40','51','00']:
-                    self.modifiedtypeohassdict.append(cst)
-
         # ****************************************************************************************
         #properties ui
         pass

@@ -16,7 +16,7 @@ class TestMain(Test):
         crs = 3945
         # Digue VNF  Assainissement  Default Assainissement2 Base Base_default Base_assainissement Base2_digue Base2_parking
         # Base2_tramway Base2_eaupotable Base2_assainissement Base2_eclairagepublic Base2_chantiertram
-        typebase = 'Base2_chantiertram'
+        typebase = 'Base2_digue'
         # CD41 Lamia Reseau_chaleur
         variante = 'Lamia'
         # spatialite   postgis

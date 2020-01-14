@@ -39,7 +39,7 @@ try:
     from qgis.PyQt.QtGui import (QWidget, QLabel, QFrame)
 except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget, QLabel, QFrame)
-import os
+import os, sys
 import logging
 import qgis
 #from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool

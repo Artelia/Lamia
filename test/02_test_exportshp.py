@@ -37,6 +37,7 @@ class TestMain(Test):
         path = "C://000_testdigue//temp_base2_tram2//test01.sqlite"
         path = "C://000_testdigue//0_bastien//LANDY.sqlite"
         path = "M://FR//BOR//VT//URBAIN//4352502-87-CDC_HLEM//5_ETUDES//51_SIG//SQLITE//Berneuil//Berneuil.sqlite"
+        path = "C://000_testdigue//000_test_virginie//ROMORANTIN BDD.sqlite"
 
         self.wind.dbase.loadQgisVectorLayers(path)
         self.wind.loadUiDesktop()
@@ -81,12 +82,16 @@ class TestMain(Test):
             rootpath = "C:"
             exportfile = os.path.join(rootpath, typeexport + ".shp")
 
-        exportfile = os.path.normpath("C://testshape.shp")
+        exportfile = os.path.normpath("C://000_testdigue//testshape.shp")
         # self.wind.dbase.dbasetables['Zonegeo']['layerqgis'].selectByIds([5])
         wdg.userwdgfield.lineEdit_nom.setText(exportfile)
 
-        indextypeexport = wdg.userwdgfield.comboBox_type.findText(typeexport)
-        wdg.userwdgfield.comboBox_type.setCurrentIndex(indextypeexport)
+        #indextypeexport = wdg.userwdgfield.comboBox_type.findText(typeexport)
+        #wdg.userwdgfield.comboBox_type.setCurrentIndex(indextypeexport)
+
+        indextypeexport = wdg.filemanager.comboBox_files.findText(typeexport)
+        wdg.filemanager.comboBox_files.setCurrentIndex(indextypeexport)
+
 
         # self.mainwin.exec_()
 

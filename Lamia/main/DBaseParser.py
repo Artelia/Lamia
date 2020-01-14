@@ -53,9 +53,15 @@ except:
     PILexists = False
 
 from collections import OrderedDict
-import os, sys, math, shutil, re, psycopg2, glob, logging, datetime, xlrd
+import os, sys, math, shutil, re, psycopg2, glob, logging, datetime
 
-
+if sys.version_info.major == 2:
+    from ..libs import xlrd
+else:
+    try:
+        import xlrd
+    except:
+        from ..libs import xlrd
 
 
 

@@ -1045,7 +1045,7 @@ class InspectiondigueWindowWidget(QMainWindow):
         :return:
         """
         styledir = self.comboBox_style.currentText()
-        stylerep = os.path.join(os.path.dirname(__file__), '..', 'DBASE', 'style', self.dbase.type,styledir )
+        stylerep = os.path.join(os.path.dirname(__file__), '..', 'DBASE', 'style', self.dbase.type, styledir )
 
         allfiles = [x[2] for x in os.walk(stylerep)][0]
         qmlfiles = [uknfile.split('.')[0] for uknfile in allfiles if uknfile.split('.')[1] == 'qml']

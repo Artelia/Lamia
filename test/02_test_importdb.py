@@ -104,7 +104,7 @@ class TestMain(Test):
             #pathterrain = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees_terrains//20190325_Terrain_HDA//export_BD_BM_mars2019.sqlite"
 
             pathterrain = "C://BM//Terrain _SPS//20191120//Test_FJE.sqlite"
-            pathterrain = "C://BM//Terrain_JRS//20191120//Test_FJE.sqlite"
+            # ##pathterrain = "C://BM//Terrain_JRS//20191120//Test_FJE.sqlite"
             pathterrain = "C://BM//Terrain _SPS//20191107//Terrain_VTA_11_2019_FJE.sqlite"
             pathterrain = "C://BM//Terrain_JRS//20191107//Terrain_VTA_11_2019_JDE.sqlite"
             pathterrain = "C://BM//Rive_Droite//Test_JDE.sqlite"

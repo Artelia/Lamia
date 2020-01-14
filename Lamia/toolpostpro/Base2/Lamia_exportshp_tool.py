@@ -193,9 +193,14 @@ class ExportShapefileTool(AbstractLamiaTool):
                     geomval = 'geom'
 
                 #sql = 'SELECT ST_GeometryType(St_MakeValid(geom)) ' + champmain
-                sql = 'SELECT ST_GeometryType(St_MakeValid(' + geomval + ')) ' + champmain
-                sql = self.dbase.updateQueryTableNow(sql)
-                res = self.dbase.query(sql)[0][0]
+                try:
+                    sql = ' SELECT ST_GeometryType(St_MakeValid(' + geomval + ')) ' + champmain
+                    sql = self.dbase.updateQueryTableNow(sql)
+                    res = self.dbase.query(sql)[0][0]
+                except TypeError:
+                    sql = ' SELECT ST_GeometryType(' + geomval + ') ' + champmain
+                    sql = self.dbase.updateQueryTableNow(sql)
+                    res = self.dbase.query(sql)[0][0]
                 # print('res',res)
                 if sys.version_info.major == 2:
                     if res == 'LINESTRING':
