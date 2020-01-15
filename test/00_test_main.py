@@ -54,7 +54,7 @@ class TestMain(Test):
         path = "C://000_testdigue//temp_base2_aep//test01.sqlite"
         # path = "C://000_testdigue//temp_base2_ass2//test01.sqlite"
         path = "U://FR//BOR//VT//PVR//20_LAMIA//1_DOC//renouveau//Pack_Renouveau//02_lamia_renouveau_prerempli//lamia_renouveau_prerempli.sqlite"
-        # path = "C://000_testdigue//000_test_virginie//ROMORANTIN BDD.sqlite"
+        path = "C://000_testdigue//000_test_virginie//ROMORANTIN BDD.sqlite"
 
         
         # self.dbase.xlsreader = True

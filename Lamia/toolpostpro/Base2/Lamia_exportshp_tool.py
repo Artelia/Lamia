@@ -161,9 +161,9 @@ class ExportShapefileTool(AbstractLamiaTool):
         sql = self.buildSql(self.champs)
         if debug: logging.getLogger('Lamia').debug('sql %s', sql)
 
-
-
         query = self.dbase.query(sql)
+        if query is None:
+            return
 
         self.result = [list(row) for row in query]
 
@@ -197,7 +197,7 @@ class ExportShapefileTool(AbstractLamiaTool):
                     sql = ' SELECT ST_GeometryType(St_MakeValid(' + geomval + ')) ' + champmain
                     sql = self.dbase.updateQueryTableNow(sql)
                     res = self.dbase.query(sql)[0][0]
-                except TypeError:
+                except (TypeError, IndexError):
                     sql = ' SELECT ST_GeometryType(' + geomval + ') ' + champmain
                     sql = self.dbase.updateQueryTableNow(sql)
                     res = self.dbase.query(sql)[0][0]

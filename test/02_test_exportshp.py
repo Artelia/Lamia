@@ -4,7 +4,7 @@
 
 
 
-from Lamia.test.AbstractTest import Test
+from test.AbstractTest import Test
 import os
 import sys
 import datetime
@@ -67,8 +67,9 @@ class TestMain(Test):
         # BM_Photo   BM_TcObjetRessource  BM_Graphdata   BM_TcObjetRessource
         #  BM_Desordres_ligne    BM_Desordres_point   BM_Observation
         # 00_Desordres_observation_actif   00_Desordres_observation_total  00_Equipement_observation_actif
-        # Export_total      Infralineaire    Noeud      Equipement      Export_total
-        typeexport = 'Infralineaire'
+        # Export_total      Infralineaire    Noeud      Equipement      Export_total    CD41_EUEP_CANA
+        # CD41_EUEP_REGARDS  CD41_EUEP_EQUIP  CD41_EUEP_AVALOIRS    CD41_EUEP_REGUL CD41_EUEP_BRANCH
+        typeexport = 'CD41_EUEP_BRANCH'
 
         if False:
             rootpath = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//63_Rapports//20190200_BD_exportshp//20190415_ind1"
