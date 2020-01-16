@@ -45,6 +45,7 @@ from .lamiabasechantiertramintervenant_tool import BaseChantierTramIntervenantTo
 from .lamiabasechantiertram_rapport_tool import BaseChantierTramRapportTool as BaseRapportTool
 from .lamiabasechantiertram_signature_tool import SignatureWidget
 from .lamiabasechantiertram_lidchooser import LidChooserWidget
+from .lamiabasechantiertram_sousobservation_tool import BaseChantierTramSousObservationTool
 
 import os
 import datetime
@@ -69,56 +70,201 @@ class BaseChantierTramObservationTool(BaseObservationTool):
     def initFieldUI(self):
         # ****************************************************************************************
         # userui Desktop
-        if self.userwdgfield is None:
+        if self.dbase.variante in [None, 'Lamia']:
+            if self.userwdgfield is None:
+                # ****************************************************************************************
+                # userui
+                self.userwdgfield = UserUI()
+                self.linkuserwdgfield = {'Observation' : {'linkfield' : 'id_observation',
+                                                 'widgets' : {'ncadescription': self.userwdgfield.textBrowser_ncadescription,
+
+                                                                'ncathqualite':self.userwdgfield.checkBox_ncathqualite  ,
+                                                                'ncathouvrage':self.userwdgfield.checkBox_ncathouvrage  ,
+                                                                'ncathsecurite':self.userwdgfield.checkBox_ncathsecurite  ,
+                                                                'ncathsystem':self.userwdgfield.checkBox_ncathsystem  ,
+                                                                'ncathenvironnement':self.userwdgfield.checkBox_ncathenvironnement  ,
+                                                                'ncathreglementaire':self.userwdgfield.checkBox_ncathreglementaire  ,
+                                                              'ncathcommentaire' : self.userwdgfield.textBrowser_ncathcommentaire,
+                                                              'ncathcategorie': self.userwdgfield.comboBox_ncathcategorie,
+
+                                                              'ncaprocessus': self.userwdgfield.textBrowser_ncaprocessus,
+                                                              'ncacause': self.userwdgfield.textBrowser_ncacause,
+
+                                                              'ncb_accord': self.userwdgfield.comboBox_acceptation,
+                                                              'ncb_datecible': self.userwdgfield.dateEdit_datecible,
+                                                              'ncb_observation': self.userwdgfield.textBrowser_ncbobs,
+
+                                                              'ncc_etatverif': self.userwdgfield.comboBox_etatverif,
+                                                              'ncc_obs': self.userwdgfield.textBrowser_etatverif,
+                                                              'ncc_date': self.userwdgfield.dateEdit_etatverif,
+
+                                                              'ncd_leveereserve': self.userwdgfield.comboBox_leveres,
+                                                              'ncd_leveereservecom': self.userwdgfield.textBrowser_leveres,
+
+                                                              'nce_actioncorr': self.userwdgfield.comboBox_actioncorr,
+                                                              'nce_actioncorrcom': self.userwdgfield.textBrowser_actioncorr,
+
+                                                              # pva
+                                                              'pva_datetime': self.userwdgfield.dateTimeEdit_pva,
+                                                              'pva_commentaires': self.userwdgfield.textBrowser_pva,
+
+
+                                                              }},
+                                    'Objet' : {'linkfield' : 'id_objet',
+                                              'widgets' : {}}}
+
+                if self.parentWidget.dbasetablename == 'Desordre':
+                    self.parentWidget.userwdgfield.comboBox_groupedes.currentIndexChanged.connect(self.changeGroupe)
+
+                # self.frame_editing.setVisible(False)
+                self.frame_editing.setParent(None)
+
+                self.tabWidget_page_formvisa = self.userwdgfield.tabWidget_formvisa.widget(1)
+
+                self.dbasechildwdgfield = []
+                self.lamiawidgets = []
+
+                #general
+                self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, parentwidget=self)
+                self.propertieswdgPHOTOGRAPHIE.NAME = None
+                self.propertieswdgPHOTOGRAPHIE.CHECKGEOM = False
+                self.propertieswdgPHOTOGRAPHIE.frame_editing.setVisible(False)
+                self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
+
+                self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
+                self.propertieswdgCROQUIS.NAME = None
+                self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+
+                self.propertieswdgRapport = BaseRapportTool(dbase=self.dbase, parentwidget=self)
+                self.propertieswdgRapport.NAME = None
+                self.propertieswdgRapport.CHECKGEOM = False
+                self.propertieswdgRapport.frame_editing.setVisible(False)
+                self.dbasechildwdgfield.append(self.propertieswdgRapport)
+
+                self.tabname_wdgtypedict = {'Photos': self.propertieswdgPHOTOGRAPHIE ,
+                                            'Rapports': self.propertieswdgRapport ,
+                                            'Proposition': self.propertieswdgRapport ,
+                                            'Plans': self.propertieswdgCROQUIS}
+
+                #NCA
+                self.signatureWidget = SignatureWidget(self, 'lid_intervenant_1', 'lid_ressource_1', 'datetimesignature_1' )
+                self.userwdgfield.tabWidget_formvisa.widget(1).layout().addWidget(self.signatureWidget)
+                self.lamiawidgets.append(self.signatureWidget)
+                # NCB
+                lidchooser = LidChooserWidget(parentwdg=self, parentlidfield='lid_intervenant_4',
+                                                                parentframe = self.userwdgfield.frame_choisresp,
+                                                                searchdbase='Intervenant', searchfieldtoshow=['nom','societe'])
+                self.lamiawidgets.append(lidchooser)
+
+
+                # mise dispo
+                if True:
+
+                    #entreprise preneuse
+                    lidchooser = LidChooserWidget(parentwdg=self, parentlidfield='lid_entpren_marche',
+                                                                parentframe = self.userwdgfield.frame_entpren_marche,
+                                                                searchdbase='Marche', searchfieldtoshow=['libelle'])
+                    self.lamiawidgets.append(lidchooser)
+
+
+                    self.signatureWidgetPreneuse = SignatureWidget(self, 'lid_entpren_intervenant',
+                                                                   'lid_ressource_entpren',
+                                                                   'lid_entpren_datetimesignature' )
+                    self.userwdgfield.groupBox_entpren_sign.layout().addWidget(self.signatureWidgetPreneuse)
+                    self.lamiawidgets.append(self.signatureWidgetPreneuse)
+
+                    #entreprise occupante
+                    lidchooser = LidChooserWidget(parentwdg=self, parentlidfield='lid_entocc_marche',
+                                                                    parentframe = self.userwdgfield.frame_entocc_marche,
+                                                                    searchdbase='Marche', searchfieldtoshow=['libelle'])
+                    self.lamiawidgets.append(lidchooser)
+
+                    self.signatureWidgetOccupante = SignatureWidget(self, 'lid_entocc_intervenant',
+                                                                   'lid_ressource_entocc',
+                                                                   'lid_entocc_datetimesignature' )
+                    self.userwdgfield.groupBox_entocc_sign.layout().addWidget(self.signatureWidgetOccupante)
+                    self.lamiawidgets.append(self.signatureWidgetOccupante)
+
+        elif self.dbase.variante in ['Orange']:
             # ****************************************************************************************
             # userui
-            self.userwdgfield = UserUI()
-            self.linkuserwdgfield = {'Observation' : {'linkfield' : 'id_observation',
-                                             'widgets' : {'ncadescription': self.userwdgfield.textBrowser_ncadescription,
+            self.userwdgfield = UserUI_Orange()
+            self.linkuserwdgfield = {'Observation': {'linkfield': 'id_observation',
+                                                     'widgets': {
+                                                         'datetimeobservation': self.userwdgfield.dateTimeEdit_datetimeobs,
+                                                         'nca_meteo': self.userwdgfield.lineEdit_meteo,
+                                                         'nca_etp_presentes': self.userwdgfield.lineEdit_etppres,
 
-                                                            'ncathqualite':self.userwdgfield.checkBox_ncathqualite  ,
-                                                            'ncathouvrage':self.userwdgfield.checkBox_ncathouvrage  ,
-                                                            'ncathsecurite':self.userwdgfield.checkBox_ncathsecurite  ,
-                                                            'ncathsystem':self.userwdgfield.checkBox_ncathsystem  ,
-                                                            'ncathenvironnement':self.userwdgfield.checkBox_ncathenvironnement  ,
-                                                            'ncathreglementaire':self.userwdgfield.checkBox_ncathreglementaire  ,
-                                                          'ncathcommentaire' : self.userwdgfield.textBrowser_ncathcommentaire,
-                                                          'ncathcategorie': self.userwdgfield.comboBox_ncathcategorie,
+                                                         'nca_planning': self.userwdgfield.comboBox_planning,
+                                                         'nca_planning_com': self.userwdgfield.textBrowser_planningcom,
 
-                                                          'ncaprocessus': self.userwdgfield.textBrowser_ncaprocessus,
-                                                          'ncacause': self.userwdgfield.textBrowser_ncacause,
+                                                         'nca_effectif_entreprise': self.userwdgfield.spinBox_effectetp,
+                                                         'nca_effectif_sstraitant': self.userwdgfield.spinBox_effectsstraitant,
+                                                         'nca_conducteurdetravaux': self.userwdgfield.checkBox_conduc,
 
-                                                          'ncb_accord': self.userwdgfield.comboBox_acceptation,
-                                                          'ncb_datecible': self.userwdgfield.dateEdit_datecible,
-                                                          'ncb_observation': self.userwdgfield.textBrowser_ncbobs,
+                                                         'nca_engins_pelle': self.userwdgfield.checkBox_eng_pelle,
+                                                         'nca_engins_chargeuse': self.userwdgfield.checkBox_eng_charg,
+                                                         'nca_engins_compresseur': self.userwdgfield.checkBox_eng_compres,
+                                                         'nca_engins_trancheuse': self.userwdgfield.checkBox_eng_trancheuse,
+                                                         'nca_engins_camionsmat': self.userwdgfield.checkBox_eng_cam_mat,
+                                                         'nca_engins_camiondeb': self.userwdgfield.checkBox_eng_cam_deblais,
+                                                         'nca_engins_camionasp': self.userwdgfield.checkBox_eng_cam_aspi,
+                                                         'nca_engins_camionrep': self.userwdgfield.checkBox_eng_cam_repand,
+                                                         'nca_engins_camionmal': self.userwdgfield.checkBox_eng_cam_malax,
+                                                         'nca_engins_container': self.userwdgfield.checkBox_eng_container,
+                                                         'nca_engins_compacteur': self.userwdgfield.checkBox_eng_compacteur,
+                                                         'nca_engins_finisseur': self.userwdgfield.checkBox_eng_finisseur,
+                                                         'nca_engins_minipelle': self.userwdgfield.checkBox_eng_minipelle,
+                                                         'nca_engins_nacelle': self.userwdgfield.checkBox_eng_nacelle,
+                                                         'nca_engins_autres': self.userwdgfield.checkBox_eng_autre,
 
-                                                          'ncc_etatverif': self.userwdgfield.comboBox_etatverif,
-                                                          'ncc_obs': self.userwdgfield.textBrowser_etatverif,
-                                                          'ncc_date': self.userwdgfield.dateEdit_etatverif,
+                                                         'nca_sec_personnel': self.userwdgfield.comboBox_sec_personnel,
+                                                         'nca_sec_protection': self.userwdgfield.comboBox_sec_protection,
+                                                         'nca_sec_afficharrete': self.userwdgfield.comboBox_sec_afficharrete,
+                                                         'nca_sec_panneauxchant': self.userwdgfield.comboBox_sec_panneauxchant,
+                                                         'nca_sec_circul': self.userwdgfield.comboBox_sec_circul,
+                                                         'nca_sec_eclairage': self.userwdgfield.comboBox_sec_eclairage,
+                                                         'nca_sec_stockagedechet': self.userwdgfield.comboBox_sec_stockagedechet,
+                                                         'nca_sec_proprete': self.userwdgfield.comboBox_sec_proprete,
+                                                         'nca_sec_protectiontranchee': self.userwdgfield.comboBox_sec_protectiontranchee,
+                                                         'nca_sec_blindage': self.userwdgfield.comboBox_sec_blindage,
+                                                         'nca_sec_reunionmarquage': self.userwdgfield.comboBox_sec_reunionmarquage,
+                                                         'nca_sec_entretienmarquage': self.userwdgfield.comboBox_sec_entretienmarquage,
+                                                         'nca_sec_accesscoupure': self.userwdgfield.comboBox_sec_accesscoupure,
+                                                         'nca_sec_travailhauteur': self.userwdgfield.comboBox_sec_travailhauteur,
+                                                         'nca_sec_plaintes': self.userwdgfield.comboBox_sec_plaintes,
+                                                         'nca_sec_plaintes_com': self.userwdgfield.lineEdit_sec_plaintes_com,
 
-                                                          'ncd_leveereserve': self.userwdgfield.comboBox_leveres,
-                                                          'ncd_leveereservecom': self.userwdgfield.textBrowser_leveres,
+                                                         'ncb_accord': self.userwdgfield.comboBox_acceptation,
+                                                         'ncb_datecible': self.userwdgfield.dateEdit_datecible,
+                                                         'ncb_observation': self.userwdgfield.textBrowser_ncbobs,
 
-                                                          'nce_actioncorr': self.userwdgfield.comboBox_actioncorr,
-                                                          'nce_actioncorrcom': self.userwdgfield.textBrowser_actioncorr,
+                                                         'ncc_etatverif': self.userwdgfield.comboBox_etatverif,
+                                                         'ncc_obs': self.userwdgfield.textBrowser_etatverif,
+                                                         'ncc_date': self.userwdgfield.dateEdit_etatverif,
 
-                                                          # pva
-                                                          'pva_datetime': self.userwdgfield.dateTimeEdit_pva,
-                                                          'pva_commentaires': self.userwdgfield.textBrowser_pva,
+                                                         'ncd_leveereserve': self.userwdgfield.comboBox_leveres,
+                                                         'ncd_leveereservecom': self.userwdgfield.textBrowser_leveres,
 
+                                                         'nce_actioncorr': self.userwdgfield.comboBox_actioncorr,
+                                                         'nce_actioncorrcom': self.userwdgfield.textBrowser_actioncorr,
 
-                                                          }},
-                                'Objet' : {'linkfield' : 'id_objet',
-                                          'widgets' : {}}}
+                                                         }},
+                                     'Objet': {'linkfield': 'id_objet',
+                                               'widgets': {}}}
 
             if self.parentWidget.dbasetablename == 'Desordre':
                 self.parentWidget.userwdgfield.comboBox_groupedes.currentIndexChanged.connect(self.changeGroupe)
 
-            self.frame_editing.setVisible(False)
+            # self.frame_editing.setVisible(False)
+            self.frame_editing.setParent(None)
 
-            # self.userwdgfield.tabWidget_formvisa.setStyleSheet("QTabBar::tab::disabled {width: 0; height: 0; margin: 0; padding: 0; border: none;} ")
+            self.userwdgfield.toolButton_effect_etp.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.spinBox_effectetp))
+            self.userwdgfield.toolButton_effect_sstraitant.clicked.connect(
+                lambda: self.windowdialog.showNumPad(self.userwdgfield.spinBox_effectsstraitant))
+
             self.tabWidget_page_formvisa = self.userwdgfield.tabWidget_formvisa.widget(1)
-
             self.dbasechildwdgfield = []
             self.lamiawidgets = []
 
@@ -127,102 +273,40 @@ class BaseChantierTramObservationTool(BaseObservationTool):
             self.propertieswdgPHOTOGRAPHIE.NAME = None
             self.propertieswdgPHOTOGRAPHIE.CHECKGEOM = False
             self.propertieswdgPHOTOGRAPHIE.frame_editing.setVisible(False)
-            # self.userwdgfield.tabWidget.widget(4).layout().addWidget(self.propertieswdgPHOTOGRAPHIE)
             self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
 
             self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
             self.propertieswdgCROQUIS.NAME = None
-            # self.userwdgfield.tabWidget.widget(5).layout().addWidget(self.propertieswdgCROQUIS)
-            # self.userwdgfield.toolox.widget(1).layout().addWidget(self.propertieswdgOBSERVATION2)
             self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
             self.propertieswdgRapport = BaseRapportTool(dbase=self.dbase, parentwidget=self)
             self.propertieswdgRapport.NAME = None
             self.propertieswdgRapport.CHECKGEOM = False
             self.propertieswdgRapport.frame_editing.setVisible(False)
-            # self.userwdgfield.groupBox_NCB_PJ.layout().addWidget(self.propertieswdgRapport)
             self.dbasechildwdgfield.append(self.propertieswdgRapport)
-
-
 
             self.tabname_wdgtypedict = {'Photos': self.propertieswdgPHOTOGRAPHIE ,
                                         'Rapports': self.propertieswdgRapport ,
                                         'Proposition': self.propertieswdgRapport ,
                                         'Plans': self.propertieswdgCROQUIS}
 
-            #NCA
+            # visa nca MOE
+            self.signatureWidgetMOE = SignatureWidget(self, 'lid_intervenant_1', 'lid_ressource_1', 'datetimesignature_1' )
+            self.userwdgfield.tabWidget_multivisa.widget(0).layout().addWidget(self.signatureWidgetMOE)
+            self.lamiawidgets.append(self.signatureWidgetMOE)
 
-            # def __init__(self, parentwdg=None, intervenantid=None, signatureid=None):
-            self.signatureWidget = SignatureWidget(self, 'lid_intervenant_1', 'lid_ressource_1', 'datetimesignature_1' )
-            #self.userwdgfield.tabWidget.widget(6).layout().addWidget(self.signatureWidget)
-            self.userwdgfield.tabWidget_formvisa.widget(1).layout().addWidget(self.signatureWidget)
-            self.lamiawidgets.append(self.signatureWidget)
+            # visa nca ETP
+            self.signatureWidgetETP = SignatureWidget(self, 'lid_intervenant_2', 'lid_ressource_2', 'datetimesignature_2')
+            self.userwdgfield.tabWidget_multivisa.widget(1).layout().addWidget(self.signatureWidgetETP)
+            self.lamiawidgets.append(self.signatureWidgetETP)
 
-
-            # NCB
-
-
-
-            #self.signatureWidget2 = SignatureWidget(self, 'lid_intervenant_4', 'lid_ressource_4', 'datetimesignature_4' )
-            #self.userwdgfield.tabWidget_avis.widget(1).layout().addWidget(self.signatureWidget2)
-            if False:
-                self.propertieswdgChooseResp = LidChooser(parentwdg=self, parentlidfield='lid_intervenant_4',
-                                                            parentlabel=self.userwdgfield.label_ncbresponsable,
-                                                            searchdbase='Intervenant', searchfieldtoshow=['nom','societe'])
-                self.userwdgfield.frame_choisresp.layout().addWidget(self.propertieswdgChooseResp)
-
-            lidchooser = LidChooserWidget(parentwdg=self, parentlidfield='lid_intervenant_4',
-                                                            parentframe = self.userwdgfield.frame_choisresp,
-                                                            searchdbase='Intervenant', searchfieldtoshow=['nom','societe'])
-            self.lamiawidgets.append(lidchooser)
-
-            # ncc
-            #self.propertieswdgPHOTOGRAPHIE2 = BasePhotoTool(dbase=self.dbase, parentwidget=self)
-            #self.propertieswdgPHOTOGRAPHIE2.NAME = None
-            #self.userwdgfield.tabWidget_verif.widget(1).layout().addWidget(self.propertieswdgPHOTOGRAPHIE2)
-            #self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE2)
-
-            #self.signatureWidget3 = SignatureWidget(self, 'lid_intervenant_5', 'lid_ressource_5', 'datetimesignature_5' )
-            #self.userwdgfield.tabWidget_verif.widget(2).layout().addWidget(self.signatureWidget3)
-
-            # mise dispo
-            if True:
-                #self.propertieswdgRapport2 = BaseRapportTool(dbase=self.dbase, parentwidget=self)
-                #self.propertieswdgRapport2.NAME = None
-                #self.propertieswdgRapport2.CHECKGEOM = False
-                #self.propertieswdgRapport2.frame_editing.setVisible(False)
-                #self.userwdgfield.tabWidget_pvmisedispo.widget(4).layout().addWidget(self.propertieswdgRapport2)
-                #self.dbasechildwdgfield.append(self.propertieswdgRapport2)
-
-                #self.propertieswdgPHOTOGRAPHIE3 = BasePhotoTool(dbase=self.dbase, parentwidget=self)
-                #self.propertieswdgPHOTOGRAPHIE3.NAME = None
-                #self.userwdgfield.tabWidget_pvmisedispo.widget(3).layout().addWidget(self.propertieswdgPHOTOGRAPHIE3)
-                #self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE3)
-
-                #entreprise preneuse
-                lidchooser = LidChooserWidget(parentwdg=self, parentlidfield='lid_entpren_marche',
-                                                            parentframe = self.userwdgfield.frame_entpren_marche,
-                                                            searchdbase='Marche', searchfieldtoshow=['libelle'])
-                self.lamiawidgets.append(lidchooser)
+            # sous fiche
+            self.sousficheWidget = BaseChantierTramSousObservationTool(dbase=self.dbase, parentwidget=self)
+            self.sousficheWidget.NAME = None
+            self.dbasechildwdgfield.append(self.sousficheWidget)
+            self.userwdgfield.tabWidget_nca.widget(1).layout().addWidget(self.sousficheWidget )
 
 
-                self.signatureWidgetPreneuse = SignatureWidget(self, 'lid_entpren_intervenant',
-                                                               'lid_ressource_entpren',
-                                                               'lid_entpren_datetimesignature' )
-                self.userwdgfield.groupBox_entpren_sign.layout().addWidget(self.signatureWidgetPreneuse)
-                self.lamiawidgets.append(self.signatureWidgetPreneuse)
-
-                #entreprise occupante
-                lidchooser = LidChooserWidget(parentwdg=self, parentlidfield='lid_entocc_marche',
-                                                                parentframe = self.userwdgfield.frame_entocc_marche,
-                                                                searchdbase='Marche', searchfieldtoshow=['libelle'])
-                self.lamiawidgets.append(lidchooser)
-
-                self.signatureWidgetOccupante = SignatureWidget(self, 'lid_entocc_intervenant',
-                                                               'lid_ressource_entocc',
-                                                               'lid_entocc_datetimesignature' )
-                self.userwdgfield.groupBox_entocc_sign.layout().addWidget(self.signatureWidgetOccupante)
-                self.lamiawidgets.append(self.signatureWidgetOccupante)
 
 
     def changeGroupe(self, comboindex):
@@ -245,6 +329,8 @@ class BaseChantierTramObservationTool(BaseObservationTool):
             self.userwdgfield.tabWidget_formvisa.insertTab(1, self.tabWidget_page_formvisa, 'Visa')
         else:
             self.userwdgfield.tabWidget_formvisa.removeTab(1)
+
+
 
     def featureSelected(self, item=None, itemisid=False):
         super(BaseChantierTramObservationTool, self).featureSelected(item,itemisid)
@@ -272,7 +358,7 @@ class BaseChantierTramObservationTool(BaseObservationTool):
 
 
     def postloadIds(self,sqlin):
-        sqlout = sqlin + " AND typeobservation = '" + str(self.OBSTYPE) + "'"
+        sqlout = sqlin + " AND typeobservation = '" + str(self.OBSTYPE) + "' AND lid_observation IS NULL"
         return sqlout
 
 
@@ -311,6 +397,11 @@ class BaseChantierTramObservationTool(BaseObservationTool):
 
             # put photo and rapport the right place
             currentwdg = self.userwdgfield.stackedWidget_2.currentWidget().layout().itemAt(0).widget()
+            if self.dbase.variante in ['Orange']:
+                try:
+                    currentwdg = currentwdg.widget(0).layout().itemAt(0).widget()
+                except AttributeError as e:
+                    pass
             if isinstance(currentwdg, QTabWidget):
                 tabtext = [currentwdg.tabText(i) for i in range(currentwdg.count())]
                 for tabname in self.tabname_wdgtypedict.keys():
@@ -327,6 +418,11 @@ class UserUI(QWidget):
         uipath = os.path.join(os.path.dirname(__file__), 'lamiabasechantiertram_observation_tool_ui.ui')
         uic.loadUi(uipath, self)
 
+class UserUI_Orange(QWidget):
+    def __init__(self, parent=None):
+        super(UserUI_Orange, self).__init__(parent=parent)
+        uipath = os.path.join(os.path.dirname(__file__), 'lamiabasechantiertram_observation_tool_orange_ui.ui')
+        uic.loadUi(uipath, self)
 
 
 

@@ -49,16 +49,65 @@ class BaseChantierTramDesordreTool(BaseDesordreTool):
     def initFieldUI(self):
         # ****************************************************************************************
         #   userui Field
-        if self.userwdgfield is None:
-            # ****************************************************************************************
-            # userui
+        if self.dbase.variante in [None, 'Lamia']:
+            if self.userwdgfield is None:
+                # ****************************************************************************************
+                # userui
 
-            self.userwdgfield = UserUI()
+                self.userwdgfield = UserUI()
+
+                self.linkuserwdgfield = {'Desordre': {'linkfield': 'id_desordre',
+                                                      'widgets': {'groupedesordre': self.userwdgfield.comboBox_groupedes,
+                                                                  'detecteur': self.userwdgfield.comboBox_detecteur,
+                                                                  'detecteur_com': self.userwdgfield.lineEdit_detecteur,
+
+                                                                  }},
+                                         'Objet': {'linkfield': 'id_objet',
+                                                   'widgets': {}}}
+
+                self.userwdgfield.comboBox_groupedes.currentIndexChanged.connect(self.changeGroupe)
+
+                # non conformité
+                for elem in self.nclist:
+                    itemname = elem[0]
+                    self.userwdgfield.listWidget_nonconf.addItem(itemname)
+                self.userwdgfield.listWidget_nonconf.currentItemChanged.connect(self.itemChangedNonConformite)
+
+
+                # ****************************************************************************************
+                # child widgets
+                self.dbasechildwdgfield = []
+                self.lamiawidgets = []
+
+                self.propertieswdgOBSERVATION = BaseObservationTool(dbase=self.dbase, parentwidget=self)
+                self.propertieswdgOBSERVATION.NAME = None
+                self.userwdgfield.stackedWidget_nonconf.widget(1).layout().addWidget(self.propertieswdgOBSERVATION )
+                self.dbasechildwdgfield.append(self.propertieswdgOBSERVATION )
+
+                propertieswdgChooseMarche = LidChooserWidget(parentwdg=self, parentlidfield='lid_marche',
+                                                            parentframe = self.userwdgfield.frame_numarche,
+                                                            searchdbase='Marche', searchfieldtoshow=['libelle'])
+                self.lamiawidgets.append(propertieswdgChooseMarche)
+
+                #pv mise a dispo
+                propertieswdgOBSERVATIONpv = BaseObservationTool(dbase=self.dbase, parentwidget=self)
+                propertieswdgOBSERVATIONpv.NAME = None
+                propertieswdgOBSERVATIONpv.setOBSTYPE('PVA', True)
+                # self.obsdict[wdgname].OBSTYPE = itemtype
+                self.userwdgfield.stackedWidget.widget(1).layout().addWidget(propertieswdgOBSERVATIONpv)
+                self.dbasechildwdgfield.append(propertieswdgOBSERVATIONpv)
+
+        elif self.dbase.variante in ['Orange']:
+            self.userwdgfield = UserUI_Orange()
 
             self.linkuserwdgfield = {'Desordre': {'linkfield': 'id_desordre',
                                                   'widgets': {'groupedesordre': self.userwdgfield.comboBox_groupedes,
-                                                              'detecteur': self.userwdgfield.comboBox_detecteur,
-                                                              'detecteur_com': self.userwdgfield.lineEdit_detecteur,
+
+                                                              'commune': self.userwdgfield.lineEdit_commune,
+                                                              'rue': self.userwdgfield.lineEdit_rue,
+                                                              'za_sro': self.userwdgfield.lineEdit_zasro,
+                                                              'datedebuttravaux': self.userwdgfield.dateEdit_debuttrav,
+                                                              'datefincontractuelle': self.userwdgfield.dateEdit_fintrav,
 
                                                               }},
                                      'Objet': {'linkfield': 'id_objet',
@@ -71,45 +120,19 @@ class BaseChantierTramDesordreTool(BaseDesordreTool):
                 itemname = elem[0]
                 self.userwdgfield.listWidget_nonconf.addItem(itemname)
             self.userwdgfield.listWidget_nonconf.currentItemChanged.connect(self.itemChangedNonConformite)
-            
 
             # ****************************************************************************************
             # child widgets
             self.dbasechildwdgfield = []
             self.lamiawidgets = []
 
-            if False:
-                self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, parentwidget=self)
-                self.propertieswdgPHOTOGRAPHIE.CHECKGEOM = False
-                self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
-
-            if False:
-                self.propertieswdgRapport = BaseRapportTool(dbase=self.dbase, parentwidget=self)
-                #self.propertieswdgRapport.NAME = None
-                self.propertieswdgRapport.CHECKGEOM = False
-                self.propertieswdgRapport.frame_editing.setVisible(False)
-                # self.userwdgfield.groupBox_NCB_PJ.layout().addWidget(self.propertieswdgRapport)
-                self.dbasechildwdgfield.append(self.propertieswdgRapport)
-
             self.propertieswdgOBSERVATION = BaseObservationTool(dbase=self.dbase, parentwidget=self)
             self.propertieswdgOBSERVATION.NAME = None
-            self.userwdgfield.stackedWidget_nonconf.widget(1).layout().addWidget(self.propertieswdgOBSERVATION )
-            self.dbasechildwdgfield.append(self.propertieswdgOBSERVATION )
+            self.userwdgfield.stackedWidget_nonconf.widget(1).layout().addWidget(self.propertieswdgOBSERVATION)
+            self.dbasechildwdgfield.append(self.propertieswdgOBSERVATION)
 
-            propertieswdgChooseMarche = LidChooserWidget(parentwdg=self, parentlidfield='lid_marche',
-                                                        parentframe = self.userwdgfield.frame_numarche,
-                                                        searchdbase='Marche', searchfieldtoshow=['libelle'])
 
-            self.lamiawidgets.append(propertieswdgChooseMarche)
 
-            #pv mise a dispo
-            if True:
-                propertieswdgOBSERVATIONpv = BaseObservationTool(dbase=self.dbase, parentwidget=self)
-                propertieswdgOBSERVATIONpv.NAME = None
-                propertieswdgOBSERVATIONpv.setOBSTYPE('PVA', True)
-                # self.obsdict[wdgname].OBSTYPE = itemtype
-                self.userwdgfield.stackedWidget.widget(1).layout().addWidget(propertieswdgOBSERVATIONpv)
-                self.dbasechildwdgfield.append(propertieswdgOBSERVATIONpv)
 
 
 
@@ -248,3 +271,8 @@ class UserUI(QWidget):
         uipath = os.path.join(os.path.dirname(__file__), 'lamiabasechantiertram_desordre_tool_ui.ui')
         uic.loadUi(uipath, self)
 
+class UserUI_Orange(QWidget):
+    def __init__(self, parent=None):
+        super(UserUI_Orange, self).__init__(parent=parent)
+        uipath = os.path.join(os.path.dirname(__file__), 'lamiabasechantiertram_desordre_tool_orange_ui.ui')
+        uic.loadUi(uipath, self)

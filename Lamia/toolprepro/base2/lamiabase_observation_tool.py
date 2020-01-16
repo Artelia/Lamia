@@ -215,7 +215,7 @@ class BaseObservationTool(AbstractLamiaTool):
             pk_objet, creation , observation = self.dbase.getValuesFromPk('Observation_qgis',
                                                             ['pk_objet','datetimecreation','datetimeobservation'],
                                                             self.currentFeaturePK)
-
+            print(pk_objet, creation , observation)
             datetimecreation = QtCore.QDateTime.fromString(creation, 'yyyy-MM-dd hh:mm:ss')
             datetimeobservation = QtCore.QDateTime.fromString(observation, 'yyyy-MM-dd hh:mm:ss')
             if datetimecreation > datetimeobservation:

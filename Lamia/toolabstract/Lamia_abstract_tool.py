@@ -1276,7 +1276,6 @@ class AbstractLamiaTool(QWidget):
         # selection of particular feature to load (if parentfeature, or window only mode)
         ids = self.loadIds()
 
-
         # creation de la liste des elements qui figurent dans le linkedtreewidget
         lenqtreewidg = len(self.qtreewidgetfields) + 1
         if sys.version_info.major == 2:
@@ -2362,7 +2361,6 @@ class AbstractLamiaTool(QWidget):
 
         """
 
-
         #setlastid
         sql = "SELECT id_" + self.dbasetablename.lower()
         sql += " FROM " + self.dbasetablename.lower()
@@ -2522,6 +2520,7 @@ class AbstractLamiaTool(QWidget):
             # lidchoosers
             for lidchooser in self.lamiawidgets:
                 lidchooser.saveProperties()
+
 
 
         if self.dbase.visualmode == 2:

@@ -2468,6 +2468,7 @@ class DBaseParser(QtCore.QObject):
         lastobjetid = self.getLastId('Objet') + 1
         sql = "INSERT INTO Objet (id_objet, lpk_revision_begin, datetimecreation, datetimemodification ) "
         sql += "VALUES(" + str(lastobjetid) + "," + str(self.maxrevision) + ",'" + datecreation + "','" + datecreation + "' )"
+        print(sql)
         self.query(sql, docommit=docommit)
         #self.dbase.commit()
         pkobjet = self.getLastRowId('Objet')

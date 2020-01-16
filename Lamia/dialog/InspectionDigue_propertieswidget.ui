@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>452</width>
-    <height>360</height>
+    <height>261</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" stretch="1,1,10">
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="1,1,100">
    <property name="spacing">
     <number>3</number>
    </property>
@@ -50,7 +50,7 @@
       </size>
      </property>
      <property name="title">
-      <string>Elements</string>
+      <string/>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout" stretch="10,0">
       <property name="leftMargin">
@@ -386,6 +386,9 @@
       <enum>QFrame::Raised</enum>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_4">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
       <property name="topMargin">
        <number>0</number>
       </property>
@@ -753,20 +756,23 @@
    <item>
     <widget class="QGroupBox" name="groupBox_properties">
      <property name="title">
-      <string>Propriétés</string>
+      <string/>
+     </property>
+     <property name="flat">
+      <bool>true</bool>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_6">
       <property name="leftMargin">
-       <number>3</number>
+       <number>0</number>
       </property>
       <property name="topMargin">
-       <number>3</number>
+       <number>0</number>
       </property>
       <property name="rightMargin">
-       <number>3</number>
+       <number>0</number>
       </property>
       <property name="bottomMargin">
-       <number>3</number>
+       <number>0</number>
       </property>
      </layout>
     </widget>

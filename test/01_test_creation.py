@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from Lamia.test.AbstractTest import Test
+from test.AbstractTest import Test
 import os
 import datetime
 
@@ -16,9 +16,9 @@ class TestMain(Test):
         crs = 3945
         # Digue VNF  Assainissement  Default Assainissement2 Base Base_default Base_assainissement Base2_digue Base2_parking
         # Base2_tramway Base2_eaupotable Base2_assainissement Base2_eclairagepublic Base2_chantiertram
-        typebase = 'Base2_digue'
-        # CD41 Lamia Reseau_chaleur
-        variante = 'Lamia'
+        typebase = 'Base2_chantiertram'
+        # CD41 Lamia Reseau_chaleur Orange
+        variante = 'Orange'
         # spatialite   postgis
 
         typedb = 'spatialite'
@@ -64,6 +64,8 @@ class TestMain(Test):
             dbaseressourcesdirectory = os.path.join(os.path.dirname(spatialitefile),'DBspatialite')
 
             self.dbase.createDbase(slfile=spatialitefile, crs=crs, worktype=typebase, variante=variante)
+
+
 
 
         elif typedb == "postgis":
