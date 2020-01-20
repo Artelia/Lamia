@@ -6,8 +6,7 @@ try:
 except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget, QLabel, QFrame)
 #from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
-
-from ..base2.lamiabase_marche_tool import BaseMarcheTool
+from ..base2.lamiabase_photo_tool import BasePhotoTool
 import os
 import datetime
 import glob
@@ -16,12 +15,12 @@ import sys
 
 
 
-class BaseChantierTramMarcheTool(BaseMarcheTool):
+class BaseChantierPhotoTool(BasePhotoTool):
 
-    LOADFIRST = True
-    dbasetablename = 'Marche'
+    LOADFIRST = False
+    dbasetablename = 'Photo'
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
-        super(BaseChantierTramMarcheTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
+        super(BaseChantierPhotoTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
 
 

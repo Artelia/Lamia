@@ -39,16 +39,16 @@ import datetime
 
 
 
-class BaseChantierTramIntervenantTool(BaseIntervenantTool):
+class BaseChantierIntervenantTool(BaseIntervenantTool):
 
     LOADFIRST = True
     dbasetablename = 'Intervenant'
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
-        super(BaseChantierTramIntervenantTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
+        super(BaseChantierIntervenantTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
 
     def initTool(self):
-        super(BaseChantierTramIntervenantTool, self).initTool()
+        super(BaseChantierIntervenantTool, self).initTool()
         self.visualmode = [0, 1, 2]
 
 

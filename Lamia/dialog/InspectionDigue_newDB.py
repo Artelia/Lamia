@@ -120,5 +120,4 @@ class newDBDialog(QDialog):
                     self.comboBox_var.currentText())
         else:
             return (None,None,None)
-            
-            
+

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>452</width>
-    <height>261</height>
+    <width>732</width>
+    <height>597</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -48,6 +48,12 @@
        <width>16777215</width>
        <height>16777215</height>
       </size>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(0, 53, 91,30);</string>
      </property>
      <property name="title">
       <string/>
@@ -379,6 +385,9 @@
    </item>
    <item>
     <widget class="QFrame" name="frame_editing">
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(0, 53, 91,30);</string>
+     </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
@@ -755,6 +764,9 @@
    </item>
    <item>
     <widget class="QGroupBox" name="groupBox_properties">
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(86, 137, 54,20);</string>
+     </property>
      <property name="title">
       <string/>
      </property>

@@ -33,20 +33,9 @@ try:
 except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget, QTabWidget, QHeaderView, QTableWidgetItem, QComboBox,
                                      QTextBrowser)
-#from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
-from ..base2.lamiabase_observation_tool import BaseObservationTool
-#from ..base.lamiabase_photo_tool import BasePhotoTool
-# from ..base.lamiabase_croquis_tool import BaseCroquisTool
-# from .lamiabaseassainissement_photo_tool import BaseAssainissementPhotoTool as BasePhotoTool
-#from .lamiabaseassainissement_photo_tool import BaseAssainissementPhotoTool as BasePhotoTool
-#from .lamiabaseassainissement_croquis_tool import BaseAssainissementCroquisTool as BaseCroquisTool
 
-from .lamiabasechantiertram_photo_tool import BaseChantierTramPhotoTool as BasePhotoTool
-from .lamiabasechantiertram_croquis_tool import BaseChantierTramCroquisTool as BaseCroquisTool
-from .lamiabasechantiertramintervenant_tool import BaseChantierTramIntervenantTool as BaseIntervenantTool
-from .lamiabasechantiertram_rapport_tool import BaseChantierTramRapportTool as BaseRapportTool
-from .lamiabasechantiertram_signature_tool import SignatureWidget
-from .lamiabasechantiertram_lidchooser import LidChooserWidget
+from ..base2.lamiabase_observation_tool import BaseObservationTool
+
 import os, sys, datetime
 
 if sys.version_info.major == 2:
@@ -60,18 +49,18 @@ else:
 
 
 
-class BaseChantierTramSousObservationTool(BaseObservationTool):
+class BaseChantierSousObservationTool(BaseObservationTool):
 
     dbasetablename = 'Observation'
 
 
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
-        super(BaseChantierTramSousObservationTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
+        super(BaseChantierSousObservationTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
 
 
     def initTool(self):
-        super(BaseChantierTramSousObservationTool, self).initTool()
+        super(BaseChantierSousObservationTool, self).initTool()
         # ****************************************************************************************
         # Main spec
 
@@ -292,7 +281,7 @@ class BaseChantierTramSousObservationTool(BaseObservationTool):
 class UserUI(QWidget):
     def __init__(self, parent=None):
         super(UserUI, self).__init__(parent=parent)
-        uipath = os.path.join(os.path.dirname(__file__), 'lamiabasechantiertram_sousobservation_tool_ui.ui')
+        uipath = os.path.join(os.path.dirname(__file__), 'lamiabasechantier_sousobservation_tool_ui.ui')
         uic.loadUi(uipath, self)
 
 

@@ -8,12 +8,12 @@ except ImportError:
 from ..base2.lamiabase_croquis_tool import BaseCroquisTool
 
 
-class BaseChantierTramCroquisTool(BaseCroquisTool):
+class BaseChantierCroquisTool(BaseCroquisTool):
 
     LOADFIRST = False
     dbasetablename = 'Photo'
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None, parentwidget=None, parent=None):
-        super(BaseChantierTramCroquisTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil, parentwidget, parent=parent)
+        super(BaseChantierCroquisTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil, parentwidget, parent=parent)
 
 

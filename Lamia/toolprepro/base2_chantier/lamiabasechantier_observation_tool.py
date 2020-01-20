@@ -39,19 +39,19 @@ from ..base2.lamiabase_observation_tool import BaseObservationTool
 #from .lamiabaseassainissement_photo_tool import BaseAssainissementPhotoTool as BasePhotoTool
 #from .lamiabaseassainissement_croquis_tool import BaseAssainissementCroquisTool as BaseCroquisTool
 
-from .lamiabasechantiertram_photo_tool import BaseChantierTramPhotoTool as BasePhotoTool
-from .lamiabasechantiertram_croquis_tool import BaseChantierTramCroquisTool as BaseCroquisTool
-from .lamiabasechantiertramintervenant_tool import BaseChantierTramIntervenantTool as BaseIntervenantTool
-from .lamiabasechantiertram_rapport_tool import BaseChantierTramRapportTool as BaseRapportTool
-from .lamiabasechantiertram_signature_tool import SignatureWidget
-from .lamiabasechantiertram_lidchooser import LidChooserWidget
-from .lamiabasechantiertram_sousobservation_tool import BaseChantierTramSousObservationTool
+from .lamiabasechantier_photo_tool import BaseChantierPhotoTool as BasePhotoTool
+from .lamiabasechantier_croquis_tool import BaseChantierCroquisTool as BaseCroquisTool
+from .lamiabasechantier_intervenant_tool import BaseChantierIntervenantTool as BaseIntervenantTool
+from .lamiabasechantier_rapport_tool import BaseChantierRapportTool as BaseRapportTool
+from .lamiabasechantier_signature_tool import SignatureWidget
+from .lamiabasechantier_lidchooser import LidChooserWidget
+from .lamiabasechantier_sousobservation_tool import BaseChantierSousObservationTool
 
 import os
 import datetime
 
 
-class BaseChantierTramObservationTool(BaseObservationTool):
+class BaseChantierObservationTool(BaseObservationTool):
 
     dbasetablename = 'Observation'
     OBSTYPE = None
@@ -59,7 +59,7 @@ class BaseChantierTramObservationTool(BaseObservationTool):
 
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
-        super(BaseChantierTramObservationTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
+        super(BaseChantierObservationTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
         self.indexstackedpage = None
 
 
@@ -301,7 +301,7 @@ class BaseChantierTramObservationTool(BaseObservationTool):
             self.lamiawidgets.append(self.signatureWidgetETP)
 
             # sous fiche
-            self.sousficheWidget = BaseChantierTramSousObservationTool(dbase=self.dbase, parentwidget=self)
+            self.sousficheWidget = BaseChantierSousObservationTool(dbase=self.dbase, parentwidget=self)
             self.sousficheWidget.NAME = None
             self.dbasechildwdgfield.append(self.sousficheWidget)
             self.userwdgfield.tabWidget_nca.widget(1).layout().addWidget(self.sousficheWidget )
@@ -333,7 +333,7 @@ class BaseChantierTramObservationTool(BaseObservationTool):
 
 
     def featureSelected(self, item=None, itemisid=False):
-        super(BaseChantierTramObservationTool, self).featureSelected(item,itemisid)
+        super(BaseChantierObservationTool, self).featureSelected(item,itemisid)
         if item is None:
             self.saveFeature()
 
@@ -365,7 +365,7 @@ class BaseChantierTramObservationTool(BaseObservationTool):
 
 
     def postInitFeatureProperties(self, feat):
-        super(BaseChantierTramObservationTool, self).postInitFeatureProperties(feat)
+        super(BaseChantierObservationTool, self).postInitFeatureProperties(feat)
 
         # init signature and lidchooser
         if self.OBSTYPE is not None:
@@ -415,13 +415,13 @@ class BaseChantierTramObservationTool(BaseObservationTool):
 class UserUI(QWidget):
     def __init__(self, parent=None):
         super(UserUI, self).__init__(parent=parent)
-        uipath = os.path.join(os.path.dirname(__file__), 'lamiabasechantiertram_observation_tool_ui.ui')
+        uipath = os.path.join(os.path.dirname(__file__), 'lamiabasechantier_observation_tool_ui.ui')
         uic.loadUi(uipath, self)
 
 class UserUI_Orange(QWidget):
     def __init__(self, parent=None):
         super(UserUI_Orange, self).__init__(parent=parent)
-        uipath = os.path.join(os.path.dirname(__file__), 'lamiabasechantiertram_observation_tool_orange_ui.ui')
+        uipath = os.path.join(os.path.dirname(__file__), 'lamiabasechantier_observation_tool_orange_ui.ui')
         uic.loadUi(uipath, self)
 
 

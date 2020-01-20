@@ -7,6 +7,7 @@ DOMAINE;         String;                  ;     Noeud_now.domaine
 
 TYPE_RES;         String;                  ;     Noeud_now.typeReseau
 NOM;         String;                  ;     NULL
+TYPE;         String;                  ;     Noeud_now.soustypeOuvrageAss
 
 TELEGEST;         String;                  ;     '0' || Noeud_now.PRtelegestion
 COTE_SURV;               Double;                               ; Noeud_now.Z - Noeud_now.prof01
@@ -37,4 +38,4 @@ geom;         Int;               ;                  ST_AsText(Noeud_now.geom)
 
 
 ###main
-FROM Noeud_now INNER JOIN Desordre_now ON Desordre_now.lid_descriptionsystem = Noeud_now.id_descriptionsystem LEFT JOIN Observation_now ON Observation_now.lid_desordre = Desordre_now.id_desordre WHERE Noeud_now.typeOuvrageAss = '10'
+FROM Noeud_now INNER JOIN Desordre_now ON Desordre_now.lid_descriptionsystem = Noeud_now.id_descriptionsystem LEFT JOIN Observation_now ON Observation_now.lid_desordre = Desordre_now.id_desordre WHERE Noeud_now.typeOuvrageAss = '40'

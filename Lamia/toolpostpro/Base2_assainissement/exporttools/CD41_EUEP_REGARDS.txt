@@ -7,7 +7,7 @@ DOMAINE;         String;                  ;     Noeud_now.domaine
 IMPLANT;         String;                  ;     Noeud_now.environnement
 TYPE_RES;         String;                  ;     Noeud_now.typeReseau
 NOM;         String;                  ;     NULL
-TYPE;         String;                  ;     Noeud_now.regard_forme
+TYPE;         String;                  ;     Noeud_now.tampon_forme
 TAMPON;         String;                  ;     NULL
 ACCESSIBIL;         String;                  ;     Noeud_now.accessibilite
 MATERIAU;         String;                  ;     Noeud_now.regard_materiau
@@ -38,4 +38,4 @@ geom;         Int;               ;                  ST_AsText(Noeud_now.geom)
 
 
 ###main
-FROM Noeud_now INNER JOIN Desordre_now ON Desordre_now.lid_descriptionsystem = Noeud_now.id_descriptionsystem JOIN Observation_now ON Observation_now.lid_desordre = Desordre_now.id_desordre WHERE Noeud_now.typeOuvrageAss = '60'
+FROM Noeud_now INNER JOIN Desordre_now ON Desordre_now.lid_descriptionsystem = Noeud_now.id_descriptionsystem LEFT JOIN Observation_now ON Observation_now.lid_desordre = Desordre_now.id_desordre WHERE Noeud_now.typeOuvrageAss = '60'

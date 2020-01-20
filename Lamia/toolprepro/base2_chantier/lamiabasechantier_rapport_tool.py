@@ -41,13 +41,13 @@ import datetime
 
 
 
-class BaseChantierTramRapportTool(BaseRapportTool):
+class BaseChantierRapportTool(BaseRapportTool):
 
     LOADFIRST = True
     dbasetablename = 'Rapport'
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
-        super(BaseChantierTramRapportTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
+        super(BaseChantierRapportTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
 
         
         

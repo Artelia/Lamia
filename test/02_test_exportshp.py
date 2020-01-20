@@ -69,7 +69,8 @@ class TestMain(Test):
         # 00_Desordres_observation_actif   00_Desordres_observation_total  00_Equipement_observation_actif
         # Export_total      Infralineaire    Noeud      Equipement      Export_total    CD41_EUEP_CANA
         # CD41_EUEP_REGARDS  CD41_EUEP_EQUIP  CD41_EUEP_AVALOIRS    CD41_EUEP_REGUL CD41_EUEP_BRANCH
-        typeexport = 'CD41_EUEP_BRANCH'
+        # CD41_EUEP_POMPAGE
+        typeexport = 'CD41_EUEP_CANA'
 
         if False:
             rootpath = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//63_Rapports//20190200_BD_exportshp//20190415_ind1"

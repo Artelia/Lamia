@@ -31,9 +31,9 @@ try:
 except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget)
 from qgis.PyQt import uic, QtCore
-from .lamiabasechantiertram_croquis_tool import BaseChantierTramCroquisTool as BaseCroquisTool
-from .lamiabasechantiertramintervenant_tool import BaseChantierTramIntervenantTool as BaseIntervenantTool
-from .lamiabasechantiertram_lidchooser import LidChooserWidget
+from .lamiabasechantier_croquis_tool import BaseChantierCroquisTool as BaseCroquisTool
+from .lamiabasechantier_intervenant_tool import BaseChantierIntervenantTool as BaseIntervenantTool
+from .lamiabasechantier_lidchooser import LidChooserWidget
 
 
 import os, datetime, logging
@@ -43,7 +43,7 @@ class SignatureWidget(QWidget):
 
     def __init__(self, parentwdg=None, intervenantid=None, signatureid=None, datetimesig=None):
         super(SignatureWidget, self).__init__(parent=parentwdg)
-        uipath = os.path.join(os.path.dirname(__file__), 'lamiabasechantiertram_signature_tool_ui.ui')
+        uipath = os.path.join(os.path.dirname(__file__), 'lamiabasechantier_signature_tool_ui.ui')
         uic.loadUi(uipath, self)
 
         self.parentwdg = parentwdg

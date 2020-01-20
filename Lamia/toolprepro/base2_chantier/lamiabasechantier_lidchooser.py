@@ -37,7 +37,7 @@ class LidChooserWidget(QWidget):
 
     def __init__(self, parentwdg=None, parentlidfield=None, parentframe=None, searchdbase='', searchfieldtoshow=[] ):
         super(LidChooserWidget, self).__init__(parent=parentwdg)
-        uipath = os.path.join(os.path.dirname(__file__), 'lamiabasechantiertram_lidchooser_ui.ui')
+        uipath = os.path.join(os.path.dirname(__file__), 'lamiabasechantier_lidchooser_ui.ui')
         uic.loadUi(uipath, self)
         self.parentwdg=parentwdg
         self.parentlidfield=parentlidfield

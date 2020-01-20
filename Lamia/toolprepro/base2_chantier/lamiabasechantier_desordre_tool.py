@@ -7,25 +7,25 @@ try:
 except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget)
 from ..base2.lamiabase_desordre_tool import BaseDesordreTool
-from .lamiabasechantiertram_observation_tool import BaseChantierTramObservationTool as BaseObservationTool
-from .lamiabasechantiertram_croquis_tool import BaseChantierTramCroquisTool as BaseCroquisTool
-from .lamiabasechantiertram_photo_tool import BaseChantierTramPhotoTool as BasePhotoTool
-from .lamiabasechantiertram_rapport_tool import BaseChantierTramRapportTool as BaseRapportTool
-from .lamiabasechantiertram_lidchooser import LidChooserWidget
+from .lamiabasechantier_observation_tool import BaseChantierObservationTool as BaseObservationTool
+from .lamiabasechantier_croquis_tool import BaseChantierCroquisTool as BaseCroquisTool
+from .lamiabasechantier_photo_tool import BaseChantierPhotoTool as BasePhotoTool
+from .lamiabasechantier_rapport_tool import BaseChantierRapportTool as BaseRapportTool
+from .lamiabasechantier_lidchooser import LidChooserWidget
 import os, inspect, datetime
 
 
-class BaseChantierTramDesordreTool(BaseDesordreTool):
+class BaseChantierDesordreTool(BaseDesordreTool):
     LOADFIRST = True
     dbasetablename = 'Desordre'
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None, parentwidget=None, parent=None):
-        super(BaseChantierTramDesordreTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil, parentwidget,
+        super(BaseChantierDesordreTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil, parentwidget,
                                                               parent=parent)
 
 
     def initTool(self):
-        super(BaseChantierTramDesordreTool, self).initTool()
+        super(BaseChantierDesordreTool, self).initTool()
         #self.NAME = 'Campagne de reconnaissance'
         #self.qtreewidgetfields = ['libelle']
         #self.linkedgeom = [['Desordre', 'lid_descriptionsystem']]
@@ -147,7 +147,7 @@ class BaseChantierTramDesordreTool(BaseDesordreTool):
 
 
     def postInitFeatureProperties(self,feat):
-        super(BaseChantierTramDesordreTool, self).postInitFeatureProperties(feat)
+        super(BaseChantierDesordreTool, self).postInitFeatureProperties(feat)
 
         self.updateListSymbols()
 
@@ -268,11 +268,11 @@ class BaseChantierTramDesordreTool(BaseDesordreTool):
 class UserUI(QWidget):
     def __init__(self, parent=None):
         super(UserUI, self).__init__(parent=parent)
-        uipath = os.path.join(os.path.dirname(__file__), 'lamiabasechantiertram_desordre_tool_ui.ui')
+        uipath = os.path.join(os.path.dirname(__file__), 'lamiabasechantier_desordre_tool_ui.ui')
         uic.loadUi(uipath, self)
 
 class UserUI_Orange(QWidget):
     def __init__(self, parent=None):
         super(UserUI_Orange, self).__init__(parent=parent)
-        uipath = os.path.join(os.path.dirname(__file__), 'lamiabasechantiertram_desordre_tool_orange_ui.ui')
+        uipath = os.path.join(os.path.dirname(__file__), 'lamiabasechantier_desordre_tool_orange_ui.ui')
         uic.loadUi(uipath, self)

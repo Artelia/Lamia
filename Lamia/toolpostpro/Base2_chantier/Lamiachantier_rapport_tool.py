@@ -20,10 +20,10 @@ from ..Base2.Lamia_rapport_tool import printPDFBaseWorker
 # ********************************* Main Widget                *******************************************************
 # ********************************************************************************************************************
 
-class ChantierTramRapportTool(RapportTool):
+class ChantierRapportTool(RapportTool):
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
-        super(ChantierTramRapportTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
+        super(ChantierRapportTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
 
 
 
