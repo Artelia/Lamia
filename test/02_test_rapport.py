@@ -4,7 +4,7 @@
 
 
 
-from Lamia.test.AbstractTest import Test
+from test.AbstractTest import Test
 import os
 import datetime
 from qgis.PyQt import QtCore
@@ -88,7 +88,8 @@ class TestMain(Test):
             if True:
                 # 01regard  Infralineaire Equipementhydraulique   EquipementCompteur   EquipementVanne
                 # EquipementRegulation  EquipementHydrant NoeudRegard nonconformite
-                indexrapport = wdg.filemanager.comboBox_files.findText('nonconformite')
+                # ORANGEnonconformitephaseA
+                indexrapport = wdg.filemanager.comboBox_files.findText('ORANGEnonconformitephaseA')
                 wdg.filemanager.comboBox_files.setCurrentIndex(indexrapport)
 
                 wdg.userwdgfield.pushButton_export.clicked.emit(True)

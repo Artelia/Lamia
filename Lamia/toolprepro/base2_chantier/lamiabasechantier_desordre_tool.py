@@ -154,6 +154,10 @@ class BaseChantierDesordreTool(BaseDesordreTool):
         if self.currentFeaturePK is None:
             self.userwdgfield.listWidget_nonconf.setCurrentRow(0)
 
+            if self.dbase.variante in ['Orange']:
+                datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d"))
+                self.initFeatureProperties(feat, self.dbasetablename, 'datedebuttravaux', datecreation)
+                self.initFeatureProperties(feat, self.dbasetablename, 'datefincontractuelle', datecreation)
 
 
 
@@ -231,11 +235,15 @@ class BaseChantierDesordreTool(BaseDesordreTool):
                 sql += " AND Observation_now.lid_desordre = " + str(currentid)
                 sql = self.dbase.updateQueryTableNow(sql)
                 res = self.dbase.query(sql)
+                if self.dbase.variante in [None, 'Lamia']:
+                    if res is not None and len(res) > 0 and not self.dbase.isAttributeNull(res[0][0]):
+                        reportype = 'TRAMnonconformite'
+                    else:
+                        reportype = 'TRAMnonconformitephaseA'
+                elif self.dbase.variante in ['Orange']:
+                    print('*********ORANGEnonconformitephaseA')
+                    reportype = 'ORANGEnonconformitephaseA'
 
-                if res is not None and len(res) > 0 and not self.dbase.isAttributeNull(res[0][0]):
-                    reportype = 'nonconformite'
-                else:
-                    reportype = 'nonconformitephaseA'
         else:
             return
 
@@ -244,7 +252,7 @@ class BaseChantierDesordreTool(BaseDesordreTool):
             self.windowdialog.loadUiDesktop()
         wdg = None
         for i, tool in enumerate(self.windowdialog.tools):
-            print(tool.__class__.__name__)
+            # print(tool.__class__.__name__)
             if 'RapportTool' in tool.__class__.__name__:
                 wdg = self.windowdialog.tools[i]
                 break

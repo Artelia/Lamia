@@ -90,9 +90,11 @@ class BaseChantierSousObservationTool(BaseObservationTool):
                                                               }},
                                     'Objet' : {'linkfield' : 'id_objet',
                                               'widgets' : {}}}
-
-                typessousfiches = self.sousfichesdict.keys()
-                self.userwdgfield.comboBox_fichetype.addItems(typessousfiches)
+                listcomboitems = []
+                for fichekey in self.sousfichesdict.keys():
+                    listcomboitems.append(fichekey + ' ' + self.sousfichesdict[fichekey]['name'])
+                #typessousfiches = self.sousfichesdict.keys()
+                self.userwdgfield.comboBox_fichetype.addItems(listcomboitems)
                 self.userwdgfield.comboBox_fichetype.currentIndexChanged.connect(self.SousFicheTypeChanged)
                 self.userwdgfield.comboBox_fichetype.currentIndexChanged.emit(0)
 
@@ -103,7 +105,8 @@ class BaseChantierSousObservationTool(BaseObservationTool):
 
     def SousFicheTypeChanged(self, comboindex):
         currentcombotext = self.userwdgfield.comboBox_fichetype.currentText()
-        currentdict = self.sousfichesdict[currentcombotext]
+        currentdict = self.sousfichesdict[currentcombotext.split(' ')[0]]
+
 
         self.userwdgfield.tableWidget.setRowCount(0)
         self.userwdgfield.tableWidget.clear()
@@ -112,32 +115,29 @@ class BaseChantierSousObservationTool(BaseObservationTool):
         self.userwdgfield.tableWidget.setHorizontalHeaderLabels(['N°', 'Critere', 'Contrôle', 'Observation'])
 
         header = self.userwdgfield.tableWidget.horizontalHeader()
-        if False:
-            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                header.setResizeMode(1, QHeaderView.Stretch)
-                header.setResizeMode(0, QHeaderView.ResizeToContents)
-            else:
-                header.setSectionResizeMode(1, QHeaderView.Stretch)
-                header.setSectionResizeMode(0, QHeaderView.ResizeToContents)
 
-        for number, name in currentdict:
+        for dataindex in currentdict['datas'].keys():
             rowPosition = self.userwdgfield.tableWidget.rowCount()
             self.userwdgfield.tableWidget.insertRow(rowPosition)
 
-
-
-            if name != '':
-                item = QTableWidgetItem(number)
+            if currentdict['datas'][dataindex]['description'] is not None:    #it is not a comment
+                item = QTableWidgetItem(dataindex)
                 item.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
                 self.userwdgfield.tableWidget.setItem(rowPosition, 0, item)
 
-                item = QTableWidgetItem(name)
+                item = QTableWidgetItem(currentdict['datas'][dataindex]['description'])
                 item.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
                 self.userwdgfield.tableWidget.setItem(rowPosition, 1, item)
 
-                wdg = QComboBox()
-                wdg.addItems(['Avec réserve', 'sans réserve', 'sans objet'])
-                self.userwdgfield.tableWidget.setCellWidget(rowPosition, 2, wdg)
+                if currentdict['datas'][dataindex]['type'] is None:
+                    wdg = QComboBox()
+                    wdg.addItems(['Avec réserve', 'sans réserve', 'sans objet'])
+                    self.userwdgfield.tableWidget.setCellWidget(rowPosition, 2, wdg)
+                else:
+                    item = QTableWidgetItem()
+                    self.userwdgfield.tableWidget.setItem(rowPosition, 2, item)
+                    item.setBackground(QtCore.Qt.gray)
+                    item.setFlags(QtCore.Qt.NoItemFlags)
 
                 wdg = QTextBrowser()
                 wdg.setMinimumHeight(30)
@@ -145,7 +145,7 @@ class BaseChantierSousObservationTool(BaseObservationTool):
                 wdg.setReadOnly(False)
                 self.userwdgfield.tableWidget.setCellWidget(rowPosition, 3, wdg)
             else:
-                item = QTableWidgetItem(number)
+                item = QTableWidgetItem(dataindex)
                 item.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
                 self.userwdgfield.tableWidget.setItem(rowPosition, 1, item)
 
@@ -157,6 +157,61 @@ class BaseChantierSousObservationTool(BaseObservationTool):
 
 
     def createDictionnary(self):
+        """
+        dict : { ..., 1.1 : {'name' : 'Tranchée,
+                            'datas' : {..., index : {'description' :  description
+                                                    , 'type' : type
+                                                    }
+                                      }
+                            }
+                }
+
+        :return:
+        """
+
+
+        pathxls = os.path.join(os.path.dirname(__file__), 'sousfiches', 'Orange.xlsx')
+        xlsbook = xlrd.open_workbook(pathxls)
+
+        sousfichesdict = {}
+        firstcolcode = None
+
+        sheet = xlsbook.sheets()[0]
+        for row in range(sheet.nrows):
+            firstcol =  sheet.cell_value(row, 0)
+
+            if firstcol == '':
+                if sheet.cell_value(row, 1) == '' and sheet.cell_value(row, 2) == '':
+                    break
+
+            else:
+                firstcolname = firstcol
+                firstcolcode = firstcolname.split(' ')[0]
+                sousfichesdict[firstcolcode] = {}
+                sousfichesdict[firstcolcode]['name'] = firstcolname.split(' ')[1]
+                sousfichesdict[firstcolcode]['datas'] = {}
+
+            sousfichesdict[firstcolcode]['datas'][sheet.cell_value(row, 1)] = {}
+            #sousfichesdict[firstcolcode]['datas'].append([sheet.cell_value(row, 1) , sheet.cell_value(row, 2), sheet.cell_value(row, 3)])
+
+            if sheet.cell_value(row, 2) != '':
+                sousfichesdict[firstcolcode]['datas'][sheet.cell_value(row, 1)]['description'] = sheet.cell_value(row, 2)
+            else:
+                sousfichesdict[firstcolcode]['datas'][sheet.cell_value(row, 1)]['description'] = None
+
+            if sheet.cell_value(row, 3) != '':
+                sousfichesdict[firstcolcode]['datas'][sheet.cell_value(row, 1)]['type'] = sheet.cell_value(row,3)
+            else:
+                sousfichesdict[firstcolcode]['datas'][sheet.cell_value(row, 1)]['type'] = None
+
+        return sousfichesdict
+
+
+
+
+
+
+    def createDictionnary_caduc(self):
         pathxls = os.path.join(os.path.dirname(__file__), 'sousfiches', 'Orange.xlsx')
         xlsbook = xlrd.open_workbook(pathxls)
 
@@ -224,7 +279,41 @@ class BaseChantierSousObservationTool(BaseObservationTool):
     def postSaveFeature(self, boolnewfeature):
         self.saveTableFeature()
 
+        self.dbase.dbasetables['Desordre']['layerqgis'].triggerRepaint()
+
+
+
     def loadTableFeature(self):
+        # get typeobservation
+        sql = "SELECT typeobservation FROM Observation WHERE pk_observation = " + str(self.currentFeaturePK)
+        res = self.dbase.query(sql)[0][0]
+
+        # for nomsousfiche in self.sousfichesdict.keys():
+        #     if nomsousfiche.split(' ')[0] == res:
+        #         self.userwdgfield.comboBox_fichetype.setCurrentText(nomsousfiche)
+        #         break
+
+        if res not in self.sousfichesdict.keys():
+            return
+
+        self.userwdgfield.comboBox_fichetype.setCurrentText(res + ' ' + self.sousfichesdict[res]['name'])
+
+        for i in range(self.userwdgfield.tableWidget.rowCount() ):
+
+            item = self.userwdgfield.tableWidget.item(i, 0)
+            if item is not None:
+                itemtext0 = item.text().split('.')[-1]
+                sql = "SELECT item_type_" + str(itemtext0) + " , item_obs_" + str(itemtext0) + " FROM Observation "
+                sql += " WHERE pk_observation = " + str(self.currentFeaturePK)
+
+                itemtype, itemobs = self.dbase.query(sql)[0]
+                if not self.dbase.isAttributeNull(itemtype):
+                    self.userwdgfield.tableWidget.cellWidget(i, 2).setCurrentIndex(itemtype)
+                self.userwdgfield.tableWidget.cellWidget(i, 3).setPlainText(itemobs)
+
+
+
+    def loadTableFeature_caduc(self):
         # get typeobservation
         sql = "SELECT typeobservation FROM Observation WHERE pk_observation = " + str(self.currentFeaturePK)
         res = self.dbase.query(sql)[0][0]
@@ -249,8 +338,35 @@ class BaseChantierSousObservationTool(BaseObservationTool):
 
 
 
-
     def saveTableFeature(self):
+        sqlupdate = []
+
+        #typeobservation
+        sqlupdate.append("typeobservation = '" + self.userwdgfield.comboBox_fichetype.currentText().split(' ')[0] + "'")
+
+        #table values
+        for i in range(self.userwdgfield.tableWidget.rowCount() ):
+            item = self.userwdgfield.tableWidget.item(i, 0)
+            if item is not None:
+                itemtext0 = item.text().split('.')[-1]
+                indexitem = int(itemtext0)
+
+                if self.userwdgfield.tableWidget.cellWidget(i, 2) is not None:
+                    columname = 'item_type_' + str(indexitem)
+                    value = self.userwdgfield.tableWidget.cellWidget(i, 2).currentIndex()
+                    sqlupdate.append(columname + ' = ' + str(value))
+
+                columname = 'item_obs_' + str(indexitem)
+                value = self.userwdgfield.tableWidget.cellWidget(i, 3).toPlainText()
+                sqlupdate.append(columname + " = '" + str(value) + "'")
+
+        sql = " UPDATE Observation SET " + ', '.join(sqlupdate)
+        sql += " WHERE pk_observation = " + str(self.currentFeaturePK)
+
+        self.dbase.query(sql)
+
+
+    def saveTableFeature_caduc(self):
         sqlupdate = []
 
         #typeobservation

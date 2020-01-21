@@ -688,6 +688,8 @@ class printPDFBaseWorker(object):
                     # composeritem = newComposition.itemByUuid(compitemuuid)
                     #imageitem.__class__ = qgis.core.QgsLayoutItemPicture
 
+                print(imageitemname, imageitem)
+
                 # print(imageitem, reportdic['images'][imageitemname])
                 imageresult = None
                 self.currentimageItem = imageitem
@@ -717,9 +719,13 @@ class printPDFBaseWorker(object):
 
                 else:
                     typeprocess = self.atlasconfData['images'][imageitemname]
-                    exec('imageresult = self.' + typeprocess + '()')
-
-
+                    txt = 'imageresult = self.' + typeprocess + '()'
+                    if sys.version_info.major == 2:
+                        exec(txt)
+                    elif sys.version_info.major == 3:
+                        ldict = locals()
+                        exec(txt, globals(), ldict)
+                        imageresult = ldict['imageresult']
 
 
                 if False:
@@ -1129,10 +1135,10 @@ class printPDFBaseWorker(object):
         dictfields = {}
         if True:
             for composeritem in newComposition.items():
-                if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                if sys.version_info.major == 2:
                     labelclasstxt = qgis.core.QgsComposerLabel
                     labelclasshtml = qgis.core.QgsComposerFrame
-                else:
+                elif sys.version_info.major == 3:
                     labelclasstxt = qgis.core.QgsLayoutItemLabel
                     labelclasshtml = qgis.core.QgsLayoutFrame
 
@@ -1142,7 +1148,7 @@ class printPDFBaseWorker(object):
                         txtsplit = composeritem.text().split('#')
                         dictfields[composeritem.uuid()] = txtsplit
                 elif isinstance(composeritem, labelclasshtml):
-                    if "#lamia" in composeritem.multiFrame().html():
+                    if composeritem.multiFrame() is not None and "#lamia" in composeritem.multiFrame().html():
                         txtsplit = composeritem.multiFrame().html().split('#')
                         dictfields[composeritem.uuid()] = txtsplit
 

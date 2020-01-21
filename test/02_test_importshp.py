@@ -4,7 +4,7 @@
 
 
 
-from Lamia.test.AbstractTest import Test
+from test.AbstractTest import Test
 import os
 import sys
 import datetime
@@ -20,7 +20,7 @@ class TestMain(Test):
     def testMethod(self):
         self.createWin()
 
-        path = "C://000_testdigue//temp_base2_ass2//test01.sqlite"
+        path = "C://000_testdigue//test_strasbourg//test0101.sqlite"
 
         self.wind.dbase.loadQgisVectorLayers(path)
         self.loadLayersInCanvas()
@@ -54,7 +54,10 @@ class TestMain(Test):
 
 
         # Infralineaire_BM Equipement_point_BM Photo_BM Graphdata_BM Desordres_ligne_BM
-        layerpath = "M://FR//BOR//VT//URBAIN//4352329-33-GPMB-diag complet EU et EP-Bacalan, Le Verdon, Pauillac et Blaye//05-ETUDES//05-1-Dessins-plans//3-Autocad//Travail PLA//ART_TRAITEMENT_backup.shp"
+        # layerpath = "M://FR//BOR//VT//URBAIN//4352329-33-GPMB-diag complet EU et EP-Bacalan, Le Verdon, Pauillac et Blaye//05-ETUDES//05-1-Dessins-plans//3-Autocad//Travail PLA//ART_TRAITEMENT_backup.shp"
+
+        layerpath = "U://FR//BOR//VT//PVR//20_LAMIA//1_DOC//renouveau//strasbourg_paul//Troncons//TRONCONS_TEST.shp"
+        layerpath = "C://000_testdigue//test_strasbourg//Troncons//TRONCONS_TEST.shp"
         layer = qgis.core.QgsVectorLayer(layerpath, 'test', "ogr")
         wdg.currentlayer = layer
 
@@ -127,7 +130,7 @@ class TestMain(Test):
         #wdg.importtable = 'Infralineaire'
         indextxt = wdg.userwdgfield.comboBox_typeimport.findText('Infralineaire')
         wdg.userwdgfield.comboBox_typeimport.setCurrentIndex(indextxt)
-        wdg.showTable()
+        #wdg.showTable()
 
         #wdg.work(layer=layer, linktable=linkinfra)
 

@@ -1313,8 +1313,8 @@ class AbstractInspectionDigueTool(QWidget):
                             return ids
 
             sql = self.postloadIds(sql)
-
             sql += ';'
+
             # print('loadIds', sql)
             query = self.dbase.query(sql)
             #ids = [row[0:1] for row in query]

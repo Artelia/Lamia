@@ -34,7 +34,7 @@ from qgis.PyQt import QtGui, uic, QtCore, QtXml
 from collections import OrderedDict
 import datetime
 import decimal
-import logging, sys
+import logging, sys, re
 import numpy as np
 from collections import OrderedDict
 
@@ -276,8 +276,8 @@ class ImportTool(AbstractLamiaTool):
 
 
 
-    def showFlowChart(self):
-        debug = False
+    def showFlowChart(self, qgslayer=None):
+        debug = True
 
         # get dest fields
         item = self.userwdgfield.comboBox_typeimport.currentText()
@@ -306,6 +306,7 @@ class ImportTool(AbstractLamiaTool):
         for field in fields:
             terminalindict[field] = {'io': 'out'}
         for field in fromlayerfields:
+            # fieldstandard = str(re.sub(r"\W", '', field))
             terminalindict[field] = {'io': 'in'}
 
         self.fc = Flowchart(terminals=terminalindict)
@@ -313,10 +314,20 @@ class ImportTool(AbstractLamiaTool):
 
         # print(len(fromlayerfields), len(fromattributesnp[1,:]))
         for i, field in enumerate(fromlayerfields):
-
             if field != '':
-                stringtoeval = 'self.fc.setInput(' + field + '=list(fromattributesnp[:,' + str(i) + ']))'
-                eval(stringtoeval)
+                if sys.version_info.major == 2:
+                    fieldstandard = field
+                if sys.version_info.major == 3:
+                    # fieldstandard = re.sub(r'([0-9])', '_', re.sub('-', '_', field))
+                    fieldstandard = field
+                    #fieldstandard = str(re.sub('-', '_', field))
+                    # fieldstandard = str(re.sub(r"\W", '', field))
+                if True:
+                    stringtoeval = 'self.fc.setInput(' + fieldstandard + '=list(fromattributesnp[:,' + str(i) + ']))'
+                    # print(fromattributesnp[:, i])
+                    # print(stringtoeval)
+                    eval(stringtoeval)
+                # self.fc.setInput(fieldstandard=list(fromattributesnp[:, i]))
 
         self.fc.outputNode.graphicsItem().bounds = QtCore.QRectF(0, 0, 200, len(fields)*15)
         self.fc.outputNode .graphicsItem().updateTerminals()
@@ -395,8 +406,11 @@ class ImportTool(AbstractLamiaTool):
 
             table_field_list.append(outputkey)
             outputres = outputflowchart[outputkey]
-            if outputres is not None and len(outputres) == 1:
-                outputres = outputres*totallinecount
+            if outputres is not None:
+                if isinstance(outputres, list) and  len(outputres) == 1:
+                    outputres = outputres*totallinecount
+                elif isinstance(outputres, float) or isinstance(outputres, int):
+                    outputres = [outputres]*totallinecount
             elif outputres is None:
                 outputres = ['NULL'] * totallinecount
 
@@ -487,14 +501,14 @@ class ImportTool(AbstractLamiaTool):
             if self.currentlayer  is None:
                 return
         else:  # debug outside qgis
-            pass
-            if True:
-                #layerpath = os.path.join(os.path.dirname(__file__), '..','..','..','test','importtool','AEP_TRON_RENOUVEAU_TRAVAIL.shp')
-                layerpath = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'test', 'importtool', 'test_import_ass.shp')
-                #layerpath =  "C://000_Modwenne//Renouv'Eau 22 05 2018//Fichier SHAPE RENOUVEAU//TABLE RENOUVEAU//AEP_TRON_RENOUVEAU_TRAVAIL.shp"
-                layerpath = "C://000_Modwenne//lamiabase//renouveauaep.shp"
+            if self.currentlayer is None:
+                # layerpath = os.path.join(os.path.dirname(__file__), '..','..','..','test','importtool','AEP_TRON_RENOUVEAU_TRAVAIL.shp')
+                # layerpath = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'test', 'importtool', 'test_import_ass.shp')
+                # layerpath =  "C://000_Modwenne//Renouv'Eau 22 05 2018//Fichier SHAPE RENOUVEAU//TABLE RENOUVEAU//AEP_TRON_RENOUVEAU_TRAVAIL.shp"
+                # layerpath = "C://000_Modwenne//lamiabase//renouveauaep.shp"
+                layerpath = "U://FR//BOR//VT//PVR//20_LAMIA//1_DOC//renouveau//strasbourg_paul//Troncons//TRONCONS.shp"
                 self.currentlayer = qgis.core.QgsVectorLayer(layerpath, 'test', 'ogr')
-            # currentlayerfieldsname = ['', 'ALTINGF', 'typ']
+
 
 
 

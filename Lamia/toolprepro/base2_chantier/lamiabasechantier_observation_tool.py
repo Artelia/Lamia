@@ -357,6 +357,9 @@ class BaseChantierObservationTool(BaseObservationTool):
             self.parentWidget.updateListSymbols()
 
 
+
+
+
     def postloadIds(self,sqlin):
         sqlout = sqlin + " AND typeobservation = '" + str(self.OBSTYPE) + "' AND lid_observation IS NULL"
         return sqlout

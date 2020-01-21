@@ -741,6 +741,12 @@
             <iconset resource="../resources.qrc">
              <normaloff>:/plugins/Lamia/icons/print.png</normaloff>:/plugins/Lamia/icons/print.png</iconset>
            </property>
+           <property name="default">
+            <bool>false</bool>
+           </property>
+           <property name="flat">
+            <bool>false</bool>
+           </property>
           </widget>
          </item>
         </layout>
@@ -765,7 +771,7 @@
    <item>
     <widget class="QGroupBox" name="groupBox_properties">
      <property name="styleSheet">
-      <string notr="true">background-color: rgba(86, 137, 54,20);</string>
+      <string notr="true"/>
      </property>
      <property name="title">
       <string/>

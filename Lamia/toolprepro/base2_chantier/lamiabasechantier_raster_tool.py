@@ -47,3 +47,7 @@ class BaseChantierRasterTool(BaseRasterTool):
     def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
         super(BaseChantierRasterTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
 
+    def initTool(self):
+        super(BaseChantierRasterTool, self).initTool()
+        self.qtreewidgetfields = ['typeraster', 'libelle']
+
