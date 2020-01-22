@@ -3080,7 +3080,7 @@ class AbstractLamiaTool(QWidget):
         if feat.geometry().centroid() is not None and not feat.geometry().centroid().isNull():
             point2 = self.dbase.xform.transform(feat.geometry().centroid().asPoint())
         else:
-            # print(feat.geometry().asWkt())
+            print(feat.geometry().asWkt())
             if sys.version_info.major == 2:
                 point2 = self.dbase.xform.transform(feat.geometry().vertexAt(0) )
             elif sys.version_info.major == 3:
@@ -3267,7 +3267,8 @@ class AbstractLamiaTool(QWidget):
             if not self.currentFeature.id() in selectedfeatureids:
                 type = self.dbasetable['layer'].geometryType()
                 geom = qgis.core.QgsGeometry(self.currentFeature.geometry())
-                if type == 1 and len(geom.asPolyline()) == 2 and geom.asPolyline()[0] == geom.asPolyline()[1] :
+                if type == 1 and ((len(geom.asPolyline()) == 2 and geom.asPolyline()[0] == geom.asPolyline()[1])
+                                    or len(geom.asPolyline()) == 1):
                     #case when point stored in polyline
                     type = 0
                     if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
@@ -3284,6 +3285,8 @@ class AbstractLamiaTool(QWidget):
                 self.rubberBandBlink.addGeometry(geom, None)
                 self.rubberBandBlink.show()
                 self.canvas.refresh()
+
+
 
     def goToFeatureReleased(self):
         """

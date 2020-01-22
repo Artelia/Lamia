@@ -57,6 +57,8 @@ class TestMain(Test):
         path = "C://000_testdigue//000_test_virginie//ROMORANTIN BDD.sqlite"
         path = "C://000_testdigue//temp_base2_chantiertram//test01.sqlite"
 
+        # path = "U://FR//BOR//VT//PVR//20_LAMIA//1_DOC//chantierorange//Demo//base_test//test01.sqlite"
+
         
         # self.dbase.xlsreader = True
         self.dbase.loadQgisVectorLayers(path)

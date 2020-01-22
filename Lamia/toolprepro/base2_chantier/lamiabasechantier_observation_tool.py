@@ -193,6 +193,7 @@ class BaseChantierObservationTool(BaseObservationTool):
                                                      'widgets': {
                                                          'datetimeobservation': self.userwdgfield.dateTimeEdit_datetimeobs,
                                                          'nca_meteo': self.userwdgfield.lineEdit_meteo,
+                                                         'nca_mandataire': self.userwdgfield.comboBox_mandataire,
                                                          'nca_etp_presentes': self.userwdgfield.lineEdit_etppres,
 
                                                          'nca_planning': self.userwdgfield.comboBox_planning,

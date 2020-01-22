@@ -207,6 +207,6 @@ class printPDFBaseWorker(printPDFBaseWorker):
                  </html>
                  """
 
-        print(html)
+        # print(html)
 
         return html

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>523</width>
-    <height>423</height>
+    <width>530</width>
+    <height>305</height>
    </rect>
   </property>
   <property name="contextMenuPolicy">
@@ -61,6 +61,18 @@
          </property>
          <widget class="QWidget" name="NCA">
           <layout class="QVBoxLayout" name="verticalLayout_3">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
            <item>
             <widget class="QTabWidget" name="tabWidget_nca">
              <property name="tabPosition">
@@ -74,18 +86,37 @@
                <string>Fiche principale</string>
               </attribute>
               <layout class="QVBoxLayout" name="verticalLayout_12">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
                <item>
                 <widget class="QTabWidget" name="tabWidget">
                  <property name="currentIndex">
-                  <number>0</number>
+                  <number>3</number>
                  </property>
                  <widget class="QWidget" name="tab_18">
                   <attribute name="title">
                    <string>Généralités</string>
                   </attribute>
                   <layout class="QGridLayout" name="gridLayout_15">
-                   <item row="1" column="1">
-                    <widget class="QLineEdit" name="lineEdit_meteo"/>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_25">
+                     <property name="text">
+                      <string>Date et heure</string>
+                     </property>
+                     <property name="wordWrap">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
                    </item>
                    <item row="1" column="0">
                     <widget class="QLabel" name="label_27">
@@ -97,33 +128,10 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="0">
-                    <widget class="QLabel" name="label_25">
-                     <property name="text">
-                      <string>Date et heure</string>
-                     </property>
-                     <property name="wordWrap">
-                      <bool>true</bool>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="1">
-                    <widget class="QDateTimeEdit" name="dateTimeEdit_datetimeobs"/>
-                   </item>
-                   <item row="2" column="0">
-                    <widget class="QLabel" name="label_28">
-                     <property name="text">
-                      <string>Entreprises présentes</string>
-                     </property>
-                     <property name="wordWrap">
-                      <bool>true</bool>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="1">
+                   <item row="3" column="1">
                     <widget class="QLineEdit" name="lineEdit_etppres"/>
                    </item>
-                   <item row="3" column="0">
+                   <item row="4" column="0">
                     <spacer name="verticalSpacer">
                      <property name="orientation">
                       <enum>Qt::Vertical</enum>
@@ -135,6 +143,32 @@
                       </size>
                      </property>
                     </spacer>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QDateTimeEdit" name="dateTimeEdit_datetimeobs"/>
+                   </item>
+                   <item row="3" column="0">
+                    <widget class="QLabel" name="label_28">
+                     <property name="text">
+                      <string>Sous traitants présents</string>
+                     </property>
+                     <property name="wordWrap">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QLineEdit" name="lineEdit_meteo"/>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="label_10">
+                     <property name="text">
+                      <string>Mandataire</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QComboBox" name="comboBox_mandataire"/>
                    </item>
                   </layout>
                  </widget>
@@ -383,6 +417,65 @@
                       <string>Conformité ?</string>
                      </property>
                      <layout class="QGridLayout" name="gridLayout_20">
+                      <item row="4" column="2">
+                       <widget class="QLabel" name="label_42">
+                        <property name="text">
+                         <string>Blindage des tranchées / fouilles</string>
+                        </property>
+                        <property name="wordWrap">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="3" column="2">
+                       <widget class="QLabel" name="label_41">
+                        <property name="text">
+                         <string>Protection des tranchées / fouilles (bariérage)</string>
+                        </property>
+                        <property name="wordWrap">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="4" column="3">
+                       <widget class="QComboBox" name="comboBox_sec_blindage"/>
+                      </item>
+                      <item row="3" column="3">
+                       <widget class="QComboBox" name="comboBox_sec_protectiontranchee"/>
+                      </item>
+                      <item row="2" column="2">
+                       <widget class="QLabel" name="label_40">
+                        <property name="text">
+                         <string>Propreté chantier et abords</string>
+                        </property>
+                        <property name="wordWrap">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="0" column="2">
+                       <widget class="QLabel" name="label_38">
+                        <property name="text">
+                         <string>Eclairage / signalisation</string>
+                        </property>
+                        <property name="wordWrap">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="1" column="2">
+                       <widget class="QLabel" name="label_39">
+                        <property name="text">
+                         <string>Stockage des déchets / tri selectif</string>
+                        </property>
+                        <property name="wordWrap">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="0" column="3">
+                       <widget class="QComboBox" name="comboBox_sec_eclairage"/>
+                      </item>
                       <item row="4" column="0">
                        <widget class="QLabel" name="label_37">
                         <property name="text">
@@ -393,48 +486,18 @@
                         </property>
                        </widget>
                       </item>
-                      <item row="0" column="2">
-                       <widget class="QLabel" name="label_41">
-                        <property name="text">
-                         <string>Protection des tranchées / fouilles (bariérage)</string>
-                        </property>
-                        <property name="wordWrap">
-                         <bool>true</bool>
-                        </property>
-                       </widget>
-                      </item>
-                      <item row="6" column="0">
-                       <widget class="QLabel" name="label_39">
-                        <property name="text">
-                         <string>Stockage des déchets / tri selectif</string>
-                        </property>
-                        <property name="wordWrap">
-                         <bool>true</bool>
-                        </property>
-                       </widget>
-                      </item>
-                      <item row="5" column="0">
-                       <widget class="QLabel" name="label_38">
-                        <property name="text">
-                         <string>Eclairage / signalisation</string>
-                        </property>
-                        <property name="wordWrap">
-                         <bool>true</bool>
-                        </property>
-                       </widget>
-                      </item>
-                      <item row="0" column="0">
-                       <widget class="QLabel" name="label_33">
-                        <property name="text">
-                         <string>Sécurité du Personnel</string>
-                        </property>
-                        <property name="wordWrap">
-                         <bool>true</bool>
-                        </property>
-                       </widget>
-                      </item>
                       <item row="0" column="1">
                        <widget class="QComboBox" name="comboBox_sec_personnel"/>
+                      </item>
+                      <item row="0" column="4">
+                       <widget class="QLabel" name="label_43">
+                        <property name="text">
+                         <string>Réunion marquage / piquetage réalisée</string>
+                        </property>
+                        <property name="wordWrap">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
                       </item>
                       <item row="2" column="0">
                        <widget class="QLabel" name="label_35">
@@ -456,10 +519,13 @@
                         </property>
                        </widget>
                       </item>
-                      <item row="7" column="0">
-                       <widget class="QLabel" name="label_40">
+                      <item row="1" column="3">
+                       <widget class="QComboBox" name="comboBox_sec_stockagedechet"/>
+                      </item>
+                      <item row="0" column="0">
+                       <widget class="QLabel" name="label_33">
                         <property name="text">
-                         <string>Propreté chantier et abords</string>
+                         <string>Sécurité du Personnel</string>
                         </property>
                         <property name="wordWrap">
                          <bool>true</bool>
@@ -476,30 +542,25 @@
                         </property>
                        </widget>
                       </item>
-                      <item row="0" column="3">
-                       <widget class="QComboBox" name="comboBox_sec_protectiontranchee"/>
+                      <item row="2" column="3">
+                       <widget class="QComboBox" name="comboBox_sec_proprete"/>
                       </item>
-                      <item row="1" column="2">
-                       <widget class="QLabel" name="label_42">
-                        <property name="text">
-                         <string>Blindage des tranchées / fouilles</string>
-                        </property>
-                        <property name="wordWrap">
-                         <bool>true</bool>
-                        </property>
-                       </widget>
+                      <item row="4" column="1">
+                       <widget class="QComboBox" name="comboBox_sec_circul"/>
                       </item>
-                      <item row="2" column="2">
-                       <widget class="QLabel" name="label_43">
-                        <property name="text">
-                         <string>Réunion marquage / piquetage réalisée</string>
-                        </property>
-                        <property name="wordWrap">
-                         <bool>true</bool>
-                        </property>
-                       </widget>
+                      <item row="1" column="1">
+                       <widget class="QComboBox" name="comboBox_sec_protection"/>
                       </item>
-                      <item row="3" column="2">
+                      <item row="3" column="1">
+                       <widget class="QComboBox" name="comboBox_sec_panneauxchant"/>
+                      </item>
+                      <item row="2" column="1">
+                       <widget class="QComboBox" name="comboBox_sec_afficharrete"/>
+                      </item>
+                      <item row="0" column="5">
+                       <widget class="QComboBox" name="comboBox_sec_reunionmarquage"/>
+                      </item>
+                      <item row="1" column="4">
                        <widget class="QLabel" name="label_44">
                         <property name="text">
                          <string>Entretien eu marquage</string>
@@ -509,7 +570,10 @@
                         </property>
                        </widget>
                       </item>
-                      <item row="4" column="2">
+                      <item row="1" column="5">
+                       <widget class="QComboBox" name="comboBox_sec_entretienmarquage"/>
+                      </item>
+                      <item row="2" column="4">
                        <widget class="QLabel" name="label_45">
                         <property name="text">
                          <string>Accessibilité organes de coupure Gaz/AEP</string>
@@ -519,7 +583,10 @@
                         </property>
                        </widget>
                       </item>
-                      <item row="5" column="2">
+                      <item row="2" column="5">
+                       <widget class="QComboBox" name="comboBox_sec_accesscoupure"/>
+                      </item>
+                      <item row="3" column="4">
                        <widget class="QLabel" name="label_46">
                         <property name="text">
                          <string>Travail en hauteur</string>
@@ -529,40 +596,7 @@
                         </property>
                        </widget>
                       </item>
-                      <item row="1" column="1">
-                       <widget class="QComboBox" name="comboBox_sec_protection"/>
-                      </item>
-                      <item row="2" column="1">
-                       <widget class="QComboBox" name="comboBox_sec_afficharrete"/>
-                      </item>
-                      <item row="3" column="1">
-                       <widget class="QComboBox" name="comboBox_sec_panneauxchant"/>
-                      </item>
-                      <item row="4" column="1">
-                       <widget class="QComboBox" name="comboBox_sec_circul"/>
-                      </item>
-                      <item row="5" column="1">
-                       <widget class="QComboBox" name="comboBox_sec_eclairage"/>
-                      </item>
-                      <item row="6" column="1">
-                       <widget class="QComboBox" name="comboBox_sec_stockagedechet"/>
-                      </item>
-                      <item row="7" column="1">
-                       <widget class="QComboBox" name="comboBox_sec_proprete"/>
-                      </item>
-                      <item row="1" column="3">
-                       <widget class="QComboBox" name="comboBox_sec_blindage"/>
-                      </item>
-                      <item row="2" column="3">
-                       <widget class="QComboBox" name="comboBox_sec_reunionmarquage"/>
-                      </item>
-                      <item row="3" column="3">
-                       <widget class="QComboBox" name="comboBox_sec_entretienmarquage"/>
-                      </item>
-                      <item row="4" column="3">
-                       <widget class="QComboBox" name="comboBox_sec_accesscoupure"/>
-                      </item>
-                      <item row="5" column="3">
+                      <item row="3" column="5">
                        <widget class="QComboBox" name="comboBox_sec_travailhauteur"/>
                       </item>
                      </layout>
@@ -619,7 +653,20 @@
               <attribute name="title">
                <string>Sous fiches</string>
               </attribute>
-              <layout class="QVBoxLayout" name="verticalLayout_24"/>
+              <layout class="QVBoxLayout" name="verticalLayout_24">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+              </layout>
              </widget>
             </widget>
            </item>

@@ -688,7 +688,7 @@ class printPDFBaseWorker(object):
                     # composeritem = newComposition.itemByUuid(compitemuuid)
                     #imageitem.__class__ = qgis.core.QgsLayoutItemPicture
 
-                print(imageitemname, imageitem)
+                # print(imageitemname, imageitem)
 
                 # print(imageitem, reportdic['images'][imageitemname])
                 imageresult = None
@@ -714,8 +714,10 @@ class printPDFBaseWorker(object):
                     #imageresult = self.getPhoto(reportdic, currentfeature)
                     imageresult = self.getNumberedRessource(atlasfeat, table, ressourcenum)
 
-                elif self.atlasconfData['images'][imageitemname] == 'logo':
-                    imageresult = os.path.join(os.path.dirname(__file__), '..','..', 'DBASE', 'utils', 'logo.jpg')
+                elif self.atlasconfData['images'][imageitemname][0:4] == 'logo':
+                    imagepath = os.path.join(os.path.dirname(__file__), '..','..', 'DBASE', 'utils', self.atlasconfData['images'][imageitemname] + '.png')
+                    # print('***********************',imagepath )
+                    imageresult = os.path.join(imagepath)
 
                 else:
                     typeprocess = self.atlasconfData['images'][imageitemname]

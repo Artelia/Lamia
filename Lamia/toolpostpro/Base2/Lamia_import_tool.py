@@ -403,7 +403,6 @@ class ImportTool(AbstractLamiaTool):
         results = []
         geoms=[]
         for outputkey in outputflowchart.keys():
-
             table_field_list.append(outputkey)
             outputres = outputflowchart[outputkey]
             if outputres is not None:

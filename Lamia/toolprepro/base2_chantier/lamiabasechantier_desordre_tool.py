@@ -105,7 +105,7 @@ class BaseChantierDesordreTool(BaseDesordreTool):
 
                                                               'commune': self.userwdgfield.lineEdit_commune,
                                                               'rue': self.userwdgfield.lineEdit_rue,
-                                                              'za_sro': self.userwdgfield.lineEdit_zasro,
+                                                              'za_sro': self.userwdgfield.comboBox_zasro,
                                                               'datedebuttravaux': self.userwdgfield.dateEdit_debuttrav,
                                                               'datefincontractuelle': self.userwdgfield.dateEdit_fintrav,
 

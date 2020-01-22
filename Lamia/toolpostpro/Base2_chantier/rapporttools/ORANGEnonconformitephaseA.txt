@@ -32,9 +32,11 @@ map1;       2500;       Predefined      ;['atlaslayer','Infralineaire', 'scan25'
 ###images
 # traitement des éléments de type image
 #itemname   ; type
-#logo1;logo
-#logo2;logo
-#logo3;logo
+logo1;logo_artelia
+logo2;logo_artelia
+logoclient1;logo_orange
+logoclient2;logo_orange
+
 #extrait_plan;NCA.croquis1
 NCA_ressource1;NCA.photo1
 NCA_ressource2;NCA.photo2
