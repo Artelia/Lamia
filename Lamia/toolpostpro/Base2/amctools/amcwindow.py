@@ -758,6 +758,8 @@ class AMCWindow(QDialog):
             sqlsplitted['WHERE'] = sentence
         sqlfinal = self.dbase.rebuildSplittedQuery(sqlsplitted)
 
+        print('***', sqlfinal)
+
         self.starttime = time.time()
         self.createdataframe.testsql = True  # before prepareVLayerScript
         self.createdataframe.scriptvl = sqlfinal
@@ -1542,6 +1544,12 @@ class CreateDataframe(QtCore.QObject):
 
         else:
             if not os.path.isfile(self.filename):
+                self.createTable()
+            #another test
+            self.virtuallayerdbase.connectToDBase(slfile=self.filename)
+            sql = "SELECT updatestatus FROM  lamiaconf"
+            res = self.virtuallayerdbase.query(sql)
+            if res is None:
                 self.createTable()
             self.createTempSpatialite()
             self.virtuallayerdbase.connectToDBase(slfile=self.filename)

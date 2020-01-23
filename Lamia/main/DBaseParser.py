@@ -252,6 +252,10 @@ class DBaseParser(QtCore.QObject):
         if debug: logging.getLogger("Lamia").debug('started')
 
         self.variante = variante
+        self.dbasetype = dbasetype
+        self.dbaseressourcesdirectory = dbaseressourcesdirectory
+        self.spatialitefile = slfile
+
         # create dbasedict
         if not self.xlsreader:
             self.createDBDictionary(worktype)
@@ -677,11 +681,9 @@ class DBaseParser(QtCore.QObject):
 
 
         else:
-            createfilesdir = os.path.join(self.dbaseressourcesdirectory,'config','dbase')
+            createfilesdir = os.path.join(self.dbaseressourcesdirectory,'config','dbase',self.type + '.xlsx')
             if not os.path.exists(createfilesdir):
                 return
-
-
 
         if debug: logging.getLogger("Lamia").debug('createfilesdir : %s', str(createfilesdir))
 
@@ -1491,6 +1493,7 @@ class DBaseParser(QtCore.QObject):
                 self.createDBDictionary(type, configdir=True)
             else:
                 self.createDBDictionary2(type)
+                print('***********')
                 self.createDBDictionary2(type, configdir=True)
 
 
@@ -1825,7 +1828,7 @@ class DBaseParser(QtCore.QObject):
         sqltemp = sqlin.split(' ')
         indexparenthesis=0
 
-        specwords = ['WITH', 'SELECT', 'FROM', 'WHERE', 'GROUP','ORDER']
+        specwords = ['WITH', 'SELECT', 'FROM', 'WHERE', 'GROUP','ORDER','LIMIT']
         listres={}
         actualsqlword = None
         for sqlword in sqltemp:
@@ -1859,6 +1862,8 @@ class DBaseParser(QtCore.QObject):
             sqlout += ' GROUP BY ' + sqlin['GROUP']
         if 'ORDER' in sqlin.keys():
             sqlout += ' ORDER BY ' + sqlin['ORDER']
+        if 'LIMIT' in sqlin.keys():
+            sqlout += ' LIMIT ' + sqlin['LIMIT']
         return sqlout
 
 
