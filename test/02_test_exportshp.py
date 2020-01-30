@@ -38,7 +38,7 @@ class TestMain(Test):
         path = "C://000_testdigue//0_bastien//LANDY.sqlite"
         path = "M://FR//BOR//VT//URBAIN//4352502-87-CDC_HLEM//5_ETUDES//51_SIG//SQLITE//Berneuil//Berneuil.sqlite"
         path = "C://000_testdigue//000_test_virginie//ROMORANTIN BDD.sqlite"
-
+        path = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//BD_totale_ind11.sqlite"
         self.wind.dbase.loadQgisVectorLayers(path)
         self.wind.loadUiDesktop()
 
@@ -70,7 +70,7 @@ class TestMain(Test):
         # Export_total      Infralineaire    Noeud      Equipement      Export_total    CD41_EUEP_CANA
         # CD41_EUEP_REGARDS  CD41_EUEP_EQUIP  CD41_EUEP_AVALOIRS    CD41_EUEP_REGUL CD41_EUEP_BRANCH
         # CD41_EUEP_POMPAGE
-        typeexport = 'CD41_EUEP_CANA'
+        typeexport = '00_Equipement_observation_actif'
 
         if False:
             rootpath = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//63_Rapports//20190200_BD_exportshp//20190415_ind1"

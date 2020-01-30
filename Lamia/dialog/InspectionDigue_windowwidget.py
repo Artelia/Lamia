@@ -319,7 +319,9 @@ class InspectiondigueWindowWidget(QMainWindow):
         # self.dbase.recentDBaseChanged.connect(self.updateRecentDBaseMenu)
         self.dbase.dBaseLoaded.connect(self.DBaseLoaded)
         self.dbase.errorMessage.connect(self.errorMessage)
+        self.dbase.errorquerymessage.connect(self.errorMessage)
         self.dbase.normalMessage.connect(self.normalMessage)
+
 
         self._readRecentDBase()
 
