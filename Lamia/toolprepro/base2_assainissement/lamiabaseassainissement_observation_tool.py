@@ -304,6 +304,7 @@ class BaseAssainissementObservationTool(BaseObservationTool):
                                 self.userwdgfield.stackedWidget_2.setCurrentIndex(2)
                             else:
                                 self.userwdgfield.stackedWidget_2.setCurrentIndex(3)
+
                 elif self.dbase.variante in ['CD41']:
                     if grpdes == 'NOD' and self.parentWidget.parentWidget is not None and self.parentWidget.parentWidget.currentFeature is not None:
                         if self.parentWidget.parentWidget.dbasetablename == 'Noeud':

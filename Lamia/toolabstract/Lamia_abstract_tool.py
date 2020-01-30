@@ -268,6 +268,9 @@ class AbstractLamiaTool(QWidget):
         #for lid choosers
         self.lamiawidgets = []
 
+        #for copy purpose
+        self.templinkuserwdg = None
+
         # *******************************************************
         # raw connection
         # *******************************************************
@@ -886,6 +889,9 @@ class AbstractLamiaTool(QWidget):
         childfieldnames = [list(dbasetable['fields'].keys())[i] for i in range(len(listparentcst))
                            if parentfieldname == listparentcst[i]]
 
+        if debug: print('**', listparentcst)
+        if debug: print('***', childfieldnames)
+
         if comefromrawtable:
             listfieldname = [self.tableWidget.item(row, 0).text() for row in range(self.tableWidget.rowCount())]
             for childfieldname in childfieldnames:
@@ -901,11 +907,14 @@ class AbstractLamiaTool(QWidget):
                     combochild.addItems(listtoadd)
         else:
             for childfieldname in childfieldnames:
-                if dbasetable['fields'][parentfieldname][
-                    'PGtype'] == 'INT' and parentcstvalue != '' and parentcstvalue is not None:
+                if dbasetable['fields'][parentfieldname]['PGtype'] == 'INT' and parentcstvalue != '' and parentcstvalue is not None:
                     parentcstvalue = int(parentcstvalue)
-                listtoadd = [value[0] for value in dbasetable['fields'][childfieldname]['Cst'] if
-                             (value[2] is None or parentcstvalue in value[2])]
+
+
+                listtoadd = [value[0] for value in dbasetable['fields'][childfieldname]['Cst'] if (value[2] is None or parentcstvalue in value[2])]
+
+                if debug: print('****', listtoadd)
+
                 if childfieldname in self.linkuserwdg[parenttablename]['widgets']:
                     combochild = self.linkuserwdg[parenttablename]['widgets'][childfieldname]
                     combochild.clear()
@@ -1097,6 +1106,15 @@ class AbstractLamiaTool(QWidget):
                             self.linkedtreewidget.invisibleRootItem().child(0).setExpanded(True)
                     else:
                         self.initFeatureProperties(None)
+
+                elif hasattr(self, 'combotypeitems'):
+                    print('**', 'combotypeitems')
+                    self.combowdg.clear()
+                    self.combowdg.addItems(self.combotypeitems)
+                    self.combowdg.setVisible(True)
+                    self.combowdg.currentIndexChanged.connect(self.combotypeitemsChanged)
+                    self.combowdg.currentIndexChanged.emit(0)
+
                 else:
                     self.linkedtreewidget.clear()
 
@@ -1106,6 +1124,78 @@ class AbstractLamiaTool(QWidget):
 
                 # Specific method
                 self.postOnActivation()
+
+    def getcombotypeitemsWhereClause(self):
+        ids = [item.text(0) for item in self.linkedtreewidget.selectedItems() ]
+        sqlwhereclause =  self.combowdg.currentText() + "_now.id_" + self.combowdg.currentText().lower() + " IN (" + ','.join(ids) + ')'
+        return sqlwhereclause
+
+    def combotypeitemsChanged(self, indexitem):
+
+        self.disconnectIdsGui()
+        self._clearLinkedTreeWidget()
+
+        headerlist = ['libelle']
+        headerlist.insert(0, 'ID')
+        self.linkedtreewidget.setColumnCount(len(headerlist))
+        self.linkedtreewidget.header().setVisible(True)
+        self.linkedtreewidget.setHeaderItem(QTreeWidgetItem(headerlist))
+        header = self.linkedtreewidget.header()
+        lenheaderlist = len(headerlist)
+        if sys.version_info.major == 2:
+            for i in range(lenheaderlist):
+                header.setResizeMode(i, QHeaderView.ResizeToContents)
+            header.setResizeMode(lenheaderlist - 1, QHeaderView.Stretch)
+        elif sys.version_info.major == 3:
+            for i in range(lenheaderlist):
+                header.setSectionResizeMode(i, QHeaderView.ResizeToContents)
+            header.setSectionResizeMode(lenheaderlist - 1, QHeaderView.Stretch)
+
+        parentitem = self.linkedtreewidget.invisibleRootItem()
+
+        tabletoshow = self.combowdg.currentText()
+        print('**', tabletoshow)
+        if tabletoshow == '':
+            return
+
+
+
+        sql = "SELECT id_" + tabletoshow.lower() + " ,"
+        if len(self.qtreewidgetfields) > 0:
+            sql += ','.join(self.qtreewidgetfields)
+        sql += " FROM " + tabletoshow  + "_now"
+        self.dbasetablename = tabletoshow
+
+
+
+        if False:
+            if self.combowdg.currentText() == 'Troncon':
+                sql = "SELECT id_infralineaire "
+                if len(self.qtreewidgetfields) > 0:
+                    sql += "," + ','.join(self.qtreewidgetfields)
+                sql += " FROM Infralineaire_now"
+
+                self.dbasetablename = 'Infralineaire'
+
+            elif self.combowdg.currentText() == 'Zone geographique':
+                sql = "SELECT id_zonegeo "
+                if len(self.qtreewidgetfields) > 0:
+                    sql += "," + ','.join(self.qtreewidgetfields)
+                sql += " FROM zonegeo_qgis WHERE lpk_revision_end IS NULL"
+
+                self.dbasetablename = 'Zonegeo'
+
+        sql = self.dbase.updateQueryTableNow(sql)
+        query = self.dbase.query(sql)
+        ids = [list(row) for row in query]
+
+        lenqtreewidg = len(self.qtreewidgetfields) + 1
+        self.treefeatlist = [[id[0], QTreeWidgetItem([str(id[i]) for i in range(lenqtreewidg)])] for id in ids]
+        parentitem.addChildren([elem[1] for elem in self.treefeatlist])
+
+        # self.propertieswdgDESORDRE.reloadgraphtype()
+
+        self.connectIdsGui()
 
 
 
@@ -1148,6 +1238,11 @@ class AbstractLamiaTool(QWidget):
             self.rubberBand.reset(0)
         # self.rubberBand = None
         self.tempgeometry = None
+
+        if hasattr(self, 'combotypeitems'):
+            self.dbasetablename = None
+            self.combowdg.setVisible(False)
+            self._clearLinkedTreeWidget()
 
         # disconnection
         self.disconnectIdsGui()
@@ -3198,6 +3293,9 @@ class AbstractLamiaTool(QWidget):
 
         for tablename in self.linkuserwdg.keys():
             for field in self.linkuserwdg[tablename]['widgets'].keys():
+                if field in ['X', 'Y', 'Z', 'dX', 'dY', 'dZ']:
+                    continue
+
                 wdg = self.linkuserwdg[tablename]['widgets'][field]
                 if isinstance(wdg, QComboBox):
                     self.templinkuserwdg[wdg] = wdg.currentIndex()
@@ -3233,6 +3331,9 @@ class AbstractLamiaTool(QWidget):
             for tablename in self.linkuserwdg.keys():
                 for field in self.linkuserwdg[tablename]['widgets'].keys():
                     wdg = self.linkuserwdg[tablename]['widgets'][field]
+                    print(dicttopaste)
+                    if wdg not in list(dicttopaste.keys()):
+                        continue
                     if isinstance(wdg, QComboBox):
                         wdg.setCurrentIndex(dicttopaste[wdg])
                     elif isinstance(wdg, QSpinBox) or isinstance(wdg, QDoubleSpinBox):

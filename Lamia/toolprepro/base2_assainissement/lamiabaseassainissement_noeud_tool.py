@@ -101,6 +101,7 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
                                                              'typeReseau': self.userwdgfield.comboBox_typeReseau,
                                                             'environnement' : self.userwdgfield.comboBox_environnement,
                                                              'typeOuvrageAss': self.userwdgfield.comboBox_typeOuvrageAss,
+                                                             'soustypeOuvrageAss': self.userwdgfield.comboBox_soustype,
                                                             'tampon_forme': self.userwdgfield.comboBox_Formetampon,
                                                              'accessibilite': self.userwdgfield.comboBox_accessibilite,
 

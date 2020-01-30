@@ -56,10 +56,16 @@ class TestMain(Test):
         path = "U://FR//BOR//VT//PVR//20_LAMIA//1_DOC//renouveau//Pack_Renouveau//02_lamia_renouveau_prerempli//lamia_renouveau_prerempli.sqlite"
         # path = "C://000_testdigue//000_test_virginie//ROMORANTIN BDD.sqlite"
         # path = "C://000_testdigue//temp_base2_chantiertram//test01.sqlite"
-
+        #
         # path = "U://FR//BOR//VT//PVR//20_LAMIA//1_DOC//chantierorange//Demo//base_test//test01.sqlite"
+        # path = "C://000_testdigue//temp_base2_ass2//test01.sqlite"
+        # path = "C://000_testdigue//temp_base2_ass2//test01.sqlite"
+
+        # path = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//BD_totale_ind11.sqlite"
         path = "C://000_testdigue//temp_base2_ass2//test01.sqlite"
-        
+
+        path = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//BD_totale_ind9.sqlite"
+
         # self.dbase.xlsreader = True
         self.dbase.loadQgisVectorLayers(path)
         print('ok0')

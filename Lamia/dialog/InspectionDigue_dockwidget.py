@@ -108,7 +108,7 @@ class InspectiondigueDockWidget(QDockWidget):
                     tool.rubberBand.reset(0)
 
 
-            self.windowwidget.dbase.reInitDBase()
+            # self.windowwidget.dbase.reInitDBase()
             self.windowwidget.cleanLayerTree()
 
         self.windowwidget.gpsutil.closeConnection()

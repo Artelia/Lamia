@@ -81,6 +81,7 @@ class ImportTool(AbstractLamiaTool):
         self.qfiledlg = self.windowdialog.qfiledlg
 
         self.flowqlabelmessage = None
+        self.currentlayer = None
 
 
     def initTool(self):
@@ -501,11 +502,7 @@ class ImportTool(AbstractLamiaTool):
                 return
         else:  # debug outside qgis
             if self.currentlayer is None:
-                # layerpath = os.path.join(os.path.dirname(__file__), '..','..','..','test','importtool','AEP_TRON_RENOUVEAU_TRAVAIL.shp')
-                # layerpath = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'test', 'importtool', 'test_import_ass.shp')
-                # layerpath =  "C://000_Modwenne//Renouv'Eau 22 05 2018//Fichier SHAPE RENOUVEAU//TABLE RENOUVEAU//AEP_TRON_RENOUVEAU_TRAVAIL.shp"
-                # layerpath = "C://000_Modwenne//lamiabase//renouveauaep.shp"
-                layerpath = "U://FR//BOR//VT//PVR//20_LAMIA//1_DOC//renouveau//strasbourg_paul//Troncons//TRONCONS.shp"
+                layerpath = os.path.join(os.path.dirname(__file__), '..','..','..','test','99_import_test_files','reseau_L93.shp.shp')
                 self.currentlayer = qgis.core.QgsVectorLayer(layerpath, 'test', 'ogr')
 
 

@@ -100,7 +100,8 @@ class CostTool(AbstractLamiaTool):
         self.groupBox_elements.setParent(None)
         self.frame_editing.setParent(None)
         self.multipleselection = True
-        self.combotypeitems = ['Zone geographique','Troncon']
+
+        self.combotypeitems = ['Zonegeo','Infralineaire']
 
 
         if False:
@@ -208,27 +209,34 @@ class CostTool(AbstractLamiaTool):
 
     def postOnActivation(self):
 
-        if True:
+        if False:
             self.disconnectIdsGui()
             self._clearLinkedTreeWidget()
             #self.userwdgfield.treeWidget_desordres.clear()
 
             # self.combowdg = QComboBox()
-            self.combowdg.clear()
-            self.combowdg.addItems(self.combotypeitems)
-            #self.windowdialog.frame_4.layout().insertWidget(0,self.combowdg )
-            self.combowdg.setVisible(True)
-            self.combowdg.currentIndexChanged.connect(self.comboWidgetTypeChanged)
-            self.combowdg.currentIndexChanged.emit(0)
+            if False:
+                self.combowdg.clear()
+                self.combowdg.addItems(self.combotypeitems)
+                #self.windowdialog.frame_4.layout().insertWidget(0,self.combowdg )
+                self.combowdg.setVisible(True)
+                self.combowdg.currentIndexChanged.connect(self.comboWidgetTypeChanged)
+                self.combowdg.currentIndexChanged.emit(0)
 
-            #
-            # self.linkedtreewidget.setSelectionMode(QAbstractItemView.ExtendedSelection)
+                #
+                # self.linkedtreewidget.setSelectionMode(QAbstractItemView.ExtendedSelection)
 
-            self.linkedtreewidget.itemSelectionChanged.connect(self.itemChanged)
+                self.linkedtreewidget.itemSelectionChanged.connect(self.itemChanged)
 
 
 
-            self.connectIdsGui()
+                self.connectIdsGui()
+
+        # spatialindex part
+        if self.dbase.dbasetype == "spatialite":
+            sql = "SELECT CreateSpatialIndex('Infralineaire', 'geom')"
+            self.dbase.query(sql)
+
 
 
 
@@ -297,9 +305,10 @@ class CostTool(AbstractLamiaTool):
 
         #zone geo selected
         #print([fet.attributes() for fet in self.dbase.dbasetables['Zonegeo']['layerqgis'].selectedFeatures()])
-        idszonegeoselected = [str(feat['id_zonegeo']) for feat in self.dbase.dbasetables['Zonegeo']['layerqgis'].selectedFeatures()]
-        if len(idszonegeoselected) == 0 :
-            idszonegeoselected = None
+        if False:
+            idszonegeoselected = [str(feat['id_zonegeo']) for feat in self.dbase.dbasetables['Zonegeo']['layerqgis'].selectedFeatures()]
+            if len(idszonegeoselected) == 0 :
+                idszonegeoselected = None
 
 
 
@@ -310,15 +319,25 @@ class CostTool(AbstractLamiaTool):
         #print(fields)
         sqlfinal = self.bordereau['sql'].replace('*',fields )
 
-        if idszonegeoselected is not None:
-            sqlsplitted = self.dbase.splitSQLSelectFromWhereOrderby(sqlfinal)
-            wheresql = 'id_zonegeo IN (' + ','.join(idszonegeoselected) + ')'
-            if 'WHERE' in sqlsplitted.keys():
-                sqlsplitted['WHERE'] += ' AND ' + wheresql
-            else:
-                sqlsplitted['WHERE'] = wheresql
+        sqlsplitted = self.dbase.splitSQLSelectFromWhereOrderby(sqlfinal)
+        wheresql = self.getcombotypeitemsWhereClause()
 
-            sqlfinal = self.dbase.rebuildSplittedQuery(sqlsplitted)
+        if 'WHERE' in sqlsplitted.keys():
+            sqlsplitted['WHERE'] += ' AND ' + wheresql
+        else:
+            sqlsplitted['WHERE'] = wheresql
+        sqlfinal = self.dbase.rebuildSplittedQuery(sqlsplitted)
+
+        if False:
+            if idszonegeoselected is not None:
+                sqlsplitted = self.dbase.splitSQLSelectFromWhereOrderby(sqlfinal)
+                wheresql = 'id_zonegeo IN (' + ','.join(idszonegeoselected) + ')'
+                if 'WHERE' in sqlsplitted.keys():
+                    sqlsplitted['WHERE'] += ' AND ' + wheresql
+                else:
+                    sqlsplitted['WHERE'] = wheresql
+
+                sqlfinal = self.dbase.rebuildSplittedQuery(sqlsplitted)
 
         if debug: logging.getLogger('Lamia').debug('sql : %s',sqlfinal )
 
@@ -328,8 +347,12 @@ class CostTool(AbstractLamiaTool):
 
         restot = self.dbase.query(sqlfinal)
 
+        if debug: logging.getLogger('Lamia').debug('res : %s', str(restot))
+
 
         self.priceCalculus(restot)
+
+
 
 
     def priceCalculus(self, restot):
@@ -566,6 +589,13 @@ class CostTool(AbstractLamiaTool):
             self.linkedtreewidget.itemSelectionChanged.disconnect(self.itemChanged)
         except:
             pass
+
+
+        print('postOnDesactivation')
+        # spatialindex part
+        if self.dbase.dbasetype == "spatialite":
+            sql = "SELECT DisableSpatialIndex('Infralineaire', 'geom')"
+            self.dbase.query(sql)
 
 
 
