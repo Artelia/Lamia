@@ -120,7 +120,14 @@ class AbstractLamiaTool(QWidget):
             QApplication.processEvents()
             logging.getLogger('Lamia').debug('Start init %s %.3f',self.dbasetablename,  self.dbase.getTimeNow()  - timestart)
 
-        uipath = os.path.join(os.path.dirname(__file__), '..', 'dialog', 'InspectionDigue_propertieswidget.ui')
+        # adapt to screen res
+        app = QApplication.instance()
+        screen_resolution = app.desktop().screenGeometry()
+        width, height = screen_resolution.width(), screen_resolution.height()
+        if width < 1500 and height<1000:
+            uipath = os.path.join(os.path.dirname(__file__), '..', 'dialog', 'InspectionDigue_propertieswidget_resizable.ui')
+        else:
+            uipath = os.path.join(os.path.dirname(__file__), '..', 'dialog', 'InspectionDigue_propertieswidget.ui')
         uic.loadUi(uipath, self)
 
         QApplication.processEvents()

@@ -2,7 +2,7 @@
 
 
 from test.AbstractTest import Test
-import os
+import os, sys
 import datetime
 from qgis.PyQt import  QtCore
 import profile
@@ -65,7 +65,7 @@ class TestMain(Test):
         path = "C://000_testdigue//temp_base2_ass2//test01.sqlite"
 
         path = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//BD_totale_ind9.sqlite"
-
+        path = "C://000_testdigue//temp_base2_ass2//test01.sqlite"
         # self.dbase.xlsreader = True
         self.dbase.loadQgisVectorLayers(path)
         print('ok0')
@@ -112,6 +112,13 @@ class TestMain(Test):
         #print( self.dbase.variantespossibles )
 
         self.dbase.printsql = False
+
+        if True:
+            screen_resolution = self.app.desktop().screenGeometry()
+            width, height = screen_resolution.width(), screen_resolution.height()
+            print('**********')
+            print(width, height )
+
         print('launch window')
 
         if False:
