@@ -426,9 +426,11 @@ class printPDFBaseWorker(object):
         """
         if self.dbase.qgsiface is not None:
             debug = False
+            debugscale = False
             stop10 = None
         else:
             debug = True  # True False
+            debugscale = False
             stop10 = 3
 
 
@@ -603,10 +605,27 @@ class printPDFBaseWorker(object):
                                 # newComposition.getComposerItemById(mapname).setAtlasScalingMode(reportdic['atlastypescale'])
                                 newComposition.getComposerItemById(mapname).setAtlasScalingMode(self.atlasconfData['atlasdrivemap'][mapname]['typescale'])
                     else:
-                        pass
+                        if debugscale: logging.getLogger("Lamia").debug('Boundingbox %s', str(self.currentatlasfeat.geometry().boundingBox().toString()))
 
+                        if self.currentatlasfeat.geometry().boundingBox().toString() == 'Empty':        #point in linelayer
+                            #for mapname in reportdic['atlasdriven']:
+                            for mapname in self.atlasconfData['atlasdrivemap']:
+                                # newComposition.getComposerItemById(mapname).setAtlasScalingMode(qgis.core.QgsComposerMap.Fixed)
+                                newComposition.itemById(mapname).setAtlasScalingMode(qgis.core.QgsLayoutItemMap.Fixed)
+                                # newComposition.getComposerItemById(mapname).setNewScale(reportdic['atlasdrivenminscale'])
+                                #newComposition.getComposerItemById(mapname).setNewScale(self.atlasconfData['atlasdrivemap'][mapname]['minscale'])
+                                newComposition.itemById(mapname).setScale( self.atlasconfData['atlasdrivemap'][mapname]['minscale'])
+                                #print('***', mapname, self.atlasconfData['atlasdrivemap'][mapname]['minscale'])
 
+                        else:
+                            #for mapname in reportdic['atlasdriven']:
+                            for mapname in self.atlasconfData['atlasdrivemap']:
+                                # newComposition.getComposerItemById(mapname).setAtlasScalingMode(reportdic['atlastypescale'])
+                                #newComposition.getComposerItemById(mapname).setAtlasScalingMode(self.atlasconfData['atlasdrivemap'][mapname]['typescale'])
+                                newComposition.itemById(mapname).setAtlasScalingMode(self.atlasconfData['atlasdrivemap'][mapname]['typescale'])
+                                newComposition.itemById(mapname).refresh()
 
+                                if debugscale: logging.getLogger("Lamia").debug('scale 1 %s', str(newComposition.itemById(mapname).scale()))
 
 
                 if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
@@ -636,16 +655,22 @@ class printPDFBaseWorker(object):
                 else:
                     for mapname in self.atlasconfData['atlasdrivemap']:
                         currentmapscale = newComposition.itemById(mapname).scale()
+
+                        if debugscale: logging.getLogger("Lamia").debug('currentscale %s',str(currentmapscale))
+                        if debugscale: logging.getLogger("Lamia").debug('minscale %s', str(self.atlasconfData['atlasdrivemap'][mapname]['minscale']))
+
                         if currentmapscale < self.atlasconfData['atlasdrivemap'][mapname]['minscale']:
                             newComposition.itemById(mapname).setScale(self.atlasconfData['atlasdrivemap'][mapname]['minscale'])
                         elif currentmapscale > 100000.0:
                             newComposition.itemById(mapname).setScale(self.atlasconfData['atlasdrivemap'][mapname]['minscale'])
                         else:   # because bad predef scale in qgis 3
+                            print('bad predef')
                             if int(currentmapscale) not in self.presetscales:
                                 for scale in self.presetscales:
                                     if currentmapscale >= scale:
                                         continue
                                     else:
+                                        if debugscale: logging.getLogger("Lamia").debug('adjust scale %s', str(scale))
                                         newComposition.itemById(mapname).setScale(scale)
                                         break
 
@@ -654,6 +679,11 @@ class printPDFBaseWorker(object):
                 self.processLamiaVars(newComposition, dictfields, self.currentatlasfeat)
 
                 self.printAtlasPage(newComposition,exporter, indexpagetotal, indexpage, idecalage)
+
+                if sys.version_info.major == 3:
+                    for mapname in self.atlasconfData['atlasdrivemap']:
+                        #currentmapscale = newComposition.itemById(mapname).scale()
+                        newComposition.itemById(mapname).setAtlasScalingMode(self.atlasconfData['atlasdrivemap'][mapname]['typescale'])
 
 
         # ********************* close printing  *****************************
@@ -1053,48 +1083,50 @@ class printPDFBaseWorker(object):
                         # sql += " INNER JOIN Ressource ON Rasters.id_ressource = Ressource.id_ressource"
                         sql += " WHERE typeraster = 'IRF'"
                         query = self.dbase.query(sql)
-                        result = [row[0] for row in query]
-                        if len(result) > 0:
-                            # fileraster = self.dbase.dbasetables['Infralineaire']['widget'].completePathOfFile(result[0])
-                            fileraster = self.dbase.completePathOfFile(result[0])
-                            if os.path.isfile(fileraster):
-                                rlayer = qgis.core.QgsRasterLayer(fileraster,
-                                                                  os.path.basename(fileraster).split('.')[0])
-                                try:
-                                    rlayer.renderer().setOpacity(0.5)
-                                except:
-                                    pass
-                                if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                                    qgis.core.QgsMapLayerRegistry.instance().addMapLayer(rlayer, False)
+                        results = [row[0] for row in query]
+                        if len(results) > 0:
+                            for result in results:
+                                # fileraster = self.dbase.dbasetables['Infralineaire']['widget'].completePathOfFile(result[0])
+                                fileraster = self.dbase.completePathOfFile(result)
+                                if os.path.isfile(fileraster):
+                                    rlayer = qgis.core.QgsRasterLayer(fileraster,
+                                                                      os.path.basename(fileraster).split('.')[0])
+                                    try:
+                                        rlayer.renderer().setOpacity(0.5)
+                                    except:
+                                        pass
+                                    if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                                        qgis.core.QgsMapLayerRegistry.instance().addMapLayer(rlayer, False)
+                                    else:
+                                        qgis.core.QgsProject.instance().addMapLayer(rlayer, False)
+                                    layersformapcomposer.append(rlayer)
+                                    layertoremove.append(rlayer)
                                 else:
-                                    qgis.core.QgsProject.instance().addMapLayer(rlayer, False)
-                                layersformapcomposer.append(rlayer)
-                                layertoremove.append(rlayer)
-                            else:
-                                if debug: logging.getLogger("Lamia").debug('no scan25 file')
+                                    if debug: logging.getLogger("Lamia").debug('no scan25 file')
 
                     elif layername == 'ortho':
                         sql = "SELECT file from Rasters_qgis"
                         # sql += " INNER JOIN Ressource ON Rasters.id_ressource = Ressource.id_ressource"
                         sql += " WHERE typeraster = 'ORF'"
                         query = self.dbase.query(sql)
-                        result = [row[0] for row in query]
-                        if len(result) > 0:
-                            # fileraster = self.dbase.dbasetables['Infralineaire']['widget'].completePathOfFile(result[0])
-                            fileraster = self.dbase.completePathOfFile(result[0])
-                            if os.path.isfile(fileraster):
-                                rlayer = qgis.core.QgsRasterLayer(fileraster,
-                                                                  os.path.basename(fileraster).split('.')[0])
-                                if self.dbase.qgsiface is not None:
-                                    rlayer.renderer().setOpacity(0.5)
-                                if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                                    qgis.core.QgsMapLayerRegistry.instance().addMapLayer(rlayer, False)
+                        results = [row[0] for row in query]
+                        if len(results) > 0:
+                            for result in results:
+                                # fileraster = self.dbase.dbasetables['Infralineaire']['widget'].completePathOfFile(result[0])
+                                fileraster = self.dbase.completePathOfFile(result)
+                                if os.path.isfile(fileraster):
+                                    rlayer = qgis.core.QgsRasterLayer(fileraster,
+                                                                      os.path.basename(fileraster).split('.')[0])
+                                    if self.dbase.qgsiface is not None:
+                                        rlayer.renderer().setOpacity(0.5)
+                                    if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                                        qgis.core.QgsMapLayerRegistry.instance().addMapLayer(rlayer, False)
+                                    else:
+                                        qgis.core.QgsProject.instance().addMapLayer(rlayer, False)
+                                    layersformapcomposer.append(rlayer)
+                                    layertoremove.append(rlayer)
                                 else:
-                                    qgis.core.QgsProject.instance().addMapLayer(rlayer, False)
-                                layersformapcomposer.append(rlayer)
-                                layertoremove.append(rlayer)
-                            else:
-                                if debug: logging.getLogger("Lamia").debug('no ortho file')
+                                    if debug: logging.getLogger("Lamia").debug('no ortho file')
 
                     elif layername in self.dbase.dbasetables.keys():
                         strtoeval = "self.dbase.dbasetables['" + layername + "']['layerqgis']"

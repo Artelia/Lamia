@@ -331,9 +331,10 @@ class DBaseParser(QtCore.QObject):
             pgiscursor.execute(sql)
             rows = pgiscursor.fetchall()
             rows = [elem[0] for elem in rows]
-            if self.pgdb not in rows:
+            print('**', rows)
+            if self.pgdb.lower() not in rows:
                 # self.errorMessage.emit('Base de donnees deja existante')
-                pgiscursor.execute('CREATE DATABASE DIGUE')
+                pgiscursor.execute('CREATE DATABASE ' + self.pgdb)
 
             sql = "Select * FROM pg_extension"
             pgiscursor.execute(sql)
@@ -342,14 +343,18 @@ class DBaseParser(QtCore.QObject):
             if 'postgis' not in result:
                 sql = 'CREATE EXTENSION postgis'
                 openedsqlfile.write(sql + '\n')
-                pgiscursor.execute(sql)
-                self.commit()
+                try:
+                    pgiscursor.execute(sql)
+                    self.commit()
+                except psycopg2.ProgrammingError as e:
+                    print('error', e)
+                    pass
                 connpgis.autocommit = False
             pgiscursor.close()
             connpgis.close()
 
             # connexion to database
-            connectstr = "dbname='" + self.pgdb + "' user='" + user + "' host='" + host
+            connectstr = "dbname='" + self.pgdb.lower() + "' user='" + user + "' host='" + host
             connectstr += "' password='" + password + "'"
             self.connPGis = psycopg2.connect(connectstr)
             self.PGiscursor = self.connPGis.cursor()
@@ -1424,7 +1429,7 @@ class DBaseParser(QtCore.QObject):
             self.pgpassword = password
             self.pgport = port
             self.pgschema = schema
-            connectstr = "dbname='" + self.pgdb + "' user='" + self.pguser + "' host='"
+            connectstr = "dbname='" + self.pgdb.lower() + "' user='" + self.pguser + "' host='"
             connectstr += self.pghost + "' password='" + self.pgpassword + "'"
             self.connPGis = psycopg2.connect(connectstr)
             #self.connPGis.autocommit = True

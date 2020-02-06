@@ -18,10 +18,10 @@ class TestMain(Test):
         # Base2_tramway Base2_eaupotable Base2_assainissement Base2_eclairagepublic Base2_chantier
         typebase = 'Base2_assainissement'
         # CD41 Lamia Reseau_chaleur Orange
-        variante = 'CD41'
+        variante = 'Lamia'
         # spatialite   postgis
 
-        typedb = 'spatialite'
+        typedb = 'postgis'
 
         if typedb == "spatialite":
             if typebase == 'VNF':
@@ -73,9 +73,9 @@ class TestMain(Test):
                 self.dbase.printsql = True
                 self.dbase.createDbase(crs=crs, type=typebase, dbasetype='postgis', dbname='PVR_test',
                                        schema='lamia_default',
-                                       user='postgres', host='localhost',
-                                       password='PVR',
-                                       dbaseressourcesdirectory='c://000_testdigue//temp_postgis//default')
+                                       user='pvr', host='localhost',
+                                       password='pvr',
+                                       dbaseressourcesdirectory='C://000_Docker_rep//bdpostgres')
             if typebase == 'Digue':
                 self.dbase.printsql = True
                 self.dbase.createDbase(crs=crs, type=typebase, dbasetype='postgis', dbname='PVR_test',
@@ -91,6 +91,16 @@ class TestMain(Test):
                                        user='postgres', host='localhost',
                                        password='PVR',
                                        dbaseressourcesdirectory='c://000_testdigue//temp_postgis//digue')
+
+
+            if typebase == 'Base2_assainissement':
+                print('***********************okok')
+                self.dbase.printsql = True
+                self.dbase.createDbase(crs=crs, worktype=typebase, dbasetype='postgis', dbname='gis',
+                                       schema='assainissement',
+                                       user='pvr', host='localhost', port=5432,
+                                       password='pvr',
+                                       dbaseressourcesdirectory='C://000_Docker_rep//bdpostgres//assainissement')
 
         print('fin')
 

@@ -1955,6 +1955,8 @@ class AbstractLamiaTool(QWidget):
 
                 elif isinstance(valuetoset, QtCore.QDate):
                     wdg.setDate(valuetoset)
+                elif isinstance(valuetoset, datetime.datetime):
+                    wdg.setDateTime(QtCore.QDateTime.fromString(str(valuetoset), 'yyyy-MM-dd hh:mm:ss'))
             else:
                 wdg.setSpecialValueText(" ")
                 wdg.setDate(QtCore.QDate.fromString('0001-01-01', 'yyyy-MM-dd'))
@@ -3030,6 +3032,7 @@ class AbstractLamiaTool(QWidget):
         else:
             self.createorresetRubberband(type)
 
+        if debug: logging.getLogger("Lamia").debug('type/point : %s %s', str(type), points)
 
         if self.dbase.qgsiface is None and int(str(self.dbase.qgisversion_int)[0:3]) < 220: #for stadalone app bug
             for point in points:
@@ -3207,7 +3210,7 @@ class AbstractLamiaTool(QWidget):
 
         if len(result) > 0:
             # date = result[0]
-            datevalue = datetime.datetime.strptime(result[0], "%Y-%m-%d %H:%M:%S").date()
+            datevalue = datetime.datetime.strptime(str(result[0]), "%Y-%m-%d %H:%M:%S").date()
             # print(result[0], datevalue, type(result[0]), isinstance(datevalue, datetime.date))
             if isinstance(datevalue, datetime.date):
                 datevalue = datevalue.strftime('%Y-%m-%d')

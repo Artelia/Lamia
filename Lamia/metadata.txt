@@ -11,7 +11,7 @@ name=Lamia
 qgisMinimumVersion=2.14
 qgisMaximumVersion=3.99
 description=lamia
-version=0.125
+version=0.127
 author=ARTELIA
 email=patrice.verchere@arteliagroup.com
 
@@ -25,6 +25,8 @@ repository=erg
 
 # Uncomment the following line and add your changelog:
 # changelog=
+0.127 : report bug fix
+0.126 : resolution adaptation
 0.125 : bug export
 0.124 : cost tool bug fix
 0.122 : bug fix on dockwidget closing

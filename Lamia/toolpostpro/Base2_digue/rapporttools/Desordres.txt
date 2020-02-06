@@ -18,10 +18,11 @@ map1;       2500;       Predefined      ;['atlaslayer','Infralineaire', 'ortho']
 ###generalmap
 #itemname;   minscale;   typescale; layers
 map0    ;           ;             ; ['Infralineaire','Equipement', 'scan25']
+#map0    ;           ;             ; ['scan25','Infralineaire','Equipement' ]
 #map0    ;           ;             ; []
 ###images
 #itemname   ; type
-logo;logo
+logo;logo_artelia
 ###childprint
 #confname;                linkcolumn;             optionsql
 Desordres_observation;    Observation_now.lid_desordre ; ORDER BY Observation_now.datetimeobservation DESC
