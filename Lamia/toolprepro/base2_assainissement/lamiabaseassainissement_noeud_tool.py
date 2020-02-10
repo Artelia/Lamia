@@ -110,14 +110,20 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
                                                             'presencecrosse': self.userwdgfield.comboBox_crosse,
                                                              'presencecunette': self.userwdgfield.comboBox_cunette,
                                                             'regard_forme': self.userwdgfield.comboBox_formeregard,
+                                                            'regard_materiau': self.userwdgfield.comboBox_regmat,
 
                                                             #branchement
                                                              'cloisonsiphoide': self.userwdgfield.comboBox_cloisonsiphoide,
                                                              'couvercle': self.userwdgfield.comboBox_couvercle,
+                                                            'type_usager': self.userwdgfield.comboBox_typeusager,
+
+                                                            #avaloir
+                                                            'decantation': self.userwdgfield.comboBox_decant,
 
                                                             #PR
                                                             'PRcloture': self.userwdgfield.comboBox_cloture,
                                                             'PRverouille': self.userwdgfield.comboBox_verouille,
+                                                             'PRtraitHdeuxs': self.userwdgfield.comboBox_h2s,
 
                                                             'PRarmoireelec': self.userwdgfield.comboBox_posteelec,
                                                              'PRarmoireelecverouillee': self.userwdgfield.comboBox_armoire_verouille,
@@ -250,6 +256,8 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
                                                          # 'presencecunette': self.userwdgfield.comboBox_cunette,
                                                          'regard_forme': self.userwdgfield.comboBox_formeregard,
                                                          # 'formeregard': self.userwdgfield.comboBox_formeregard,
+
+
 
                                                          # branchement
                                                          # 'cloisonsiphoide': self.userwdgfield.comboBox_cloisonsiphoide,
@@ -514,7 +522,7 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
         #print(self.userwdgfield.comboBox_typeOuvrageAss.currentText())
         currenttext = self.userwdgfield.comboBox_typeOuvrageAss.currentText()
 
-        if currenttext in ['Regard','Avaloir', 'Grille','Regard mixte EP EU']:
+        if currenttext in ['Regard','Regard mixte EP EU']:
             self.userwdgfield.stackedWidget.setCurrentIndex(0)
         elif currenttext in ['Branchement']:
             self.userwdgfield.stackedWidget.setCurrentIndex(1)
@@ -528,8 +536,10 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
             """
         elif currenttext in ['Débourbeur/déshuileur']:
             self.userwdgfield.stackedWidget.setCurrentIndex(3)
-        else:
+        elif currenttext in ['Avaloir', 'Grille', 'Grille avaloir' ]:
             self.userwdgfield.stackedWidget.setCurrentIndex(4)
+        else:
+            self.userwdgfield.stackedWidget.setCurrentIndex(5)
 
 
         self.propertieswdgDesordre.propertieswdgOBSERVATION2.updateObservationStackedWidget()

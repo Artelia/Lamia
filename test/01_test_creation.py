@@ -21,7 +21,7 @@ class TestMain(Test):
         variante = 'Lamia'
         # spatialite   postgis
 
-        typedb = 'postgis'
+        typedb = 'spatialite'
 
         if typedb == "spatialite":
             if typebase == 'VNF':

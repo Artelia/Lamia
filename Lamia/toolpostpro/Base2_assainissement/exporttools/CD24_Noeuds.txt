@@ -1,0 +1,70 @@
+###Noeud
+#nom              type               cst               valeur                    
+ID_SAISIE;         Int;                  ;               id_noeud
+code_insee;         Int;                  ;               NULL
+lieu_dit;         String;                  ;               NULL
+adresse;         String;                  ;               Noeud_now.rue_libelle
+date_mes;         String;                  ;               Noeud_now.annee_fin_pose
+periode_serv;         String;                  ;               Noeud_now.precision_pose
+gest_exp;         String;                  ;               NULL
+id_c_ppale;         String;                  ;               NULL
+etat;         String;                  ;               NULL
+
+type_res;         String;                  ;               CASE WHEN Noeud_now.typeReseau = 'PLU' THEN 'Pluvial' WHEN Noeud_now.typeReseau = 'USE' THEN 'Eaux usées' WHEN Noeud_now.typeReseau = 'UNI' THEN 'Unitaire' EKSE 'Autre' END
+typ_nd;         String;                  ; CASE WHEN Noeud_now.typeOuvrageAss IN ('50', '60', '70') THEN 'Ouvrage' WHEN Noeud_now.typeOuvrageAss IN ('61') THEN 'Appareillage' END
+fct_nd;         String;                  ; CASE WHEN Noeud_now.typeOuvrageAss ='50' THEN 'O4.Rejets' WHEN Noeud_now.typeOuvrageAss ='60' THEN 'O5.Regards' WHEN Noeud_now.typeOuvrageAss ='61' THEN 'A4.Branchement' WHEN Noeud_now.typeOuvrageAss ='70' THEN 'O6.Avaloirs' END
+typ_fct_nd;         String;                  ; Noeud_now.soustypeOuvrageAss
+typ_alt_nd;         String;                  ; NULL
+marque;         String;                  ; NULL
+modele;         String;                  ; NULL
+
+nom;         String;                  ; CASE WHEN Noeud_now.typeOuvrageAss ='50' THEN 'O4' WHEN Noeud_now.typeOuvrageAss ='60' THEN 'O5' WHEN Noeud_now.typeOuvrageAss ='61' THEN 'A4' WHEN Noeud_now.typeOuvrageAss ='70' THEN 'O6' END
+
+id_sandre;         String;                  ; NULL
+id_ouvrage;         String;                  ; NULL
+
+diametre;         String;                  ; NULL
+acces;         String;                  ; Noeud_now.accessibilite
+implant;         String;      environnement            ; Noeud_now.environnement
+
+prof_rad;               Double;                               ;     Noeud_now.profradierouvrage
+cote_rad;               Double;                               ;     Noeud_now.Z - Noeud_now.profradierouvrage
+cote_tn;               Double;                               ;     Noeud_now.Z
+
+#Pompage
+trait_h2s;         String;          PRtraitHdeuxs        ; Noeud_now.PRtraitHdeuxs
+trop_plein;         String;          PRsurverse        ; Noeud_now.PRsurverse
+
+#rejet
+nom_recept;         String;                  ; NULL
+
+#regards
+tampon;         String;                  ; NULL
+accessibil;         String;                  ; Noeud_now.accessibilite
+materiaux;         String;                  ; Noeud_now.regard_materiau
+
+#avaloirs
+decant;         String;                  ; NULL
+dim_grille;         String;                  ; Noeud_now.decantation
+
+#branchement
+mat_branch;         String;                  ; NULL
+type_usager;         String;                  ; Noeud_now.type_usager
+
+
+#Autre
+date_geo;         String;                  ; Noeud_now.datetimecreation
+srce_geo;         String;                  ; NULL
+qlt_geo;         String;                  ; NULL
+date_maj;         String;                  ; NULL
+srce_maj;         String;                  ; NULL
+
+
+
+
+###geom
+geom;         Int;               ;                  ST_AsText(Noeud_now.geom)
+
+
+###main
+FROM Noeud_now INNER JOIN Desordre_now ON Desordre_now.lid_descriptionsystem = Noeud_now.id_descriptionsystem LEFT JOIN Observation_now ON Observation_now.lid_desordre = Desordre_now.id_desordre WHERE Noeud_now.typeOuvrageAss = '60'
