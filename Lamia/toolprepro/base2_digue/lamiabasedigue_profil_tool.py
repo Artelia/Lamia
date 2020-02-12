@@ -100,7 +100,7 @@ class BaseDigueProfilTool(BaseProfilTool):
 
                 pkparentfeature = self.parentWidget.currentFeaturePK
 
-                sql = "UPDATE " + str(self.parentWidget.dbasetablename.lower()) + " SET  lid_ressource4 = " + str(idressource)
+                sql = "UPDATE " + str(self.parentWidget.dbasetablename.lower()) + " SET  lid_ressource_4 = " + str(idressource)
                 sql += " WHERE pk_"+ str(self.parentWidget.dbasetablename.lower()) + " = " + str(pkparentfeature)
                 query = self.dbase.query(sql)
                 self.dbase.commit()

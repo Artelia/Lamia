@@ -17,7 +17,7 @@ autopath
 Infralineaire_atlas.qml
 ###atlasdrivemap
 #itemname;   minscale;   typescale;      layers
-map1;       2500;       Predefined      ;['atlaslayer', 'Equipement', 'scan25']
+map1;       2500;       Auto      ;['atlaslayer', 'Equipement', 'scan25']
 #map1;       2500;       Predefined      ;[]
 ###generalmap
 #itemname;   minscale;   typescale; layers
@@ -26,8 +26,8 @@ map0    ;           ;             ; ['Infralineaire', 'ortho']
 ###images
 #itemname   ; type
 photo;Infralineaire_now.ressource2
-logo;logo
-#graph;profile
+logo;logo_artelia
+graph;profile
 profiltravers;profiltravers
 ###childprint
 #confname;                linkcolumn;             optionsql

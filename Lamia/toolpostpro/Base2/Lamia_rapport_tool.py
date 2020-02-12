@@ -572,7 +572,11 @@ class printPDFBaseWorker(object):
                 if False:
                     request = qgis.core.QgsFeatureRequest().setFilterExpression('"' + self.atlasconfData['atlaslayerid'] + '" = ' + str(featid))
                 if True:
-                    request = qgis.core.QgsFeatureRequest(featid)
+                    if False:   #because featid is id and not pk
+                        request = qgis.core.QgsFeatureRequest(featid)
+                    else:
+                        request = qgis.core.QgsFeatureRequest().setFilterExpression('"' + self.atlasconfData['atlaslayerid'] + '" = ' + str(featid))
+
 
                 # if debug: logging.getLogger("Lamia").debug('request %s', self.atlasconfData['atlaslayerid'] + '" = ' + str(featid))
 
@@ -1210,15 +1214,26 @@ class printPDFBaseWorker(object):
                 idszonegeoselected = [int(feat['id_zonegeo']) for feat in self.dbase.dbasetables['Zonegeo']['layerqgis'].selectedFeatures()]
 
             orderedids = self.orderIdsAlongPath(coveragelayer,idszonegeoselected)
+
+            # poor patch... because id are pk
+
+
         else:
-            orderedids[0] = [feat.id() for feat in coveragelayer.getFeatures()]
+            if False:
+                orderedids[0] = [feat.id() for feat in coveragelayer.getFeatures()]
+            else:
+                orderedids[0] = [feat[self.atlasconfData['atlaslayerid']] for feat in coveragelayer.getFeatures()]
 
 
 
         # if orderedids is None:
         if len(orderedids) == 0:
             # orderedids[0] = [feat.id() for feat in reportdic['atlaslayer'].getFeatures()]
-            orderedids[0] = [feat.id() for feat in coveragelayer.getFeatures()]
+            # orderedids[0] = [feat.id() for feat in coveragelayer.getFeatures()]
+            if False:
+                orderedids[0] = [feat.id() for feat in coveragelayer.getFeatures()]
+            else:
+                orderedids[0] = [feat[self.atlasconfData['atlaslayerid']] for feat in coveragelayer.getFeatures()]
 
         if debug: self.logger.debug('orderedids %s', str(orderedids))
 
@@ -1280,6 +1295,8 @@ class printPDFBaseWorker(object):
 
 
     def orderIdsAlongPath(self, coveragelayer,zonegeoids=[]):
+
+
         if self.dbase.qgsiface is not None:
             debug = False
         else:
@@ -1399,9 +1416,15 @@ class printPDFBaseWorker(object):
                             # print('ids infralin',list(pathids[:, 0]) )
                             # print('datas', datas)
                             res = [int(id) for id in datas['id']]
+                            # In fact we have pk, conver it to self.atlasconfData['atlaslayerid']
+                            # TODO
+                            rescoveragelayerid=[]
+                            for id in res:
+                                rescoveragelayerid.append(coveragelayer.getFeature(id)[self.atlasconfData['atlaslayerid']])
+
                             # print('res',zonegeoid, res)
                             # orderedids += res
-                            orderedids[zonegeoid] += res
+                            orderedids[zonegeoid] += rescoveragelayerid
 
 
                         if False:

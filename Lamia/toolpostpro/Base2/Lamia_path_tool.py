@@ -934,19 +934,19 @@ class PathTool(AbstractInspectionDigueTool):
 
         debug = False
 
-        logging.getLogger('Lamia').info('start')
+        if debug: logging.getLogger('Lamia').info('start')
 
         self.computePath(point1, point2, alsocomputegraph=False)
-        logging.getLogger('Lamia').info('path %s %s', str(self.geomfinal),str( self.geomfinalids))
+        if debug: logging.getLogger('Lamia').info('path %s %s', str(self.geomfinal),str( self.geomfinalids))
 
         datas = self.getGraphData()
-        logging.getLogger('Lamia').info('datas %s', str(datas))
+        if debug: logging.getLogger('Lamia').info('datas %s', str(datas))
 
         self.axtype.cla()
         self.figuretype.set_size_inches(w / 25.4, h / 25.4)
 
         if len(datas) == 0:
-            src_file = os.path.join(os.path.dirname(__file__), '..','..', 'DBASE', 'rapport', 'utils', 'blank.png')
+            src_file = os.path.join(os.path.dirname(__file__), '..','..', 'DBASE', 'utils', 'blank.png')
             shutil.copyfile(src_file, exportfile)
             return
 

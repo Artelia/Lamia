@@ -105,6 +105,8 @@ class DBaseParser(QtCore.QObject):
         self.visualmode = 0
         # dabse type Digue Assainissement
         self.type = None
+
+
         # spatialite or postgis
         self.dbasetype = None
         self.pghost = None
@@ -183,6 +185,9 @@ class DBaseParser(QtCore.QObject):
             self.qgisversion_int = qgis.utils.Qgis.QGIS_VERSION_INT
 
         self.qgsiface = qgis.utils.iface
+
+
+
 
 
     def checkIfPGShcemaExists(self, dbname=None, schema=None, user=None,
@@ -707,6 +712,8 @@ class DBaseParser(QtCore.QObject):
         debug = False
         if dictfile is None or not os.path.isfile(dictfile):
             return
+        if self.dbasetables is None:
+            self.dbasetables = {}
 
         xlsbook = xlrd.open_workbook(dictfile)
 

@@ -64,10 +64,8 @@ class TestMain(Test):
         # path = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//BD_totale_ind11.sqlite"
         path = "C://000_testdigue//temp_base2_ass2//test01.sqlite"
 
-        path = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//BD_totale_ind9.sqlite"
-        path = "C://000_testdigue//temp_base2_ass2//test01.sqlite"
-        path = "C://000_testdigue//Somme//terrain.sqlite"
-        path = "C://000_testdigue//temp_base2_ass2//test01.sqlite"
+        path = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//BD_totale_ind11_PVR.sqlite"
+
 
 
         # self.dbase.xlsreader = True

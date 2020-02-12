@@ -3,7 +3,7 @@ WITH Gestionnaire AS (SELECT Intervenant.societe, Intervenant.nom  , Tcobjetinte
                  FROM Tcobjetintervenant  
                  INNER JOIN Intervenant ON Tcobjetintervenant.lid_intervenant = Intervenant.id_intervenant  
                  WHERE Tcobjetintervenant.fonction = 'GES' )
-SELECT Equipement_now.* , Gestionnaire.societe, Gestionnaire.nom 
+SELECT Equipement_now.id_equipement, Equipement_now.* , Gestionnaire.societe, Gestionnaire.nom
 FROM Equipement_now 
 LEFT JOIN Gestionnaire ON Gestionnaire.lid_objet = Equipement_now.id_objet
 WHERE ( Equipement_now.categorie = 'RHF' or Equipement_now.categorie = 'RHO' or Equipement_now.categorie = 'OUH')

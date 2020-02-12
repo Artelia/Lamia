@@ -23,7 +23,7 @@ map1;       2500;       Predefined      ;['atlaslayer', 'Equipement', 'ortho']
 map0    ;           ;             ; ['Infralineaire', 'scan25']
 ###images
 #itemname   ; type
-logo;logo
+logo;logo_artelia
 photo1 ;Infralineaire_now.photo1
 photo2 ;Infralineaire_now.photo2
 photo3 ;Infralineaire_now.photo3

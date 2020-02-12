@@ -125,6 +125,8 @@ class printPDFBaseWorker(printPDFBaseWorker):
             sql = "SELECT lid_ressource_4 FROM Infralineaire WHERE id_infralineaire = " + str(currentfeatureid)
             query = self.dbase.query(sql)
             result = [row for row in query]
+            if len(result)==0:
+                return None
             lkressourceprofile = result[0][0]
             # print('getPhoto',lkphoto )
 
