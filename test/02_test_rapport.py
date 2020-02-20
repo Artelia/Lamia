@@ -49,6 +49,7 @@ class TestMain(Test):
         path = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//BD_totale_ind11.sqlite"
         path = "C://000_testdigue//Somme//somme1//terrain.sqlite"
         path = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//BD_totale_ind11_PVR.sqlite"
+        # path = "C://000_testdigue//Somme//somme2//terrain epis_Troncon.sqlite"
 
         self.wind.dbase.loadQgisVectorLayers(path)
         self.wind.loadUiDesktop()
@@ -96,11 +97,11 @@ class TestMain(Test):
                 # 01regard  Infralineaire   Infralineaire_PT_PL     Equipementhydraulique   EquipementCompteur   EquipementVanne
                 # EquipementRegulation  EquipementHydrant NoeudRegard nonconformite
                 # ORANGEnonconformitephaseA     _fiches_somme
-                indexrapport = wdg.filemanager.comboBox_files.findText('Infralineaire_PT_PL')
+                indexrapport = wdg.filemanager.comboBox_files.findText('Equipementhydraulique')
                 wdg.filemanager.comboBox_files.setCurrentIndex(indexrapport)
 
                 if True:
-                    self.wind.dbase.dbasetables['Zonegeo']['layerqgis'].select(22)
+                    self.wind.dbase.dbasetables['Zonegeo']['layerqgis'].select(18)
 
                 wdg.userwdgfield.pushButton_export.clicked.emit(True)
 

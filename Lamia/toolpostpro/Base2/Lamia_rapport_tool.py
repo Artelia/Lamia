@@ -575,7 +575,8 @@ class printPDFBaseWorker(object):
                     if False:   #because featid is id and not pk
                         request = qgis.core.QgsFeatureRequest(featid)
                     else:
-                        request = qgis.core.QgsFeatureRequest().setFilterExpression('"' + self.atlasconfData['atlaslayerid'] + '" = ' + str(featid))
+                        filterexpr = '"' + self.atlasconfData['atlaslayerid'] + '" = ' + str(featid)
+                        request = qgis.core.QgsFeatureRequest().setFilterExpression(filterexpr)
 
 
                 # if debug: logging.getLogger("Lamia").debug('request %s', self.atlasconfData['atlaslayerid'] + '" = ' + str(featid))
@@ -586,7 +587,8 @@ class printPDFBaseWorker(object):
                 else:
                     #atlasfeat = next(reportdic['atlaslayer'].getFeatures(qgis.core.QgsFeatureRequest(featid)))
                     requ = coveragelayer.getFeatures(qgis.core.QgsFeatureRequest(request))
-                    #print('res',[fet.id() for fet in requ])
+
+                    # print('res',[fet.id() for fet in requ])
                     #print('res',[fet['id_desordre'] for fet in coveragelayer.getFeatures()])
                     self.currentatlasfeat = coveragelayer.getFeatures(qgis.core.QgsFeatureRequest(request)).__next__()
 
@@ -1730,10 +1732,16 @@ class printPDFBaseWorker(object):
             #get id_objet
             tempsplittedquery = self.dbase.splitSQLSelectFromWhereOrderby(self.atlasconfData['atlaslayersql'])
             tempsplittedquery['SELECT'] = table + '.id_objet '
-            if 'WHERE' in tempsplittedquery.keys():
-                tempsplittedquery['WHERE'] += ' AND ' + self.atlasconfData['atlaslayerid'] + ' = ' + str(atlasfeat.id())
-            else:
-                tempsplittedquery['WHERE'] = self.atlasconfData['atlaslayerid'] + ' = ' + str(atlasfeat.id())
+            if False:
+                if 'WHERE' in tempsplittedquery.keys():
+                    tempsplittedquery['WHERE'] += ' AND ' + self.atlasconfData['atlaslayerid'] + ' = ' + str(atlasfeat.id())
+                else:
+                    tempsplittedquery['WHERE'] = self.atlasconfData['atlaslayerid'] + ' = ' + str(atlasfeat.id())
+            if True:
+                if 'WHERE' in tempsplittedquery.keys():
+                    tempsplittedquery['WHERE'] += ' AND ' + self.atlasconfData['atlaslayerid'] + ' = ' + str(atlasfeat[self.atlasconfData['atlaslayerid']])
+                else:
+                    tempsplittedquery['WHERE'] = self.atlasconfData['atlaslayerid'] + ' = ' + str(atlasfeat[self.atlasconfData['atlaslayerid']])
             #tempsplittedquery['WHERE'] += " AND typephoto = 'PHO'"
             # tempsplittedquery['FROM'] = table
             sql = self.dbase.rebuildSplittedQuery(tempsplittedquery)
