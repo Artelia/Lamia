@@ -98,7 +98,7 @@ class printPDFBaseWorker(printPDFBaseWorker):
                 res = self.dbase.query(sql)
                 #print('**', res)
                 for i, sousresult in enumerate(res[0]):
-                    if sousresult == 0:
+                    if sousresult == 0 or dictfiche['datas'][list(dictfiche['datas'].keys())[i]]['type'] is not None:
                         typefichenom = typefichenom
                         typefichenumber = typefiche + '.' + str(i +1)
                         #print('**', i)

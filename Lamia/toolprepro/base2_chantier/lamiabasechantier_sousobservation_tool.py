@@ -188,7 +188,7 @@ class BaseChantierSousObservationTool(BaseObservationTool):
                 firstcolname = firstcol
                 firstcolcode = firstcolname.split(' ')[0]
                 sousfichesdict[firstcolcode] = {}
-                sousfichesdict[firstcolcode]['name'] = firstcolname.split(' ')[1]
+                sousfichesdict[firstcolcode]['name'] = ' '.join(firstcolname.split(' ')[1:])
                 sousfichesdict[firstcolcode]['datas'] = {}
 
             sousfichesdict[firstcolcode]['datas'][sheet.cell_value(row, 1)] = {}
