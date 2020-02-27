@@ -97,11 +97,11 @@ class TestMain(Test):
                 # 01regard  Infralineaire   Infralineaire_PT_PL     Equipementhydraulique   EquipementCompteur   EquipementVanne
                 # EquipementRegulation  EquipementHydrant NoeudRegard nonconformite
                 # ORANGEnonconformitephaseA     _fiches_somme
-                indexrapport = wdg.filemanager.comboBox_files.findText('Equipementhydraulique')
+                indexrapport = wdg.filemanager.comboBox_files.findText('Infralineaire_PT_PL')
                 wdg.filemanager.comboBox_files.setCurrentIndex(indexrapport)
 
                 if True:
-                    self.wind.dbase.dbasetables['Zonegeo']['layerqgis'].select(18)
+                    self.wind.dbase.dbasetables['Zonegeo']['layerqgis'].select(4)
 
                 wdg.userwdgfield.pushButton_export.clicked.emit(True)
 

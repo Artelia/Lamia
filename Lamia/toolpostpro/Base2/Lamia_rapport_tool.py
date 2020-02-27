@@ -1865,11 +1865,17 @@ class printPDFBaseWorker(object):
 
             tempsplittedquery = self.dbase.splitSQLSelectFromWhereOrderby(self.atlasconfData['atlaslayersql'])
             tempsplittedquery['SELECT'] = table + '.lid_ressource_' + str(photoid)
-            if 'WHERE' in tempsplittedquery.keys():
-                tempsplittedquery['WHERE'] += ' AND ' + self.atlasconfData['atlaslayerid'] + ' = ' + str(atlasfeat.id())
+            if False:
+                if 'WHERE' in tempsplittedquery.keys():
+                    tempsplittedquery['WHERE'] += ' AND ' + self.atlasconfData['atlaslayerid'] + ' = ' + str(atlasfeat.id())
+                else:
+                    tempsplittedquery['WHERE'] = self.atlasconfData['atlaslayerid'] + ' = ' + str(atlasfeat.id())
+                # tempsplittedquery['FROM'] = table
             else:
-                tempsplittedquery['WHERE'] = self.atlasconfData['atlaslayerid'] + ' = ' + str(atlasfeat.id())
-            # tempsplittedquery['FROM'] = table
+                if 'WHERE' in tempsplittedquery.keys():
+                    tempsplittedquery['WHERE'] += ' AND ' + self.atlasconfData['atlaslayerid'] + ' = ' + str(atlasfeat[self.atlasconfData['atlaslayerid']])
+                else:
+                    tempsplittedquery['WHERE'] = self.atlasconfData['atlaslayerid'] + ' = ' + str(atlasfeat[self.atlasconfData['atlaslayerid']])
 
             sql = self.dbase.rebuildSplittedQuery(tempsplittedquery)
             sql = self.dbase.updateQueryTableNow(sql)

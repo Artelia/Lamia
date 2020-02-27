@@ -141,6 +141,7 @@ class TestMain(Test):
 
 
         self.mainwin.exec_()
+        sys.exit()
 
 
 test = TestMain()

@@ -114,7 +114,10 @@ class printPDFBaseWorker(printPDFBaseWorker):
         resfile = None
         #print([field.name() for field in reportdic['atlaslayer'].fields()])
         if isinstance(atlasfeat, qgis.core.QgsFeature):
-            currentfeatureid = atlasfeat.id()
+            if False:
+                currentfeatureid = atlasfeat.id()
+            else:
+                currentfeatureid = atlasfeat[self.atlasconfData['atlaslayerid']]
         elif isinstance(atlasfeat, int):
             currentfeatureid = atlasfeat
         #if 'lk_profil' in self.dbase.dbasetables[reportdic['dbasename']]['fields'].keys():
