@@ -1,0 +1,9 @@
+QToolButton {
+    background: none;
+    border: none;
+}
+
+QToolButton:checked {
+    background: none;
+    border: none;
+}

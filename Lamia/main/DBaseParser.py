@@ -64,7 +64,7 @@ else:
         from ..libs import xlrd
 
 
-
+log = logging.getLogger("Lamia")
 
 class DBaseParser(QtCore.QObject):
     """
@@ -4418,3 +4418,7 @@ class DBaseParser(QtCore.QObject):
             return time.clock()
         elif sys.version_info.major == 3:
             return time.process_time()
+
+    def alpha(self, *args, **kargs):
+        pkressource = self.getValuesFromPk('Audio_qgis', 'pk_ressource', args[0])
+        log.debug(pkressource)

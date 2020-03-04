@@ -29,9 +29,10 @@ This file is part of LAMIA.
 from qgis.PyQt import uic, QtCore
 
 try:
-    from qgis.PyQt.QtGui import (QWidget)
+    from qgis.PyQt.QtGui import (QWidget, QVBoxLayout)
 except ImportError:
-    from qgis.PyQt.QtWidgets import (QWidget)
+    from qgis.PyQt.QtWidgets import (QWidget, QVBoxLayout)
+from qgis.PyQt.QtCore import Qt
 #from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
 from ...toolabstract.Lamia_abstract_tool import AbstractLamiaTool
 
@@ -39,11 +40,13 @@ from .lamiabase_photo_tool import BasePhotoTool
 # from .lamiadigue_rapport_tool import RapportTool
 # from .lamiadigue_tronconemprise_tool  import TronconEmpriseTool
 from .lamiabase_croquis_tool import BaseCroquisTool
-import os
-import datetime
+import os, logging, datetime
 
+from ...toolgeneral.VoiceRecorder.main.AudioLogic.audioFactory import AudioFactory
+from ...toolgeneral.VoiceRecorder.main.Ui.Widgets.RecorderWidget import RecorderWidget
+from ...toolgeneral.VoiceRecorder.main.Ui.Controller.Mediator import Mediator
 
-
+log = logging.getLogger("Lamia")
 class BaseEquipementTool(AbstractLamiaTool):
 
     LOADFIRST = True
@@ -57,6 +60,7 @@ class BaseEquipementTool(AbstractLamiaTool):
         # ****************************************************************************************
         # Main spec
 
+        log.debug("init equipement tool")
         self.CAT = 'Description'
         self.NAME = 'Equipement'
         self.dbasetablename = 'Equipement'
@@ -64,23 +68,26 @@ class BaseEquipementTool(AbstractLamiaTool):
         self.LineENABLED = True
         # self.PolygonENABLED = True
         # self.magicfunctionENABLED = True
-        self.linkagespec = {'Equipement': {'tabletc': None,
-                                           'idsource': 'lid_descriptionsystem_1',
-                                           'idtcsource': None,
-                                           'iddest': 'id_descriptionsystem',
-                                           'idtcdest': None,
-                                           'desttable': ['Equipement','Noeud','Infralineaire']}
-
-
-
-                            }
+        self.linkagespec = {
+            'Equipement': {
+                'tabletc': None,
+                'idsource': 'lid_descriptionsystem_1',
+                'idtcsource': None,
+                'iddest': 'id_descriptionsystem',
+                'idtcdest': None,
+                'desttable': [
+                        'Equipement',
+                        'Noeud',
+                        'Infralineaire'
+                ]
+            }
+        }
         # self.pickTable = None
         self.debug = False
         self.iconpath = os.path.join(os.path.dirname(__file__), 'lamiabase_equipement_tool_icon.svg')
 
         # ****************************************************************************************
-        #properties ui
-        pass
+        #properties ui        
 
     def initFieldUI(self):
         # ****************************************************************************************
@@ -88,16 +95,34 @@ class BaseEquipementTool(AbstractLamiaTool):
         if self.userwdgfield is None:
             # ****************************************************************************************
             # userui
-            self.userwdgfield = UserUI()
-            self.linkuserwdgfield = {'Equipement' : {'linkfield' : 'id_equipement',
-                                             'widgets' : {'categorie': self.userwdgfield.comboBox_cat}},
-                                'Objet' : {'linkfield' : 'id_objet',
-                                          'widgets' : {
-                                                          'commentaire': self.userwdgfield.textBrowser_comm}},
-                                'Descriptionsystem' : {'linkfield' : 'id_descriptionsystem',
-                                          'widgets' : {}}}
-            self.userwdgfield.comboBox_cat.currentIndexChanged.connect(self.changeCategorie)
+            log.debug("init field UI")
+            self.recorder = AudioFactory.create("recorder")                             
+            self.mediator = Mediator.getinstance()
+            self.mediator.connect("stream_stop", self.saveFeature)            
+            self.userwdgfield = UserUI(RecorderWidget(self.recorder, self.mediator))            
+            
+            self.linkuserwdgfield = {
+                "Equipement":{
+                    "linkfield":"id_equipement",
+                    "widgets":{
+                        "categorie":"self.userwdgfield.comboBox_cat"
+                    }
+                },
+                "Objet":{
+                    "linkfield":"id_objet",
+                    "widgets": {
+                        "commentaire":"self.userwdgfield.textBrowser_comm",
+                        "vocal": "self.userwdgfield.recorderWidget"
+                    }
+                },
+                "Descriptionsystem":{
+                    "linkfield":"id_descriptionsystem",
+                    "widgets":{
 
+                    }
+                }
+            }
+            self.userwdgfield.comboBox_cat.currentIndexChanged.connect(self.changeCategorie)            
 
             # ****************************************************************************************
             # child widgets
@@ -216,7 +241,15 @@ class BaseEquipementTool(AbstractLamiaTool):
 
 
 class UserUI(QWidget):
-    def __init__(self, parent=None):
+
+    def __init__(self, widget, parent=None):
         super(UserUI, self).__init__(parent=parent)
         uipath = os.path.join(os.path.dirname(__file__), 'lamiabase_equipement_tool_ui.ui')
         uic.loadUi(uipath, self)
+        self._layout = QVBoxLayout()
+        self._layout.setAlignment(Qt.AlignVCenter)
+        self._layout.addWidget(widget)
+        # self.setLayout(self._layout)
+        # self.focusWidget()
+        self.recorderWidget.setLayout(self._layout)        
+        log.debug("Set Layout")

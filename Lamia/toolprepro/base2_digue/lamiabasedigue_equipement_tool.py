@@ -28,9 +28,10 @@ This file is part of LAMIA.
 from qgis.PyQt import uic, QtCore
 import qgis
 try:
-    from qgis.PyQt.QtGui import (QWidget)
+    from qgis.PyQt.QtGui import (QWidget, QVBoxLayout)
 except ImportError:
-    from qgis.PyQt.QtWidgets import (QWidget)
+    from qgis.PyQt.QtWidgets import (QWidget, QVBoxLayout)
+from qgis.PyQt.QtCore import Qt
 #from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
 from ..base2.lamiabase_equipement_tool import BaseEquipementTool
 
@@ -40,11 +41,13 @@ from .lamiabasedigue_croquis_tool import BaseCroquisTool
 from .lamiabasedigue_desordre_tool import BaseDigueDesordreTool
 
 
-import os
-import datetime
+import os, logging, datetime
 
+from ...toolgeneral.VoiceRecorder.main.AudioLogic.audioFactory import AudioFactory
+from ...toolgeneral.VoiceRecorder.main.Ui.Widgets.RecorderWidget import RecorderWidget
+from ...toolgeneral.VoiceRecorder.main.Ui.Controller.Mediator import Mediator
 
-
+log = logging.getLogger("Lamia")
 class BaseDigueEquipementTool(BaseEquipementTool):
 
     LOADFIRST = True
@@ -69,31 +72,50 @@ class BaseDigueEquipementTool(BaseEquipementTool):
             if self.userwdgfield is None:
                 # ****************************************************************************************
                 # userui
-                self.userwdgfield = UserUI()
-                self.linkuserwdgfield = {'Equipement' : {'linkfield' : 'id_equipement',
-                                                 'widgets' : {'categorie': self.userwdgfield.comboBox_cat,
-                                                              'cote': self.userwdgfield.comboBox_cote,
-                                                              'position': self.userwdgfield.comboBox_position,
-                                                              'typeequipement': self.userwdgfield.comboBox_type,
-                                                              'implantation': self.userwdgfield.comboBox_implantation,
-                                                              'ecoulement': self.userwdgfield.comboBox_ecoulement,
-                                                              'utilisation': self.userwdgfield.comboBox_utilisation,
-                                                              'dimverti': [self.userwdgfield.doubleSpinBox_dimvert,
-                                                                           self.userwdgfield.doubleSpinBox_dimvert_2],
-                                                              'dimhori': [self.userwdgfield.doubleSpinBox_dimhoriz,
-                                                                          self.userwdgfield.doubleSpinBox_dimhoriz2],
+                log.debug("init field UI")
+                self.recorder = AudioFactory.create("recorder")                             
+                self.mediator = Mediator.getinstance()
+                #self.mediator.connect("stream_stop", self.saveFeature)            
+                self.userwdgfield = UserUI(RecorderWidget(self.recorder, self.mediator))                
+                
+                self.linkuserwdgfield = {
+                    'Equipement' : {
+                        'linkfield' : 'id_equipement',
+                        'widgets' : {
+                            'categorie': self.userwdgfield.comboBox_cat,
+                            'cote': self.userwdgfield.comboBox_cote,
+                            'position': self.userwdgfield.comboBox_position,
+                            'typeequipement': self.userwdgfield.comboBox_type,
+                            'implantation': self.userwdgfield.comboBox_implantation,
+                            'ecoulement': self.userwdgfield.comboBox_ecoulement,
+                            'utilisation': self.userwdgfield.comboBox_utilisation,
+                            'dimverti': [
+                                self.userwdgfield.doubleSpinBox_dimvert,
+                                self.userwdgfield.doubleSpinBox_dimvert_2],
+                            'dimhori': [
+                                self.userwdgfield.doubleSpinBox_dimhoriz,
+                                self.userwdgfield.doubleSpinBox_dimhoriz2],
+                            'soustype': self.userwdgfield.comboBox_soustype,
+                            'fildeau': self.userwdgfield.doubleSpinBox_fildeau,
+                            'securite': self.userwdgfield.comboBox_securite,
+                        }
+                    },
+                    'Objet' : {
+                        'linkfield' : 'id_objet',
+                        'widgets' : {
+                            'commentaire': self.userwdgfield.textBrowser_comm
+                        }
+                    },
+                    'Descriptionsystem' : {
+                        'linkfield' : 'id_descriptionsystem',
+                            'widgets' : {
 
-                                                              'soustype': self.userwdgfield.comboBox_soustype,
-                                                              'fildeau': self.userwdgfield.doubleSpinBox_fildeau,
-                                                              'securite': self.userwdgfield.comboBox_securite,
-
-
-                                                              }},
-                                    'Objet' : {'linkfield' : 'id_objet',
-                                              'widgets' : {'commentaire': self.userwdgfield.textBrowser_comm}},
-                                    'Descriptionsystem' : {'linkfield' : 'id_descriptionsystem',
-                                              'widgets' : {}}}
+                            }
+                    }
+                }
+                                
                 self.userwdgfield.comboBox_cat.currentIndexChanged.connect(self.changeCategorie)
+
                 self.userwdgfield.toolButton_calch.clicked.connect(
                     lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_dimvert))
                 self.userwdgfield.toolButton__calcv.clicked.connect(
@@ -141,22 +163,36 @@ class BaseDigueEquipementTool(BaseEquipementTool):
                 # ****************************************************************************************
                 # userui
                 self.userwdgfield = UserUISirs()
-                self.linkuserwdgfield = {'Equipement': {'linkfield': 'id_equipement',
-                                                        'widgets': {'categorie': self.userwdgfield.comboBox_cat,
-                                                                    'cote': self.userwdgfield.comboBox_cote,
-                                                                    'position': self.userwdgfield.comboBox_position,
-                                                                    'typeequipement': self.userwdgfield.comboBox_type,
-                                                                    'implantation': self.userwdgfield.comboBox_implantation,
-                                                                    'ecoulement': self.userwdgfield.comboBox_ecoulement,
-                                                                    'utilisation': self.userwdgfield.comboBox_utilisation,
-                                                                    'dimverti': self.userwdgfield.doubleSpinBox_dimvert,
-                                                                    'dimhori': self.userwdgfield.doubleSpinBox_dimhoriz,
-                                                                    'securite': self.userwdgfield.comboBox_securite
-                                                                    }},
-                                         'Objet': {'linkfield': 'id_objet',
-                                                   'widgets': {'commentaire': self.userwdgfield.textBrowser_comm}},
-                                         'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
-                                                               'widgets': {}}}
+                self.linkuserwdgfield = {
+                    "Equipement":{
+                        "linkfield":"id_equipement",
+                        "widgets":{
+                            "categorie":"self.userwdgfield.comboBox_cat",
+                            "cote":"self.userwdgfield.comboBox_cote",
+                            "position":"self.userwdgfield.comboBox_position",
+                            "typeequipement":"self.userwdgfield.comboBox_type",
+                            "implantation":"self.userwdgfield.comboBox_implantation",
+                            "ecoulement":"self.userwdgfield.comboBox_ecoulement",
+                            "utilisation":"self.userwdgfield.comboBox_utilisation",
+                            "dimverti":"self.userwdgfield.doubleSpinBox_dimvert",
+                            "dimhori":"self.userwdgfield.doubleSpinBox_dimhoriz",
+                            "securite":"self.userwdgfield.comboBox_securite",
+                            "recorder": "self.userwdgfield.recorderWidget"
+                        }
+                    },
+                    "Objet":{
+                        "linkfield":"id_objet",
+                        "widgets":{
+                            "commentaire":"self.userwdgfield.textBrowser_comm"
+                        }
+                    },
+                    "Descriptionsystem":{
+                        "linkfield":"id_descriptionsystem",
+                        "widgets":{
+
+                        }
+                    }
+                }
                 self.userwdgfield.comboBox_cat.currentIndexChanged.connect(self.changeCategorie)
                 self.userwdgfield.toolButton_calch.clicked.connect(
                     lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_dimvert))
@@ -200,21 +236,44 @@ class BaseDigueEquipementTool(BaseEquipementTool):
         if self.savingnewfeature and self.savingnewfeatureVersion == False:
             # categorie
             sql = "SELECT Categorie FROM Equipement WHERE pk_equipement = " + str(self.currentFeaturePK)
-            categ = self.dbase.query(sql)[0][0]
-            print('categ', categ)
+            categ = self.dbase.query(sql)[0][0]            
             if categ == 'OUH':
                 pkobjet = self.dbase.createNewObjet()
                 lastiddesordre = self.dbase.getLastId('Desordre') + 1
-                geomtext, iddessys = self.dbase.getValuesFromPk('Equipement_qgis',
-                                                                ['ST_AsText(geom)', 'id_descriptionsystem'],
-                                                                self.currentFeaturePK)
-                sql = self.dbase.createSetValueSentence(type='INSERT',
-                                                        tablename='Desordre',
-                                                        listoffields=['id_desordre', 'lpk_objet', 'groupedesordre',
-                                                                      'lid_descriptionsystem', 'geom'],
-                                                        listofrawvalues=[lastiddesordre, pkobjet, 'EQP', iddessys,
-                                                                         geomtext])
+                geomtext, iddessys = self.dbase.getValuesFromPk('Equipement_qgis', ['ST_AsText(geom)', 'id_descriptionsystem'], self.currentFeaturePK)
+                sql = self.dbase.createSetValueSentence(
+                    type='INSERT',
+                    tablename='Desordre',
+                    listoffields=[
+                        'id_desordre', 
+                        'lpk_objet', 
+                        'groupedesordre',
+                        'lid_descriptionsystem', 
+                        'geom'
+                    ],
+                    listofrawvalues=[
+                        lastiddesordre,
+                        pkobjet,
+                        'EQP',
+                        iddessys,
+                        geomtext
+                    ]
+                )
                 self.dbase.query(sql)
+
+            currentrecording = self.recorder.currentrecording
+            pkressource = self.dbase.getValuesFromPk('Audio_qgis', 'pk_ressource', self.currentFeaturePK)
+            sqlquery = (
+                "UPDATE Ressource "
+                "SET file = '{0}' "            
+                "WHERE pk_ressource = {1}"
+            ).format(
+                currentrecording.path + currentrecording.name + currentrecording.extension_type,
+                pkressource
+            )
+
+            self.dbase.query(sqlquery)
+            self.dbase.commit()
 
 
     def typeponctuelChanged(self, comboindex):
@@ -228,10 +287,6 @@ class BaseDigueEquipementTool(BaseEquipementTool):
             self.userwdg.stackedWidget.setCurrentIndex(1)
             self.pushButton_addPoint.setEnabled(True)
             self.pushButton_addLine.setEnabled(False)
-
-
-
-
         elif 'Lineaire' in self.userwdg.comboBox_cat.currentText():
             self.userwdg.stackedWidget.setCurrentIndex(0)
             self.pushButton_addPoint.setEnabled(False)
@@ -243,94 +298,56 @@ class BaseDigueEquipementTool(BaseEquipementTool):
 
 
     def postInitFeatureProperties(self, feat):
-        pass
-        if False:
-            print(self.propertieswdgDesordre.comboBox_featurelist.count())
-            if feat is not None and self.currentFeature['categorie'] == 'OUH' and self.propertieswdgDesordre.comboBox_featurelist.count() == 0:
-                print('tt')
-                self.propertieswdgDesordre.pushButton_addFeature.setEnabled(True)
-            else:
-                print('ff')
-                self.propertieswdgDesordre.pushButton_addFeature.setEnabled(False)
-
-
-
-
-    """
-    def postOnActivation(self):
-        pass
-
-    def postOnDesactivation(self):
-        pass
-
-
-
-
+        pass     
 
     def createParentFeature(self):
-
-        lastrevision = self.dbase.getLastPk('Revision')
-        datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
-        lastobjetid = self.dbase.getLastId('Objet') + 1
-        sql = "INSERT INTO Objet (id_objet, id_revisionbegin, datecreation ) "
-        sql += "VALUES(" + str(lastobjetid) + "," + str(lastrevision) + ",'" + datecreation + "');"
-        query = self.dbase.query(sql)
-        self.dbase.commit()
-        # idobjet = self.dbase.getLastRowId('Objet')
-
-        # sql = "INSERT INTO Descriptionsystem (id_objet) VALUES(" + str(idobjet) + ");"
-        lastdescriptionsystemid = self.dbase.getLastId('Descriptionsystem') + 1
-        sql = "INSERT INTO Descriptionsystem (id_descriptionsystem, id_revisionbegin, id_objet) "
-        sql += "VALUES(" + str(lastdescriptionsystemid) + "," + str(lastrevision) + "," + str(lastobjetid) + ");"
-        query = self.dbase.query(sql)
-        self.dbase.commit()
-        # idsys = self.dbase.getLastRowId('Descriptionsystem')
-
-        pkequip = self.currentFeature.id()
-        lastidequip = self.dbase.getLastId('Equipement') + 1
-
-        sql = "UPDATE Equipement SET id_objet = " + str(lastobjetid) + ","
-        sql += "id_descriptionsystem = " + str(lastdescriptionsystemid) + ","
-        sql += "id_equipement = " + str(lastidequip) + ","
-        sql += "id_revisionbegin = " + str(lastrevision)
-        sql += " WHERE pk_equipement = " + str(pkequip) + ";"
-        query = self.dbase.query(sql)
+        #Insertion dans la table des ressource de  du lien à l'objet
+        #INSERT INTO Ressource (id_ressource, lpk_objet) VALUES( str(lastressourceid) , str(pkobjet))
+        pkobjet = self.dbase.createNewObjet()
+        lastressourceid = self.dbase.getLastId('Ressource') + 1
+        sqlquery = (
+            "INSERT INTO Ressource (id_ressource, lpk_objet) "
+            "VALUES ( {0}, {1})"
+        ).format(
+            lastressourceid,
+            pkobjet
+        )        
+        self.dbase.query(sqlquery)
         self.dbase.commit()
 
-
-        if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
-            currentparentlinkfield = self.parentWidget.currentFeature['id_descriptionsystem']
-            sql = "UPDATE Equipement SET lk_descriptionsystem = " + str(currentparentlinkfield)
-            sql += " WHERE pk_equipement = " + str(pkequip)
-            self.dbase.query(sql)
-            self.dbase.commit()
-
-
-
-
-
-    def deleteParentFeature(self):
-        idobjet = self.currentFeature['id_objet']
-
-        sql = "DELETE FROM Objet WHERE id_objet = " + str(idobjet) + ";"
-        query = self.dbase.query(sql)
+        pkressource = self.dbase.getLastRowId('Ressource')
+        pkaudio = self.currentFeaturePK
+        lastidaudio = self.dbase.getLastId('Audio') + 1
+        
+        # Liaison de l'objet (ici de l'audio) à l'entrée précédente de la table ressource
+        # UPDATE Audio SET id_audio = str(lastidaudio) ,lpk_ressource = str(pkres) WHERE pk_audio = str(pkaudio)
+        sqlquery = (
+            "UPDATE Audio SET id_audio = {0}, lpk_ressource = {1} "
+            "WHERE pk_audio = {2}"
+        ).format(
+            lastidaudio,
+            pkressource,
+            pkaudio
+        )        
+        self.dbase.query(sqlquery)
         self.dbase.commit()
-
-        sql = "DELETE FROM Descriptionsystem WHERE id_objet = " + str(idobjet) + ";"
-        query = self.dbase.query(sql)
+        
+        # Ajout des référence pour le champs commentaire 
+        sqlquery = (
+            "UPDATE Audio SET id_commentaire = {0}, id_table = {1} "            
+        ).format(
+            self.userwdgfield.textBrowser_comm,
+            "equipement",            
+        )        
+        self.dbase.query(sqlquery)
         self.dbase.commit()
-
-        return True
-
-
-    """
-
 
 class UserUI(QWidget):
-    def __init__(self, parent=None):
+    def __init__(self, widget, parent=None):
         super(UserUI, self).__init__(parent=parent)
+        log.debug("Set Layout")
         uipath = os.path.join(os.path.dirname(__file__), 'lamiabasedigue_equipement_tool_ui.ui')
-        uic.loadUi(uipath, self)
+        uic.loadUi(uipath, self)        
 
 class UserUISirs(QWidget):
     def __init__(self, parent=None):
