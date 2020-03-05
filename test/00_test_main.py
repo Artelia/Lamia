@@ -40,20 +40,20 @@ class TestMain(Test):
         # path = "C://000_testdigue//tram_bordeaux//Tram.sqlite
 
         # choice
-        path = "C://000_testdigue//temp_base2_ass2//test01.sqlite"
+        path = "C://000_testdigue//temp_base2_digue//test01.sqlite"
 
         # path = "C://000_Modwenne//Lamia//test01.sqlite"
         # path = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//BD_totale_ind8.sqlite"
         # path = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees_terrains//20191105_Terrain//Terrain_VTA_11_2019.sqlite"
-        path = "C://000_Modwenne//test01.sqlite"
-        path = "C://000_Modwenne//lamiatest01//test01.sqlite"
+        # path = "C://000_Modwenne//test01.sqlite"
+        # path = "C://000_Modwenne//lamiatest01//test01.sqlite"
         # path = "M://FR//BOR//VT//MOE//4352678-33-CD33_VTA_digue_bas_Medoc//05-ETP ou ETUDES//05-1-Plans//1-Divers-travail//SAUVEGARDE TERRAIN//bas_medoc.sqlite"
-        path = "C://000_testdigue//temp_base2_chantiertram//test01.sqlite"
+        # path = "C://000_testdigue//temp_base2_chantiertram//test01.sqlite"
         # path = "C://000_testdigue//testdigue//BD_totale_ind6.sqlite"
-        path = "C://BM//pourimport//BD_totale_ind8.sqlite"
-        path = "C://000_testdigue//temp_base2_aep//test01.sqlite"
+        # path = "C://BM//pourimport//BD_totale_ind8.sqlite"
+        # path = "C://000_testdigue//temp_base2_aep//test01.sqlite"
         # path = "C://000_testdigue//temp_base2_ass2//test01.sqlite"
-        path = "U://FR//BOR//VT//PVR//20_LAMIA//1_DOC//renouveau//Pack_Renouveau//02_lamia_renouveau_prerempli//lamia_renouveau_prerempli.sqlite"
+        # path = "U://FR//BOR//VT//PVR//20_LAMIA//1_DOC//renouveau//Pack_Renouveau//02_lamia_renouveau_prerempli//lamia_renouveau_prerempli.sqlite"
         # path = "C://000_testdigue//000_test_virginie//ROMORANTIN BDD.sqlite"
         # path = "C://000_testdigue//temp_base2_chantiertram//test01.sqlite"
         #
@@ -62,9 +62,9 @@ class TestMain(Test):
         # path = "C://000_testdigue//temp_base2_ass2//test01.sqlite"
 
         # path = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//BD_totale_ind11.sqlite"
-        path = "C://000_testdigue//temp_base2_ass2//test01.sqlite"
+        # path = "C://000_testdigue//temp_base2_ass2//test01.sqlite"
 
-        path = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//BD_totale_ind11_PVR.sqlite"
+        # path = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//BD_totale_ind11_PVR.sqlite"
 
 
 
@@ -76,8 +76,7 @@ class TestMain(Test):
                              host='localhost', port=5432, dbname='gis', schema='assainissement', user='pvr', password='pvr')
 
 
-        print('ok0')
-
+        print('ok')
         self.loadLayersInCanvas()
 
         # print(self.dbase.dbasetables['Infralineaire']['fields'])

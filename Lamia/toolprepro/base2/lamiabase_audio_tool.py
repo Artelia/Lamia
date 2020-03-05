@@ -51,7 +51,9 @@ class BaseAudioTool(AbstractLamiaTool):
     specialfieldui = []
 
     def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
-        super(BaseAudioTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil, parentwidget, parent=parent)           
+        super(BaseAudioTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil, parentwidget, parent=parent)
+        self.parentwidget = parentwidget
+        log.debug(self.parentwidget)
 
     def initTool(self):      
         # ****************************************************************************************
@@ -167,6 +169,9 @@ class BaseAudioTool(AbstractLamiaTool):
         self.dbase.query(sqlquery)
         self.dbase.commit()
 
+        # Ajout de de l'id du widget parent dans la table audio, pour faire le lier entre les fichier wav et les champs de text
+        log.debug(self.parentwidget)
+
 class UserUI(QWidget):
 
     def __init__(self, widget, parent=None):
@@ -174,6 +179,5 @@ class UserUI(QWidget):
         self._layout = QVBoxLayout()
         self._layout.setAlignment(Qt.AlignCenter)
         self._layout.addWidget(widget)
-        self.setLayout(self._layout)
-        self.focusWidget()
+        self.setLayout(self._layout)        
 

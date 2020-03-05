@@ -10,7 +10,7 @@ import shutil
 from qgis.PyQt import uic, QtCore
 from qgis.PyQt.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, Qt
 
-from Lamia.dialog.InspectionDigue_windowwidget import InspectiondigueWindowWidget
+from Lamia.Lamia.dialog.InspectionDigue_windowwidget import InspectiondigueWindowWidget
 
 try:
     from qgis.PyQt.QtGui import (QWidget,QDialog,QMainWindow)

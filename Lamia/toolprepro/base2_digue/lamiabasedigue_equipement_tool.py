@@ -30,22 +30,20 @@ import qgis
 try:
     from qgis.PyQt.QtGui import (QWidget, QVBoxLayout)
 except ImportError:
-    from qgis.PyQt.QtWidgets import (QWidget, QVBoxLayout)
+    from qgis.PyQt.QtWidgets import (QWidget, QVBoxLayout, QGridLayout, QPushButton)
 from qgis.PyQt.QtCore import Qt
-#from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
 from ..base2.lamiabase_equipement_tool import BaseEquipementTool
 
 from .lamiabasedigue_photo_tool import BaseDiguePhotoTool as BasePhotoTool
-#from ..base.lamiabase_croquis_tool import BaseCroquisTool
 from .lamiabasedigue_croquis_tool import BaseCroquisTool
 from .lamiabasedigue_desordre_tool import BaseDigueDesordreTool
+
+from ...toolgeneral.VoiceRecorder.main.Ui.Widgets.RecorderWidget import RecorderWidget
 
 
 import os, logging, datetime
 
-from ...toolgeneral.VoiceRecorder.main.AudioLogic.audioFactory import AudioFactory
-from ...toolgeneral.VoiceRecorder.main.Ui.Widgets.RecorderWidget import RecorderWidget
-from ...toolgeneral.VoiceRecorder.main.Ui.Controller.Mediator import Mediator
+from .recorderTool import RecorderTool
 
 log = logging.getLogger("Lamia")
 class BaseDigueEquipementTool(BaseEquipementTool):
@@ -56,14 +54,9 @@ class BaseDigueEquipementTool(BaseEquipementTool):
     def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
         super(BaseDigueEquipementTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
 
-
-
-
     def initTool(self):
         super(BaseDigueEquipementTool,self).initTool()
         self.linkedgeom = [['Desordre', 'lid_descriptionsystem']]
-
-
 
     def initFieldUI(self):
         # ****************************************************************************************
@@ -72,11 +65,7 @@ class BaseDigueEquipementTool(BaseEquipementTool):
             if self.userwdgfield is None:
                 # ****************************************************************************************
                 # userui
-                log.debug("init field UI")
-                self.recorder = AudioFactory.create("recorder")                             
-                self.mediator = Mediator.getinstance()
-                #self.mediator.connect("stream_stop", self.saveFeature)            
-                self.userwdgfield = UserUI(RecorderWidget(self.recorder, self.mediator))                
+                self.userwdgfield = UserUI()                
                 
                 self.linkuserwdgfield = {
                     'Equipement' : {
@@ -130,6 +119,8 @@ class BaseDigueEquipementTool(BaseEquipementTool):
 
                 self.userwdgfield.comboBox_type.currentIndexChanged.connect(self.typeponctuelChanged)
 
+                log.debug("OSKOUR")                
+                self.userwdgfield.gridLayout_2.addWidget(RecorderTool(self, self.dbase), 0, 2)
                 # ****************************************************************************************
                 # child widgets
 
@@ -200,7 +191,7 @@ class BaseDigueEquipementTool(BaseEquipementTool):
                     lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_dimhoriz))
 
                 # ****************************************************************************************
-                # child widgets
+                # child widgets                
 
                 self.dbasechildwdgfield = []
 
@@ -227,8 +218,7 @@ class BaseDigueEquipementTool(BaseEquipementTool):
                     self.dbasechildwdgfield.append(self.propertieswdgEQUIPEMENT)
 
                     self.userwdgfield.comboBox_type.currentIndexChanged.connect(
-                        self.propertieswdgDesordre.propertieswdgOBSERVATION2.equipementTypeChanged)
-
+                        self.propertieswdgDesordre.propertieswdgOBSERVATION2.equipementTypeChanged)            
 
     def postSaveFeature(self, boolnewfeature):
 
@@ -343,11 +333,10 @@ class BaseDigueEquipementTool(BaseEquipementTool):
         self.dbase.commit()
 
 class UserUI(QWidget):
-    def __init__(self, widget, parent=None):
+    def __init__(self, parent=None):
         super(UserUI, self).__init__(parent=parent)
-        log.debug("Set Layout")
         uipath = os.path.join(os.path.dirname(__file__), 'lamiabasedigue_equipement_tool_ui.ui')
-        uic.loadUi(uipath, self)        
+        uic.loadUi(uipath, self)
 
 class UserUISirs(QWidget):
     def __init__(self, parent=None):

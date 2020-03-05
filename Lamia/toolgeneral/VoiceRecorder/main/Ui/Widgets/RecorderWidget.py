@@ -9,8 +9,8 @@ log = logging.getLogger("AudioRecord")
 class RecorderWidget(QWidget):
 
     def __init__(self, recorder, mediator, parent=None):        
-        log.debug("Recorder initialized") 
         super(RecorderWidget, self).__init__(parent)
+        log.debug("Recorder initialized")
         self._recorder = recorder
         # SETUP        
         self._setup_recordingButton()
