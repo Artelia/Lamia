@@ -7,3 +7,9 @@
 /Lamia/toolpostpro/*/*amc_tool*
 /Lamia/toolpostpro/*/amctools
 /.idea/
+
+### IDE Files ###
+*/.vscode
+
+### Misc Files ###
+*.wav

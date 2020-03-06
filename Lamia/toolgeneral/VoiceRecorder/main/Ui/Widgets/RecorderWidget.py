@@ -15,7 +15,7 @@ class RecorderWidget(QWidget):
         # SETUP        
         self._setup_recordingButton()
         self._setup_layout()
-        #Mediator
+        # Mediator
         self._mediator = mediator
 
     def _setup_layout(self):

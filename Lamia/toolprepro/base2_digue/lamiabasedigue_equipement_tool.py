@@ -56,7 +56,12 @@ class BaseDigueEquipementTool(BaseEquipementTool):
 
     def initTool(self):
         super(BaseDigueEquipementTool,self).initTool()
-        self.linkedgeom = [['Desordre', 'lid_descriptionsystem']]
+        self.linkedgeom = [
+            [
+                'Desordre',
+                'lid_descriptionsystem'
+            ]
+        ]
 
     def initFieldUI(self):
         # ****************************************************************************************
@@ -80,10 +85,12 @@ class BaseDigueEquipementTool(BaseEquipementTool):
                             'utilisation': self.userwdgfield.comboBox_utilisation,
                             'dimverti': [
                                 self.userwdgfield.doubleSpinBox_dimvert,
-                                self.userwdgfield.doubleSpinBox_dimvert_2],
+                                self.userwdgfield.doubleSpinBox_dimvert_2
+                            ],
                             'dimhori': [
                                 self.userwdgfield.doubleSpinBox_dimhoriz,
-                                self.userwdgfield.doubleSpinBox_dimhoriz2],
+                                self.userwdgfield.doubleSpinBox_dimhoriz2
+                            ],
                             'soustype': self.userwdgfield.comboBox_soustype,
                             'fildeau': self.userwdgfield.doubleSpinBox_fildeau,
                             'securite': self.userwdgfield.comboBox_securite,
@@ -119,8 +126,8 @@ class BaseDigueEquipementTool(BaseEquipementTool):
 
                 self.userwdgfield.comboBox_type.currentIndexChanged.connect(self.typeponctuelChanged)
 
-                log.debug("OSKOUR")                
-                self.userwdgfield.gridLayout_2.addWidget(RecorderTool(self, self.dbase), 0, 2)
+                log.debug("Ajout d'un nouveau widget")
+                self.userwdgfield.gridLayout_2.addWidget(RecorderTool(parent=self), 0, 2)
                 # ****************************************************************************************
                 # child widgets
 
