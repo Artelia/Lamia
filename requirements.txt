@@ -1,0 +1,4 @@
+xlrd==1.1.0
+networkx==2.2
+pandas==0.25.1
+pylint

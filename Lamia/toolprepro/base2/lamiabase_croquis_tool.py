@@ -41,7 +41,9 @@ import qgis
 import datetime
 from .lamiabase_photoviewer import PhotoViewer
 import PIL
-from PIL import ImageGrab
+import platform
+if platform.system() == 'Windows':
+    from PIL import ImageGrab
 from PIL.ImageQt import ImageQt
 
 # FORM_CLASS3, _ = uic.loadUiType(os.path.join(os.path.dirname(__file__), 'FreeHandEditorToolUser.ui'))
@@ -147,20 +149,21 @@ class BaseCroquisTool(AbstractLamiaTool):
 
 
     def pasteImage(self):
-        pilimage = PIL.ImageGrab.grabclipboard()
-        if pilimage is not None:
-            im = ImageQt(pilimage )
-            # self.editorwindow.scribbleArea
-            #self.image = loadedImage
-            #self.modified = False
-            #self.update()
-            self.editorwindow.setImage(im)
-            #self.editorwindow.scribbleArea.image = im
-            #self.editorwindow.scribbleArea.update()
-            self.photowdg.clear()
-            self.photowdg.setPixmap(im)
+        if platform.system() == 'Windows':
+            pilimage = PIL.ImageGrab.grabclipboard()
+            if pilimage is not None:
+                im = ImageQt(pilimage )
+                # self.editorwindow.scribbleArea
+                #self.image = loadedImage
+                #self.modified = False
+                #self.update()
+                self.editorwindow.setImage(im)
+                #self.editorwindow.scribbleArea.image = im
+                #self.editorwindow.scribbleArea.update()
+                self.photowdg.clear()
+                self.photowdg.setPixmap(im)
 
-            self.editPhoto()
+                self.editPhoto()
 
 
     def editPhoto(self):

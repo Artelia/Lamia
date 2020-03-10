@@ -49,6 +49,8 @@ import datetime
 import sys
 import logging
 import math
+import platform
+import subprocess
 logger = logging.getLogger("Lamia")
 logger.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s :: %(levelname)s :: %(module)s :: %(funcName)s :: %(message)s')
@@ -1488,7 +1490,10 @@ class InspectiondigueWindowWidget(QMainWindow):
 
     def openHelp(self):
         path = os.path.join(os.path.dirname(__file__),'..','doc_html','index.html')
-        os.startfile(path)
+        if platform.system() == 'Linux':
+            r = subprocess.call(('xdg-open', path))
+        elif platform.system() == 'Windows':
+            os.startfile(path)
 
 
     def errorMessage(self, text):

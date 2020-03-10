@@ -1429,7 +1429,7 @@ class UserUI(QWidget):
         # self.setupUi(self)
 
         # Charge le widget associé
-        uipath = os.path.join(os.path.dirname(__file__), 'lamia_stat_tool.ui')
+        uipath = os.path.join(os.path.dirname(__file__), 'Lamia_stat_tool.ui')
         uic.loadUi(uipath, self)
 
         class ObservationUserUI(QWidget):

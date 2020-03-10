@@ -5,7 +5,7 @@
 
 
 from test.AbstractTest import Test
-import os
+import os, sys
 import datetime
 from qgis.PyQt import QtCore
 
@@ -47,9 +47,11 @@ class TestMain(Test):
         path = "C://000_testdigue//Somme//terrain.sqlite"
         path = "C://000_testdigue//Somme//somme2//terrain epis_Troncon.sqlite"
         path = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//BD_totale_ind11.sqlite"
-        path = "C://000_testdigue//Somme//somme1//terrain.sqlite"
+        
         path = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//BD_totale_ind11_PVR.sqlite"
-        # path = "C://000_testdigue//Somme//somme2//terrain epis_Troncon.sqlite"
+        path = "C://000_testdigue//Somme//somme2//terrain epis_Troncon.sqlite"
+        # path = "C://000_testdigue//Somme//somme1//terrain.sqlite"
+
 
         self.wind.dbase.loadQgisVectorLayers(path)
         self.wind.loadUiDesktop()
@@ -70,12 +72,13 @@ class TestMain(Test):
                 if 'printPDF' in menutool.__class__.__name__ :
                     indexrapport = i
                     break
-            self.wind.dbase.dbasetables['Zonegeo']['layerqgis'].selectByIds([22])
+            if False:
+                self.wind.dbase.dbasetables['Zonegeo']['layerqgis'].selectByIds([22])
             # Desordres Infralineaire Equipementhydraulique
-            # 01regard 01deshuileur  01posterefoulement
+            # 01regard 01deshuileur  01posterefoulement   
             # self.wind.menutools[indexrapport].pdffile = "C://000_testdigue//Lamia2//testrapport.pdf"
             self.wind.menutools[indexrapport].pdffile = "C://testrapport.pdf"
-            self.wind.menutools[indexrapport].reporttype = 'Infralineaire'
+            self.wind.menutools[indexrapport].reporttype = '_fiches_somme'
             self.wind.menutools[indexrapport].work()
 
 
@@ -97,16 +100,16 @@ class TestMain(Test):
                 # 01regard  Infralineaire   Infralineaire_PT_PL     Equipementhydraulique   EquipementCompteur   EquipementVanne
                 # EquipementRegulation  EquipementHydrant NoeudRegard nonconformite
                 # ORANGEnonconformitephaseA     _fiches_somme
-                indexrapport = wdg.filemanager.comboBox_files.findText('Infralineaire_PT_PL')
+                indexrapport = wdg.filemanager.comboBox_files.findText('_fiches_somme')
                 wdg.filemanager.comboBox_files.setCurrentIndex(indexrapport)
 
-                if True:
+                if False:
                     self.wind.dbase.dbasetables['Zonegeo']['layerqgis'].select(4)
 
                 wdg.userwdgfield.pushButton_export.clicked.emit(True)
 
         #self.mainwin.exec_()
-
+        sys.exit()
 
 
 

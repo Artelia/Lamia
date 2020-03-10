@@ -1,5 +1,13 @@
 import qgis
 import qgis.utils
+import os
+
+qgis_path = '/usr/bin/qgis'
+qgis_path = '/usr'
+
+app = qgis.core.QgsApplication([], True)
+qgis.core.QgsApplication.setPrefixPath(qgis_path, True)
+qgis.core.QgsApplication.initQgis()
 
 try:
     qgisversion_int = qgis.utils.QGis.QGIS_VERSION_INT
@@ -15,7 +23,9 @@ else:
 
 uri = qgis.core.QgsDataSourceUri()
 
-spatialitefile = "C://000_testdigue//temp_base2_assainissement//test01.sqlite"
+spatialitefile = "/home/docker/temp_base2_ass2/test01.sqlite"
+print(os.path.isfile(spatialitefile))
+
 sql = "(SELECT * FROM Noeud)"
 
 uri.setDatabase(spatialitefile)

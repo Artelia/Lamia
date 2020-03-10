@@ -1115,7 +1115,6 @@ class AbstractLamiaTool(QWidget):
                         self.initFeatureProperties(None)
 
                 elif hasattr(self, 'combotypeitems'):
-                    print('**', 'combotypeitems')
                     self.combowdg.clear()
                     self.combowdg.addItems(self.combotypeitems)
                     self.combowdg.setVisible(True)
@@ -1161,7 +1160,6 @@ class AbstractLamiaTool(QWidget):
         parentitem = self.linkedtreewidget.invisibleRootItem()
 
         tabletoshow = self.combowdg.currentText()
-        print('**', tabletoshow)
         if tabletoshow == '':
             return
 
@@ -1811,6 +1809,10 @@ class AbstractLamiaTool(QWidget):
         :return:
         """
 
+        
+        if feat is not None and feat.id() == 0:
+            return
+
         if self.dbasetable is not None:
             if self.linkuserwdg is None:
                 templinkuserwgd = {self.dbasetablename: None}
@@ -1835,6 +1837,7 @@ class AbstractLamiaTool(QWidget):
                     sql = "SELECT " + ','.join(fieldstoiterate) + " FROM " + self.dbasetablename + "_qgis "
                     sql += " WHERE pk_" + self.dbasetablename.lower() + " = " + str(feat.id())
                     result = self.dbase.query(sql)[0]
+
                 else:
                     if fieldname is None:
                         fieldstoiterate = self.dicttablefieldtoinit[tablename]

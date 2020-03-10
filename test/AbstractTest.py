@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-import sys
+import sys, platform
 import qgis
 import datetime
 import qgis.gui
@@ -42,12 +42,18 @@ class Test(QtCore.QObject):
             qgisversion_int = qgis.utils.Qgis.QGIS_VERSION_INT
         #print(qgisversion_int)
 
-        if int(str(qgisversion_int)[0:3]) < 220:
-            qgis_path = "C://OSGeo4W64//apps//qgis218"
-            qgis_path = "C://Program Files//OSGeo4W64//apps//qgis-ltr"
-        else:
-            qgis_path = "C://OSGeo4W64//apps//qgis-ltr"
-            #os.environ["QT_QPA_PLATFORM"] = "offscreen"
+
+        if platform.system() == 'Windows':
+            if int(str(qgisversion_int)[0:3]) < 220:
+                qgis_path = "C://OSGeo4W64//apps//qgis218"
+                qgis_path = "C://Program Files//OSGeo4W64//apps//qgis-ltr"
+            else:
+                qgis_path = "C://OSGeo4W64//apps//qgis-ltr"
+                #os.environ["QT_QPA_PLATFORM"] = "offscreen"
+        elif platform.system() == 'Linux':
+            qgis_path = '/usr'
+            print('qgis_path', qgis_path)
+
 
         self.app = qgis.core.QgsApplication([], True)
         qgis.core.QgsApplication.setPrefixPath(qgis_path, True)

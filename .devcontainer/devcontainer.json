@@ -1,0 +1,57 @@
+// For format details, see https://aka.ms/vscode-remote/devcontainer.json or this file's README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.101.1/containers/docker-existing-dockerfile
+{
+	"name": "Lamia",
+
+	// Sets the run context to one level up instead of the .devcontainer folder.
+	"context": "..",
+
+	// Update the 'dockerFile' property if you aren't using the standard 'Dockerfile' filename.
+	"dockerFile": "Dockerfile",
+
+	// Set *default* container specific settings.json values on container create.
+	"settings": { 
+		"http.proxy": "http://10.1.3.48:3128",
+		"terminal.integrated.shell.linux": "/bin/bash",
+		"python.pythonPath": "/usr/bin/python3.6",
+		"python.linting.enabled": true,
+		"python.linting.pylintEnabled": true,
+		//"python.linting.pylintPath": "/usr/local/share/pip-global/bin/pylint"
+		"python.linting.pylintPath": "/home/docker/.local/bin"
+	},
+
+	//"workspaceMount": "source=${localWorkspaceFolder}/sub-folder,target=/usr/src/Analytics/,type=bind,consistency=delegated",
+	"workspaceMount": "source=${localWorkspaceFolder},target=/usr/src/Lamia/,type=bind,consistency=delegated",
+	"workspaceFolder": "/usr/src/Lamia/",
+
+	"remoteEnv": {
+		"PATH": "${containerEnv:PATH}:/usr/src/Lamia",
+		"PYTHONPATH": "${containerEnv:PYTHONPATH}:/usr/src/Lamia:usr/share/qgis/python:/usr/share/qgis/python/plugins:/usr/lib/python36.zip:/usr/lib/python3.6",
+		"DISPLAY": "10.20.75.139:0.0",
+		"LANG" : "C.UTF-8",
+		"LD_LIBRARY_PATH" : "/usr/lib/grass74/lib",
+	},
+
+	// Add the IDs of extensions you want installed when the container is created.
+	"extensions": [],
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+
+	// Uncomment the next line to run commands after the container is created - for example installing git.
+	// "postCreateCommand": "apt-get update && apt-get install -y git",
+	//for qgis gui - pu your ip adress get with ipconfig in powershell
+	//"postCreateCommand": "export DISPLAY=10.20.75.139:0.0 && export PATH=/usr/src/Lamia:$PATH",
+	//"postCreateCommand": "export DISPLAY=10.20.75.139:0.0 && export PATH=/usr/src/Lamia:$PATH",
+
+	// Uncomment when using a ptrace-based debugger like C++, Go, and Rust
+	// "runArgs": [ "--cap-add=SYS_PTRACE", "--security-opt", "seccomp=unconfined" ],
+	//"runArgs": [ "--name Lamia" ],
+	//"runArgs": [ "--env DISPLAY=(Test-Connection -ComputerName (hostname) -Count 1).IPV4Address.IPAddressToString" ],
+
+	// Uncomment to use the Docker CLI from inside the container. See https://aka.ms/vscode-remote/samples/docker-in-docker.
+	"mounts": [ "source=C:\\000_Lamia_DBase,target=/home/docker,type=bind" ],
+
+	// Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
+	// "remoteUser": "vscode"
+}

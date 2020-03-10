@@ -6,7 +6,8 @@ import os, sys
 import datetime
 from qgis.PyQt import  QtCore
 import profile
-
+import platform
+from pprint import pprint
 
 
 class TestMain(Test):
@@ -17,6 +18,12 @@ class TestMain(Test):
 
     def testMethod(self):
         self.createWin()
+
+        rootdir = ''
+        if platform.system() == 'Linux':
+            rootdir = '/home/docker'
+        elif platform.system() == 'Windows':
+            rootdir = 'c://000_Lamia_DBase'
 
         #common
         # path = "C://000_testdigue//temp_base2_digue//test01.sqlite"
@@ -67,10 +74,19 @@ class TestMain(Test):
         path = "M://FR//BOR//VT//FLUVIAL//4352024_33_Conformite_digues_BM//6_Reglementaire//61_Calculs//Basedonnees//BD_totale_ind11_PVR.sqlite"
         path = "C://000_testdigue//temp_base2_chantiertram//test01.sqlite"
 
+        filepath = "temp_base2_chantiertram//test01.sqlite"
+        filepath = "temp_base2_ass2/test01.sqlite"
+        filepath = "temp_base2_chantiertram/test01.sqlite"
+        #filepath = "temp_base2_digue//test01.sqlite"
+
 
         # self.dbase.xlsreader = True
+        completepath = os.path.join(rootdir, filepath)
+        print('****cp', completepath)
+        print('****info', sys.version)
+
         if True:
-            self.dbase.loadQgisVectorLayers(path)
+            self.dbase.loadQgisVectorLayers(completepath)
         else:
             self.dbase.loadQgisVectorLayers( dbasetype='postgis', variante='Lamia',
                              host='localhost', port=5432, dbname='gis', schema='assainissement', user='pvr', password='pvr')
@@ -121,7 +137,7 @@ class TestMain(Test):
 
         self.dbase.printsql = False
 
-        if True:
+        if False:
             screen_resolution = self.app.desktop().screenGeometry()
             width, height = screen_resolution.width(), screen_resolution.height()
             print('**********')
@@ -139,8 +155,9 @@ class TestMain(Test):
             wdg.deepCopy()
 
 
+        if True:
+            self.mainwin.exec_()
 
-        self.mainwin.exec_()
         sys.exit()
 
 

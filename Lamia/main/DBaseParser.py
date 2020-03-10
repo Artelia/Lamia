@@ -53,7 +53,7 @@ except:
     PILexists = False
 
 from collections import OrderedDict
-import os, sys, math, shutil, re, psycopg2, glob, logging, datetime
+import os, sys, math, shutil, re, psycopg2, glob, logging, datetime, platform
 
 if sys.version_info.major == 2:
     from ..libs import xlrd
@@ -715,6 +715,7 @@ class DBaseParser(QtCore.QObject):
         if self.dbasetables is None:
             self.dbasetables = {}
 
+        # xlsbook = xlrd.open_workbook(dictfile, encoding_override='utf8')
         xlsbook = xlrd.open_workbook(dictfile)
 
         for sheet in xlsbook.sheets():
@@ -870,6 +871,11 @@ class DBaseParser(QtCore.QObject):
 
 
 
+            if debug and self.dbasetables[tablename]['order'] <= 4:
+                print('**************************')
+                print(self.dbasetables[tablename])
+                # logging.getLogger("Lamia").debug('dbasetables %s : %s', str(tablename), str(self.dbasetables[tablename]))
+
 
         if False:
             for filename in glob.glob(os.path.join(createfilesdir, '*.txt')):
@@ -1001,9 +1007,7 @@ class DBaseParser(QtCore.QObject):
             self.revisionwork = True
 
 
-        if debug:
-            for key in self.dbasetables.keys():
-                logging.getLogger("Lamia").debug('dbasetables %s : %s', str(key), str(self.dbasetables[key]))
+
 
 
     def readConstraints(self, tablename,fieldname  ,sheet, xlrow,cstcolumntoread=None):
@@ -1550,7 +1554,9 @@ class DBaseParser(QtCore.QObject):
                     # view layer qgis
 
                     #get id column
+
                     idcolumnname = self.getFirstIdColumn(tablename + '_qgis')
+
                     # print('***', tablename + '_qgis' , idcolumnname)
                     #if sys.version_info.major == 2:       #bug on qgis 3
                     if True:
