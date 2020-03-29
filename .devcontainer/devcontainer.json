@@ -11,43 +11,44 @@
 
 	// Set *default* container specific settings.json values on container create.
 	"settings": { 
-		"http.proxy": "http://10.1.3.48:3128",
+		//"http.proxy": "http://10.1.3.48:3128",
 		"terminal.integrated.shell.linux": "/bin/bash",
-		"python.pythonPath": "/usr/bin/python3.6",
+		"python.pythonPath": "/usr/src/dev_env/venv/bin/python3",
+		"python.venvPath": "/usr/src/dev_env/venv",
 		"python.linting.enabled": true,
 		"python.linting.pylintEnabled": true,
-		//"python.linting.pylintPath": "/usr/local/share/pip-global/bin/pylint"
-		"python.linting.pylintPath": "/home/docker/.local/bin"
+		"python.linting.pylintPath": "/usr/src/dev_env//venv/bin/pylint"
 	},
-
-	//"workspaceMount": "source=${localWorkspaceFolder}/sub-folder,target=/usr/src/Analytics/,type=bind,consistency=delegated",
-	"workspaceMount": "source=${localWorkspaceFolder},target=/usr/src/Lamia/,type=bind,consistency=delegated",
-	"workspaceFolder": "/usr/src/Lamia/",
 
 	"remoteEnv": {
 		"PATH": "${containerEnv:PATH}:/usr/src/Lamia",
-		"PYTHONPATH": "${containerEnv:PYTHONPATH}:/usr/src/Lamia:usr/share/qgis/python:/usr/share/qgis/python/plugins:/usr/lib/python36.zip:/usr/lib/python3.6",
+		"PYTHONPATH": "${containerEnv:PYTHONPATH}:/usr/src/Lamia:/usr/share/qgis/python:/usr/share/qgis/python/plugins:/usr/lib/python36.zip:/usr/lib/python3.6",
 		"DISPLAY": "10.20.75.139:0.0",
 		"LANG" : "C.UTF-8",
-		"LD_LIBRARY_PATH" : "/usr/lib/grass74/lib",
+		"LIBGL_ALWAYS_INDIRECT" : "1",
+		//"http_proxy": "http://proxy-a.arteliagroup.com:3128",
+		//"https_proxy": "http://proxy-a.arteliagroup.com:3128",
 	},
 
+	"workspaceMount": "source=${localWorkspaceFolder},target=/usr/src/Lamia/,type=bind,consistency=delegated",
+	"workspaceFolder": "/usr/src/Lamia/",
+
 	// Add the IDs of extensions you want installed when the container is created.
-	"extensions": [],
+	"extensions": [
+		"ms-python.python",
+		"donjayamanne.githistory",
+	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
+	//"forwardPorts": [5432],
 
 	// Uncomment the next line to run commands after the container is created - for example installing git.
 	// "postCreateCommand": "apt-get update && apt-get install -y git",
-	//for qgis gui - pu your ip adress get with ipconfig in powershell
-	//"postCreateCommand": "export DISPLAY=10.20.75.139:0.0 && export PATH=/usr/src/Lamia:$PATH",
-	//"postCreateCommand": "export DISPLAY=10.20.75.139:0.0 && export PATH=/usr/src/Lamia:$PATH",
+	"postCreateCommand": "sudo apt-get install git git-flow tree nano -y",
 
 	// Uncomment when using a ptrace-based debugger like C++, Go, and Rust
 	// "runArgs": [ "--cap-add=SYS_PTRACE", "--security-opt", "seccomp=unconfined" ],
-	//"runArgs": [ "--name Lamia" ],
-	//"runArgs": [ "--env DISPLAY=(Test-Connection -ComputerName (hostname) -Count 1).IPV4Address.IPAddressToString" ],
+	"runArgs": [ "--name", "Lamia" ],
 
 	// Uncomment to use the Docker CLI from inside the container. See https://aka.ms/vscode-remote/samples/docker-in-docker.
 	"mounts": [ "source=C:\\000_Lamia_DBase,target=/home/docker,type=bind" ],
