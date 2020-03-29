@@ -449,7 +449,7 @@ class DBaseOfflineManager():
 
 
 
-        if progress is not None: self.qgsiface.messageBar().clearWidgets()
+        # if progress is not None: self.qgsiface.messageBar().clearWidgets() TODO
         self.normalMessage.emit("Import termine")
 
     def isInConflict(self, dbaseparserfrom, conflictobjetid):
@@ -702,7 +702,7 @@ class DBaseOfflineManager():
                     self.dbase.query(sql, docommit=False)
 
 
-                childdbname, childpk = self.searchChildfeatureFromPkObjet(self, pkobjet)
+                childdbname, childpk = self.searchChildfeatureFromPkObjet(self.dbase, pkobjet)
                 parenttables = [childdbname] + self.dbase.getParentTable(childdbname)
 
                 for tablename in parenttables:
@@ -740,8 +740,8 @@ class DBaseOfflineManager():
 
         debug = False
         if debug: logging.getLogger("Lamia").debug('Start ')
-
-        if self.qgsiface is not None:
+        """
+        if self.qgsiface is not None: TODO
             # if not self.dbase.standalone:
             progressMessageBar = self.qgsiface.messageBar().createMessage("Backup...")
             progress = QProgressBar()
@@ -756,11 +756,20 @@ class DBaseOfflineManager():
             progress.setMaximum(maxprogress)
         else:
             progress = None
+        """
+        dbaseparserfact = self.dbase.parserfactory.__class__
+        exportparser = dbaseparserfact('spatialite').getDbaseParser()
 
-        exportparser = DBaseParser(self.canvas)
-        exportparser.createDbase(slfile=exportfile,
-                                 crs = self.dbase.crsnumber,
-                                 worktype = self.type)
+        #exportparser = DBaseParser(self.canvas)
+        #exportparser.createDbase(slfile=exportfile,
+        #                         crs = self.dbase.crsnumber,
+        #                         worktype = self.type)
+        exportparser.createDbase(crs=self.dbase.crsnumber, 
+                                worktype=self.dbase.worktype, 
+                                dbaseressourcesdirectory=None, 
+                                variante=None,
+                                slfile=exportfile)
+        exportparser.loadDBase(slfile=exportfile)
 
         counter = 0
         for order in range(1,10):
@@ -769,8 +778,10 @@ class DBaseOfflineManager():
 
                 if self.dbase.dbasetables[dbname]['order'] == order:
                     counter += 1
-                    if progress: progressMessageBar.setText("Import des donnees... : " + dbname)
-                    self.setLoadingProgressBar(progress, counter)
+                    # if progress: progressMessageBar.setText("Import des donnees... : " + dbname) TODO
+                    # self.setLoadingProgressBar(progress, counter) TODO
+                    logging.getLogger("Lamia_unittest").debug(' ******************* %s *********  ', dbname)
+
 
                     noncriticalfield = []
 
@@ -814,14 +825,8 @@ class DBaseOfflineManager():
                                 if noncriticalfield[l] == 'lpk_revision_begin':
                                     restemp.append(str(1))
                                     # elif isinstance(res, str) or  ( isinstance(res, unicode) and noncriticalfield[l] != 'geom') :
-                                elif (isinstance(res, str) or isinstance(res, unicode)) and noncriticalfield[l] != 'geom':
-                                    if sys.version_info.major == 2:
-                                        if isinstance(res, unicode):
-                                            restemp.append("'" + res.replace("'","''") + "'")
-                                        else:
-                                            restemp.append("'" + str(res).replace("'", "''") + "'")
-                                    else:
-                                        restemp.append("'" + str(res).replace("'", "''") + "'")
+                                elif (isinstance(res, str) or isinstance(res, bytes)) and noncriticalfield[l] != 'geom':
+                                    restemp.append("'" + str(res).replace("'", "''") + "'")
                                 elif 'datetime' in noncriticalfield[l] and res is not None and res != 'None':
                                     restemp.append("'" + str(res) + "'")
                                 elif noncriticalfield[l] == 'geom' and res is not None:
@@ -849,7 +854,7 @@ class DBaseOfflineManager():
                                 pkobjetindex = noncriticalfield.index('lpk_objet')
                                 pkobjet = result[pkobjetindex]
 
-                                childdbname, childpk = self.searchChildfeatureFromPkObjet(self, pkobjet)
+                                childdbname, childpk = self.searchChildfeatureFromPkObjet(self.dbase, pkobjet)
 
                                 # only export reference rasters
                                 if childdbname.lower() == 'rasters':
@@ -859,11 +864,11 @@ class DBaseOfflineManager():
                                         continue
 
 
-                                if not self.isAttributeNull(filepath):
+                                if not dbaseutils.isAttributeNull(filepath):
 
                                     # print(self.dbaseressourcesdirectory,filepath,  exportparser.dbaseressourcesdirectory)
 
-                                    fromfile = os.path.join(self.dbaseressourcesdirectory, filepath)
+                                    fromfile = os.path.join(self.dbase.dbaseressourcesdirectory, filepath)
                                     tofile = os.path.join(exportparser.dbaseressourcesdirectory, filepath)
 
                                     self.copyRessourceFile(fromfile=fromfile,
@@ -881,7 +886,18 @@ class DBaseOfflineManager():
 
 
         #update seq file to remember last pk of each table
+        for tablename in self.dbase.dbasetables.keys():
+            if tablename == 'Revision':
+                continue
+            lastpk = self.dbase.getLastPK(tablename)
+            if lastpk > 0:
+                sql = "UPDATE sqlite_sequence SET seq = " + str(lastpk)
+                sql += " WHERE name = '" + str(tablename) + "'"
+                exportparser.query(sql)
+
+        """
         if self.dbasetype == 'spatialite':
+
             sql = "SELECT * FROM sqlite_sequence "
             results = self.dbase.query(sql)
             for res in results:
@@ -892,6 +908,9 @@ class DBaseOfflineManager():
                 exportparser.query(sql)
         elif self.dbasetype == 'postgis':
             for tablename in self.dbase.dbasetables.keys():
+                lastpk = self.dbase.getLastPK('Revision')
+
+                
                 sql = "SELECT last_value FROM " + self.pgschema + '.' 
                 sql +=  tablename.lower() + '_pk_' + tablename.lower() + '_seq'
                 try:
@@ -904,7 +923,7 @@ class DBaseOfflineManager():
                     print('no seq for ' + tablename)
                 except Exception as e:
                     print(e, ' - no seq for ' + tablename)
-
+        """
 
 
 
@@ -913,7 +932,7 @@ class DBaseOfflineManager():
         sql += " VALUES('" + datecreation + "','travail horsligne')"
         exportparser.query(sql)
 
-        if progress is not None: self.qgsiface.messageBar().clearWidgets()
+        # if progress is not None: self.qgsiface.messageBar().clearWidgets() TODO
 
 
     def backupBase(self):
@@ -1192,3 +1211,24 @@ class DBaseOfflineManager():
 
                     if withthumbnail in [0,2]:
                         shutil.copy(fromfile, destinationfile)
+
+
+
+    def searchChildfeatureFromPkObjet(self,dbaseparser, pkobjet):
+
+        currentdbname = "Objet"
+        currentpk = pkobjet
+
+        for order in range(1,10):
+            for dbname in self.dbase.dbasetables:
+                if self.dbase.dbasetables[dbname]['order'] == order :
+                    if "lpk_" + currentdbname.lower() in self.dbase.dbasetables[dbname]['fields'].keys():
+                        sql = "SELECT pk_" + dbname.lower() + " FROM " + dbname.lower()
+                        sql += " WHERE lpk_" + currentdbname.lower() + " = " + str(currentpk)
+                        result = dbaseparser.query(sql)
+                        if len(result)== 1 :
+                            currentdbname = dbname
+                            currentpk = result[0][0]
+                            break
+
+        return currentdbname, currentpk

@@ -222,6 +222,9 @@ class AbstractDBaseParser():
         self.variante = variante
         self.worktype = worktype
 
+        self.maxrevision = self.getLastPK('Revision')
+
+
         self.dbconfigreader.createDBDictionary(self.worktype)
         self.dbasetables = self.dbconfigreader.dbasetables
 
@@ -281,6 +284,15 @@ class AbstractDBaseParser():
         :return: la version max de la table Revision
         """
         raise NotImplementedError 
+
+    def getmaxColumnValue(self, tablename, field):
+        sql = "SELECT MAX(" + field + ") FROM " + str(tablename)
+        query = self.query(sql, docommit=False)
+        result = [row[0] for row in query]
+        if len(result)>0 and result[0] is not  None:
+            return result[0]
+        else:       
+            return 0
 
     def getConstraintRawValueFromText(self, table, field, txt):
         """
@@ -369,13 +381,43 @@ class AbstractDBaseParser():
                 return tuple([None]*len(fields))
 
     def createNewObjet(self, docommit=True):
-        datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-        lastobjetid = self.getLastId('Objet') + 1
+        datecreation = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        #lastobjetid = self.getLastId('Objet') + 1
+        lastobjetid = self.getmaxColumnValue('Objet', 'id_objet')
         sql = "INSERT INTO Objet (id_objet, lpk_revision_begin, datetimecreation, datetimemodification ) "
         sql += "VALUES(" + str(lastobjetid) + "," + str(self.maxrevision) + ",'" + datecreation + "','" + datecreation + "' )"
         self.query(sql, docommit=docommit)
-        pkobjet = self.getLastRowId('Objet')
+        # pkobjet = self.getLastRowId('Objet')
+        pkobjet = self.getLastPK('Objet') 
         return pkobjet
+        
+    def createNewFeature(self, tablename):
+        parenttables = [tablename] + self.getParentTable(tablename)
+        for itertablename in parenttables[::-1]:
+            if itertablename == 'Objet':
+                parenttablepk = self.createNewObjet()
+                parenttablename = itertablename
+            else:
+                tablepk = self.getLastPK(itertablename) + 1
+                """
+                sql = "INSERT INTO Ressource (id_ressource, lpk_objet) "
+                sql += "VALUES(" + str(lastressourceid) +   "," + str(pkobjet) + ");"
+
+                createSetValueSentence(self,type='INSERT',tablename=None, listoffields=[], listofrawvalues=[]):
+                """
+                maxid = self.getmaxColumnValue(itertablename, 'id_' + itertablename.lower()) + 1
+                listofields = ['id_' + itertablename.lower(), 'lpk_' + parenttablename.lower()]
+                listofrawvalues = [maxid, parenttablepk]
+                sql = self.createSetValueSentence(type='INSERT',
+                                            tablename=itertablename,
+                                             listoffields=listofields,
+                                             listofrawvalues=listofrawvalues)
+                self.query(sql)
+                parenttablename = itertablename
+                parenttablepk = self.getLastPK(itertablename)
+            
+        return self.getLastPK(tablename)
+
 
     def createNewLineVersion(self,dbname, rawpk):
 
@@ -505,7 +547,7 @@ class AbstractDBaseParser():
                     restemp.append(str(res))
 
             elif sys.version_info.major == 3:             
-                if ((isinstance(res, str)  or isinstance(res, unicode))  and listoffields[l] != 'geom' 
+                if ((isinstance(res, str)  or isinstance(res, bytes))  and listoffields[l] != 'geom' 
                         and 'datetime' not in listoffields[l]) :
                     restemp.append("'" + str(res).replace("'", "''") + "'")
                 elif 'datetime' in listoffields[l] and  res is not None and res != 'None':
@@ -514,7 +556,7 @@ class AbstractDBaseParser():
                     restemp.append("ST_GeomFromText('" + res + "', " + str(self.crsnumber) + ")")
                 elif res is None or res == ''  :
                     restemp.append('NULL')
-                elif (isinstance(res, str)  or isinstance(res, unicode)) and 'None' in res:
+                elif (isinstance(res, str)  or isinstance(res, bytes)) and 'None' in res:
                     restemp.append('NULL')
                 else:
                     restemp.append(str(res))

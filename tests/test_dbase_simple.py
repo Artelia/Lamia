@@ -1,13 +1,5 @@
 import unittest, os, logging, sys, shutil, logging, time
-from Lamia.dbaseutils.dbaseparserfactory import DBaseParserFactory
-
-logger = logging.getLogger("LamiaTest")
-logger.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s :: %(levelname)s :: %(module)s :: %(funcName)s :: %(message)s')
-stream_handler = logging.StreamHandler(sys.stdout)
-stream_handler.setLevel(logging.DEBUG)
-stream_handler.setFormatter(formatter)
-logger.addHandler(stream_handler)
+from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
 
 from settings import *
 

@@ -1,15 +1,8 @@
 import unittest, os, logging, sys, shutil, logging, time
 from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
-import psycopg2
 from settings import *
 
-logger = logging.getLogger("LamiaTest")
-logger.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s :: %(levelname)s :: %(module)s :: %(funcName)s :: %(message)s')
-stream_handler = logging.StreamHandler(sys.stdout)
-stream_handler.setLevel(logging.DEBUG)
-stream_handler.setFormatter(formatter)
-logger.addHandler(stream_handler)
+REMOVEDIRONSTARTUP = False
 
 
 
@@ -21,15 +14,22 @@ class DBaseTest(unittest.TestCase):
         """Initialisation des tests."""
         self.dbase = None
         self.tempdir = os.path.join(os.path.join(os.path.dirname(__file__)), 'temp')
-        if os.path.isdir(self.tempdir):
-            shutil.rmtree(self.tempdir, ignore_errors=False, onerror=None)
-            time.sleep(1)
-        os.mkdir(self.tempdir)
+
+        self.filetoimport = os.path.join(os.path.dirname(__file__),'lamia_test','BD_totale_ind11.sqlite' )
+        self.fieldfile = os.path.join(os.path.dirname(__file__),'temp','export_DB','exporttest.sqlite' )
+
+        if REMOVEDIRONSTARTUP:
+            if os.path.isdir(self.tempdir):
+                shutil.rmtree(self.tempdir, ignore_errors=False, onerror=None)
+                time.sleep(1)
+            os.mkdir(self.tempdir)
     
+
+    """
     def test_a_import_from_sl_to_postgis(self):
 
         sqlitedbase = DBaseParserFactory('spatialite').getDbaseParser()
-        sqlitedbase.loadDBase(slfile = os.path.join(os.path.dirname(__file__),'lamia_test','BD_totale_ind11.sqlite' ))
+        sqlitedbase.loadDBase(slfile = self.filetoimport)
 
         pgdbase = DBaseParserFactory('postgis').getDbaseParser()
         work = 'Base2_digue'
@@ -43,7 +43,9 @@ class DBaseTest(unittest.TestCase):
         pgdbase.loadDBase(host=PGhost, port=PGport, dbname=PGbase, schema= 'test_import', user=PGuser,  password=PGpassword)
         pgdbase.dbaseofflinemanager.importDbase(sqlitedbase)
 
-    """
+        logging.getLogger("Lamia_unittest").debug('test_a_import_from_sl_to_postgis OK')
+
+
     def test_b_export_from_postgis_to_sl_field_investigation(self):
 
         work = 'Base2_digue'
@@ -51,26 +53,36 @@ class DBaseTest(unittest.TestCase):
 
         pgdbase = DBaseParserFactory('postgis').getDbaseParser()
         pgdbase.loadDBase(host=PGhost, port=PGport, dbname=PGbase, schema= 'test_import', user=PGuser,  password=PGpassword)
-        exportfile = os.path.join(os.path.dirname(__file__),'temp','export_DB','exporttest.sqlite' )
-        pgdbase.dbaseofflinemanager.exportDbase(exportfile)
+        os.mkdir(os.path.dirname(self.fieldfile ))
+
+        pgdbase.dbaseofflinemanager.exportDbase(self.fieldfile )
         pgdbase.disconnect()
-    """
+
+        logging.getLogger("Lamia_unittest").debug('test_b_export_from_postgis_to_sl_field_investigation OK')
 
     """
     def test_c_modify_sl_field_investigation(self):
-        exportfile = os.path.join(os.path.dirname(__file__),'temp','export_DB','exporttest.sqlite' )
-        self.dbase = DBaseParser()
-        self.dbase.loadQgisVectorLayers(file=exportfile)
+        sqlitedbase = DBaseParserFactory('spatialite').getDbaseParser()
+        sqlitedbase.loadDBase(slfile = self.fieldfile  )
 
-        #creating new entries
+        pkinfra = sqlitedbase.createNewFeature('Infralineaire')
+
+        logging.getLogger("Lamia_unittest").debug('pkinfra %s', str(pkinfra))
+
+
+
+
     """
-
-
-
     def test_d_reimport_sl_field_investigation(self):
         pass
 
+    """
 
+
+    def tearDown(self):
+        if False and os.path.isdir(self.tempdir):
+            shutil.rmtree(self.tempdir, ignore_errors=False, onerror=None)
+            time.sleep(1)
 
 
 
@@ -79,6 +91,4 @@ if __name__ == "__main__":
     logging.getLogger( "Lamia_unittest" ).setLevel( logging.DEBUG )
     unittest.main()
         
-
-
 

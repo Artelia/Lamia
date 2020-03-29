@@ -6,9 +6,6 @@
 *.py[cod]
 /Lamia/toolpostpro/*/*amc_tool*
 /Lamia/toolpostpro/*/amctools
-/.idea/
-/.vscode/
-/.vs/
-travail_VS_PVR.code-workspace
-.vscode/settings.json
+.vscode/
 Lamia_*.zip
+tests/temp/
