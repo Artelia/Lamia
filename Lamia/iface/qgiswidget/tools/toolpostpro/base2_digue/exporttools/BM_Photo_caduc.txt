@@ -1,0 +1,34 @@
+###Photo
+#nom              type               cst               valeur                    
+id_photo;         Int;                  ;               id_photo
+
+
+###Ressource
+## FROM Ressource  WHERE  Ressource.pk_ressource = Photo_now.pk_ressource
+#nom              type               cst               valeur                    
+id_ressource;         Int;                  ;               id_ressource
+source;         String;                  ;               source
+datephoto;         String;                  ;               dateressource
+fichier;         String;                  ;               file
+descriptio;         String;                  ;               description
+
+
+
+###Tcobjetressource
+## FROM Tcobjetressourcetemp WHERE Tcobjetressourcetemp.lid_ressource = Photo_now.id_ressource
+lk_objet;         Int;                  ;               lid_objet
+
+###Zonegeo
+## FROM Zonegeo_qgis WHERE ST_WITHIN(ST_MakeValid(Photo_now.geom),ST_MakeValid(Zonegeo_qgis.geom))
+pk_zonegeo;     Int;            ;        pk_zonegeo ;  pk_zonegeo
+
+
+###geom
+geom;         Int;               ;                  ST_AsText(geom)
+
+
+###main
+FROM Photo_now
+
+###with
+WITH Tcobjetressourcetemp AS ( SELECT lid_ressource, lid_objet FROM Tcobjetressource WHERE lpk_revision_end IS NULL)

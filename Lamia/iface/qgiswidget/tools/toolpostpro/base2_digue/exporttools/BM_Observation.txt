@@ -1,0 +1,33 @@
+###Observation1
+#nom              type               cst               valeur     
+id_observation;         Int;                  ;     id_observation      
+id_objet;         Int;               ;                  id_objet
+commentaire;      String;               ;                  commentaire
+
+
+###Observation
+#nom              type               cst               valeur     
+datetimeobservation;      String;               ;                  datetimeobservation
+source;                   String;               ;                  source
+nombre;                   Int;               ;                  CASE WHEN nombre >0 THEN nombre ELSE NULL END
+gravite;                  String;       gravite        ;                  gravite
+evolution;                  String;               ;                  evolution
+typesuite;                  String;       typesuite        ;                  typesuite
+precisionsuite;                   String;               ;                  precisionsuite
+suite_com;                  String;               ;                  commentairesuite
+
+vant_etat      ;      String;     oh_etatvantellerie          ;                  oh_etatvantellerie    
+vant_com   ;      String;               ;                  oh_etatvantelleriecom 
+gc_etat       ;      String;       oh_etatgeniecivil        ;                  oh_etatgeniecivil     
+gc_com    ;      String;               ;                  oh_etatgeniecivilcom  
+mano        ;      String;    oh_testmanoeuvre    ;                  oh_testmanoeuvre      
+mano_com     ;      String;               ;                  oh_testmanoeuvrecom   
+etan           ;      Int;               ;                  oh_etancheite         
+etan_com        ;      String;               ;                  oh_etancheitecom      
+
+
+lid_desordre;                   Int;               ;                  lid_desordre
+
+
+###main
+FROM Observation_now

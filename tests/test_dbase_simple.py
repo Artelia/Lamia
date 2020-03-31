@@ -59,7 +59,7 @@ class DBaseTest(unittest.TestCase):
                 logging.getLogger("Lamia_unittest").debug('Creating spatialite %s %s ...', work, variante)
                 slfile = os.path.join(testcdir, 'sl_' + work + '_' + variante, 'test01.sqlite')
                 os.mkdir(os.path.dirname(slfile))
-                sqlitedbase.createDbase(crs=CRS, 
+                sqlitedbase.createDBase(crs=CRS, 
                                         worktype=work, 
                                         dbaseressourcesdirectory=None, 
                                         variante=variante,
@@ -79,7 +79,7 @@ class DBaseTest(unittest.TestCase):
                 pgdir = os.path.join(testcdir, 'pg_' + work + '_' + variante)
                 os.mkdir(pgdir)
                 pgdbase = DBaseParserFactory('postgis').getDbaseParser()
-                pgdbase.createDbase(crs=CRS, 
+                pgdbase.createDBase(crs=CRS, 
                                     worktype=work, 
                                     dbaseressourcesdirectory=pgdir, 
                                     variante=variante,

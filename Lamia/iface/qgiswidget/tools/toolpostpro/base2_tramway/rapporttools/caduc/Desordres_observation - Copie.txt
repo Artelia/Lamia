@@ -1,0 +1,32 @@
+###atlaslayersql
+WITH Objettemp AS (SELECT Objet.id_objet, Objet.commentaire FROM Objet )
+SELECT Observation_qgis.* ,Objettemp.commentaire 
+FROM Observation_qgis
+INNER JOIN Objettemp ON Observation_qgis.id_objet = Objettemp.id_objet
+WHERE Observation_qgis.id_observation = Observation_qgis.id_observation
+###atlaslayerid
+id_observation
+###spatial
+False
+###ordering
+
+###atlaslayerstyle
+
+###atlasdrivemap
+#itemname;   minscale;   typescale;      layers
+
+###generalmap
+#itemname;   minscale;   typescale; layers
+
+###images
+#itemname   ; type
+photo1 ;photo1
+photo2;photo2
+photo3;photo3
+
+###childprint
+#confname;                linkcolumn;             optionsql
+
+
+
+

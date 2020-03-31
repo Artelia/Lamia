@@ -1,0 +1,49 @@
+###Infralineaire
+#nom              type               cst               valeur                    
+id_cana;         Int;                  ;     id_infralineaire
+code_insee;         Int;                  ;               NULL
+code_voie;         String;                  ;     NULL
+rue;         String;                  ;     NULL
+id_nd_ini;         String;                  ;     Noeud_amont.id_noeud
+id_nd_term;         String;                  ;     Noeud_aval.id_noeud
+typ_ecoul;         String;                  ;     Noeud_aval.modeCirculation
+
+
+Z_AMONT;        Double;                             ; CASE WHEN Infralineaire_now.profamont is NULL THEN (Noeud_amont.z - Noeud_amont.profradierouvrage) ELSE (Noeud_amont.z - Infralineaire_now.profamont) END 
+Z_AVAL;        Double;                             ; CASE WHEN Infralineaire_now.profaval is NULL THEN (Noeud_aval.z - Noeud_aval.profradierouvrage) ELSE (Noeud_aval.z - Infralineaire_now.profaval) END
+
+PROF_AMONT;        Double;                             ; CASE WHEN Infralineaire_now.profamont is NULL THEN Noeud_amont.profradierouvrage ELSE Infralineaire_now.profamont END 
+PROF_AVAL;        Double;                             ; CASE WHEN Infralineaire_now.profaval is NULL THEN  Noeud_aval.profradierouvrage ELSE  Infralineaire_now.profaval END
+
+PENTE;        Double;                             ;(( CASE WHEN Infralineaire_now.profamont is NULL THEN (Noeud_amont.z - Noeud_amont.profradierouvrage) ELSE (Noeud_amont.z - Infralineaire_now.profamont) END  ) - CASE WHEN Infralineaire_now.profaval is NULL THEN (Noeud_aval.z - Noeud_aval.profradierouvrage) ELSE (Noeud_aval.z - Infralineaire_now.profaval) END ) / ST_Length(Infralineaire_now.geom) * 100
+
+
+DIAMETRE;         Int;                  ;     Infralineaire_now.diametreNominal * 1000
+annee_pose;         String;                  ;               Infralineaire_now.annee_fin_pose
+periode_serv;         String;                  ;               Infralineaire_now.precision_pose
+categorie;         String;                  ;     Infralineaire_now.fonctionCannAss
+
+
+gest_exp;         Int;                  ;               NULL
+m_ouv;         Int;                  ;               NULL
+longueur;         Int;                  ;               ST_Length(Infralineaire_now.geom)
+type_res;         Int;         typeReseau         ;               Infralineaire_now.typeReseau
+
+
+
+#Autre
+date_geo;         String;                  ; Infralineaire_now.datetimecreation
+srce_geo;         String;                  ; NULL
+qlt_geo;         String;                  ; NULL
+date_maj;         String;                  ; NULL
+srce_maj;         String;                  ; NULL
+
+
+
+
+
+###geom
+geom;         Int;               ;                  ST_AsText(Infralineaire_now.geom)
+
+###main
+FROM Infralineaire_now LEFT JOIN Noeud_now AS Noeud_amont ON Infralineaire_now.lid_descriptionsystem_1 = Noeud_amont.id_descriptionsystem LEFT JOIN Noeud_now AS Noeud_aval ON Infralineaire_now.lid_descriptionsystem_2 = Noeud_aval.id_descriptionsystem WHERE Infralineaire_now.branchement = 0

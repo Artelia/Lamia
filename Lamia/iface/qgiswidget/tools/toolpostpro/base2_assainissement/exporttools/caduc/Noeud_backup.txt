@@ -1,0 +1,68 @@
+###Noeud
+##FROM Noeud AS Noeudtemp INNER JOIN Objet ON Objet.id_objet = Noeudtemp.id_objet AND Noeudtemp.pk_noeud = Noeud.pk_noeud
+#nom              type               cst               valeur                    
+id_noeud;         Int;                  ;               id_noeud
+typeReseau;       String;           typeReseau;         typeReseau
+typeOuvrageAss;       String;       typeOuvrageAss;     typeOuvrageAss
+X;               Double;                               ;     X
+Y;               Double;                               ;     Y
+Z;               Double;                               ;     Z
+alttamponouvrage;Double;                               ;     alttamponouvrage
+profradierouvrage;Double;                               ;     profradierouvrage
+altradierouvrage;Double;                               ;     CASE WHEN altradierouvrage IS NULL THEN Z - profradierouvrage ELSE altradierouvrage END
+accessibilite;       String;           accessibilite;         accessibilite
+
+test1;            Int;                  ;                
+test2;            Int;                  ;               CASE WHEN id_noeud IS NULL THEN 1 ELSE 0 END
+
+###Objet
+##FROM Objet WHERE  Objet.id_objet = Noeud.id_objet
+#nom              type               cst               valeur                    
+id_objet;         Int;               ;                  id_objet
+commentaire;      String;               ;                  commentaire
+
+
+###Infralineaire1
+##FROM Infralineaire   INNER JOIN Objet  ON Infralineaire.id_objet = Objet.id_objet  WHERE  Infralineaire.lk_descriptionsystem2 =  Noeud.id_descriptionsystem ; LIMIT 1 OFFSET 0
+profaval1;         Double;               ;                  profaval
+FE_CHUTE1;         Double;               ;                  CASE WHEN profaval IS NOT NULL THEN profradierouvrage - profaval ELSE NULL END
+
+###Infralineaire2
+##FROM Infralineaire  INNER JOIN Objet  ON Infralineaire.id_objet = Objet.id_objet WHERE  Infralineaire.lk_descriptionsystem2 =  Noeud.id_descriptionsystem ; LIMIT 1 OFFSET 1
+profaval2;         Double;               ;                  profaval
+FE_CHUTE2;         Double;               ;                  CASE WHEN profaval IS NOT NULL THEN profradierouvrage - profaval ELSE NULL END
+
+###Infralineaire3
+##FROM Infralineaire  INNER JOIN Objet  ON Infralineaire.id_objet = Objet.id_objet WHERE  Infralineaire.lk_descriptionsystem2 =  Noeud.id_descriptionsystem
+ART_NB_ARR;         Int;               ;                  COUNT(*)
+
+###Photo1
+##FROM Photo INNER JOIN Ressource ON Ressource.id_ressource = Photo.id_ressource  INNER JOIN Objet  ON Photo.id_objet = Objet.id_objet INNER JOIN Tcobjetressource ON Tcobjetressource.id_tcressource = Ressource.id_ressource WHERE Noeud.id_objet = Tcobjetressource.id_tcobjet; LIMIT 1 OFFSET 0
+fichier;         String;               ;                  numphoto
+
+###Zonegeo
+##FROM Zonegeo INNER JOIN Objet  ON Zonegeo.id_objet = Objet.id_objet WHERE  ST_WITHIN(ST_MakeValid(Noeud.geom), ST_MakeValid(Zonegeo.geom)) AND Zonegeo.type_zonegeo = 'COL'
+#nom              type               cst               valeur                    
+id_zonegeo;       Int;               ;                  id_zonegeo
+libelle;       String;               ;                  libelle
+
+###Observation
+##FROM Observation INNER JOIN Desordre ON Desordre.id_desordre = Observation.lk_desordre INNER JOIN Objet  ON Observation.id_objet = Objet.id_objet WHERE Desordre.lk_descriptionsystem = Noeud.id_descriptionsystem
+#nom              type               cst               valeur                    
+depots;         String;             depots;             depots
+ECPPdepuisbranchement;Int;          ;                   ECPPdepuisbranchement
+gcdegrade;Int;          ;                   gcdegrade
+infiltration;Int;          ;                   infiltration
+intrusionracine;Int;          ;                   intrusionracine
+miseencharge;Int;          ;                   miseencharge
+tamponendommage;Int;          ;                   tamponendommage
+
+
+
+###geom
+##FROM Noeud AS Noeudtemp INNER JOIN Objet ON Objet.id_objet = Noeudtemp.id_objet AND Noeudtemp.pk_noeud = Noeud.pk_noeud
+geom;         Int;               ;                  ST_AsText(geom)
+
+
+###main
+FROM Noeud

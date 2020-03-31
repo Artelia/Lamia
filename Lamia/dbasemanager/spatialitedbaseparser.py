@@ -50,6 +50,10 @@ class SpatialiteDBaseParser(AbstractDBaseParser):
     def disconnect(self):
         self.connSLITE.close()
 
+
+    def getBDName(self):
+        return os.path.basename(self.spatialitefile)
+
     def generateSQLTableCreationFromDBConfig(self, name, dbasetable, crs):
 
         sql = {}
@@ -161,7 +165,7 @@ class SpatialiteDBaseParser(AbstractDBaseParser):
         sql = "PRAGMA table_info(" + str(tablename) + ")"
         query = self.query(sql)
         result = [row[1] for row in query]
-        #print(result)
+        # print(result)
         if 'geom' in result:
             return True
         else:

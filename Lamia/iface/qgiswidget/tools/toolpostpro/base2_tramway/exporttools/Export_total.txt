@@ -1,0 +1,74 @@
+###Infralineaire
+#nom              type               cst               valeur   
+id_infra;         Int;                  ;     id_infralineaire      
+ligne;      String;                ;                  Infralineaire_now.ligne
+An_servi;      String;                ;                  Infralineaire_now.anneeMiseEnService
+nom;      String;                ;                  Infralineaire_now.libelle
+typ_sec;      String;        typeSection        ;                  Infralineaire_now.typeSection
+circul;      String;        circulation        ;                  Infralineaire_now.circulation
+revet;      String;        typeRevetement        ;                  Infralineaire_now.typeRevetement
+long;      Double;                ;                  ST_Length(Infralineaire_now.geom)
+
+rayon;      Double;                ;                  Infralineaire_now.rayon
+tang;      String;                ;                  Infralineaire_now.tangentetxt
+dev_type;      String;    deviationtype     ;                  Infralineaire_now.deviationtype
+entraxe;      Double;                ;                  Infralineaire_now.deviation
+manoeuvre;      String;     manoeuvre        ;                  Infralineaire_now.manoeuvre
+
+commentaire;      String;                ;                  Infralineaire_now.commentaire
+
+###Desordre
+id_desordre;         Int;                  ;     Desordre_now.id_desordre 
+
+
+###Observation
+id_observation;         Int;                  ;     Observation_now.id_observation 
+datetimeobservation;      String;               ;                  Observation_now.datetimeobservation
+
+#rail _ geo voie
+
+uo_pr;      String;        presenceUO   ;                  Observation_now.presenceUO
+fatig_pr;      String;     presenceFatigue       ;                  Observation_now.presenceFatigue
+fatif_co;      String;       precisionsFatigue     ;                  Observation_now.precisionsFatigue
+
+geo_voie;      String;          geoVoie ;                  Observation_now.geoVoie
+rech_etat;      String;        etatRechargement   ;                  Observation_now.etatRechargement
+rech_co;      String;        precisionsRechargement    ;                  Observation_now.precisionsRechargement
+
+#equipement
+joi_fiss;      String;        eqp_fissurationjoint    ;                  Observation_now.eqp_fissurationjoint
+joi_deg;      String;        eqp_degarnissage   ;                  Observation_now.eqp_degarnissage
+joi_abs;      String;          eqp_absencejoint ;                  Observation_now.eqp_absencejoint
+
+fis_gri;      String;       eqp_fissurationgrille    ;                  Observation_now.eqp_fissurationgrille
+can_bou;      String;      eqp_caniveaubouche    ;                  Observation_now.eqp_caniveaubouche
+desaf;      String;        eqp_desaffleurement   ;                  Observation_now.eqp_desaffleurement
+abs_ass;      String;       eqp_absenceass  ;                  Observation_now.eqp_absenceass
+
+#ballast
+rev_tass;      String;       rev_tassement    ;                  Observation_now.rev_tassement
+poll;      String;       rev_pollution   ;                  Observation_now.rev_pollution
+
+#mineral
+rev_fiss;      String;        rev_fissurations    ;                  Observation_now.rev_fissurations
+rev_deg;      String;      rev_degarnissage  ;                  Observation_now.rev_degarnissage
+rev_desa;      String;       rev_desafleurement   ;                  Observation_now.rev_desafleurement
+rev_affs;      String;         rev_affaissement  ;                  Observation_now.rev_affaissement
+rev_orn;      String;       rev_ornierage    ;                  Observation_now.rev_ornierage
+rev_disp;      String;        rev_disparitions  ;                  Observation_now.rev_disparitions
+
+rev_def;      String;       rev_deformations    ;                  Observation_now.rev_deformations
+rev_arra;      String;      rev_arrachement   ;                  Observation_now.rev_arrachement
+rev_remt;      String;     rev_remontees      ;                  Observation_now.rev_remontees
+
+rev_dsch;      String;       rev_dessechement    ;                  Observation_now.rev_dessechement
+rev_veg;      String;      rev_vegetation  ;                  Observation_now.rev_vegetation
+rev_tont;      String;     rev_tonte      ;                  Observation_now.rev_tonte
+
+
+
+###geom
+geom;         Int;               ;                  ST_AsText(Infralineaire_now.geom)
+
+###main
+FROM Infralineaire_now INNER JOIN Desordre_now ON Desordre_now.lid_descriptionsystem = Infralineaire_now.id_descriptionsystem INNER JOIN Observation_now ON   Desordre_now.id_desordre = Observation_now.lid_desordre

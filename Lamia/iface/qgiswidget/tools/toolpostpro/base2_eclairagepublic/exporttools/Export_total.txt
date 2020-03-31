@@ -1,0 +1,28 @@
+###Infralineaire
+#nom              type               cst               valeur   
+id_infralineaire;         Int;                  ;     id_infralineaire      
+libelle;      String;                ;                  Infralineaire_now.libelle
+situation;      String;                ;                  Infralineaire_now.commentaire
+
+typestationnement;      String;             typestationnement  ;                  typestationnement
+zonage;      String;             zonage  ;                  zonage
+zonageautre;      String;               ;                  zonageautre
+nbredeplaces;         Int;                  ;     nbredeplaces 
+
+###Desordre
+id_desordre;         Int;                  ;     id_desordre 
+numrotation;         Int;                  ;     numrotation 
+
+###Observation
+id_observation;         Int;                  ;     id_observation 
+datetimeobservation;      String;               ;                  datetimeobservation
+immatriculation;         Int;                  ;     immatriculation 
+illicite;         Int;                  ;     illicite 
+
+
+
+###geom
+geom;         Int;               ;                  ST_AsText(Infralineaire_now.geom)
+
+###main
+FROM Infralineaire_now INNER JOIN Desordre_now ON Desordre_now.lid_descriptionsystem = Infralineaire_now.id_descriptionsystem INNER JOIN Observation_now ON   Desordre_now.id_desordre = Observation_now.lid_desordre

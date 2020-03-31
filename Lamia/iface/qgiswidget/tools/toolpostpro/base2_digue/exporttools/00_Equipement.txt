@@ -1,0 +1,28 @@
+###Equipement
+##FROM Equipement AS Equipementtemp INNER JOIN Objet ON Objet.id_objet = Equipementtemp.id_objet AND Equipementtemp.pk_equipement = Equipement.pk_equipement
+#nom              type               cst               valeur                    
+id_equipement;         Int;                  ;               id_equipement
+
+test1;            Int;                  ;                
+test2;            Int;                  ;               CASE WHEN id_equipement IS NULL THEN 1 ELSE 0 END
+
+###Descriptionsystem
+##FROM Descriptionsystem INNER JOIN Objet ON Objet.id_objet = Descriptionsystem.id_objet WHERE  Descriptionsystem.id_descriptionsystem = Equipement.id_descriptionsystem
+id_descriptionsystem;         Int;               ;                  id_descriptionsystem
+
+###Objet
+##FROM Objet WHERE  Objet.id_objet = Equipement.id_objet
+#nom              type               cst               valeur                    
+id_objet;         Int;               ;                  id_objet
+commentaire;      String;               ;                  commentaire
+
+###Photo1
+##FROM Photo INNER JOIN Ressource ON Ressource.id_ressource = Photo.id_ressource  INNER JOIN Objet  ON Photo.id_objet = Objet.id_objet INNER JOIN Tcobjetressource ON Tcobjetressource.id_tcressource = Ressource.id_ressource WHERE Equipement.id_objet = Tcobjetressource.id_tcobjet; LIMIT 1 OFFSET 0
+fichier;         String;               ;                  numphoto
+
+###geom
+##FROM Equipement AS Equipementtemp INNER JOIN Objet ON Objet.id_objet = Equipementtemp.id_objet AND Equipementtemp.pk_equipement = Equipement.pk_equipement
+geom;         Int;               ;                  ST_AsText(geom)
+
+###main
+FROM Equipement_now

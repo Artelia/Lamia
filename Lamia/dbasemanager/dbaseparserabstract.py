@@ -48,7 +48,7 @@ PROJECTCONFIGDIRS = ['dbase', 'rapporttools', 'styles', 'importtools']
 class AbstractDBaseParser():
 
 
-    def __init__(self, parserfactory):
+    def __init__(self, parserfactory=None):
 
         """
         Init func
@@ -115,10 +115,13 @@ class AbstractDBaseParser():
     def connectToDBase(self):
         raise NotImplementedError
 
+    def getBDName(self):
+        raise NotImplementedError
+
     def disconnect(self):
         raise NotImplementedError
 
-    def createDbase(self, 
+    def createDBase(self, 
                     crs=None, 
                     worktype=None, 
                     dbaseressourcesdirectory=None, 
@@ -419,7 +422,7 @@ class AbstractDBaseParser():
         return self.getLastPK(tablename)
 
 
-    def createNewLineVersion(self,dbname, rawpk):
+    def createNewFeatureVersion(self,dbname, rawpk):
 
         #first be sure
         pkobjet, revbegin = self.getValuesFromPk(dbname + "_qgis", ['pk_objet','lpk_revision_begin'], rawpk)

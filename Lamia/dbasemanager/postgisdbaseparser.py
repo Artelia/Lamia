@@ -73,6 +73,8 @@ class PostGisDBaseParser(AbstractDBaseParser):
         self.PGiscursor.close()
         self.connPGis.close()
 
+    def getBDName(self):
+        return self.pgschema
 
     def generateSQLTableCreationFromDBConfig(self, name, dbasetable, crs):
 
