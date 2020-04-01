@@ -34,7 +34,7 @@ except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget, QLabel, QFrame, QTreeWidgetItem, QHeaderView)
 
 #from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
-from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
+from ...Lamia_abstract_tool import AbstractLamiaTool
 #from ...toolabstract.Lamia_abstract_tool import AbstractLamiaTool
 import os
 import io

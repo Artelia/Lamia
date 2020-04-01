@@ -1,4 +1,4 @@
-import re, math
+import re, math, datetime
 try :
     from qgis.PyQt import QtCore
     TRY_QT = True
@@ -6,40 +6,6 @@ except ImportError:
     TRY_QT = False
 
 
-def updateQueryTableNow( sqlin, date=None):
-    
-    sqllist = re.split(' |,|\(|\)|\.|=', sqlin)
-    withsql = ''
-    alreadytables=[]
-    for sqlword in sqllist:
-        if '_now' in sqlword:
-            tablename=sqlword.split('_now')[0]
-            if tablename.lower() not in  alreadytables:
-                alreadytables.append(tablename.lower())
-                withsql +=  sqlword + " AS "
-                withsql += " (SELECT * FROM " + tablename + "_qgis WHERE "
-                withsql += self.dateVersionConstraintSQL(date)
-                withsql += "), "
-
-    withsql = withsql[0:-2]
-    sqltemp1 = self.splitSQLSelectFromWhereOrderby(sqlin)
-    sqlout = ''
-    if 'WITH' in sqltemp1.keys():
-        sqlout += 'WITH ' + sqltemp1['WITH']
-        sqlout += ', ' + withsql
-        sqlout += ' SELECT ' + sqltemp1['SELECT'] + ' FROM ' + sqltemp1['FROM']+ ' WHERE ' + sqltemp1['WHERE']
-        if 'ORDER' in sqltemp1.keys():
-            sqlout += ' ORDER BY ' + sqltemp1['ORDER']
-        if 'GROUP' in sqltemp1.keys():
-            sqlout += ' GROUP BY ' + sqltemp1['GROUP']
-
-    elif withsql != '':
-        sqlout += 'WITH ' + withsql + sqlin
-
-    else:
-        sqlout += sqlin
-        
-    return sqlout
 
 
 def splitSQLSelectFromWhereOrderby(sqlin):

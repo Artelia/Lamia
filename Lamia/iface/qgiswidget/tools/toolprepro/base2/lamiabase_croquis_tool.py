@@ -35,7 +35,8 @@ except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget,QMainWindow, QSpinBox, QAction, QDialog, QFrame)
 
 #from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
-from ...toolabstract.Lamia_abstract_tool import AbstractLamiaTool
+from ...Lamia_abstract_tool import AbstractLamiaTool
+
 import os
 import qgis
 import datetime
@@ -364,10 +365,7 @@ class ScribbleMainWindow(QMainWindow):
         self.scrollArea.setWidget(self.scribbleArea)
 
         self.toolbar = self.addToolBar('Color')
-        if int(str(self.parentwdg.dbase.qgisversion_int)[0:3]) < 220:
-            self.colorwdg = qgis.gui.QgsColorButtonV2()
-        else:
-            self.colorwdg = qgis.gui.QgsColorButton()
+        self.colorwdg = qgis.gui.QgsColorButton()
         self.colorwdg.setColor(QtCore.Qt.black)
         self.toolbar.addWidget(self.colorwdg)
         self.spinb = QSpinBox()

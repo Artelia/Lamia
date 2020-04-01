@@ -1,4 +1,4 @@
-/home/docker/temp_base2_ass2/test01.sqlite
+/usr/src/Lamia/tests/lamia_test2/test01.sqlite
 lamiaunittest.test_import@docker.for.win.localhost:5432;pvr;pvr
 gis.assainissement@localhost:5432;pvr;pvr
 pvr_test.assainissement@localhost:5432;pvr;pvr

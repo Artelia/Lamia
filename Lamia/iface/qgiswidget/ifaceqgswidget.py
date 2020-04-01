@@ -25,9 +25,6 @@ This file is part of LAMIA.
   * License-Filename: LICENSING.md
  """
 
-
-
-
 # qgis pyqt import
 from qgis.PyQt import QtGui, uic, QtCore
 from unicodedata import normalize
@@ -102,7 +99,7 @@ from .subdialogs.lamia_tablefield_dialog import LamiaTableFieldDialog
 
 
 import Lamia, time
-from Lamia.gps.GPSutil import GpsUtil
+from Lamia.libslamia.gps.GPSutil import GpsUtil
 from Lamia.maptool.mapTools import mapToolCapture, mapToolEdit
 
 
@@ -134,6 +131,7 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         self.connector = QgisConnector()
         self.connector.widget = self
         self.qgiscanvas = QgisCanvas()
+        self.gpsutil = GpsUtil()
 
         #subwidgets
         self.wdgclasses={}
@@ -412,12 +410,12 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
     def loadDBase(self, **kwargs):
         """[summary]
         kwargs contains either var:
-        - dbtype : 'Postgis' or 'Spatialite' (optionnal)
+        - dbtype : 'Postgis' or 'Spatialite'
         - slfile (optionnal)
         - host port dbname schema userpassword (optionnal)
         """
 
-        if 'dbtype' not in kwargs.keys():
+        if 'dbtype' not in kwargs.keys():   #case come from qt event
             kwargs['dbtype'] = self.sender().objectName()[6:]
         success = self._loadDBaseParser(**kwargs)
         if not success:
@@ -427,6 +425,7 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         self._loadStyles()
         self._AddDbaseInRecentsDBase(self.dbase)
         self.loadToolsClasses()
+        self.loadToolsWidgets()
 
 
     def pullDBase(self):    #for offline mode
@@ -624,31 +623,27 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         if debug: logging.getLogger('Lamia').debug('start')
 
         tooltypestoload = ['toolprepro', 'toolpostpro']
+        self.wdgclasses={}
         for tooltypetoload in tooltypestoload:
-            self.wdgclasses={}
             self.wdgclasses[tooltypetoload]={}
 
             path = os.path.join(os.path.dirname(__file__), 'tools', tooltypetoload, self.dbase.worktype.lower())
             modules = glob.glob(path + "/*.py")
             __all__ = [os.path.basename(f)[:-3] for f in modules if os.path.isfile(f)]
-            print(__all__)
             interfacefielduisup=[]
             for x in __all__:
-                print('***', x)
-                if debug: logging.getLogger('Lamia').debug('x %s', x)
-                exec('import .tools.' + tooltypetoload + '.' + self.dbase.worktype.lower())
-                moduletemp = importlib.import_module('.' + str(x), '.tools.' + tooltypetoload + '.' + self.dbase.worktype.lower() )
+                if debug: logging.getLogger('Lamia_unittest').debug('x %s', x)
+                parentmodulename = '.'.join(__name__.split('.')[:-1])
+                modulename = parentmodulename + '.tools.' + tooltypetoload + '.' + self.dbase.worktype.lower()
+                exec('import ' + modulename)
+                moduletemp = importlib.import_module('.' + str(x), modulename )
 
                 for name, obj in inspect.getmembers(moduletemp, inspect.isclass):
-                    print('**', name)
                     if moduletemp.__name__ == obj.__module__:
                         if tooltypetoload == 'toolpostpro' and hasattr(obj,'TOOLNAME'):
-                            #self.uipostpro.append(obj)
-                            # print(type(obj), obj.__class__)
                             self.wdgclasses[tooltypetoload][obj.TOOLNAME] = obj
                         elif tooltypetoload == 'toolprepro' and hasattr(obj,'dbasetablename'):
                             self.wdgclasses[tooltypetoload][obj.dbasetablename] = obj
-                            self.wdgclasses[tooltypetoload][obj.dbasetablename]['FIELDINV'] = obj.LOADFIRST
 
 
 
@@ -717,8 +712,136 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
 
         # ************************** Show fields ui ********************************************
         #self.loadUiField()
-        pprint(self.wdgclasses)
+        
+        if debug: logging.getLogger('Lamia_unittest').debug('x %s', str(self.wdgclasses))
 
+
+    def loadToolsWidgets(self, fullloading=False):
+
+        toopreprodict = self.wdgclasses['toolprepro']
+        lenprogress = len([name for name in toopreprodict.keys() 
+                                    if hasattr(toopreprodict[name], 'LOADFIRST') 
+                                    and toopreprodict[name].LOADFIRST])
+        self.connector.createProgressBar('Loading widgets...', lenprogress)
+
+        self.toolwidgets={}
+        typeswdg = ['toolprepro']
+        i = 0
+        for typewdg in typeswdg:
+            self.toolwidgets[typewdg] = {}
+            for toolname in self.wdgclasses[typewdg].keys():
+                self.toolwidgets[typewdg][toolname] = []
+                self.toolwidgets[typewdg][toolname].append( self.wdgclasses[typewdg][toolname](dbase = self.dbase,
+                                                            dialog = self,
+                                                            linkedtreewidget = self.ElemtreeWidget,
+                                                            gpsutil = self.gpsutil) )
+                i += 1
+                self.connector.updateProgressBar(i)
+
+        # init progress bar
+        """
+        if self.dbase.qgsiface is not None:
+            progressMessageBar = self.dbase.qgsiface.messageBar().createMessage("Loading widget...")
+            progress = QProgressBar()
+            progress.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+            progressMessageBar.layout().addWidget(progress)
+            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                self.dbase.qgsiface.messageBar().pushWidget(progressMessageBar, self.dbase.qgsiface.messageBar().INFO)
+            else:
+                self.dbase.qgsiface.messageBar().pushWidget(progressMessageBar, qgis.core.Qgis.Info)
+            lenuifields = len(self.uifields)
+            progress.setMaximum(lenuifields)
+        else:
+            progress = None
+        """
+        """
+        #load ui fields
+        i = 0
+        for uifield in self.uifields:
+            if debugtime: logger.debug(' start %s %.3f', uifield.dbasetablename, self.dbase.getTimeNow() - timestart)
+            dbasename = uifield.dbasetablename
+            self.dbase.dbasetables[dbasename]['widget'].append( uifield(dbase = self.dbase,
+                                                                     dialog = self,
+                                                                     linkedtreewidget = self.ElemtreeWidget,
+                                                                     gpsutil = self.gpsutil) )
+
+            if debugtime: logger.debug(' end %s %.3f', uifield.dbasetablename, self.dbase.getTimeNow()  - timestart)
+            i += 1
+            self.setLoadingProgressBar(progress, i)
+
+        if progress is not None: self.dbase.qgsiface.messageBar().clearWidgets()
+        """
+
+    def loadUiDesktop(self, fullloading=False):
+
+        debug = False
+
+        # init progress bar
+        lenuifields = len(self.uidesktop)
+        lenuipostpro = len(self.uipostpro)
+        lenmenutool = len(self.menuclasses)
+        self.connector.createProgressBar('Loading widgets...',lenuifields + lenuipostpro + lenmenutool )
+        if self.dbase.qgsiface is not None:
+            progressMessageBar = self.dbase.qgsiface.messageBar().createMessage("Loading widget...")
+            progress = QProgressBar()
+            progress.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+            progressMessageBar.layout().addWidget(progress)
+            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                self.dbase.qgsiface.messageBar().pushWidget(progressMessageBar, self.dbase.qgsiface.messageBar().INFO)
+            else:
+                self.dbase.qgsiface.messageBar().pushWidget(progressMessageBar, qgis.core.Qgis.Info)
+
+        else:
+            progress = None
+
+        # load menu ui
+        i = 0
+        for menuclasse in self.menuclasses:
+            self.menutools.append(menuclasse(dbase=self.dbase, windowdialog=self))
+            i += 1
+            self.setLoadingProgressBar(progress, i)
+            if debug : logger.debug(' loading %s', str(menuclasse))
+
+        # load postpro ui
+        for uidpostpr in self.uipostpro:
+            # print('uidpostpr', uidpostpr)
+            strtoexec = ('self.' + uidpostpr.__name__.lower() + " = uidpostpr(dbase = self.dbase, dialog = self,linkedtreewidget = self.ElemtreeWidget, gpsutil = self.gpsutil)")
+            # print(strtoexec)
+            exec(strtoexec)
+            # print('test', eval('self.' + uidpostpr.__name__.lower()))
+            strtoexec = 'self.tools.append(' + 'self.' + uidpostpr.__name__.lower() + ')'
+            # print(strtoexec)
+            exec(strtoexec)
+
+            if debug: logger.debug(' loading %s', str(uidpostpr.__name__))
+            # print('ok')
+
+
+            if False:
+                self.tools.append( uidpostpr(dbase = self.dbase,
+                                             dialog = self,
+                                             linkedtreewidget = self.ElemtreeWidget,
+                                             gpsutil = self.gpsutil)
+                               )
+            i += 1
+            self.setLoadingProgressBar(progress, i)
+
+        # load uidesktop ui
+        for uidesktop in self.uidesktop:
+            try:
+                dbasename = uidesktop.dbasetablename
+                self.dbase.dbasetables[dbasename]['widget'].append(uidesktop(dbase = self.dbase,
+                                                                         dialog = self,
+                                                                         linkedtreewidget = self.ElemtreeWidget,
+                                                                         gpsutil = self.gpsutil))
+                i += 1
+                self.setLoadingProgressBar(progress, i)
+
+            except AttributeError:
+                pass
+
+        if progress is not None: self.dbase.qgsiface.messageBar().clearWidgets()
+        self.desktopuiloaded = True
 
 
     #*************************************************************

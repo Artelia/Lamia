@@ -33,7 +33,7 @@ try:
 except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget)
 #from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
-from ...toolabstract.Lamia_abstract_tool import AbstractLamiaTool
+from ...Lamia_abstract_tool import AbstractLamiaTool
 import os, sys, datetime
 
 

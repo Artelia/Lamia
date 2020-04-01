@@ -33,9 +33,10 @@ class DBaseTest(unittest.TestCase):
         self.createMainWin()
         logging.getLogger("Lamia_unittest").debug('ok02')
 
-        self.wind.loadDBase(dbtype='Spatialite', slfile='/home/docker/temp_base2_ass2/test01.sqlite')
+        #self.wind.loadDBase(dbtype='Spatialite', slfile='/home/docker/temp_base2_ass2/test01.sqlite')
+        self.wind.loadDBase(dbtype='Spatialite', slfile='/usr/src/Lamia/tests/lamia_test2/test01.sqlite')
 
-        #self.mainwin.exec_()
+        self.mainwin.exec_()
 
         #sys.exit()
         self.exitQGis()
@@ -72,16 +73,13 @@ class DBaseTest(unittest.TestCase):
         qgis.core.QgsApplication.initQgis()
         self.canvas = qgis.gui.QgsMapCanvas()
         self.canvas.enableAntiAliasing(True)
-        self.canvas.setDestinationCrs(qgis.core.QgsCoordinateReferenceSystem(2154))
+        canvascrs = qgis.core.QgsCoordinateReferenceSystem()
+        canvascrs.createFromString('EPSG:2154')
+        self.canvas.setDestinationCrs(canvascrs)
 
         # self.createWin()
-
         # self.loadLocale() TODO
-
-
         # self.testMethod()
-        #program.run(self.canvas, True, "spatialite")
-        #self.app.exec_()
 
 
 

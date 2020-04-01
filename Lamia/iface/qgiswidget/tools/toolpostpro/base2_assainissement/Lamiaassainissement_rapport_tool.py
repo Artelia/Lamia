@@ -40,8 +40,8 @@ import logging
 import numpy as np
 import math
 
-from ..Base2.Lamia_rapport_tool import RapportTool
-from ..Base2.Lamia_rapport_tool import printPDFBaseWorker
+from ..base2.Lamia_rapport_tool import RapportTool
+from ..base2.Lamia_rapport_tool import printPDFBaseWorker
 
 # ********************************************************************************************************************
 # ********************************* Main Widget                *******************************************************

@@ -26,11 +26,12 @@ This file is part of LAMIA.
   * License-Filename: LICENSING.md
  """
 
-from datetime import datetime
-import os, sys
+import  datetime 
+import os, sys, re
 
 from .dbconfigreader import DBconfigReader
 from .dbaseofflinemanager import DBaseOfflineManager
+from . import dbaseutils
 
 PGTYPE_TO_SLTYPE = {'VARCHAR' : 'TEXT',
                     'INT' : 'INTEGER',
@@ -55,6 +56,9 @@ class AbstractDBaseParser():
         """
         # the dictionnary of dbase (cf DBconfigReader)
         self.dbasetables = None
+
+        #utils
+        self.utils = dbaseutils
 
         # dbase type : Base2_digue, Base2_assainissement ....
         self.worktype = None
@@ -88,7 +92,7 @@ class AbstractDBaseParser():
         # used to define the working date in db
         #self.workingdate = QtCore.QDate.currentDate().toString('yyyy-MM-dd')
         #self.workingdate = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        self.workingdate = datetime.now().strftime("%Y-%m-%d")
+        self.workingdate = datetime.datetime.now().strftime("%Y-%m-%d")
 
 
         # the current prestation id
@@ -102,15 +106,8 @@ class AbstractDBaseParser():
         self.maxrevision = 0
 
         self.forcenocommit=False
-        self.xlsreader = True
 
-        if False:
-          try:
-              self.qgisversion_int = qgis.utils.QGis.QGIS_VERSION_INT
-          except AttributeError:  # qgis 3
-              self.qgisversion_int = qgis.utils.Qgis.QGIS_VERSION_INT
 
-          self.qgsiface = qgis.utils.iface
 
     def connectToDBase(self):
         raise NotImplementedError
@@ -183,7 +180,7 @@ class AbstractDBaseParser():
         sql += "," + workversionsql +  ',' + variantesql + ")"
         self.query(sql)
         #Revision table
-        datecreation = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         sql = "INSERT INTO Revision (datetimerevision, commentaire) "
         sql += "VALUES('" + datecreation + "','Premiere version ');"
         self.query(sql)
@@ -384,7 +381,7 @@ class AbstractDBaseParser():
                 return tuple([None]*len(fields))
 
     def createNewObjet(self, docommit=True):
-        datecreation = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         #lastobjetid = self.getLastId('Objet') + 1
         lastobjetid = self.getmaxColumnValue('Objet', 'id_objet')
         sql = "INSERT INTO Objet (id_objet, lpk_revision_begin, datetimecreation, datetimemodification ) "
@@ -578,8 +575,40 @@ class AbstractDBaseParser():
 
 
 
+    def updateQueryTableNow(self, sqlin, date=None):
+        
+        sqllist = re.split(' |,|\(|\)|\.|=', sqlin)
+        withsql = ''
+        alreadytables=[]
+        for sqlword in sqllist:
+            if '_now' in sqlword:
+                tablename=sqlword.split('_now')[0]
+                if tablename.lower() not in  alreadytables:
+                    alreadytables.append(tablename.lower())
+                    withsql +=  sqlword + " AS "
+                    withsql += " (SELECT * FROM " + tablename + "_qgis WHERE "
+                    withsql += self._dateVersionConstraintSQL(date)
+                    withsql += "), "
 
+        withsql = withsql[0:-2]
+        sqltemp1 = self.utils.splitSQLSelectFromWhereOrderby(sqlin)
+        sqlout = ''
+        if 'WITH' in sqltemp1.keys():
+            sqlout += 'WITH ' + sqltemp1['WITH']
+            sqlout += ', ' + withsql
+            sqlout += ' SELECT ' + sqltemp1['SELECT'] + ' FROM ' + sqltemp1['FROM']+ ' WHERE ' + sqltemp1['WHERE']
+            if 'ORDER' in sqltemp1.keys():
+                sqlout += ' ORDER BY ' + sqltemp1['ORDER']
+            if 'GROUP' in sqltemp1.keys():
+                sqlout += ' GROUP BY ' + sqltemp1['GROUP']
 
+        elif withsql != '':
+            sqlout += 'WITH ' + withsql + sqlin
 
-    def setLoadingProgressBar(self, progressbar, val):
-        pass
+        else:
+            sqlout += sqlin
+            
+        return sqlout
+
+    def _dateVersionConstraintSQL(self, specialdate=None):
+        raise NotImplementedError

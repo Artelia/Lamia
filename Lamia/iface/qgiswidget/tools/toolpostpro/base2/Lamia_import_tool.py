@@ -47,15 +47,22 @@ except ImportError:
     from qgis.PyQt.QtWidgets import (QInputDialog,QTableWidgetItem,QComboBox,QAction,QProgressBar,QApplication,QWidget,QToolButton,
                                      QDialog, QGridLayout, QSplitter, QLabel, QFrame, QVBoxLayout)
 
+"""
 from ...libs.pyqtgraph.flowchart import Flowchart, Node
 from ...libs.pyqtgraph.flowchart.library.common import CtrlNode
 # import ...libs.pyqtgraph.flowchart.library as fclib
 from ...libs.pyqtgraph.flowchart import library as fclib
 from ...libs.pyqtgraph.flowchart.library.Data import EvalNode
 from ...libs.pyqtgraph import configfile as configfile
-
-from ...toolabstract.Lamia_abstract_tool import AbstractLamiaTool
-from ...main.DBaseParser import DBaseParser
+"""
+from Lamia.libs.pyqtgraph.flowchart import Flowchart, Node
+from Lamia.libs.pyqtgraph.flowchart.library.common import CtrlNode
+# import ...libs.pyqtgraph.flowchart.library as fclib
+from Lamia.libs.pyqtgraph.flowchart import library as fclib
+from Lamia.libs.pyqtgraph.flowchart.library.Data import EvalNode
+from Lamia.libs.pyqtgraph import configfile as configfile
+from ...Lamia_abstract_tool import AbstractLamiaTool
+from Lamia.main.DBaseParser import DBaseParser
 from pprint import pprint
 
 

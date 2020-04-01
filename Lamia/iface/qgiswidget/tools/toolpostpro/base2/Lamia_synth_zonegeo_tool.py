@@ -33,7 +33,7 @@ except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget, QLabel, QFrame, QTreeWidgetItem, QHeaderView,QComboBox,QAbstractItemView )
 import re
 #from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
-from ...toolabstract.Lamia_abstract_tool import AbstractLamiaTool
+from ...Lamia_abstract_tool import AbstractLamiaTool
 import glob
 import numpy as np
 import os, logging, sys

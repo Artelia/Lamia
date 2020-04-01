@@ -46,8 +46,8 @@ import numpy as np
 from collections import OrderedDict
 import glob, sys, logging, inspect, textwrap
 
-from ...toolabstract.Lamia_abstract_tool import AbstractLamiaTool
-from ...lamiautils.abstractfilemanager import AbstractFileManager
+from ...Lamia_abstract_tool import AbstractLamiaTool
+from ...subwidgets.abstractfilemanager import AbstractFileManager
 
 
 

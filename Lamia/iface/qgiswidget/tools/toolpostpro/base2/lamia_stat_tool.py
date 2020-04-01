@@ -1,4 +1,4 @@
-from ...toolabstract.Lamia_abstract_tool import AbstractLamiaTool
+from ...Lamia_abstract_tool import AbstractLamiaTool
 import os
 from qgis.PyQt import QtGui, uic, QtCore
 

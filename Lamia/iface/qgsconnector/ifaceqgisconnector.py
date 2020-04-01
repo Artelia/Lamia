@@ -24,10 +24,13 @@ This file is part of LAMIA.
   * SPDX-License-Identifier: GPL-3.0-or-later
   * License-Filename: LICENSING.md
  """
+
+import logging, sys
 import qgis.utils, qgis.core
 from qgis.PyQt.QtWidgets import (QApplication)
 
 from ..ifaceabstractconnector import LamiaIFaceAbstractConnectors
+
 
 class QgisConnector(LamiaIFaceAbstractConnectors):
 
@@ -36,23 +39,45 @@ class QgisConnector(LamiaIFaceAbstractConnectors):
         self.widget = None
         self.canvas = None
 
+        self.progressbar=None
+
+        if qgis.utils.iface is None:
+            logging.basicConfig( stream=sys.stderr )
+            logging.getLogger("Lamia_connector").setLevel( logging.INFO )
+
 
     def showNormalMessage(self, text):
         if qgis.utils.iface is not None:
             qgis.utils.iface.messageBar().pushMessage("Lamia " ,text, qgis.core.Qgis.Info)
+            QApplication.processEvents()
         else:
-            print('normalMessage', text)
-        QApplication.processEvents()
+            logging.getLogger( "Lamia_connector" ).info('normalMessage : %s', text)
+        
 
 
     def showErrorMessage(self,msg):
         pass
 
-    def createProgressBar(self):
-        pass
+    def createProgressBar(self, inittext='', maxvalue=99):
+        if qgis.utils.iface is not None:
+            progressMessageBar = self.dbase.qgsiface.messageBar().createMessage(inittext)
+            self.progressbar = QProgressBar()
+            self.progressbar.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+            progressMessageBar.layout().addWidget(self.progressbar)
+            self.dbase.qgsiface.messageBar().pushWidget(progressMessageBar, qgis.core.Qgis.Info)
+            self.progressbar.setMaximum(maxvalue)
+        else:
+            logging.getLogger( "Lamia_connector" ).info('Creating progress bar : %s', inittext)
 
-    def updateProgressBar(self,int):
-        pass
+    def updateProgressBar(self,val):
+        if self.progressbar is not None:
+            self.progressbar.setValue(val)
+            QApplication.processEvents()
+        else:
+            logging.getLogger( "Lamia_connector" ).info('Loading : %d', val)
+        
 
-    def closeProgressBar(self,int):
-        pass
+    def closeProgressBar(self):
+        if qgis.utils.iface is not None: 
+            qgis.utils.iface.messageBar().clearWidgets()
+        self.progressbar = None

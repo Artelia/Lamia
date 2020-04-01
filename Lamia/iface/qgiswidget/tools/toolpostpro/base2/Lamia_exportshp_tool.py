@@ -40,8 +40,8 @@ try:
 except ImportError:
     from qgis.PyQt.QtWidgets import (QAction, QWidget)
 
-from ...toolabstract.Lamia_abstract_tool import AbstractLamiaTool
-from ...lamiautils.abstractfilemanager import AbstractFileManager
+from ...Lamia_abstract_tool import AbstractLamiaTool
+from ...subwidgets.abstractfilemanager import AbstractFileManager
 
 
 class ExportShapefileTool(AbstractLamiaTool):

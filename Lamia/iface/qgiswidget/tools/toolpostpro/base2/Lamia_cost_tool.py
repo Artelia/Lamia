@@ -38,7 +38,7 @@ except ImportError:
 #from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
 # from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
 #from ...toolabstract.Lamia_abstract_tool import AbstractLamiaTool
-from ...toolabstract.Lamia_abstract_tool import AbstractLamiaTool
+from ...Lamia_abstract_tool import AbstractLamiaTool
 import os
 import io
 import sys

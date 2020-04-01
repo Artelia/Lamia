@@ -22,7 +22,7 @@ import numpy as np
 from collections import OrderedDict
 import glob, sys, logging, inspect
 
-from ...toolabstract.Lamia_abstract_tool import AbstractLamiaTool
+from ...Lamia_abstract_tool import AbstractLamiaTool
 from .amctools.amcwindow import AMCWindow
 from ...lamiautils.abstractfilemanager import AbstractFileManager
 

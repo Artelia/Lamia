@@ -26,7 +26,7 @@ This file is part of LAMIA.
   * License-Filename: LICENSING.md
  """
 
-import os, sys, shutil
+import os, sys, shutil, datetime
 import psycopg2
 
 from .dbaseparserabstract import *
@@ -297,3 +297,21 @@ class PostGisDBaseParser(AbstractDBaseParser):
         except Exception as e:
             print(e, ' - no seq for ' + tablename)
             return 0
+
+    def _dateVersionConstraintSQL(self, specialdate=None):
+        if specialdate is None or specialdate == 'now':
+            #workingdatemodif = QtCore.QDate.fromString(self.workingdate, 'yyyy-MM-dd').addDays(1).toString('yyyy-MM-dd')
+            workingdatemodif = (datetime.datetime.now() + datetime.timedelta(days=1)).strftime("%y-%m-%d")
+        else:
+            workingdatemodif = QtCore.QDate.fromString(specialdate, 'dd/MM/yyyy').addDays(1).toString('yyyy-MM-dd')
+
+
+        sqlin = ' datetimecreation <= ' + "'" + workingdatemodif + "'"
+        sqlin += ' AND CASE WHEN datetimedestruction IS NOT NULL  '
+        sqlin += 'THEN datetimedestruction > ' + "'" + workingdatemodif + "'" + ' ELSE TRUE END'
+        sqlin += " AND lpk_revision_begin <= " + str(self.currentrevision)
+        sqlin += " AND CASE WHEN lpk_revision_end IS NOT NULL THEN "
+        sqlin += " lpk_revision_end > " + str(self.currentrevision)
+        sqlin += " ELSE TRUE END "
+
+        return sqlin

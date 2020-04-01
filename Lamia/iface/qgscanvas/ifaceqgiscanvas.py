@@ -24,11 +24,12 @@ This file is part of LAMIA.
   * SPDX-License-Identifier: GPL-3.0-or-later
   * License-Filename: LICENSING.md
  """
-import os, sys
+import os, sys, io
 import qgis, qgis.core, qgis.utils, qgis.gui
 
 import Lamia
 from ..ifaceabstractcanvas import LamiaAbstractIFaceCanvas
+from .maptool.mapTools import mapToolCapture, mapToolEdit
 
 class QgisCanvas(LamiaAbstractIFaceCanvas):
 
@@ -36,13 +37,25 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         LamiaAbstractIFaceCanvas.__init__(self)
         self.canvas = canvas
         if canvas is None and qgis.utils.iface is not None:
-            self.canvas = qgis.utils.iface.mapCanvas()
+            self.setCanvas(qgis.utils.iface.mapCanvas())
         
         self.dbaseqgiscrs = None
         self.layers = {}
+        self.mtoolpoint = None
+        self.mtoolline = None
+        self.mtoolpolygon = None
 
     def setCanvas(self,qgscanvas):
         self.canvas = qgscanvas
+
+        #init maptools
+        self.cadwdg = qgis.gui.QgsAdvancedDigitizingDockWidget(self.canvas)
+        self.mtoolpoint = mapToolCapture(self.canvas, self.cadwdg,
+                                qgis.gui.QgsMapToolCapture.CapturePoint)
+        self.mtoolline = mapToolCapture(self.canvas, self.cadwdg,
+                                        qgis.gui.QgsMapToolCapture.CaptureLine)
+        self.mtoolpolygon = mapToolCapture(self.canvas, self.cadwdg,
+                                        qgis.gui.QgsMapToolCapture.CapturePolygon)
 
 
     def createLayers(self, dbaseparser):
@@ -76,7 +89,8 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                         uri.setDataSource(dbaseparser.pgschema, str(tablenamelower), None, '', "'pk_" + str(tablenamelower))
                 self.layers[tablename][tabletype] = qgis.core.QgsVectorLayer(uri.uri(), tablename, dbtype)
 
-        self.dbaseqgiscrs = qgis.core.QgsCoordinateReferenceSystem(dbaseparser.crsnumber)
+        self.dbaseqgiscrs = qgis.core.QgsCoordinateReferenceSystem()
+        self.dbaseqgiscrs.createFromString('EPSG:' + str(dbaseparser.crsnumber))
         self.updateQgsCoordinateTransform()
 
     def loadLayersInCanvas(self, dbaseparser):

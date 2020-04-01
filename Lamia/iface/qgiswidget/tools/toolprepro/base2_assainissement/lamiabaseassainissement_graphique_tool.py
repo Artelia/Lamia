@@ -33,7 +33,8 @@ try:
 except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget,QComboBox, QDoubleSpinBox, QSpinBox, QHeaderView,
                                      QTableWidgetItem)
-from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
+# from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
+from ...InspectionDigue_abstract_tool import AbstractInspectionDigueTool
 from ..base2.lamiabase_graphique_tool import BaseGraphiqueTool
 
 import os
