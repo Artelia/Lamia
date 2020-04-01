@@ -110,7 +110,7 @@ class RapportTool(AbstractLamiaTool):
 
             self.userwdgfield.pushButton_export.clicked.connect(self.launchRapport)
 
-            if self.dbase.qgsiface is None:
+            if qgis.utils.iface is None:
                 self.userwdgfield.lineEdit_nom.setText('c://000_testdigue//test_rapport.pdf')
 
 
@@ -219,7 +219,7 @@ class RapportTool(AbstractLamiaTool):
 
                             typescale = speclist[2].strip()
                             if typescale != '':
-                                if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                                if False:    #qgis 2 version
                                     toexec = "typescale = qgis.core.QgsComposerMap." + typescale
                                     exec(toexec)
                                 else:
@@ -424,7 +424,7 @@ class printPDFBaseWorker(object):
         Méthode principale - génère le pdf
         :return:
         """
-        if self.dbase.qgsiface is not None:
+        if qgis.utils.iface is not None:
             debug = False
             debugscale = False
             stop10 = None
@@ -534,7 +534,7 @@ class printPDFBaseWorker(object):
             self.heightpx = 0
             self.currentpageheightpx  = self.parentprintPDFworker.heightpx
         elif 'childprint' in self.atlasconfData.keys() and len(self.atlasconfData['childprint'].keys()) > 0:
-            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+            if False:    #qgis 2 version
                 parentheightmm = newComposition.getComposerItemById('parentheight').rectWithFrame().height()
             else:
                 parentheightmm = newComposition.itemById('parentheight').rectWithFrame().height()
@@ -581,7 +581,7 @@ class printPDFBaseWorker(object):
 
                 # if debug: logging.getLogger("Lamia").debug('request %s', self.atlasconfData['atlaslayerid'] + '" = ' + str(featid))
 
-                if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                if False:    #qgis 2 version
                     #atlasfeat = reportdic['atlaslayer'].getFeatures(qgis.core.QgsFeatureRequest(featid)).next()
                     self.currentatlasfeat = coveragelayer.getFeatures(qgis.core.QgsFeatureRequest(request)).next()
                 else:
@@ -596,7 +596,7 @@ class printPDFBaseWorker(object):
 
 
                 if self.atlasconfData['spatial']:
-                    if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                    if False:    #qgis 2 version
                         if self.currentatlasfeat.geometry().boundingBox().toString() == 'Empty':        #point in linelayer
                             #for mapname in reportdic['atlasdriven']:
                             for mapname in self.atlasconfData['atlasdrivemap']:
@@ -634,7 +634,7 @@ class printPDFBaseWorker(object):
                                 if debugscale: logging.getLogger("Lamia").debug('scale 1 %s', str(newComposition.itemById(mapname).scale()))
 
 
-                if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                if False:    #qgis 2 version
                     atlas.prepareForFeature(self.currentatlasfeat)
                     #currentfeature = atlas.feature()
                 else:
@@ -646,7 +646,7 @@ class printPDFBaseWorker(object):
 
                 #check atlasdriven map scale
 
-                if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                if False:    #qgis 2 version
                     #for mapname in reportdic['atlasdriven']:
                     for mapname in self.atlasconfData['atlasdrivemap']:
                         # if newComposition.getComposerItemById(mapname).scale() < reportdic['atlasdrivenminscale']:
@@ -697,11 +697,11 @@ class printPDFBaseWorker(object):
         if self.parentprintPDFworker is None:
             self.painter.end()
         if debug: self.logger.debug('end')
-        if progress is not None: self.dbase.qgsiface.messageBar().clearWidgets()
+        if progress is not None: qgis.utils.iface.messageBar().clearWidgets()
         # return
 
         for rastlayer in layertoremove:
-            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+            if False:    #qgis 2 version
                 qgis.core.QgsMapLayerRegistry.instance().removeMapLayer(rastlayer)
             else:
                 qgis.core.QgsProject.instance().removeMapLayer(rastlayer)
@@ -716,7 +716,7 @@ class printPDFBaseWorker(object):
             #for imageitemname in reportdic['images'].keys():
             for imageitemname in self.atlasconfData['images'].keys():
                 # get imageitem
-                if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                if False:    #qgis 2 version
                     imageitem = newComposition.getComposerItemById(imageitemname)
                 else:
                     imageitem = newComposition.itemById(imageitemname)
@@ -770,7 +770,7 @@ class printPDFBaseWorker(object):
                     if imageitem is not None:
                         # print('ok',imagefile )
                         imageitem.setPicturePath(imagefile)
-                        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                        if False:    #qgis 2 version
                             imageitem.updateItem()
                         else:
                             imageitem.refreshPicture()
@@ -778,7 +778,7 @@ class printPDFBaseWorker(object):
                 if True:
                     if imageitem is not None:
                         # print('ok',imagefile )
-                        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                        if False:    #qgis 2 version
                             if isinstance(imageitem, qgis.core.QgsComposerPicture):
                                 imageitem.setPicturePath(imageresult)
                                 imageitem.updateItem()
@@ -822,7 +822,7 @@ class printPDFBaseWorker(object):
         atlasfeatpk = atlasfeat[self.atlasconfData['atlaslayerid']]
 
         for compitemuuid in dictfields.keys():
-            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+            if False:    #qgis 2 version
                 composeritem = newComposition.getComposerItemByUuid(compitemuuid)
             else:
                 composeritem = newComposition.itemByUuid(compitemuuid)
@@ -952,7 +952,7 @@ class printPDFBaseWorker(object):
             if debug: self.logger.debug('result %s', str(finaltxt))
             txt = ''.join(finaltxt)
 
-            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+            if False:    #qgis 2 version
                 labelclasstxt = qgis.core.QgsComposerLabel
                 labelclasshtml = qgis.core.QgsComposerFrame
             else:
@@ -978,12 +978,12 @@ class printPDFBaseWorker(object):
         debug = False
         if debug: self.logger.debug('started')
 
-        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+        if False:    #qgis 2 version
             newComposition = qgis.core.QgsComposition(mapsettings)
         else:
             newComposition = qgis.core.QgsPrintLayout(self.project)
 
-        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+        if False:    #qgis 2 version
             templatefile = self.reporttype + '.qpt'
         else:
             templatefile = self.reporttype + '3.qpt'
@@ -997,7 +997,7 @@ class printPDFBaseWorker(object):
 
         if debug: self.logger.debug('template read')
 
-        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+        if False:    #qgis 2 version
             document = QtXml.QDomDocument()
             document.setContent(template_content)
             # You can use this to replace any string like this [key]
@@ -1021,7 +1021,7 @@ class printPDFBaseWorker(object):
         :param coveragelayer: le layer utilisé pour l'atals
         :return: l'atlasComposition de la newComposition
         """
-        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+        if False:    #qgis 2 version
             atlas = newComposition.atlasComposition()
         else:
             atlas = newComposition.atlas()
@@ -1030,7 +1030,7 @@ class printPDFBaseWorker(object):
         stylepath = os.path.join(self.createfilesdir, self.atlasconfData['atlaslayerstyle'])
         coveragelayer.loadNamedStyle(stylepath)
         # add coveragelayer to QgsProject
-        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+        if False:    #qgis 2 version
             qgis.core.QgsMapLayerRegistry.instance().addMapLayer(coveragelayer, False)
         else:
             qgis.core.QgsProject.instance().addMapLayer(coveragelayer, False)
@@ -1042,11 +1042,11 @@ class printPDFBaseWorker(object):
         atlas.setEnabled(True)
 
         # set atlas spec
-        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+        if False:    #qgis 2 version
             atlas.setSingleFile(True)
             ret = newComposition.setAtlasMode(qgis.core.QgsComposition.ExportAtlas)
 
-        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+        if False:    #qgis 2 version
             for mapname in self.atlasconfData['atlasdrivemap'].keys():
                 # atlas.setComposerMap(newComposition.getComposerItemById(mapname))
                 newComposition.getComposerItemById(mapname).setAtlasDriven(True)
@@ -1101,7 +1101,7 @@ class printPDFBaseWorker(object):
                                         rlayer.renderer().setOpacity(0.5)
                                     except:
                                         pass
-                                    if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                                    if False:    #qgis 2 version
                                         qgis.core.QgsMapLayerRegistry.instance().addMapLayer(rlayer, False)
                                     else:
                                         qgis.core.QgsProject.instance().addMapLayer(rlayer, False)
@@ -1123,9 +1123,9 @@ class printPDFBaseWorker(object):
                                 if os.path.isfile(fileraster):
                                     rlayer = qgis.core.QgsRasterLayer(fileraster,
                                                                       os.path.basename(fileraster).split('.')[0])
-                                    if self.dbase.qgsiface is not None:
+                                    if qgis.utils.iface is not None:
                                         rlayer.renderer().setOpacity(0.5)
-                                    if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                                    if False:    #qgis 2 version
                                         qgis.core.QgsMapLayerRegistry.instance().addMapLayer(rlayer, False)
                                     else:
                                         qgis.core.QgsProject.instance().addMapLayer(rlayer, False)
@@ -1140,7 +1140,7 @@ class printPDFBaseWorker(object):
                         layersformapcomposer.append(layer)
                     else:
                         layer = self.dbase.dbasetables['Rasters']['widget'][0].createMapLayer(libelle=layername)
-                        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                        if False:    #qgis 2 version
                             qgis.core.QgsMapLayerRegistry.instance().addMapLayer(layer, False)
                         else:
                             qgis.core.QgsProject.instance().addMapLayer(layer, False)
@@ -1148,10 +1148,10 @@ class printPDFBaseWorker(object):
                         layertoremove.append(layer)
 
 
-                if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                if False:    #qgis 2 version
                     layersformapcomposer = [layer.id() for layer in layersformapcomposer]
 
-                if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                if False:    #qgis 2 version
                     newComposition.getComposerItemById(mapname).setLayerSet(layersformapcomposer)
                     newComposition.getComposerItemById(mapname).setKeepLayerSet(True)
                 else:
@@ -1276,8 +1276,8 @@ class printPDFBaseWorker(object):
         :param idsforreportdict:
         :return:
         """
-        if self.dbase.qgsiface is not None and self.parentprintPDFworker is None:
-            progressMessageBar = self.dbase.qgsiface.messageBar().createMessage("Generation du pdf...")
+        if qgis.utils.iface is not None and self.parentprintPDFworker is None:
+            progressMessageBar = qgis.utils.iface.messageBar().createMessage("Generation du pdf...")
             progress = QProgressBar()
             lenidsforreportdict = 0
             for reportkey in idsforreportdict.keys():
@@ -1285,10 +1285,10 @@ class printPDFBaseWorker(object):
             progress.setMaximum(lenidsforreportdict)
             progress.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
             progressMessageBar.layout().addWidget(progress)
-            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                self.dbase.qgsiface.messageBar().pushWidget(progressMessageBar, self.dbase.qgsiface.messageBar().INFO)
+            if False:    #qgis 2 version
+                qgis.utils.iface.messageBar().pushWidget(progressMessageBar, qgis.utils.iface.messageBar().INFO)
             else:
-                self.dbase.qgsiface.messageBar().pushWidget(progressMessageBar, qgis.core.Qgis.Info)
+                qgis.utils.iface.messageBar().pushWidget(progressMessageBar, qgis.core.Qgis.Info)
         else:
             progress = None
 
@@ -1299,7 +1299,7 @@ class printPDFBaseWorker(object):
     def orderIdsAlongPath(self, coveragelayer,zonegeoids=[]):
 
 
-        if self.dbase.qgsiface is not None:
+        if qgis.utils.iface is not None:
             debug = False
         else:
             debug = True  #True false
@@ -1472,7 +1472,7 @@ class printPDFBaseWorker(object):
         """
         debug = False
         exporter = None
-        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+        if False:    #qgis 2 version
             newComposition.setUseAdvancedEffects(False)
             atlas.beginRender()
             if self.parentprintPDFworker is None:
@@ -1518,7 +1518,7 @@ class printPDFBaseWorker(object):
         """
         for mapname in self.atlasconfData['generalmap'].keys():
             pkzonegeofet = self.dbase.getLayerFeatureById('Zonegeo', zonegeoid).id()
-            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+            if False:    #qgis 2 version
                 zonegeofet = self.dbase.dbasetables['Zonegeo']['layerqgis'].getFeatures(qgis.core.QgsFeatureRequest(pkzonegeofet)).next()
                 layerext = zonegeofet.geometry().boundingBox()
                 layerext = layerext.buffer(layerext.height() / 10.0)
@@ -1529,7 +1529,7 @@ class printPDFBaseWorker(object):
             layerextgeom = qgis.core.QgsGeometry.fromRect(layerext)
             layerextgeomcanvas = layerextgeom.transform(self.dbase.xform)
             layerextgeomcanvasfinal = layerextgeom.boundingBox()
-            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+            if False:    #qgis 2 version
                 newComposition.getComposerItemById(mapname).zoomToExtent(layerextgeomcanvasfinal)
             else:
                 temp1 = newComposition.itemById(mapname)
@@ -1541,7 +1541,7 @@ class printPDFBaseWorker(object):
             for atlasmapitem in self.atlasconfData['atlasdrivemap'].keys():
                 if self.atlasconfData['atlasdrivemap'][atlasmapitem]['minscale'] > minscale:
                     minscale = self.atlasconfData['atlasdrivemap'][atlasmapitem]['minscale']
-            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+            if False:    #qgis 2 version
                 if newComposition.getComposerItemById(mapname).scale() < minscale * 5.0:
                     newComposition.getComposerItemById(mapname).setNewScale(minscale * 5.0)
             else:
@@ -1572,7 +1572,7 @@ class printPDFBaseWorker(object):
             if indexpagetotal > 0:
                 self.printer.newPage()
 
-            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+            if False:    #qgis 2 version
                 newComposition.doPrint(self.printer, self.painter)
             else:
                 for numpage in range(newComposition.pageCollection().pageCount()):
@@ -1587,7 +1587,7 @@ class printPDFBaseWorker(object):
             # selfheightpx = newComposition.compositionBounds().height()/ 25.4 * 96 * 1.08
             pageheightmm = self.printer.paperRect(QPrinter.Millimeter).height()
 
-            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+            if False:    #qgis 2 version
                 selfheightpx = newComposition.compositionBounds().height() / pageheightmm * self.painter.device().height()
             else:
                 selfheightpx = newComposition.layoutBounds().height() / pageheightmm * self.painter.device().height()
@@ -1606,7 +1606,7 @@ class printPDFBaseWorker(object):
 
 
             self.painter.translate(0, self.currentpageheightpx + (indexpage - self.idecalage) * selfheightpx)
-            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+            if False:    #qgis 2 version
                 newComposition.doPrint(self.printer, self.painter)
             else:
                 exporter.renderPage(self.painter, 0)
@@ -1957,7 +1957,7 @@ class printPDFBaseWorker(object):
         if progressbar is not None:
             progressbar.setValue(val)
         else:
-            if self.dbase.qgsiface is None:
+            if qgis.utils.iface is None:
                 logging.getLogger('Lamia').info('Generation du pdf %d', val )
         QApplication.processEvents()
 

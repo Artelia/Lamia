@@ -59,6 +59,7 @@ class QgisConnector(LamiaIFaceAbstractConnectors):
         pass
 
     def createProgressBar(self, inittext='', maxvalue=99):
+        self.progressbarinittext = inittext
         if qgis.utils.iface is not None:
             progressMessageBar = self.dbase.qgsiface.messageBar().createMessage(inittext)
             self.progressbar = QProgressBar()
@@ -74,10 +75,12 @@ class QgisConnector(LamiaIFaceAbstractConnectors):
             self.progressbar.setValue(val)
             QApplication.processEvents()
         else:
-            logging.getLogger( "Lamia_connector" ).info('Loading : %d', val)
+            logging.getLogger( "Lamia_connector" ).info('%s : %d', self.progressbarinittext, val)
         
 
     def closeProgressBar(self):
         if qgis.utils.iface is not None: 
             qgis.utils.iface.messageBar().clearWidgets()
+        else:
+            logging.getLogger( "Lamia_connector" ).info('%s : %s', self.progressbarinittext, 'closing')
         self.progressbar = None

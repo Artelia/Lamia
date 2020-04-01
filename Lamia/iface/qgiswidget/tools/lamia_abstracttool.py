@@ -89,15 +89,24 @@ class AbstractLamiaTool(QWidget):
     """
 
 
-    saveFeatureSignal = QtCore.pyqtSignal()
-    currentFeatureChanged = QtCore.pyqtSignal()
-    lamiageomChanged = QtCore.pyqtSignal()
-    postInitFeaturePropertiesActivated = QtCore.pyqtSignal()
+
+    #saveFeatureSignal = QtCore.pyqtSignal()
+    #currentFeatureChanged = QtCore.pyqtSignal()
+    #lamiageomChanged = QtCore.pyqtSignal()
+    #postInitFeaturePropertiesActivated = QtCore.pyqtSignal()
 
     specialfieldui = []
 
+    # tooltreewidget conf
+    tooltreewidgetCAT = 'toto'
+    tooltreewidgetSUBCAT = 'TEST'
+    tooltreewidgetICONPATH = ''
+    # choosertreewidget conf
+    choosertreewidgetMUTIPLESELECTION = False
 
-    def __init__(self, dbase=None, dialog=None, linkedtreewidget=None, gpsutil=None, parentwidget=None, parent=None):
+
+
+    def __init__(self, dbaseparser=None, mainifacewidget=None, parentwidget=None, parent=None):
         """
         Initialisation of AbstractLamiaTool
 
@@ -109,34 +118,41 @@ class AbstractLamiaTool(QWidget):
         :param parent:             the Qt parent
         """
         super(AbstractLamiaTool, self).__init__(parent)
-
-        self._init_loadWidgetDependentResolution()
-
-
+        self._loadUIForm()
+        
         # ***************************************************************
         # ******************   Variables def ****************************
         # ***************************************************************
 
-        # ***** Data base var
-        #  the dbaseparser
-        self.dbase = dbase
-        # TODO
-        # the gpsutil
-        self.gpsutil = gpsutil
-        #  the current widget feature selected in self.linkedtreewidget
-        self.currentFeature = None
-        self.currentFeaturePK = None
-        self.beforesavingFeature = None
-        #  the parent widget if exists
-        self.parentWidget = parentwidget
-        #  ids to load
-        self.idstoload = None
-        
-        self.linkagespec = None
-        # self.linkageids = None
-        # data for datas in config file
-        self.dbasefiledata = None
+        # ******************      mainifacewidget************************
+        # ***************************************************************
+        # *           *                                                 *
+        # * tool      *                                                 *
+        # * treewidget*           self                                  *
+        # *           *                                                 *
+        # *           *                                                 *
+        # *           *                                                 *
+        # *************                                                 *
+        # *           *                                                 *
+        # * chooser   *                                                 *
+        # * treewidget*                                                 *
+        # *           *                                                 *
+        # *           *                                                 *
+        # ***************************************************************
+        # ***************************************************************
 
+
+
+        # ***** main var
+        self.dbase = dbaseparser
+        self.parentWidget = parentwidget
+        self.mainifacewidget = dialog
+        self.tooltreewidget = None
+        self.choosertreewidget = None
+
+        #Init for tooltreewidget
+        
+        """
         # ***** Ui var
         #  Name used for rool tree in main qtreewidget - must be implemented
         self.CAT = None
@@ -280,20 +296,10 @@ class AbstractLamiaTool(QWidget):
 
         if self.dbasetablename is not None:
             self.initWidgets()
+        """
 
-    def _init_loadWidgetDependentResolution(self):
-        # adapt to screen res
-        app = QApplication.instance()
-        screen_resolution = app.desktop().screenGeometry()
-        width, height = screen_resolution.width(), screen_resolution.height()
-        if width < 1500 and height<1000:
-            uipath = os.path.join(os.path.dirname(__file__), 'lamia_propertieswidget.ui')
-        else:
-            uipath = os.path.join(os.path.dirname(__file__), 'lamia_propertieswidget_resizable.ui')
-        uic.loadUi(uipath, self)
-        QApplication.processEvents()
-
-
+    def _loadUIForm(self):
+        pass
 
 
     def initTool(self):
@@ -382,9 +388,9 @@ class AbstractLamiaTool(QWidget):
 
         if True:
             # load proper widget
-            if self.windowdialog.interfacemode in [0, 1, 4]:
+            if self.dbase.visualmode in [0, 1, 4]:
                 # define self.userwdg, self.linkuserwdg and self.dbasechildwdg
-                if self.windowdialog.interfacemode == 0:
+                if self.dbase.visualmode == 0:
                     if (interfacename is None
                             or (interfacename is not None
                                     and (len(interfacename.split('_')) == 1
@@ -412,7 +418,7 @@ class AbstractLamiaTool(QWidget):
                         if self.linkuserwdg is not None:
                             for key in self.linkuserwdg.keys():
                                 self.dicttablefieldtoinit[key] = self.linkuserwdg[key]['widgets'].keys()
-                elif self.windowdialog.interfacemode == 1:
+                elif self.dbase.visualmode == 1:
                     self.initDesktopUI()
                     if self.userwdgdesktop is not None:
                         self.userwdg = self.userwdgdesktop
@@ -426,7 +432,7 @@ class AbstractLamiaTool(QWidget):
                         self.dbasechildwdg = self.dbasechildwdgfield
                     else:
                         self.dbasechildwdg = []
-                elif self.windowdialog.interfacemode == 4:
+                elif self.dbase.visualmode == 4:
                     self.initDesktopUI()
                     if self.userwdgfield is not None:
                         self.userwdg = self.userwdgfield
@@ -446,7 +452,7 @@ class AbstractLamiaTool(QWidget):
                 if self.linkuserwdg is not None:
                     for key in self.linkuserwdg.keys():
                         self.dicttablefieldtoinit[key] = self.linkuserwdg[key]['widgets'].keys()
-            elif self.windowdialog.interfacemode == 2:
+            elif self.dbase.visualmode == 2:
                 self.groupBox_properties.layout().addWidget(self.tableWidget)
                 if self.linkuserwdg is not None:
                     for key in self.linkuserwdg.keys():
@@ -477,7 +483,7 @@ class AbstractLamiaTool(QWidget):
             logging.getLogger('Lamia').debug('after  changePropertiesWidget %s %.3f',self.dbasetablename,  self.dbase.getTimeNow()  - timestart)
 
         # load the widgets in main tree
-        if self.windowdialog.interfacemode in self.visualmode:
+        if self.dbase.visualmode in self.visualmode:
             self.loadWidgetinMainTree()
         else:
             self.unloadWidgetinMainTree()
@@ -670,8 +676,7 @@ class AbstractLamiaTool(QWidget):
 
             if self.LineENABLED or self.PolygonENABLED:
                 self.pushButton_editgeom.setEnabled(True)
-                # self.pushButton_editgeom.clicked.connect(self.windowdialog.editFeature)
-                self.pushButton_editgeom.clicked.connect(self.editLayer)
+                self.pushButton_editgeom.clicked.connect(self.windowdialog.editFeature)
             else:
                 self.pushButton_editgeom.setEnabled(False)
 
@@ -1835,7 +1840,7 @@ class AbstractLamiaTool(QWidget):
                     if self.dbase.utils.isAttributeNull(valuetoset):
                         valuetoset = None
 
-                    if self.windowdialog.interfacemode in [0, 1]:
+                    if self.dbase.visualmode in [0, 1]:
                         if (tablename in templinkuserwgd.keys()
                                 and templinkuserwgd[tablename] is not None
                                 and 'widgets' in templinkuserwgd[tablename].keys()
@@ -1845,7 +1850,7 @@ class AbstractLamiaTool(QWidget):
                             else:
                                 self.setValueInWidget(templinkuserwgd[tablename]['widgets'][field], valuetoset, tablename,field)
 
-                    if self.windowdialog.interfacemode == 2 :
+                    if self.dbase.visualmode == 2 :
                         listfieldname = [self.tableWidget.item(row, 0).text() for row in range(self.tableWidget.rowCount())]
                         itemindex = listfieldname.index(tablename + '.' + field)
 
@@ -2010,8 +2015,7 @@ class AbstractLamiaTool(QWidget):
 
         if self.windowdialog.editfeatureworking:
             #tempgeom = self.windowdialog.editfeaturelayer.selectedFeatures()[0].geometry()
-            # self.windowdialog.closeEditFeature(savechanges=True)
-            self.windowdialog.qgiscanvas.closeRawLayerEditing(savechanges=True)
+            self.windowdialog.closeEditFeature(savechanges=True)
             self.currentFeaturePK = self.currentFeature.id()
             self.currentFeature = self.dbase.getLayerFeatureByPk(self.dbasetablename, self.currentFeaturePK)
 
@@ -2560,7 +2564,7 @@ class AbstractLamiaTool(QWidget):
 
         self.dbasetable['layer'].startEditing()
 
-        if self.windowdialog.interfacemode in [0, 1]:
+        if self.dbase.visualmode in [0, 1]:
             if self.linkuserwdg is not None:
                 for i, tablename in enumerate(self.linkuserwdg.keys()):
                     if debug: logging.getLogger("Lamia").debug('start : %s', tablename)
@@ -2612,7 +2616,7 @@ class AbstractLamiaTool(QWidget):
 
 
 
-        if self.windowdialog.interfacemode == 2:
+        if self.dbase.visualmode == 2:
             if self.linkuserwdg is None:
                 templinkuserwgd = {self.dbasetablename: {'linkfield': 'ID','widgets': {}}}
             else:
@@ -2808,8 +2812,7 @@ class AbstractLamiaTool(QWidget):
         Method called by deselect Button
 
         """
-        #self.windowdialog.closeEditFeature()
-        self.windowdialog.qgiscanvas.closeRawLayerEditing()
+        self.windowdialog.closeEditFeature()
         #case deepcopy
         self.deepCopyDisconnect()
 
@@ -3759,10 +3762,6 @@ class AbstractLamiaTool(QWidget):
 
     def printWidget(self):
         pass
-
-    def editLayer(self):
-        if self.dbasetablename:
-            self.windowdialog.qgiscanvas.addRawLayerInCanvasForEditing(self.dbasetablename)
 
     def tr(self, message):
         return QtCore.QCoreApplication.translate('AbstractLamiaTool', message)

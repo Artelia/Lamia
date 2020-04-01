@@ -27,7 +27,7 @@ This file is part of LAMIA.
 
 
 
-import qgis
+import qgis, qgis.utils
 import os
 #from ..toolabstract.inspectiondigue_abstractworker import AbstractWorker
 from qgis.PyQt import QtGui, uic, QtCore, QtXml
@@ -153,7 +153,7 @@ class ImportTool(AbstractLamiaTool):
 
         self.userwdgfield.comboBox_tableimport.clear()
 
-        if self.dbase.qgsiface is not None:
+        if qgis.utils.iface is not None:
             if sys.version_info.major == 2:
                 layers = self.dbase.qgsiface.legendInterface().layers()
             elif sys.version_info.major == 3:

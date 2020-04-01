@@ -45,6 +45,9 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         self.mtoolline = None
         self.mtoolpolygon = None
 
+        #behaviour
+        self.editingrawlayer = False
+
     def setCanvas(self,qgscanvas):
         self.canvas = qgscanvas
 
@@ -153,3 +156,70 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             self.xformreverse = qgis.core.QgsCoordinateTransform(self.canvas.mapSettings().destinationCrs(),
                                                                     self.dbaseqgiscrs,
                                                                 qgis.core.QgsProject.instance() )
+
+    def addRawLayerInCanvasForEditing(self, layername):
+
+        if self.editingrawlayer == True :
+                return
+
+
+        self.editingrawlayer = False
+
+        """
+        if True:
+            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                qgis.core.QgsMapLayerRegistry.instance().addMapLayer(self.dbase.dbasetables[tablename]['layerqgis'],
+                                                                    False)
+            else:
+                qgis.core.QgsProject.instance().addMapLayer(self.dbase.dbasetables[tablename]['layerqgis'],
+                                                            False)
+        lamialegendgroup.addLayer(self.dbase.dbasetables[tablename]['layerqgis'])
+        """
+        self.editlayer = qgis.core.QgsVectorLayer(self.layers[layername]['layer'].source(),
+                                                self.layers[layername]['layer'].name() + '_edit',
+                                                self.layers[layername]['layer'].providerType())
+        qgis.core.QgsProject.instance().addMapLayer(self.editlayer, False)
+        self.editfeaturetreelayer = self.qgislegendnode.insertLayer(0,self.editlayer)
+        if qgis.utils.iface is not None :
+            self.dbase.qgsiface.setActiveLayer(self.editlayer)
+            self.editlayer.startEditing()
+            self.dbase.qgsiface.actionVertexTool().trigger()
+
+        self.editingrawlayer = True
+        
+        
+        """
+        if self.stackedWidget_main.currentIndex() == 0:
+            wdg = self.MaintabWidget.widget(0).layout().itemAt(0).widget()
+
+            self.editfeaturelayer = qgis.core.QgsVectorLayer(wdg.dbasetable['layer'].source(),
+                                                            wdg.dbasetable['layer'].name() + '_edit',
+                                                            wdg.dbasetable['layer'].providerType())
+
+            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                qgis.core.QgsMapLayerRegistry.instance().addMapLayer(self.editfeaturelayer,False)
+                self.editfeaturetreelayer = self.qgislegendnode.insertLayer(0,self.editfeaturelayer)
+                if self.dbase.qgsiface is not None :
+                    self.dbase.qgsiface.setActiveLayer(self.editfeaturelayer)
+                    self.editfeaturelayer.startEditing()
+                    self.dbase.qgsiface.actionNodeTool().trigger()
+            else:
+                qgis.core.QgsProject.instance().addMapLayer(self.editfeaturelayer, False)
+                self.editfeaturetreelayer = self.qgislegendnode.insertLayer(0,self.editfeaturelayer)
+                if self.dbase.qgsiface is not None :
+                    self.dbase.qgsiface.setActiveLayer(self.editfeaturelayer)
+                    self.editfeaturelayer.startEditing()
+                    self.dbase.qgsiface.actionVertexTool().trigger()
+
+            self.editingrawlayer = True
+        """
+
+    def closeRawLayerEditing(self, maintreewdgindex=None, savechanges=False):
+
+        if self.editingrawlayer:
+            self.editingrawlayer = False
+            if isinstance(savechanges,bool) and savechanges:
+                self.editlayer.commitChanges()
+            else:
+                self.editlayer.rollBack()
+            self.qgislegendnode.removeLayer(self.editlayer)

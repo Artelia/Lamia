@@ -24,49 +24,52 @@ class DBaseTest(unittest.TestCase):
 
         self.filetoimport = os.path.join(os.path.dirname(__file__),'lamia_test1','test01.sqlite' )
         """
+    def test_a_showLamia(self):
+        self._initQGis()
+        self._createWin()
+        self._createMainWin()
+        
+        self.wind.loadDBase(dbtype='Spatialite', slfile='/usr/src/Lamia/tests/lamia_test2/test01.sqlite')
+        # self.wind.setVisualMode(visualmode=1)
+        self.mainwin.exec_()
+        self._exitQGis()
 
+        
 
-    def test_a_DbaseInit(self):
+    """
+    def test_b_OpeningToolWidget(self):
         logging.getLogger("Lamia_unittest").debug('ok01')
-        self.initQGis()
-        self.createWin()
-        self.createMainWin()
+        self._initQGis()
+        self._createWin()
+        self._createMainWin()
         logging.getLogger("Lamia_unittest").debug('ok02')
 
-        #self.wind.loadDBase(dbtype='Spatialite', slfile='/home/docker/temp_base2_ass2/test01.sqlite')
         self.wind.loadDBase(dbtype='Spatialite', slfile='/usr/src/Lamia/tests/lamia_test2/test01.sqlite')
+        
+        #test opening tools (prepro and postpro)
+        self.wind.setVisualMode(visualmode=1)
+        for toolname in self.wind.toolwidgets['toolprepro'].keys():
+            wdglist = self.wind.toolwidgets['toolprepro'][toolname]
+            if isinstance(wdglist, list):
+                for tt in wdglist:
+                    self.wind.MaintreeWidget.setCurrentItem(tt.qtreewidgetitem)
+        self.wind.setVisualMode(visualmode=4)
+        for toolname in self.wind.toolwidgets['toolpostpro'].keys():
+            wdglist = self.wind.toolwidgets['toolpostpro'][toolname]
+            if isinstance(wdglist, list):
+                for tt in wdglist:
+                    self.wind.MaintreeWidget.setCurrentItem(tt.qtreewidgetitem)
+            else:
+                self.wind.MaintreeWidget.setCurrentItem(wdglist.qtreewidgetitem)
 
-        self.mainwin.exec_()
+        self._exitQGis()
+    """
 
-        #sys.exit()
-        self.exitQGis()
-
-
-        """
-        sqlitedbase = DBaseParserFactory('spatialite').getDbaseParser()
-        slfile = os.path.join(self.tempdir, 'a_testslinit','test_a.sqlite')
-        os.mkdir(os.path.dirname(slfile))
-        sqlitedbase.initDBase(slfile=slfile)
-
-        pgdbase = DBaseParserFactory('postgis').getDbaseParser()
-        pgdbase.initDBase(host=PGhost, 
-                          port=PGport, 
-                          dbname=PGbase, 
-                          schema='testa', 
-                          user=PGuser,  
-                          password=PGpassword)
-
-        logging.getLogger("Lamia_unittest").debug('test_a_DbaseInit OK')
-        """
-
-    def initQGis(self):
-
-
+    def _initQGis(self):
         if platform.system() == 'Windows':
             qgis_path = "C://OSGeo4W64//apps//qgis-ltr"
         elif platform.system() == 'Linux':
             qgis_path = '/usr'
-
 
         self.app = qgis.core.QgsApplication([], True)
         qgis.core.QgsApplication.setPrefixPath(qgis_path, True)
@@ -81,19 +84,16 @@ class DBaseTest(unittest.TestCase):
         # self.loadLocale() TODO
         # self.testMethod()
 
-
-
-    def exitQGis(self):
+    def _exitQGis(self):
         qgis.core.QgsApplication.exitQgis()
-        print('Test fini')
 
-    def createMainWin(self):
+    def _createMainWin(self):
         self.mainwin = UserUI()
         self.mainwin.frame.layout().addWidget(self.canvas)
         self.mainwin.frame_2.layout().addWidget(self.wind)
         self.mainwin.setParent(None)
 
-    def createWin(self):
+    def _createWin(self):
         self.wind = LamiaWindowWidget()
         self.wind.qgiscanvas.setCanvas(self.canvas)
         # self.wind.createDBase()
@@ -110,7 +110,7 @@ class DBaseTest(unittest.TestCase):
         self.mainwin = None
 
 
-    def loadLocale(self):
+    def _loadLocale(self):
         # initialize locale
         # locale = QSettings().value('locale/userLocale')[0:2]
         locale = 'fr'
@@ -131,17 +131,12 @@ class DBaseTest(unittest.TestCase):
                 QCoreApplication.installTranslator(self.translator)
                 #self.app.installTranslator(self.translator)
 
-
-
-
 class UserUI(QDialog):
 
     def __init__(self, parent=None):
         super(UserUI, self).__init__(parent=parent)
         uipath = os.path.join(os.path.dirname(__file__), 'qtdialog', 'mainwindows.ui')
         uic.loadUi(uipath, self)
-
-
 
 if __name__ == "__main__":
     logging.basicConfig( stream=sys.stderr )

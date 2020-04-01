@@ -194,10 +194,6 @@ class AbstractLamiaTool(QWidget):
         self.tableWidget.setColumnWidth(2, 48)
         self.tableWidget.setColumnWidth(3, 48)
 
-        if debugtime:
-            QApplication.processEvents()
-            logging.getLogger('Lamia').debug('step3 table wdg %s %.3f', self.dbasetablename, self.dbase.getTimeNow()  - timestart)
-
         # header.setResizeMode(2, QHeaderView.ResizeToContents)
         # header.setResizeMode(3, QHeaderView.ResizeToContents)
         self.newentrytext = 'Nouvelle entree'
@@ -249,9 +245,9 @@ class AbstractLamiaTool(QWidget):
         # raw connection
         # *******************************************************
         # load tools - must be kept in this order
-        if debugtime: logging.getLogger('Lamia').debug('before initTool %s %.3f',self.dbasetablename, self.dbase.getTimeNow()  - timestart)
+        # if debugtime: logging.getLogger('Lamia').debug('before initTool %s %.3f',self.dbasetablename, self.dbase.getTimeNow()  - timestart)
         self.initTool()
-        if debugtime: logging.getLogger('Lamia').debug('After initTool %s %.3f',self.dbasetablename, self.dbase.getTimeNow()  - timestart)
+        # if debugtime: logging.getLogger('Lamia').debug('After initTool %s %.3f',self.dbasetablename, self.dbase.getTimeNow()  - timestart)
 
         # *******************************************************
         # Post inittool things
@@ -655,8 +651,8 @@ class AbstractLamiaTool(QWidget):
                         self.tableWidget.setCellWidget(rowPosition, 1, wdg)
                     if 'FK' in dbasetable['fields'][field].keys():
                         # print(dbasetable['fields'][field]['FK'].split('(')[0])
-                        self.fktables.append(dbasetable['fields'][field]['FK'].split('(')[0])
-
+                        #self.fktables.append(dbasetable['fields'][field]['FK'].split('(')[0])
+                        pass    #TODO
             elif os.path.isfile(tablename):
                 print(tablename)
 
@@ -1456,14 +1452,21 @@ class AbstractLamiaTool(QWidget):
 
         ids = []
         if self.dbasetablename is not None:
+            if False:
+                strid = 'id_' + self.dbasetablename.lower()
+                sql = "SELECT " + strid
+                if len(self.qtreewidgetfields)>0 :
+                    sql += "," + ','.join(self.qtreewidgetfields)
+                sql += " FROM " + self.dbasetablename.lower() + '_qgis'
+                sql += ' WHERE '
+                sql += self.dbase.dateVersionConstraintSQL()
+                
             strid = 'id_' + self.dbasetablename.lower()
             sql = "SELECT " + strid
             if len(self.qtreewidgetfields)>0 :
                 sql += "," + ','.join(self.qtreewidgetfields)
-            sql += " FROM " + self.dbasetablename.lower() + '_qgis'
-
-            sql += ' WHERE '
-            sql += self.dbase.dateVersionConstraintSQL()
+            sql += " FROM " + self.dbasetablename.lower() + '_now'
+            sql = self.dbase.updateQueryTableNow(sql)
 
             if (self.parentWidget is not None and self.linkagespec is not None
                     and self.parentWidget.currentFeature is not None):
@@ -1828,7 +1831,7 @@ class AbstractLamiaTool(QWidget):
                     else:
                         valuetoset = value
 
-                    if self.dbase.isAttributeNull(valuetoset):
+                    if self.dbase.utils.isAttributeNull(valuetoset):
                         valuetoset = None
 
                     if self.dbase.visualmode in [0, 1]:
