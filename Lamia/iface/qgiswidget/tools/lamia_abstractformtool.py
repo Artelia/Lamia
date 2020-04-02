@@ -46,7 +46,6 @@ from ..subdialogs.lamia_linkage import LinkageDialog
 # from ..maptool.mapTools import mapToolCapture TODO
 from .lamia_abstracttool import AbstractLamiaTool
 
-
 debugconnector = False
 
 
@@ -103,7 +102,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                  mainifacewidget=None, 
                  choosertreewidget=None, 
                  parentwidget=None, 
-                 parent=None
+                 parent=None):
         """
         Initialisation of AbstractLamiaTool
 
@@ -114,11 +113,16 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         :param parentwidget:       the parentWidget class, in case of use in prepro
         :param parent:             the Qt parent
         """
-        super(AbstractLamiaFormTool, self).__init__(parent)
-
-        self._init_loadWidgetDependentResolution()
+        super(AbstractLamiaFormTool, self).__init__(dbaseparser=dbaseparser, 
+                                                    mainifacewidget=mainifacewidget, 
+                                                    choosertreewidget=choosertreewidget, 
+                                                    parentwidget=parentwidget, 
+                                                    parent=parent)
 
         if False:
+            self._init_loadWidgetDependentResolution()
+
+
             # ***************************************************************
             # ******************   Variables def ****************************
             # ***************************************************************
@@ -286,24 +290,19 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
 
             if self.dbasetablename is not None:
                 self.initWidgets()
-
-
+    
     def _loadUIForm(self):
-        # adapt to screen res
-        app = QApplication.instance()
-        screen_resolution = app.desktop().screenGeometry()
-        width, height = screen_resolution.width(), screen_resolution.height()
-        if width < 1500 and height<1000:
-            uipath = os.path.join(os.path.dirname(__file__), 'lamia_propertieswidget.ui')
-        else:
-            uipath = os.path.join(os.path.dirname(__file__), 'lamia_propertieswidget_resizable.ui')
-        uic.loadUi(uipath, self)
-        QApplication.processEvents()
+        pass
 
 
+
+    def updateToolbarOnToolFrameLoading(self):
+        self.mainifacewidget.currenttoolwidget = self
+        if self.mainifacewidget is not None:
+            self.mainifacewidget.toolBarFormCreation.setEnabled(True)
+            self.mainifacewidget.toolBarFormGeom.setEnabled(True)
 
     if False:
-
         def _init_loadWidgetDependentResolution(self):
             # adapt to screen res
             app = QApplication.instance()
@@ -411,7 +410,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                         if (interfacename is None
                                 or (interfacename is not None
                                         and (len(interfacename.split('_')) == 1
-                                                or interfacename.split('_')[1] not in self.specialfieldui) )):
+                                            or interfacename.split('_')[1] not in self.specialfieldui) )):
                             self.initFieldUI()
                             if self.userwdgfield is not None:
                                 self.userwdg = self.userwdgfield
@@ -616,7 +615,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                             self.tableWidget.setCellWidget(rowPosition, 1, wdg)
                             if 'ParFldCst' in dbasetable['fields'][field].keys():
                                 listfieldname = [self.tableWidget.item(row, 0).text() for row in
-                                                    range(self.tableWidget.rowCount())]
+                                                range(self.tableWidget.rowCount())]
                                 indexparentfield = listfieldname.index(
                                     tablename + '.' + dbasetable['fields'][field]['ParFldCst'])
                                 nameparenttalbe, nameparentfield = listfieldname[indexparentfield].split('.')
@@ -877,7 +876,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
 
             try:
                 parentcstvalue = self.dbase.getConstraintRawValueFromText(parenttablename, parentfieldname,
-                                                                            senderwdg.currentText())
+                                                                        senderwdg.currentText())
             except Exception as e:
                 if self.dbase.qgsiface is None:
                     logging.getLogger("Lamia").debug('error %s %s %s', e, parenttablename, parentfieldname)
@@ -886,11 +885,11 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             dbasetable = self.dbase.dbasetables[parenttablename]
             # get child index and combochild
             listparentcst = [dbasetable['fields'][field]['ParFldCst']
-                                if 'ParFldCst' in dbasetable['fields'][field].keys() else None
-                                for field in dbasetable['fields'].keys()]
+                            if 'ParFldCst' in dbasetable['fields'][field].keys() else None
+                            for field in dbasetable['fields'].keys()]
 
             childfieldnames = [list(dbasetable['fields'].keys())[i] for i in range(len(listparentcst))
-                                if parentfieldname == listparentcst[i]]
+                            if parentfieldname == listparentcst[i]]
 
             if debug: print('**', listparentcst)
             if debug: print('***', childfieldnames)
@@ -902,7 +901,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                         'PGtype'] == 'INT' and parentcstvalue != '' and parentcstvalue is not None:
                         parentcstvalue = int(parentcstvalue)
                     listtoadd = [value[0] for value in dbasetable['fields'][childfieldname]['Cst'] if
-                                    parentcstvalue in value[2]]
+                                parentcstvalue in value[2]]
                     indexchildintable = listfieldname.index(parenttablename + '.' + childfieldname)
                     combochild = self.tableWidget.cellWidget(indexchildintable, 1)
                     combochild.clear()
@@ -997,7 +996,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
 
             if senderwdg.text() == 'File':
                 file, extension = self.dialog.qfiledlg.getOpenFileNameAndFilter(None, 'Choose the file', None,
-                                                                            'All (*.*)', '')
+                                                                        'All (*.*)', '')
                 if file:
                     self.setValueInWidget(self.tableWidget.cellWidget(ind, 1), file, tablename, fieldname)
             if senderwdg.text() == 'Open':
@@ -2237,8 +2236,8 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                 for tablename,linkedfield  in self.linkedgeom:
 
                     sourcevalue = self.dbase.getValuesFromPk(self.dbasetablename + '_qgis',
-                                                                str("id_" + linkedfield.split('_')[1]),
-                                                                self.currentFeaturePK)
+                                                            str("id_" + linkedfield.split('_')[1]),
+                                                            self.currentFeaturePK)
                     sql = "SELECT pk_" + tablename.lower() + ", id_" + tablename.lower()
                     sql += " FROM " + tablename + "_qgis "
                     sql += " WHERE " + linkedfield + " = " + str(sourcevalue)
@@ -2249,10 +2248,10 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                     # for fetid in result:
                     for fetpk, fetid in result:
                         sourcegeomtext = self.dbase.getValuesFromPk(self.dbasetablename + '_qgis',
-                                                                    ['ST_AsText(geom)'],
+                                                                ['ST_AsText(geom)'],
                                                                     self.currentFeaturePK)
                         targetgeomtext = self.dbase.getValuesFromPk(tablename + '_qgis',
-                                                                    ['ST_AsText(geom)'],
+                                                                ['ST_AsText(geom)'],
                                                                     fetpk)
                         sourceqgsgeom = qgis.core.QgsGeometry.fromWkt(sourcegeomtext)
                         targetqgsgeom = qgis.core.QgsGeometry.fromWkt(targetgeomtext)
@@ -2334,11 +2333,11 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                         sql = self.dbase.createSetValueSentence(type='INSERT',
                                                                 tablename='Desordre',
                                                                 listoffields=['id_desordre', 'lpk_objet',
-                                                                                'groupedesordre',
-                                                                                'lid_descriptionsystem', 'geom'],
+                                                                            'groupedesordre',
+                                                                            'lid_descriptionsystem', 'geom'],
                                                                 listofrawvalues=[lastiddesordre, pkobjet,
-                                                                                    self.linkeddisorder['groupedesordre'],
-                                                                                    iddessys, geomtext])
+                                                                                self.linkeddisorder['groupedesordre'],
+                                                                                iddessys, geomtext])
                         self.dbase.query(sql)
 
 
@@ -2347,12 +2346,12 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                     categ = None
                     if self.linkeddisorder['specificfield'] is not None:
                         categ, iddessys = self.dbase.getValuesFromPk(self.dbasetablename + '_qgis',
-                                                                        [self.linkeddisorder['specificfield'], 'id_descriptionsystem'],
-                                                                        self.currentFeaturePK)
+                                                                    [self.linkeddisorder['specificfield'], 'id_descriptionsystem'],
+                                                                    self.currentFeaturePK)
                     else:
                         iddessys = self.dbase.getValuesFromPk(self.dbasetablename + '_qgis',
-                                                                        [ 'id_descriptionsystem'],
-                                                                        self.currentFeaturePK)
+                                                                    [ 'id_descriptionsystem'],
+                                                                    self.currentFeaturePK)
 
                     if categ == self.linkeddisorder['specificfieldvalue'] and iddessys is not None:
 
@@ -2363,11 +2362,11 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                             desfeature = self.dbase.getLayerFeatureById('Desordre', iddes)
                             # revibegin
                             desgeomtext = self.dbase.getValuesFromPk('Desordre_qgis',
-                                                                        ['ST_AsText(geom)'],
-                                                                        desfeature.id())
+                                                                    ['ST_AsText(geom)'],
+                                                                    desfeature.id())
                             equipgeomtext = self.dbase.getValuesFromPk(self.dbasetablename + '_qgis',
-                                                                        ['ST_AsText(geom)'],
-                                                                        self.currentFeaturePK)
+                                                                    ['ST_AsText(geom)'],
+                                                                    self.currentFeaturePK)
 
                             if self.dbasetable['geom'] == 'POINT':
                                 qgsgeom = qgis.core.QgsGeometry.fromWkt(equipgeomtext)
@@ -2404,7 +2403,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
 
             # geometry conversion first
             if (self.tempgeometry is not None and self.dbasetable['geom'] in ['POINT', 'LINESTRING', 'POLYGON']
-                        and self.tempgeometry.isMultipart()):
+                    and self.tempgeometry.isMultipart()):
                 success = self.tempgeometry.convertToSingleType()
             elif (self.tempgeometry is not None and self.dbasetable['geom'] in ['MULTIPOLYGON']
                     and not self.tempgeometry.isMultipart()):
@@ -2544,7 +2543,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             dbasetablelayer = self.dbase.dbasetables[table]['layer']
 
             if debug: logging.getLogger("Lamia").debug('start : %s %s %s %s',
-                                                        table, str(feat.id()) , feat.attributes(), feat.geometry())
+                                                    table, str(feat.id()) , feat.attributes(), feat.geometry())
 
             dbasetablelayer.startEditing()
 
@@ -2592,8 +2591,8 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                         result = []
                         for fieldname in fieldnames:
                             fieldvaluetosave = self.getValueFromWidget(self.linkuserwdg[tablename]['widgets'][fieldname],
-                                                                        tablename,
-                                                                        fieldname)
+                                                                    tablename,
+                                                                    fieldname)
                             if fieldvaluetosave is not None:
                                 result.append(fieldvaluetosave)
                             else:
@@ -2647,8 +2646,8 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                     for j, field in enumerate(dbasetable['fields'].keys()):
                         itemindex = listfieldname.index(tablename + '.' + field)
                         fieldvaluetosave = self.getValueFromWidget(self.tableWidget.cellWidget(itemindex, 1),
-                                                                    tablename,
-                                                                    field)
+                                                                tablename,
+                                                                field)
                         if fieldvaluetosave is not None:
                             result.append(fieldvaluetosave)
                         else:
@@ -2758,8 +2757,8 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             if showmessage :
                 message = "Supprimer completement l'element (yes) ou l'archiver (no) ? "
                 reply = QMessageBox.question(self, "Su",
-                                                    message,
-                                                    QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
+                                                message,
+                                                QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
             else:
                 reply = QMessageBox.Yes
 
@@ -3144,9 +3143,9 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                 else:
                     layer.selectByIds([nearestfeature.id()])
                 self.initFeatureProperties(self.currentFeature,
-                                            tablename=self.dbasetablename,
-                                            fieldname=self.pickfield,
-                                            value=nearattributevalue)
+                                        tablename=self.dbasetablename,
+                                        fieldname=self.pickfield,
+                                        value=nearattributevalue)
                 self.pickfield = None
                 self.canvas.unsetMapTool(self.pointEmitter)
                 try:
@@ -3248,9 +3247,9 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                         destinationfile = os.path.join(destinationdir, filename)
 
                         self.dbase.copyRessourceFile(fromfile= file,
-                                                        tofile=destinationfile,
-                                                        withthumbnail=0,
-                                                        copywholedirforraster=False)
+                                                    tofile=destinationfile,
+                                                    withthumbnail=0,
+                                                    copywholedirforraster=False)
 
 
                         finalname = os.path.join('.',os.path.relpath(destinationfile, self.dbase.dbaseressourcesdirectory ))
@@ -3743,9 +3742,9 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                             if lastcount < len(originaltreefeatlist)-1 and parentIdtocopyinto is None:
                                 for j in list(range(lastcount+1,len(originaltreefeatlist))):
                                     if debugsavedelete:  print('delete', tempwdg.dbasetablename, j,
-                                                                        len(originaltreefeatlist),
-                                                                        originaltreefeatlist,
-                                                                        originaltreefeatlist[j][0])
+                                                                    len(originaltreefeatlist),
+                                                                    originaltreefeatlist,
+                                                                    originaltreefeatlist[j][0])
                                     tempwdg.featureSelected(item=originaltreefeatlist[j][0], itemisid=True)
 
                                     tempwdg.deleteFeature(showmessage=False)

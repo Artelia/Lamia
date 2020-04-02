@@ -28,13 +28,14 @@ class DBaseTest(unittest.TestCase):
         self._initQGis()
         self._createWin()
         self._createMainWin()
-        
+        self.mainwin.resize(QtCore.QSize(1000,800))
+
         self.wind.loadDBase(dbtype='Spatialite', slfile='/usr/src/Lamia/tests/lamia_test2/test01.sqlite')
         # self.wind.setVisualMode(visualmode=1)
         self.mainwin.exec_()
         self._exitQGis()
 
-        
+
 
     """
     def test_b_OpeningToolWidget(self):

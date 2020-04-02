@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>405</width>
+    <width>702</width>
     <height>404</height>
    </rect>
   </property>
@@ -188,7 +188,7 @@
                      <string/>
                     </property>
                     <property name="pixmap">
-                     <pixmap resource="../resources.qrc">:/plugins/Lamia/icons/eye2.svg</pixmap>
+                     <pixmap>:/plugins/Lamia/icons/eye2.svg</pixmap>
                     </property>
                     <property name="scaledContents">
                      <bool>false</bool>
@@ -214,7 +214,7 @@
                      <string>...</string>
                     </property>
                     <property name="icon">
-                     <iconset resource="../resources.qrc">
+                     <iconset>
                       <normaloff>:/plugins/Lamia/icons/Calendar_icon.png</normaloff>:/plugins/Lamia/icons/Calendar_icon.png</iconset>
                     </property>
                     <property name="iconSize">
@@ -329,7 +329,7 @@ background-color: rgb(255, 255, 255);
                      <string/>
                     </property>
                     <property name="icon">
-                     <iconset resource="../resources.qrc">
+                     <iconset>
                       <normaloff>:/plugins/Lamia/icons/select.png</normaloff>:/plugins/Lamia/icons/select.png</iconset>
                     </property>
                    </widget>
@@ -445,7 +445,7 @@ background-color: rgb(255, 255, 255);</string>
            <locale language="French" country="France"/>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="page_3">
            <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -498,7 +498,7 @@ background-color: rgb(255, 255, 255);</string>
               </property>
               <widget class="QWidget" name="tab">
                <attribute name="icon">
-                <iconset resource="../resources.qrc">
+                <iconset>
                  <normaloff>:/plugins/Lamia/icons/main.png</normaloff>:/plugins/Lamia/icons/main.png</iconset>
                </attribute>
                <attribute name="title">
@@ -518,7 +518,7 @@ background-color: rgb(255, 255, 255);</string>
               </widget>
               <widget class="QWidget" name="tab_2">
                <attribute name="icon">
-                <iconset resource="../resources.qrc">
+                <iconset>
                  <normaloff>:/plugins/Lamia/icons/link.svg</normaloff>:/plugins/Lamia/icons/link.svg</iconset>
                </attribute>
                <attribute name="title">
@@ -600,8 +600,8 @@ background-color: rgb(255, 255, 255);</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>405</width>
-     <height>21</height>
+     <width>702</width>
+     <height>26</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -678,6 +678,31 @@ background-color: rgb(255, 255, 255);</string>
    <addaction name="menuAide"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="toolBarFormCreation">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actiontoolbarnew"/>
+   <addaction name="actiontoolbarsave"/>
+  </widget>
+  <widget class="QToolBar" name="toolBarFormGeom">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actiontoobargeomaddpoint"/>
+  </widget>
   <action name="actionTre">
    <property name="text">
     <string>tre</string>
@@ -864,9 +889,24 @@ background-color: rgb(255, 255, 255);</string>
     <string>Tables et champs</string>
    </property>
   </action>
+  <action name="actiontoolbarsave">
+   <property name="text">
+    <string>toolbarsave</string>
+   </property>
+  </action>
+  <action name="actiontoolbarnew">
+   <property name="text">
+    <string>toolbarnew</string>
+   </property>
+  </action>
+  <action name="actiontoobargeomaddpoint">
+   <property name="text">
+    <string>toobargeomaddpoint</string>
+   </property>
+  </action>
  </widget>
  <resources>
-  <include location="../resources.qrc"/>
+  <include location="resources.qrc"/>
  </resources>
  <connections/>
 </ui>

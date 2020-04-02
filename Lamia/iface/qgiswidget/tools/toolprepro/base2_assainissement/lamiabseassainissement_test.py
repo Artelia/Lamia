@@ -1,10 +1,16 @@
-from ...lamia_abstracttool import AbstractLamiaTool
+from ...lamia_abstractformtool import AbstractLamiaFormTool
 import os
 import datetime
 
 
 
-class BaseAssainissementZonegeoTool(AbstractLamiaTool):
+class BaseAssainissementTestTool(AbstractLamiaFormTool):
 
-    def __init__(self):
-        super(BaseAssainissementZonegeoTool, self).__init__()
+    DBASETABLENAME = 'Infralineaire'
+    LOADFIRST = True
+
+    tooltreewidgetCAT = 'abba'
+    tooltreewidgetSUBCAT = 'Test'
+
+    def __init__(self,**kwargs):
+        super(BaseAssainissementTestTool, self).__init__(**kwargs)
