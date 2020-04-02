@@ -60,6 +60,10 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         self.mtoolpolygon = mapToolCapture(self.canvas, self.cadwdg,
                                         qgis.gui.QgsMapToolCapture.CapturePolygon)
 
+        self.pointEmitter = qgis.gui.QgsMapToolEmitPoint(self.canvas)
+
+    def _____________________________layersManagement(self):
+        pass
 
     def createLayers(self, dbaseparser):
 
@@ -71,10 +75,11 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         for rawtablename in dbaseparser.dbasetables:
             tablenames = [rawtablename, rawtablename + '_qgis', rawtablename + '_django']
             tabletypes = ['layer', 'layerqgis', 'layerdjango']
+            self.layers[rawtablename] = {}
             for i, tablename in enumerate(tablenames):
                 tablenamelower = tablename.lower()
                 tabletype = tabletypes[i]
-                self.layers[tablename] = {}
+                
                 #rawlayers
                 uri = qgis.core.QgsDataSourceUri()
                 if dbtype == 'spatialite':
@@ -90,7 +95,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                         uri.setDataSource(dbaseparser.pgschema, str(tablenamelower), 'geom', '', "pk_" + str(tablenamelower))
                     else:
                         uri.setDataSource(dbaseparser.pgschema, str(tablenamelower), None, '', "'pk_" + str(tablenamelower))
-                self.layers[tablename][tabletype] = qgis.core.QgsVectorLayer(uri.uri(), tablename, dbtype)
+                self.layers[rawtablename][tabletype] = qgis.core.QgsVectorLayer(uri.uri(), tablename, dbtype)
 
         self.dbaseqgiscrs = qgis.core.QgsCoordinateReferenceSystem()
         self.dbaseqgiscrs.createFromString('EPSG:' + str(dbaseparser.crsnumber))
@@ -223,3 +228,141 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             else:
                 self.editlayer.rollBack()
             self.qgislegendnode.removeLayer(self.editlayer)
+
+    def _____________________________maptoolsManagement(self):
+        pass
+
+    def toolsetChanged(self, newtool, oldtool=None):
+        # print('toolsetchanged', newtool,oldtool )
+        # self.closeEditFeature()
+        if newtool != self.pointEmitter :
+            self.pointEmitter.canvasClicked.disconnect()
+            self.canvas.mapToolSet.disconnect(self.toolsetChanged)
+
+    def _____________________________Functions(self):
+        pass
+
+    # def getNearestPk(self, dbasetable, dbasetablename, point, comefromcanvas=True):
+    def getNearestPk(self, tablename, point, comefromcanvas=True): 
+        """
+        Permet d'avoir le pk du feature le plus proche du qgsvectorlayer correspondant à dbasetablename
+        pas besoin de filtre sur les dates et versions on travaille avec le qgsectorlyaer de la table
+        qui dispose déjà d'un filtre en fonction de la date et de la version
+        :param dbasetable: la dbasetable considérée
+        :param dbasetablename:  le nom de la dbasetable
+        :param point: le point dont on veut connaitre le plus proche élément
+        :param comefromcanvas: spécifie sir le point provient du canvas qgis (nécessité de trasformation) ou non
+        :return: le pk de la table dbasetablenamele plus proche du point
+        """
+        debug = False
+        layertoprocess = self.layers[tablename]['layer']
+        # checking if layer is spatial one
+        # isspatial = dbasetable['layerqgis'].isSpatial()
+        isspatial = layertoprocess.isSpatial()
+        if not isspatial:
+            return None, None
+
+        # crs transform if needed
+        if debug: logging.getLogger("Lamia").debug('pointbefore %s', str(point))
+        if comefromcanvas:
+            if qgis.utils.iface is not None:
+                point2 = self.xformreverse.transform(point)
+            else:   #debug purpose
+                point2 = point
+        else:
+            point2 = point
+        if debug: logging.getLogger("Lamia").debug('pointafter %s', str(point2))
+
+        # spatialindex creation
+        # spindex = qgis.core.QgsSpatialIndex(dbasetable['layerqgis'].getFeatures())
+        spindex = qgis.core.QgsSpatialIndex(layertoprocess.getFeatures())
+        layernearestid = spindex.nearestNeighbor(point2, 1)
+
+        point2geom = qgis.core.QgsGeometry.fromPointXY(point2)
+        
+        """
+        if not self.revisionwork:
+            nearestfet = self.getLayerFeatureById(dbasetablename, layernearestid[0])
+        else:
+            nearestfet = self.getLayerFeatureByPk(dbasetablename, layernearestid[0])
+        """
+        nearestfet = layertoprocess.getFeature(layernearestid[0])
+        nearestfetgeom = nearestfet.geometry()
+
+        # if point layer : nearestNeighbor gives the right value
+        #if dbasetable['layerqgis'].geometryType() == 0:
+        if layertoprocess.geometryType() == 0:
+            disfrompoint = nearestfetgeom.distance(point2geom)
+            return layernearestid[0], disfrompoint
+
+        # if line or polygon layer : as the nearestNeighbor is with a bounding box, we need to filter
+        # the elements in this boundingbox
+        else:
+            # clean nearestfet geometry if not valid
+            if not nearestfetgeom.isGeosValid() and nearestfetgeom.type() == 1:
+                nearestfetgeom = qgis.core.QgsGeometry.fromPointXY(qgis.core.QgsPointXY(nearestfetgeom.asPolyline()[0]))
+
+            disfrompoint = nearestfetgeom.distance(point2geom)
+
+            if debug: logging.getLogger("Lamia").debug('nearestfetgeom - dist %s %s', str(nearestfetgeom.exportToWkt()), str(disfrompoint))
+            if disfrompoint < 0.1:
+                disfrompoint = 0.1
+
+            bboxtofilter = point2geom.buffer(disfrompoint * 1.2, 12).boundingBox()
+            idsintersectingbbox = spindex.intersects(bboxtofilter)
+
+            if debug: logging.getLogger("Lamia").debug('idsintersectingbbox %s', str(idsintersectingbbox))
+
+            # search nearest geom in bbox
+            distance = None
+            nearestindex = None
+            finalgeomispoint = False
+            distanceratio = 1.2
+
+            for intersectingid in idsintersectingbbox:
+                ispoint = False
+                #feat = self.getLayerFeatureByPk(dbasetablename, intersectingid)
+                feat = layertoprocess.getFeature(intersectingid)
+                featgeom = feat.geometry()
+
+                if debug: logging.getLogger("Lamia").debug('intersectingid %s  - is valid : %s - type : %s - multi : %s',
+                                                           str(intersectingid), str(featgeom.isGeosValid()),
+                                                           str(featgeom.type()), str(featgeom.isMultipart()))
+
+                if featgeom.isGeosValid():  # if not valid, return dist = -1...
+                    dist = featgeom.distance(point2geom)
+                else:  # point
+                    if featgeom.type() == 1 and not featgeom.isMultipart():
+
+                        ispoint = True
+                        if len(featgeom.asPolyline()) == 1:  # polyline of 1 point
+                            dist = qgis.core.QgsGeometry.fromPointXY(qgis.core.QgsPointXY(featgeom.asPolyline()[0])).distance(point2geom)
+                        elif len(featgeom.asPolyline()) == 2 and featgeom.asPolyline()[0] == featgeom.asPolyline()[1]:
+                            dist = qgis.core.QgsGeometry.fromPointXY(qgis.core.QgsPointXY(featgeom.asPolyline()[0])).distance(point2geom)
+                    else:
+                        continue
+                if debug: logging.getLogger("Lamia").debug('distance : %s - ispoint : %s', str(dist), str(ispoint))
+                # algo for keeping point in linestring layer as nearest
+                # if point is nearest than 1.2 x dist from nearest line
+                if debug: logging.getLogger("Lamia").debug('distance : %s - ispoint : %s - geomfinalispoint : %s - finaldist : %s' ,
+                                                           str(dist), str(ispoint), str(finalgeomispoint), str(distance))
+                if distance is None:
+                    distance = dist
+                    nearestindex = intersectingid
+                    finalgeomispoint = ispoint
+                elif not finalgeomispoint and ispoint and dist < distance*distanceratio:
+                    distance = dist
+                    nearestindex = intersectingid
+                    finalgeomispoint = True
+                elif finalgeomispoint and not ispoint and dist < distance/distanceratio:
+                    distance = dist
+                    nearestindex = intersectingid
+                    finalgeomispoint = False
+                elif finalgeomispoint == ispoint and dist < distance:
+                    distance = dist
+                    nearestindex = intersectingid
+                    finalgeomispoint = ispoint
+
+
+        if debug: logging.getLogger("Lamia").debug('nearestpk, dist %s %s', str(nearestindex), str(distance))
+        return nearestindex, distance

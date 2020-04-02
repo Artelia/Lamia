@@ -612,3 +612,4 @@ class AbstractDBaseParser():
 
     def _dateVersionConstraintSQL(self, specialdate=None):
         raise NotImplementedError
+

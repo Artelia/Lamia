@@ -45,6 +45,7 @@ import os, sys, logging, pprint, shutil, datetime, time
 from ..subdialogs.lamia_linkage import LinkageDialog
 # from ..maptool.mapTools import mapToolCapture TODO
 from .lamia_abstracttool import AbstractLamiaTool
+from .lamia_abstractformutils import FormToolUtils
 
 debugconnector = False
 
@@ -118,6 +119,20 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                                                     choosertreewidget=choosertreewidget, 
                                                     parentwidget=parentwidget, 
                                                     parent=parent)
+        # utils class
+        self.formutils = FormToolUtils(self)
+        # var for widgets loaded in self.toolwidgetmainlayout
+
+        # behaviour var
+        self.toolwidget = None          #the widget loaded in self.toolwidgetmainlayout
+        self.toolwidgetmain = None      #the widget defined in inherited class - become self.toolwidget when loaded in layout
+        self.toolwidgetadvanced = None  #the widget defined in inherited class - become self.toolwidget when loaded in layout
+        self.currentFeaturePK = None    # the pk of selected feature
+
+
+        self.formtoolwidgetconfdict = None       #dict used to link dbase column name to qtwidget objectname 
+        self.formtoolwidgetconfdictmain = None   #dict for toolwidgetmain
+        self.formtoolwidgetconfdictadvanced = None   #dict for toolwidgetadvanced
 
         if False:
             self._init_loadWidgetDependentResolution()
@@ -291,16 +306,78 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             if self.dbasetablename is not None:
                 self.initWidgets()
     
-    def _loadUIForm(self):
+    def manageWidgetToLoadInMainLayout(self):
+        if self.mainifacewidget.interfacemode in [0,4]:
+            if self.toolwidgetmain is None: #first loading
+                #former initFieldUI
+                self.initMainToolWidget()
+                if self.toolwidgetmain:
+                    self.toolwidget = self.toolwidgetmain 
+                    self.formtoolwidgetconfdict = self.formtoolwidgetconfdictmain
+                    self.formutils.initWidgetBehaviour()                                   
+            if self.toolwidgetmain is not None:    #non first loading
+                #former self.userwdg = self.userwdgfield
+                self.toolwidget = self.toolwidgetmain     
+                #former self.linkuserwdg = self.linkuserwdgfield              
+                self.formtoolwidgetconfdict = self.formtoolwidgetconfdictmain
+
+
+        elif self.mainifacewidget.interfacemode == 1:
+            if self.toolwidgetadvanced is None: #first loading
+                # former self.initDesktopUI()
+                self.initAdvancedToolWidget()
+                if self.toolwidgetadvanced:
+                    self.toolwidget = self.toolwidgetadvanced
+                    self.formtoolwidgetconfdict = self.formtoolwidgetconfdictadvanced
+                    self.formutils.initWidgetBehaviour(self.toolwidgetadvanced) 
+            if self.toolwidgetadvanced is not None:    #non first loading
+                # former self.userwdg = self.userwdgdesktop
+                self.toolwidget = self.toolwidgetadvanced
+                # former self.linkuserwdg = self.linkuserwdgdesktop
+                self.formtoolwidgetconfdict = self.formtoolwidgetconfdictadvanced
+            else:
+                self.toolwidget = self.toolwidgetmain
+                self.formtoolwidgetconfdict = self.formtoolwidgetconfdictmain
+            
+        self.layout().addWidget(self.toolwidget)
+
+    def initMainToolWidget(self):
         pass
-
-
+            
+    def initAdvancedToolWidget(self):
+        pass
 
     def updateToolbarOnToolFrameLoading(self):
         self.mainifacewidget.currenttoolwidget = self
         if self.mainifacewidget is not None:
             self.mainifacewidget.toolBarFormCreation.setEnabled(True)
             self.mainifacewidget.toolBarFormGeom.setEnabled(True)
+
+
+    #*************************************************************
+    # toolbar
+    #*************************************************************
+
+    def ____________________________________ToolBarActions(self):
+        pass
+
+    def selectFeature(self, **kwargs):
+        print('selectFeature', kwargs)
+        self.currentFeaturePK = kwargs.getattr('pk', None)
+        if self.currentFeaturePK:
+            pass
+
+        
+
+    def toolbarNew(self):
+        print('new1')
+
+    def toolbarSave(self):
+        print('save1')
+
+    def toolbarGeomAddPoint(self):
+        print('toolbarGeomAddPoint1')
+
 
     if False:
         def _init_loadWidgetDependentResolution(self):

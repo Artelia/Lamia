@@ -25,7 +25,7 @@ This file is part of LAMIA.
   * License-Filename: LICENSING.md
  """
 
-from qgis.PyQt.QtWidgets import (QWidget, QTreeWidgetItem, QAbstractItemView)
+from qgis.PyQt.QtWidgets import (QWidget, QTreeWidgetItem, QAbstractItemView, QHBoxLayout )
 import os, sys, logging
 
 from ..subdialogs.lamia_linkage import LinkageDialog
@@ -116,7 +116,6 @@ class AbstractLamiaTool(QWidget):
 
         """
         super(AbstractLamiaTool, self).__init__(parent)
-        self._loadUIForm()
 
         # ***** main var
         self.dbase = dbaseparser
@@ -127,18 +126,24 @@ class AbstractLamiaTool(QWidget):
 
         # var used by tooltreewidget
         if self.mainifacewidget is not None:
-            self.mainifacewidget.MaintreeWidget.currentItemChanged.connect(self.loadWidgetInToolFrame)
+            self.tooltreewidget.currentItemChanged.connect(self.loadWidgetInToolFrame)
         self.qtreewidgetitem = None     #the tool treewidgetitem in tooltreewidget
 
-    
-    def _loadUIForm(self):
-        pass
+        #qwidgetconf
+        toolwidgetmainlayout = QHBoxLayout()
+        toolwidgetmainlayout.setMargin(0)
+        self.setLayout(toolwidgetmainlayout)
+
+        self.toolwidget = None      #the widget loaded in self.toolwidgetmainlayout defined in inherited class
+        self.toolwidgetmain = None  #the widget defined in inherited class - become self.toolwidget when loaded in layout
 
     def ___________________widgetBehaviourWithToolTreeWidget(self):
         pass
 
-    def changeInterfaceMode(self, interfacename=None, preloadwidgfunc=None, postloadwidgfunc=None):
+    def changeInterfaceMode(self):
         self.manageLoadingInToolTreeWidget()
+        self.manageWidgetToLoadInMainLayout()
+
 
     def manageLoadingInToolTreeWidget(self):
         
@@ -157,6 +162,17 @@ class AbstractLamiaTool(QWidget):
                 self.loadWidgetinToolTree()
             else:
                 self.unloadWidgetinToolTree()
+
+    def manageWidgetToLoadInMainLayout(self):
+        if self.toolwidgetmain is None:
+            self.initMainToolWidget()                                   
+        if self.toolwidgetmain is not None:    
+            #former self.userwdg = self.userwdgfield
+            self.toolwidget = self.toolwidgetmain   
+        self.layout().addWidget(self.toolwidget)
+
+    def initMainToolWidget(self):
+        pass
 
     def loadWidgetinToolTree(self):
         """
@@ -243,6 +259,7 @@ class AbstractLamiaTool(QWidget):
 
             if param2 == self.qtreewidgetitem:  #the closed qtreewidgetitem
                 if debug and param2 : logging.getLogger("Lamia").debug('step 2 desactivation %s ', param2.text(0))
+                self.updateToolbarOnToolFrameUnloading()
                 self.unloadWidgetInToolFrame()
                 # self.postOnDesactivation()    TODO
                 # if param2 == param1:      TODO
@@ -348,3 +365,5 @@ class AbstractLamiaTool(QWidget):
             self.mainifacewidget.toolBarFormCreation.setEnabled(False)
             self.mainifacewidget.toolBarFormGeom.setEnabled(False)
 
+    def updateToolbarOnToolFrameUnloading(self):
+        pass

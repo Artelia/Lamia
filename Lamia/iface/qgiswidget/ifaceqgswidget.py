@@ -324,7 +324,7 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
             self.splitter_2.setSizes([80, 200])
 
         # ************** Init actions ******************
-        self._connectMenu()
+        self._connectMenuAndOthers()
         self._connectToolBar()
         self._readRecentDBase()
         self._updateRecentDBaseMenu()
@@ -1011,7 +1011,7 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         self.actiontoolbarnew.triggered.connect(self.toolbarNew)
         self.actiontoolbarsave.triggered.connect(self.toolbarSave)
 
-        self.actiontoobargeomaddpoint.triggered.connect(self.toolbarSave)
+        self.actiontoobargeomaddpoint.triggered.connect(self.toolbarGeomAddPoint)
 
 
     def toolbarNew(self):
@@ -1039,7 +1039,8 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
     def ____________________________________MenuActions(self):
         pass
 
-    def _connectMenu(self):
+    def _connectMenuAndOthers(self):
+        #file menu
         self.actionNouvelle_base.triggered.connect(self.newDBase)
         self.actionSpatialite.triggered.connect(self.loadDBase)
         self.actionPostgis.triggered.connect(self.loadDBase)
@@ -1057,3 +1058,139 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         self.action_Repertoire_photo.triggered.connect(self.setImageDir)
         #about menu
         self.actionAide.triggered.connect(self.openHelp)
+
+        #others
+        self.pushButton_selectfeat.clicked.connect(self.selectFeature)
+
+
+    def selectFeature(self):
+        pointemitter = self.qgiscanvas.pointEmitter
+        try:
+            pointemitter.canvasClicked.disconnect(self.selectPickedFeature)
+        except TypeError:
+            pass
+        try:
+            self.qgiscanvas.canvas.mapToolSet.disconnect(self.qgiscanvas.toolsetChanged)
+        except TypeError:
+            pass
+        pointemitter.canvasClicked.connect(self.selectPickedFeature)
+        self.qgiscanvas.canvas.mapToolSet.connect(self.qgiscanvas.toolsetChanged)
+        self.qgiscanvas.canvas.setMapTool(pointemitter)
+
+
+
+    def selectPickedFeature(self, point):
+        # print('select',point.x(), point.y())
+        debug = False
+        if debug: logging.getLogger("Lamia").debug('Start %s', str(point))
+
+        addselection = False
+        modifiers = QApplication.keyboardModifiers()
+        #print('modif')
+        #if modifiers == QtCore.Qt.ShiftModifier:
+        if modifiers == QtCore.Qt.ControlModifier:
+            # print('Ctrl+Click')
+            addselection = True
+
+        # self.currenttoolwidget
+        
+        if not (hasattr(self.currenttoolwidget, 'DBASETABLENAME') 
+                and self.currenttoolwidget.DBASETABLENAME is not None):
+            return
+        # getCurrentLayer
+        tablename = self.currenttoolwidget.DBASETABLENAME
+        #qgslayer = self.qgiscanvas.layers[tablename]['layerqgis']
+        #point2 = self.qgiscanvas.pointEmitter.toLayerCoordinates(qgslayer, point)
+        nearestpk, dist = self.qgiscanvas.getNearestPk(tablename,
+                                                        point,  #former point2
+                                                        comefromcanvas=False)
+        if nearestpk is None:   #no element in table
+            return
+
+        self.currenttoolwidget.selectFeature(pk=nearestpk)
+
+        if False:
+            pass
+            """
+            if self.stackedWidget_main.currentIndex() == 0  :
+
+                wdg = self.MaintabWidget.widget(0).layout().itemAt(0).widget()
+                layer = wdg.dbasetable['layerqgis']
+
+                if debug: logging.getLogger("Lamia").debug('dabsetable %s', str(wdg.dbasetablename))
+
+                point2 = self.pointEmitter.toLayerCoordinates(wdg.dbasetable['layerqgis'], point)
+
+                nearestpk, dist = self.dbase.getNearestPk(wdg.dbasetable,
+                                                        wdg.dbasetablename,
+                                                        point2,
+                                                        False)
+
+                if debug: logging.getLogger("Lamia").debug('nearest pk %s , dist %s', str(nearestpk), str(dist))
+
+                if nearestpk is None:   #no element in table
+                    return
+
+                if self.dbase.revisionwork:
+                    feat = self.dbase.getLayerFeatureByPk(wdg.dbasetablename, nearestpk)
+                    featid = feat['id_' + wdg.dbasetablename]
+                    # print('sel',featid)
+                else:
+                    featid = nearestpk
+
+                if wdg.linkedtreewidget is not None:
+                    items = wdg.linkedtreewidget.findItems(str(featid),QtCore.Qt.MatchExactly | QtCore.Qt.MatchRecursive)
+                    for item in items:
+                        if item.parent() is not None and item.parent().text(0) == wdg.dbasetablename:
+                            wdg.linkedtreewidget.setCurrentItem(item)
+                            #wdg.linkedtreewidget.setItemSelected(item, True)
+                            # print('ok')
+                            break
+
+                    # print('item', item.text(0))
+                    #self.linkedtreewidget.setSelectionMode(QAbstractItemView.ExtendedSelection)
+
+
+                if False:
+                    itemindex = wdg.comboBox_featurelist.findText(str(featid))
+                    wdg.comboBox_featurelist.setCurrentIndex(itemindex)
+
+
+
+            elif self.stackedWidget_main.currentIndex() == 1:
+
+                wdg = self.stackedWidget_main.widget(1).layout().itemAt(0).widget()
+                if False:
+                    wdg.selectPickedFeature(point)
+
+                layer = self.dbase.dbasetables[wdg.dbasetablename]['layerqgis']
+
+                point2 = self.pointEmitter.toLayerCoordinates(layer, point)
+
+                nearestpk, dist = self.dbase.getNearestPk(self.dbase.dbasetables[wdg.dbasetablename],
+                                                        wdg.dbasetablename,
+                                                        point2,
+                                                        False)
+
+                if debug: logging.getLogger("Lamia").debug('nearest pk %s , dist %s', str(nearestpk), str(dist))
+
+                if self.dbase.revisionwork:
+                    feat = self.dbase.getLayerFeatureByPk(wdg.dbasetablename, nearestpk)
+                    featid = feat['id_' + wdg.dbasetablename]
+                    # print('sel',featid)
+                else:
+                    featid = nearestpk
+
+                if wdg.linkedtreewidget is not None:
+                    items = wdg.linkedtreewidget.findItems(str(featid), QtCore.Qt.MatchExactly | QtCore.Qt.MatchRecursive)
+                    for item in items:
+                        if item.parent() is not None and item.parent().text(0) == wdg.dbasetablename:
+                            wdg.linkedtreewidget.setCurrentItem(item)
+                            # wdg.linkedtreewidget.setItemSelected(item, True)
+                            #print('ok')
+                            break
+
+                    #print('item', item.text(0))
+            """
+
+
