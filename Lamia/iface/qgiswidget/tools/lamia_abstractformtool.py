@@ -38,7 +38,7 @@ try:
 except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget, QTreeWidgetItem, QMessageBox, QFileDialog, QTableWidget,
                                      QHeaderView, QComboBox, QSpinBox,QCheckBox, QPushButton, QDateEdit,QDateTimeEdit, QTextEdit,
-                                     QDoubleSpinBox, QDialog, QVBoxLayout, QTreeWidget, QLineEdit, QCheckBox,
+                                     QDoubleSpinBox, QDialog, QVBoxLayout, QTreeWidget, QLineEdit, QCheckBox,QFrame,
                                      QLabel, QMessageBox, QTextBrowser, QTableWidgetItem,QApplication,QToolButton, QAbstractItemView)
 import os, sys, logging, pprint, shutil, datetime, time
 
@@ -123,12 +123,25 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         self.formutils = FormToolUtils(self)
         # var for widgets loaded in self.toolwidgetmainlayout
 
+        #layoutconf
+        #self.toolwidgetmainlayout = QVBoxLayout()
+        #self.toolwidgetmainlayout.setMargin(0)
+        #self.setLayout(self.toolwidgetmainlayout)
+        self.titlelabel = QLabel('temp')
+        #self.titlelabel.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.titlelabel.setAlignment(QtCore.Qt.AlignVCenter)
+        self.titlelabel.setFrameShape(QFrame.Panel)
+        #self.titlelabel.setFrameShadow(QFrame.Sunken)
+        self.titlelabel.setLineWidth(2)
+        self.layout().addWidget(self.titlelabel)
+        self.layout().update()
+
         # behaviour var
         self.toolwidget = None          #the widget loaded in self.toolwidgetmainlayout
         self.toolwidgetmain = None      #the widget defined in inherited class - become self.toolwidget when loaded in layout
         self.toolwidgetadvanced = None  #the widget defined in inherited class - become self.toolwidget when loaded in layout
         self.currentFeaturePK = None    # the pk of selected feature
-
+        self.tempgeometry = None        #the geometry edited while defining new geom
 
         self.formtoolwidgetconfdict = None       #dict used to link dbase column name to qtwidget objectname 
         self.formtoolwidgetconfdictmain = None   #dict for toolwidgetmain
@@ -339,7 +352,9 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                 self.toolwidget = self.toolwidgetmain
                 self.formtoolwidgetconfdict = self.formtoolwidgetconfdictmain
             
-        self.layout().addWidget(self.toolwidget)
+        self.layout().insertWidget(1,self.toolwidget)
+        #self.toolwidgetmainlayout.addWidget(self.toolwidget)
+        self.layout().update()
 
     def initMainToolWidget(self):
         pass
@@ -362,21 +377,156 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         pass
 
     def selectFeature(self, **kwargs):
-        print('selectFeature', kwargs)
-        self.currentFeaturePK = kwargs.getattr('pk', None)
+        debug = False
+        if debug: logging.getLogger("Lamia_unittest").debug('kwargs %s', str(kwargs))
+        self.currentFeaturePK = kwargs.get('pk', None)
         if self.currentFeaturePK:
             pass
+        if self.parentWidget is None and self.DBASETABLENAME is not None:
+            self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME]['layer'].removeSelection()
+            # self.dbasetable['layer'].removeSelection()
 
+        self.updateFormTitle()
+
+        resultdict = self.formutils.getDictValuesForWidget(featurepk=self.currentFeaturePK)
+        if debug: logging.getLogger("Lamia_unittest").debug('resultdict %s', str(resultdict))
+        self.formutils.applyResultDict(resultdict)
         
 
     def toolbarNew(self):
-        print('new1')
+        self.selectFeature()
 
     def toolbarSave(self):
-        print('save1')
+        self.formutils.saveFeature(featurepk=self.currentFeaturePK)
+        #reinit
+        layergeomtype = self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME]['layer'].geometryType()
+        self.mainifacewidget.qgiscanvas.rubberBand.reset(layergeomtype)
+        self.tempgeometry = None
+        self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME]['layerqgis'].repaintRequested.emit()
+        # self.mainifacewidget.qgiscanvas.canvas.refresh()
 
-    def toolbarGeomAddPoint(self):
-        print('toolbarGeomAddPoint1')
+    def toolbarGeom(self):
+        sender = self.mainifacewidget.sender()
+
+        if sender is not None and sender.objectName() != 'pushButton_rajoutPoint':
+            listpointinitialgeometry = []
+        if 'point' in sender.objectName():
+            capturetype = 0
+        elif 'line' in sender.objectName():
+            capturetype = 1
+        elif 'polygon' in sender.objectName():
+            capturetype = 2
+
+        self.mainifacewidget.qgiscanvas.captureGeometry(capturetype=capturetype,
+                                                        listpointinitialgeometry=listpointinitialgeometry,
+                                                        fctonstopcapture=self.setTempGeometry)
+
+
+    def ____________________________________ToolBarActionsFunctions(self):
+        pass
+
+    def updateFormTitle(self):
+        featureid = self.dbase.getValuesFromPk(self.DBASETABLENAME,
+                                               'id_' + self.DBASETABLENAME.lower(),
+                                                self.currentFeaturePK)
+        self.titlelabel.setText('{}({})'.format(self.DBASETABLENAME,
+                                                      featureid) )
+        self.updateFormTitleBackground()
+    
+    def updateFormTitleBackground(self):
+        if self.currentFeaturePK is not None:
+            self.titlelabel.setStyleSheet("QLabel { background-color : rgb(0, 255, 0) }")
+        else:
+            self.titlelabel.setStyleSheet("QLabel { background-color : rgb(255, 0, 0) }")
+
+
+    def setTempGeometry(self, 
+                        points, 
+                        comefromcanvas=True, 
+                        showinrubberband=True ):
+        """
+        Called when self.currentmaptool has finished capturing
+
+        Assign the geometry to self.tempgeometry
+
+        :param points: the list of points coming from the currentmaptool
+        :param comefromcanvas: True if come from canvas (need od reprojection)
+        :param showinrubberband: True if the temp geometry will be visible with the rubberband
+
+        """
+        debug = False
+
+        if debug: logging.getLogger("Lamia").debug('start points : %s %s', self.dbasetablename, points)
+
+        if self.mainifacewidget.qgiscanvas.currentmaptool is not None:
+            try:
+                #self.mainifacewidget.qgiscanvas.currentmaptool.stopCapture.disconnect(self.setTempGeometry)
+                print('disconnect')
+                self.mainifacewidget.qgiscanvas.currentmaptool.stopCapture.disconnect()
+            except TypeError:
+                pass
+
+        pointsmapcanvas = []
+        pointslayer=[]
+        """
+        if self.capturetype is None:
+            type = self.dbasetable['layer'].geometryType()
+        else:
+            type = self.capturetype
+        """
+        #capturetype = self.dbasetable['layer'].geometryType()
+        capturetype = self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME]['layer'].geometryType()
+
+        # case point in line layer
+        if len(points)==2 and points[0] == points[1]:
+            #self.rubberBand.reset(0)
+            self.mainifacewidget.qgiscanvas.createorresetRubberband(0)
+            capturetype = 0.5
+        elif len(points) == 1 and self.dbasetable['geom'] == 'LINESTRING':
+            points.append(points[0])
+            self.mainifacewidget.qgiscanvas.createorresetRubberband(0)
+            capturetype = 0.5
+        else:
+            self.mainifacewidget.qgiscanvas.createorresetRubberband(capturetype)
+
+        if debug: logging.getLogger("Lamia").debug('type/point : %s %s', str(capturetype), points)
+
+        if comefromcanvas:
+            pointsmapcanvas = points
+            for point in points:
+                pointslayer.append(self.mainifacewidget.qgiscanvas.xformreverse.transform(point))
+        else:
+            pointslayer = points
+            for point in points:
+                pointsmapcanvas.append(self.mainifacewidget.qgiscanvas.xform.transform(point))
+
+        if capturetype == 0:
+            geometryformap = qgis.core.QgsGeometry.fromPointXY(pointsmapcanvas[0])
+            geometryforlayer = qgis.core.QgsGeometry.fromPointXY(pointslayer[0])
+        elif capturetype == 0.5:
+            geometryformap = qgis.core.QgsGeometry.fromPointXY(pointsmapcanvas[0])
+            geometryforlayer = qgis.core.QgsGeometry.fromMultiPolylineXY([pointslayer])
+        elif capturetype == 1:
+            geometryformap = qgis.core.QgsGeometry.fromMultiPolylineXY([pointsmapcanvas])
+            geometryforlayer = qgis.core.QgsGeometry.fromMultiPolylineXY([pointslayer])
+        elif capturetype == 2:
+            geometryformap = qgis.core.QgsGeometry.fromPolygonXY([pointsmapcanvas])
+            geometryforlayer = qgis.core.QgsGeometry.fromPolygonXY([pointslayer])
+
+        #outside qgis bug
+        if showinrubberband:
+            self.mainifacewidget.qgiscanvas.rubberBand.addGeometry(geometryformap, None)
+            self.mainifacewidget.qgiscanvas.rubberBand.show()
+        self.tempgeometry = geometryforlayer
+        self.lamiageomChanged.emit()
+
+        if debug: logging.getLogger("Lamia").debug('end layer points : %s', pointslayer)
+        if debug: logging.getLogger("Lamia").debug('end canvas points : %s', pointsmapcanvas)
+        if debug: logging.getLogger("Lamia").debug('end tempgeom : %s', self.toWKT(self.tempgeometry))
+
+        #self.mtool = None
+
+
 
 
     if False:

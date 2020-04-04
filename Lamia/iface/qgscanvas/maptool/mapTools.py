@@ -128,6 +128,8 @@ class mapToolCapture(qgis.gui.QgsMapToolCapture):
         except AttributeError:  #qgis 3
             self.qgisversion_int = qgis.utils.Qgis.QGIS_VERSION_INT
 
+    def setMapPoints(self, pointlist):
+        self.mappoints = pointlist
 
     def canvasReleaseEvent(self, event):
         # print(self.mappoints)
@@ -146,7 +148,6 @@ class mapToolCapture(qgis.gui.QgsMapToolCapture):
 
             self.addVertex(mapPt)
             self.mappoints.append(mapPt)
-            # print(self.points(), mapPt)
 
             if int(str(self.qgisversion_int)[0:3]) < 220:
                 capturemodepoint = qgis.gui.QgsMapToolAdvancedDigitizing.CapturePoint
@@ -161,8 +162,9 @@ class mapToolCapture(qgis.gui.QgsMapToolCapture):
                         # self.stopCapture.emit(self.points())
                     else:       # run from pycharm
                         self.stopCapture.emit(self.mappoints)
-                    self.stopCapturing()
                     self.mappoints = []
+                    self.stopCapturing()
+                    
 
         elif event.button() == QtCore.Qt.RightButton:
             if qgis.utils.iface is not None:  # run from within qgis
@@ -170,8 +172,9 @@ class mapToolCapture(qgis.gui.QgsMapToolCapture):
                 #self.stopCapture.emit(self.points())
             else:  # run from pycharm
                 self.stopCapture.emit(self.mappoints)
-            self.stopCapturing()
             self.mappoints = []
+            self.stopCapturing()
+            
 
     if False:
         def transformCoordinates(self, canvasPt):

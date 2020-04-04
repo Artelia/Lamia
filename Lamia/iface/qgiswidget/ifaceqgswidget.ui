@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>702</width>
+    <width>501</width>
     <height>404</height>
    </rect>
   </property>
@@ -188,7 +188,7 @@
                      <string/>
                     </property>
                     <property name="pixmap">
-                     <pixmap>:/plugins/Lamia/icons/eye2.svg</pixmap>
+                     <pixmap resource="../../resources.qrc">:/plugins/Lamia/icons/eye2.svg</pixmap>
                     </property>
                     <property name="scaledContents">
                      <bool>false</bool>
@@ -214,7 +214,7 @@
                      <string>...</string>
                     </property>
                     <property name="icon">
-                     <iconset>
+                     <iconset resource="../../resources.qrc">
                       <normaloff>:/plugins/Lamia/icons/Calendar_icon.png</normaloff>:/plugins/Lamia/icons/Calendar_icon.png</iconset>
                     </property>
                     <property name="iconSize">
@@ -329,7 +329,7 @@ background-color: rgb(255, 255, 255);
                      <string/>
                     </property>
                     <property name="icon">
-                     <iconset>
+                     <iconset resource="../../resources.qrc">
                       <normaloff>:/plugins/Lamia/icons/select.png</normaloff>:/plugins/Lamia/icons/select.png</iconset>
                     </property>
                    </widget>
@@ -498,7 +498,7 @@ background-color: rgb(255, 255, 255);</string>
               </property>
               <widget class="QWidget" name="tab">
                <attribute name="icon">
-                <iconset>
+                <iconset resource="../../resources.qrc">
                  <normaloff>:/plugins/Lamia/icons/main.png</normaloff>:/plugins/Lamia/icons/main.png</iconset>
                </attribute>
                <attribute name="title">
@@ -518,7 +518,7 @@ background-color: rgb(255, 255, 255);</string>
               </widget>
               <widget class="QWidget" name="tab_2">
                <attribute name="icon">
-                <iconset>
+                <iconset resource="../../resources.qrc">
                  <normaloff>:/plugins/Lamia/icons/link.svg</normaloff>:/plugins/Lamia/icons/link.svg</iconset>
                </attribute>
                <attribute name="title">
@@ -600,7 +600,7 @@ background-color: rgb(255, 255, 255);</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>702</width>
+     <width>501</width>
      <height>26</height>
     </rect>
    </property>
@@ -702,6 +702,8 @@ background-color: rgb(255, 255, 255);</string>
     <bool>false</bool>
    </attribute>
    <addaction name="actiontoobargeomaddpoint"/>
+   <addaction name="actiontoobargeomaddline"/>
+   <addaction name="actiontoobargeomaddpolygon"/>
   </widget>
   <action name="actionTre">
    <property name="text">
@@ -890,23 +892,53 @@ background-color: rgb(255, 255, 255);</string>
    </property>
   </action>
   <action name="actiontoolbarsave">
+   <property name="icon">
+    <iconset resource="../../resources.qrc">
+     <normaloff>:/plugins/Lamia/icons/save.png</normaloff>:/plugins/Lamia/icons/save.png</iconset>
+   </property>
    <property name="text">
     <string>toolbarsave</string>
    </property>
   </action>
   <action name="actiontoolbarnew">
+   <property name="icon">
+    <iconset resource="../../resources.qrc">
+     <normaloff>:/plugins/Lamia/icons/Add_48x48.png</normaloff>:/plugins/Lamia/icons/Add_48x48.png</iconset>
+   </property>
    <property name="text">
     <string>toolbarnew</string>
    </property>
   </action>
   <action name="actiontoobargeomaddpoint">
+   <property name="icon">
+    <iconset resource="../../resources.qrc">
+     <normaloff>:/plugins/Lamia/icons/mActionCapturePoint.svg</normaloff>:/plugins/Lamia/icons/mActionCapturePoint.svg</iconset>
+   </property>
    <property name="text">
     <string>toobargeomaddpoint</string>
    </property>
   </action>
+  <action name="actiontoobargeomaddline">
+   <property name="icon">
+    <iconset resource="../../resources.qrc">
+     <normaloff>:/plugins/Lamia/icons/mActionCaptureLine.svg</normaloff>:/plugins/Lamia/icons/mActionCaptureLine.svg</iconset>
+   </property>
+   <property name="text">
+    <string>toobargeomaddline</string>
+   </property>
+  </action>
+  <action name="actiontoobargeomaddpolygon">
+   <property name="icon">
+    <iconset resource="../../resources.qrc">
+     <normaloff>:/plugins/Lamia/icons/mActionCapturePolygon.svg</normaloff>:/plugins/Lamia/icons/mActionCapturePolygon.svg</iconset>
+   </property>
+   <property name="text">
+    <string>toobargeomaddpolygon</string>
+   </property>
+  </action>
  </widget>
  <resources>
-  <include location="resources.qrc"/>
+  <include location="../../resources.qrc"/>
  </resources>
  <connections/>
 </ui>

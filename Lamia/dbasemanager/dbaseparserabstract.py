@@ -27,7 +27,7 @@ This file is part of LAMIA.
  """
 
 import  datetime 
-import os, sys, re
+import os, sys, re, logging
 
 from .dbconfigreader import DBconfigReader
 from .dbaseofflinemanager import DBaseOfflineManager
@@ -112,7 +112,7 @@ class AbstractDBaseParser():
     def connectToDBase(self):
         raise NotImplementedError
 
-    def getBDName(self):
+    def getDBName(self):
         raise NotImplementedError
 
     def disconnect(self):
@@ -333,32 +333,22 @@ class AbstractDBaseParser():
 
             dbasetable = self.dbasetables[table]
             #if field in dbasetable['fields'].keys() and 'Cst' in dbasetable['fields'][field].keys():
-            if not self.isAttributeNull(rawvalue):
+            if not dbaseutils.isAttributeNull(rawvalue):
                 if isinstance(rawvalue, int) or isinstance(rawvalue, long):
                     rawvalue = str(rawvalue)
-
                 try:
                     index = [value[1] for value in dbasetable['fields'][field]['Cst']].index(rawvalue)
                     return dbasetable['fields'][field]['Cst'][index][0]
                 except ValueError as e:
-                    if qgis.utils.iface is None:
-                        print('getConstraintTextFromRawValue error', table, field, e, [value[1] for value in dbasetable['fields'][field]['Cst']])
+                    logging.getLogger("Lamia_unittest").debug('error : %s %s %s %s', table, field, e, str([value[1] for value in dbasetable['fields'][field]['Cst']]))
                     return str(rawvalue)
 
             else:
                 return ''
         else:
-            if not self.isAttributeNull(rawvalue):
+            if not dbaseutils.isAttributeNull(rawvalue):
                 # print(table, field, rawvalue, type(rawvalue))
                 return rawvalue
-                if False:
-                    if sys.version_info.major == 2:
-                        if isinstance(rawvalue, unicode):
-                            return rawvalue.encode('utf-8')
-                        else:
-                            return rawvalue
-                else:
-                    return rawvalue
             else:
                 return ''
 
@@ -572,8 +562,6 @@ class AbstractDBaseParser():
             sql = sql[:-2]
 
         return sql
-
-
 
     def updateQueryTableNow(self, sqlin, date=None):
         

@@ -1,6 +1,7 @@
 from ...lamia_abstractformtool import AbstractLamiaFormTool
 import os
 import datetime
+import qgis
 from qgis.PyQt.QtWidgets import (QWidget)
 from qgis.PyQt import uic, QtCore
 
@@ -91,10 +92,159 @@ class BaseAssainissementTestTool(AbstractLamiaFormTool):
                                                                 'annee_debut_pose': self.toolwidgetmain.dateEdit_anneepose,
 
                                                             }}}
+            
+            self.toolwidgetmain.toolButton_calc_diam.clicked.connect(
+                lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_diametreNominal))
 
+            self.toolwidgetmain.toolButton_calc_haut.clicked.connect(
+                lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_haut))
+
+            self.toolwidgetmain.toolButton_prof_amont.clicked.connect(
+                lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_profamont))
+
+            self.toolwidgetmain.toolButton_prof_aval.clicked.connect(
+                lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_profaval))
+
+            self.toolwidgetmain.toolButton_pickam.clicked.connect(self.pickToNode)
+            self.toolwidgetmain.toolButton_pickav.clicked.connect(self.pickToNode)
 
     def initAdvancedToolWidget(self):
         pass
+
+
+    def _____________________widgetspecificfunctions(self):
+        pass
+
+    def pickToNode(self):
+        # print('pick',self.sender())
+        self.picksender = self.sender()
+        self.mainifacewidget.qgiscanvas.pointEmitter.canvasClicked.connect(self.picknearestnode)
+        self.mainifacewidget.qgiscanvas.canvas.setMapTool(self.mainifacewidget.qgiscanvas.pointEmitter)
+
+    def picknearestnode(self, point):
+
+        debug = False
+        typenode = False
+
+        if self.picksender == self.toolwidgetmain.toolButton_pickam:
+            editingnode = 1
+        elif self.picksender == self.toolwidgetmain.toolButton_pickav:
+            editingnode = 2
+
+        if debug: logging.getLogger("Lamia").debug('edit mode %s', str(editingnode))
+
+        #if self.toolwidgetmain.comboBox_branch.currentText()=='Faux' or editingnode == 1:
+        if self.toolwidgetmain.comboBox_branch.currentText() in ['Faux','Non'] or editingnode == 1:
+            nearestnodeid, distance  = self.mainifacewidget.qgiscanvas.getNearestPk('Noeud',
+                                                                                    point)
+            #nearestnodefet = self.dbase.getLayerFeatureByPk('Noeud', nearestnodeid)
+            nearestnodefet = self.mainifacewidget.qgiscanvas.layers['Noeud']['layer'].getFeature(nearestnodeid)
+            nearestnodepoint = nearestnodefet.geometry().asPoint()
+            typenode = 'NODE'
+        else:
+            nearestnodeid, distance  = self.mainifacewidget.qgiscanvas.getNearestPk('Infralineaire',
+                                                                                    point)
+            nearestnodeid2, distance2  = self.mainifacewidget.qgiscanvas.getNearestPk('Noeud',
+                                                                                        point)
+            if distance2 < distance * 1.1 :
+                #nearestnodefet = self.dbase.getLayerFeatureByPk('Noeud', nearestnodeid2)
+                nearestnodefet = self.mainifacewidget.qgiscanvas.layers['Noeud']['layer'].getFeature(nearestnodeid2)
+                nearestnodepoint = nearestnodefet.geometry().asPoint()
+                typenode = 'NODE'
+            else:
+                # nearestnodefet = self.dbase.getLayerFeatureByPk('Infralineaire', nearestnodeid)
+                nearestnodefet = self.mainifacewidget.qgiscanvas.layers['Infralineaire']['layer'].getFeature(nearestnodeid)
+                if self.dbase.qgsiface is not None:
+                    point = self.dbase.xformreverse.transform(point)
+                if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
+                    nearestnodepoint = nearestnodefet.geometry().nearestPoint(qgis.core.QgsGeometry.fromPoint(point)).asPoint()
+                else:
+                    nearestnodepoint = nearestnodefet.geometry().nearestPoint(qgis.core.QgsGeometry.fromPointXY(point)).asPoint()
+                typenode = 'INF'
+        # nearestnodeiddessys = nearestnodefet['id_descriptionsystem']
+        if typenode == 'NODE':
+            sql = "SELECT id_descriptionsystem FROM Noeud_qgis WHERE pk_noeud = " + str(nearestnodefet.id())
+        elif typenode == 'INF':
+            sql = "SELECT id_descriptionsystem FROM Infralineaire_qgis WHERE pk_infralineaire = " + str(nearestnodefet.id())
+        nearestnodeiddessys = self.dbase.query(sql)[0][0]
+
+        if debug: logging.getLogger("Lamia").debug('id,dist  %s %s', str(nearestnodeid), str(distance))
+
+        #nearestnodefet = self.dbase.getLayerFeatureById('Noeud', nearestnodeid)
+        #nearestnodepoint = nearestnodefet.geometry().asPoint()
+
+        if debug: logging.getLogger("Lamia").debug('id  %s', str(nearestnodepoint) )
+
+        #gui things
+        if editingnode == 1:
+            #self.toolwidgetmain.spinBox_lk_noeud1.setValue(nearestnodeid)
+            self.toolwidgetmain.spinBox_lk_noeud1.setValue(nearestnodeiddessys)
+        elif editingnode == 2:
+            #self.toolwidgetmain.spinBox_lk_noeud2.setValue(nearestnodeid)
+            self.toolwidgetmain.spinBox_lk_noeud2.setValue(nearestnodeiddessys)
+
+        # get the geometry before editing
+        tempgeom=[]
+        if self.tempgeometry is not None :
+            wkbtype = self.tempgeometry.wkbType()
+            if wkbtype == qgis.core.QgsWkbTypes.LineString :
+                tempgeom = self.tempgeometry.asPolyline()
+            elif wkbtype == qgis.core.QgsWkbTypes.MultiLineString :
+                tempgeom = self.tempgeometry.asMultiPolyline()[0]
+
+        elif self.currentFeaturePK is not None and self.tempgeometry is  None:
+            tempfeat = self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME]['layer'].getFeature(self.currentFeaturePK)
+            tempgeom = tempfeat.geometry().asPolyline()
+
+        if debug: logging.getLogger("Lamia").debug('geombeforeediting %s', tempgeom)
+
+        #modify geometry
+        if False and len(tempgeom)>0:
+            geomlist = self.checkGeometry(tempgeom)
+
+        if True:
+            if len(tempgeom) >= 2:
+                if editingnode == 1:
+                    tempgeom[0] = nearestnodepoint
+                    #geomlist[1] = tempgeom[-1]
+                    # geomlist.insert(0,nearestnodepoint )
+                elif editingnode == 2:
+                    tempgeom[-1] = nearestnodepoint
+                    #geomlist[0] = tempgeom[0]
+                    # geomlist.insert(-1, nearestnodepoint)
+
+            elif len(tempgeom) == 0:
+                tempgeom.insert(-1, nearestnodepoint)
+                tempgeom.insert(-1, nearestnodepoint)
+
+            elif len(tempgeom) == 1:
+                if editingnode == 1:
+                    # geomlist.insert(0,nearestnodepoint)
+                    tempgeom[0] = nearestnodepoint
+                    #geomlist[1] = tempgeom[0]
+                elif editingnode == 2:
+                    # geomlist.insert(-1,nearestnodepoint)
+                    #tempgeom[1] = nearestnodepoint
+                    tempgeom.insert(-1, nearestnodepoint)
+                    #geomlist[0] = tempgeom[0]
+
+            if debug: logging.getLogger("Lamia").debug('geomafterediting %s', tempgeom)
+
+
+            # update canvas
+            #self.createorresetRubberband(1)
+            self.mainifacewidget.qgiscanvas.createorresetRubberband(1)
+            self.setTempGeometry(tempgeom, False)
+
+        # disconnect all
+        self.mainifacewidget.qgiscanvas.canvas.unsetMapTool(self.mainifacewidget.qgiscanvas.pointEmitter)
+        self.picksender = None
+        try:
+            self.mainifacewidget.qgiscanvas.pointEmitter.canvasClicked.disconnect(self.picknearestnode)
+        except:
+            pass
+
+
 
 class UserUIField(QWidget):
     def __init__(self, parent=None):

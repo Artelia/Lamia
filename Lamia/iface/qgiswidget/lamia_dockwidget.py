@@ -52,15 +52,11 @@ import time
 
 from qgis.PyQt import QtGui, uic, QtCore
 from qgis.PyQt.QtCore import pyqtSignal
-from .InspectionDigue_windowwidget import InspectiondigueWindowWidget
+from .ifaceqgswidget import LamiaWindowWidget
 try:
     from qgis.PyQt.QtGui import QDockWidget, QMainWindow
 except:
     from qgis.PyQt.QtWidgets import QDockWidget, QMainWindow
-"""
-FORM_CLASS, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'InspectionDigue_dockwidget_base2.ui'))
-"""
 
 class InspectiondigueDockWidget(QDockWidget):
     """!
@@ -77,7 +73,7 @@ class InspectiondigueDockWidget(QDockWidget):
         """
         super(InspectiondigueDockWidget, self).__init__(parent)
         ## The windowwidget put inside te dockwidget
-        self.windowwidget = InspectiondigueWindowWidget(canvas,self)
+        self.windowwidget = LamiaWindowWidget(canvas,self)
 
         if True:
             stylesheet = """
@@ -92,10 +88,6 @@ class InspectiondigueDockWidget(QDockWidget):
         self.setWidget(self.windowwidget)
         self.setWindowTitle('Lamia')
 
-        if False:
-            p = self.windowwidget.palette()
-            p.setColor(self.windowwidget.Window(), QtCore.Qt.black)
-            self.windowwidget.setPalette(p)
 
 
 

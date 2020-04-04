@@ -1,1 +1,34 @@
-<RCC/>
+<RCC>
+    <qresource prefix="/plugins/Lamia" >
+        <file>icons/icon.png</file>
+        <file>icons/icon_petit.png</file>
+        <file>icons/profil_digue.png</file>
+        <file>icons/Add_48x48.png</file>
+        <file>icons/Delete_48x48.png</file>
+        <file>icons/select.png</file>
+        <file>icons/Zoom_48x48.png</file>
+        <file>icons/Copy_48x48.png</file>
+        <file>icons/add_elements2.png</file>
+        <file>icons/save.png</file>
+        <file>icons/Find_32x32.png</file>
+        <file>icons/magic-wand.png</file>
+        <file>icons/mActionCapturePoint.svg</file>
+        <file>icons/mActionCaptureLine.svg</file>
+        <file>icons/mActionCapturePolygon.svg</file>
+        <file>icons/mActionAddNodesItem1.svg</file>
+        <file>icons/mActionAddNodesItemGPS.svg</file>
+        <file>icons/mActionVertexTool2.svg</file>
+        <file>icons/numpad.png</file>
+        <file>icons/link.svg</file>
+        <file>icons/main.png</file>
+        <file>icons/eye2.svg</file>
+        <file>icons/Calendar_icon.png</file>
+        <file>icons/deselect.png</file>
+        <file>icons/logo2.png</file>
+        <file>icons/logo3.png</file>
+        <file>icons/Copy.png</file>
+        <file>icons/Copyselection.png</file>
+        <file>icons/Paste.png</file>
+        <file>icons/print.png</file>
+    </qresource>
+</RCC>

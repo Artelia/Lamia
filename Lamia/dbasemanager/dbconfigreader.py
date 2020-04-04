@@ -34,7 +34,7 @@ class DBconfigReader():
         self.dbase = dbaseparser
         self.dbasetables = {}
         self.variantespossibles=[]
-        self.variante = None
+        # self.variante = None
         self.baseversion = None
         self.workversion = None
 
@@ -363,27 +363,27 @@ class DBconfigReader():
 
         if colindexvariante is None:
             colindexvariante = None
-            if self.variante is None:
+            if self.dbase.variante is None:
                 colindexvariante = 5
             else:
                 if self.dbasetables[tablename]['row_variantes'] >= 0 :
                     rowvariantes = self.dbasetables[tablename]['row_variantes']
-                    if self.variante =='Lamia':
+                    if self.dbase.variante =='Lamia':
                         colindexvariante = 5
                     else:
                         for col in range(sheet.ncols):
                             try:
-                                if (sheet.cell_value(rowvariantes,col ) == self.variante
+                                if (sheet.cell_value(rowvariantes,col ) == self.dbase.variante
                                         and sheet.cell_value(xlrow,col ) != '' ):
                                     colindexvariante = col
                                     # print('colindexvariante', tablename, fieldname, colindexvariante)
                                     break
                             except:
-                                print('error',tablename,fieldname ,self.variante )
-                        if colindexvariante is None:
-                            colindexvariante = 5
-
-
+                                print('error',tablename,fieldname ,self.dbase.variante )
+                        #if colindexvariante is None:
+                        #    colindexvariante = 5
+        if colindexvariante is None:
+            colindexvariante = 5
 
         #if unicode(sheet.cell_value(xlrow, colindexvariante)).strip() != '':
         if sheet.cell_value(xlrow, colindexvariante).strip() != '':

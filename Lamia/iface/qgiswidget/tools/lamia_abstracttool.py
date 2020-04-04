@@ -25,10 +25,11 @@ This file is part of LAMIA.
   * License-Filename: LICENSING.md
  """
 
-from qgis.PyQt.QtWidgets import (QWidget, QTreeWidgetItem, QAbstractItemView, QHBoxLayout )
+from qgis.PyQt.QtWidgets import (QWidget, QTreeWidgetItem, QAbstractItemView, QVBoxLayout )
 import os, sys, logging
 
 from ..subdialogs.lamia_linkage import LinkageDialog
+from .subwidgets.lamia_numpad import NumPadDialog
 # from ..maptool.mapTools import mapToolCapture TODO
 
 class AbstractLamiaTool(QWidget):
@@ -130,12 +131,16 @@ class AbstractLamiaTool(QWidget):
         self.qtreewidgetitem = None     #the tool treewidgetitem in tooltreewidget
 
         #qwidgetconf
-        toolwidgetmainlayout = QHBoxLayout()
+        toolwidgetmainlayout = QVBoxLayout()
         toolwidgetmainlayout.setMargin(0)
         self.setLayout(toolwidgetmainlayout)
 
         self.toolwidget = None      #the widget loaded in self.toolwidgetmainlayout defined in inherited class
         self.toolwidgetmain = None  #the widget defined in inherited class - become self.toolwidget when loaded in layout
+
+        # subwidgets
+        self.numpaddialog = NumPadDialog()
+
 
     def ___________________widgetBehaviourWithToolTreeWidget(self):
         pass
@@ -143,7 +148,6 @@ class AbstractLamiaTool(QWidget):
     def changeInterfaceMode(self):
         self.manageLoadingInToolTreeWidget()
         self.manageWidgetToLoadInMainLayout()
-
 
     def manageLoadingInToolTreeWidget(self):
         
@@ -367,3 +371,12 @@ class AbstractLamiaTool(QWidget):
 
     def updateToolbarOnToolFrameUnloading(self):
         pass
+
+    def _____________________subwidgets(self):
+        pass
+
+    def showNumPad(self, finalwdg):
+        self.numpaddialog.exec_()
+        number = self.numpaddialog.dialogIsFinished()
+        if number:
+            finalwdg.setValue(number)

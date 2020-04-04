@@ -32,6 +32,13 @@ class DBaseTest(unittest.TestCase):
 
         self.wind.loadDBase(dbtype='Spatialite', slfile='/usr/src/Lamia/tests/lamia_test2/test01.sqlite')
         # self.wind.setVisualMode(visualmode=1)
+        #selectfeaturetest
+        wdglist = self.wind.toolwidgets['toolprepro']['Infralineaire']
+        if isinstance(wdglist, list):
+            for tt in wdglist:
+                self.wind.MaintreeWidget.setCurrentItem(tt.qtreewidgetitem)
+                tt.selectFeature(pk=7158)
+
         self.mainwin.exec_()
         self._exitQGis()
 
@@ -140,8 +147,16 @@ class UserUI(QDialog):
         uic.loadUi(uipath, self)
 
 if __name__ == "__main__":
-    logging.basicConfig( stream=sys.stderr )
-    logging.getLogger( "Lamia_unittest" ).setLevel( logging.DEBUG )
+    #logging.basicConfig( stream=sys.stderr )
+    #logging.getLogger( "Lamia_unittest" ).setLevel( logging.DEBUG )
+
+    logger = logging.getLogger("Lamia_unittest")
+    logger.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(asctime)s :: %(levelname)s :: %(module)s :: %(funcName)s :: %(message)s')
+    stream_handler = logging.StreamHandler(sys.stdout)
+    stream_handler.setLevel(logging.DEBUG)
+    stream_handler.setFormatter(formatter)
+    logger.addHandler(stream_handler)
     unittest.main()
         
 

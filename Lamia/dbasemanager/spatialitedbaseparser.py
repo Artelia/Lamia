@@ -51,7 +51,7 @@ class SpatialiteDBaseParser(AbstractDBaseParser):
         self.connSLITE.close()
 
 
-    def getBDName(self):
+    def getDBName(self):
         return os.path.basename(self.spatialitefile)
 
     def generateSQLTableCreationFromDBConfig(self, name, dbasetable, crs):

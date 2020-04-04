@@ -49,6 +49,7 @@ import logging
 import math
 import platform
 import subprocess
+"""
 logger = logging.getLogger("Lamia")
 logger.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s :: %(levelname)s :: %(module)s :: %(funcName)s :: %(message)s')
@@ -56,7 +57,7 @@ stream_handler = logging.StreamHandler(sys.stdout)
 stream_handler.setLevel(logging.DEBUG)
 stream_handler.setFormatter(formatter)
 logger.addHandler(stream_handler)
-
+"""
 debugtime = False
 
 
@@ -1011,26 +1012,25 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         self.actiontoolbarnew.triggered.connect(self.toolbarNew)
         self.actiontoolbarsave.triggered.connect(self.toolbarSave)
 
-        self.actiontoobargeomaddpoint.triggered.connect(self.toolbarGeomAddPoint)
+        self.actiontoobargeomaddpoint.triggered.connect(self.toolbarGeom)
+        self.actiontoobargeomaddline.triggered.connect(self.toolbarGeom)
+        self.actiontoobargeomaddpolygon.triggered.connect(self.toolbarGeom)
 
 
     def toolbarNew(self):
-        print('New')
+        logging.getLogger("Lamia_unittest").debug('called')
         if self.currenttoolwidget and hasattr(self.currenttoolwidget,'toolbarNew'):
-            print(self.currenttoolwidget.objectName())
             self.currenttoolwidget.toolbarNew()
 
     def toolbarSave(self):
-        print('Save')
+        logging.getLogger("Lamia_unittest").debug('called')
         if self.currenttoolwidget and hasattr(self.currenttoolwidget,'toolbarSave'):
-            print(self.currenttoolwidget.objectName())
             self.currenttoolwidget.toolbarSave()
 
-    def toolbarGeomAddPoint(self):
-        print('AddPoint')
-        if self.currenttoolwidget and hasattr(self.currenttoolwidget,'toolbarGeomAddPoint'):
-            print(self.currenttoolwidget.objectName())
-            self.currenttoolwidget.toolbarGeomAddPoint()
+    def toolbarGeom(self):
+        logging.getLogger("Lamia_unittest").debug('called')
+        if self.currenttoolwidget and hasattr(self.currenttoolwidget,'toolbarGeom'):
+            self.currenttoolwidget.toolbarGeom()
         
     #*************************************************************
     # menu

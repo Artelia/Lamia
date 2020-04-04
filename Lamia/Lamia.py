@@ -32,7 +32,7 @@ Class
 
 
 import qgis
-from .dialog.InspectionDigue_dockwidget import InspectiondigueDockWidget
+from .iface.qgiswidget.lamia_dockwidget import InspectiondigueDockWidget
 
 
 

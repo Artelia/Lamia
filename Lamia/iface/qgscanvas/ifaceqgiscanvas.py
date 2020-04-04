@@ -26,7 +26,7 @@ This file is part of LAMIA.
  """
 import os, sys, io
 import qgis, qgis.core, qgis.utils, qgis.gui
-
+from qgis.PyQt import QtGui
 import Lamia
 from ..ifaceabstractcanvas import LamiaAbstractIFaceCanvas
 from .maptool.mapTools import mapToolCapture, mapToolEdit
@@ -44,9 +44,12 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         self.mtoolpoint = None
         self.mtoolline = None
         self.mtoolpolygon = None
+        self.rubberBand = None
+
 
         #behaviour
         self.editingrawlayer = False
+        self.currentmaptool = None  #the maptool in use
 
     def setCanvas(self,qgscanvas):
         self.canvas = qgscanvas
@@ -238,6 +241,87 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         if newtool != self.pointEmitter :
             self.pointEmitter.canvasClicked.disconnect()
             self.canvas.mapToolSet.disconnect(self.toolsetChanged)
+
+
+    def captureGeometry(self, 
+                        capturetype=0,
+                        fctonstopcapture=None,
+                        listpointinitialgeometry=[]):
+        """
+        Method called when capturing geometry is needed (add/extent point, line, polygon...)
+        Launch the capture tool
+
+        :param connectint: Catching widget signal
+        :param listpointinitialgeometry: list of geometry to be extended, if new empty list
+        :param type: geom type (point, line, polygone)
+        """
+        """
+        source = self.sender()
+
+        if source is not None and source.objectName() != 'pushButton_rajoutPoint':
+            listpointinitialgeometry = []
+        
+
+        if type is None:
+            if 'Point' in source.objectName():
+                type = 0
+            elif 'Line' in source.objectName():
+                type = 1
+            elif 'Polygon' in source.objectName():
+                type = 2
+        """
+        print( 
+                        listpointinitialgeometry, 
+                        # type=None,
+                        capturetype,
+                        fctonstopcapture)
+        self.createorresetRubberband(capturetype)
+
+        #try:
+        if capturetype == qgis.core.QgsWkbTypes.PointGeometry:
+            self.currentmaptool = self.mtoolpoint
+        elif capturetype == qgis.core.QgsWkbTypes.LineGeometry:
+            self.currentmaptool = self.mtoolline
+        elif capturetype == qgis.core.QgsWkbTypes.PolygonGeometry:
+            self.currentmaptool = self.mtoolpolygon
+        else:
+            return
+        """
+        except:
+            if capturetype == qgis.core.QGis.Point:
+                self.currentmaptool = self.mtoolpoint
+            elif capturetype == qgis.core.QGis.Line:
+                self.currentmaptool = self.mtoolline
+            elif capturetype == qgis.core.QGis.Polygon:
+                self.currentmaptool = self.mtoolpolygon
+            else:
+                return
+        """
+        if self.canvas.mapTool() != self.currentmaptool:
+            self.canvas.setMapTool(self.currentmaptool)
+        #self.currentmaptool.stopCapture.connect(self.setTempGeometry)
+        self.currentmaptool.stopCapture.connect(fctonstopcapture)
+        self.currentmaptool.setMapPoints(listpointinitialgeometry)
+        #self.currentmaptool.mappoints = listpointinitialgeometry
+        self.currentmaptool.startCapturing()
+
+    def ______________________________RubberbandManagement(self):
+        pass
+
+    def createorresetRubberband(self,type=0):
+        """
+        Reset the rubberband
+
+        :param type: geom type
+        """
+        if self.rubberBand is not None:
+            self.rubberBand.reset(type)
+        else:
+            self.rubberBand = qgis.gui.QgsRubberBand(self.canvas,type)
+            self.rubberBand.setWidth(5)
+            self.rubberBand.setColor(QtGui.QColor("magenta"))
+
+
 
     def _____________________________Functions(self):
         pass
