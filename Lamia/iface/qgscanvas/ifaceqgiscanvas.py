@@ -24,7 +24,7 @@ This file is part of LAMIA.
   * SPDX-License-Identifier: GPL-3.0-or-later
   * License-Filename: LICENSING.md
  """
-import os, sys, io
+import os, sys, io, logging
 import qgis, qgis.core, qgis.utils, qgis.gui
 from qgis.PyQt import QtGui
 import Lamia
@@ -36,15 +36,16 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
     def __init__(self, canvas=None):
         LamiaAbstractIFaceCanvas.__init__(self)
         self.canvas = canvas
+        self.mtoolpoint = None
+        self.mtoolline = None
+        self.mtoolpolygon = None
+        self.rubberBand = None
         if canvas is None and qgis.utils.iface is not None:
             self.setCanvas(qgis.utils.iface.mapCanvas())
         
         self.dbaseqgiscrs = None
         self.layers = {}
-        self.mtoolpoint = None
-        self.mtoolline = None
-        self.mtoolpolygon = None
-        self.rubberBand = None
+
 
 
         #behaviour
@@ -114,10 +115,10 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                 lamialegendgroup = root.insertGroup(0, groupname)
             self.qgislegendnode = lamialegendgroup
 
-
-            for tablename in self.dbase.dbasetables:
-                qgis.core.QgsProject.instance().addMapLayer(self.dbase.dbasetables[tablename]['layerqgis'], False)
-                lamialegendgroup.addLayer(self.dbase.dbasetables[tablename]['layerqgis'])
+            dbasetables = self.layers
+            for tablename in dbasetables:
+                qgis.core.QgsProject.instance().addMapLayer(dbasetables[tablename]['layerqgis'], False)
+                lamialegendgroup.addLayer(dbasetables[tablename]['layerqgis'])
 
         else:
             layerstoadd = []
@@ -128,6 +129,13 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             self.canvas.setLayers(layerstoadd)
             self.canvas.setExtent(dbasetables['Infralineaire']['layer'].extent())
             self.canvas.refresh()
+
+
+    def unloadLayersInCanvas(self):
+        if self.qgislegendnode is not None:
+            self.qgislegendnode.removeAllChildren()
+            root = qgis.core.QgsProject.instance().layerTreeRoot()
+            root.removeChildNode(self.qgislegendnode)
 
 
     def applyStyle(self, worktype, styledir):
@@ -270,14 +278,14 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             elif 'Polygon' in source.objectName():
                 type = 2
         """
-        print( 
-                        listpointinitialgeometry, 
-                        # type=None,
-                        capturetype,
-                        fctonstopcapture)
+        debug = False
+        if debug: 
+            logging.getLogger("Lamia_unittest").debug('\n  %s \n  %s \n  %s',
+                                                        str(listpointinitialgeometry), 
+                                                        # type=None,
+                                                        str(capturetype),
+                                                        str(fctonstopcapture))      
         self.createorresetRubberband(capturetype)
-
-        #try:
         if capturetype == qgis.core.QgsWkbTypes.PointGeometry:
             self.currentmaptool = self.mtoolpoint
         elif capturetype == qgis.core.QgsWkbTypes.LineGeometry:
@@ -286,17 +294,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             self.currentmaptool = self.mtoolpolygon
         else:
             return
-        """
-        except:
-            if capturetype == qgis.core.QGis.Point:
-                self.currentmaptool = self.mtoolpoint
-            elif capturetype == qgis.core.QGis.Line:
-                self.currentmaptool = self.mtoolline
-            elif capturetype == qgis.core.QGis.Polygon:
-                self.currentmaptool = self.mtoolpolygon
-            else:
-                return
-        """
+
         if self.canvas.mapTool() != self.currentmaptool:
             self.canvas.setMapTool(self.currentmaptool)
         #self.currentmaptool.stopCapture.connect(self.setTempGeometry)

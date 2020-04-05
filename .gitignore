@@ -10,3 +10,5 @@
 Lamia_*.zip
 tests/temp/
 tests/lamia_test*
+**/*backup*
+**/*caduc*

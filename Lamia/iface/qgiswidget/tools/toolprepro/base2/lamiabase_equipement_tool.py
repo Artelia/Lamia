@@ -24,35 +24,29 @@ This file is part of LAMIA.
   * License-Filename: LICENSING.md
  """
 
-
-
-from qgis.PyQt import uic, QtCore
-
-try:
-    from qgis.PyQt.QtGui import (QWidget)
-except ImportError:
-    from qgis.PyQt.QtWidgets import (QWidget)
-#from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
-from ...Lamia_abstract_tool import AbstractLamiaTool
-
-from .lamiabase_photo_tool import BasePhotoTool
-# from .lamiadigue_rapport_tool import RapportTool
-# from .lamiadigue_tronconemprise_tool  import TronconEmpriseTool
-from .lamiabase_croquis_tool import BaseCroquisTool
 import os
 import datetime
+from qgis.PyQt import uic, QtCore
+from qgis.PyQt.QtWidgets import (QWidget)
 
+from ...lamia_abstractformtool import AbstractLamiaFormTool
+from .lamiabase_photo_tool import BasePhotoTool
+from .lamiabase_croquis_tool import BaseCroquisTool
 
+class BaseEquipementTool(AbstractLamiaFormTool):
 
-class BaseEquipementTool(AbstractLamiaTool):
-
+    DBASETABLENAME = 'Equipement'
     LOADFIRST = True
-    dbasetablename = 'Equipement'
-    specialfieldui = []
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
-        super(BaseEquipementTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
+    tooltreewidgetCAT = 'Description'
+    tooltreewidgetSUBCAT = 'Equipement'
+    tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_equipement_tool_icon.svg')
+
+    def __init__(self, **kwargs):
+        super(BaseEquipementTool, self).__init__(**kwargs)
+        self.instencekwargs = kwargs
         
+        """
     def initTool(self):
         # ****************************************************************************************
         # Main spec
@@ -81,47 +75,45 @@ class BaseEquipementTool(AbstractLamiaTool):
         # ****************************************************************************************
         #properties ui
         pass
+        """
 
-    def initFieldUI(self):
+
+    def initMainToolWidget(self):
+
+        self.toolwidgetmain = UserUI()
+        self.formtoolwidgetconfdictmain = {'Equipement' : {'linkfield' : 'id_equipement',
+                                            'widgets' : {'categorie': self.toolwidgetmain.comboBox_cat}},
+                                            'Objet' : {'linkfield' : 'id_objet',
+                                                        'widgets' : {
+                                                                        'commentaire': self.toolwidgetmain.textBrowser_comm}},
+                                            'Descriptionsystem' : {'linkfield' : 'id_descriptionsystem',
+                                                        'widgets' : {}}}
+        self.toolwidgetmain.comboBox_cat.currentIndexChanged.connect(self.changeCategorie)
+
+
         # ****************************************************************************************
-        #   userui Field
-        if self.userwdgfield is None:
-            # ****************************************************************************************
-            # userui
-            self.userwdgfield = UserUI()
-            self.linkuserwdgfield = {'Equipement' : {'linkfield' : 'id_equipement',
-                                             'widgets' : {'categorie': self.userwdgfield.comboBox_cat}},
-                                'Objet' : {'linkfield' : 'id_objet',
-                                          'widgets' : {
-                                                          'commentaire': self.userwdgfield.textBrowser_comm}},
-                                'Descriptionsystem' : {'linkfield' : 'id_descriptionsystem',
-                                          'widgets' : {}}}
-            self.userwdgfield.comboBox_cat.currentIndexChanged.connect(self.changeCategorie)
+        # child widgets
+        self.dbasechildwdgfield = []
 
+        if self.parentWidget is None:
+            self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(**self.instencekwargs)
+            self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
 
-            # ****************************************************************************************
-            # child widgets
-            self.dbasechildwdgfield = []
-
-            if self.parentWidget is None:
-                self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
-                self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
-
-                self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
-                self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+            self.propertieswdgCROQUIS = BaseCroquisTool(**self.instencekwargs)
+            self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
 
 
 
     def changeCategorie(self,intcat):
 
-        pagecount = self.userwdg.stackedWidget.count()
+        pagecount = self.toolwidget.stackedWidget.count()
         if intcat >= pagecount -1 :
-            self.userwdg.stackedWidget.setCurrentIndex(pagecount -1)
+            self.toolwidget.stackedWidget.setCurrentIndex(pagecount -1)
         else:
-            self.userwdg.stackedWidget.setCurrentIndex(intcat)
+            self.toolwidget.stackedWidget.setCurrentIndex(intcat)
 
-
+    """
     def postOnActivation(self):
         pass
 
@@ -133,12 +125,14 @@ class BaseEquipementTool(AbstractLamiaTool):
         strid = 'id_' + self.dbasetablename.lower()
         sqlin += ' ORDER BY ' + strid
         return sqlin
+    """
 
 
-
-    def postInitFeatureProperties(self, feat):
+    # def postInitFeatureProperties(self, feat):
+    def postSelectFeature(self):
         pass
-
+    
+    """
     def createParentFeature(self):
         pkobjet = self.dbase.createNewObjet()
 
@@ -184,17 +178,17 @@ class BaseEquipementTool(AbstractLamiaTool):
                 sql += " WHERE pk_equipement = " + str(pkequip)
                 self.dbase.query(sql)
                 self.dbase.commit()
+    """
 
 
 
 
 
 
-
-    def postSaveFeature(self, boolnewfeature):
+    def postSaveFeature(self, savedfeaturepk=None):
         pass
 
-
+    """
     def deleteParentFeature(self):
 
         sql = "SELECT pk_objet, pk_descriptionsystem FROM Equipement_qgis WHERE pk_equipement = " + str(self.currentFeaturePK)
@@ -212,7 +206,7 @@ class BaseEquipementTool(AbstractLamiaTool):
 
 
         return True
-
+    """
 
 
 class UserUI(QWidget):

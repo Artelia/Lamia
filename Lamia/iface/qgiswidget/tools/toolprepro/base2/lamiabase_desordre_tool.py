@@ -33,8 +33,8 @@ try:
     from qgis.PyQt.QtGui import (QWidget)
 except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget)
-#from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
-from ...Lamia_abstract_tool import AbstractLamiaTool
+
+from ...lamia_abstractformtool import AbstractLamiaFormTool
 
 from .lamiabase_observation_tool import BaseObservationTool
 import os
@@ -44,15 +44,19 @@ import qgis
 
 
 
-class BaseDesordreTool(AbstractLamiaTool):
+class BaseDesordreTool(AbstractLamiaFormTool):
 
+    DBASETABLENAME = 'Desordre'
     LOADFIRST = True
-    dbasetablename = 'Desordre'
-    specialfieldui = []
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None, parentwidget=None, parent=None):
-        super(BaseDesordreTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
-        
+    tooltreewidgetCAT = 'Etat'
+    tooltreewidgetSUBCAT = 'Desordre'
+    tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_desordre_tool_icon.png')
+
+    def __init__(self, **kwargs):
+        super(BaseDesordreTool, self).__init__(**kwargs)
+    
+    """
     def initTool(self):
         # ****************************************************************************************
         # Main spec
@@ -64,14 +68,7 @@ class BaseDesordreTool(AbstractLamiaTool):
         self.LineENABLED = True
         # self.PolygonEnabled = True
         self.magicfunctionENABLED = True
-        """
-        self.linkagespec = {'Tcdesordredescriptionsystem' : {'tabletc' : 'Tcdesordredescriptionsystem',
-                                              'idsource' : 'id_desordre',
-                                            'idtcsource' : 'id_tcdesordre',
-                                           'iddest' : 'id_descriptionsystem',
-                                           'idtcdest' : 'id_tcdescriptionsystem',
-                                           'desttable' : ['Infralineaire']}}
-        """
+
         self.linkagespec = {'Descriptionsystem' : {'tabletc' : None,
                                               'idsource' : 'lid_descriptionsystem',
                                             'idtcsource' : None,
@@ -86,29 +83,26 @@ class BaseDesordreTool(AbstractLamiaTool):
         # ****************************************************************************************
         #properties ui
         pass
+    """
 
-    def initFieldUI(self):
+    def initMainToolWidget(self):
+
+        self.toolwidgetmain = UserUI()
+
+        self.formtoolwidgetconfdictmain = {'Desordre' : {'linkfield' : 'id_desordre',
+                                            'widgets' : {'groupedesordre': self.toolwidgetmain.comboBox_groupedes
+                                                        }},
+                            'Objet' : {'linkfield' : 'id_objet',
+                                        'widgets' : {}}}
+
+        self.toolwidgetmain.comboBox_groupedes.currentIndexChanged.connect(self.changeGroupe)
+
+
         # ****************************************************************************************
-        #   userui Field
-        if self.userwdgfield is None:
-            # ****************************************************************************************
-            # userui
+        # child widgets
+        self.dbasechildwdgfield = []
 
-            self.userwdgfield = UserUI()
-
-            self.linkuserwdgfield = {'Desordre' : {'linkfield' : 'id_desordre',
-                                             'widgets' : {'groupedesordre': self.userwdgfield.comboBox_groupedes
-                                                          }},
-                                'Objet' : {'linkfield' : 'id_objet',
-                                          'widgets' : {}}}
-
-            self.userwdgfield.comboBox_groupedes.currentIndexChanged.connect(self.changeGroupe)
-
-
-            # ****************************************************************************************
-            # child widgets
-            self.dbasechildwdgfield = []
-
+        if False:   #TODO
             if self.parentWidget is None :
 
                 self.propertieswdgOBSERVATION = BaseObservationTool(dbase=self.dbase, parentwidget=self)
@@ -117,11 +111,11 @@ class BaseDesordreTool(AbstractLamiaTool):
 
             self.propertieswdgOBSERVATION2 = BaseObservationTool(dbase=self.dbase, parentwidget=self)
             self.propertieswdgOBSERVATION2.NAME = None
-            self.userwdgfield.tabWidget.widget(0).layout().addWidget(self.propertieswdgOBSERVATION2)
+            self.toolwidgetmain.tabWidget.widget(0).layout().addWidget(self.propertieswdgOBSERVATION2)
             self.dbasechildwdgfield.append(self.propertieswdgOBSERVATION2)
 
-            self.userwdgfield.tabWidget.widget(1).layout().addWidget(self.propertieswdgOBSERVATION2.propertieswdgPHOTOGRAPHIE)
-            self.userwdgfield.tabWidget.widget(2).layout().addWidget(self.propertieswdgOBSERVATION2.propertieswdgCROQUIS)
+            self.toolwidgetmain.tabWidget.widget(1).layout().addWidget(self.propertieswdgOBSERVATION2.propertieswdgPHOTOGRAPHIE)
+            self.toolwidgetmain.tabWidget.widget(2).layout().addWidget(self.propertieswdgOBSERVATION2.propertieswdgCROQUIS)
 
 
 
@@ -139,17 +133,18 @@ class BaseDesordreTool(AbstractLamiaTool):
         self.propertieswdgOBSERVATION2.saveFeature()
 
 
-    def postInitFeatureProperties(self, feat):
-        if feat is not None:
-            self.userwdgfield.comboBox_groupedes.setEnabled(False)
+    # def postInitFeatureProperties(self, feat):
+    def postSelectFeature(self):
+        if self.currentFeaturePK is not None:
+            self.toolwidgetmain.comboBox_groupedes.setEnabled(False)
         else:
-            self.userwdgfield.comboBox_groupedes.setEnabled(True)
+            self.toolwidgetmain.comboBox_groupedes.setEnabled(True)
 
 
     def changeGroupe(self,intcat):
-        self.userwdg.stackedWidget.setCurrentIndex(intcat)
+        self.toolwidget.stackedWidget.setCurrentIndex(intcat)
 
-
+    """
     def createParentFeature(self):
         pkobjet = self.dbase.createNewObjet()
 
@@ -208,13 +203,13 @@ class BaseDesordreTool(AbstractLamiaTool):
             sql = "UPDATE Desordre SET groupedesordre = 'INF'  WHERE pk_desordre = " + str(pkdesordre)
             self.dbase.query(sql)
             self.dbase.commit()
-
+    """
 
 
     def postSaveFeature(self, boolnewfeature):
         pass
 
-
+    """
     def deleteParentFeature(self):
 
 
@@ -249,7 +244,7 @@ class BaseDesordreTool(AbstractLamiaTool):
             sql = "DELETE FROM Observation WHERE lk_desordre = " +str(iddesordre)
 
         return True
-
+    """
 
 class UserUI(QWidget):
     def __init__(self, parent=None):

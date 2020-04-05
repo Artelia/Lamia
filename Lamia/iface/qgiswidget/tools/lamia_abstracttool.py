@@ -26,6 +26,7 @@ This file is part of LAMIA.
  """
 
 from qgis.PyQt.QtWidgets import (QWidget, QTreeWidgetItem, QAbstractItemView, QVBoxLayout )
+from qgis.PyQt import QtGui
 import os, sys, logging
 
 from ..subdialogs.lamia_linkage import LinkageDialog

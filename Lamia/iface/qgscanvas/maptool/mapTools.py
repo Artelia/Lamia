@@ -55,7 +55,7 @@ Some map tools for digitizing features
 from qgis.PyQt import uic, QtCore, QtGui
 import qgis
 import qgis.utils
-qgis.utils.uninstallErrorHook()     #for standart output
+#qgis.utils.uninstallErrorHook()     #for standart output
 
 """
 from qgis.gui import (
@@ -122,12 +122,12 @@ class mapToolCapture(qgis.gui.QgsMapToolCapture):
         # self.layer = layer
         # self.mappoints = []
         self.mappoints = []
-
+        """
         try:
             self.qgisversion_int = qgis.utils.QGis.QGIS_VERSION_INT
         except AttributeError:  #qgis 3
             self.qgisversion_int = qgis.utils.Qgis.QGIS_VERSION_INT
-
+        """
     def setMapPoints(self, pointlist):
         self.mappoints = pointlist
 
@@ -141,27 +141,24 @@ class mapToolCapture(qgis.gui.QgsMapToolCapture):
 
             # mapPt,layerPt = self.transformCoordinates(event.pos())
 
-            if int(str(self.qgisversion_int)[0:3]) < 220:
-                mapPt = event.snapPoint(qgis.gui.QgsMapMouseEvent.SnapProjectConfig)
-            else:
-                mapPt = event.snapPoint()
+            mapPt = event.snapPoint()
 
             self.addVertex(mapPt)
             self.mappoints.append(mapPt)
 
-            if int(str(self.qgisversion_int)[0:3]) < 220:
-                capturemodepoint = qgis.gui.QgsMapToolAdvancedDigitizing.CapturePoint
-            else:
-                capturemodepoint = qgis.gui.QgsMapToolCapture.CapturePoint
+            capturemodepoint = qgis.gui.QgsMapToolCapture.CapturePoint
 
             if self.mode() == capturemodepoint:
                 # if len(self.points()) > 0:
                 if len(self.mappoints) > 0:
+                    self.stopCapture.emit(self.mappoints)
+                    """
                     if qgis.utils.iface is not None:  #run from within qgis
                         self.stopCapture.emit(self.mappoints)
                         # self.stopCapture.emit(self.points())
                     else:       # run from pycharm
                         self.stopCapture.emit(self.mappoints)
+                    """
                     self.mappoints = []
                     self.stopCapturing()
                     
@@ -175,47 +172,3 @@ class mapToolCapture(qgis.gui.QgsMapToolCapture):
             self.mappoints = []
             self.stopCapturing()
             
-
-    if False:
-        def transformCoordinates(self, canvasPt):
-            return (self.toMapCoordinates(canvasPt),
-                    self.toLayerCoordinates(self.layer, canvasPt))
-
-
-class mapToolCapture2(qgis.gui.QgsMapToolCapture):
-
-    stopCapture = QtCore.pyqtSignal(list)
-
-    def __init__(self, canvas, dockwdget, mode,layer):
-        qgis.gui.QgsMapToolCapture.__init__(self, canvas, dockwdget, mode)
-        self.canvas = canvas
-        self.layer = layer
-        self.mappoints = []
-        
-    
-    def canvasReleaseEvent(self, event):
-        if event.button() == QtCore.Qt.LeftButton:
-            if not self.isCapturing():
-                self.startCapturing()
-            
-            mapPt,layerPt = self.transformCoordinates(event.pos())
-            mapPt = event.snapPoint(qgis.gui.QgsMapMouseEvent.SnapProjectConfig )
-            self.addVertex(mapPt)
-            self.mappoints.append(mapPt)
-            
-            if self.mode() ==  qgis.gui.QgsMapToolAdvancedDigitizing.CapturePoint:
-                self.stopCapturing()
-                if len(self.mappoints)>0:
-                    self.stopCapture.emit(self.mappoints)
-                    self.mappoints = []
-            
-        elif event.button() == QtCore.Qt.RightButton:
-            self.stopCapturing()
-            self.stopCapture.emit(self.mappoints)
-                
-
-    def transformCoordinates(self, canvasPt):
-        return (self.toMapCoordinates(canvasPt),
-                self.toLayerCoordinates(self.layer, canvasPt))
-                
-

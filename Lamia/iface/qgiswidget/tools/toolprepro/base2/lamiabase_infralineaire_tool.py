@@ -24,27 +24,18 @@ This file is part of LAMIA.
   * License-Filename: LICENSING.md
  """
 
-
-
-
 from qgis.PyQt import uic, QtCore, QtGui
 
 try:
     from qgis.PyQt.QtGui import (QWidget, QLabel, QFrame)
 except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget, QLabel, QFrame)
-#from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
-from ...Lamia_abstract_tool import AbstractLamiaTool
+
+from ...lamia_abstractformtool import AbstractLamiaFormTool
 
 from .lamiabase_photo_tool import BasePhotoTool
-# from .lamiadigue_rapport_tool import RapportTool
-# from .lamiadigue_tronconemprise_tool  import TronconEmpriseTool
 from .lamiabase_croquis_tool import BaseCroquisTool
-# from .lamiadigue_profil_tool import ProfilTool
-# from ..InspectionDigue_graphique_tool import GraphiqueTool
-# from .InspectionDigue_profiltravers_tool  import ProfilTraversTool
-# from ...toolpostpro.InspectionDigue_path_tool import PathTool
-#from .lamiadigue_graphique_tool  import GraphiqueTool
+
 import os
 import datetime
 import logging
@@ -53,15 +44,18 @@ debugtime = False
 
 
 
-class BaseInfraLineaireTool(AbstractLamiaTool):
+class BaseInfraLineaireTool(AbstractLamiaFormTool):
 
-
+    DBASETABLENAME = 'Infralineaire'
     LOADFIRST = True
-    dbasetablename = 'Infralineaire'
-    specialfieldui = []
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
-        super(BaseInfraLineaireTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
+    tooltreewidgetCAT = 'Description'
+    tooltreewidgetSUBCAT = 'Troncon'
+    tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_infralineaire_tool_icon.svg')
+
+
+    def __init__(self, **kwargs):
+        super(BaseInfraLineaireTool, self).__init__(**kwargs)
 
     def initTool(self):
         # ****************************************************************************************
@@ -96,29 +90,29 @@ class BaseInfraLineaireTool(AbstractLamiaTool):
         #properties ui
         pass
 
-    def initFieldUI(self):
+    def initMainToolWidget(self):
         # ****************************************************************************************
         #   userui Field
-        if self.userwdgfield is None:
-            self.userwdgfield = UserUIField()
 
-            self.linkuserwdgfield = {'Infralineaire': {'linkfield': 'id_infralineaire',
-                                                       'widgets': {}},
-                                     'Objet': {'linkfield': 'id_objet',
-                                               'widgets': {'libelle': self.userwdgfield.lineEdit_nom,
-                                                           'commentaire': self.userwdgfield.textBrowser_commentaire}},
-                                     'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
-                                                           'widgets': {}}}
+        self.toolwidgetmain = UserUIField()
 
-            self.dbasechildwdgfield = []
+        self.formtoolwidgetconfdictmain = {'Infralineaire': {'linkfield': 'id_infralineaire',
+                                                    'widgets': {}},
+                                            'Objet': {'linkfield': 'id_objet',
+                                                    'widgets': {'libelle': self.toolwidgetmain.lineEdit_nom,
+                                                                'commentaire': self.toolwidgetmain.textBrowser_commentaire}},
+                                            'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
+                                                                'widgets': {}}}
 
-            if self.parentWidget is None:
-                self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
-                self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
+        self.dbasechildwdgfield = []
+
+        if self.parentWidget is None:
+            self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
+            self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
 
 
-                self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
-                self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+            self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
+            self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
 
     def postOnActivation(self):
@@ -128,18 +122,14 @@ class BaseInfraLineaireTool(AbstractLamiaTool):
         pass
 
     def postloadIds(self,sqlin):
-        strid = 'id_' + self.dbasetablename.lower()
+        strid = 'id_' + self.DBASETABLENAME.lower()
         sqlin += ' ORDER BY ' + strid
         return sqlin
 
 
 
     def postInitFeatureProperties(self, feat):
-        debug = False
-        if debug: logging.getLogger("Lamia").debug('Start ')
-
         pass
-
 
     def createParentFeature(self):
         pkobjet = self.dbase.createNewObjet()

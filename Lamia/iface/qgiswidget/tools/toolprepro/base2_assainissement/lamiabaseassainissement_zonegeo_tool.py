@@ -41,233 +41,142 @@ import datetime
 class BaseAssainissementZonegeoTool(BaseZonegeoTool):
 
     LOADFIRST = False
-    dbasetablename = 'Zonegeo'
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
-        super(BaseAssainissementZonegeoTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
-
-        if False:
-            self.statgrpbox = QGroupBox('Statistiques')
-            self.Form.layout().insertWidget(self.statgrpbox)
-            layout = QGridLayout()
-
-            layout.setColumnStretch(1, 4)
-            self.statgrpbox.setLayout(layout)
-
-    def initFieldUI(self):
-        # ****************************************************************************************
-        # userui Desktop
-        if self.userwdgfield is None:
-
-            # ****************************************************************************************
-            # userui
-            self.userwdgfield = UserUI()
-            self.linkuserwdgfield = {'Zonegeo' : {'linkfield' : 'id_zonegeo',
-                                             'widgets' : {
-                                                          'typezonegeo':self.userwdgfield.comboBox_type
-                                                        }},
-                                'Objet' : {'linkfield' : 'id_objet',
-                                          'widgets' : {
-                                                        'libelle' : self.userwdgfield.lineEdit_nom
-                                                        }}}
+    def __init__(self, **kwargs):
+        super(BaseAssainissementZonegeoTool, self).__init__(**kwargs)
 
 
-            self.stats = [['EU - lineaire gravitaire', ''' SELECT SUM(ST_Length(ST_MakeValid(Infralineaire_now.geom))) 
-                                            FROM Infralineaire_now, Zonegeo 
-                                            WHERE ST_WITHIN(ST_MakeValid(Infralineaire_now.geom), ST_MakeValid(Zonegeo.geom))
-                                             AND Infralineaire_now.typeReseau = 'USE' AND Infralineaire_now.modeCirculation = 1 
-                                             AND branchement = 0 '''],
+    def initMainToolWidget(self):
 
-                          ['EU - lineaire refoulement', ''' SELECT SUM(ST_Length(ST_MakeValid(Infralineaire_now.geom))) 
-                                                        FROM Infralineaire_now, Zonegeo 
-                                                        WHERE ST_WITHIN(ST_MakeValid(Infralineaire_now.geom), ST_MakeValid(Zonegeo.geom))
-                                                         AND Infralineaire_now.typeReseau = 'USE' AND Infralineaire_now.modeCirculation = 2 
-                                                         AND branchement = 0  '''],
-
-                          ['EU - regards ', ''' SELECT COUNT(*) 
-                                                                FROM Noeud_now, Zonegeo 
-                                                                WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
-                                                                 AND Noeud_now.typeOuvrageAss = '60' AND Noeud_now.typeReseau = 'USE' '''],
-
-                          ['EU - branchements ', ''' SELECT COUNT(*) 
-                                                  FROM Noeud_now, Zonegeo 
-                                                  WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
-                                                   AND Noeud_now.typeOuvrageAss = '61'  AND Noeud_now.typeReseau = 'USE'  '''],
-
-                          ['EU - Postes de refoulement ', ''' SELECT COUNT(*) 
-                                              FROM Noeud_now, Zonegeo 
-                                              WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
-                                               AND Noeud_now.typeOuvrageAss = '10'  AND Noeud_now.typeReseau = 'USE'   '''],
+        self.toolwidgetmain = UserUI()
+        self.formtoolwidgetconfdictmain = {'Zonegeo' : {'linkfield' : 'id_zonegeo',
+                                            'widgets' : {
+                                                        'typezonegeo':self.toolwidgetmain.comboBox_type
+                                                    }},
+                                            'Objet' : {'linkfield' : 'id_objet',
+                                                        'widgets' : {
+                                                                    'libelle' : self.toolwidgetmain.lineEdit_nom
+                                                                    }}}
 
 
-                          ['EU - Deversoirs d orage ', ''' SELECT COUNT(*) 
+        self.stats = [['EU - lineaire gravitaire', ''' SELECT SUM(ST_Length(ST_MakeValid(Infralineaire_now.geom))) 
+                                        FROM Infralineaire_now, Zonegeo 
+                                        WHERE ST_WITHIN(ST_MakeValid(Infralineaire_now.geom), ST_MakeValid(Zonegeo.geom))
+                                            AND Infralineaire_now.typeReseau = 'USE' AND Infralineaire_now.modeCirculation = 1 
+                                            AND branchement = 0 '''],
+
+                        ['EU - lineaire refoulement', ''' SELECT SUM(ST_Length(ST_MakeValid(Infralineaire_now.geom))) 
+                                                    FROM Infralineaire_now, Zonegeo 
+                                                    WHERE ST_WITHIN(ST_MakeValid(Infralineaire_now.geom), ST_MakeValid(Zonegeo.geom))
+                                                        AND Infralineaire_now.typeReseau = 'USE' AND Infralineaire_now.modeCirculation = 2 
+                                                        AND branchement = 0  '''],
+
+                        ['EU - regards ', ''' SELECT COUNT(*) 
                                                             FROM Noeud_now, Zonegeo 
                                                             WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
-                                                             AND Noeud_now.typeOuvrageAss = '40'  AND Noeud_now.typeReseau = 'USE'  '''],
+                                                                AND Noeud_now.typeOuvrageAss = '60' AND Noeud_now.typeReseau = 'USE' '''],
 
-                          ['EU - STEP ', ''' SELECT COUNT(*) 
-                                                                FROM Noeud_now, Zonegeo 
-                                                                WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
-                                                                 AND Noeud_now.typeOuvrageAss = '20' '''],
-
-                          ['EP - lineaire collecteurs', ''' SELECT SUM(ST_Length(ST_MakeValid(Infralineaire_now.geom))) 
-                                            FROM Infralineaire_now, Zonegeo 
-                                            WHERE ST_WITHIN(ST_MakeValid(Infralineaire_now.geom), ST_MakeValid(Zonegeo.geom))
-                                             AND Infralineaire_now.typeReseau = 'PLU' AND branchement = 0  
-                                             AND Infralineaire_now.formecanalisation IN ('CIR', 'AQU', 'OVO') '''],
-
-                          ['EP - lineaire fosses-caniveaux', ''' SELECT SUM(ST_Length(ST_MakeValid(Infralineaire_now.geom))) 
-                                                                  FROM Infralineaire_now, Zonegeo 
-                                                                  WHERE ST_WITHIN(ST_MakeValid(Infralineaire_now.geom), ST_MakeValid(Zonegeo.geom))
-                                                                   AND Infralineaire_now.typeReseau = 'PLU' AND branchement = 0  
-                                                                   AND Infralineaire_now.formecanalisation IN ('FOS', 'FOB') '''],
-
-
-                          ['EP - regards ', ''' SELECT COUNT(*) 
-                                                  FROM Noeud_now, Zonegeo 
-                                                  WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
-                                                   AND Noeud_now.typeOuvrageAss = '60'  AND Noeud_now.typeReseau = 'PLU'  '''],
-
-                          ['EP - branchements ', ''' SELECT COUNT(*) 
-                                                    FROM Noeud_now, Zonegeo 
-                                                    WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
-                                                     AND Noeud_now.typeOuvrageAss = '61'  AND Noeud_now.typeReseau = 'PLU'  '''],
-
-                          ['EP - grilles - avaloirs ', ''' SELECT COUNT(*) 
-                                                            FROM Noeud_now, Zonegeo 
-                                                            WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
-                                                             AND Noeud_now.typeOuvrageAss IN ('70','71','72')  AND Noeud_now.typeReseau = 'PLU'  '''],
-
-
-                          ['UN - lineaire gravitaire', ''' SELECT SUM(ST_Length(ST_MakeValid(Infralineaire_now.geom))) 
-                                              FROM Infralineaire_now, Zonegeo 
-                                              WHERE ST_WITHIN(ST_MakeValid(Infralineaire_now.geom), ST_MakeValid(Zonegeo.geom))
-                                               AND Infralineaire_now.typeReseau = 'UNI' AND Infralineaire_now.modeCirculation = 1 
-                                               AND branchement = 0  '''],
-
-                          ['UN - lineaire refoulement', ''' SELECT SUM(ST_Length(ST_MakeValid(Infralineaire_now.geom))) 
-                                                            FROM Infralineaire_now, Zonegeo 
-                                                            WHERE ST_WITHIN(ST_MakeValid(Infralineaire_now.geom), ST_MakeValid(Zonegeo.geom))
-                                                             AND Infralineaire_now.typeReseau = 'UNI' AND Infralineaire_now.modeCirculation = 2 
-                                                             AND branchement = 0  '''],
-
-                          ['UN - regards ', ''' SELECT COUNT(*) 
+                        ['EU - branchements ', ''' SELECT COUNT(*) 
                                                 FROM Noeud_now, Zonegeo 
                                                 WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
-                                                 AND Noeud_now.typeOuvrageAss = '60'  AND Noeud_now.typeReseau = 'UNI'  '''],
+                                                AND Noeud_now.typeOuvrageAss = '61'  AND Noeud_now.typeReseau = 'USE'  '''],
 
-                          ['regards mixtes', ''' SELECT COUNT(*) /2 
-                                  FROM Noeud_now, Zonegeo 
-                                  WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
-                                   AND Noeud_now.typeOuvrageAss = '62'   '''],
+                        ['EU - Postes de refoulement ', ''' SELECT COUNT(*) 
+                                            FROM Noeud_now, Zonegeo 
+                                            WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
+                                            AND Noeud_now.typeOuvrageAss = '10'  AND Noeud_now.typeReseau = 'USE'   '''],
 
 
-                          ['UN - branchements ', ''' SELECT COUNT(*) 
-                                                    FROM Noeud_now, Zonegeo 
-                                                    WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
-                                                     AND Noeud_now.typeOuvrageAss = '61'  AND Noeud_now.typeReseau = 'UNI'  '''],
+                        ['EU - Deversoirs d orage ', ''' SELECT COUNT(*) 
+                                                        FROM Noeud_now, Zonegeo 
+                                                        WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
+                                                            AND Noeud_now.typeOuvrageAss = '40'  AND Noeud_now.typeReseau = 'USE'  '''],
 
-                          ['UN - Postes de refoulement ', ''' SELECT COUNT(*) 
+                        ['EU - STEP ', ''' SELECT COUNT(*) 
                                                             FROM Noeud_now, Zonegeo 
                                                             WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
-                                                             AND Noeud_now.typeOuvrageAss = '10'  AND Noeud_now.typeReseau = 'UNI'   '''],
+                                                                AND Noeud_now.typeOuvrageAss = '20' '''],
 
-                          ['UN - Deversoirs d orage ', ''' SELECT COUNT(*) 
-                                                              FROM Noeud_now, Zonegeo 
-                                                              WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
-                                                               AND Noeud_now.typeOuvrageAss = '40'  AND Noeud_now.typeReseau = 'UNI'  '''],
+                        ['EP - lineaire collecteurs', ''' SELECT SUM(ST_Length(ST_MakeValid(Infralineaire_now.geom))) 
+                                        FROM Infralineaire_now, Zonegeo 
+                                        WHERE ST_WITHIN(ST_MakeValid(Infralineaire_now.geom), ST_MakeValid(Zonegeo.geom))
+                                            AND Infralineaire_now.typeReseau = 'PLU' AND branchement = 0  
+                                            AND Infralineaire_now.formecanalisation IN ('CIR', 'AQU', 'OVO') '''],
 
-                          ]
-
-            self.userwdgfield.tableWidget_stats.setRowCount(0)
-            self.userwdgfield.tableWidget_stats.setColumnCount(2)
-            self.userwdgfield.tableWidget_stats.horizontalHeader().setStretchLastSection(True)
-            for i, stat in enumerate(self.stats):
-                rowPosition = self.userwdgfield.tableWidget_stats.rowCount()
-                self.userwdgfield.tableWidget_stats.insertRow(rowPosition)
-                itemfield = QTableWidgetItem(stat[0])
-                itemfield.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-                self.userwdgfield.tableWidget_stats.setItem(rowPosition, 0, itemfield)
+                        ['EP - lineaire fosses-caniveaux', ''' SELECT SUM(ST_Length(ST_MakeValid(Infralineaire_now.geom))) 
+                                                                FROM Infralineaire_now, Zonegeo 
+                                                                WHERE ST_WITHIN(ST_MakeValid(Infralineaire_now.geom), ST_MakeValid(Zonegeo.geom))
+                                                                AND Infralineaire_now.typeReseau = 'PLU' AND branchement = 0  
+                                                                AND Infralineaire_now.formecanalisation IN ('FOS', 'FOB') '''],
 
 
+                        ['EP - regards ', ''' SELECT COUNT(*) 
+                                                FROM Noeud_now, Zonegeo 
+                                                WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
+                                                AND Noeud_now.typeOuvrageAss = '60'  AND Noeud_now.typeReseau = 'PLU'  '''],
+
+                        ['EP - branchements ', ''' SELECT COUNT(*) 
+                                                FROM Noeud_now, Zonegeo 
+                                                WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
+                                                    AND Noeud_now.typeOuvrageAss = '61'  AND Noeud_now.typeReseau = 'PLU'  '''],
+
+                        ['EP - grilles - avaloirs ', ''' SELECT COUNT(*) 
+                                                        FROM Noeud_now, Zonegeo 
+                                                        WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
+                                                            AND Noeud_now.typeOuvrageAss IN ('70','71','72')  AND Noeud_now.typeReseau = 'PLU'  '''],
 
 
-    """
-    def initTool(self):
-        # ****************************************************************************************
-        # Main spec
-        self.CAT = 'Gestion'
-        self.NAME = 'Zone geographique'
-        self.dbasetablename = 'Zonegeo'
-        self.visualmode = [ 1, 2]
-        # self.PointENABLED = True
-        # self.LineENABLED = True
-        self.PolygonENABLED = True
-        # self.magicfunctionENABLED = True
-        self.linkagespec = {'Tcobjetzonegeo' : {'tabletc' : 'Tcobjetzonegeo',
-                                              'idsource' : 'id_zonegeo',
-                                            'idtcsource' : 'id_tczonegeo',
-                                           'iddest' : 'id_objet',
-                                           'idtcdest' : 'id_tcobjet',
-                                           'desttable' : ['Infralineaire']}}
-        # self.pickTable = None
-        self.iconpath = os.path.join(os.path.dirname(__file__), 'lamiadefault_zonegeo_tool_icon.svg')
-        self.qtreewidgetfields = ['nom']
-        # ****************************************************************************************
-        #properties ui
-        pass
+                        ['UN - lineaire gravitaire', ''' SELECT SUM(ST_Length(ST_MakeValid(Infralineaire_now.geom))) 
+                                            FROM Infralineaire_now, Zonegeo 
+                                            WHERE ST_WITHIN(ST_MakeValid(Infralineaire_now.geom), ST_MakeValid(Zonegeo.geom))
+                                            AND Infralineaire_now.typeReseau = 'UNI' AND Infralineaire_now.modeCirculation = 1 
+                                            AND branchement = 0  '''],
 
-    def initFieldUI(self):
-        # ****************************************************************************************
-        # userui Desktop
-        if self.userwdgfield is None:
+                        ['UN - lineaire refoulement', ''' SELECT SUM(ST_Length(ST_MakeValid(Infralineaire_now.geom))) 
+                                                        FROM Infralineaire_now, Zonegeo 
+                                                        WHERE ST_WITHIN(ST_MakeValid(Infralineaire_now.geom), ST_MakeValid(Zonegeo.geom))
+                                                            AND Infralineaire_now.typeReseau = 'UNI' AND Infralineaire_now.modeCirculation = 2 
+                                                            AND branchement = 0  '''],
 
-            # ****************************************************************************************
-            # userui
-            self.userwdgfield = UserUI()
-            self.linkuserwdgfield = {'Zonegeo' : {'linkfield' : 'id_zonegeo',
-                                             'widgets' : {'nom' : self.userwdgfield.lineEdit_nom,
-                                                          'type_zonegeo':self.userwdgfield.comboBox_type }},
-                                'Objet' : {'linkfield' : 'id_objet',
-                                          'widgets' : {}}}
+                        ['UN - regards ', ''' SELECT COUNT(*) 
+                                            FROM Noeud_now, Zonegeo 
+                                            WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
+                                                AND Noeud_now.typeOuvrageAss = '60'  AND Noeud_now.typeReseau = 'UNI'  '''],
+
+                        ['regards mixtes', ''' SELECT COUNT(*) /2 
+                                FROM Noeud_now, Zonegeo 
+                                WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
+                                AND Noeud_now.typeOuvrageAss = '62'   '''],
 
 
-    def postOnActivation(self):
-        pass
+                        ['UN - branchements ', ''' SELECT COUNT(*) 
+                                                FROM Noeud_now, Zonegeo 
+                                                WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
+                                                    AND Noeud_now.typeOuvrageAss = '61'  AND Noeud_now.typeReseau = 'UNI'  '''],
 
-    def postOnDesactivation(self):
-        pass
+                        ['UN - Postes de refoulement ', ''' SELECT COUNT(*) 
+                                                        FROM Noeud_now, Zonegeo 
+                                                        WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
+                                                            AND Noeud_now.typeOuvrageAss = '10'  AND Noeud_now.typeReseau = 'UNI'   '''],
 
+                        ['UN - Deversoirs d orage ', ''' SELECT COUNT(*) 
+                                                            FROM Noeud_now, Zonegeo 
+                                                            WHERE ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo.geom))
+                                                            AND Noeud_now.typeOuvrageAss = '40'  AND Noeud_now.typeReseau = 'UNI'  '''],
 
+                        ]
 
-
-    def createParentFeature(self):
-
-        lastrevision = self.dbase.getLastPk('Revision')
-        datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
-        lastobjetid = self.dbase.getLastId('Objet') + 1
-        sql = "INSERT INTO Objet (id_objet, id_revisionbegin, datecreation ) "
-        sql += "VALUES(" + str(lastobjetid ) + "," + str(lastrevision) +  ",'" + datecreation + "');"
-        query = self.dbase.query(sql)
-        self.dbase.commit()
-
-        pkzonegeo = self.currentFeature.id()
-        lastidzonegeo = self.dbase.getLastId('Zonegeo') + 1
-
-        sql = "UPDATE Zonegeo SET id_objet = " + str(lastobjetid)  + ","
-        sql += "id_zonegeo = " + str(lastidzonegeo) + ","
-        sql += "id_revisionbegin = " + str(lastrevision)
-        sql += " WHERE pk_zonegeo = " + str(pkzonegeo) + ";"
-        query = self.dbase.query(sql)
-        self.dbase.commit()
+        self.toolwidgetmain.tableWidget_stats.setRowCount(0)
+        self.toolwidgetmain.tableWidget_stats.setColumnCount(2)
+        self.toolwidgetmain.tableWidget_stats.horizontalHeader().setStretchLastSection(True)
+        for i, stat in enumerate(self.stats):
+            rowPosition = self.toolwidgetmain.tableWidget_stats.rowCount()
+            self.toolwidgetmain.tableWidget_stats.insertRow(rowPosition)
+            itemfield = QTableWidgetItem(stat[0])
+            itemfield.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+            self.toolwidgetmain.tableWidget_stats.setItem(rowPosition, 0, itemfield)
 
 
-        #self.initLinkageFromGeometry('Tcobjetzonegeo', pkzonegeo)
-
-    def postSaveFeature(self, boolnewfeature):
-        pass
-
-    """
 class UserUI(QWidget):
     def __init__(self, parent=None):
         super(UserUI, self).__init__(parent=parent)

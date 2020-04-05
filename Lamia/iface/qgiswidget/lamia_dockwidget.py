@@ -94,14 +94,9 @@ class InspectiondigueDockWidget(QDockWidget):
 
 
     def closeEvent(self, event):
-        if True:
-            for tool in self.windowwidget.tools:
-                if tool.rubberBand is not None:
-                    tool.rubberBand.reset(0)
-
-
-            # self.windowwidget.dbase.reInitDBase()
-            self.windowwidget.cleanLayerTree()
+        if self.windowwidget.qgiscanvas.rubberBand is not None:
+            self.windowwidget.qgiscanvas.rubberBand.reset(0)
+        self.windowwidget.qgiscanvas.unloadLayersInCanvas()
 
         self.windowwidget.gpsutil.closeConnection()
         self.closingPlugin.emit()

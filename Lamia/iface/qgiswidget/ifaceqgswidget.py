@@ -49,41 +49,13 @@ import logging
 import math
 import platform
 import subprocess
-"""
-logger = logging.getLogger("Lamia")
-logger.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s :: %(levelname)s :: %(module)s :: %(funcName)s :: %(message)s')
-stream_handler = logging.StreamHandler(sys.stdout)
-stream_handler.setLevel(logging.DEBUG)
-stream_handler.setFormatter(formatter)
-logger.addHandler(stream_handler)
-"""
+
 debugtime = False
 
 
 import glob, importlib, inspect
 from pprint import pprint
-"""
-try:
-    from pyspatialite import dbapi2 as db
-    from pyspatialite.dbapi2 import *
-except ImportError:
-    import sqlite3
-    from sqlite3 import *
-    print('spatialite not enabled')
-"""
 
-# plugin import
-"""
-from ..main.DBaseParser import DBaseParser
-from .InspectionDigue_Connexion_PG import ConnexionPGDialog
-from .InspectionDigue_ConflitHorsLigne import ConflitHorsLigne
-from .Lamia_numpad import NumPadDialog
-from .Lamia_iconsize import IconSizeDialog
-from .InspectionDigue_newDB import newDBDialog
-from .InspectionDigue_getDate import getDateDialog
-from .lamia_tablefield_dialog import LamiaTableFieldDialog
-"""
 from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
 
 from ..ifaceabstractwidget import LamiaIFaceAbstractWidget
@@ -160,6 +132,12 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         self.gpsutil = GpsUtil()
         self.gpsutil.hauteurperche = 2.0 
 
+        #statusbar
+        self.GPSlabel = QLabel(self.tr('GPS non connecté'))
+        self.statusBar().addWidget(self.GPSlabel)
+        self.GPSlabelprecision = QLabel(self.tr('Précision'))
+        self.statusBar().addWidget(self.GPSlabelprecision)
+
         # interfacemode
         # old :self.dbase.visualmode
         self.interfacemode = None
@@ -169,12 +147,19 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
 
         #behaviour var
         self.currenttoolwidget = None
+        self.imagedirectory = None
 
         # subdialogs
         self.newDBDialog = newDBDialog()
         self.crsselector = qgis.gui.QgsProjectionSelectionDialog()
         self.qfiledlg = QFileDialog()
         self.connPGDialog = ConnexionPGDialog()
+
+        # camera path
+        if QtCore.QSettings().value("Lamia/picturepath") is not None:
+            self.imagedirectory = os.path.normpath(QtCore.QSettings().value("Lamia/picturepath"))
+        else:
+            self.imagedirectory = None
 
         # ***************************************************************
         # ******************   Variables def ****************************
@@ -751,7 +736,7 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
                         elif tooltypetoload == 'toolprepro' and  hasattr(obj,'dbasetablename') :   #tool dep
                             self.wdgclasses[tooltypetoload][obj.dbasetablename] = obj
                         elif tooltypetoload == 'toolprepro' and hasattr(obj,'DBASETABLENAME') :
-                            self.wdgclasses[tooltypetoload][obj.DBASETABLENAME] = obj
+                            self.wdgclasses[tooltypetoload][obj.tooltreewidgetSUBCAT] = obj
 
         if debug: logging.getLogger('Lamia_unittest').debug('x %s', str(self.wdgclasses))
 
@@ -983,8 +968,8 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
     def setImageDir(self):
         file = self.qfiledlg.getExistingDirectory(self, "Select Directory",self.dbase.imagedirectory, QFileDialog.ShowDirsOnly)
         if file:
-            self.dbase.imagedirectory = file
-            QtCore.QSettings().setValue("InspectionDigue/picturepath", file)
+            self.imagedirectory = file
+            QtCore.QSettings().setValue("Lamia/picturepath", file)
 
     #*************************************************************
     # About menu
@@ -1010,17 +995,32 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
 
     def _connectToolBar(self):
         self.actiontoolbarnew.triggered.connect(self.toolbarNew)
+        self.actiontoolbarundo.triggered.connect(self.toolbarUndo)
+        self.actiontoolbardelete.triggered.connect(self.toolbarDelete)
         self.actiontoolbarsave.triggered.connect(self.toolbarSave)
 
+        self.actiontoobargeomnewpoint.triggered.connect(self.toolbarGeom)
+        self.actiontoobargeomnewline.triggered.connect(self.toolbarGeom)
+        self.actiontoobargeomnewpolygon.triggered.connect(self.toolbarGeom)
         self.actiontoobargeomaddpoint.triggered.connect(self.toolbarGeom)
-        self.actiontoobargeomaddline.triggered.connect(self.toolbarGeom)
-        self.actiontoobargeomaddpolygon.triggered.connect(self.toolbarGeom)
+        self.actiontoobargeomaddGPSpoint.triggered.connect(self.toolbarGeomAddGPS)
+
 
 
     def toolbarNew(self):
         logging.getLogger("Lamia_unittest").debug('called')
         if self.currenttoolwidget and hasattr(self.currenttoolwidget,'toolbarNew'):
             self.currenttoolwidget.toolbarNew()
+
+    def toolbarUndo(self):
+        logging.getLogger("Lamia_unittest").debug('called')
+        if self.currenttoolwidget and hasattr(self.currenttoolwidget,'toolbarUndo'):
+            self.currenttoolwidget.toolbarUndo()
+
+    def toolbarDelete(self):
+        logging.getLogger("Lamia_unittest").debug('called')
+        if self.currenttoolwidget and hasattr(self.currenttoolwidget,'toolbarDelete'):
+            self.currenttoolwidget.toolbarDelete()
 
     def toolbarSave(self):
         logging.getLogger("Lamia_unittest").debug('called')
@@ -1031,7 +1031,13 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         logging.getLogger("Lamia_unittest").debug('called')
         if self.currenttoolwidget and hasattr(self.currenttoolwidget,'toolbarGeom'):
             self.currenttoolwidget.toolbarGeom()
-        
+    
+    def toolbarGeomAddGPS(self):
+        logging.getLogger("Lamia_unittest").debug('called')
+        if self.currenttoolwidget and hasattr(self.currenttoolwidget,'toolbarGeomAddGPS'):
+            self.currenttoolwidget.toolbarGeomAddGPS()
+
+
     #*************************************************************
     # menu
     #*************************************************************

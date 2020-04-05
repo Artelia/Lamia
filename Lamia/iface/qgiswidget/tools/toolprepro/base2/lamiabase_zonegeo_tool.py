@@ -26,30 +26,29 @@ This file is part of LAMIA.
 
 
 
-
+import os, datetime
 from qgis.PyQt import uic, QtCore
 
-try:
-    from qgis.PyQt.QtGui import (QWidget, QGroupBox,QGridLayout,QLabel,QTableWidgetItem)
-except ImportError:
-    from qgis.PyQt.QtWidgets import (QWidget,QGroupBox,QGridLayout,QLabel,QTableWidgetItem)
+from qgis.PyQt.QtWidgets import (QWidget,QGroupBox,QGridLayout,QLabel,QTableWidgetItem)
 
-#from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
-from ...Lamia_abstract_tool import AbstractLamiaTool
-import os
-import datetime
+from ...lamia_abstractformtool import AbstractLamiaFormTool
 
 
 
-class BaseZonegeoTool(AbstractLamiaTool):
 
+class BaseZonegeoTool(AbstractLamiaFormTool):
+
+    DBASETABLENAME = 'Zonegeo'
     LOADFIRST = False
-    dbasetablename = 'Zonegeo'
-    specialfieldui = []
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
-        super(BaseZonegeoTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
+    tooltreewidgetCAT = 'Gestion'
+    tooltreewidgetSUBCAT = 'Zone geographique'
+    tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_zonegeo_tool_icon.svg')
 
+    def __init__(self, **kwargs):
+        super(BaseZonegeoTool, self).__init__(**kwargs)
+
+    """
     def initTool(self):
         # ****************************************************************************************
         # Main spec
@@ -73,41 +72,37 @@ class BaseZonegeoTool(AbstractLamiaTool):
         # ****************************************************************************************
         #properties ui
         pass
+        """
 
-    def initFieldUI(self):
-        # ****************************************************************************************
-        # userui Desktop
-        if self.userwdgfield is None:
+    def initMainToolWidget(self):
 
-            # ****************************************************************************************
-            # userui
-            self.userwdgfield = UserUI()
-            self.linkuserwdgfield = {'Zonegeo' : {'linkfield' : 'id_zonegeo',
-                                             'widgets' : {
-                                                          'typezonegeo':self.userwdgfield.comboBox_type
-                                                        }},
-                                'Objet' : {'linkfield' : 'id_objet',
-                                          'widgets' : {
-                                                        'libelle' : self.userwdgfield.lineEdit_nom
-                                                        }}}
+        self.toolwidgetmain = UserUI()
+        self.formtoolwidgetconfdictmain = {'Zonegeo' : {'linkfield' : 'id_zonegeo',
+                                            'widgets' : {
+                                                        'typezonegeo':self.toolwidgetmain.comboBox_type
+                                                    }},
+                                        'Objet' : {'linkfield' : 'id_objet',
+                                                    'widgets' : {
+                                                                'libelle' : self.toolwidgetmain.lineEdit_nom
+                                                                }}}
 
-            # rem : il sera affiné le select avec le champ datetimecreation trouvé dans la requete
-            # il faut que zone geo soit présent dans la requete
-            self.stats = [['Infralineaire lineaire',
-                           ''' SELECT SUM(ST_Length(ST_MakeValid(Infralineaire_now.geom))) 
-                                FROM Infralineaire_now, Zonegeo 
-                                WHERE ST_WITHIN(ST_MakeValid(Infralineaire_now.geom), ST_MakeValid(Zonegeo.geom)) ''']
-                           ]
+        # rem : il sera affiné le select avec le champ datetimecreation trouvé dans la requete
+        # il faut que zone geo soit présent dans la requete
+        self.stats = [['Infralineaire lineaire',
+                        ''' SELECT SUM(ST_Length(ST_MakeValid(Infralineaire_now.geom))) 
+                            FROM Infralineaire_now, Zonegeo 
+                            WHERE ST_WITHIN(ST_MakeValid(Infralineaire_now.geom), ST_MakeValid(Zonegeo.geom)) ''']
+                        ]
 
-            self.userwdgfield.tableWidget_stats.setRowCount(0)
-            self.userwdgfield.tableWidget_stats.setColumnCount(2)
-            self.userwdgfield.tableWidget_stats.horizontalHeader().setStretchLastSection(True)
-            for i, stat in enumerate(self.stats):
-                rowPosition = self.userwdgfield.tableWidget_stats.rowCount()
-                self.userwdgfield.tableWidget_stats.insertRow(rowPosition)
-                itemfield = QTableWidgetItem(stat[0])
-                itemfield.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-                self.userwdgfield.tableWidget_stats.setItem(rowPosition, 0, itemfield)
+        self.toolwidgetmain.tableWidget_stats.setRowCount(0)
+        self.toolwidgetmain.tableWidget_stats.setColumnCount(2)
+        self.toolwidgetmain.tableWidget_stats.horizontalHeader().setStretchLastSection(True)
+        for i, stat in enumerate(self.stats):
+            rowPosition = self.toolwidgetmain.tableWidget_stats.rowCount()
+            self.toolwidgetmain.tableWidget_stats.insertRow(rowPosition)
+            itemfield = QTableWidgetItem(stat[0])
+            itemfield.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+            self.toolwidgetmain.tableWidget_stats.setItem(rowPosition, 0, itemfield)
 
 
 
@@ -118,41 +113,30 @@ class BaseZonegeoTool(AbstractLamiaTool):
         pass
 
 
-    def postInitFeatureProperties(self, feat):
-
-        if feat is not None and not hasattr(self,'TOOLNAME'):
-            #stat fill
+    #def postInitFeatureProperties(self, feat):
+    def postSelectFeature(self):
+        #if feat is not None and not hasattr(self,'TOOLNAME'):
+        #stat fill
+        if self.currentFeaturePK is not None:
             for i, stat in enumerate(self.stats) :
 
                 featpk = self.currentFeaturePK
                 sql = stat[1]
                 if sql != '':
-                    if False:
-                        sql += ' AND Zonegeo.pk_zonegeo = ' + str(featpk) + ' AND '
-                        sql += self.dbase.dateVersionConstraintSQL()
                     sql += ' AND Zonegeo.pk_zonegeo = ' + str(featpk)
                     sql = self.dbase.updateQueryTableNow(sql)
-                    """
-                    sql += ' AND  Objet.datetimecreation <= ' + "'" + self.dbase.workingdate + "'"
-                    if self.dbase.dbasetype == 'postgis':
-                        sql += ' AND CASE WHEN Objet.datetimedestruction IS NOT NULL  '
-                        sql += 'THEN Objet.datetimedestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE TRUE END'
-                    elif self.dbase.dbasetype == 'spatialite':
-                        sql += ' AND CASE WHEN Objet.datetimedestruction IS NOT NULL  '
-                        sql += 'THEN Objet.datetimedestruction > ' + "'" + self.dbase.workingdate + "'" + ' ELSE 1 END '
-                    """
-
                     query = self.dbase.query(sql)
-                    #print(query)
-                    result = query[0][0]
-
+                    if query:
+                        result = query[0][0]
+                    else:
+                        result = 'Error'
                     itemresult = QTableWidgetItem(str(result))
                     itemresult.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-                    self.userwdgfield.tableWidget_stats.setItem(i, 1, itemresult)
+                    self.toolwidgetmain.tableWidget_stats.setItem(i, 1, itemresult)
 
 
 
-
+    """
     def createParentFeature(self):
         pkobjet = self.dbase.createNewObjet()
 
@@ -168,16 +152,6 @@ class BaseZonegeoTool(AbstractLamiaTool):
             query = self.dbase.query(sql)
             self.dbase.commit()
             pkobjet = self.dbase.getLastRowId('Objet')
-
-        """
-        # sql = "INSERT INTO Descriptionsystem (id_objet) VALUES(" + str(idobjet) + ");"
-        lastdescriptionsystemid = self.dbase.getLastId('Descriptionsystem') + 1
-        sql = "INSERT INTO Descriptionsystem (id_descriptionsystem, lpk_objet) "
-        sql += "VALUES(" + str(lastdescriptionsystemid) + "," + str(pkobjet) + ");"
-        query = self.dbase.query(sql)
-        self.dbase.commit()
-        pksys = self.dbase.getLastRowId('Descriptionsystem')
-        """
 
         # idnoeud = self.currentFeature.id()
         pkzonegeo = self.currentFeaturePK
@@ -209,7 +183,7 @@ class BaseZonegeoTool(AbstractLamiaTool):
 
 
         return True
-
+    """
 
 class UserUI(QWidget):
     def __init__(self, parent=None):

@@ -26,29 +26,35 @@ This file is part of LAMIA.
 
 
 
-
-from qgis.PyQt import uic, QtCore
-
-try:
-    from qgis.PyQt.QtGui import (QWidget, QInputDialog)
-except ImportError:
-    from qgis.PyQt.QtWidgets import (QWidget, QInputDialog)
-#from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
-from ...Lamia_abstract_tool import AbstractLamiaTool
 import os
 import datetime
 
+from qgis.PyQt import uic, QtCore
+from qgis.PyQt.QtWidgets import (QWidget, QInputDialog)
+
+from ...lamia_abstractformtool import AbstractLamiaFormTool
 
 
-class BaseIntervenantTool(AbstractLamiaTool):
+
+
+class BaseIntervenantTool(AbstractLamiaFormTool):
 
     LOADFIRST = False
     dbasetablename = 'Intervenant'
     specialfieldui = []
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
-        super(BaseIntervenantTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
+    DBASETABLENAME = 'Intervenant'
+    LOADFIRST = False
 
+    tooltreewidgetCAT = 'Gestion'
+    tooltreewidgetSUBCAT = 'Intervenants'
+    tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_intervenant_tool_icon.png')
+
+
+    def __init__(self, **kwargs):
+        super(BaseIntervenantTool, self).__init__(**kwargs)
+
+    """
     def initTool(self):
         # ****************************************************************************************
         # Main spec
@@ -74,26 +80,23 @@ class BaseIntervenantTool(AbstractLamiaTool):
         # ****************************************************************************************
         #properties ui
         pass
+    """
 
-    def initFieldUI(self):
-        # ****************************************************************************************
-        #   userui Field
-        if self.userwdgfield is None:
-            # ****************************************************************************************
-            # userui
-            self.userwdgfield = UserUI()
+    def initMainToolWidget(self):
 
-            self.linkuserwdgfield = {'Intervenant': {'linkfield': 'id_intervenant',
-                                                  'widgets': {'nom' : self.userwdgfield.lineEdit_nom,
-                                                              'societe': self.userwdgfield.lineEdit_societe,
-                                                              'fonction': self.userwdgfield.lineEdit_fonction,
-                                                              'adresse': self.userwdgfield.lineEdit_adresse,
-                                                              'tel': self.userwdgfield.lineEdit_tel,
-                                                              'courriel': self.userwdgfield.lineEdit_mail,
-                                                              'fax': self.userwdgfield.lineEdit_fax,
-                                                              }},
-                                'Objet': {'linkfield': 'id_objet',
-                                          'widgets': {}}}
+        self.toolwidgetmain = UserUI()
+
+        self.formtoolwidgetconfdictmain = {'Intervenant': {'linkfield': 'id_intervenant',
+                                                        'widgets': {'nom' : self.toolwidgetmain.lineEdit_nom,
+                                                                    'societe': self.toolwidgetmain.lineEdit_societe,
+                                                                    'fonction': self.toolwidgetmain.lineEdit_fonction,
+                                                                    'adresse': self.toolwidgetmain.lineEdit_adresse,
+                                                                    'tel': self.toolwidgetmain.lineEdit_tel,
+                                                                    'courriel': self.toolwidgetmain.lineEdit_mail,
+                                                                    'fax': self.toolwidgetmain.lineEdit_fax,
+                                                                    }},
+                                    'Objet': {'linkfield': 'id_objet',
+                                                'widgets': {}}}
 
 
 
@@ -105,9 +108,11 @@ class BaseIntervenantTool(AbstractLamiaTool):
         pass
 
 
-    def postInitFeatureProperties(self, feat):
+    # def postInitFeatureProperties(self, feat):
+    def postSelectFeature(self):
         pass
 
+    """
     def createParentFeature(self):
         pkobjet = self.dbase.createNewObjet()
 
@@ -149,15 +154,15 @@ class BaseIntervenantTool(AbstractLamiaTool):
                     query = self.dbase.query(sql)
                     self.dbase.commit()
 
+    """
 
 
 
 
-
-    def postSaveFeature(self, boolnewfeature):
+    def postSaveFeature(self, savedfeaturepk=None):
         pass
 
-
+    """
     def deleteParentFeature(self):
 
 
@@ -172,7 +177,7 @@ class BaseIntervenantTool(AbstractLamiaTool):
 
 
         return True
-
+    """
 
 
 class UserUI(QWidget):

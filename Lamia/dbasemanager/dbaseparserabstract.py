@@ -27,11 +27,18 @@ This file is part of LAMIA.
  """
 
 import  datetime 
-import os, sys, re, logging
-
+import os, sys, re, logging, shutil
+try:
+    import PIL
+    import PIL.Image
+    PILexists = True
+except ImportError:
+    PILexists = False
 from .dbconfigreader import DBconfigReader
 from .dbaseofflinemanager import DBaseOfflineManager
 from . import dbaseutils
+
+
 
 PGTYPE_TO_SLTYPE = {'VARCHAR' : 'TEXT',
                     'INT' : 'INTEGER',
@@ -512,6 +519,70 @@ class AbstractDBaseParser():
                     break
 
         return parenttablenamelist
+
+    def copyRessourceFile(self,fromfile, tofile, withthumbnail=0, copywholedirforraster = False):
+        """
+
+        :param fromrep:
+        :param fromfile:
+        :param torep:
+        :param withthumbnail: 0 : copy  file + create thumbnail ; 1 : copy only thumnail; 2 : copyonly file
+        :param copywholedirforraster:
+        :return:
+        """
+
+        debug = False
+
+        if debug: logging.getLogger("Lamia").debug('Copy %s %s', str(fromfile), str(tofile))
+
+        fromfile = fromfile
+        fromdir =  os.path.dirname(fromfile)
+        fromfilename, fromfileext = os.path.splitext(os.path.basename(fromfile))
+        destinationfile = tofile
+        destinationdir = os.path.dirname(destinationfile)
+        destinationfilename, destinationfileext = os.path.splitext(os.path.basename(destinationfile))
+
+        if os.path.isfile(fromfile):
+
+            if copywholedirforraster and 'Rasters' in fromfile:
+                if not os.path.exists(destinationdir):
+                    shutil.copytree(fromdir, destinationdir)
+            else:
+                if not os.path.exists(destinationdir):
+                    os.makedirs(destinationdir)
+
+                fromfilebase, fromext = os.path.splitext(fromfile)
+                tofilebase, toext = os.path.splitext(destinationfile)
+
+
+                if len(fromfilebase.split('_')) > 1 and fromfilebase.split('_')[1] == 'croquis':
+                    shutil.copy(fromfile, destinationfile)
+
+                elif fromext in ['.shp']:
+                    dirfiles = [f for f in os.listdir(fromdir) if os.path.isfile(os.path.join(fromdir,f))]
+                    for dirfile in dirfiles:
+                        dirfilebase, dirfileext = os.path.splitext(dirfile)
+                        if dirfilebase == fromfilename:
+                            fromshpfile = os.path.join(fromdir,dirfilebase + dirfileext )
+                            toshpfile = os.path.join(destinationdir,destinationfilename + dirfileext)
+                            shutil.copy(fromshpfile, toshpfile)
+
+                else:
+                    if withthumbnail in [0,1] and PILexists and fromext.lower() in ['.jpg', '.jpeg', '.png']:
+
+                        possibletbnailfile = fromfilebase + "_thumbnail.png"
+                        if os.path.isfile(possibletbnailfile):
+                            if possibletbnailfile != tofilebase + "_thumbnail.png":
+                                shutil.copy(possibletbnailfile, tofilebase + "_thumbnail.png")
+                        else:
+                            size = 256, 256
+                            im = PIL.Image.open(fromfile)
+                            im.thumbnail(size)
+                            im.save(tofilebase + "_thumbnail.png", "PNG")
+
+                    if withthumbnail in [0,2]:
+                        shutil.copy(fromfile, destinationfile)
+
 
     def createSetValueSentence(self,type='INSERT',tablename=None, listoffields=[], listofrawvalues=[]):
 

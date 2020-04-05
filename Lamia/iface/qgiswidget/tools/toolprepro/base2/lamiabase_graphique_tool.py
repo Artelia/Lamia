@@ -25,33 +25,11 @@ This file is part of LAMIA.
  """
 
 
-
-
-from qgis.PyQt import uic, QtCore
-
-try:
-    from qgis.PyQt.QtGui import (QWidget, QComboBox, QDoubleSpinBox, QSpinBox, QHeaderView,
-                                 QTableWidgetItem)
-except ImportError:
-    from qgis.PyQt.QtWidgets import (QWidget,QComboBox, QDoubleSpinBox, QSpinBox, QHeaderView,
-                                     QTableWidgetItem)
-#from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
-from ...Lamia_abstract_tool import AbstractLamiaTool
-
+from collections import OrderedDict
 import os
 import datetime
 import numpy as np
 import sys
-
-
-if False:
-    if sys.version_info.major == 2:
-        from ...libs import pyqtgraph as pg
-        pg.setConfigOption('background', 'w')
-    elif sys.version_info.major == 3:
-        from ...libs import pyqtgraph as pg
-        pg.setConfigOption('background', 'w')
-
 
 import matplotlib
 matplotlib.use('agg')
@@ -60,31 +38,33 @@ font = {'family' : 'normal','weight' : 'bold','size'   : 8}
 matplotlib.rc('font', **font)
 #matplotlib.rc('xtick', labelsize=20)
 #matplotlib.rc('ytick', labelsize=20)
-
-if sys.version_info.major == 2:
-    from matplotlib.backends.backend_qt4agg import (FigureCanvasQTAgg as FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
-elif sys.version_info.major == 3:
-    from matplotlib.backends.backend_qt5agg import (FigureCanvasQTAgg as FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
-
-from collections import OrderedDict
+from matplotlib.backends.backend_qt5agg import (FigureCanvasQTAgg as FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
 
 
-"""
-ne permettre de la renseigner qu en etant une classe fille de leve topo - sinon pas de datecreation
-ca fout la merde....
+from qgis.PyQt import uic, QtCore
+from qgis.PyQt.QtWidgets import (QWidget,QComboBox, QDoubleSpinBox, QSpinBox, QHeaderView,
+                                     QTableWidgetItem)
 
-"""
+from ...lamia_abstractformtool import AbstractLamiaFormTool
 
 
-class BaseGraphiqueTool(AbstractLamiaTool):
 
+
+
+
+class BaseGraphiqueTool(AbstractLamiaFormTool):
+
+    DBASETABLENAME = 'Graphique'
     LOADFIRST = False
-    dbasetablename = 'Graphique'
-    specialfieldui = []
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
-        super(BaseGraphiqueTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
+    tooltreewidgetCAT = 'Ressources'
+    tooltreewidgetSUBCAT = 'Graphique'
+    tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), '..', 'base', 'lamiabase_graphique_tool_icon.png')
 
+    def __init__(self, **kwargs):
+        super(BaseGraphiqueTool, self).__init__(**kwargs)
+
+    """
     def initTool(self):
         # ****************************************************************************************
         # Main spec
@@ -114,73 +94,68 @@ class BaseGraphiqueTool(AbstractLamiaTool):
 
         # ****************************************************************************************
         #properties ui
+    """
 
-    def initFieldUI(self):
+    def initMainToolWidget(self):
         # ****************************************************************************************
         #   userui Field
-        if self.userwdgfield is None:
-            # ****************************************************************************************
-            # userui
-            self.userwdgfield = UserUI()
-            self.linkuserwdgfield = {'Graphique' : {'linkfield' : 'id_graphique',
-                                             'widgets' : {'typegraphique': self.userwdgfield.comboBox_graphtype}},
-                                'Objet' : {'linkfield' : 'id_objet',
-                                          'widgets' : {}},
-                                'Ressource' : {'linkfield' : 'id_ressource',
-                                          'widgets' : {}}}
+
+        self.toolwidgetmain = UserUI()
+        self.formtoolwidgetconfdictmain = {'Graphique' : {'linkfield' : 'id_graphique',
+                                                        'widgets' : {'typegraphique': self.toolwidgetmain.comboBox_graphtype}},
+                                                'Objet' : {'linkfield' : 'id_objet',
+                                                            'widgets' : {}},
+                                                'Ressource' : {'linkfield' : 'id_ressource',
+                                                            'widgets' : {}}}
 
 
-            self.graphspec = {'SIM': OrderedDict([('x','X'),
-                                                  ('y','X')]),
-                                'PTR': OrderedDict([('x','X'),
-                                                  ('y','X'),
-                                                  ('index1', 'Position'),
-                                                  ('index2',  'Nature'),
-                                                  ('index3', 'Materiau'),
-                                                    ('index4', 'Cote') ])
-                                      }
+        self.graphspec = {'SIM': OrderedDict([('x','X'),
+                                                ('y','X')]),
+                            'PTR': OrderedDict([('x','X'),
+                                                ('y','X'),
+                                                ('index1', 'Position'),
+                                                ('index2',  'Nature'),
+                                                ('index3', 'Materiau'),
+                                                ('index4', 'Cote') ])
+                                    }
 
-            self.userwdgfield.pushButton_addline.clicked.connect(self.addrow)
-            self.userwdgfield.pushButton_delline.clicked.connect(self.removerow)
-            self.enableTypeComboBox()
+        self.toolwidgetmain.pushButton_addline.clicked.connect(self.addrow)
+        self.toolwidgetmain.pushButton_delline.clicked.connect(self.removerow)
+        self.enableTypeComboBox()
 
-            if True:
-                self.figuretype = plt.figure()
-                self.axtype = self.figuretype.add_subplot(111)
-                self.mplfigure = FigureCanvas(self.figuretype)
-                self.userwdgfield.frame_graph.layout().addWidget(self.mplfigure)
-                self.toolbar = NavigationToolbar(self.mplfigure, self.userwdgfield.frame_graph)
-                self.userwdgfield.frame_graph.layout().addWidget(self.toolbar)
+        if True:
+            self.figuretype = plt.figure()
+            self.axtype = self.figuretype.add_subplot(111)
+            self.mplfigure = FigureCanvas(self.figuretype)
+            self.toolwidgetmain.frame_graph.layout().addWidget(self.mplfigure)
+            self.toolbar = NavigationToolbar(self.mplfigure, self.toolwidgetmain.frame_graph)
+            self.toolwidgetmain.frame_graph.layout().addWidget(self.toolbar)
 
-            if False:
-                # Tools tab - temporal graph
-                self.pyqtgraphwdg = pg.PlotWidget()
-                #layout = QtGui.QVBoxLayout()
-                #layout.addWidget(self.pyqtgraphwdg)
-                self.vb = self.pyqtgraphwdg.getViewBox()
-                #self.userwdg.frame_graph.setLayout(layout)
-                self.userwdgfield.frame_graph.layout().addWidget(self.pyqtgraphwdg)
-                self.plotitem = []
-
+        if False:
+            # Tools tab - temporal graph
+            self.pyqtgraphwdg = pg.PlotWidget()
+            #layout = QtGui.QVBoxLayout()
+            #layout.addWidget(self.pyqtgraphwdg)
+            self.vb = self.pyqtgraphwdg.getViewBox()
+            #self.userwdg.frame_graph.setLayout(layout)
+            self.toolwidgetmain.frame_graph.layout().addWidget(self.pyqtgraphwdg)
+            self.plotitem = []
 
 
 
-            # ****************************************************************************************
-            # child widgets
-            pass
-
-
+    """
     def postOnActivation(self):
         pass
 
     def postOnDesactivation(self):
         pass
+    """
 
     def addrow(self):
-        introw = self.userwdgfield.tableWidget.currentRow()
-        self.userwdgfield.tableWidget.insertRow(introw + 1)
-        typetext = self.userwdgfield.comboBox_graphtype.currentText()
-        type = self.dbase.getConstraintRawValueFromText(self.dbasetablename,'typegraphique',typetext)
+        introw = self.toolwidgetmain.tableWidget.currentRow()
+        self.toolwidgetmain.tableWidget.insertRow(introw + 1)
+        typetext = self.toolwidgetmain.comboBox_graphtype.currentText()
+        type = self.dbase.getConstraintRawValueFromText(self.DBASETABLENAME,'typegraphique',typetext)
         if type in self.graphspec.keys():
             for i, field in enumerate(self.graphspec[type]):
                 graphiquedataelemfields = self.dbase.dbasetables['Graphiquedata']['fields'][field]
@@ -188,18 +163,18 @@ class BaseGraphiqueTool(AbstractLamiaTool):
                     combobox = QComboBox()
                     itemlist = [elem[0] for elem in graphiquedataelemfields['Cst']]
                     combobox.addItems(itemlist)
-                    self.userwdgfield.tableWidget.setCellWidget(introw + 1, i, combobox)
+                    self.toolwidgetmain.tableWidget.setCellWidget(introw + 1, i, combobox)
                 elif graphiquedataelemfields['PGtype'] == 'NUMERIC':
                     spinbox = QDoubleSpinBox()
                     spinbox.setSingleStep(0.5)
                     spinbox.setRange(-9999, 9999)
-                    self.userwdgfield.tableWidget.setCellWidget(introw + 1, i, spinbox)
+                    self.toolwidgetmain.tableWidget.setCellWidget(introw + 1, i, spinbox)
                 elif graphiquedataelemfields['PGtype'] == 'INTEGER':
                     spinbox = QSpinBox()
                     spinbox.setRange(-9999, 9999)
-                    self.userwdgfield.tableWidget.setCellWidget(introw + 1, i, spinbox)
+                    self.toolwidgetmain.tableWidget.setCellWidget(introw + 1, i, spinbox)
 
-        header = self.userwdgfield.tableWidget.horizontalHeader()
+        header = self.toolwidgetmain.tableWidget.horizontalHeader()
         if sys.version_info.major == 2:
             header.setResizeMode(QHeaderView.ResizeToContents)
         elif sys.version_info.major == 3:
@@ -210,24 +185,25 @@ class BaseGraphiqueTool(AbstractLamiaTool):
 
 
     def removerow(self):
-        introw = self.userwdgfield.tableWidget.currentRow()
-        self.userwdgfield.tableWidget.removeRow(introw)
+        introw = self.toolwidgetmain.tableWidget.currentRow()
+        self.toolwidgetmain.tableWidget.removeRow(introw)
 
         self.enableTypeComboBox()
 
-        if False and introw != 0 and introw != (self.userwdgfield.tableWidget.rowCount()):
-            self.userwdgfield.tableWidget.setItem(introw, 1, QTableWidgetItem(self.userwdgfield.tableWidget.item(introw - 1, 2)))
+        if False and introw != 0 and introw != (self.toolwidgetmain.tableWidget.rowCount()):
+            self.toolwidgetmain.tableWidget.setItem(introw, 1, QTableWidgetItem(self.toolwidgetmain.tableWidget.item(introw - 1, 2)))
 
 
     def enableTypeComboBox(self):
-        if self.userwdgfield.tableWidget.rowCount() == 0:
-            self.userwdgfield.comboBox_graphtype.setEnabled(True)
+        if self.toolwidgetmain.tableWidget.rowCount() == 0:
+            self.toolwidgetmain.comboBox_graphtype.setEnabled(True)
         else:
-            self.userwdgfield.comboBox_graphtype.setEnabled(False)
+            self.toolwidgetmain.comboBox_graphtype.setEnabled(False)
 
 
 
-    def postInitFeatureProperties(self, feat):
+    # def postInitFeatureProperties(self, feat):
+    def postSelectFeature(self):
 
         if False:
             self.pyqtgraphwdg.clear()
@@ -239,44 +215,43 @@ class BaseGraphiqueTool(AbstractLamiaTool):
         """
 
 
-        if self.currentFeature is None:
+        if self.currentFeaturePK is None:
             datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
-            self.initFeatureProperties(feat, 'Ressource', 'date', datecreation)
-            self.userwdgfield.tableWidget.setRowCount(0)
+            #self.initFeatureProperties(feat, 'Ressource', 'date', datecreation)
+            self.formutils.applyResultDict({'date': datecreation})
+            self.toolwidgetmain.tableWidget.setRowCount(0)
 
         else :
 
-            type = self.currentFeature['typegraphique']
-            typetext =  self.dbase.getConstraintTextFromRawValue(self.dbasetablename,'typegraphique',type)
-            self.userwdgfield.comboBox_graphtype.setCurrentIndex(self.userwdgfield.comboBox_graphtype.findText(typetext))
+            #type = self.currentFeature['typegraphique']
+            grapthtype = self.dbase.getValuesFromPk(self.DBASETABLENAME,
+                                                    'typegraphique',
+                                                    self.currentFeaturePK)
+            typetext =  self.dbase.getConstraintTextFromRawValue(self.DBASETABLENAME,'typegraphique',grapthtype)
+            self.toolwidgetmain.comboBox_graphtype.setCurrentIndex(self.toolwidgetmain.comboBox_graphtype.findText(typetext))
 
-
-            # result = self.getGraphData(self.currentFeature['id_graphique'])
             result = self.getGraphData(self.currentFeaturePK)
 
-            # print('result',result)
-
-            # print('resgraph', len(query), query)
-            self.userwdgfield.tableWidget.setRowCount(0)
+            self.toolwidgetmain.tableWidget.setRowCount(0)
             if result is not None :
                 graphiquedatafields = self.dbase.dbasetables['Graphiquedata']['fields']
 
                 for i in range(len(result['x'])):
                     self.addrow()
-                    lastrow = self.userwdgfield.tableWidget.rowCount() - 1
-                    self.userwdgfield.tableWidget.setCurrentCell(lastrow, 0)
+                    lastrow = self.toolwidgetmain.tableWidget.rowCount() - 1
+                    self.toolwidgetmain.tableWidget.setCurrentCell(lastrow, 0)
                     # print('init',lastrow,elem)
-                    for field in self.graphspec[type].keys():
-                        order = list(self.graphspec[type].keys()).index(field)
+                    for field in self.graphspec[grapthtype].keys():
+                        order = list(self.graphspec[grapthtype].keys()).index(field)
                         if 'Cst' in graphiquedatafields[field].keys():
-                            combo = self.userwdgfield.tableWidget.cellWidget(lastrow, order)
+                            combo = self.toolwidgetmain.tableWidget.cellWidget(lastrow, order)
                             indexcombo = combo.findText(result[field][i])
                             combo.setCurrentIndex(indexcombo)
                         elif (graphiquedatafields[field]['PGtype'] == 'INT'
                               or graphiquedatafields[field]['PGtype'] == 'NUMERIC'):
-                            self.userwdgfield.tableWidget.cellWidget(lastrow, order).setValue(result[field][i])
+                            self.toolwidgetmain.tableWidget.cellWidget(lastrow, order).setValue(result[field][i])
 
-                self.showGraph(type, result)
+                self.showGraph(grapthtype, result)
 
         self.enableTypeComboBox()
 
@@ -330,8 +305,8 @@ class BaseGraphiqueTool(AbstractLamiaTool):
 
     def showGraph(self,type, graphdata):
 
-        typetext = self.userwdgfield.comboBox_graphtype.currentText()
-        type = self.dbase.getConstraintRawValueFromText(self.dbasetablename,'typegraphique',typetext)
+        typetext = self.toolwidgetmain.comboBox_graphtype.currentText()
+        type = self.dbase.getConstraintRawValueFromText(self.DBASETABLENAME,'typegraphique',typetext)
         graphspec = self.graphspec[type]
         result={}
 
@@ -340,12 +315,14 @@ class BaseGraphiqueTool(AbstractLamiaTool):
         if True:
             Xgraph = [0.0]
             Zgraph = [0.0]
+            grapthtype = self.dbase.getValuesFromPk(self.DBASETABLENAME,
+                                        'typegraphique',
+                                        self.currentFeaturePK)
 
-            if self.currentFeature['typegraphique'] == 'PTR':
+            if grapthtype in ['SIM', 'PTR']:
                 for i in range(len(result['x'])):
                     Xgraph.append(Xgraph[-1] + float(result['x'][i]))
                     Zgraph.append(Zgraph[-1] + float(result['y'][i]))
-
 
             self.axtype.clear()
             self.axtype.plot(Xgraph, Zgraph)
@@ -470,6 +447,7 @@ class BaseGraphiqueTool(AbstractLamiaTool):
 
         #return resfile
 
+    """
     def createParentFeature(self):
         pkobjet = self.dbase.createNewObjet()
 
@@ -515,50 +493,43 @@ class BaseGraphiqueTool(AbstractLamiaTool):
                 self.dbase.commit()
 
                 """
-                currentparentlinkfield = self.parentWidget.currentFeature['id_objet']
-                sql = "INSERT INTO Tcobjetressource(id_tcobjet, id_tcressource,id_revisionbegin) "
-                sql += " VALUES(" +  str(currentparentlinkfield) + ", " +  str(lastressourceid) + "," +str(lastrevision) +");"
-                # print('createparent',sql)
 
-                query = self.dbase.query(sql)
-                self.dbase.commit()
-                """
-
-    def postSaveFeature(self, boolnewfeature):
+    def postSaveFeature(self, savedfeaturepk=None):
 
 
         #idgraphique = self.currentFeature.id()
-        pkgraphique = self.currentFeaturePK
+        pkgraphique = savedfeaturepk
 
         sql = "DELETE FROM Graphiquedata WHERE lpk_graphique = " + str(pkgraphique)
-        # print(sql)
         self.dbase.query(sql)
-        self.dbase.commit()
 
         if False:
             self.dbase.vacuum('Graphiquedata')
             self.dbase.commit()
 
-        for i, row in enumerate(range(self.userwdgfield.tableWidget.rowCount() )):
+        for i, row in enumerate(range(self.toolwidgetmain.tableWidget.rowCount() )):
             # get values
-            typetext = self.userwdgfield.comboBox_graphtype.currentText()
-            type = self.dbase.getConstraintRawValueFromText(self.dbasetablename, 'typegraphique', typetext)
-            listchamp = ','.join(self.graphspec[type].keys())
+            typetext = self.toolwidgetmain.comboBox_graphtype.currentText()
+            graphtype = self.dbase.getConstraintRawValueFromText(self.DBASETABLENAME, 'typegraphique', typetext)
+            listchamp = ','.join(self.graphspec[graphtype].keys())
             values=[]
-            for column, field in enumerate(self.graphspec[type]):
-                if self.userwdgfield.tableWidget.cellWidget(row, column) is not None:
-                    columnwdg = self.userwdgfield.tableWidget.cellWidget(row, column)
+            for column, field in enumerate(self.graphspec[graphtype]):
+                if self.toolwidgetmain.tableWidget.cellWidget(row, column) is not None:
+                    columnwdg = self.toolwidgetmain.tableWidget.cellWidget(row, column)
                     if isinstance(columnwdg,QComboBox):
                         value = "'" + self.dbase.getConstraintRawValueFromText('Graphiquedata',
                                                                           field,
                                                                           columnwdg.currentText()) + "'"
                     elif isinstance(columnwdg,QDoubleSpinBox) or isinstance(columnwdg,QSpinBox):
                         value = str(columnwdg.value())
+                        if value is None:
+                            value = '0.0'
+                    else:
+                        value = 'NULL'
                 values.append(value)
 
             sql = "INSERT INTO Graphiquedata (" + listchamp + ",lpk_graphique, id_graphiquedata) "
             sql += " VALUES(" + ",".join(values) + "," + str(pkgraphique) + ',' +  str(i +1) + ");"
-            # print(sql)
             self.dbase.query(sql)
 
 

@@ -33,8 +33,8 @@ try:
     from qgis.PyQt.QtGui import (QWidget)
 except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget)
-#from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
-from ...Lamia_abstract_tool import AbstractLamiaTool
+
+from ...lamia_abstractformtool import AbstractLamiaFormTool
 
 from .lamiabase_photo_tool import BasePhotoTool
 from .lamiabase_croquis_tool import BaseCroquisTool
@@ -42,15 +42,19 @@ import os
 import datetime
 
 
-class BaseObservationTool(AbstractLamiaTool):
+class BaseObservationTool(AbstractLamiaFormTool):
 
-    dbasetablename = 'Observation'
-    specialfieldui = []
+    DBASETABLENAME = 'Observation'
+    # LOADFIRST = True
 
+    tooltreewidgetCAT = 'Desordre'
+    # tooltreewidgetSUBCAT = 'Desordre'
+    tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_observation_tool_icon.png')
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
-        super(BaseObservationTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
-        
+    def __init__(self, **kwargs):
+        super(BaseObservationTool, self).__init__(**kwargs)
+    
+    """
     def initTool(self):
         # ****************************************************************************************
         # Main spec
@@ -81,38 +85,35 @@ class BaseObservationTool(AbstractLamiaTool):
         # ****************************************************************************************
         #properties ui
         pass
+    """
 
-    def initFieldUI(self):
+    def initMainToolWidget(self):
+
+        self.toolwidgetmain = UserUI()
+        self.formtoolwidgetconfdictmain = {'Observation' : {'linkfield' : 'id_observation',
+                                                            'widgets' : {'datetimeobservation' : self.toolwidgetmain.dateTimeEdit,
+                                                                        'nombre' : self.toolwidgetmain.spinBox_nombre,
+                                                                    'gravite': self.toolwidgetmain.comboBox_urgence,
+                                                                    'evolution': self.toolwidgetmain.textEdit_evolution,
+                                                                    'typesuite': self.toolwidgetmain.comboBox_typesuite,
+                                                                    'commentairesuite': self.toolwidgetmain.textEdit_suite}},
+                                            'Objet' : {'linkfield' : 'id_objet',
+                                                        'widgets' : {'commentaire': self.toolwidgetmain.textEdit_comm}}}
+
+        self.toolwidgetmain.toolButton_calc_nb.clicked.connect(
+            lambda: self.windowdialog.showNumPad(self.toolwidgetmain.spinBox_nombre))
+
         # ****************************************************************************************
-        # userui Desktop
-        if self.userwdgfield is None:
-            # ****************************************************************************************
-            # userui
-            self.userwdgfield = UserUI()
-            self.linkuserwdgfield = {'Observation' : {'linkfield' : 'id_observation',
-                                             'widgets' : {'datetimeobservation' : self.userwdgfield.dateTimeEdit,
-                                                          'nombre' : self.userwdgfield.spinBox_nombre,
-                                                        'gravite': self.userwdgfield.comboBox_urgence,
-                                                        'evolution': self.userwdgfield.textEdit_evolution,
-                                                        'typesuite': self.userwdgfield.comboBox_typesuite,
-                                                        'commentairesuite': self.userwdgfield.textEdit_suite}},
-                                'Objet' : {'linkfield' : 'id_objet',
-                                          'widgets' : {'commentaire': self.userwdgfield.textEdit_comm}}}
+        # child widgets
+        self.dbasechildwdgfield=[]
+        if self.parentWidget is not None:
+            self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, parentwidget=self)
+            self.dbasechildwdgfield = [self.propertieswdgPHOTOGRAPHIE]
 
-            self.userwdgfield.toolButton_calc_nb.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.userwdgfield.spinBox_nombre))
+            self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
+            self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
-            # ****************************************************************************************
-            # child widgets
-            self.dbasechildwdgfield=[]
-            if self.parentWidget is not None:
-                self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, parentwidget=self)
-                self.dbasechildwdgfield = [self.propertieswdgPHOTOGRAPHIE]
-
-                self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
-                self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
-
-
+    """
     def postOnActivation(self):
             pass
 
@@ -123,9 +124,10 @@ class BaseObservationTool(AbstractLamiaTool):
         if self.parentWidget is not None and self.parentWidget.dbasetablename == 'Desordre':
             sqlin += " ORDER BY datetimeobservation DESC"
         return sqlin
+    """
 
-
-    def postInitFeatureProperties(self, feat):
+    # def postInitFeatureProperties(self, feat):
+    def postSelectFeature(self):
 
         if self.currentFeature is None:
 
@@ -161,12 +163,12 @@ class BaseObservationTool(AbstractLamiaTool):
                 grpdescst = [elem[1] for elem in self.dbase.dbasetables['Desordre']['fields']['groupedesordre']['Cst']]
                 indexgrp = grpdescst.index(grpdes)
                 try:
-                    self.userwdgfield.stackedWidget.setCurrentIndex(indexgrp)
+                    self.toolwidgetmain.stackedWidget.setCurrentIndex(indexgrp)
                 except:
                     pass
 
 
-
+    """
     def createParentFeature(self):
         pkobjet = self.dbase.createNewObjet()
 
@@ -205,17 +207,17 @@ class BaseObservationTool(AbstractLamiaTool):
                 sql += " WHERE pk_observation = " + str(self.currentFeaturePK)
                 query = self.dbase.query(sql)
                 self.dbase.commit()
+    """
 
 
 
-
-    def postSaveFeature(self, boolnewfeature):
-        if self.savingnewfeature:
+    def postSaveFeature(self, savedfeaturepk=None):
+        if self.currentFeaturePK is None:   #new feature
             # Case when a observation is defined in the past
             pk_objet, creation , observation = self.dbase.getValuesFromPk('Observation_qgis',
                                                             ['pk_objet','datetimecreation','datetimeobservation'],
                                                             self.currentFeaturePK)
-            print(pk_objet, creation , observation)
+
             datetimecreation = QtCore.QDateTime.fromString(creation, 'yyyy-MM-dd hh:mm:ss')
             datetimeobservation = QtCore.QDateTime.fromString(observation, 'yyyy-MM-dd hh:mm:ss')
             if datetimecreation > datetimeobservation:
@@ -223,7 +225,7 @@ class BaseObservationTool(AbstractLamiaTool):
                 sql += " WHERE pk_objet = " + str(pk_objet)
                 self.dbase.query(sql)
 
-            if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
+            if self.parentWidget is not None and self.parentWidget.currentFeaturePK is not None:
                 if self.parentWidget.dbasetablename == 'Desordre':
                     pk_objet, descreation = self.dbase.getValuesFromPk('Desordre_qgis',
                                                                                  ['pk_objet', 'datetimecreation'],
@@ -235,7 +237,7 @@ class BaseObservationTool(AbstractLamiaTool):
                         self.dbase.query(sql)
 
 
-
+    """
     def deleteParentFeature(self):
 
         sql = "SELECT pk_objet FROM Observation_qgis WHERE pk_observation = " + str(self.currentFeaturePK)
@@ -249,7 +251,7 @@ class BaseObservationTool(AbstractLamiaTool):
 
 
         return True
-
+    """
 
 
 class UserUI(QWidget):

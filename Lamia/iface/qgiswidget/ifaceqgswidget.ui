@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>501</width>
-    <height>404</height>
+    <height>370</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -689,6 +689,8 @@ background-color: rgb(255, 255, 255);</string>
     <bool>false</bool>
    </attribute>
    <addaction name="actiontoolbarnew"/>
+   <addaction name="actiontoolbarundo"/>
+   <addaction name="actiontoolbardelete"/>
    <addaction name="actiontoolbarsave"/>
   </widget>
   <widget class="QToolBar" name="toolBarFormGeom">
@@ -701,9 +703,12 @@ background-color: rgb(255, 255, 255);</string>
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actiontoobargeomnewpoint"/>
+   <addaction name="actiontoobargeomnewline"/>
+   <addaction name="actiontoobargeomnewpolygon"/>
    <addaction name="actiontoobargeomaddpoint"/>
-   <addaction name="actiontoobargeomaddline"/>
-   <addaction name="actiontoobargeomaddpolygon"/>
+   <addaction name="actiontoobargeomaddGPSpoint"/>
+   <addaction name="actiontoobargeomeditlayer"/>
   </widget>
   <action name="actionTre">
    <property name="text">
@@ -909,31 +914,76 @@ background-color: rgb(255, 255, 255);</string>
     <string>toolbarnew</string>
    </property>
   </action>
-  <action name="actiontoobargeomaddpoint">
+  <action name="actiontoobargeomnewpoint">
    <property name="icon">
     <iconset resource="../../resources.qrc">
      <normaloff>:/plugins/Lamia/icons/mActionCapturePoint.svg</normaloff>:/plugins/Lamia/icons/mActionCapturePoint.svg</iconset>
    </property>
    <property name="text">
-    <string>toobargeomaddpoint</string>
+    <string>toobargeomnewpoint</string>
    </property>
   </action>
-  <action name="actiontoobargeomaddline">
+  <action name="actiontoobargeomnewline">
    <property name="icon">
     <iconset resource="../../resources.qrc">
      <normaloff>:/plugins/Lamia/icons/mActionCaptureLine.svg</normaloff>:/plugins/Lamia/icons/mActionCaptureLine.svg</iconset>
    </property>
    <property name="text">
-    <string>toobargeomaddline</string>
+    <string>toobargeomnewline</string>
    </property>
   </action>
-  <action name="actiontoobargeomaddpolygon">
+  <action name="actiontoobargeomnewpolygon">
    <property name="icon">
     <iconset resource="../../resources.qrc">
      <normaloff>:/plugins/Lamia/icons/mActionCapturePolygon.svg</normaloff>:/plugins/Lamia/icons/mActionCapturePolygon.svg</iconset>
    </property>
    <property name="text">
-    <string>toobargeomaddpolygon</string>
+    <string>toobargeomanewpolygon</string>
+   </property>
+  </action>
+  <action name="actiontoolbardelete">
+   <property name="icon">
+    <iconset resource="../../resources.qrc">
+     <normaloff>:/plugins/Lamia/icons/Delete_48x48.png</normaloff>:/plugins/Lamia/icons/Delete_48x48.png</iconset>
+   </property>
+   <property name="text">
+    <string>toolbardelete</string>
+   </property>
+  </action>
+  <action name="actiontoolbarundo">
+   <property name="icon">
+    <iconset resource="../../resources.qrc">
+     <normaloff>:/plugins/Lamia/icons/deselect.png</normaloff>:/plugins/Lamia/icons/deselect.png</iconset>
+   </property>
+   <property name="text">
+    <string>toolbarundo</string>
+   </property>
+  </action>
+  <action name="actiontoobargeomaddpoint">
+   <property name="icon">
+    <iconset resource="../../resources.qrc">
+     <normaloff>:/plugins/Lamia/icons/mActionAddNodesItem1.svg</normaloff>:/plugins/Lamia/icons/mActionAddNodesItem1.svg</iconset>
+   </property>
+   <property name="text">
+    <string>toobargeomaddpoint</string>
+   </property>
+  </action>
+  <action name="actiontoobargeomaddGPSpoint">
+   <property name="icon">
+    <iconset resource="../../resources.qrc">
+     <normaloff>:/plugins/Lamia/icons/mActionAddNodesItemGPS.svg</normaloff>:/plugins/Lamia/icons/mActionAddNodesItemGPS.svg</iconset>
+   </property>
+   <property name="text">
+    <string>toobargeomaddGPSpoint</string>
+   </property>
+  </action>
+  <action name="actiontoobargeomeditlayer">
+   <property name="icon">
+    <iconset resource="../../resources.qrc">
+     <normaloff>:/plugins/Lamia/icons/mActionVertexTool2.svg</normaloff>:/plugins/Lamia/icons/mActionVertexTool2.svg</iconset>
+   </property>
+   <property name="text">
+    <string>toobargeomeditlayer</string>
    </property>
   </action>
  </widget>

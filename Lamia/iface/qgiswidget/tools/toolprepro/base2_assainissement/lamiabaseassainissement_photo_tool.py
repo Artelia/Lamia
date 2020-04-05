@@ -46,79 +46,53 @@ numphoto = None
 
 
 class BaseAssainissementPhotoTool(BasePhotoTool):
-    LOADFIRST = False
-    dbasetablename = 'Photo'
 
+    def __init__(self, **kwargs):
+        super(BaseAssainissementPhotoTool, self).__init__(**kwargs)
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None, parentwidget=None, parent=None):
-        super(BaseAssainissementPhotoTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil, parentwidget,
-                                                          parent=parent)
+    def initMainToolWidget(self):
 
-    def initFieldUI(self):
-        if self.userwdgfield is None:
-            self.userwdgfield = UserUI()
-            self.linkuserwdgfield = {'Photo' : {'linkfield' : 'id_photo',
-                                             'widgets' : {}},
-                                'Objet' : {'linkfield' : 'id_objet',
-                                          'widgets' : {}},
-                                'Ressource' : {'linkfield' : 'id_ressource',
-                                          'widgets' : {'file': self.userwdgfield.lineEdit_file,
-                                                       'numressource': self.userwdgfield.spinBox_numphoto,
-                                                        'datetimeressource' : self.userwdgfield.dateTimeEdit_date}}}
+        self.toolwidgetmain = UserUI()
+        self.formtoolwidgetconfdictmain = {'Photo' : {'linkfield' : 'id_photo',
+                                            'widgets' : {}},
+                            'Objet' : {'linkfield' : 'id_objet',
+                                        'widgets' : {}},
+                            'Ressource' : {'linkfield' : 'id_ressource',
+                                        'widgets' : {'file': self.toolwidgetmain.lineEdit_file,
+                                                    'numressource': self.toolwidgetmain.spinBox_numphoto,
+                                                    'datetimeressource' : self.toolwidgetmain.dateTimeEdit_date}}}
 
-            self.userwdgfield.stackedWidget.setCurrentIndex(0)
-            self.userwdgfield.pushButton_chooseph.clicked.connect(self.choosePhoto)
-            self.userwdgfield.pushButton_lastph.clicked.connect(self.lastPhoto)
-            self.userwdgfield.pushButton_openph.clicked.connect(self.openPhoto)
-            self.photowdg = PhotoViewer()
-            self.userwdgfield.frame_ph.layout().addWidget(self.photowdg)
+        self.toolwidgetmain.stackedWidget.setCurrentIndex(0)
+        self.toolwidgetmain.pushButton_chooseph.clicked.connect(self.choosePhoto)
+        self.toolwidgetmain.pushButton_lastph.clicked.connect(self.lastPhoto)
+        self.toolwidgetmain.pushButton_openph.clicked.connect(self.openPhoto)
+        self.photowdg = PhotoViewer()
+        self.toolwidgetmain.frame_ph.layout().addWidget(self.photowdg)
 
-            self.userwdgfield.toolButton_photoplus.clicked.connect(self.changeNumPhoto)
-            self.userwdgfield.toolButton_photomoins.clicked.connect(self.changeNumPhoto)
-            self.userwdgfield.toolButton_calc.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.userwdgfield.spinBox_numphoto))
+        self.toolwidgetmain.toolButton_photoplus.clicked.connect(self.changeNumPhoto)
+        self.toolwidgetmain.toolButton_photomoins.clicked.connect(self.changeNumPhoto)
+        self.toolwidgetmain.toolButton_calc.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.spinBox_numphoto))
 
 
 
-            # ****************************************************************************************
-            # child widgets
-            pass
-            if False:
-                if self.parentWidget is not None and self.parentWidget.dbasetablename in ['']:
-                    self.userwdgfield.pushButton_defaultphoto.clicked.connect(self.setDefaultPhoto)
-                else:
-                    self.userwdgfield.pushButton_defaultphoto.setParent(None)
+        # ****************************************************************************************
+        # child widgets
+        pass
 
-            if True:
-                self.userwdgfield.pushButton_vueensemble.clicked.connect(self.setDefaultPhoto)
-                self.userwdgfield.pushButton_cuve.clicked.connect(self.setDefaultPhoto)
-                self.userwdgfield.pushButton_poires.clicked.connect(self.setDefaultPhoto)
-                self.userwdgfield.pushButton_vanne.clicked.connect(self.setDefaultPhoto)
-                self.userwdgfield.pushButton_armoire.clicked.connect(self.setDefaultPhoto)
-
-
-
-    def changeNumPhoto(self):
-
-        global numphoto
-
-        if numphoto is None:
-            numphoto = 0
-
-        if self.sender() == self.userwdgfield.toolButton_photoplus:
-            numphoto += 1
-        elif self.sender() == self.userwdgfield.toolButton_photomoins:
-            numphoto = numphoto -1
-        self.userwdgfield.spinBox_numphoto.setValue(numphoto)
-
-
+        if True:
+            self.toolwidgetmain.pushButton_vueensemble.clicked.connect(self.setDefaultPhoto)
+            self.toolwidgetmain.pushButton_cuve.clicked.connect(self.setDefaultPhoto)
+            self.toolwidgetmain.pushButton_poires.clicked.connect(self.setDefaultPhoto)
+            self.toolwidgetmain.pushButton_vanne.clicked.connect(self.setDefaultPhoto)
+            self.toolwidgetmain.pushButton_armoire.clicked.connect(self.setDefaultPhoto)
 
 
     def setDefaultPhoto(self):
         # print('setDefaultPhoto', self.currentparentfeature)
 
         if self.currentFeaturePK is None:
-            self.windowdialog.errorMessage("Enregistrer d'abord la photo")
+            self.mainifacewidget.errorMessage("Enregistrer d'abord la photo")
             return
 
         sendername = self.sender().objectName()
@@ -150,10 +124,12 @@ class BaseAssainissementPhotoTool(BasePhotoTool):
 
 
 
-    def postInitFeatureProperties(self, feat):
+    #def postInitFeatureProperties(self, feat):
+    def postSelectFeature(self):
 
         global numphoto
-
+        super(BaseAssainissementPhotoTool, self).postSelectFeature()
+        """
         if self.currentFeature is None:
             #datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
             datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
@@ -161,7 +137,7 @@ class BaseAssainissementPhotoTool(BasePhotoTool):
 
 
             if numphoto is not None:
-                self.userwdgfield.spinBox_numphoto.setValue(numphoto)
+                self.toolwidgetmain.spinBox_numphoto.setValue(numphoto)
                 print('numphoto2', numphoto)
 
             # geom if parent is node
@@ -184,26 +160,29 @@ class BaseAssainissementPhotoTool(BasePhotoTool):
             else:
                 self.photowdg.clear()
 
-
-        if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
-            if self.parentWidget.dbasetablename == 'Noeud':
-                if self.parentWidget.currentFeature['typeOuvrageAss'] == '10':
-                    self.userwdgfield.stackedWidget_2.setCurrentIndex(1)
+        """
+        if self.parentWidget is not None and self.parentWidget.currentFeaturePK is not None:
+            if self.parentWidget.DBASETABLENAME == 'Noeud':
+                typeouvrageass = self.dbase.getValuesFromPk(self.parentWidget.DBASETABLENAME + '_qgis',
+                                                            'typeOuvrageAss',
+                                                            self.parentWidget.currentFeaturePK)
+                if typeouvrageass == '10':
+                    self.toolwidgetmain.stackedWidget_2.setCurrentIndex(1)
                 else:
-                    self.userwdgfield.stackedWidget_2.setCurrentIndex(2)
+                    self.toolwidgetmain.stackedWidget_2.setCurrentIndex(2)
 
-
+    """
     def postSaveFeature(self, boolnewfeature):
 
         global numphoto
 
-        if self.userwdgfield.spinBox_numphoto.value() == -1 :
+        if self.toolwidgetmain.spinBox_numphoto.value() == -1 :
             numphoto = None
-        elif numphoto == self.userwdgfield.spinBox_numphoto.value():
+        elif numphoto == self.toolwidgetmain.spinBox_numphoto.value():
             numphoto += 1
         else:
-            numphoto = self.userwdgfield.spinBox_numphoto.value() + 1
-
+            numphoto = self.toolwidgetmain.spinBox_numphoto.value() + 1
+    """
 
 
 class UserUI(QWidget):

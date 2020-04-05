@@ -50,7 +50,7 @@ import os
 import qgis
 import sys
 import qgis.utils
-qgis.utils.uninstallErrorHook()     #for standart output
+# qgis.utils.uninstallErrorHook()     #for standart output
 
 #import serial
 import time

@@ -26,39 +26,35 @@ This file is part of LAMIA.
 
 
 
-
-from qgis.PyQt import uic, QtCore, QtGui
-
-try:
-    from qgis.PyQt.QtGui import (QWidget, QMainWindow, QSpinBox, QAction, QDialog, QFrame)
-except ImportError:
-    from qgis.PyQt.QtWidgets import (QWidget,QMainWindow, QSpinBox, QAction, QDialog, QFrame)
-
-#from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
-from ...Lamia_abstract_tool import AbstractLamiaTool
-
-import os
-import qgis
-import datetime
-from .lamiabase_photoviewer import PhotoViewer
-import PIL
-import platform
+import qgis, qgis.utils, os, datetime, PIL, platform
 if platform.system() == 'Windows':
     from PIL import ImageGrab
 from PIL.ImageQt import ImageQt
 
-# FORM_CLASS3, _ = uic.loadUiType(os.path.join(os.path.dirname(__file__), 'FreeHandEditorToolUser.ui'))
+from qgis.PyQt import uic, QtCore, QtGui
+from qgis.PyQt.QtWidgets import (QWidget,QMainWindow, QSpinBox, QAction, QDialog, QFrame)
+
+from ...lamia_abstractformtool import AbstractLamiaFormTool
+from .lamiabase_photoviewer import PhotoViewer
 
 
-class BaseCroquisTool(AbstractLamiaTool):
+class BaseCroquisTool(AbstractLamiaFormTool):
 
+    DBASETABLENAME = 'Photo'
+    LOADFIRST = False
+
+    tooltreewidgetCAT = 'Ressources'
+    tooltreewidgetSUBCAT = 'Croquis'
+    tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_croquis_tool_icon.png')
+    """
     LOADFIRST = False
     dbasetablename = 'Photo'
     specialfieldui = []
+    """
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None, parentwidget=None, parent=None):
-        super(BaseCroquisTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil, parentwidget, parent=parent)
-
+    def __init__(self, **kwargs):
+        super(BaseCroquisTool, self).__init__(**kwargs)
+    """
     def initTool(self):
         # ****************************************************************************************
         # Main spec
@@ -83,31 +79,31 @@ class BaseCroquisTool(AbstractLamiaTool):
         # ****************************************************************************************
         #properties ui
         pass
+    """
 
-    def initFieldUI(self):
+    def initMainToolWidget(self):
         # ****************************************************************************************
         # userui
-        if self.userwdgfield is None:
-            self.userwdgfield = UserUI()
-            self.linkuserwdgfield = {'Photo' : {'linkfield' : 'id_photo',
-                                             'widgets' : {}},
-                                'Objet' : {'linkfield' : 'id_objet',
-                                          'widgets' : {}},
-                                'Ressource' : {'linkfield' : 'id_ressource',
-                                          'widgets' : {}}}
+        self.toolwidgetmain = UserUI()
+        self.formtoolwidgetconfdictmain = {'Photo' : {'linkfield' : 'id_photo',
+                                            'widgets' : {}},
+                                            'Objet' : {'linkfield' : 'id_objet',
+                                                        'widgets' : {}},
+                                            'Ressource' : {'linkfield' : 'id_ressource',
+                                                        'widgets' : {}}}
 
-            # self.groupBox_geom.setParent(None)
-            self.frame_editing.setVisible(False)
-            self.userwdgfield.stackedWidget.setCurrentIndex(1)
+        # self.groupBox_geom.setParent(None)
+        # self.frame_editing.setVisible(False)
+        self.toolwidgetmain.stackedWidget.setCurrentIndex(1)
 
-            self.userwdgfield.pushButton_open.clicked.connect(self.openPhoto)
-            self.userwdgfield.pushButton_edit.clicked.connect(self.editPhoto)
-            self.userwdgfield.pushButton_getfromclipboard.clicked.connect(self.pasteImage)
-            self.editorwindow = ScribbleMainWindow(parentwdg=self)
-            self.photowdg = PhotoViewer()
-            self.userwdgfield.frame_cr.layout().addWidget(self.photowdg)
+        self.toolwidgetmain.pushButton_open.clicked.connect(self.openPhoto)
+        self.toolwidgetmain.pushButton_edit.clicked.connect(self.editPhoto)
+        self.toolwidgetmain.pushButton_getfromclipboard.clicked.connect(self.pasteImage)
+        self.editorwindow = ScribbleMainWindow(parentwdg=self)
+        self.photowdg = PhotoViewer()
+        self.toolwidgetmain.frame_cr.layout().addWidget(self.photowdg)
 
-
+    """
     def postOnActivation(self):
         pass
 
@@ -117,33 +113,23 @@ class BaseCroquisTool(AbstractLamiaTool):
     def postloadIds(self,sqlin):
         sqlin += " AND typephoto = 'CRO'"
         return sqlin
+    """
+    #def postInitFeatureProperties(self, feat):
+    def postSelectFeature(self):
 
-    def postInitFeatureProperties(self, feat):
-
-        if self.currentFeature is None:
-            #datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
-            #self.initFeatureProperties(feat, 'Ressource', 'dateressource', datecreation)
-
+        if self.currentFeaturePK is None:   #first time
             datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-            self.initFeatureProperties(feat, 'Ressource', 'datetimeressource', datecreation)
+            self.formutils.applyResultDict({'Ressource':{'datetimeressource' : datecreation}})
             self.editorwindow.reinitSize()
             self.editorwindow.clear()
             self.photowdg.clear()
 
-
-
-
         else:
             sql = "SELECT file FROM photo_qgis  WHERE pk_photo = " + str(self.currentFeaturePK)
             file = self.dbase.query(sql)[0][0]
-            if False:
-                sql = "SELECT file FROM Ressource  WHERE id_ressource = " + str(feat['id_ressource']) + ";"
-                query = self.dbase.query(sql)
-                result = [row[0] for row in query]
-                file = result[0]
             if file is not None and file != '' and os.path.isfile(self.dbase.completePathOfFile(file)) :
                 self.editorwindow.openImage(self.dbase.completePathOfFile(file))
-                self.showImageinLabelWidget(self.photowdg, self.dbase.completePathOfFile(file))
+                self.formutils.showImageinLabelWidget(self.photowdg, self.dbase.completePathOfFile(file))
             else:
                 self.editorwindow.clear()
                 self.photowdg.clear()
@@ -168,7 +154,7 @@ class BaseCroquisTool(AbstractLamiaTool):
 
 
     def editPhoto(self):
-        if self.dbase.qgsiface is not None :
+        if qgis.utils.iface is not None :
             self.editorwindow.show()
         else:
             self.editorwindow.setWindowModality(QtCore.Qt.ApplicationModal)
@@ -191,6 +177,7 @@ class BaseCroquisTool(AbstractLamiaTool):
                 filepath = self.dbase.completePathOfFile(resultfile)
                 os.startfile(filepath)
 
+    """
     def createParentFeature(self):
         pkobjet = self.dbase.createNewObjet()
 
@@ -309,19 +296,45 @@ class BaseCroquisTool(AbstractLamiaTool):
                 sql += " VALUES(" + str(currentparentlinkfield) + ", " + str(lastressourceid) + "," + str(lastrevision) + ");"
                 query = self.dbase.query(sql)
                 self.dbase.commit()
+    """
 
 
+    def postSaveFeature(self, savedfeaturepk=None):
 
-    def postSaveFeature(self, boolnewfeature):
-        if self.currentFeature is not None:
+        if self.currentFeaturePK is None:   #first creation
+            idphoto, pkres = self.dbase.getValuesFromPk(self.DBASETABLENAME.lower() + '_qgis',
+                                                 ['id_' + self.DBASETABLENAME.lower(),'pk_ressource'],
+                                                 savedfeaturepk)
+            datecreation = datetime.datetime.now().strftime("%Y-%m-%d")
+            datetimecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+
+            sql = "UPDATE Photo SET  typephoto = 'CRO' WHERE pk_photo = {}".format(str(savedfeaturepk))
+            query = self.dbase.query(sql)
+
+            fileimage = os.path.join('.', self.DBASETABLENAME, ''.join(datecreation.split('-')),
+                                    str(idphoto) + '_croquis.png')
+            if not os.path.exists(os.path.dirname(self.dbase.completePathOfFile(fileimage))):
+                os.makedirs(os.path.dirname(self.dbase.completePathOfFile(fileimage)))
+            #self.editorwindow.saveImage(self.dbase.completePathOfFile(fileimage))
+
+            sql = "UPDATE Ressource SET  file = '" + fileimage + "', datetimeressource = '" + datetimecreation + "'"
+            sql += " WHERE pk_ressource = " + str(pkres)
+            query = self.dbase.query(sql)
+
+        else:
+            """
             sql = "SELECT file FROM Photo_qgis WHERE pk_photo = " + str(self.currentFeaturePK)
             query = self.dbase.query(sql)
             fileimage = [row[0] for row in query][0]
-            self.editorwindow.saveImage(self.dbase.completePathOfFile(fileimage))
+            """
+            fileimage = self.dbase.getValuesFromPk(self.DBASETABLENAME + '_qgis',
+                                                 'file',
+                                                 self.currentFeaturePK )
+        self.editorwindow.saveImage(self.dbase.completePathOfFile(fileimage))
 
 
 
-
+    """
     def deleteParentFeature(self):
         sql = "SELECT pk_objet, pk_ressource, id_ressource FROM Photo_qgis WHERE pk_photo = " + str(self.currentFeaturePK)
         pkobjet, pkressource, idressource = self.dbase.query(sql)[0]
@@ -341,7 +354,7 @@ class BaseCroquisTool(AbstractLamiaTool):
         sql += " AND lpk_revision_end IS  NULL "
 
         return True
-
+    """
 
 
 

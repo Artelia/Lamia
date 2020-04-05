@@ -27,7 +27,8 @@ This file is part of LAMIA.
 
 import logging, sys
 import qgis.utils, qgis.core
-from qgis.PyQt.QtWidgets import (QApplication)
+from qgis.PyQt.QtWidgets import (QApplication, QProgressBar)
+from qgis.PyQt import QtCore
 
 from ..ifaceabstractconnector import LamiaIFaceAbstractConnectors
 
@@ -61,11 +62,11 @@ class QgisConnector(LamiaIFaceAbstractConnectors):
     def createProgressBar(self, inittext='', maxvalue=99):
         self.progressbarinittext = inittext
         if qgis.utils.iface is not None:
-            progressMessageBar = self.dbase.qgsiface.messageBar().createMessage(inittext)
+            progressMessageBar = qgis.utils.iface .messageBar().createMessage(inittext)
             self.progressbar = QProgressBar()
             self.progressbar.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
             progressMessageBar.layout().addWidget(self.progressbar)
-            self.dbase.qgsiface.messageBar().pushWidget(progressMessageBar, qgis.core.Qgis.Info)
+            qgis.utils.iface.messageBar().pushWidget(progressMessageBar, qgis.core.Qgis.Info)
             self.progressbar.setMaximum(maxvalue)
         else:
             logging.getLogger( "Lamia_connector" ).info('Creating progress bar : %s', inittext)

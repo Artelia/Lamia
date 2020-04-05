@@ -29,17 +29,18 @@ This file is part of LAMIA.
 import qgis
 import qgis.utils
 from qgis.PyQt import uic, QtCore, QtGui
-
+"""
 try:
     from qgis.PyQt.QtGui import (QWidget, QTreeWidgetItem, QMessageBox, QFileDialog, QTableWidget,
                                  QHeaderView, QComboBox, QSpinBox, QCheckBox, QPushButton, QDateEdit,QDateTimeEdit, QTextEdit,
                                  QDoubleSpinBox, QDialog, QVBoxLayout, QTreeWidget, QLineEdit, QCheckBox,
                                  QLabel, QMessageBox, QTextBrowser, QTableWidgetItem,QApplication,QToolButton, QAbstractItemView)
 except ImportError:
-    from qgis.PyQt.QtWidgets import (QWidget, QTreeWidgetItem, QMessageBox, QFileDialog, QTableWidget,
-                                     QHeaderView, QComboBox, QSpinBox,QCheckBox, QPushButton, QDateEdit,QDateTimeEdit, QTextEdit,
-                                     QDoubleSpinBox, QDialog, QVBoxLayout, QTreeWidget, QLineEdit, QCheckBox,QFrame,
-                                     QLabel, QMessageBox, QTextBrowser, QTableWidgetItem,QApplication,QToolButton, QAbstractItemView)
+"""
+from qgis.PyQt.QtWidgets import (QWidget, QTreeWidgetItem, QMessageBox, QFileDialog, QTableWidget,
+                                    QHeaderView, QComboBox, QSpinBox,QCheckBox, QPushButton, QDateEdit,QDateTimeEdit, QTextEdit,
+                                    QDoubleSpinBox, QDialog, QVBoxLayout, QTreeWidget, QLineEdit, QCheckBox, QFrame,
+                                    QLabel, QMessageBox, QTextBrowser, QTableWidgetItem,QApplication,QToolButton, QAbstractItemView)
 import os, sys, logging, pprint, shutil, datetime, time
 
 from ..subdialogs.lamia_linkage import LinkageDialog
@@ -391,6 +392,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         resultdict = self.formutils.getDictValuesForWidget(featurepk=self.currentFeaturePK)
         if debug: logging.getLogger("Lamia_unittest").debug('resultdict %s', str(resultdict))
         self.formutils.applyResultDict(resultdict)
+        self.postSelectFeature()
         
 
     def toolbarNew(self):
@@ -400,14 +402,15 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         self.formutils.saveFeature(featurepk=self.currentFeaturePK)
         #reinit
         layergeomtype = self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME]['layer'].geometryType()
-        self.mainifacewidget.qgiscanvas.rubberBand.reset(layergeomtype)
+        self.mainifacewidget.qgiscanvas.createorresetRubberband(layergeomtype)
         self.tempgeometry = None
         self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME]['layerqgis'].repaintRequested.emit()
         # self.mainifacewidget.qgiscanvas.canvas.refresh()
 
     def toolbarGeom(self):
         sender = self.mainifacewidget.sender()
-
+        if sender is not None:
+            print('***', sender.objectName())
         if sender is not None and sender.objectName() != 'pushButton_rajoutPoint':
             listpointinitialgeometry = []
         if 'point' in sender.objectName():
@@ -439,6 +442,11 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         else:
             self.titlelabel.setStyleSheet("QLabel { background-color : rgb(255, 0, 0) }")
 
+    def postSelectFeature(self):
+        pass
+
+    def postSaveFeature(self,pkfeature=None):
+        pass
 
     def setTempGeometry(self, 
                         points, 
@@ -478,11 +486,12 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         capturetype = self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME]['layer'].geometryType()
 
         # case point in line layer
+        dbasetable = self.dbase.dbasetables[self.DBASETABLENAME]
         if len(points)==2 and points[0] == points[1]:
             #self.rubberBand.reset(0)
             self.mainifacewidget.qgiscanvas.createorresetRubberband(0)
             capturetype = 0.5
-        elif len(points) == 1 and self.dbasetable['geom'] == 'LINESTRING':
+        elif len(points) == 1 and dbasetable['geom'] == 'LINESTRING':
             points.append(points[0])
             self.mainifacewidget.qgiscanvas.createorresetRubberband(0)
             capturetype = 0.5

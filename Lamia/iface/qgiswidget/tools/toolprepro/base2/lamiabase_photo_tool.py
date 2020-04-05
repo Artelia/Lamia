@@ -33,7 +33,7 @@ try:
 except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget, QLabel, QFrame)
 #from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
-from ...Lamia_abstract_tool import AbstractLamiaTool
+from ...lamia_abstractformtool import AbstractLamiaFormTool
 import os
 import datetime
 import glob
@@ -44,16 +44,21 @@ numphoto = None
 import sys
 
 
-class BasePhotoTool(AbstractLamiaTool):
+class BasePhotoTool(AbstractLamiaFormTool):
 
+
+    DBASETABLENAME = 'Photo'
     LOADFIRST = False
-    dbasetablename = 'Photo'
-    specialfieldui = []
 
+    tooltreewidgetCAT = 'Ressources'
+    tooltreewidgetSUBCAT = 'Photo'
+    tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_photo_tool_icon.svg')
+    
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
-        super(BasePhotoTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
+    def __init__(self, **kwargs):
+        super(BasePhotoTool, self).__init__(**kwargs)
 
+    """
     def initTool(self):
         # ****************************************************************************************
         # Main spec
@@ -80,62 +85,43 @@ class BasePhotoTool(AbstractLamiaTool):
 
         # ****************************************************************************************
         # userui
-    def initFieldUI(self):
-        if self.userwdgfield is None:
-            self.userwdgfield = UserUI()
-            self.linkuserwdgfield = {'Photo' : {'linkfield' : 'id_photo',
-                                             'widgets' : {}},
-                                'Objet' : {'linkfield' : 'id_objet',
-                                          'widgets' : {}},
-                                'Ressource' : {'linkfield' : 'id_ressource',
-                                          'widgets' : {'file': self.userwdgfield.lineEdit_file,
-                                                       'numressource': self.userwdgfield.spinBox_numphoto,
-                                                        'datetimeressource' : self.userwdgfield.dateTimeEdit_date}}}
+    """
 
-            self.userwdgfield.stackedWidget.setCurrentIndex(0)
-            self.userwdgfield.pushButton_chooseph.clicked.connect(self.choosePhoto)
-            self.userwdgfield.pushButton_lastph.clicked.connect(self.lastPhoto)
-            self.userwdgfield.pushButton_openph.clicked.connect(self.openPhoto)
-            self.photowdg = PhotoViewer()
-            self.userwdgfield.frame_ph.layout().addWidget(self.photowdg)
+    def initMainToolWidget(self):
 
-            self.userwdgfield.toolButton_photoplus.clicked.connect(self.changeNumPhoto)
-            self.userwdgfield.toolButton_photomoins.clicked.connect(self.changeNumPhoto)
-            self.userwdgfield.toolButton_calc.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.userwdgfield.spinBox_numphoto))
+        self.toolwidgetmain = UserUI()
+        self.formtoolwidgetconfdictmain = {'Photo' : {'linkfield' : 'id_photo',
+                                                            'widgets' : {}},
+                                            'Objet' : {'linkfield' : 'id_objet',
+                                                        'widgets' : {}},
+                                            'Ressource' : {'linkfield' : 'id_ressource',
+                                                        'widgets' : {'file': self.toolwidgetmain.lineEdit_file,
+                                                                    'numressource': self.toolwidgetmain.spinBox_numphoto,
+                                                                    'datetimeressource' : self.toolwidgetmain.dateTimeEdit_date}}}
 
+        self.toolwidgetmain.stackedWidget.setCurrentIndex(0)
+        self.toolwidgetmain.pushButton_chooseph.clicked.connect(self.choosePhoto)
+        self.toolwidgetmain.pushButton_lastph.clicked.connect(self.lastPhoto)
+        self.toolwidgetmain.pushButton_openph.clicked.connect(self.openPhoto)
+        self.photowdg = PhotoViewer()
+        self.toolwidgetmain.frame_ph.layout().addWidget(self.photowdg)
 
-            if False:
-                # ****************************************************************************************
-                # parent widgets
-                if self.parentWidget is not None and 'lk_photo' in self.dbase.dbasetables[self.parentWidget.dbasetablename]['fields'].keys():
-                    self.userwdgfield.pushButton_defaultphoto.clicked.connect(self.setDefaultPhoto)
-                else:
-                    self.userwdgfield.pushButton_defaultphoto.setParent(None)
-
-
-            # ****************************************************************************************
-            # child widgets
-            pass
-
+        self.toolwidgetmain.toolButton_photoplus.clicked.connect(self.changeNumPhoto)
+        self.toolwidgetmain.toolButton_photomoins.clicked.connect(self.changeNumPhoto)
+        self.toolwidgetmain.toolButton_calc.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.spinBox_numphoto))
 
     def changeNumPhoto(self):
-
         global numphoto
-
         if numphoto is None:
             numphoto = 0
-
-        if self.sender() == self.userwdgfield.toolButton_photoplus:
+        if self.sender() == self.toolwidgetmain.toolButton_photoplus:
             numphoto += 1
-        elif self.sender() == self.userwdgfield.toolButton_photomoins:
+        elif self.sender() == self.toolwidgetmain.toolButton_photomoins:
             numphoto = numphoto -1
-        self.userwdgfield.spinBox_numphoto.setValue(numphoto)
+        self.toolwidgetmain.spinBox_numphoto.setValue(numphoto)
 
-
-
-
-
+    """
     def postOnActivation(self):
         pass
 
@@ -145,7 +131,8 @@ class BasePhotoTool(AbstractLamiaTool):
     def postloadIds(self,sqlin):
         sqlin += " AND typephoto = 'PHO'"
         return sqlin
-
+    """
+    
     def magicFunction(self):
         self.featureSelected()
         self.lastPhoto()
@@ -153,7 +140,6 @@ class BasePhotoTool(AbstractLamiaTool):
         self.saveFeature()
 
     def setDefaultPhoto(self):
-        # print('setDefaultPhoto', self.currentparentfeature)
         if self.parentWidget.currentFeature is not None:
             idphoto = self.currentFeature['id_objet']
             idparentfeature=self.parentWidget.currentFeature['id_objet']
@@ -164,36 +150,29 @@ class BasePhotoTool(AbstractLamiaTool):
 
 
     def choosePhoto(self):
-
         file = None
-        if sys.version_info.major == 2:
-            file, extension = self.windowdialog.qfiledlg.getOpenFileNameAndFilter(None, 'Choose the file', self.dbase.imagedirectory,
-                                                                     'Image (*.jpg)', '')
-        elif sys.version_info.major == 3:
-            file , extension= self.windowdialog.qfiledlg.getOpenFileName(None, 'Choose the file', self.dbase.imagedirectory,
-                                                                     'Image (*.jpg)', '')
-
-
+        file , extension= self.mainifacewidget.qfiledlg.getOpenFileName(None, 'Choose the file', self.mainifacewidget.imagedirectory,
+                                                                    'Image (*.jpg)', '')
         if file:
-            self.userwdg.lineEdit_file.setText(os.path.normpath(file))
-            self.showImageinLabelWidget(self.photowdg , self.userwdg.lineEdit_file.text())
+            self.toolwidgetmain.lineEdit_file.setText(os.path.normpath(file))
+            self.formutils.showImageinLabelWidget(self.photowdg , self.toolwidgetmain.lineEdit_file.text())
 
 
     def lastPhoto(self):
-        if self.dbase.imagedirectory is not None:
-            list_of_files = glob.glob(self.dbase.imagedirectory + "//*.jpg")
+        if self.mainifacewidget.imagedirectory is not None:
+            list_of_files = glob.glob(self.mainifacewidget.imagedirectory + "//*.jpg")
             try :
                 latest_file = max(list_of_files, key=os.path.getctime)
-                self.userwdg.lineEdit_file.setText(os.path.normpath(latest_file))
-                self.showImageinLabelWidget(self.photowdg , self.userwdg.lineEdit_file.text())
+                self.toolwidgetmain.lineEdit_file.setText(os.path.normpath(latest_file))
+                self.showImageinLabelWidget(self.photowdg , self.toolwidgetmain.lineEdit_file.text())
                 datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-                self.userwdg.dateTimeEdit_date.setDateTime(QtCore.QDateTime.fromString(datecreation, 'yyyy-MM-dd hh:mm:ss'))
+                self.toolwidgetmain.dateTimeEdit_date.setDateTime(QtCore.QDateTime.fromString(datecreation, 'yyyy-MM-dd hh:mm:ss'))
 
             except ValueError:
                 pass
 
     def openPhoto(self):
-        filepath = self.dbase.completePathOfFile(self.userwdg.lineEdit_file.text())
+        filepath = self.dbase.completePathOfFile(self.toolwidgetmain.lineEdit_file.text())
 
         if os.path.isfile(filepath ):
             os.startfile(filepath)
@@ -203,25 +182,30 @@ class BasePhotoTool(AbstractLamiaTool):
                 os.startfile(possiblethumbnail + "_thumbnail.png")
 
 
-    def postInitFeatureProperties(self, feat):
-
+    #def postInitFeatureProperties(self, feat):
+    def postSelectFeature(self):
         global numphoto
 
-        if self.currentFeature is None:
-            datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
-            #datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-            self.initFeatureProperties(feat, 'Ressource', 'datetimeressource', datecreation)
+        if self.currentFeaturePK is None:   #first creation
+            #datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
+            datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            #self.initFeatureProperties(feat, 'Ressource', 'datetimeressource', datecreation)
+            self.formutils.applyResultDict({'datetimeressource' : datecreation})
 
             if numphoto is not None:
-                self.userwdgfield.spinBox_numphoto.setValue(numphoto)
+                self.toolwidgetmain.spinBox_numphoto.setValue(numphoto)
 
             # geom if parent is node
-            if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
-                if self.parentWidget.dbasetablename == 'Noeud':
+            if self.parentWidget is not None and self.parentWidget.currentFeaturePK is not None:
+                if self.parentWidget.DBASETABLENAME == 'Noeud':
 
                     # get geom
-                    noeudfet = self.dbase.getLayerFeatureByPk('Noeud', self.parentWidget.currentFeature.id())
-                    neudfetgeom = noeudfet.geometry().asPoint()
+                    #noeudfet = self.dbase.getLayerFeatureByPk('Noeud', self.parentWidget.currentFeature.id())
+                    #neudfetgeom = noeudfet.geometry().asPoint()
+                    noeudfetwkt = self.dbase.getValuesFromPk('Noeud',
+                                                            'ST_AsText(geom)',
+                                                            self.parentWidget.currentFeaturePK)
+                    neudfetgeom = qgis.core.QgsGeometry.fromWkt(noeudfetwkt).asPoint()
                     self.createorresetRubberband(1)
                     self.setTempGeometry([neudfetgeom], False,False)
 
@@ -231,12 +215,12 @@ class BasePhotoTool(AbstractLamiaTool):
             sql = "SELECT file FROM photo_qgis  WHERE pk_photo = " + str(self.currentFeaturePK)
             file = self.dbase.query(sql)[0][0]
             if file is not None and file != '':
-                self.showImageinLabelWidget(self.photowdg, self.userwdg.lineEdit_file.text())
+                self.formutils.showImageinLabelWidget(self.photowdg, self.toolwidgetmain.lineEdit_file.text())
             else:
                 self.photowdg.clear()
 
 
-
+    """
     def createParentFeature(self):
         pkobjet = self.dbase.createNewObjet()
 
@@ -279,21 +263,24 @@ class BasePhotoTool(AbstractLamiaTool):
             sql += " VALUES(" + str(self.dbase.maxrevision) + "," + str(currentparentlinkfield) + ',' + str(lastressourceid) + ")"
             query = self.dbase.query(sql)
             self.dbase.commit()
-
+    """
 
 
 
     def postSaveFeature(self, boolnewfeature):
 
         global numphoto
-        if self.userwdgfield.spinBox_numphoto.value() == -1 :
-            numphoto = None
-        elif numphoto == self.userwdgfield.spinBox_numphoto.value():
-            numphoto += 1
-        else:
-            numphoto = self.userwdgfield.spinBox_numphoto.value() + 1
+        if self.currentFeaturePK is None:
+            if self.toolwidgetmain.spinBox_numphoto.value() == -1 :
+                numphoto = None
+            elif numphoto == self.toolwidgetmain.spinBox_numphoto.value():
+                numphoto += 1
+            else:
+                numphoto = self.toolwidgetmain.spinBox_numphoto.value() + 1
 
 
+
+    """
     def deleteParentFeature(self):
 
         sql = "SELECT pk_objet, pk_ressource, id_ressource FROM Photo_qgis WHERE pk_photo = " + str(self.currentFeaturePK)
@@ -313,21 +300,12 @@ class BasePhotoTool(AbstractLamiaTool):
         sql += " AND lpk_revision_begin <= " + str(self.dbase.maxrevision)
         sql += " AND lpk_revision_end IS  NULL "
 
-        """
-        if self.dbase.dbasetype == 'postgis':
-            sql += " AND CASE WHEN lpk_revision_end IS NOT NULL THEN "
-            sql += " lpk_revision_end > " + str(self.currentrevision)
-            sql += " ELSE TRUE END "
-        elif self.dbase.dbasetype == 'spatialite':
-            sql += " AND CASE WHEN lpk_revision_end IS NOT NULL THEN "
-            sql += " lpk_revision_end > " + str(self.currentrevision)
-            sql += " ELSE 1 END"
-        """
+
         query = self.dbase.query(sql)
         self.dbase.commit()
 
         return True
-
+    """
 
 
 

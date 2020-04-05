@@ -33,7 +33,7 @@ from qgis.PyQt.QtWidgets import (QWidget, QTreeWidgetItem, QMessageBox, QFileDia
 from qgis.PyQt.QtWidgets import (QComboBox, QTextEdit,QLineEdit,  QSpinBox, QDoubleSpinBox,
                                  QDateEdit,QDateTimeEdit, QTextBrowser, QCheckBox)
 from qgis.PyQt import QtCore
-import qgis, logging
+import qgis, logging, datetime, os
 
 class FormToolUtils(QtCore.QObject):
 
@@ -301,11 +301,36 @@ class FormToolUtils(QtCore.QObject):
                         logging.getLogger("Lamia_unittest").debug('field %s-%s not found in dictconf : %s', tablename,
                                                                                                             field,
                                                                                                             resultdict.keys())
-                        raise ValueError
+                        continue
+                        # raise ValueError
                     self.setValueInWidget(fieldwdg, 
                                           resultdict[field], 
                                           tablename,
                                           field)
+
+
+    def showImageinLabelWidget(self,wdg,savedfile):
+        """
+        Show the image file in the text widget
+        Manage thumbnail image
+
+        :param wdg: the text widget
+        :param savedfile: the image file
+
+        """
+        filetoshow = self.formtoolwidget.dbase.completePathOfFile(savedfile)
+        possiblethumbnail,ext = os.path.splitext(filetoshow)
+        if os.path.isfile(possiblethumbnail + "_thumbnail.png"):
+            filetoshow = possiblethumbnail + "_thumbnail.png"
+
+        if os.path.isfile(filetoshow):
+            wdg.clear()
+            wdg.setPixmap(filetoshow)
+        else:
+            wdg.clear()
+            wdg.setText('Image non trouvee')
+
+
 
     def ___________________actionsOnFeatureSave(self):
         pass
@@ -316,6 +341,9 @@ class FormToolUtils(QtCore.QObject):
 
         self.setGeometryToFeature(savedfeaturepk)
         self.saveFeatureProperties(savedfeaturepk)
+        self.formtoolwidget.postSaveFeature(savedfeaturepk)  #featurepk toknow if new or not
+        self.saveRessourceFile(savedfeaturepk)
+        self.updateDateModification(savedfeaturepk)
         self.formtoolwidget.selectFeature(pk=savedfeaturepk)
 
 
@@ -459,6 +487,16 @@ class FormToolUtils(QtCore.QObject):
                                                                         featurepk)
         self.formtoolwidget.dbase.query(sql)
     
+    def updateDateModification(self, featurepk):
+        if 'Objet' in self.formtoolwidget.dbase.getParentTable(self.formtoolwidget.DBASETABLENAME):
+            pkobjet = self.formtoolwidget.dbase.getValuesFromPk(self.formtoolwidget.DBASETABLENAME.lower() + "_qgis ",
+                                                                'pk_objet',
+                                                                featurepk)
+
+            datemodif = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            sql = "UPDATE Objet SET datetimemodification = '" + datemodif + "'  WHERE pk_objet = " + str(pkobjet)
+            self.formtoolwidget.dbase.query(sql)
+
     def saveFeatureProperties(self, featurepk=None):
         """
         Method called by saveFeature
@@ -747,6 +785,88 @@ class FormToolUtils(QtCore.QObject):
                 fieldvaluetosave = wdg.dateTime().toString( 'yyyy-MM-dd hh:mm:ss')
 
         return fieldvaluetosave
+
+
+    def saveRessourceFile(self,featurepk=None):
+        """
+        Called by saveFeature
+        If ressource file is not in the dbase directory, save it in the dbase directory
+
+        """
+        # get date
+        """
+        sql = "SELECT datetimecreation FROM " + self.dbasetablename.lower() + "_qgis"
+        sql += " WHERE pk_"+ self.dbasetablename.lower() + " = " + str(self.currentFeaturePK)
+        query = self.dbase.query(sql)
+        result = [row[0] for row in query]
+        """
+        if not 'Ressource' in self.formtoolwidget.dbase.getParentTable(self.formtoolwidget.DBASETABLENAME):
+            return
+            
+        DBASETABLENAMElower = self.formtoolwidget.DBASETABLENAME.lower()
+        result = self.formtoolwidget.dbase.getValuesFromPk(DBASETABLENAMElower + "_qgis",
+                                                            'datetimecreation',
+                                                            featurepk)
+
+        if result is not None:
+            datevalue = datetime.datetime.strptime(str(result), "%Y-%m-%d %H:%M:%S").date()
+            if isinstance(datevalue, datetime.date):
+                datevalue = datevalue.strftime('%Y-%m-%d')
+        else:
+            return
+
+        date = ''.join(datevalue.split('-'))
+        """
+        sql = "SELECT pk_ressource, id_ressource, file FROM " + self.dbasetablename.lower() + "_qgis"
+        sql += " WHERE pk_"+ self.dbasetablename.lower() + " = " + str(self.currentFeaturePK)
+        query = self.dbase.query(sql)
+        result = [row[0:3] for row in query]
+        """
+        result = self.formtoolwidget.dbase.getValuesFromPk(DBASETABLENAMElower + "_qgis",
+                                                            ['pk_ressource', 'id_ressource', 'file'],
+                                                            featurepk)
+        if len(result) > 0:
+            pkressource, idressource, file = result
+        else:
+            return
+
+        dbaseressourcesdirectory = self.formtoolwidget.dbase.dbaseressourcesdirectory
+        if file is not None and len(file) > 0:
+            if file[0] == '.':
+                file = os.path.join(dbaseressourcesdirectory,file)
+            else:
+                if os.path.isfile(file):
+                    filename = os.path.basename(file)
+                    filename = str(idressource) + '_' + filename
+                    destinationdir = os.path.join(dbaseressourcesdirectory,self.formtoolwidget.DBASETABLENAME,date)
+                    destinationfile = os.path.join(destinationdir, filename)
+
+                    self.formtoolwidget.dbase.copyRessourceFile(fromfile= file,
+                                                                tofile=destinationfile,
+                                                                withthumbnail=0,
+                                                                copywholedirforraster=False)
+
+
+                    finalname = os.path.join('.',os.path.relpath(destinationfile, dbaseressourcesdirectory ))
+                    sql = "UPDATE Ressource SET file = '" + finalname + "' WHERE pk_ressource = " +  str(pkressource) + ";"
+                    query = self.formtoolwidget.dbase.query(sql)
+
+                    #removing old file 
+                    #if self.beforesavingFeature is not None:
+                    if self.formtoolwidget.currentFeaturePK is not None:   #case updating existing feature
+                        sql = "SELECT file FROM Ressource  WHERE pk_ressource = " + str(pkressource) + ";"
+                        query = self.formtoolwidget.dbase.query(sql)
+                        result = [row[0] for row in query]
+                        oldfile = result[0]
+                    else:
+                        oldfile = ''
+
+                    newfile = finalname
+
+                    if os.path.isfile(self.formtoolwidget.dbase.completePathOfFile(oldfile)) and oldfile != newfile:
+                        os.remove(self.formtoolwidget.dbase.completePathOfFile(oldfile))
+                    else:
+                        pass
 
 
 
