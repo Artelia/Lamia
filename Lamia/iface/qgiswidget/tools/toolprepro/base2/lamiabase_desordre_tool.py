@@ -55,7 +55,7 @@ class BaseDesordreTool(AbstractLamiaFormTool):
 
     def __init__(self, **kwargs):
         super(BaseDesordreTool, self).__init__(**kwargs)
-    
+        self.instancekwargs = kwargs
     """
     def initTool(self):
         # ****************************************************************************************
@@ -101,21 +101,20 @@ class BaseDesordreTool(AbstractLamiaFormTool):
         # ****************************************************************************************
         # child widgets
         self.dbasechildwdgfield = []
+        self.instancekwargs['parentwidget'] = self
+        if self.parentWidget is None :
 
-        if False:   #TODO
-            if self.parentWidget is None :
-
-                self.propertieswdgOBSERVATION = BaseObservationTool(dbase=self.dbase, parentwidget=self)
-                self.dbasechildwdgfield.append(self.propertieswdgOBSERVATION)
+            self.propertieswdgOBSERVATION = BaseObservationTool(**self.instancekwargs)
+            self.dbasechildwdgfield.append(self.propertieswdgOBSERVATION)
 
 
-            self.propertieswdgOBSERVATION2 = BaseObservationTool(dbase=self.dbase, parentwidget=self)
-            self.propertieswdgOBSERVATION2.NAME = None
-            self.toolwidgetmain.tabWidget.widget(0).layout().addWidget(self.propertieswdgOBSERVATION2)
-            self.dbasechildwdgfield.append(self.propertieswdgOBSERVATION2)
+        self.propertieswdgOBSERVATION2 = BaseObservationTool(**self.instancekwargs)
+        self.propertieswdgOBSERVATION2.NAME = None
+        self.toolwidgetmain.tabWidget.widget(0).layout().addWidget(self.propertieswdgOBSERVATION2)
+        self.dbasechildwdgfield.append(self.propertieswdgOBSERVATION2)
 
-            self.toolwidgetmain.tabWidget.widget(1).layout().addWidget(self.propertieswdgOBSERVATION2.propertieswdgPHOTOGRAPHIE)
-            self.toolwidgetmain.tabWidget.widget(2).layout().addWidget(self.propertieswdgOBSERVATION2.propertieswdgCROQUIS)
+        self.toolwidgetmain.tabWidget.widget(1).layout().addWidget(self.propertieswdgOBSERVATION2.propertieswdgPHOTOGRAPHIE)
+        self.toolwidgetmain.tabWidget.widget(2).layout().addWidget(self.propertieswdgOBSERVATION2.propertieswdgCROQUIS)
 
 
 

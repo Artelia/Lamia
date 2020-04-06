@@ -319,11 +319,20 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             self.rubberBand.setWidth(5)
             self.rubberBand.setColor(QtGui.QColor("magenta"))
 
+    def createRubberBandForSelection(self, qgsgeom):
+        geomtype = qgsgeom.type()
+        self.createorresetRubberband(qgis.core.QgsWkbTypes.LineGeometry)
+        canvasscale = self.canvas.scale() 
+        print(canvasscale)
+        distpixel = 4.0
+        dist = distpixel * canvasscale / 1000.0
 
+        bufferedgeom = qgsgeom.buffer(dist, 12).convertToType(qgis.core.QgsWkbTypes.LineGeometry)
+        self.rubberBand.setToGeometry(bufferedgeom, self.dbaseqgiscrs)
 
     def _____________________________Functions(self):
         pass
-
+    
     # def getNearestPk(self, dbasetable, dbasetablename, point, comefromcanvas=True):
     def getNearestPk(self, tablename, point, comefromcanvas=True): 
         """

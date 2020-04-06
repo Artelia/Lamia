@@ -81,20 +81,21 @@ class BaseAssainissementDesordreTool(BaseDesordreTool):
         # ****************************************************************************************
         # child widgets
         self.dbasechildwdgfield = []
-        if False : # TODO
-            if self.parentWidget is None :
+        self.instancekwargs['parentwidget'] = self
+        if self.parentWidget is None :
 
-                self.propertieswdgOBSERVATION = BaseAssainissementObservationTool(dbase=self.dbase, parentwidget=self)
-                self.dbasechildwdgfield.append(self.propertieswdgOBSERVATION)
+            self.propertieswdgOBSERVATION = BaseAssainissementObservationTool(**self.instancekwargs)
+            self.dbasechildwdgfield.append(self.propertieswdgOBSERVATION)
 
 
-            self.propertieswdgOBSERVATION2 = BaseAssainissementObservationTool(dbase=self.dbase, parentwidget=self)
-            self.propertieswdgOBSERVATION2.NAME = None
-            self.toolwidgetmain.tabWidget.widget(0).layout().addWidget(self.propertieswdgOBSERVATION2)
-            self.dbasechildwdgfield.append(self.propertieswdgOBSERVATION2)
+        self.propertieswdgOBSERVATION2 = BaseAssainissementObservationTool(**self.instancekwargs)
+        self.propertieswdgOBSERVATION2.initMainToolWidget()
+        self.propertieswdgOBSERVATION2.NAME = None
+        self.toolwidgetmain.tabWidget.widget(0).layout().addWidget(self.propertieswdgOBSERVATION2)
+        self.dbasechildwdgfield.append(self.propertieswdgOBSERVATION2)
 
-            self.toolwidgetmain.tabWidget.widget(1).layout().addWidget(self.propertieswdgOBSERVATION2.propertieswdgPHOTOGRAPHIE)
-            self.toolwidgetmain.tabWidget.widget(2).layout().addWidget(self.propertieswdgOBSERVATION2.propertieswdgCROQUIS)
+        self.toolwidgetmain.tabWidget.widget(1).layout().addWidget(self.propertieswdgOBSERVATION2.propertieswdgPHOTOGRAPHIE)
+        self.toolwidgetmain.tabWidget.widget(2).layout().addWidget(self.propertieswdgOBSERVATION2.propertieswdgCROQUIS)
 
 
 

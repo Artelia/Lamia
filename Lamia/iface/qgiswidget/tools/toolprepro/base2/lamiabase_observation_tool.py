@@ -53,6 +53,7 @@ class BaseObservationTool(AbstractLamiaFormTool):
 
     def __init__(self, **kwargs):
         super(BaseObservationTool, self).__init__(**kwargs)
+        self.instancekwargs = kwargs
     
     """
     def initTool(self):

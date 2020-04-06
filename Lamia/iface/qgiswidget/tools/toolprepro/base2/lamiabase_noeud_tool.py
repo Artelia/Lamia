@@ -25,34 +25,37 @@ This file is part of LAMIA.
  """
 
 
-
-
-from qgis.PyQt import uic, QtCore
-
-try:
-    from qgis.PyQt.QtGui import (QWidget, QPushButton)
-except ImportError:
-    from qgis.PyQt.QtWidgets import (QWidget, QPushButton)
-#from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
-from ...Lamia_abstract_tool import AbstractLamiaTool
-
 import os
 import datetime
+
+from qgis.PyQt import uic, QtCore
+from qgis.PyQt.QtWidgets import (QWidget, QPushButton)
+
+from ...lamia_abstractformtool import AbstractLamiaFormTool
 from .lamiabase_photo_tool import BasePhotoTool
 from .lamiabase_croquis_tool import BaseCroquisTool
 
 
 
 
-class BaseNoeudTool(AbstractLamiaTool):
+class BaseNoeudTool(AbstractLamiaFormTool):
 
     LOADFIRST = True
     dbasetablename = 'Noeud'
     specialfieldui = []
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
-        super(BaseNoeudTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
+    DBASETABLENAME = 'Noeud'
+    LOADFIRST = True
+
+    tooltreewidgetCAT = 'Description'
+    tooltreewidgetSUBCAT = 'Noeud'
+    tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_noeud_tool_icon.svg')
+
+    def __init__(self, **kwargs):
+        super(BaseNoeudTool, self).__init__(**kwargs)
+        self.instancekwargs = kwargs
         
+    """
     def initTool(self):
         # ****************************************************************************************
         # Main spec
@@ -73,38 +76,33 @@ class BaseNoeudTool(AbstractLamiaTool):
         # ****************************************************************************************
         #properties ui
         pass
+    """
+
+
+    def initMainToolWidget(self):
+
+        self.toolwidgetmain= UserUI()
+        self.formtoolwidgetconfdictmain = {'Noeud' : {'linkfield' : 'id_noeud',
+                                                            'widgets' : {}},
+                                            'Objet' : {'linkfield' : 'id_objet',
+                                                        'widgets' : {'libelle': self.toolwidgetmain.lineEdit_libelle}},
+                                            'Descriptionsystem' : {'linkfield' : 'id_descriptionsystem',
+                                                        'widgets' : {}}}
 
 
 
-    def initFieldUI(self):
         # ****************************************************************************************
-        # userui Desktop
-        if self.userwdgfield is None:
+        # child widgets
 
-            # ****************************************************************************************
-            # userui
-            self.userwdgfield = UserUI()
-            self.linkuserwdgfield = {'Noeud' : {'linkfield' : 'id_noeud',
-                                             'widgets' : {}},
-                                'Objet' : {'linkfield' : 'id_objet',
-                                          'widgets' : {'libelle': self.userwdgfield.lineEdit_libelle}},
-                                'Descriptionsystem' : {'linkfield' : 'id_descriptionsystem',
-                                          'widgets' : {}}}
+        self.dbasechildwdgfield = []
+        self.instancekwargs['parentwidget'] = self
+        if self.parentWidget is None:
+            self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(**self.instancekwargs)
+            self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
 
 
-
-            # ****************************************************************************************
-            # child widgets
-
-            self.dbasechildwdgfield = []
-
-            if self.parentWidget is None:
-                self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
-                self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
-
-
-                self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
-                self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+            self.propertieswdgCROQUIS = BaseCroquisTool(**self.instancekwargs)
+            self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
 
 
@@ -117,9 +115,11 @@ class BaseNoeudTool(AbstractLamiaTool):
 
 
 
-    def postInitFeatureProperties(self, feat):
+    # def postInitFeatureProperties(self, feat):
+    def postSelectFeature(self):
         pass
 
+    """
     def createParentFeature(self):
         pkobjet = self.dbase.createNewObjet()
 
@@ -166,17 +166,19 @@ class BaseNoeudTool(AbstractLamiaTool):
                 sql += " WHERE pk_noeud = " + str(pknoeud)
                 self.dbase.query(sql)
                 self.dbase.commit()
+    """
 
 
 
 
-    def postSaveFeature(self, boolnewfeature):
+    def postSaveFeature(self, savedfeaturepk=None):
         pass
 
 
     def postDeleteFeature(self):
         pass
 
+    """
     def deleteParentFeature(self):
 
         sql = "SELECT pk_objet, pk_descriptionsystem FROM Noeud_qgis WHERE pk_noeud = " + str(self.currentFeaturePK)
@@ -208,7 +210,7 @@ class BaseNoeudTool(AbstractLamiaTool):
 
 
         return True
-
+    """
 
 class UserUI(QWidget):
     def __init__(self, parent=None):

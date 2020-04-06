@@ -382,7 +382,8 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         if debug: logging.getLogger("Lamia_unittest").debug('kwargs %s', str(kwargs))
         self.currentFeaturePK = kwargs.get('pk', None)
         if self.currentFeaturePK:
-            pass
+            currentgeom = self.formutils.getQgsGeomFromPk(self.currentFeaturePK)
+            self.mainifacewidget.qgiscanvas.createRubberBandForSelection(currentgeom)
         if self.parentWidget is None and self.DBASETABLENAME is not None:
             self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME]['layer'].removeSelection()
             # self.dbasetable['layer'].removeSelection()
@@ -429,9 +430,12 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         pass
 
     def updateFormTitle(self):
-        featureid = self.dbase.getValuesFromPk(self.DBASETABLENAME,
-                                               'id_' + self.DBASETABLENAME.lower(),
-                                                self.currentFeaturePK)
+        if self.currentFeaturePK:
+            featureid = self.dbase.getValuesFromPk(self.DBASETABLENAME,
+                                                'id_' + self.DBASETABLENAME.lower(),
+                                                    self.currentFeaturePK)
+        else:
+            featureid = 'New'
         self.titlelabel.setText('{}({})'.format(self.DBASETABLENAME,
                                                       featureid) )
         self.updateFormTitleBackground()

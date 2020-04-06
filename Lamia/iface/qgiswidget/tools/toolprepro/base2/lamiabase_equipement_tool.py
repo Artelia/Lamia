@@ -44,7 +44,7 @@ class BaseEquipementTool(AbstractLamiaFormTool):
 
     def __init__(self, **kwargs):
         super(BaseEquipementTool, self).__init__(**kwargs)
-        self.instencekwargs = kwargs
+        self.instancekwargs = kwargs
         
         """
     def initTool(self):
@@ -96,10 +96,12 @@ class BaseEquipementTool(AbstractLamiaFormTool):
         self.dbasechildwdgfield = []
 
         if self.parentWidget is None:
-            self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(**self.instencekwargs)
+            self.instancekwargs['parentwidget'] = self
+            
+            self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(**self.instancekwargs)
             self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
 
-            self.propertieswdgCROQUIS = BaseCroquisTool(**self.instencekwargs)
+            self.propertieswdgCROQUIS = BaseCroquisTool(**self.instancekwargs)
             self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
 

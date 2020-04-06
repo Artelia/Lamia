@@ -76,6 +76,7 @@ class BaseAssainissementObservationTool(BaseObservationTool):
     
     """
     def initMainToolWidget(self):
+        print('obs', self.dbase.variante)
 
         if self.dbase.variante in [None, 'Lamia']:
 
@@ -121,10 +122,11 @@ class BaseAssainissementObservationTool(BaseObservationTool):
             # ****************************************************************************************
             # child widgets
             self.dbasechildwdgfield=[]
+            self.instancekwargs['parentwidget'] = self
             if self.parentWidget is not None:
-                self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, parentwidget=self)
+                self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(**self.instancekwargs)
                 self.dbasechildwdgfield = [self.propertieswdgPHOTOGRAPHIE]
-                self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
+                self.propertieswdgCROQUIS = BaseCroquisTool(**self.instancekwargs)
                 self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
                     
         elif self.dbase.variante in ['2018_SNCF']:
@@ -169,15 +171,16 @@ class BaseAssainissementObservationTool(BaseObservationTool):
                 lambda: self.windowdialog.showNumPad(self.toolwidgetmain.spinBox_nombre))
 
             self.dbasechildwdgfield = []
+            self.instancekwargs['parentwidget'] = self
             if self.parentWidget is not None:
-                self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, parentwidget=self)
+                self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(**self.instancekwargs)
                 self.dbasechildwdgfield = [self.propertieswdgPHOTOGRAPHIE]
-                self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
+                self.propertieswdgCROQUIS = BaseCroquisTool(**self.instancekwargs)
                 self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
 
         elif self.dbase.variante in ['CD41']:
-
+            
             self.toolwidgetmain = UserUI_3()
             self.formtoolwidgetconfdictmain = {'Observation': {'linkfield': 'id_observation',
                                                         'widgets': {
@@ -211,10 +214,14 @@ class BaseAssainissementObservationTool(BaseObservationTool):
                 lambda: self.windowdialog.showNumPad(self.toolwidgetmain.spinBox_nombre))
 
             self.dbasechildwdgfield = []
+            self.instancekwargs['parentwidget'] = self
+
+            print(self.parentWidget.__class__.__name__)
+
             if self.parentWidget is not None:
-                self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, parentwidget=self)
+                self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(**self.instancekwargs)
                 self.dbasechildwdgfield = [self.propertieswdgPHOTOGRAPHIE]
-                self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
+                self.propertieswdgCROQUIS = BaseCroquisTool(**self.instancekwargs)
                 self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
 

@@ -98,11 +98,11 @@ class BaseAssainissementEquipementTool(BaseEquipementTool):
             # ****************************************************************************************
             # child widgets
             self.dbasechildwdgfield = []
-            self.instencekwargs['parentwidget'] = self
-            self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(**self.instencekwargs)
+            self.instancekwargs['parentwidget'] = self
+            self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(**self.instancekwargs)
             self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
 
-            self.propertieswdgCROQUIS = BaseCroquisTool(**self.instencekwargs)
+            self.propertieswdgCROQUIS = BaseCroquisTool(**self.instancekwargs)
             self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
             #if self.parentWidget is None:
@@ -136,8 +136,8 @@ class BaseAssainissementEquipementTool(BaseEquipementTool):
 
             #self.propertieswdgDesordre = BaseAssainissementDesordreTool(dbase=self.dbase, gpsutil=self.gpsutil,
             #                                                            parentwidget=self)
-            self.instencekwargs['parentwidget'] = self
-            self.propertieswdgDesordre = BaseAssainissementDesordreTool(**self.instencekwargs)
+            self.instancekwargs['parentwidget'] = self
+            self.propertieswdgDesordre = BaseAssainissementDesordreTool(**self.instancekwargs)
 
             #self.propertieswdgDesordre.toolwidgetmain.frame_2.setParent(None)
             #self.propertieswdgDesordre.groupBox_elements.setParent(None)
@@ -148,10 +148,10 @@ class BaseAssainissementEquipementTool(BaseEquipementTool):
             self.dbasechildwdgfield.append(self.propertieswdgDesordre)
 
 
-            self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(**self.instencekwargs)
+            self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(**self.instancekwargs)
             self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
 
-            self.propertieswdgCROQUIS = BaseCroquisTool(**self.instencekwargs)
+            self.propertieswdgCROQUIS = BaseCroquisTool(**self.instancekwargs)
             self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
 

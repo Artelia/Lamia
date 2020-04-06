@@ -31,9 +31,10 @@ from qgis.PyQt.QtWidgets import (QWidget, QTreeWidgetItem, QMessageBox, QFileDia
                                      QLabel, QMessageBox, QTextBrowser, QTableWidgetItem,QApplication,QToolButton, QAbstractItemView)
 """
 from qgis.PyQt.QtWidgets import (QComboBox, QTextEdit,QLineEdit,  QSpinBox, QDoubleSpinBox,
-                                 QDateEdit,QDateTimeEdit, QTextBrowser, QCheckBox)
+                                 QDateEdit,QDateTimeEdit, QTextBrowser, QCheckBox, QLabel)
 from qgis.PyQt import QtCore
 import qgis, logging, datetime, os
+import qgis.core
 
 class FormToolUtils(QtCore.QObject):
 
@@ -194,7 +195,7 @@ class FormToolUtils(QtCore.QObject):
         Manage paret/child combobox
         """
 
-        debug = False
+        debug = True
         if debug:
             senderwdg = self.sender()
             print('**', senderwdg.objectName())
@@ -203,39 +204,49 @@ class FormToolUtils(QtCore.QObject):
         if isinstance(senderwdg, QComboBox) and senderwdg.count() == 0:  # case triple descendant and parent not filled
             return
 
-        if self.groupBox_properties.layout().itemAt(0) is None:
-            return
+        #if self.groupBox_properties.layout().itemAt(0) is None:
+        #    return
 
         parenttablename = None
         parentfieldname = None
 
-        if self.groupBox_properties.layout().itemAt(0).widget() == self.userwdg:
+        if (self.formtoolwidget.toolwidget == self.formtoolwidget.toolwidgetmain or 
+                self.formtoolwidget.toolwidget == self.formtoolwidget.toolwidgetadvanced):
             comefromrawtable = False
-            if self.linkuserwdg is not None:
-                for tablename in self.linkuserwdg.keys():
-                    for fieldname in self.linkuserwdg[tablename]['widgets'].keys():
-                        if senderwdg == self.linkuserwdg[tablename]['widgets'][fieldname]:
+            if self.formtoolwidget.formtoolwidgetconfdict is not None:
+                for tablename, tabledict in self.formtoolwidget.formtoolwidgetconfdict.items():
+                    for fieldname in tabledict['widgets'].keys():
+                        if senderwdg == tabledict['widgets'][fieldname]:
                             parenttablename = tablename
                             parentfieldname = fieldname
                             break
 
-        elif self.groupBox_properties.layout().itemAt(0).widget() == self.tableWidget:
-            ind = self.tableWidget.indexAt(senderwdg.pos()).row()
-            parenttablename, parentfieldname = self.tableWidget.item(ind, 0).text().split('.')
-            comefromrawtable = True
+        #if self.groupBox_properties.layout().itemAt(0).widget() == self.userwdg:
+        #    comefromrawtable = False
+        #    if self.linkuserwdg is not None:
+        #        for tablename in self.linkuserwdg.keys():
+        #            for fieldname in self.linkuserwdg[tablename]['widgets'].keys():
+        #                if senderwdg == self.linkuserwdg[tablename]['widgets'][fieldname]:
+        #                    parenttablename = tablename
+        #                    parentfieldname = fieldname
+        #                    break
+        #
+        #elif self.groupBox_properties.layout().itemAt(0).widget() == self.tableWidget:
+        #    ind = self.tableWidget.indexAt(senderwdg.pos()).row()
+        #    parenttablename, parentfieldname = self.tableWidget.item(ind, 0).text().split('.')
+        #    comefromrawtable = True
 
         if parenttablename is None:
             return
 
         try:
-            parentcstvalue = self.dbase.getConstraintRawValueFromText(parenttablename, parentfieldname,
+            parentcstvalue = self.formtoolwidget.dbase.getConstraintRawValueFromText(parenttablename, parentfieldname,
                                                                       senderwdg.currentText())
         except Exception as e:
-            if self.dbase.qgsiface is None:
-                logging.getLogger("Lamia_unittest").debug('error %s %s %s', e, parenttablename, parentfieldname)
-            return
+            logging.getLogger("Lamia_unittest").debug('error %s %s %s', e, parenttablename, parentfieldname)
 
-        dbasetable = self.dbase.dbasetables[parenttablename]
+
+        dbasetable = self.formtoolwidget.dbase.dbasetables[parenttablename]
         # get child index and combochild
         listparentcst = [dbasetable['fields'][field]['ParFldCst']
                          if 'ParFldCst' in dbasetable['fields'][field].keys() else None
@@ -269,9 +280,9 @@ class FormToolUtils(QtCore.QObject):
                 listtoadd = [value[0] for value in dbasetable['fields'][childfieldname]['Cst'] if (value[2] is None or parentcstvalue in value[2])]
 
                 if debug: print('****', listtoadd)
-
-                if childfieldname in self.linkuserwdg[parenttablename]['widgets']:
-                    combochild = self.linkuserwdg[parenttablename]['widgets'][childfieldname]
+                wdgconfdict = self.formtoolwidget.formtoolwidgetconfdict
+                if childfieldname in wdgconfdict[parenttablename]['widgets']:
+                    combochild = wdgconfdict[parenttablename]['widgets'][childfieldname]
                     combochild.clear()
                     if len(listtoadd) > 0:
                         combochild.addItems(listtoadd)
@@ -329,8 +340,6 @@ class FormToolUtils(QtCore.QObject):
         else:
             wdg.clear()
             wdg.setText('Image non trouvee')
-
-
 
     def ___________________actionsOnFeatureSave(self):
         pass
@@ -868,7 +877,13 @@ class FormToolUtils(QtCore.QObject):
                     else:
                         pass
 
+    def ___________________utilsFunctions(self):
+        pass
 
+    def getQgsGeomFromPk(self,pk):
+        wkt = self.formtoolwidget.dbase.getWktGeomFromPk(self.formtoolwidget.DBASETABLENAME, pk)
+        geom = qgis.core.QgsGeometry.fromWkt(wkt)
+        return geom
 
     if False:
         def initFeatureProperties(self, feat, inputtablename=None, fieldname=None, value=None):

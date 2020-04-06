@@ -376,6 +376,9 @@ class AbstractDBaseParser():
                 return None
             else:
                 return tuple([None]*len(fields))
+    
+    def getWktGeomFromPk(self, dbasename, pk):
+        return self.getValuesFromPk(dbasename, 'ST_AsText(geom)', pk)
 
     def createNewObjet(self, docommit=True):
         datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
