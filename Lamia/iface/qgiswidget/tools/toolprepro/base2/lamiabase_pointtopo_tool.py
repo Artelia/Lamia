@@ -26,31 +26,28 @@ This file is part of LAMIA.
  """
 
 
-
-
-from qgis.PyQt import uic, QtGui
-try:
-    from qgis.PyQt.QtGui import (QWidget)
-except ImportError:
-    from qgis.PyQt.QtWidgets import (QWidget)
-#from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
-from ...Lamia_abstract_tool import AbstractLamiaTool
 import os
 import qgis
+from qgis.PyQt import uic, QtGui
+from qgis.PyQt.QtWidgets import (QWidget)
+
+from ...lamia_abstractformtool import AbstractLamiaFormTool
 
 
+class BasePointtopoTool(AbstractLamiaFormTool):
 
-
-
-class BasePointtopoTool(AbstractLamiaTool):
-
+    DBASETABLENAME = 'Pointtopo'
     LOADFIRST = False
-    dbasetablename = 'Pointtopo'
-    specialfieldui = []
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
-        super(BasePointtopoTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
+    tooltreewidgetCAT = 'Ressources'
+    tooltreewidgetSUBCAT = 'Points topo'
+    tooltreewidgetICONPATH = None
 
+
+    def __init__(self, **kwargs):
+        super(BasePointtopoTool, self).__init__(**kwargs)
+
+    """
     def initTool(self):
         # ****************************************************************************************
         # Main spec
@@ -74,75 +71,54 @@ class BasePointtopoTool(AbstractLamiaTool):
         # ****************************************************************************************
         #properties ui
         pass
+    """
 
-    def initFieldUI(self):
-        # ****************************************************************************************
-        #   userui Field
-        if self.userwdgfield is None:
-            # ****************************************************************************************
-            # userui
-            self.userwdgfield = UserUI()
-            """
-            self.linkuserwdg = {'Pointtopo' : {'linkfield' : 'id_pointtopo',
-                                             'widgets' : {'typepointtopo': self.userwdg.comboBox_position,
-                                                            'x': self.userwdg.doubleSpinBox_X,
-                                                            'y': self.userwdg.doubleSpinBox_Y,
-                                                            'zmngf': self.userwdg.doubleSpinBox_Zngf,
-                                                            'dx': self.userwdg.doubleSpinBox_dX,
-                                                            'dy': self.userwdg.doubleSpinBox_dY,
-                                                            'dz': self.userwdg.doubleSpinBox_dZ,
-                                                            'zwgs84': self.userwdg.doubleSpinBox_Zwgs84,
-                                                            'zgps': self.userwdg.doubleSpinBox_Zgps,
-                                                            'raf09': self.userwdg.doubleSpinBox_raf09,
-                                                            'hauteurperche': self.userwdg.doubleSpinBox_hautperche}},
-                                'Topographie': {'linkfield': 'id_topographie',
-                                              'widgets': {}}
-                                                          }
-            """
+    def initMainToolWidget(self):
+        self.toolwidgetmain = UserUI()
 
-            self.linkuserwdgfield = {'Pointtopo' : {'linkfield' : 'id_pointtopo',
-                                             'widgets' : {'typepointtopo': self.userwdgfield.comboBox_position,
-                                                            'x': self.userwdgfield.doubleSpinBox_X,
-                                                            'y': self.userwdgfield.doubleSpinBox_Y,
-                                                            'zmngf': self.userwdgfield.doubleSpinBox_Zngf,
-                                                            'dx': self.userwdgfield.doubleSpinBox_dX,
-                                                            'dy': self.userwdgfield.doubleSpinBox_dY,
-                                                            'dz': self.userwdgfield.doubleSpinBox_dZ,
-                                                            'zwgs84': self.userwdgfield.doubleSpinBox_Zwgs84,
-                                                            'zgps': self.userwdgfield.doubleSpinBox_Zgps,
-                                                            'raf09': self.userwdgfield.doubleSpinBox_raf09,
-                                                            'hauteurperche': self.userwdgfield.doubleSpinBox_hautperche}}
-                                                          }
-            if self.parentWidget is not None and self.parentWidget.dbasetablename == 'Topographie':
-                self.pushButton_addFeature.setEnabled(True)
-            else:
-                self.pushButton_addFeature.setEnabled(False)
+        self.formtoolwidgetconfdictmain = {'Pointtopo' : {'linkfield' : 'id_pointtopo',
+                                                    'widgets' : {'typepointtopo': self.toolwidgetmain.comboBox_position,
+                                                                'x': self.toolwidgetmain.doubleSpinBox_X,
+                                                                'y': self.toolwidgetmain.doubleSpinBox_Y,
+                                                                'zmngf': self.toolwidgetmain.doubleSpinBox_Zngf,
+                                                                'dx': self.toolwidgetmain.doubleSpinBox_dX,
+                                                                'dy': self.toolwidgetmain.doubleSpinBox_dY,
+                                                                'dz': self.toolwidgetmain.doubleSpinBox_dZ,
+                                                                'zwgs84': self.toolwidgetmain.doubleSpinBox_Zwgs84,
+                                                                'zgps': self.toolwidgetmain.doubleSpinBox_Zgps,
+                                                                'raf09': self.toolwidgetmain.doubleSpinBox_raf09,
+                                                                'hauteurperche': self.toolwidgetmain.doubleSpinBox_hautperche}}
+                                                                }
+        # if self.parentWidget is not None and self.parentWidget.dbasetablename == 'Topographie':
+        #     self.pushButton_addFeature.setEnabled(True)
+        # else:
+        #     self.pushButton_addFeature.setEnabled(False)
 
-            self.userwdgfield.pushButton_catchvalues.clicked.connect(self.getGPSValues)
+        self.toolwidgetmain.pushButton_catchvalues.clicked.connect(self.getGPSValues)
 
-            self.gpswidget = {'x' : {'widget' : self.userwdgfield.label_X,
-                                     'gga' : 'Xcrs'},
-                              'y': {'widget': self.userwdgfield.label_Y,
-                                    'gga': 'Ycrs'},
-                              'zmngf': {'widget': self.userwdgfield.label_Z,
-                                    'gga': 'zmNGF'},
-                              'dx': {'widget': self.userwdgfield.label_dX,
-                                    'gst': 'xprecision'},
-                              'dy': {'widget': self.userwdgfield.label_dY,
-                                    'gst': 'yprecision'},
-                              'dz': {'widget': self.userwdgfield.label_dZ,
-                                    'gst': 'zprecision'},
-                              'zgps': {'widget': self.userwdgfield.label_zgps,
-                                     'gga': 'elevation'},
-                              'zwgs84': {'widget': self.userwdgfield.label_zwgs84,
-                                       'gga': 'deltageoid'},
-                              'raf09': {'widget': self.userwdgfield.label_raf09,
-                                       'gga': 'RAF09'},
-                              'hauteurperche': {'widget': self.userwdgfield.label_hautperche,
-                                        'gga': 'hauteurperche'}
-                              }
+        self.gpswidget = {'x' : {'widget' : self.toolwidgetmain.label_X,
+                                    'gga' : 'Xcrs'},
+                            'y': {'widget': self.toolwidgetmain.label_Y,
+                                'gga': 'Ycrs'},
+                            'zmngf': {'widget': self.toolwidgetmain.label_Z,
+                                'gga': 'zmNGF'},
+                            'dx': {'widget': self.toolwidgetmain.label_dX,
+                                'gst': 'xprecision'},
+                            'dy': {'widget': self.toolwidgetmain.label_dY,
+                                'gst': 'yprecision'},
+                            'dz': {'widget': self.toolwidgetmain.label_dZ,
+                                'gst': 'zprecision'},
+                            'zgps': {'widget': self.toolwidgetmain.label_zgps,
+                                    'gga': 'elevation'},
+                            'zwgs84': {'widget': self.toolwidgetmain.label_zwgs84,
+                                    'gga': 'deltageoid'},
+                            'raf09': {'widget': self.toolwidgetmain.label_raf09,
+                                    'gga': 'RAF09'},
+                            'hauteurperche': {'widget': self.toolwidgetmain.label_hautperche,
+                                    'gga': 'hauteurperche'}
+                            }
 
-
+    """
     def postloadIds(self,sqlin):
         sqlin += " ORDER BY id_pointtopo "
         if False:
@@ -155,7 +131,7 @@ class BasePointtopoTool(AbstractLamiaTool):
 
 
         return sqlin
-
+    """
 
     """
     def getPkFromId(self, layername, inputid):
@@ -186,7 +162,9 @@ class BasePointtopoTool(AbstractLamiaTool):
         pass
 
 
-    def postInitFeatureProperties(self, feat):
+    # def postInitFeatureProperties(self, feat):
+    def postSelectFeature(self):
+        pass
 
         if self.currentFeaturePK is None:
             #self.pushButton_savefeature.setEnabled(True)
@@ -205,11 +183,12 @@ class BasePointtopoTool(AbstractLamiaTool):
                 self.enablePropertiesButtons(True)
 
     def enablePropertiesButtons(self, boolvalue):
-        self.pushButton_savefeature.setEnabled(boolvalue)
-        self.pushButton_addFeature.setEnabled(boolvalue)
-        self.pushButton_delFeature.setEnabled(boolvalue)
-        self.pushButton_savefeature.setEnabled(boolvalue)
-        self.groupBox_geom.setEnabled(boolvalue)
+        pass
+        #self.pushButton_savefeature.setEnabled(boolvalue)
+        #self.pushButton_addFeature.setEnabled(boolvalue)
+        #self.pushButton_delFeature.setEnabled(boolvalue)
+        #self.pushButton_savefeature.setEnabled(boolvalue)
+        #self.groupBox_geom.setEnabled(boolvalue)
 
 
     def magicFunction(self):
@@ -219,55 +198,21 @@ class BasePointtopoTool(AbstractLamiaTool):
         if success:
             self.saveFeature()
 
-
+    """
     def createParentFeature(self):
 
         if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
             if self.parentWidget.dbasetablename == 'Topographie':
                 pktopo = self.parentWidget.currentFeaturePK
                 pkpointtopo = self.currentFeaturePK
-                """
-                #idpointtopo
-                sql = "SELECT MAX(id_pointtopo) FROM Pointtopo"
-                sql += " WHERE lpk_topographie = " + str(pktopo)
-                idpointtopo = self.dbase.query(sql)[0][0]
-                if idpointtopo is None:
-                    idpointtopo = 1
-                else:
-                    idpointtopo = idpointtopo + 1
-                """
+
                 sql = "UPDATE Pointtopo SET "
                 sql += "lpk_topographie = " + str(pktopo)
                 sql += ", id_pointtopo = " + str(pkpointtopo)
                 sql += " WHERE pk_pointtopo = " + str(pkpointtopo) + ";"
                 query = self.dbase.query(sql)
                 self.dbase.commit()
-
-
-        if False:
-
-            pktopo = self.currentFeature.id()
-            lastobjetid = self.dbase.getLastId('Pointtopo') + 1
-            lastrevision = self.dbase.getLastPk('Revision')
-
-            sql = "UPDATE Pointtopo SET "
-            sql += "id_pointtopo = " + str(lastobjetid)   + ","
-            sql += "id_revisionbegin = " + str(lastrevision)
-            sql += " WHERE pk_pointtopo = " + str(pktopo) + ";"
-            query = self.dbase.query(sql)
-            self.dbase.commit()
-
-
-
-            #print('parent',pktopo)
-            if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
-                if self.parentWidget.dbasetablename == 'Topographie':
-                    # print('parent levetopo')
-                    currentparentlinkfield = self.parentWidget.currentFeature['id_topographie']
-                    sql = "UPDATE Pointtopo SET id_topographie = " + str(currentparentlinkfield) + " WHERE pk_pointtopo = " + str(pktopo) + ";"
-                    self.dbase.query(sql)
-                    self.dbase.commit()
-
+    """
 
 
     def deleteParentFeature(self):
@@ -281,7 +226,7 @@ class BasePointtopoTool(AbstractLamiaTool):
     def getGPSValues(self):
         if self.gpsutil is not None:
             if self.gpsutil.currentpoint is None:
-                self.windowdialog.errorMessage('GPS non connecte')
+                self.mainifacewidget.errorMessage('GPS non connecte')
                 return
 
             for i, fieldname in enumerate(self.gpswidget.keys()):
@@ -290,17 +235,11 @@ class BasePointtopoTool(AbstractLamiaTool):
                 except ValueError:
                     value = None
                 if value is not None:
-                    self.linkuserwdg[self.dbasetablename]['widgets'][fieldname].setValue(value)
+                    self.formtoolwidgetconfdict[self.dbasetablename]['widgets'][fieldname].setValue(value)
                 else:
-                    self.linkuserwdg[self.dbasetablename]['widgets'][fieldname].setValue(-1.0)
-            if False:
-                if self.rubberBand is not None:
-                    self.rubberBand.reset(0)
-                else:
-                    self.rubberBand = qgis.gui.QgsRubberBand(self.canvas,0)
-                    self.rubberBand.setWidth(5)
-                    self.rubberBand.setColor(QtGui.QColor("magenta"))
-            self.createorresetRubberband(0)
+                    self.formtoolwidgetconfdict[self.dbasetablename]['widgets'][fieldname].setValue(-1.0)
+
+            self.mainifacewidget.qgiscanvas.createorresetRubberband(0)
             self.setTempGeometry([self.gpsutil.currentpoint],False)
             return True
         else:

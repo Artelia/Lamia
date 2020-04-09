@@ -54,6 +54,12 @@ class BasePhotoTool(AbstractLamiaFormTool):
     tooltreewidgetSUBCAT = 'Photo'
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_photo_tool_icon.svg')
     
+    PARENTJOIN = {'Observation' : {'colparent': 'id_objet',
+                                'colthistable': 'id_ressource',
+                                 'tctable': 'Tcobjetressource',
+                                 'tctablecolparent':'lid_objet',
+                                 'tctablecolthistable':'lid_ressource'}
+                 }
 
     def __init__(self, **kwargs):
         super(BasePhotoTool, self).__init__(**kwargs)

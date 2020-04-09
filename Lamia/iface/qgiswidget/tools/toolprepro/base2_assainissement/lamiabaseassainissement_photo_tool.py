@@ -47,6 +47,7 @@ numphoto = None
 
 class BaseAssainissementPhotoTool(BasePhotoTool):
 
+
     def __init__(self, **kwargs):
         super(BaseAssainissementPhotoTool, self).__init__(**kwargs)
 

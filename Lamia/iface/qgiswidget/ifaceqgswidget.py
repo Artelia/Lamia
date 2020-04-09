@@ -148,6 +148,7 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         #behaviour var
         self.currenttoolwidget = None
         self.imagedirectory = None
+        self.currentchoosertreewidget = None
 
         # subdialogs
         self.newDBDialog = newDBDialog()
@@ -436,6 +437,7 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         self.loadToolsClasses()
         self.loadToolsWidgets()
         self.setVisualMode(visualmode=0)
+        self.qgiscanvas.updateWorkingDate(dbaseparser=self.dbase)
 
 
     def pullDBase(self):    #for offline mode
@@ -1011,21 +1013,30 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         logging.getLogger("Lamia_unittest").debug('called')
         if self.currenttoolwidget and hasattr(self.currenttoolwidget,'toolbarNew'):
             self.currenttoolwidget.toolbarNew()
+        if self.currentchoosertreewidget:
+            self.currentchoosertreewidget.toolbarNew()
 
     def toolbarUndo(self):
         logging.getLogger("Lamia_unittest").debug('called')
         if self.currenttoolwidget and hasattr(self.currenttoolwidget,'toolbarUndo'):
             self.currenttoolwidget.toolbarUndo()
+        if self.currentchoosertreewidget:
+            self.currentchoosertreewidget.toolbarUndo()
 
     def toolbarDelete(self):
         logging.getLogger("Lamia_unittest").debug('called')
         if self.currenttoolwidget and hasattr(self.currenttoolwidget,'toolbarDelete'):
             self.currenttoolwidget.toolbarDelete()
+        if self.currentchoosertreewidget:
+            self.currentchoosertreewidget.toolbarDelete()
 
     def toolbarSave(self):
         logging.getLogger("Lamia_unittest").debug('called')
         if self.currenttoolwidget and hasattr(self.currenttoolwidget,'toolbarSave'):
             self.currenttoolwidget.toolbarSave()
+        if self.currentchoosertreewidget:
+            self.currentchoosertreewidget.toolbarSave()
+
 
     def toolbarGeom(self):
         logging.getLogger("Lamia_unittest").debug('called')
@@ -1114,6 +1125,12 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
             return
 
         self.currenttoolwidget.selectFeature(pk=nearestpk)
+
+        if self.currentchoosertreewidget is not None:
+            self.currentchoosertreewidget.selectFeature(pk=nearestpk)
+
+
+
 
         if False:
             pass

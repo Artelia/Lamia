@@ -52,6 +52,16 @@ class BaseDesordreTool(AbstractLamiaFormTool):
     tooltreewidgetCAT = 'Etat'
     tooltreewidgetSUBCAT = 'Desordre'
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_desordre_tool_icon.png')
+    tempparentjoin = {}
+    linkdict = {'colparent': 'id_descriptionsystem',
+                            'colthistable': 'lid_descriptionsystem',
+                                'tctable': None,
+                                'tctablecolparent':None,
+                                'tctablecolthistable':None}
+    for tablename in ['Noeud', 'Infralineaire', 'Equipement' ]:
+        tempparentjoin[tablename] = linkdict
+    PARENTJOIN = tempparentjoin
+
 
     def __init__(self, **kwargs):
         super(BaseDesordreTool, self).__init__(**kwargs)

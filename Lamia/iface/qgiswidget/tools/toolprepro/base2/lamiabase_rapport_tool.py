@@ -26,29 +26,26 @@ This file is part of LAMIA.
 
 
 
-
-from qgis.PyQt import uic, QtCore, QtGui
-try:
-    from qgis.PyQt.QtGui import (QWidget)
-except ImportError:
-    from qgis.PyQt.QtWidgets import (QWidget)
-#from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
-from ...Lamia_abstract_tool import AbstractLamiaTool
 import os, sys, datetime
+from qgis.PyQt import uic, QtCore, QtGui
+from qgis.PyQt.QtWidgets import (QWidget)
+
+from ...lamia_abstractformtool import AbstractLamiaFormTool
 
 
+class BaseRapportTool(AbstractLamiaFormTool):
 
-
-
-class BaseRapportTool(AbstractLamiaTool):
-
+    DBASETABLENAME = 'Rapport'
     LOADFIRST = False
-    dbasetablename = 'Rapport'
-    specialfieldui = []
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
-        super(BaseRapportTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
+    tooltreewidgetCAT = 'Ressources'
+    tooltreewidgetSUBCAT = 'Rapport'
+    tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_rapport_tool_icon.png')
 
+    def __init__(self, **kwargs):
+        super(BaseRapportTool, self).__init__(**kwargs)
+
+    """
     def initTool(self):
         # ****************************************************************************************
         # Main spec
@@ -84,28 +81,23 @@ class BaseRapportTool(AbstractLamiaTool):
         #properties ui
         self.iconpath = os.path.join(os.path.dirname(__file__), 'lamiabase_rapport_tool_icon.png')
         self.qtreewidgetfields = ['libelle']
+    """
 
-    def initFieldUI(self):
-        # ****************************************************************************************
-        # userui Desktop
-        if self.userwdgfield is None:
-            # ****************************************************************************************
-            # userui
-            self.userwdgfield = UserUI()
-            self.userwdgfield.pushButton_chooseph.clicked.connect(self.choosePhoto)
-            self.userwdgfield.pushButton_openph.clicked.connect(self.openFile)
 
-            self.linkuserwdgfield = {'Rapport' : {'linkfield' : 'id_rapport',
-                                             'widgets' : { }},
-                                'Objet' : {'linkfield' : 'id_objet',
-                                          'widgets' : {'libelle' : self.userwdgfield.lineEdit_nom}},
-                                'Ressource' : {'linkfield' : 'id_ressource',
-                                          'widgets' : {'file': self.userwdgfield.lineEdit_file,
-                                                        'description': self.userwdgfield.lineEdit_description,
-                                                        'datetimeressource': self.userwdgfield.dateTimeEdit}}}
+    def initMainToolWidget(self):
 
-            # ****************************************************************************************
-            # child widgets
+        self.toolwidgetmain = UserUI()
+        self.toolwidgetmain.pushButton_chooseph.clicked.connect(self.choosePhoto)
+        self.toolwidgetmain.pushButton_openph.clicked.connect(self.openFile)
+
+        self.formtoolwidgetconfdictmain = {'Rapport' : {'linkfield' : 'id_rapport',
+                                                            'widgets' : { }},
+                                            'Objet' : {'linkfield' : 'id_objet',
+                                                        'widgets' : {'libelle' : self.toolwidgetmain.lineEdit_nom}},
+                                            'Ressource' : {'linkfield' : 'id_ressource',
+                                                        'widgets' : {'file': self.toolwidgetmain.lineEdit_file,
+                                                                    'description': self.toolwidgetmain.lineEdit_description,
+                                                                    'datetimeressource': self.toolwidgetmain.dateTimeEdit}}}
 
 
 
@@ -116,46 +108,31 @@ class BaseRapportTool(AbstractLamiaTool):
         pass
 
     def openFile(self):
-        filepath = self.dbase.completePathOfFile(self.userwdg.lineEdit_file.text())
+        filepath = self.dbase.completePathOfFile(self.toolwidget.lineEdit_file.text())
         if filepath != '':
             os.startfile(filepath)
 
 
     def choosePhoto(self):
 
-        if sys.version_info.major == 2:
-            file, extension = self.windowdialog.qfiledlg.getOpenFileNameAndFilter(None, 'Choose the file', self.dbase.imagedirectory,
-                                                                     'All (*.*)', '')
-        elif sys.version_info.major == 3:
-            file , extension= self.windowdialog.qfiledlg.getOpenFileName(None, 'Choose the file', self.dbase.imagedirectory,
-                                                                     'All (*.*)', '')
+        file , extension= self.mainifacewidget.qfiledlg.getOpenFileName(None, 'Choose the file', self.mainifacewidget.imagedirectory,
+                                                                    'All (*.*)', '')
 
         if file:
-            self.userwdg.lineEdit_file.setText(os.path.normpath(file))
+            self.toolwidget.lineEdit_file.setText(os.path.normpath(file))
 
 
-    def postInitFeatureProperties(self, feat):
-        if self.currentFeature is None:
+    #def postInitFeatureProperties(self, feat):
+    def postSelectFeature(self):
+        if self.currentFeaturePK is None:
             datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-            self.initFeatureProperties(feat, 'Ressource', 'datetimeressource', datecreation)
+            #self.initFeatureProperties(feat, 'Ressource', 'datetimeressource', datecreation)
+            self.formutils.applyResultDict({'datetimeressource': datecreation})
 
 
-
+    """
     def createParentFeature(self):
         pkobjet = self.dbase.createNewObjet()
-
-        if False:
-
-
-
-            # lastrevision = self.dbase.maxrevision
-            datecreation =  str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-            lastobjetid = self.dbase.getLastId('Objet') + 1
-            sql = "INSERT INTO Objet (id_objet, lpk_revision_begin, datetimecreation ) "
-            sql += "VALUES(" + str(lastobjetid ) + "," + str(self.dbase.maxrevision) +  ",'" + datecreation + "');"
-            query = self.dbase.query(sql)
-            self.dbase.commit()
-            pkobjet = self.dbase.getLastRowId('Objet')
 
         lastressourceid = self.dbase.getLastId('Ressource') + 1
         sql = "INSERT INTO Ressource (id_ressource, lpk_objet) "
@@ -184,8 +161,9 @@ class BaseRapportTool(AbstractLamiaTool):
             sql += " VALUES(" + str(self.dbase.maxrevision) + "," + str(currentparentlinkfield) + ',' + str(lastressourceid) + ")"
             query = self.dbase.query(sql)
             self.dbase.commit()
+    """
 
-
+    """
     def deleteParentFeature(self):
 
         sql = "SELECT pk_objet, pk_ressource, id_ressource FROM Rapport_qgis WHERE pk_rapport= " + str(self.currentFeaturePK)
@@ -210,7 +188,7 @@ class BaseRapportTool(AbstractLamiaTool):
         self.dbase.commit()
 
         return True
-
+    """
 
 
 

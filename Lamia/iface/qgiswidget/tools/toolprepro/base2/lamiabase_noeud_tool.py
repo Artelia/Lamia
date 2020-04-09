@@ -40,10 +40,6 @@ from .lamiabase_croquis_tool import BaseCroquisTool
 
 class BaseNoeudTool(AbstractLamiaFormTool):
 
-    LOADFIRST = True
-    dbasetablename = 'Noeud'
-    specialfieldui = []
-
     DBASETABLENAME = 'Noeud'
     LOADFIRST = True
 

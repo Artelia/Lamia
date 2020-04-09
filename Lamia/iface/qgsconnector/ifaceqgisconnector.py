@@ -56,8 +56,12 @@ class QgisConnector(LamiaIFaceAbstractConnectors):
         
 
 
-    def showErrorMessage(self,msg):
-        pass
+    def showErrorMessage(self,text):
+        if qgis.utils.iface is not None:
+            qgis.utils.iface.messageBar().pushMessage("Lamia " ,text, qgis.core.Qgis.Critical )
+            QApplication.processEvents()
+        else:
+            logging.getLogger( "Lamia_connector" ).info('ErrorMessage : %s', text)
 
     def createProgressBar(self, inittext='', maxvalue=99):
         self.progressbarinittext = inittext

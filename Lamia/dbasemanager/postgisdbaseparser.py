@@ -301,7 +301,7 @@ class PostGisDBaseParser(AbstractDBaseParser):
     def _dateVersionConstraintSQL(self, specialdate=None):
         if specialdate is None or specialdate == 'now':
             #workingdatemodif = QtCore.QDate.fromString(self.workingdate, 'yyyy-MM-dd').addDays(1).toString('yyyy-MM-dd')
-            workingdatemodif = (datetime.datetime.now() + datetime.timedelta(days=1)).strftime("%y-%m-%d")
+            workingdatemodif = (datetime.datetime.now() + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
         else:
             workingdatemodif = QtCore.QDate.fromString(specialdate, 'dd/MM/yyyy').addDays(1).toString('yyyy-MM-dd')
 

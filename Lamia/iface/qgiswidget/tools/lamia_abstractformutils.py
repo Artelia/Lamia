@@ -41,6 +41,7 @@ class FormToolUtils(QtCore.QObject):
     def __init__(self, formtoolwidget):
         super(FormToolUtils, self).__init__()
         self.formtoolwidget = formtoolwidget
+        
 
     def ___________________actionsOnWidgetCreation(self):
         pass
@@ -92,6 +93,25 @@ class FormToolUtils(QtCore.QObject):
                                 elif isinstance(wdgs[0], QSpinBox) or isinstance(wdgs[0], QDoubleSpinBox):
                                     for wdg in wdgs:
                                         wdg.valueChanged.connect(self.manageMultipleWidgetField)
+
+    def connectSubWidgetModifications(self):
+        for table, tabledict in self.formtoolwidget.formtoolwidgetconfdict.items():
+            for field, wdg in tabledict['widgets'].items():
+                if isinstance(wdg, QTextEdit) or isinstance(wdg, QLineEdit):
+                    wdg.textChanged.connect(self.formtoolwidget.subwidgetChanged)
+                elif isinstance(wdg, QSpinBox) or isinstance(wdg, QDoubleSpinBox):
+                    wdg.valueChanged.connect(self.formtoolwidget.subwidgetChanged)
+                elif isinstance(wdg, QComboBox):
+                    wdg.currentIndexChanged.connect(self.formtoolwidget.subwidgetChanged)
+                elif isinstance(wdg, QDateEdit):
+                    wdg.dateChanged.connect(self.formtoolwidget.subwidgetChanged)
+                elif isinstance(wdg, QDateTimeEdit):
+                    wdg.dateTimeChanged.connect(self.formtoolwidget.subwidgetChanged)
+                elif isinstance(wdg, QCheckBox):
+                    wdg.stateChanged.connect(self.formtoolwidget.subwidgetChanged)
+                elif isinstance(wdg, QLabel):
+                    pass
+
 
 
     def initWidgetUI(self, basewidget):
@@ -195,7 +215,7 @@ class FormToolUtils(QtCore.QObject):
         Manage paret/child combobox
         """
 
-        debug = True
+        debug = False
         if debug:
             senderwdg = self.sender()
             print('**', senderwdg.objectName())
@@ -320,6 +340,8 @@ class FormToolUtils(QtCore.QObject):
                                           field)
 
 
+
+
     def showImageinLabelWidget(self,wdg,savedfile):
         """
         Show the image file in the text widget
@@ -346,6 +368,13 @@ class FormToolUtils(QtCore.QObject):
 
     def saveFeature(self, featurepk=None):
         #self.currentFeature, self.currentFeaturePK = self.manageFeatureCreationOrUpdate()
+
+        dbasetablehasgeomfield = self.formtoolwidget.dbase.dbasetables[self.formtoolwidget.DBASETABLENAME].get('geom', None)
+        if (dbasetablehasgeomfield is not None and featurepk is None 
+                and self.formtoolwidget.tempgeometry is None):     # assure taht a geometry is acquired on first creation
+            self.formtoolwidget.mainifacewidget.connector.showErrorMessage('Geometry needed')
+            return
+        
         savedfeaturepk = self.manageFeatureCreationOrUpdate(featurepk)
 
         self.setGeometryToFeature(savedfeaturepk)
@@ -353,6 +382,8 @@ class FormToolUtils(QtCore.QObject):
         self.formtoolwidget.postSaveFeature(savedfeaturepk)  #featurepk toknow if new or not
         self.saveRessourceFile(savedfeaturepk)
         self.updateDateModification(savedfeaturepk)
+        self._reinitAfterSaving()
+
         self.formtoolwidget.selectFeature(pk=savedfeaturepk)
 
 
@@ -876,6 +907,48 @@ class FormToolUtils(QtCore.QObject):
                         os.remove(self.formtoolwidget.dbase.completePathOfFile(oldfile))
                     else:
                         pass
+
+    def _reinitAfterSaving(self):
+        #reinit
+        layergeomtype = self.formtoolwidget.mainifacewidget.qgiscanvas.layers[self.formtoolwidget.DBASETABLENAME]['layer'].geometryType()
+        self.formtoolwidget.mainifacewidget.qgiscanvas.createorresetRubberband(layergeomtype)
+        self.formtoolwidget.tempgeometry = None
+        self.formtoolwidget.mainifacewidget.qgiscanvas.layers[self.formtoolwidget.DBASETABLENAME]['layerqgis'].repaintRequested.emit()
+        # self.mainifacewidget.qgiscanvas.canvas.refresh()
+
+    def ___________________actionsOnDeletingFeature(self):
+        pass
+
+    def deleteFeature(self):
+
+        tablestodel = [self.formtoolwidget.DBASETABLENAME]
+        tablestodel += self.formtoolwidget.dbase.getParentTable(self.formtoolwidget.DBASETABLENAME)
+        pkfields = ['pk_' + tablename.lower() for tablename in tablestodel]
+
+        for tablename in tablestodel:
+            pkvalues = self.formtoolwidget.dbase.getValuesFromPk(self.formtoolwidget.DBASETABLENAME + '_qgis',
+                                                                pkfields,
+                                                                self.formtoolwidget.currentFeaturePK)
+        dictdelete=dict(zip(tablestodel, pkvalues))       # dict : {tablename : pkvalue}
+        for tablename, pkvalue in dictdelete.items():
+            sql = "DELETE FROM {} WHERE pk_{} = {}".format(tablename,
+                                                            tablename.lower(),
+                                                            str(pkvalue))
+            self.formtoolwidget.dbase.query(sql)
+        self.formtoolwidget.postDeleteFeature()
+
+
+
+    def archiveFeature(self):
+        pkobjet = self.formtoolwidget.dbase.getValuesFromPk(self.formtoolwidget.DBASETABLENAME + '_qgis',
+                                                                'pk_objet',
+                                                                self.formtoolwidget.currentFeaturePK)
+        # idobjet = self.currentFeature['id_objet']
+        #datesuppr = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
+        datesuppr = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        sql = "UPDATE Objet SET datetimedestruction = '" + datesuppr + "'  WHERE pk_objet = " + str(pkobjet) + ";"
+        self.formtoolwidget.dbase.query(sql)
+
 
     def ___________________utilsFunctions(self):
         pass

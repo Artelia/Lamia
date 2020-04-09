@@ -99,8 +99,8 @@ class AbstractDBaseParser():
         # used to define the working date in db
         #self.workingdate = QtCore.QDate.currentDate().toString('yyyy-MM-dd')
         #self.workingdate = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        self.workingdate = datetime.datetime.now().strftime("%Y-%m-%d")
-
+        self.workingdate = (datetime.datetime.now()+ datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+        # self.workingdate = (datetime.datetime.now()).strftime("%Y-%m-%d")
 
         # the current prestation id
         self.currentprestationid = None
@@ -263,6 +263,8 @@ class AbstractDBaseParser():
               os.makedirs(dbasedir)
 
       return dbaseressourcesdirectorytemp
+
+ 
 
     def query(self):
         raise NotImplementedError 
@@ -636,6 +638,10 @@ class AbstractDBaseParser():
             sql = sql[:-2]
 
         return sql
+
+    def sqlNow(self, sqlin, date=None):
+        sqlout = self.updateQueryTableNow(sqlin, date)
+        return sqlout
 
     def updateQueryTableNow(self, sqlin, date=None):
         

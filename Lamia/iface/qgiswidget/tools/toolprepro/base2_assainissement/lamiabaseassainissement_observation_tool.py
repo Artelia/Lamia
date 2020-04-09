@@ -76,7 +76,6 @@ class BaseAssainissementObservationTool(BaseObservationTool):
     
     """
     def initMainToolWidget(self):
-        print('obs', self.dbase.variante)
 
         if self.dbase.variante in [None, 'Lamia']:
 
@@ -216,14 +215,20 @@ class BaseAssainissementObservationTool(BaseObservationTool):
             self.dbasechildwdgfield = []
             self.instancekwargs['parentwidget'] = self
 
-            print(self.parentWidget.__class__.__name__)
-
             if self.parentWidget is not None:
                 self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(**self.instancekwargs)
-                self.dbasechildwdgfield = [self.propertieswdgPHOTOGRAPHIE]
-                self.propertieswdgCROQUIS = BaseCroquisTool(**self.instancekwargs)
-                self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+                
 
+                #self.propertieswdgOBSERVATION2 = BaseAssainissementObservationTool(**self.instancekwargs)
+                #self.propertieswdgOBSERVATION2.initMainToolWidget()
+                #self.propertieswdgOBSERVATION2.NAME = None
+                #self.toolwidgetmain.tabWidget.widget(1).layout().addWidget(self.propertieswdgPHOTOGRAPHIE)
+                self.dbasechildwdgfield += [self.propertieswdgPHOTOGRAPHIE]
+                if False:
+                    self.propertieswdgCROQUIS = BaseCroquisTool(**self.instancekwargs)
+                    self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+                #self.toolwidgetmain.tabWidget.widget(2).layout().addWidget(self.propertieswdgCROQUIS)
+                #self.dbasechildwdgfield += [self.propertieswdgCROQUIS]
 
 
     # def postInitFeatureProperties(self, feat):
@@ -240,7 +245,7 @@ class BaseAssainissementObservationTool(BaseObservationTool):
         dbasetabledesordre = self.dbase.dbasetables['Desordre']
         if ('groupedesordre' in dbasetabledesordre['fields'].keys()  ):
             if self.parentWidget is not None and self.parentWidget.currentFeaturePK is not None:
-                grpdes = self.dbase.getValuesFromPk(self.dbasetablename,
+                grpdes = self.dbase.getValuesFromPk(self.parentWidget.DBASETABLENAME,
                                                     'groupedesordre',
                                                     self.parentWidget.currentFeaturePK)
                 grpdescst = [elem[1] for elem in dbasetabledesordre['fields']['groupedesordre']['Cst']]
@@ -279,8 +284,8 @@ class BaseAssainissementObservationTool(BaseObservationTool):
 
                 elif self.dbase.variante in ['CD41']:
                     if grpdes == 'NOD' and self.parentWidget.parentWidget is not None and self.parentWidget.parentWidget.currentFeaturePK is not None:
-                        if self.parentWidget.parentWidget.dbasetablename == 'Noeud':
-                            currenttext = self.parentWidget.parentWidget.userwdgfield.comboBox_typeOuvrageAss.currentText()
+                        if self.parentWidget.parentWidget.DBASETABLENAME == 'Noeud':
+                            currenttext = self.parentWidget.parentWidget.toolwidgetmain.comboBox_typeOuvrageAss.currentText()
                             typenoeud = self.dbase.getConstraintRawValueFromText('Noeud', 'typeOuvrageAss', currenttext)
                             if typenoeud in ['60']:
                                 self.toolwidgetmain.stackedWidget_2.setCurrentIndex(0)

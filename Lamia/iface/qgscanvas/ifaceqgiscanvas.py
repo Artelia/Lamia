@@ -24,7 +24,7 @@ This file is part of LAMIA.
   * SPDX-License-Identifier: GPL-3.0-or-later
   * License-Filename: LICENSING.md
  """
-import os, sys, io, logging
+import os, sys, io, logging, datetime
 import qgis, qgis.core, qgis.utils, qgis.gui
 from qgis.PyQt import QtGui
 import Lamia
@@ -240,6 +240,63 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                 self.editlayer.rollBack()
             self.qgislegendnode.removeLayer(self.editlayer)
 
+    def updateWorkingDate(self, dbaseparser, datetimearg=None, revision=None):
+        """
+        Methode appelée lorsque la date de travail (self.workingdate) ou la version de travail (self.currentrevision)
+        est modifiée
+        Change les filtres de toutes les tables qgis en fonction
+        """
+
+        #workingdatemodif = QtCore.QDate.fromString(self.workingdate, 'yyyy-MM-dd').addDays(1).toString('yyyy-MM-dd')
+        if datetimearg:
+            workingdatemodif = datetimearg
+        else:
+            workingdatemodif = dbaseparser.workingdate
+        if revision:
+            revision = revision
+        else:
+            revision = dbaseparser.currentrevision
+        if dbaseparser.__class__.__name__ == 'SpatialiteDBaseParser':
+            parsertruevalue = '1'
+        elif dbaseparser.__class__.__name__ == 'PostGisDBaseParser':
+            parsertruevalue = 'TRUE'
+
+        subsetstringtemp = """  "datetimecreation" <= '{workingdate}' """\
+                           """ AND CASE WHEN "datetimedestruction" IS NOT NULL  THEN "datetimedestruction" > '{workingdate}' ELSE {truevalue} END """\
+                           """ AND "lpk_revision_begin" <= '{currentrevision}' """\
+                           """ AND CASE WHEN "lpk_revision_end" IS NOT NULL  THEN "lpk_revision_end" > '{currentrevision}' ELSE {truevalue} END """
+        #print(subsetstringtemp)
+        #print(workingdatemodif, parsertruevalue, revision)
+        subsetstring = subsetstringtemp.format(workingdate=workingdatemodif,
+                                               truevalue=parsertruevalue,
+                                                currentrevision=str(revision))
+
+        #
+        #if self.dbasetype == 'spatialite':
+        #    subsetstring = '"datetimecreation" <= ' + "'" + workingdatemodif + "'"
+        #    subsetstring += ' AND CASE WHEN "datetimedestruction" IS NOT NULL  THEN "datetimedestruction" > ' + "'" + workingdatemodif + "'" + ' ELSE 1 END'
+        #    if self.revisionwork:
+        #        subsetstring += ' AND "lpk_revision_begin" <= ' + str(self.currentrevision)
+        #        subsetstring += ' AND CASE WHEN "lpk_revision_end" IS NOT NULL  THEN "lpk_revision_end" > ' + str(
+        #            self.currentrevision) + ' ELSE 1 END'
+        #
+        #elif self.dbasetype == 'postgis':
+        #    subsetstring = '"datetimecreation" <= ' + "'" + workingdatemodif + "'"
+        #    subsetstring += ' AND CASE WHEN "datetimedestruction" IS NOT NULL  THEN "datetimedestruction" > ' + "'" + workingdatemodif + "'" + ' ELSE TRUE END'
+        #    if self.revisionwork:
+        #        subsetstring += ' AND "lpk_revision_begin" <= ' + str(self.currentrevision)
+        #        subsetstring += ' AND CASE WHEN "lpk_revision_end" IS NOT NULL  THEN "lpk_revision_end" > ' + str(
+        #            self.currentrevision) + ' ELSE TRUE END'
+
+
+        #for tablename in self.dbasetables:
+        for tablename, tabledict in self.layers.items():
+            fieldnames = [field.name().lower() for field in tabledict['layerqgis'].fields()]
+            if 'datecreation' in fieldnames or 'datetimecreation' in fieldnames :
+                tabledict['layerqgis'].setSubsetString(subsetstring)
+                tabledict['layerqgis'].triggerRepaint()
+
+
     def _____________________________maptoolsManagement(self):
         pass
 
@@ -320,10 +377,9 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             self.rubberBand.setColor(QtGui.QColor("magenta"))
 
     def createRubberBandForSelection(self, qgsgeom):
-        geomtype = qgsgeom.type()
+        # geomtype = qgsgeom.type()
         self.createorresetRubberband(qgis.core.QgsWkbTypes.LineGeometry)
         canvasscale = self.canvas.scale() 
-        print(canvasscale)
         distpixel = 4.0
         dist = distpixel * canvasscale / 1000.0
 

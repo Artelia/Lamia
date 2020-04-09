@@ -529,8 +529,8 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
             self.toolwidgetmain.stackedWidget.setCurrentIndex(5)
 
 
-        self.propertieswdgDesordre.propertieswdgOBSERVATION2.updateObservationStackedWidget()
-
+        #self.propertieswdgDesordre.propertieswdgOBSERVATION2.updateObservationStackedWidget()
+        self.propertieswdgDesordre.propertieswdgOBSERVATION.updateObservationStackedWidget()
 
 
 
@@ -553,7 +553,8 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
         else:
             self.toolwidgetmain.stackedWidget.setCurrentIndex(3)
 
-        self.propertieswdgDesordre.propertieswdgOBSERVATION2.updateObservationStackedWidget()
+        #self.propertieswdgDesordre.propertieswdgOBSERVATION2.updateObservationStackedWidget()
+        self.propertieswdgDesordre.propertieswdgOBSERVATION.updateObservationStackedWidget()
 
 
     def fieldui3TypeOhChanged(self, comboindex):
@@ -572,7 +573,8 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
         else:
             self.toolwidgetmain.stackedWidget.setCurrentIndex(5)
 
-        self.propertieswdgDesordre.propertieswdgOBSERVATION2.updateObservationStackedWidget()
+        #self.propertieswdgDesordre.propertieswdgOBSERVATION2.updateObservationStackedWidget()
+        self.propertieswdgDesordre.propertieswdgOBSERVATION.updateObservationStackedWidget()
 
 
 
@@ -635,10 +637,14 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
             # iterate on lid_descriptionsystem_1 and lid_descriptionsystem_2
             valuetoiterate = [1, 2]
             for indexnode in valuetoiterate:
-                sql = "SELECT pk_infralineaire, id_infralineaire FROM Infralineaire_qgis "
-                sql += "WHERE lid_descriptionsystem_" + str(indexnode ) + " = " + str(nodeiddessys)
-                sql += " AND "
-                sql += self.dbase.dateVersionConstraintSQL()
+                #sql = "SELECT pk_infralineaire, id_infralineaire FROM Infralineaire_qgis "
+                #sql += "WHERE lid_descriptionsystem_" + str(indexnode ) + " = " + str(nodeiddessys)
+                #sql += " AND "
+                #sql += self.dbase.dateVersionConstraintSQL()
+                sql = "SELECT pk_infralineaire, id_infralineaire FROM Infralineaire_now "\
+                      "WHERE lid_descriptionsystem_{} = {} ".format(str(indexnode ),
+                                                                    str(nodeiddessys))
+                sql = self.dbase.sqlNow(sql)
                 result = self.dbase.query(sql)
                 if indexnode == 1 :
                     indexgeom = 0
@@ -737,9 +743,12 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
         dbasetablelayer = self.dbase.dbasetables['Infralineaire']['layer']
         print('moveBranchement1', pkinfralin, fetiddessys)
         # sql = "SELECT id_infralineaire FROM Infralineaire WHERE lk_descriptionsystem2 = " + str(infrafet['id_descriptionsystem'])
-        sql = "SELECT pk_infralineaire, id_infralineaire FROM Infralineaire_qgis WHERE lid_descriptionsystem_2 = " + str( fetiddessys)
-        sql += " AND "
-        sql += self.dbase.dateVersionConstraintSQL()
+        #sql = "SELECT pk_infralineaire, id_infralineaire FROM Infralineaire_qgis WHERE lid_descriptionsystem_2 = " + str( fetiddessys)
+        #sql += " AND "
+        #sql += self.dbase.dateVersionConstraintSQL()
+        sql = "SELECT pk_infralineaire, id_infralineaire FROM Infralineaire_now "\
+              " WHERE lid_descriptionsystem_2 = {} ".format( str(fetiddessys))
+        sql = self.dbase.sqlNow(sql)
         # query = self.dbase.query(sql)
         # result2 = [row[0] for row in query]
         result2 = self.dbase.query(sql)

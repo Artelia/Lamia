@@ -46,11 +46,13 @@ class BaseCroquisTool(AbstractLamiaFormTool):
     tooltreewidgetCAT = 'Ressources'
     tooltreewidgetSUBCAT = 'Croquis'
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_croquis_tool_icon.png')
-    """
-    LOADFIRST = False
-    dbasetablename = 'Photo'
-    specialfieldui = []
-    """
+
+    PARENTJOIN = {'Observation' : {'colparent': 'id_objet',
+                                'colthistable': 'id_ressource',
+                                 'tctable': 'Tcobjetressource',
+                                 'tctablecolparent':'lid_objet',
+                                 'tctablecolthistable':'lid_ressource'}
+                 }
 
     def __init__(self, **kwargs):
         super(BaseCroquisTool, self).__init__(**kwargs)

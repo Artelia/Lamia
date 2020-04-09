@@ -47,9 +47,16 @@ class BaseObservationTool(AbstractLamiaFormTool):
     DBASETABLENAME = 'Observation'
     # LOADFIRST = True
 
-    tooltreewidgetCAT = 'Desordre'
-    # tooltreewidgetSUBCAT = 'Desordre'
+    tooltreewidgetCAT = 'Etat'
+    tooltreewidgetSUBCAT = 'Obervation'
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_observation_tool_icon.png')
+
+    PARENTJOIN = {'Desordre' : {'colparent': 'id_desordre',
+                                'colthistable': 'lid_desordre',
+                                 'tctable': None,
+                                 'tctablecolparent':None,
+                                 'tctablecolthistable':None}
+                 }
 
     def __init__(self, **kwargs):
         super(BaseObservationTool, self).__init__(**kwargs)
@@ -227,7 +234,7 @@ class BaseObservationTool(AbstractLamiaFormTool):
                 self.dbase.query(sql)
 
             if self.parentWidget is not None and self.parentWidget.currentFeaturePK is not None:
-                if self.parentWidget.dbasetablename == 'Desordre':
+                if self.parentWidget.DBASETABLENAME == 'Desordre':
                     pk_objet, descreation = self.dbase.getValuesFromPk('Desordre_qgis',
                                                                                  ['pk_objet', 'datetimecreation'],
                                                                                  self.parentWidget.currentFeaturePK)

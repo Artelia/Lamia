@@ -47,8 +47,12 @@ from ..subdialogs.lamia_linkage import LinkageDialog
 # from ..maptool.mapTools import mapToolCapture TODO
 from .lamia_abstracttool import AbstractLamiaTool
 from .lamia_abstractformutils import FormToolUtils
+from .choosertreewidget.fullidchoosertreewidget import FullIDChooserTreeWidget
+
+
 
 debugconnector = False
+
 
 
 class AbstractLamiaFormTool(AbstractLamiaTool):
@@ -99,6 +103,8 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
     specialfieldui = []
 
 
+
+
     def __init__(self,                  
                  dbaseparser=None, 
                  mainifacewidget=None, 
@@ -120,33 +126,42 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                                                     choosertreewidget=choosertreewidget, 
                                                     parentwidget=parentwidget, 
                                                     parent=parent)
+        self.installEventFilter(self) 
         # utils class
         self.formutils = FormToolUtils(self)
+        # choosertreewdg
+        self.choosertreewidget = FullIDChooserTreeWidget(toolwidget=self,
+                                                         dbaseparser = self.dbase,
+                                                         mainifacewidget = self.mainifacewidget)
+
+
         # var for widgets loaded in self.toolwidgetmainlayout
 
         #layoutconf
         #self.toolwidgetmainlayout = QVBoxLayout()
         #self.toolwidgetmainlayout.setMargin(0)
         #self.setLayout(self.toolwidgetmainlayout)
-        self.titlelabel = QLabel('temp')
-        #self.titlelabel.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
-        self.titlelabel.setAlignment(QtCore.Qt.AlignVCenter)
-        self.titlelabel.setFrameShape(QFrame.Panel)
-        #self.titlelabel.setFrameShadow(QFrame.Sunken)
-        self.titlelabel.setLineWidth(2)
-        self.layout().addWidget(self.titlelabel)
-        self.layout().update()
 
-        # behaviour var
+
         self.toolwidget = None          #the widget loaded in self.toolwidgetmainlayout
         self.toolwidgetmain = None      #the widget defined in inherited class - become self.toolwidget when loaded in layout
         self.toolwidgetadvanced = None  #the widget defined in inherited class - become self.toolwidget when loaded in layout
-        self.currentFeaturePK = None    # the pk of selected feature
-        self.tempgeometry = None        #the geometry edited while defining new geom
-
         self.formtoolwidgetconfdict = None       #dict used to link dbase column name to qtwidget objectname 
         self.formtoolwidgetconfdictmain = None   #dict for toolwidgetmain
         self.formtoolwidgetconfdictadvanced = None   #dict for toolwidgetadvanced
+        self.dbasechildwdg = []
+        self.dbasechildwdgfield = []
+        self.dbasechildwdgdesktop = []
+
+
+        # behaviour var
+        self.currentFeaturePK = None    # the pk of selected feature
+        self.tempgeometry = None        #the geometry edited while defining new geom
+        self.activatesubwidgetchangelistener=False
+        self.lastselectedpk = None
+
+
+
 
         if False:
             self._init_loadWidgetDependentResolution()
@@ -320,6 +335,23 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             if self.dbasetablename is not None:
                 self.initWidgets()
     
+    def _________________widgetinitialization(self):
+        pass
+
+    def _loadUI(self):
+        pass
+        uipath = os.path.join(os.path.dirname(__file__), 'lamia_abstractformtool.ui')
+        uic.loadUi(uipath, self)
+
+        #self.titlelabel = QLabel('temp')
+        ##self.titlelabel.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        #self.titlelabel.setAlignment(QtCore.Qt.AlignVCenter)
+        #self.titlelabel.setFrameShape(QFrame.Panel)
+        ##self.titlelabel.setFrameShadow(QFrame.Sunken)
+        #self.titlelabel.setLineWidth(2)
+        #self.frametoolwidgindicator.layout().addWidget(self.titlelabel)
+        #self.frametoolwidgindicator.layout().update()
+
     def manageWidgetToLoadInMainLayout(self):
         if self.mainifacewidget.interfacemode in [0,4]:
             if self.toolwidgetmain is None: #first loading
@@ -328,12 +360,14 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                 if self.toolwidgetmain:
                     self.toolwidget = self.toolwidgetmain 
                     self.formtoolwidgetconfdict = self.formtoolwidgetconfdictmain
-                    self.formutils.initWidgetBehaviour()                                   
+                    self.formutils.initWidgetBehaviour()  
+                    self.formutils.connectSubWidgetModifications()                           
             if self.toolwidgetmain is not None:    #non first loading
                 #former self.userwdg = self.userwdgfield
                 self.toolwidget = self.toolwidgetmain     
                 #former self.linkuserwdg = self.linkuserwdgfield              
                 self.formtoolwidgetconfdict = self.formtoolwidgetconfdictmain
+                self.dbasechildwdg = self.dbasechildwdgfield
 
 
         elif self.mainifacewidget.interfacemode == 1:
@@ -349,13 +383,304 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                 self.toolwidget = self.toolwidgetadvanced
                 # former self.linkuserwdg = self.linkuserwdgdesktop
                 self.formtoolwidgetconfdict = self.formtoolwidgetconfdictadvanced
+                self.dbasechildwdg = self.dbasechildwdgdesktop   
             else:
                 self.toolwidget = self.toolwidgetmain
                 self.formtoolwidgetconfdict = self.formtoolwidgetconfdictmain
+                self.dbasechildwdg = self.dbasechildwdgfield
+        
+        #var1
+        if False:
+            parentitem = self.treeWidgetmain.invisibleRootItem()
+            if len(self.dbasechildwdg) == 0 :
+                self.toolBoxmain.removeItem(1)
+            if self.parentWidget is not None:
+                parentwdg=self
+                parentlist=[]
+                while parentwdg is not None:
+                    parentlist.append(parentwdg.DBASETABLENAME)
+                    parenttoolbox = parentwdg.toolBoxmain
+                    parentwdgnotnone = parentwdg
+                    parentwdg = parentwdg.parentWidget
+                    
+                name = '/'.join(parentlist[::-1])
+                name = '    '*len(parentlist) + name
+
+                parentitem = self.parentWidget.newitem
+                self.newitem = QTreeWidgetItem([self.DBASETABLENAME])
+                parentitem.addChildren([self.newitem ])
+                parentwdgnotnone.treeWidgetmain.setItemWidget(self.newitem , 1, self.toolwidget)
+            else:
+                parentitem = self.treeWidgetmain.invisibleRootItem()
+                self.newitem = QTreeWidgetItem([self.DBASETABLENAME])
+                parentitem.addChildren([self.newitem ])
+                self.treeWidgetmain.setItemWidget(self.newitem , 1, self.toolwidget)
+        #var2
+        if False:
+            self.treeWidgetmain.setVisible(False)
+            self.frametoolwidg.layout().addWidget(self.toolwidget)
+            if len(self.dbasechildwdg) == 0 :
+                #self.toolBoxchildwdg.setParent(None)
+                self.toolBoxmain.removeItem(1)
+            if self.parentWidget is not None:
+                # print('additem {} in {}'.format(self.DBASETABLENAME,self.parentWidget.DBASETABLENAME ))
+                # self.toolBoxmain.widget(0).setParent(None)
+                #index = self.parentWidget.toolBoxchildwdg.addItem(self,self.DBASETABLENAME)
+                parentwdg=self
+                parentlist=[]
+                while parentwdg is not None:
+                    parentlist.append(parentwdg.tooltreewidgetSUBCAT)
+                    parenttoolbox = parentwdg.toolBoxmain
+                    parentwdgnotnone = parentwdg
+                    parentwdg = parentwdg.parentWidget
+                    
+                name = '/'.join(parentlist[::-1])
+                name = '    '*len(parentlist) + name
+
+                index = parenttoolbox.addItem(self.frametoolwidg,name)
+                #self.toolBoxmain.widget(0).setParent(self.parentWidget.toolBoxchildwdg.widget(index))
+                #self.parentWidget.toolBoxchildwdg.insertItem(-1,self.frametoolwidg,self.DBASETABLENAME)
+            else:
+                self.frame.setParent(None)
+        self._defineQTabWidgetTabBehaviour()
+        #var3
+        if False:
+            self.frametoolwidg.layout().addWidget(self.toolwidget)
+            self.tabWidgetmain.setTabText(0, self.tooltreewidgetSUBCAT)
+
+            if self.parentWidget is not None:
+                parentwdg=self
+                parentlist=[]
+                parenttab = self.parentWidget.tabWidget
+                indexinserted = parenttab.addTab(self.tabWidgetmain.widget(0),
+                                                  QtGui.QIcon(self.tooltreewidgetICONPATH),
+                                                   self.tooltreewidgetSUBCAT)
+
+                def selectFirstTab(idx):
+                    if idx == indexinserted:
+                        self.tabWidget.setCurrentIndex(0)
+                        self.widgetClicked(event=None)
+
+                parenttab.tabBarClicked.connect(lambda idx : selectFirstTab(idx))
+                parenttab.tabBarClicked.connect(lambda idx : selectFirstTab(idx))
+            else:
+                self.frame.setParent(None)
+                self.tabWidgetmain.tabBarClicked.connect(lambda idx : self.tabWidget.setCurrentIndex(0))
+
+            self.tabWidgetmain.setTabIcon(0, QtGui.QIcon(self.tooltreewidgetICONPATH))
+            self.tabWidget.setTabIcon(0, QtGui.QIcon(self.tooltreewidgetICONPATH))
+
+            self.tabWidget.tabBarClicked.connect(lambda idx : self.widgetClicked)
+
+        if False:
+            #if self.parentWidget is None:
+            #self.frametoolwidg.layout().insertWidget(1,self.toolwidget)
+            #if self.parentWidget is None:
+            #self.frametoolwidg.layout().addWidget(self.toolwidget)
+            parentitem = self.treeWidgetmain.invisibleRootItem()
+
+            #self.treeWidgetmain.
+            #self.toolwidgetmainlayout.addWidget(self.toolwidget)
+            #self.frametoolwidg.layout().update()
+            if len(self.dbasechildwdg) == 0 :
+                #self.toolBoxchildwdg.setParent(None)
+                self.toolBoxmain.removeItem(1)
             
-        self.layout().insertWidget(1,self.toolwidget)
-        #self.toolwidgetmainlayout.addWidget(self.toolwidget)
-        self.layout().update()
+            if self.parentWidget is not None:
+                # print('additem {} in {}'.format(self.DBASETABLENAME,self.parentWidget.DBASETABLENAME ))
+                # self.toolBoxmain.widget(0).setParent(None)
+                #index = self.parentWidget.toolBoxchildwdg.addItem(self,self.DBASETABLENAME)
+                parentwdg=self
+                parentlist=[]
+                while parentwdg is not None:
+                    parentlist.append(parentwdg.DBASETABLENAME)
+                    parenttoolbox = parentwdg.toolBoxmain
+                    parentwdgnotnone = parentwdg
+                    parentwdg = parentwdg.parentWidget
+                    
+                name = '/'.join(parentlist[::-1])
+                name = '    '*len(parentlist) + name
+                #self.toolBoxmain
+                #index = parenttoolbox.addItem(self.frametoolwidg,name)
+
+                parentitem = self.parentWidget.newitem
+                self.newitem = QTreeWidgetItem([self.DBASETABLENAME])
+                parentitem.addChildren([self.newitem ])
+                #treeWidget->setItemWidget(childItem1, 0, childButton1)
+                parentwdgnotnone.treeWidgetmain.setItemWidget(self.newitem , 1, self.toolwidget)
+
+                # print('**', index)
+                #self.toolBoxmain.widget(0).setParent(self.parentWidget.toolBoxchildwdg.widget(index))
+                #self.parentWidget.toolBoxchildwdg.insertItem(-1,self.frametoolwidg,self.DBASETABLENAME)
+                #if True and self.parentWidget.toolBoxmain.widget(0).objectName() == 'page_to_remove':
+                #    self.parentWidget.toolBoxchildwdg.removeItem(0)
+
+
+                """
+                if self.parentWidget.framechildwdg.layout().count()==0:
+                    self.toolBoxmain.setParent(self.parentWidget.framechildwdg)
+                else:
+                    self.parentWidget.toolBoxmain.addItem(self.toolBoxmain.widget(0))
+                """
+            else:
+                #self.frame.setParent(None)
+                parentitem = self.treeWidgetmain.invisibleRootItem()
+            
+                self.newitem = QTreeWidgetItem([self.DBASETABLENAME])
+                parentitem.addChildren([self.newitem ])
+                #treeWidget->setItemWidget(childItem1, 0, childButton1)
+                self.treeWidgetmain.setItemWidget(self.newitem , 1, self.toolwidget)
+
+
+        self.toolwidget.mouseReleaseEvent=self.widgetClicked
+
+        #propagate to childwidgets
+        try:
+            self.currentFeatureChanged.disconnect()
+        except TypeError:
+            pass
+            #print('error disconnect currentFeatureChanged')
+
+        for childwdg in self.dbasechildwdg:
+            childwdg.manageWidgetToLoadInMainLayout()
+            self.currentFeatureChanged.connect(childwdg.loadChildFeatureinWidget)
+
+    def _defineQTabWidgetTabBehaviour(self):
+        self.frametoolwidg.layout().addWidget(self.toolwidget)
+        self.tabWidgetmain.setTabText(0, self.tooltreewidgetSUBCAT)
+        self.tabWidgetmain.setTabIcon(0, QtGui.QIcon(self.tooltreewidgetICONPATH))
+        self.tabWidget.setTabIcon(0, QtGui.QIcon(self.tooltreewidgetICONPATH))
+
+        if self.parentWidget is not None:
+            parentwdg=self
+            parentlist=[]
+            parenttab = self.parentWidget.tabWidget
+            indexinserted = parenttab.addTab(self.tabWidgetmain.widget(0),
+                                                QtGui.QIcon(self.tooltreewidgetICONPATH),
+                                                self.tooltreewidgetSUBCAT)
+
+            def selectFirstTab(idx):
+                if idx == indexinserted:
+                    self.tabWidget.setCurrentIndex(0)
+                    self.widgetClicked(event=None)
+
+            #parenttab.tabBarClicked.connect(lambda idx : selectFirstTab(idx))
+            parenttab.tabBarClicked.connect(lambda idx : selectFirstTab(idx))
+        else:
+            #self.frame.setParent(None)
+            self.tabWidgetmain.tabBarClicked.connect(lambda idx : self.tabWidget.setCurrentIndex(0))
+
+        def onlyFirstTabClicked(idx):
+            print('oo')
+            if idx == 0:
+                self.widgetClicked()
+
+        self.tabWidget.tabBarClicked.connect(lambda idx : onlyFirstTabClicked(idx))
+
+    def eventFilter(self, obj, event):  #to work also on disabled widget
+        if event.type() == QtCore.QEvent.MouseButtonRelease and event.button() == 1:
+            # print('eventFilter')
+            self.toolwidget.mouseReleaseEvent(event)
+            #self._click.emit(self)
+            return True
+
+        return QWidget.eventFilter(self, obj, event)
+
+    def widgetClicked(self, event=None, **kwargs):
+        print('*******',self.DBASETABLENAME, kwargs)
+        self.mainifacewidget.currenttoolwidget = self
+
+        if True:
+            parentwidget = self
+            lastparentwdgpk = None
+            while parentwidget.parentWidget is not None:
+                #parentwidget.parentWidget.setStyleSheet(".QWidget{border: none}")
+                #self.setStyleSheet("#lamiatoolwidget {border: none}")
+                #self.setStyleSheet("#lamiatoolwidget {background-color: rgb(240, 240, 240)}")
+                #parentwidget.parentWidget.setStyleSheet("background-color: rgb(240, 240, 240)")
+                #if hasattr(parentwidget.parentWidget.toolwidget,'frametodisable'):
+                #    parentwidget.parentWidget.toolwidget.frametodisable.setEnabled(False)
+                #else:
+                #    parentwidget.parentWidget.toolwidget.setEnabled(False)
+                print('disable ', parentwidget.parentWidget.DBASETABLENAME)
+                self._setWidgetEnabled(False, parentwidget.parentWidget)
+                
+                lastparentwdgpk = parentwidget.parentWidget.currentFeaturePK
+                #parentwidget.parentWidget.layout().setStyleSheet("""border-width: 2px,
+                #                                                border-radius: 10px,
+                #                                                border-color: black,""")
+                """
+                childswdg = parentwidget.parentWidget.dbasechildwdg
+                for childwdg in childswdg:
+                    #childwdg.setStyleSheet("background-color: rgb(240, 240, 240)")
+                    childwdg.setEnabled(False)
+                """
+
+                parentwidget = parentwidget.parentWidget
+
+            #self.layout().setStyleSheet("""border-width: 2px,
+            #                            border-radius: 10px,
+            #                            border-color: beige,""")
+            #self.setStyleSheet(".QWidget{border: 1px solid red}")
+            #print(self.objectName())
+            #self.setStyleSheet("#lamiatoolwidget {background-color: rgb(85, 255, 127)}")
+            #self.setStyleSheet("background-color: rgb(85, 255, 127)")
+
+            if ((self.parentWidget is not None and lastparentwdgpk is not None)
+                    or self.parentWidget is None):
+                #self._setWidgetEnabled(True, self)
+                self.mainifacewidget.currentchoosertreewidget.disconnectTreewidget()
+                self.mainifacewidget.currentchoosertreewidget = self.choosertreewidget
+                self.mainifacewidget.currentchoosertreewidget.onActivation()
+            else:
+                pass
+                #self._setWidgetEnabled(False, self)
+
+            if self.lastselectedpk is not None:
+                self.selectFeature(pk=self.lastselectedpk)
+
+            #self._disableChildWidgets(self.dbasechildwdg)
+        
+    def _disableChildWidgets(self,childwdgs):
+        if hasattr(self.toolwidget,'framechildtoolwidg'):
+            print('disab')
+            self.toolwidget.framechildtoolwidg.setEnabled(False)
+        for childwdg in childwdgs:
+            self._disableChildWidgets(childwdg.dbasechildwdg)
+            self._setWidgetEnabled(False,childwdg)
+            childwdg.updateFormTitleBackground(disabletitle=True)
+            #childwdg.toolwidget.setEnabled(False)
+
+    def _setWidgetEnabled(self, boolstate, wdg):
+        framenametoenable = 'frametoolwidg'
+        if boolstate:
+            wdg.toolwidget.setEnabled(True)
+            #wdg.toolwidget
+            if hasattr(wdg.toolwidget,framenametoenable):
+                wdg.toolwidget.frametoolwidg.setEnabled(True)
+                wdg.toolwidget.frametoolwidg.setVisible(True)
+        else:
+            wdg.updateFormTitleBackground(disabletitle=True)
+            if hasattr(wdg.toolwidget,framenametoenable):
+                wdg.toolwidget.frametoolwidg.setEnabled(False)
+                wdg.toolwidget.frametoolwidg.setVisible(False)
+                if hasattr(wdg.toolwidget,'framechildtoolwidg'):
+                    wdg.toolwidget.framechildtoolwidg.setEnabled(True)
+            else:
+                wdg.toolwidget.setEnabled(False)
+            
+
+
+    def loadChildFeatureinWidget(self):
+        #print('loadChildFeatureinWidget', self.DBASETABLENAME)
+        minsql = "SELECT min(pk_{}) FROM {}".format(self.DBASETABLENAME.lower(),
+                                                    self.DBASETABLENAME)
+        minpk = self.dbase.query(minsql)
+        if minpk:
+            minpk =  minpk[0][0]
+            self.selectFeature(pk=minpk)
+
+
 
     def initMainToolWidget(self):
         pass
@@ -363,11 +688,24 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
     def initAdvancedToolWidget(self):
         pass
 
+    def postToolTreeWidgetCurrentItemChanged(self):
+        if self.lastselectedpk is not None:
+            self.selectFeature(pk=self.lastselectedpk)
+
+
+
     def updateToolbarOnToolFrameLoading(self):
         self.mainifacewidget.currenttoolwidget = self
         if self.mainifacewidget is not None:
             self.mainifacewidget.toolBarFormCreation.setEnabled(True)
             self.mainifacewidget.toolBarFormGeom.setEnabled(True)
+
+        
+    def subwidgetChanged(self):
+        if self.activatesubwidgetchangelistener:
+            self.updateFormTitleBackground(subwidgethaschanged=True)
+
+
 
 
     #*************************************************************
@@ -379,39 +717,43 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
 
     def selectFeature(self, **kwargs):
         debug = False
+        self.activatesubwidgetchangelistener = False
         if debug: logging.getLogger("Lamia_unittest").debug('kwargs %s', str(kwargs))
         self.currentFeaturePK = kwargs.get('pk', None)
+        #rubberband actions
+        self._manageRubberbandOnSelectFeature(self.currentFeaturePK)
+        #remember feature pk
         if self.currentFeaturePK:
-            currentgeom = self.formutils.getQgsGeomFromPk(self.currentFeaturePK)
-            self.mainifacewidget.qgiscanvas.createRubberBandForSelection(currentgeom)
+            self.lastselectedpk = self.currentFeaturePK
+        #layer action
         if self.parentWidget is None and self.DBASETABLENAME is not None:
             self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME]['layer'].removeSelection()
             # self.dbasetable['layer'].removeSelection()
-
+        #form title action
         self.updateFormTitle()
-
+        #load values in form
         resultdict = self.formutils.getDictValuesForWidget(featurepk=self.currentFeaturePK)
         if debug: logging.getLogger("Lamia_unittest").debug('resultdict %s', str(resultdict))
         self.formutils.applyResultDict(resultdict)
+        #end actions
         self.postSelectFeature()
-        
+        if self.currentFeaturePK is not None:   #activate listener only with existing feat
+            self.activatesubwidgetchangelistener = True
+        self.currentFeatureChanged.emit()
 
     def toolbarNew(self):
         self.selectFeature()
 
+    def toolbarUndo(self):
+        self.selectFeature(pk=self.currentFeaturePK)
+
     def toolbarSave(self):
         self.formutils.saveFeature(featurepk=self.currentFeaturePK)
-        #reinit
-        layergeomtype = self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME]['layer'].geometryType()
-        self.mainifacewidget.qgiscanvas.createorresetRubberband(layergeomtype)
-        self.tempgeometry = None
-        self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME]['layerqgis'].repaintRequested.emit()
-        # self.mainifacewidget.qgiscanvas.canvas.refresh()
 
     def toolbarGeom(self):
         sender = self.mainifacewidget.sender()
         if sender is not None:
-            print('***', sender.objectName())
+            logging.getLogger("Lamia_unittest").debug('toolbarGeom %s', str(sender.objectName()))
         if sender is not None and sender.objectName() != 'pushButton_rajoutPoint':
             listpointinitialgeometry = []
         if 'point' in sender.objectName():
@@ -425,31 +767,121 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                                                         listpointinitialgeometry=listpointinitialgeometry,
                                                         fctonstopcapture=self.setTempGeometry)
 
+    def toolbarDelete(self):
+
+        message = "Supprimer completement l'element (yes) ou l'archiver (no) ? "
+        reply = QMessageBox.question(self, "Su",
+                                           message,
+                                           QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
+        if reply == QMessageBox.Yes:
+            self.formutils.deleteFeature()
+
+        elif reply == QMessageBox.No:
+            self.formutils.archiveFeature()
+
+        self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME]['layerqgis'].triggerRepaint()
+        #self.canvas.refresh()
+        #self.loadChildFeatureinWidget()
 
     def ____________________________________ToolBarActionsFunctions(self):
         pass
 
     def updateFormTitle(self):
+        #self.toolBoxmain
+
+
         if self.currentFeaturePK:
             featureid = self.dbase.getValuesFromPk(self.DBASETABLENAME,
                                                 'id_' + self.DBASETABLENAME.lower(),
                                                     self.currentFeaturePK)
+            for i in range(1,self.tabWidget.count()):
+                self.tabWidget.setTabEnabled(i, True)
         else:
             featureid = 'New'
-        self.titlelabel.setText('{}({})'.format(self.DBASETABLENAME,
-                                                      featureid) )
+            for i in range(1,self.tabWidget.count()):
+                self.tabWidget.setTabEnabled(i, False)
+
+        if False:
+            parentwidget=self
+            while parentwidget.parentWidget is not None:
+                parentwidget = parentwidget.parentWidget
+
+            toolbox = parentwidget.toolBoxmain
+            finalpageindex=0
+            for pageindex in range(toolbox.count()):
+                print('po',pageindex,toolbox.widget(pageindex).parent().__dict__)
+                if toolbox.widget(pageindex) == self.frametoolwidg:
+                    finalpageindex == pageindex
+                    break
+            toolbox.setItemText(finalpageindex,'{}({})'.format(self.DBASETABLENAME,
+                                                        featureid) )
+            #self.toolBoxmain.setItemText(0,'{}({})'.format(self.DBASETABLENAME,
+            #                                              featureid) )
+            #self.titlelabel.setText('{}({})'.format(self.DBASETABLENAME,
+            #                                              featureid) )
         self.updateFormTitleBackground()
+
     
-    def updateFormTitleBackground(self):
+    def updateFormTitleBackground(self, subwidgethaschanged=False, disabletitle=False):
+        # print('updateFormTitleBackground', self.DBASETABLENAME, subwidgethaschanged,disabletitle)
+        styling = '.QTabBar::tab:selected , QTabBar * {border-color: rgb(0, 0, 0);'
+   
+        if True:
+            if subwidgethaschanged:
+                styling += ' background-color : rgb(0, 0, 255) }'
+                #self.toolBoxmain.setStyleSheet(styling)
+                self.tabWidget.setStyleSheet(styling)
+                return
+            if disabletitle:
+                styling += ' background-color : rgb(150, 150, 150) }'
+                #self.toolBoxmain.setStyleSheet(styling)
+                self.tabWidget.setStyleSheet(styling)
+                return
+
+            if self.currentFeaturePK is not None:
+                styling += ' background-color : rgb(0, 255, 0) }'
+            else:
+                styling += ' background-color : rgb(255, 0, 0) }'
+        self.tabWidget.setStyleSheet(styling)
+        return
+        
+        """
+        .QToolBox::tab {
+            background-color: rgb(255, 170, 255);
+            }
+        """
+        """
+        if subwidgethaschanged:
+            self.titlelabel.setStyleSheet("QLabel { background-color : rgb(0, 0, 255) }")
+            return
+
+        if disabletitle:
+            self.titlelabel.setStyleSheet("QLabel { background-color : rgb(150, 150, 150) }")
+            return
+
         if self.currentFeaturePK is not None:
             self.titlelabel.setStyleSheet("QLabel { background-color : rgb(0, 255, 0) }")
         else:
             self.titlelabel.setStyleSheet("QLabel { background-color : rgb(255, 0, 0) }")
+        """
+
+
+    def _manageRubberbandOnSelectFeature(self, pkfeature=None):
+        if self.parentWidget is None:
+            if pkfeature:
+                currentgeom = self.formutils.getQgsGeomFromPk(pkfeature)
+                self.mainifacewidget.qgiscanvas.createRubberBandForSelection(currentgeom)
+                self.mainifacewidget.qgiscanvas.rubberBand.show()
+            else:
+                self.mainifacewidget.qgiscanvas.createorresetRubberband()
 
     def postSelectFeature(self):
         pass
 
     def postSaveFeature(self,pkfeature=None):
+        pass
+
+    def postDeleteFeature(self):
         pass
 
     def setTempGeometry(self, 
@@ -472,8 +904,6 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
 
         if self.mainifacewidget.qgiscanvas.currentmaptool is not None:
             try:
-                #self.mainifacewidget.qgiscanvas.currentmaptool.stopCapture.disconnect(self.setTempGeometry)
-                print('disconnect')
                 self.mainifacewidget.qgiscanvas.currentmaptool.stopCapture.disconnect()
             except TypeError:
                 pass
@@ -540,7 +970,8 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         #self.mtool = None
 
 
-
+    def ___________________________oldThings(self):
+        pass
 
     if False:
         def _init_loadWidgetDependentResolution(self):
