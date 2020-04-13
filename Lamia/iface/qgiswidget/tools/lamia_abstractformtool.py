@@ -102,8 +102,8 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
 
     specialfieldui = []
 
-
-
+    PARENTJOIN = None
+    TABLEFILTERFIELD = {}
 
     def __init__(self,                  
                  dbaseparser=None, 
@@ -442,6 +442,9 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                 #self.parentWidget.toolBoxchildwdg.insertItem(-1,self.frametoolwidg,self.DBASETABLENAME)
             else:
                 self.frame.setParent(None)
+        self.tabWidgetmain.tabBar().setObjectName('lamia_tabbar')
+        self.tabWidget.tabBar().setObjectName('lamia_tabbar')
+        
         self._defineQTabWidgetTabBehaviour()
         #var3
         if False:
@@ -569,9 +572,9 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         else:
             #self.frame.setParent(None)
             self.tabWidgetmain.tabBarClicked.connect(lambda idx : self.tabWidget.setCurrentIndex(0))
+            self.tabWidgetmain.tabBarClicked.connect(lambda idx: self.toolwidget.mouseReleaseEvent(None))
 
         def onlyFirstTabClicked(idx):
-            print('oo')
             if idx == 0:
                 self.widgetClicked()
 
@@ -587,60 +590,58 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         return QWidget.eventFilter(self, obj, event)
 
     def widgetClicked(self, event=None, **kwargs):
-        print('*******',self.DBASETABLENAME, kwargs)
+        debug = False
+        # print('*******',self.DBASETABLENAME, kwargs)
         self.mainifacewidget.currenttoolwidget = self
 
-        if True:
-            parentwidget = self
-            lastparentwdgpk = None
-            while parentwidget.parentWidget is not None:
-                #parentwidget.parentWidget.setStyleSheet(".QWidget{border: none}")
-                #self.setStyleSheet("#lamiatoolwidget {border: none}")
-                #self.setStyleSheet("#lamiatoolwidget {background-color: rgb(240, 240, 240)}")
-                #parentwidget.parentWidget.setStyleSheet("background-color: rgb(240, 240, 240)")
-                #if hasattr(parentwidget.parentWidget.toolwidget,'frametodisable'):
-                #    parentwidget.parentWidget.toolwidget.frametodisable.setEnabled(False)
-                #else:
-                #    parentwidget.parentWidget.toolwidget.setEnabled(False)
-                print('disable ', parentwidget.parentWidget.DBASETABLENAME)
-                self._setWidgetEnabled(False, parentwidget.parentWidget)
-                
-                lastparentwdgpk = parentwidget.parentWidget.currentFeaturePK
-                #parentwidget.parentWidget.layout().setStyleSheet("""border-width: 2px,
-                #                                                border-radius: 10px,
-                #                                                border-color: black,""")
-                """
-                childswdg = parentwidget.parentWidget.dbasechildwdg
-                for childwdg in childswdg:
-                    #childwdg.setStyleSheet("background-color: rgb(240, 240, 240)")
-                    childwdg.setEnabled(False)
-                """
+        parentwidget = self
+        lastparentwdgpk = None
+        while parentwidget.parentWidget is not None:
+            # print('disable ', parentwidget.parentWidget.DBASETABLENAME)
+            #self._setWidgetEnabled(False, parentwidget.parentWidget)
+            lastparentwdgpk = parentwidget.parentWidget.currentFeaturePK
+            parentwidget = parentwidget.parentWidget
 
-                parentwidget = parentwidget.parentWidget
 
-            #self.layout().setStyleSheet("""border-width: 2px,
-            #                            border-radius: 10px,
-            #                            border-color: beige,""")
-            #self.setStyleSheet(".QWidget{border: 1px solid red}")
-            #print(self.objectName())
-            #self.setStyleSheet("#lamiatoolwidget {background-color: rgb(85, 255, 127)}")
-            #self.setStyleSheet("background-color: rgb(85, 255, 127)")
-
-            if ((self.parentWidget is not None and lastparentwdgpk is not None)
-                    or self.parentWidget is None):
-                #self._setWidgetEnabled(True, self)
+        if ((self.parentWidget is not None and lastparentwdgpk is not None)
+                or self.parentWidget is None):
+            #self._setWidgetEnabled(True, self)
+            if self.mainifacewidget.currentchoosertreewidget:
                 self.mainifacewidget.currentchoosertreewidget.disconnectTreewidget()
-                self.mainifacewidget.currentchoosertreewidget = self.choosertreewidget
-                self.mainifacewidget.currentchoosertreewidget.onActivation()
+            self.mainifacewidget.currentchoosertreewidget = self.choosertreewidget
+            self.mainifacewidget.currentchoosertreewidget.onActivation()
+            #res = 
+        else:
+            pass
+            #self._setWidgetEnabled(False, self)
+        lastselectedid = None
+        if self.lastselectedpk is not None:
+            lastselectedid = self.dbase.getValuesFromPk(self.DBASETABLENAME,
+                                                      'id_' + self.DBASETABLENAME.lower(),
+                                                      self.lastselectedpk)
+        if debug :
+            logging.getLogger("Lamia_unittest").debug('%s - last sel pk : %s - lenids : %i',
+                                                        self.DBASETABLENAME,
+                                                        self.lastselectedpk,
+                                                        len(self.choosertreewidget.ids) )
+
+        if (self.lastselectedpk is not None and len(self.choosertreewidget.ids)>0 
+                and lastselectedid in self.choosertreewidget.ids.id.values):
+            self.selectFeature(pk=self.lastselectedpk)
+            self.choosertreewidget.selectItemfromPK(self.lastselectedpk)
+        else:
+            if len(self.choosertreewidget.ids)>0:
+                pk = self.choosertreewidget.ids['pk'].values[0]
+                self.selectFeature(pk=pk)
+                self.choosertreewidget.selectItemfromPK(pk)
             else:
-                pass
-                #self._setWidgetEnabled(False, self)
+                self.currentFeaturePK = None
+                self.updateFormTitle(pk=None, disabletitle=True)
+                self.frametoolwidg.setEnabled(False)
 
-            if self.lastselectedpk is not None:
-                self.selectFeature(pk=self.lastselectedpk)
 
-            #self._disableChildWidgets(self.dbasechildwdg)
-        
+
+    """
     def _disableChildWidgets(self,childwdgs):
         if hasattr(self.toolwidget,'framechildtoolwidg'):
             print('disab')
@@ -668,17 +669,51 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                     wdg.toolwidget.framechildtoolwidg.setEnabled(True)
             else:
                 wdg.toolwidget.setEnabled(False)
-            
+    """
 
 
     def loadChildFeatureinWidget(self):
+        debug = False
         #print('loadChildFeatureinWidget', self.DBASETABLENAME)
-        minsql = "SELECT min(pk_{}) FROM {}".format(self.DBASETABLENAME.lower(),
-                                                    self.DBASETABLENAME)
-        minpk = self.dbase.query(minsql)
-        if minpk:
-            minpk =  minpk[0][0]
-            self.selectFeature(pk=minpk)
+        self.choosertreewidget.loadIds()
+        if debug :
+            logging.getLogger("Lamia_unittest").debug('%s - pk:%s / %s \n %s',
+                                                        self.parentWidget.DBASETABLENAME,
+                                                        self.parentWidget.currentFeaturePK,
+                                                        self.DBASETABLENAME,
+                                                        self.choosertreewidget.ids )
+        if len(self.choosertreewidget.ids)==0:
+            self.selectFeature(pk=None, disabletitle=True)
+        else:
+            self.selectFeature(pk=self.choosertreewidget.ids['pk'][0])
+
+
+        if False:
+            res = self.choosertreewidget.loadIds()
+            # print('***', self.DBASETABLENAME, res)
+            if len(res)==0:
+                self.selectFeature(disabletitle=True)
+                #self.currentFeaturePK = None
+                #self.updateFormTitle(disabletitle=True)
+            else:
+                sql = "SELECT pk_{} FROM {}_now WHERE id_{} = {}".format(self.DBASETABLENAME.lower(),
+                                                                    self.DBASETABLENAME,
+                                                                    self.DBASETABLENAME.lower(),
+                                                                    res[0][0] )
+                sql = self.dbase.sqlNow(sql)
+                pk = self.dbase.query(sql)[0][0]
+                self.selectFeature(pk=pk)
+                #self.currentFeaturePK = pk
+                #self.updateFormTitle()
+
+        if False:
+            minsql = "SELECT min(pk_{}) FROM {}".format(self.DBASETABLENAME.lower(),
+                                                        self.DBASETABLENAME)
+            minpk = self.dbase.query(minsql)
+            if minpk:
+                minpk =  minpk[0][0]
+                self.selectFeature(pk=minpk)
+
 
 
 
@@ -690,12 +725,17 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
 
     def postToolTreeWidgetCurrentItemChanged(self):
         if self.lastselectedpk is not None:
+            self.setEnabled(True)
             self.selectFeature(pk=self.lastselectedpk)
+        elif len(self.choosertreewidget.ids)>0:
+            self.setEnabled(True)
+            self.selectFeature(pk=self.choosertreewidget.ids['pk'].values[0])
+        else:
+            self.setEnabled(False)
 
 
 
     def updateToolbarOnToolFrameLoading(self):
-        self.mainifacewidget.currenttoolwidget = self
         if self.mainifacewidget is not None:
             self.mainifacewidget.toolBarFormCreation.setEnabled(True)
             self.mainifacewidget.toolBarFormGeom.setEnabled(True)
@@ -717,6 +757,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
 
     def selectFeature(self, **kwargs):
         debug = False
+        self.setEnabled(True)
         self.activatesubwidgetchangelistener = False
         if debug: logging.getLogger("Lamia_unittest").debug('kwargs %s', str(kwargs))
         self.currentFeaturePK = kwargs.get('pk', None)
@@ -730,7 +771,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME]['layer'].removeSelection()
             # self.dbasetable['layer'].removeSelection()
         #form title action
-        self.updateFormTitle()
+        self.updateFormTitle(**kwargs)
         #load values in form
         resultdict = self.formutils.getDictValuesForWidget(featurepk=self.currentFeaturePK)
         if debug: logging.getLogger("Lamia_unittest").debug('resultdict %s', str(resultdict))
@@ -786,9 +827,8 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
     def ____________________________________ToolBarActionsFunctions(self):
         pass
 
-    def updateFormTitle(self):
+    def updateFormTitle(self, **kwargs):
         #self.toolBoxmain
-
 
         if self.currentFeaturePK:
             featureid = self.dbase.getValuesFromPk(self.DBASETABLENAME,
@@ -819,61 +859,48 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             #                                              featureid) )
             #self.titlelabel.setText('{}({})'.format(self.DBASETABLENAME,
             #                                              featureid) )
-        self.updateFormTitleBackground()
+        self.updateFormTitleBackground(**kwargs)
 
     
-    def updateFormTitleBackground(self, subwidgethaschanged=False, disabletitle=False):
+    def updateFormTitleBackground(self, subwidgethaschanged=False, disabletitle=False, **kwargs):
         # print('updateFormTitleBackground', self.DBASETABLENAME, subwidgethaschanged,disabletitle)
-        styling = '.QTabBar::tab:selected , QTabBar * {border-color: rgb(0, 0, 0);'
-   
-        if True:
+        #styling = '.QTabBar::tab:selected , QTabBar * {border-color: rgb(0, 0, 0);'
+        #tabbarname = self.tabWidget.tabBar().objectName()
+        tabbarname = 'lamia_tabbar'
+        styling = '.QTabBar::tab:selected#{}'.format(tabbarname)
+        styling += ' {border-color: rgb(0, 0, 0);'
+        tabwidgetlist = [self.tabWidget]
+        if False and self.parentWidget is None:
+            tabwidgetlist.insert(0,self.tabWidgetmain)
+
+        if subwidgethaschanged or disabletitle:
             if subwidgethaschanged:
                 styling += ' background-color : rgb(0, 0, 255) }'
-                #self.toolBoxmain.setStyleSheet(styling)
-                self.tabWidget.setStyleSheet(styling)
-                return
             if disabletitle:
                 styling += ' background-color : rgb(150, 150, 150) }'
-                #self.toolBoxmain.setStyleSheet(styling)
-                self.tabWidget.setStyleSheet(styling)
-                return
+            for wdg in tabwidgetlist:
+                wdg.setStyleSheet(styling)
 
+        else:
             if self.currentFeaturePK is not None:
                 styling += ' background-color : rgb(0, 255, 0) }'
             else:
                 styling += ' background-color : rgb(255, 0, 0) }'
-        self.tabWidget.setStyleSheet(styling)
-        return
-        
-        """
-        .QToolBox::tab {
-            background-color: rgb(255, 170, 255);
-            }
-        """
-        """
-        if subwidgethaschanged:
-            self.titlelabel.setStyleSheet("QLabel { background-color : rgb(0, 0, 255) }")
-            return
+            for wdg in tabwidgetlist:
+                wdg.setStyleSheet(styling)
 
-        if disabletitle:
-            self.titlelabel.setStyleSheet("QLabel { background-color : rgb(150, 150, 150) }")
-            return
-
-        if self.currentFeaturePK is not None:
-            self.titlelabel.setStyleSheet("QLabel { background-color : rgb(0, 255, 0) }")
-        else:
-            self.titlelabel.setStyleSheet("QLabel { background-color : rgb(255, 0, 0) }")
-        """
 
 
     def _manageRubberbandOnSelectFeature(self, pkfeature=None):
-        if self.parentWidget is None:
-            if pkfeature:
-                currentgeom = self.formutils.getQgsGeomFromPk(pkfeature)
-                self.mainifacewidget.qgiscanvas.createRubberBandForSelection(currentgeom)
-                self.mainifacewidget.qgiscanvas.rubberBand.show()
-            else:
-                self.mainifacewidget.qgiscanvas.createorresetRubberband()
+        if (self.parentWidget is None 
+                and 'geom' in self.dbase.dbasetables[self.DBASETABLENAME]['fields'].keys()
+                and pkfeature):
+            currentgeom = self.formutils.getQgsGeomFromPk(pkfeature)
+            self.mainifacewidget.qgiscanvas.createRubberBandForSelection(currentgeom)
+            self.mainifacewidget.qgiscanvas.rubberBand.show()
+
+        else:
+            self.mainifacewidget.qgiscanvas.createorresetRubberband()
 
     def postSelectFeature(self):
         pass

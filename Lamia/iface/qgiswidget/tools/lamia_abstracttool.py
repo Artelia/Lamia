@@ -129,7 +129,7 @@ class AbstractLamiaTool(QWidget):
 
         # var used by tooltreewidget
         if self.mainifacewidget is not None:
-            self.tooltreewidget.currentItemChanged.connect(self.toolTreeTidgetCurrentItemChanged)
+            self.tooltreewidget.currentItemChanged.connect(self.toolTreeWidgetCurrentItemChanged)
 
         self.qtreewidgetitem = None     #the tool treewidgetitem in tooltreewidget
 
@@ -241,7 +241,7 @@ class AbstractLamiaTool(QWidget):
             # self.disconnectIdsGui()
 
     #def loadWidgetInToolFrame(self, param1, param2=None):
-    def toolTreeTidgetCurrentItemChanged(self, param1, param2=None):
+    def toolTreeWidgetCurrentItemChanged(self, param1, param2=None):
         """
         Manage the activation of widget when tool's icon is clicked on main QTreeWidget
 
@@ -285,6 +285,7 @@ class AbstractLamiaTool(QWidget):
                 # manage display in canvas
                 # self._checkLayerVisibility() TODO
                 self.mainifacewidget.qgiscanvas.createorresetRubberband()
+                self.mainifacewidget.currenttoolwidget = self
                 self.updateToolbarOnToolFrameLoading()
                 self._activateChooserTreeWidget()
                 self._displayWidget()
@@ -349,7 +350,7 @@ class AbstractLamiaTool(QWidget):
         pass
 
     def updateToolbarOnToolFrameLoading(self):
-        self.mainifacewidget.currenttoolwidget = self
+        
         if self.mainifacewidget is not None:
             self.mainifacewidget.toolBarFormCreation.setEnabled(False)
             self.mainifacewidget.toolBarFormGeom.setEnabled(False)

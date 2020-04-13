@@ -627,6 +627,22 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
 
     # def postSaveFeature(self, boolnewfeature):
     def postSaveFeature(self, savedfeaturepk=None):
+        print('**********', 'postSaveFeature', self.currentFeaturePK)
+        if self.currentFeaturePK is None :  #very new equip, not newversion
+            self.propertieswdgDesordre.toolbarNew()
+            geomtext = self.dbase.getValuesFromPk('Noeud_qgis',
+                                            'ST_AsText(geom)',
+                                            savedfeaturepk)
+            qgsgeom = qgis.core.QgsGeometry.fromWkt(geomtext).asPoint()
+            qgsgeomfordesordre = [qgsgeom,qgsgeom]
+            self.propertieswdgDesordre.setTempGeometry(qgsgeomfordesordre)
+            self.propertieswdgDesordre.parentWidget.currentFeaturePK = savedfeaturepk
+            self.propertieswdgDesordre.toolbarSave()
+            pkdesordre = self.propertieswdgDesordre.currentFeaturePK
+            sql = "UPDATE Desordre SET groupedesordre = 'NOD' WHERE pk_desordre = {}".format(pkdesordre)
+            print(sql)
+            self.dbase.query(sql)
+
 
         #adapt linked infralin geoemtry
         if self.currentFeaturePK is not None:
@@ -675,6 +691,10 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
         self.mainifacewidget.qgiscanvas.layers['Infralineaire']['layerqgis'].triggerRepaint()
         
         #if self.savingnewfeature and not self.savingnewfeatureVersion:
+
+
+
+        """
         if self.currentFeaturePK != savedfeaturepk: # save a disorder on first creation
             pkobjet = self.dbase.createNewObjet()
             # lastiddesordre = self.dbase.getLastId('Desordre') + 1
@@ -690,11 +710,11 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
             sql = self.dbase.createSetValueSentence(type='INSERT',
                                                     tablename='Desordre',
                                                     listoffields=['id_desordre', 'lpk_objet', 'groupedesordre',
-                                                                  'lid_descriptionsystem', 'geom'],
+                                                                'lid_descriptionsystem', 'geom'],
                                                     listofrawvalues=[lastiddesordre, pkobjet, 'NOD',
-                                                                     iddessys, newgeomwkt])
+                                                                    iddessys, newgeomwkt])
             self.dbase.query(sql)
-
+        """
         if self.currentFeaturePK is not None:
             #if  hasattr(self, 'userwdgfield_2') and self.userwdg == self.toolwidgetmain_2:
             if self.dbase.variante in ['2018_SNCF'] :

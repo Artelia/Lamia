@@ -24,6 +24,67 @@ class DBaseTest(unittest.TestCase):
 
         self.filetoimport = os.path.join(os.path.dirname(__file__),'lamia_test1','test01.sqlite' )
         """
+
+
+    def test_a_testSaveFeature(self):
+        self._initQGis()
+        self._createWin()
+        self._createMainWin()
+        self.mainwin.resize(QtCore.QSize(1000,800))
+        slfile = os.path.join(os.path.dirname(__file__), 'lamia_test2','test01.sqlite')
+        self.wind.loadDBase(dbtype='Spatialite', slfile=slfile)
+        self.wind.setVisualMode(visualmode=1)
+        #selectfeaturetest
+        if False:
+            toolpreprolist = self.wind.toolwidgets['toolprepro']
+            global i
+            i = 0
+            for toolpreproname, toolpreprovalue in self.wind.toolwidgets['toolprepro'].items():
+                if isinstance(toolpreprovalue, list):
+                    for tt in toolpreprovalue:
+                        self.recursive_creation(tt)
+        self.mainwin.exec_()
+        self._exitQGis()
+
+    def recursive_creation(self, tt):
+        global i
+        i += 1
+        name=[tt.tooltreewidgetSUBCAT]
+        parentwdg=tt
+        while parentwdg.parentWidget is not None:
+            name.append(parentwdg.parentWidget.tooltreewidgetSUBCAT)
+            parentwdg = parentwdg.parentWidget
+        name = '/'.join(name[::-1])
+        logging.getLogger("Lamia_unittest").debug('******* Testing %s ******', name)
+        #self.wind.MaintreeWidget.setCurrentItem(tt.qtreewidgetitem)
+        tt.widgetClicked()
+        if len(tt.choosertreewidget.ids) == 0:
+            self.wind.toolbarNew()
+            dbasetable = self.wind.dbase.dbasetables[tt.DBASETABLENAME]
+            #logging.getLogger("Lamia_unittest").debug('fieldgeom : %s , tempgeom : %s',
+            #                                            'geom' in dbasetable.keys(),
+            #                                            tt.tempgeometry)
+            if 'geom' in dbasetable.keys() and tt.tempgeometry is None:
+                typegeom = dbasetable['geom']
+                if 'POINT' in typegeom:
+                    tt.setTempGeometry([qgis.core.QgsPointXY(i,0)])
+                elif 'LINESTRING'  in typegeom:
+                    tt.setTempGeometry([qgis.core.QgsPointXY(i,0),qgis.core.QgsPointXY(i,1)])
+                else:
+                    tt.setTempGeometry([qgis.core.QgsPointXY(i,0),qgis.core.QgsPointXY(i,1),
+                                        qgis.core.QgsPointXY(i-0.5,1),qgis.core.QgsPointXY(i-0.5,0)])
+            self.wind.toolbarSave()
+            logging.getLogger("Lamia_unittest").debug('%s - pk created : %s', tt.DBASETABLENAME,
+                                                                                tt.currentFeaturePK)
+        else:
+            tt.selectFeature(pk=tt.choosertreewidget.ids['pk'].values[0])
+
+        for childwdg in tt.dbasechildwdgfield:
+            self.recursive_creation(childwdg)
+
+
+
+    """
     def test_a_showLamia(self):
         self._initQGis()
         self._createWin()
@@ -41,7 +102,7 @@ class DBaseTest(unittest.TestCase):
 
         self.mainwin.exec_()
         self._exitQGis()
-
+    """
 
 
     """

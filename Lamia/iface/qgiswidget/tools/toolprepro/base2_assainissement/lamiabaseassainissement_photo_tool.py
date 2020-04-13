@@ -56,12 +56,12 @@ class BaseAssainissementPhotoTool(BasePhotoTool):
         self.toolwidgetmain = UserUI()
         self.formtoolwidgetconfdictmain = {'Photo' : {'linkfield' : 'id_photo',
                                             'widgets' : {}},
-                            'Objet' : {'linkfield' : 'id_objet',
-                                        'widgets' : {}},
-                            'Ressource' : {'linkfield' : 'id_ressource',
-                                        'widgets' : {'file': self.toolwidgetmain.lineEdit_file,
-                                                    'numressource': self.toolwidgetmain.spinBox_numphoto,
-                                                    'datetimeressource' : self.toolwidgetmain.dateTimeEdit_date}}}
+                                            'Objet' : {'linkfield' : 'id_objet',
+                                                        'widgets' : {}},
+                                            'Ressource' : {'linkfield' : 'id_ressource',
+                                                        'widgets' : {'file': self.toolwidgetmain.lineEdit_file,
+                                                                    'numressource': self.toolwidgetmain.spinBox_numphoto,
+                                                                    'datetimeressource' : self.toolwidgetmain.dateTimeEdit_date}}}
 
         self.toolwidgetmain.stackedWidget.setCurrentIndex(0)
         self.toolwidgetmain.pushButton_chooseph.clicked.connect(self.choosePhoto)

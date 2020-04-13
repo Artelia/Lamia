@@ -737,7 +737,8 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
                             self.wdgclasses[tooltypetoload][obj.TOOLNAME] = obj
                         elif tooltypetoload == 'toolprepro' and  hasattr(obj,'dbasetablename') :   #tool dep
                             self.wdgclasses[tooltypetoload][obj.dbasetablename] = obj
-                        elif tooltypetoload == 'toolprepro' and hasattr(obj,'DBASETABLENAME') :
+                        elif (tooltypetoload == 'toolprepro' and hasattr(obj,'DBASETABLENAME')
+                                and hasattr(obj,'tooltreewidgetSUBCAT') and obj.tooltreewidgetSUBCAT is not None) :
                             self.wdgclasses[tooltypetoload][obj.tooltreewidgetSUBCAT] = obj
 
         if debug: logging.getLogger('Lamia_unittest').debug('x %s', str(self.wdgclasses))

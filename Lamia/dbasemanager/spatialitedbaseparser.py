@@ -136,7 +136,8 @@ class SpatialiteDBaseParser(AbstractDBaseParser):
             self.SLITEcursor = self.connSLITE.cursor()
         try:
             if self.printsql :
-                logging.getLogger('Lamia').debug('%s - %s %.3f', docommit, sql,  self.getTimeNow() - timestart)
+                #logging.getLogger('Lamia').debug('%s - %s %.3f', docommit, sql,  self.getTimeNow() - timestart)
+                logging.getLogger('Lamia_unittest').debug('%s - %s ', docommit, sql)
 
             query = self.SLITEcursor.execute(sql,arguments)
             returnquery = list(query)

@@ -26,7 +26,7 @@ This file is part of LAMIA.
 
 
 
-
+import qgis, qgis.core
 from qgis.PyQt import uic, QtCore, QtGui
 try:
     from qgis.PyQt.QtGui import (QWidget, QLabel, QFrame)
@@ -54,12 +54,17 @@ class BasePhotoTool(AbstractLamiaFormTool):
     tooltreewidgetSUBCAT = 'Photo'
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_photo_tool_icon.svg')
     
-    PARENTJOIN = {'Observation' : {'colparent': 'id_objet',
-                                'colthistable': 'id_ressource',
-                                 'tctable': 'Tcobjetressource',
-                                 'tctablecolparent':'lid_objet',
-                                 'tctablecolthistable':'lid_ressource'}
-                 }
+    tempparentjoin = {}
+    linkdict = {'colparent': 'id_objet',
+                'colthistable': 'id_ressource',
+                    'tctable': 'Tcobjetressource',
+                    'tctablecolparent':'lid_objet',
+                    'tctablecolthistable':'lid_ressource'}
+    for tablename in ['Observation', 'Noeud', 'Infralineaire', 'Equipement']:
+        tempparentjoin[tablename] = linkdict
+    PARENTJOIN = tempparentjoin
+    TABLEFILTERFIELD = {'typephoto': 'PHO' }
+
 
     def __init__(self, **kwargs):
         super(BasePhotoTool, self).__init__(**kwargs)
@@ -196,7 +201,7 @@ class BasePhotoTool(AbstractLamiaFormTool):
             #datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
             datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
             #self.initFeatureProperties(feat, 'Ressource', 'datetimeressource', datecreation)
-            self.formutils.applyResultDict({'datetimeressource' : datecreation})
+            self.formutils.applyResultDict({'datetimeressource' : datecreation},checkifinforgottenfield=False)
 
             if numphoto is not None:
                 self.toolwidgetmain.spinBox_numphoto.setValue(numphoto)
@@ -212,7 +217,7 @@ class BasePhotoTool(AbstractLamiaFormTool):
                                                             'ST_AsText(geom)',
                                                             self.parentWidget.currentFeaturePK)
                     neudfetgeom = qgis.core.QgsGeometry.fromWkt(noeudfetwkt).asPoint()
-                    self.createorresetRubberband(1)
+                    self.mainifacewidget.qgiscanvas.createorresetRubberband(1)
                     self.setTempGeometry([neudfetgeom], False,False)
 
             self.photowdg.clear()

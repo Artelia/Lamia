@@ -236,7 +236,8 @@ class BaseAssainissementObservationTool(BaseObservationTool):
         if self.currentFeaturePK is None:
             datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
             # self.initFeatureProperties(feat, self.dbasetablename, 'datetimeobservation', datecreation)
-            self.formutils.applyResultDict({'datetimeobservation': datecreation})
+            self.formutils.applyResultDict({'datetimeobservation': datecreation}, checkifinforgottenfield=False)
+            #applyResultDict(self, resultdict, checkifinforgottenfield=True):
 
         self.updateObservationStackedWidget()
 
@@ -245,10 +246,14 @@ class BaseAssainissementObservationTool(BaseObservationTool):
         dbasetabledesordre = self.dbase.dbasetables['Desordre']
         if ('groupedesordre' in dbasetabledesordre['fields'].keys()  ):
             if self.parentWidget is not None and self.parentWidget.currentFeaturePK is not None:
+                self.dbase.printsql = True
                 grpdes = self.dbase.getValuesFromPk(self.parentWidget.DBASETABLENAME,
                                                     'groupedesordre',
                                                     self.parentWidget.currentFeaturePK)
+                if grpdes is None:
+                    return
                 grpdescst = [elem[1] for elem in dbasetabledesordre['fields']['groupedesordre']['Cst']]
+                self.dbase.printsql = False
                 indexgrp = grpdescst.index(grpdes)
                 try:
                     self.toolwidgetmain.stackedWidget.setCurrentIndex(indexgrp)

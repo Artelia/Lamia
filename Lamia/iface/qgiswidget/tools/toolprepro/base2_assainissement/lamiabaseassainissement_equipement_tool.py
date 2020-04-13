@@ -173,30 +173,36 @@ class BaseAssainissementEquipementTool(BaseEquipementTool):
     def postSaveFeature(self, savedfeaturepk=None):
         if self.dbase.variante in ['CD41']:
             # save a disorder on first creation
-            if self.savingnewfeature and not self.savingnewfeatureVersion:
-                pkobjet = self.dbase.createNewObjet()
-                lastiddesordre = self.dbase.getLastId('Desordre') + 1
+            #if self.savingnewfeature and not self.savingnewfeatureVersion:
+            if self.currentFeaturePK is None :  #very new equip, not newversion
+                self.propertieswdgDesordre.toolbarNew()
                 geomtext, iddessys = self.dbase.getValuesFromPk('Equipement_qgis',
-                                                                ['ST_AsText(geom)', 'id_descriptionsystem'],
-                                                                self.currentFeaturePK)
-                qgsgeom = qgis.core.QgsGeometry.fromWkt(geomtext)
-                if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                    #newgeom = qgis.core.QgsGeometry.fromPolyline([qgsgeom.asPoint(), qgsgeom.asPoint()])
-                    newgeom = qgis.core.QgsGeometry(qgsgeom)
-                    newgeomwkt = newgeom.exportToWkt()
-                else:
-                    # newgeom = qgis.core.QgsGeometry.fromPolylineXY([qgsgeom.asPointXY(), qgsgeom.asPointXY()])
-                    #newgeom = qgis.core.QgsGeometry.fromPolylineXY([qgsgeom.asPoint(), qgsgeom.asPoint()])
+                                                ['ST_AsText(geom)', 'id_descriptionsystem'],
+                                                savedfeaturepk)
+                qgsgeom = qgis.core.QgsGeometry.fromWkt(geomtext).asPolyline()
+                self.propertieswdgDesordre.setTempGeometry(qgsgeom)
+                self.propertieswdgDesordre.parentWidget.currentFeaturePK = savedfeaturepk
+                self.propertieswdgDesordre.toolbarSave()
+                pkdesordre = self.propertieswdgDesordre.currentFeaturePK
+                sql = "UPDATE Desordre SET groupedesordre = 'EQP' WHERE pk_desordre = {}".format(pkdesordre)
+                self.dbase.query(sql)
+                if False:
+                    pkobjet = self.dbase.createNewObjet()
+                    lastiddesordre = self.dbase.getLastId('Desordre') + 1
+                    geomtext, iddessys = self.dbase.getValuesFromPk('Equipement_qgis',
+                                                                    ['ST_AsText(geom)', 'id_descriptionsystem'],
+                                                                    savedfeaturepk)
+                    qgsgeom = qgis.core.QgsGeometry.fromWkt(geomtext)
                     newgeom = qgis.core.QgsGeometry(qgsgeom)
                     newgeomwkt = newgeom.asWkt()
 
-                sql = self.dbase.createSetValueSentence(type='INSERT',
-                                                        tablename='Desordre',
-                                                        listoffields=['id_desordre', 'lpk_objet', 'groupedesordre',
-                                                                      'lid_descriptionsystem', 'geom'],
-                                                        listofrawvalues=[lastiddesordre, pkobjet, 'EQP',
-                                                                         iddessys, newgeomwkt])
-                self.dbase.query(sql)
+                    sql = self.dbase.createSetValueSentence(type='INSERT',
+                                                            tablename='Desordre',
+                                                            listoffields=['id_desordre', 'lpk_objet', 'groupedesordre',
+                                                                        'lid_descriptionsystem', 'geom'],
+                                                            listofrawvalues=[lastiddesordre, pkobjet, 'EQP',
+                                                                            iddessys, newgeomwkt])
+                    self.dbase.query(sql)
 
 
 

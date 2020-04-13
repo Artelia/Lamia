@@ -220,11 +220,11 @@ class BaseObservationTool(AbstractLamiaFormTool):
 
 
     def postSaveFeature(self, savedfeaturepk=None):
-        if self.currentFeaturePK is None:   #new feature
+        if savedfeaturepk is None:   #new feature
             # Case when a observation is defined in the past
             pk_objet, creation , observation = self.dbase.getValuesFromPk('Observation_qgis',
                                                             ['pk_objet','datetimecreation','datetimeobservation'],
-                                                            self.currentFeaturePK)
+                                                            savedfeaturepk)
 
             datetimecreation = QtCore.QDateTime.fromString(creation, 'yyyy-MM-dd hh:mm:ss')
             datetimeobservation = QtCore.QDateTime.fromString(observation, 'yyyy-MM-dd hh:mm:ss')

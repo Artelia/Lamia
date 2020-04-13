@@ -40,7 +40,7 @@ class BasePointtopoTool(AbstractLamiaFormTool):
     LOADFIRST = False
 
     tooltreewidgetCAT = 'Ressources'
-    tooltreewidgetSUBCAT = 'Points topo'
+    tooltreewidgetSUBCAT = None
     tooltreewidgetICONPATH = None
 
 

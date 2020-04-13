@@ -387,7 +387,7 @@ class AbstractDBaseParser():
         #lastobjetid = self.getLastId('Objet') + 1
         lastobjetid = self.getmaxColumnValue('Objet', 'id_objet')
         sql = "INSERT INTO Objet (id_objet, lpk_revision_begin, datetimecreation, datetimemodification ) "
-        sql += "VALUES(" + str(lastobjetid) + "," + str(self.maxrevision) + ",'" + datecreation + "','" + datecreation + "' )"
+        sql += "VALUES(" + str(lastobjetid + 1) + "," + str(self.maxrevision) + ",'" + datecreation + "','" + datecreation + "' )"
         self.query(sql, docommit=docommit)
         # pkobjet = self.getLastRowId('Objet')
         pkobjet = self.getLastPK('Objet') 

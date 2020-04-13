@@ -323,13 +323,15 @@ class FormToolUtils(QtCore.QObject):
         resdict = dict(zip(columns, values))
         return resdict
 
-    def applyResultDict(self, resultdict):
+    def applyResultDict(self, resultdict, checkifinforgottenfield=True):
         
         if self.formtoolwidget.mainifacewidget.interfacemode in [0, 1]:
             for tablename, tabledict in self.formtoolwidget.formtoolwidgetconfdict.items():
                 for field, fieldwdg in tabledict['widgets'].items():
                     if not field in resultdict.keys():
-                        logging.getLogger("Lamia_unittest").debug('field %s-%s not found in dictconf : %s', tablename,
+                        if checkifinforgottenfield:
+                            logging.getLogger("Lamia_unittest").debug('%s : field %s-%s not found in dictconf : %s', self.formtoolwidget.DBASETABLENAME,
+                                                                                                                tablename,
                                                                                                             field,
                                                                                                             resultdict.keys())
                         continue
@@ -370,6 +372,7 @@ class FormToolUtils(QtCore.QObject):
         #self.currentFeature, self.currentFeaturePK = self.manageFeatureCreationOrUpdate()
 
         dbasetablehasgeomfield = self.formtoolwidget.dbase.dbasetables[self.formtoolwidget.DBASETABLENAME].get('geom', None)
+        # print('dbasetablehasgeomfield',self.formtoolwidget.DBASETABLENAME, dbasetablehasgeomfield)
         if (dbasetablehasgeomfield is not None and featurepk is None 
                 and self.formtoolwidget.tempgeometry is None):     # assure taht a geometry is acquired on first creation
             self.formtoolwidget.mainifacewidget.connector.showErrorMessage('Geometry needed')
@@ -379,8 +382,10 @@ class FormToolUtils(QtCore.QObject):
 
         self.setGeometryToFeature(savedfeaturepk)
         self.saveFeatureProperties(savedfeaturepk)
+        self.saveTABLEFILTERFIELD(savedfeaturepk)
         self.formtoolwidget.postSaveFeature(savedfeaturepk)  #featurepk toknow if new or not
         self.saveRessourceFile(savedfeaturepk)
+        self._saveParentWidgetRelation(savedfeaturepk)
         self.updateDateModification(savedfeaturepk)
         self._reinitAfterSaving()
 
@@ -592,11 +597,21 @@ class FormToolUtils(QtCore.QObject):
                         resulttemp = str(result[i ])
 
                     sql += str(field) + " = " + resulttemp + ','
-
+                """
+                for fieldname in self.formtoolwidget.TABLEFILTERFIELD.keys():
+                    if fieldname in 
+                if field in self.formtoolwidget.TABLEFILTERFIELD.keys():
+                    value =  self.formtoolwidget.TABLEFILTERFIELD[field]
+                    if isinstance(value, str):
+                        value = "'" + value + "'"
+                """
                 sql = sql[:-1]  # remove last ,
 
                 sql += " WHERE pk_" + str(tablename) + " = " + str(tablepk)
                 self.formtoolwidget.dbase.query(sql)
+
+
+
 
 
 
@@ -907,6 +922,77 @@ class FormToolUtils(QtCore.QObject):
                         os.remove(self.formtoolwidget.dbase.completePathOfFile(oldfile))
                     else:
                         pass
+
+    def _saveParentWidgetRelation(self,featurepk=None):
+
+        debug = False
+        if debug : self.formtoolwidget.dbase.printsql = True
+        if self.formtoolwidget.currentFeaturePK == featurepk:   # relation is already saved
+            return
+
+        if hasattr(self.formtoolwidget, 'PARENTJOIN') and self.formtoolwidget.parentWidget is not None:
+            parenttblname = self.formtoolwidget.parentWidget.DBASETABLENAME
+            childtblname = self.formtoolwidget.DBASETABLENAME
+            parentjoin = self.formtoolwidget.PARENTJOIN
+            if parenttblname in self.formtoolwidget.PARENTJOIN.keys():
+                joindict = self.formtoolwidget.PARENTJOIN[parenttblname]
+                if joindict['tctable'] is None:
+                    parentcolval = self.formtoolwidget.dbase.getValuesFromPk(parenttblname + '_qgis',
+                                                                             joindict['colparent'],
+                                                                             self.formtoolwidget.parentWidget.currentFeaturePK)
+                    childparenttables = [childtblname] + self.formtoolwidget.dbase.getParentTable(childtblname)
+                    for tablename in childparenttables:
+                        dbasetable = self.formtoolwidget.dbase.dbasetables[tablename]
+                        if joindict['colthistable'] in dbasetable['fields'].keys():
+                            pktable = self.formtoolwidget.dbase.getValuesFromPk(tablename + '_qgis',
+                                                                             'pk_' + tablename.lower(),
+                                                                             featurepk)
+                            sql = "UPDATE {} SET {} = {} WHERE pk_{} = {}".format(tablename,
+                                                                                   joindict['colthistable'],
+                                                                                    parentcolval,
+                                                                                    tablename.lower(),
+                                                                                    pktable)
+                            self.formtoolwidget.dbase.query(sql)
+                            break
+                    
+                else:
+                    fieldtcthis = self.formtoolwidget.dbase.getValuesFromPk(childtblname + '_qgis',
+                                                                             joindict['colthistable'],
+                                                                             featurepk)
+                    fieldtcparent = self.formtoolwidget.dbase.getValuesFromPk(parenttblname + '_qgis',
+                                                                             joindict['colparent'],
+                                                                             self.formtoolwidget.parentWidget.currentFeaturePK)
+                    sql = "INSERT INTO {}(lpk_revision_begin,{},{}) "\
+                          "VALUES({},{},{})".format(joindict['tctable'],
+                                                     joindict['tctablecolparent'],
+                                                     joindict['tctablecolthistable'],
+                                                     self.formtoolwidget.dbase.maxrevision,
+                                                     fieldtcparent,
+                                                     fieldtcthis)
+                    self.formtoolwidget.dbase.query(sql)
+        if debug : self.formtoolwidget.dbase.printsql = False
+        #self.dbase.commit()
+
+    def saveTABLEFILTERFIELD(self, featurepk=None):
+        if len(self.formtoolwidget.TABLEFILTERFIELD) > 0:
+            parenttables = [self.formtoolwidget.DBASETABLENAME]
+            parenttables += self.formtoolwidget.dbase.getParentTable(self.formtoolwidget.DBASETABLENAME)
+            for tablename in parenttables:
+                fields = self.formtoolwidget.dbase.dbasetables[tablename]['fields']
+                tablepk = self.formtoolwidget.dbase.getValuesFromPk(self.formtoolwidget.DBASETABLENAME + '_qgis',
+                                                    'pk_' + tablename.lower(),
+                                                        featurepk)
+                for fieldname, fieldvalue in self.formtoolwidget.TABLEFILTERFIELD.items():
+                    if fieldname in fields:
+                        if isinstance(fieldvalue, str):
+                            fieldvalue = "'" + fieldvalue + "'"
+                        sql = "UPDATE {} SET {} = {} WHERE pk_{} = {}".format(tablename,
+                                                                               fieldname,
+                                                                                fieldvalue,
+                                                                                tablename.lower(),
+                                                                                tablepk)
+                        self.formtoolwidget.dbase.query(sql)
+
 
     def _reinitAfterSaving(self):
         #reinit

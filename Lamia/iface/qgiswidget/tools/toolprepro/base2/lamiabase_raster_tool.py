@@ -168,7 +168,7 @@ class BaseRasterTool(AbstractLamiaFormTool):
         if self.currentFeaturePK is None:
             datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
             # self.initFeatureProperties(feat, 'Ressource', 'datetimeressource', datecreation)
-            self.formutils.applyResultDict({'datetimeressource': datecreation})
+            self.formutils.applyResultDict({'datetimeressource': datecreation}, False)
 
     """
     def createParentFeature(self):

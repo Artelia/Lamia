@@ -25,6 +25,8 @@ This file is part of LAMIA.
   * License-Filename: LICENSING.md
  """
 
+import pandas as pd
+import logging
 from qgis.PyQt.QtWidgets import  QTreeWidgetItem
 from qgis.PyQt import QtCore
 
@@ -43,20 +45,35 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
 
     def onActivation(self):
         self.treewidget.clear()
+
+        headerlist = [self.toolwidget.DBASETABLENAME]
+        #headerlist.insert(0, 'ID')
+        self.treewidget.setColumnCount(len(headerlist))
+        self.treewidget.header().setVisible(True)
+        self.treewidget.setHeaderItem(QTreeWidgetItem(headerlist))
+
         # print('onActivation', self.toolwidget.DBASETABLENAME)
         self.loadFeaturesinTreeWdg()
-        if self.toolwidget.lastselectedpk is not None:
-            self.disconnectTreewidget()
-            self.selectItemfromPK(self.toolwidget.lastselectedpk)
-            self.connectTreewidget()
-
+        self.disconnectTreewidget()
+        self.toolwidget.frametoolwidg.setEnabled(True)
+        """
+        if self.toolwidget.lastselectedpk is not None and self.selectItemfromPK(self.toolwidget.lastselectedpk):
+            print('***', self.toolwidget.DBASETABLENAME, self.toolwidget.lastselectedpk)
+        
+            
+        if self.treewidget.topLevelItemCount() == 0 :
+            self.toolwidget.frametoolwidg.setEnabled(False)
+        """
+        if self.treewidget.topLevelItemCount() > 0 :
+            self.treewidget.setCurrentItem(self.treewidget.invisibleRootItem().child(0))
+        self.connectTreewidget()
 
     def loadFeaturesinTreeWdg(self):
         self.disconnectTreewidget()
         self.treewidget.clear()
         ids = self.loadIds()
         parentitem = self.treewidget.invisibleRootItem()
-        parentitem.addChildren([QTreeWidgetItem([str(id[0])]) for id in ids])
+        parentitem.addChildren([QTreeWidgetItem([str(id)]) for id in self.ids['id'].values])
         self.connectTreewidget()
 
     def selectItemfromPK(self,pk ):
@@ -69,14 +86,19 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
         if len(founditems) > 0:
             founditem = founditems[0]
             self.treewidget.setCurrentItem(founditem)
+            return True 
+        else:
+            return False
 
     def loadIds(self):
-        sql = "SELECT id_{} FROM {}_now ".format(self.toolwidget.DBASETABLENAME.lower(),
-                                                self.toolwidget.DBASETABLENAME    )
+        debug = False
+        sql = "SELECT pk_{}, id_{} FROM {}_now ".format(self.toolwidget.DBASETABLENAME.lower(),
+                                                        self.toolwidget.DBASETABLENAME.lower(),
+                                                        self.toolwidget.DBASETABLENAME    )
         
         if self.toolwidget.parentWidget is not None and self.toolwidget.parentWidget.currentFeaturePK is not None:
             parenttablename = self.toolwidget.parentWidget.DBASETABLENAME
-            if parenttablename in  self.toolwidget.PARENTJOIN.keys():
+            if self.toolwidget.PARENTJOIN and parenttablename in  self.toolwidget.PARENTJOIN.keys():
                 joindict = self.toolwidget.PARENTJOIN[parenttablename]
                 thistablename = self.toolwidget.DBASETABLENAME
                 if joindict['tctable'] is None:
@@ -87,8 +109,8 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
                                                         parenttablename.lower(),
                                                         self.toolwidget.parentWidget.currentFeaturePK)
                 else:
-                    sql += "JOIN {} ON {} = {} "\
-                           "JOIN {}_now ON {} = {} "\
+                    sql += "INNER JOIN {} ON {} = {} "\
+                           "INNER JOIN {}_now ON {} = {} "\
                            "WHERE pk_{} = {} ".format(joindict['tctable'],
                                                       thistablename + '_now.' + joindict['colthistable'],
                                                       joindict['tctable'] + '.' + joindict['tctablecolthistable'],
@@ -98,10 +120,34 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
                                                         parenttablename.lower(),
                                                         self.toolwidget.parentWidget.currentFeaturePK)
 
+            sql = self.dbase.sqlNow(sql)
+            #query = self.dbase.query(sql)
+            #self.ids = pd.DataFrame(query, columns = ['pk', 'id']) 
+            #print(self.ids)
+            #return query
+        elif self.toolwidget.parentWidget is not None :
+            sql = None
+            #self.ids = pd.DataFrame(columns = ['pk', 'id']) 
+        else:
+            sql = self.dbase.sqlNow(sql)
+            #query = self.dbase.query(sql)
+            #self.ids = pd.DataFrame(query, columns = ['pk', 'id']) 
 
-        sql = self.dbase.sqlNow(sql)
-        query = self.dbase.query(sql)
-        return query
+        if sql:
+            if hasattr(self.toolwidget, 'TABLEFILTERFIELD') and self.toolwidget.TABLEFILTERFIELD is not None:
+                for fieldname, fieldvalue in self.toolwidget.TABLEFILTERFIELD.items():
+                    if isinstance(fieldvalue,str):
+                        fieldvalue = "'" + fieldvalue + "'"
+                    sqlsplitted = self.toolwidget.dbase.utils.splitSQLSelectFromWhereOrderby(sql)
+                    if 'WHERE' in sqlsplitted.keys():
+                        sql += " AND {} = {}".format(fieldname,fieldvalue)
+                    else:
+                        sql += " WHERE  {} = {}".format(fieldname,fieldvalue)
+            if debug: logging.getLogger("Lamia_unittest").debug('sq : %s', sql)
+            query = self.dbase.query(sql)
+            self.ids = pd.DataFrame(query, columns = ['pk', 'id']) 
+        else:
+            self.ids = pd.DataFrame(columns = ['pk', 'id']) 
 
 
 
@@ -320,6 +366,7 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
 
     def toolbarNew(self):
         self.disconnectTreewidget()
+        self.toolwidget.frametoolwidg.setEnabled(True)
         parentitem = self.treewidget.invisibleRootItem()
         newitem = QTreeWidgetItem([self.NEWFEATURETXT])
         parentitem.addChildren([newitem])
@@ -331,8 +378,20 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
         pass
 
     def toolbarDelete(self):
-        pass
+        if self.toolwidget.currentFeaturePK is None:    #feature not correctly saved
+            return
 
+        id = self.toolwidget.dbase.getValuesFromPk(self.toolwidget.DBASETABLENAME,
+                                            'id_' + self.toolwidget.DBASETABLENAME.lower(),
+                                            self.toolwidget.currentFeaturePK)
+        founditems = self.treewidget.findItems(str(id), 
+                                                QtCore.Qt.MatchExactly | QtCore.Qt.MatchRecursive, 
+                                                0)
+        if len(founditems)>0:
+            idx = self.treewidget.invisibleRootItem().indexOfChild(founditems[0])
+            self.treewidget.invisibleRootItem().takeChild(idx)
+            # self.ids.remove(id)
+            self.ids = self.ids[self.ids.id != id]
 
     def toolbarSave(self):
         if self.toolwidget.currentFeaturePK is None:    #feature not correctly saved
@@ -346,6 +405,13 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
                                                         self.toolwidget.currentFeaturePK)
             selecteditem = selecteditems[0]
             selecteditem.setText(0, str(id))
+            self.ids.append([self.toolwidget.currentFeaturePK, id])
+            #self.ids.append((id,))
+            #
+            #if self.ids.index.max() :
+            #    self.ids.loc[self.ids.index.max()+1].append([id])
+            #else:
+            #    self.ids.loc[0].append([id])
         self.connectTreewidget()
 
 

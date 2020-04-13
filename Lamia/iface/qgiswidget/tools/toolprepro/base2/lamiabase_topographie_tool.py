@@ -26,18 +26,13 @@ This file is part of LAMIA.
 
 
 
-
-from qgis.PyQt import uic, QtCore
-
-try:
-    from qgis.PyQt.QtGui import (QWidget)
-except ImportError:
-    from qgis.PyQt.QtWidgets import (QWidget)
-#from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
-from ...Lamia_abstract_tool import AbstractLamiaTool
 import os
 import datetime
 
+from qgis.PyQt import uic, QtCore
+from qgis.PyQt.QtWidgets import (QWidget)
+
+from ...lamia_abstractformtool import AbstractLamiaFormTool
 from .lamiabase_pointtopo_tool import BasePointtopoTool
 
 """
@@ -47,15 +42,20 @@ ca fout la merde....
 """
 
 
-class BaseTopographieTool(AbstractLamiaTool):
+class BaseTopographieTool(AbstractLamiaFormTool):
 
+    DBASETABLENAME = 'Topographie'
     LOADFIRST = True
-    dbasetablename = 'Topographie'
-    specialfieldui = []
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
-        super(BaseTopographieTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
+    tooltreewidgetCAT = 'Ressources'
+    tooltreewidgetSUBCAT = 'Topographie'
+    tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_topographie_tool_icon.png')
 
+    def __init__(self, **kwargs):
+        super(BaseTopographieTool, self).__init__(**kwargs)
+        self.instancekwargs = kwargs
+
+    """
     def initTool(self):
         # ****************************************************************************************
         # Main spec
@@ -85,60 +85,59 @@ class BaseTopographieTool(AbstractLamiaTool):
 
         # ****************************************************************************************
         #properties ui
+    """
 
-    def initFieldUI(self):
+    def initMainToolWidget(self):
+
+        self.toolwidgetmain = UserUI()
+        self.formtoolwidgetconfdictmain = {'Topographie' : {'linkfield' : 'id_topographie',
+                                                            'widgets' : {}},
+                                            'Objet' : {'linkfield' : 'id_objet',
+                                                        'widgets' : {}},
+                                            'Ressource' : {'linkfield' : 'id_ressource',
+                                                        'widgets' : {'file': self.toolwidgetmain.lineEdit_file,
+                                                                    'description': self.toolwidgetmain.lineEdit_nom,
+                                                                    'datetimeressource': self.toolwidgetmain.dateTimeEdit_date}}}
+        self.toolwidgetmain.pushButton_chooseph.clicked.connect(self.choosePhoto)
+        self.toolwidgetmain.pushButton_open.clicked.connect(self.openFile)
+        self.toolwidgetmain.pushButton_ajoutpointGPS.clicked.connect(self.ajoutPointGPS)
+        self.toolwidgetmain.pushButton_importer.clicked.connect(self.importer)
+
+        typpointlist = [elem[0] for elem in self.dbase.dbasetables['Pointtopo']['fields']['typepointtopo']['Cst']]
+        self.toolwidgetmain.comboBox_typepoints.addItems(typpointlist)
+
+
+        self.gpswidget = {'x' : {'widget' : self.toolwidgetmain.label_X,
+                                    'gga' : 'Xcrs'},
+                            'y': {'widget': self.toolwidgetmain.label_Y,
+                                'gga': 'Ycrs'},
+                            'zmngf': {'widget': self.toolwidgetmain.label_Z,
+                                'gga': 'zmNGF'},
+                            'dx': {'widget': self.toolwidgetmain.label_dX,
+                                'gst': 'xprecision'},
+                            'dy': {'widget': self.toolwidgetmain.label_dY,
+                                'gst': 'yprecision'},
+                            'dz': {'widget': self.toolwidgetmain.label_dZ,
+                                'gst': 'zprecision'},
+                            'zgps': {'widget': self.toolwidgetmain.label_zgps,
+                                    'gga': 'elevation'},
+                            'zwgs84': {'widget': self.toolwidgetmain.label_zwgs84,
+                                    'gga': 'deltageoid'},
+                            'raf09': {'widget': self.toolwidgetmain.label_raf09,
+                                    'gga': 'RAF09'},
+                            'hauteurperche': {'widget': self.toolwidgetmain.label_hautperche,
+                                    'gga': 'hauteurperche'}
+                            }
+
+
         # ****************************************************************************************
-        #   userui Field
-        if self.userwdgfield is None:
+        # child widgets
+        self.instancekwargs['parentwidget'] = self
 
-            # ****************************************************************************************
-            # userui
-            self.userwdgfield = UserUI()
-            self.linkuserwdgfield = {'Topographie' : {'linkfield' : 'id_topographie',
-                                             'widgets' : {}},
-                                'Objet' : {'linkfield' : 'id_objet',
-                                          'widgets' : {}},
-                                'Ressource' : {'linkfield' : 'id_ressource',
-                                          'widgets' : {'file': self.userwdgfield.lineEdit_file,
-                                                        'description': self.userwdgfield.lineEdit_nom,
-                                                        'datetimeressource': self.userwdgfield.dateTimeEdit_date}}}
-            self.userwdgfield.pushButton_chooseph.clicked.connect(self.choosePhoto)
-            self.userwdgfield.pushButton_open.clicked.connect(self.openFile)
-            self.userwdgfield.pushButton_ajoutpointGPS.clicked.connect(self.ajoutPointGPS)
-            self.userwdgfield.pushButton_importer.clicked.connect(self.importer)
-
-            typpointlist = [elem[0] for elem in self.dbase.dbasetables['Pointtopo']['fields']['typepointtopo']['Cst']]
-            self.userwdgfield.comboBox_typepoints.addItems(typpointlist)
-
-
-            self.gpswidget = {'x' : {'widget' : self.userwdgfield.label_X,
-                                     'gga' : 'Xcrs'},
-                              'y': {'widget': self.userwdgfield.label_Y,
-                                    'gga': 'Ycrs'},
-                              'zmngf': {'widget': self.userwdgfield.label_Z,
-                                    'gga': 'zmNGF'},
-                              'dx': {'widget': self.userwdgfield.label_dX,
-                                    'gst': 'xprecision'},
-                              'dy': {'widget': self.userwdgfield.label_dY,
-                                    'gst': 'yprecision'},
-                              'dz': {'widget': self.userwdgfield.label_dZ,
-                                    'gst': 'zprecision'},
-                              'zgps': {'widget': self.userwdgfield.label_zgps,
-                                     'gga': 'elevation'},
-                              'zwgs84': {'widget': self.userwdgfield.label_zwgs84,
-                                       'gga': 'deltageoid'},
-                              'raf09': {'widget': self.userwdgfield.label_raf09,
-                                       'gga': 'RAF09'},
-                              'hauteurperche': {'widget': self.userwdgfield.label_hautperche,
-                                        'gga': 'hauteurperche'}
-                              }
-
-
-            # ****************************************************************************************
-            # child widgets
-            self.dbasechildwdgfield = []
-            self.propertieswdgPOINTTOPO= BasePointtopoTool(dbase=self.dbase,gpsutil=self.gpsutil, parentwidget=self)
-            self.dbasechildwdgfield.append(self.propertieswdgPOINTTOPO)
+        self.dbasechildwdgfield = []
+        self.propertieswdgPOINTTOPO= BasePointtopoTool(**self.instancekwargs)
+        self.propertieswdgPOINTTOPO.tooltreewidgetSUBCAT = 'Points topo'
+        self.dbasechildwdgfield.append(self.propertieswdgPOINTTOPO)
 
 
     def postOnActivation(self):
@@ -148,17 +147,17 @@ class BaseTopographieTool(AbstractLamiaTool):
         pass
 
 
-    def postSaveFeature(self, boolnewfeature):
+    def postSaveFeature(self, savedfeaturepk=None):
 
-        if self.savingnewfeatureVersion:
+        if self.currentFeaturePK is not None and self.currentFeaturePK != savedfeaturepk:   # new version of feature
 
             #fieldstoappend
-            pointtopofields = self.dbase.dbasetables['Pointtopo']['fields'].keys()
+            pointtopofields = list(self.dbase.dbasetables['Pointtopo']['fields'].keys())
             pointtopofields.remove('pk_pointtopo')
             indexpktopo = pointtopofields.index('lpk_topographie')
             pointtopofields.insert(-1, 'ST_AsText(geom)')
 
-            sql = "SELECT " + ','.join(pointtopofields) + " FROM Pointtopo WHERE lpk_topographie = " + str(self.beforesavingFeaturePK)
+            sql = "SELECT " + ','.join(pointtopofields) + " FROM Pointtopo WHERE lpk_topographie = " + str(self.currentFeaturePK )
             results = self.dbase.query(sql)
             results = [list(res) for res in results]
 
@@ -202,21 +201,28 @@ class BaseTopographieTool(AbstractLamiaTool):
         pass
 
     def choosePhoto(self):
-        file, extension = self.windowdialog.qfiledlg.getOpenFileNameAndFilter(None, 'Choose the file', self.dbase.imagedirectory,
+        file, extension = self.mainifacewidget.qfiledlg.getOpenFileNameAndFilter(None, 'Choose the file', self.dbase.imagedirectory,
                                                                  'All (*.*)', '')
         if file:
             self.userwdg.lineEdit_file.setText(os.path.normpath(file))
 
 
-    def postInitFeatureProperties(self, feat):
-        if self.currentFeature is None:
+    # def postInitFeatureProperties(self, feat):
+    def postSelectFeature(self):
+        if self.currentFeaturePK is None:   #first creation
+            #datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
+            datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            #self.initFeatureProperties(feat, 'Ressource', 'datetimeressource', datecreation)
+            self.formutils.applyResultDict({'datetimeressource' : datecreation},checkifinforgottenfield=False)
+        """
+        if self.currentFeaturePK is None:
             # datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
             datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
             #self.initFeatureProperties(feat, 'Ressource', 'dateressource', datecreation)
             self.initFeatureProperties(feat, None, 'datetimeressource', datecreation)
+        """
 
-
-
+    """
     def createParentFeature(self):
         pkobjet = self.dbase.createNewObjet()
 
@@ -255,7 +261,7 @@ class BaseTopographieTool(AbstractLamiaTool):
                 sql = "UPDATE Ressource SET lk_marche = " + str(currentparentlinkfield) + " WHERE id_ressource = " + str(pkres) + ";"
                 query = self.dbase.query(sql)
                 self.dbase.commit()
-
+    """
 
 
 
