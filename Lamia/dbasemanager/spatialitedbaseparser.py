@@ -109,9 +109,11 @@ class SpatialiteDBaseParser(AbstractDBaseParser):
                 sql = 'SELECT * FROM ' + str(dbname)
             finalsqllist.append(sql)
 
-            if self.isTableSpatial(viewnames[viewname]):
+            #if self.isTableSpatial(viewnames[viewname]):
+            if self.isTableSpatial(dbname):
                 dbnamelower = dbname.lower()
-                idcolumnname = self.getFirstIdColumn(viewnames[viewname])
+                # idcolumnname = self.getFirstIdColumn(viewnames[viewname])
+                idcolumnname = self.getFirstIdColumn(dbname)
                 viewlower = viewnames[viewname].lower()
                 sql = "INSERT INTO views_geometry_columns (view_name, view_geometry, view_rowid, "
                 sql += "f_table_name, f_geometry_column,read_only)"

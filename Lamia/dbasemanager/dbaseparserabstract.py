@@ -651,12 +651,18 @@ class AbstractDBaseParser():
         for sqlword in sqllist:
             if '_now' in sqlword:
                 tablename=sqlword.split('_now')[0]
-                if tablename.lower() not in  alreadytables:
-                    alreadytables.append(tablename.lower())
-                    withsql +=  sqlword + " AS "
-                    withsql += " (SELECT * FROM " + tablename + "_qgis WHERE "
-                    withsql += self._dateVersionConstraintSQL(date)
-                    withsql += "), "
+                if 'lpk_revision_begin' in self.getColumns(tablename + '_qgis'):
+                    if tablename.lower() not in  alreadytables:
+                        alreadytables.append(tablename.lower())
+                        withsql +=  sqlword + " AS "
+                        withsql += " (SELECT * FROM " + tablename + "_qgis WHERE "
+                        withsql += self._dateVersionConstraintSQL(date)
+                        withsql += "), "
+                else:
+                    if tablename.lower() not in  alreadytables:
+                        alreadytables.append(tablename.lower())
+                        withsql +=  sqlword + " AS "
+                        withsql += " (SELECT * FROM " + tablename + "), "
 
         withsql = withsql[0:-2]
         sqltemp1 = self.utils.splitSQLSelectFromWhereOrderby(sqlin)

@@ -762,7 +762,8 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         if debug: logging.getLogger("Lamia_unittest").debug('kwargs %s', str(kwargs))
         self.currentFeaturePK = kwargs.get('pk', None)
         #rubberband actions
-        self._manageRubberbandOnSelectFeature(self.currentFeaturePK)
+        if self.parentWidget is None:
+            self._manageRubberbandOnSelectFeature(self.currentFeaturePK)
         #remember feature pk
         if self.currentFeaturePK:
             self.lastselectedpk = self.currentFeaturePK
@@ -892,8 +893,8 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
 
 
     def _manageRubberbandOnSelectFeature(self, pkfeature=None):
-        if (self.parentWidget is None 
-                and 'geom' in self.dbase.dbasetables[self.DBASETABLENAME]['fields'].keys()
+        
+        if ('geom' in self.dbase.dbasetables[self.DBASETABLENAME].keys()
                 and pkfeature):
             currentgeom = self.formutils.getQgsGeomFromPk(pkfeature)
             self.mainifacewidget.qgiscanvas.createRubberBandForSelection(currentgeom)
@@ -927,7 +928,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         """
         debug = False
 
-        if debug: logging.getLogger("Lamia").debug('start points : %s %s', self.dbasetablename, points)
+        if debug: logging.getLogger("Lamia_unittest").debug('start points : %s %s', self.DBASETABLENAME, points)
 
         if self.mainifacewidget.qgiscanvas.currentmaptool is not None:
             try:
@@ -948,6 +949,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
 
         # case point in line layer
         dbasetable = self.dbase.dbasetables[self.DBASETABLENAME]
+
         if len(points)==2 and points[0] == points[1]:
             #self.rubberBand.reset(0)
             self.mainifacewidget.qgiscanvas.createorresetRubberband(0)
@@ -959,7 +961,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         else:
             self.mainifacewidget.qgiscanvas.createorresetRubberband(capturetype)
 
-        if debug: logging.getLogger("Lamia").debug('type/point : %s %s', str(capturetype), points)
+        if debug: logging.getLogger("Lamia_unittest").debug('type/point : %s %s', str(capturetype), points)
 
         if comefromcanvas:
             pointsmapcanvas = points
@@ -990,9 +992,9 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         self.tempgeometry = geometryforlayer
         self.lamiageomChanged.emit()
 
-        if debug: logging.getLogger("Lamia").debug('end layer points : %s', pointslayer)
-        if debug: logging.getLogger("Lamia").debug('end canvas points : %s', pointsmapcanvas)
-        if debug: logging.getLogger("Lamia").debug('end tempgeom : %s', self.toWKT(self.tempgeometry))
+        if debug: logging.getLogger("Lamia_unittest").debug('end layer points : %s', pointslayer)
+        if debug: logging.getLogger("Lamia_unittest").debug('end canvas points : %s', pointsmapcanvas)
+        # if debug: logging.getLogger("Lamia_unittest").debug('end tempgeom : %s', self.toWKT(self.tempgeometry))
 
         #self.mtool = None
 

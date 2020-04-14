@@ -43,6 +43,13 @@ class BasePointtopoTool(AbstractLamiaFormTool):
     tooltreewidgetSUBCAT = None
     tooltreewidgetICONPATH = None
 
+    PARENTJOIN = {'Topographie' : {'colparent': 'pk_topographie',
+                            'colthistable': 'lpk_topographie',
+                                'tctable': None,
+                                'tctablecolparent':None,
+                                'tctablecolthistable':None}
+                }
+
 
     def __init__(self, **kwargs):
         super(BasePointtopoTool, self).__init__(**kwargs)
@@ -165,22 +172,22 @@ class BasePointtopoTool(AbstractLamiaFormTool):
     # def postInitFeatureProperties(self, feat):
     def postSelectFeature(self):
         pass
-
-        if self.currentFeaturePK is None:
-            #self.pushButton_savefeature.setEnabled(True)
-            self.enablePropertiesButtons(True)
-        else:
-            # getlpkrevisionbeginfromparent
-            sql = "SELECT lpk_revision_begin FROM Pointtopo_qgis WHERE pk_pointtopo = " + str(self.currentFeaturePK)
-            result = self.dbase.query(sql)
-            if len(result)>0:
-                revbegin = result[0][0]
-                if revbegin == self.dbase.maxrevision:
-                    self.enablePropertiesButtons(True)
-                else:
-                    self.enablePropertiesButtons(False)
-            else:
+        if False:
+            if self.currentFeaturePK is None:
+                #self.pushButton_savefeature.setEnabled(True)
                 self.enablePropertiesButtons(True)
+            else:
+                # getlpkrevisionbeginfromparent
+                sql = "SELECT lpk_revision_begin FROM Pointtopo_qgis WHERE pk_pointtopo = " + str(self.currentFeaturePK)
+                result = self.dbase.query(sql)
+                if len(result)>0:
+                    revbegin = result[0][0]
+                    if revbegin == self.dbase.maxrevision:
+                        self.enablePropertiesButtons(True)
+                    else:
+                        self.enablePropertiesButtons(False)
+                else:
+                    self.enablePropertiesButtons(True)
 
     def enablePropertiesButtons(self, boolvalue):
         pass
@@ -224,8 +231,8 @@ class BasePointtopoTool(AbstractLamiaFormTool):
 
 
     def getGPSValues(self):
-        if self.gpsutil is not None:
-            if self.gpsutil.currentpoint is None:
+        if self.mainifacewidget.gpsutil is not None:
+            if self.mainifacewidget.gpsutil.currentpoint is None:
                 self.mainifacewidget.errorMessage('GPS non connecte')
                 return
 
@@ -240,7 +247,7 @@ class BasePointtopoTool(AbstractLamiaFormTool):
                     self.formtoolwidgetconfdict[self.dbasetablename]['widgets'][fieldname].setValue(-1.0)
 
             self.mainifacewidget.qgiscanvas.createorresetRubberband(0)
-            self.setTempGeometry([self.gpsutil.currentpoint],False)
+            self.setTempGeometry([self.mainifacewidget.gpsutil.currentpoint],False)
             return True
         else:
             self.errorMessage('GPS non connecte')

@@ -166,18 +166,13 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
                 lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_largeur))
             self.toolwidgetmain.toolButton_calc.clicked.connect(
                 lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_profradierouvrage))
-
             self.toolwidgetmain.toolButton_poires.clicked.connect(
                 lambda: self.showNumPad(self.toolwidgetmain.spinBox_poires))
             self.toolwidgetmain.toolButton_pompes.clicked.connect(
                 lambda: self.showNumPad(self.toolwidgetmain.spinBox_pompes))
 
-
-
             self.toolwidgetmain.comboBox_typeOuvrageAss.currentIndexChanged.connect(self.fielduiTypeOhChanged)
-
             self.toolwidgetmain.pushButton_getGPS.clicked.connect(self.getGPSValue)
-
 
             # ****************************************************************************************
             # child widgets
@@ -191,12 +186,14 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
             self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
             self.propertieswdgDesordre = BaseAssainissementDesordreTool(**self.instancekwargs)
-            self.propertieswdgDesordre.userwdgfield.frame_2.setParent(None)
-            self.propertieswdgDesordre.groupBox_elements.setParent(None)
-            self.propertieswdgDesordre.pushButton_addFeature.setEnabled(False)
-            self.propertieswdgDesordre.pushButton_delFeature.setEnabled(False)
-            self.propertieswdgDesordre.comboBox_featurelist.setEnabled(False)
-            self.propertieswdgDesordre.groupBox_geom.setParent(None)
+            self.propertieswdgDesordre.initMainToolWidget()
+            self.propertieswdgDesordre.formtoolwidgetconfdictmain['Desordre']['widgets']['groupedesordre'] = 'NOD'
+            #self.propertieswdgDesordre.userwdgfield.frame_2.setParent(None)
+            #self.propertieswdgDesordre.groupBox_elements.setParent(None)
+            #self.propertieswdgDesordre.pushButton_addFeature.setEnabled(False)
+            #self.propertieswdgDesordre.pushButton_delFeature.setEnabled(False)
+            #self.propertieswdgDesordre.comboBox_featurelist.setEnabled(False)
+            #self.propertieswdgDesordre.groupBox_geom.setParent(None)
             self.dbasechildwdgfield.append(self.propertieswdgDesordre)
 
             self.propertieswdgEquipement = BaseAssainissementEquipementTool(**self.instancekwargs)
@@ -306,7 +303,6 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
                 lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_largeur))
             self.toolwidgetmain.toolButton_calc.clicked.connect(
                 lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_profradierouvrage))
-
             self.toolwidgetmain.toolButton_poires.clicked.connect(
                 lambda: self.showNumPad(self.toolwidgetmain.spinBox_poires))
             self.toolwidgetmain.toolButton_pompes.clicked.connect(
@@ -326,6 +322,8 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
             self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
             self.propertieswdgDesordre = BaseAssainissementDesordreTool(**self.instancekwargs)
+            self.propertieswdgDesordre.initMainToolWidget()
+            self.propertieswdgDesordre.formtoolwidgetconfdictmain['Desordre']['widgets']['groupedesordre'] = 'NOD'
             #self.propertieswdgDesordre.userwdgfield.frame_2.setParent(None)
             #self.propertieswdgDesordre.groupBox_elements.setParent(None)
             #self.propertieswdgDesordre.pushButton_addFeature.setEnabled(False)
@@ -424,32 +422,20 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
 
             self.toolwidgetmain.toolButton_longueur.clicked.connect(
                 lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_longueur))
-
             self.toolwidgetmain.toolButton_diamtampon.clicked.connect(
                 lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_diamtampon))
-
             self.toolwidgetmain.toolButton_profsurverse.clicked.connect(
                 lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_profsurverse))
-
             self.toolwidgetmain.toolButton_capanom.clicked.connect(
                 lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_capanom))
             self.toolwidgetmain.toolButton_pompes2.clicked.connect(
                 lambda: self.showNumPad(self.toolwidgetmain.spinBox_pompes2))
-
-
-
-
-
             self.toolwidgetmain.toolButton_largeur.clicked.connect(
                 lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_largeur))
             self.toolwidgetmain.toolButton_calc.clicked.connect(
                 lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_profradierouvrage))
 
-
-
             self.toolwidgetmain.comboBox_typeOuvrageAss.currentIndexChanged.connect(self.fieldui3TypeOhChanged)
-
-
 
             # ****************************************************************************************
             # child widgets
@@ -457,6 +443,7 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
             self.instancekwargs['parentwidget'] = self
             self.propertieswdgDesordre = BaseAssainissementDesordreTool(**self.instancekwargs)
             self.propertieswdgDesordre.initMainToolWidget()
+            self.propertieswdgDesordre.formtoolwidgetconfdictmain['Desordre']['widgets']['groupedesordre'] = 'NOD'
             #self.propertieswdgDesordre.userwdgfield.frame_2.setParent(None)
             #self.propertieswdgDesordre.groupBox_elements.setParent(None)
             #self.propertieswdgDesordre.pushButton_addFeature.setEnabled(False)
@@ -627,7 +614,7 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
 
     # def postSaveFeature(self, boolnewfeature):
     def postSaveFeature(self, savedfeaturepk=None):
-        print('**********', 'postSaveFeature', self.currentFeaturePK)
+
         if self.currentFeaturePK is None :  #very new equip, not newversion
             self.propertieswdgDesordre.toolbarNew()
             geomtext = self.dbase.getValuesFromPk('Noeud_qgis',
@@ -636,12 +623,10 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
             qgsgeom = qgis.core.QgsGeometry.fromWkt(geomtext).asPoint()
             qgsgeomfordesordre = [qgsgeom,qgsgeom]
             self.propertieswdgDesordre.setTempGeometry(qgsgeomfordesordre)
+
             self.propertieswdgDesordre.parentWidget.currentFeaturePK = savedfeaturepk
             self.propertieswdgDesordre.toolbarSave()
-            pkdesordre = self.propertieswdgDesordre.currentFeaturePK
-            sql = "UPDATE Desordre SET groupedesordre = 'NOD' WHERE pk_desordre = {}".format(pkdesordre)
-            print(sql)
-            self.dbase.query(sql)
+
 
 
         #adapt linked infralin geoemtry

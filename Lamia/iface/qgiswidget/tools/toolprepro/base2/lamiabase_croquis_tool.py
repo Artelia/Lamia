@@ -58,6 +58,7 @@ class BaseCroquisTool(AbstractLamiaFormTool):
     PARENTJOIN = tempparentjoin
 
     TABLEFILTERFIELD = {'typephoto': 'CRO' }
+    GEOMETRYSKIP = True
 
     def __init__(self, **kwargs):
         super(BaseCroquisTool, self).__init__(**kwargs)

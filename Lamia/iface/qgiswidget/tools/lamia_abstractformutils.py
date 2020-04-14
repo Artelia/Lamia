@@ -312,6 +312,9 @@ class FormToolUtils(QtCore.QObject):
 
     def getDictValuesForWidget(self, featurepk=None):
         columns = self.formtoolwidget.dbase.getColumns(self.formtoolwidget.DBASETABLENAME + '_qgis')
+        if len(columns) == 0:   #table without qgis view ex : graphdata, pointtopo
+            columns = self.formtoolwidget.dbase.getColumns(self.formtoolwidget.DBASETABLENAME)
+
         if not featurepk:
             values = [None] * len(columns)
         else:
@@ -372,15 +375,23 @@ class FormToolUtils(QtCore.QObject):
         #self.currentFeature, self.currentFeaturePK = self.manageFeatureCreationOrUpdate()
 
         dbasetablehasgeomfield = self.formtoolwidget.dbase.dbasetables[self.formtoolwidget.DBASETABLENAME].get('geom', None)
+        geometryskip = False
+        if hasattr(self.formtoolwidget, 'GEOMETRYSKIP') and self.formtoolwidget.GEOMETRYSKIP :
+            geometryskip = True
         # print('dbasetablehasgeomfield',self.formtoolwidget.DBASETABLENAME, dbasetablehasgeomfield)
         if (dbasetablehasgeomfield is not None and featurepk is None 
-                and self.formtoolwidget.tempgeometry is None):     # assure taht a geometry is acquired on first creation
+                and self.formtoolwidget.tempgeometry is None
+                and not geometryskip):     # assure taht a geometry is acquired on first creation
             self.formtoolwidget.mainifacewidget.connector.showErrorMessage('Geometry needed')
             return
         
+        if hasattr(self.formtoolwidget, 'GEOMETRYSKIP') and self.formtoolwidget.GEOMETRYSKIP :
+            pass
+
         savedfeaturepk = self.manageFeatureCreationOrUpdate(featurepk)
 
-        self.setGeometryToFeature(savedfeaturepk)
+        if not geometryskip:
+            self.setGeometryToFeature(savedfeaturepk)
         self.saveFeatureProperties(savedfeaturepk)
         self.saveTABLEFILTERFIELD(savedfeaturepk)
         self.formtoolwidget.postSaveFeature(savedfeaturepk)  #featurepk toknow if new or not
@@ -808,7 +819,8 @@ class FormToolUtils(QtCore.QObject):
         """
 
         fieldvaluetosave = None
-        if 'Cst' in self.formtoolwidget.dbase.dbasetables[tablename]['fields'][fieldname].keys():
+        if ('Cst' in self.formtoolwidget.dbase.dbasetables[tablename]['fields'][fieldname].keys()
+                and not isinstance(wdg, str)):
             try:
                 if isinstance(wdg, list):
                     wdg = wdg[0]
@@ -838,6 +850,8 @@ class FormToolUtils(QtCore.QObject):
                 fieldvaluetosave = wdg.date().toString('yyyy-MM-dd')
             elif isinstance(wdg, QDateTimeEdit) and wdg.findChild(QLineEdit).text() != ' ':
                 fieldvaluetosave = wdg.dateTime().toString( 'yyyy-MM-dd hh:mm:ss')
+            elif isinstance(wdg, str):
+                fieldvaluetosave = wdg
 
         return fieldvaluetosave
 

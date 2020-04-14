@@ -5,16 +5,19 @@ from qgis.PyQt.QtCore import QSettings, QTranslator, qVersion, QCoreApplication,
 from qgis.PyQt.QtWidgets import (QWidget,QDialog,QMainWindow)
 
 from Lamia.iface.qgiswidget.ifaceqgswidget import LamiaWindowWidget
-
+from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
 from settings import *
 
+DBTYPE = ['Base2_assainissement']
+X_BEGIN = 400000.0
+Y_BEGIN = 6000000.0
 
 class DBaseTest(unittest.TestCase):
 
     """Test case utilisé pour tester les fonctions du module 'random'."""
     def setUp(self):
         """Initialisation des tests."""
-        pass
+        self.tempdir = os.path.join(os.path.join(os.path.dirname(__file__)), 'temp')
         """
         self.tempdir = os.path.join(os.path.join(os.path.dirname(__file__)), 'temp')
         if os.path.isdir(self.tempdir):
@@ -24,14 +27,17 @@ class DBaseTest(unittest.TestCase):
 
         self.filetoimport = os.path.join(os.path.dirname(__file__),'lamia_test1','test01.sqlite' )
         """
-
-
+    """
     def test_a_testSaveFeature(self):
+        testcdir = os.path.join(self.tempdir, 'c_creation')
+        work = 'Base2_assainissement'
+        variante = '2018_SNCF'       # Lamia 2018_SNCF CD41
         self._initQGis()
         self._createWin()
         self._createMainWin()
-        self.mainwin.resize(QtCore.QSize(1000,800))
-        slfile = os.path.join(os.path.dirname(__file__), 'lamia_test2','test01.sqlite')
+        slfile = os.path.normpath(os.path.join(os.path.dirname(__file__), 'lamia_test2','test01.sqlite'))
+        #slfile = os.path.join(testcdir, 'c_creation','sl_Base2_assainissement_CD41','test01.sqlite')
+        slfile = os.path.normpath(os.path.join(testcdir, 'sl_' + work + '_' + variante, 'test01.sqlite'))
         self.wind.loadDBase(dbtype='Spatialite', slfile=slfile)
         self.wind.setVisualMode(visualmode=1)
         #selectfeaturetest
@@ -43,8 +49,60 @@ class DBaseTest(unittest.TestCase):
                 if isinstance(toolpreprovalue, list):
                     for tt in toolpreprovalue:
                         self.recursive_creation(tt)
+        extent = self.wind.qgiscanvas.layers['Photo']['layerqgis'].extent().buffered(10.0)
+        self.wind.qgiscanvas.canvas.setExtent(extent)
+
+        # self.wind.qgiscanvas.canvas.xyCoordinates.connect(self.emitpoint)
+        #self.wind.qgiscanvas.canvas.setCenter(qgis.core.QgsPointXY(X_BEGIN, Y_BEGIN))
+        # self.wind.qgiscanvas.canvas.setScale(1000.0)
         self.mainwin.exec_()
         self._exitQGis()
+
+
+    """
+    def test_a_testSaveFeature(self):
+        testcdir = os.path.join(self.tempdir, 'c_creation')
+        self._initQGis()
+        #self._createWin()
+        #self._createMainWin()
+        for work in DBTYPE:
+            sqlitedbase = DBaseParserFactory('spatialite').getDbaseParser()
+            # slfile = os.path.join(testcdir, work ,'test01.sqlite')
+            # os.mkdir(os.path.dirname(slfile))
+            sqlitedbase.dbconfigreader.createDBDictionary(work)
+            variantes = list(sqlitedbase.dbconfigreader.variantespossibles)
+            logging.getLogger("Lamia_unittest").debug('************* Opening %s', variantes)
+            for variante in variantes:
+                logging.getLogger("Lamia_unittest").debug('************* Opening %s %s', work, variante)
+                #self._initQGis()
+                self._createWin()
+                self._createMainWin()
+                
+                #slfile = os.path.join(os.path.dirname(__file__), 'lamia_test2','test01.sqlite')
+                #slfile = os.path.join(testcdir, 'c_creation','sl_Base2_assainissement_CD41','test01.sqlite')
+                slfile = os.path.join(testcdir, 'sl_' + work + '_' + variante, 'test01.sqlite')
+                self.wind.loadDBase(dbtype='Spatialite', slfile=slfile)
+                self.wind.setVisualMode(visualmode=1)
+                #selectfeaturetest
+                if True:
+                    toolpreprolist = self.wind.toolwidgets['toolprepro']
+                    global i
+                    i = 0
+                    for toolpreproname, toolpreprovalue in self.wind.toolwidgets['toolprepro'].items():
+                        if isinstance(toolpreprovalue, list):
+                            for tt in toolpreprovalue:
+                                self.recursive_creation(tt)
+                
+                self.wind.qgiscanvas.layers['Photo']['layerqgis'].triggerRepaint()
+                self.wind.qgiscanvas.canvas.refreshAllLayers()
+                extent = self.wind.qgiscanvas.layers['Photo']['layerqgis'].extent().buffered(10.0)
+                print(extent)
+                extent = qgis.core.QgsRectangle(X_BEGIN, Y_BEGIN, X_BEGIN + 10, Y_BEGIN + 10)
+                self.wind.qgiscanvas.canvas.setExtent(extent)
+                self.mainwin.exec_()
+                #self.wind.dbase.disconnect()
+        self._exitQGis()
+
 
     def recursive_creation(self, tt):
         global i
@@ -55,7 +113,7 @@ class DBaseTest(unittest.TestCase):
             name.append(parentwdg.parentWidget.tooltreewidgetSUBCAT)
             parentwdg = parentwdg.parentWidget
         name = '/'.join(name[::-1])
-        logging.getLogger("Lamia_unittest").debug('******* Testing %s ******', name)
+        logging.getLogger("Lamia_unittest").debug('******* Testing %s', name)
         #self.wind.MaintreeWidget.setCurrentItem(tt.qtreewidgetitem)
         tt.widgetClicked()
         if len(tt.choosertreewidget.ids) == 0:
@@ -66,19 +124,25 @@ class DBaseTest(unittest.TestCase):
             #                                            tt.tempgeometry)
             if 'geom' in dbasetable.keys() and tt.tempgeometry is None:
                 typegeom = dbasetable['geom']
+                """
+                X_BEGIN = 100000.0
+                Y_BEGIN = 6000000.0
+                """
                 if 'POINT' in typegeom:
-                    tt.setTempGeometry([qgis.core.QgsPointXY(i,0)])
+                    tt.setTempGeometry([qgis.core.QgsPointXY(X_BEGIN + i,Y_BEGIN + 0)])
                 elif 'LINESTRING'  in typegeom:
-                    tt.setTempGeometry([qgis.core.QgsPointXY(i,0),qgis.core.QgsPointXY(i,1)])
+                    tt.setTempGeometry([qgis.core.QgsPointXY(X_BEGIN + i,Y_BEGIN + 0),qgis.core.QgsPointXY(X_BEGIN + i,Y_BEGIN + 1)])
                 else:
-                    tt.setTempGeometry([qgis.core.QgsPointXY(i,0),qgis.core.QgsPointXY(i,1),
-                                        qgis.core.QgsPointXY(i-0.5,1),qgis.core.QgsPointXY(i-0.5,0)])
+                    tt.setTempGeometry([qgis.core.QgsPointXY(X_BEGIN + i,Y_BEGIN + 0),qgis.core.QgsPointXY(X_BEGIN + i,Y_BEGIN + 1),
+                                        qgis.core.QgsPointXY(X_BEGIN + i-0.5,Y_BEGIN + 1),qgis.core.QgsPointXY(X_BEGIN + i-0.5,Y_BEGIN + 0)])
             self.wind.toolbarSave()
             logging.getLogger("Lamia_unittest").debug('%s - pk created : %s', tt.DBASETABLENAME,
                                                                                 tt.currentFeaturePK)
         else:
-            tt.selectFeature(pk=tt.choosertreewidget.ids['pk'].values[0])
-
+            pk = tt.choosertreewidget.ids['pk'].values[0]
+            tt.selectFeature(pk=pk)
+            logging.getLogger("Lamia_unittest").debug('%s - pk selected : %s', tt.DBASETABLENAME,
+                                                                                pk)
         for childwdg in tt.dbasechildwdgfield:
             self.recursive_creation(childwdg)
 
@@ -143,11 +207,7 @@ class DBaseTest(unittest.TestCase):
         self.app = qgis.core.QgsApplication([], True)
         qgis.core.QgsApplication.setPrefixPath(qgis_path, True)
         qgis.core.QgsApplication.initQgis()
-        self.canvas = qgis.gui.QgsMapCanvas()
-        self.canvas.enableAntiAliasing(True)
-        canvascrs = qgis.core.QgsCoordinateReferenceSystem()
-        canvascrs.createFromString('EPSG:2154')
-        self.canvas.setDestinationCrs(canvascrs)
+
 
         # self.createWin()
         # self.loadLocale() TODO
@@ -158,11 +218,20 @@ class DBaseTest(unittest.TestCase):
 
     def _createMainWin(self):
         self.mainwin = UserUI()
+
         self.mainwin.frame.layout().addWidget(self.canvas)
         self.mainwin.frame_2.layout().addWidget(self.wind)
         self.mainwin.setParent(None)
+        self.mainwin.resize(QtCore.QSize(1000,800))
 
     def _createWin(self):
+        self.canvas = qgis.gui.QgsMapCanvas()
+        self.canvas.enableAntiAliasing(True)
+        canvascrs = qgis.core.QgsCoordinateReferenceSystem()
+        canvascrs.createFromString('EPSG:2154')
+        self.canvas.setDestinationCrs(canvascrs)
+
+
         self.wind = LamiaWindowWidget()
         self.wind.qgiscanvas.setCanvas(self.canvas)
         # self.wind.createDBase()

@@ -40,10 +40,10 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         self.mtoolline = None
         self.mtoolpolygon = None
         self.rubberBand = None
+        self.dbaseqgiscrs = None
         if canvas is None and qgis.utils.iface is not None:
             self.setCanvas(qgis.utils.iface.mapCanvas())
         
-        self.dbaseqgiscrs = None
         self.layers = {}
 
 
@@ -53,6 +53,12 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         self.currentmaptool = None  #the maptool in use
 
     def setCanvas(self,qgscanvas):
+        if self.canvas:
+            try:
+                self.canvas.destinationCrsChanged.disconnect(self.updateQgsCoordinateTransform)
+            except TypeError:
+                pass
+        
         self.canvas = qgscanvas
 
         #init maptools
@@ -65,6 +71,10 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                                         qgis.gui.QgsMapToolCapture.CapturePolygon)
 
         self.pointEmitter = qgis.gui.QgsMapToolEmitPoint(self.canvas)
+
+        self.updateQgsCoordinateTransform()
+
+        self.canvas.destinationCrsChanged.connect(self.updateQgsCoordinateTransform)
 
     def _____________________________layersManagement(self):
         pass

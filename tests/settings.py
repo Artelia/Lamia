@@ -1,7 +1,7 @@
 import socket
 
 DBTYPE = ['Base2_digue', 'Base2_assainissement', 'Base2_eaupotable', 'Base2_eclairagepublic']
-CRS = 3945
+CRS = 2154
 PGuser = 'pvr'
 PGpassword = 'pvr'
 PGbase = 'Lamiaunittest'

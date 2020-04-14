@@ -116,7 +116,7 @@ class BaseAssainissementObservationTool(BaseObservationTool):
                                             'widgets' : {'commentaire': self.toolwidgetmain.textEdit_comm}}}
 
             self.toolwidgetmain.toolButton_calc_nb.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.toolwidgetmain.spinBox_nombre))
+                lambda: self.showNumPad(self.toolwidgetmain.spinBox_nombre))
 
             # ****************************************************************************************
             # child widgets
@@ -167,7 +167,7 @@ class BaseAssainissementObservationTool(BaseObservationTool):
                                                     'widgets': {'commentaire': self.toolwidgetmain.textEdit_comm}}}
 
             self.toolwidgetmain.toolButton_calc_nb.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.toolwidgetmain.spinBox_nombre))
+                lambda: self.showNumPad(self.toolwidgetmain.spinBox_nombre))
 
             self.dbasechildwdgfield = []
             self.instancekwargs['parentwidget'] = self
@@ -210,7 +210,7 @@ class BaseAssainissementObservationTool(BaseObservationTool):
                                                     'widgets': {'commentaire': self.toolwidgetmain.textEdit_comm}}}
 
             self.toolwidgetmain.toolButton_calc_nb.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.toolwidgetmain.spinBox_nombre))
+                lambda: self.showNumPad(self.toolwidgetmain.spinBox_nombre))
 
             self.dbasechildwdgfield = []
             self.instancekwargs['parentwidget'] = self
@@ -224,9 +224,8 @@ class BaseAssainissementObservationTool(BaseObservationTool):
                 #self.propertieswdgOBSERVATION2.NAME = None
                 #self.toolwidgetmain.tabWidget.widget(1).layout().addWidget(self.propertieswdgPHOTOGRAPHIE)
                 self.dbasechildwdgfield += [self.propertieswdgPHOTOGRAPHIE]
-                if False:
-                    self.propertieswdgCROQUIS = BaseCroquisTool(**self.instancekwargs)
-                    self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+                self.propertieswdgCROQUIS = BaseCroquisTool(**self.instancekwargs)
+                self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
                 #self.toolwidgetmain.tabWidget.widget(2).layout().addWidget(self.propertieswdgCROQUIS)
                 #self.dbasechildwdgfield += [self.propertieswdgCROQUIS]
 
@@ -246,14 +245,11 @@ class BaseAssainissementObservationTool(BaseObservationTool):
         dbasetabledesordre = self.dbase.dbasetables['Desordre']
         if ('groupedesordre' in dbasetabledesordre['fields'].keys()  ):
             if self.parentWidget is not None and self.parentWidget.currentFeaturePK is not None:
-                self.dbase.printsql = True
                 grpdes = self.dbase.getValuesFromPk(self.parentWidget.DBASETABLENAME,
                                                     'groupedesordre',
                                                     self.parentWidget.currentFeaturePK)
-                if grpdes is None:
-                    return
+
                 grpdescst = [elem[1] for elem in dbasetabledesordre['fields']['groupedesordre']['Cst']]
-                self.dbase.printsql = False
                 indexgrp = grpdescst.index(grpdes)
                 try:
                     self.toolwidgetmain.stackedWidget.setCurrentIndex(indexgrp)
@@ -262,8 +258,8 @@ class BaseAssainissementObservationTool(BaseObservationTool):
 
                 if self.dbase.variante in [None, 'Lamia']:
                     if grpdes == 'NOD' and self.parentWidget.parentWidget is not None and self.parentWidget.parentWidget.currentFeaturePK is not None:
-                        if self.parentWidget.parentWidget.dbasetablename == 'Noeud':
-                            currenttext = self.parentWidget.parentWidget.userwdgfield.comboBox_typeOuvrageAss.currentText()
+                        if self.parentWidget.parentWidget.DBASETABLENAME == 'Noeud':
+                            currenttext = self.parentWidget.parentWidget.toolwidgetmain.comboBox_typeOuvrageAss.currentText()
                             typenoeud = self.dbase.getConstraintRawValueFromText('Noeud', 'typeOuvrageAss', currenttext)
 
                             if typenoeud in ['60','70', '71']:
@@ -275,8 +271,8 @@ class BaseAssainissementObservationTool(BaseObservationTool):
 
                 elif self.dbase.variante in ['2018_SNCF']:
                     if grpdes == 'NOD' and self.parentWidget.parentWidget is not None and self.parentWidget.parentWidget.currentFeaturePK is not None:
-                        if self.parentWidget.parentWidget.dbasetablename == 'Noeud':
-                            currenttext = self.parentWidget.parentWidget.userwdgfield.comboBox_typeOuvrageAss.currentText()
+                        if self.parentWidget.parentWidget.DBASETABLENAME == 'Noeud':
+                            currenttext = self.parentWidget.parentWidget.toolwidgetmain.comboBox_typeOuvrageAss.currentText()
                             typenoeud = self.dbase.getConstraintRawValueFromText('Noeud', 'typeOuvrageAss', currenttext)
                             if typenoeud in ['60','70', '71']:
                                 self.toolwidgetmain.stackedWidget_2.setCurrentIndex(0)

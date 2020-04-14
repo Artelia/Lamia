@@ -3,8 +3,8 @@ from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
 
 from settings import *
 
-KEEP_DB_CREATION = False
-
+KEEP_DB_CREATION = True
+DBTYPE = ['Base2_assainissement']
 
 class DBaseTest(unittest.TestCase):
 
