@@ -171,8 +171,8 @@ class BaseAssainissementPhotoTool(BasePhotoTool):
                     # get geom
                     noeudfet = self.dbase.getLayerFeatureByPk('Noeud', self.parentWidget.currentFeature.id())
                     neudfetgeom = noeudfet.geometry().asPoint()
-                    self.createorresetRubberband(1)
-                    self.setTempGeometry([neudfetgeom], False,False)
+                    #self.createorresetRubberband(1)
+                    self.setTempGeometry([neudfetgeom], ,comefromcanvas=False,showinrubberband=False)
 
             self.photowdg.clear()
 

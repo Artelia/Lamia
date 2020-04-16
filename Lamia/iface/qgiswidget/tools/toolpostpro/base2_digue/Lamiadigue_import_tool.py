@@ -25,20 +25,7 @@ This file is part of LAMIA.
  """
 
 
-
-import qgis
-from qgis.PyQt import uic, QtGui, QtCore
-try:
-    from qgis.PyQt.QtGui import (QWidget, QLabel, QFrame, QTreeWidgetItem, QHeaderView)
-except ImportError:
-    from qgis.PyQt.QtWidgets import (QWidget, QLabel, QFrame, QTreeWidgetItem, QHeaderView)
-
-# from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
-import os
-import io
-import glob
-
-from ..Base2.Lamia_import_tool import ImportTool
+from ..base2.Lamia_import_tool import ImportTool
 
 # ********************************************************************************************************************
 # ********************************* Main Widget                *******************************************************

@@ -12,45 +12,39 @@ import os
 
 
 class BaseEclairagePublicDesordreTool(BaseDesordreTool):
-    LOADFIRST = False
-    dbasetablename = 'Desordre'
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None, parentwidget=None, parent=None):
-        super(BaseEclairagePublicDesordreTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil, parentwidget,
-                                                              parent=parent)
+    def __init__(self, **kwargs):
+        super(BaseEclairagePublicDesordreTool, self).__init__(**kwargs)
 
-    def initFieldUI(self):
+    def initMainToolWidget(self):
+
+
+        self.toolwidgetmain = UserUI()
+
+        self.formtoolwidgetconfdictmain = {'Desordre': {'linkfield': 'id_desordre',
+                                                        'widgets': {'groupedesordre': self.toolwidgetmain.comboBox_groupedes
+                                                                    }},
+                                            'Objet': {'linkfield': 'id_objet',
+                                                    'widgets': {}}}
+        #self.groupBox_attributes.setParent(None)
         # ****************************************************************************************
-        #   userui Field
-        if self.userwdgfield is None:
-            # ****************************************************************************************
-            # userui
+        # child widgets
+        self.dbasechildwdgfield = []
+        self.instancekwargs['parentwidget'] = self
 
-            self.userwdgfield = UserUI()
+        #if self.parentWidget is None:
+        self.propertieswdgOBSERVATION = BaseObservationTool(**self.instancekwargs)
+        self.dbasechildwdgfield.append(self.propertieswdgOBSERVATION)
 
-            self.linkuserwdgfield = {'Desordre': {'linkfield': 'id_desordre',
-                                                  'widgets': {'groupedesordre': self.userwdgfield.comboBox_groupedes
-                                                              }},
-                                     'Objet': {'linkfield': 'id_objet',
-                                               'widgets': {}}}
-            self.groupBox_attributes.setParent(None)
-            # ****************************************************************************************
-            # child widgets
-            self.dbasechildwdgfield = []
+        #self.propertieswdgOBSERVATION2 = BaseObservationTool(dbase=self.dbase, parentwidget=self)
+        #self.propertieswdgOBSERVATION2.NAME = None
+        #self.toolwidgetmain.tabWidget.widget(0).layout().addWidget(self.propertieswdgOBSERVATION2)
+        #self.dbasechildwdgfield.append(self.propertieswdgOBSERVATION2)
 
-            if self.parentWidget is None:
-                self.propertieswdgOBSERVATION = BaseObservationTool(dbase=self.dbase, parentwidget=self)
-                self.dbasechildwdgfield.append(self.propertieswdgOBSERVATION)
-
-            self.propertieswdgOBSERVATION2 = BaseObservationTool(dbase=self.dbase, parentwidget=self)
-            self.propertieswdgOBSERVATION2.NAME = None
-            self.userwdgfield.tabWidget.widget(0).layout().addWidget(self.propertieswdgOBSERVATION2)
-            self.dbasechildwdgfield.append(self.propertieswdgOBSERVATION2)
-
-            self.userwdgfield.tabWidget.widget(1).layout().addWidget(
-                self.propertieswdgOBSERVATION2.propertieswdgPHOTOGRAPHIE)
-            self.userwdgfield.tabWidget.widget(2).layout().addWidget(
-                self.propertieswdgOBSERVATION2.propertieswdgCROQUIS)
+        #self.toolwidgetmain.tabWidget.widget(1).layout().addWidget(
+        #    self.propertieswdgOBSERVATION2.propertieswdgPHOTOGRAPHIE)
+        #self.toolwidgetmain.tabWidget.widget(2).layout().addWidget(
+        #    self.propertieswdgOBSERVATION2.propertieswdgCROQUIS)
 
 
 class UserUI(QWidget):

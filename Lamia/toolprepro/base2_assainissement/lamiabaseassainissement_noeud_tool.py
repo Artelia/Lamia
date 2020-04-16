@@ -602,7 +602,7 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
         layerpoint = self.gpsutil.currentpoint
 
 
-        self.setTempGeometry([layerpoint],False)
+        self.setTempGeometry([layerpoint],,comefromcanvas=False,showinrubberband=False)
 
         self.getGPSValue()
 

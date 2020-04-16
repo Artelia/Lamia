@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>440</width>
-    <height>729</height>
+    <width>723</width>
+    <height>624</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -52,1163 +52,1192 @@
     </widget>
    </item>
    <item>
-    <widget class="QStackedWidget" name="stackedWidget">
+    <widget class="QTabWidget" name="tabWidget_3">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
-     <widget class="QWidget" name="Regard">
-      <layout class="QGridLayout" name="gridLayout_2"/>
-     </widget>
-     <widget class="QWidget" name="branchement">
-      <layout class="QGridLayout" name="gridLayout_5">
-       <item row="0" column="0">
-        <widget class="QTabWidget" name="tabWidget_2">
-         <property name="currentIndex">
-          <number>3</number>
-         </property>
-         <widget class="QWidget" name="tab_6">
-          <attribute name="title">
-           <string>Général</string>
-          </attribute>
-          <layout class="QGridLayout" name="gridLayout_13">
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_3">
-             <property name="text">
-              <string>n° acheminement</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label">
-             <property name="text">
-              <string>Contrat</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QLineEdit" name="lineEdit_contrat"/>
-           </item>
-           <item row="1" column="1">
-            <widget class="QLineEdit" name="lineEdit_achemin"/>
-           </item>
-           <item row="2" column="1">
-            <widget class="QComboBox" name="comboBox_typealim"/>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_5">
-             <property name="text">
-              <string>Type d'alimentation</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <spacer name="verticalSpacer_2">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="tab_7">
-          <attribute name="title">
-           <string>Comptage</string>
-          </attribute>
-          <layout class="QGridLayout" name="gridLayout_14">
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_8">
-             <property name="text">
-              <string>Type de compteur</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_25">
-             <property name="text">
-              <string>N° compteur</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QComboBox" name="comboBox_typecompt"/>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_6">
-             <property name="text">
-              <string>Coffret indépendant</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QLineEdit" name="lineEdit_numcompt"/>
-           </item>
-           <item row="0" column="1">
-            <widget class="QComboBox" name="comboBox_coff_indep"/>
-           </item>
-           <item row="3" column="1">
-            <widget class="QComboBox" name="comboBox_type_protect"/>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="label_26">
-             <property name="text">
-              <string>Type de protection</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="0">
-            <widget class="QLabel" name="label_27">
-             <property name="text">
-              <string>Calibre de la protection</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="1">
-            <widget class="QLineEdit" name="lineEdit_calibre_compt"/>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="tab_8">
-          <attribute name="title">
-           <string>Protection/Enveloppe</string>
-          </attribute>
-          <layout class="QGridLayout" name="gridLayout_15">
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_36">
-             <property name="text">
-              <string>Mode de pose enveloppe</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="1">
-            <widget class="QComboBox" name="comboBox_typeprogen"/>
-           </item>
-           <item row="6" column="1">
-            <widget class="QComboBox" name="comboBox_difprogen"/>
-           </item>
-           <item row="4" column="0">
-            <widget class="QLabel" name="label_56">
-             <property name="text">
-              <string>Type de protection générale</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QComboBox" name="comboBox_modeposeenv"/>
-           </item>
-           <item row="8" column="1">
-            <widget class="QLineEdit" name="lineEdit_valpristerre"/>
-           </item>
-           <item row="0" column="1">
-            <widget class="QComboBox" name="comboBox_diffcomptbranch"/>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_54">
-             <property name="text">
-              <string>Type d'enveloppe</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="1">
-            <widget class="QLineEdit" name="lineEdit_calprogen"/>
-           </item>
-           <item row="3" column="1">
-            <widget class="QComboBox" name="comboBox_ferenv"/>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_30">
-             <property name="text">
-              <string>Différentiel du disjonteur de branchement</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QComboBox" name="comboBox_typeenv"/>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="label_55">
-             <property name="text">
-              <string>Fermeture enveloppe</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="0">
-            <widget class="QLabel" name="label_58">
-             <property name="text">
-              <string>Différentiel protection générale</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="0">
-            <widget class="QLabel" name="label_57">
-             <property name="text">
-              <string>Calibre protection générale</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="7" column="1">
-            <widget class="QComboBox" name="comboBox_prespara"/>
-           </item>
-           <item row="8" column="0">
-            <widget class="QLabel" name="label_28">
-             <property name="text">
-              <string>Valeur prise terre</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="7" column="0">
-            <widget class="QLabel" name="label_24">
-             <property name="text">
-              <string>Présence parasurtenseur</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="9" column="0">
-            <widget class="QLabel" name="label_29">
-             <property name="text">
-              <string>Mise à la terre partie metal. armoire</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="9" column="1">
-            <widget class="QComboBox" name="comboBox_misterrearmoire"/>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="tab_9">
-          <attribute name="title">
-           <string>Technique 1</string>
-          </attribute>
-          <layout class="QGridLayout" name="gridLayout_6">
-           <item row="1" column="1">
-            <widget class="QLineEdit" name="lineEdit_typevar"/>
-           </item>
-           <item row="5" column="0">
-            <widget class="QLabel" name="label_38">
-             <property name="text">
-              <string>Référence allumage</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_34">
-             <property name="text">
-              <string>Puissance variateur</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="label_35">
-             <property name="text">
-              <string>Fonctionnement eclairage</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_33">
-             <property name="text">
-              <string>Type de variateur</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QComboBox" name="comboBox_presvar"/>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_32">
-             <property name="text">
-              <string>Présence variateur</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QSpinBox" name="spinBox_puissvar"/>
-           </item>
-           <item row="8" column="0">
-            <widget class="QLabel" name="label_41">
-             <property name="text">
-              <string>Temps constante compteur</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="1">
-            <widget class="QSpinBox" name="spinBox_valcontcompt"/>
-           </item>
-           <item row="3" column="1">
-            <widget class="QComboBox" name="comboBox_fonceclai"/>
-           </item>
-           <item row="5" column="1">
-            <widget class="QLineEdit" name="lineEdit_refallu"/>
-           </item>
-           <item row="6" column="0">
-            <widget class="QLabel" name="label_39">
-             <property name="text">
-              <string>Valeur constante compteur</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="10" column="1">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_valcow">
-             <property name="minimum">
-              <double>-1.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>999999.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="1">
-            <widget class="QComboBox" name="comboBox_typeallu"/>
-           </item>
-           <item row="4" column="0">
-            <widget class="QLabel" name="label_37">
-             <property name="text">
-              <string>Type allumage</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="8" column="1">
-            <widget class="QSpinBox" name="spinBox_tempcon"/>
-           </item>
-           <item row="7" column="0">
-            <widget class="QLabel" name="label_40">
-             <property name="text">
-              <string>unite constante compteur</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="10" column="0">
-            <widget class="QLabel" name="label_43">
-             <property name="text">
-              <string>Valeur compteur W</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="9" column="0">
-            <widget class="QLabel" name="label_42">
-             <property name="text">
-              <string>Nombre de tour compteur</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="9" column="1">
-            <widget class="QSpinBox" name="spinBox_nomtour"/>
-           </item>
-           <item row="11" column="0">
-            <widget class="QLabel" name="label_44">
-             <property name="text">
-              <string>Valeur competur VA</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="11" column="1">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_valconva">
-             <property name="minimum">
-              <double>-1.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>999999.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="7" column="1">
-            <widget class="QComboBox" name="comboBox_unicon"/>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="tab">
-          <attribute name="title">
-           <string>Technique 2</string>
-          </attribute>
-          <layout class="QGridLayout" name="gridLayout_7">
-           <item row="0" column="7" rowspan="7">
-            <widget class="Line" name="line_3">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="4" rowspan="7">
-            <widget class="Line" name="line_2">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="3">
-            <widget class="QToolButton" name="toolButton_p1p">
-             <property name="text">
-              <string>...</string>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="3">
-            <widget class="QToolButton" name="toolButton_p1cos">
-             <property name="text">
-              <string>...</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="3">
-            <widget class="QToolButton" name="toolButton_p1va">
-             <property name="text">
-              <string>...</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="3">
-            <widget class="QToolButton" name="toolButton_p1i">
-             <property name="text">
-              <string>...</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="5">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_p2v">
-             <property name="minimum">
-              <double>-1.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>999999.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="9">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_p3cos">
-             <property name="minimum">
-              <double>-1.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>999999.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="9" colspan="2">
-            <widget class="QLabel" name="label_47">
-             <property name="text">
-              <string>Phase 3</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="10">
-            <widget class="QToolButton" name="toolButton_p3v">
-             <property name="text">
-              <string>...</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="6">
-            <widget class="QToolButton" name="toolButton_p2v">
-             <property name="text">
-              <string>...</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="5">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_p2i">
-             <property name="minimum">
-              <double>-1.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>999999.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_48">
-             <property name="text">
-              <string>V</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="0">
-            <widget class="QLabel" name="label_51">
-             <property name="text">
-              <string>VA</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="9">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_p3va">
-             <property name="minimum">
-              <double>-1.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>999999.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="5">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_p2p">
-             <property name="minimum">
-              <double>-1.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>999999.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="10">
-            <widget class="QToolButton" name="toolButton_p3i">
-             <property name="text">
-              <string>...</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="0">
-            <widget class="QLabel" name="label_50">
-             <property name="text">
-              <string>P</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="label_49">
-             <property name="text">
-              <string>I</string>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="0">
-            <widget class="QLabel" name="label_52">
-             <property name="text">
-              <string>cos</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="5">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_p2va">
-             <property name="minimum">
-              <double>-1.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>999999.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="10">
-            <widget class="QToolButton" name="toolButton_p3p">
-             <property name="text">
-              <string>...</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="6">
-            <widget class="QToolButton" name="toolButton_p2va">
-             <property name="text">
-              <string>...</string>
-             </property>
-            </widget>
-           </item>
-           <item row="7" column="0">
-            <spacer name="verticalSpacer_3">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="1" column="9">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_p3v">
-             <property name="minimum">
-              <double>-1.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>999999.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="5" colspan="2">
-            <widget class="QLabel" name="label_46">
-             <property name="text">
-              <string>Phase 2</string>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="5">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_p2cos">
-             <property name="minimum">
-              <double>-1.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>999999.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="9">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_p3i">
-             <property name="minimum">
-              <double>-1.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>999999.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="6">
-            <widget class="QToolButton" name="toolButton_p2cos">
-             <property name="text">
-              <string>...</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="10">
-            <widget class="QToolButton" name="toolButton_p3va">
-             <property name="text">
-              <string>...</string>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="10">
-            <widget class="QToolButton" name="toolButton_p3cos">
-             <property name="text">
-              <string>...</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="6">
-            <widget class="QToolButton" name="toolButton_p2i">
-             <property name="text">
-              <string>...</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="6">
-            <widget class="QToolButton" name="toolButton_p2p">
-             <property name="text">
-              <string>...</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="9">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_p3p">
-             <property name="minimum">
-              <double>-1.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>999999.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="3">
-            <widget class="QToolButton" name="toolButton_p1v">
-             <property name="text">
-              <string>...</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="2">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_p1v">
-             <property name="minimum">
-              <double>-1.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>999999.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="2">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_p1i">
-             <property name="minimum">
-              <double>-1.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>999999.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="2">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_p1p">
-             <property name="minimum">
-              <double>-1.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>999999.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="2">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_p1va">
-             <property name="minimum">
-              <double>-1.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>999999.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="2">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_p1cos">
-             <property name="minimum">
-              <double>-1.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>999999.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="2" colspan="2">
-            <widget class="QLabel" name="label_45">
-             <property name="text">
-              <string>Phase1</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="refoulement">
-      <layout class="QVBoxLayout" name="verticalLayout_2">
+     <widget class="QWidget" name="tab_5">
+      <attribute name="title">
+       <string>Propriétés</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_5">
+       <property name="spacing">
+        <number>3</number>
+       </property>
+       <property name="leftMargin">
+        <number>3</number>
+       </property>
+       <property name="topMargin">
+        <number>3</number>
+       </property>
+       <property name="rightMargin">
+        <number>3</number>
+       </property>
+       <property name="bottomMargin">
+        <number>3</number>
+       </property>
        <item>
-        <widget class="QTabWidget" name="tabWidget">
+        <widget class="QStackedWidget" name="stackedWidget">
          <property name="currentIndex">
-          <number>0</number>
+          <number>2</number>
          </property>
-         <widget class="QWidget" name="tab_2">
-          <attribute name="title">
-           <string>Général</string>
-          </attribute>
-          <layout class="QGridLayout" name="gridLayout_8">
-           <item row="2" column="3">
-            <widget class="QLabel" name="label_61">
-             <property name="text">
-              <string>Forme</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1" colspan="2">
-            <widget class="QComboBox" name="comboBox_multip"/>
-           </item>
+         <widget class="QWidget" name="Regard">
+          <layout class="QGridLayout" name="gridLayout_2"/>
+         </widget>
+         <widget class="QWidget" name="branchement">
+          <layout class="QGridLayout" name="gridLayout_5">
            <item row="0" column="0">
-            <widget class="QLabel" name="label_53">
-             <property name="text">
-              <string>Type de mat</string>
+            <widget class="QTabWidget" name="tabWidget_2">
+             <property name="currentIndex">
+              <number>4</number>
              </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="4" colspan="2">
-            <widget class="QComboBox" name="comboBox_sp_type"/>
-           </item>
-           <item row="0" column="3">
-            <widget class="QLabel" name="label_59">
-             <property name="text">
-              <string>Type de support</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="4" colspan="2">
-            <widget class="QComboBox" name="comboBox_sp_forme"/>
-           </item>
-           <item row="2" column="1" colspan="2">
-            <widget class="QComboBox" name="comboBox_sp_materiau"/>
-           </item>
-           <item row="4" column="0">
-            <widget class="QLabel" name="label_62">
-             <property name="text">
-              <string>Couleur</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_60">
-             <property name="text">
-              <string>Materiau</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="0">
-            <widget class="QLabel" name="label_63">
-             <property name="text">
-              <string>Diamètre</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="2">
-            <widget class="QToolButton" name="toolButton_sp_diam">
-             <property name="text">
-              <string>...</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="1">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_sp_diam">
-             <property name="minimum">
-              <double>-1.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>999999.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="3">
-            <widget class="QLabel" name="label_64">
-             <property name="text">
-              <string>Hauteur</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="4">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_sp_haut">
-             <property name="minimum">
-              <double>-1.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>999999.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="5">
-            <widget class="QToolButton" name="toolButton_sp_haut">
-             <property name="text">
-              <string>...</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="1" colspan="5">
-            <widget class="QLineEdit" name="lineEdit_sp_couleur"/>
-           </item>
-           <item row="6" column="0">
-            <widget class="QLabel" name="label_75">
-             <property name="text">
-              <string>type de montage crosse</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="1" colspan="2">
-            <widget class="QComboBox" name="comboBox_sp_typmonc"/>
-           </item>
-           <item row="6" column="3">
-            <widget class="QLabel" name="label_76">
-             <property name="text">
-              <string>Déport crosse</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="4">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_sp_depcro">
-             <property name="minimum">
-              <double>-1.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>999999.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="5">
-            <widget class="QToolButton" name="toolButton_sp_depcro">
-             <property name="text">
-              <string>...</string>
-             </property>
+             <widget class="QWidget" name="tab_6">
+              <attribute name="title">
+               <string>Général</string>
+              </attribute>
+              <layout class="QGridLayout" name="gridLayout_13">
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_3">
+                 <property name="text">
+                  <string>n° acheminement</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label">
+                 <property name="text">
+                  <string>Contrat</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLineEdit" name="lineEdit_contrat"/>
+               </item>
+               <item row="1" column="1">
+                <widget class="QLineEdit" name="lineEdit_achemin"/>
+               </item>
+               <item row="2" column="1">
+                <widget class="QComboBox" name="comboBox_typealim"/>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="label_5">
+                 <property name="text">
+                  <string>Type d'alimentation</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <spacer name="verticalSpacer_2">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="tab_7">
+              <attribute name="title">
+               <string>Comptage</string>
+              </attribute>
+              <layout class="QGridLayout" name="gridLayout_14">
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_8">
+                 <property name="text">
+                  <string>Type de compteur</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="label_25">
+                 <property name="text">
+                  <string>N° compteur</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QComboBox" name="comboBox_typecompt"/>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_6">
+                 <property name="text">
+                  <string>Coffret indépendant</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QLineEdit" name="lineEdit_numcompt"/>
+               </item>
+               <item row="0" column="1">
+                <widget class="QComboBox" name="comboBox_coff_indep"/>
+               </item>
+               <item row="3" column="1">
+                <widget class="QComboBox" name="comboBox_type_protect"/>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="label_26">
+                 <property name="text">
+                  <string>Type de protection</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QLabel" name="label_27">
+                 <property name="text">
+                  <string>Calibre de la protection</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <widget class="QLineEdit" name="lineEdit_calibre_compt"/>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="tab_8">
+              <attribute name="title">
+               <string>Protection/Enveloppe</string>
+              </attribute>
+              <layout class="QGridLayout" name="gridLayout_15">
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_36">
+                 <property name="text">
+                  <string>Mode de pose enveloppe</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <widget class="QComboBox" name="comboBox_typeprogen"/>
+               </item>
+               <item row="6" column="1">
+                <widget class="QComboBox" name="comboBox_difprogen"/>
+               </item>
+               <item row="4" column="0">
+                <widget class="QLabel" name="label_56">
+                 <property name="text">
+                  <string>Type de protection générale</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QComboBox" name="comboBox_modeposeenv"/>
+               </item>
+               <item row="8" column="1">
+                <widget class="QLineEdit" name="lineEdit_valpristerre"/>
+               </item>
+               <item row="0" column="1">
+                <widget class="QComboBox" name="comboBox_diffcomptbranch"/>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="label_54">
+                 <property name="text">
+                  <string>Type d'enveloppe</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="1">
+                <widget class="QLineEdit" name="lineEdit_calprogen"/>
+               </item>
+               <item row="3" column="1">
+                <widget class="QComboBox" name="comboBox_ferenv"/>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_30">
+                 <property name="text">
+                  <string>Différentiel du disjonteur de branchement</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QComboBox" name="comboBox_typeenv"/>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="label_55">
+                 <property name="text">
+                  <string>Fermeture enveloppe</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="0">
+                <widget class="QLabel" name="label_58">
+                 <property name="text">
+                  <string>Différentiel protection générale</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="0">
+                <widget class="QLabel" name="label_57">
+                 <property name="text">
+                  <string>Calibre protection générale</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="1">
+                <widget class="QComboBox" name="comboBox_prespara"/>
+               </item>
+               <item row="8" column="0">
+                <widget class="QLabel" name="label_28">
+                 <property name="text">
+                  <string>Valeur prise terre</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="0">
+                <widget class="QLabel" name="label_24">
+                 <property name="text">
+                  <string>Présence parasurtenseur</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="9" column="0">
+                <widget class="QLabel" name="label_29">
+                 <property name="text">
+                  <string>Mise à la terre partie metal. armoire</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="9" column="1">
+                <widget class="QComboBox" name="comboBox_misterrearmoire"/>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="tab_9">
+              <attribute name="title">
+               <string>Technique 1</string>
+              </attribute>
+              <layout class="QGridLayout" name="gridLayout_6">
+               <item row="1" column="1">
+                <widget class="QLineEdit" name="lineEdit_typevar"/>
+               </item>
+               <item row="5" column="0">
+                <widget class="QLabel" name="label_38">
+                 <property name="text">
+                  <string>Référence allumage</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="label_34">
+                 <property name="text">
+                  <string>Puissance variateur</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="label_35">
+                 <property name="text">
+                  <string>Fonctionnement eclairage</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_33">
+                 <property name="text">
+                  <string>Type de variateur</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QComboBox" name="comboBox_presvar"/>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_32">
+                 <property name="text">
+                  <string>Présence variateur</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QSpinBox" name="spinBox_puissvar"/>
+               </item>
+               <item row="8" column="0">
+                <widget class="QLabel" name="label_41">
+                 <property name="text">
+                  <string>Temps constante compteur</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="1">
+                <widget class="QSpinBox" name="spinBox_valcontcompt"/>
+               </item>
+               <item row="3" column="1">
+                <widget class="QComboBox" name="comboBox_fonceclai"/>
+               </item>
+               <item row="5" column="1">
+                <widget class="QLineEdit" name="lineEdit_refallu"/>
+               </item>
+               <item row="6" column="0">
+                <widget class="QLabel" name="label_39">
+                 <property name="text">
+                  <string>Valeur constante compteur</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="10" column="1">
+                <widget class="QDoubleSpinBox" name="doubleSpinBox_valcow">
+                 <property name="minimum">
+                  <double>-1.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>999999.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <widget class="QComboBox" name="comboBox_typeallu"/>
+               </item>
+               <item row="4" column="0">
+                <widget class="QLabel" name="label_37">
+                 <property name="text">
+                  <string>Type allumage</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="8" column="1">
+                <widget class="QSpinBox" name="spinBox_tempcon"/>
+               </item>
+               <item row="7" column="0">
+                <widget class="QLabel" name="label_40">
+                 <property name="text">
+                  <string>unite constante compteur</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="10" column="0">
+                <widget class="QLabel" name="label_43">
+                 <property name="text">
+                  <string>Valeur compteur W</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="9" column="0">
+                <widget class="QLabel" name="label_42">
+                 <property name="text">
+                  <string>Nombre de tour compteur</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="9" column="1">
+                <widget class="QSpinBox" name="spinBox_nomtour"/>
+               </item>
+               <item row="11" column="0">
+                <widget class="QLabel" name="label_44">
+                 <property name="text">
+                  <string>Valeur competur VA</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="11" column="1">
+                <widget class="QDoubleSpinBox" name="doubleSpinBox_valconva">
+                 <property name="minimum">
+                  <double>-1.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>999999.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="1">
+                <widget class="QComboBox" name="comboBox_unicon"/>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="tab">
+              <attribute name="title">
+               <string>Technique 2</string>
+              </attribute>
+              <layout class="QGridLayout" name="gridLayout_7">
+               <item row="0" column="7" rowspan="7">
+                <widget class="Line" name="line_3">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="4" rowspan="7">
+                <widget class="Line" name="line_2">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="3">
+                <widget class="QToolButton" name="toolButton_p1p">
+                 <property name="text">
+                  <string>...</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="3">
+                <widget class="QToolButton" name="toolButton_p1cos">
+                 <property name="text">
+                  <string>...</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="3">
+                <widget class="QToolButton" name="toolButton_p1va">
+                 <property name="text">
+                  <string>...</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="3">
+                <widget class="QToolButton" name="toolButton_p1i">
+                 <property name="text">
+                  <string>...</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="5">
+                <widget class="QDoubleSpinBox" name="doubleSpinBox_p2v">
+                 <property name="minimum">
+                  <double>-1.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>999999.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="9">
+                <widget class="QDoubleSpinBox" name="doubleSpinBox_p3cos">
+                 <property name="minimum">
+                  <double>-1.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>999999.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="9" colspan="2">
+                <widget class="QLabel" name="label_47">
+                 <property name="text">
+                  <string>Phase 3</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="10">
+                <widget class="QToolButton" name="toolButton_p3v">
+                 <property name="text">
+                  <string>...</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="6">
+                <widget class="QToolButton" name="toolButton_p2v">
+                 <property name="text">
+                  <string>...</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="5">
+                <widget class="QDoubleSpinBox" name="doubleSpinBox_p2i">
+                 <property name="minimum">
+                  <double>-1.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>999999.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_48">
+                 <property name="text">
+                  <string>V</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="0">
+                <widget class="QLabel" name="label_51">
+                 <property name="text">
+                  <string>VA</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="9">
+                <widget class="QDoubleSpinBox" name="doubleSpinBox_p3va">
+                 <property name="minimum">
+                  <double>-1.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>999999.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="5">
+                <widget class="QDoubleSpinBox" name="doubleSpinBox_p2p">
+                 <property name="minimum">
+                  <double>-1.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>999999.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="10">
+                <widget class="QToolButton" name="toolButton_p3i">
+                 <property name="text">
+                  <string>...</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QLabel" name="label_50">
+                 <property name="text">
+                  <string>P</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="label_49">
+                 <property name="text">
+                  <string>I</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="0">
+                <widget class="QLabel" name="label_52">
+                 <property name="text">
+                  <string>cos</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="5">
+                <widget class="QDoubleSpinBox" name="doubleSpinBox_p2va">
+                 <property name="minimum">
+                  <double>-1.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>999999.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="10">
+                <widget class="QToolButton" name="toolButton_p3p">
+                 <property name="text">
+                  <string>...</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="6">
+                <widget class="QToolButton" name="toolButton_p2va">
+                 <property name="text">
+                  <string>...</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="0">
+                <spacer name="verticalSpacer_3">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="1" column="9">
+                <widget class="QDoubleSpinBox" name="doubleSpinBox_p3v">
+                 <property name="minimum">
+                  <double>-1.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>999999.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="5" colspan="2">
+                <widget class="QLabel" name="label_46">
+                 <property name="text">
+                  <string>Phase 2</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="5">
+                <widget class="QDoubleSpinBox" name="doubleSpinBox_p2cos">
+                 <property name="minimum">
+                  <double>-1.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>999999.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="9">
+                <widget class="QDoubleSpinBox" name="doubleSpinBox_p3i">
+                 <property name="minimum">
+                  <double>-1.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>999999.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="6">
+                <widget class="QToolButton" name="toolButton_p2cos">
+                 <property name="text">
+                  <string>...</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="10">
+                <widget class="QToolButton" name="toolButton_p3va">
+                 <property name="text">
+                  <string>...</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="10">
+                <widget class="QToolButton" name="toolButton_p3cos">
+                 <property name="text">
+                  <string>...</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="6">
+                <widget class="QToolButton" name="toolButton_p2i">
+                 <property name="text">
+                  <string>...</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="6">
+                <widget class="QToolButton" name="toolButton_p2p">
+                 <property name="text">
+                  <string>...</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="9">
+                <widget class="QDoubleSpinBox" name="doubleSpinBox_p3p">
+                 <property name="minimum">
+                  <double>-1.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>999999.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="3">
+                <widget class="QToolButton" name="toolButton_p1v">
+                 <property name="text">
+                  <string>...</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="2">
+                <widget class="QDoubleSpinBox" name="doubleSpinBox_p1v">
+                 <property name="minimum">
+                  <double>-1.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>999999.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="2">
+                <widget class="QDoubleSpinBox" name="doubleSpinBox_p1i">
+                 <property name="minimum">
+                  <double>-1.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>999999.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="2">
+                <widget class="QDoubleSpinBox" name="doubleSpinBox_p1p">
+                 <property name="minimum">
+                  <double>-1.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>999999.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="2">
+                <widget class="QDoubleSpinBox" name="doubleSpinBox_p1va">
+                 <property name="minimum">
+                  <double>-1.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>999999.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="2">
+                <widget class="QDoubleSpinBox" name="doubleSpinBox_p1cos">
+                 <property name="minimum">
+                  <double>-1.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>999999.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="2" colspan="2">
+                <widget class="QLabel" name="label_45">
+                 <property name="text">
+                  <string>Phase1</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
             </widget>
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="tab_3">
-          <attribute name="title">
-           <string>Electrique</string>
-          </attribute>
-          <layout class="QGridLayout" name="gridLayout_9">
-           <item row="4" column="0">
-            <widget class="QLabel" name="label_69">
-             <property name="text">
-              <string>Calibre de protection pied candélabre</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_67">
-             <property name="text">
-              <string>Type de boitier de racordement</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_65">
-             <property name="text">
-              <string>Présence d'un appareillage pied mât</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QComboBox" name="comboBox_sp_appmat"/>
-           </item>
-           <item row="2" column="1">
-            <widget class="QComboBox" name="comboBox_sp_typbr"/>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_66">
-             <property name="text">
-              <string>Présence d'un boitier de raccordement</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="0">
-            <widget class="QLabel" name="label_71">
-             <property name="text">
-              <string>Présence terre dans fût</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QComboBox" name="comboBox_sp_boitbran"/>
-           </item>
-           <item row="8" column="1">
-            <widget class="QComboBox" name="comboBox_sp_liaisoneq"/>
-           </item>
-           <item row="3" column="1">
-            <widget class="QComboBox" name="comboBox_sp_typprot"/>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="label_68">
-             <property name="text">
-              <string>Type de protection pied candélabre</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="7" column="1">
-            <widget class="QComboBox" name="comboBox_sp_terracc"/>
-           </item>
-           <item row="5" column="1">
-            <widget class="QComboBox" name="comboBox_sp_barette"/>
-           </item>
-           <item row="4" column="1">
-            <widget class="QLineEdit" name="lineEdit_sp_calprot"/>
-           </item>
-           <item row="5" column="0">
-            <widget class="QLabel" name="label_70">
-             <property name="text">
-              <string>Barette de neutre sur la protection pied candélabre</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="1">
-            <widget class="QComboBox" name="comboBox_sp_preter"/>
-           </item>
-           <item row="7" column="0">
-            <widget class="QLabel" name="label_72">
-             <property name="text">
-              <string>Terre raccordée</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="8" column="0">
-            <widget class="QLabel" name="label_73">
-             <property name="text">
-              <string>Liaison équipotentielle</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="9" column="0">
-            <widget class="QLabel" name="label_74">
-             <property name="text">
-              <string>Présence d’une prise festive, jardiniére, caméra….</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="9" column="1">
-            <widget class="QComboBox" name="comboBox_sp_eq"/>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="tab_4">
-          <attribute name="title">
-           <string>Etat</string>
-          </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_3">
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>0</number>
-           </property>
+         <widget class="QWidget" name="refoulement">
+          <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
-            <widget class="QFrame" name="frame_desordre">
-             <property name="frameShape">
-              <enum>QFrame::StyledPanel</enum>
+            <widget class="QTabWidget" name="tabWidget">
+             <property name="currentIndex">
+              <number>0</number>
              </property>
-             <property name="frameShadow">
-              <enum>QFrame::Raised</enum>
-             </property>
-             <layout class="QVBoxLayout" name="verticalLayout_4">
-              <property name="leftMargin">
-               <number>0</number>
-              </property>
-              <property name="topMargin">
-               <number>0</number>
-              </property>
-              <property name="rightMargin">
-               <number>0</number>
-              </property>
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
-             </layout>
+             <widget class="QWidget" name="tab_2">
+              <attribute name="title">
+               <string>Général</string>
+              </attribute>
+              <layout class="QGridLayout" name="gridLayout_8">
+               <item row="2" column="3">
+                <widget class="QLabel" name="label_61">
+                 <property name="text">
+                  <string>Forme</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1" colspan="2">
+                <widget class="QComboBox" name="comboBox_multip"/>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_53">
+                 <property name="text">
+                  <string>Type de mat</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="4" colspan="2">
+                <widget class="QComboBox" name="comboBox_sp_type"/>
+               </item>
+               <item row="0" column="3">
+                <widget class="QLabel" name="label_59">
+                 <property name="text">
+                  <string>Type de support</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="4" colspan="2">
+                <widget class="QComboBox" name="comboBox_sp_forme"/>
+               </item>
+               <item row="2" column="1" colspan="2">
+                <widget class="QComboBox" name="comboBox_sp_materiau"/>
+               </item>
+               <item row="4" column="0">
+                <widget class="QLabel" name="label_62">
+                 <property name="text">
+                  <string>Couleur</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="label_60">
+                 <property name="text">
+                  <string>Materiau</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="0">
+                <widget class="QLabel" name="label_63">
+                 <property name="text">
+                  <string>Diamètre</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="2">
+                <widget class="QToolButton" name="toolButton_sp_diam">
+                 <property name="text">
+                  <string>...</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="1">
+                <widget class="QDoubleSpinBox" name="doubleSpinBox_sp_diam">
+                 <property name="minimum">
+                  <double>-1.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>999999.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="3">
+                <widget class="QLabel" name="label_64">
+                 <property name="text">
+                  <string>Hauteur</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="4">
+                <widget class="QDoubleSpinBox" name="doubleSpinBox_sp_haut">
+                 <property name="minimum">
+                  <double>-1.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>999999.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="5">
+                <widget class="QToolButton" name="toolButton_sp_haut">
+                 <property name="text">
+                  <string>...</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="1" colspan="5">
+                <widget class="QLineEdit" name="lineEdit_sp_couleur"/>
+               </item>
+               <item row="6" column="0">
+                <widget class="QLabel" name="label_75">
+                 <property name="text">
+                  <string>type de montage crosse</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="1" colspan="2">
+                <widget class="QComboBox" name="comboBox_sp_typmonc"/>
+               </item>
+               <item row="6" column="3">
+                <widget class="QLabel" name="label_76">
+                 <property name="text">
+                  <string>Déport crosse</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="4">
+                <widget class="QDoubleSpinBox" name="doubleSpinBox_sp_depcro">
+                 <property name="minimum">
+                  <double>-1.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>999999.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="5">
+                <widget class="QToolButton" name="toolButton_sp_depcro">
+                 <property name="text">
+                  <string>...</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="tab_3">
+              <attribute name="title">
+               <string>Electrique</string>
+              </attribute>
+              <layout class="QGridLayout" name="gridLayout_9">
+               <item row="4" column="0">
+                <widget class="QLabel" name="label_69">
+                 <property name="text">
+                  <string>Calibre de protection pied candélabre</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="label_67">
+                 <property name="text">
+                  <string>Type de boitier de racordement</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_65">
+                 <property name="text">
+                  <string>Présence d'un appareillage pied mât</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QComboBox" name="comboBox_sp_appmat"/>
+               </item>
+               <item row="2" column="1">
+                <widget class="QComboBox" name="comboBox_sp_typbr"/>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_66">
+                 <property name="text">
+                  <string>Présence d'un boitier de raccordement</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="0">
+                <widget class="QLabel" name="label_71">
+                 <property name="text">
+                  <string>Présence terre dans fût</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QComboBox" name="comboBox_sp_boitbran"/>
+               </item>
+               <item row="8" column="1">
+                <widget class="QComboBox" name="comboBox_sp_liaisoneq"/>
+               </item>
+               <item row="3" column="1">
+                <widget class="QComboBox" name="comboBox_sp_typprot"/>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="label_68">
+                 <property name="text">
+                  <string>Type de protection pied candélabre</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="1">
+                <widget class="QComboBox" name="comboBox_sp_terracc"/>
+               </item>
+               <item row="5" column="1">
+                <widget class="QComboBox" name="comboBox_sp_barette"/>
+               </item>
+               <item row="4" column="1">
+                <widget class="QLineEdit" name="lineEdit_sp_calprot"/>
+               </item>
+               <item row="5" column="0">
+                <widget class="QLabel" name="label_70">
+                 <property name="text">
+                  <string>Barette de neutre sur la protection pied candélabre</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="1">
+                <widget class="QComboBox" name="comboBox_sp_preter"/>
+               </item>
+               <item row="7" column="0">
+                <widget class="QLabel" name="label_72">
+                 <property name="text">
+                  <string>Terre raccordée</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="8" column="0">
+                <widget class="QLabel" name="label_73">
+                 <property name="text">
+                  <string>Liaison équipotentielle</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="9" column="0">
+                <widget class="QLabel" name="label_74">
+                 <property name="text">
+                  <string>Présence d’une prise festive, jardiniére, caméra….</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="9" column="1">
+                <widget class="QComboBox" name="comboBox_sp_eq"/>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="tab_4">
+              <attribute name="title">
+               <string>Etat</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="verticalLayout_3">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QFrame" name="frame_desordre">
+                 <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Raised</enum>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_4">
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
+                 </layout>
+                </widget>
+               </item>
+              </layout>
+             </widget>
             </widget>
            </item>
           </layout>
@@ -1217,142 +1246,348 @@
        </item>
       </layout>
      </widget>
-    </widget>
-   </item>
-   <item>
-    <widget class="QFrame" name="frame_3">
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_3">
-      <property name="leftMargin">
-       <number>3</number>
-      </property>
-      <property name="topMargin">
-       <number>3</number>
-      </property>
-      <property name="rightMargin">
-       <number>3</number>
-      </property>
-      <property name="bottomMargin">
-       <number>3</number>
-      </property>
-      <property name="spacing">
-       <number>3</number>
-      </property>
-      <item row="2" column="1">
-       <widget class="QDoubleSpinBox" name="doubleSpinBox_Z">
-        <property name="minimum">
-         <double>-99.000000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>99999999.000000000000000</double>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QDoubleSpinBox" name="doubleSpinBox_Y">
-        <property name="minimum">
-         <double>-99.000000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>99999999.000000000000000</double>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="3">
-       <widget class="QDoubleSpinBox" name="doubleSpinBox_dZ">
-        <property name="minimum">
-         <double>-1.000000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>999.000000000000000</double>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_18">
-        <property name="text">
-         <string>Y</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_22">
-        <property name="text">
-         <string>Z tampon</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
-       <widget class="QDoubleSpinBox" name="doubleSpinBox_dY">
-        <property name="minimum">
-         <double>-1.000000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>999.000000000000000</double>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_15">
-        <property name="text">
-         <string>X</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="3">
-       <widget class="QDoubleSpinBox" name="doubleSpinBox_dX">
-        <property name="minimum">
-         <double>-1.000000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>999.000000000000000</double>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QDoubleSpinBox" name="doubleSpinBox_X">
-        <property name="minimum">
-         <double>-99.000000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>99999999.000000000000000</double>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QLabel" name="label_21">
-        <property name="text">
-         <string>dY</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QLabel" name="label_16">
-        <property name="text">
-         <string>dX</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="2">
-       <widget class="QLabel" name="label_23">
-        <property name="text">
-         <string>dZ</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0" colspan="4">
-       <widget class="QPushButton" name="pushButton_getGPS">
-        <property name="text">
-         <string>GPS</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
+     <widget class="QWidget" name="tab_10">
+      <attribute name="title">
+       <string>Géométrie</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_6">
+       <property name="spacing">
+        <number>3</number>
+       </property>
+       <property name="leftMargin">
+        <number>3</number>
+       </property>
+       <property name="topMargin">
+        <number>3</number>
+       </property>
+       <property name="rightMargin">
+        <number>3</number>
+       </property>
+       <property name="bottomMargin">
+        <number>3</number>
+       </property>
+       <item>
+        <widget class="QFrame" name="frame_3">
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <property name="leftMargin">
+           <number>3</number>
+          </property>
+          <property name="topMargin">
+           <number>3</number>
+          </property>
+          <property name="rightMargin">
+           <number>3</number>
+          </property>
+          <property name="bottomMargin">
+           <number>3</number>
+          </property>
+          <property name="spacing">
+           <number>3</number>
+          </property>
+          <item row="2" column="1">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_Z">
+            <property name="minimum">
+             <double>-99.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>99999999.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_Y">
+            <property name="minimum">
+             <double>-99.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>99999999.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="3">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_dZ">
+            <property name="minimum">
+             <double>-1.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>999.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_18">
+            <property name="text">
+             <string>Y</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_22">
+            <property name="text">
+             <string>Z tampon</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_dY">
+            <property name="minimum">
+             <double>-1.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>999.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_15">
+            <property name="text">
+             <string>X</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_dX">
+            <property name="minimum">
+             <double>-1.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>999.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_X">
+            <property name="minimum">
+             <double>-99.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>99999999.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QLabel" name="label_21">
+            <property name="text">
+             <string>dY</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QLabel" name="label_16">
+            <property name="text">
+             <string>dX</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QLabel" name="label_23">
+            <property name="text">
+             <string>dZ</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0" colspan="4">
+           <widget class="QPushButton" name="pushButton_getGPS">
+            <property name="text">
+             <string>GPS</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox">
+         <property name="title">
+          <string>GPS</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_4">
+          <property name="leftMargin">
+           <number>3</number>
+          </property>
+          <property name="topMargin">
+           <number>3</number>
+          </property>
+          <property name="rightMargin">
+           <number>3</number>
+          </property>
+          <property name="bottomMargin">
+           <number>3</number>
+          </property>
+          <property name="spacing">
+           <number>3</number>
+          </property>
+          <item row="4" column="1">
+           <widget class="QLabel" name="label_zgps">
+            <property name="text">
+             <string>/</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="3">
+           <widget class="QLabel" name="label_raf09">
+            <property name="text">
+             <string>/</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="2">
+           <widget class="QLabel" name="label_20">
+            <property name="text">
+             <string>RAF09</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>Zgps</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QLabel" name="label_zwgs84">
+            <property name="text">
+             <string>/</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="label_17">
+            <property name="text">
+             <string>Zwgs84</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLabel" name="label_Z">
+            <property name="text">
+             <string>/</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_9">
+            <property name="text">
+             <string>Y</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QLabel" name="label_dX">
+            <property name="text">
+             <string>/</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QLabel" name="label_10">
+            <property name="text">
+             <string>dX</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_11">
+            <property name="text">
+             <string>Z mNGF</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QLabel" name="label_12">
+            <property name="text">
+             <string>dY</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QLabel" name="label_dY">
+            <property name="text">
+             <string>/</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLabel" name="label_Y">
+            <property name="text">
+             <string>/</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QLabel" name="label_13">
+            <property name="text">
+             <string>dZ</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_14">
+            <property name="text">
+             <string>X</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="3">
+           <widget class="QLabel" name="label_dZ">
+            <property name="text">
+             <string>/</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="label_X">
+            <property name="text">
+             <string>/</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0" colspan="4">
+           <widget class="Line" name="line">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="2">
+           <widget class="QLabel" name="label_19">
+            <property name="text">
+             <string>Haut. perche</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="3">
+           <widget class="QLabel" name="label_hautperche">
+            <property name="text">
+             <string>/</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
    <item>
@@ -1399,177 +1634,6 @@
       </size>
      </property>
     </spacer>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="groupBox">
-     <property name="title">
-      <string>GPS</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_4">
-      <property name="leftMargin">
-       <number>3</number>
-      </property>
-      <property name="topMargin">
-       <number>3</number>
-      </property>
-      <property name="rightMargin">
-       <number>3</number>
-      </property>
-      <property name="bottomMargin">
-       <number>3</number>
-      </property>
-      <property name="spacing">
-       <number>3</number>
-      </property>
-      <item row="4" column="1">
-       <widget class="QLabel" name="label_zgps">
-        <property name="text">
-         <string>/</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="3">
-       <widget class="QLabel" name="label_raf09">
-        <property name="text">
-         <string>/</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="2">
-       <widget class="QLabel" name="label_20">
-        <property name="text">
-         <string>RAF09</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>Zgps</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="1">
-       <widget class="QLabel" name="label_zwgs84">
-        <property name="text">
-         <string>/</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="label_17">
-        <property name="text">
-         <string>Zwgs84</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QLabel" name="label_Z">
-        <property name="text">
-         <string>/</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_9">
-        <property name="text">
-         <string>Y</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="3">
-       <widget class="QLabel" name="label_dX">
-        <property name="text">
-         <string>/</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QLabel" name="label_10">
-        <property name="text">
-         <string>dX</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_11">
-        <property name="text">
-         <string>Z mNGF</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QLabel" name="label_12">
-        <property name="text">
-         <string>dY</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
-       <widget class="QLabel" name="label_dY">
-        <property name="text">
-         <string>/</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLabel" name="label_Y">
-        <property name="text">
-         <string>/</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="2">
-       <widget class="QLabel" name="label_13">
-        <property name="text">
-         <string>dZ</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_14">
-        <property name="text">
-         <string>X</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="3">
-       <widget class="QLabel" name="label_dZ">
-        <property name="text">
-         <string>/</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLabel" name="label_X">
-        <property name="text">
-         <string>/</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0" colspan="4">
-       <widget class="Line" name="line">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="2">
-       <widget class="QLabel" name="label_19">
-        <property name="text">
-         <string>Haut. perche</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="3">
-       <widget class="QLabel" name="label_hautperche">
-        <property name="text">
-         <string>/</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
    </item>
   </layout>
  </widget>

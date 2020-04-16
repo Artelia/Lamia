@@ -287,7 +287,7 @@ class AbstractLamiaTool(QWidget):
                 self.mainifacewidget.qgiscanvas.createorresetRubberband()
                 self.mainifacewidget.currenttoolwidget = self
                 self.updateToolbarOnToolFrameLoading()
-                self._activateChooserTreeWidget()
+                self.activateChooserTreeWidget()
                 self._displayWidget()
                 self.postToolTreeWidgetCurrentItemChanged()
                 
@@ -366,7 +366,7 @@ class AbstractLamiaTool(QWidget):
                 self.mainifacewidget.stackedWidget_main.widget(1).layout().itemAt(0).widget().setParent(None)
             self.mainifacewidget.stackedWidget_main.widget(1).layout().addWidget(self)
 
-    def _activateChooserTreeWidget(self):
+    def activateChooserTreeWidget(self, **kwargs):
         #choosertreewdg things
         if self.choosertreewidget is not None :
             if self.choosertreewidgetMUTIPLESELECTION  :
@@ -376,7 +376,7 @@ class AbstractLamiaTool(QWidget):
             if self.mainifacewidget.currentchoosertreewidget is not None:
                 self.mainifacewidget.currentchoosertreewidget.disconnectTreewidget()
             self.mainifacewidget.currentchoosertreewidget = self.choosertreewidget
-            self.choosertreewidget.onActivation()
+            self.choosertreewidget.onActivation(**kwargs)
 
     def postToolTreeWidgetCurrentItemChanged(self):
         pass
@@ -389,3 +389,25 @@ class AbstractLamiaTool(QWidget):
         number = self.numpaddialog.dialogIsFinished()
         if number:
             finalwdg.setValue(number)
+
+
+    def showImageinLabelWidget(self,wdg,savedfile):
+        """
+        Show the image file in the text widget
+        Manage thumbnail image
+
+        :param wdg: the text widget
+        :param savedfile: the image file
+
+        """
+        filetoshow = self.dbase.completePathOfFile(savedfile)
+        possiblethumbnail,ext = os.path.splitext(filetoshow)
+        if os.path.isfile(possiblethumbnail + "_thumbnail.png"):
+            filetoshow = possiblethumbnail + "_thumbnail.png"
+
+        if os.path.isfile(filetoshow):
+            wdg.clear()
+            wdg.setPixmap(filetoshow)
+        else:
+            wdg.clear()
+            wdg.setText('Image non trouvee')

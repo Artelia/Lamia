@@ -61,6 +61,14 @@ class BaseGraphiqueTool(AbstractLamiaFormTool):
     tooltreewidgetSUBCAT = 'Graphique'
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), '..', 'base', 'lamiabase_graphique_tool_icon.png')
 
+    PARENTJOIN = {'Profil' : {'colparent': 'id_objet',
+                                    'colthistable': 'id_ressource',
+                                        'tctable': 'Tcobjetressource',
+                                        'tctablecolparent': 'lid_objet',
+                                        'tctablecolthistable': 'lid_ressource'}
+                }
+
+
     def __init__(self, **kwargs):
         super(BaseGraphiqueTool, self).__init__(**kwargs)
 
@@ -108,7 +116,6 @@ class BaseGraphiqueTool(AbstractLamiaFormTool):
                                                 'Ressource' : {'linkfield' : 'id_ressource',
                                                             'widgets' : {}}}
 
-
         self.graphspec = {'SIM': OrderedDict([('x','X'),
                                                 ('y','X')]),
                             'PTR': OrderedDict([('x','X'),
@@ -154,10 +161,15 @@ class BaseGraphiqueTool(AbstractLamiaFormTool):
     def addrow(self):
         introw = self.toolwidgetmain.tableWidget.currentRow()
         self.toolwidgetmain.tableWidget.insertRow(introw + 1)
-        typetext = self.toolwidgetmain.comboBox_graphtype.currentText()
-        type = self.dbase.getConstraintRawValueFromText(self.DBASETABLENAME,'typegraphique',typetext)
-        if type in self.graphspec.keys():
-            for i, field in enumerate(self.graphspec[type]):
+        if self.currentFeaturePK is None:
+            typetext = self.toolwidgetmain.comboBox_graphtype.currentText()
+            typegraph = self.dbase.getConstraintRawValueFromText(self.DBASETABLENAME,'typegraphique',typetext)
+        else:
+            typegraph = self.dbase.getValuesFromPk(self.DBASETABLENAME,
+                                                    'typegraphique',
+                                                    self.currentFeaturePK)
+        if typegraph in self.graphspec.keys():
+            for i, field in enumerate(self.graphspec[typegraph]):
                 graphiquedataelemfields = self.dbase.dbasetables['Graphiquedata']['fields'][field]
                 if 'Cst' in graphiquedataelemfields.keys():
                     combobox = QComboBox()
@@ -175,10 +187,7 @@ class BaseGraphiqueTool(AbstractLamiaFormTool):
                     self.toolwidgetmain.tableWidget.setCellWidget(introw + 1, i, spinbox)
 
         header = self.toolwidgetmain.tableWidget.horizontalHeader()
-        if sys.version_info.major == 2:
-            header.setResizeMode(QHeaderView.ResizeToContents)
-        elif sys.version_info.major == 3:
-            header.resizeSections(QHeaderView.ResizeToContents)
+        header.resizeSections(QHeaderView.ResizeToContents)
         header.setStretchLastSection(True)
 
         self.enableTypeComboBox()
@@ -216,9 +225,12 @@ class BaseGraphiqueTool(AbstractLamiaFormTool):
 
 
         if self.currentFeaturePK is None:
-            datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
-            #self.initFeatureProperties(feat, 'Ressource', 'date', datecreation)
-            self.formutils.applyResultDict({'date': datecreation})
+            datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            self.formutils.applyResultDict({'datetimeressource' : datecreation},checkifinforgottenfield=False)
+
+            #datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
+            ##self.initFeatureProperties(feat, 'Ressource', 'date', datecreation)
+            #self.formutils.applyResultDict({'date': datecreation},,checkifinforgottenfield=False)
             self.toolwidgetmain.tableWidget.setRowCount(0)
 
         else :
@@ -305,9 +317,12 @@ class BaseGraphiqueTool(AbstractLamiaFormTool):
 
     def showGraph(self,type, graphdata):
 
-        typetext = self.toolwidgetmain.comboBox_graphtype.currentText()
-        type = self.dbase.getConstraintRawValueFromText(self.DBASETABLENAME,'typegraphique',typetext)
-        graphspec = self.graphspec[type]
+        #typetext = self.toolwidgetmain.comboBox_graphtype.currentText()
+        ##type = self.dbase.getConstraintRawValueFromText(self.DBASETABLENAME,'typegraphique',typetext)
+        #typegraph = self.dbase.getValuesFromPk(self.DBASETABLENAME,
+        #                                            'typegraphique',
+        #                                            self.currentFeaturePK)
+        #graphspec = self.graphspec[type]
         result={}
 
         result = graphdata
@@ -318,7 +333,7 @@ class BaseGraphiqueTool(AbstractLamiaFormTool):
             grapthtype = self.dbase.getValuesFromPk(self.DBASETABLENAME,
                                         'typegraphique',
                                         self.currentFeaturePK)
-
+            
             if grapthtype in ['SIM', 'PTR']:
                 for i in range(len(result['x'])):
                     Xgraph.append(Xgraph[-1] + float(result['x'][i]))

@@ -45,8 +45,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             self.setCanvas(qgis.utils.iface.mapCanvas())
         
         self.layers = {}
-
-
+        self.qgislegendnode = None
 
         #behaviour
         self.editingrawlayer = False
@@ -422,10 +421,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         # crs transform if needed
         if debug: logging.getLogger("Lamia").debug('pointbefore %s', str(point))
         if comefromcanvas:
-            if qgis.utils.iface is not None:
-                point2 = self.xformreverse.transform(point)
-            else:   #debug purpose
-                point2 = point
+            point2 = self.xformreverse.transform(point)
         else:
             point2 = point
         if debug: logging.getLogger("Lamia").debug('pointafter %s', str(point2))

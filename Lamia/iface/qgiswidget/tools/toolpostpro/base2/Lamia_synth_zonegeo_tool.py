@@ -377,6 +377,7 @@ class DesordreSyntheseTool(AbstractLamiaTool):
     def initFieldUI(self):
         # ****************************************************************************************
         #   userui Field
+        return      #TODO
         if self.userwdgfield is None:
             # ****************************************************************************************
             # userui

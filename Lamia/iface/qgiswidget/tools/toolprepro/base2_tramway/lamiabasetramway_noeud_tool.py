@@ -25,111 +25,97 @@ This file is part of LAMIA.
  """
 
 
-
-
-from qgis.PyQt import uic, QtCore
-
-try:
-    from qgis.PyQt.QtGui import (QWidget, QPushButton)
-except ImportError:
-    from qgis.PyQt.QtWidgets import (QWidget, QPushButton)
-#from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
-from ..base2.lamiabase_noeud_tool import BaseNoeudTool
-
 import os
-import qgis
 from collections import OrderedDict
 import datetime
-# from ..base.lamiabase_photo_tool import BasePhotoTool
+import sys
+
+import qgis
+from qgis.PyQt import uic, QtCore
+from qgis.PyQt.QtWidgets import (QWidget, QPushButton)
+
+from ..base2.lamiabase_noeud_tool import BaseNoeudTool
 from .lamiabasetramway_photo_tool import BaseTramwayPhotoTool as BasePhotoTool
 from .lamiabasetramway_croquis_tool import BaseTramwayCroquisTool as BaseCroquisTool
 from .lamiabasetramway_equipement_tool import BaseTramwayEquipementTool as BaseEquipementTool
 from .lamiabasetramway_desordre_tool import BaseTramwayDesordreTool
-#from ..base.lamiabase_croquis_tool import BaseCroquisTool
-#from .lamiabaseassainissement_desordre_tool import BaseAssainissementDesordreTool
-#from .lamiabaseassainissement_equipement_tool import BaseAssainissementEquipementTool
-import sys
-
 
 
 class BaseTramwayNoeudTool(BaseNoeudTool):
 
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
-        super(BaseTramwayNoeudTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
+    def __init__(self, **kwargs):
+        super(BaseTramwayNoeudTool, self).__init__(**kwargs)
         self.linkedgeom = [['Desordre', 'lid_descriptionsystem']]
         self.qtreewidgetfields = ['typenoeud']
 
 
 
-    def initFieldUI(self):
+    def initMainToolWidget(self):
+
+        self.toolwidgetmain = UserUI()
+        self.formtoolwidgetconfdictmain = {'Noeud' : {'linkfield' : 'id_noeud',
+                                                            'widgets' : {
+                                                                        'typenoeud' : self.toolwidgetmain.comboBox_typenoeud,
+                                                                        'typeLigne': self.toolwidgetmain.comboBox_typeligne,
+                                                                    'numLigne': self.toolwidgetmain.lineEdit_nomligne,
+
+                                                                    'typelocal': self.toolwidgetmain.lineEdit_typelocal
+
+
+
+
+                                                            }},
+                                            'Objet' : {'linkfield' : 'id_objet',
+                                                        'widgets' : {
+                                                                    #'libelle': self.toolwidgetmain.lineEdit_libelle
+                                                                    }},
+                                            'Descriptionsystem' : {'linkfield' : 'id_descriptionsystem',
+                                                        'widgets' : {}}}
+
+        self.toolwidgetmain.comboBox_typenoeud.currentIndexChanged.connect(self.changeCategorie)
         # ****************************************************************************************
-        # userui Desktop
-        if self.userwdgfield is None:
+        # child widgets
 
-            # ****************************************************************************************
-            # userui
-            self.userwdgfield = UserUI()
-            self.linkuserwdgfield = {'Noeud' : {'linkfield' : 'id_noeud',
-                                             'widgets' : {
-                                                          'typenoeud' : self.userwdgfield.comboBox_typenoeud,
-                                                         'typeLigne': self.userwdgfield.comboBox_typeligne,
-                                                        'numLigne': self.userwdgfield.lineEdit_nomligne,
+        self.dbasechildwdgfield = []
+        self.instancekwargs['parentwidget'] = self
 
-                                                        'typelocal': self.userwdgfield.lineEdit_typelocal
+        #if self.parentWidget is None:
+        self.propertieswdgEQUIPEMENT = BaseEquipementTool(**self.instancekwargs)
+        self.dbasechildwdgfield.append(self.propertieswdgEQUIPEMENT)
+
+        self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(**self.instancekwargs)
+        self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
 
 
+        self.propertieswdgCROQUIS = BaseCroquisTool(**self.instancekwargs)
+        self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
-
-                                             }},
-                                'Objet' : {'linkfield' : 'id_objet',
-                                          'widgets' : {
-                                                      #'libelle': self.userwdgfield.lineEdit_libelle
-                                                      }},
-                                'Descriptionsystem' : {'linkfield' : 'id_descriptionsystem',
-                                          'widgets' : {}}}
-
-            self.userwdgfield.comboBox_typenoeud.currentIndexChanged.connect(self.changeCategorie)
-            # ****************************************************************************************
-            # child widgets
-
-            self.dbasechildwdgfield = []
-
-            if self.parentWidget is None:
-                self.propertieswdgEQUIPEMENT = BaseEquipementTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
-                self.dbasechildwdgfield.append(self.propertieswdgEQUIPEMENT)
-
-                self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
-                self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
-
-
-                self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
-                self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
-
-                self.propertieswdgDesordre = BaseTramwayDesordreTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
-                self.propertieswdgDesordre.NAME = None
-                self.propertieswdgDesordre.groupBox_elements.setParent(None)
-                self.propertieswdgDesordre.groupBox_geom.setParent(None)
-                self.propertieswdgDesordre.userwdgfield.frame_2.setParent(None)
-                self.propertieswdgDesordre.userwdgfield.stackedWidget.setParent(None)
-                self.userwdgfield.frame_observationlocal.layout().addWidget(self.propertieswdgDesordre)
-                self.propertieswdgDesordre.propertieswdgOBSERVATION2.userwdgfield.groupBox.setParent(None)
-                self.dbasechildwdgfield.append(self.propertieswdgDesordre)
+        self.propertieswdgDesordre = BaseTramwayDesordreTool(**self.instancekwargs)
+        #self.propertieswdgDesordre.NAME = None
+        #self.propertieswdgDesordre.groupBox_elements.setParent(None)
+        #self.propertieswdgDesordre.groupBox_geom.setParent(None)
+        #self.propertieswdgDesordre.userwdgfield.frame_2.setParent(None)
+        #self.propertieswdgDesordre.userwdgfield.stackedWidget.setParent(None)
+        #self.toolwidgetmain.frame_observationlocal.layout().addWidget(self.propertieswdgDesordre)
+        #self.propertieswdgDesordre.propertieswdgOBSERVATION2.userwdgfield.groupBox.setParent(None)
+        self.dbasechildwdgfield.append(self.propertieswdgDesordre)
 
 
 
     def changeCategorie(self, combovalue=None):
-        if self.userwdgfield.comboBox_typenoeud.currentText() == 'Station':
-            self.userwdgfield.stackedWidget.setCurrentIndex(0)
-        elif self.userwdgfield.comboBox_typenoeud.currentText() == 'Local':
-            self.userwdgfield.stackedWidget.setCurrentIndex(1)
+        if self.toolwidgetmain.comboBox_typenoeud.currentText() == 'Station':
+            self.toolwidgetmain.stackedWidget.setCurrentIndex(0)
+        elif self.toolwidgetmain.comboBox_typenoeud.currentText() == 'Local':
+            self.toolwidgetmain.stackedWidget.setCurrentIndex(1)
 
 
-    def postSaveFeature(self, boolnewfeature):
+    def postSaveFeature(self, savedfeaturepk=None):
 
         # save a disorder on first creation
-        if self.savingnewfeature and self.savingnewfeatureVersion == False:
-            if self.userwdgfield.comboBox_typenoeud.currentText() == 'Local':
+        #if self.savingnewfeature and self.savingnewfeatureVersion == False:
+        if self.currentFeaturePK is None:
+            if self.toolwidgetmain.comboBox_typenoeud.currentText() == 'Local':
                 pkobjet = self.dbase.createNewObjet()
                 lastiddesordre = self.dbase.getLastId('Desordre') + 1
 

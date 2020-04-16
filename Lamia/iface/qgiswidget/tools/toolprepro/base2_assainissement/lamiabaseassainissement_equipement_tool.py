@@ -161,14 +161,20 @@ class BaseAssainissementEquipementTool(BaseEquipementTool):
         #if feat is None and self.comboBox_featurelist.currentText() == self.newentrytext :
         if self.currentFeaturePK is None : #new feat
             if self.parentWidget is not None and self.parentWidget.currentFeaturePK is not None:
-                if self.parentWidget.dbasetablename == 'Noeud':
+                if self.parentWidget.DBASETABLENAME == 'Noeud':
                     # get geom
+                    """
                     noeudfet = self.dbase.getLayerFeatureByPk('Noeud', self.parentWidget.currentFeaturePK)
                     neudfetgeom = noeudfet.geometry().asPoint()
                     self.createorresetRubberband(1)
                     self.setTempGeometry([neudfetgeom,neudfetgeom],False)
-
-
+                    """
+                    noeudfetwkt = self.dbase.getValuesFromPk('Noeud',
+                                                            'ST_AsText(geom)',
+                                                            self.parentWidget.currentFeaturePK)
+                    neudfetgeom = qgis.core.QgsGeometry.fromWkt(noeudfetwkt).asPoint()
+                    #self.mainifacewidget.qgiscanvas.createorresetRubberband(1)
+                    self.setTempGeometry([neudfetgeom,neudfetgeom], False,False)
 
     def postSaveFeature(self, savedfeaturepk=None):
         if self.dbase.variante in ['CD41']:

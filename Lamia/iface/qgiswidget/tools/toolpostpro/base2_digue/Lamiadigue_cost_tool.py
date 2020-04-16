@@ -46,7 +46,7 @@ import networkx
 import numpy as np
 import shutil
 
-from ..Base2.Lamia_cost_tool import CostTool
+from ..base2.Lamia_cost_tool import CostTool
 
 # ********************************************************************************************************************
 # ********************************* Main Widget                *******************************************************

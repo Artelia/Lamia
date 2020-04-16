@@ -42,77 +42,72 @@ import datetime
 
 class BaseDigueZonegeoTool(BaseZonegeoTool):
 
-    LOADFIRST = False
-    dbasetablename = 'Zonegeo'
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
-        super(BaseDigueZonegeoTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
+    def __init__(self, **kwargs):
+        super(BaseDigueZonegeoTool, self).__init__(**kwargs)
 
     def initFieldUI(self):
-        if self.userwdgfield is None:
 
-            # ****************************************************************************************
-            # userui
-            self.userwdgfield = UserUI()
-            self.linkuserwdgfield = {'Zonegeo' : {'linkfield' : 'id_zonegeo',
-                                             'widgets' : {'typezonegeo':self.userwdgfield.comboBox_type,
+        self.toolwidgetmain = UserUI()
+        self.formtoolwidgetconfdictmain = {'Zonegeo' : {'linkfield' : 'id_zonegeo',
+                                                            'widgets' : {'typezonegeo':self.toolwidgetmain.comboBox_type,
 
-                                                          'BV_superficie':self.userwdgfield.doubleSpinBox_superf,
-                                                          'BV_cheminhydrau': self.userwdgfield.doubleSpinBox_chem,
-                                                           'BV_pente': self.userwdgfield.doubleSpinBox_pente,
-                                                 'BV_coefruissellement': self.userwdgfield.doubleSpinBox_coef,
+                                                                        'BV_superficie':self.toolwidgetmain.doubleSpinBox_superf,
+                                                                        'BV_cheminhydrau': self.toolwidgetmain.doubleSpinBox_chem,
+                                                                        'BV_pente': self.toolwidgetmain.doubleSpinBox_pente,
+                                                                'BV_coefruissellement': self.toolwidgetmain.doubleSpinBox_coef,
 
-                                                 'BV_capacite': self.userwdgfield.doubleSpinBox_perret,
+                                                                'BV_capacite': self.toolwidgetmain.doubleSpinBox_perret,
 
 
-                                                        }},
-                                'Objet' : {'linkfield' : 'id_objet',
-                                          'widgets' : {
-                                                        'libelle' : self.userwdgfield.lineEdit_nom,
-                                              'commentaire': self.userwdgfield.textBrowser_com,
-                                                        }}}
+                                                                    }},
+                                            'Objet' : {'linkfield' : 'id_objet',
+                                                        'widgets' : {
+                                                                    'libelle' : self.toolwidgetmain.lineEdit_nom,
+                                                            'commentaire': self.toolwidgetmain.textBrowser_com,
+                                                                    }}}
 
-            # rem : il sera affiné le select avec le champ datetimecreation trouvé dans la requete
-            # il faut que zone geo soit présent dans la requete
-            self.stats = [['Infralineaire lineaire',
-                           ''' SELECT SUM(ST_Length(ST_MakeValid(Infralineaire_now.geom))) 
-                                FROM Infralineaire_now, Zonegeo 
-                                WHERE ST_WITHIN(ST_MakeValid(Infralineaire_now.geom), ST_MakeValid(Zonegeo.geom)) ''']
-                           ]
+        # rem : il sera affiné le select avec le champ datetimecreation trouvé dans la requete
+        # il faut que zone geo soit présent dans la requete
+        self.stats = [['Infralineaire lineaire',
+                        ''' SELECT SUM(ST_Length(ST_MakeValid(Infralineaire_now.geom))) 
+                            FROM Infralineaire_now, Zonegeo 
+                            WHERE ST_WITHIN(ST_MakeValid(Infralineaire_now.geom), ST_MakeValid(Zonegeo.geom)) ''']
+                        ]
 
-            self.userwdgfield.tableWidget_stats.setRowCount(0)
-            self.userwdgfield.tableWidget_stats.setColumnCount(2)
-            self.userwdgfield.tableWidget_stats.horizontalHeader().setStretchLastSection(True)
-            for i, stat in enumerate(self.stats):
-                rowPosition = self.userwdgfield.tableWidget_stats.rowCount()
-                self.userwdgfield.tableWidget_stats.insertRow(rowPosition)
-                itemfield = QTableWidgetItem(stat[0])
-                itemfield.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-                self.userwdgfield.tableWidget_stats.setItem(rowPosition, 0, itemfield)
+        self.toolwidgetmain.tableWidget_stats.setRowCount(0)
+        self.toolwidgetmain.tableWidget_stats.setColumnCount(2)
+        self.toolwidgetmain.tableWidget_stats.horizontalHeader().setStretchLastSection(True)
+        for i, stat in enumerate(self.stats):
+            rowPosition = self.toolwidgetmain.tableWidget_stats.rowCount()
+            self.toolwidgetmain.tableWidget_stats.insertRow(rowPosition)
+            itemfield = QTableWidgetItem(stat[0])
+            itemfield.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+            self.toolwidgetmain.tableWidget_stats.setItem(rowPosition, 0, itemfield)
 
 
 
-            self.userwdgfield.toolButton_superf.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_superf))
-            self.userwdgfield.toolButton_chem.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_chem))
-            self.userwdgfield.toolButton_pente.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_pente))
-            self.userwdgfield.toolButton_coef.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_coef))
-            self.userwdgfield.toolButton_perret.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_perret))
+        self.toolwidgetmain.toolButton_superf.clicked.connect(
+            lambda: self.windowdialog.showNumPad(self.toolwidgetmain.doubleSpinBox_superf))
+        self.toolwidgetmain.toolButton_chem.clicked.connect(
+            lambda: self.windowdialog.showNumPad(self.toolwidgetmain.doubleSpinBox_chem))
+        self.toolwidgetmain.toolButton_pente.clicked.connect(
+            lambda: self.windowdialog.showNumPad(self.toolwidgetmain.doubleSpinBox_pente))
+        self.toolwidgetmain.toolButton_coef.clicked.connect(
+            lambda: self.windowdialog.showNumPad(self.toolwidgetmain.doubleSpinBox_coef))
+        self.toolwidgetmain.toolButton_perret.clicked.connect(
+            lambda: self.windowdialog.showNumPad(self.toolwidgetmain.doubleSpinBox_perret))
 
-            self.userwdgfield.comboBox_type.currentIndexChanged.connect(self.combotypeChanged)
-            self.userwdgfield.comboBox_type.currentIndexChanged.emit(0)
+        self.toolwidgetmain.comboBox_type.currentIndexChanged.connect(self.combotypeChanged)
+        self.toolwidgetmain.comboBox_type.currentIndexChanged.emit(0)
 
 
 
     def combotypeChanged(self, currentindex):
-        if self.userwdgfield.comboBox_type.currentText() == 'Bassin versant':
-            self.userwdgfield.stackedWidget.setCurrentIndex(1)
+        if self.toolwidgetmain.comboBox_type.currentText() == 'Bassin versant':
+            self.toolwidgetmain.stackedWidget.setCurrentIndex(1)
         else:
-            self.userwdgfield.stackedWidget.setCurrentIndex(0)
+            self.toolwidgetmain.stackedWidget.setCurrentIndex(0)
 
 
 class UserUI(QWidget):

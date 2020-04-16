@@ -232,12 +232,14 @@ class BaseAssainissementObservationTool(BaseObservationTool):
 
     # def postInitFeatureProperties(self, feat):
     def postSelectFeature(self):
+        super(BaseAssainissementObservationTool, self).postSelectFeature()
+        """
         if self.currentFeaturePK is None:
             datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
             # self.initFeatureProperties(feat, self.dbasetablename, 'datetimeobservation', datecreation)
             self.formutils.applyResultDict({'datetimeobservation': datecreation}, checkifinforgottenfield=False)
             #applyResultDict(self, resultdict, checkifinforgottenfield=True):
-
+        """
         self.updateObservationStackedWidget()
 
 
@@ -245,17 +247,18 @@ class BaseAssainissementObservationTool(BaseObservationTool):
         dbasetabledesordre = self.dbase.dbasetables['Desordre']
         if ('groupedesordre' in dbasetabledesordre['fields'].keys()  ):
             if self.parentWidget is not None and self.parentWidget.currentFeaturePK is not None:
+                
                 grpdes = self.dbase.getValuesFromPk(self.parentWidget.DBASETABLENAME,
                                                     'groupedesordre',
                                                     self.parentWidget.currentFeaturePK)
-
+                """
                 grpdescst = [elem[1] for elem in dbasetabledesordre['fields']['groupedesordre']['Cst']]
                 indexgrp = grpdescst.index(grpdes)
                 try:
                     self.toolwidgetmain.stackedWidget.setCurrentIndex(indexgrp)
                 except:
                     pass
-
+                """
                 if self.dbase.variante in [None, 'Lamia']:
                     if grpdes == 'NOD' and self.parentWidget.parentWidget is not None and self.parentWidget.parentWidget.currentFeaturePK is not None:
                         if self.parentWidget.parentWidget.DBASETABLENAME == 'Noeud':

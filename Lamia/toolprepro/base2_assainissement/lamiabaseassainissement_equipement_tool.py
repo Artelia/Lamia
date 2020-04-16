@@ -166,7 +166,7 @@ class BaseAssainissementEquipementTool(BaseEquipementTool):
                 self.pushButton_addFeature.setEnabled(False)
 
 
-
+    """
     def postInitFeatureProperties(self, feat):
         if feat is None and self.comboBox_featurelist.currentText() == self.newentrytext :
             if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
@@ -180,9 +180,8 @@ class BaseAssainissementEquipementTool(BaseEquipementTool):
                             noeudfet = self.dbase.getLayerFeatureByPk('Noeud', self.parentWidget.currentFeature.id())
                     neudfetgeom = noeudfet.geometry().asPoint()
                     self.createorresetRubberband(1)
-                    self.setTempGeometry([neudfetgeom,neudfetgeom],False)
-
-
+                    self.setTempGeometry([neudfetgeom,neudfetgeom],comefromcanvas=False,showinrubberband=False)
+    """
 
     def postSaveFeature(self, boolnewfeature):
         if self.dbase.variante in ['CD41']:

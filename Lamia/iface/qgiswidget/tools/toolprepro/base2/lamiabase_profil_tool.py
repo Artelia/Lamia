@@ -26,35 +26,47 @@ This file is part of LAMIA.
 
 
 
-
-from qgis.PyQt import uic, QtCore
-
-try:
-    from qgis.PyQt.QtGui import (QWidget)
-except ImportError:
-    from qgis.PyQt.QtWidgets import (QWidget)
-#from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
-from ...Lamia_abstract_tool import AbstractLamiaTool
-from .lamiabase_photo_tool import BasePhotoTool
-
-from .lamiabase_croquis_tool import BaseCroquisTool
-from .lamiabase_graphique_tool import BaseGraphiqueTool
-
 import os
 import datetime
 
+from qgis.PyQt import uic, QtCore
+from qgis.PyQt.QtWidgets import (QWidget)
+
+from ...lamia_abstractformtool import AbstractLamiaFormTool
+from .lamiabase_photo_tool import BasePhotoTool
+from .lamiabase_croquis_tool import BaseCroquisTool
+from .lamiabase_graphique_tool import BaseGraphiqueTool
 
 
 
-class BaseProfilTool(AbstractLamiaTool):
 
-    LOADFIRST = False
-    dbasetablename = 'Profil'
-    specialfieldui = []
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
-        super(BaseProfilTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
-        
+
+class BaseProfilTool(AbstractLamiaFormTool):
+
+
+    DBASETABLENAME = 'Profil'
+    LOADFIRST = True
+
+    tooltreewidgetCAT = 'Description'
+    tooltreewidgetSUBCAT = 'Profil'
+    tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_profil_tool_icon.svg')
+    
+    PARENTJOIN = {'Infralineaire' : {'colparent': 'id_descriptionsystem',
+                                    'colthistable': 'lid_descriptionsystem',
+                                        'tctable': None,
+                                        'tctablecolparent': None,
+                                        'tctablecolthistable': None}
+                }
+ 
+
+    def __init__(self, **kwargs):
+        super(BaseProfilTool, self).__init__(**kwargs)
+        self.instancekwargs = kwargs
+
+
+    
+    """
     def initTool(self):
         # ****************************************************************************************
         # Main spec
@@ -65,14 +77,7 @@ class BaseProfilTool(AbstractLamiaTool):
         # self.PointEnabled = True
         self.LineENABLED = True
         # self.PolygonEnabled = True
-        """
-        self.linkagespec = {'Infralineaire' : {'tabletc' : None,
-                                              'idsource' : 'lk_objet',
-                                            'idtcsource' : None,
-                                           'iddest' : 'id_objet',
-                                           'idtcdest' : None,
-                                           'desttable' : ['Infralineaire']} }
-        """
+
         self.linkagespec = {'Infralineaire' : {'tabletc' : None,
                                               'idsource' : 'lid_descriptionsystem',
                                             'idtcsource' : None,
@@ -84,58 +89,50 @@ class BaseProfilTool(AbstractLamiaTool):
         # ****************************************************************************************
         #properties ui
         pass
+        """
 
-    def initFieldUI(self):
-        # ****************************************************************************************
-        #   userui Field
-        if self.userwdgfield is None:
-            # ****************************************************************************************
-            # userui
-
-            self.userwdgfield = UserUI()
-            self.linkuserwdgfield = {'Profil' : {'linkfield' : 'id_profil',
-                                             'widgets' : {'dateprofil': self.userwdgfield.dateEdit,
-                                                          'type': self.userwdgfield.comboBox_type}},
-                                'Objet' : {'linkfield' : 'id_objet',
-                                          'widgets' : {}},
-                                'Descriptionsystem' : {'linkfield' : 'id_descriptionsystem',
-                                          'widgets' : {}}}
-
-            self.userwdgfield.comboBox_type.currentIndexChanged.connect(self.changeType)
+    def initMainToolWidget(self):
 
 
-            # ****************************************************************************************
+        self.toolwidgetmain = UserUI()
+        self.formtoolwidgetconfdictmain = {'Profil' : {'linkfield' : 'id_profil',
+                                                        'widgets' : {'dateprofil': self.toolwidgetmain.dateEdit,
+                                                                    'type': self.toolwidgetmain.comboBox_type}},
+                                            'Objet' : {'linkfield' : 'id_objet',
+                                                        'widgets' : {}},
+                                            'Descriptionsystem' : {'linkfield' : 'id_descriptionsystem',
+                                                        'widgets' : {}}}
 
+        self.toolwidgetmain.comboBox_type.currentIndexChanged.connect(self.changeType)
 
-            # ****************************************************************************************
-            # child widgets
-            self.dbasechildwdgfield = []
-
-            if True:
-                self.propertieswdgGRAPH = BaseGraphiqueTool(dbase=self.dbase, parentwidget=self)
-                self.propertieswdgGRAPH.NAME = None
-                #self.userwdgfield.tabWidget.widget(0).layout().addWidget(self.propertieswdgCROQUIS)
-                #self.userwdgfield.frame_graph.layout().addWidget(self.propertieswdgGRAPH)
-                self.userwdgfield.stackedWidget.widget(0).layout().addWidget(self.propertieswdgGRAPH)
-                self.dbasechildwdgfield.append(self.propertieswdgGRAPH)
+        # child widgets
+        self.dbasechildwdgfield = []
+        self.instancekwargs['parentwidget'] = self
+        if True:
+            self.propertieswdgGRAPH = BaseGraphiqueTool(**self.instancekwargs)
+            #self.propertieswdgGRAPH.NAME = None
+            ##self.toolwidgetmain.tabWidget.widget(0).layout().addWidget(self.propertieswdgCROQUIS)
+            ##self.toolwidgetmain.frame_graph.layout().addWidget(self.propertieswdgGRAPH)
+            #self.toolwidgetmain.stackedWidget.widget(0).layout().addWidget(self.propertieswdgGRAPH)
+            self.dbasechildwdgfield.append(self.propertieswdgGRAPH)
 
 
 
-            if True:
-                self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
-                self.propertieswdgCROQUIS.NAME = None
-                #self.userwdgfield.tabWidget.widget(0).layout().addWidget(self.propertieswdgCROQUIS)
-                #self.userwdgfield.frame_cr.layout().addWidget(self.propertieswdgCROQUIS)
-                self.userwdgfield.stackedWidget.widget(1).layout().addWidget(self.propertieswdgCROQUIS)
-                self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+        if True:
+            self.propertieswdgCROQUIS = BaseCroquisTool(**self.instancekwargs)
+            #self.propertieswdgCROQUIS.NAME = None
+            ##self.toolwidgetmain.tabWidget.widget(0).layout().addWidget(self.propertieswdgCROQUIS)
+            ##self.toolwidgetmain.frame_cr.layout().addWidget(self.propertieswdgCROQUIS)
+            #self.toolwidgetmain.stackedWidget.widget(1).layout().addWidget(self.propertieswdgCROQUIS)
+            self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
-            if True:
-                self.propertieswdgPHOTO = BasePhotoTool(dbase=self.dbase, parentwidget=self)
-                self.propertieswdgPHOTO.NAME = None
-                #self.userwdgfield.tabWidget.widget(0).layout().addWidget(self.propertieswdgCROQUIS)
-                #self.userwdgfield.frame_cr.layout().addWidget(self.propertieswdgPHOTO)
-                self.userwdgfield.stackedWidget.widget(2).layout().addWidget(self.propertieswdgPHOTO)
-                self.dbasechildwdgfield.append(self.propertieswdgPHOTO)
+        if True:
+            self.propertieswdgPHOTO = BasePhotoTool(**self.instancekwargs)
+            #self.propertieswdgPHOTO.NAME = None
+            ##self.toolwidgetmain.tabWidget.widget(0).layout().addWidget(self.propertieswdgCROQUIS)
+            ##self.toolwidgetmain.frame_cr.layout().addWidget(self.propertieswdgPHOTO)
+            #self.toolwidgetmain.stackedWidget.widget(2).layout().addWidget(self.propertieswdgPHOTO)
+            self.dbasechildwdgfield.append(self.propertieswdgPHOTO)
 
 
 
@@ -148,52 +145,51 @@ class BaseProfilTool(AbstractLamiaTool):
         pass
 
     def setAsDefault(self):
-        if self.parentWidget.currentFeature is not None:
-            if self.userwdgfield.stackedWidget.currentIndex() == 0:
+        if self.parentWidget.currentFeaturePK is not None:
+            if self.toolwidgetmain.stackedWidget.currentIndex() == 0:
                 currentwdg = self.propertieswdgCROQUIS
-            elif self.userwdgfield.stackedWidget.currentIndex() == 1:
+            elif self.toolwidgetmain.stackedWidget.currentIndex() == 1:
                 currentwdg = self.propertieswdgGRAPH
 
-            if currentwdg.currentFeature is not None:
+            if currentwdg.currentFeaturePK is not None:
                 #idressoruce
-                sql = "SELECT id_ressource FROM " + currentwdg.dbasetablename.lower() + "_qgis"
-                sql += " WHERE pk_" + currentwdg.dbasetablename.lower() + " = " + str(self.currentwdg.currentFeaturePK)
+                sql = "SELECT id_ressource FROM " + currentwdg.DBASETABLENAME.lower() + "_qgis"
+                sql += " WHERE pk_" + currentwdg.DBASETABLENAME.lower() + " = " + str(self.currentwdg.currentFeaturePK)
                 idressource = self.dbase.query(sql)[0][0]
 
                 pkparentfeature = self.parentWidget.currentFeaturePK
 
-                sql = "UPDATE " + str(self.parentWidget.dbasetablename.lower()) + " SET  lid_ressource_4 = " + str(idressource)
-                sql += " WHERE pk_"+ str(self.parentWidget.dbasetablename.lower()) + " = " + str(pkparentfeature)
-
-                if False:
-                    idressource = currentwdg.currentFeature['id_ressource']
-                    idparentfeature=self.parentWidget.currentFeature['id_objet']
-                    # print('setDefaultPhoto',idphoto,idparentfeature)
-                    sql = "UPDATE " + str(self.parentWidget.dbasetablename) + " SET  lk_profil = " + str(idressource) + " WHERE id_objet = " + str(idparentfeature) + ";"
+                sql = "UPDATE " + str(self.parentWidget.DBASETABLENAME.lower()) + " SET  lid_ressource_4 = " + str(idressource)
+                sql += " WHERE pk_"+ str(self.parentWidget.DBASETABLENAME.lower()) + " = " + str(pkparentfeature)
 
                 query = self.dbase.query(sql)
                 self.dbase.commit()
 
     def changeType(self,comboint):
-        self.userwdgfield.stackedWidget.setCurrentIndex(comboint)
+        self.toolwidgetmain.stackedWidget.setCurrentIndex(comboint)
 
 
-    def postInitFeatureProperties(self, feat):
-        if self.currentFeature is None:
+    #def postInitFeatureProperties(self, feat):
+    def postSelectFeature(self):
+        if self.currentFeaturePK is None:
             #datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
             #self.initFeatureProperties(feat, 'Date', datecreation)
 
-            datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
-            self.initFeatureProperties(feat, self.dbasetablename, 'date', datecreation)
+            #datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
+            #self.initFeatureProperties(feat, self.DBASETABLENAME, 'date', datecreation)
+            datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            self.formutils.applyResultDict({'dateprofil' : datecreation},checkifinforgottenfield=False)
 
-            if self.parentWidget is not None:
-                if self.parentWidget.dbasetablename == 'Infralineaire' and self.parentWidget.currentFeature is not None:
-                    #parent id_dessys
-                    sql = "SELECT id_descriptionsystem FROM Infralineaire_qgis WHERE pk_infralineaire = " + str(self.parentWidget.currentFeaturePK)
-                    pkdessys = self.dbase.query(sql)[0][0]
-                    self.initFeatureProperties(self.currentFeature,'Profil', 'lid_descriptionsystem', pkdessys)
+            #if self.parentWidget is not None:
+            #    if self.parentWidget.DBASETABLENAME == 'Infralineaire' and self.parentWidget.currentFeaturePK is not None:
+            #        #parent id_dessys
+            #        sql = "SELECT id_descriptionsystem FROM Infralineaire_qgis WHERE pk_infralineaire = " + str(self.parentWidget.currentFeaturePK)
+            #        pkdessys = self.dbase.query(sql)[0][0]
+            #        # TODO
+            #        self.initFeatureProperties(self.currentFeature,'Profil', 'lid_descriptionsystem', pkdessys)
+            #        #self.formutils.applyResultDict({'date' : datecreation},checkifinforgottenfield=False)
 
-
+    """
     def createParentFeature(self):
         pkobjet = self.dbase.createNewObjet()
 
@@ -229,7 +225,7 @@ class BaseProfilTool(AbstractLamiaTool):
 
 
         if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
-            if self.parentWidget.dbasetablename == 'Infralineaire':
+            if self.parentWidget.DBASETABLENAME == 'Infralineaire':
                 # print(self.parentWidget.currentFeature.attributes())
                 #currentparentlinkfield = self.parentWidget.currentFeature['id_descriptionsystem']
                 #currentparentlinkfield
@@ -239,12 +235,12 @@ class BaseProfilTool(AbstractLamiaTool):
                 sql = "UPDATE Profil SET lid_descriptionsystem = " + str(currentparentlinkfield) + " WHERE pk_profil = " + str(pkprofil) + ";"
                 query = self.dbase.query(sql)
                 self.dbase.commit()
+    """
 
 
 
 
-
-    def postSaveFeature(self, boolnewfeature):
+    def postSaveFeature(self, savedfeaturepk=None):
         pass
 
 

@@ -316,11 +316,9 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
             self.instancekwargs['parentwidget'] = self
             self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(**self.instancekwargs)
             self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
-
-
             self.propertieswdgCROQUIS = BaseCroquisTool(**self.instancekwargs)
             self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
-
+            
             self.propertieswdgDesordre = BaseAssainissementDesordreTool(**self.instancekwargs)
             self.propertieswdgDesordre.initMainToolWidget()
             self.propertieswdgDesordre.formtoolwidgetconfdictmain['Desordre']['widgets']['groupedesordre'] = 'NOD'
@@ -334,7 +332,7 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
 
             self.propertieswdgEquipement = BaseAssainissementEquipementTool(**self.instancekwargs)
             self.dbasechildwdgfield.append(self.propertieswdgEquipement)
-
+            
             self.gpswidget = {'x': {'widget': self.toolwidgetmain.label_X,
                                     'gga': 'Xcrs'},
                               'y': {'widget': self.toolwidgetmain.label_Y,
@@ -451,11 +449,8 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
             #self.propertieswdgDesordre.comboBox_featurelist.setEnabled(False)
             #self.propertieswdgDesordre.groupBox_geom.setParent(None)
             self.dbasechildwdgfield.append(self.propertieswdgDesordre)
-
             self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(**self.instancekwargs)
             self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
-
-
             self.propertieswdgCROQUIS = BaseCroquisTool(**self.instancekwargs)
             self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
@@ -653,21 +648,32 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
                     indexgeom = -1
 
                 for fetpk, fetid in result:
-                    infrafet = self.dbase.getLayerFeatureByPk('Infralineaire', fetpk)
-                    infrafetgeom = infrafet.geometry().asPolyline()
+                    #infrafet = self.dbase.getLayerFeatureByPk('Infralineaire', fetpk)
+                    #infrafetgeom = infrafet.geometry().asPolyline()
+                    geomtext = self.dbase.getValuesFromPk('Infralineaire',
+                                'ST_AsText(geom)',
+                                fetpk)
+                    infrafetgeom = qgis.core.QgsGeometry.fromWkt(geomtext).asPolyline()
 
-                    if not self.dbase.areNodesEquals(infrafetgeom[indexgeom], nodegeom):
-                        self.dbase.createNewLineVersion('Infralineaire', fetpk)
-                        fetpk = self.dbase.getLayerFeatureById('Infralineaire', fetid).id()
+                    if not self.dbase.utils.areNodesEquals(infrafetgeom[indexgeom], nodegeom):
+                        #savedfeaturepk = self.manageFeatureCreationOrUpdate(featurepk)
+                        fetpk = self.mainifacewidget.toolwidgets['toolprepro']['Troncon'][0].formutils.manageFeatureCreationOrUpdate(fetpk)
+                        #self.dbase.createNewLineVersion('Infralineaire', fetpk)
+                        #fetpk = self.dbase.getLayerFeatureById('Infralineaire', fetid).id()
                         infrafetgeom[indexgeom] = nodegeom
-                        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                            newgeom = qgis.core.QgsGeometry.fromPolyline(infrafetgeom)
-                        else:
-                            newgeom = qgis.core.QgsGeometry.fromPolylineXY(infrafetgeom)
-                        dbasetablelayer = self.dbase.dbasetables['Infralineaire']['layer']
-                        dbasetablelayer.startEditing()
-                        success = dbasetablelayer.changeGeometry(fetpk, newgeom)
-                        dbasetablelayer.commitChanges()
+                        newgeom = qgis.core.QgsGeometry.fromPolylineXY(infrafetgeom)
+
+                        sql = "UPDATE Infralineaire SET geom = ST_GeomFromText('{}',{}) "\
+                              " WHERE pk_infralineaire = {}".format(newgeom.asWkt(),
+                                                                    self.dbase.crsnumber,
+                                                                    fetpk)
+                        self.dbase.query(sql)
+                        #self.mainifacewidget.qgiscanvas.layers['Infralineaire']['layerqgis'].triggerRepaint()
+
+                        #dbasetablelayer = self.dbase.dbasetables['Infralineaire']['layer']
+                        #dbasetablelayer.startEditing()
+                        #success = dbasetablelayer.changeGeometry(fetpk, newgeom)
+                        #dbasetablelayer.commitChanges()
                         # move branchement
                         self.moveBranchement(fetpk, newgeom)
 
@@ -745,8 +751,9 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
     def moveBranchement(self, pkinfralin, newgeom):
 
         fetiddessys = self.dbase.getValuesFromPk('Infralineaire_qgis', 'id_descriptionsystem', pkinfralin)
-        dbasetablelayer = self.dbase.dbasetables['Infralineaire']['layer']
-        print('moveBranchement1', pkinfralin, fetiddessys)
+        #dbasetablelayer = self.dbase.dbasetables['Infralineaire']['layer']
+        dbasetablelayer = self.mainifacewidget.qgiscanvas.layers['Infralineaire']['layer']
+        #print('moveBranchement1', pkinfralin, fetiddessys)
         # sql = "SELECT id_infralineaire FROM Infralineaire WHERE lk_descriptionsystem2 = " + str(infrafet['id_descriptionsystem'])
         #sql = "SELECT pk_infralineaire, id_infralineaire FROM Infralineaire_qgis WHERE lid_descriptionsystem_2 = " + str( fetiddessys)
         #sql += " AND "
@@ -759,20 +766,32 @@ class BaseAssainissementNoeudTool(BaseNoeudTool):
         result2 = self.dbase.query(sql)
         # for fetid2 in result2:
         for fetpk2, fetid2 in result2:
-            print('moveBranchement2',fetpk2,fetid2 )
+            # print('moveBranchement2',fetpk2,fetid2 )
             # infrafet = self.dbase.getLayerFeatureById('Infralineaire', fetid2)
-            self.dbase.createNewLineVersion('Infralineaire', fetpk2)
-            fetpk2 = self.dbase.getLayerFeatureById('Infralineaire', fetid2).id()
-            infrafet = self.dbase.getLayerFeatureByPk('Infralineaire', fetpk2)
-            if sys.version_info.major == 2:
-                infrafetpoint1 = qgis.core.QgsGeometry().fromPoint(infrafet.geometry().asPolyline()[0])
-            elif sys.version_info.major == 3:
-                infrafetpoint1 = qgis.core.QgsGeometry().fromPointXY(infrafet.geometry().asPolyline()[0])
+            #self.dbase.createNewLineVersion('Infralineaire', fetpk2)
+            #fetpk2 = self.dbase.getLayerFeatureById('Infralineaire', fetid2).id()
+            #infrafet = self.dbase.getLayerFeatureByPk('Infralineaire', fetpk2)
+
+            infrafetpk = self.mainifacewidget.toolwidgets['toolprepro']['Troncon'][0].formutils.manageFeatureCreationOrUpdate(fetpk2)
+            geomtext = self.dbase.getValuesFromPk('Infralineaire',
+                        'ST_AsText(geom)',
+                        infrafetpk)
+            infrafetgeom = qgis.core.QgsGeometry.fromWkt(geomtext).asPolyline()
+
+            #infrafetpoint1 = qgis.core.QgsGeometry().fromPointXY(infrafet.geometry().asPolyline()[0])
+            infrafetpoint1 = qgis.core.QgsGeometry().fromPointXY(infrafetgeom[0])
             # newgeom2 = newgeom.shortestLine(infrafetpoint1)
             newgeom2 = infrafetpoint1.shortestLine(newgeom)
-            dbasetablelayer.startEditing()
-            success = dbasetablelayer.changeGeometry(fetpk2, newgeom2)
-            dbasetablelayer.commitChanges()
+
+            sql = "UPDATE Infralineaire SET geom = ST_GeomFromText('{}',{}) "\
+                    " WHERE pk_infralineaire = {}".format(newgeom2.asWkt(),
+                                                        self.dbase.crsnumber,
+                                                        infrafetpk)
+            self.dbase.query(sql)
+
+            #dbasetablelayer.startEditing()
+            #success = dbasetablelayer.changeGeometry(infrafetpk, newgeom2)
+            #dbasetablelayer.commitChanges()
 
 
 class UserUI(QWidget):

@@ -7,10 +7,13 @@ from qgis.PyQt.QtWidgets import (QWidget,QDialog,QMainWindow)
 from Lamia.iface.qgiswidget.ifaceqgswidget import LamiaWindowWidget
 from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
 from settings import *
-
-DBTYPE = ['Base2_assainissement']
+# Base2_assainissement  Base2_digue Base2_eaupotable  Base2_eclairagepublic
+# Base2_tramway
+DBTYPE = ['Base2_tramway']  
+#variantes = ['Lamia']       # Lamia 2018_SNCF CD41
 X_BEGIN = 400000.0
 Y_BEGIN = 6000000.0
+TEST_WITH_FEATURE_CREATION = False
 
 class DBaseTest(unittest.TestCase):
 
@@ -63,28 +66,28 @@ class DBaseTest(unittest.TestCase):
     def test_a_testSaveFeature(self):
         testcdir = os.path.join(self.tempdir, 'c_creation')
         self._initQGis()
-        #self._createWin()
-        #self._createMainWin()
+        # uncomment to test specific file
+        #slfile = os.path.join(os.path.dirname(__file__), 'lamia_test2','test01.sqlite')
+        #slfile = os.path.join(os.path.dirname(__file__), 'lamia_test','test01.sqlite')
+
         for work in DBTYPE:
             sqlitedbase = DBaseParserFactory('spatialite').getDbaseParser()
-            # slfile = os.path.join(testcdir, work ,'test01.sqlite')
-            # os.mkdir(os.path.dirname(slfile))
             sqlitedbase.dbconfigreader.createDBDictionary(work)
-            variantes = list(sqlitedbase.dbconfigreader.variantespossibles)
+            if not 'variantes' in locals().keys():
+                variantes = list(sqlitedbase.dbconfigreader.variantespossibles)
             logging.getLogger("Lamia_unittest").debug('************* Opening %s', variantes)
             for variante in variantes:
                 logging.getLogger("Lamia_unittest").debug('************* Opening %s %s', work, variante)
                 #self._initQGis()
                 self._createWin()
                 self._createMainWin()
-                
-                #slfile = os.path.join(os.path.dirname(__file__), 'lamia_test2','test01.sqlite')
-                #slfile = os.path.join(testcdir, 'c_creation','sl_Base2_assainissement_CD41','test01.sqlite')
-                slfile = os.path.join(testcdir, 'sl_' + work + '_' + variante, 'test01.sqlite')
+                if not 'slfile' in locals().keys() or slfile is None:
+                    slfile = os.path.join(testcdir, 'sl_' + work + '_' + variante, 'test01.sqlite')
                 self.wind.loadDBase(dbtype='Spatialite', slfile=slfile)
-                self.wind.setVisualMode(visualmode=1)
+                slfile = None
+                self.wind.setVisualMode(visualmode=0)
                 #selectfeaturetest
-                if True:
+                if TEST_WITH_FEATURE_CREATION:
                     toolpreprolist = self.wind.toolwidgets['toolprepro']
                     global i
                     i = 0
@@ -93,11 +96,13 @@ class DBaseTest(unittest.TestCase):
                             for tt in toolpreprovalue:
                                 self.recursive_creation(tt)
                 
-                self.wind.qgiscanvas.layers['Photo']['layerqgis'].triggerRepaint()
-                self.wind.qgiscanvas.canvas.refreshAllLayers()
-                extent = self.wind.qgiscanvas.layers['Photo']['layerqgis'].extent().buffered(10.0)
-                print(extent)
-                extent = qgis.core.QgsRectangle(X_BEGIN, Y_BEGIN, X_BEGIN + 10, Y_BEGIN + 10)
+                #self.wind.qgiscanvas.layers['Photo']['layerqgis'].triggerRepaint()
+                #self.wind.qgiscanvas.canvas.refreshAllLayers()
+                if self.wind.qgiscanvas.layers['Infralineaire']['layer'].featureCount() > 0:
+                    extent = self.wind.qgiscanvas.layers['Infralineaire']['layer'].extent().buffered(10.0)
+                else:
+                    extent = qgis.core.QgsRectangle(X_BEGIN, Y_BEGIN, X_BEGIN + 10, Y_BEGIN + 10)
+                logging.getLogger("Lamia_unittest").debug('Extent : %s', extent)
                 self.wind.qgiscanvas.canvas.setExtent(extent)
                 self.mainwin.exec_()
                 #self.wind.dbase.disconnect()
@@ -277,8 +282,8 @@ class UserUI(QDialog):
         uic.loadUi(uipath, self)
 
 if __name__ == "__main__":
-    #logging.basicConfig( stream=sys.stderr )
-    logging.basicConfig(format='%(asctime)s :: %(levelname)s :: %(module)s :: %(funcName)s :: %(message)s')
+    logging.basicConfig(format='%(asctime)s :: %(levelname)s :: %(module)s :: %(funcName)s :: %(message)s',
+                        datefmt="%H:%M:%S")
     logging.getLogger( "Lamia_unittest" ).setLevel( logging.DEBUG )
 
     unittest.main()

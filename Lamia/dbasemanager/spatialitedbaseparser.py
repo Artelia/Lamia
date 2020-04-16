@@ -115,11 +115,17 @@ class SpatialiteDBaseParser(AbstractDBaseParser):
                 # idcolumnname = self.getFirstIdColumn(viewnames[viewname])
                 idcolumnname = self.getFirstIdColumn(dbname)
                 viewlower = viewnames[viewname].lower()
-                sql = "INSERT INTO views_geometry_columns (view_name, view_geometry, view_rowid, "
-                sql += "f_table_name, f_geometry_column,read_only)"
-                sql += " VALUES ('" + str(viewlower) + "','geom','" + idcolumnname + "','" + str(dbnamelower)
-                sql += "','geom',0)"
-                finalsqllist.append(sql)
+                try:
+                    sql = "INSERT INTO views_geometry_columns (view_name, view_geometry, view_rowid, "
+                    sql += "f_table_name, f_geometry_column,read_only)"
+                    sql += " VALUES ('" + str(viewlower) + "','geom','" + idcolumnname + "','" + str(dbnamelower)
+                    sql += "','geom',0)"
+                    finalsqllist.append(sql)
+                except TypeError as e:
+                    print(dbname, e)
+                    print(viewlower, idcolumnname, dbnamelower)
+                    raise TypeError
+                
 
         return finalsqllist
 
@@ -184,14 +190,10 @@ class SpatialiteDBaseParser(AbstractDBaseParser):
         sql = "PRAGMA table_info(" + str(tablename) + ")"
         query = self.query(sql)
         result = [row[1] for row in query]
-        #print(result)
         for fieldname in result:
-            if self.revisionwork:
-                if 'pk_' in fieldname:
-                    return fieldname
-            else:
-                if 'id_' in fieldname:
-                    return fieldname
+            if 'pk_' in fieldname:
+                return fieldname
+
 
     def getLastPK(self, tablename):
         sql = "SELECT * FROM sqlite_sequence "

@@ -24,33 +24,7 @@ This file is part of LAMIA.
   * License-Filename: LICENSING.md
  """
 
-
-
-import qgis
-from qgis.PyQt import uic, QtGui, QtCore
-try:
-    from qgis.PyQt.QtGui import (QWidget, QLabel, QFrame, QTreeWidgetItem, QHeaderView)
-except ImportError:
-    from qgis.PyQt.QtWidgets import (QWidget, QLabel, QFrame, QTreeWidgetItem, QHeaderView)
-
-# from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
-import os
-import io
-# from ...libs import pyqtgraph as pg
-# from ...libs.pyqtgraph import exporters
-
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-import networkx
-import numpy as np
-import shutil
-
-from ..Base2.Lamia_path_tool import PathTool
-
-# ********************************************************************************************************************
-# ********************************* Main Widget                *******************************************************
-# ********************************************************************************************************************
+from ..base2.Lamia_path_tool import PathTool
 
 class DiguePathTool(PathTool):
 

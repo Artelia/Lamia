@@ -43,7 +43,7 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
         #self.mainifacewidget = kwargs.get('mainifacewidget', None)
         self.toolwidget = kwargs.get('toolwidget', None)
 
-    def onActivation(self):
+    def onActivation(self, initfeatureselection=True):
         self.treewidget.clear()
 
         headerlist = [self.toolwidget.DBASETABLENAME]
@@ -64,8 +64,14 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
         if self.treewidget.topLevelItemCount() == 0 :
             self.toolwidget.frametoolwidg.setEnabled(False)
         """
-        if self.treewidget.topLevelItemCount() > 0 :
-            self.treewidget.setCurrentItem(self.treewidget.invisibleRootItem().child(0))
+        if initfeatureselection:
+            if self.treewidget.topLevelItemCount() > 0 :
+                if self.toolwidget.lastselectedpk is None: 
+                    self.treewidget.setCurrentItem(self.treewidget.invisibleRootItem().child(0))
+                else:
+                    indexids = self.ids.index[self.ids['pk'] == self.toolwidget.lastselectedpk][0]
+                    self.treewidget.setCurrentItem(self.treewidget.invisibleRootItem().child(indexids))
+
         self.connectTreewidget()
 
     def loadFeaturesinTreeWdg(self):
@@ -102,25 +108,38 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
                 joindict = self.toolwidget.PARENTJOIN[parenttablename]
                 thistablename = self.toolwidget.DBASETABLENAME
                 if joindict['tctable'] is None:
-                    sql += "JOIN {}_now ON {} = {}"\
-                            " WHERE pk_{} = {}".format(parenttablename,
-                                                        parenttablename + '_now.' + joindict['colparent'],
-                                                        thistablename + '_now.' + joindict['colthistable'],
-                                                        parenttablename.lower(),
-                                                        self.toolwidget.parentWidget.currentFeaturePK)
+                    if parenttablename != thistablename:
+                        sql += "JOIN {}_now ON {} = {}"\
+                                " WHERE pk_{} = {}".format(parenttablename,
+                                                            parenttablename + '_now.' + joindict['colparent'],
+                                                            thistablename + '_now.' + joindict['colthistable'],
+                                                            parenttablename.lower(),
+                                                            self.toolwidget.parentWidget.currentFeaturePK)
+                    else:
+                        valsearched = self.toolwidget.dbase.getValuesFromPk(thistablename + '_qgis',
+                                                                            joindict['colparent'],
+                                                                            self.toolwidget.parentWidget.currentFeaturePK)
+                        if valsearched is not None:
+                            sql += " WHERE {} = {}".format(joindict['colthistable'],
+                                                            valsearched)
+                            #print('***', sql)
+                        else:
+                            sql = None
                 else:
+                    
                     sql += "INNER JOIN {} ON {} = {} "\
-                           "INNER JOIN {}_now ON {} = {} "\
-                           "WHERE pk_{} = {} ".format(joindict['tctable'],
-                                                      thistablename + '_now.' + joindict['colthistable'],
-                                                      joindict['tctable'] + '.' + joindict['tctablecolthistable'],
-                                                      parenttablename,
-                                                      joindict['tctable'] + '.' + joindict['tctablecolparent'],
-                                                      parenttablename + '_now.' + joindict['colparent'],
+                        "INNER JOIN {}_now ON {} = {} "\
+                        "WHERE pk_{} = {} ".format(joindict['tctable'],
+                                                    thistablename + '_now.' + joindict['colthistable'],
+                                                    joindict['tctable'] + '.' + joindict['tctablecolthistable'],
+                                                    parenttablename,
+                                                    joindict['tctable'] + '.' + joindict['tctablecolparent'],
+                                                    parenttablename + '_now.' + joindict['colparent'],
                                                         parenttablename.lower(),
                                                         self.toolwidget.parentWidget.currentFeaturePK)
 
-            sql = self.dbase.sqlNow(sql)
+            if sql is not None:
+                sql = self.dbase.sqlNow(sql)
             #query = self.dbase.query(sql)
             #self.ids = pd.DataFrame(query, columns = ['pk', 'id']) 
             #print(self.ids)

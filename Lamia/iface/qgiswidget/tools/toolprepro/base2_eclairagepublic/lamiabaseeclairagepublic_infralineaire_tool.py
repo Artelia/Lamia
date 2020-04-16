@@ -1,100 +1,99 @@
 # -*- coding: utf-8 -*-
 """
+This file is part of LAMIA.
 
+    LAMIA is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-import datetime
-import logging
-import time
-debugtime = False
+    LAMIA is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Foobar.  If not, see <https://www.gnu.org/licenses/>.
+
 """
+"""
+  * Copyright (c) 2017-2020 ARTELIA Commit <lamia@arteliagroup.com>
+  * 
+  * SPDX-License-Identifier: GPL-3.0-or-later
+  * License-Filename: LICENSING.md
+ """
 
-from qgis.PyQt import uic, QtCore, QtGui
 
-try:
-    from qgis.PyQt.QtGui import (QWidget, QLabel, QFrame)
-except ImportError:
-    from qgis.PyQt.QtWidgets import (QWidget, QLabel, QFrame)
-import os
-#from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
-from ..base2.lamiabase_infralineaire_tool import BaseInfraLineaireTool
 import logging
-# from ..base.lamiabase_photo_tool import BasePhotoTool
+import os
+from collections import OrderedDict
+import qgis
+from qgis.PyQt import uic, QtCore, QtGui
+from qgis.PyQt.QtWidgets import (QWidget, QLabel, QFrame)
+
+
+from ..base2.lamiabase_infralineaire_tool import BaseInfraLineaireTool
 from .lamiabaseeclairagepublic_photo_tool import BaseEclairagePublicPhotoTool as BasePhotoTool
 from .lamiabaseeclairagepublic_croquis_tool import BaseEclairagePublicCroquisTool as BaseCroquisTool
 from ..base2.lamiabase_photoviewer import PhotoViewer
-if False:
-    from .lamiabasedigue_graphique_tool import BaseGraphiqueTool as GraphiqueTool
-    from .lamiabasedigue_profil_tool import BaseDigueProfilTool as ProfilTool
-from collections import OrderedDict
-import qgis
 
 
 class BaseEclairagePublicInfraLineaireTool(BaseInfraLineaireTool):
 
 
-    LOADFIRST = True
-    dbasetablename = 'Infralineaire'
-    # specialfieldui=['2']
-
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
-        super(BaseEclairagePublicInfraLineaireTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
+    def __init__(self, **kwargs):
+        super(BaseEclairagePublicInfraLineaireTool, self).__init__(**kwargs)
 
 
+    def initMainToolWidget(self):
 
-
-
-
-
-
-
-    def initFieldUI(self):
-        # ****************************************************************************************
-        #   userui Field
         if self.dbase.variante in [None, 'Lamia']:
-            if self.userwdgfield is None:
-                self.userwdgfield = UserUIField()
 
-                self.linkuserwdgfield = {'Infralineaire': {'linkfield': 'id_infralineaire',
-                                                           'widgets': OrderedDict([('typres', self.userwdgfield.comboBox_typres),
-                                                                                   ('neutre', self.userwdgfield.comboBox_neutre),
-                                                                                   ('typcab', self.userwdgfield.comboBox_typcab),
+            self.toolwidgetmain = UserUIField()
 
-                                                                                   ('natcond',self.userwdgfield.comboBox_natcond),
-                                                                                   ('nbresecti', self.userwdgfield.lineEdit_nbresecti),
+            self.formtoolwidgetconfdictmain = {'Infralineaire': {'linkfield': 'id_infralineaire',
+                                                        'widgets': OrderedDict([('typres', self.toolwidgetmain.comboBox_typres),
+                                                                                ('neutre', self.toolwidgetmain.comboBox_neutre),
+                                                                                ('typcab', self.toolwidgetmain.comboBox_typcab),
 
-                                                                                   ('lid_descriptionsystem_1', self.userwdgfield.spinBox_lk_noeud1),
-                                                                                   ('lid_descriptionsystem_2', self.userwdgfield.spinBox_lk_noeud2),
+                                                                                ('natcond',self.toolwidgetmain.comboBox_natcond),
+                                                                                ('nbresecti', self.toolwidgetmain.lineEdit_nbresecti),
 
-                                                                                   ('nomdepart', self.userwdgfield.comboBox_depart),
+                                                                                ('lid_descriptionsystem_1', self.toolwidgetmain.spinBox_lk_noeud1),
+                                                                                ('lid_descriptionsystem_2', self.toolwidgetmain.spinBox_lk_noeud2),
 
-                                                                                   ])},
-                                         'Objet': {'linkfield': 'id_objet',
-                                                   'widgets': {
-                                                               'commentaire':self.userwdgfield.textBrowser_commentaire}},
-                                         'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
-                                                               'widgets': {
-                                                                   'annee_debut_pose': self.userwdgfield.dateTimeEdit_annee_debut_pose
-                                                               }}}
+                                                                                ('nomdepart', self.toolwidgetmain.comboBox_depart),
 
-
-                self.userwdgfield.toolButton_pickam.clicked.connect(self.pickToNode)
-                self.userwdgfield.toolButton_pickav.clicked.connect(self.pickToNode)
+                                                                                ])},
+                                        'Objet': {'linkfield': 'id_objet',
+                                                'widgets': {
+                                                            'commentaire':self.toolwidgetmain.textBrowser_commentaire}},
+                                        'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
+                                                            'widgets': {
+                                                                'annee_debut_pose': self.toolwidgetmain.dateTimeEdit_annee_debut_pose
+                                                            }}}
 
 
-
-                self.dbasechildwdgfield = []
-
-                if self.parentWidget is None:
-                    self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
-                    self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
-
-
-                    self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
-                    self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+            self.toolwidgetmain.toolButton_pickam.clicked.connect(self.pickToNode)
+            self.toolwidgetmain.toolButton_pickav.clicked.connect(self.pickToNode)
 
 
 
-    def postInitFeatureProperties(self, feat):
+            self.dbasechildwdgfield = []
+            self.instancekwargs['parentwidget'] = self
+
+            #if self.parentWidget is None:
+            self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(**self.instancekwargs)
+            self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
+
+
+            self.propertieswdgCROQUIS = BaseCroquisTool(**self.instancekwargs)
+            self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+
+
+
+        # def postInitFeatureProperties(self, feat):
+    def postSelectFeature(self):
         self.updateNomDepart()
 
 
@@ -103,8 +102,8 @@ class BaseEclairagePublicInfraLineaireTool(BaseInfraLineaireTool):
     def pickToNode(self):
         # print('pick',self.sender())
         self.picksender = self.sender()
-        self.pointEmitter.canvasClicked.connect(self.picknearestnode)
-        self.canvas.setMapTool(self.pointEmitter)
+        self.mainifacewidget.qgiscanvas.pointEmitter.canvasClicked.connect(self.picknearestnode)
+        self.mainifacewidget.qgiscanvas.canvas.setMapTool(self.mainifacewidget.qgiscanvas.pointEmitter)
 
 
 
@@ -114,26 +113,31 @@ class BaseEclairagePublicInfraLineaireTool(BaseInfraLineaireTool):
         debug = False
         typenode = False
 
-        if self.picksender == self.userwdgfield.toolButton_pickam:
+        if self.picksender == self.toolwidgetmain.toolButton_pickam:
             editingnode = 1
-        elif self.picksender == self.userwdgfield.toolButton_pickav:
+        elif self.picksender == self.toolwidgetmain.toolButton_pickav:
             editingnode = 2
 
         if debug: logging.getLogger("Lamia").debug('edit mode %s', str(editingnode))
 
 
-        #if self.userwdgfield.comboBox_branch.currentText() in ['Faux','Non'] or editingnode == 1:
-        nearestnodeid, distance  = self.dbase.getNearestPk(self.dbase.dbasetables['Noeud'],
-                                              'Noeud',
-                                              point)
-        nearestnodefet = self.dbase.getLayerFeatureByPk('Noeud', nearestnodeid)
-        nearestnodepoint = nearestnodefet.geometry().asPoint()
+        #if self.toolwidgetmain.comboBox_branch.currentText() in ['Faux','Non'] or editingnode == 1:
+        #nearestnodeid, distance  = self.dbase.getNearestPk(self.dbase.dbasetables['Noeud'],
+        #                                      'Noeud',
+        #                                      point)
+        #nearestnodefet = self.dbase.getLayerFeatureByPk('Noeud', nearestnodeid)
+        #nearestnodepoint = nearestnodefet.geometry().asPoint()
         #typenode = 'NODE'
+        nearestnodeid, distance  = self.mainifacewidget.qgiscanvas.getNearestPk('Noeud',
+                                                                                point)
+        #nearestnodefet = self.dbase.getLayerFeatureByPk('Noeud', nearestnodeid)
+        nearestnodefet = self.mainifacewidget.qgiscanvas.layers['Noeud']['layer'].getFeature(nearestnodeid)
+        nearestnodepoint = nearestnodefet.geometry().asPoint()
 
 
         if False:
-            #if self.userwdgfield.comboBox_branch.currentText()=='Faux' or editingnode == 1:
-            if self.userwdgfield.comboBox_branch.currentText() in ['Faux','Non'] or editingnode == 1:
+            #if self.toolwidgetmain.comboBox_branch.currentText()=='Faux' or editingnode == 1:
+            if self.toolwidgetmain.comboBox_branch.currentText() in ['Faux','Non'] or editingnode == 1:
                 nearestnodeid, distance  = self.dbase.getNearestPk(self.dbase.dbasetables['Noeud'],
                                                       'Noeud',
                                                       point)
@@ -183,29 +187,29 @@ class BaseEclairagePublicInfraLineaireTool(BaseInfraLineaireTool):
 
         #gui things
         if editingnode == 1:
-            #self.userwdgfield.spinBox_lk_noeud1.setValue(nearestnodeid)
-            self.userwdgfield.spinBox_lk_noeud1.setValue(nearestnodeiddessys)
+            #self.toolwidgetmain.spinBox_lk_noeud1.setValue(nearestnodeid)
+            self.toolwidgetmain.spinBox_lk_noeud1.setValue(nearestnodeiddessys)
         elif editingnode == 2:
-            #self.userwdgfield.spinBox_lk_noeud2.setValue(nearestnodeid)
-            self.userwdgfield.spinBox_lk_noeud2.setValue(nearestnodeiddessys)
+            #self.toolwidgetmain.spinBox_lk_noeud2.setValue(nearestnodeid)
+            self.toolwidgetmain.spinBox_lk_noeud2.setValue(nearestnodeiddessys)
 
         # get the geometry before editing
         tempgeom=[]
         if self.tempgeometry is not None :
             wkbtype = self.tempgeometry.wkbType()
-            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                if len(self.tempgeometry.asPolyline()) > 0:
-                    tempgeom = self.tempgeometry.asPolyline()
-                else:
-                    tempgeom = self.tempgeometry.asMultiPolyline()[0]
-            else:
-                if wkbtype == qgis.core.QgsWkbTypes.Type.LineString :
-                    tempgeom = self.tempgeometry.asPolyline()
-                elif wkbtype == qgis.core.QgsWkbTypes.Type.MultiLineString :
-                    tempgeom = self.tempgeometry.asMultiPolyline()[0]
+            if wkbtype == qgis.core.QgsWkbTypes.Type.LineString :
+                tempgeom = self.tempgeometry.asPolyline()
+            elif wkbtype == qgis.core.QgsWkbTypes.Type.MultiLineString :
+                tempgeom = self.tempgeometry.asMultiPolyline()[0]
 
-        elif self.currentFeature is not None and self.tempgeometry is  None:
-            tempgeom = self.currentFeature.geometry().asPolyline()
+        #elif self.currentFeature is not None and self.tempgeometry is  None:
+        #    tempgeom = self.currentFeature.geometry().asPolyline()
+
+
+        elif self.currentFeaturePK is not None and self.tempgeometry is  None:
+            tempfeat = self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME]['layer'].getFeature(self.currentFeaturePK)
+            tempgeom = tempfeat.geometry().asPolyline()
+
 
         if debug: logging.getLogger("Lamia").debug('geombeforeediting %s', tempgeom)
 
@@ -240,14 +244,23 @@ class BaseEclairagePublicInfraLineaireTool(BaseInfraLineaireTool):
 
 
             # update canvas
-            self.createorresetRubberband(1)
+            #self.createorresetRubberband(1)
+            #self.setTempGeometry(tempgeom, False)
+            self.mainifacewidget.qgiscanvas.createorresetRubberband(1)
             self.setTempGeometry(tempgeom, False)
 
         # disconnect all
-        self.canvas.unsetMapTool(self.pointEmitter)
+        #self.canvas.unsetMapTool(self.pointEmitter)
+        #self.picksender = None
+        #try:
+        #    self.pointEmitter.canvasClicked.disconnect(self.picknearestnode)
+        #except:
+        #    pass
+
+        self.mainifacewidget.qgiscanvas.canvas.unsetMapTool(self.mainifacewidget.qgiscanvas.pointEmitter)
         self.picksender = None
         try:
-            self.pointEmitter.canvasClicked.disconnect(self.picknearestnode)
+            self.mainifacewidget.qgiscanvas.pointEmitter.canvasClicked.disconnect(self.picknearestnode)
         except:
             pass
 
@@ -257,7 +270,7 @@ class BaseEclairagePublicInfraLineaireTool(BaseInfraLineaireTool):
 
     def updateNomDepart(self):
 
-        idnoeudmaont = int(self.userwdgfield.spinBox_lk_noeud1.value())
+        idnoeudmaont = int(self.toolwidgetmain.spinBox_lk_noeud1.value())
         sql = "SELECT dep_nom FROM Equipement_now "
         sql += "INNER JOIN Noeud_now ON Equipement_now.lid_descriptionsystem_1 = Noeud_now.id_descriptionsystem"
         sql+= " WHERE Noeud_now.id_descriptionsystem = " + str(idnoeudmaont)
@@ -269,28 +282,65 @@ class BaseEclairagePublicInfraLineaireTool(BaseInfraLineaireTool):
 
 
         if len(res)==0:
-            self.userwdgfield.comboBox_depart.setEnabled(False)
-            self.userwdgfield.comboBox_depart.setCurrentIndex(0)
+            self.toolwidgetmain.comboBox_depart.setEnabled(False)
+            self.toolwidgetmain.comboBox_depart.setCurrentIndex(0)
         else:
-            self.userwdgfield.comboBox_depart.setEnabled(True)
+            self.toolwidgetmain.comboBox_depart.setEnabled(True)
             departspresents = [elem[0] for elem in res]
-            for index in range(1, self.userwdgfield.comboBox_depart.count()):
-                if self.userwdgfield.comboBox_depart.itemText(index) in departspresents:
-                    self.userwdgfield.comboBox_depart.model().item(index).setEnabled(True)
+            for index in range(1, self.toolwidgetmain.comboBox_depart.count()):
+                if self.toolwidgetmain.comboBox_depart.itemText(index) in departspresents:
+                    self.toolwidgetmain.comboBox_depart.model().item(index).setEnabled(True)
                 else:
-                    self.userwdgfield.comboBox_depart.model().item(index).setEnabled(False)
+                    self.toolwidgetmain.comboBox_depart.model().item(index).setEnabled(False)
 
 
 
-    def postSaveFeature(self, boolnewfeature):
+    def postSaveFeature(self, savedfeaturepk=None):
 
 
-        self.currentFeature = self.dbase.getLayerFeatureByPk(self.dbasetablename, self.currentFeaturePK)
-        fetgeom = self.currentFeature.geometry().asPolyline()
+        #self.currentFeature = self.dbase.getLayerFeatureByPk(self.dbasetablename, self.currentFeaturePK)
+        #fetgeom = self.currentFeature.geometry().asPolyline()
+        geomtext = self.dbase.getValuesFromPk(self.DBASETABLENAME,
+                                        'ST_AsText(geom)',
+                                        savedfeaturepk)
+        fetgeom = qgis.core.QgsGeometry.fromWkt(geomtext).asPolyline()
 
-        indexnode1 = self.userwdgfield.spinBox_lk_noeud1.value()
+
+        indexnodes = [1, 2]
+        for indexnode in indexnodes:
+            idnode = eval('self.toolwidgetmain.spinBox_lk_noeud{}.value()'.format(indexnode))
+            if idnode > -1 :
+                sql = "SELECT pk_noeud FROM Noeud_qgis WHERE id_descriptionsystem = {}".format(idnode)
+                query = self.dbase.query(sql)
+                pks = [row for row in query]
+                if len(pks) == 1:
+                    pknoeud = pks[0][0]
+                    layer = self.mainifacewidget.qgiscanvas.layers['Noeud']['layer']
+                    nearestnodepoint1 = layer.getFeature(pknoeud).geometry().asPoint()
+                    if indexnode == 1:
+                        order = [0,-1]
+                    else:
+                        order = [-1,0]
+                    if not self.dbase.utils.areNodesEquals(fetgeom[order[0]], nearestnodepoint1):
+                        if self.dbase.utils.areNodesEquals(fetgeom[order[1]], nearestnodepoint1):
+                            fetgeom = fetgeom[::-1]
+                            newgeom = qgis.core.QgsGeometry.fromPolylineXY(fetgeom)
+                            #layer = self.dbase.dbasetables['Infralineaire']['layer']
+                            layer = self.mainifacewidget.qgiscanvas.layers['Infralineaire']['layer']
+                            layer.startEditing()
+                            success = layer.changeGeometry(self.currentFeaturePK, newgeom)
+                            layer.commitChanges()
+                        else:
+                            self.toolwidgetmain.spinBox_lk_noeud1.setValue(-1)
+                            exec('self.toolwidgetmain.spinBox_lk_noeud{}.setValue(-1)'.format(indexnode))
+                            self.formutils.saveFeatureProperties(savedfeaturepk)
+
+
+
+        """
+        indexnode1 = self.toolwidgetmain.spinBox_lk_noeud1.value()
         if indexnode1 > -1 :
-            #if self.userwdgfield.comboBox_branch.currentText() == 'Faux':
+            #if self.toolwidgetmain.comboBox_branch.currentText() == 'Faux':
             sql = "SELECT id_noeud FROM Noeud_qgis WHERE id_descriptionsystem = " + str(indexnode1)
             query = self.dbase.query(sql)
             ids = [row for row in query]
@@ -299,7 +349,6 @@ class BaseEclairagePublicInfraLineaireTool(BaseInfraLineaireTool):
                 idnoeud = ids[0][0]
 
                 nearestnodefet1 = self.dbase.getLayerFeatureById('Noeud', idnoeud)
-
                 nearestnodepoint1 = nearestnodefet1.geometry().asPoint()
 
                 if not self.dbase.areNodesEquals(fetgeom[0], nearestnodepoint1):
@@ -315,91 +364,13 @@ class BaseEclairagePublicInfraLineaireTool(BaseInfraLineaireTool):
                         success = dbasetablelayer.changeGeometry(self.currentFeature.id(), newgeom)
                         dbasetablelayer.commitChanges()
                     else:
-                        self.userwdgfield.spinBox_lk_noeud1.setValue(-1)
+                        
+                        self.toolwidgetmain.spinBox_lk_noeud1.setValue(-1)
                         self.saveFeatureProperties()
 
-
-
-            if False:
-                if self.userwdgfield.comboBox_branch.currentText() in ['Faux','Non']:
-                    sql = "SELECT id_noeud FROM Noeud_qgis WHERE id_descriptionsystem = " + str(indexnode1)
-                    #sql = "SELECT pk_noeud FROM Noeud_qgis WHERE id_descriptionsystem = " + str(indexnode1)
-                    #sql += " AND "
-                    #sql += self.dbase.dateVersionConstraintSQL()
-                    query = self.dbase.query(sql)
-                    ids = [row for row in query]
-                    #pks = [row for row in query]
-                    if len(ids) == 1:
-                        # if len(pks) == 1:
-                        iddessys = ids[0][0]
-                        idnoeud = ids[0][0]
-                        # pknoeud = pks[0][0]
-
-                        nearestnodefet1 = self.dbase.getLayerFeatureById('Noeud', idnoeud)
-                        #nearestnodefet1 = self.dbase.getLayerFeatureByPk('Noeud', iddessys)
-
-                        nearestnodepoint1 = nearestnodefet1.geometry().asPoint()
-
-                        if not self.dbase.areNodesEquals(fetgeom[0], nearestnodepoint1):
-
-                            if self.dbase.areNodesEquals(fetgeom[-1], nearestnodepoint1):
-                                fetgeom = fetgeom[::-1]
-                                if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                                    newgeom = qgis.core.QgsGeometry.fromPolyline(fetgeom)
-                                else:
-                                    newgeom = qgis.core.QgsGeometry.fromPolylineXY(fetgeom)
-                                dbasetablelayer = self.dbase.dbasetables['Infralineaire']['layer']
-                                dbasetablelayer.startEditing()
-                                success = dbasetablelayer.changeGeometry(self.currentFeature.id(), newgeom)
-                                dbasetablelayer.commitChanges()
-                            else:
-                                self.userwdgfield.spinBox_lk_noeud1.setValue(-1)
-                                self.saveFeatureProperties()
-
-
-                else:
-                    sql = "SELECT id_infralineaire FROM Infralineaire_qgis WHERE id_descriptionsystem = " + str(indexnode1)
-                    query = self.dbase.query(sql)
-                    ids = [row for row in query]
-
-                    if len(ids) == 1:
-                        iddessys = ids[0][0]
-                        nearestnodefet2 = self.dbase.getLayerFeatureById('Infralineaire', iddessys)
-                        nearestnodepoint2 = nearestnodefet2.geometry()
-                        if False:
-                            resultintersect = nearestnodepoint2.buffer(0.01,12).intersects(self.currentFeature.geometry())
-
-                            if not resultintersect:
-                                self.userwdgfield.spinBox_lk_noeud2.setValue(-1)
-                                self.saveFeatureProperties()
-
-                        #if not nearestnodepoint2.buffer(0.01,12).intersects(self.currentFeature.geometry()):
-                        if not nearestnodepoint2.buffer(0.01, 12).intersects(qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(fetgeom[0]))):
-
-                            #if nearestnodepoint2.buffer(0.01,12).intersects(self.currentFeature.geometry()):
-                            if nearestnodepoint2.buffer(0.01, 12).intersects(qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(fetgeom[-1]))):
-
-                                fetgeom = fetgeom[::-1]
-                                if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                                    newgeom = qgis.core.QgsGeometry.fromPolyline(fetgeom)
-                                else:
-                                    newgeom = qgis.core.QgsGeometry.fromPolylineXY(fetgeom)
-                                dbasetablelayer = self.dbase.dbasetables['Infralineaire']['layer']
-                                dbasetablelayer.startEditing()
-                                success = dbasetablelayer.changeGeometry(self.currentFeature.id(), newgeom)
-                                dbasetablelayer.commitChanges()
-                            else:
-                                self.userwdgfield.spinBox_lk_noeud1.setValue(-1)
-                                self.saveFeatureProperties()
-
-
-
-
-
-
-        indexnode2 = self.userwdgfield.spinBox_lk_noeud2.value()
+        indexnode2 = self.toolwidgetmain.spinBox_lk_noeud2.value()
         if indexnode2 > -1:
-            #if self.userwdgfield.comboBox_branch.currentText() == 'Faux':
+            #if self.toolwidgetmain.comboBox_branch.currentText() == 'Faux':
             sql = "SELECT id_noeud FROM Noeud_qgis WHERE id_descriptionsystem = " + str(indexnode2)
             query = self.dbase.query(sql)
             ids = [row for row in query]
@@ -422,104 +393,9 @@ class BaseEclairagePublicInfraLineaireTool(BaseInfraLineaireTool):
                         success = dbasetablelayer.changeGeometry(self.currentFeature.id(), newgeom)
                         dbasetablelayer.commitChanges()
                     else:
-                        self.userwdgfield.spinBox_lk_noeud2.setValue(-1)
+                        self.toolwidgetmain.spinBox_lk_noeud2.setValue(-1)
                         self.saveFeatureProperties()
-
-
-
-
-
-            if False:
-                if self.userwdgfield.comboBox_branch.currentText() in ['Faux','Non']:
-                    sql = "SELECT id_noeud FROM Noeud_qgis WHERE id_descriptionsystem = " + str(indexnode2)
-                    query = self.dbase.query(sql)
-                    ids = [row for row in query]
-                    if len(ids) == 1:
-                        iddessys = ids[0][0]
-                        nearestnodefet2 = self.dbase.getLayerFeatureById('Noeud', iddessys)
-                        nearestnodepoint2 = nearestnodefet2.geometry().asPoint()
-
-                        if not self.dbase.areNodesEquals(fetgeom[-1], nearestnodepoint2):
-
-                            if self.dbase.areNodesEquals(fetgeom[0],nearestnodepoint2 ):
-
-                                fetgeom = fetgeom[::-1]
-                                if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                                    newgeom = qgis.core.QgsGeometry.fromPolyline(fetgeom)
-                                else:
-                                    newgeom = qgis.core.QgsGeometry.fromPolylineXY(fetgeom)
-                                dbasetablelayer = self.dbase.dbasetables['Infralineaire']['layer']
-                                dbasetablelayer.startEditing()
-                                success = dbasetablelayer.changeGeometry(self.currentFeature.id(), newgeom)
-                                dbasetablelayer.commitChanges()
-                            else:
-                                self.userwdgfield.spinBox_lk_noeud2.setValue(-1)
-                                self.saveFeatureProperties()
-
-                else:
-                    sql = "SELECT id_infralineaire FROM Infralineaire_qgis WHERE id_descriptionsystem = " + str(indexnode2)
-                    query = self.dbase.query(sql)
-                    ids = [row for row in query]
-
-                    if len(ids) == 1:
-                        iddessys = ids[0][0]
-                        nearestnodefet2 = self.dbase.getLayerFeatureById('Infralineaire', iddessys)
-                        nearestnodepoint2 = nearestnodefet2.geometry()
-                        if False:
-                            resultintersect = nearestnodepoint2.buffer(0.01,12).intersects(self.currentFeature.geometry())
-
-                            if not resultintersect:
-                                self.userwdgfield.spinBox_lk_noeud2.setValue(-1)
-                                self.saveFeatureProperties()
-                        if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                            #if not nearestnodepoint2.buffer(0.01,12).intersects(self.currentFeature.geometry()):
-                            if not nearestnodepoint2.buffer(0.01, 12).intersects(qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(fetgeom[-1]))):
-
-                                #if nearestnodepoint2.buffer(0.01,12).intersects(self.currentFeature.geometry()):
-                                if nearestnodepoint2.buffer(0.01, 12).intersects(qgis.core.QgsGeometry.fromPoint(qgis.core.QgsPoint(fetgeom[0]))):
-
-                                    fetgeom = fetgeom[::-1]
-                                    if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                                        newgeom = qgis.core.QgsGeometry.fromPolyline(fetgeom)
-                                    else:
-                                        newgeom = qgis.core.QgsGeometry.fromPolylineXY(fetgeom)
-                                    dbasetablelayer = self.dbase.dbasetables['Infralineaire']['layer']
-                                    dbasetablelayer.startEditing()
-                                    success = dbasetablelayer.changeGeometry(self.currentFeature.id(), newgeom)
-                                    dbasetablelayer.commitChanges()
-                                else:
-                                    self.userwdgfield.spinBox_lk_noeud2.setValue(-1)
-                                    self.saveFeatureProperties()
-                        else:
-                            #if not nearestnodepoint2.buffer(0.01,12).intersects(self.currentFeature.geometry()):
-                            if not nearestnodepoint2.buffer(0.01, 12).intersects(qgis.core.QgsGeometry.fromPointXY(qgis.core.QgsPointXY(fetgeom[-1]))):
-
-                                #if nearestnodepoint2.buffer(0.01,12).intersects(self.currentFeature.geometry()):
-                                if nearestnodepoint2.buffer(0.01, 12).intersects(qgis.core.QgsGeometry.fromPointXY(qgis.core.QgsPointXY(fetgeom[0]))):
-
-                                    fetgeom = fetgeom[::-1]
-                                    if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                                        newgeom = qgis.core.QgsGeometry.fromPolyline(fetgeom)
-                                    else:
-                                        newgeom = qgis.core.QgsGeometry.fromPolylineXY(fetgeom)
-                                    dbasetablelayer = self.dbase.dbasetables['Infralineaire']['layer']
-                                    dbasetablelayer.startEditing()
-                                    success = dbasetablelayer.changeGeometry(self.currentFeature.id(), newgeom)
-                                    dbasetablelayer.commitChanges()
-                                else:
-                                    self.userwdgfield.spinBox_lk_noeud2.setValue(-1)
-                                    self.saveFeatureProperties()
-
-
-
-
-
-
-
-
-
-
-
+        """
 
 class UserUIField(QWidget):
     def __init__(self, parent=None):

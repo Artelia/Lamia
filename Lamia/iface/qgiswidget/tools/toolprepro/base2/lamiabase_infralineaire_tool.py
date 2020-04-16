@@ -56,6 +56,7 @@ class BaseInfraLineaireTool(AbstractLamiaFormTool):
 
     def __init__(self, **kwargs):
         super(BaseInfraLineaireTool, self).__init__(**kwargs)
+        self.instancekwargs = kwargs
 
     def initTool(self):
         # ****************************************************************************************
@@ -105,14 +106,14 @@ class BaseInfraLineaireTool(AbstractLamiaFormTool):
                                                                 'widgets': {}}}
 
         self.dbasechildwdgfield = []
+        self.instancekwargs['parentwidget'] = self
+        #if self.parentWidget is None:
+        self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(**self.instancekwargs)
+        self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
 
-        if self.parentWidget is None:
-            self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
-            self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
 
-
-            self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
-            self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+        self.propertieswdgCROQUIS = BaseCroquisTool(**self.instancekwargs)
+        self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
 
     def postOnActivation(self):

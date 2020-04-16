@@ -359,7 +359,7 @@ class BaseAssainissementInfraLineaireTool(BaseInfraLineaireTool):
 
             #update canvas
             self.createorresetRubberband(1)
-            self.setTempGeometry(geomlist,False)
+            self.setTempGeometry(geomlist,,comefromcanvas=False,showinrubberband=False)
 
 
         if True:
@@ -393,7 +393,7 @@ class BaseAssainissementInfraLineaireTool(BaseInfraLineaireTool):
 
             # update canvas
             self.createorresetRubberband(1)
-            self.setTempGeometry(tempgeom, False)
+            self.setTempGeometry(tempgeom, ,comefromcanvas=False,showinrubberband=False)
 
         # disconnect all
         self.canvas.unsetMapTool(self.pointEmitter)

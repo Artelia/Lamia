@@ -217,7 +217,7 @@ class BasePhotoTool(AbstractLamiaFormTool):
                                                             'ST_AsText(geom)',
                                                             self.parentWidget.currentFeaturePK)
                     neudfetgeom = qgis.core.QgsGeometry.fromWkt(noeudfetwkt).asPoint()
-                    self.mainifacewidget.qgiscanvas.createorresetRubberband(1)
+                    #self.mainifacewidget.qgiscanvas.createorresetRubberband(1)
                     self.setTempGeometry([neudfetgeom], False,False)
 
             self.photowdg.clear()
@@ -277,7 +277,7 @@ class BasePhotoTool(AbstractLamiaFormTool):
     """
 
 
-
+    """
     def postSaveFeature(self, boolnewfeature):
 
         global numphoto
@@ -288,7 +288,7 @@ class BasePhotoTool(AbstractLamiaFormTool):
                 numphoto += 1
             else:
                 numphoto = self.toolwidgetmain.spinBox_numphoto.value() + 1
-
+    """
 
 
     """

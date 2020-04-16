@@ -40,7 +40,7 @@ import shutil
 import io
 import glob
 
-from ..Base2.Lamia_exportshp_tool import ExportShapefileTool
+from ..base2.Lamia_exportshp_tool import ExportShapefileTool
 from .Lamiadigue_rapport_tool import printPDFBaseWorker
 
 # ********************************************************************************************************************

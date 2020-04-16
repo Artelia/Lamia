@@ -82,11 +82,9 @@ class BaseAssainissementDesordreTool(BaseDesordreTool):
         # child widgets
         self.dbasechildwdgfield = []
         self.instancekwargs['parentwidget'] = self
-        #if self.parentWidget is None :
-        if True:
 
-            self.propertieswdgOBSERVATION = BaseAssainissementObservationTool(**self.instancekwargs)
-            self.dbasechildwdgfield.append(self.propertieswdgOBSERVATION)
+        self.propertieswdgOBSERVATION = BaseAssainissementObservationTool(**self.instancekwargs)
+        self.dbasechildwdgfield.append(self.propertieswdgOBSERVATION)
 
         """
         self.propertieswdgOBSERVATION2 = BaseAssainissementObservationTool(**self.instancekwargs)

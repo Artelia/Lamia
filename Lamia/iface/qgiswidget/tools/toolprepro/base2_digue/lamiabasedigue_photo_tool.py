@@ -25,77 +25,63 @@ This file is part of LAMIA.
  """
 
 
-
-
-from qgis.PyQt import uic, QtCore, QtGui
-try:
-    from qgis.PyQt.QtGui import (QWidget, QLabel, QFrame)
-except ImportError:
-    from qgis.PyQt.QtWidgets import (QWidget, QLabel, QFrame)
-#from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
-from ..base2.lamiabase_photo_tool import BasePhotoTool
-from ..base2.lamiabase_photoviewer import PhotoViewer
 import os
 import datetime
 import glob
 import sys
+
+from qgis.PyQt import uic, QtCore, QtGui
+from qgis.PyQt.QtWidgets import (QWidget, QLabel, QFrame)
+
+from ..base2.lamiabase_photo_tool import BasePhotoTool
+from ..base2.lamiabase_photoviewer import PhotoViewer
+
 numphoto = None
 
 
 
 class BaseDiguePhotoTool(BasePhotoTool):
 
-    LOADFIRST = False
-    dbasetablename = 'Photo'
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
-        super(BaseDiguePhotoTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
 
+    def __init__(self, **kwargs):
+        super(BaseDiguePhotoTool, self).__init__(**kwargs)
 
 
 
-    def initFieldUI(self):
 
-        if self.userwdgfield is None:
-            self.userwdgfield = UserUI()
-            self.linkuserwdgfield = {'Photo': {'linkfield': 'id_photo',
-                                               'widgets': {}},
-                                     'Objet': {'linkfield': 'id_objet',
-                                               'widgets': {}},
-                                     'Ressource': {'linkfield': 'id_ressource',
-                                                   'widgets': {'file': self.userwdgfield.lineEdit_file,
-                                                               'numressource': self.userwdgfield.spinBox_numphoto,
-                                                               'datetimeressource': self.userwdgfield.dateTimeEdit_date}}}
-
-            self.userwdgfield.stackedWidget.setCurrentIndex(0)
-            self.userwdgfield.pushButton_chooseph.clicked.connect(self.choosePhoto)
-            self.userwdgfield.pushButton_lastph.clicked.connect(self.lastPhoto)
-            self.userwdgfield.pushButton_openph.clicked.connect(self.openPhoto)
-            self.photowdg = PhotoViewer()
-            self.userwdgfield.frame_ph.layout().addWidget(self.photowdg)
-
-            self.userwdgfield.toolButton_photoplus.clicked.connect(self.changeNumPhoto)
-            self.userwdgfield.toolButton_photomoins.clicked.connect(self.changeNumPhoto)
-            self.userwdgfield.toolButton_calc.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.userwdgfield.spinBox_numphoto))
-
-            # ****************************************************************************************
-            # child widgets
-            pass
-            if False:
-                if self.parentWidget is not None and self.parentWidget.dbasetablename in ['']:
-                    self.userwdgfield.pushButton_defaultphoto.clicked.connect(self.setDefaultPhoto)
-                else:
-                    self.userwdgfield.pushButton_defaultphoto.setParent(None)
-
-            if True:
-                self.userwdgfield.pushButton_eau.clicked.connect(self.setDefaultPhoto)
-                self.userwdgfield.pushButton_crete.clicked.connect(self.setDefaultPhoto)
-                self.userwdgfield.pushButton_terre.clicked.connect(self.setDefaultPhoto)
-                self.userwdgfield.pushButton_defaultphoto.clicked.connect(self.setDefaultPhoto)
+    def initMainToolWidget(self):
 
 
+        self.toolwidgetmain = UserUI()
+        self.formtoolwidgetconfdictmain = {'Photo': {'linkfield': 'id_photo',
+                                            'widgets': {}},
+                                    'Objet': {'linkfield': 'id_objet',
+                                            'widgets': {}},
+                                    'Ressource': {'linkfield': 'id_ressource',
+                                                'widgets': {'file': self.toolwidgetmain.lineEdit_file,
+                                                            'numressource': self.toolwidgetmain.spinBox_numphoto,
+                                                            'datetimeressource': self.toolwidgetmain.dateTimeEdit_date}}}
+        
+        self.toolwidgetmain.stackedWidget.setCurrentIndex(0)
+        self.toolwidgetmain.pushButton_chooseph.clicked.connect(self.choosePhoto)
+        self.toolwidgetmain.pushButton_lastph.clicked.connect(self.lastPhoto)
+        self.toolwidgetmain.pushButton_openph.clicked.connect(self.openPhoto)
+        self.photowdg = PhotoViewer()
+        self.toolwidgetmain.frame_ph.layout().addWidget(self.photowdg)
 
+        self.toolwidgetmain.toolButton_photoplus.clicked.connect(self.changeNumPhoto)
+        self.toolwidgetmain.toolButton_photomoins.clicked.connect(self.changeNumPhoto)
+        self.toolwidgetmain.toolButton_calc.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.spinBox_numphoto))
+
+        self.toolwidgetmain.pushButton_eau.clicked.connect(self.setDefaultPhoto)
+        self.toolwidgetmain.pushButton_crete.clicked.connect(self.setDefaultPhoto)
+        self.toolwidgetmain.pushButton_terre.clicked.connect(self.setDefaultPhoto)
+        self.toolwidgetmain.pushButton_defaultphoto.clicked.connect(self.setDefaultPhoto)
+
+
+    """
     def changeNumPhoto(self):
 
         global numphoto
@@ -103,12 +89,12 @@ class BaseDiguePhotoTool(BasePhotoTool):
         if numphoto is None:
             numphoto = 0
 
-        if self.sender() == self.userwdgfield.toolButton_photoplus:
+        if self.sender() == self.toolwidgetmain.toolButton_photoplus:
             numphoto += 1
-        elif self.sender() == self.userwdgfield.toolButton_photomoins:
+        elif self.sender() == self.toolwidgetmain.toolButton_photomoins:
             numphoto = numphoto -1
-        self.userwdgfield.spinBox_numphoto.setValue(numphoto)
-
+        self.toolwidgetmain.spinBox_numphoto.setValue(numphoto)
+    """
 
 
     def setDefaultPhoto(self):
@@ -119,7 +105,6 @@ class BaseDiguePhotoTool(BasePhotoTool):
             return
 
         sendername = self.sender().objectName()
-
 
         if self.parentWidget.currentFeature is not None:
             sql = "SELECT id_ressource FROM Photo_qgis WHERE pk_photo = " + str(self.currentFeaturePK)
@@ -137,18 +122,18 @@ class BaseDiguePhotoTool(BasePhotoTool):
             elif sendername == "pushButton_defaultphoto":
                 field = 'lid_ressource_1'
 
-            sql = "UPDATE " + str(self.parentWidget.dbasetablename) + " SET " + field +  " = " + str(idressource)
+            sql = "UPDATE " + str(self.parentWidget.DBASETABLENAME) + " SET " + field +  " = " + str(idressource)
             # sql += " WHERE id_objet = " + str(idparentfeature) + ";"
-            sql += " WHERE pk_" + self.parentWidget.dbasetablename.lower() + " = " + str(pkparentfeature)
+            sql += " WHERE pk_" + self.parentWidget.DBASETABLENAME.lower() + " = " + str(pkparentfeature)
             query = self.dbase.query(sql)
             self.dbase.commit()
 
 
 
-
-
-    def postInitFeatureProperties(self, feat):
-
+    #def postInitFeatureProperties(self, feat):
+    def postSelectFeature(self):
+        super(BaseDiguePhotoTool, self).postSelectFeature()
+        """
         global numphoto
 
         if self.currentFeature is None:
@@ -158,12 +143,12 @@ class BaseDiguePhotoTool(BasePhotoTool):
 
 
             if numphoto is not None:
-                self.userwdgfield.spinBox_numphoto.setValue(numphoto)
+                self.toolwidgetmain.spinBox_numphoto.setValue(numphoto)
                 print('numphoto2', numphoto)
 
             # geom if parent is node
             if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
-                if self.parentWidget.dbasetablename == 'Noeud':
+                if self.parentWidget.DBASETABLENAME == 'Noeud':
 
                     # get geom
                     noeudfet = self.dbase.getLayerFeatureByPk('Noeud', self.parentWidget.currentFeature.id())
@@ -180,15 +165,15 @@ class BaseDiguePhotoTool(BasePhotoTool):
                 self.showImageinLabelWidget(self.photowdg, self.userwdg.lineEdit_file.text())
             else:
                 self.photowdg.clear()
+        """
 
-
-        if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
-            if self.parentWidget.dbasetablename in ['Equipement']:
-                self.userwdgfield.stackedWidget_2.setCurrentIndex(0)
-            elif self.parentWidget.dbasetablename in ['Infralineaire']:
-                self.userwdgfield.stackedWidget_2.setCurrentIndex(1)
+        if self.parentWidget is not None and self.parentWidget.currentFeaturePK is not None:
+            if self.parentWidget.DBASETABLENAME in ['Equipement']:
+                self.toolwidgetmain.stackedWidget_2.setCurrentIndex(0)
+            elif self.parentWidget.DBASETABLENAME in ['Infralineaire']:
+                self.toolwidgetmain.stackedWidget_2.setCurrentIndex(1)
             else:
-                self.userwdgfield.stackedWidget_2.setCurrentIndex(2)
+                self.toolwidgetmain.stackedWidget_2.setCurrentIndex(2)
 
 
 
@@ -197,11 +182,11 @@ class BaseDiguePhotoTool(BasePhotoTool):
 
     def setDefaultPhotobackup(self):
         # print('setDefaultPhoto', self.currentparentfeature)
-        if self.parentWidget.currentFeature is not None and self.parentWidget.dbasetablename == 'Infralineaire':
+        if self.parentWidget.currentFeature is not None and self.parentWidget.DBASETABLENAME == 'Infralineaire':
             idressourcephoto = self.currentFeature['id_ressource']
             idparentfeature=self.parentWidget.currentFeature['id_objet']
             # print('setDefaultPhoto',idphoto,idparentfeature)
-            sql = "UPDATE " + str(self.parentWidget.dbasetablename) + " SET  lk_ressource_2 = " + str(idressourcephoto)
+            sql = "UPDATE " + str(self.parentWidget.DBASETABLENAME) + " SET  lk_ressource_2 = " + str(idressourcephoto)
             sql += " WHERE id_objet = " + str(idparentfeature) + ";"
             query = self.dbase.query(sql)
             self.dbase.commit()
@@ -212,12 +197,12 @@ class BaseDiguePhotoTool(BasePhotoTool):
 
         global numphoto
 
-        if self.userwdgfield.spinBox_numphoto.value() == -1 :
+        if self.toolwidgetmain.spinBox_numphoto.value() == -1 :
             numphoto = None
-        elif numphoto == self.userwdgfield.spinBox_numphoto.value():
+        elif numphoto == self.toolwidgetmain.spinBox_numphoto.value():
             numphoto += 1
         else:
-            numphoto = self.userwdgfield.spinBox_numphoto.value() + 1
+            numphoto = self.toolwidgetmain.spinBox_numphoto.value() + 1
 
 
 

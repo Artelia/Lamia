@@ -45,8 +45,8 @@ import datetime
 class BaseEaupotableObservationTool(BaseObservationTool):
 
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
-        super(BaseEaupotableObservationTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
+    def __init__(self, **kwargs):
+        super(BaseEaupotableObservationTool, self).__init__(**kwargs)
 
     """
     def initTool(self):
@@ -80,179 +80,103 @@ class BaseEaupotableObservationTool(BaseObservationTool):
         pass
     
     """
-    def initFieldUI(self):
+    def initMainToolWidget(self):
+
+        self.toolwidgetmain = UserUI()
+        self.formtoolwidgetconfdictmain = {'Observation' : {'linkfield' : 'id_observation',
+                                            'widgets' : {
+                                                    #general
+                                                    'datetimeobservation' : self.toolwidgetmain.dateTimeEdit,
+                                                    'gravite': self.toolwidgetmain.comboBox_urgence,
+
+                                                        # infra
+                                                        'nombre': self.toolwidgetmain.spinBox_nombre,
+                                                        'evolution': self.toolwidgetmain.textEdit_evolution,
+                                                    #noeud
+                                                    'etattampon' : self.toolwidgetmain.comboBox_etattampon,
+                                                    'etatregard': self.toolwidgetmain.comboBox_etatregard,
+
+                                                    #equip
+                                                        'etatgeneral': [self.toolwidgetmain.comboBox_etatgen,
+                                                                        self.toolwidgetmain.comboBox_etatgen2],
+                                                        'indexcompteur': self.toolwidgetmain.spinBox_indexcompteur,
+
+
+                                                    #general
+                                                    'typesuite': self.toolwidgetmain.comboBox_typesuite,
+                                                    'commentairesuite': self.toolwidgetmain.textEdit_suite}},
+                            'Objet' : {'linkfield' : 'id_objet',
+                                        'widgets' : {'commentaire': self.toolwidgetmain.textEdit_comm}}}
+
+        self.toolwidgetmain.toolButton_calc_nb.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.spinBox_nombre))
+
+        self.toolwidgetmain.toolButton_indexcompteur.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.spinBox_indexcompteur))
+
         # ****************************************************************************************
-        # userui Desktop
-        if self.userwdgfield is None:
-            # ****************************************************************************************
-            # userui
-            self.userwdgfield = UserUI()
-            self.linkuserwdgfield = {'Observation' : {'linkfield' : 'id_observation',
-                                             'widgets' : {
-                                                        #general
-                                                        'datetimeobservation' : self.userwdgfield.dateTimeEdit,
-                                                        'gravite': self.userwdgfield.comboBox_urgence,
-
-                                                         # infra
-                                                          'nombre': self.userwdgfield.spinBox_nombre,
-                                                          'evolution': self.userwdgfield.textEdit_evolution,
-                                                        #noeud
-                                                        'etattampon' : self.userwdgfield.comboBox_etattampon,
-                                                       'etatregard': self.userwdgfield.comboBox_etatregard,
-
-                                                        #equip
-                                                          'etatgeneral': [self.userwdgfield.comboBox_etatgen,
-                                                                          self.userwdgfield.comboBox_etatgen2],
-                                                           'indexcompteur': self.userwdgfield.spinBox_indexcompteur,
+        # child widgets
+        self.dbasechildwdgfield=[]
+        self.instancekwargs['parentwidget'] = self
+        # if self.parentWidget is not None:
+        #if self.parentWidget is None or self.parentWidget is not None and self.parentWidget.dbasetablename == 'Desordre':
+        self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(**self.instancekwargs)
+        self.dbasechildwdgfield = [self.propertieswdgPHOTOGRAPHIE]
+        self.propertieswdgCROQUIS = BaseCroquisTool(**self.instancekwargs)
+        self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
 
-                                                        #general
-                                                        'typesuite': self.userwdgfield.comboBox_typesuite,
-                                                        'commentairesuite': self.userwdgfield.textEdit_suite}},
-                                'Objet' : {'linkfield' : 'id_objet',
-                                          'widgets' : {'commentaire': self.userwdgfield.textEdit_comm}}}
-
-            self.userwdgfield.toolButton_calc_nb.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.userwdgfield.spinBox_nombre))
-
-            self.userwdgfield.toolButton_indexcompteur.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.userwdgfield.spinBox_indexcompteur))
-
-            # ****************************************************************************************
-            # child widgets
-            self.dbasechildwdgfield=[]
-            # if self.parentWidget is not None:
-            if self.parentWidget is None or self.parentWidget is not None and self.parentWidget.dbasetablename == 'Desordre':
-                self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase,gpsutil=self.gpsutil, parentwidget=self)
-                self.dbasechildwdgfield = [self.propertieswdgPHOTOGRAPHIE]
-                self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
-                self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
-
-
-    def postInitFeatureProperties(self, feat):
-        super(BaseEaupotableObservationTool, self).postInitFeatureProperties(feat)
+    # def postInitFeatureProperties(self, feat): 
+    def postSelectFeature(self):
+        super(BaseEaupotableObservationTool, self).postSelectFeature()
         self.updateObservationStackedWidget()
 
     def updateObservationStackedWidget(self):
 
         if ('groupedesordre' in self.dbase.dbasetables['Desordre']['fields'].keys()  ):
-            if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
-                grpdes = self.parentWidget.currentFeature['groupedesordre']
+            if self.parentWidget is not None and self.parentWidget.currentFeaturePK is not None:
+                #grpdes = self.parentWidget.currentFeature['groupedesordre']
+                grpdes = self.dbase.getValuesFromPk(self.parentWidget.DBASETABLENAME,
+                                                     'groupedesordre',
+                                                      self.parentWidget.currentFeaturePK )
                 grpdescst = [elem[1] for elem in self.dbase.dbasetables['Desordre']['fields']['groupedesordre']['Cst']]
                 indexgrp = grpdescst.index(grpdes)
                 try:
-                    self.userwdgfield.stackedWidget.setCurrentIndex(indexgrp)
+                    self.toolwidgetmain.stackedWidget.setCurrentIndex(indexgrp)
                 except:
                     pass
 
 
-                if grpdes == 'NOD' and self.parentWidget.parentWidget is not None and self.parentWidget.parentWidget.currentFeature is not None:
-                    if self.parentWidget.parentWidget.dbasetablename == 'Noeud':
+                if (grpdes == 'NOD' and self.parentWidget.parentWidget is not None 
+                            and self.parentWidget.parentWidget.currentFeaturePK is not None):
+                    if self.parentWidget.parentWidget.DBASETABLENAME == 'Noeud':
                         #typenoeud = self.parentWidget.parentWidget.currentFeature['typeOuvrageAss']
-                        currenttext = self.parentWidget.parentWidget.userwdgfield.comboBox_cat.currentText()
+                        currenttext = self.parentWidget.parentWidget.toolwidgetmain.comboBox_cat.currentText()
                         # typenoeud = self.parentWidget.parentWidget.currentFeature['typeOuvrageAss']
                         typeeqp = self.dbase.getConstraintRawValueFromText('Noeud', 'categorie', currenttext)
 
                         if typeeqp in ['VEN', 'VAN', 'VID','REG','HYD','CHL','RPC','SPE','AUT','IND']:
-                            self.userwdgfield.stackedWidget_2.setCurrentIndex(0)
+                            self.toolwidgetmain.stackedWidget_2.setCurrentIndex(0)
                         elif typeeqp in ['COM', 'DEB']:
-                            self.userwdgfield.stackedWidget_2.setCurrentIndex(1)
+                            self.toolwidgetmain.stackedWidget_2.setCurrentIndex(1)
                         else:
-                            self.userwdgfield.stackedWidget_2.setCurrentIndex(2)
+                            self.toolwidgetmain.stackedWidget_2.setCurrentIndex(2)
 
-
-
-
-
-                if grpdes == 'EQP' and self.parentWidget.parentWidget is not None and self.parentWidget.parentWidget.currentFeature is not None:
-                    if self.parentWidget.parentWidget.dbasetablename == 'Equipement':
+                if (grpdes == 'EQP' and self.parentWidget.parentWidget is not None 
+                            and self.parentWidget.parentWidget.currentFeaturePK is not None):
+                    if self.parentWidget.parentWidget.DBASETABLENAME == 'Equipement':
                         #typenoeud = self.parentWidget.parentWidget.currentFeature['typeOuvrageAss']
-                        currenttext = self.parentWidget.parentWidget.userwdgfield.comboBox_typeouvrage.currentText()
+                        currenttext = self.parentWidget.parentWidget.toolwidgetmain.comboBox_typeouvrage.currentText()
                         # typenoeud = self.parentWidget.parentWidget.currentFeature['typeOuvrageAss']
 
                         typenoeud = self.dbase.getConstraintRawValueFromText('Equipement', 'type_ouvrage', currenttext)
 
                         if typenoeud in ['CHE']:
-                            self.userwdgfield.stackedWidget_3.setCurrentIndex(0)
+                            self.toolwidgetmain.stackedWidget_3.setCurrentIndex(0)
                         else:
-                            self.userwdgfield.stackedWidget_3.setCurrentIndex(1)
+                            self.toolwidgetmain.stackedWidget_3.setCurrentIndex(1)
 
 
-    """
-    def postOnActivation(self):
-            pass
-
-    def postOnDesactivation(self):
-        pass
-
-    def postloadIds(self,sqlin):
-        if self.parentWidget is not None and self.parentWidget.dbasetablename == 'Desordre':
-            sqlin += " ORDER BY dateobservation DESC"
-        return sqlin
-
-
-    def postInitFeatureProperties(self, feat):
-        if self.currentFeature is None:
-            datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
-            self.initFeatureProperties(feat, self.dbasetablename, 'dateobservation', datecreation)
-
-        if ('groupedesordre' in self.dbase.dbasetables['Desordre']['fields'].keys()  ):
-            if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
-                grpdes = self.parentWidget.currentFeature['groupedesordre']
-                grpdescst = [elem[1] for elem in self.dbase.dbasetables['Desordre']['fields']['groupedesordre']['Cst']]
-                indexgrp = grpdescst.index(grpdes)
-                try:
-                    self.userwdgfield.stackedWidget.setCurrentIndex(indexgrp)
-                except:
-                    pass
-
-
-
-    def createParentFeature(self):
-
-        lastrevision = self.dbase.getLastPk('Revision')
-        datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
-        lastobjetid = self.dbase.getLastId('Objet') + 1
-        sql = "INSERT INTO Objet (id_objet, id_revisionbegin, datecreation ) "
-        sql += "VALUES(" + str(lastobjetid ) + "," + str(lastrevision) +  ",'" + datecreation + "');"
-        query = self.dbase.query(sql)
-        self.dbase.commit()
-        #idobjet = self.dbase.getLastRowId('Objet')
-
-        pkobservation = self.currentFeature.id()
-        lastidobservation = self.dbase.getLastId('Observation') + 1
-
-        sql = "UPDATE Observation SET id_objet = " + str(lastobjetid)  + ","
-        sql += "id_observation = " + str(lastidobservation) + ","
-        sql += "id_revisionbegin = " + str(lastrevision)
-        sql += " WHERE pk_observation = " + str(pkobservation) + ";"
-        query = self.dbase.query(sql)
-        self.dbase.commit()
-
-        if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
-            if self.parentWidget.dbasetablename == 'Desordre':
-                currentparentlinkfield = self.parentWidget.currentFeature['id_desordre']
-                sql = "UPDATE Observation SET lk_desordre = " + str(currentparentlinkfield) + " WHERE pk_observation = " + str(pkobservation) + ";"
-                query = self.dbase.query(sql)
-                self.dbase.commit()
-
-
-
-    def postSaveFeature(self, boolnewfeature):
-        pass
-
-
-
-    def deleteParentFeature(self):
-        idobjet = self.currentFeature['id_objet']
-
-        sql = "DELETE FROM Objet WHERE id_objet = " + str(idobjet) + ";"
-        query = self.dbase.query(sql)
-        self.dbase.commit()
-
-        return True
-
-    """
 
 class UserUI(QWidget):
     def __init__(self, parent=None):

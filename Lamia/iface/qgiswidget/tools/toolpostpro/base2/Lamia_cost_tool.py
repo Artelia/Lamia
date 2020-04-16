@@ -593,7 +593,8 @@ class CostTool(AbstractLamiaTool):
 
         print('postOnDesactivation')
         # spatialindex part
-        if self.dbase.dbasetype == "spatialite":
+        #if self.dbase.dbasetype == "spatialite":
+        if self.dbase.__class__.__name__ == 'SpatialiteDBaseParser':
             sql = "SELECT DisableSpatialIndex('Infralineaire', 'geom')"
             self.dbase.query(sql)
 

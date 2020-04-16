@@ -1,9 +1,6 @@
-c:/111_GitProjects/Lamia/tests\temp\c_creation\sl_Base2_assainissement_CD41\test01.sqlite
-c:/111_GitProjects/Lamia/tests\temp\c_creation\sl_Base2_assainissement_2018_SNCF\test01.sqlite
-c:/111_GitProjects/Lamia/tests\temp\c_creation\sl_Base2_assainissement_Lamia\test01.sqlite
-c:\111_GitProjects\Lamia\tests\temp\c_creation\sl_Base2_assainissement_2018_SNCF\test01.sqlite
-c:\111_GitProjects\Lamia\tests\temp\c_creation\sl_Base2_assainissement_Lamia\test01.sqlite
-c:\111_GitProjects\Lamia\tests\temp\c_creation\sl_Base2_assainissement_CD41\test01.sqlite
+c:/111_GitProjects/Lamia/tests\temp\c_creation\sl_Base2_tramway_Lamia\test01.sqlite
+c:/111_GitProjects/Lamia/tests\lamia_test\test01.sqlite
+c:\111_GitProjects\Lamia\tests\lamia_test\test01.sqlite
 c:\111_GitProjects\Lamia\tests\lamia_test2\test01.sqlite
 c:/111_GitProjects/Lamia/tests\lamia_test2\test01.sqlite
 lamiaunittest.test_import@docker.for.win.localhost:5432;pvr;pvr

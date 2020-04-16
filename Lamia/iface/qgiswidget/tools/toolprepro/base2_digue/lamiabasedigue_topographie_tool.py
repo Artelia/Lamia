@@ -49,11 +49,9 @@ ca fout la merde....
 
 class BaseDigueTopographieTool(BaseTopographieTool):
 
-    LOADFIRST = True
-    dbasetablename = 'Topographie'
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
-        super(BaseDigueTopographieTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
+    def __init__(self, **kwargs):
+        super(BaseDigueTopographieTool, self).__init__(**kwargs)
 
     """
     def initTool(self):
@@ -87,59 +85,56 @@ class BaseDigueTopographieTool(BaseTopographieTool):
 
 
     """
+    """
     def initFieldUI(self):
+
+        self.toolwidgetmain = UserUI()
+        self.formtoolwidgetconfdictmain = {'Topographie' : {'linkfield' : 'id_topographie',
+                                                            'widgets' : {}},
+                                            'Objet' : {'linkfield' : 'id_objet',
+                                                        'widgets' : {}},
+                                            'Ressource' : {'linkfield' : 'id_ressource',
+                                                        'widgets' : {'file': self.toolwidgetmain.lineEdit_file,
+                                                                    'description': self.toolwidgetmain.lineEdit_nom,
+                                                                    'datetimeressource': self.toolwidgetmain.dateTimeEdit_date}}}
+        self.toolwidgetmain.pushButton_chooseph.clicked.connect(self.choosePhoto)
+        self.toolwidgetmain.pushButton_open.clicked.connect(self.openFile)
+        self.toolwidgetmain.pushButton_ajoutpointGPS.clicked.connect(self.ajoutPointGPS)
+        self.toolwidgetmain.pushButton_importer.clicked.connect(self.importer)
+
+        typpointlist = [elem[0] for elem in self.dbase.dbasetables['Pointtopo']['fields']['typepointtopo']['Cst']]
+        self.toolwidgetmain.comboBox_typepoints.addItems(typpointlist)
+
+
+        self.gpswidget = {'x' : {'widget' : self.toolwidgetmain.label_X,
+                                    'gga' : 'Xcrs'},
+                            'y': {'widget': self.toolwidgetmain.label_Y,
+                                'gga': 'Ycrs'},
+                            'zmngf': {'widget': self.toolwidgetmain.label_Z,
+                                'gga': 'zmNGF'},
+                            'dx': {'widget': self.toolwidgetmain.label_dX,
+                                'gst': 'xprecision'},
+                            'dy': {'widget': self.toolwidgetmain.label_dY,
+                                'gst': 'yprecision'},
+                            'dz': {'widget': self.toolwidgetmain.label_dZ,
+                                'gst': 'zprecision'},
+                            'zgps': {'widget': self.toolwidgetmain.label_zgps,
+                                    'gga': 'elevation'},
+                            'zwgs84': {'widget': self.toolwidgetmain.label_zwgs84,
+                                    'gga': 'deltageoid'},
+                            'raf09': {'widget': self.toolwidgetmain.label_raf09,
+                                    'gga': 'RAF09'},
+                            'hauteurperche': {'widget': self.toolwidgetmain.label_hautperche,
+                                    'gga': 'hauteurperche'}
+                            }
+
+
         # ****************************************************************************************
-        #   userui Field
-        if self.userwdgfield is None:
-
-            # ****************************************************************************************
-            # userui
-            self.userwdgfield = UserUI()
-            self.linkuserwdgfield = {'Topographie' : {'linkfield' : 'id_topographie',
-                                             'widgets' : {}},
-                                'Objet' : {'linkfield' : 'id_objet',
-                                          'widgets' : {}},
-                                'Ressource' : {'linkfield' : 'id_ressource',
-                                          'widgets' : {'file': self.userwdgfield.lineEdit_file,
-                                                        'description': self.userwdgfield.lineEdit_nom,
-                                                        'datetimeressource': self.userwdgfield.dateTimeEdit_date}}}
-            self.userwdgfield.pushButton_chooseph.clicked.connect(self.choosePhoto)
-            self.userwdgfield.pushButton_open.clicked.connect(self.openFile)
-            self.userwdgfield.pushButton_ajoutpointGPS.clicked.connect(self.ajoutPointGPS)
-            self.userwdgfield.pushButton_importer.clicked.connect(self.importer)
-
-            typpointlist = [elem[0] for elem in self.dbase.dbasetables['Pointtopo']['fields']['typepointtopo']['Cst']]
-            self.userwdgfield.comboBox_typepoints.addItems(typpointlist)
-
-
-            self.gpswidget = {'x' : {'widget' : self.userwdgfield.label_X,
-                                     'gga' : 'Xcrs'},
-                              'y': {'widget': self.userwdgfield.label_Y,
-                                    'gga': 'Ycrs'},
-                              'zmngf': {'widget': self.userwdgfield.label_Z,
-                                    'gga': 'zmNGF'},
-                              'dx': {'widget': self.userwdgfield.label_dX,
-                                    'gst': 'xprecision'},
-                              'dy': {'widget': self.userwdgfield.label_dY,
-                                    'gst': 'yprecision'},
-                              'dz': {'widget': self.userwdgfield.label_dZ,
-                                    'gst': 'zprecision'},
-                              'zgps': {'widget': self.userwdgfield.label_zgps,
-                                     'gga': 'elevation'},
-                              'zwgs84': {'widget': self.userwdgfield.label_zwgs84,
-                                       'gga': 'deltageoid'},
-                              'raf09': {'widget': self.userwdgfield.label_raf09,
-                                       'gga': 'RAF09'},
-                              'hauteurperche': {'widget': self.userwdgfield.label_hautperche,
-                                        'gga': 'hauteurperche'}
-                              }
-
-
-            # ****************************************************************************************
-            # child widgets
-            self.dbasechildwdgfield = []
-            self.propertieswdgPOINTTOPO= BaseDiguePointtopoTool(dbase=self.dbase,gpsutil=self.gpsutil, parentwidget=self)
-            self.dbasechildwdgfield.append(self.propertieswdgPOINTTOPO)
+        # child widgets
+        self.dbasechildwdgfield = []
+        self.propertieswdgPOINTTOPO= BaseDiguePointtopoTool(dbase=self.dbase,gpsutil=self.gpsutil, parentwidget=self)
+        self.dbasechildwdgfield.append(self.propertieswdgPOINTTOPO)
+    """
     """
 
     def postOnActivation(self):

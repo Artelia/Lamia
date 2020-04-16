@@ -27,42 +27,32 @@ This file is part of LAMIA.
 
 
 
+import os
+import datetime
+from collections import OrderedDict
 
 import qgis
 from qgis.PyQt import uic, QtCore
+from qgis.PyQt.QtWidgets import (QWidget)
 
-try:
-    from qgis.PyQt.QtGui import (QWidget)
-except ImportError:
-    from qgis.PyQt.QtWidgets import (QWidget)
-#from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
 from ..base2.lamiabase_equipement_tool import BaseEquipementTool
-
-# from ..base.lamiabase_photo_tool import BasePhotoTool
-# from ..base.lamiabase_croquis_tool import BaseCroquisTool
 from .lamiabaseeaupotable_noeud_tool import BaseEaupotableNoeudTool
 from .lamiabaseeaupotable_photo_tool import BaseEaupotablePhotoTool as BasePhotoTool
 from .lamiabaseeaupotable_croquis_tool import BaseEaupotableCroquisTool as BaseCroquisTool
 from .lamiabaseeaupotable_desordre_tool import BaseEaupotableDesordreTool
 
-import os
-import datetime
-from collections import OrderedDict
+
 
 
 
 class BaseEaupotableEquipementTool(BaseEquipementTool):
 
-    LOADFIRST = True
-    dbasetablename = 'Equipement'
+
+    def __init__(self, **kwargs):
+        super(BaseEaupotableEquipementTool, self).__init__(**kwargs)
 
 
-
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
-        super(BaseEaupotableEquipementTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
-
-
-
+    """
     def initTool(self):
         # ****************************************************************************************
         # Main spec
@@ -92,137 +82,132 @@ class BaseEaupotableEquipementTool(BaseEquipementTool):
         # ****************************************************************************************
         #properties ui
         pass
+    """
+
+
+    def initMainToolWidget(self):
+
+        self.toolwidgetmain = UserUI()
+
+        self.formtoolwidgetconfdictmain = {'Equipement' : {'linkfield' : 'id_equipement',
+                                            'widgets' : {'type_ouvrage' : self.toolwidgetmain.comboBox_typeouvrage,
+                                                        'ss_type_ouv' :  self.toolwidgetmain.comboBox_sstype,
+
+                                                        'h_mano_tot' : self.toolwidgetmain.doubleSpinBox_hmano,
+
+                                                        'volume': self.toolwidgetmain.doubleSpinBox_volume,
+                                                        'nbre_cuves': self.toolwidgetmain.spinBox_nbrecuves,
+                                                        'cote_sql': self.toolwidgetmain.doubleSpinBox_cotesql,
+                                                        'cote_radier': self.toolwidgetmain.doubleSpinBox_coteradier,
+                                                        'cote_trop_plein': self.toolwidgetmain.doubleSpinBox_cotetp,
+
+                                                        'diametre': self.toolwidgetmain.doubleSpinBox_diam,
+                                                        'nb_compteur': self.toolwidgetmain.doubleSpinBox_nbrecompteur,
+                                                        'fonctionnement': self.toolwidgetmain.comboBox_fonct,
+
+                                                        'profondeur': self.toolwidgetmain.doubleSpinBox_prof,
+
+                                                        'X': self.toolwidgetmain.doubleSpinBox_X,
+                                                        'dX': self.toolwidgetmain.doubleSpinBox_dX,
+                                                        'Y': self.toolwidgetmain.doubleSpinBox_Y,
+                                                        'dY': self.toolwidgetmain.doubleSpinBox_dY,
+                                                        'Z': self.toolwidgetmain.doubleSpinBox_Z,
+                                                        'dZ': self.toolwidgetmain.doubleSpinBox_dZ,
+
+
+                                                        }},
+                                    'Objet': {'linkfield': 'id_objet',
+                                                'widgets': {
+                                                    'commentaire': self.toolwidgetmain.textBrowser_commentaire,
+                                                    'libelle': self.toolwidgetmain.lineEdit_nom}},
+                                    'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
+                                                            'widgets': {
+                                                                'enservice': self.toolwidgetmain.comboBox_enservice,
+                                                                'annee_fin_pose': self.toolwidgetmain.dateEdit_anneepose
+                                                                        }}}
+
+
+        self.toolwidgetmain.toolButton_hmano.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_hmano))
+
+        self.toolwidgetmain.toolButton_volume.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_volume))
+        self.toolwidgetmain.toolButton_nbrecuve.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.spinBox_nbrecuves))
+
+        self.toolwidgetmain.toolButton_cotesql.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_cotesql))
+        self.toolwidgetmain.toolButton_coteradier.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_coteradier))
+        self.toolwidgetmain.toolButton_cotetp.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_cotetp))
+
+        self.toolwidgetmain.toolButton_diam.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_diam))
+        self.toolwidgetmain.toolButton_nbrecompteur.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_nbrecompteur))
+
+        self.toolwidgetmain.toolButton_prof.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_prof))
 
 
 
-    def initFieldUI(self):
+        self.toolwidgetmain.comboBox_typeouvrage.currentIndexChanged.connect(self.fielduiTypeOhChanged)
+
+        self.toolwidgetmain.pushButton_getGPS.clicked.connect(self.getGPSValue)
+
+
         # ****************************************************************************************
-        # userui Desktop
-        if self.userwdgfield is None:
+        # child widgets
+        self.dbasechildwdgfield = []
+        self.instancekwargs['parentwidget'] = self
 
-            # ****************************************************************************************
-            # userui
-            self.userwdgfield = UserUI()
+        self.propertieswdgDesordre = BaseEaupotableDesordreTool(**self.instancekwargs)
+        #self.propertieswdgDesordre.userwdgfield.frame_2.setParent(None)
+        #self.propertieswdgDesordre.userwdgfield.stackedWidget.setVisible(False)
+        #self.propertieswdgDesordre.groupBox_elements.setParent(None)
+        #self.propertieswdgDesordre.pushButton_addFeature.setEnabled(False)
+        #self.propertieswdgDesordre.pushButton_delFeature.setEnabled(False)
+        #self.propertieswdgDesordre.comboBox_featurelist.setEnabled(False)
+        #self.propertieswdgDesordre.groupBox_geom.setParent(None)
+        self.dbasechildwdgfield.append(self.propertieswdgDesordre)
 
-            self.linkuserwdgfield = {'Equipement' : {'linkfield' : 'id_equipement',
-                                             'widgets' : {'type_ouvrage' : self.userwdgfield.comboBox_typeouvrage,
-                                                          'ss_type_ouv' :  self.userwdgfield.comboBox_sstype,
+        self.propertieswdgNoeud = BaseEaupotableNoeudTool(**self.instancekwargs)
+        self.dbasechildwdgfield.append(self.propertieswdgNoeud)
 
-                                                          'h_mano_tot' : self.userwdgfield.doubleSpinBox_hmano,
-
-                                                          'volume': self.userwdgfield.doubleSpinBox_volume,
-                                                          'nbre_cuves': self.userwdgfield.spinBox_nbrecuves,
-                                                          'cote_sql': self.userwdgfield.doubleSpinBox_cotesql,
-                                                          'cote_radier': self.userwdgfield.doubleSpinBox_coteradier,
-                                                          'cote_trop_plein': self.userwdgfield.doubleSpinBox_cotetp,
-
-                                                          'diametre': self.userwdgfield.doubleSpinBox_diam,
-                                                          'nb_compteur': self.userwdgfield.doubleSpinBox_nbrecompteur,
-                                                          'fonctionnement': self.userwdgfield.comboBox_fonct,
-
-                                                          'profondeur': self.userwdgfield.doubleSpinBox_prof,
-
-                                                          'X': self.userwdgfield.doubleSpinBox_X,
-                                                          'dX': self.userwdgfield.doubleSpinBox_dX,
-                                                          'Y': self.userwdgfield.doubleSpinBox_Y,
-                                                          'dY': self.userwdgfield.doubleSpinBox_dY,
-                                                          'Z': self.userwdgfield.doubleSpinBox_Z,
-                                                          'dZ': self.userwdgfield.doubleSpinBox_dZ,
+        self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(**self.instancekwargs)
+        self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
 
 
-                                                          }},
-                                        'Objet': {'linkfield': 'id_objet',
-                                                  'widgets': {
-                                                      'commentaire': self.userwdgfield.textBrowser_commentaire,
-                                                        'libelle': self.userwdgfield.lineEdit_nom}},
-                                        'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
-                                                              'widgets': {
-                                                                    'enservice': self.userwdgfield.comboBox_enservice,
-                                                                  'annee_fin_pose': self.userwdgfield.dateEdit_anneepose
-                                                                          }}}
-
-
-            self.userwdgfield.toolButton_hmano.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_hmano))
-
-            self.userwdgfield.toolButton_volume.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_volume))
-            self.userwdgfield.toolButton_nbrecuve.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.userwdgfield.spinBox_nbrecuves))
-
-            self.userwdgfield.toolButton_cotesql.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_cotesql))
-            self.userwdgfield.toolButton_coteradier.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_coteradier))
-            self.userwdgfield.toolButton_cotetp.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_cotetp))
-
-            self.userwdgfield.toolButton_diam.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_diam))
-            self.userwdgfield.toolButton_nbrecompteur.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_nbrecompteur))
-
-            self.userwdgfield.toolButton_prof.clicked.connect(
-                lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_prof))
-
-
-
-            self.userwdgfield.comboBox_typeouvrage.currentIndexChanged.connect(self.fielduiTypeOhChanged)
-
-            self.userwdgfield.pushButton_getGPS.clicked.connect(self.getGPSValue)
-
-
-            # ****************************************************************************************
-            # child widgets
-            self.dbasechildwdgfield = []
-
-            self.propertieswdgDesordre = BaseEaupotableDesordreTool(dbase=self.dbase, gpsutil=self.gpsutil,
-                                                                        parentwidget=self)
-            self.propertieswdgDesordre.userwdgfield.frame_2.setParent(None)
-            self.propertieswdgDesordre.userwdgfield.stackedWidget.setVisible(False)
-            self.propertieswdgDesordre.groupBox_elements.setParent(None)
-            self.propertieswdgDesordre.pushButton_addFeature.setEnabled(False)
-            self.propertieswdgDesordre.pushButton_delFeature.setEnabled(False)
-            self.propertieswdgDesordre.comboBox_featurelist.setEnabled(False)
-            self.propertieswdgDesordre.groupBox_geom.setParent(None)
-            self.dbasechildwdgfield.append(self.propertieswdgDesordre)
-
-            self.propertieswdgNoeud = BaseEaupotableNoeudTool(dbase=self.dbase, parentwidget=self)
-            self.dbasechildwdgfield.append(self.propertieswdgNoeud)
-
-            self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
-            self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
-
-
-            self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
-            self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+        self.propertieswdgCROQUIS = BaseCroquisTool(**self.instancekwargs)
+        self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
 
 
 
 
 
-        self.gpswidget = {'x' : {'widget' : self.userwdgfield.label_X,
-                                 'gga' : 'Xcrs'},
-                          'y': {'widget': self.userwdgfield.label_Y,
+        self.gpswidget = {'x' : {'widget' : self.toolwidgetmain.label_X,
+                                    'gga' : 'Xcrs'},
+                            'y': {'widget': self.toolwidgetmain.label_Y,
                                 'gga': 'Ycrs'},
-                          'zmngf': {'widget': self.userwdgfield.label_Z,
+                            'zmngf': {'widget': self.toolwidgetmain.label_Z,
                                 'gga': 'zmNGF'},
-                          'dx': {'widget': self.userwdgfield.label_dX,
+                            'dx': {'widget': self.toolwidgetmain.label_dX,
                                 'gst': 'xprecision'},
-                          'dy': {'widget': self.userwdgfield.label_dY,
+                            'dy': {'widget': self.toolwidgetmain.label_dY,
                                 'gst': 'yprecision'},
-                          'dz': {'widget': self.userwdgfield.label_dZ,
+                            'dz': {'widget': self.toolwidgetmain.label_dZ,
                                 'gst': 'zprecision'},
-                          'zgps': {'widget': self.userwdgfield.label_zgps,
-                                 'gga': 'elevation'},
-                          'zwgs84': {'widget': self.userwdgfield.label_zwgs84,
-                                   'gga': 'deltageoid'},
-                          'raf09': {'widget': self.userwdgfield.label_raf09,
-                                   'gga': 'RAF09'},
-                          'hauteurperche': {'widget': self.userwdgfield.label_hautperche,
+                            'zgps': {'widget': self.toolwidgetmain.label_zgps,
+                                    'gga': 'elevation'},
+                            'zwgs84': {'widget': self.toolwidgetmain.label_zwgs84,
+                                    'gga': 'deltageoid'},
+                            'raf09': {'widget': self.toolwidgetmain.label_raf09,
+                                    'gga': 'RAF09'},
+                            'hauteurperche': {'widget': self.toolwidgetmain.label_hautperche,
                                     'gga': 'hauteurperche'}
-                          }
+                            }
 
 
 
@@ -230,19 +215,19 @@ class BaseEaupotableEquipementTool(BaseEquipementTool):
 
 
     def fielduiTypeOhChanged(self, comboindex):
-        #print(self.userwdgfield.comboBox_typeOuvrageAss.currentText())
-        currenttext = self.userwdgfield.comboBox_typeouvrage.currentText()
+        #print(self.toolwidgetmain.comboBox_typeOuvrageAss.currentText())
+        currenttext = self.toolwidgetmain.comboBox_typeouvrage.currentText()
 
         if currenttext in ['Station de pompage']:
-            self.userwdgfield.stackedWidget.setCurrentIndex(0)
+            self.toolwidgetmain.stackedWidget.setCurrentIndex(0)
         elif currenttext in [u'Réservoir']:
-            self.userwdgfield.stackedWidget.setCurrentIndex(1)
+            self.toolwidgetmain.stackedWidget.setCurrentIndex(1)
         elif currenttext in ['Chambre de comptage']:
-            self.userwdgfield.stackedWidget.setCurrentIndex(2)
+            self.toolwidgetmain.stackedWidget.setCurrentIndex(2)
         elif currenttext in [u'Chambre enterrée/regard']:
-            self.userwdgfield.stackedWidget.setCurrentIndex(3)
+            self.toolwidgetmain.stackedWidget.setCurrentIndex(3)
         else:
-            self.userwdgfield.stackedWidget.setCurrentIndex(4)
+            self.toolwidgetmain.stackedWidget.setCurrentIndex(4)
 
 
         #self.propertieswdgDesordre.propertieswdgOBSERVATION2.updateObservationStackedWidget()
@@ -275,12 +260,12 @@ class BaseEaupotableEquipementTool(BaseEquipementTool):
 
 
     def getGPSValue(self):
-        self.assignValue(self.userwdgfield.label_X, self.userwdgfield.doubleSpinBox_X)
-        self.assignValue(self.userwdgfield.label_dX, self.userwdgfield.doubleSpinBox_dX)
-        self.assignValue(self.userwdgfield.label_Y, self.userwdgfield.doubleSpinBox_Y)
-        self.assignValue(self.userwdgfield.label_dY, self.userwdgfield.doubleSpinBox_dY)
-        self.assignValue(self.userwdgfield.label_Z, self.userwdgfield.doubleSpinBox_Z)
-        self.assignValue(self.userwdgfield.label_dZ, self.userwdgfield.doubleSpinBox_dZ)
+        self.assignValue(self.toolwidgetmain.label_X, self.toolwidgetmain.doubleSpinBox_X)
+        self.assignValue(self.toolwidgetmain.label_dX, self.toolwidgetmain.doubleSpinBox_dX)
+        self.assignValue(self.toolwidgetmain.label_Y, self.toolwidgetmain.doubleSpinBox_Y)
+        self.assignValue(self.toolwidgetmain.label_dY, self.toolwidgetmain.doubleSpinBox_dY)
+        self.assignValue(self.toolwidgetmain.label_Z, self.toolwidgetmain.doubleSpinBox_Z)
+        self.assignValue(self.toolwidgetmain.label_dZ, self.toolwidgetmain.doubleSpinBox_dZ)
 
 
     def assignValue(self,wdgfrom, wdgto):
@@ -295,13 +280,32 @@ class BaseEaupotableEquipementTool(BaseEquipementTool):
             return False
 
 
-    def postSaveFeature(self, boolnewfeature):
+    def postSaveFeature(self, savedfeaturepk=None):
 
 
 
-        self.dbase.dbasetables['Infralineaire']['layerqgis'].triggerRepaint()
+        #self.dbase.dbasetables['Infralineaire']['layerqgis'].triggerRepaint()
         # save a disorder on first creation
-        if True and self.savingnewfeature and not self.savingnewfeatureVersion:
+        #if True and self.savingnewfeature and not self.savingnewfeatureVersion:
+        if self.currentFeaturePK is None:
+            self.propertieswdgDesordre.toolbarNew()
+            geomtext = self.dbase.getValuesFromPk('Equipement_qgis',
+                                            'ST_AsText(geom)',
+                                            savedfeaturepk)
+
+            qgsgeom = qgis.core.QgsGeometry.fromWkt(geomtext).asPolyline()
+            qgsgeomfordesordre = qgsgeom
+
+            self.propertieswdgDesordre.setTempGeometry(qgsgeomfordesordre)
+
+            self.currentFeaturePK = savedfeaturepk
+            self.propertieswdgDesordre.toolbarSave()
+            pkdesordre = self.propertieswdgDesordre.currentFeaturePK
+            sql = "UPDATE Desordre SET groupedesordre = 'EQP' WHERE pk_desordre = {}".format(pkdesordre)
+            self.dbase.query(sql)
+
+
+            """
             pkobjet = self.dbase.createNewObjet()
             lastiddesordre = self.dbase.getLastId('Desordre') + 1
             geomtext, iddessys = self.dbase.getValuesFromPk('Equipement_qgis',
@@ -327,7 +331,7 @@ class BaseEaupotableEquipementTool(BaseEquipementTool):
                                                     listofrawvalues=[lastiddesordre, pkobjet, 'EQP',
                                                                      iddessys, newgeomwkt])
             self.dbase.query(sql)
-
+            """
 
 
 

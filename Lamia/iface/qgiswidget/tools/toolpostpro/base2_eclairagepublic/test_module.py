@@ -1,5 +1,5 @@
 import os
-from ...toolabstract.Lamia_abstract_tool import AbstractLamiaTool
+from ...Lamia_abstract_tool import AbstractLamiaTool
 from qgis.PyQt import uic
 from qgis.PyQt.QtWidgets import (QWidget)
 

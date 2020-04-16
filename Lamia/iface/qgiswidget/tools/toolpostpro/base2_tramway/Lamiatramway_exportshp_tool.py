@@ -23,20 +23,9 @@ This file is part of LAMIA.
   * SPDX-License-Identifier: GPL-3.0-or-later
   * License-Filename: LICENSING.md
  """
- 
-import qgis
-from qgis.PyQt import uic, QtGui, QtCore
-try:
-    from qgis.PyQt.QtGui import (QWidget, QLabel, QFrame, QTreeWidgetItem, QHeaderView)
-except ImportError:
-    from qgis.PyQt.QtWidgets import (QWidget, QLabel, QFrame, QTreeWidgetItem, QHeaderView)
 
-# from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
-import os
-import io
-import glob
 
-from ..Base2.Lamia_exportshp_tool import ExportShapefileTool
+from ..base2.Lamia_exportshp_tool import ExportShapefileTool
 
 # ********************************************************************************************************************
 # ********************************* Main Widget                *******************************************************

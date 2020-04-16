@@ -414,14 +414,18 @@ class FormToolUtils(QtCore.QObject):
 
         #if self.currentFeaturePK is not None :
         if featurepk is not None :
-            featlastrevision = dbase.getValuesFromPk(self.formtoolwidget.DBASETABLENAME + '_qgis',
-                                                    'lpk_revision_begin',
-                                                        featurepk)
-            if featlastrevision != dbase.maxrevision:   #new version feature
-                self.formtoolwidget.dbase.createNewFeatureVersion(self.formtoolwidget.DBASETABLENAME,
-                                                                          featurepk)
-                pktoreturn= self.formtoolwidget.dbase.getLastPK(self.formtoolwidget.DBASETABLENAME)
-            else:       #simple feature update
+            if 'lpk_revision_begin' in dbase.getColumns(self.formtoolwidget.DBASETABLENAME + '_qgis'):
+                featlastrevision = dbase.getValuesFromPk(self.formtoolwidget.DBASETABLENAME + '_qgis',
+                                                        'lpk_revision_begin',
+                                                            featurepk)
+
+                if featlastrevision != dbase.maxrevision:   #new version feature
+                    self.formtoolwidget.dbase.createNewFeatureVersion(self.formtoolwidget.DBASETABLENAME,
+                                                                            featurepk)
+                    pktoreturn= self.formtoolwidget.dbase.getLastPK(self.formtoolwidget.DBASETABLENAME)
+                else:       #simple feature update
+                    pktoreturn = featurepk
+            else:
                 pktoreturn = featurepk
 
         else:           # feature creation
@@ -437,6 +441,7 @@ class FormToolUtils(QtCore.QObject):
         cree le self.currenfeature si besoin
 
         """
+
         rawgeom = self.formtoolwidget.tempgeometry
         if rawgeom is None:         #geom no modified
             return
@@ -535,7 +540,6 @@ class FormToolUtils(QtCore.QObject):
     
     def _setGeometryToFeature(self,featurepk, qgsgeom):
         sqlqgsgeom = qgsgeom.asWkt()
-        
         sql = "UPDATE {} SET geom=ST_GeomFromText('{}',{}) WHERE pk_{}={}".format(self.formtoolwidget.DBASETABLENAME,
                                                                         sqlqgsgeom,
                                                                         self.formtoolwidget.dbase.crsnumber,

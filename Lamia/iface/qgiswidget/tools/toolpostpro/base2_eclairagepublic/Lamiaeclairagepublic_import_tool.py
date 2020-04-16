@@ -11,7 +11,7 @@ import os
 import io
 import glob
 
-from ..Base2.Lamia_import_tool import ImportTool
+from ..base2.Lamia_import_tool import ImportTool
 
 # ********************************************************************************************************************
 # ********************************* Main Widget                *******************************************************

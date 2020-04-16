@@ -24,47 +24,27 @@ This file is part of LAMIA.
   * License-Filename: LICENSING.md
  """
 
-
-
-"""
-
-
-import datetime
+import os
 import logging
-import time
-debugtime = False
-"""
+from collections import OrderedDict
 
 from qgis.PyQt import uic, QtCore, QtGui
+from qgis.PyQt.QtWidgets import (QWidget, QLabel, QFrame)
 
-try:
-    from qgis.PyQt.QtGui import (QWidget, QLabel, QFrame)
-except ImportError:
-    from qgis.PyQt.QtWidgets import (QWidget, QLabel, QFrame)
-import os
-#from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
+
 from ..base2.lamiabase_infralineaire_tool import BaseInfraLineaireTool
-import logging
-# from ..base.lamiabase_photo_tool import BasePhotoTool
 from .lamiabaseeaupotable_photo_tool import BaseEaupotablePhotoTool as BasePhotoTool
 from .lamiabaseeaupotable_croquis_tool import BaseEaupotableCroquisTool as BaseCroquisTool
 from ..base2.lamiabase_photoviewer import PhotoViewer
-if False:
-    from .lamiabasedigue_graphique_tool import BaseGraphiqueTool as GraphiqueTool
-    from .lamiabasedigue_profil_tool import BaseDigueProfilTool as ProfilTool
-from collections import OrderedDict
 
 
 
 class BaseEaupotableInfraLineaireTool(BaseInfraLineaireTool):
 
 
-    LOADFIRST = True
-    dbasetablename = 'Infralineaire'
-    # specialfieldui=['2']
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
-        super(BaseEaupotableInfraLineaireTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
+    def __init__(self, **kwargs):
+        super(BaseEaupotableInfraLineaireTool, self).__init__(**kwargs)
 
     """
     def initTool(self):
@@ -107,102 +87,97 @@ class BaseEaupotableInfraLineaireTool(BaseInfraLineaireTool):
 
 
 
-    def initFieldUI(self):
+    def initMainToolWidget(self):
         # ****************************************************************************************
         #   userui Field
         if self.dbase.variante in [None, 'Lamia']:
-            if self.userwdgfield is None:
-                self.userwdgfield = UserUIField()
+            self.toolwidgetmain = UserUIField()
 
-                self.linkuserwdgfield = {'Infralineaire': {'linkfield': 'id_infralineaire',
-                                                           'widgets': OrderedDict([('type_eau', self.userwdgfield.comboBox_typeeau),
-                                                                                   ('branchement', self.userwdgfield.comboBox_branchement),
-                                                                                   ('domaine', self.userwdgfield.comboBox_domaine),
+            self.formtoolwidgetconfdictmain = {'Infralineaire': {'linkfield': 'id_infralineaire',
+                                                        'widgets': OrderedDict([('type_eau', self.toolwidgetmain.comboBox_typeeau),
+                                                                                ('branchement', self.toolwidgetmain.comboBox_branchement),
+                                                                                ('domaine', self.toolwidgetmain.comboBox_domaine),
 
-                                                                                   ('diametre_ext', self.userwdgfield.doubleSpinBox_diametre),
-                                                                                   ('profondeur_generatrice', self.userwdgfield.doubleSpinBox_gene),
-                                                                                   ('materiau', self.userwdgfield.comboBox_materiau),
-                                                                                   ('joint', self.userwdgfield.comboBox_joint),
+                                                                                ('diametre_ext', self.toolwidgetmain.doubleSpinBox_diametre),
+                                                                                ('profondeur_generatrice', self.toolwidgetmain.doubleSpinBox_gene),
+                                                                                ('materiau', self.toolwidgetmain.comboBox_materiau),
+                                                                                ('joint', self.toolwidgetmain.comboBox_joint),
 
-                                                                                   ('protection_catodique',self.userwdgfield.comboBox_protectioncatho),
-                                                                                   ('mode_circulation', self.userwdgfield.comboBox_modecircu),
-                                                                                   ('fonction_cana',self.userwdgfield.comboBox_fonctioncan)
-                                                                                   ])},
-                                         'Objet': {'linkfield': 'id_objet',
-                                                   'widgets': {
-                                                               'commentaire':self.userwdgfield.textBrowser_commentaire}},
-                                         'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
-                                                               'widgets': {}}}
+                                                                                ('protection_catodique',self.toolwidgetmain.comboBox_protectioncatho),
+                                                                                ('mode_circulation', self.toolwidgetmain.comboBox_modecircu),
+                                                                                ('fonction_cana',self.toolwidgetmain.comboBox_fonctioncan)
+                                                                                ])},
+                                                'Objet': {'linkfield': 'id_objet',
+                                                        'widgets': {
+                                                                    'commentaire':self.toolwidgetmain.textBrowser_commentaire}},
+                                                'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
+                                                                    'widgets': {}}}
 
-                self.userwdgfield.toolButton_diametre.clicked.connect(
-                    lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_diametre))
-                self.userwdgfield.toolButton_gene.clicked.connect(
-                    lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_gene))
-
-
-                self.dbasechildwdgfield = []
-
-                if self.parentWidget is None:
-                    self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
-                    self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
+            self.toolwidgetmain.toolButton_diametre.clicked.connect(
+                lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_diametre))
+            self.toolwidgetmain.toolButton_gene.clicked.connect(
+                lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_gene))
 
 
-                    self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
-                    self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+            self.dbasechildwdgfield = []
+            self.instancekwargs['parentwidget'] = self
+
+            #if self.parentWidget is None:
+            self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(**self.instancekwargs)
+            self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
+
+
+            self.propertieswdgCROQUIS = BaseCroquisTool(**self.instancekwargs)
+            self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
         elif self.dbase.variante in ['Reseau_chaleur']:
-            if self.userwdgfield is None:
-                self.userwdgfield = UserUIField2()
+            self.toolwidgetmain = UserUIField2()
 
-                self.linkuserwdgfield = {'Infralineaire': {'linkfield': 'id_infralineaire',
-                                                           'widgets': OrderedDict(
-                                                               [('type_eau', self.userwdgfield.comboBox_typeeau),
-                                                                ('branchement', self.userwdgfield.comboBox_branchement),
-                                                                ('domaine', self.userwdgfield.comboBox_domaine),
+            self.formtoolwidgetconfdictmain = {'Infralineaire': {'linkfield': 'id_infralineaire',
+                                                        'widgets': OrderedDict(
+                                                            [('type_eau', self.toolwidgetmain.comboBox_typeeau),
+                                                            ('branchement', self.toolwidgetmain.comboBox_branchement),
+                                                            ('domaine', self.toolwidgetmain.comboBox_domaine),
 
-                                                                ('diametre_ext',self.userwdgfield.doubleSpinBox_diametre),
-                                                                ('diametre_int',self.userwdgfield.doubleSpinBox_diamint),
-                                                                ('profondeur_generatrice',self.userwdgfield.doubleSpinBox_gene),
-                                                                ('materiau', self.userwdgfield.comboBox_materiau),
-                                                                ('joint', self.userwdgfield.comboBox_joint),
+                                                            ('diametre_ext',self.toolwidgetmain.doubleSpinBox_diametre),
+                                                            ('diametre_int',self.toolwidgetmain.doubleSpinBox_diamint),
+                                                            ('profondeur_generatrice',self.toolwidgetmain.doubleSpinBox_gene),
+                                                            ('materiau', self.toolwidgetmain.comboBox_materiau),
+                                                            ('joint', self.toolwidgetmain.comboBox_joint),
 
-                                                                ('calorifugeage',self.userwdgfield.comboBox_calor),
-                                                                ('calorif_typ',self.userwdgfield.comboBox_calortype),
-                                                                ('calorif_ep', self.userwdgfield.spinBox_calorep),
+                                                            ('calorifugeage',self.toolwidgetmain.comboBox_calor),
+                                                            ('calorif_typ',self.toolwidgetmain.comboBox_calortype),
+                                                            ('calorif_ep', self.toolwidgetmain.spinBox_calorep),
 
-                                                                ('protection_catodique',self.userwdgfield.comboBox_protectioncatho),
-                                                                ('mode_circulation', self.userwdgfield.comboBox_modecircu),
-                                                                (
-                                                                'fonction_cana', self.userwdgfield.comboBox_fonctioncan)
-                                                                ])},
-                                         'Objet': {'linkfield': 'id_objet',
-                                                   'widgets': {
-                                                       'commentaire': self.userwdgfield.textBrowser_commentaire}},
-                                         'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
-                                                               'widgets': {}}}
+                                                            ('protection_catodique',self.toolwidgetmain.comboBox_protectioncatho),
+                                                            ('mode_circulation', self.toolwidgetmain.comboBox_modecircu),
+                                                            (
+                                                            'fonction_cana', self.toolwidgetmain.comboBox_fonctioncan)
+                                                            ])},
+                                        'Objet': {'linkfield': 'id_objet',
+                                                'widgets': {
+                                                    'commentaire': self.toolwidgetmain.textBrowser_commentaire}},
+                                        'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
+                                                            'widgets': {}}}
 
-                self.userwdgfield.toolButton_diametre.clicked.connect(
-                    lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_diametre))
-                self.userwdgfield.toolButton_diamint.clicked.connect(
-                    lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_diamint))
-                self.userwdgfield.toolButton_gene.clicked.connect(
-                    lambda: self.windowdialog.showNumPad(self.userwdgfield.doubleSpinBox_gene))
-                self.userwdgfield.toolButton_calorep.clicked.connect(
-                    lambda: self.windowdialog.showNumPad(self.userwdgfield.spinBox_calorep))
+            self.toolwidgetmain.toolButton_diametre.clicked.connect(
+                lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_diametre))
+            self.toolwidgetmain.toolButton_diamint.clicked.connect(
+                lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_diamint))
+            self.toolwidgetmain.toolButton_gene.clicked.connect(
+                lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_gene))
+            self.toolwidgetmain.toolButton_calorep.clicked.connect(
+                lambda: self.showNumPad(self.toolwidgetmain.spinBox_calorep))
 
-                self.dbasechildwdgfield = []
-
-                if self.parentWidget is None:
-                    self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, gpsutil=self.gpsutil,
-                                                                   parentwidget=self)
-                    self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
-
-                    self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
-                    self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+            self.dbasechildwdgfield = []
+            self.instancekwargs['parentwidget'] = self
 
 
+            self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(**self.instancekwargs)
+            self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
 
-
+            self.propertieswdgCROQUIS = BaseCroquisTool(**self.instancekwargs)
+            self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
 
 

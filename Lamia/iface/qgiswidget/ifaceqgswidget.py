@@ -774,21 +774,25 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
                 self.toolwidgets[typewdg][toolname] = []
                 toolwdglist = self.toolwidgets[typewdg][toolname]
                 toolwdgcls = self.wdgclasses[typewdg][toolname]
-                if hasattr(self.wdgclasses[typewdg][toolname],'DBASETABLENAME') and not fullloading:
-                    toolwdglist.append( toolwdgcls(dbaseparser = self.dbase,
-                                                    mainifacewidget = self,
-                                                    choosertreewidget = self.ElemtreeWidget,
-                                                    parentwidget = None) )
-                elif hasattr(self.wdgclasses[typewdg][toolname],'LOADFIRST') and not fullloading:
-                    toolwdglist.append( toolwdgcls(dbase = self.dbase,
-                                                    dialog = self,
-                                                    linkedtreewidget = self.ElemtreeWidget,
-                                                    gpsutil = self.gpsutil) )
-                else:       # tool dep
-                    toolwdglist.append( toolwdgcls(dbase = self.dbase,
-                                                    dialog = self,
-                                                    linkedtreewidget = self.ElemtreeWidget,
-                                                    gpsutil = self.gpsutil) )
+                try:
+                    if hasattr(self.wdgclasses[typewdg][toolname],'DBASETABLENAME') and not fullloading:
+                        toolwdglist.append( toolwdgcls(dbaseparser = self.dbase,
+                                                        mainifacewidget = self,
+                                                        choosertreewidget = self.ElemtreeWidget,
+                                                        parentwidget = None) )
+                    elif hasattr(self.wdgclasses[typewdg][toolname],'LOADFIRST') and not fullloading:
+                        toolwdglist.append( toolwdgcls(dbase = self.dbase,
+                                                        dialog = self,
+                                                        linkedtreewidget = self.ElemtreeWidget,
+                                                        gpsutil = self.gpsutil) )
+                    else:       # tool dep
+                        toolwdglist.append( toolwdgcls(dbase = self.dbase,
+                                                        dialog = self,
+                                                        linkedtreewidget = self.ElemtreeWidget,
+                                                        gpsutil = self.gpsutil) )
+                except TypeError as e:
+                    print(toolname, e)
+                    #raise TypeError
                 i += 1
                 self.connector.updateProgressBar(i)
         
@@ -1098,9 +1102,9 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
 
 
     def selectPickedFeature(self, point):
-        # print('select',point.x(), point.y())
-        debug = False
-        if debug: logging.getLogger("Lamia").debug('Start %s', str(point))
+
+        debug = True
+        if debug: logging.getLogger("Lamia_unittest").debug('Start %s', str(point))
 
         addselection = False
         modifiers = QApplication.keyboardModifiers()
@@ -1121,7 +1125,7 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         #point2 = self.qgiscanvas.pointEmitter.toLayerCoordinates(qgslayer, point)
         nearestpk, dist = self.qgiscanvas.getNearestPk(tablename,
                                                         point,  #former point2
-                                                        comefromcanvas=False)
+                                                        comefromcanvas=True)
         if nearestpk is None:   #no element in table
             return
 

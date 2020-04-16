@@ -132,8 +132,8 @@ class BaseAssainissementInfraLineaireTool(BaseInfraLineaireTool):
             self.toolwidgetmain.toolButton_prof_aval.clicked.connect(
                 lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_profaval))
 
-            self.toolwidgetmain.toolButton_pickam.clicked.connect(self.pickToNode)
-            self.toolwidgetmain.toolButton_pickav.clicked.connect(self.pickToNode)
+        self.toolwidgetmain.toolButton_pickam.clicked.connect(self.pickToNode)
+        self.toolwidgetmain.toolButton_pickav.clicked.connect(self.pickToNode)
 
     def initAdvancedToolWidget(self):
         pass
@@ -181,14 +181,12 @@ class BaseAssainissementInfraLineaireTool(BaseInfraLineaireTool):
             else:
                 # nearestnodefet = self.dbase.getLayerFeatureByPk('Infralineaire', nearestnodeid)
                 nearestnodefet = self.mainifacewidget.qgiscanvas.layers['Infralineaire']['layer'].getFeature(nearestnodeid)
-                if self.dbase.qgsiface is not None:
-                    point = self.dbase.xformreverse.transform(point)
-                if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                    nearestnodepoint = nearestnodefet.geometry().nearestPoint(qgis.core.QgsGeometry.fromPoint(point)).asPoint()
-                else:
-                    nearestnodepoint = nearestnodefet.geometry().nearestPoint(qgis.core.QgsGeometry.fromPointXY(point)).asPoint()
+                #if self.dbase.qgsiface is not None:
+                point = self.mainifacewidget.qgiscanvas.xformreverse.transform(point)
+                nearestnodepoint = nearestnodefet.geometry().nearestPoint(qgis.core.QgsGeometry.fromPointXY(point)).asPoint()
                 typenode = 'INF'
         # nearestnodeiddessys = nearestnodefet['id_descriptionsystem']
+        
         if typenode == 'NODE':
             sql = "SELECT id_descriptionsystem FROM Noeud_qgis WHERE pk_noeud = " + str(nearestnodefet.id())
         elif typenode == 'INF':
@@ -271,6 +269,46 @@ class BaseAssainissementInfraLineaireTool(BaseInfraLineaireTool):
         except:
             pass
 
+
+    def postSaveFeature(self, savedfeaturepk=None):
+
+
+        #self.currentFeature = self.dbase.getLayerFeatureByPk(self.dbasetablename, self.currentFeaturePK)
+        #fetgeom = self.currentFeature.geometry().asPolyline()
+        geomtext = self.dbase.getValuesFromPk(self.DBASETABLENAME,
+                                        'ST_AsText(geom)',
+                                        savedfeaturepk)
+        fetgeom = qgis.core.QgsGeometry.fromWkt(geomtext).asPolyline()
+
+
+        indexnodes = [1, 2]
+        for indexnode in indexnodes:
+            idnode = eval('self.toolwidgetmain.spinBox_lk_noeud{}.value()'.format(indexnode))
+            if idnode > -1 :
+                sql = "SELECT pk_noeud FROM Noeud_qgis WHERE id_descriptionsystem = {}".format(idnode)
+                query = self.dbase.query(sql)
+                pks = [row for row in query]
+                if len(pks) == 1:
+                    pknoeud = pks[0][0]
+                    layer = self.mainifacewidget.qgiscanvas.layers['Noeud']['layer']
+                    nearestnodepoint1 = layer.getFeature(pknoeud).geometry().asPoint()
+                    if indexnode == 1:
+                        order = [0,-1]
+                    else:
+                        order = [-1,0]
+                    if not self.dbase.utils.areNodesEquals(fetgeom[order[0]], nearestnodepoint1):
+                        if self.dbase.utils.areNodesEquals(fetgeom[order[1]], nearestnodepoint1):
+                            fetgeom = fetgeom[::-1]
+                            newgeom = qgis.core.QgsGeometry.fromPolylineXY(fetgeom)
+                            #layer = self.dbase.dbasetables['Infralineaire']['layer']
+                            layer = self.mainifacewidget.qgiscanvas.layers['Infralineaire']['layer']
+                            layer.startEditing()
+                            success = layer.changeGeometry(self.currentFeaturePK, newgeom)
+                            layer.commitChanges()
+                        else:
+                            self.toolwidgetmain.spinBox_lk_noeud1.setValue(-1)
+                            exec('self.toolwidgetmain.spinBox_lk_noeud{}.setValue(-1)'.format(indexnode))
+                            self.formutils.saveFeatureProperties(savedfeaturepk)
 
 
 class UserUIField(QWidget):

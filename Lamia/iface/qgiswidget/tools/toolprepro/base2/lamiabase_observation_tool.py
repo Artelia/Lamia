@@ -109,17 +109,17 @@ class BaseObservationTool(AbstractLamiaFormTool):
                                                         'widgets' : {'commentaire': self.toolwidgetmain.textEdit_comm}}}
 
         self.toolwidgetmain.toolButton_calc_nb.clicked.connect(
-            lambda: self.windowdialog.showNumPad(self.toolwidgetmain.spinBox_nombre))
+            lambda: self.showNumPad(self.toolwidgetmain.spinBox_nombre))
 
         # ****************************************************************************************
         # child widgets
         self.dbasechildwdgfield=[]
-        if self.parentWidget is not None:
-            self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, parentwidget=self)
-            self.dbasechildwdgfield = [self.propertieswdgPHOTOGRAPHIE]
-
-            self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
-            self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+        self.instancekwargs['parentwidget'] = self
+        #if self.parentWidget is not None:
+        self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(**self.instancekwargs)
+        self.dbasechildwdgfield = [self.propertieswdgPHOTOGRAPHIE]
+        self.propertieswdgCROQUIS = BaseCroquisTool(**self.instancekwargs)
+        self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
     """
     def postOnActivation(self):
@@ -137,43 +137,61 @@ class BaseObservationTool(AbstractLamiaFormTool):
     # def postInitFeatureProperties(self, feat):
     def postSelectFeature(self):
 
-        if self.currentFeature is None:
+        if self.currentFeaturePK is None:
 
-            if self.parentWidget is not None and self.parentWidget.currentFeature is not None:  #copy last obs text
+            if self.parentWidget is not None and self.parentWidget.currentFeaturePK is not None:  #copy last obs text
                 #parent iddesordre
-                sql = " SELECT id_desordre FROM Desordre WHERE pk_desordre = " + str(self.parentWidget.currentFeaturePK)
-                iddesordre = self.dbase.query(sql)[0][0]
+                #sql = " SELECT id_desordre FROM Desordre WHERE pk_desordre = " + str(self.parentWidget.currentFeaturePK)
+                #iddesordre = self.dbase.query(sql)[0][0]
+                iddesordre = self.dbase.getValuesFromPk('Desordre',
+                                                       'id_desordre',
+                                                        self.parentWidget.currentFeaturePK)
+
 
                 # SELECT pk_observation FROM Observation WHERE lk_desordre = 1 AND dateobservation = (SELECT MAX(dateobservation) FROM Observation WHERE lk_desordre = 1)
-                sql = "SELECT pk_observation FROM Observation_qgis WHERE lid_desordre = " + str(iddesordre)
-                sql += " AND datetimeobservation = (SELECT MAX(datetimeobservation) FROM Observation WHERE lid_desordre = " + str(iddesordre)
-                sql += " )"
-                sql += " AND "
-                sql += self.dbase.dateVersionConstraintSQL()
+                #sql = "SELECT pk_observation FROM Observation_qgis WHERE lid_desordre = " + str(iddesordre)
+                #sql += " AND datetimeobservation = (SELECT MAX(datetimeobservation) FROM Observation WHERE lid_desordre = " + str(iddesordre)
+                #sql += " )"
+                #sql += " AND "
+                #sql += self.dbase.dateVersionConstraintSQL()
                 # print(sql)
+                sql = "SELECT pk_observation FROM Observation_now WHERE lid_desordre = {iddesordre}" \
+                       " AND datetimeobservation = (SELECT MAX(datetimeobservation) FROM Observation_now WHERE lid_desordre = {iddesordre} )" .format(iddesordre=iddesordre)
+
+                sql = self.dbase.sqlNow(sql)
                 query = self.dbase.query(sql)
                 result = [row[0] for row in query]
                 if len(result)>0:
                     pklastobservation = result[0]
-                    featobs = self.dbase.getLayerFeatureByPk('Observation',pklastobservation )
+                    dictvalues = self.formutils.getDictValuesForWidget(featurepk=pklastobservation)
+                    #featobs = self.dbase.getLayerFeatureByPk('Observation',pklastobservation )
                     #print(featobs.attributes())
-                    self.initFeatureProperties(featobs)
+                    #self.initFeatureProperties(featobs)
+                    self.formutils.applyResultDict(dictvalues)
 
+            #datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            ##datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
+            #self.initFeatureProperties(feat, self.dbasetablename, 'datetimeobservation', datecreation)
             datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-            #datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
-            self.initFeatureProperties(feat, self.dbasetablename, 'datetimeobservation', datecreation)
+            # self.initFeatureProperties(feat, self.dbasetablename, 'datetimeobservation', datecreation)
+            self.formutils.applyResultDict({'datetimeobservation': datecreation}, checkifinforgottenfield=False)
+            #applyResultDict(self, resultdict, checkifinforgottenfield=True):
 
 
 
         if ('groupedesordre' in self.dbase.dbasetables['Desordre']['fields'].keys()  ):
-            if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
-                grpdes = self.parentWidget.currentFeature['groupedesordre']
-                grpdescst = [elem[1] for elem in self.dbase.dbasetables['Desordre']['fields']['groupedesordre']['Cst']]
-                indexgrp = grpdescst.index(grpdes)
-                try:
-                    self.toolwidgetmain.stackedWidget.setCurrentIndex(indexgrp)
-                except:
-                    pass
+            if self.parentWidget is not None and self.parentWidget.currentFeaturePK is not None:
+                #grpdes = self.parentWidget.currentFeature['groupedesordre']
+                grpdes = self.dbase.getValuesFromPk(self.parentWidget.DBASETABLENAME,
+                                                    'groupedesordre',
+                                                    self.parentWidget.currentFeaturePK)
+                if grpdes is not None:
+                    grpdescst = [elem[1] for elem in self.dbase.dbasetables['Desordre']['fields']['groupedesordre']['Cst']]
+                    indexgrp = grpdescst.index(grpdes)
+                    try:
+                        self.toolwidgetmain.stackedWidget.setCurrentIndex(indexgrp)
+                    except:
+                        pass
 
 
     """
@@ -220,7 +238,7 @@ class BaseObservationTool(AbstractLamiaFormTool):
 
 
     def postSaveFeature(self, savedfeaturepk=None):
-        if savedfeaturepk is None:   #new feature
+        if self.currentFeaturePK is None:   #new feature
             # Case when a observation is defined in the past
             pk_objet, creation , observation = self.dbase.getValuesFromPk('Observation_qgis',
                                                             ['pk_objet','datetimecreation','datetimeobservation'],

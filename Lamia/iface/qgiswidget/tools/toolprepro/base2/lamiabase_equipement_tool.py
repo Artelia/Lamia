@@ -42,6 +42,18 @@ class BaseEquipementTool(AbstractLamiaFormTool):
     tooltreewidgetSUBCAT = 'Equipement'
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_equipement_tool_icon.svg')
 
+
+    tempparentjoin = {}
+    linkdict = {'colparent': 'id_descriptionsystem',
+                'colthistable': 'lid_descriptionsystem_1',
+                    'tctable': None,
+                    'tctablecolparent':None,
+                    'tctablecolthistable':None}
+    for tablename in ['Noeud', 'Infralineaire', 'Equipement']:
+        tempparentjoin[tablename] = linkdict
+    PARENTJOIN = tempparentjoin
+
+
     def __init__(self, **kwargs):
         super(BaseEquipementTool, self).__init__(**kwargs)
         self.instancekwargs = kwargs

@@ -66,7 +66,8 @@ import logging
 # ********************************* Main Widget                *******************************************************
 # ********************************************************************************************************************
 
-class PathTool(AbstractInspectionDigueTool):
+#class PathTool(AbstractInspectionDigueTool):
+class PathTool(AbstractLamiaTool):
 
     DBASES = ['digue','base_digue']
     TOOLNAME = 'Networktool'
@@ -88,6 +89,8 @@ class PathTool(AbstractInspectionDigueTool):
         # self.linkagespec = None
         # self.pickTable = None
         # print(self.dbase.recentsdbase)
+
+        return  #TODO
 
         if self.dbase.dbasetype == 'spatialite':
             fielpathname = 'path_' + os.path.basename(self.dbase.spatialitefile).split('.')[0]
