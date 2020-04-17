@@ -65,9 +65,10 @@ class PostGisDBaseParser(AbstractDBaseParser):
         self.PGiscursor = self.connPGis.cursor()
 
         #searchpath
-        sql = 'SET search_path TO ' + self.pgschema + ',public'
+        sql = 'SET search_path TO ' + self.pgschema.lower() + ', public;'
         self.query(sql)
         self.commit()
+
 
     def disconnect(self):
         self.PGiscursor.close()
@@ -122,12 +123,12 @@ class PostGisDBaseParser(AbstractDBaseParser):
             if dbasetable[viewname].strip() != '':
                 sql += dbasetable[viewname]
             else:
-                sql = 'SELECT * FROM ' + str(dbname)
+                sql += 'SELECT * FROM ' + str(dbname)
             finalsqllist.append(sql)
 
-            if self.isTableSpatial(viewnames[viewname]):
+            if self.isTableSpatial(dbname):
                 dbnamelower = dbname.lower()
-                idcolumnname = self.getFirstIdColumn(viewnames[viewname])
+                idcolumnname = self.getFirstIdColumn(dbname)
                 viewlower = viewnames[viewname].lower()
                 sql = 'INSERT INTO geometry_columns(f_table_catalog, f_table_schema, f_table_name, '
                 sql += 'f_geometry_column, coord_dimension, srid, "type") VALUES ('
@@ -224,8 +225,16 @@ class PostGisDBaseParser(AbstractDBaseParser):
             self.PGiscursor = self.connPGis.cursor()
         try:
             if self.printsql :
-                logging.getLogger('Lamia').debug('%s %.3f', sql,  self.getTimeNow() - timestart)
+                logging.getLogger('Lamia_unittest').debug('%s', sql)
             self.PGiscursor.execute(sql)
+            if self.PGiscursor.rowcount > 0:
+                rows = list(self.PGiscursor.fetchall())
+            else:
+                rows = None
+            if docommit:
+                self.commit()
+            return rows
+
         except psycopg2.ProgrammingError as e:
             print('error query : ', sql, '\n', e)
             return None
@@ -233,19 +242,6 @@ class PostGisDBaseParser(AbstractDBaseParser):
             print('error query : ', sql, '\n', e)
             return None
 
-
-        if sql.strip()[0:6] == 'SELECT':
-            try:
-                rows = self.PGiscursor.fetchall()
-                returnrows = list(rows)
-                if docommit:
-                    self.commit()
-                if self.printsql:
-                    logging.getLogger('Lamia').debug('%s %.3f', sql, self.getTimeNow() - timestart)
-                return returnrows
-            except psycopg2.ProgrammingError as e:
-                print('error query', e)
-                return None
 
     def vacuum(self):
         raise NotImplementedError 
@@ -257,31 +253,31 @@ class PostGisDBaseParser(AbstractDBaseParser):
         raise NotImplementedError 
 
     def isTableSpatial(self,tablename ):
-        sql = "SELECT column_name FROM information_schema.columns WHERE table_name  = '" +  str(tablename).lower() + "'"
-        query = self.query(sql)
-        result = [row[0] for row in query]
+        #sql = "SELECT column_name FROM information_schema.columns WHERE table_name  = '" +  str(tablename).lower() + "'"
+        #query = self.query(sql)
+        #result = [row[0] for row in query]
+        result = self.getColumns(tablename.lower())
         if 'geom' in result:
             return True
         else:
             return False
 
     def getColumns(self, tablename):
-        sql = "SELECT column_name FROM information_schema.columns WHERE table_name  = '" +  str(tablename).lower() + "'"
+        sql = "SELECT column_name FROM information_schema.columns "\
+               "WHERE table_name  = '{}' AND table_schema = '{}'".format(tablename.lower(),
+                                                                        self.pgschema.lower())
         query = self.query(sql)
         result = [row[0] for row in query]
         return result
 
     def getFirstIdColumn(self,tablename):
-        sql = "SELECT column_name FROM information_schema.columns WHERE table_name  = '" +  str(tablename).lower() + "'"
-        query = self.query(sql)
-        result = [row[0] for row in query]
-        for fieldname in result:
-            if self.revisionwork:
-                if 'pk_' in fieldname:
-                    return fieldname
-            else:
-                if 'id_' in fieldname:
-                    return fieldname
+        #sql = "SELECT column_name FROM information_schema.columns WHERE table_name  = '" +  str(tablename).lower() + "'"
+        #query = self.query(sql)
+        #result = [row[0] for row in query]
+        columns = self.getColumns(tablename.lower())
+        for fieldname in columns:
+            if 'pk_' in fieldname:
+                return fieldname
 
 
     def getLastPK(self, tablename):

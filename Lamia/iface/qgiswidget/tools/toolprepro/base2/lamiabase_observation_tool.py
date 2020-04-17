@@ -160,14 +160,15 @@ class BaseObservationTool(AbstractLamiaFormTool):
 
                 sql = self.dbase.sqlNow(sql)
                 query = self.dbase.query(sql)
-                result = [row[0] for row in query]
-                if len(result)>0:
-                    pklastobservation = result[0]
-                    dictvalues = self.formutils.getDictValuesForWidget(featurepk=pklastobservation)
-                    #featobs = self.dbase.getLayerFeatureByPk('Observation',pklastobservation )
-                    #print(featobs.attributes())
-                    #self.initFeatureProperties(featobs)
-                    self.formutils.applyResultDict(dictvalues)
+                if query:
+                    result = [row[0] for row in query]
+                    if len(result)>0:
+                        pklastobservation = result[0]
+                        dictvalues = self.formutils.getDictValuesForWidget(featurepk=pklastobservation)
+                        #featobs = self.dbase.getLayerFeatureByPk('Observation',pklastobservation )
+                        #print(featobs.attributes())
+                        #self.initFeatureProperties(featobs)
+                        self.formutils.applyResultDict(dictvalues)
 
             #datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
             ##datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
@@ -240,25 +241,26 @@ class BaseObservationTool(AbstractLamiaFormTool):
     def postSaveFeature(self, savedfeaturepk=None):
         if self.currentFeaturePK is None:   #new feature
             # Case when a observation is defined in the past
-            pk_objet, creation , observation = self.dbase.getValuesFromPk('Observation_qgis',
+            pk_objet, datetimecreation , datetimeobservation = self.dbase.getValuesFromPk('Observation_qgis',
                                                             ['pk_objet','datetimecreation','datetimeobservation'],
                                                             savedfeaturepk)
-
-            datetimecreation = QtCore.QDateTime.fromString(creation, 'yyyy-MM-dd hh:mm:ss')
-            datetimeobservation = QtCore.QDateTime.fromString(observation, 'yyyy-MM-dd hh:mm:ss')
+            if isinstance(datetimecreation, str):
+                datetimecreation = QtCore.QDateTime.fromString(creation, 'yyyy-MM-dd hh:mm:ss')
+                datetimeobservation = QtCore.QDateTime.fromString(observation, 'yyyy-MM-dd hh:mm:ss')
             if datetimecreation > datetimeobservation:
-                sql = "UPDATE Objet SET datetimecreation = '" + str(observation) + "'"
+                sql = "UPDATE Objet SET datetimecreation = '" + str(datetimeobservation) + "'"
                 sql += " WHERE pk_objet = " + str(pk_objet)
                 self.dbase.query(sql)
 
             if self.parentWidget is not None and self.parentWidget.currentFeaturePK is not None:
                 if self.parentWidget.DBASETABLENAME == 'Desordre':
-                    pk_objet, descreation = self.dbase.getValuesFromPk('Desordre_qgis',
+                    pk_objet, datetimecreation = self.dbase.getValuesFromPk('Desordre_qgis',
                                                                                  ['pk_objet', 'datetimecreation'],
                                                                                  self.parentWidget.currentFeaturePK)
-                    datetimecreation = QtCore.QDateTime.fromString(descreation, 'yyyy-MM-dd hh:mm:ss')
+                    if isinstance(datetimecreation, str):
+                        datetimecreation = QtCore.QDateTime.fromString(descreation, 'yyyy-MM-dd hh:mm:ss')
                     if datetimecreation > datetimeobservation:
-                        sql = "UPDATE Objet SET datetimecreation = '" + str(observation) + "'"
+                        sql = "UPDATE Objet SET datetimecreation = '" + str(datetimeobservation) + "'"
                         sql += " WHERE pk_objet = " + str(pk_objet)
                         self.dbase.query(sql)
 

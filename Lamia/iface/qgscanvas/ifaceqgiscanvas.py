@@ -85,14 +85,20 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         elif dbaseparser.__class__.__name__ == 'PostGisDBaseParser':
             dbtype = 'postgres'
         
-        for rawtablename in dbaseparser.dbasetables:
-            tablenames = [rawtablename, rawtablename + '_qgis', rawtablename + '_django']
-            tabletypes = ['layer', 'layerqgis', 'layerdjango']
+        for rawtablename, rawdict in dbaseparser.dbasetables.items():
+            tablenames = [rawtablename]
+            tabletypes = ['layer']
+            if 'djangoviewsql' in rawdict.keys():
+                tabletypes += ['layerdjango']
+                tablenames += [rawtablename + '_django']
+            if 'qgisPGviewsql' in rawdict.keys() or 'qgisviewsql' in rawdict.keys() :
+                tabletypes += ['layerqgis']
+                tablenames += [rawtablename + '_qgis']
+
             self.layers[rawtablename] = {}
             for i, tablename in enumerate(tablenames):
                 tablenamelower = tablename.lower()
                 tabletype = tabletypes[i]
-                
                 #rawlayers
                 uri = qgis.core.QgsDataSourceUri()
                 if dbtype == 'spatialite':
@@ -103,11 +109,11 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                         uri.setDataSource('', str(tablename), '')
                 elif dbtype == 'postgres':
                     uri.setConnection(dbaseparser.pghost, str(dbaseparser.pgport), 
-                                        dbaseparser.pgdb, dbaseparser.pguser, dbaseparser.pgpassword)
+                                        dbaseparser.pgdb.lower(), dbaseparser.pguser, dbaseparser.pgpassword)
                     if dbaseparser.isTableSpatial(tablenamelower):
-                        uri.setDataSource(dbaseparser.pgschema, str(tablenamelower), 'geom', '', "pk_" + str(tablenamelower))
+                        uri.setDataSource(dbaseparser.pgschema.lower(), str(tablenamelower), 'geom', '', "pk_" + rawtablename.lower())
                     else:
-                        uri.setDataSource(dbaseparser.pgschema, str(tablenamelower), None, '', "'pk_" + str(tablenamelower))
+                        uri.setDataSource(dbaseparser.pgschema.lower(), str(tablenamelower), None, '', "pk_" + rawtablename.lower())
                 self.layers[rawtablename][tabletype] = qgis.core.QgsVectorLayer(uri.uri(), tablename, dbtype)
 
         self.dbaseqgiscrs = qgis.core.QgsCoordinateReferenceSystem()
@@ -300,10 +306,11 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
         #for tablename in self.dbasetables:
         for tablename, tabledict in self.layers.items():
-            fieldnames = [field.name().lower() for field in tabledict['layerqgis'].fields()]
-            if 'datecreation' in fieldnames or 'datetimecreation' in fieldnames :
-                tabledict['layerqgis'].setSubsetString(subsetstring)
-                tabledict['layerqgis'].triggerRepaint()
+            if 'layerqgis' in tabledict.keys():
+                fieldnames = [field.name().lower() for field in tabledict['layerqgis'].fields()]
+                if 'datecreation' in fieldnames or 'datetimecreation' in fieldnames :
+                    tabledict['layerqgis'].setSubsetString(subsetstring)
+                    tabledict['layerqgis'].triggerRepaint()
 
 
     def _____________________________maptoolsManagement(self):

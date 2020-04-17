@@ -27,30 +27,19 @@ This file is part of LAMIA.
 
 
 
-"""
-
-
-import datetime
-import logging
-import time
-debugtime = False
-"""
-
-from qgis.PyQt import uic, QtCore, QtGui
-
-try:
-    from qgis.PyQt.QtGui import (QWidget, QLabel, QFrame)
-except ImportError:
-    from qgis.PyQt.QtWidgets import (QWidget, QLabel, QFrame)
 import os
-#from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
-from ..base2.lamiabase_infralineaire_tool import BaseInfraLineaireTool
 import logging
-# from ..base.lamiabase_photo_tool import BasePhotoTool
+from collections import OrderedDict
+
+import qgis
+from qgis.PyQt import uic, QtCore, QtGui
+from qgis.PyQt.QtWidgets import (QWidget, QLabel, QFrame)
+
+from ..base2.lamiabase_infralineaire_tool import BaseInfraLineaireTool
 from .lamiabasetramway_photo_tool import BaseTramwayPhotoTool as BasePhotoTool
 from .lamiabasetramway_croquis_tool import BaseTramwayCroquisTool as BaseCroquisTool
 from .lamiabasetramway_desordre_tool import BaseTramwayDesordreTool
-from collections import OrderedDict
+
 
 
 
@@ -127,6 +116,13 @@ class BaseTramwayInfraLineaireTool(BaseInfraLineaireTool):
         #self.propertieswdgDesordre.toolwidgetmain.stackedWidget.setParent(None)
         self.propertieswdgDesordre.initMainToolWidget()
         self.propertieswdgDesordre.propertieswdgOBSERVATION.initMainToolWidget()
+        self.propertieswdgDesordre.SKIP_LOADING_UI = True
+        #parenttab = self.tabWidget
+        ##self.propertieswdgDesordre.tabWidgetmain = self.propertieswdgDesordre.propertieswdgOBSERVATION.tabWidgetmain
+        #indexinserted = parenttab.addTab(self.propertieswdgDesordre.propertieswdgOBSERVATION.tabWidgetmain.widget(0),
+        #                                        QtGui.QIcon(self.propertieswdgDesordre.propertieswdgOBSERVATION.tooltreewidgetICONPATH),
+        #                                        self.propertieswdgDesordre.propertieswdgOBSERVATION.tooltreewidgetSUBCAT)
+        #self.propertieswdgDesordre.tabWidget.removeTab(0)
         self.dbasechildwdgfield.append(self.propertieswdgDesordre)
 
         self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(**self.instancekwargs)

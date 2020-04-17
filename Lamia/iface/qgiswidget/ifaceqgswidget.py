@@ -1101,9 +1101,9 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
 
 
 
-    def selectPickedFeature(self, point):
+    def selectPickedFeature(self, point, tablename = None):
 
-        debug = True
+        debug = False
         if debug: logging.getLogger("Lamia_unittest").debug('Start %s', str(point))
 
         addselection = False
@@ -1114,8 +1114,29 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
             # print('Ctrl+Click')
             addselection = True
 
-        # self.currenttoolwidget
+        # get parent
+        parentwdg = self.currenttoolwidget
+        while parentwdg.parentWidget is not None:
+            parentwdg = parentwdg.parentWidget
         
+        if not (hasattr(parentwdg, 'DBASETABLENAME') 
+                and parentwdg.DBASETABLENAME is not None):
+            return
+        # getCurrentLayer
+        tablename = parentwdg.DBASETABLENAME
+        #qgslayer = self.qgiscanvas.layers[tablename]['layerqgis']
+        #point2 = self.qgiscanvas.pointEmitter.toLayerCoordinates(qgslayer, point)
+        nearestpk, dist = self.qgiscanvas.getNearestPk(tablename,
+                                                        point,  #former point2
+                                                        comefromcanvas=True)
+        if nearestpk is None:   #no element in table
+            return
+
+        parentwdg.selectFeature(pk=nearestpk)
+        if parentwdg.choosertreewidget is not None:
+            parentwdg.choosertreewidget.selectFeature(pk=nearestpk)
+        self.currenttoolwidget.widgetClicked()
+        """
         if not (hasattr(self.currenttoolwidget, 'DBASETABLENAME') 
                 and self.currenttoolwidget.DBASETABLENAME is not None):
             return
@@ -1133,7 +1154,7 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
 
         if self.currentchoosertreewidget is not None:
             self.currentchoosertreewidget.selectFeature(pk=nearestpk)
-
+        """
 
 
 

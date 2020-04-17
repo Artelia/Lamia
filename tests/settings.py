@@ -4,7 +4,7 @@ DBTYPE = ['Base2_digue', 'Base2_assainissement', 'Base2_eaupotable', 'Base2_ecla
 CRS = 2154
 PGuser = 'pvr'
 PGpassword = 'pvr'
-PGbase = 'Lamiaunittest'
+PGbase = 'lamiaunittest'
 try:    #docker env in win host
     socket.gethostbyname('docker.for.win.localhost')
     PGhost = 'docker.for.win.localhost'

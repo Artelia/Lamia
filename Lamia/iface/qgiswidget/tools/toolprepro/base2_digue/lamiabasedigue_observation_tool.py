@@ -206,7 +206,7 @@ class BaseDigueObservationTool(BaseObservationTool):
                 sql+= str(iddesordre)
                 sql = self.dbase.updateQueryTableNow(sql)
                 res = self.dbase.query(sql)
-                if len(res)>0:
+                if res and len(res)>0:
                     currenttext = res[0][0]
                     if currenttext in ['VAN', 'CLA']:
                         self.toolwidgetmain.stackedWidget_2.setCurrentIndex(1)

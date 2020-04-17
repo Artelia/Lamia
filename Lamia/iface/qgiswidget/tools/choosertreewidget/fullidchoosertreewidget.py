@@ -162,13 +162,15 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
                         sql += " AND {} = {}".format(fieldname,fieldvalue)
                     else:
                         sql += " WHERE  {} = {}".format(fieldname,fieldvalue)
-            if debug: logging.getLogger("Lamia_unittest").debug('sq : %s', sql)
+            if debug: logging.getLogger("Lamia_unittest").debug('sql : %s', sql)
+            if debug: logging.getLogger("Lamia_unittest").debug('search : %s', self.dbase.query('show search_path'))
+            
             query = self.dbase.query(sql)
             self.ids = pd.DataFrame(query, columns = ['pk', 'id']) 
         else:
             self.ids = pd.DataFrame(columns = ['pk', 'id']) 
 
-
+        if debug: logging.getLogger("Lamia_unittest").debug('ids : %s', self.ids)
 
     def loadFeaturesinTreeWdg_caduc(self):
         """

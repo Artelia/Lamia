@@ -49,6 +49,8 @@ class FormToolUtils(QtCore.QObject):
     def initWidgetBehaviour(self):
 
         templinkuserwgd = self.formtoolwidget.formtoolwidgetconfdict
+        if templinkuserwgd is None:
+            raise TypeError('formtoolwidgetconfdict of {} is None'.format(self.formtoolwidget.DBASETABLENAME))
 
         for tablename in templinkuserwgd:
             dbasetables = self.formtoolwidget.dbase.dbasetables

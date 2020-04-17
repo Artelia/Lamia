@@ -9,11 +9,15 @@ from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
 from settings import *
 # Base2_assainissement  Base2_digue Base2_eaupotable  Base2_eclairagepublic
 # Base2_tramway
-DBTYPE = ['Base2_tramway']  
-#variantes = ['Lamia']       # Lamia 2018_SNCF CD41
+DBTYPE = ['Base2_digue']  
+variantes = ['Lamia']       # Lamia 2018_SNCF CD41
 X_BEGIN = 400000.0
 Y_BEGIN = 6000000.0
 TEST_WITH_FEATURE_CREATION = False
+SPATIALITE = False
+POSTGIS = True
+
+PGhost = 'localhost'
 
 class DBaseTest(unittest.TestCase):
 
@@ -73,19 +77,33 @@ class DBaseTest(unittest.TestCase):
         for work in DBTYPE:
             sqlitedbase = DBaseParserFactory('spatialite').getDbaseParser()
             sqlitedbase.dbconfigreader.createDBDictionary(work)
-            if not 'variantes' in locals().keys():
+
+            if not 'variantes' in globals().keys():
                 variantes = list(sqlitedbase.dbconfigreader.variantespossibles)
+            else:
+                variantes = globals()['variantes']
+
             logging.getLogger("Lamia_unittest").debug('************* Opening %s', variantes)
             for variante in variantes:
                 logging.getLogger("Lamia_unittest").debug('************* Opening %s %s', work, variante)
                 #self._initQGis()
                 self._createWin()
                 self._createMainWin()
-                if not 'slfile' in locals().keys() or slfile is None:
-                    slfile = os.path.join(testcdir, 'sl_' + work + '_' + variante, 'test01.sqlite')
-                self.wind.loadDBase(dbtype='Spatialite', slfile=slfile)
-                slfile = None
+
+                if SPATIALITE:
+                    if not 'slfile' in locals().keys() or slfile is None:
+                        slfile = os.path.join(testcdir, 'sl_' + work + '_' + variante, 'test01.sqlite')
+                    self.wind.loadDBase(dbtype='Spatialite', slfile=slfile)
+                    slfile = None
+                if POSTGIS:
+                    #print(PGhost, PGport, PGbase, work + '_' + variante, PGuser,  PGpassword)
+                    self.wind.loadDBase(dbtype='Postgis', host=PGhost, port=PGport, dbname=PGbase, schema= work + '_' + variante, user=PGuser,  password=PGpassword)
                 self.wind.setVisualMode(visualmode=0)
+                if False :
+                    res = self.wind.dbase.query('SELECT datetimecreation FROM Objet WHERE pk_objet = 2')
+                    print(str(res[0][0]))
+                    print(type(res[0][0]))
+                    sys.exit()
                 #selectfeaturetest
                 if TEST_WITH_FEATURE_CREATION:
                     toolpreprolist = self.wind.toolwidgets['toolprepro']

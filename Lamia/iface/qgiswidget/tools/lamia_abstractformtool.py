@@ -400,10 +400,12 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         #if not self.toolwidget.isVisible():
         #    self.toolwidget.setVisible(True)
         self.frametoolwidg.layout().addWidget(self.toolwidget)
+        if hasattr(self,'SKIP_LOADING_UI') and self.SKIP_LOADING_UI:
+            pass
+        else:
+            self._defineQTabWidgetTabBehaviour()
+            #self.toolwidget.mouseReleaseEvent=self.widgetClicked
 
-        self._defineQTabWidgetTabBehaviour()
-
-        self.toolwidget.mouseReleaseEvent=self.widgetClicked
 
         #propagate to childwidgets
         try:
@@ -413,6 +415,9 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             #print('error disconnect currentFeatureChanged')
 
         for childwdg in self.dbasechildwdg:
+            #if hasattr(childwdg,'SKIP_LOADING_UI') and childwdg.SKIP_LOADING_UI:
+            #    childwdg.manageWidgetToLoadInMainLayout()
+            #else:
             childwdg.manageWidgetToLoadInMainLayout()
             self.currentFeatureChanged.connect(childwdg.loadChildFeatureinWidget)
 
@@ -425,12 +430,18 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         self.tabWidget.setTabIcon(0, QtGui.QIcon(self.tooltreewidgetICONPATH))
 
         if self.parentWidget is not None:
-            parentwdg=self
-            parentlist=[]
-            parenttab = self.parentWidget.tabWidget
-            indexinserted = parenttab.addTab(self.tabWidgetmain.widget(0),
-                                                QtGui.QIcon(self.tooltreewidgetICONPATH),
-                                                self.tooltreewidgetSUBCAT)
+            #parentwdg=self
+            #parentlist=[]
+            if hasattr(self.parentWidget,'SKIP_LOADING_UI') and self.parentWidget.SKIP_LOADING_UI:
+                parenttab = self.parentWidget.parentWidget.tabWidget
+            else:
+                parenttab = self.parentWidget.tabWidget
+            if self.tabWidget.count() > 0:
+                indexinserted = parenttab.addTab(self.tabWidgetmain.widget(0),
+                                                    QtGui.QIcon(self.tooltreewidgetICONPATH),
+                                                    self.tooltreewidgetSUBCAT)
+            else:
+                return
 
             def selectFirstTab(idx):
                 if idx == indexinserted:
@@ -440,7 +451,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
 
         else:
             self.tabWidgetmain.tabBarClicked.connect(lambda idx : self.tabWidget.setCurrentIndex(0))
-            self.tabWidgetmain.tabBarClicked.connect(lambda idx: self.toolwidget.mouseReleaseEvent(None))
+            self.tabWidgetmain.tabBarClicked.connect(lambda idx: self.widgetClicked())
 
         def onlyFirstTabClicked(idx):
             if idx == 0:
@@ -470,34 +481,25 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         parentwidget = self
         lastparentwdgpk = None
         while parentwidget.parentWidget is not None:
-            # print('disable ', parentwidget.parentWidget.DBASETABLENAME)
-            #self._setWidgetEnabled(False, parentwidget.parentWidget)
             lastparentwdgpk = parentwidget.parentWidget.currentFeaturePK
             parentwidget = parentwidget.parentWidget
 
-
         if ((self.parentWidget is not None and lastparentwdgpk is not None)
                 or self.parentWidget is None):
-            #self._setWidgetEnabled(True, self)
             self.activateChooserTreeWidget(initfeatureselection=True)
-            """
-            if self.mainifacewidget.currentchoosertreewidget:
-                self.mainifacewidget.currentchoosertreewidget.disconnectTreewidget()
-            self.mainifacewidget.currentchoosertreewidget = self.choosertreewidget
-            self.mainifacewidget.currentchoosertreewidget.onActivation()
-            #res = 
-            """
         else:
             pass
-            #self._setWidgetEnabled(False, self)
 
         if debug :
             logging.getLogger("Lamia_unittest").debug('%s - last sel pk : %s - lenids : %i',
                                                         self.DBASETABLENAME,
                                                         self.lastselectedpk,
                                                         len(self.choosertreewidget.ids) )
-
+        self._widgetClicked_manageFeatureSelectionAndChooserWidget(**kwargs)
         # select feature and update choosertreewidget
+        self._widgetClicked_manageToolBar()
+
+    def _widgetClicked_manageFeatureSelectionAndChooserWidget(self,**kwargs):
         if (self.lastselectedpk is not None and len(self.choosertreewidget.ids)>0 
                 and self.lastselectedpk in self.choosertreewidget.ids.pk.values):
             self.selectFeature(pk=self.lastselectedpk)
@@ -511,39 +513,41 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                 self.currentFeaturePK = None
                 self.updateFormTitle(pk=None, disabletitle=True)
                 self.frametoolwidg.setEnabled(False)
+       
+    def _widgetClicked_manageToolBar(self):
+        #self.mainifacewidget.toolBarFormCreation.setEnabled(False)
+        #self.mainifacewidget.toolBarFormGeom.setEnabled(False)
+        if 'geom' in self.dbase.dbasetables[self.DBASETABLENAME].keys():
+            self.mainifacewidget.toolBarFormGeom.setEnabled(True)
 
+            toolbaractions = [self.mainifacewidget.actiontoobargeomnewpoint,
+                             self.mainifacewidget.actiontoobargeomnewline,
+                             self.mainifacewidget.actiontoobargeomnewpolygon,
+                             self.mainifacewidget.actiontoobargeomaddpoint,
+                             #self.mainifacewidget.actiontoobargeomaddGPSpoint,
+                             #self.mainifacewidget.actiontoobargeomeditlayer
+                             ]
+            dbaselayertype = self.dbase.dbasetables[self.DBASETABLENAME]['geom']
+            if 'POINT' in dbaselayertype:
+                conf = [True, False, False, False]
+            elif 'LINESTRING' in dbaselayertype:
+                if self.DBASETABLENAME in ['Equipement', 'Desordre']:
+                    conf = [True, True, False, True]
+                else:
+                    conf = [False, True, False, True]
+            elif 'POLYGON' in dbaselayertype:
+                conf = [False, False, True, True]
+            dictwhattodo = dict(zip(toolbaractions, conf))
+            for action, boolenabled in dictwhattodo.items():
+                action.setEnabled(boolenabled)
 
-
-    """
-    def _disableChildWidgets(self,childwdgs):
-        if hasattr(self.toolwidget,'framechildtoolwidg'):
-            print('disab')
-            self.toolwidget.framechildtoolwidg.setEnabled(False)
-        for childwdg in childwdgs:
-            self._disableChildWidgets(childwdg.dbasechildwdg)
-            self._setWidgetEnabled(False,childwdg)
-            childwdg.updateFormTitleBackground(disabletitle=True)
-            #childwdg.toolwidget.setEnabled(False)
-
-    def _setWidgetEnabled(self, boolstate, wdg):
-        framenametoenable = 'frametoolwidg'
-        if boolstate:
-            wdg.toolwidget.setEnabled(True)
-            #wdg.toolwidget
-            if hasattr(wdg.toolwidget,framenametoenable):
-                wdg.toolwidget.frametoolwidg.setEnabled(True)
-                wdg.toolwidget.frametoolwidg.setVisible(True)
         else:
-            wdg.updateFormTitleBackground(disabletitle=True)
-            if hasattr(wdg.toolwidget,framenametoenable):
-                wdg.toolwidget.frametoolwidg.setEnabled(False)
-                wdg.toolwidget.frametoolwidg.setVisible(False)
-                if hasattr(wdg.toolwidget,'framechildtoolwidg'):
-                    wdg.toolwidget.framechildtoolwidg.setEnabled(True)
-            else:
-                wdg.toolwidget.setEnabled(False)
-    """
+            self.mainifacewidget.toolBarFormGeom.setEnabled(False)
 
+        if self.parentWidget is not None and self.parentWidget.currentFeaturePK is None:
+            self.mainifacewidget.toolBarFormCreation.setEnabled(False)
+        else:
+            self.mainifacewidget.toolBarFormCreation.setEnabled(True)
 
     def loadChildFeatureinWidget(self):
         debug = False
@@ -586,9 +590,6 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             if minpk:
                 minpk =  minpk[0][0]
                 self.selectFeature(pk=minpk)
-
-
-
 
     def initMainToolWidget(self):
         pass

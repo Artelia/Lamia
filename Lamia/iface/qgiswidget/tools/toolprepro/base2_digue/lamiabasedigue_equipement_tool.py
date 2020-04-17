@@ -116,6 +116,7 @@ class BaseDigueEquipementTool(BaseEquipementTool):
             #self.propertieswdgDesordre.pushButton_delFeature.setEnabled(False)
             #self.propertieswdgDesordre.comboBox_featurelist.setEnabled(False)
             #self.propertieswdgDesordre.groupBox_geom.setParent(None)
+            self.propertieswdgDesordre.SKIP_LOADING_UI = True
             self.propertieswdgDesordre.initMainToolWidget()
             self.toolwidgetmain.comboBox_type.currentIndexChanged.connect(self.propertieswdgDesordre.propertieswdgOBSERVATION.equipementTypeChanged)
             self.dbasechildwdgfield.append(self.propertieswdgDesordre)

@@ -106,7 +106,7 @@ class SpatialiteDBaseParser(AbstractDBaseParser):
             if dbasetable[viewname].strip() != '':
                 sql += dbasetable[viewname]
             else:
-                sql = 'SELECT * FROM ' + str(dbname)
+                sql += 'SELECT * FROM ' + str(dbname)
             finalsqllist.append(sql)
 
             #if self.isTableSpatial(viewnames[viewname]):

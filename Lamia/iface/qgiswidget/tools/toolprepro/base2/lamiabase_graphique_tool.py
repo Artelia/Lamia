@@ -276,6 +276,9 @@ class BaseGraphiqueTool(AbstractLamiaFormTool):
         sql += " ORDER BY id_graphiquedata"
         query = self.dbase.query(sql)
 
+        if not query:
+            return
+
         result = [list(row) for row in query]
         graphiquedatafields = self.dbase.dbasetables['Graphiquedata']['fields']
         lenrowresult = len(graphiquedatafields)
