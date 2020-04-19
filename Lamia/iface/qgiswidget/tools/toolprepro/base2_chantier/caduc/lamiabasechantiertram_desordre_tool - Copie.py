@@ -17,9 +17,8 @@ class BaseChantierTramDesordreTool(BaseDesordreTool):
     LOADFIRST = True
     dbasetablename = 'Desordre'
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None, parentwidget=None, parent=None):
-        super(BaseChantierTramDesordreTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil, parentwidget,
-                                                              parent=parent)
+    def __init__(self, **kwargs):
+        super(BaseChantierTramDesordreTool, self).__init__(**kwargs)
 
 
     def initTool(self):
@@ -44,31 +43,31 @@ class BaseChantierTramDesordreTool(BaseDesordreTool):
         self.iconinterv2 = QtGui.QIcon(os.path.join(os.path.dirname(__file__), 'interv1.png'))
         self.iconinterv3 = QtGui.QIcon(os.path.join(os.path.dirname(__file__), 'interv3.png'))
 
-    def initFieldUI(self):
+    def initMainToolWidget(self):
         # ****************************************************************************************
         #   userui Field
-        if self.userwdgfield is None:
+        if self.toolwidgetmain is None:
             # ****************************************************************************************
             # userui
 
-            self.userwdgfield = UserUI()
+            self.toolwidgetmain = UserUI()
 
-            self.linkuserwdgfield = {'Desordre': {'linkfield': 'id_desordre',
-                                                  'widgets': {'groupedesordre': self.userwdgfield.comboBox_groupedes,
-                                                              'detecteur': self.userwdgfield.comboBox_detecteur,
-                                                              'detecteur_com': self.userwdgfield.lineEdit_detecteur,
+            self.formtoolwidgetconfdictmain = {'Desordre': {'linkfield': 'id_desordre',
+                                                  'widgets': {'groupedesordre': self.toolwidgetmain.comboBox_groupedes,
+                                                              'detecteur': self.toolwidgetmain.comboBox_detecteur,
+                                                              'detecteur_com': self.toolwidgetmain.lineEdit_detecteur,
 
                                                               }},
                                      'Objet': {'linkfield': 'id_objet',
                                                'widgets': {}}}
 
-            self.userwdgfield.comboBox_groupedes.currentIndexChanged.connect(self.changeGroupe)
+            self.toolwidgetmain.comboBox_groupedes.currentIndexChanged.connect(self.changeGroupe)
 
             # non conformité
             for elem in self.nclist:
                 itemname = elem[0]
-                self.userwdgfield.listWidget_nonconf.addItem(itemname)
-            self.userwdgfield.listWidget_nonconf.currentItemChanged.connect(self.itemChangedNonConformite)
+                self.toolwidgetmain.listWidget_nonconf.addItem(itemname)
+            self.toolwidgetmain.listWidget_nonconf.currentItemChanged.connect(self.itemChangedNonConformite)
             
 
             # ****************************************************************************************
@@ -88,14 +87,14 @@ class BaseChantierTramDesordreTool(BaseDesordreTool):
                     self.obsdict[wdgname].NAME = None
                     self.obsdict[wdgname].setOBSTYPE(itemtype, itemboolsignature)
                     #self.obsdict[wdgname].OBSTYPE = itemtype
-                    self.userwdgfield.stackedWidget_nonconf.widget(i).layout().addWidget(self.obsdict[wdgname])
+                    self.toolwidgetmain.stackedWidget_nonconf.widget(i).layout().addWidget(self.obsdict[wdgname])
                     self.dbasechildwdgfield.append(self.obsdict[wdgname])
 
 
             self.propertieswdgChooseMarche = LidChooser(parentwdg=self, parentlidfield='lid_marche',
-                                                        parentlabel=self.userwdgfield.label_marche,
+                                                        parentlabel=self.toolwidgetmain.label_marche,
                                                         searchdbase='Marche', searchfieldtoshow=['libelle'])
-            self.userwdgfield.frame_numarche.layout().addWidget(self.propertieswdgChooseMarche)
+            self.toolwidgetmain.frame_numarche.layout().addWidget(self.propertieswdgChooseMarche)
 
             #pv mise a dispo
             if True:
@@ -103,7 +102,7 @@ class BaseChantierTramDesordreTool(BaseDesordreTool):
                 propertieswdgOBSERVATIONpv.NAME = None
                 propertieswdgOBSERVATIONpv.setOBSTYPE('PVA', True)
                 # self.obsdict[wdgname].OBSTYPE = itemtype
-                self.userwdgfield.stackedWidget.widget(1).layout().addWidget(propertieswdgOBSERVATIONpv)
+                self.toolwidgetmain.stackedWidget.widget(1).layout().addWidget(propertieswdgOBSERVATIONpv)
                 self.dbasechildwdgfield.append(propertieswdgOBSERVATIONpv)
 
 
@@ -118,20 +117,21 @@ class BaseChantierTramDesordreTool(BaseDesordreTool):
                 wdgobservation.saveFeature()
 
 
-    def postInitFeatureProperties(self,feat):
+    # def postInitFeatureProperties(self, feat):
+    def postSelectFeature(self):
         super(BaseChantierTramDesordreTool, self).postInitFeatureProperties(feat)
         self.propertieswdgChooseMarche.postInitFeatureProperties(feat)
         self.updateListSymbols()
 
         if self.currentFeaturePK is None:
-            self.userwdgfield.listWidget_nonconf.setCurrentRow(0)
+            self.toolwidgetmain.listWidget_nonconf.setCurrentRow(0)
 
 
 
 
     def itemChangedNonConformite(self, itemcurrent, itemprevious):
-        currentrow = self.userwdgfield.listWidget_nonconf.row(itemcurrent)
-        self.userwdgfield.stackedWidget_nonconf.setCurrentIndex(currentrow)
+        currentrow = self.toolwidgetmain.listWidget_nonconf.row(itemcurrent)
+        self.toolwidgetmain.stackedWidget_nonconf.setCurrentIndex(currentrow)
 
 
 
@@ -150,18 +150,18 @@ class BaseChantierTramDesordreTool(BaseDesordreTool):
                 # print('**', sql, res)
                 if res is not None and len(res)>0 :
                     if not self.dbase.isAttributeNull(res[0][0]) and not self.dbase.isAttributeNull(res[0][2]):
-                        self.userwdgfield.listWidget_nonconf.item(i).setIcon(self.iconinterv3)
+                        self.toolwidgetmain.listWidget_nonconf.item(i).setIcon(self.iconinterv3)
 
                     elif not self.dbase.isAttributeNull(res[0][0]):
-                        self.userwdgfield.listWidget_nonconf.item(i).setIcon(self.iconinterv1)
+                        self.toolwidgetmain.listWidget_nonconf.item(i).setIcon(self.iconinterv1)
 
                     else:
-                        self.userwdgfield.listWidget_nonconf.item(i).setIcon(QtGui.QIcon())
+                        self.toolwidgetmain.listWidget_nonconf.item(i).setIcon(QtGui.QIcon())
 
                 else:
-                    self.userwdgfield.listWidget_nonconf.item(i).setIcon(QtGui.QIcon())
+                    self.toolwidgetmain.listWidget_nonconf.item(i).setIcon(QtGui.QIcon())
             else:
-                self.userwdgfield.listWidget_nonconf.item(i).setIcon(QtGui.QIcon())
+                self.toolwidgetmain.listWidget_nonconf.item(i).setIcon(QtGui.QIcon())
 
 
     def printWidget(self):

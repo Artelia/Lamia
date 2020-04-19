@@ -50,6 +50,15 @@ class BaseIntervenantTool(AbstractLamiaFormTool):
     tooltreewidgetSUBCAT = 'Intervenants'
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_intervenant_tool_icon.png')
 
+    tempparentjoin = {}
+    linkdict = {'colparent': 'id_objet',
+                'colthistable': 'id_intervenant',
+                    'tctable': 'Tcobjetintervenant',
+                    'tctablecolparent':'lid_objet',
+                    'tctablecolthistable':'lid_intervenant'}
+    for tablename in ['Infralineaire','Marche']:
+        tempparentjoin[tablename] = linkdict
+    PARENTJOIN = tempparentjoin
 
     def __init__(self, **kwargs):
         super(BaseIntervenantTool, self).__init__(**kwargs)

@@ -51,7 +51,10 @@ class SignatureWidget(QWidget):
         self.signatureid = signatureid
         self.datetimesigfield = datetimesig
 
-        self.propertieswdgCROQUIS2 = BaseCroquisTool(dbase=self.parentwdg.dbase, parentwidget=self.parentwdg)
+        self.propertieswdgCROQUIS2 = BaseCroquisTool(dbaseparser=self.parentwdg.dbase,
+                                                    mainifacewidget=self.parentwdg.mainifacewidget,
+                                                     parentwidget=self.parentwdg)
+        self.propertieswdgCROQUIS2.initMainToolWidget()
         self.propertieswdgCROQUIS2.linkagespec = {'Observation': {'tabletc': None,
                                                                   'idsource': 'id_ressource',
                                                                   'idtcsource': None,
@@ -59,10 +62,11 @@ class SignatureWidget(QWidget):
                                                                   'idtcdest': None,
                                                                   'desttable': ['Observation']}}
         self.propertieswdgCROQUIS2.NAME = None
+        self.propertieswdgCROQUIS2.SKIP_LOADING_UI = True
         self.frame_signature.layout().addWidget(self.propertieswdgCROQUIS2.photowdg)
         self.pushButton_editsig.clicked.connect(self.propertieswdgCROQUIS2.editPhoto)
-        self.propertieswdgCROQUIS2.groupBox_elements.setVisible(False)
-        self.propertieswdgCROQUIS2.userwdgfield.frame_editing.setVisible(False)
+        #self.propertieswdgCROQUIS2.groupBox_elements.setVisible(False)
+        #self.propertieswdgCROQUIS2.userwdgfield.frame_editing.setVisible(False)
         self.parentwdg.dbasechildwdgfield.append(self.propertieswdgCROQUIS2)
 
         lidchooser = LidChooserWidget(parentwdg=self.parentwdg, parentlidfield=self.intervenantid,

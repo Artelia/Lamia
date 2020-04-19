@@ -51,7 +51,8 @@ class LidChooser(QWidget):
         self.lineEdit.textChanged.connect(self.loadDatas)
         self.pushButton_interv.clicked.connect(self.saveDatas)
 
-    def postInitFeatureProperties(self,feat):
+    # def postInitFeatureProperties(self, feat):
+    def postSelectFeature(self):
         """
         if self.parentwdg.currentFeaturePK is None:
             self.frame_sigedit.setEnabled(False)
@@ -98,8 +99,8 @@ class LidChooser(QWidget):
             #         self.signatureid = signatureid
 
             #sql = "SELECT " + self.intervenantid  + " FROM Observation WHERE pk_observation = " + str(self.parentwdg.currentFeaturePK)
-            sql = "SELECT " + str(self.parentlidfield) + " FROM " + self.parentwdg.dbasetablename
-            sql += " WHERE pk_" + self.parentwdg.dbasetablename.lower() + " = " + str(self.parentwdg.currentFeaturePK)
+            sql = "SELECT " + str(self.parentlidfield) + " FROM " + self.parentwdg.DBASETABLENAME
+            sql += " WHERE pk_" + self.parentwdg.DBASETABLENAME.lower() + " = " + str(self.parentwdg.currentFeaturePK)
             res = self.parentwdg.dbase.query(sql)
             if res is not None and len(res) > 0 and res[0][0] is not None:
                 for itemindex in range(self.comboBox_interv.count()):
@@ -123,8 +124,8 @@ class LidChooser(QWidget):
 
         try:
             id = int(idtxt)
-            sql = "UPDATE " + self.parentwdg.dbasetablename + " SET " + self.parentlidfield
-            sql += " = " + str(id) + " WHERE pk_" + self.parentwdg.dbasetablename.lower() + " = " + str(self.parentwdg.currentFeaturePK)
+            sql = "UPDATE " + self.parentwdg.DBASETABLENAME + " SET " + self.parentlidfield
+            sql += " = " + str(id) + " WHERE pk_" + self.parentwdg.DBASETABLENAME.lower() + " = " + str(self.parentwdg.currentFeaturePK)
             print(sql)
             self.parentwdg.dbase.query(sql)
 

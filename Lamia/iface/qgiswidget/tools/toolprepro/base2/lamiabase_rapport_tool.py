@@ -42,8 +42,20 @@ class BaseRapportTool(AbstractLamiaFormTool):
     tooltreewidgetSUBCAT = 'Rapport'
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_rapport_tool_icon.png')
 
+    tempparentjoin = {}
+    linkdict = {'colparent': 'id_objet',
+                'colthistable': 'id_ressource',
+                    'tctable': 'Tcobjetressource',
+                    'tctablecolparent':'lid_objet',
+                    'tctablecolthistable':'lid_ressource'}
+    for tablename in ['Observation', 'Noeud', 'Infralineaire', 'Equipement']:
+        tempparentjoin[tablename] = linkdict
+    PARENTJOIN = tempparentjoin
+
+
     def __init__(self, **kwargs):
         super(BaseRapportTool, self).__init__(**kwargs)
+        self.instancekwargs = kwargs
 
     """
     def initTool(self):

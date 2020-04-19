@@ -25,39 +25,44 @@ This file is part of LAMIA.
  """
 
 
-
+import datetime, os
 
 from qgis.PyQt import uic, QtCore
+from qgis.PyQt.QtWidgets import (QWidget)
 
-try:
-    from qgis.PyQt.QtGui import (QWidget)
-except ImportError:
-    from qgis.PyQt.QtWidgets import (QWidget)
-#from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
-from ...Lamia_abstract_tool import AbstractLamiaTool
-
-
+from ...lamia_abstractformtool import AbstractLamiaFormTool
 from .lamiabase_rapport_tool import BaseRapportTool
 from .lamiabase_photo_tool import BasePhotoTool
 from .lamiabase_topographie_tool import BaseTopographieTool
-# from .lamia_ressource_tool import AbstractRessourceTool
 
 
 
-import os
-import datetime
+class BaseMarcheTool(AbstractLamiaFormTool):
 
-
-
-class BaseMarcheTool(AbstractLamiaTool):
-
+    DBASETABLENAME = 'Marche'
     LOADFIRST = False
-    dbasetablename = 'Marche'
-    specialfieldui = []
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
-        super(BaseMarcheTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
+    tooltreewidgetCAT = 'Gestion'
+    tooltreewidgetSUBCAT = 'Marche'
+    tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_marche_tool_icon.png')
+    
+    """
+    tempparentjoin = {}
+    linkdict = {'colparent': 'id_objet',
+                'colthistable': 'id_intervenant',
+                    'tctable': 'Tcobjetintervenant',
+                    'tctablecolparent':'lid_objet',
+                    'tctablecolthistable':'lid_intervenant'}
+    for tablename in ['Intervenant']:
+        tempparentjoin[tablename] = linkdict
+    PARENTJOIN = tempparentjoin
+    """
 
+    def __init__(self, **kwargs):
+        super(BaseMarcheTool, self).__init__(**kwargs)
+        self.instancekwargs = kwargs
+
+    """
     def initTool(self):
         # ****************************************************************************************
         # Main spec
@@ -82,35 +87,35 @@ class BaseMarcheTool(AbstractLamiaTool):
         # ****************************************************************************************
         #properties ui
         pass
+    """
 
-    def initFieldUI(self):
+
+    def initMainToolWidget(self):
+
+        self.toolwidgetmain = UserUI()
+        self.formtoolwidgetconfdictmain = {'Marche' : {'linkfield' : 'id_marche',
+                                            'widgets' : {
+                                                        'datemarche' : self.toolwidgetmain.dateEdit_date,
+                                                        'numero_marche': self.toolwidgetmain.lineEdit_nummarche,
+                                            }},
+                            'Objet' : {'linkfield' : 'id_objet',
+                                        'widgets' : {'libelle': self.toolwidgetmain.lineEdit_nom}}}
+        self.toolwidgetmain.pushButton_currentPrestation.clicked.connect(self.defineCurrentPrestation)
+        #self.toolwidgetmain.pushButton_defineinter.clicked.connect(self.manageLinkage)
+
         # ****************************************************************************************
-        #   userui Field
-        if self.userwdgfield is None:
-            # ****************************************************************************************
-            # userui
-            self.userwdgfield = UserUI()
-            self.linkuserwdgfield = {'Marche' : {'linkfield' : 'id_marche',
-                                             'widgets' : {
-                                                          'datemarche' : self.userwdgfield.dateEdit_date,
-                                                          'numero_marche': self.userwdgfield.lineEdit_nummarche,
-                                             }},
-                                'Objet' : {'linkfield' : 'id_objet',
-                                          'widgets' : {'libelle': self.userwdgfield.lineEdit_nom}}}
-            self.userwdgfield.pushButton_currentPrestation.clicked.connect(self.defineCurrentPrestation)
-            self.userwdgfield.pushButton_defineinter.clicked.connect(self.manageLinkage)
+        # child widgets
+        self.dbasechildwdgfield = []
+        self.instancekwargs['parentwidget'] = self
 
-            # ****************************************************************************************
-            # child widgets
-            self.dbasechildwdgfield = []
-            self.propertieswdgRAPPORT = BaseRapportTool(dbase=self.dbase, parentwidget=self)
-            self.dbasechildwdgfield.append(self.propertieswdgRAPPORT)
+        self.propertieswdgRAPPORT = BaseRapportTool(**self.instancekwargs)
+        self.dbasechildwdgfield.append(self.propertieswdgRAPPORT)
 
-            self.propertieswdgPHOTO = BasePhotoTool(dbase=self.dbase, parentwidget=self)
-            self.dbasechildwdgfield.append(self.propertieswdgPHOTO)
+        self.propertieswdgPHOTO = BasePhotoTool(**self.instancekwargs)
+        self.dbasechildwdgfield.append(self.propertieswdgPHOTO)
 
-            self.propertieswdgTOPOGRAPHIE = BaseTopographieTool(dbase=self.dbase, parentwidget=self)
-            self.dbasechildwdgfield.append(self.propertieswdgTOPOGRAPHIE)
+        self.propertieswdgTOPOGRAPHIE = BaseTopographieTool(**self.instancekwargs)
+        self.dbasechildwdgfield.append(self.propertieswdgTOPOGRAPHIE)
 
 
 
@@ -119,30 +124,40 @@ class BaseMarcheTool(AbstractLamiaTool):
         self.dbase.currentprestationid = self.currentFeature.id()
 
 
-
+    """
     def postOnActivation(self):
         pass
 
     def postOnDesactivation(self):
         pass
+    """
 
+    # def postInitFeatureProperties(self, feat):
+    def postSelectFeature(self):
+        if self.currentFeaturePK is None:
+            #datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
+            #self.initFeatureProperties(feat, self.dbasetablename, 'datemarche', datecreation)
+            datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            self.formutils.applyResultDict({'datemarche' : datecreation},checkifinforgottenfield=False)
 
-    def postInitFeatureProperties(self, feat):
-        if self.currentFeature is None:
-            datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
-            self.initFeatureProperties(feat, self.dbasetablename, 'datemarche', datecreation)
         else:
             try:
+                idobjet = self.dbase.getValuesFromPk(self.DBASETABLENAME + '_qgis', 
+                                                    'id_objet',
+                                                    self.currentFeaturePK)
                 sql = "SELECT Tcobjetintervenant.fonction, Intervenant.nom,Intervenant.societe  FROM Tcobjetintervenant "
-                sql += " INNER JOIN Intervenant ON Tcobjetintervenant.id_tcintervenant = Intervenant.id_intervenant "
-                sql += "WHERE id_tcobjet = " + str(self.currentFeature['id_objet'])
+                sql += " INNER JOIN Intervenant ON Tcobjetintervenant.lid_intervenant = Intervenant.id_intervenant "
+                #sql += "WHERE id_tcobjet = " + str(self.currentFeature['id_objet'])
+                sql += "WHERE lid_objet = " + str(idobjet)
                 query = self.dbase.query(sql)
+
                 result = "\n".join([str(row) for row in query])
-                self.userwdg.textBrowser_intervenants.clear()
-                self.userwdg.textBrowser_intervenants.append(result)
+                self.toolwidgetmain.textBrowser_intervenants.clear()
+                self.toolwidgetmain.textBrowser_intervenants.append(result)
             except KeyError as e:
                 print('postInitFeatureProperties', e)
 
+    """
     def createParentFeature(self):
         pkobjet = self.dbase.createNewObjet()
 
@@ -168,7 +183,7 @@ class BaseMarcheTool(AbstractLamiaTool):
         sql += " WHERE pk_marche = " + str(pkmarche) + ";"
         query = self.dbase.query(sql)
         self.dbase.commit()
-
+    """
 
 
 

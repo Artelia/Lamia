@@ -389,12 +389,12 @@ class AbstractDBaseParser():
         sql = "INSERT INTO Objet (id_objet, lpk_revision_begin, datetimecreation, datetimemodification ) "
         sql += "VALUES(" + str(lastobjetid + 1) + "," + str(self.maxrevision) + ",'" + datecreation + "','" + datecreation + "' )"
         self.query(sql, docommit=docommit)
-        # pkobjet = self.getLastRowId('Objet')
         pkobjet = self.getLastPK('Objet') 
         return pkobjet
         
     def createNewFeature(self, tablename):
         parenttables = [tablename] + self.getParentTable(tablename)
+        parenttablename = None
         for itertablename in parenttables[::-1]:
             if itertablename == 'Objet':
                 parenttablepk = self.createNewObjet()
@@ -407,14 +407,15 @@ class AbstractDBaseParser():
 
                 createSetValueSentence(self,type='INSERT',tablename=None, listoffields=[], listofrawvalues=[]):
                 """
-                maxid = self.getmaxColumnValue(itertablename, 'id_' + itertablename.lower()) + 1
-                listofields = ['id_' + itertablename.lower(), 'lpk_' + parenttablename.lower()]
-                listofrawvalues = [maxid, parenttablepk]
-                sql = self.createSetValueSentence(type='INSERT',
-                                            tablename=itertablename,
-                                             listoffields=listofields,
-                                             listofrawvalues=listofrawvalues)
-                self.query(sql)
+                if parenttablename is not None :
+                    maxid = self.getmaxColumnValue(itertablename, 'id_' + itertablename.lower()) + 1
+                    listofields = ['id_' + itertablename.lower(), 'lpk_' + parenttablename.lower()]
+                    listofrawvalues = [maxid, parenttablepk]
+                    sql = self.createSetValueSentence(type='INSERT',
+                                                tablename=itertablename,
+                                                listoffields=listofields,
+                                                listofrawvalues=listofrawvalues)
+                    self.query(sql)
                 parenttablename = itertablename
                 parenttablepk = self.getLastPK(itertablename)
             
@@ -510,18 +511,24 @@ class AbstractDBaseParser():
         dbasetable = self.dbasetables[tablename]
         continuesearchparent = True
 
+        #if 'onlyoneparenttable' in dbasetable.keys() and dbasetable['onlyoneparenttable'] :
+        #    onlyoneiteration = True
+
         while continuesearchparent:
             for field in dbasetable['fields'].keys():
                 continuesearchparent = False
                 if 'lpk_' == field[:4]:
                     tablename = field.split('_')[1].title()
                     parenttablenamelist.append(tablename)
-                    dbasetable = self.dbasetables[tablename]
-                    if field[4:] == 'objet':
+                    if 'onlyoneparenttable' in dbasetable.keys() and dbasetable['onlyoneparenttable'] :
+                        continuesearchparent = False
+                    elif field[4:] == 'objet':
                         continuesearchparent = False
                     else:
                         continuesearchparent = True
+                    dbasetable = self.dbasetables[tablename]
                     break
+                    
 
         return parenttablenamelist
 

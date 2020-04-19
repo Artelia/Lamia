@@ -227,7 +227,8 @@ class PostGisDBaseParser(AbstractDBaseParser):
             if self.printsql :
                 logging.getLogger('Lamia_unittest').debug('%s', sql)
             self.PGiscursor.execute(sql)
-            if self.PGiscursor.rowcount > 0:
+            #print(self.PGiscursor.statusmessage )
+            if self.PGiscursor.statusmessage.split(' ')[0] not in ['INSERT', 'UPDATE','SET','CREATE','ALTER','DROP']:
                 rows = list(self.PGiscursor.fetchall())
             else:
                 rows = None
@@ -236,7 +237,7 @@ class PostGisDBaseParser(AbstractDBaseParser):
             return rows
 
         except psycopg2.ProgrammingError as e:
-            print('error query : ', sql, '\n', e)
+            print('error query : ', sql, '\n', e, self.PGiscursor.statusmessage )
             return None
         except (psycopg2.DataError, psycopg2.InternalError) as e:
             print('error query : ', sql, '\n', e)

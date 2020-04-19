@@ -23,21 +23,19 @@ This file is part of LAMIA.
   * SPDX-License-Identifier: GPL-3.0-or-later
   * License-Filename: LICENSING.md
  """
-
-
-try:
-    from qgis.PyQt.QtGui import (QWidget, QVBoxLayout)
-except ImportError:
-    from qgis.PyQt.QtWidgets import (QWidget, QVBoxLayout)
-from qgis.PyQt import uic, QtCore
 import os, logging
 
-class LidChooserWidget(QWidget):
+from qgis.PyQt.QtWidgets import (QWidget, QVBoxLayout)
+from qgis.PyQt import uic, QtCore
+
+from .subwidget_abstract import AbstractSubWidget
+
+class LidChooserWidget(AbstractSubWidget):
 
 
     def __init__(self, parentwdg=None, parentlidfield=None, parentframe=None, searchdbase='', searchfieldtoshow=[] ):
         super(LidChooserWidget, self).__init__(parent=parentwdg)
-        uipath = os.path.join(os.path.dirname(__file__), 'lamiabasechantier_lidchooser_ui.ui')
+        uipath = os.path.join(os.path.dirname(__file__), 'subwidget_lidchooser_ui.ui')
         uic.loadUi(uipath, self)
         self.parentwdg=parentwdg
         self.parentlidfield=parentlidfield
@@ -56,7 +54,7 @@ class LidChooserWidget(QWidget):
 
 
 
-    def initProperties(self):
+    def postSelectFeature(self):
         """
         if self.parentwdg.currentFeaturePK is None:
             self.frame_sigedit.setEnabled(False)
@@ -93,7 +91,7 @@ class LidChooserWidget(QWidget):
 
 
     def loadDatas(self, txtstr=None):
-
+        #print('loadDatas', self.parentwdg.DBASETABLENAME)
         self.comboBox_interv.clear()
         fields = ['id_' + self.searchdbase.lower() ] + self.searchfieldtoshow
 
@@ -114,12 +112,12 @@ class LidChooserWidget(QWidget):
 
 
 
-    #def saveDatas(self):
-    def saveProperties(self):
+    def postSaveFeature(self, parentfeaturepk=None):
         idtxt = self.comboBox_interv.currentText().split(' / ')[0]
 
-        if self.parentwdg.currentFeaturePK is None:
-            self.parentwdg.windowdialog.errorMessage("Enregistrer l'observation d'abord")
+        if parentfeaturepk is None:
+            self.parentwdg.mainifacewidget.connector.showErrorMessage("Enregistrer l'observation d'abord")
+            #self.parentwdg.windowdialog.errorMessage("Enregistrer l'observation d'abord")
             return
 
         if idtxt.isdigit():
@@ -128,5 +126,5 @@ class LidChooserWidget(QWidget):
             valuetoset = 'NULL'
 
         sql = "UPDATE " + self.parentwdg.DBASETABLENAME + " SET " + self.parentlidfield
-        sql += " = " + valuetoset + " WHERE pk_" + self.parentwdg.DBASETABLENAME.lower() + " = " + str(self.parentwdg.currentFeaturePK)
+        sql += " = " + valuetoset + " WHERE pk_" + self.parentwdg.DBASETABLENAME.lower() + " = " + str(parentfeaturepk)
         self.parentwdg.dbase.query(sql)

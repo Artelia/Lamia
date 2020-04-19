@@ -72,20 +72,7 @@
       <number>0</number>
      </property>
      <widget class="QWidget" name="page_nonconf">
-      <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,10">
-       <item>
-        <widget class="QListWidget" name="listWidget_nonconf">
-         <property name="minimumSize">
-          <size>
-           <width>100</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="wordWrap">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
+      <layout class="QHBoxLayout" name="horizontalLayout" stretch="10">
        <item>
         <widget class="QStackedWidget" name="stackedWidget_nonconf">
          <property name="currentIndex">

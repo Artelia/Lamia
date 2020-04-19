@@ -52,62 +52,61 @@ import datetime
 
 class BaseChantierTramObservationTool(BaseObservationTool):
 
-    dbasetablename = 'Observation'
     OBSTYPE = None
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
-        super(BaseChantierTramObservationTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
+    def __init__(self, **kwargs):
+        super(BaseChantierTramObservationTool, self).__init__(**kwargs)
         self.indexstackedpage = None
 
 
 
 
-    def initFieldUI(self):
+    def initMainToolWidget(self):
         # ****************************************************************************************
         # userui Desktop
-        if self.userwdgfield is None:
+        if self.toolwidgetmain is None:
             # ****************************************************************************************
             # userui
-            self.userwdgfield = UserUI()
-            self.linkuserwdgfield = {'Observation' : {'linkfield' : 'id_observation',
-                                             'widgets' : {'ncadescription': self.userwdgfield.textBrowser_ncadescription,
+            self.toolwidgetmain = UserUI()
+            self.formtoolwidgetconfdictmain = {'Observation' : {'linkfield' : 'id_observation',
+                                             'widgets' : {'ncadescription': self.toolwidgetmain.textBrowser_ncadescription,
 
-                                                            'ncathqualite':self.userwdgfield.checkBox_ncathqualite  ,
-                                                            'ncathouvrage':self.userwdgfield.checkBox_ncathouvrage  ,
-                                                            'ncathsecurite':self.userwdgfield.checkBox_ncathsecurite  ,
-                                                            'ncathsystem':self.userwdgfield.checkBox_ncathsystem  ,
-                                                            'ncathenvironnement':self.userwdgfield.checkBox_ncathenvironnement  ,
-                                                            'ncathreglementaire':self.userwdgfield.checkBox_ncathreglementaire  ,
-                                                          'ncathcommentaire' : self.userwdgfield.textBrowser_ncathcommentaire,
-                                                          'ncathcategorie': self.userwdgfield.comboBox_ncathcategorie,
+                                                            'ncathqualite':self.toolwidgetmain.checkBox_ncathqualite  ,
+                                                            'ncathouvrage':self.toolwidgetmain.checkBox_ncathouvrage  ,
+                                                            'ncathsecurite':self.toolwidgetmain.checkBox_ncathsecurite  ,
+                                                            'ncathsystem':self.toolwidgetmain.checkBox_ncathsystem  ,
+                                                            'ncathenvironnement':self.toolwidgetmain.checkBox_ncathenvironnement  ,
+                                                            'ncathreglementaire':self.toolwidgetmain.checkBox_ncathreglementaire  ,
+                                                          'ncathcommentaire' : self.toolwidgetmain.textBrowser_ncathcommentaire,
+                                                          'ncathcategorie': self.toolwidgetmain.comboBox_ncathcategorie,
 
-                                                          'ncaprocessus': self.userwdgfield.textBrowser_ncaprocessus,
-                                                          'ncacause': self.userwdgfield.textBrowser_ncacause,
+                                                          'ncaprocessus': self.toolwidgetmain.textBrowser_ncaprocessus,
+                                                          'ncacause': self.toolwidgetmain.textBrowser_ncacause,
 
-                                                          'ncb_accord': self.userwdgfield.comboBox_acceptation,
-                                                          'ncb_datecible': self.userwdgfield.dateEdit_datecible,
-                                                          'ncb_observation': self.userwdgfield.textBrowser_ncbobs,
+                                                          'ncb_accord': self.toolwidgetmain.comboBox_acceptation,
+                                                          'ncb_datecible': self.toolwidgetmain.dateEdit_datecible,
+                                                          'ncb_observation': self.toolwidgetmain.textBrowser_ncbobs,
 
-                                                          'ncc_etatverif': self.userwdgfield.comboBox_etatverif,
-                                                          'ncc_obs': self.userwdgfield.textBrowser_etatverif,
-                                                          'ncc_date': self.userwdgfield.dateEdit_etatverif,
+                                                          'ncc_etatverif': self.toolwidgetmain.comboBox_etatverif,
+                                                          'ncc_obs': self.toolwidgetmain.textBrowser_etatverif,
+                                                          'ncc_date': self.toolwidgetmain.dateEdit_etatverif,
 
-                                                          'ncd_leveereserve': self.userwdgfield.comboBox_leveres,
-                                                          'ncd_leveereservecom': self.userwdgfield.textBrowser_leveres,
+                                                          'ncd_leveereserve': self.toolwidgetmain.comboBox_leveres,
+                                                          'ncd_leveereservecom': self.toolwidgetmain.textBrowser_leveres,
 
-                                                          'nce_actioncorr': self.userwdgfield.comboBox_actioncorr,
-                                                          'nce_actioncorrcom': self.userwdgfield.textBrowser_actioncorr,
+                                                          'nce_actioncorr': self.toolwidgetmain.comboBox_actioncorr,
+                                                          'nce_actioncorrcom': self.toolwidgetmain.textBrowser_actioncorr,
 
                                                           # pva
-                                                          'pva_datetime': self.userwdgfield.dateTimeEdit_pva,
-                                                          'pva_commentaires': self.userwdgfield.textBrowser_pva,
+                                                          'pva_datetime': self.toolwidgetmain.dateTimeEdit_pva,
+                                                          'pva_commentaires': self.toolwidgetmain.textBrowser_pva,
 
 
                                                           }},
                                 'Objet' : {'linkfield' : 'id_objet',
                                           'widgets' : {}}}
 
-            if self.parentWidget.dbasetablename == 'Desordre':
+            if self.parentWidget.DBASETABLENAME == 'Desordre':
                 self.parentWidget.userwdgfield.comboBox_groupedes.currentIndexChanged.connect(self.changeGroupe)
 
             self.frame_editing.setVisible(False)
@@ -117,19 +116,19 @@ class BaseChantierTramObservationTool(BaseObservationTool):
             #NCA
             self.propertieswdgPHOTOGRAPHIE = BasePhotoTool(dbase=self.dbase, parentwidget=self)
             self.propertieswdgPHOTOGRAPHIE.NAME = None
-            self.userwdgfield.tabWidget.widget(4).layout().addWidget(self.propertieswdgPHOTOGRAPHIE)
+            self.toolwidgetmain.tabWidget.widget(4).layout().addWidget(self.propertieswdgPHOTOGRAPHIE)
             self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
 
             self.propertieswdgCROQUIS = BaseCroquisTool(dbase=self.dbase, parentwidget=self)
             self.propertieswdgCROQUIS.NAME = None
-            self.userwdgfield.tabWidget.widget(5).layout().addWidget(self.propertieswdgCROQUIS)
-            # self.userwdgfield.toolox.widget(1).layout().addWidget(self.propertieswdgOBSERVATION2)
+            self.toolwidgetmain.tabWidget.widget(5).layout().addWidget(self.propertieswdgCROQUIS)
+            # self.toolwidgetmain.toolox.widget(1).layout().addWidget(self.propertieswdgOBSERVATION2)
             self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
             # def __init__(self, parentwdg=None, intervenantid=None, signatureid=None):
             self.signatureWidget = SignatureWidget(self, 'lid_intervenant_1', 'lid_ressource_1', 'datetimesignature_1' )
-            #self.userwdgfield.tabWidget.widget(6).layout().addWidget(self.signatureWidget)
-            self.userwdgfield.tabWidget_formvisa.widget(1).layout().addWidget(self.signatureWidget)
+            #self.toolwidgetmain.tabWidget.widget(6).layout().addWidget(self.signatureWidget)
+            self.toolwidgetmain.tabWidget_formvisa.widget(1).layout().addWidget(self.signatureWidget)
 
             # NCB
 
@@ -137,25 +136,25 @@ class BaseChantierTramObservationTool(BaseObservationTool):
             self.propertieswdgRapport.NAME = None
             self.propertieswdgRapport.CHECKGEOM = False
             self.propertieswdgRapport.frame_editing.setVisible(False)
-            self.userwdgfield.groupBox_NCB_PJ.layout().addWidget(self.propertieswdgRapport)
+            self.toolwidgetmain.groupBox_NCB_PJ.layout().addWidget(self.propertieswdgRapport)
             self.dbasechildwdgfield.append(self.propertieswdgRapport)
 
             #self.signatureWidget2 = SignatureWidget(self, 'lid_intervenant_4', 'lid_ressource_4', 'datetimesignature_4' )
-            #self.userwdgfield.tabWidget_avis.widget(1).layout().addWidget(self.signatureWidget2)
+            #self.toolwidgetmain.tabWidget_avis.widget(1).layout().addWidget(self.signatureWidget2)
 
             self.propertieswdgChooseResp = LidChooser(parentwdg=self, parentlidfield='lid_intervenant_4',
-                                                        parentlabel=self.userwdgfield.label_ncbresponsable,
+                                                        parentlabel=self.toolwidgetmain.label_ncbresponsable,
                                                         searchdbase='Intervenant', searchfieldtoshow=['nom','societe'])
-            self.userwdgfield.frame_choisresp.layout().addWidget(self.propertieswdgChooseResp)
+            self.toolwidgetmain.frame_choisresp.layout().addWidget(self.propertieswdgChooseResp)
 
             # ncc
             self.propertieswdgPHOTOGRAPHIE2 = BasePhotoTool(dbase=self.dbase, parentwidget=self)
             self.propertieswdgPHOTOGRAPHIE2.NAME = None
-            self.userwdgfield.tabWidget_verif.widget(1).layout().addWidget(self.propertieswdgPHOTOGRAPHIE2)
+            self.toolwidgetmain.tabWidget_verif.widget(1).layout().addWidget(self.propertieswdgPHOTOGRAPHIE2)
             self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE2)
 
             #self.signatureWidget3 = SignatureWidget(self, 'lid_intervenant_5', 'lid_ressource_5', 'datetimesignature_5' )
-            #self.userwdgfield.tabWidget_verif.widget(2).layout().addWidget(self.signatureWidget3)
+            #self.toolwidgetmain.tabWidget_verif.widget(2).layout().addWidget(self.signatureWidget3)
 
             # mise dispo
             if True:
@@ -163,37 +162,37 @@ class BaseChantierTramObservationTool(BaseObservationTool):
                 self.propertieswdgRapport2.NAME = None
                 self.propertieswdgRapport2.CHECKGEOM = False
                 self.propertieswdgRapport2.frame_editing.setVisible(False)
-                self.userwdgfield.tabWidget_pvmisedispo.widget(4).layout().addWidget(self.propertieswdgRapport2)
+                self.toolwidgetmain.tabWidget_pvmisedispo.widget(4).layout().addWidget(self.propertieswdgRapport2)
                 self.dbasechildwdgfield.append(self.propertieswdgRapport2)
 
                 self.propertieswdgPHOTOGRAPHIE3 = BasePhotoTool(dbase=self.dbase, parentwidget=self)
                 self.propertieswdgPHOTOGRAPHIE3.NAME = None
-                self.userwdgfield.tabWidget_pvmisedispo.widget(3).layout().addWidget(self.propertieswdgPHOTOGRAPHIE3)
+                self.toolwidgetmain.tabWidget_pvmisedispo.widget(3).layout().addWidget(self.propertieswdgPHOTOGRAPHIE3)
                 self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE3)
 
                 #entreprise preneuse
                 self.propertieswdgChoosePreneuseMarche = LidChooser(parentwdg=self, parentlidfield='lid_entpren_marche',
-                                                            parentlabel=self.userwdgfield.label_entpren_marche,
+                                                            parentlabel=self.toolwidgetmain.label_entpren_marche,
                                                             searchdbase='Marche', searchfieldtoshow=['libelle'])
-                self.userwdgfield.groupBox_entpren_marche.layout().addWidget(self.propertieswdgChoosePreneuseMarche)
+                self.toolwidgetmain.groupBox_entpren_marche.layout().addWidget(self.propertieswdgChoosePreneuseMarche)
 
 
                 self.signatureWidgetPreneuse = SignatureWidget(self, 'lid_entpren_intervenant',
                                                                'lid_ressource_entpren',
                                                                'lid_entpren_datetimesignature' )
-                self.userwdgfield.groupBox_entpren_sign.layout().addWidget(self.signatureWidgetPreneuse)
+                self.toolwidgetmain.groupBox_entpren_sign.layout().addWidget(self.signatureWidgetPreneuse)
 
                 #entreprise occupante
                 self.propertieswdgChooseOccupanteMarche = LidChooser(parentwdg=self, parentlidfield='lid_entocc_marche',
-                                                            parentlabel=self.userwdgfield.label_entocc_marche,
+                                                            parentlabel=self.toolwidgetmain.label_entocc_marche,
                                                             searchdbase='Marche', searchfieldtoshow=['libelle'])
-                self.userwdgfield.groupBox_entocc_marche.layout().addWidget(self.propertieswdgChooseOccupanteMarche)
+                self.toolwidgetmain.groupBox_entocc_marche.layout().addWidget(self.propertieswdgChooseOccupanteMarche)
 
 
                 self.signatureWidgetOccupante = SignatureWidget(self, 'lid_entocc_intervenant',
                                                                'lid_ressource_entocc',
                                                                'lid_entocc_datetimesignature' )
-                self.userwdgfield.groupBox_entocc_sign.layout().addWidget(self.signatureWidgetOccupante)
+                self.toolwidgetmain.groupBox_entocc_sign.layout().addWidget(self.signatureWidgetOccupante)
 
 
 
@@ -205,16 +204,16 @@ class BaseChantierTramObservationTool(BaseObservationTool):
     def changeGroupe(self, comboindex):
         parentcombotext = self.parentWidget.userwdgfield.comboBox_groupedes.currentText()
         if parentcombotext == 'Non-conformité':
-            self.userwdgfield.stackedWidget_2.setCurrentIndex(0)
+            self.toolwidgetmain.stackedWidget_2.setCurrentIndex(0)
         elif parentcombotext == 'Procès-verbal':
-            self.userwdgfield.stackedWidget_2.setCurrentIndex(5)
+            self.toolwidgetmain.stackedWidget_2.setCurrentIndex(5)
 
 
 
 
     def setOBSTYPE(self, obstype, boolsignature):
         if obstype is None:
-            self.userwdgfield.tabWidget_formvisa.removeTab(1)
+            self.toolwidgetmain.tabWidget_formvisa.removeTab(1)
             return
 
         self.OBSTYPE = obstype
@@ -222,7 +221,7 @@ class BaseChantierTramObservationTool(BaseObservationTool):
             obstypeindex = [elem[1] for elem in nclist].index(obstype)
             boolsignature = nclist[obstypeindex][2]
         if boolsignature  == False:
-            self.userwdgfield.tabWidget_formvisa.removeTab(1)
+            self.toolwidgetmain.tabWidget_formvisa.removeTab(1)
 
 
     def postSaveFeature(self, boolnewfeature):
@@ -269,13 +268,13 @@ class BaseChantierTramObservationTool(BaseObservationTool):
 
             if self.OBSTYPE == 'NCB':
                 valuetoset = str(datetime.datetime.now().strftime("%Y-%m-%d"))
-                self.userwdgfield.dateEdit_datecible.setDateTime(QtCore.QDateTime.fromString(valuetoset, 'yyyy-MM-dd'))
+                self.toolwidgetmain.dateEdit_datecible.setDateTime(QtCore.QDateTime.fromString(valuetoset, 'yyyy-MM-dd'))
             elif self.OBSTYPE == 'NCC':
                 valuetoset = str(datetime.datetime.now().strftime("%Y-%m-%d"))
-                self.userwdgfield.dateEdit_etatverif.setDateTime(QtCore.QDateTime.fromString(valuetoset, 'yyyy-MM-dd'))
+                self.toolwidgetmain.dateEdit_etatverif.setDateTime(QtCore.QDateTime.fromString(valuetoset, 'yyyy-MM-dd'))
             elif self.OBSTYPE == 'PVA':
                 valuetoset = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-                self.userwdgfield.dateTimeEdit_pva.setDateTime(QtCore.QDateTime.fromString(valuetoset, 'yyyy-MM-dd hh:mm:ss'))
+                self.toolwidgetmain.dateTimeEdit_pva.setDateTime(QtCore.QDateTime.fromString(valuetoset, 'yyyy-MM-dd hh:mm:ss'))
 
 
         #self.signatureWidget2.postInitFeatureProperties(feat)
@@ -284,12 +283,12 @@ class BaseChantierTramObservationTool(BaseObservationTool):
 
         if self.OBSTYPE is not None:
             if self.indexstackedpage is None:
-                for i in range(self.userwdgfield.stackedWidget_2.count()):
-                    # print(self.userwdgfield.stackedWidget_2.widget(i).objectName())
-                    if self.userwdgfield.stackedWidget_2.widget(i).objectName() == self.OBSTYPE:
+                for i in range(self.toolwidgetmain.stackedWidget_2.count()):
+                    # print(self.toolwidgetmain.stackedWidget_2.widget(i).objectName())
+                    if self.toolwidgetmain.stackedWidget_2.widget(i).objectName() == self.OBSTYPE:
                         self.indexstackedpage = i
 
-            self.userwdgfield.stackedWidget_2.setCurrentIndex(self.indexstackedpage)
+            self.toolwidgetmain.stackedWidget_2.setCurrentIndex(self.indexstackedpage)
 
 
 
@@ -360,23 +359,23 @@ class BaseChantierTramObservationTool(BaseObservationTool):
 
 
 
-    def initFieldUI(self):
+    def initMainToolWidget(self):
         # ****************************************************************************************
         # userui Desktop
-        if self.userwdgfield is None:
+        if self.toolwidgetmain is None:
             # ****************************************************************************************
             # userui
-            self.userwdgfield = UserUI()
-            self.linkuserwdgfield = {'Observation' : {'linkfield' : 'id_observation',
-                                             'widgets' : {'immatriculation' : self.userwdgfield.spinBox_immat,
-                                                          'illicite' : self.userwdgfield.checkBox_illicite,
-                                                         'datetimeobservation' : self.userwdgfield.dateTimeEdit,
+            self.toolwidgetmain = UserUI()
+            self.formtoolwidgetconfdictmain = {'Observation' : {'linkfield' : 'id_observation',
+                                             'widgets' : {'immatriculation' : self.toolwidgetmain.spinBox_immat,
+                                                          'illicite' : self.toolwidgetmain.checkBox_illicite,
+                                                         'datetimeobservation' : self.toolwidgetmain.dateTimeEdit,
                                                           }},
                                 'Objet' : {'linkfield' : 'id_objet',
                                           'widgets' : {}}}
 
-            self.userwdgfield.toolButton_immat.clicked.connect(
-                lambda: self.showNumPad(self.userwdgfield.spinBox_immat))
+            self.toolwidgetmain.toolButton_immat.clicked.connect(
+                lambda: self.showNumPad(self.toolwidgetmain.spinBox_immat))
 
 
             # ****************************************************************************************

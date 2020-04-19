@@ -51,6 +51,13 @@ class BaseTopographieTool(AbstractLamiaFormTool):
     tooltreewidgetSUBCAT = 'Topographie'
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_topographie_tool_icon.png')
 
+    PARENTJOIN = {'Marche' : {'colparent': 'id_marche',
+                                'colthistable': 'lid_marche',
+                                 'tctable': None,
+                                 'tctablecolparent':None,
+                                 'tctablecolthistable':None}
+                 }
+
     def __init__(self, **kwargs):
         super(BaseTopographieTool, self).__init__(**kwargs)
         self.instancekwargs = kwargs
@@ -150,7 +157,6 @@ class BaseTopographieTool(AbstractLamiaFormTool):
     def postSaveFeature(self, savedfeaturepk=None):
 
         if self.currentFeaturePK is not None and self.currentFeaturePK != savedfeaturepk:   # new version of feature
-
             #fieldstoappend
             pointtopofields = list(self.dbase.dbasetables['Pointtopo']['fields'].keys())
             pointtopofields.remove('pk_pointtopo')

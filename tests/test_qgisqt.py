@@ -1,4 +1,5 @@
 import unittest, os, logging, sys, platform
+from pprint import pprint
 import qgis, qgis.core, qgis.gui
 from qgis.PyQt import uic, QtCore
 from qgis.PyQt.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, Qt
@@ -8,20 +9,19 @@ from Lamia.iface.qgiswidget.ifaceqgswidget import LamiaWindowWidget
 from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
 from settings import *
 # Base2_assainissement  Base2_digue Base2_eaupotable  Base2_eclairagepublic
-# Base2_tramway
-DBTYPE = ['Base2_digue']  
-variantes = ['Lamia']       # Lamia 2018_SNCF CD41
+# Base2_tramway     Base2_chantier
+DBTYPE = ['Base2_chantier']  
+variantes = ['Orange']       # Lamia 2018_SNCF CD41 Orange
 X_BEGIN = 400000.0
 Y_BEGIN = 6000000.0
 TEST_WITH_FEATURE_CREATION = False
-SPATIALITE = False
-POSTGIS = True
+SPATIALITE = True
+POSTGIS = False
 
 PGhost = 'localhost'
 
 class DBaseTest(unittest.TestCase):
 
-    """Test case utilisé pour tester les fonctions du module 'random'."""
     def setUp(self):
         """Initialisation des tests."""
         self.tempdir = os.path.join(os.path.join(os.path.dirname(__file__)), 'temp')
@@ -100,9 +100,11 @@ class DBaseTest(unittest.TestCase):
                     self.wind.loadDBase(dbtype='Postgis', host=PGhost, port=PGport, dbname=PGbase, schema= work + '_' + variante, user=PGuser,  password=PGpassword)
                 self.wind.setVisualMode(visualmode=0)
                 if False :
-                    res = self.wind.dbase.query('SELECT datetimecreation FROM Objet WHERE pk_objet = 2')
-                    print(str(res[0][0]))
-                    print(type(res[0][0]))
+                    pprint(self.wind.dbase.dbasetables['Observation']['fields'])
+                    if False:
+                        res = self.wind.dbase.query('SELECT datetimecreation FROM Objet WHERE pk_objet = 2')
+                        print(str(res[0][0]))
+                        print(type(res[0][0]))
                     sys.exit()
                 #selectfeaturetest
                 if TEST_WITH_FEATURE_CREATION:

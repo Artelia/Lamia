@@ -153,6 +153,8 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         self.dbasechildwdgfield = []
         self.dbasechildwdgdesktop = []
 
+        self.lamiawidgets = []  # subwidgets defined in lamia
+
 
         # behaviour var
         self.currentFeaturePK = None    # the pk of selected feature
@@ -437,6 +439,8 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             else:
                 parenttab = self.parentWidget.tabWidget
             if self.tabWidget.count() > 0:
+                if self.tabWidgetmain.widget(0):
+                    self.tabWidgetmain.widget(0).setObjectName(self.tooltreewidgetSUBCAT)
                 indexinserted = parenttab.addTab(self.tabWidgetmain.widget(0),
                                                     QtGui.QIcon(self.tooltreewidgetICONPATH),
                                                     self.tooltreewidgetSUBCAT)
@@ -598,6 +602,8 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         pass
 
     def postToolTreeWidgetCurrentItemChanged(self):
+        self.widgetClicked()
+        """
         if self.lastselectedpk is not None:
             self.setEnabled(True)
             self.selectFeature(pk=self.lastselectedpk)
@@ -606,7 +612,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             self.selectFeature(pk=self.choosertreewidget.ids['pk'].values[0])
         else:
             self.setEnabled(False)
-
+        """
 
 
     def updateToolbarOnToolFrameLoading(self):
@@ -654,6 +660,8 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         self.formutils.applyResultDict(resultdict)
         #end actions
         self.postSelectFeature()
+        for lidchooser in self.lamiawidgets:
+            lidchooser.postSelectFeature()
         if self.currentFeaturePK is not None:   #activate listener only with existing feat
             self.activatesubwidgetchangelistener = True
         self.currentFeatureChanged.emit()

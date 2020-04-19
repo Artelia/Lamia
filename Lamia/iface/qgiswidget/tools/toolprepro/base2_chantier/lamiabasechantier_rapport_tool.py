@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 """
 This file is part of LAMIA.
 
@@ -25,29 +24,14 @@ This file is part of LAMIA.
  """
 
 
-
-
-from qgis.PyQt import uic, QtCore, QtGui
-try:
-    from qgis.PyQt.QtGui import (QWidget)
-except ImportError:
-    from qgis.PyQt.QtWidgets import (QWidget)
-#from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
 from ..base2.lamiabase_rapport_tool import BaseRapportTool
-
-import os
-import datetime
-
-
 
 
 class BaseChantierRapportTool(BaseRapportTool):
 
-    LOADFIRST = True
-    dbasetablename = 'Rapport'
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
-        super(BaseChantierRapportTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
+    def __init__(self, **kwargs):
+        super(BaseChantierRapportTool, self).__init__(**kwargs)
 
         
         

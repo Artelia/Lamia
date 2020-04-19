@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 This file is part of LAMIA.
 
@@ -24,14 +22,4 @@ This file is part of LAMIA.
   * License-Filename: LICENSING.md
  """
 
-from ..base2.lamiabase_marche_tool import BaseMarcheTool
 
-
-class BaseChantierMarcheTool(BaseMarcheTool):
-
-    LOADFIRST = True
-
-    def __init__(self, **kwargs):
-        super(BaseChantierMarcheTool, self).__init__(**kwargs)
-
-    

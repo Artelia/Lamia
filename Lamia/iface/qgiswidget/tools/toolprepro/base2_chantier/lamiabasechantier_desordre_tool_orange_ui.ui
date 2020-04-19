@@ -75,7 +75,7 @@
       <number>0</number>
      </property>
      <widget class="QWidget" name="page_nonconf">
-      <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,10">
+      <layout class="QHBoxLayout" name="horizontalLayout" stretch="10">
        <property name="leftMargin">
         <number>3</number>
        </property>
@@ -88,19 +88,6 @@
        <property name="bottomMargin">
         <number>3</number>
        </property>
-       <item>
-        <widget class="QListWidget" name="listWidget_nonconf">
-         <property name="minimumSize">
-          <size>
-           <width>100</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="wordWrap">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
        <item>
         <widget class="QStackedWidget" name="stackedWidget_nonconf">
          <property name="currentIndex">

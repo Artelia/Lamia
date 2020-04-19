@@ -5,9 +5,9 @@ from settings import *
 
 KEEP_DB_CREATION = True
 # Base2_assainissement  Base2_digue Base2_eaupotable  Base2_eclairagepublic
-# Base2_tramway
-DBTYPE = ['Base2_digue'] 
-SPATIALITE = False
+# Base2_tramway Base2_chantier
+DBTYPE = ['Base2_chantier'] 
+SPATIALITE = True
 POSTGIS = True
 
 class DBaseTest(unittest.TestCase):

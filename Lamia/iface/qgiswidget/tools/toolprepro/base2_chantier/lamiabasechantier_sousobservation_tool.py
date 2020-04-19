@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 This file is part of LAMIA.
 
@@ -23,42 +24,36 @@ This file is part of LAMIA.
  """
 
 
-# -*- coding: utf-8 -*-
+import os, sys, datetime
+import xlrd
 
 from qgis.PyQt import uic, QtCore
-
-try:
-    from qgis.PyQt.QtGui import (QWidget, QTabWidget, QHeaderView, QTableWidgetItem, QComboBox,
-                                 QTextBrowser)
-except ImportError:
-    from qgis.PyQt.QtWidgets import (QWidget, QTabWidget, QHeaderView, QTableWidgetItem, QComboBox,
+from qgis.PyQt.QtWidgets import (QWidget, QTabWidget, QHeaderView, QTableWidgetItem, QComboBox,
                                      QTextBrowser)
 
 from ..base2.lamiabase_observation_tool import BaseObservationTool
-
-import os, sys, datetime
-
-if sys.version_info.major == 2:
-    from ..libs import xlrd
-else:
-    try:
-        import xlrd
-    except:
-        from ..libs import xlrd
 
 
 
 
 class BaseChantierSousObservationTool(BaseObservationTool):
 
-    dbasetablename = 'Observation'
+    tooltreewidgetSUBCAT = None
+    tempparentjoin = {}
+    PARENTJOIN = {'Observation': {'colparent': 'id_observation',
+                'colthistable': 'lid_observation',
+                    'tctable': None,
+                    'tctablecolparent':None,
+                    'tctablecolthistable':None}}
 
 
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None,gpsutil=None, parentwidget=None, parent=None):
-        super(BaseChantierSousObservationTool, self).__init__(dbase, dialog, linkedtreewidget,gpsutil, parentwidget, parent=parent)
 
+    def __init__(self, **kwargs):
+        super(BaseChantierSousObservationTool, self).__init__(**kwargs)
+        self.sousfichesdict = self.createDictionnary()
 
+    """
     def initTool(self):
         super(BaseChantierSousObservationTool, self).initTool()
         # ****************************************************************************************
@@ -73,69 +68,66 @@ class BaseChantierSousObservationTool(BaseObservationTool):
                              }
 
         self.sousfichesdict = self.createDictionnary()
+    """
 
+    def initMainToolWidget(self):
 
-    def initFieldUI(self):
-        # ****************************************************************************************
-        # userui Desktop
         if self.dbase.variante in ['Orange']:
-            if self.userwdgfield is None:
-                # ****************************************************************************************
-                # userui
-                self.userwdgfield = UserUI()
-                self.linkuserwdgfield = {'Observation' : {'linkfield' : 'id_observation',
-                                                 'widgets' : {
-                                                                'datetimeobservation' : self.userwdgfield.dateTimeEdit_datetimeobservation,
 
-                                                              }},
-                                    'Objet' : {'linkfield' : 'id_objet',
-                                              'widgets' : {}}}
-                listcomboitems = []
-                for fichekey in self.sousfichesdict.keys():
-                    listcomboitems.append(fichekey + ' ' + self.sousfichesdict[fichekey]['name'])
-                #typessousfiches = self.sousfichesdict.keys()
-                self.userwdgfield.comboBox_fichetype.addItems(listcomboitems)
-                self.userwdgfield.comboBox_fichetype.currentIndexChanged.connect(self.SousFicheTypeChanged)
-                self.userwdgfield.comboBox_fichetype.currentIndexChanged.emit(0)
+            self.toolwidgetmain = UserUI()
+            self.formtoolwidgetconfdictmain = {'Observation' : {'linkfield' : 'id_observation',
+                                                'widgets' : {
+                                                            'datetimeobservation' : self.toolwidgetmain.dateTimeEdit_datetimeobservation,
 
-                # self.frame_editing.setVisible(False)
-                self.frame_editing.setParent(None)
+                                                            }},
+                                'Objet' : {'linkfield' : 'id_objet',
+                                            'widgets' : {}}}
+            listcomboitems = []
+            for fichekey in self.sousfichesdict.keys():
+                listcomboitems.append(fichekey + ' ' + self.sousfichesdict[fichekey]['name'])
+            #typessousfiches = self.sousfichesdict.keys()
+            self.toolwidgetmain.comboBox_fichetype.addItems(listcomboitems)
+            self.toolwidgetmain.comboBox_fichetype.currentIndexChanged.connect(self.SousFicheTypeChanged)
+            self.toolwidgetmain.comboBox_fichetype.currentIndexChanged.emit(0)
+
+            # self.frame_editing.setVisible(False)
+            #self.frame_editing.setParent(None)
 
 
 
     def SousFicheTypeChanged(self, comboindex):
-        currentcombotext = self.userwdgfield.comboBox_fichetype.currentText()
+        currentcombotext = self.toolwidgetmain.comboBox_fichetype.currentText()
         currentdict = self.sousfichesdict[currentcombotext.split(' ')[0]]
 
 
-        self.userwdgfield.tableWidget.setRowCount(0)
-        self.userwdgfield.tableWidget.clear()
-        self.userwdgfield.tableWidget.setColumnCount(4)
+        self.toolwidgetmain.tableWidget.setRowCount(0)
+        self.toolwidgetmain.tableWidget.clear()
+        self.toolwidgetmain.tableWidget.setColumnCount(4)
 
-        self.userwdgfield.tableWidget.setHorizontalHeaderLabels(['N°', 'Critere', 'Contrôle', 'Observation'])
+        self.toolwidgetmain.tableWidget.setHorizontalHeaderLabels(['N°', 'Critere', 'Contrôle', 'Observation'])
 
-        header = self.userwdgfield.tableWidget.horizontalHeader()
+        header = self.toolwidgetmain.tableWidget.horizontalHeader()
 
         for dataindex in currentdict['datas'].keys():
-            rowPosition = self.userwdgfield.tableWidget.rowCount()
-            self.userwdgfield.tableWidget.insertRow(rowPosition)
+            rowPosition = self.toolwidgetmain.tableWidget.rowCount()
+            self.toolwidgetmain.tableWidget.insertRow(rowPosition)
 
             if currentdict['datas'][dataindex]['description'] is not None:    #it is not a comment
                 item = QTableWidgetItem(dataindex)
                 item.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-                self.userwdgfield.tableWidget.setItem(rowPosition, 0, item)
+                self.toolwidgetmain.tableWidget.setItem(rowPosition, 0, item)
 
                 item = QTableWidgetItem(currentdict['datas'][dataindex]['description'])
                 item.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-                self.userwdgfield.tableWidget.setItem(rowPosition, 1, item)
+                self.toolwidgetmain.tableWidget.setItem(rowPosition, 1, item)
 
                 if currentdict['datas'][dataindex]['type'] is None:
                     wdg = QComboBox()
                     wdg.addItems(['Avec réserve', 'sans réserve', 'sans objet'])
-                    self.userwdgfield.tableWidget.setCellWidget(rowPosition, 2, wdg)
+                    self.toolwidgetmain.tableWidget.setCellWidget(rowPosition, 2, wdg)
                 else:
                     item = QTableWidgetItem()
-                    self.userwdgfield.tableWidget.setItem(rowPosition, 2, item)
+                    self.toolwidgetmain.tableWidget.setItem(rowPosition, 2, item)
                     item.setBackground(QtCore.Qt.gray)
                     item.setFlags(QtCore.Qt.NoItemFlags)
 
@@ -143,16 +135,16 @@ class BaseChantierSousObservationTool(BaseObservationTool):
                 wdg.setMinimumHeight(30)
                 wdg.setMaximumHeight(50)
                 wdg.setReadOnly(False)
-                self.userwdgfield.tableWidget.setCellWidget(rowPosition, 3, wdg)
+                self.toolwidgetmain.tableWidget.setCellWidget(rowPosition, 3, wdg)
             else:
                 item = QTableWidgetItem(dataindex)
                 item.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-                self.userwdgfield.tableWidget.setItem(rowPosition, 1, item)
+                self.toolwidgetmain.tableWidget.setItem(rowPosition, 1, item)
 
-            self.userwdgfield.tableWidget.setWordWrap(True)
-            self.userwdgfield.tableWidget.resizeColumnToContents(0)
-            self.tableWidget.setColumnWidth(1, 200)
-            self.userwdgfield.tableWidget.resizeRowsToContents()
+            self.toolwidgetmain.tableWidget.setWordWrap(True)
+            self.toolwidgetmain.tableWidget.resizeColumnToContents(0)
+            self.toolwidgetmain.tableWidget.setColumnWidth(1, 200)
+            self.toolwidgetmain.tableWidget.resizeRowsToContents()
             header.setStretchLastSection(True)
 
 
@@ -234,22 +226,24 @@ class BaseChantierSousObservationTool(BaseObservationTool):
         return sousfichesdict
 
 
-    def postInitFeatureProperties(self, feat):
-        if self.currentFeature is None:
-            self.userwdgfield.comboBox_fichetype.setEnabled(True)
-            self.userwdgfield.comboBox_fichetype.setCurrentIndex(0)
-            self.userwdgfield.comboBox_fichetype.currentIndexChanged.emit(0)
-            if self.parentWidget is not None and self.parentWidget.currentFeature is not None:  #copy last obs text
+    # def postInitFeatureProperties(self, feat):
+    def postSelectFeature(self):
+        if self.currentFeaturePK is None:
+            self.toolwidgetmain.comboBox_fichetype.setEnabled(True)
+            self.toolwidgetmain.comboBox_fichetype.setCurrentIndex(0)
+            self.toolwidgetmain.comboBox_fichetype.currentIndexChanged.emit(0)
+            if self.parentWidget is not None and self.parentWidget.currentFeaturePK is not None:  #copy last obs text
+                #datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+                #self.initFeatureProperties(feat, self.DBASETABLENAME, 'datetimeobservation', datecreation)
                 datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-                self.initFeatureProperties(feat, self.dbasetablename, 'datetimeobservation', datecreation)
-
+                self.formutils.applyResultDict({'datetimeobservation': datecreation}, checkifinforgottenfield=False)
 
         else:
-            self.userwdgfield.comboBox_fichetype.setEnabled(False)
+            self.toolwidgetmain.comboBox_fichetype.setEnabled(False)
             self.loadTableFeature()
 
 
-
+    """
     def createParentFeature(self):
         pkobjet = self.dbase.createNewObjet()
 
@@ -264,7 +258,7 @@ class BaseChantierSousObservationTool(BaseObservationTool):
 
         if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
 
-            if self.parentWidget.dbasetablename == 'Observation':
+            if self.parentWidget.DBASETABLENAME == 'Observation':
                 #currentparentlinkfield = self.parentWidget.currentFeature['id_desordre']
                 #parent iddesordre
                 sql = " SELECT id_observation FROM Observation WHERE pk_observation = " + str(self.parentWidget.currentFeaturePK)
@@ -274,12 +268,13 @@ class BaseChantierSousObservationTool(BaseObservationTool):
                 sql += " WHERE pk_observation = " + str(self.currentFeaturePK)
                 query = self.dbase.query(sql)
                 self.dbase.commit()
+    """
 
+    def postSaveFeature(self, savedfeaturepk=None):
+        self.saveTableFeature(savedfeaturepk)
 
-    def postSaveFeature(self, boolnewfeature):
-        self.saveTableFeature()
-
-        self.dbase.dbasetables['Desordre']['layerqgis'].triggerRepaint()
+        #self.dbase.dbasetables['Desordre']['layerqgis'].triggerRepaint()
+        self.mainifacewidget.qgiscanvas.layers['Desordre']['layerqgis'].triggerRepaint()
 
 
 
@@ -290,106 +285,58 @@ class BaseChantierSousObservationTool(BaseObservationTool):
 
         # for nomsousfiche in self.sousfichesdict.keys():
         #     if nomsousfiche.split(' ')[0] == res:
-        #         self.userwdgfield.comboBox_fichetype.setCurrentText(nomsousfiche)
+        #         self.toolwidgetmain.comboBox_fichetype.setCurrentText(nomsousfiche)
         #         break
 
         if res not in self.sousfichesdict.keys():
             return
 
-        self.userwdgfield.comboBox_fichetype.setCurrentText(res + ' ' + self.sousfichesdict[res]['name'])
+        self.toolwidgetmain.comboBox_fichetype.setCurrentText(res + ' ' + self.sousfichesdict[res]['name'])
 
-        for i in range(self.userwdgfield.tableWidget.rowCount() ):
+        for i in range(self.toolwidgetmain.tableWidget.rowCount() ):
 
-            item = self.userwdgfield.tableWidget.item(i, 0)
+            item = self.toolwidgetmain.tableWidget.item(i, 0)
             if item is not None:
                 itemtext0 = item.text().split('.')[-1]
                 sql = "SELECT item_type_" + str(itemtext0) + " , item_obs_" + str(itemtext0) + " FROM Observation "
                 sql += " WHERE pk_observation = " + str(self.currentFeaturePK)
 
                 itemtype, itemobs = self.dbase.query(sql)[0]
-                if not self.dbase.isAttributeNull(itemtype):
-                    self.userwdgfield.tableWidget.cellWidget(i, 2).setCurrentIndex(itemtype)
-                self.userwdgfield.tableWidget.cellWidget(i, 3).setPlainText(itemobs)
+                if not self.dbase.utils.isAttributeNull(itemtype):
+                    self.toolwidgetmain.tableWidget.cellWidget(i, 2).setCurrentIndex(itemtype)
+                self.toolwidgetmain.tableWidget.cellWidget(i, 3).setPlainText(itemobs)
 
 
 
-    def loadTableFeature_caduc(self):
-        # get typeobservation
-        sql = "SELECT typeobservation FROM Observation WHERE pk_observation = " + str(self.currentFeaturePK)
-        res = self.dbase.query(sql)[0][0]
-        for nomsousfiche in self.sousfichesdict.keys():
-            if nomsousfiche.split(' ')[0] == res:
-                self.userwdgfield.comboBox_fichetype.setCurrentText(nomsousfiche)
-                break
 
-        for i in range(self.userwdgfield.tableWidget.rowCount() ):
-            item = self.userwdgfield.tableWidget.item(i, 0)
-            item = self.userwdgfield.tableWidget.item(i, 0)
-            if item is not None:
-                itemtext0 = item.text().split('.')[-1]
-                sql = "SELECT item_type_" + str(itemtext0) + " , item_obs_" + str(itemtext0) + " FROM Observation "
-                sql += " WHERE pk_observation = " + str(self.currentFeaturePK)
-                itemtype, itemobs = self.dbase.query(sql)[0]
-                if self.dbase.isAttributeNull(itemtype):
-                    self.userwdgfield.tableWidget.cellWidget(i, 3).setPlainText('ERROR READING')
-                else:
-                    self.userwdgfield.tableWidget.cellWidget(i, 2).setCurrentIndex(itemtype)
-                    self.userwdgfield.tableWidget.cellWidget(i, 3).setPlainText(itemobs)
-
-
-
-    def saveTableFeature(self):
+    def saveTableFeature(self, featurepk):
         sqlupdate = []
 
         #typeobservation
-        sqlupdate.append("typeobservation = '" + self.userwdgfield.comboBox_fichetype.currentText().split(' ')[0] + "'")
+        sqlupdate.append("typeobservation = '" + self.toolwidgetmain.comboBox_fichetype.currentText().split(' ')[0] + "'")
 
         #table values
-        for i in range(self.userwdgfield.tableWidget.rowCount() ):
-            item = self.userwdgfield.tableWidget.item(i, 0)
+        for i in range(self.toolwidgetmain.tableWidget.rowCount() ):
+            item = self.toolwidgetmain.tableWidget.item(i, 0)
             if item is not None:
                 itemtext0 = item.text().split('.')[-1]
                 indexitem = int(itemtext0)
 
-                if self.userwdgfield.tableWidget.cellWidget(i, 2) is not None:
+                if self.toolwidgetmain.tableWidget.cellWidget(i, 2) is not None:
                     columname = 'item_type_' + str(indexitem)
-                    value = self.userwdgfield.tableWidget.cellWidget(i, 2).currentIndex()
+                    value = self.toolwidgetmain.tableWidget.cellWidget(i, 2).currentIndex()
                     sqlupdate.append(columname + ' = ' + str(value))
 
                 columname = 'item_obs_' + str(indexitem)
-                value = self.userwdgfield.tableWidget.cellWidget(i, 3).toPlainText()
+                value = self.toolwidgetmain.tableWidget.cellWidget(i, 3).toPlainText()
                 sqlupdate.append(columname + " = '" + str(value) + "'")
 
         sql = " UPDATE Observation SET " + ', '.join(sqlupdate)
-        sql += " WHERE pk_observation = " + str(self.currentFeaturePK)
+        sql += " WHERE pk_observation = " + str(featurepk)
 
         self.dbase.query(sql)
 
 
-    def saveTableFeature_caduc(self):
-        sqlupdate = []
-
-        #typeobservation
-        sqlupdate.append("typeobservation = '" + self.userwdgfield.comboBox_fichetype.currentText().split(' ')[0] + "'")
-
-        #table values
-        for i in range(self.userwdgfield.tableWidget.rowCount() ):
-            item = self.userwdgfield.tableWidget.item(i, 0)
-            if item is not None:
-                itemtext0 = item.text().split('.')[-1]
-                indexitem = int(itemtext0)
-                columname = 'item_type_' + str(indexitem)
-                value = self.userwdgfield.tableWidget.cellWidget(i, 2).currentIndex()
-                sqlupdate.append(columname + ' = ' + str(value))
-
-                columname = 'item_obs_' + str(indexitem)
-                value = self.userwdgfield.tableWidget.cellWidget(i, 3).toPlainText()
-                sqlupdate.append(columname + " = '" + str(value) + "'")
-
-        sql = " UPDATE Observation SET " + ', '.join(sqlupdate)
-        sql += " WHERE pk_observation = " + str(self.currentFeaturePK)
-
-        self.dbase.query(sql)
 
 
 

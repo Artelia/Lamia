@@ -47,7 +47,7 @@ class FormToolUtils(QtCore.QObject):
         pass
 
     def initWidgetBehaviour(self):
-
+        print('initWidgetBehaviour', self.formtoolwidget.DBASETABLENAME)
         templinkuserwgd = self.formtoolwidget.formtoolwidgetconfdict
         if templinkuserwgd is None:
             raise TypeError('formtoolwidgetconfdict of {} is None'.format(self.formtoolwidget.DBASETABLENAME))
@@ -65,7 +65,9 @@ class FormToolUtils(QtCore.QObject):
 
                         if (tablename in linkuserwdg.keys()
                                 and field in linkuserwdg[tablename]['widgets'].keys()):
+                            
                             wdgs = linkuserwdg[tablename]['widgets'][field]
+                            print(wdgs)
                             if 'Cst' in dbasetable['fields'][field].keys():
                                 # combox filling with constraints
                                 if isinstance(wdgs, QComboBox) or (
@@ -78,6 +80,7 @@ class FormToolUtils(QtCore.QObject):
                                     for wdg in wdgs:
                                         wdg.clear()
                                         wdg.addItems(templist)
+                                        print(wdg.objectName(), templist)
 
                             if 'ParFldCst' in dbasetable['fields'][field].keys():
                                 nameparentfield = dbasetable['fields'][field]['ParFldCst']
@@ -397,12 +400,16 @@ class FormToolUtils(QtCore.QObject):
         self.saveFeatureProperties(savedfeaturepk)
         self.saveTABLEFILTERFIELD(savedfeaturepk)
         self.formtoolwidget.postSaveFeature(savedfeaturepk)  #featurepk toknow if new or not
+        for lidchooser in self.formtoolwidget.lamiawidgets:
+            lidchooser.postSaveFeature(savedfeaturepk)
         self.saveRessourceFile(savedfeaturepk)
         self._saveParentWidgetRelation(savedfeaturepk)
+
         self.updateDateModification(savedfeaturepk)
         self._reinitAfterSaving()
 
         self.formtoolwidget.selectFeature(pk=savedfeaturepk)
+
 
 
     def manageFeatureCreationOrUpdate(self, featurepk=None):

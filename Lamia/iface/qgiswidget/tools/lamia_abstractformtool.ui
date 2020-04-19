@@ -52,6 +52,7 @@ QTabBar::tab {
     border-top-right-radius: 4px;
     min-width: 15ex;
     padding: 5px;
+	height: 30px
 }
 
 QTabBar::tab:selected, QTabBar::tab:hover {
@@ -134,6 +135,7 @@ QTabBar::tab {
     border-top-right-radius: 4px;
     min-width: 15ex;
     padding: 5px;
+	height: 30px
 }
 
 QTabBar::tab:selected, QTabBar::tab:hover {
