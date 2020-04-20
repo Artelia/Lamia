@@ -57,6 +57,7 @@ class BaseObservationTool(AbstractLamiaFormTool):
                                  'tctablecolparent':None,
                                  'tctablecolthistable':None}
                  }
+    CHOOSERTREEWDG_COLSHOW = ['datetimeobservation']
 
     def __init__(self, **kwargs):
         super(BaseObservationTool, self).__init__(**kwargs)
@@ -245,8 +246,8 @@ class BaseObservationTool(AbstractLamiaFormTool):
                                                             ['pk_objet','datetimecreation','datetimeobservation'],
                                                             savedfeaturepk)
             if isinstance(datetimecreation, str):
-                datetimecreation = QtCore.QDateTime.fromString(creation, 'yyyy-MM-dd hh:mm:ss')
-                datetimeobservation = QtCore.QDateTime.fromString(observation, 'yyyy-MM-dd hh:mm:ss')
+                datetimecreation = QtCore.QDateTime.fromString(datetimecreation, 'yyyy-MM-dd hh:mm:ss')
+                datetimeobservation = QtCore.QDateTime.fromString(datetimeobservation, 'yyyy-MM-dd hh:mm:ss')
             if datetimecreation > datetimeobservation:
                 sql = "UPDATE Objet SET datetimecreation = '" + str(datetimeobservation) + "'"
                 sql += " WHERE pk_objet = " + str(pk_objet)
@@ -258,7 +259,7 @@ class BaseObservationTool(AbstractLamiaFormTool):
                                                                                  ['pk_objet', 'datetimecreation'],
                                                                                  self.parentWidget.currentFeaturePK)
                     if isinstance(datetimecreation, str):
-                        datetimecreation = QtCore.QDateTime.fromString(descreation, 'yyyy-MM-dd hh:mm:ss')
+                        datetimecreation = QtCore.QDateTime.fromString(datetimecreation, 'yyyy-MM-dd hh:mm:ss')
                     if datetimecreation > datetimeobservation:
                         sql = "UPDATE Objet SET datetimecreation = '" + str(datetimeobservation) + "'"
                         sql += " WHERE pk_objet = " + str(pk_objet)

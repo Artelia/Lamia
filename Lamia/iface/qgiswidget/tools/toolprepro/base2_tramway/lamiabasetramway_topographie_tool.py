@@ -148,6 +148,7 @@ class BaseTramawayTopographieTool(BaseTopographieTool):
         self.dbasechildwdgfield = []
         self.instancekwargs['parentwidget'] = self
         self.propertieswdgPOINTTOPO= BaseTramwayPointtopoTool(**self.instancekwargs)
+        self.propertieswdgPOINTTOPO.tooltreewidgetSUBCAT = 'Points topo'
         self.dbasechildwdgfield.append(self.propertieswdgPOINTTOPO)
             
     def ajoutPointGPS(self):

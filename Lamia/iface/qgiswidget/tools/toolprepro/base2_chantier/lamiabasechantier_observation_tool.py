@@ -185,6 +185,8 @@ class BaseChantierObservationTool(BaseObservationTool):
                                                                     'lid_entocc_datetimesignature' )
                     self.toolwidgetmain.groupBox_entocc_sign.layout().addWidget(self.signatureWidgetOccupante)
                     self.lamiawidgets.append(self.signatureWidgetOccupante)
+
+                    self.toolwidgetmain.tabWidget_formvisa.removeTab(1)
                 
                 else:
                     self.toolwidgetmain.tabWidget_formvisa.removeTab(1)
@@ -401,6 +403,17 @@ class BaseChantierObservationTool(BaseObservationTool):
         pass
         # print('postSelectFeature Obs', self.OBSTYPE, self.toolwidgetmain.stackedWidget_2.currentIndex()) 
         #super(BaseChantierObservationTool, self).postSelectFeature()
+        if 'typeobservation' in self.TABLEFILTERFIELD.keys() and self.currentFeaturePK is None:
+            typeobservation = self.TABLEFILTERFIELD['typeobservation']
+            valuedate = str(datetime.datetime.now().strftime("%Y-%m-%d"))
+            valuedatetime = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            if typeobservation == 'NCB':
+                self.toolwidgetmain.dateEdit_datecible.setDateTime(QtCore.QDateTime.fromString(valuedate, 'yyyy-MM-dd'))
+            elif typeobservation == 'NCC':
+                self.toolwidgetmain.dateEdit_etatverif.setDateTime(QtCore.QDateTime.fromString(valuedate, 'yyyy-MM-dd'))
+            elif typeobservation== 'PVA':
+                self.toolwidgetmain.dateTimeEdit_pva.setDateTime(QtCore.QDateTime.fromString(valuedatetime, 'yyyy-MM-dd hh:mm:ss'))
+
         if False:
             # init signature and lidchooser
             if self.OBSTYPE is not None:

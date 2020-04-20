@@ -57,7 +57,7 @@
        <item>
         <widget class="QStackedWidget" name="stackedWidget_2">
          <property name="currentIndex">
-          <number>0</number>
+          <number>5</number>
          </property>
          <widget class="QWidget" name="NCA">
           <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -379,7 +379,7 @@
            <item>
             <widget class="QTabWidget" name="tabWidget_pvmisedispo">
              <property name="currentIndex">
-              <number>3</number>
+              <number>0</number>
              </property>
              <widget class="QWidget" name="tab_17">
               <attribute name="title">
@@ -525,18 +525,6 @@
                 </widget>
                </item>
               </layout>
-             </widget>
-             <widget class="QWidget" name="tab_11">
-              <attribute name="title">
-               <string>Photos</string>
-              </attribute>
-              <layout class="QVBoxLayout" name="verticalLayout_16"/>
-             </widget>
-             <widget class="QWidget" name="tab_13">
-              <attribute name="title">
-               <string>Rapports</string>
-              </attribute>
-              <layout class="QVBoxLayout" name="verticalLayout_21"/>
              </widget>
             </widget>
            </item>

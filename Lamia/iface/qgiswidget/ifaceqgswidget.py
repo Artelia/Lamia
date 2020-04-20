@@ -1015,28 +1015,28 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
 
 
     def toolbarNew(self):
-        logging.getLogger("Lamia_unittest").debug('called')
+        logging.getLogger("Lamia_unittest").info('called')
         if self.currenttoolwidget and hasattr(self.currenttoolwidget,'toolbarNew'):
             self.currenttoolwidget.toolbarNew()
         if self.currentchoosertreewidget:
             self.currentchoosertreewidget.toolbarNew()
 
     def toolbarUndo(self):
-        logging.getLogger("Lamia_unittest").debug('called')
+        logging.getLogger("Lamia_unittest").info('called')
         if self.currenttoolwidget and hasattr(self.currenttoolwidget,'toolbarUndo'):
             self.currenttoolwidget.toolbarUndo()
         if self.currentchoosertreewidget:
             self.currentchoosertreewidget.toolbarUndo()
 
     def toolbarDelete(self):
-        logging.getLogger("Lamia_unittest").debug('called')
+        logging.getLogger("Lamia_unittest").info('called')
         if self.currenttoolwidget and hasattr(self.currenttoolwidget,'toolbarDelete'):
             self.currenttoolwidget.toolbarDelete()
         if self.currentchoosertreewidget:
             self.currentchoosertreewidget.toolbarDelete()
 
     def toolbarSave(self):
-        logging.getLogger("Lamia_unittest").debug('called')
+        logging.getLogger("Lamia_unittest").info('called')
         if self.currenttoolwidget and hasattr(self.currenttoolwidget,'toolbarSave'):
             self.currenttoolwidget.toolbarSave()
         if self.currentchoosertreewidget:
@@ -1044,12 +1044,12 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
 
 
     def toolbarGeom(self):
-        logging.getLogger("Lamia_unittest").debug('called')
+        logging.getLogger("Lamia_unittest").info('called')
         if self.currenttoolwidget and hasattr(self.currenttoolwidget,'toolbarGeom'):
             self.currenttoolwidget.toolbarGeom()
     
     def toolbarGeomAddGPS(self):
-        logging.getLogger("Lamia_unittest").debug('called')
+        logging.getLogger("Lamia_unittest").info('called')
         if self.currenttoolwidget and hasattr(self.currenttoolwidget,'toolbarGeomAddGPS'):
             self.currenttoolwidget.toolbarGeomAddGPS()
 

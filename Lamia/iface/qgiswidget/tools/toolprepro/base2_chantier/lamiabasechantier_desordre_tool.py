@@ -39,6 +39,7 @@ from ..subwidgets.subwidget_lidchooser import LidChooserWidget
 
 class BaseChantierDesordreTool(BaseDesordreTool):
 
+    tooltreewidgetSUBCAT = 'Non conformité'
 
     def __init__(self, **kwargs):
         super(BaseChantierDesordreTool, self).__init__(**kwargs)
@@ -87,7 +88,8 @@ class BaseChantierDesordreTool(BaseDesordreTool):
             self.toolwidgetmain = UserUI()
 
             self.formtoolwidgetconfdictmain = {'Desordre': {'linkfield': 'id_desordre',
-                                                            'widgets': {'groupedesordre': self.toolwidgetmain.comboBox_groupedes,
+                                                            'widgets': {
+                                                                        #'groupedesordre': self.toolwidgetmain.comboBox_groupedes,
                                                                         'detecteur': self.toolwidgetmain.comboBox_detecteur,
                                                                         'detecteur_com': self.toolwidgetmain.lineEdit_detecteur,
 
@@ -95,7 +97,8 @@ class BaseChantierDesordreTool(BaseDesordreTool):
                                                 'Objet': {'linkfield': 'id_objet',
                                                         'widgets': {}}}
 
-            self.toolwidgetmain.comboBox_groupedes.currentIndexChanged.connect(self.changeGroupe)
+            self.toolwidgetmain.stackedWidget.setCurrentIndex(0)
+            self.TABLEFILTERFIELD = {'groupedesordre' : 'NCO'}
 
             # non conformité
             #for elem in self.nclist:
@@ -152,14 +155,16 @@ class BaseChantierDesordreTool(BaseDesordreTool):
                                                         searchdbase='Marche', searchfieldtoshow=['libelle'])
             self.lamiawidgets.append(propertieswdgChooseMarche)
 
-            #pv mise a dispo
-            propertieswdgOBSERVATIONpv = BaseObservationTool(**self.instancekwargs)
-            #propertieswdgOBSERVATIONpv.NAME = None
-            #propertieswdgOBSERVATIONpv.setOBSTYPE('PVA', True)
-            propertieswdgOBSERVATIONpv.TABLEFILTERFIELD = {'typeobservation': 'PVA' }
-            # self.obsdict[wdgname].OBSTYPE = itemtype
-            self.toolwidgetmain.stackedWidget.widget(1).layout().addWidget(propertieswdgOBSERVATIONpv)
-            self.dbasechildwdgfield.append(propertieswdgOBSERVATIONpv)
+            if False:
+                #pv mise a dispo
+                propertieswdgOBSERVATIONpv = BaseObservationTool(**self.instancekwargs)
+                #propertieswdgOBSERVATIONpv.NAME = None
+                #propertieswdgOBSERVATIONpv.setOBSTYPE('PVA', True)
+                propertieswdgOBSERVATIONpv.tooltreewidgetSUBCAT = 'Mise a dispo'
+                propertieswdgOBSERVATIONpv.TABLEFILTERFIELD = {'typeobservation': 'PVA' }
+                # self.obsdict[wdgname].OBSTYPE = itemtype
+                self.toolwidgetmain.stackedWidget.widget(1).layout().addWidget(propertieswdgOBSERVATIONpv)
+                self.dbasechildwdgfield.append(propertieswdgOBSERVATIONpv)
 
 
 
@@ -167,7 +172,8 @@ class BaseChantierDesordreTool(BaseDesordreTool):
             self.toolwidgetmain = UserUI_Orange()
 
             self.formtoolwidgetconfdictmain = {'Desordre': {'linkfield': 'id_desordre',
-                                                            'widgets': {'groupedesordre': self.toolwidgetmain.comboBox_groupedes,
+                                                            'widgets': {
+                                                                        #'groupedesordre': self.toolwidgetmain.comboBox_groupedes,
 
                                                                         'commune': self.toolwidgetmain.lineEdit_commune,
                                                                         'rue': self.toolwidgetmain.lineEdit_rue,
@@ -179,7 +185,9 @@ class BaseChantierDesordreTool(BaseDesordreTool):
                                                 'Objet': {'linkfield': 'id_objet',
                                                         'widgets': {}}}
 
-            self.toolwidgetmain.comboBox_groupedes.currentIndexChanged.connect(self.changeGroupe)
+            self.TABLEFILTERFIELD = {'groupedesordre' : 'CON'}
+
+            self.toolwidgetmain.stackedWidget.setCurrentIndex(0)
 
             # non conformité
             #for elem in self.nclist:

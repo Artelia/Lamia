@@ -196,12 +196,15 @@ class AbstractLamiaTool(QWidget):
         if self.mainifacewidget is not None and self.parentWidget is None:
             
             arb = [self.tooltreewidgetCAT, self.tooltreewidgetSUBCAT]
-            if self.qtreewidgetitem is None:
+            if hasattr(self, 'qtreewidgetitem') and self.qtreewidgetitem is None:
                 self.qtreewidgetitem = QTreeWidgetItem()
                 self.qtreewidgetitem.setText(0, arb[-1])
                 self.qtreewidgetitem.setFlags(self.qtreewidgetitem.flags())
                 if self.tooltreewidgetICONPATH is not None:
                     self.qtreewidgetitem.setIcon(0, QtGui.QIcon(self.tooltreewidgetICONPATH))
+            else:
+                return
+
             wdgitem = None
             root = self.tooltreewidget.invisibleRootItem()
             child_count = root.childCount()

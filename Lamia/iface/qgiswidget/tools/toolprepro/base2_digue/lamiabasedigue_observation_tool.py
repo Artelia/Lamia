@@ -141,26 +141,26 @@ class BaseDigueObservationTool(BaseObservationTool):
 
             self.toolwidgetmain = UserUISirs()
 
-            self.linkuserwdgfield = {'Observation' : {'linkfield' : 'id_observation',
-                                                'widgets' : {'datetimeobservation' : self.toolwidgetmain.dateTimeEdit,
-                                                            'nombre' : self.toolwidgetmain.spinBox_nombre,
-                                                        'gravite': self.toolwidgetmain.comboBox_urgence,
+            self.formtoolwidgetconfdictmain = {'Observation' : {'linkfield' : 'id_observation',
+                                                        'widgets' : {'datetimeobservation' : self.toolwidgetmain.dateTimeEdit,
+                                                                    'nombre' : self.toolwidgetmain.spinBox_nombre,
+                                                                'gravite': self.toolwidgetmain.comboBox_urgence,
 
-                                                        'oh_etatvantellerie' : self.toolwidgetmain.comboBox_etatvantellerie,
-                                                        'oh_etatvantelleriecom': self.toolwidgetmain.textBrowser_vanteleriecom,
-                                                            'oh_etatgeniecivil': self.toolwidgetmain.comboBox_etatGC,
-                                                            'oh_etatgeniecivilcom': self.toolwidgetmain.textBrowser_etatGC,
-                                                            'oh_testmanoeuvre': self.toolwidgetmain.comboBox_manoeuvre,
-                                                            'oh_testmanoeuvrecom': self.toolwidgetmain.textBrowser_manoeuvre,
-                                                            'oh_etancheite': self.toolwidgetmain.checkBox_etancheite,
-                                                            'oh_etancheitecom': self.toolwidgetmain.textBrowser__etancheite,
+                                                                'oh_etatvantellerie' : self.toolwidgetmain.comboBox_etatvantellerie,
+                                                                'oh_etatvantelleriecom': self.toolwidgetmain.textBrowser_vanteleriecom,
+                                                                    'oh_etatgeniecivil': self.toolwidgetmain.comboBox_etatGC,
+                                                                    'oh_etatgeniecivilcom': self.toolwidgetmain.textBrowser_etatGC,
+                                                                    'oh_testmanoeuvre': self.toolwidgetmain.comboBox_manoeuvre,
+                                                                    'oh_testmanoeuvrecom': self.toolwidgetmain.textBrowser_manoeuvre,
+                                                                    'oh_etancheite': self.toolwidgetmain.checkBox_etancheite,
+                                                                    'oh_etancheitecom': self.toolwidgetmain.textBrowser__etancheite,
 
 
-                                                        'evolution': self.toolwidgetmain.textEdit_evolution,
-                                                        'typesuite': self.toolwidgetmain.comboBox_typesuite,
-                                                        'commentairesuite': self.toolwidgetmain.textEdit_suite}},
-                                'Objet' : {'linkfield' : 'id_objet',
-                                            'widgets' : {'commentaire': self.toolwidgetmain.textEdit_comm}}}
+                                                                'evolution': self.toolwidgetmain.textEdit_evolution,
+                                                                'typesuite': self.toolwidgetmain.comboBox_typesuite,
+                                                                'commentairesuite': self.toolwidgetmain.textEdit_suite}},
+                                        'Objet' : {'linkfield' : 'id_objet',
+                                                    'widgets' : {'commentaire': self.toolwidgetmain.textEdit_comm}}}
 
 
             self.toolwidgetmain.toolButton_calc_nb.clicked.connect(

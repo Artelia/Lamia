@@ -59,6 +59,8 @@ class BaseIntervenantTool(AbstractLamiaFormTool):
     for tablename in ['Infralineaire','Marche']:
         tempparentjoin[tablename] = linkdict
     PARENTJOIN = tempparentjoin
+    CHOOSERTREEWDG_COLSHOW = ['societe', 'nom']
+
 
     def __init__(self, **kwargs):
         super(BaseIntervenantTool, self).__init__(**kwargs)

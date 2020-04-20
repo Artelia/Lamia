@@ -401,6 +401,9 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             self.frametoolwidg.layout().itemAt(0).widget().setParent(None)
         #if not self.toolwidget.isVisible():
         #    self.toolwidget.setVisible(True)
+        if self.toolwidget is  None:    #case toolwidget deactivated for variante
+            return
+
         self.frametoolwidg.layout().addWidget(self.toolwidget)
         if hasattr(self,'SKIP_LOADING_UI') and self.SKIP_LOADING_UI:
             pass

@@ -27,7 +27,7 @@ This file is part of LAMIA.
 
 import pandas as pd
 import logging
-from qgis.PyQt.QtWidgets import  QTreeWidgetItem
+from qgis.PyQt.QtWidgets import  QTreeWidgetItem, QHeaderView
 from qgis.PyQt import QtCore
 
 from ..lamia_abstractchoosertreewidget import AbstractChooserTreeWidget
@@ -78,9 +78,27 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
         self.disconnectTreewidget()
         self.treewidget.clear()
         ids = self.loadIds()
+        self._manageTreeWidgetHeader()
         parentitem = self.treewidget.invisibleRootItem()
-        parentitem.addChildren([QTreeWidgetItem([str(id)]) for id in self.ids['id'].values])
+
+        parentitem.addChildren([QTreeWidgetItem([str(val) for val in row[1:]]) for row in self.ids.values])
         self.connectTreewidget()
+
+
+    def _manageTreeWidgetHeader(self):
+        
+        # headerlist = list(self.qtreewidgetfields)
+        headerlist = list(self.ids.columns)[1:] 
+        #headerlist.insert(0, 'spec')
+        self.treewidget.setColumnCount(len(headerlist))
+        self.treewidget.header().setVisible(True)
+        self.treewidget.setHeaderItem(QTreeWidgetItem(headerlist))
+        header = self.treewidget.header()
+        lenheaderlist = len(headerlist)
+        for i in range(lenheaderlist):
+            header.setSectionResizeMode(i, QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(lenheaderlist-1, QHeaderView.Stretch)
+
 
     def selectItemfromPK(self,pk ):
         id = self.toolwidget.dbase.getValuesFromPk(self.toolwidget.DBASETABLENAME,
@@ -98,8 +116,16 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
 
     def loadIds(self):
         debug = False
-        sql = "SELECT pk_{}, id_{} FROM {}_now ".format(self.toolwidget.DBASETABLENAME.lower(),
-                                                        self.toolwidget.DBASETABLENAME.lower(),
+        # CHOOSERTREEWDG_COLSHOW = ['datetimeobservation']
+        dbnamelower = self.toolwidget.DBASETABLENAME.lower()
+        fields_to_request = ['pk_' + dbnamelower, 'id_' + dbnamelower]
+        pandascolumns = ['pk', 'id']
+        if (hasattr(self.toolwidget, 'CHOOSERTREEWDG_COLSHOW') 
+                and len(self.toolwidget.CHOOSERTREEWDG_COLSHOW) > 0 ):
+            fields_to_request += self.toolwidget.CHOOSERTREEWDG_COLSHOW
+            pandascolumns += self.toolwidget.CHOOSERTREEWDG_COLSHOW
+
+        sql = "SELECT {} FROM {}_now ".format(', '.join(fields_to_request),
                                                         self.toolwidget.DBASETABLENAME    )
         
         if self.toolwidget.parentWidget is not None and self.toolwidget.parentWidget.currentFeaturePK is not None:
@@ -146,11 +172,8 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
             #return query
         elif self.toolwidget.parentWidget is not None :
             sql = None
-            #self.ids = pd.DataFrame(columns = ['pk', 'id']) 
         else:
             sql = self.dbase.sqlNow(sql)
-            #query = self.dbase.query(sql)
-            #self.ids = pd.DataFrame(query, columns = ['pk', 'id']) 
 
         if sql:
             if hasattr(self.toolwidget, 'TABLEFILTERFIELD') and self.toolwidget.TABLEFILTERFIELD is not None:
@@ -166,9 +189,9 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
             if debug: logging.getLogger("Lamia_unittest").debug('search : %s', self.dbase.query('show search_path'))
             
             query = self.dbase.query(sql)
-            self.ids = pd.DataFrame(query, columns = ['pk', 'id']) 
+            self.ids = pd.DataFrame(query, columns = pandascolumns) 
         else:
-            self.ids = pd.DataFrame(columns = ['pk', 'id']) 
+            self.ids = pd.DataFrame(columns = pandascolumns) 
 
         if debug: logging.getLogger("Lamia_unittest").debug('ids : %s', self.ids)
 
@@ -415,18 +438,31 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
             self.ids = self.ids[self.ids.id != id]
 
     def toolbarSave(self):
-        if self.toolwidget.currentFeaturePK is None:    #feature not correctly saved
-            return
+        #if self.toolwidget.currentFeaturePK is None:    #feature not correctly saved
+        #    return
         
         self.disconnectTreewidget()
         selecteditems = self.treewidget.selectedItems()
-        if len(selecteditems) > 0 and selecteditems[0].text(0) == self.NEWFEATURETXT:
-            id = self.toolwidget.dbase.getValuesFromPk(self.toolwidget.DBASETABLENAME,
-                                                        'id_' + self.toolwidget.DBASETABLENAME.lower(),
+        #if len(selecteditems) > 0 and selecteditems[0].text(0) == self.NEWFEATURETXT:
+        if len(selecteditems) > 0 :
+            fieldtorequest = ['id_' + self.toolwidget.DBASETABLENAME.lower()]
+            if hasattr(self.toolwidget, 'CHOOSERTREEWDG_COLSHOW') :
+                fieldtorequest += self.toolwidget.CHOOSERTREEWDG_COLSHOW
+
+            res = self.toolwidget.dbase.getValuesFromPk(self.toolwidget.DBASETABLENAME + '_qgis',
+                                                        fieldtorequest,
                                                         self.toolwidget.currentFeaturePK)
+            res = [self.toolwidget.currentFeaturePK] + list(res)
+            if selecteditems[0].text(0) == self.NEWFEATURETXT:
+                self.ids.append(res)
+            else:
+                self.ids.loc[self.ids['pk'] == self.toolwidget.currentFeaturePK] = res
+
+
             selecteditem = selecteditems[0]
-            selecteditem.setText(0, str(id))
-            self.ids.append([self.toolwidget.currentFeaturePK, id])
+            for i, val in enumerate(res[1:]):
+                selecteditem.setText(i, str(val))
+            #self.ids.append([self.toolwidget.currentFeaturePK, id])
             #self.ids.append((id,))
             #
             #if self.ids.index.max() :
