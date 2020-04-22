@@ -1,21 +1,34 @@
-from ...Lamia_abstract_tool import AbstractLamiaTool
-import os
-from qgis.PyQt import QtGui, uic, QtCore
+# -*- coding: utf-8 -*-
 
-try:
-    from qgis.PyQt.QtGui import (QWidget, QTableWidgetItem, QHeaderView, QSizePolicy, QFileDialog, QVBoxLayout,
-                                 QFrame, QLabel, QInputDialog, QMessageBox, QColorDialog, QPushButton)
-except ImportError:
-    from qgis.PyQt.QtWidgets import (QWidget, QTableWidgetItem, QHeaderView, QSizePolicy, QFileDialog, QVBoxLayout,
-                                     QFrame, QLabel, QInputDialog, QMessageBox, QColorDialog, QPushButton)
+"""
+This file is part of LAMIA.
 
+    LAMIA is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    LAMIA is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Foobar.  If not, see <https://www.gnu.org/licenses/>.
+
+"""
+"""
+  * Copyright (c) 2017-2020 ARTELIA Commit <lamia@arteliagroup.com>
+  * 
+  * SPDX-License-Identifier: GPL-3.0-or-later
+  * License-Filename: LICENSING.md
+ """
 import statistics
 from collections import Counter
 import json
 import io
 import sys
 from functools import partial
-
 import random
 import datetime
 import pandas as pd
@@ -23,17 +36,32 @@ import numpy as np
 import pprint
 from pprint import pprint
 import inspect
-
+import os
 import matplotlib
 import matplotlib.pyplot as plt
 matplotlib.use('Agg')
 
+from qgis.PyQt import QtGui, uic, QtCore
+from qgis.PyQt.QtWidgets import (QWidget, QTableWidgetItem, QHeaderView, QSizePolicy, QFileDialog, QVBoxLayout,
+                                     QFrame, QLabel, QInputDialog, QMessageBox, QColorDialog, QPushButton)
+
+
+from ...lamia_abstracttool import AbstractLamiaTool
+
+
 
 class StatTool(AbstractLamiaTool):
-    TOOLNAME = 'GRAPHS'
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None, parentwidget=None, parent=None):
-        super(StatTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil, parentwidget, parent=parent)
+    POSTPROTOOLNAME = 'stattool'
+
+    tooltreewidgetCAT = 'Synthese'
+    tooltreewidgetSUBCAT = 'Statistiques'
+    tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_croquis_tool_icon.png')
+
+    choosertreewidgetMUTIPLESELECTION = True
+
+    def __init__(self, **kwargs):
+        super(StatTool, self).__init__(**kwargs)
 
         # Class' attributes
         self.variable = ["Troncon", "ZoneGeo"]
@@ -70,6 +98,7 @@ class StatTool(AbstractLamiaTool):
         # Debugging stage
         self.isDebug = False
 
+    """
     def initTool(self):
         # ****************************************************************************************
         # Main spec
@@ -91,80 +120,77 @@ class StatTool(AbstractLamiaTool):
 
         self.iconpath = os.path.join(os.path.dirname(__file__), 'lamiabase_croquis_tool_icon.png')
         self.qtreewidgetfields = ['libelle']
+    """
 
-    def initFieldUI(self):
-        # ****************************************************************************************
-        #   userui Field
-        if self.userwdgfield is None:
-            # ****************************************************************************************
-            # userui
 
-            self.userwdgfield = UserUI()
+    def initMainToolWidget(self):
 
-            # ComboBox's lists
-            graphTypeList = ["Camembert", "Hist.", "Hist. cum."]
-            # graphTypeList = ["Hist.", "Hist. cum."]
-            # self.tablesList = list(self.dbase.dbasetables.keys())
-            self.tablesList = ["Infralineaire", "Equipement", "Noeud"]
+        self.toolwidgetmain = UserUI()
 
-            # Clear comboBox
-            self.userwdgfield.comboBoxTable.clear()
-            self.userwdgfield.comboBoxField.clear()
-            self.userwdgfield.comboBoxGraphType.clear()
+        # ComboBox's lists
+        graphTypeList = ["Camembert", "Hist.", "Hist. cum."]
+        # graphTypeList = ["Hist.", "Hist. cum."]
+        # self.tablesList = list(self.dbase.dbasetables.keys())
+        self.tablesList = ["Infralineaire", "Equipement", "Noeud"]
 
-            # Fill comboBox with lists
-            self.userwdgfield.comboBoxTable.addItems(sorted(self.tablesList))
-            self.userwdgfield.comboBoxGraphType.addItems(sorted(graphTypeList))
+        # Clear comboBox
+        self.toolwidgetmain.comboBoxTable.clear()
+        self.toolwidgetmain.comboBoxField.clear()
+        self.toolwidgetmain.comboBoxGraphType.clear()
 
-            # Fill queries list comboBox
-            self.updatesQueriesList()
+        # Fill comboBox with lists
+        self.toolwidgetmain.comboBoxTable.addItems(sorted(self.tablesList))
+        self.toolwidgetmain.comboBoxGraphType.addItems(sorted(graphTypeList))
 
-            # Updates field combobox given the currentText
-            self.userwdgfield.comboBoxTable.currentIndexChanged.connect(self.updateFields)
+        # Fill queries list comboBox
+        self.updatesQueriesList()
 
-            # Load field combobox on load
-            self.userwdgfield.comboBoxTable.currentIndexChanged.emit(0)
+        # Updates field combobox given the currentText
+        self.toolwidgetmain.comboBoxTable.currentIndexChanged.connect(self.updateFields)
 
-            # Display first element
-            self.userwdgfield.comboBoxField.setCurrentIndex(0)
-            self.userwdgfield.comboBoxGraphType.setCurrentIndex(1)
+        # Load field combobox on load
+        self.toolwidgetmain.comboBoxTable.currentIndexChanged.emit(0)
 
-            # Updates stats labels given tables currentText and fields currentText
-            self.userwdgfield.pushButtonExecute.clicked.connect(self.updateGUI)
-            self.userwdgfield.pushButtonExecuteAdv.clicked.connect(self.updateGUI)
+        # Display first element
+        self.toolwidgetmain.comboBoxField.setCurrentIndex(0)
+        self.toolwidgetmain.comboBoxGraphType.setCurrentIndex(1)
 
-            # Load query from memory
-            self.connectComboSavedQueries()
+        # Updates stats labels given tables currentText and fields currentText
+        self.toolwidgetmain.pushButtonExecute.clicked.connect(self.updateGUI)
+        self.toolwidgetmain.pushButtonExecuteAdv.clicked.connect(self.updateGUI)
 
-            # Modify query
-            self.userwdgfield.pushButtonMod.clicked.connect(self.modifyTextFile)
+        # Load query from memory
+        self.connectComboSavedQueries()
 
-            # Save query
-            self.userwdgfield.pushButtonSave.clicked.connect(self.createNewTextFile)
+        # Modify query
+        self.toolwidgetmain.pushButtonMod.clicked.connect(self.modifyTextFile)
 
-            # Delete query
-            self.userwdgfield.pushButtonDel.clicked.connect(self.deleteTextFile)
+        # Save query
+        self.toolwidgetmain.pushButtonSave.clicked.connect(self.createNewTextFile)
 
-            # Update graphs
-            # self.userwdgfield.comboBoxGraphType.currentIndexChanged.connect(self.plotGraph)
+        # Delete query
+        self.toolwidgetmain.pushButtonDel.clicked.connect(self.deleteTextFile)
 
-            #self.figuretype, self.axtype = plt.subplots()
-            self.figuretype = plt.figure()
-            self.axtype = self.figuretype.add_subplot(111)
-            self.graphwdg = Label()
-            self.userwdgfield.frame_chart.layout().addWidget(self.graphwdg)
+        # Update graphs
+        # self.toolwidgetmain.comboBoxGraphType.currentIndexChanged.connect(self.plotGraph)
 
-            # self.postOnActivation()
+        #self.figuretype, self.axtype = plt.subplots()
+        self.figuretype = plt.figure()
+        self.axtype = self.figuretype.add_subplot(111)
+        self.graphwdg = Label()
+        self.toolwidgetmain.frame_chart.layout().addWidget(self.graphwdg)
+
+        # self.postOnActivation()
 
     def disconnectComboSavedQueries(self):
         try:
-            self.userwdgfield.comboBoxSavedQueries.currentIndexChanged.disconnect(self.loadTextFile)
+            self.toolwidgetmain.comboBoxSavedQueries.currentIndexChanged.disconnect(self.loadTextFile)
         except:
             print("Disconnect loadTextFile failed")
 
     def connectComboSavedQueries(self):
         try:
-            self.userwdgfield.comboBoxSavedQueries.currentIndexChanged.connect(self.loadTextFile)
+            self.toolwidgetmain.comboBoxSavedQueries.currentIndexChanged.connect(self.loadTextFile)
         except:
             print("Connect loadTextFile failed")
 
@@ -176,7 +202,7 @@ class StatTool(AbstractLamiaTool):
         fieldsList = []
         parentTables = []
         # Fetch current table
-        currentTable = self.userwdgfield.comboBoxTable.currentText()
+        currentTable = self.toolwidgetmain.comboBoxTable.currentText()
         try:
             # Fetch table's fields
             fieldsList = list(self.dbase.dbasetables[currentTable]["fields"].keys())
@@ -187,7 +213,7 @@ class StatTool(AbstractLamiaTool):
         except KeyError as e:
             QMessageBox.about(self, "Erreur".upper(),
                               "Table {table} non-trouvée".format(
-                                  table=self.userwdgfield.comboBoxTable.currentText().upper()))
+                                  table=self.toolwidgetmain.comboBoxTable.currentText().upper()))
             print("{type}: {exception} raised at {fct}".format(type=sys.exc_info()[0].upper(), exception=e,
                                                                fct="updateFields"))
 
@@ -199,11 +225,11 @@ class StatTool(AbstractLamiaTool):
 
         # TODO: Pourquoi cela fonctionne sans disconnect/connect?????????????????????????
         # Clear comboBoxField and add items from fieldsList
-        self.userwdgfield.comboBoxField.clear()
-        self.userwdgfield.comboBoxField.addItems(sorted(fieldsList))
+        self.toolwidgetmain.comboBoxField.clear()
+        self.toolwidgetmain.comboBoxField.addItems(sorted(fieldsList))
 
         # Display first element
-        self.userwdgfield.comboBoxField.setCurrentIndex(0)
+        self.toolwidgetmain.comboBoxField.setCurrentIndex(0)
 
     def getDataFrame(self):
         """
@@ -220,17 +246,17 @@ class StatTool(AbstractLamiaTool):
         # ----- CLASSIQUE -----
         # Create SQL query from table and field comboBox
         if sender.objectName() == "pushButtonExecute":
-            selectFrom = "SELECT {slct} FROM {frm}_now".format(slct=self.userwdgfield.comboBoxField.currentText(),
-                                                           frm=self.userwdgfield.comboBoxTable.currentText())
+            selectFrom = "SELECT {slct} FROM {frm}_now".format(slct=self.toolwidgetmain.comboBoxField.currentText(),
+                                                           frm=self.toolwidgetmain.comboBoxTable.currentText())
 
         # ----- ADVANCED -----
         # Fetch SQL query from lineEditQuery
         else:
             if self.checkText():
-                selectFrom = self.userwdgfield.lineEditQuery.text() + "_now"
+                selectFrom = self.toolwidgetmain.lineEditQuery.text() + "_now"
 
                 # Extract dates from lineEditDates and add today's date
-                self.dates = self.userwdgfield.lineEditDates.text().split(", ")
+                self.dates = self.toolwidgetmain.lineEditDates.text().split(", ")
 
         # Reset self.dictGraphs and fill in with len(self.dates) lists
         self.dictGraphs.clear()
@@ -266,7 +292,7 @@ class StatTool(AbstractLamiaTool):
         """
         # Strings that cannot exist in a query
         bannedQuery = ["delete", "drop", "insert", "update"]
-        queryList = self.userwdgfield.lineEditQuery.text().split()
+        queryList = self.toolwidgetmain.lineEditQuery.text().split()
 
         # Loop through the query and check if authorized or not
         for element in queryList:
@@ -379,11 +405,11 @@ class StatTool(AbstractLamiaTool):
             except Exception as e:
                 print(e)
 
-        self.userwdgfield.labelSum.setText(str(result))
+        self.toolwidgetmain.labelSum.setText(str(result))
         try:
-            self.userwdgfield.labelAvg.setText(str(round(result/count, 2)))
+            self.toolwidgetmain.labelAvg.setText(str(round(result/count, 2)))
         except ZeroDivisionError:
-            self.userwdgfield.labelAvg.setText(str(0))
+            self.toolwidgetmain.labelAvg.setText(str(0))
 
         print("Exit {fct}".format(fct=inspect.stack()[0][3])) if self.isDebug else None
 
@@ -401,7 +427,7 @@ class StatTool(AbstractLamiaTool):
         except TypeError:
             result = "-"
 
-        self.userwdgfield.labelOcc.setText(str(result))
+        self.toolwidgetmain.labelOcc.setText(str(result))
 
         print("Exit {fct}".format(fct=inspect.stack()[0][3])) if self.isDebug else None
 
@@ -412,28 +438,28 @@ class StatTool(AbstractLamiaTool):
         print("Enter {fct}".format(fct=inspect.stack()[0][3])) if self.isDebug else None
 
         # Reset table widget
-        self.userwdgfield.tableWidgetDetails.setRowCount(0)
-        header = self.userwdgfield.tableWidgetDetails.horizontalHeader()
+        self.toolwidgetmain.tableWidgetDetails.setRowCount(0)
+        header = self.toolwidgetmain.tableWidgetDetails.horizontalHeader()
 
         # Columns and rows names
         colNames = list(self.df.columns.values)
         rowNames = list(self.df.index.values)
 
         # Set column's number to len(colNames) + 2 (Name and Color) and row's number to len(rowNames)
-        self.userwdgfield.tableWidgetDetails.setColumnCount(len(colNames) + 2)
-        self.userwdgfield.tableWidgetDetails.setRowCount(len(rowNames))
+        self.toolwidgetmain.tableWidgetDetails.setColumnCount(len(colNames) + 2)
+        self.toolwidgetmain.tableWidgetDetails.setRowCount(len(rowNames))
 
         # Fill tableWidget with elements from self.dataFrame
         for row in range(len(rowNames)):
             # Insert row name
-            self.userwdgfield.tableWidgetDetails.setItem(row, 0, QTableWidgetItem(str(rowNames[row])))
+            self.toolwidgetmain.tableWidgetDetails.setItem(row, 0, QTableWidgetItem(str(rowNames[row])))
 
             # Insert row values for each date
             for col in range(len(colNames)):
                 # Fetch value at self.df(row, col)
                 valueTmp = self.df.iat[row, col]
                 # Insert value
-                self.userwdgfield.tableWidgetDetails.setItem(row, col + 1, QTableWidgetItem(str(valueTmp)))
+                self.toolwidgetmain.tableWidgetDetails.setItem(row, col + 1, QTableWidgetItem(str(valueTmp)))
                 # Resize column
                 header.setSectionResizeMode(col + 1, QHeaderView.ResizeToContents)
 
@@ -458,7 +484,7 @@ class StatTool(AbstractLamiaTool):
         print("Enter {fct}".format(fct=inspect.stack()[0][3])) if self.isDebug else None
 
         button = QPushButton("", self)
-        self.userwdgfield.tableWidgetDetails.setCellWidget(row, col, button)
+        self.toolwidgetmain.tableWidgetDetails.setCellWidget(row, col, button)
         # ####################### Utile pour les tests - A SUPPRIMER: if key != None:
         if key is not None:
             button.clicked.connect(partial(self.openColorDialog, key))
@@ -472,7 +498,7 @@ class StatTool(AbstractLamiaTool):
         """
         # Add description for first column and Couleur for last one
         headersName = ["Description"] + colNames + ["Couleur"]
-        self.userwdgfield.tableWidgetDetails.setHorizontalHeaderLabels(headersName)
+        self.toolwidgetmain.tableWidgetDetails.setHorizontalHeaderLabels(headersName)
 
     def plotGraph(self):
         """
@@ -494,13 +520,13 @@ class StatTool(AbstractLamiaTool):
         self.colorsDF = [self.oneRandomColor() for i in range(len(self.df))]
         self.colorsDFT = [self.oneRandomColor() for i in range(len(dfT))]
         # Fetch colors from self.currentQuery if exists
-        if self.userwdgfield.tabResearch.currentIndex() == 1 and len(self.currentQuery) != 0:
+        if self.toolwidgetmain.tabResearch.currentIndex() == 1 and len(self.currentQuery) != 0:
             print("> Tab Advanced - Filled dict")
             self.colorsDF = list(self.currentQuery["colorsDF"].values())
             self.colorsDFT = list(self.currentQuery["colorsDFT"].values())"""
 
         """"# Query from Classique
-        if self.userwdgfield.tabResearch.currentIndex() == 0:
+        if self.toolwidgetmain.tabResearch.currentIndex() == 0:
             print("> Tab Classique")
             # Create random colors
             colorsDF = [self.oneRandomColor() for i in range(len(self.df))]
@@ -525,7 +551,7 @@ class StatTool(AbstractLamiaTool):
         print("> colorsDFT:", colorsDFT)"""
 
         # Get current graph type
-        currentChartType = self.userwdgfield.comboBoxGraphType.currentText()
+        currentChartType = self.toolwidgetmain.comboBoxGraphType.currentText()
 
         # ----- Histogram -----
         if currentChartType == "Hist.":
@@ -551,7 +577,7 @@ class StatTool(AbstractLamiaTool):
                 QMessageBox.about(self, "Erreur".upper(),
                                   "Format de graphique non-compatible avec plusieurs dates")
                 print("> Hist.")
-                self.userwdgfield.comboBoxGraphType.setCurrentIndex(1)
+                self.toolwidgetmain.comboBoxGraphType.setCurrentIndex(1)
                 # self.df.plot(kind='bar', ax=self.axtype, color=colorsDF)
                 self.df.plot(kind='bar', ax=self.axtype)
 
@@ -595,7 +621,7 @@ class StatTool(AbstractLamiaTool):
         print("Enter {fct}".format(fct=inspect.stack()[0][3])) if self.isDebug else None
 
         # Disable pie chart on Advanced tab with lineEditDates filled
-        if self.userwdgfield.tabResearch.currentIndex() == 1 and self.userwdgfield.lineEditDates.text() != "":
+        if self.toolwidgetmain.tabResearch.currentIndex() == 1 and self.toolwidgetmain.lineEditDates.text() != "":
             print("Exit {fct}".format(fct=inspect.stack()[0][3])) if self.isDebug else None
             return False
         else:
@@ -656,8 +682,8 @@ class StatTool(AbstractLamiaTool):
         print(">", queriesList)
 
         # Clear and add files to comboBox
-        self.userwdgfield.comboBoxSavedQueries.clear()
-        self.userwdgfield.comboBoxSavedQueries.addItems(queriesList)
+        self.toolwidgetmain.comboBoxSavedQueries.clear()
+        self.toolwidgetmain.comboBoxSavedQueries.addItems(queriesList)
 
         self.connectComboSavedQueries()
 
@@ -682,15 +708,15 @@ class StatTool(AbstractLamiaTool):
 
         # Get data
         newQuery = {
-            "query": self.userwdgfield.lineEditQuery.text(),
-            "graphType": self.userwdgfield.comboBoxGraphType.currentText(),
-            "dates": self.userwdgfield.lineEditDates.text(),
+            "query": self.toolwidgetmain.lineEditQuery.text(),
+            "graphType": self.toolwidgetmain.comboBoxGraphType.currentText(),
+            "dates": self.toolwidgetmain.lineEditDates.text(),
             "colorsDF": self.colorsDF,
             "colorsDFT": self.colorsDFT
         }
 
         # Retrieve query's name
-        fileName = self.userwdgfield.comboBoxSavedQueries.currentText()
+        fileName = self.toolwidgetmain.comboBoxSavedQueries.currentText()
         # Fetch complete path
         directory = self.dbase.dbaseressourcesdirectory + "/config/statsTools/" + fileName
 
@@ -707,7 +733,7 @@ class StatTool(AbstractLamiaTool):
         print("Enter {fct}".format(fct=inspect.stack()[0][3])) if self.isDebug else None
 
         # Retrieve query's name
-        fileName = self.userwdgfield.comboBoxSavedQueries.currentText()
+        fileName = self.toolwidgetmain.comboBoxSavedQueries.currentText()
         # Save query options
         completePath = self.dbase.dbaseressourcesdirectory + "/config/statsTools/" + fileName
 
@@ -731,9 +757,9 @@ class StatTool(AbstractLamiaTool):
         """
         print("Enter {fct}".format(fct=inspect.stack()[0][3])) if self.isDebug else None
 
-        self.userwdgfield.lineEditQuery.setText(loadedQuery["query"])
-        self.userwdgfield.comboBoxGraphType.setCurrentText(loadedQuery["graphType"])
-        self.userwdgfield.lineEditDates.setText(loadedQuery["dates"])
+        self.toolwidgetmain.lineEditQuery.setText(loadedQuery["query"])
+        self.toolwidgetmain.comboBoxGraphType.setCurrentText(loadedQuery["graphType"])
+        self.toolwidgetmain.lineEditDates.setText(loadedQuery["dates"])
         # self.getSavedColors()
 
         print("Exit {fct}".format(fct=inspect.stack()[0][3])) if self.isDebug else None
@@ -747,7 +773,7 @@ class StatTool(AbstractLamiaTool):
         # Query has not been modified
         if self.confirm():
             # Retrieve query's name
-            fileName = self.userwdgfield.comboBoxSavedQueries.currentText()
+            fileName = self.toolwidgetmain.comboBoxSavedQueries.currentText()
             # Fetch complete path
             directory = self.dbase.dbaseressourcesdirectory + "/config/statsTools/" + fileName
             # Delete file
@@ -755,7 +781,7 @@ class StatTool(AbstractLamiaTool):
 
         # Update queries list comboBox and set index to first item
         self.updatesQueriesList()
-        self.userwdgfield.comboBoxSavedQueries.setCurrentIndex(0)
+        self.toolwidgetmain.comboBoxSavedQueries.setCurrentIndex(0)
 
         print("Exit {fct}".format(fct=inspect.stack()[0][3])) if self.isDebug else None
 
@@ -782,20 +808,6 @@ class StatTool(AbstractLamiaTool):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     # ---------- WRITE QUERY ----------
     def writeQuery(self):
         """
@@ -804,9 +816,9 @@ class StatTool(AbstractLamiaTool):
         """
         print("Enter writeQuery")
         try:
-            self.queryToSave["query"] = self.userwdgfield.lineEditQuery.text()
-            self.queryToSave["graphType"] = self.userwdgfield.comboBoxGraphType.currentText()
-            self.queryToSave["dates"] = self.userwdgfield.lineEditDates.text()
+            self.queryToSave["query"] = self.toolwidgetmain.lineEditQuery.text()
+            self.queryToSave["graphType"] = self.toolwidgetmain.comboBoxGraphType.currentText()
+            self.queryToSave["dates"] = self.toolwidgetmain.lineEditDates.text()
 
             print("Exit writeQuery")
             return True
@@ -843,7 +855,7 @@ class StatTool(AbstractLamiaTool):
 
             # Colors
             # Random colors for Classique Tab (Tab index: 0)
-            # if self.userwdgfield.tabResearch.currentIndex() == 0:
+            # if self.toolwidgetmain.tabResearch.currentIndex() == 0:
             if not self.hasColor:
                 print("Does not have color")
                 self.queryToSave.clear()
@@ -857,7 +869,7 @@ class StatTool(AbstractLamiaTool):
             self.updateDetails(self.counter)
             self.updateMaxOccurence(self.counter)
 
-            if self.userwdgfield.lineEditDates.text() == "":
+            if self.toolwidgetmain.lineEditDates.text() == "":
                 self.drawGraph()
 
         # Pop-up if request is valid but self.result is empty
@@ -937,7 +949,7 @@ class StatTool(AbstractLamiaTool):
             pass
 
         # Plot data per specified chart type and colors
-        currentChartType = self.userwdgfield.comboBoxGraphType.currentText()
+        currentChartType = self.toolwidgetmain.comboBoxGraphType.currentText()
         try:
             # ----- Histogram -----
             if currentChartType == "Hist.":
@@ -1040,9 +1052,9 @@ class StatTool(AbstractLamiaTool):
         # ----- CLASSIQUE -----
         # Create SQL query from table and field comboBox
         if sender.objectName() == "pushButtonExecute":
-            # selectFrom = "SELECT {slct} FROM {frm}".format(slct=self.userwdgfield.comboBoxField.currentText(), frm=self.userwdgfield.comboBoxTable.currentText() + "_now")
-            selectFrom = "SELECT {slct} FROM {frm}_now".format(slct=self.userwdgfield.comboBoxField.currentText(),
-                                                           frm=self.userwdgfield.comboBoxTable.currentText())
+            # selectFrom = "SELECT {slct} FROM {frm}".format(slct=self.toolwidgetmain.comboBoxField.currentText(), frm=self.toolwidgetmain.comboBoxTable.currentText() + "_now")
+            selectFrom = "SELECT {slct} FROM {frm}_now".format(slct=self.toolwidgetmain.comboBoxField.currentText(),
+                                                           frm=self.toolwidgetmain.comboBoxTable.currentText())
             try:
 
                 sql = self.dbase.updateQueryTableNow(selectFrom)
@@ -1058,15 +1070,15 @@ class StatTool(AbstractLamiaTool):
         else:
             self.validQuery = self.checkText()
             if self.validQuery:
-                selectFrom = self.userwdgfield.lineEditQuery.text() + "_now"
+                selectFrom = self.toolwidgetmain.lineEditQuery.text() + "_now"
 
                 # Updates self.queryToSave with current query
                 self.writeQuery()
 
                 # Date lineEdit is filled: fetch dated data
-                if self.userwdgfield.lineEditDates.text() != "":
+                if self.toolwidgetmain.lineEditDates.text() != "":
                     # Extract dates from lineEditDates and add today's date
-                    self.dates = self.userwdgfield.lineEditDates.text().split(", ")
+                    self.dates = self.toolwidgetmain.lineEditDates.text().split(", ")
                     self.dates.append(datetime.date.today().strftime("%d/%m/%Y"))
 
                     # Reset self.dictGraphs and fill in with len(self.dates) lists
@@ -1142,12 +1154,12 @@ class StatTool(AbstractLamiaTool):
 
         print("Enter updateSumAvg")
         try:
-            self.userwdgfield.labelSum.setText(str(sum(lstItems)))
-            self.userwdgfield.labelAvg.setText(str(round(statistics.mean(lstItems), 2)))
+            self.toolwidgetmain.labelSum.setText(str(sum(lstItems)))
+            self.toolwidgetmain.labelAvg.setText(str(round(statistics.mean(lstItems), 2)))
             print("Exit updateSumAvg")
         except TypeError:
-            self.userwdgfield.labelSum.setText("-")
-            self.userwdgfield.labelAvg.setText("-")
+            self.toolwidgetmain.labelSum.setText("-")
+            self.toolwidgetmain.labelAvg.setText("-")
 
     def updateDetails(self, counter):
         """
@@ -1157,27 +1169,27 @@ class StatTool(AbstractLamiaTool):
 
         print("Enter updateDetails")
         # Reset table widget
-        self.userwdgfield.tableWidgetDetails.setRowCount(0)
-        header = self.userwdgfield.tableWidgetDetails.horizontalHeader()
+        self.toolwidgetmain.tableWidgetDetails.setRowCount(0)
+        header = self.toolwidgetmain.tableWidgetDetails.horizontalHeader()
 
         # On Classique or on (Advanced and lineEditDates is empty)
-        if self.userwdgfield.tabResearch.currentIndex() == 0 or (
-                self.userwdgfield.tabResearch.currentIndex() == 1 and self.userwdgfield.lineEditDates.text() == ""):
+        if self.toolwidgetmain.tabResearch.currentIndex() == 0 or (
+                self.toolwidgetmain.tabResearch.currentIndex() == 1 and self.toolwidgetmain.lineEditDates.text() == ""):
             print("> On Classique or on (Advanced and lineEditDates is empty)")
             print(self.queryToSave)
             try:
-                self.userwdgfield.tableWidgetDetails.setColumnCount(3)
-                self.userwdgfield.tableWidgetDetails.setRowCount(len(counter))
+                self.toolwidgetmain.tableWidgetDetails.setColumnCount(3)
+                self.toolwidgetmain.tableWidgetDetails.setRowCount(len(counter))
 
                 # Fill tableWidget with elements from counter
                 print("> Enter loop: create detailed tab")
                 for row, key in enumerate(counter.keys()):
-                    self.userwdgfield.tableWidgetDetails.setItem(row, 0, QTableWidgetItem(str(key)))
-                    self.userwdgfield.tableWidgetDetails.setItem(row, 1, QTableWidgetItem(str(counter[key])))
+                    self.toolwidgetmain.tableWidgetDetails.setItem(row, 0, QTableWidgetItem(str(key)))
+                    self.toolwidgetmain.tableWidgetDetails.setItem(row, 1, QTableWidgetItem(str(counter[key])))
 
                     # Color dialog
                     button = QPushButton("", self)
-                    self.userwdgfield.tableWidgetDetails.setCellWidget(row, 2, button)
+                    self.toolwidgetmain.tableWidgetDetails.setCellWidget(row, 2, button)
                     button.clicked.connect(partial(self.openColorDialog, key))
 
                     try:
@@ -1211,18 +1223,18 @@ class StatTool(AbstractLamiaTool):
             colNames = list(self.dataFrame.columns.values)
             rowNames = list(self.dataFrame.index.values)
             # Set column's number to len(colNames) + 2 (Name, color) and row's number to len(rowNames)
-            self.userwdgfield.tableWidgetDetails.setColumnCount(len(colNames) + 2)
-            self.userwdgfield.tableWidgetDetails.setRowCount(len(rowNames))
+            self.toolwidgetmain.tableWidgetDetails.setColumnCount(len(colNames) + 2)
+            self.toolwidgetmain.tableWidgetDetails.setRowCount(len(rowNames))
 
             # Fill tableWidget with elements from self.dataFrame
             for row in range(len(rowNames)):
                 # Insert row name
-                self.userwdgfield.tableWidgetDetails.setItem(row, 0, QTableWidgetItem(str(rowNames[row])))
+                self.toolwidgetmain.tableWidgetDetails.setItem(row, 0, QTableWidgetItem(str(rowNames[row])))
 
                 # Insert row values for each date
                 for col in range(len(colNames)):
                     valueTmp = self.dataFrame.iat[row, col]
-                    self.userwdgfield.tableWidgetDetails.setItem(row, col + 1, QTableWidgetItem(str(valueTmp)))
+                    self.toolwidgetmain.tableWidgetDetails.setItem(row, col + 1, QTableWidgetItem(str(valueTmp)))
                     # Resize column
                     header.setSectionResizeMode(col + 1, QHeaderView.ResizeToContents)
 
@@ -1258,7 +1270,7 @@ class StatTool(AbstractLamiaTool):
                 print("openColorDialog Error:", e)
 
             # Update graph after color selection
-            if self.userwdgfield.lineEditDates.text() == "":
+            if self.toolwidgetmain.lineEditDates.text() == "":
                 # self.drawGraph()
                 print("> {key}: Color changed to {color}".format(key=key, color=color.name()))
 
@@ -1279,7 +1291,7 @@ class StatTool(AbstractLamiaTool):
                 text = "{name}: {count}".format(name=self.abbv[maxi[0]], count=maxi[1])
             else:
                 text = "{name}: {count}".format(name=maxi[0], count=maxi[1])
-            self.userwdgfield.labelOcc.setText(text)
+            self.toolwidgetmain.labelOcc.setText(text)
         except IndexError as e:
             print("{type}: {exception} raised at {fct}".format(type=sys.exc_info()[0].upper(), exception=e,
                                                                fct="updateMaxOccurence"))
@@ -1302,8 +1314,8 @@ class StatTool(AbstractLamiaTool):
 
         self.queryToSave.clear()
         # Load file and parse it from JSON to dict
-        print('***', self.userwdgfield.comboBoxSavedQueries.currentText())
-        fileName = self.userwdgfield.comboBoxSavedQueries.currentText()
+        print('***', self.toolwidgetmain.comboBoxSavedQueries.currentText())
+        fileName = self.toolwidgetmain.comboBoxSavedQueries.currentText()
         print(fileName)
         self.loadedQueryPath = os.path.join(self.dbase.dbaseressourcesdirectory, "config", "statsTools", fileName)
         print(self.loadedQueryPath)
@@ -1319,7 +1331,7 @@ class StatTool(AbstractLamiaTool):
             try:
                 self.queryToSave.clear()
                 # Load file and parse it from JSON to dict
-                fileName = self.userwdgfield.comboBoxSavedQueries.currentText()
+                fileName = self.toolwidgetmain.comboBoxSavedQueries.currentText()
                 print(fileName)
                 #fileCompletePath = self.dbase.dbaseressourcesdirectory + "/config/statsTools/" + fileName
                 fileCompletePath = os.path.join(self.dbase.dbaseressourcesdirectory, "config", "statsTools", fileName)

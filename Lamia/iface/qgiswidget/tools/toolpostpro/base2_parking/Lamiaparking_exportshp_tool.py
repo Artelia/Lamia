@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 This file is part of LAMIA.
 
@@ -23,7 +24,6 @@ This file is part of LAMIA.
  """
 
 
-# -*- coding: utf-8 -*-
 import qgis
 from qgis.PyQt import uic, QtGui, QtCore
 try:
@@ -44,10 +44,8 @@ from ..Base2.Lamia_exportshp_tool import ExportShapefileTool
 
 class ParkingExportShapefileTool(ExportShapefileTool):
 
-    DBASES = ['digue','base_digue','base2_digue', 'base2_parking']
-
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
-        super(ParkingExportShapefileTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
+    def __init__(self, **kwargs):
+        super(ParkingExportShapefileTool, self).__init__(**kwargs)
 
         
 

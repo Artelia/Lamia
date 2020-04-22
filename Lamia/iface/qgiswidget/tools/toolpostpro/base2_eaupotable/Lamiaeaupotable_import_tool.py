@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 This file is part of LAMIA.
 
@@ -23,7 +24,7 @@ This file is part of LAMIA.
  """
 
 
-# -*- coding: utf-8 -*-
+
 import qgis
 from qgis.PyQt import uic, QtGui, QtCore
 try:
@@ -38,17 +39,12 @@ import glob
 
 from ..base2.Lamia_import_tool import ImportTool
 
-# ********************************************************************************************************************
-# ********************************* Main Widget                *******************************************************
-# ********************************************************************************************************************
 
 class EaupotableImportTool(ImportTool):
 
-    DBASES = ['digue','base_digue','base2_digue']
-    TOOLNAME = 'IMPORT'
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
-        super(EaupotableImportTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
+    def __init__(self, **kwargs):
+        super(EaupotableImportTool, self).__init__(**kwargs)
         
         
 

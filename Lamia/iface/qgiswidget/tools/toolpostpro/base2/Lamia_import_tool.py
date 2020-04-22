@@ -24,55 +24,57 @@ This file is part of LAMIA.
   * License-Filename: LICENSING.md
  """
 
-
-
-
-import qgis, qgis.utils
 import os
-#from ..toolabstract.inspectiondigue_abstractworker import AbstractWorker
-from qgis.PyQt import QtGui, uic, QtCore, QtXml
 from collections import OrderedDict
 import datetime
 import decimal
 import logging, sys, re
 import numpy as np
 from collections import OrderedDict
+from pprint import pprint
 
-from .importtools.InspectionDigue_Import import ImportObjetDialog
-
-try:
-    from qgis.PyQt.QtGui import (QInputDialog,QTableWidgetItem,QComboBox,QAction,QProgressBar,QApplication,QWidget,QToolButton,
-                                 QDialog, QGridLayout, QSplitter, QLabel, QFrame, QVBoxLayout)
-except ImportError:
-    from qgis.PyQt.QtWidgets import (QInputDialog,QTableWidgetItem,QComboBox,QAction,QProgressBar,QApplication,QWidget,QToolButton,
+import qgis, qgis.utils
+from qgis.PyQt import QtGui, uic, QtCore, QtXml
+from qgis.PyQt.QtWidgets import (QInputDialog,QTableWidgetItem,QComboBox,QAction,QProgressBar,QApplication,QWidget,QToolButton,
                                      QDialog, QGridLayout, QSplitter, QLabel, QFrame, QVBoxLayout)
 
-"""
-from ...libs.pyqtgraph.flowchart import Flowchart, Node
-from ...libs.pyqtgraph.flowchart.library.common import CtrlNode
-# import ...libs.pyqtgraph.flowchart.library as fclib
-from ...libs.pyqtgraph.flowchart import library as fclib
-from ...libs.pyqtgraph.flowchart.library.Data import EvalNode
-from ...libs.pyqtgraph import configfile as configfile
-"""
+
 from Lamia.libs.pyqtgraph.flowchart import Flowchart, Node
 from Lamia.libs.pyqtgraph.flowchart.library.common import CtrlNode
-# import ...libs.pyqtgraph.flowchart.library as fclib
 from Lamia.libs.pyqtgraph.flowchart import library as fclib
 from Lamia.libs.pyqtgraph.flowchart.library.Data import EvalNode
 from Lamia.libs.pyqtgraph import configfile as configfile
-from ...Lamia_abstract_tool import AbstractLamiaTool
+
+
+
+from .importtools.InspectionDigue_Import import ImportObjetDialog
+from ...lamia_abstracttool import AbstractLamiaTool
+#from ...subwidgets.abstractfilemanager import AbstractFileManager
+from Lamia.libslamia.lamiaimport.lamiaimport import ImportCore
 from Lamia.main.DBaseParser import DBaseParser
-from pprint import pprint
 
 
 class ImportTool(AbstractLamiaTool):
     TOOLNAME = 'Importtools'
     DBASES = ['digue', 'base_digue', 'base2_digue', 'base2_parking']
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None, parentwidget=None, parent=None):
-        super(ImportTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil, parentwidget, parent=parent)
-        self.postInit()
+
+    POSTPROTOOLNAME = ImportCore.POSTPROTOOLNAME
+
+    tooltreewidgetCAT = 'Import/export'
+    tooltreewidgetSUBCAT = 'Import'
+    tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'Lamia_import_tool_icon.png')
+
+    choosertreewidgetMUTIPLESELECTION = True
+
+    def __init__(self, **kwargs):
+        super(ImportTool, self).__init__(**kwargs)
+
+        self.importtool = ImportCore(dbaseparser=self.dbase,
+                                    messageinstance=self.mainifacewidget.connector)
+        self.qfiledlg = self.mainifacewidget.qfiledlg
+        #self.postInit()
+
         self.dialog = QDialog()
         layout = QGridLayout()
         self.dialog.setLayout(layout)
@@ -85,12 +87,12 @@ class ImportTool(AbstractLamiaTool):
         # Add the unsharp mask node to two locations in the menu to demonstrate
         # that we can create arbitrary menu structures
         # self.library.addNodeType(UnsharpMaskNode, [('Image',),('Submenu_test', 'submenu2', 'submenu3')])
-        self.qfiledlg = self.windowdialog.qfiledlg
+        
 
         self.flowqlabelmessage = None
         self.currentlayer = None
 
-
+    """
     def initTool(self):
         # ****************************************************************************************
         # Main spec
@@ -118,40 +120,40 @@ class ImportTool(AbstractLamiaTool):
 
     def postInit(self):
         pass
-
-    def initFieldUI(self):
-        if self.userwdgfield is None:
-
-            # ****************************************************************************************
-            # userui
-
-            self.userwdgfield = UserUI()
-            self.userwdgfield.toolButton_update.clicked.connect(self.updateShowedTable)
-
-            items = [ "Infralineaire", 'Noeud', 'Equipement', 'Photo']
-            self.userwdgfield.comboBox_typeimport.addItems(items)
-
-            # methode 1
-            self.userwdgfield.pushButton_import.clicked.connect(self.showTable)
-            self.userwdgfield.pushButton_importer.clicked.connect(self.work)
-            self.userwdgfield.pushButton_validimport.clicked.connect(self.validImport)
-            self.userwdgfield.pushButton_rollback.clicked.connect(self.rollbackImport)
-
-            #flowchart
-            self.userwdgfield.pushButton_flowchart.clicked.connect(self.showFlowChart)
+    """
 
 
+    def initMainToolWidget(self):
 
-            self.dialogui = DialogUI()
+
+        self.toolwidgetmain = UserUI()
+        self.toolwidgetmain.toolButton_update.clicked.connect(self.updateShowedTable)
+
+        items = [ "Infralineaire", 'Noeud', 'Equipement', 'Photo']
+        self.toolwidgetmain.comboBox_typeimport.addItems(items)
+
+        # methode 1
+        self.toolwidgetmain.pushButton_import.clicked.connect(self.showTable)
+        self.toolwidgetmain.pushButton_importer.clicked.connect(self.work)
+        self.toolwidgetmain.pushButton_validimport.clicked.connect(self.validImport)
+        self.toolwidgetmain.pushButton_rollback.clicked.connect(self.rollbackImport)
+
+        #flowchart
+        self.toolwidgetmain.pushButton_flowchart.clicked.connect(self.showFlowChart)
 
 
 
+        self.dialogui = DialogUI()
+
+    def postToolTreeWidgetCurrentItemChanged(self):
+        self.updateShowedTable()
+    
     def postOnActivation(self):
         self.updateShowedTable()
 
     def updateShowedTable(self):
 
-        self.userwdgfield.comboBox_tableimport.clear()
+        self.toolwidgetmain.comboBox_tableimport.clear()
 
         if qgis.utils.iface is not None:
             if sys.version_info.major == 2:
@@ -164,7 +166,7 @@ class ImportTool(AbstractLamiaTool):
 
             for lay in layers:
                 if not lay in layqgis:
-                    self.userwdgfield.comboBox_tableimport.addItems([lay.name()])
+                    self.toolwidgetmain.comboBox_tableimport.addItems([lay.name()])
 
 
     def fcSaveAs(self):
@@ -288,7 +290,7 @@ class ImportTool(AbstractLamiaTool):
         debug = True
 
         # get dest fields
-        item = self.userwdgfield.comboBox_typeimport.currentText()
+        item = self.toolwidgetmain.comboBox_typeimport.currentText()
         parentstable = [item] + self.dbase.getParentTable(item)
         if debug: logging.getLogger('Lamia').debug('start %s', str(parentstable))
         fields = self.getAllFields(parentstable)
@@ -450,7 +452,7 @@ class ImportTool(AbstractLamiaTool):
             print(np.array(results).shape)
             print(np.array(results).T.shape)
 
-        maintablename = self.userwdgfield.comboBox_typeimport.currentText()
+        maintablename = self.toolwidgetmain.comboBox_typeimport.currentText()
         self.importCleanedDatas(maintablename, table_field_list, results, geoms)
 
 
@@ -488,7 +490,7 @@ class ImportTool(AbstractLamiaTool):
 
 
     def defineCurrentLayer(self):
-        item = self.userwdgfield.comboBox_typeimport.currentText()
+        item = self.toolwidgetmain.comboBox_typeimport.currentText()
 
         if self.dbase.qgsiface is not None:
             self.currentlayer = None
@@ -501,7 +503,7 @@ class ImportTool(AbstractLamiaTool):
 
             # if not self.dbase.standalone:
             for lay in layers:
-                if self.userwdgfield.comboBox_tableimport.currentText() == lay.name():
+                if self.toolwidgetmain.comboBox_tableimport.currentText() == lay.name():
                     self.currentlayer = lay
                     break
 
@@ -519,7 +521,7 @@ class ImportTool(AbstractLamiaTool):
         self.defineCurrentLayer()
 
         if False:
-            item = self.userwdgfield.comboBox_typeimport.currentText()
+            item = self.toolwidgetmain.comboBox_typeimport.currentText()
             self.currentlayer = None
             if self.dbase.qgsiface is not None:
                 # if not self.dbase.standalone:
@@ -530,7 +532,7 @@ class ImportTool(AbstractLamiaTool):
 
 
                 for lay in layers:
-                    if self.userwdgfield.comboBox_tableimport.currentText() == lay.name():
+                    if self.toolwidgetmain.comboBox_tableimport.currentText() == lay.name():
                         self.currentlayer = lay
                         break
 
@@ -546,7 +548,7 @@ class ImportTool(AbstractLamiaTool):
         currentlayerfieldsname = [''] + [field.name() for field in currentlayerfields]
         # combofield = QComboBox([''] + currentlayerfieldsname)
 
-        item = self.userwdgfield.comboBox_typeimport.currentText()
+        item = self.toolwidgetmain.comboBox_typeimport.currentText()
         if item == "Points topo":
             # print('ok')
             templinkuserwgd = self.dbase.dbasetables['Topographie']['widget'][0].propertieswdgPOINTTOPO.linkuserwdg
@@ -567,47 +569,47 @@ class ImportTool(AbstractLamiaTool):
         if item == "Photos":
             templinkuserwgd = self.dbase.dbasetables['Photos']['widget'][0].linkuserwdg
 
-        self.userwdgfield.tableWidget.setRowCount(0)
-        self.userwdgfield.tableWidget.setColumnCount(3)
+        self.toolwidgetmain.tableWidget.setRowCount(0)
+        self.toolwidgetmain.tableWidget.setColumnCount(3)
         for tablename in templinkuserwgd:
             if tablename in self.dbase.dbasetables.keys():
                 dbasetable = self.dbase.dbasetables[tablename]
                 for field in dbasetable['fields'].keys():
                     # print(field)
-                    rowPosition = self.userwdgfield.tableWidget.rowCount()
-                    self.userwdgfield.tableWidget.insertRow(rowPosition)
+                    rowPosition = self.toolwidgetmain.tableWidget.rowCount()
+                    self.toolwidgetmain.tableWidget.insertRow(rowPosition)
                     itemfield = QTableWidgetItem(tablename + '.' + field)
                     itemfield.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-                    self.userwdgfield.tableWidget.setItem(rowPosition, 0, itemfield)
+                    self.toolwidgetmain.tableWidget.setItem(rowPosition, 0, itemfield)
                     # item.setFlags()
                     #if field[0:2] != 'id' and field[0:2] != 'pk':
                     if field.split('_')[0] not in ['pk','lpk']:
                         combofield = QComboBox()
                         combofield.addItems(currentlayerfieldsname)
-                        self.userwdgfield.tableWidget.setCellWidget(rowPosition, 1, combofield)
+                        self.toolwidgetmain.tableWidget.setCellWidget(rowPosition, 1, combofield)
 
                         pushbutton = QToolButton()
                         pushbutton.setText('...')
                         pushbutton.setObjectName(tablename + '.' + field)
-                        self.userwdgfield.tableWidget.setCellWidget(rowPosition, 2, pushbutton)
+                        self.toolwidgetmain.tableWidget.setCellWidget(rowPosition, 2, pushbutton)
                         pushbutton.clicked.connect(self.editFields)
 
                     else:
                         itemfield = QTableWidgetItem('')
-                        self.userwdgfield.tableWidget.setItem(rowPosition, 1, itemfield)
+                        self.toolwidgetmain.tableWidget.setItem(rowPosition, 1, itemfield)
 
         #self.importobjetdialog.exec_()
         #tableview = self.importobjetdialog.dialogIsFinished()
         if False:
             if tableview is not None:
                 result = []
-                for row in range(self.userwdgfield.tableWidget.rowCount()):
-                    if self.userwdgfield.tableWidget.cellWidget(row, 1) is not None:
-                        result.append([self.userwdgfield.tableWidget.item(row, 0).text(),
-                                       self.userwdgfield.tableWidget.cellWidget(row, 1).currentText()])
+                for row in range(self.toolwidgetmain.tableWidget.rowCount()):
+                    if self.toolwidgetmain.tableWidget.cellWidget(row, 1) is not None:
+                        result.append([self.toolwidgetmain.tableWidget.item(row, 0).text(),
+                                       self.toolwidgetmain.tableWidget.cellWidget(row, 1).currentText()])
                     else:
-                        result.append([self.userwdgfield.tableWidget.item(row, 0).text(),
-                                       self.userwdgfield.tableWidget.item(row, 1).text()])
+                        result.append([self.toolwidgetmain.tableWidget.item(row, 0).text(),
+                                       self.toolwidgetmain.tableWidget.item(row, 1).text()])
 
                 self.work(result)
 
@@ -623,11 +625,11 @@ class ImportTool(AbstractLamiaTool):
 
 
         #fill tableWidget_from in dialog
-        for  row in range(self.userwdgfield.tableWidget.rowCount()):
-            # print('cell',self.userwdgfield.tableWidget.cellWidget(row, 2))
-            if self.userwdgfield.tableWidget.cellWidget(row, 2) == pushbuttonsender:
-                layerfromfield = self.userwdgfield.tableWidget.cellWidget(row, 1).currentText()
-                layerfromfieldindex = self.userwdgfield.tableWidget.cellWidget(row, 1).currentIndex() -1
+        for  row in range(self.toolwidgetmain.tableWidget.rowCount()):
+            # print('cell',self.toolwidgetmain.tableWidget.cellWidget(row, 2))
+            if self.toolwidgetmain.tableWidget.cellWidget(row, 2) == pushbuttonsender:
+                layerfromfield = self.toolwidgetmain.tableWidget.cellWidget(row, 1).currentText()
+                layerfromfieldindex = self.toolwidgetmain.tableWidget.cellWidget(row, 1).currentIndex() -1
                 # print(layerfromfield)
                 break
         uniquevalues = self.currentlayer.uniqueValues(layerfromfieldindex)
@@ -692,19 +694,19 @@ class ImportTool(AbstractLamiaTool):
 
         self.results = []
         if linktable is None:
-            for row in range(self.userwdgfield.tableWidget.rowCount()):
-                if self.userwdgfield.tableWidget.cellWidget(row, 1) is not None:
-                    self.results.append([self.userwdgfield.tableWidget.item(row, 0).text(),
-                                   self.userwdgfield.tableWidget.cellWidget(row, 1).currentText()])
+            for row in range(self.toolwidgetmain.tableWidget.rowCount()):
+                if self.toolwidgetmain.tableWidget.cellWidget(row, 1) is not None:
+                    self.results.append([self.toolwidgetmain.tableWidget.item(row, 0).text(),
+                                   self.toolwidgetmain.tableWidget.cellWidget(row, 1).currentText()])
                 else:
-                    self.results.append([self.userwdgfield.tableWidget.item(row, 0).text(),
-                                   self.userwdgfield.tableWidget.item(row, 1).text()])
+                    self.results.append([self.toolwidgetmain.tableWidget.item(row, 0).text(),
+                                   self.toolwidgetmain.tableWidget.item(row, 1).text()])
         else:
             self.results = linktable
 
         if debug: logging.getLogger('Lamia').debug('start %s', str(self.results))
 
-        self.importtable = self.userwdgfield.comboBox_typeimport.currentText()
+        self.importtable = self.toolwidgetmain.comboBox_typeimport.currentText()
 
         tablestemp = [result[0].split('.')[0] for result in self.results]
 

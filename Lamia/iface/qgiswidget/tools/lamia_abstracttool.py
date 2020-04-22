@@ -88,7 +88,8 @@ class AbstractLamiaTool(QWidget):
                  mainifacewidget=None, 
                  choosertreewidget=None, 
                  parentwidget=None, 
-                 parent=None):
+                 parent=None,
+                 **kwargs):
         """
         Initialisation of AbstractLamiaTool
 
@@ -124,13 +125,14 @@ class AbstractLamiaTool(QWidget):
         self.dbase = dbaseparser
         self.parentWidget = parentwidget
         self.mainifacewidget = mainifacewidget
-        self.tooltreewidget = self.mainifacewidget.MaintreeWidget
+        
         self.choosertreewidget = choosertreewidget
 
         # var used by tooltreewidget
         if self.mainifacewidget is not None:
+            self.tooltreewidget = self.mainifacewidget.MaintreeWidget
             self.tooltreewidget.currentItemChanged.connect(self.toolTreeWidgetCurrentItemChanged)
-
+            
         self.qtreewidgetitem = None     #the tool treewidgetitem in tooltreewidget
 
 
@@ -157,7 +159,6 @@ class AbstractLamiaTool(QWidget):
         self.manageWidgetToLoadInMainLayout()
 
     def manageLoadingInToolTreeWidget(self):
-        
         if self.mainifacewidget.interfacemode == 0:
             if self.DBASETABLENAME and self.LOADFIRST:
                 self.loadWidgetinToolTree()
@@ -179,8 +180,12 @@ class AbstractLamiaTool(QWidget):
             self.initMainToolWidget()                                   
         if self.toolwidgetmain is not None:    
             #former self.userwdg = self.userwdgfield
-            self.toolwidget = self.toolwidgetmain   
-        #self.layout().addWidget(self.toolwidget)
+            self.toolwidget = self.toolwidgetmain  
+        if self.layout().count() > 0:
+            #self.frametoolwidg.layout().itemAt(0).widget().setVisible(False)
+            self.layout().itemAt(0).widget().setParent(None)
+        self.layout().addWidget(self.toolwidget)
+
 
     def initMainToolWidget(self):
         pass
@@ -202,8 +207,7 @@ class AbstractLamiaTool(QWidget):
                 self.qtreewidgetitem.setFlags(self.qtreewidgetitem.flags())
                 if self.tooltreewidgetICONPATH is not None:
                     self.qtreewidgetitem.setIcon(0, QtGui.QIcon(self.tooltreewidgetICONPATH))
-            else:
-                return
+
 
             wdgitem = None
             root = self.tooltreewidget.invisibleRootItem()
@@ -371,7 +375,7 @@ class AbstractLamiaTool(QWidget):
 
     def activateChooserTreeWidget(self, **kwargs):
         #choosertreewdg things
-        if self.choosertreewidget is not None :
+        if self.choosertreewidget is not None and hasattr(self.choosertreewidget,'treewidget'):
             if self.choosertreewidgetMUTIPLESELECTION  :
                 self.choosertreewidget.treewidget.setSelectionMode(QAbstractItemView.ExtendedSelection)
             else:
@@ -380,6 +384,9 @@ class AbstractLamiaTool(QWidget):
                 self.mainifacewidget.currentchoosertreewidget.disconnectTreewidget()
             self.mainifacewidget.currentchoosertreewidget = self.choosertreewidget
             self.choosertreewidget.onActivation(**kwargs)
+        else:
+            if self.mainifacewidget is not None:
+                self.mainifacewidget.ElemtreeWidget.clear()
 
     def postToolTreeWidgetCurrentItemChanged(self):
         pass

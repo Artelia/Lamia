@@ -1,0 +1,22 @@
+###Equipement
+
+#nom              type               cst               valeur                    
+id_equipement;         Int;                  ;               id_equipement
+
+test1;            Int;                  ;                
+test2;            Int;                  ;               CASE WHEN id_equipement IS NULL THEN 1 ELSE 0 END
+
+###Descriptionsystem
+id_descriptionsystem;         Int;               ;                  id_descriptionsystem
+
+###Objet
+#nom              type               cst               valeur                    
+id_objet;         Int;               ;                  id_objet
+commentaire;      String;               ;                  commentaire
+
+
+###geom
+geom;         Int;               ;                  ST_AsText(geom)
+
+###main
+FROM Equipement_now

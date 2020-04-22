@@ -130,9 +130,10 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         # utils class
         self.formutils = FormToolUtils(self)
         # choosertreewdg
-        self.choosertreewidget = FullIDChooserTreeWidget(toolwidget=self,
-                                                         dbaseparser = self.dbase,
-                                                         mainifacewidget = self.mainifacewidget)
+        if self.mainifacewidget is not None:
+            self.choosertreewidget = FullIDChooserTreeWidget(toolwidget=self,
+                                                            dbaseparser = self.dbase,
+                                                            mainifacewidget = self.mainifacewidget)
 
 
         # var for widgets loaded in self.toolwidgetmainlayout

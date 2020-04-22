@@ -24,7 +24,7 @@ This file is part of LAMIA.
   * SPDX-License-Identifier: GPL-3.0-or-later
   * License-Filename: LICENSING.md
  """
-import os, sys, io, logging, datetime
+import os, sys, io, logging, datetime, re
 import qgis, qgis.core, qgis.utils, qgis.gui
 from qgis.PyQt import QtGui
 import Lamia
@@ -46,6 +46,9 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         
         self.layers = {}
         self.qgislegendnode = None
+
+        self.xform = None
+        self.xformreverse = None
 
         #behaviour
         self.editingrawlayer = False
@@ -120,6 +123,82 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         self.dbaseqgiscrs.createFromString('EPSG:' + str(dbaseparser.crsnumber))
         self.updateQgsCoordinateTransform()
 
+
+    def createSingleQgsVectorLayer(self,dbaseparser,tablename='tempvectorlayer',isspatial = True,  sql='', tableid=None):
+        layer = None
+
+        if tableid is not None:
+            finaltableid = tableid
+        else:
+            finaltableid = "id_" + str(tablename.lower())
+        if dbaseparser.__class__.__name__ == 'SpatialiteDBaseParser':
+            dbtype = 'spatialite'
+        elif dbaseparser.__class__.__name__ == 'PostGisDBaseParser':
+            dbtype = 'postgres'
+
+        uri = qgis.core.QgsDataSourceUri()
+
+        if dbtype == 'spatialite':
+            # uri.setDataSource("public","japan_ver52","the_geom","","gid")
+            # uri.setDataSource("",sql,"the_geom","","gid")
+            uri.setDatabase(dbaseparser.spatialitefile)
+            if isspatial:
+                uri.setDataSource('', f'({sql})' , 'geom' ,'',finaltableid)
+            else:
+                uri.setDataSource('', f'({sql})', '', '', finaltableid)
+
+            layer = qgis.core.QgsVectorLayer(uri.uri(), tablename, 'spatialite')
+
+
+        elif dbtype == 'postgres':
+            uri.setConnection(dbaseparser.pghost, 
+                              str(dbaseparser.pgport), 
+                              dbaseparser.pgdb.lower(), 
+                              dbaseparser.pguser, 
+                              dbaseparser.pgpassword)
+
+            # qgis bug _ need to add schema name 
+            sqlsplitted = re.split('[ \n]',sql)
+            finalsql = []
+            for word in sqlsplitted:
+                if word.split('.')[0].split('_qgis')[0] in dbaseparser.dbasetables.keys():
+                    word = dbaseparser.pgschema.lower() + '.' + word
+                finalsql.append(word)
+            finalsql = ' '.join(finalsql)
+
+
+
+            if isspatial:
+                #uri.setDataSource(dbaseparser.pgschema.lower(), str(tablenamelower), 'geom', '', "pk_" + rawtablename.lower())
+                #uri.setDataSource(dbaseparser.pgschema.lower(), f'({sql})', 'geom','' , finaltableid)
+                uri.setDataSource('', f'({finalsql})', 'geom','' , finaltableid)
+            else:
+                #uri.setDataSource(dbaseparser.pgschema.lower(), f'({sql})', None, '' , finaltableid )
+                uri.setDataSource('', f'({finalsql})', None, '' , finaltableid )
+
+            layer = qgis.core.QgsVectorLayer(uri.uri(), tablename, 'postgres')
+        """
+        uri = qgis.core.QgsDataSourceUri()
+        uri.setConnection('localhost', 
+                        '5432', 
+                        'lamiaunittest', 
+                        'pvr', 
+                        'pvr')
+        sql = "SELECT * FROM Infralineaire"
+        print(f'({sql})')
+        uri.setDataSource('', f'({sql})' , 'geom' ,'','pk_infralineaire')
+        uri.setSchema('base2_digue_lamia')
+        #base2_digue_lamia
+        layer = qgis.core.QgsVectorLayer(uri.uri(), 'tt', 'postgres')
+        print(uri.uri())
+        QgsProject.instance().addMapLayer(layer)
+        print([fet.id() for fet in layer.getFeatures()])
+        """
+
+
+        return layer
+
+
     def loadLayersInCanvas(self, dbaseparser):
         if qgis.utils.iface is not None:
             #create node in legend
@@ -132,8 +211,9 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
             dbasetables = self.layers
             for tablename in dbasetables:
-                qgis.core.QgsProject.instance().addMapLayer(dbasetables[tablename]['layerqgis'], False)
-                lamialegendgroup.addLayer(dbasetables[tablename]['layerqgis'])
+                if 'layerqgis' in dbasetables[tablename].keys():
+                    qgis.core.QgsProject.instance().addMapLayer(dbasetables[tablename]['layerqgis'], False)
+                    lamialegendgroup.addLayer(dbasetables[tablename]['layerqgis'])
 
         else:
             layerstoadd = []
@@ -170,9 +250,10 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                 else:
                     if ltl:
                         ltl.setItemVisibilityChecked(False)
-
-        self.canvas.refreshAllLayers()
-        self.canvas.refresh()
+        
+        if self.canvas:
+            self.canvas.refreshAllLayers()
+            self.canvas.refresh()
 
     def updateQgsCoordinateTransform(self):
         """

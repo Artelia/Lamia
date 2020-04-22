@@ -209,7 +209,8 @@ class SpatialiteDBaseParser(AbstractDBaseParser):
             #workingdatemodif = QtCore.QDate.fromString(self.workingdate, 'yyyy-MM-dd').addDays(1).toString('yyyy-MM-dd')
             workingdatemodif = (datetime.datetime.now() + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
         else:
-            workingdatemodif = QtCore.QDate.fromString(specialdate, 'dd/MM/yyyy').addDays(1).toString('yyyy-MM-dd')
+            #workingdatemodif = QtCore.QDate.fromString(specialdate, 'dd/MM/yyyy').addDays(1).toString('yyyy-MM-dd')
+            workingdatemodif = (datetime.datetime.strptime(specialdate, '%d/%m/%Y') + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
 
         sqlin = ' datetimecreation <= ' + "'" + workingdatemodif + "'"
         sqlin += ' AND CASE WHEN datetimedestruction IS NOT NULL  '

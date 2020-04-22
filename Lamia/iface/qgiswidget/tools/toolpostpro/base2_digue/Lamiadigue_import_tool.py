@@ -27,16 +27,10 @@ This file is part of LAMIA.
 
 from ..base2.Lamia_import_tool import ImportTool
 
-# ********************************************************************************************************************
-# ********************************* Main Widget                *******************************************************
-# ********************************************************************************************************************
-
 class DigueImportTool(ImportTool):
 
-    DBASES = ['digue','base_digue','base2_digue']
-
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
-        super(DigueImportTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
+    def __init__(self, **kwargs):
+        super(DigueImportTool, self).__init__(**kwargs)
 
 
         

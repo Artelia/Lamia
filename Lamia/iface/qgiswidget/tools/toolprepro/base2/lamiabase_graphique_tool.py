@@ -71,6 +71,10 @@ class BaseGraphiqueTool(AbstractLamiaFormTool):
 
     def __init__(self, **kwargs):
         super(BaseGraphiqueTool, self).__init__(**kwargs)
+        self.figuretype = plt.figure()
+        self.axtype = self.figuretype.add_subplot(111)
+        self.mplfigure = FigureCanvas(self.figuretype)
+
 
     """
     def initTool(self):
@@ -131,9 +135,9 @@ class BaseGraphiqueTool(AbstractLamiaFormTool):
         self.enableTypeComboBox()
 
         if True:
-            self.figuretype = plt.figure()
-            self.axtype = self.figuretype.add_subplot(111)
-            self.mplfigure = FigureCanvas(self.figuretype)
+            #self.figuretype = plt.figure()
+            #self.axtype = self.figuretype.add_subplot(111)
+            #self.mplfigure = FigureCanvas(self.figuretype)
             self.toolwidgetmain.frame_graph.layout().addWidget(self.mplfigure)
             self.toolbar = NavigationToolbar(self.mplfigure, self.toolwidgetmain.frame_graph)
             self.toolwidgetmain.frame_graph.layout().addWidget(self.toolbar)

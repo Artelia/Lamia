@@ -72,7 +72,7 @@ class AbstractDBaseParser():
         self.variante = None
         # crs of dbase
         self.crsnumber = None
-        self.qgiscrs = None
+        #self.qgiscrs = None
 
         #  ressources dir
         self.dbaseressourcesdirectory = None

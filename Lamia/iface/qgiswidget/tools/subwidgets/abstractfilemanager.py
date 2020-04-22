@@ -36,20 +36,27 @@ class AbstractFileManager(QWidget):
 
     projectcharacter = '_'
 
-    def __init__(self,  mainwindows=None, parentwdg=None, fileext=None):
+    def __init__(self,  mainwindows=None, toolclass=None, fileext=None):
         super(AbstractFileManager, self).__init__()
 
         uipath = os.path.join(os.path.dirname(__file__), 'abstractfilemanager.ui')
         uic.loadUi(uipath, self)
 
-        self.parentwdg = parentwdg
+        self.toolclass = toolclass
         self.mainwindows = mainwindows
         self.fileext = fileext
         self.dbase = mainwindows.dbase
         self.qfiledialog = self.mainwindows.qfiledlg
 
-        self.confdataplugin = os.path.join(os.path.dirname(inspect.getsourcefile(self.parentwdg.__class__)), self.parentwdg.TOOLNAME)
-        self.confdataproject = os.path.join(self.dbase.dbaseressourcesdirectory, 'config', self.parentwdg.TOOLNAME)
+        if hasattr(self.toolclass, 'confdataplugin'):
+            self.confdataplugin = self.toolclass.confdataplugin
+        else:
+            self.confdataplugin = os.path.join(os.path.dirname(inspect.getsourcefile(self.toolclass.__class__)), self.dbase.worktype)
+        
+        if hasattr(self.toolclass, 'confdataproject'):
+            self.confdataproject = self.toolclass.confdataproject
+        else:
+            self.confdataproject = os.path.join(self.dbase.dbaseressourcesdirectory, 'config', self.toolclass.POSTPROTOOLNAME)
 
         self.comboBox_files.currentIndexChanged.connect(self.comboChanged)
         self.toolButton_new.clicked.connect(self.new)

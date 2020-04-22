@@ -1,0 +1,20 @@
+###Infralineaire
+#nom              type               cst               valeur   
+id_infralineaire;         Int;                  ;     id_infralineaire      
+
+
+###Desordre
+id_desordre;         Int;                  ;     id_desordre 
+
+###Observation
+id_observation;         Int;                  ;     id_observation 
+datetimeobservation;      String;               ;                  datetimeobservation
+
+
+
+
+###geom
+geom;         Int;               ;                  ST_AsText(Infralineaire_now.geom)
+
+###main
+FROM Infralineaire_now INNER JOIN Desordre_now ON Desordre_now.lid_descriptionsystem = Infralineaire_now.id_descriptionsystem INNER JOIN Observation_now ON   Desordre_now.id_desordre = Observation_now.lid_desordre

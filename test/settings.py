@@ -1,13 +1,37 @@
 import socket
 import  platform
+import os, qgis
+
+
+def initQGis():
+    if platform.system() == 'Windows':
+        qgis_path = "C://OSGeo4W64//apps//qgis-ltr"
+    elif platform.system() == 'Linux':
+        qgis_path = '/usr'
+
+    app = qgis.core.QgsApplication([], True)
+    qgis.core.QgsApplication.setPrefixPath(qgis_path, True)
+    qgis.core.QgsApplication.initQgis()
+    return app
+
+def exitQGis():
+    qgis.core.QgsApplication.exitQgis()
+
+
+#* creation conf
+CRS = 2154
+#* DBase conf
 
 DBTYPE = ['Base2_digue', 'Base2_assainissement', 'Base2_eaupotable', 'Base2_eclairagepublic',
          'Base2_chantier', 'Base2_tramway']
-CRS = 2154
+DBTYPE = ['Base2_digue']
+VARIANTES = ['Lamia']
+
+#* Connexion conf
+#postgis
 PGuser = 'pvr'
 PGpassword = 'pvr'
 PGbase = 'lamiaunittest'
-
 if platform.system() == 'Windows':
     PGhost = 'localhost'
 elif platform.system() == 'Linux':
@@ -16,5 +40,23 @@ elif platform.system() == 'Linux':
         PGhost = 'docker.for.win.localhost'
     except socket.error as e:   # else
         PGhost = 'localhost'
-
 PGport = 5432
+
+#* Test conf
+SPATIALITE = True
+POSTGIS = False
+
+#* test onparticularfile - uncomment to apply
+if True:
+    SLFILE = os.path.join(os.path.dirname(__file__), 'lamia_test','test01.sqlite')
+if False:
+    PGhost = 'localhost'
+    PGport = 5432
+    PGbase = 'lamiaunittest'
+    PGschema = 'lamia_base2_digue'
+    PGuser = 'pvr'
+    PGpassword = 'pvr'
+    
+
+    
+

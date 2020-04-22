@@ -41,17 +41,11 @@ import glob
 
 from ..base2.Lamia_import_tool import ImportTool
 
-# ********************************************************************************************************************
-# ********************************* Main Widget                *******************************************************
-# ********************************************************************************************************************
-
 class AssainissementImportTool(ImportTool):
 
-    DBASES = ['digue','base_digue','base2_digue']
-    TOOLNAME = 'IMPORT'
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
-        super(AssainissementImportTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
+    def __init__(self, **kwargs):
+        super(AssainissementImportTool, self).__init__(dbase, **kwargs)
         
         
 

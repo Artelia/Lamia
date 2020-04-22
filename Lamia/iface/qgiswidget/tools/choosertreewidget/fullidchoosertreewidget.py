@@ -452,6 +452,8 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
             res = self.toolwidget.dbase.getValuesFromPk(self.toolwidget.DBASETABLENAME + '_qgis',
                                                         fieldtorequest,
                                                         self.toolwidget.currentFeaturePK)
+            if isinstance(res, int):
+                res = [res]
             res = [self.toolwidget.currentFeaturePK] + list(res)
             if selecteditems[0].text(0) == self.NEWFEATURETXT:
                 self.ids.append(res)

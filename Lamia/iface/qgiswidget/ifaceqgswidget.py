@@ -674,7 +674,6 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         for tooltype in self.toolwidgets.keys():
             if tooltype == 'desktop_loaded':
                 continue
-
             for toolname in self.toolwidgets[tooltype].keys():
                 toowdg = self.toolwidgets[tooltype][toolname]
                 if isinstance(toowdg, list):
@@ -685,11 +684,11 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
                         else:
                             wdg.changePropertiesWidget()
                 else:
-                        #tool dep
-                        if hasattr(wdg, 'changeInterfaceMode'):
-                            wdg.changeInterfaceMode()
-                        else:
-                            wdg.changePropertiesWidget()
+                    #tool dep
+                    if hasattr(wdg, 'changeInterfaceMode'):
+                        wdg.changeInterfaceMode()
+                    else:
+                        wdg.changePropertiesWidget()
         """
         if self.dbase.dbasetables is not None:
             for tool in self.tools:
@@ -735,14 +734,17 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
                     if moduletemp.__name__ == obj.__module__:
                         if tooltypetoload == 'toolpostpro' and hasattr(obj,'TOOLNAME'):
                             self.wdgclasses[tooltypetoload][obj.TOOLNAME] = obj
-                        elif tooltypetoload == 'toolprepro' and  hasattr(obj,'dbasetablename') :   #tool dep
+                        elif (tooltypetoload == 'toolpostpro' and hasattr(obj,'POSTPROTOOLNAME')
+                                and hasattr(obj,'tooltreewidgetSUBCAT') and obj.tooltreewidgetSUBCAT is not None):
+                            self.wdgclasses[tooltypetoload][obj.tooltreewidgetSUBCAT] = obj
+
+                        if tooltypetoload == 'toolprepro' and  hasattr(obj,'dbasetablename') :   #tool dep
                             self.wdgclasses[tooltypetoload][obj.dbasetablename] = obj
                         elif (tooltypetoload == 'toolprepro' and hasattr(obj,'DBASETABLENAME')
                                 and hasattr(obj,'tooltreewidgetSUBCAT') and obj.tooltreewidgetSUBCAT is not None) :
                             self.wdgclasses[tooltypetoload][obj.tooltreewidgetSUBCAT] = obj
 
         if debug: logging.getLogger('Lamia_unittest').debug('x %s', str(self.wdgclasses))
-
 
     def loadToolsWidgets(self, fullloading=False):
 
@@ -780,11 +782,19 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
                                                         mainifacewidget = self,
                                                         choosertreewidget = self.ElemtreeWidget,
                                                         parentwidget = None) )
+
+                    elif hasattr(self.wdgclasses[typewdg][toolname],'POSTPROTOOLNAME') and fullloading:
+                        toolwdglist.append( toolwdgcls(dbaseparser = self.dbase,
+                                                        mainifacewidget = self,
+                                                        choosertreewidget = self.ElemtreeWidget,
+                                                        parentwidget = None) )
+ 
                     elif hasattr(self.wdgclasses[typewdg][toolname],'LOADFIRST') and not fullloading:
                         toolwdglist.append( toolwdgcls(dbase = self.dbase,
                                                         dialog = self,
                                                         linkedtreewidget = self.ElemtreeWidget,
                                                         gpsutil = self.gpsutil) )
+
                     else:       # tool dep
                         toolwdglist.append( toolwdgcls(dbase = self.dbase,
                                                         dialog = self,
@@ -799,7 +809,6 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         if not self.toolwidgets['desktop_loaded'] and fullloading:
             self.toolwidgets['desktop_loaded'] = True
         self.connector.closeProgressBar()
-
 
         # init progress bar
         """

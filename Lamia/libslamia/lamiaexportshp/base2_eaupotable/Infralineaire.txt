@@ -1,0 +1,32 @@
+###Infralineaire
+#nom              type               cst               valeur                    
+id_infralineaire;         Int;                  ;     id_infralineaire
+lk_descriptionsystem1;    Int;                  ;     Infralineaire_now.lid_descriptionsystem_1
+lk_descriptionsystem2;    Int;                  ;     Infralineaire_now.lid_descriptionsystem_2
+type_eau;               String;   type_eau   ;     Infralineaire_now.type_eau
+mode_circulation;        String;   modeCirculation ;     Infralineaire_now.mode_circulation
+materiau;               String;      materiau   ;     Infralineaire_now.materiau
+branchement;               String;         ;     CASE WHEN branchement = 0 THEN 'Principal' ELSE 'Branchement' END
+
+
+
+
+
+###Descriptionsystem
+id_descriptionsystem;         Int;               ;                  Infralineaire_now.id_descriptionsystem
+
+###Objet
+#nom              type               cst               valeur                    
+id_objet;         Int;               ;                  Infralineaire_now.id_objet
+commentaire;      String;               ;                  Infralineaire_now.commentaire
+
+###Infralineaire1
+#nom              type               cst               valeur  
+longueur;Double;     ;ST_Length(Infralineaire_now.geom)
+
+
+###geom
+geom;         Int;               ;                  ST_AsText(Infralineaire_now.geom)
+
+###main
+FROM Infralineaire_now LEFT JOIN Noeud_now AS Noeud_amont ON Infralineaire_now.lid_descriptionsystem_1 = Noeud_amont.id_descriptionsystem LEFT JOIN Noeud_now AS Noeud_aval ON Infralineaire_now.lid_descriptionsystem_2 = Noeud_aval.id_descriptionsystem

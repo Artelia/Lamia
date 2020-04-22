@@ -27,10 +27,9 @@ from ..base2.Lamia_exportshp_tool import ExportShapefileTool
 
 class EclairagePublicExportShapefileTool(ExportShapefileTool):
 
-    DBASES = ['digue','base_digue','base2_digue', 'base2_parking']
 
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
-        super(EclairagePublicExportShapefileTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
+    def __init__(self, **kwargs):
+        super(EclairagePublicExportShapefileTool, self).__init__(**kwargs)
 
         
 
