@@ -4,10 +4,12 @@ import warnings
 with warnings.catch_warnings():
     warnings.filterwarnings("ignore",category=DeprecationWarning)
 
-# uncomment for activating tests
+# comment for desactivating tests
 from settings import *
 import test_a_dbase_simple
+import test_a_autoupdatedbase
 import test_b_qgisqt
+import test_b_qtimporttool
 import test_c_exporttool
 import test_c_reporttool
 import test_c_costtool
@@ -21,9 +23,16 @@ def suite():
         suite.addTest(test_a_dbase_simple.DBaseTest('test_b_DbaseReader'))
         suite.addTest(test_a_dbase_simple.DBaseTest('test_c_DbaseCreate'))
 
+    #* test_a_autoupdatedbase
+        suite.addTest(test_a_autoupdatedbase.DBaseTest('test_a_updatedbase'))
+
     #* test_b_qgisqt
     if 'test_b_qgisqt' in globals().keys():
         suite.addTest(test_b_qgisqt.DBaseTest('test_a_testSaveFeature'))
+
+    #* test_b_qtimporttool
+    if 'test_b_qtimporttool' in globals().keys():
+        suite.addTest(test_b_qtimporttool.DBaseTest('test_a_generateImport'))
 
     #* test_c_exporttool
     if 'test_c_exporttool' in globals().keys():

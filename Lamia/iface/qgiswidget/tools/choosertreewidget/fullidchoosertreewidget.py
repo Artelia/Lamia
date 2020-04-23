@@ -66,11 +66,17 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
         """
         if initfeatureselection:
             if self.treewidget.topLevelItemCount() > 0 :
-                if self.toolwidget.lastselectedpk is None: 
+                if self.ids is None: 
+                    return
+                if self.toolwidget.lastselectedpk is None : 
                     self.treewidget.setCurrentItem(self.treewidget.invisibleRootItem().child(0))
                 else:
-                    indexids = self.ids.index[self.ids['pk'] == self.toolwidget.lastselectedpk][0]
-                    self.treewidget.setCurrentItem(self.treewidget.invisibleRootItem().child(indexids))
+                    indexids = self.ids.index[self.ids['pk'] == self.toolwidget.lastselectedpk]
+                    if not indexids.empty:
+                        indexid = int(indexids[0])
+                        self.treewidget.setCurrentItem(self.treewidget.invisibleRootItem().child(indexid))
+                    else:
+                        self.treewidget.setCurrentItem(self.treewidget.invisibleRootItem().child(0))
 
         self.connectTreewidget()
 

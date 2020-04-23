@@ -39,24 +39,16 @@ from qgis.PyQt.QtWidgets import (QInputDialog,QTableWidgetItem,QComboBox,QAction
                                      QDialog, QGridLayout, QSplitter, QLabel, QFrame, QVBoxLayout)
 
 
-from Lamia.libs.pyqtgraph.flowchart import Flowchart, Node
-from Lamia.libs.pyqtgraph.flowchart.library.common import CtrlNode
-from Lamia.libs.pyqtgraph.flowchart import library as fclib
-from Lamia.libs.pyqtgraph.flowchart.library.Data import EvalNode
-from Lamia.libs.pyqtgraph import configfile as configfile
-
-
-
-from .importtools.InspectionDigue_Import import ImportObjetDialog
+#from .importtools.InspectionDigue_Import import ImportObjetDialog
 from ...lamia_abstracttool import AbstractLamiaTool
-#from ...subwidgets.abstractfilemanager import AbstractFileManager
+#from Lamia.iface.qgiswidget.tools.lamia_abstracttool  import AbstractLamiaTool 
 from Lamia.libslamia.lamiaimport.lamiaimport import ImportCore
 from Lamia.main.DBaseParser import DBaseParser
 
+from .Lamia_import_tool_flowchart import FlowChartWidget
+
 
 class ImportTool(AbstractLamiaTool):
-    TOOLNAME = 'Importtools'
-    DBASES = ['digue', 'base_digue', 'base2_digue', 'base2_parking']
 
 
     POSTPROTOOLNAME = ImportCore.POSTPROTOOLNAME
@@ -70,96 +62,52 @@ class ImportTool(AbstractLamiaTool):
     def __init__(self, **kwargs):
         super(ImportTool, self).__init__(**kwargs)
 
-        self.importtool = ImportCore(dbaseparser=self.dbase,
-                                    messageinstance=self.mainifacewidget.connector)
+        # self.importtool = ImportCore(dbaseparser=self.dbase,
+        #                             messageinstance=self.mainifacewidget.connector)
         self.qfiledlg = self.mainifacewidget.qfiledlg
+        self.flowchartdlg = FlowChartWidget(dbase=self.dbase, 
+                                            messageinstance=self.mainifacewidget.connector,
+                                            mainifacewidget=self.mainifacewidget)
+
         #self.postInit()
 
-        self.dialog = QDialog()
-        layout = QGridLayout()
-        self.dialog.setLayout(layout)
-
-        self.library = fclib.LIBRARY.copy()  # start with the default node set
-        self.library.nodeList = OrderedDict()
-        self.library.nodeTree = OrderedDict()
-        self.library.addNodeType(EvalNode, [()])
-        self.library.addNodeType(AttributeReaderNode, [()])
-        # Add the unsharp mask node to two locations in the menu to demonstrate
-        # that we can create arbitrary menu structures
-        # self.library.addNodeType(UnsharpMaskNode, [('Image',),('Submenu_test', 'submenu2', 'submenu3')])
-        
+        # self.dialog = QDialog()
+        # layout = QGridLayout()
+        # self.dialog.setLayout(layout)
 
         self.flowqlabelmessage = None
         self.currentlayer = None
-
-    """
-    def initTool(self):
-        # ****************************************************************************************
-        # Main spec
-        self.CAT = 'Import/export'
-        self.NAME = 'Import'
-        self.visualmode = [4]
-        # self.PointENABLED = True
-        # self.LineENABLED = True
-        # self.PolygonEnabled = True
-        # self.magicfunctionENABLED = True
-        # self.linkagespec = None
-        # self.pickTable = None
-        # print(self.dbase.recentsdbase)
-
-        self.iconpath = os.path.join(os.path.dirname(__file__), 'Lamia_import_tool_icon.png')
-        #self.qtreewidgetfields = ['libelle']
-
-        # ****************************************************************************************
-        # properties ui
-        self.groupBox_elements.setParent(None)
-        self.frame_editing.setParent(None)
-
-
-
-
-    def postInit(self):
-        pass
-    """
 
 
     def initMainToolWidget(self):
 
 
         self.toolwidgetmain = UserUI()
-        self.toolwidgetmain.toolButton_update.clicked.connect(self.updateShowedTable)
+        #self.toolwidgetmain.toolButton_update.clicked.connect(self.updateShowedTable)
 
         items = [ "Infralineaire", 'Noeud', 'Equipement', 'Photo']
         self.toolwidgetmain.comboBox_typeimport.addItems(items)
 
         # methode 1
-        self.toolwidgetmain.pushButton_import.clicked.connect(self.showTable)
-        self.toolwidgetmain.pushButton_importer.clicked.connect(self.work)
-        self.toolwidgetmain.pushButton_validimport.clicked.connect(self.validImport)
-        self.toolwidgetmain.pushButton_rollback.clicked.connect(self.rollbackImport)
+        #self.toolwidgetmain.pushButton_import.clicked.connect(self.showTable)
+        #self.toolwidgetmain.pushButton_importer.clicked.connect(self.work)
+        #self.toolwidgetmain.pushButton_validimport.clicked.connect(self.validImport)
+        #self.toolwidgetmain.pushButton_rollback.clicked.connect(self.rollbackImport)
 
         #flowchart
         self.toolwidgetmain.pushButton_flowchart.clicked.connect(self.showFlowChart)
-
-
-
-        self.dialogui = DialogUI()
+        #self.dialogui = DialogUI()
 
     def postToolTreeWidgetCurrentItemChanged(self):
-        self.updateShowedTable()
-    
-    def postOnActivation(self):
-        self.updateShowedTable()
+        self._updateFromTables()
 
-    def updateShowedTable(self):
+
+
+    def _updateFromTables(self):
 
         self.toolwidgetmain.comboBox_tableimport.clear()
-
         if qgis.utils.iface is not None:
-            if sys.version_info.major == 2:
-                layers = self.dbase.qgsiface.legendInterface().layers()
-            elif sys.version_info.major == 3:
-                layers = [tree_layer.layer() for tree_layer in qgis.core.QgsProject.instance().layerTreeRoot().findLayers()]
+            layers = [tree_layer.layer() for tree_layer in qgis.core.QgsProject.instance().layerTreeRoot().findLayers()]
             layqgis=[]
             for tablename in self.dbase.dbasetables.keys():
                 layqgis.append(self.dbase.dbasetables[tablename]['layerqgis'])
@@ -168,340 +116,34 @@ class ImportTool(AbstractLamiaTool):
                 if not lay in layqgis:
                     self.toolwidgetmain.comboBox_tableimport.addItems([lay.name()])
 
+    def ___________________________________flowchartpart(self):
+        pass
 
-    def fcSaveAs(self):
-        if self.fc.widget().currentFileName is None:
-
-            startdir = os.path.join(self.dbase.dbaseressourcesdirectory, 'config', 'importtools')
-
-            if sys.version_info.major == 2:
-                conffile = self.qfiledlg.getSaveFileName(self,
-                                                       'Lamia - import conf',
-                                                       startdir,
-                                                       'PDF (*.fc)')
-            elif sys.version_info.major == 3:
-                conffile, fileext = self.qfiledlg.getSaveFileName(self,
-                                                       'Lamia - import conf',
-                                                       startdir,
-                                                       'PDF (*.fc)')
-
-
-
-        else:
-            conffile = self.fc.widget().currentFileName
-
-        conffile = unicode(conffile)
-        configfile.writeConfigFile(self.fc.saveState(), conffile)
-        self.fc.sigFileSaved.emit(conffile)
-
-
-
-    def fcLoad(self):
-        startdir = os.path.join(self.dbase.dbaseressourcesdirectory, 'config', 'importtools')
-        if sys.version_info.major == 2:
-            fileName, extension = self.windowdialog.qfiledlg.getOpenFileNameAndFilter(None,
-                                                                              'Choose the file',
-                                                                              startdir,
-                                                                             'flowChart (*.fc)', '')
-
-        elif sys.version_info.major == 3:
-            fileName, extension = self.windowdialog.qfiledlg.getOpenFileName(None,
-                                                                              'Choose the file',
-                                                                              startdir,
-                                                                             'flowChart (*.fc)', '')
-
-        if fileName:
-            try:
-                fileName = unicode(fileName)
-                state = configfile.readConfigFile(fileName)
-                self.fc.setLibrary(self.library)
-                self.fc.sigChartChanged.connect(self.fcNodeAdded)
-                self.restoreState(state, clear=True)
-                self.fc.viewBox.autoRange()
-                # self.emit(QtCore.SIGNAL('fileLoaded'), fileName)
-                self.fc.sigFileLoaded.emit(fileName)
-            except Exception as e:
-                print('err', e)
-
-
-
-    def restoreState(self, state, clear=False):
-        #self.blockSignals(True)
-        try:
-            if clear:
-                self.fc.clear()
-            Node.restoreState(self.fc, state)
-            nodes = state['nodes']
-            nodes.sort(key=lambda a: a['pos'][0])
-            for n in nodes:
-                if n['name'] in self.fc._nodes:
-                    # self._nodes[n['name']].graphicsItem().moveBy(*n['pos'])
-                    self.fc._nodes[n['name']].restoreState(n['state'])
-                    continue
-                try:
-                    node = self.fc.createNode(n['class'], name=n['name'])
-                    node.restoreState(n['state'])
-                except:
-                    pass
-                    #printExc("Error creating node %s: (continuing anyway)" % n['name'])
-                # node.graphicsItem().moveBy(*n['pos'])
-
-            self.fc.inputNode.restoreState(state.get('inputNode', {}))
-            self.fc.outputNode.restoreState(state.get('outputNode', {}))
-
-            # self.restoreTerminals(state['terminals'])
-            connectionstoloadafter = []
-            for n1, t1, n2, t2 in state['connects']:
-                if n1 in ['Output', 'Input'] or n2 in ['Output', 'Input'] :
-                    self.fc.connectTerminals(self.fc._nodes[n1][t1], self.fc._nodes[n2][t2])
-                else:
-                    connectionstoloadafter.append([n1, t1, n2, t2 ])
-
-            for n1, t1, n2, t2 in connectionstoloadafter:
-                try:
-                    self.fc.connectTerminals(self.fc._nodes[n1][t1], self.fc._nodes[n2][t2])
-                except:
-                    pass
-
-                """
-                try:
-                    print("*** connecting terminals %s.%s - %s.%s:" % (n1, t1, n2, t2))
-                    self.fc.connectTerminals(self.fc._nodes[n1][t1], self.fc._nodes[n2][t2])
-                except:
-                    print(self.fc._nodes[n1].terminals)
-                    print(self.fc._nodes[n2].terminals)
-                    print("Error connecting terminals %s.%s - %s.%s:" % (n1, t1, n2, t2))
-                    #printExc("Error connecting terminals %s.%s - %s.%s:" % (n1, t1, n2, t2))
-                """
-
-        finally:
-            pass
-            #self.fc.blockSignals(False)
-
-        self.fc.sigChartLoaded.emit()
-        self.fc.outputChanged()
-        self.fc.sigStateChanged.emit()
-        # self.fc.sigOutputChanged.emit()
 
 
 
 
     def showFlowChart(self, qgslayer=None):
-        debug = True
+        self._defineCurrentLayer()
 
-        # get dest fields
-        item = self.toolwidgetmain.comboBox_typeimport.currentText()
-        parentstable = [item] + self.dbase.getParentTable(item)
-        if debug: logging.getLogger('Lamia').debug('start %s', str(parentstable))
-        fields = self.getAllFields(parentstable)
-        if debug: logging.getLogger('Lamia').debug('fields %s', str(fields))
-
-        #get fromfields
-        fromlayerfields = self.getFromFields()
-        if fromlayerfields is None:
-            return
-        if debug: logging.getLogger('Lamia').debug('fromfields %s', str(fromlayerfields))
+        tolayername = self.toolwidgetmain.comboBox_typeimport.currentText()
+        fromqgslayer = self.currentlayer
+        self.flowchartdlg.initFromandToLayers(fromqgslayer, tolayername)
 
 
-        #get from valuues
-        fromattributes = []
-        for fet in self.currentlayer.getFeatures():
-            fromattributes.append( np.array(fet.attributes()))
-        fromattributesnp = np.array(fromattributes)
-        if debug: logging.getLogger('Lamia').debug('npaatributes %s', str(fromattributesnp))
-
-
-        # initflowchart
-        terminalindict = OrderedDict()
-        for field in fields:
-            terminalindict[field] = {'io': 'out'}
-        for field in fromlayerfields:
-            # fieldstandard = str(re.sub(r"\W", '', field))
-            terminalindict[field] = {'io': 'in'}
-
-        self.fc = Flowchart(terminals=terminalindict)
-        self.fc.setLibrary(self.library)
-
-        # print(len(fromlayerfields), len(fromattributesnp[1,:]))
-        for i, field in enumerate(fromlayerfields):
-            if field != '':
-                if sys.version_info.major == 2:
-                    fieldstandard = field
-                if sys.version_info.major == 3:
-                    # fieldstandard = re.sub(r'([0-9])', '_', re.sub('-', '_', field))
-                    fieldstandard = field
-                    #fieldstandard = str(re.sub('-', '_', field))
-                    # fieldstandard = str(re.sub(r"\W", '', field))
-                if True:
-                    stringtoeval = 'self.fc.setInput(' + fieldstandard + '=list(fromattributesnp[:,' + str(i) + ']))'
-                    # print(fromattributesnp[:, i])
-                    # print(stringtoeval)
-                    eval(stringtoeval)
-                # self.fc.setInput(fieldstandard=list(fromattributesnp[:, i]))
-
-        self.fc.outputNode.graphicsItem().bounds = QtCore.QRectF(0, 0, 200, len(fields)*15)
-        self.fc.outputNode .graphicsItem().updateTerminals()
-        self.fc.outputNode .graphicsItem().update()
-
-        self.fc.inputNode  .graphicsItem().bounds = QtCore.QRectF(0, 0, 200, len(fromlayerfields)*15)
-        self.fc.inputNode  .graphicsItem().updateTerminals()
-        self.fc.inputNode  .graphicsItem().update()
-
-        self.fc.sigChartChanged.connect(self.fcNodeAdded)
-
-        if self.dbase.qgsiface is None:
-            fNode = self.fc.createNode('AttributeReaderNode', pos=(0, 10))
-            fNode2 = self.fc.createNode('AttributeReaderNode', pos=(0, 20))
-            fNode3 = self.fc.createNode('PythonEval', pos=(0, 30))
-            #fNode.setLayers(self.currentlayer)
-
-
-        #ui things
-        for butname in ['loadBtn', 'saveBtn','saveAsBtn',  'reloadBtn', 'showChartBtn']:
-            try:
-                eval('self.fc.widget().ui.' + butname + '.clicked.disconnect()')
-            except:
-                pass
-
-        self.fc.widget().ui.showChartBtn.setVisible(False)
-        self.fc.widget().ui.reloadBtn.setText("Import !!!")
-        self.fc.widget().ui.reloadBtn.clicked.connect(self.importFromFlowChart)
-        self.fc.widget().ui.saveAsBtn.clicked.connect(self.fcSaveAs)
-        self.fc.widget().ui.loadBtn.clicked.connect(self.fcLoad)
-
-        wdg1lay = QVBoxLayout()
-        wdgflowcontrol = self.fc.widget()
-        wdg1lay.addWidget(wdgflowcontrol)
-        self.flowqlabelmessage = QLabel("Message d'erreur : /")
-        wdg1lay.addWidget(self.flowqlabelmessage)
-        wdg1 = QFrame()
-        wdg1.setLayout(wdg1lay)
-
-        wdg2 = self.fc.widget().chartWidget
-        wdg2.selDock.setVisible(False)
-        splitwdg = QSplitter(QtCore.Qt.Horizontal)
-        splitwdg.setStretchFactor(1, 10)
-        if True:
-            splitwdg.addWidget(wdg1)
-            splitwdg.addWidget(wdg2)
-            self.dialog.layout().addWidget(splitwdg,0,0,1,1)
-
-
-        if False:
-            self.dialog.layout().addWidget(wdg, 0, 0, 2, 1)
-            self.dialog.layout().addWidget(wdg1, 1, 1, 1, 2)
-
-        if self.dbase.qgsiface is not None:
-            self.dialog.setWindowModality(QtCore.Qt.NonModal)
-            self.dialog.show()
+        if qgis.utils.iface is not None:
+            self.flowchartdlg.setWindowModality(QtCore.Qt.NonModal)
+            self.flowchartdlg.show()
         else:
-            self.dialog.exec_()
-
-        #sys output = self.fc.output()
-        # print('***', output)
-
-    def importFromFlowChart(self):
-        """
-        first step for importing : preparing datas
-        :return:
-        """
-        outputflowchart = self.fc.output()
-        totallinecount = self.currentlayer.featureCount()
-
-        #build datas
-        table_field_list=[]
-        results = []
-        geoms=[]
-        for outputkey in outputflowchart.keys():
-            table_field_list.append(outputkey)
-            outputres = outputflowchart[outputkey]
-            if outputres is not None:
-                if isinstance(outputres, list) and  len(outputres) == 1:
-                    outputres = outputres*totallinecount
-                elif isinstance(outputres, float) or isinstance(outputres, int):
-                    outputres = [outputres]*totallinecount
-            elif outputres is None:
-                outputres = ['NULL'] * totallinecount
-
-            if len(outputres) != totallinecount:
-                self.flowqlabelmessage.setText("Message d'erreur : problème avec " + str(outputkey))
-                return
-            results.append(outputres)
-
-        results = np.array(results).T
+            self.flowchartdlg.exec_()
 
 
-        #build geoms
-        if sys.version_info.major == 2:
-            self.xform = qgis.core.QgsCoordinateTransform(self.currentlayer.crs(), self.dbase.qgiscrs)
-        elif sys.version_info.major == 3:
-            self.xform = qgis.core.QgsCoordinateTransform(self.currentlayer.crs(), self.dbase.qgiscrs, qgis.core.QgsProject.instance())
-
-        for layerfeat in self.currentlayer.getFeatures():
-            featgeom = layerfeat.geometry()
-            success = featgeom.transform(self.xform)
-            if sys.version_info.major == 2:
-                featgeomwkt = featgeom.exportToWkt()
-            elif sys.version_info.major == 3:
-                featgeomwkt = featgeom.asWkt()
-            geoms.append(featgeomwkt)
-
-        if False:
-            print('totallinecount',totallinecount)
-            print('field', len(table_field_list),table_field_list)
-            print(np.array(results).shape)
-            print(np.array(results).T.shape)
-
-        maintablename = self.toolwidgetmain.comboBox_typeimport.currentText()
-        self.importCleanedDatas(maintablename, table_field_list, results, geoms)
-
-
-
-    def fcNodeAdded(self,flowchart, action, node):
-        if node.nodeName == 'AttributeReaderNode':
-            node.setLayers(self.currentlayer)
-            node.setDbase(self.dbase)
-
-
-
-
-    def getAllFields(self, tables):
-        result=[]
-        for tablename in tables:
-            if tablename in self.dbase.dbasetables.keys():
-                dbasetable = self.dbase.dbasetables[tablename]
-                for field in dbasetable['fields'].keys():
-                    if (field[0:3] not in ["pk_", "id_"]
-                            and field[0:4] not in ["lpk_", "lid_"]
-                            and field not in ['datetimecreation', 'datetimemodification']):
-                        result.append(tablename + '.' + field)
-        return result
-
-
-
-    def getFromFields(self):
-        self.defineCurrentLayer()
-        currentlayerfieldsname = None
-        if self.currentlayer  is not None:
-            currentlayerfields = self.currentlayer.fields()
-            currentlayerfieldsname = ['_'.join(field.name().split(' ')) for field in currentlayerfields]
-        return currentlayerfieldsname
-
-
-
-    def defineCurrentLayer(self):
+    def _defineCurrentLayer(self):
         item = self.toolwidgetmain.comboBox_typeimport.currentText()
 
-        if self.dbase.qgsiface is not None:
+        if qgis.utils.iface is not None:
             self.currentlayer = None
-
-            if sys.version_info.major == 2:
-                layers = self.dbase.qgsiface.legendInterface().layers()
-            elif sys.version_info.major == 3:
-                layers = [tree_layer.layer() for tree_layer in qgis.core.QgsProject.instance().layerTreeRoot().findLayers()]
-
-
-            # if not self.dbase.standalone:
+            layers = [tree_layer.layer() for tree_layer in qgis.core.QgsProject.instance().layerTreeRoot().findLayers()]
             for lay in layers:
                 if self.toolwidgetmain.comboBox_tableimport.currentText() == lay.name():
                     self.currentlayer = lay
@@ -511,22 +153,39 @@ class ImportTool(AbstractLamiaTool):
                 return
         else:  # debug outside qgis
             if self.currentlayer is None:
-                layerpath = os.path.join(os.path.dirname(__file__), '..','..','..','test','99_import_test_files','reseau_L93.shp.shp')
+                import Lamia
+                lamiapath = os.path.dirname(Lamia.__file__)
+                layerpath = os.path.join(lamiapath,'..', 'test','shpforimporttest', 'TRONCONS_TEST.shp' )
+                print('*********layerpath', layerpath)
+                #layerpath = os.path.join(os.path.dirname(__file__), '..','..','..','test','99_import_test_files','reseau_L93.shp.shp')
                 self.currentlayer = qgis.core.QgsVectorLayer(layerpath, 'test', 'ogr')
+                print(self.currentlayer.featureCount())
 
 
 
+
+
+
+
+
+
+
+
+
+    """
+    def ___________________________________simpletablepart(self):
+        pass
 
     def showTable(self):
-        self.defineCurrentLayer()
+        self._defineCurrentLayer()
 
         if False:
             item = self.toolwidgetmain.comboBox_typeimport.currentText()
             self.currentlayer = None
-            if self.dbase.qgsiface is not None:
+            if qgis.utils.iface is not None:
                 # if not self.dbase.standalone:
                 if sys.version_info.major == 2:
-                    layers = self.dbase.qgsiface.legendInterface().layers()
+                    layers = qgis.utils.iface.legendInterface().layers()
                 elif sys.version_info.major == 3:
                     layers = [tree_layer.layer() for tree_layer in qgis.core.QgsProject.instance().layerTreeRoot().findLayers()]
 
@@ -673,518 +332,29 @@ class ImportTool(AbstractLamiaTool):
         self.dialogui.exec_()
         res = self.dialogui.dialogIsFinished()
 
+    """
 
 
 
 
-
-
-
-
-    def work(self,layer=None,linktable=None):
-        """
-
-        :param linktable: une liste qui correspond au tableau du dialog :
-                         [...[colonne1;colonne2]...]
-        :param layer:  pour le debug - possibilite de passer un layer autre
-        :return:
-        """
-        debug = False
-
-
-        self.results = []
-        if linktable is None:
-            for row in range(self.toolwidgetmain.tableWidget.rowCount()):
-                if self.toolwidgetmain.tableWidget.cellWidget(row, 1) is not None:
-                    self.results.append([self.toolwidgetmain.tableWidget.item(row, 0).text(),
-                                   self.toolwidgetmain.tableWidget.cellWidget(row, 1).currentText()])
-                else:
-                    self.results.append([self.toolwidgetmain.tableWidget.item(row, 0).text(),
-                                   self.toolwidgetmain.tableWidget.item(row, 1).text()])
-        else:
-            self.results = linktable
-
-        if debug: logging.getLogger('Lamia').debug('start %s', str(self.results))
-
-        self.importtable = self.toolwidgetmain.comboBox_typeimport.currentText()
-
-        tablestemp = [result[0].split('.')[0] for result in self.results]
-
-        # print(tables)
-
-        # print(self.results)
-
-
-
-        uniquetables = list(set(tablestemp))
-        tables = [result[0].split('.')[0] for result in self.results]
-        fields = [result[0].split('.')[1] for result in self.results]
-        tablefield = [result[0] for result in self.results]
-        values = [result[1] for result in self.results]
-
-        if debug: logging.getLogger('Lamia').debug('start %s', str(self.importtable))
-        if debug: logging.getLogger('Lamia').debug('tables %s', str(tables))
-        if debug: logging.getLogger('Lamia').debug('fields %s', str(fields))
-
-        if layer is None or isinstance(layer, bool):   # come from qqis app
-            # layer = self.dbase.qgsiface.activeLayer()
-            layer = self.currentlayer
-        else:
-            layer = layer
-
-            # qgis.core.QgsVectorLayer('C://001_travail_BM//testtopo//toposijalag1.shp', 'test', "ogr")
-        progress = self.initProgressBar(len([fet for fet in layer.getFeatures()]))
-        layerfromfieldsname = [field.name() for field in layer.fields()]
-        #print('layerfromfieldsname',layerfromfieldsname)
-        if sys.version_info.major == 2:
-            self.xform = qgis.core.QgsCoordinateTransform(layer.crs(), self.dbase.qgiscrs)
-        elif sys.version_info.major == 3:
-            self.xform = qgis.core.QgsCoordinateTransform(layer.crs(), self.dbase.qgiscrs,qgis.core.QgsProject.instance())
-
-        if len(layer.selectedFeatures()) == 0:
-            feats  = layer.getFeatures()
-        else:
-            feats = layer.selectedFeatures()
-
-        if debug: logging.getLogger('Lamia').debug('selected feat %s', [fet.id() for fet in feats])
-
-
-        # cas des couches enfant de descriptionsystem
-        if 'Objet' in tables and 'Descriptionsystem' in uniquetables:
-            if debug: logging.getLogger('Lamia').debug('Descriptionsystem')
-            for compt, layerfeat in enumerate(layer.getFeatures()):
-
-                if debug: logging.getLogger('Lamia').debug('feat %s', layerfeat.attributes())
-                self.setLoadingProgressBar(progress, compt)
-                #create objet
-                if False:
-                    lastrevision = self.dbase.maxrevision
-                    datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
-                    lastobjetid = self.dbase.getLastId('Objet') + 1
-                    sql = "INSERT INTO Objet (id_objet, id_revisionbegin, datecreation ) "
-                    sql += "VALUES(" + str(lastobjetid) + "," + str(lastrevision) + ",'" + datecreation + "');"
-                    query = self.dbase.query(sql)
-                    #self.dbase.commit()
-                    pkobjet = self.dbase.getLastRowId('Objet')
-                pkobjet = self.dbase.createNewObjet()
-
-                for i, table in enumerate(tables):
-                    if table == 'Objet' and values[i] != '':
-                        #sql = "UPDATE Objet SET " + fields[i] + " = " + str(layerfeat[values[i]])
-                        sql = "UPDATE Objet SET " + fields[i] + " = " + self.convertDataType(table,fields[i], layerfeat[values[i]])
-                        sql += " WHERE pk_objet = " + str(pkobjet)
-
-                        query = self.dbase.query(sql, docommit=False)
-                self.dbase.commit()
-
-                lastdescriptionsystemid = self.dbase.getLastId('Descriptionsystem') + 1
-                if False:
-                    sql = "INSERT INTO Descriptionsystem (id_descriptionsystem, id_revisionbegin, id_objet) "
-                    sql += "VALUES(" + str(lastdescriptionsystemid) + "," + str(lastrevision) + "," + str(lastobjetid) + ");"
-                sql = "INSERT INTO Descriptionsystem (id_descriptionsystem, lpk_objet) "
-                sql += "VALUES(" + str(lastdescriptionsystemid) + "," + str(pkobjet) + ");"
-
-                query = self.dbase.query(sql)
-                #self.dbase.commit()
-                pkdessys= self.dbase.getLastRowId('Descriptionsystem')
-
-                for i, table in enumerate(tables):
-                    if table == 'Descriptionsystem' and values[i] != '':
-                        #sql = "UPDATE Descriptionsystem SET " + fields[i] + " = " + str(layerfeat[values[i]])
-                        sql = "UPDATE Descriptionsystem SET " + fields[i] + " = " + self.convertDataType(table,fields[i], layerfeat[values[i]])
-                        sql += " WHERE pk_descriptionsystem = " + str(pkdessys)
-                        query = self.dbase.query(sql, docommit=False)
-                self.dbase.commit()
-
-                lastsubdescriptionsystemid = self.dbase.getLastId(self.importtable) + 1
-                #geom
-                featgeom = layerfeat.geometry()
-                success = featgeom.transform(self.xform)
-                if sys.version_info.major == 2:
-                    featgeomwkt = featgeom.exportToWkt()
-                elif sys.version_info.major == 3:
-                    featgeomwkt = featgeom.asWkt()
-                geomsql = "CastToXY(ST_GeomFromText('"
-                geomsql += featgeomwkt
-                geomsql += "', " + str(self.dbase.crsnumber) + "))"
-                if False:
-                    sql = "INSERT INTO " + self.importtable + " (id_objet, id_descriptionsystem, id_revisionbegin, id_" + self.importtable.lower() + ", geom )"
-                    sql += " VALUES(" + str(lastobjetid) + "," + str(lastdescriptionsystemid) +',' + str(lastrevision) + "," + str(lastsubdescriptionsystemid) + ","
-                    sql += geomsql + ');'
-
-
-                sql = "INSERT INTO " + self.importtable + " ( lpk_descriptionsystem,  id_" + self.importtable.lower() + ", geom )"
-                sql += " VALUES("  + str(pkdessys) +',' + str(lastsubdescriptionsystemid) + ","
-                sql += geomsql + ');'
-                query = self.dbase.query(sql)
-                #self.dbase.commit()
-                pksubdessys= self.dbase.getLastRowId(self.importtable)
-
-                for i, table in enumerate(tables):
-                    if table == self.importtable and values[i] != '':
-                        sql = "UPDATE " + self.importtable + " SET " + fields[i] + " = " + self.convertDataType(table,fields[i], layerfeat[values[i]])
-                        sql += " WHERE pk_" + self.importtable + " = " + str(pksubdessys)
-                        query = self.dbase.query(sql, docommit=False)
-                self.dbase.commit()
-
-
-                self.postImport(layerfeat,pkobjet, pkdessys, pksubdessys )
-
-
-
-
-
-
-
-        if False and self.importtable == 'Points topo':
-            table = 'Pointtopo'
-            fielddestination=['typepointtopo', 'x', 'y', 'zgps', 'zwgs84', 'raf09', 'zmngf', 'precision', 'dx', 'dy', 'dz', 'hauteurperche',
-                    'id_topographie','geom']
-
-
-            linktable = {}
-            for i, result in enumerate(self.results):
-                for j, field in enumerate(fielddestination):
-                    if table + '.' + field in result:
-                        linktable[j] = i
-
-            # print(linktable)
-
-
-
-
-            for layerfeat in feats:
-                sql = "INSERT INTO Pointtopo (" + ', '.join(fielddestination) + ") "
-                sql += "VALUES("
-                featvalues = []
-                for i, field in enumerate(fielddestination):
-                    # print('values',field,featvalues)
-                    if field == 'geom':
-                        featgeom = layerfeat.geometry()
-                        success = featgeom.transform(self.xform)
-                        featgeomwkt = featgeom.exportToWkt()
-
-                        geomsql = "ST_GeomFromText('"
-                        geomsql += featgeomwkt
-                        geomsql += "', " + str(self.dbase.crsnumber) + ")"
-                        featvalues.append(geomsql)
-                    else:
-                        valuefieldtemp = values[linktable[i]]
-                        # print(valuefieldtemp, layerfromfieldsname)
-                        if valuefieldtemp == '':
-                            featvalues.append('NULL')
-                        else:
-
-
-                            if valuefieldtemp in layerfromfieldsname:
-                                valuefieldtemp = layerfeat[valuefieldtemp]
-                                # print(valuefieldtemp)
-                                if valuefieldtemp is None:
-                                    featvalues.append('NULL')
-                                else:
-                                    # print(type(valuefieldtemp))
-                                    if isinstance(valuefieldtemp, unicode):
-                                        featvalues.append("'" + str(valuefieldtemp) + "'")
-                                    else:
-                                        featvalues.append(str(valuefieldtemp))
-                            else:
-                                featvalues.append(str(valuefieldtemp))
-
-
-                sql += ', '.join(featvalues)
-                sql += ");"
-                # print(sql)
-                query = self.dbase.query(sql)
-                self.dbase.commit()
-
-
-
-
-
-
-        if progress is not None: self.dbase.qgsiface.messageBar().clearWidgets()
-        if debug: logging.getLogger('Lamia').debug('end')
-
-    def importCleanedDatas(self, tablename=None, table_field_list=None, values=None, geoms=None, returnfield=None):
-
-        """
-
-        :param tablename: table name
-        :param table_field_list: list of values tablename.fieldname
-        :param values: array of values : each line is e new element, and each row correspond to table_field row
-        :params geoms: list of geoms in wkt form
-        :param returnfield:  fieldname corresponding to the data returned by this method
-        :return: array of data of returnfield
-        """
-
-        debug = False
-
-        # uniquetables = list(set(tablestemp))
-        tablesnames = np.array([result.split('.')[0] for result in table_field_list])
-        fieldsnames = np.array([result.split('.')[1] for result in table_field_list])
-
-        parenttables = self.dbase.getParentTable(tablename)
-        progress = self.initProgressBar(len(values))
-
-
-        if False:
-            temparser = DBaseParser()
-            temparser.connectToDBase(slfile=self.dbase.spatialitefile)
-            temparser.printsql = True
-
-            sql = "BEGIN TRANSACTION"
-            temparser.query(sql)
-
-        sql = "BEGIN"
-        self.dbase.query(sql)
-
-        if True:
-            # cas des couches enfant de descriptionsystem
-            for i, valueline in enumerate(values):
-                valueline = np.array(valueline)
-                self.setLoadingProgressBar(progress, i)
-                if 'Objet' in parenttables and 'Descriptionsystem' in parenttables:
-                    if debug: logging.getLogger('Lamia').debug('Descriptionsystem')
-
-                    # fill objet table
-
-                    pkobjet = self.dbase.createNewObjet(docommit=False)
-                    indexobjectvalues = np.where(np.array(tablesnames) == 'Objet')
-                    lisfield = fieldsnames[indexobjectvalues]
-                    listvalues = valueline[indexobjectvalues]
-                    self.updateTable( 'Objet', lisfield, listvalues, pkobjet)
-
-                    # fill descriptionsystemtable
-                    lastdescriptionsystemid = self.dbase.getLastId('Descriptionsystem') + 1
-                    sql = "INSERT INTO Descriptionsystem (id_descriptionsystem, lpk_objet) "
-                    sql += "VALUES(" + str(lastdescriptionsystemid) + "," + str(pkobjet) + ");"
-                    query = self.dbase.query(sql, docommit=False)
-                    pkdessys = self.dbase.getLastRowId('Descriptionsystem')
-
-                    indexdessysvalues = np.where(np.array(tablesnames) == 'Descriptionsystem')
-                    lisfield = fieldsnames[indexdessysvalues]
-                    listvalues = valueline[indexdessysvalues]
-                    self.updateTable( 'Descriptionsystem', lisfield, listvalues, pkdessys)
-
-                    # table fille
-                    lastsubdescriptionsystemid = self.dbase.getLastId(tablename) + 1
-                    sql = "INSERT INTO " + tablename + " ( lpk_descriptionsystem,  id_" + tablename.lower() + " )"
-                    sql += " VALUES(" + str(pkdessys) + ',' + str(lastsubdescriptionsystemid) + ');'
-                    query = self.dbase.query(sql, docommit=False)
-                    pksubdessys = self.dbase.getLastRowId(tablename)
-
-                    indexsubdessysvalues = np.where(np.array(tablesnames) == tablename)
-                    lisfield = fieldsnames[indexsubdessysvalues]
-                    listvalues = valueline[indexsubdessysvalues]
-                    self.updateTable(tablename, lisfield, listvalues, pksubdessys)
-
-                    # geom
-                    geomsql = "CastToSingle(CastToXY(ST_GeomFromText('"
-                    geomsql += geoms[i]
-                    geomsql += "', " + str(self.dbase.crsnumber) + ")))"
-
-                    self.updateTable( tablename, ['geom'], [geomsql], pksubdessys)
-
-            #self.dbase.commit()
-
-        #self.dbase.forcenocommit = True
-
-        sql = "COMMIT"
-        self.dbase.query(sql)
-
-        if progress is not None: self.dbase.qgsiface.messageBar().clearWidgets()
-
-
-
-
-    def importCleanedDatas2(self, tablename=None, table_field_list=None, values=None, geoms=None, returnfield=None):
-
-        """
-        
-        :param tablename: table name 
-        :param table_field_list: list of values tablename.fieldname
-        :param values: array of values : each line is e new element, and each row correspond to table_field row
-        :params geoms: list of geoms in wkt form
-        :param returnfield:  fieldname corresponding to the data returned by this method
-        :return: array of data of returnfield
-        """
-        
-        debug = False
-        
-        #uniquetables = list(set(tablestemp))
-        tablesnames = np.array([result.split('.')[0] for result in table_field_list])
-        fieldsnames = np.array([result.split('.')[1] for result in table_field_list])
-
-
-        parenttables = self.dbase.getParentTable(tablename)
-        progress = self.initProgressBar(len(values))
-
-        temparser = DBaseParser()
-        temparser.connectToDBase(slfile=self.dbase.spatialitefile, autocommit=False)
-
-        # cas des couches enfant de descriptionsystem
-        for i, valueline in enumerate(values):
-            valueline = np.array(valueline)
-            self.setLoadingProgressBar(progress, i)
-            if 'Objet' in parenttables and 'Descriptionsystem' in parenttables:
-                if i==0:
-                    compt_obj_id = self.temparser.getLastPk('Objet') +1
-                    compt_obj_pk=self.temparser.getLastId('Objet') +1
-                    compt_dessys_id = self.temparser.getLastPk('Descriptionsystem') +1
-                    compt_dessys_pk = self.temparser.getLastId('Descriptionsystem') +1
-                    compt_subdessys_id = self.temparser.getLastPk(tablename) +1
-                    compt_subdessys_pk = self.temparser.getLastId(tablename) +1
-                else:
-                    compt_obj_id += 1
-                    compt_obj_pk += 1
-                    compt_dessys_id += 1
-                    compt_dessys_pk += 1
-                    compt_subdessys_id += 1
-                    compt_subdessys_pk += 1
-
-                if debug: logging.getLogger('Lamia').debug('Descriptionsystem')
-
-                #fill objet table
-
-                pkobjet = self.dbase.createNewObjet(docommit=False)
-                indexobjectvalues = np.where(np.array(tablesnames)=='Objet')
-                lisfield = fieldsnames[indexobjectvalues]
-                listvalues = valueline[indexobjectvalues]
-                self.updateTable('Objet', lisfield,listvalues,pkobjet )
-
-                #fill descriptionsystemtable
-                lastdescriptionsystemid = self.dbase.getLastId('Descriptionsystem') + 1
-                sql = "INSERT INTO Descriptionsystem (id_descriptionsystem, lpk_objet) "
-                sql += "VALUES(" + str(lastdescriptionsystemid) + "," + str(pkobjet) + ");"
-                query = self.dbase.query(sql, docommit=False)
-                pkdessys = self.dbase.getLastRowId('Descriptionsystem')
-
-                indexdessysvalues = np.where(np.array(tablesnames) == 'Descriptionsystem')
-                lisfield = fieldsnames[indexdessysvalues]
-                listvalues = valueline[indexdessysvalues]
-                self.updateTable('Descriptionsystem', lisfield, listvalues, pkdessys)
-
-                #table fille
-                lastsubdescriptionsystemid = self.dbase.getLastId(tablename) + 1
-                sql = "INSERT INTO " + tablename + " ( lpk_descriptionsystem,  id_" + tablename.lower() + " )"
-                sql += " VALUES("  + str(pkdessys) +',' + str(lastsubdescriptionsystemid)  + ');'
-                query = self.dbase.query(sql, docommit=False)
-                pksubdessys= self.dbase.getLastRowId(tablename)
-
-                indexsubdessysvalues = np.where(np.array(tablesnames) == tablename)
-                lisfield = fieldsnames[indexsubdessysvalues]
-                listvalues = valueline[indexsubdessysvalues]
-                self.updateTable(tablename, lisfield, listvalues, pksubdessys)
-
-                #geom
-                geomsql = "CastToSingle(CastToXY(ST_GeomFromText('"
-                geomsql += geoms[i]
-                geomsql += "', " + str(self.dbase.crsnumber) + ")))"
-
-                self.updateTable(tablename, ['geom'], [geomsql], pksubdessys)
-
-        self.dbase.commit()
-
-        if progress is not None: self.dbase.qgsiface.messageBar().clearWidgets()
-
-
-
-
-
-    def updateTable(self,  tablename, listfield, listvalues, pkvalue):
-
-        sql = "UPDATE " + tablename + " SET "
-        for i, fieldname in enumerate(listfield):
-            if listvalues[i] != '':
-                sql += fieldname + " = "
-                sql += self.convertDataType(tablename, fieldname, listvalues[i]) + ', '
-
-        if sql[-2:] == ', ':
-            sql = sql[:-2]
-        sql += " WHERE pk_" + tablename.lower()  +" = " + str(pkvalue)
-        query = self.dbase.query(sql, docommit=False)
-
-
-
-    def updateTable2(self, tablename, listfield, listvalues, pkvalue):
-        for i, fieldname in enumerate(listfield):
-            if listvalues[i] != '':
-                sql = "UPDATE " + tablename + " SET " + fieldname + " = "
-                sql += self.convertDataType(tablename, fieldname, listvalues[i])
-                sql += " WHERE pk_" + tablename.lower() + " = " + str(pkvalue)
-                query = self.dbase.query(sql, docommit=False)
-
-
-
-
-    def convertDataType(self, table,field, value):
-        if field == 'geom':
-            return str(value)
-
-        if self.dbase.isAttributeNull(value):
-            return 'NULL'
-
-        typevalue = self.dbase.dbasetables[table]['fields'][field]['PGtype']
-        #getConstraintRawValueFromText(self, table, field, txt):
-        rawvalue = self.dbase.getConstraintRawValueFromText(table, field, value)
-
-        if 'VARCHAR' in typevalue:
-            returnvalue = "'" + str(rawvalue) + "'"
-        elif 'TIMESTAMP' in typevalue:
-            returnvalue = "'" + str(rawvalue) + "'"
-        elif 'TEXT' in typevalue:
-            returnvalue = "'" + str(rawvalue) + "'"
-        else:
-            returnvalue = str(rawvalue)
-
-        return returnvalue
-
-
-
-
-    def convertDataType2(self,temparser, table,field, value):
-        if field == 'geom':
-            return str(value)
-
-        if self.dbase.isAttributeNull(value):
-            return 'NULL'
-
-        typevalue = temparser.dbasetables[table]['fields'][field]['PGtype']
-        #getConstraintRawValueFromText(self, table, field, txt):
-        rawvalue = temparser.getConstraintRawValueFromText(table, field, value)
-
-        if 'VARCHAR' in typevalue:
-            returnvalue = "'" + str(rawvalue) + "'"
-        elif 'TIMESTAMP' in typevalue:
-            returnvalue = "'" + str(rawvalue) + "'"
-        elif 'TEXT' in typevalue:
-            returnvalue = "'" + str(rawvalue) + "'"
-        else:
-            returnvalue = str(rawvalue)
-
-        return returnvalue
-
-
-    def postImport(self,layerfeat, pkobjet=None, pkdessys=None, pksubdessys=None):
-        pass
-
+    
     def initProgressBar(self, lenprogress):
         """
         Initialise la progress bar d'avancement de la generation du rapport
         :param idsforreportdict:
         :return:
         """
-        if self.dbase.qgsiface is not None :
-            progressMessageBar = self.dbase.qgsiface.messageBar().createMessage("import ...")
+        if qgis.utils.iface is not None :
+            progressMessageBar = qgis.utils.iface.messageBar().createMessage("import ...")
             progress = QProgressBar()
 
             progress.setMaximum(lenprogress)
             progress.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
             progressMessageBar.layout().addWidget(progress)
             if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                self.dbase.qgsiface.messageBar().pushWidget(progressMessageBar, self.dbase.qgsiface.messageBar().INFO)
+                qgis.utils.iface.messageBar().pushWidget(progressMessageBar, qgis.utils.iface.messageBar().INFO)
             else:
-                self.dbase.qgsiface.messageBar().pushWidget(progressMessageBar, qgis.core.Qgis.Info)
+                qgis.utils.iface.messageBar().pushWidget(progressMessageBar, qgis.core.Qgis.Info)
         else:
             progress = None
 
@@ -1194,7 +364,7 @@ class ImportTool(AbstractLamiaTool):
         if progressbar is not None:
             progressbar.setValue(val)
         else:
-            if self.dbase.qgsiface is None:
+            if qgis.utils.iface is None:
                 if val%100 == 0:
                     logging.getLogger('Lamia').info('Import de l item %d', val )
         QApplication.processEvents()
@@ -1210,45 +380,6 @@ class ImportTool(AbstractLamiaTool):
         self.dbase.forcenocommit = False
         sql = "ROLLBACK"
         self.dbase.query(sql)
-
-
-class AttributeReaderNode(CtrlNode):
-    """Return the input data passed through an unsharp mask."""
-    nodeName = "AttributeReaderNode"
-    uiTemplate = []
-    """
-    uiTemplate = [
-        ('sigma', 'spin', {'value': 1.0, 'step': 1.0, 'bounds': [0.0, None]}),
-        ('strength', 'spin', {'value': 1.0, 'dec': True, 'step': 0.5, 'minStep': 0.01, 'bounds': [0.0, None]}),
-    ]
-    """
-
-    def __init__(self, name):
-        ## Define the input / output terminals available on this node
-        #self.someQWidget = None
-        terminals = {
-            'dataIn': dict(io='in'),  # each terminal needs at least a name and
-            'dataOut': dict(io='out'),  # to specify whether it is input or output
-        }  # other more advanced options are available
-        # as well..
-
-        CtrlNode.__init__(self, name, terminals=terminals)
-        self.stopconnect = False
-        self.currentlayer = None
-        self.currentlayerindex = None
-        self.uniquevalues = None
-
-
-    def process(self, display=True, **args):
-        # CtrlNode has created self.ctrls, which is a dict containing {ctrlName: widget}
-        debug = False
-        results={}
-
-        if debug: logging.getLogger("Lamia").debug('***  process ***')
-        if debug: logging.getLogger("Lamia").debug( 'nodename : %s', self.name())
-        if debug: logging.getLogger("Lamia").debug('args : %s', str(args))
-        if debug: logging.getLogger("Lamia").debug('inputs : %s', str(self.inputs().keys()))
-        if debug: logging.getLogger("Lamia").debug('outputs : %s', str(self.outputs().keys()))
 
 
         if list(self.inputs().keys())[0] == 'dataIn':
@@ -1316,7 +447,7 @@ class AttributeReaderNode(CtrlNode):
 
 
 
-
+    """
     def connected(self,localTerm, remoteTerm ):
         debug = False
 
@@ -1385,16 +516,8 @@ class AttributeReaderNode(CtrlNode):
             input.connectTo(remoteTerm)
 
             #self.update()
-
-
-
-
     """
-    def ctrlWidget(self):  # this method is optional
-        self.someQWidget = UserUI()
-        self.someQWidget.comboBox_type.currentIndexChanged.connect(self.update)
-        return self.someQWidget
-    """
+
 
 
 class UserUI(QWidget):
@@ -1405,12 +528,4 @@ class UserUI(QWidget):
         uic.loadUi(uipath, self)
 
 
-class DialogUI(QDialog):
-    def __init__(self, parent=None):
-        super(DialogUI, self).__init__(parent=parent)
-        # self.setupUi(self)
-        uipath = os.path.join(os.path.dirname(__file__), 'Lamia_import_tool_dialog.ui')
-        uic.loadUi(uipath, self)
 
-    def dialogIsFinished(self):
-        return None

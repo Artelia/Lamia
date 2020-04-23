@@ -38,6 +38,12 @@ class DBconfigReader():
         self.baseversion = None
         self.workversion = None
 
+        self.maxbaseversion=None
+        self.maxworkversion=None
+
+        self.basedict=None  #dict with only base reading
+        self.workdict=None  #dict with work reading
+
 
 
     def createDBDictionary(self, 
@@ -93,34 +99,36 @@ class DBconfigReader():
         self.dbasetables = {}
         self.worktype = worktype
 
-        baseversionspathlist = self.getWorktypeVersionsList(self.worktype.split('_')[0])
-        baseversionnumbers = [elem[0] for elem in baseversionspathlist]
+        self.baseversionspathlist = self.getWorktypeVersionsList(self.worktype.split('_')[0])
+        self.baseversionnumbers = [elem[0] for elem in self.baseversionspathlist]
+        self.maxbaseversion = self.baseversionnumbers[-1]
         if len(self.worktype.split('_')) > 0:
-            workversionspathlist = self.getWorktypeVersionsList(self.worktype)
-            workversionnumbers = [elem[0] for elem in workversionspathlist]
+            self.workversionspathlist = self.getWorktypeVersionsList(self.worktype)
+            self.workversionnumbers = [elem[0] for elem in self.workversionspathlist]
+            self.maxworkversion = self.workversionnumbers[-1]
         else:
-            workversionspathlist = None
-            workversionnumbers = None
+            self.workversionspathlist = None
+            self.workversionnumbers = None
         
         #first read base version
         if baseversiontoread is None:
-            baseversiontoread, createbasefilepathtoread = baseversionspathlist[-1]
+            baseversiontoread, createbasefilepathtoread = self.baseversionspathlist[-1]
         else:
-            createbasefilepathtoread = baseversionspathlist[baseversionnumbers.index(baseversiontoread)][1]
+            createbasefilepathtoread = self.baseversionspathlist[self.baseversionnumbers.index(baseversiontoread)][1]
 
-        self.readXlsDbDictionnary(createbasefilepathtoread)
+        self.basedict = self.readXlsDbDictionnary(createbasefilepathtoread)
         self.baseversion = baseversiontoread
 
 
         #then read work version:
-        if workversionspathlist is None:
+        if self.workversionspathlist is None:
             return
         if workversiontoread is None:
-            workversiontoread, createworkfilepathtoread = workversionspathlist[-1]
+            workversiontoread, createworkfilepathtoread = self.workversionspathlist[-1]
         else:
-            createworkfilepathtoread = workversions[workversionnumbers.index(workversiontoread)][1]
+            createworkfilepathtoread = self.workversionspathlist[self.workversionnumbers.index(workversiontoread)][1]
 
-        self.readXlsDbDictionnary(createworkfilepathtoread)
+        self.workdict = self.readXlsDbDictionnary(createworkfilepathtoread)
         self.workversion = workversiontoread
 
         # finally read project's dbase if exists
@@ -354,7 +362,7 @@ class DBconfigReader():
         if "Revision" in self.dbasetables.keys():
             self.revisionwork = True
 
-
+        return dict(self.dbasetables)
 
 
 

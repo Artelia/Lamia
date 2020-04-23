@@ -40,7 +40,8 @@ class PostGisDBaseParser(AbstractDBaseParser):
 
     
     def connectToDBase(self,
-                        host='localhost', port=None, dbname=None, schema=None, user=None, password=None):
+                        host='localhost', port=None, dbname=None, schema=None, user=None, password=None,
+                        **kwargs):
         self.dbasetype = 'postgis'
         self.pgport = port
         self.pghost = host

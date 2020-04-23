@@ -12,4 +12,4 @@ test/temp/
 test/lamia_test*
 **/*backup*
 **/*caduc*
-test2/*/
+sandbox/*/

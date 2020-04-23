@@ -40,7 +40,7 @@ class SpatialiteDBaseParser(AbstractDBaseParser):
     def __init__(self, parserfactory):
          super(SpatialiteDBaseParser, self).__init__(parserfactory)
 
-    def connectToDBase(self, slfile=None):
+    def connectToDBase(self, slfile=None,**kwargs):
         self.spatialitefile = slfile
         self.connSLITE = sqlite3.dbapi2.connect(slfile)
         self.connSLITE.enable_load_extension(True)

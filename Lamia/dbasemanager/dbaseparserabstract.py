@@ -145,7 +145,12 @@ class AbstractDBaseParser():
 
         self.initDBase(**kwargs)
 
-        self.dbconfigreader.createDBDictionary(worktype)
+        baseversion = kwargs.get('baseversion', None)
+        workversion = kwargs.get('workversion', None)
+
+        self.dbconfigreader.createDBDictionary(worktype=worktype,
+                                               baseversiontoread=baseversion,
+                                                workversiontoread=workversion)
         finaldbaseressourcesdirectory = self.createRessourcesDir(dbaseressourcesdirectory,**kwargs)
 
         # sqlfile contains output of dbase creation script
@@ -219,6 +224,7 @@ class AbstractDBaseParser():
         query = self.query(sql)
         worktype, resdir, crs , version, workversion, variante  = [row[0:6] for row in query][0]
 
+
         if resdir[0] == '.' and hasattr(self,'spatialitefile'):
             self.dbaseressourcesdirectory = os.path.join(os.path.dirname(self.spatialitefile ), resdir)
         else:
@@ -235,12 +241,207 @@ class AbstractDBaseParser():
         self.dbconfigreader.createDBDictionary(self.worktype)
         self.dbasetables = self.dbconfigreader.dbasetables
 
+        if (self.baseversion < self.dbconfigreader.maxbaseversion 
+                or self.workversion < self.dbconfigreader.maxworkversion):
+            self.updateDBaseVersion()
+
         sql = "SELECT MAX(pk_revision) FROM Revision;"
         query = self.query(sql)
         self.currentrevision = query[0][0]
 
+
+
     def initDBase(self):
         raise NotImplementedError
+
+    def updateDBaseVersion(self):
+        debug = True
+        # if (self.baseversion < self.dbconfigreader.maxbaseversion 
+        #         or self.workversion < self.dbconfigreader.maxworkversion):
+
+        # indexbaseversion = [ver[0] for ver in baseversions].index(self.version)
+        # indexworkversion = [ver[0] for ver in workversions].index(self.workversion)
+        if debug: logging.getLogger("Lamia_unittest").debug('currentbaseversion %s - verions : %s', self.baseversion, self.dbconfigreader.baseversionnumbers)
+        if debug: logging.getLogger("Lamia_unittest").debug('currentworkversion %s - verions : %s', self.workversion,self.dbconfigreader.workversionnumbers)
+        indexbaseversion = self.dbconfigreader.baseversionnumbers.index(self.baseversion)
+        indexworkversion = self.dbconfigreader.workversionnumbers.index(self.workversion)
+
+        for indexversion in range(indexbaseversion, len(self.dbconfigreader.baseversionnumbers) -1 ):
+            self._updateTables('base',
+                              self.dbconfigreader.baseversionnumbers[indexversion],
+                              self.dbconfigreader.baseversionnumbers[indexversion +1] )
+
+
+        for indexversion in range(indexworkversion, len(self.dbconfigreader.workversionnumbers) -1 ):
+            self._updateTables('work',
+                              self.dbconfigreader.workversionnumbers[indexversion],
+                              self.dbconfigreader.workversionnumbers[indexversion + 1])
+
+        if debug: logging.getLogger("Lamia_unittest").debug('currentbaseversion %s - verions : %s', self.baseversion, self.dbconfigreader.baseversionnumbers)
+        if debug: logging.getLogger("Lamia_unittest").debug('currentworkversion %s - verions : %s', self.workversion,self.dbconfigreader.workversionnumbers)
+
+    def _updateTables(self, typebase, oldversion, newversion ):
+
+        debug = True
+        if debug: logging.getLogger("Lamia_unittest").debug(' %s - old : %s, new : %s', str(typebase), str(oldversion), str(newversion))
+        
+        baseversions = self.dbconfigreader.baseversionnumbers
+        workversions = self.dbconfigreader.workversionnumbers
+        
+        #get old and new dict
+        if typebase == 'base':
+            self.dbconfigreader.createDBDictionary(worktype=self.worktype,
+                                                    baseversiontoread=oldversion,
+                                                    workversiontoread=self.workversion)
+            dictold = self.dbconfigreader.basedict
+            self.dbconfigreader.createDBDictionary(worktype=self.worktype,
+                                                    baseversiontoread=newversion,
+                                                    workversiontoread=self.workversion)
+            dictnew = self.dbconfigreader.basedict
+            pythonupdatefile = self.dbconfigreader.baseversionspathlist[-1][1]
+        if typebase == 'work':
+            self.dbconfigreader.createDBDictionary(worktype=self.worktype,
+                                                    baseversiontoread=self.baseversion,
+                                                    workversiontoread=oldversion)
+            dictold = self.dbconfigreader.workdict
+            self.dbconfigreader.createDBDictionary(worktype=self.worktype,
+                                                    baseversiontoread=self.baseversion,
+                                                    workversiontoread=newversion)
+            dictnew = self.dbconfigreader.workdict
+            pythonupdatefile = self.dbconfigreader.workversionspathlist[-1][1]
+        #* get diffs saved in results
+        results = []
+        for table in dictnew.keys():
+            if table not in dictold.keys():
+                results.append([table, None])
+            else:
+                for field in dictnew[table]['fields']:
+                    if field not in dictold[table]['fields'].keys():
+                        results.append([table, field])
+
+        if debug: logging.getLogger("Lamia_unittest").debug('diffs : %s', results)
+
+        #* update dbase
+        for table, field in results:
+            if table is not None and field is None:
+                sql = self.generateSQLTableCreationFromDBConfig(table, dictnew[table], self.crs)
+                #openedsqlfile.write(sql['main'] + '\n')
+                self.query(sql['main'])
+                self.commit()
+                if 'other' in sql.keys():
+                    for sqlother in sql['other']:
+                        #openedsqlfile.write(sqlother + '\n')
+                        # print(sqlother)
+                        self.query(sqlother)
+                        self.commit()
+            else:
+                sql = 'ALTER TABLE ' + table + ' ADD COLUMN ' + field + ' '
+
+                if self.__class__.__name__ == 'SpatialiteDBaseParser':
+                    if 'VARCHAR' in dictnew[table]['fields'][field]['PGtype']:
+                        sql += ' TEXT '
+                    else:
+                        sql += PGTYPE_TO_SLTYPE[dictnew[table]['fields'][field]['PGtype']]
+                elif self.__class__.__name__ == 'PostGisDBaseParser':
+                    sql += dictnew[table]['fields'][field]['PGtype']
+                self.query(sql)
+
+        #* read potential python file
+        pythonfile, ext = os.path.splitext(pythonupdatefile)
+        pythonfile = pythonfile + '.txt'
+
+        if os.path.isfile(pythonfile):
+            pyfile = open(pythonfile,'r')
+            text = pyfile.read()
+            pyfile.close()
+            exec (text)
+
+
+        #* update version
+        self.dbasetables = dictnew
+        if typebase == 'base':
+            self.baseversion = newversion
+            self.workversion = self.workversion
+        elif typebase == 'work':
+            self.baseversion = self.baseversion
+            self.workversion = newversion
+
+        sql = "UPDATE Basedonnees SET version = '" + str(self.version) + "'"
+        if self.workversion is not None:
+            sql += ",workversion = '" + str(self.workversion) + "'"
+
+        self.query(sql)
+
+
+        if False:
+            if typebase == 'base':
+                indexnewversion = [ver[0] for ver in baseversions].index(newversion)
+                filenewversion = baseversions[indexnewversion][1]
+                #updates new columsns
+                self.createDBDictionary2(self.type, baseversiontoread=oldversion, workversiontoread=self.workversion)
+                dictold = dict(self.dbasetables)
+                self.createDBDictionary2(self.type, baseversiontoread=newversion, workversiontoread=self.workversion)
+                dictnew = dict(self.dbasetables)
+            elif typebase == 'metier':
+                indexnewversion = [ver[0] for ver in workversions].index(newversion)
+                filenewversion = workversions[indexnewversion][1]
+                #updates new columsns
+                self.createDBDictionary2(self.type, baseversiontoread=self.version, workversiontoread=oldversion)
+                dictold = dict(self.dbasetables)
+                self.createDBDictionary2(self.type, baseversiontoread=self.version, workversiontoread=newversion)
+                dictnew = dict(self.dbasetables)
+
+
+
+            results = []
+
+            for table in dictnew.keys():
+                for field in dictnew[table]['fields']:
+                    if field not in dictold[table]['fields'].keys():
+                        results.append([table, field])
+
+            if debug: logging.getLogger("Lamia").debug('diff : %s', str(results))
+            if self.qgsiface is None:
+                print('diff :',str(results))
+
+            for table, field in results:
+                sql = 'ALTER TABLE ' + table + ' ADD COLUMN ' + field + ' '
+                if self.dbasetype == 'spatialite':
+                    if 'VARCHAR' in dictnew[table]['fields'][field]['PGtype']:
+                        sql += ' TEXT '
+                    else:
+                        sql += PGTYPE_TO_SLTYPE[dictnew[table]['fields'][field]['PGtype']]
+                elif self.dbasetype == 'postgis':
+                    sql += dictnew[table]['fields'][field]['PGtype']
+                self.query(sql)
+
+            # read potential python file
+            pythonfile, ext = os.path.splitext(filenewversion)
+            pythonfile = pythonfile + '.txt'
+
+            if os.path.isfile(pythonfile):
+                pyfile = open(pythonfile,'r')
+                text = pyfile.read()
+                pyfile.close()
+                exec (text)
+
+
+            #update version
+            if typebase == 'base':
+                self.version = newversion
+                self.workversion = self.workversion
+            elif typebase == 'metier':
+                self.version = self.version
+                self.workversion = newversion
+
+            sql = "UPDATE Basedonnees SET version = '" + str(self.version) + "'"
+            if self.workversion is not None:
+                sql += ",workversion = '" + str(self.workversion) + "'"
+
+            self.query(sql)
+
+
+
 
     def createRessourcesDir(self, dbaseressourcesdirectory, **kwargs):
 

@@ -1,14 +1,29 @@
 import unittest, os, logging, sys, platform
 sys.path.append(os.path.join(os.path.join(os.path.dirname(__file__)), '..'))
+"""
 import warnings
 with warnings.catch_warnings():
     warnings.filterwarnings("ignore",category=DeprecationWarning)
+
+if not sys.warnoptions:
+    import warnings
+    warnings.simplefilter("ignore")
+"""
+import networkx
+import Lamia.libs.pyqtgraph
+
 
 from pprint import pprint
 import qgis, qgis.core, qgis.gui
 from qgis.PyQt import uic, QtCore
 from qgis.PyQt.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, Qt
 from qgis.PyQt.QtWidgets import (QWidget,QDialog,QMainWindow)
+
+import warnings, os
+#warnings.simplefilter("ignore")
+#os.environ["PYTHONWARNINGS"] = "ignore" # Also affect subprocesses
+warnings.filterwarnings("default", category=DeprecationWarning,
+                                   module='networkx')
 
 from Lamia.iface.qgiswidget.ifaceqgswidget import LamiaWindowWidget
 from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
@@ -110,63 +125,17 @@ class DBaseTest(unittest.TestCase):
         if SHOWIFACE:
             self.showIFace()
 
-    """
-    def test_a_testSaveFeature_caduc(self):
-        testcdir = os.path.join(self.tempdir, 'c_creation')
-        self._initQGis()
-
-        for work in DBTYPE:
-            sqlitedbase = DBaseParserFactory('spatialite').getDbaseParser()
-            sqlitedbase.dbconfigreader.createDBDictionary(work)
-
-            if not 'VARIANTES' in globals().keys():
-                variantes = list(sqlitedbase.dbconfigreader.variantespossibles)
-            else:
-                variantes = globals()['VARIANTES']
-
-            logging.getLogger("Lamia_unittest").debug('*************** Opening %s', variantes)
-            for variante in variantes:
-                logging.getLogger("Lamia_unittest").debug('*************** Opening %s %s', work, variante)
-                self._createWin()
-                self._createMainWin()
-
-                if SPATIALITE:
-                    if not 'SLFILE' in locals().keys() or SLFILE is None:
-                        slfile = os.path.join(testcdir, 'sl_' + work + '_' + variante, 'test01.sqlite')
-                    else:
-                        slfile = SLFILE
-                    self.wind.loadDBase(dbtype='Spatialite', slfile=slfile)
-                    slfile = None
-                    if False :
-                        pprint(self.wind.dbase.dbasetables['Observation']['fields'])
-                        if False:
-                            res = self.wind.dbase.query('SELECT datetimecreation FROM Objet WHERE pk_objet = 2')
-                            print(str(res[0][0]))
-                            print(type(res[0][0]))
-                        sys.exit()
-                    if TEST_WITH_FEATURE_CREATION:
-                        self.featurecreation()
-                    if SHOWIFACE:
-                        self.showIFace()
-                if POSTGIS:
-                    #print(PGhost, PGport, PGbase, work + '_' + variante, PGuser,  PGpassword)
-                    self.wind.loadDBase(dbtype='Postgis', host=PGhost, port=PGport, dbname=PGbase, schema= work + '_' + variante, user=PGuser,  password=PGpassword)
-                    if TEST_WITH_FEATURE_CREATION:
-                        self.featurecreation()
-                    if SHOWIFACE:
-                        self.showIFace()
-
-        self._exitQGis()
-    """
-
     def showIFace(self):
         self.wind.setVisualMode(visualmode=4)
         if self.wind.qgiscanvas.layers['Infralineaire']['layer'].featureCount() > 0:
             extent = self.wind.qgiscanvas.layers['Infralineaire']['layer'].extent().buffered(10.0)
         else:
             extent = qgis.core.QgsRectangle(X_BEGIN, Y_BEGIN, X_BEGIN + 10, Y_BEGIN + 10)
-        logging.getLogger("Lamia_unittest").debug('Extent : %s', extent)
+        # logging.getLogger("Lamia_unittest").debug('Extent : %s', extent)
         self.wind.qgiscanvas.canvas.setExtent(extent)
+        # display good widget
+        wdg = self.wind.toolwidgets['toolpostpro']['Import'][0]
+        wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
         self.mainwin.exec_()
 
     def featurecreation(self):
