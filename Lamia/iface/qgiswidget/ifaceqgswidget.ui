@@ -631,8 +631,8 @@ background-color: rgb(255, 255, 255);</string>
      <property name="title">
       <string>Import / export</string>
      </property>
-     <addaction name="actionExporter_la_base"/>
-     <addaction name="actionImporter_et_mettre_jour_la_base"/>
+     <addaction name="action_pulldb"/>
+     <addaction name="action_pushdb"/>
      <addaction name="separator"/>
      <addaction name="actionImporter_et_ajouter_la_base"/>
     </widget>
@@ -876,9 +876,9 @@ background-color: rgb(255, 255, 255);</string>
     <string>Exporter vers SIRS Digues</string>
    </property>
   </action>
-  <action name="actionExporter_la_base">
+  <action name="action_pulldb">
    <property name="text">
-    <string>Exporter pour l'inspection terrain</string>
+    <string>Créer une copie locale</string>
    </property>
   </action>
   <action name="actionImporter_et_ajouter_la_base">
@@ -886,9 +886,9 @@ background-color: rgb(255, 255, 255);</string>
     <string>Importer et ajouter une base de données</string>
    </property>
   </action>
-  <action name="actionImporter_et_mettre_jour_la_base">
+  <action name="action_pushdb">
    <property name="text">
-    <string>Importer l'inspection terrain</string>
+    <string>Reverser la base locale sur la base principale</string>
    </property>
   </action>
   <action name="actionTables_et_champs">

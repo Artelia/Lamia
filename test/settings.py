@@ -47,7 +47,7 @@ SPATIALITE = True
 POSTGIS = False
 
 #* test onparticularfile - uncomment to apply
-if False:
+if True:
     SLFILE = os.path.join(os.path.dirname(__file__), 'lamia_test','test01.sqlite')
 if False:
     PGhost = 'localhost'

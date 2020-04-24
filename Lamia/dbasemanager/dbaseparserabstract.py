@@ -114,7 +114,7 @@ class AbstractDBaseParser():
 
         self.forcenocommit=False
 
-
+        self.connectconf = None    #dict of connection data
 
     def connectToDBase(self):
         raise NotImplementedError
@@ -216,7 +216,7 @@ class AbstractDBaseParser():
         raise NotImplementedError
 
     def loadDBase(self, **kwargs):
-
+        self.connectconf = kwargs
         self.connectToDBase(**kwargs)
 
         #init variables

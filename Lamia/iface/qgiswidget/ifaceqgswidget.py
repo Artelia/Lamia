@@ -24,7 +24,6 @@ This file is part of LAMIA.
   * SPDX-License-Identifier: GPL-3.0-or-later
   * License-Filename: LICENSING.md
  """
-
 # qgis pyqt import
 from qgis.PyQt import QtGui, uic, QtCore
 from unicodedata import normalize
@@ -440,11 +439,35 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         self.qgiscanvas.updateWorkingDate(dbaseparser=self.dbase)
 
 
-    def pullDBase(self):    #for offline mode
-        pass
+    def pullDBase(self, exportfilepath=None):    #for offline mode
+        if exportfilepath is None:
+            if platform.system() == 'Linux':
+                pass
+            elif platform.system() == 'Windows':
+                importdir = "C://Users//Public//Documents"
+            lamiadir = os.path.join(importdir,'lamia')
+            if not os.path.isdir(lamiadir):
+                os.mkdir(lamiadir)
+            dbname = self.dbase.getDBName()
+            dbdir = os.path.join(lamiadir,dbname)
+            if not os.path.isdir(dbdir):
+                os.mkdir(dbdir)
+            else:
+                self.connector.showErrorMessage('Il y a déjà une copie locale de la base... Supprimez la')
+                return
+            
+            lamiafilepath = os.path.join(dbdir,dbname+'.sqlite')
+        else:
+            lamiafilepath = exportfilepath
 
+        
+        self.dbase.dbaseofflinemanager.exportDbase(lamiafilepath)
+
+        self.loadDBase(dbtype='Spatialite',slfile=lamiafilepath)
+
+        
     def pushDBase(self):    #for offline mode
-        pass
+        self.dbase.dbaseofflinemanager.pushDBase()
 
     def addDBase(self):
         pass
@@ -1076,8 +1099,8 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         self.actionSpatialite.triggered.connect(self.loadDBase)
         self.actionPostgis.triggered.connect(self.loadDBase)
         self.actionImporter_et_ajouter_la_base.triggered.connect(self.addDBase)
-        self.actionImporter_et_mettre_jour_la_base.triggered.connect(self.pushDBase)
-        self.actionExporter_la_base.triggered.connect(self.pullDBase)
+        self.action_pushdb.triggered.connect(self.pushDBase)
+        self.action_pulldb.triggered.connect(self.pullDBase)
 
         #visual mode menu
         self.actionModeExpert.triggered.connect(self.setVisualMode)
@@ -1138,9 +1161,10 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         nearestpk, dist = self.qgiscanvas.getNearestPk(tablename,
                                                         point,  #former point2
                                                         comefromcanvas=True)
+        if debug: logging.getLogger("Lamia_unittest").debug('nearestpk %s', str(nearestpk))
+        
         if nearestpk is None:   #no element in table
             return
-
         parentwdg.selectFeature(pk=nearestpk)
         if parentwdg.choosertreewidget is not None:
             parentwdg.choosertreewidget.selectFeature(pk=nearestpk)

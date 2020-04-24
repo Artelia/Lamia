@@ -25,7 +25,7 @@ This file is part of LAMIA.
  """
 
 import datetime, os, sys
-import logging
+import logging, json
 
 from . import dbaseutils
 
@@ -35,7 +35,19 @@ class DBaseOfflineManager():
     def __init__(self, dbase):
         self.dbase = dbase
 
+    def pushDBase(self):
+        tempconffilepath = os.path.join(self.dbase.dbaseressourcesdirectory,'config', '.offlinemode')
+        with open(tempconffilepath) as outfile:
+            connectconf = json.load(outfile)
 
+        dbaseparserfact = self.dbase.parserfactory.__class__
+        if 'slfile' in connectconf.keys():
+            parentdbase = dbaseparserfact('spatialite').getDbaseParser()
+        elif 'pgschema' in connectconf.keys():
+            parentdbase = dbaseparserfact('postgis').getDbaseParser()
+
+        parentdbase.loadDBase(**connectconf)
+        parentdbase.dbaseofflinemanager.importDbase(self.dbase,typeimport='import_terrain')
 
     def importDbase(self, dbaseparserfrom, typeimport='nouvelle'):
         """
@@ -46,27 +58,7 @@ class DBaseOfflineManager():
         """
 
         debug = False
-
-        dbaseutils.isAttributeNull('None')
-
         self.backupBase()
-        """
-        if self.qgsiface is not None:
-            #if not self.dbase.standalone:
-            progressMessageBar = self.qgsiface.messageBar().createMessage("Import des donnees...")
-            progress = QProgressBar()
-            progress.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
-            progressMessageBar.layout().addWidget(progress)
-            if int(str(self.qgisversion_int)[0:3]) < 220:
-                self.qgsiface.messageBar().pushWidget(progressMessageBar, self.qgsiface.messageBar().INFO)
-            else:
-                self.qgsiface.messageBar().pushWidget(progressMessageBar, qgis.core.Qgis.Info)
-            #len
-            maxprogress = len(self.dbase.dbasetables.keys())
-            progress.setMaximum(maxprogress)
-        else:
-            progress = None
-        """
 
         # ********** Variables générales ***********************************
         # import dict : {tablename : {...{idfrom : idto} ...} }
@@ -108,23 +100,15 @@ class DBaseOfflineManager():
         for order in range(1, 10):
             for dbname in self.dbase.dbasetables:
                 if self.dbase.dbasetables[dbname]['order'] == order:
-
                     counter += 1
+                    if debug: logging.getLogger("Lamia_unittest").debug(' ******************* %s *********  ', dbname)
 
-                    # if progress: progressMessageBar.setText("Import des donnees... : " + dbname)
-                    # self.setLoadingProgressBar(progress, counter)
-
-
-
-                    if debug: logging.getLogger("Lamia").debug(' ******************* %s *********  ', dbname)
-                    logging.getLogger("Lamia_unittest").debug(' ******************* %s *********  ', dbname)
-
-                    # initialisation des variables génerales
+                    #* global var initialization
                     importdictid[dbname.lower()] = {}
                     importdictpk[dbname.lower()] = {}
                     importdictdeletedpk[dbname.lower()] = []
 
-                    # get non critical fields (not pk and non id)
+                    #* get non critical fields (not pk and non id)
                     noncriticalfield = []           # the "non-critical" fields
                     pkidfields = []                 # the "critical" fields (pk; id, lpk, lid)
                     for field in self.dbase.dbasetables[dbname]['fields'].keys():
@@ -140,7 +124,7 @@ class DBaseOfflineManager():
                     if debug: logging.getLogger("Lamia").debug(' fields, critical : %s %s ',
                                                                str(noncriticalfield),str(pkidfields))
 
-                    # request results from dbaseparserfrom
+                    #* request results from dbaseparserfrom
                     if typeimport == 'nouvelle':
                         sqlconstraint = " WHERE lpk_revision_end IS NULL"
                     elif typeimport == 'import_terrain':
@@ -168,7 +152,7 @@ class DBaseOfflineManager():
                     if strtofind in noncriticalfield:
                         noncriticalfield[noncriticalfield.index(strtofind)] = 'geom'
 
-                    # get previoux existing id and other things for import terrain
+                    #* get previoux existing id and other things for import terrain
                     resultsid = None            # the existing id in main table
                     indexidfield = None         # the index of id_ column
                     indexrevisionend = None     # the index of lpk_revision_end
@@ -180,20 +164,17 @@ class DBaseOfflineManager():
                     if typeimport == 'import_terrain':
                         # get resultsid and indexidfield
                         if "id_" + dbname.lower() in pkidfields:
-                            if True:
-                                sqlid = "SELECT id_" + dbname.lower() + " FROM " + dbname.lower() + "_qgis"
-                                sqlid += " WHERE lpk_revision_begin = 1 "
-                                resultsid = [elem[0] for elem in dbaseparserfrom.query(sqlid)]
+                            sqlid = "SELECT id_" + dbname.lower() + " FROM " + dbname.lower() + "_qgis"
+                            sqlid += " WHERE lpk_revision_begin = 1 "
+                            resultsid = [elem[0] for elem in dbaseparserfrom.query(sqlid)]
 
-                            if False:
-                                sqlid = "SELECT id_" + dbname.lower() + " FROM " + dbname.lower() + "_qgis"
-                                sqlid += " WHERE datetimecreation < '" + str(datetravailhorsligne) + "'"
-                                resultsid = [elem[0] for elem in self.dbase.query(sqlid)]
                             indexidfield = pkidfields.index("id_" + dbname.lower())
+                        
                         # get indexrevisionend
                         if "lpk_revision_end" in pkidfields:
                             indexrevisionend = pkidfields.index('lpk_revision_end')
                         indexpkdbase = pkidfields.index("pk_" + dbname.lower())
+                        
                         # get eventual parenttable
                         for j, fieldname in enumerate(pkidfields):
                             if fieldname[0:4] == 'lpk_':
@@ -203,10 +184,8 @@ class DBaseOfflineManager():
                                                                    str(parenttable),
                                                                    str(indexlkparenttable))
 
-                    # start the iteration in table lines
-                    # if results is not None:
+                    #* start the iteration in table lines
                     for i, result in enumerate(results):
-
                         if i % 50 == 0 and debug: logging.getLogger("Lamia").debug(' result : %s  ', str(result))
 
                         if resultsid is not None:
@@ -215,13 +194,8 @@ class DBaseOfflineManager():
                         # id already exists before - search if it was modified
                         if resultsid is not None and importid in resultsid:
                             # get its  datemodif
-                            if False:
-                                sqldate = " SELECT datetimemodification FROM " + dbname.lower() + "_qgis"
-                                sqldate += " WHERE id_" + dbname.lower() + " = " + str(importid)
-                                sqldate += " AND lpk_revision_end IS NULL"
-                            if True:
-                                sqldate = " SELECT MAX(datetimemodification) FROM " + dbname.lower() + "_qgis"
-                                sqldate += " WHERE id_" + dbname.lower() + " = " + str(importid)
+                            sqldate = " SELECT MAX(datetimemodification) FROM " + dbname.lower() + "_qgis"
+                            sqldate += " WHERE id_" + dbname.lower() + " = " + str(importid)
                             resultdatesql = self.dbase.query(sqldate)
                             resultdate = None
                             if resultdatesql : # cases 3, 5, 6, 8, 9
@@ -249,11 +223,6 @@ class DBaseOfflineManager():
 
                             elif resultdate < datetravailhorsligne or resultdate > datedebutimport:     #case 1, 3 - no conflict
                                 pass
-
-
-
-
-
 
                             else:     # cases  5, 6, 8, 9
                                 if dbname.lower() == 'objet':
@@ -314,49 +283,6 @@ class DBaseOfflineManager():
                                             self.dbase.query(sql, docommit=False)
 
 
-                                    if False:
-
-                                        sql = " SELECT pk_" + dbname.lower() + "FROM " + dbname.lower() + "_qgis"
-                                        sql += " WHERE id_" + dbname.lower() + " = " + str(importid)
-                                        sql += " AND lpk_revision_end IS NULL "
-                                        sql += "AND datetimemodification > '"  + str(datetravailhorsligne) + "'"
-                                        resultcase = self.dbase.query(sql)
-
-                                        if resultcase:  #case 3a, 6a, 9a : revend to main line without possible conflict
-                                            pass
-                                        else:
-                                            pass
-
-
-                                        if 'lpk_revision_end' in self.dbase.dbasetables[dbname]['fields'].keys():
-                                            datesuppr = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-                                            sql = "UPDATE " + dbname.lower() + " SET lpk_revision_end = " + str(self.maxrevision)
-                                            sql += " , datetimemodification = '" + datesuppr + "'"
-                                            sql += " WHERE pk_" + dbname.lower() + " = " + str(resultpk[i][indexpkdbase])
-                                            self.dbase.query(sql, docommit=False)
-
-                                            # add pk to importdictdeletedpk
-                                            importdictdeletedpk[dbname.lower()].append(resultpk[i][indexpkdbase])
-
-                                            if True:
-                                                # search if another id is in main and not in import
-                                                sql = "SELECT pk_" + dbname.lower() + " FROM  " + dbname.lower()
-                                                sql += " WHERE id_" + dbname.lower() + " = " + str(importid)
-                                                sql += " AND lpk_revision_end IS NULL"
-                                                idmain = self.dbase.query(sql)
-                                                idimport = dbaseparserfrom.query(sql)
-
-                                                if not idimport and idmain:        # simple delete from import and remain in main
-                                                    pkmain = idmain[0][0]
-                                                    sql = "UPDATE " + dbname.lower() + " SET lpk_revision_end = " + str(self.maxrevision)
-                                                    sql += " , datetimemodification = '" + datesuppr + "'"
-                                                    sql += " WHERE pk_" + dbname.lower() + " = " + str(pkmain)
-                                                    self.dbase.query(sql, docommit=False)
-
-
-
-
-
                             # if parent table pk is in  importdictdeletedpk
                             elif (parenttable is not None
                                   and parenttable in importdictdeletedpk.keys()
@@ -395,8 +321,6 @@ class DBaseOfflineManager():
                                 # case of line deleted in main and deleted in import - dont t process it
                                 importdictdeletedpk[dbname.lower()].append(resultpk[i][indexpkdbase])
 
-
-
                             elif (parenttable is not None
                                   and parenttable in importdictdeletedpk.keys()
                                   and resultpk[i][indexlkparenttable] in importdictdeletedpk[parenttable]):
@@ -415,15 +339,13 @@ class DBaseOfflineManager():
                                 self.dbase.query(sql, docommit=False)
 
                                 # traite les id, pk et lid et lpk
-                                if True:
-                                    sqlup = self.updateIdPkSqL(tablename=dbname,
-                                                               listoffields=pkidfields,
-                                                               listofrawvalues=resultpk[i],
-                                                               dictpk=importdictpk,
-                                                               dictid=importdictid,
-                                                               changeID=True)
-
-                                    self.dbase.query(sqlup, docommit=False)
+                                sqlup = self.updateIdPkSqL(tablename=dbname,
+                                                            listoffields=pkidfields,
+                                                            listofrawvalues=resultpk[i],
+                                                            dictpk=importdictpk,
+                                                            dictid=importdictid,
+                                                            changeID=True)
+                                self.dbase.query(sqlup, docommit=False)
 
                                 # Ressource case : copy file
                                 if dbname == 'Ressource':
@@ -446,11 +368,10 @@ class DBaseOfflineManager():
 
         self.resolveConflict(dbaseparserfrom,conflictobjetids )
 
-
-
-
         # if progress is not None: self.qgsiface.messageBar().clearWidgets() TODO
         self.normalMessage.emit("Import termine")
+
+
 
     def isInConflict(self, dbaseparserfrom, conflictobjetid):
         """
@@ -764,7 +685,7 @@ class DBaseOfflineManager():
         #exportparser.createDbase(slfile=exportfile,
         #                         crs = self.dbase.crsnumber,
         #                         worktype = self.type)
-        exportparser.createDbase(crs=self.dbase.crsnumber, 
+        exportparser.createDBase(crs=self.dbase.crsnumber, 
                                 worktype=self.dbase.worktype, 
                                 dbaseressourcesdirectory=None, 
                                 variante=None,
@@ -934,6 +855,10 @@ class DBaseOfflineManager():
 
         # if progress is not None: self.qgsiface.messageBar().clearWidgets() TODO
 
+        #finaly create a file keeping in memory the parent dbase
+        tempconffilepath = os.path.join(exportparser.dbaseressourcesdirectory,'config', '.offlinemode')
+        with open(tempconffilepath, 'w', encoding='utf-8') as outfile:
+            json.dump(self.dbase.connectconf, outfile, ensure_ascii=False, indent=4)
 
     def backupBase(self):
 
@@ -951,7 +876,7 @@ class DBaseOfflineManager():
 
         dbaseparserfact = self.dbase.parserfactory.__class__
         backupsqlitedbase = dbaseparserfact('spatialite').getDbaseParser()
-        backupsqlitedbase.createDbase(crs=self.dbase.crsnumber, 
+        backupsqlitedbase.createDBase(crs=self.dbase.crsnumber, 
                                 worktype=self.dbase.worktype, 
                                 dbaseressourcesdirectory=None, 
                                 variante=None,

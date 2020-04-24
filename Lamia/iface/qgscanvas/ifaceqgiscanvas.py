@@ -499,7 +499,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         :return: le pk de la table dbasetablenamele plus proche du point
         """
         debug = False
-        layertoprocess = self.layers[tablename]['layer']
+        layertoprocess = self.layers[tablename]['layerqgis']        #layer qgis has conf with only good versions
         # checking if layer is spatial one
         # isspatial = dbasetable['layerqgis'].isSpatial()
         isspatial = layertoprocess.isSpatial()
@@ -545,7 +545,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
             disfrompoint = nearestfetgeom.distance(point2geom)
 
-            if debug: logging.getLogger("Lamia").debug('nearestfetgeom - dist %s %s', str(nearestfetgeom.exportToWkt()), str(disfrompoint))
+            if debug: logging.getLogger("Lamia").debug('nearestfetgeom - dist %s %s', str(nearestfetgeom.asWkt()), str(disfrompoint))
             if disfrompoint < 0.1:
                 disfrompoint = 0.1
 

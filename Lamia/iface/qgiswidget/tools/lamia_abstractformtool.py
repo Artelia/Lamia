@@ -507,6 +507,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         # select feature and update choosertreewidget
         self._widgetClicked_manageToolBar()
 
+
     def _widgetClicked_manageFeatureSelectionAndChooserWidget(self,**kwargs):
         if (self.lastselectedpk is not None and len(self.choosertreewidget.ids)>0 
                 and self.lastselectedpk in self.choosertreewidget.ids.pk.values):

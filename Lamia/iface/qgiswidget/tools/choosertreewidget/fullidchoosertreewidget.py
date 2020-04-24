@@ -412,7 +412,9 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
         pass
 
     def selectFeature(self,pk=None):
+        self.disconnectTreewidget()
         self.selectItemfromPK(pk)
+        self.connectTreewidget()
 
     def toolbarNew(self):
         self.disconnectTreewidget()
