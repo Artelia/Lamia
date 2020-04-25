@@ -116,6 +116,9 @@ class AbstractDBaseParser():
 
         self.connectconf = None    #dict of connection data
 
+    def __________________________DBase_handing(self):
+        pass
+
     def connectToDBase(self):
         raise NotImplementedError
 
@@ -248,8 +251,6 @@ class AbstractDBaseParser():
         sql = "SELECT MAX(pk_revision) FROM Revision;"
         query = self.query(sql)
         self.currentrevision = query[0][0]
-
-
 
     def initDBase(self):
         raise NotImplementedError
@@ -440,9 +441,6 @@ class AbstractDBaseParser():
 
             self.query(sql)
 
-
-
-
     def createRessourcesDir(self, dbaseressourcesdirectory, **kwargs):
 
       slfile=kwargs.get('slfile', None)
@@ -465,7 +463,8 @@ class AbstractDBaseParser():
 
       return dbaseressourcesdirectorytemp
 
- 
+    def __________________________DBase_querying(self):
+        pass
 
     def query(self):
         raise NotImplementedError 
@@ -583,6 +582,107 @@ class AbstractDBaseParser():
     def getWktGeomFromPk(self, dbasename, pk):
         return self.getValuesFromPk(dbasename, 'ST_AsText(geom)', pk)
 
+    def createSetValueSentence(self,type='INSERT',tablename=None, listoffields=[], listofrawvalues=[]):
+
+        debug = False
+        if debug : logging.getLogger("Lamia").debug(' fields / rawvalues %s %s  ', str(listoffields), str(listofrawvalues))
+
+        restemp = []
+
+        for l, res in enumerate(listofrawvalues):
+            if sys.version_info.major == 2:
+                if isinstance(res, str) or (isinstance(res, unicode) and listoffields[l] != 'geom'):
+                    if isinstance(res, unicode):
+                        restemp.append("'" + res.replace("'", "''") + "'")
+                    else:
+                        restemp.append("'" + str(res).replace("'", "''") + "'")
+
+                elif listoffields[l] == 'geom' and res is not None:
+                    # print('geom', "ST_GeomFromText('" + res + "', " + str(self.crsnumber)  + ")")
+                    restemp.append("ST_GeomFromText('" + res + "', " + str(self.crsnumber) + ")")
+                elif res is None or res == '':
+                    restemp.append('NULL')
+                else:
+                    restemp.append(str(res))
+
+            elif sys.version_info.major == 3:             
+                if ((isinstance(res, str)  or isinstance(res, bytes))  and listoffields[l] != 'geom' 
+                        and 'datetime' not in listoffields[l]) :
+                    restemp.append("'" + str(res).replace("'", "''") + "'")
+                elif 'datetime' in listoffields[l] and  res is not None and res != 'None':
+                        restemp.append("'" + str(res) + "'")
+                elif listoffields[l] == 'geom' and res is not None:
+                    restemp.append("ST_GeomFromText('" + res + "', " + str(self.crsnumber) + ")")
+                elif res is None or res == ''  :
+                    restemp.append('NULL')
+                elif (isinstance(res, str)  or isinstance(res, bytes)) and 'None' in res:
+                    restemp.append('NULL')
+                else:
+                    restemp.append(str(res))
+
+        if type == 'INSERT':
+            sql = "INSERT INTO " + tablename + '(' + ','.join(listoffields) + ')'
+            sql += " VALUES(" + ','.join(restemp) + ")"
+
+        elif type == 'UPDATE':
+            sql = " UPDATE " + tablename.lower() + " SET "
+            for i, field in enumerate(listoffields):
+                sql += field + " = " + str(restemp[i]) + ', '
+            sql = sql[:-2]
+
+        return sql
+
+    def sqlNow(self, sqlin, date=None):
+        sqlout = self.updateQueryTableNow(sqlin, date)
+        return sqlout
+
+    def updateQueryTableNow(self, sqlin, date=None):
+        
+        sqllist = re.split(' |,|\(|\)|\.|=', sqlin)
+        withsql = ''
+        alreadytables=[]
+        for sqlword in sqllist:
+            if '_now' in sqlword:
+                tablename=sqlword.split('_now')[0]
+                if 'lpk_revision_begin' in self.getColumns(tablename + '_qgis'):
+                    if tablename.lower() not in  alreadytables:
+                        alreadytables.append(tablename.lower())
+                        withsql +=  sqlword + " AS "
+                        withsql += " (SELECT * FROM " + tablename + "_qgis WHERE "
+                        withsql += self._dateVersionConstraintSQL(date)
+                        withsql += "), "
+                else:
+                    if tablename.lower() not in  alreadytables:
+                        alreadytables.append(tablename.lower())
+                        withsql +=  sqlword + " AS "
+                        withsql += " (SELECT * FROM " + tablename + "), "
+
+        withsql = withsql[0:-2]
+        sqltemp1 = self.utils.splitSQLSelectFromWhereOrderby(sqlin)
+        sqlout = ''
+        if 'WITH' in sqltemp1.keys():
+            sqlout += 'WITH ' + sqltemp1['WITH']
+            sqlout += ', ' + withsql
+            sqlout += ' SELECT ' + sqltemp1['SELECT'] + ' FROM ' + sqltemp1['FROM']+ ' WHERE ' + sqltemp1['WHERE']
+            if 'ORDER' in sqltemp1.keys():
+                sqlout += ' ORDER BY ' + sqltemp1['ORDER']
+            if 'GROUP' in sqltemp1.keys():
+                sqlout += ' GROUP BY ' + sqltemp1['GROUP']
+
+        elif withsql != '':
+            sqlout += 'WITH ' + withsql + sqlin
+
+        else:
+            sqlout += sqlin
+            
+        return sqlout
+
+    def _dateVersionConstraintSQL(self, specialdate=None):
+        raise NotImplementedError
+
+    def __________________________Feature_creation_saving(self):
+        pass
+
     def createNewObjet(self, docommit=True):
         datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         #lastobjetid = self.getLastId('Objet') + 1
@@ -622,6 +722,31 @@ class AbstractDBaseParser():
             
         return self.getLastPK(tablename)
 
+    def manageFeatureCreationOrUpdate(self, tablename, featurepk=None):
+        """
+        Called by saveFeature - Manage versioning
+        return pk of object
+        """
+
+        if featurepk is not None :  #existing feature saved
+            if 'lpk_revision_begin' in self.getColumns(tablename + '_qgis'):
+                featlastrevision = self.getValuesFromPk(tablename + '_qgis',
+                                                        'lpk_revision_begin',
+                                                            featurepk)
+
+                if featlastrevision != self.maxrevision:   #new version feature
+                    self.createNewFeatureVersion(tablename,
+                                                featurepk)
+                    pktoreturn= self.getLastPK(tablename)
+                else:       #simple feature update
+                    pktoreturn = featurepk
+            else:
+                pktoreturn = featurepk
+
+        else:           # feature creation
+            pktoreturn = self.createNewFeature(tablename)
+
+        return pktoreturn
 
     def createNewFeatureVersion(self,dbname, rawpk):
 
@@ -662,7 +787,7 @@ class AbstractDBaseParser():
                                                   nonpkfields,
                                                   list(values))
                 self.query(sql)
-                lastpk.append(self.getLastRowId(tablename))
+                lastpk.append(self.getLastPK(tablename))
                 fieldstoupdate = []
                 valuestoupdate=[]
                 if 'lpk_revision_begin' in pkfields:
@@ -682,6 +807,87 @@ class AbstractDBaseParser():
                                                   valuestoupdate)
                 sql += " WHERE pk_" + tablename.lower() + " = " + str(lastpk[i])
                 self.query(sql)
+
+    def saveRessourceFile(self,dbname, featurepk=None):
+        """
+        Called by saveFeature
+        If ressource file is not in the dbase directory, save it in the dbase directory
+
+        """
+        # get date
+        """
+        sql = "SELECT datetimecreation FROM " + self.dbasetablename.lower() + "_qgis"
+        sql += " WHERE pk_"+ self.dbasetablename.lower() + " = " + str(self.currentFeaturePK)
+        query = self.dbase.query(sql)
+        result = [row[0] for row in query]
+        """
+        if not 'Ressource' in self.getParentTable(dbname):
+            return
+            
+        DBASETABLENAMElower = dbname.lower()
+        result = self.formtoolwidget.dbase.getValuesFromPk(DBASETABLENAMElower + "_qgis",
+                                                            'datetimecreation',
+                                                            featurepk)
+
+        if result is not None:
+            datevalue = datetime.datetime.strptime(str(result), "%Y-%m-%d %H:%M:%S").date()
+            if isinstance(datevalue, datetime.date):
+                datevalue = datevalue.strftime('%Y-%m-%d')
+        else:
+            return
+
+        date = ''.join(datevalue.split('-'))
+        """
+        sql = "SELECT pk_ressource, id_ressource, file FROM " + self.dbasetablename.lower() + "_qgis"
+        sql += " WHERE pk_"+ self.dbasetablename.lower() + " = " + str(self.currentFeaturePK)
+        query = self.dbase.query(sql)
+        result = [row[0:3] for row in query]
+        """
+        result = self.getValuesFromPk(DBASETABLENAMElower + "_qgis",
+                                                            ['pk_ressource', 'id_ressource', 'file'],
+                                                            featurepk)
+        if len(result) > 0:
+            pkressource, idressource, file = result
+        else:
+            return
+
+        dbaseressourcesdirectory = self.dbaseressourcesdirectory
+        if file is not None and len(file) > 0:
+            if file[0] == '.':
+                file = os.path.join(dbaseressourcesdirectory,file)
+            else:
+                if os.path.isfile(file):
+                    filename = os.path.basename(file)
+                    filename = str(idressource) + '_' + filename
+                    destinationdir = os.path.join(dbaseressourcesdirectory,dbname,date)
+                    destinationfile = os.path.join(destinationdir, filename)
+
+                    self.copyRessourceFile(fromfile= file,
+                                            tofile=destinationfile,
+                                            withthumbnail=0,
+                                            copywholedirforraster=False)
+
+
+                    finalname = os.path.join('.',os.path.relpath(destinationfile, dbaseressourcesdirectory ))
+                    sql = "UPDATE Ressource SET file = '" + finalname + "' WHERE pk_ressource = " +  str(pkressource) + ";"
+                    query = self.query(sql)
+
+                    #removing old file 
+                    #if self.beforesavingFeature is not None:
+                    if self.formtoolwidget.currentFeaturePK is not None:   #case updating existing feature
+                        sql = "SELECT file FROM Ressource  WHERE pk_ressource = " + str(pkressource) + ";"
+                        query = self.query(sql)
+                        result = [row[0] for row in query]
+                        oldfile = result[0]
+                    else:
+                        oldfile = ''
+
+                    newfile = finalname
+
+                    if os.path.isfile(self.completePathOfFile(oldfile)) and oldfile != newfile:
+                        os.remove(self.completePathOfFile(oldfile))
+                    else:
+                        pass
 
     def completePathOfFile(self,filetoprocess):
         """
@@ -796,102 +1002,4 @@ class AbstractDBaseParser():
                     if withthumbnail in [0,2]:
                         shutil.copy(fromfile, destinationfile)
 
-
-    def createSetValueSentence(self,type='INSERT',tablename=None, listoffields=[], listofrawvalues=[]):
-
-        debug = False
-        if debug : logging.getLogger("Lamia").debug(' fields / rawvalues %s %s  ', str(listoffields), str(listofrawvalues))
-
-        restemp = []
-
-        for l, res in enumerate(listofrawvalues):
-            if sys.version_info.major == 2:
-                if isinstance(res, str) or (isinstance(res, unicode) and listoffields[l] != 'geom'):
-                    if isinstance(res, unicode):
-                        restemp.append("'" + res.replace("'", "''") + "'")
-                    else:
-                        restemp.append("'" + str(res).replace("'", "''") + "'")
-
-                elif listoffields[l] == 'geom' and res is not None:
-                    # print('geom', "ST_GeomFromText('" + res + "', " + str(self.crsnumber)  + ")")
-                    restemp.append("ST_GeomFromText('" + res + "', " + str(self.crsnumber) + ")")
-                elif res is None or res == '':
-                    restemp.append('NULL')
-                else:
-                    restemp.append(str(res))
-
-            elif sys.version_info.major == 3:             
-                if ((isinstance(res, str)  or isinstance(res, bytes))  and listoffields[l] != 'geom' 
-                        and 'datetime' not in listoffields[l]) :
-                    restemp.append("'" + str(res).replace("'", "''") + "'")
-                elif 'datetime' in listoffields[l] and  res is not None and res != 'None':
-                        restemp.append("'" + str(res) + "'")
-                elif listoffields[l] == 'geom' and res is not None:
-                    restemp.append("ST_GeomFromText('" + res + "', " + str(self.crsnumber) + ")")
-                elif res is None or res == ''  :
-                    restemp.append('NULL')
-                elif (isinstance(res, str)  or isinstance(res, bytes)) and 'None' in res:
-                    restemp.append('NULL')
-                else:
-                    restemp.append(str(res))
-
-        if type == 'INSERT':
-            sql = "INSERT INTO " + tablename + '(' + ','.join(listoffields) + ')'
-            sql += " VALUES(" + ','.join(restemp) + ")"
-
-        elif type == 'UPDATE':
-            sql = " UPDATE " + tablename.lower() + " SET "
-            for i, field in enumerate(listoffields):
-                sql += field + " = " + str(restemp[i]) + ', '
-            sql = sql[:-2]
-
-        return sql
-
-    def sqlNow(self, sqlin, date=None):
-        sqlout = self.updateQueryTableNow(sqlin, date)
-        return sqlout
-
-    def updateQueryTableNow(self, sqlin, date=None):
-        
-        sqllist = re.split(' |,|\(|\)|\.|=', sqlin)
-        withsql = ''
-        alreadytables=[]
-        for sqlword in sqllist:
-            if '_now' in sqlword:
-                tablename=sqlword.split('_now')[0]
-                if 'lpk_revision_begin' in self.getColumns(tablename + '_qgis'):
-                    if tablename.lower() not in  alreadytables:
-                        alreadytables.append(tablename.lower())
-                        withsql +=  sqlword + " AS "
-                        withsql += " (SELECT * FROM " + tablename + "_qgis WHERE "
-                        withsql += self._dateVersionConstraintSQL(date)
-                        withsql += "), "
-                else:
-                    if tablename.lower() not in  alreadytables:
-                        alreadytables.append(tablename.lower())
-                        withsql +=  sqlword + " AS "
-                        withsql += " (SELECT * FROM " + tablename + "), "
-
-        withsql = withsql[0:-2]
-        sqltemp1 = self.utils.splitSQLSelectFromWhereOrderby(sqlin)
-        sqlout = ''
-        if 'WITH' in sqltemp1.keys():
-            sqlout += 'WITH ' + sqltemp1['WITH']
-            sqlout += ', ' + withsql
-            sqlout += ' SELECT ' + sqltemp1['SELECT'] + ' FROM ' + sqltemp1['FROM']+ ' WHERE ' + sqltemp1['WHERE']
-            if 'ORDER' in sqltemp1.keys():
-                sqlout += ' ORDER BY ' + sqltemp1['ORDER']
-            if 'GROUP' in sqltemp1.keys():
-                sqlout += ' GROUP BY ' + sqltemp1['GROUP']
-
-        elif withsql != '':
-            sqlout += 'WITH ' + withsql + sqlin
-
-        else:
-            sqlout += sqlin
-            
-        return sqlout
-
-    def _dateVersionConstraintSQL(self, specialdate=None):
-        raise NotImplementedError
 

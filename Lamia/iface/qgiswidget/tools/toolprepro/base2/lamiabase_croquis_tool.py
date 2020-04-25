@@ -111,6 +111,9 @@ class BaseCroquisTool(AbstractLamiaFormTool):
         self.photowdg = PhotoViewer()
         self.toolwidgetmain.frame_cr.layout().addWidget(self.photowdg)
 
+        
+
+
     """
     def postOnActivation(self):
         pass

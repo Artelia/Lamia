@@ -42,6 +42,7 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
         #self.dbase = kwargs.get('dbaseparser', None)
         #self.mainifacewidget = kwargs.get('mainifacewidget', None)
         self.toolwidget = kwargs.get('toolwidget', None)
+        self.ids = pd.DataFrame()
 
     def onActivation(self, initfeatureselection=True):
         self.treewidget.clear()
@@ -126,10 +127,16 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
         dbnamelower = self.toolwidget.DBASETABLENAME.lower()
         fields_to_request = ['pk_' + dbnamelower, 'id_' + dbnamelower]
         pandascolumns = ['pk', 'id']
+        """
         if (hasattr(self.toolwidget, 'CHOOSERTREEWDG_COLSHOW') 
                 and len(self.toolwidget.CHOOSERTREEWDG_COLSHOW) > 0 ):
             fields_to_request += self.toolwidget.CHOOSERTREEWDG_COLSHOW
             pandascolumns += self.toolwidget.CHOOSERTREEWDG_COLSHOW
+        """
+        if (hasattr(self.toolwidget, 'CHOOSERTREEWDGSPEC') 
+                and 'colshow' in self.toolwidget.CHOOSERTREEWDGSPEC.keys()):
+            fields_to_request += self.toolwidget.CHOOSERTREEWDGSPEC['colshow']
+            pandascolumns += self.toolwidget.CHOOSERTREEWDGSPEC['colshow']
 
         sql = "SELECT {} FROM {}_now ".format(', '.join(fields_to_request),
                                                         self.toolwidget.DBASETABLENAME    )
@@ -198,6 +205,19 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
             self.ids = pd.DataFrame(query, columns = pandascolumns) 
         else:
             self.ids = pd.DataFrame(columns = pandascolumns) 
+
+        #* sorting ids
+        if (hasattr(self.toolwidget, 'CHOOSERTREEWDGSPEC') 
+                and 'sort' in self.toolwidget.CHOOSERTREEWDGSPEC.keys()):
+            sortcolumn = self.toolwidget.CHOOSERTREEWDGSPEC['sort'][0]
+            if self.toolwidget.CHOOSERTREEWDGSPEC['sort'][1] == 'ASC':
+                ascending = True
+            else:
+                ascending = False
+        else:
+            sortcolumn = 'id'
+            ascending = True
+        self.ids.sort_values(sortcolumn,ascending=ascending, inplace=True )
 
         if debug: logging.getLogger("Lamia_unittest").debug('ids : %s', self.ids)
 
@@ -454,8 +474,10 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
         #if len(selecteditems) > 0 and selecteditems[0].text(0) == self.NEWFEATURETXT:
         if len(selecteditems) > 0 :
             fieldtorequest = ['id_' + self.toolwidget.DBASETABLENAME.lower()]
-            if hasattr(self.toolwidget, 'CHOOSERTREEWDG_COLSHOW') :
-                fieldtorequest += self.toolwidget.CHOOSERTREEWDG_COLSHOW
+            #if hasattr(self.toolwidget, 'CHOOSERTREEWDG_COLSHOW') :
+            if (hasattr(self.toolwidget, 'CHOOSERTREEWDGSPEC') 
+                    and 'colshow' in self.toolwidget.CHOOSERTREEWDGSPEC.keys()):
+                fieldtorequest += self.toolwidget.CHOOSERTREEWDGSPEC['colshow']
 
             res = self.toolwidget.dbase.getValuesFromPk(self.toolwidget.DBASETABLENAME + '_qgis',
                                                         fieldtorequest,
@@ -466,7 +488,12 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
             if selecteditems[0].text(0) == self.NEWFEATURETXT:
                 self.ids.append(res)
             else:
-                self.ids.loc[self.ids['pk'] == self.toolwidget.currentFeaturePK] = res
+                try:
+                    self.ids.loc[self.ids['pk'] == self.toolwidget.currentFeaturePK] = [res]
+                except ValueError as e:
+                    print(e)
+                    print('*',self.ids.loc[self.ids['pk'] == self.toolwidget.currentFeaturePK])
+                    print('**',[res])
 
 
             selecteditem = selecteditems[0]
@@ -504,4 +531,3 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
         pass
         self.treewidget.itemSelectionChanged.connect(self.qtreeitemSelected)
 
-    

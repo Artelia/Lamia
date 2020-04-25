@@ -40,7 +40,6 @@ class DBaseTest(unittest.TestCase):
         SLFILE = os.path.join(os.path.dirname(__file__), 'lamia_test','test01.sqlite')
 
         #testcdir = os.path.join(self.tempdir, 'c_creation')
-#
         #DBTYPE = ['base2_digue']
         #VARIANTE = ['Lamia']
         #work = DBTYPE[0]

@@ -1,10 +1,8 @@
-c:/111_GitProjects/Lamia/test\temp\offline\testoffline.sqlite
-c:/111_GitProjects/Lamia/test\lamia_test\test01.sqlite
-c:\111_GitProjects\Lamia\test\lamia_test\test01.sqlite
 c:/111_GitProjects/Lamia/test\temp\c_creation\sl_Base2_digue_Lamia\test01.sqlite
-lamiaunittest.Base2_digue_Lamia@localhost:5432;pvr;pvr
-c:\111_GitProjects\Lamia\test\temp\c_creation\sl_Base2_assainissement_Lamia\test01.sqlite
-c:\111_GitProjects\Lamia\test\temp\c_creation\sl_Base2_digue_SIRS\test01.sqlite
+c:/111_GitProjects/Lamia/test\lamia_test\test01.sqlite
 c:\111_GitProjects\Lamia\test\temp\c_creation\sl_Base2_digue_Lamia\test01.sqlite
+c:\111_GitProjects\Lamia\test\lamia_test\test01.sqlite
+lamiaunittest.Base2_digue_Lamia@localhost:5432;pvr;pvr
+c:\111_GitProjects\Lamia\test\temp\c_creation\sl_Base2_digue_SIRS\test01.sqlite
 lamiaunittest.Base2_eaupotable_Lamia@localhost:5432;pvr;pvr
 c:/111_GitProjects/Lamia/test\temp\c_creation\sl_Base2_digue_SIRS\test01.sqlite

@@ -126,7 +126,7 @@ class DBaseTest(unittest.TestCase):
             self.showIFace()
 
     def showIFace(self):
-        self.wind.setVisualMode(visualmode=4)
+        self.wind.setVisualMode(visualmode=1)
         if self.wind.qgiscanvas.layers['Infralineaire']['layer'].featureCount() > 0:
             extent = self.wind.qgiscanvas.layers['Infralineaire']['layer'].extent().buffered(10.0)
         else:
@@ -134,8 +134,11 @@ class DBaseTest(unittest.TestCase):
         # logging.getLogger("Lamia_unittest").debug('Extent : %s', extent)
         self.wind.qgiscanvas.canvas.setExtent(extent)
         # display good widget
-        wdg = self.wind.toolwidgets['toolpostpro']['Import'][0]
+        wdg = self.wind.toolwidgets['toolprepro']['Graphique2'][0]
         wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
+        # wdg = self.wind.toolwidgets['toolpostpro']['Import'][0]
+        # wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
+        # self.wind.dbase.printsql = True
         self.mainwin.exec_()
 
     def featurecreation(self):

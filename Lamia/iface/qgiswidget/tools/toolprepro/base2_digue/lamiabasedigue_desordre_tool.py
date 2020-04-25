@@ -114,12 +114,8 @@ class BaseDigueDesordreTool(BaseDesordreTool):
 
     # def postInitFeatureProperties(self, feat):
     def postSelectFeature(self):
-
-        if self.currentFeaturePK is not None:
-            self.toolwidgetmain.comboBox_groupedes.setEnabled(False)
-        else:
-            self.toolwidgetmain.comboBox_groupedes.setEnabled(True)
-
+        super().postSelectFeature()
+        if self.currentFeaturePK is None:
             if self.parentWidget is not None and self.parentWidget.DBASETABLENAME == 'Equipement':
                 combocrtindex = self.toolwidgetmain.comboBox_groupedes.findText('Equipement')
                 self.toolwidgetmain.comboBox_groupedes.setCurrentIndex(combocrtindex)

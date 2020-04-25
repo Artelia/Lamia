@@ -101,7 +101,7 @@ class DBaseOfflineManager():
             for dbname in self.dbase.dbasetables:
                 if self.dbase.dbasetables[dbname]['order'] == order:
                     counter += 1
-                    if debug: logging.getLogger("Lamia_unittest").debug(' ******************* %s *********  ', dbname)
+                    logging.getLogger("Lamia_unittest").debug(' ******************* %s *********  ', dbname)
 
                     #* global var initialization
                     importdictid[dbname.lower()] = {}

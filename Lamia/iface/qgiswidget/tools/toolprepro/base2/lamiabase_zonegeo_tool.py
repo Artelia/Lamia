@@ -45,8 +45,8 @@ class BaseZonegeoTool(AbstractLamiaFormTool):
     tooltreewidgetSUBCAT = 'Zone geographique'
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_zonegeo_tool_icon.svg')
 
-    CHOOSERTREEWDG_COLSHOW = ['libelle']
-
+    # CHOOSERTREEWDG_COLSHOW = ['libelle']
+    CHOOSERTREEWDGSPEC = {'colshow': ['libelle']}
     def __init__(self, **kwargs):
         super(BaseZonegeoTool, self).__init__(**kwargs)
 

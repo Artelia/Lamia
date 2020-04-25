@@ -146,9 +146,31 @@ class BaseDesordreTool(AbstractLamiaFormTool):
     def postSelectFeature(self):
         if self.currentFeaturePK is not None:
             self.toolwidgetmain.comboBox_groupedes.setEnabled(False)
+            
         else:
             self.toolwidgetmain.comboBox_groupedes.setEnabled(True)
+        
+        self._checkSameGeomAsParentNode()
 
+
+    def _checkSameGeomAsParentNode(self):
+        if (self.currentFeaturePK is not None 
+                and self.parentWidget is not None ):
+            if self.parentWidget.DBASETABLENAME in ['Noeud']:
+                parentgeom = self.dbase.getWktGeomFromPk('Noeud', self.parentWidget.currentFeaturePK)
+                qgsgeom = qgis.core.QgsGeometry.fromWkt(parentgeom).asPoint()
+                thisgeom = [qgsgeom,qgsgeom]
+                self.setTempGeometry(thisgeom,False,False)
+                self.formutils.setGeometryToFeature(self.currentFeaturePK)
+            elif self.parentWidget.DBASETABLENAME in ['Equipement']:
+                parentgeom = self.dbase.getWktGeomFromPk('Equipement', self.parentWidget.currentFeaturePK)
+                qgsgeom = qgis.core.QgsGeometry.fromWkt(parentgeom).asPolyline()
+                if len(qgsgeom) == 2 and qgsgeom[0] == qgsgeom[1]:
+                    thisgeom = qgsgeom
+                    self.setTempGeometry(thisgeom,False,False)
+                    self.formutils.setGeometryToFeature(self.currentFeaturePK)
+
+    
 
     def changeGroupe(self,intcat):
         self.toolwidget.stackedWidget.setCurrentIndex(intcat)
@@ -216,6 +238,7 @@ class BaseDesordreTool(AbstractLamiaFormTool):
 
 
     def postSaveFeature(self, savedfeaturepk=None):
+
         pass
 
     """

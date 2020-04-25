@@ -346,9 +346,6 @@ class FormToolUtils(QtCore.QObject):
                                           tablename,
                                           field)
 
-
-
-
     def showImageinLabelWidget(self,wdg,savedfile):
         """
         Show the image file in the text widget
@@ -390,7 +387,8 @@ class FormToolUtils(QtCore.QObject):
         if hasattr(self.formtoolwidget, 'GEOMETRYSKIP') and self.formtoolwidget.GEOMETRYSKIP :
             pass
 
-        savedfeaturepk = self.manageFeatureCreationOrUpdate(featurepk)
+        savedfeaturepk = self.formtoolwidget.dbase.manageFeatureCreationOrUpdate(self.formtoolwidget.DBASETABLENAME,
+                                                                                featurepk)
 
         if not geometryskip:
             self.setGeometryToFeature(savedfeaturepk)
@@ -408,12 +406,9 @@ class FormToolUtils(QtCore.QObject):
         self.formtoolwidget.selectFeature(pk=savedfeaturepk)
 
 
-
+    """
     def manageFeatureCreationOrUpdate(self, featurepk=None):
-        """
-        Called by saveFeature - Manage versioning
-        return pk of object
-        """
+
 
         currentFeature = None
         dbase = self.formtoolwidget.mainifacewidget.dbase
@@ -438,7 +433,7 @@ class FormToolUtils(QtCore.QObject):
             pktoreturn = self.formtoolwidget.dbase.createNewFeature(self.formtoolwidget.DBASETABLENAME)
 
         return pktoreturn
-
+    """
 
     def setGeometryToFeature(self, featurepk=None):
 
@@ -1067,112 +1062,5 @@ class FormToolUtils(QtCore.QObject):
         wkt = self.formtoolwidget.dbase.getWktGeomFromPk(self.formtoolwidget.DBASETABLENAME, pk)
         geom = qgis.core.QgsGeometry.fromWkt(wkt)
         return geom
-
-    if False:
-        def initFeatureProperties(self, feat, inputtablename=None, fieldname=None, value=None):
-            """
-            Called by featureSelected
-            Fill the fields in the widget
-
-            :param feat: the selected  QgsFeature - if None it s a new feature
-            :param inputtablename:  To init a specific table with specific field and a specific value
-            :param fieldname:  specific field
-            :param value:  specific value
-            :return:
-            """
-
-            
-            if feat is not None and feat.id() == 0:
-                return
-
-            if self.dbasetable is not None:
-                if self.linkuserwdg is None:
-                    templinkuserwgd = {self.dbasetablename: None}
-                else:
-                    templinkuserwgd = self.linkuserwdg
-
-                if inputtablename is None:
-                    tablestoiterate = self.dicttablefieldtoinit.keys()
-                else:
-                    tablestoiterate = [inputtablename]
-
-                #Then get values
-                for tablename in tablestoiterate:
-                    dbasetable = self.dbase.dbasetables[tablename]
-                    if len(self.dicttablefieldtoinit[tablename]) == 0 :
-                        continue
-                    if feat is not None:
-                        if fieldname is None:
-                            fieldstoiterate = self.dicttablefieldtoinit[tablename]
-                        else:
-                            fieldstoiterate = [fieldname]
-                        sql = "SELECT " + ','.join(fieldstoiterate) + " FROM " + self.dbasetablename + "_qgis "
-                        sql += " WHERE pk_" + self.dbasetablename.lower() + " = " + str(feat.id())
-                        result = self.dbase.query(sql)[0]
-
-                    else:
-                        if fieldname is None:
-                            fieldstoiterate = self.dicttablefieldtoinit[tablename]
-                        else:
-                            fieldstoiterate = [fieldname]
-
-                    for i, field in enumerate(fieldstoiterate):
-                        # raw table
-                        if feat is not None and value is None:
-                            valuetoset = result[i]
-                        else:
-                            valuetoset = value
-
-                        if self.dbase.utils.isAttributeNull(valuetoset):
-                            valuetoset = None
-
-                        if self.windowdialog.interfacemode in [0, 1]:
-                            if (tablename in templinkuserwgd.keys()
-                                    and templinkuserwgd[tablename] is not None
-                                    and 'widgets' in templinkuserwgd[tablename].keys()
-                                    and field in  templinkuserwgd[tablename]['widgets'].keys()):
-                                if isinstance(templinkuserwgd[tablename]['widgets'][field], list):
-                                    self.setValueInWidget(templinkuserwgd[tablename]['widgets'][field][0], valuetoset, tablename, field)
-                                else:
-                                    self.setValueInWidget(templinkuserwgd[tablename]['widgets'][field], valuetoset, tablename,field)
-
-                        if self.windowdialog.interfacemode == 2 :
-                            listfieldname = [self.tableWidget.item(row, 0).text() for row in range(self.tableWidget.rowCount())]
-                            itemindex = listfieldname.index(tablename + '.' + field)
-
-                            if self.tableWidget.cellWidget(itemindex, 1) is not None:
-                                self.setValueInWidget(self.tableWidget.cellWidget(itemindex, 1), valuetoset, tablename, field)
-                            else:
-                                if self.tableWidget.item(itemindex, 1) is not None:
-                                    if valuetoset is None:
-                                        self.tableWidget.item(itemindex, 1).setText('')
-                                    else:
-                                        self.tableWidget.item(itemindex, 1).setText(str(valuetoset))
-
-            #lidchoosers
-            for lidchooser in self.lamiawidgets:
-                lidchooser.initProperties()
-
-            # current prestation case:
-            self.pushButton_savefeature.setEnabled(True)
-
-            if feat is not None and self.linkagespec is not None and 'Marche' in self.linkagespec.keys()  and self.dbase.currentprestationid is not None:
-                # search table with lk prestation
-                if int(str(self.dbase.qgisversion_int)[0:3]) < 218:
-                    isspatial = self.dbasetable['layerqgis'].geometryType() < 3
-                else:
-                    isspatial = self.dbasetable['layerqgis'].isSpatial()
-                if isspatial:
-                    # if self.dbasetable['layerview'].isSpatial():
-                    # lk_presta = self.dbasetable['layerview'].getFeatures(qgis.core.QgsFeatureRequest(feat.id())).next()['lk_marche']
-                    lk_presta = self.dbase.getLayerFeatureById(self.dbasetablename, feat.id())['lk_marche']
-                else:
-                    listfeat = list(self.dbasetable['layerqgis'].getFeatures())
-                    featid = [fet.id() for fet in listfeat]
-                    index = featid.index(feat.id())
-                    lk_presta = listfeat[index]['lk_marche']
-
-                if lk_presta != self.dbase.currentprestationid:
-                    self.pushButton_savefeature.setEnabled(False)
 
 

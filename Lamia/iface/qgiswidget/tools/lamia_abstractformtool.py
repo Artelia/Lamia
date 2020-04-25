@@ -134,7 +134,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             self.choosertreewidget = FullIDChooserTreeWidget(toolwidget=self,
                                                             dbaseparser = self.dbase,
                                                             mainifacewidget = self.mainifacewidget)
-
+            self.gpsutil = self.mainifacewidget.gpsutil
 
         # var for widgets loaded in self.toolwidgetmainlayout
 
@@ -701,12 +701,65 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                                                         listpointinitialgeometry=listpointinitialgeometry,
                                                         fctonstopcapture=self.setTempGeometry)
 
+    def toolbarGeomAddGPS(self):
+        """
+        Method called by add GPS Point Button
+
+        """
+        if self.gpsutil and self.gpsutil.currentpoint is None:
+            self.mainifacewidget.connector.showErrorMessage('GPS non connecte')
+            return
+
+        type = self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME]['layer'].geometryType()
+        self.mainifacewidget.qgiscanvas.createorresetRubberband(type)
+        layerpoint = self.gpsutil.currentpoint
+
+        if type == 0:       # POINT
+            self.setTempGeometry([layerpoint],False)
+
+        elif type == 1:      # LINE
+            geom = None
+            geompoly = self._getCurrentGeomasList()
+            if not geompoly:
+                self.setTempGeometry([layerpoint,layerpoint],False)
+            else:
+                #geompoly = self.tempgeometry.asMultiPolyline()[0]
+                if geompoly[0] == geompoly[1]:
+                    del geompoly[0]
+                geompoly.append(layerpoint)
+                self.setTempGeometry(geompoly,False)
+            """
+            if self.currentFeaturePK is not None and self.currentFeature.geometry() is not None:
+                # geom = self.currentFeature.geometry()
+                # geompoly = geom.asPolyline()
+                geompoly = self._getCurrentGeomasList()
+                geompoly.append(layerpoint)
+                self.setTempGeometry(geompoly,False)
+            else:
+                if self.tempgeometry is None:
+                    self.setTempGeometry([layerpoint,layerpoint],False)
+                else:
+                    geompoly = self.tempgeometry.asMultiPolyline()[0]
+                    if geompoly[0] == geompoly[1]:
+                        del geompoly[0]
+                    geompoly.append(layerpoint)
+                    self.setTempGeometry(geompoly,False)
+            """
 
     def _getCurrentGeomasList(self):
         type = self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME]['layer'].geometryType()
         # self.createorresetRubberband(type)
         initialgeom = []
-        if type == 1:      # LINE
+        if type == 0:
+            if self.tempgeometry is not None:
+                initialgeom = self.tempgeometry.asPoint()
+            else:
+                initialgeomwkt = self.dbase.getValuesFromPk(self.DBASETABLENAME,
+                                                        'ST_AsText(geom)',
+                                                        self.currentFeaturePK)
+                initialgeom = qgis.core.QgsGeometry.fromWkt(initialgeomwkt).asPoint()
+
+        elif type == 1:      # LINE
             # get the geometry before editing
             if self.tempgeometry is not None:
                 if not self.tempgeometry.isMultipart () :
@@ -721,12 +774,8 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                                                         self.currentFeaturePK)
                 initialgeom = qgis.core.QgsGeometry.fromWkt(initialgeomwkt).asPolyline()
 
-            return initialgeom
-            #mapgeometry = []
-            #for point in initialgeom:
-            #    mapgeometry.append(self.dbase.xform.transform(point))
-#
-            #self.captureGeometry(listpointinitialgeometry=mapgeometry, type=1)
+        return initialgeom
+
 
     def toolbarDelete(self):
 

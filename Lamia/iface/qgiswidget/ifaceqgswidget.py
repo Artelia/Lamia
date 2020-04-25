@@ -134,6 +134,8 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         #statusbar
         self.GPSlabel = QLabel(self.tr('GPS non connecté'))
         self.statusBar().addWidget(self.GPSlabel)
+        self.GPSlabelperchheigh = QLabel(self.tr('Hauteur perche : /'))
+        self.statusBar().addWidget(self.GPSlabelperchheigh)
         self.GPSlabelprecision = QLabel(self.tr('Précision'))
         self.statusBar().addWidget(self.GPSlabelprecision)
 
@@ -242,6 +244,8 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
 
             self.GPSlabel = QLabel(self.tr('GPS non connecté'))
             self.statusBar().addWidget(self.GPSlabel)
+            self.GPSlabelperchheigh = QLabel(self.tr('Hauteur perche : /'))
+            self.statusBar().addWidget(self.GPSlabelperchheigh)
             self.GPSlabelprecision = QLabel(self.tr('Précision'))
             self.statusBar().addWidget(self.GPSlabelprecision)
 
@@ -436,8 +440,9 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         self.loadToolsClasses()
         self.loadToolsWidgets()
         self.setVisualMode(visualmode=0)
+        
         self.qgiscanvas.updateWorkingDate(dbaseparser=self.dbase)
-
+        
 
     def pullDBase(self, exportfilepath=None):    #for offline mode
         if exportfilepath is None:
@@ -946,28 +951,27 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         pass
 
     def connectToGPS(self):
+        self.gpsutil.setCRS(self.qgiscanvas.dbaseqgiscrs)
         success = self.gpsutil.connectToGPS()
-        """
-        if False:
-            if not success:
-                print('gps connection failed')
-                self.GPSConnected.emit(False)
-            else:
-                self.GPSConnected.emit(True)
-        """
 
     def GPSconnected(self,success):
         if success:
             self.GPSlabel.setStyleSheet("QLabel { background-color : rgb(85, 255, 0);  }")  #vert
             self.GPSlabel.setText(u'GPS connecté')
+            self.GPSlabelperchheigh.setText('Hauteur perche : {}'.format(self.gpsutil.hauteurperche))
+            self.GPSlabelperchheigh.setStyleSheet("QLabel { background-color : rgb(85, 255, 0);  }")
             self.GPSlabelprecision.setStyleSheet("QLabel { background-color : red;  }")
             self.GPSlabelprecision.setText(u'Précision : erreur')
             self.gpsutil.gstsentence.connect(self.displayGPSPrecision)
+            self.actiontoobargeomaddGPSpoint.setEnabled(True)
         else:
             self.GPSlabel.setStyleSheet("QLabel { background-color : rgba(0, 0, 0, 0);  }")
             self.GPSlabel.setText(u'GPS non connecté')
+            self.GPSlabelperchheigh.setText('Hauteur perche : {}'.format('/'))
+            self.GPSlabelperchheigh.setStyleSheet("QLabel { background-color : rgba(0, 0, 0, 0);  }")
             self.GPSlabelprecision.setStyleSheet("QLabel { background-color : rgba(0, 0, 0, 0);  }")
             self.GPSlabelprecision.setText(u'Précision : Off')
+            self.actiontoobargeomaddGPSpoint.setEnabled(False)
             try:
                 self.gpsutil.gstsentence.disconnect(self.displayGPSPrecision)
             except:
@@ -1108,6 +1112,8 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         self.actionModeTerrain.triggered.connect(self.setVisualMode)
         self.actionPosttraitement.triggered.connect(self.setVisualMode)
         #settings menu
+        self.actionHauteur_de_perche_GPS.triggered.connect(self.setHauteurPerche)
+        self.action_GPSConnection.triggered.connect(self.connectToGPS)
         self.gpsutil.GPSConnected.connect(self.GPSconnected)
         self.action_Repertoire_photo.triggered.connect(self.setImageDir)
         #about menu
