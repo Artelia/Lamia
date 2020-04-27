@@ -59,7 +59,7 @@ class BaseGraphiqueTool(AbstractLamiaFormTool):
 
     tooltreewidgetCAT = 'Ressources'
     tooltreewidgetSUBCAT = 'Graphique'
-    tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), '..', 'base', 'lamiabase_graphique_tool_icon.png')
+    tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_graphique_tool_icon.png')
 
     PARENTJOIN = {'Profil' : {'colparent': 'id_objet',
                                     'colthistable': 'id_ressource',
@@ -67,7 +67,7 @@ class BaseGraphiqueTool(AbstractLamiaFormTool):
                                         'tctablecolparent': 'lid_objet',
                                         'tctablecolthistable': 'lid_ressource'}
                 }
-
+    TABLEFILTERFIELD = {'maintypegraphique': 'TAB' }
 
     def __init__(self, **kwargs):
         super(BaseGraphiqueTool, self).__init__(**kwargs)
@@ -251,6 +251,7 @@ class BaseGraphiqueTool(AbstractLamiaFormTool):
             self.toolwidgetmain.tableWidget.setRowCount(0)
             if result is not None :
                 graphiquedatafields = self.dbase.dbasetables['Graphiquedata']['fields']
+                #graphiquedatafields = self.dbase.getColumns('Graphiquedata')
 
                 for i in range(len(result['x'])):
                     self.addrow()
@@ -274,17 +275,22 @@ class BaseGraphiqueTool(AbstractLamiaFormTool):
 
     def getGraphData(self,graphpk):
         #print('getGraphData')
-
-
-        sql = "SELECT * FROM Graphiquedata WHERE lpk_graphique = " + str(graphpk)
-        sql += " ORDER BY id_graphiquedata"
+        graphiquedatafields = self.dbase.dbasetables['Graphiquedata']['fields']
+        fieldstorequest = ' ,'.join([fieldname for fieldname in graphiquedatafields.keys()])
+        if False:
+            sql = "SELECT * FROM Graphiquedata WHERE lpk_graphique = " + str(graphpk)
+            sql += " ORDER BY id_graphiquedata"
+        else:
+            sql = "SELECT " + fieldstorequest + " FROM Graphiquedata WHERE lpk_graphique = " + str(graphpk)
+            sql += " ORDER BY pk_graphiquedata"
         query = self.dbase.query(sql)
 
         if not query:
             return
 
         result = [list(row) for row in query]
-        graphiquedatafields = self.dbase.dbasetables['Graphiquedata']['fields']
+        #graphiquedatafields = self.dbase.dbasetables['Graphiquedata']['fields']
+        #graphiquedatafields = self.dbase.getColumns('Graphiquedata')
         lenrowresult = len(graphiquedatafields)
         resultfinal = []
 
@@ -550,10 +556,14 @@ class BaseGraphiqueTool(AbstractLamiaFormTool):
                         value = 'NULL'
                 values.append(value)
 
-            sql = "INSERT INTO Graphiquedata (" + listchamp + ",lpk_graphique, id_graphiquedata) "
-            sql += " VALUES(" + ",".join(values) + "," + str(pkgraphique) + ',' +  str(i +1) + ");"
-            self.dbase.query(sql)
-
+            if False:
+                sql = "INSERT INTO Graphiquedata (" + listchamp + ",lpk_graphique, id_graphiquedata) "
+                sql += " VALUES(" + ",".join(values) + "," + str(pkgraphique) + ',' +  str(i +1) + ");"
+                self.dbase.query(sql)
+            else:
+                sql = "INSERT INTO Graphiquedata (" + listchamp + ",lpk_graphique) "
+                sql += " VALUES(" + ",".join(values) + "," + str(pkgraphique) +  ");"
+                self.dbase.query(sql)
 
 
 

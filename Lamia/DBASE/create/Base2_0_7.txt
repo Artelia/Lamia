@@ -1,0 +1,10 @@
+# copy Pointtopo in Topographiedata
+
+
+sql = "INSERT INTO Topographiedata(pk_topographiedata, lpk_topographie, typepointtopo, x, y, zgps, zwgs84, raf09, zmngf, precision, dx, dy, dz, hauteurperche, valeur1, valeur2, geom)"
+sql += " SELECT pk_pointtopo, lpk_topographie, typepointtopo, x, y, zgps, zwgs84, raf09, zmngf, precision, dx, dy, dz, hauteurperche, valeur1, valeur2, geom FROM Pointtopo"
+
+self.query(sql)
+
+sql = "UPDATE Graphique SET maintypegraphique='TAB'"
+self.query(sql)

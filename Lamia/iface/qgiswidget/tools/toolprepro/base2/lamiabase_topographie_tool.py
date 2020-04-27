@@ -33,7 +33,7 @@ from qgis.PyQt import uic, QtCore
 from qgis.PyQt.QtWidgets import (QWidget)
 
 from ...lamia_abstractformtool import AbstractLamiaFormTool
-from .lamiabase_pointtopo_tool import BasePointtopoTool
+from .lamiabase_topographiedata_tool import BaseTopographiedataTool
 
 """
 ne permettre de la renseigner qu en etant une classe fille de leve topo - sinon pas de datecreation
@@ -110,7 +110,7 @@ class BaseTopographieTool(AbstractLamiaFormTool):
         self.toolwidgetmain.pushButton_ajoutpointGPS.clicked.connect(self.ajoutPointGPS)
         self.toolwidgetmain.pushButton_importer.clicked.connect(self.importer)
 
-        typpointlist = [elem[0] for elem in self.dbase.dbasetables['Pointtopo']['fields']['typepointtopo']['Cst']]
+        typpointlist = [elem[0] for elem in self.dbase.dbasetables['Topographiedata']['fields']['typepointtopo']['Cst']]
         self.toolwidgetmain.comboBox_typepoints.addItems(typpointlist)
 
 
@@ -142,7 +142,7 @@ class BaseTopographieTool(AbstractLamiaFormTool):
         self.instancekwargs['parentwidget'] = self
 
         self.dbasechildwdgfield = []
-        self.propertieswdgPOINTTOPO= BasePointtopoTool(**self.instancekwargs)
+        self.propertieswdgPOINTTOPO= BaseTopographiedataTool(**self.instancekwargs)
         self.propertieswdgPOINTTOPO.tooltreewidgetSUBCAT = 'Points topo'
         self.dbasechildwdgfield.append(self.propertieswdgPOINTTOPO)
 
@@ -158,12 +158,12 @@ class BaseTopographieTool(AbstractLamiaFormTool):
 
         if self.currentFeaturePK is not None and self.currentFeaturePK != savedfeaturepk:   # new version of feature
             #fieldstoappend
-            pointtopofields = list(self.dbase.dbasetables['Pointtopo']['fields'].keys())
-            pointtopofields.remove('pk_pointtopo')
+            pointtopofields = list(self.dbase.dbasetables['Topographiedata']['fields'].keys())
+            pointtopofields.remove('pk_topographiedata')
             indexpktopo = pointtopofields.index('lpk_topographie')
             pointtopofields.insert(-1, 'ST_AsText(geom)')
 
-            sql = "SELECT " + ','.join(pointtopofields) + " FROM Pointtopo WHERE lpk_topographie = " + str(self.currentFeaturePK )
+            sql = "SELECT " + ','.join(pointtopofields) + " FROM Topographiedata WHERE lpk_topographie = " + str(self.currentFeaturePK )
             results = self.dbase.query(sql)
             results = [list(res) for res in results]
 
@@ -179,7 +179,7 @@ class BaseTopographieTool(AbstractLamiaFormTool):
             for res in results:
 
                 sql = self.dbase.createSetValueSentence(type='INSERT',
-                                                  tablename='Pointtopo',
+                                                  tablename='Topographiedata',
                                                   listoffields=pointtopofields,
                                                   listofrawvalues=res)
 

@@ -29,14 +29,14 @@ import os
 from qgis.PyQt import uic, QtCore
 from qgis.PyQt.QtWidgets import (QWidget)
 
-from ..base2.lamiabase_pointtopo_tool import BasePointtopoTool
+from ..base2.lamiabase_topographiedata_tool import BaseTopographiedataTool
 
 
-class BaseTramwayPointtopoTool(BasePointtopoTool):
+class BaseTramwayTopographiedataTool(BasePointtopoTool):
 
 
     def __init__(self, **kwargs):
-        super(BaseTramwayPointtopoTool, self).__init__(**kwargs)
+        super(BaseTramwayTopographiedataTool, self).__init__(**kwargs)
 
 
     def initMainToolWidget(self):
@@ -93,5 +93,5 @@ class BaseTramwayPointtopoTool(BasePointtopoTool):
 class UserUI(QWidget):
     def __init__(self, parent=None):
         super(UserUI, self).__init__(parent=parent)
-        uipath = os.path.join(os.path.dirname(__file__), 'lamiatramway_pointtopo_tool_ui.ui')
+        uipath = os.path.join(os.path.dirname(__file__), 'lamiabasetramway_topographiedata_tool_ui.ui')
         uic.loadUi(uipath, self)

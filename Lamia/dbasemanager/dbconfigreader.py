@@ -222,10 +222,10 @@ class DBconfigReader():
                         value = sheetdatas[row][ 1].strip()
                         if value == 'YES':
                             self.dbasetables[tablename]['spatialindex'] = True
-                    elif firstcol.strip() == '#ONLYONEPARENTTABLE':
-                        value = sheetdatas[row][ 1].strip()
-                        if value == 'YES':
-                            self.dbasetables[tablename]['onlyoneparenttable'] = True
+                    # elif firstcol.strip() == '#ONLYONEPARENTTABLE':
+                    #     value = sheetdatas[row][ 1].strip()
+                    #     if value == 'YES':
+                    #         self.dbasetables[tablename]['onlyoneparenttable'] = True
                     elif firstcol.strip() == '#VARIANTES':
                         #for colnbr in range(1,sheet.ncols):
                         for colnbr in range(1,len(rowcontent)):    
@@ -351,10 +351,10 @@ class DBconfigReader():
                         value = sheet.cell_value(row, 1).strip()
                         if value == 'YES':
                             self.dbasetables[tablename]['spatialindex'] = True
-                    elif firstcol.strip() == '#ONLYONEPARENTTABLE':
-                        value = sheet.cell_value(row, 1).strip()
-                        if value == 'YES':
-                            self.dbasetables[tablename]['onlyoneparenttable'] = True
+                    # elif firstcol.strip() == '#ONLYONEPARENTTABLE':
+                    #     value = sheet.cell_value(row, 1).strip()
+                    #     if value == 'YES':
+                    #         self.dbasetables[tablename]['onlyoneparenttable'] = True
                     elif firstcol.strip() == '#VARIANTES':
                         for colnbr in range(1,sheet.ncols):
                             value = sheet.cell_value(row, colnbr)

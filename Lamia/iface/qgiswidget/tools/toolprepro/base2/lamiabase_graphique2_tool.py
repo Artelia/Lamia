@@ -60,7 +60,7 @@ class BaseGraphique2Tool(AbstractLamiaFormTool):
     LOADFIRST = False
 
     tooltreewidgetCAT = 'Ressources'
-    tooltreewidgetSUBCAT = 'Graphique2'
+    tooltreewidgetSUBCAT = 'Graphique_csv'
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_graphique_tool_icon.png')
 
     tempparentjoin = {}
@@ -72,6 +72,8 @@ class BaseGraphique2Tool(AbstractLamiaFormTool):
     for tablename in ['Observation', 'Noeud', 'Infralineaire', 'Equipement','Profil']:
         tempparentjoin[tablename] = linkdict
     PARENTJOIN = tempparentjoin
+
+    TABLEFILTERFIELD = {'maintypegraphique': 'CSV' }
 
     def __init__(self, **kwargs):
         super(BaseGraphique2Tool, self).__init__(**kwargs)

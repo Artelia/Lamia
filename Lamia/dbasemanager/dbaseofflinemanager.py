@@ -52,6 +52,7 @@ class DBaseOfflineManager():
     def importDbase(self, dbaseparserfrom, typeimport='nouvelle'):
         """
 
+
         :param dbaseparserfrom:
         :param typeimport:  nouvelle import_terrain
         :return:
@@ -108,82 +109,14 @@ class DBaseOfflineManager():
                     importdictpk[dbname.lower()] = {}
                     importdictdeletedpk[dbname.lower()] = []
 
-                    #* get non critical fields (not pk and non id)
-                    noncriticalfield = []           # the "non-critical" fields
-                    pkidfields = []                 # the "critical" fields (pk; id, lpk, lid)
-                    for field in self.dbase.dbasetables[dbname]['fields'].keys():
-                        if field[0:3] in ['id_', 'pk_'] or field[0:4] in ['lpk_', 'lid_']:
-                            pkidfields.append(field)
-                        else:
-                            noncriticalfield.append(field)
-                    #add geom at rank-1
-                    if 'geom' in self.dbase.dbasetables[dbname].keys():
-                        noncriticalfield.insert(-1, 'ST_AsText(ST_Transform(geom,' + str(self.dbase.crsnumber) + '))')
-                    if not noncriticalfield:
-                        noncriticalfield = ['*']
-                    if debug: logging.getLogger("Lamia").debug(' fields, critical : %s %s ',
-                                                               str(noncriticalfield),str(pkidfields))
+                    pkidfields, noncriticalfield = self._getCriticalandNonCriticalFields(dbname)
+                    if debug: logging.getLogger("Lamia_unittest").debug(' critical, fields,  : %s %s ',
+                                                        str(pkidfields),str(noncriticalfield))
 
-                    #* request results from dbaseparserfrom
-                    if typeimport == 'nouvelle':
-                        sqlconstraint = " WHERE lpk_revision_end IS NULL"
-                    elif typeimport == 'import_terrain':
-                        sqlconstraint = " WHERE lpk_revision_begin = 2 OR lpk_revision_end = 2"
+                    results, resultpk = self._getValuesFromImportedTable(typeimport,dbaseparserfrom, dbname, pkidfields, noncriticalfield)
 
-                    sql, sqlpk = '', ''
-                    if 'Objet' in self.dbase.getParentTable(dbname):
-                        sql = "SELECT " + ','.join(noncriticalfield) + " FROM " + dbname.lower() + "_qgis"
-                        sql += sqlconstraint
-                        sqlpk = "SELECT " + ','.join(pkidfields) + " FROM " + dbname.lower() + "_qgis"
-                        sqlpk += sqlconstraint
-                    elif 'lpk_revision_end' in self.dbase.dbasetables[dbname]['fields'].keys():
-                        sql = "SELECT " + ','.join(noncriticalfield) + " FROM " + dbname.lower()
-                        sql += sqlconstraint
-                        sqlpk = "SELECT " + ','.join(pkidfields) + " FROM " + dbname.lower()
-                        sqlpk += sqlconstraint
-                    else:
-                        sql = "SELECT " + ','.join(noncriticalfield) + " FROM " + dbname.lower()
-                        sqlpk = "SELECT " + ','.join(pkidfields) + " FROM " + dbname.lower()
-                    results = dbaseparserfrom.query(sql)
-                    resultpk = dbaseparserfrom.query(sqlpk)
-
-
-                    strtofind = 'ST_AsText(ST_Transform(geom,' + str(self.dbase.crsnumber) + '))'
-                    if strtofind in noncriticalfield:
-                        noncriticalfield[noncriticalfield.index(strtofind)] = 'geom'
-
-                    #* get previoux existing id and other things for import terrain
-                    resultsid = None            # the existing id in main table
-                    indexidfield = None         # the index of id_ column
-                    indexrevisionend = None     # the index of lpk_revision_end
-                    indexpkdbase = None         # the index of pk_ column
-                    importid = None             # the id in the table lines iteration
-                    parenttable = None          # the parent table of actual table - defined as lpk_(parenttable)
-                    indexlkparenttable = None   # the index of parent table in pkidfields
-
-                    if typeimport == 'import_terrain':
-                        # get resultsid and indexidfield
-                        if "id_" + dbname.lower() in pkidfields:
-                            sqlid = "SELECT id_" + dbname.lower() + " FROM " + dbname.lower() + "_qgis"
-                            sqlid += " WHERE lpk_revision_begin = 1 "
-                            resultsid = [elem[0] for elem in dbaseparserfrom.query(sqlid)]
-
-                            indexidfield = pkidfields.index("id_" + dbname.lower())
-                        
-                        # get indexrevisionend
-                        if "lpk_revision_end" in pkidfields:
-                            indexrevisionend = pkidfields.index('lpk_revision_end')
-                        indexpkdbase = pkidfields.index("pk_" + dbname.lower())
-                        
-                        # get eventual parenttable
-                        for j, fieldname in enumerate(pkidfields):
-                            if fieldname[0:4] == 'lpk_':
-                                parenttable = fieldname.split('_')[1]
-                                indexlkparenttable = j
-                        if debug: logging.getLogger("Lamia").debug(' parenttable, index : %s %s ',
-                                                                   str(parenttable),
-                                                                   str(indexlkparenttable))
-
+                    resultsid, indexidfield, indexrevisionend, indexpkdbase, importid, parenttable, indexlkparenttable = self._getIndexofCriticalFields(typeimport,dbaseparserfrom,dbname,pkidfields )
+                    
                     #* start the iteration in table lines
                     for i, result in enumerate(results):
                         if i % 50 == 0 and debug: logging.getLogger("Lamia").debug(' result : %s  ', str(result))
@@ -345,7 +278,8 @@ class DBaseOfflineManager():
                                                             dictpk=importdictpk,
                                                             dictid=importdictid,
                                                             changeID=True)
-                                self.dbase.query(sqlup, docommit=False)
+                                if sqlup:
+                                    self.dbase.query(sqlup, docommit=False)
 
                                 # Ressource case : copy file
                                 if dbname == 'Ressource':
@@ -369,8 +303,108 @@ class DBaseOfflineManager():
         self.resolveConflict(dbaseparserfrom,conflictobjetids )
 
         # if progress is not None: self.qgsiface.messageBar().clearWidgets() TODO
-        self.normalMessage.emit("Import termine")
+        #self.normalMessage.emit("Import termine")
 
+    def _getCriticalandNonCriticalFields(self,dbname):
+
+        #* get non critical fields (not pk and non id)
+        noncriticalfield = []           # the "non-critical" fields
+        pkidfields = []                 # the "critical" fields (pk; id, lpk, lid)
+        for field in self.dbase.dbasetables[dbname]['fields'].keys():
+            if field[0:3] in ['id_', 'pk_'] or field[0:4] in ['lpk_', 'lid_']:
+                pkidfields.append(field)
+            else:
+                noncriticalfield.append(field)
+
+        #add geom at rank-1
+        if 'geom' in self.dbase.dbasetables[dbname].keys():
+            #noncriticalfield.insert(-1, 'ST_AsText(ST_Transform(geom,' + str(self.dbase.crsnumber) + '))')
+            noncriticalfield.insert(-1,'geom')
+        if not noncriticalfield:
+            noncriticalfield = ['*']
+
+        
+        return pkidfields, noncriticalfield
+
+    def _getValuesFromImportedTable(self, typeimport, dbaseparserfrom, dbname, pkidfields, noncriticalfield):
+
+        if typeimport == 'nouvelle':
+            sqlconstraint = " WHERE lpk_revision_end IS NULL"
+        elif typeimport == 'import_terrain':
+            sqlconstraint = " WHERE lpk_revision_begin = 2 OR lpk_revision_end = 2"
+
+        #noncriticalfield.insert(-1, 'ST_AsText(ST_Transform(geom,' + str(self.dbase.crsnumber) + '))')
+        noncriticalfieldtemp = list(noncriticalfield)
+        if 'geom' in noncriticalfieldtemp:
+            noncriticalfieldtemp[noncriticalfieldtemp.index('geom')] = 'ST_AsText(ST_Transform(geom,' + str(self.dbase.crsnumber) + '))'
+
+        sql, sqlpk = '', ''
+        if 'Objet' in self.dbase.getParentTable(dbname):
+            sql = "SELECT " + ','.join(noncriticalfieldtemp) + " FROM " + dbname.lower() + "_qgis"
+            sql += sqlconstraint
+            sqlpk = "SELECT " + ','.join(pkidfields) + " FROM " + dbname.lower() + "_qgis"
+            sqlpk += sqlconstraint
+        elif 'lpk_revision_end' in self.dbase.dbasetables[dbname]['fields'].keys():
+            sql = "SELECT " + ','.join(noncriticalfieldtemp) + " FROM " + dbname.lower()
+            sql += sqlconstraint
+            sqlpk = "SELECT " + ','.join(pkidfields) + " FROM " + dbname.lower()
+            sqlpk += sqlconstraint
+        #elif  'onlyoneparenttable' in self.dbase.dbasetables[dbname].keys():
+        elif  dbname[-4:] == 'data':
+            for elem in pkidfields:
+                if elem[0:4] == 'lpk_':
+                    parenttablename = elem.split('_')[1].title()
+                    break
+            sql = "SELECT " + ','.join(noncriticalfieldtemp) + " FROM " + dbname.lower()
+            sql += " INNER JOIN {} ON {} = {} ".format(parenttablename + '_qgis',
+                                                        parenttablename + '_qgis.pk_' + parenttablename.lower(),
+                                                        dbname + '.lpk_' + parenttablename.lower())
+            sql += sqlconstraint
+            sqlpk = "SELECT " + ','.join(pkidfields) + " FROM " + dbname.lower()
+            sqlpk += " INNER JOIN {} ON {} = {} ".format(parenttablename+ '_qgis',
+                                                        parenttablename + '_qgis.pk_' + parenttablename.lower(),
+                                                        dbname + '.lpk_' + parenttablename.lower())
+            sqlpk += sqlconstraint
+        else:
+            sql = "SELECT " + ','.join(noncriticalfieldtemp) + " FROM " + dbname.lower()
+            sqlpk = "SELECT " + ','.join(pkidfields) + " FROM " + dbname.lower()
+        results = dbaseparserfrom.query(sql)
+        resultpk = dbaseparserfrom.query(sqlpk)
+        return results, resultpk
+
+
+
+    def _getIndexofCriticalFields(self, typeimport,dbaseparserfrom,dbname,pkidfields ):
+
+        #* get previoux existing id and other things for import terrain
+        resultsid = None            # the list of existing id in main table
+        indexidfield = None         # the index of id_ column in pkidfields and resultpk
+        indexrevisionend = None     # the index of lpk_revision_end in pkidfields and resultpk
+        indexpkdbase = None         # the index of pk_ column in pkidfields and resultpk
+        importid = None             # the id in the table lines iteration
+        parenttable = None          # the parent table of actual table - defined as lpk_(parenttable)
+        indexlkparenttable = None   # the index of parent table in pkidfields and resultpk
+
+        if typeimport == 'import_terrain':
+            # get resultsid and indexidfield
+            if "id_" + dbname.lower() in pkidfields:
+                sqlid = "SELECT id_" + dbname.lower() + " FROM " + dbname.lower() + "_qgis"
+                sqlid += " WHERE lpk_revision_begin = 1 "
+                resultsid = [elem[0] for elem in dbaseparserfrom.query(sqlid)]
+                indexidfield = pkidfields.index("id_" + dbname.lower())
+            # get indexrevisionend
+            if "lpk_revision_end" in pkidfields:
+                indexrevisionend = pkidfields.index('lpk_revision_end')
+            # get indexpkdbase
+            indexpkdbase = pkidfields.index("pk_" + dbname.lower())
+            
+            # get eventual parenttable
+            for j, fieldname in enumerate(pkidfields):
+                if fieldname[0:4] == 'lpk_':
+                    parenttable = fieldname.split('_')[1]
+                    indexlkparenttable = j
+
+        return resultsid, indexidfield, indexrevisionend, indexpkdbase, importid, parenttable, indexlkparenttable
 
 
     def isInConflict(self, dbaseparserfrom, conflictobjetid):
@@ -437,7 +471,7 @@ class DBaseOfflineManager():
             importpkobjet = importpkobjetsql[0][0]
 
             # get child table name and pk
-            mainconflictdbname, mainconflictpk = self.searchChildfeatureFromPkObjet(self, mainpkobjet)
+            mainconflictdbname, mainconflictpk = self.searchChildfeatureFromPkObjet(self.dbase, mainpkobjet)
             importconflictdbname, importconflictpk = self.searchChildfeatureFromPkObjet(dbaseparserfrom, importpkobjet)
 
             #get revend of pk
@@ -453,8 +487,8 @@ class DBaseOfflineManager():
                 return False, None, None, None
 
             # construct column names (usefull if both tables are not in same order)
-            # allfields = ', '.join(self.getAllFields(mainconflictdbname))
-            allfieldslist = self.getAllFields(mainconflictdbname)
+            #allfieldslist = self.getAllFields(mainconflictdbname)
+            allfieldslist = self.dbase.getColumns(mainconflictdbname + '_qgis')
 
 
             # values from child table
@@ -927,9 +961,18 @@ class DBaseOfflineManager():
         # print(self.dbase.dbasetables)
 
     def updateIdPkSqL(self,tablename=None, listoffields=[], listofrawvalues=[], dictpk = {}, dictid = {}, changeID = True):
+        
+        debug = False
         pktable = None
         fields = []
         values = []
+
+        if debug and tablename == 'Graphiquedata':
+            logging.getLogger("Lamia_unittest").debug('tablename %s', tablename)
+            logging.getLogger("Lamia_unittest").debug('listoffields %s', listoffields)
+            logging.getLogger("Lamia_unittest").debug('listofrawvalues %s', listofrawvalues)
+            logging.getLogger("Lamia_unittest").debug('dictpk %s', dictpk)
+            logging.getLogger("Lamia_unittest").debug('dictid %s', dictid)
 
 
         for k, field in enumerate(listoffields):
@@ -1009,7 +1052,7 @@ class DBaseOfflineManager():
         # if i % 50 == 0:
             # if debug: logging.getLogger("Lamia").debug(' field, value : %s %s  ', str(fields), str(values))
 
-        if pktable is not None:
+        if pktable is not None and fields:
             # update line
             sqlup = "UPDATE " + tablename.lower() + " SET "
             for j, field in enumerate(fields):
@@ -1018,7 +1061,8 @@ class DBaseOfflineManager():
             sqlup += " WHERE pk_" + tablename.lower() + ' = ' + str(pktable)
 
             #self.dbase.query(sqlup, docommit=False)
-
+        else:
+            sqlup = None
 
 
         return sqlup

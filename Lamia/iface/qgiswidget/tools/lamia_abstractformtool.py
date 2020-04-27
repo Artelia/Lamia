@@ -509,6 +509,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
 
 
     def _widgetClicked_manageFeatureSelectionAndChooserWidget(self,**kwargs):
+
         if (self.lastselectedpk is not None and len(self.choosertreewidget.ids)>0 
                 and self.lastselectedpk in self.choosertreewidget.ids.pk.values):
             self.selectFeature(pk=self.lastselectedpk)
@@ -641,6 +642,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         pass
 
     def selectFeature(self, **kwargs):
+        #print('selectFeature',self.DBASETABLENAME, kwargs)
         debug = False
         self.setEnabled(True)
         self.activatesubwidgetchangelistener = False
@@ -800,13 +802,13 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         #self.toolBoxmain
 
         if self.currentFeaturePK:
-            featureid = self.dbase.getValuesFromPk(self.DBASETABLENAME,
-                                                'id_' + self.DBASETABLENAME.lower(),
-                                                    self.currentFeaturePK)
+            # featureid = self.dbase.getValuesFromPk(self.DBASETABLENAME,
+            #                                     'id_' + self.DBASETABLENAME.lower(),
+            #                                         self.currentFeaturePK)
             for i in range(1,self.tabWidget.count()):
                 self.tabWidget.setTabEnabled(i, True)
         else:
-            featureid = 'New'
+            # featureid = 'New'
             for i in range(1,self.tabWidget.count()):
                 self.tabWidget.setTabEnabled(i, False)
 

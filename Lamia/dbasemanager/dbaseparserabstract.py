@@ -56,13 +56,14 @@ PROJECTCONFIGDIRS = ['dbase', 'rapporttools', 'styles', 'importtools']
 class AbstractDBaseParser():
 
 
-    def __init__(self, parserfactory=None):
+    def __init__(self, parserfactory=None,messageinstance=None):
 
         """
         Init func
         """
         # the dictionnary of dbase (cf DBconfigReader)
         self.dbasetables = None
+        self.messageinstance = messageinstance
 
         #utils
         self.utils = dbaseutils
@@ -325,7 +326,8 @@ class AbstractDBaseParser():
         #* update dbase
         for table, field in results:
             if table is not None and field is None:
-                sql = self.generateSQLTableCreationFromDBConfig(table, dictnew[table], self.crs)
+                #table creation
+                sql = self.generateSQLTableCreationFromDBConfig(table, dictnew[table], self.crsnumber)
                 #openedsqlfile.write(sql['main'] + '\n')
                 self.query(sql['main'])
                 self.commit()
@@ -335,6 +337,14 @@ class AbstractDBaseParser():
                         # print(sqlother)
                         self.query(sqlother)
                         self.commit()
+                #view creation
+                sqls = self.generateSQLViewCreationFromDBConfig(table, dictnew[table], self.worktype, self.crsnumber)
+                
+                for sql in sqls:
+                    #openedsqlfile.write(sql + '\n')
+                    self.query(sql)
+
+
             else:
                 sql = 'ALTER TABLE ' + table + ' ADD COLUMN ' + field + ' '
 
@@ -709,9 +719,14 @@ class AbstractDBaseParser():
                 createSetValueSentence(self,type='INSERT',tablename=None, listoffields=[], listofrawvalues=[]):
                 """
                 if parenttablename is not None :
-                    maxid = self.getmaxColumnValue(itertablename, 'id_' + itertablename.lower()) + 1
-                    listofields = ['id_' + itertablename.lower(), 'lpk_' + parenttablename.lower()]
-                    listofrawvalues = [maxid, parenttablepk]
+                    #if not 'onlyoneparenttable' in self.dbasetables[itertablename].keys():
+                    if  not itertablename[-4:] == 'data':
+                        maxid = self.getmaxColumnValue(itertablename, 'id_' + itertablename.lower()) + 1
+                        listofields = ['id_' + itertablename.lower(), 'lpk_' + parenttablename.lower()]
+                        listofrawvalues = [maxid, parenttablepk]
+                    else:
+                        listofields = ['lpk_' + parenttablename.lower()]
+                        listofrawvalues = [parenttablepk]
                     sql = self.createSetValueSentence(type='INSERT',
                                                 tablename=itertablename,
                                                 listoffields=listofields,
@@ -927,7 +942,7 @@ class AbstractDBaseParser():
                 if 'lpk_' == field[:4]:
                     tablename = field.split('_')[1].title()
                     parenttablenamelist.append(tablename)
-                    if 'onlyoneparenttable' in dbasetable.keys() and dbasetable['onlyoneparenttable'] :
+                    if tablename[-4:] == 'data':
                         continuesearchparent = False
                     elif field[4:] == 'objet':
                         continuesearchparent = False

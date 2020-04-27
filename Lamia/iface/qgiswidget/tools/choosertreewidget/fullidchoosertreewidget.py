@@ -45,6 +45,7 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
         self.ids = pd.DataFrame()
 
     def onActivation(self, initfeatureselection=True):
+        debug = False
         self.treewidget.clear()
 
         headerlist = [self.toolwidget.DBASETABLENAME]
@@ -65,6 +66,10 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
         if self.treewidget.topLevelItemCount() == 0 :
             self.toolwidget.frametoolwidg.setEnabled(False)
         """
+        if debug :
+            logging.getLogger("Lamia_unittest").debug('ids :  ' )
+            logging.getLogger("Lamia_unittest").debug('%s ', self.ids )
+        
         if initfeatureselection:
             if self.treewidget.topLevelItemCount() > 0 :
                 if self.ids is None: 
@@ -72,9 +77,12 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
                 if self.toolwidget.lastselectedpk is None : 
                     self.treewidget.setCurrentItem(self.treewidget.invisibleRootItem().child(0))
                 else:
-                    indexids = self.ids.index[self.ids['pk'] == self.toolwidget.lastselectedpk]
-                    if not indexids.empty:
-                        indexid = int(indexids[0])
+                    indexids = self.ids.index[self.ids['pk'] == self.toolwidget.lastselectedpk].tolist()
+                    if debug :
+                        logging.getLogger("Lamia_unittest").debug('lastselectedpk : %s ',self.toolwidget.lastselectedpk )
+                        logging.getLogger("Lamia_unittest").debug('indexids : %s ',indexids )
+                    if indexids:
+                        indexid = indexids[0]
                         self.treewidget.setCurrentItem(self.treewidget.invisibleRootItem().child(indexid))
                     else:
                         self.treewidget.setCurrentItem(self.treewidget.invisibleRootItem().child(0))
@@ -84,18 +92,20 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
     def loadFeaturesinTreeWdg(self):
         self.disconnectTreewidget()
         self.treewidget.clear()
-        ids = self.loadIds()
+        self.loadIds()
         self._manageTreeWidgetHeader()
         parentitem = self.treewidget.invisibleRootItem()
 
-        parentitem.addChildren([QTreeWidgetItem([str(val) for val in row[1:]]) for row in self.ids.values])
+        #parentitem.addChildren([QTreeWidgetItem([str(val) for val in row[1:]]) for row in self.ids.values])
+        parentitem.addChildren([QTreeWidgetItem([str(val) for val in row]) for row in self.ids.values])
         self.connectTreewidget()
 
 
     def _manageTreeWidgetHeader(self):
         
         # headerlist = list(self.qtreewidgetfields)
-        headerlist = list(self.ids.columns)[1:] 
+        # headerlist = list(self.ids.columns)[1:] 
+        headerlist = list(self.ids.columns)
         #headerlist.insert(0, 'spec')
         self.treewidget.setColumnCount(len(headerlist))
         self.treewidget.header().setVisible(True)
@@ -105,13 +115,15 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
         for i in range(lenheaderlist):
             header.setSectionResizeMode(i, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(lenheaderlist-1, QHeaderView.Stretch)
+        self.treewidget.setColumnHidden(0,True)
 
 
     def selectItemfromPK(self,pk ):
-        id = self.toolwidget.dbase.getValuesFromPk(self.toolwidget.DBASETABLENAME,
-                                            'id_' + self.toolwidget.DBASETABLENAME.lower(),
-                                            pk)
-        founditems = self.treewidget.findItems(str(id), 
+        # id = self.toolwidget.dbase.getValuesFromPk(self.toolwidget.DBASETABLENAME,
+        #                                     'id_' + self.toolwidget.DBASETABLENAME.lower(),
+        #                                     pk)
+        # founditems = self.treewidget.findItems(str(id), 
+        founditems = self.treewidget.findItems(str(pk), 
                                                 QtCore.Qt.MatchExactly | QtCore.Qt.MatchRecursive, 
                                                 0)
         if len(founditems) > 0:
@@ -125,8 +137,15 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
         debug = False
         # CHOOSERTREEWDG_COLSHOW = ['datetimeobservation']
         dbnamelower = self.toolwidget.DBASETABLENAME.lower()
-        fields_to_request = ['pk_' + dbnamelower, 'id_' + dbnamelower]
-        pandascolumns = ['pk', 'id']
+        fields_to_request = ['pk_' + dbnamelower]
+        pandascolumns = ['pk']
+        #if not 'onlyoneparenttable' in self.toolwidget.dbase.dbasetables[self.toolwidget.DBASETABLENAME].keys():
+        if  not dbnamelower[-4:] == 'data':
+            fields_to_request += ['id_' + dbnamelower]
+            pandascolumns += ['id']
+        else:
+            fields_to_request += ['pk_' + dbnamelower]
+            pandascolumns += ['pk2']
         """
         if (hasattr(self.toolwidget, 'CHOOSERTREEWDG_COLSHOW') 
                 and len(self.toolwidget.CHOOSERTREEWDG_COLSHOW) > 0 ):
@@ -214,10 +233,14 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
                 ascending = True
             else:
                 ascending = False
-        else:
+        elif 'id' in pandascolumns:
             sortcolumn = 'id'
             ascending = True
+        else:
+            sortcolumn = 'pk'
+            ascending = True
         self.ids.sort_values(sortcolumn,ascending=ascending, inplace=True )
+        self.ids.reset_index(drop=True, inplace=True)
 
         if debug: logging.getLogger("Lamia_unittest").debug('ids : %s', self.ids)
 
@@ -440,7 +463,7 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
         self.disconnectTreewidget()
         self.toolwidget.frametoolwidg.setEnabled(True)
         parentitem = self.treewidget.invisibleRootItem()
-        newitem = QTreeWidgetItem([self.NEWFEATURETXT])
+        newitem = QTreeWidgetItem(['',self.NEWFEATURETXT])
         parentitem.addChildren([newitem])
         self.treewidget.setCurrentItem(newitem)
         #newitem.setSelected(True)
@@ -473,7 +496,11 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
         selecteditems = self.treewidget.selectedItems()
         #if len(selecteditems) > 0 and selecteditems[0].text(0) == self.NEWFEATURETXT:
         if len(selecteditems) > 0 :
-            fieldtorequest = ['id_' + self.toolwidget.DBASETABLENAME.lower()]
+            #if not 'onlyoneparenttable' in self.toolwidget.dbase.dbasetables[self.toolwidget.DBASETABLENAME].keys():
+            if  not self.toolwidget.DBASETABLENAME[-4:] == 'data':
+                fieldtorequest = ['id_' + self.toolwidget.DBASETABLENAME.lower()]
+            else:
+                fieldtorequest = ['pk_' + self.toolwidget.DBASETABLENAME.lower()]
             #if hasattr(self.toolwidget, 'CHOOSERTREEWDG_COLSHOW') :
             if (hasattr(self.toolwidget, 'CHOOSERTREEWDGSPEC') 
                     and 'colshow' in self.toolwidget.CHOOSERTREEWDGSPEC.keys()):
@@ -485,7 +512,8 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
             if isinstance(res, int):
                 res = [res]
             res = [self.toolwidget.currentFeaturePK] + list(res)
-            if selecteditems[0].text(0) == self.NEWFEATURETXT:
+            #if selecteditems[0].text(0) == self.NEWFEATURETXT:
+            if selecteditems[0].text(1) == self.NEWFEATURETXT:
                 self.ids.append(res)
             else:
                 try:
@@ -497,7 +525,8 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
 
 
             selecteditem = selecteditems[0]
-            for i, val in enumerate(res[1:]):
+            #for i, val in enumerate(res[1:]):
+            for i, val in enumerate(res):    
                 selecteditem.setText(i, str(val))
             #self.ids.append([self.toolwidget.currentFeaturePK, id])
             #self.ids.append((id,))
@@ -510,7 +539,8 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
 
 
     def qtreeitemSelected(self, **kwargs):
-        currentiditem = self.treewidget.currentItem().text(0)
+        currentpkitem = int(self.treewidget.currentItem().text(0))
+        """
         if currentiditem.isdigit():
             sql = "SELECT pk_{namelower} "\
                 "FROM {name} WHERE id_{namelower} = {id}".format(name=self.toolwidget.DBASETABLENAME,
@@ -519,6 +549,8 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
 
             pk = self.toolwidget.dbase.query(sql)[0][0]
             self.toolwidget.selectFeature(pk=pk)
+        """
+        self.toolwidget.selectFeature(pk=currentpkitem)
 
     def disconnectTreewidget(self):
         try:

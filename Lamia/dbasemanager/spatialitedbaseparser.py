@@ -156,8 +156,10 @@ class SpatialiteDBaseParser(AbstractDBaseParser):
         except (sqlite3.dbapi2.OperationalError ,sqlite3.dbapi2.IntegrityError) as e:
             # self.errorquerymessage.emit(str(e))
             #if self.qgsiface is None:
+            
             print(sql)
             print('error query', e)
+            #raise TypeError('error query', e)
 
             return None
 

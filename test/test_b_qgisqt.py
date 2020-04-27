@@ -134,11 +134,15 @@ class DBaseTest(unittest.TestCase):
         # logging.getLogger("Lamia_unittest").debug('Extent : %s', extent)
         self.wind.qgiscanvas.canvas.setExtent(extent)
         # display good widget
-        wdg = self.wind.toolwidgets['toolprepro']['Graphique2'][0]
-        wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
+        # wdg = self.wind.toolwidgets['toolprepro']['Graphique_csv'][0]
+        # wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
         # wdg = self.wind.toolwidgets['toolpostpro']['Import'][0]
         # wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
         # self.wind.dbase.printsql = True
+        wdg = self.wind.toolwidgets['toolprepro']['Troncon'][0]
+        wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
+
+
         self.mainwin.exec_()
 
     def featurecreation(self):

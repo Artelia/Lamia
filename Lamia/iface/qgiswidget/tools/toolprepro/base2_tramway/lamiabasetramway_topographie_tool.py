@@ -38,7 +38,7 @@ from ..base2.lamiabase_topographie_tool import BaseTopographieTool
 import os
 import datetime
 
-from .lamiabasetramway_pointtopo_tool import BaseTramwayPointtopoTool
+from .lamiabasetramway_topographiedata_tool import BaseTramwayTopographiedataTool
 
 
 
@@ -147,7 +147,7 @@ class BaseTramawayTopographieTool(BaseTopographieTool):
         # child widgets
         self.dbasechildwdgfield = []
         self.instancekwargs['parentwidget'] = self
-        self.propertieswdgPOINTTOPO= BaseTramwayPointtopoTool(**self.instancekwargs)
+        self.propertieswdgPOINTTOPO= BaseTramwayTopographiedataTool(**self.instancekwargs)
         self.propertieswdgPOINTTOPO.tooltreewidgetSUBCAT = 'Points topo'
         self.dbasechildwdgfield.append(self.propertieswdgPOINTTOPO)
             

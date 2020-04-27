@@ -47,10 +47,12 @@ class DBaseTest(unittest.TestCase):
         #print(testcdir, work, variante)
         if SPATIALITE:
             offlinepath = os.path.join(self.offlinetdir,'testoffline.sqlite')
+
             self.wind.loadDBase(dbtype='Spatialite', slfile=SLFILE)
             logging.getLogger("Lamia_unittest").debug('ressourcedir %s', self.wind.dbase.dbaseressourcesdirectory)
             self.wind.pullDBase(exportfilepath=offlinepath)
-            # self.mainwin.exec_()
+
+            #self.wind.loadDBase(dbtype='Spatialite', slfile=offlinepath)
             logging.getLogger("Lamia_unittest").debug('ressourcedir %s', self.wind.dbase.dbaseressourcesdirectory)
             self.wind.pushDBase()
 

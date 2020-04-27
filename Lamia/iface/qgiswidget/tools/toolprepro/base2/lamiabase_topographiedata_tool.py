@@ -34,9 +34,9 @@ from qgis.PyQt.QtWidgets import (QWidget)
 from ...lamia_abstractformtool import AbstractLamiaFormTool
 
 
-class BasePointtopoTool(AbstractLamiaFormTool):
+class BaseTopographiedataTool(AbstractLamiaFormTool):
 
-    DBASETABLENAME = 'Pointtopo'
+    DBASETABLENAME = 'Topographiedata'
     LOADFIRST = False
 
     tooltreewidgetCAT = 'Ressources'
@@ -52,7 +52,7 @@ class BasePointtopoTool(AbstractLamiaFormTool):
 
 
     def __init__(self, **kwargs):
-        super(BasePointtopoTool, self).__init__(**kwargs)
+        super(BaseTopographiedataTool, self).__init__(**kwargs)
 
     """
     def initTool(self):
@@ -83,7 +83,7 @@ class BasePointtopoTool(AbstractLamiaFormTool):
     def initMainToolWidget(self):
         self.toolwidgetmain = UserUI()
 
-        self.formtoolwidgetconfdictmain = {'Pointtopo' : {'linkfield' : 'id_pointtopo',
+        self.formtoolwidgetconfdictmain = {'Topographiedata' : {'linkfield' : 'id_topographiedata',
                                                     'widgets' : {'typepointtopo': self.toolwidgetmain.comboBox_position,
                                                                 'x': self.toolwidgetmain.doubleSpinBox_X,
                                                                 'y': self.toolwidgetmain.doubleSpinBox_Y,
@@ -259,5 +259,5 @@ class BasePointtopoTool(AbstractLamiaFormTool):
 class UserUI(QWidget):
     def __init__(self, parent=None):
         super(UserUI, self).__init__(parent=parent)
-        uipath = os.path.join(os.path.dirname(__file__), 'lamiabase_pointtopo_tool_ui.ui')
+        uipath = os.path.join(os.path.dirname(__file__), 'lamiabase_topographiedata_tool_ui.ui')
         uic.loadUi(uipath, self)

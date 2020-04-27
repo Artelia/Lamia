@@ -24,13 +24,13 @@ This file is part of LAMIA.
   * License-Filename: LICENSING.md
  """
 
-from ..base2.lamiabase_pointtopo_tool import BasePointtopoTool
+from ..base2.lamiabase_topographiedata_tool import BaseTopographiedataTool
 
 
 
-class BaseDiguePointtopoTool(BasePointtopoTool):
+class BaseDigueTopographiedataTool(BaseTopographiedataTool):
 
 
     def __init__(self, **kwargs):
-        super(BaseDiguePointtopoTool, self).__init__(**kwargs)
+        super(BaseDigueTopographiedataTool, self).__init__(**kwargs)
 

@@ -38,7 +38,7 @@ from ..base2.lamiabase_topographie_tool import BaseTopographieTool, UserUI
 import os
 import datetime
 
-from .lamiabasedigue_pointtopo_tool import BaseDiguePointtopoTool
+from .lamiabasedigue_topographiedata_tool import BaseDigueTopographiedataTool
 
 """
 ne permettre de la renseigner qu en etant une classe fille de leve topo - sinon pas de datecreation
