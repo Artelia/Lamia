@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 """
-This file is part of LAMIA.
+This file is part of Lamia.Lamia.
 
     LAMIA is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -91,7 +91,7 @@ from .lamia_tablefield_dialog import LamiaTableFieldDialog
 # from ..toolgeneral.InspectionDigue_exportshp import exportShapefileWorker
 # from ..toolgeneral.InspectionDigue_import import ImportObjectWorker
 """
-from ..toolgeneral.SIRS_to_LAMIA.FDtL import *
+from ..toolgeneral.SIRS_to_Lamia.Lamia.FDtL import *
 from ..toolgeneral.LAMIA_to_SIRS.LtFD import *
 """
 
@@ -956,13 +956,13 @@ class InspectiondigueWindowWidget(QMainWindow):
                 if debug: logging.getLogger('Lamia').debug('x %s', x)
                 if self.dbase.qgsiface is not None:
                     #   if not self.dbase.standalone:
-                    exec('import Lamia.toolprepro.' + self.dbase.type.lower())
-                    moduletemp = importlib.import_module('.' + str(x), 'Lamia.toolprepro.' + self.dbase.type.lower() )
-                    # moduletemp = importlib.import_module('.' + str(x), 'Lamia.toolprepro.' + self.dbase.type.lower())
+                    exec('import Lamia.Lamia.toolprepro.' + self.dbase.type.lower())
+                    moduletemp = importlib.import_module('.' + str(x), 'Lamia.Lamia.toolprepro.' + self.dbase.type.lower() )
+                    # moduletemp = importlib.import_module('.' + str(x), 'Lamia.Lamia.toolprepro.' + self.dbase.type.lower())
                     # moduletemp = importlib.import_module('.' + str(x), '..toolprepro.' + self.dbase.type.lower())
                 else:
-                    exec('import Lamia.toolprepro.' + self.dbase.type.lower())
-                    moduletemp = importlib.import_module('.' + str(x), 'Lamia.toolprepro.' + self.dbase.type.lower())
+                    exec('import Lamia.Lamia.toolprepro.' + self.dbase.type.lower())
+                    moduletemp = importlib.import_module('.' + str(x), 'Lamia.Lamia.toolprepro.' + self.dbase.type.lower())
 
                 for name, obj in inspect.getmembers(moduletemp, inspect.isclass):
                     if moduletemp.__name__ == obj.__module__:
@@ -1000,11 +1000,11 @@ class InspectiondigueWindowWidget(QMainWindow):
             for x in __all__:
                 if self.dbase.qgsiface is not None:
                     #if not self.dbase.standalone:
-                    exec('import Lamia.toolpostpro.' + self.dbase.type)
-                    moduletemp = importlib.import_module('.' + str(x), 'Lamia.toolpostpro.' + self.dbase.type )
+                    exec('import Lamia.Lamia.toolpostpro.' + self.dbase.type)
+                    moduletemp = importlib.import_module('.' + str(x), 'Lamia.Lamia.toolpostpro.' + self.dbase.type )
                 else:
-                    exec('import Lamia.toolpostpro.' + self.dbase.type )
-                    moduletemp = importlib.import_module('.' + str(x), 'Lamia.toolpostpro.' + self.dbase.type)
+                    exec('import Lamia.Lamia.toolpostpro.' + self.dbase.type )
+                    moduletemp = importlib.import_module('.' + str(x), 'Lamia.Lamia.toolpostpro.' + self.dbase.type)
                 for name, obj in inspect.getmembers(moduletemp, inspect.isclass):
                     if moduletemp.__name__ == obj.__module__:
                         if hasattr(obj,'TOOLNAME'):
