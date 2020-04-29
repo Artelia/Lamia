@@ -41,7 +41,7 @@ class DBaseViewer():
         
 
         if True :
-            SLFILE = os.path.join(os.path.dirname(__file__), '..','test','lamia_test','test01.sqlite')
+            SLFILE = os.path.join(os.path.dirname(__file__), '..','test','datas','lamia_digue','test01.sqlite')
             #SLFILE = r"C:\Users\Public\Documents\lamia\test01\test01.sqlite"
             self._createWin()
             self._createMainWin()

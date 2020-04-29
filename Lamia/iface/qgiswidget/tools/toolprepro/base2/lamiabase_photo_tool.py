@@ -35,7 +35,8 @@ except ImportError:
 #from ...toolabstract.InspectionDigue_abstract_tool import AbstractInspectionDigueTool
 from ...lamia_abstractformtool import AbstractLamiaFormTool
 import os
-import datetime
+import datetime, platform
+import subprocess
 import glob
 from .lamiabase_photoviewer import PhotoViewer
 
@@ -121,6 +122,11 @@ class BasePhotoTool(AbstractLamiaFormTool):
         self.toolwidgetmain.toolButton_photomoins.clicked.connect(self.changeNumPhoto)
         self.toolwidgetmain.toolButton_calc.clicked.connect(
             lambda: self.showNumPad(self.toolwidgetmain.spinBox_numphoto))
+        if platform.system() == 'Linux':
+            self.toolwidgetmain.pushButton_opencamera.setEnabled(False)
+        elif platform.system() == 'Windows':
+            self.toolwidgetmain.pushButton_opencamera.clicked.connect(
+                lambda: self.openCameraApp())
 
     def changeNumPhoto(self):
         global numphoto
@@ -159,6 +165,11 @@ class BasePhotoTool(AbstractLamiaFormTool):
             query = self.dbase.query(sql)
             self.dbase.commit()
 
+    def openCameraApp(self):
+        if platform.system() == 'Linux':
+            pass
+        elif platform.system() == 'Windows':
+            subprocess.run('start microsoft.windows.camera:', shell=True)
 
     def choosePhoto(self):
         file = None

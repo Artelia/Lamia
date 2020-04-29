@@ -26,7 +26,7 @@ This file is part of LAMIA.
 
 
 import os
-import datetime
+import datetime, platform
 import glob
 import sys
 
@@ -74,6 +74,12 @@ class BaseDiguePhotoTool(BasePhotoTool):
         self.toolwidgetmain.toolButton_photomoins.clicked.connect(self.changeNumPhoto)
         self.toolwidgetmain.toolButton_calc.clicked.connect(
             lambda: self.showNumPad(self.toolwidgetmain.spinBox_numphoto))
+            
+        if platform.system() == 'Linux':
+            self.toolwidgetmain.pushButton_opencamera.setEnabled(False)
+        elif platform.system() == 'Windows':
+            self.toolwidgetmain.pushButton_opencamera.clicked.connect(
+                lambda: self.openCameraApp())
 
         self.toolwidgetmain.pushButton_eau.clicked.connect(self.setDefaultPhoto)
         self.toolwidgetmain.pushButton_crete.clicked.connect(self.setDefaultPhoto)

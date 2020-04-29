@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>587</width>
-    <height>219</height>
+    <width>504</width>
+    <height>324</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -72,6 +72,13 @@
           <property name="bottomMargin">
            <number>3</number>
           </property>
+          <item>
+           <widget class="QPushButton" name="pushButton_opencamera">
+            <property name="text">
+             <string>Ouvrir l'appareil photo</string>
+            </property>
+           </widget>
+          </item>
           <item>
            <widget class="QFrame" name="frame">
             <property name="frameShape">
