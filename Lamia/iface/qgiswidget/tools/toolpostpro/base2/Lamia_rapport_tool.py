@@ -155,10 +155,11 @@ class RapportTool(AbstractLamiaTool):
         reporttype = self.filemanager.getCurrentText()
         #tabletypepath = self.filemanager.getCurrentPath()
 
-        selectedzonegeoitems = self.choosertreewidget.treewidget.selectedItems()
-        ids = [int(item.text(0)) for item in selectedzonegeoitems]
-        pdids = self.choosertreewidget.ids
-        pks = [pdids.loc[pdids['id'] == id]['pk'].values[0] for id in ids]
+        # selectedzonegeoitems = self.choosertreewidget.treewidget.selectedItems()
+        # ids = [int(item.text(0)) for item in selectedzonegeoitems]
+        # pdids = self.choosertreewidget.ids
+        # pks = [pdids.loc[pdids['id'] == id]['pk'].values[0] for id in ids]
+        pks = self.choosertreewidget.getSelectedPks()
 
         self.reporttool.runReport(destinationfile=pdffile, 
                                     reportconffilename=reporttype, 

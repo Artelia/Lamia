@@ -8,3 +8,15 @@ self.query(sql)
 
 sql = "UPDATE Graphique SET maintypegraphique='TAB'"
 self.query(sql)
+
+#drop ressourceview and recreate it
+sql = "DROP VIEW Ressource_qgis"
+self.query(sql)
+sql = "DROP VIEW Ressource_django"
+self.query(sql)
+
+sql = "CREATE VIEW Ressource_qgis AS SELECT Ressource.*, Objet.*  FROM Ressource INNER JOIN Objet ON Ressource.lpk_objet = Objet.pk_objet"
+self.query(sql)
+sql = "CREATE VIEW Ressource_django AS SELECT  Ressource.*, Objet.* FROM Ressource INNER JOIN Objet ON Ressource.lpk_objet = Objet.pk_objet   WHERE Objet.lpk_revision_end IS NULL  AND Objet.datetimedestruction IS NULL"
+self.query(sql)
+

@@ -24,286 +24,669 @@ This file is part of LAMIA.
   * License-Filename: LICENSING.md
  """
 
-import datetime, os, sys
+import datetime, os, sys, platform
 import logging, json
 
-from . import dbaseutils
+#from . import dbaseutils
 
 
 class DBaseOfflineManager():
 
+    # typeimport : append : "simply" append to self.dbase the datas of dbaseparserfrom
+    # typeimport : update : dbaseparserfrom was created for offline use, now reimport modified data in self.dbase
+    # typeimport : copy : copy dbase, keeping id values - used when pull of offline mode
+    TYPEIMPORT = {'append':0,
+                'update':1,
+                'copy': -1}
+
+    RESOLVECONFLICTTYPE = 'manual'  #manual auto
+    RESOLVECONFLICTCHOICE = 'import'      # import main
+
+
+
     def __init__(self, dbase):
         self.dbase = dbase
 
+    def pullDBase(self,pulledpath):
+        
+        #create pull dir
+        if pulledpath is None:
+            if platform.system() == 'Linux':
+                pass
+            elif platform.system() == 'Windows':
+                importdir = "C://Users//Public//Documents"
+            lamiadir = os.path.join(importdir,'lamia')
+            if not os.path.isdir(lamiadir):
+                os.mkdir(lamiadir)
+            dbname = self.dbase.getDBName()
+            dbdir = os.path.join(lamiadir,dbname)
+            if not os.path.isdir(dbdir):
+                os.mkdir(dbdir)
+            else:
+                self.dbase.messageinstance.showErrorMessage('Il y a déjà une copie locale de la base... Supprimez la')
+                return
+            
+            lamiafilepath = os.path.join(dbdir,dbname+'.sqlite')
+        else:
+            lamiafilepath = pulledpath
+
+        #create dbase
+        dbaseparserfact = self.dbase.parserfactory.__class__
+        exportparser = dbaseparserfact('spatialite',self.dbase.messageinstance).getDbaseParser()
+
+        exportparser.createDBase(crs=self.dbase.crsnumber, 
+                                worktype=self.dbase.worktype, 
+                                dbaseressourcesdirectory=None, 
+                                variante=None,
+                                slfile=lamiafilepath)
+        exportparser.loadDBase(slfile=lamiafilepath)
+
+        #make import in new dbase
+        exportparser.dbaseofflinemanager.importDBase(self.dbase, 
+                                                    typeimport='copy',
+                                                    createnewversion=False,
+                                                    ressourcesimport='thumbnails')
+
+        datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        sql = "INSERT INTO Revision(datetimerevision, commentaire)  "
+        sql += " VALUES('" + datecreation + "','travail horsligne')"
+        exportparser.query(sql)
+
+        #finaly create a file keeping in memory the parent dbase
+        tempconffilepath = os.path.join(exportparser.dbaseressourcesdirectory,'config', '.offlinemode')
+        with open(tempconffilepath, 'w', encoding='utf-8') as outfile:
+            json.dump(self.dbase.connectconf, outfile, ensure_ascii=False, indent=4)
+
+
+
     def pushDBase(self):
         tempconffilepath = os.path.join(self.dbase.dbaseressourcesdirectory,'config', '.offlinemode')
+        if not os.path.isfile(tempconffilepath):
+            self.dbase.messageinstance.showErrorMessage("La base ne provient pas d'une version locale \nou a déjà été reversée")
+            return
+
         with open(tempconffilepath) as outfile:
             connectconf = json.load(outfile)
 
         dbaseparserfact = self.dbase.parserfactory.__class__
         if 'slfile' in connectconf.keys():
-            parentdbase = dbaseparserfact('spatialite').getDbaseParser()
+            parentdbase = dbaseparserfact('spatialite',self.dbase.messageinstance).getDbaseParser()
         elif 'pgschema' in connectconf.keys():
-            parentdbase = dbaseparserfact('postgis').getDbaseParser()
+            parentdbase = dbaseparserfact('postgis',self.dbase.messageinstance).getDbaseParser()
 
         parentdbase.loadDBase(**connectconf)
-        parentdbase.dbaseofflinemanager.importDbase(self.dbase,typeimport='import_terrain')
+        parentdbase.dbaseofflinemanager.importDBase(self.dbase,typeimport='update')
 
-    def importDbase(self, dbaseparserfrom, typeimport='nouvelle'):
+        os.remove(tempconffilepath)
+
+        self.dbase.messageinstance.showErrorMessage("Attention : il faut recréer une copie locale pour prendre en compte les changements à venir")
+
+
+    def importDBase(self, dbaseparserfrom, 
+                          typeimport='append', 
+                          createnewversion=True,
+                          ressourcesimport='Full'):
+        """
+        typeimport : append : "simply" append to self.dbase the datas of dbaseparserfrom
+        typeimport : update : dbaseparserfrom was created for offline use, now reimport modified data in self.dbase
+        typeimport : copy : copy dbase, keeping id values - used when pull of offline mode
+
+        create new version : create new vrsion before import
+
+        ressourcesimport : Full / thumbnails / None  : import all ressources files, or just thumbnails, or None
+        """
+        debug = True
+
+        """
+        if isinstance(typeimport,str):
+            # offlineimport = TYPEIMPORT[typeimport]
+            typeimport = TYPEIMPORT[typeimport]
         """
 
-
-        :param dbaseparserfrom:
-        :param typeimport:  nouvelle import_terrain
-        :return:
-        """
-
-        debug = False
+        # ****************** init
         self.backupBase()
+        maxprogress = len(self.dbase.dbasetables.keys())
+        self.dbase.messageinstance.createProgressBar('Import des donnees...',maxprogress )
+        confdatas = {}
+        #confdatas['offlineimport'] = offlineimport
+        confdatas['typeimport'] = typeimport
+        dictconflicts={}        # for offlineimport
 
-        # ********** Variables générales ***********************************
-        # import dict : {tablename : {...{idfrom : idto} ...} }
-        # utilise pour la correspondance entre les id de la table d'import et les id de la table main
-        importdictid = {}
-        # import dict : {tablename : {...{pkfrom : pkto} ...} }
-        # utilise pour la correspondance entre les pk de la table d'import et les pk de la table main
-        importdictpk = {}
-        # import dict : {tablename : [pk1, pk2,..] }
-        # utilise pour se souvenir des pk qui ont un revsionend
-        importdictdeletedpk = {}
-        #conflictobjetids dict : {..., idobjet:{fields : [], importvalue:[], mainvalue:[]},... }
-        conflictobjetids = {}
+        # add version in Main
+        if createnewversion:
+            datedebutimport = str((datetime.datetime.now() - datetime.timedelta(seconds=2)).strftime("%Y-%m-%d %H:%M:%S"))
+            if typeimport == 'update':
+                comment = 'import_from_offline'
+            else:
+                comment = 'import'
+            sql = "INSERT INTO Revision(datetimerevision, commentaire) "
+            sql += " VALUES('" + str(datedebutimport) + "', '" + comment + "')"
+            self.dbase.query(sql)
 
-        # ************** add version
-        datedebutimport = str((datetime.datetime.now() - datetime.timedelta(seconds=2)).strftime("%Y-%m-%d %H:%M:%S"))
-        if typeimport == 'nouvelle':
-            comment = 'import'
-        elif typeimport == 'import_terrain':
-            comment = 'import_terrain'
-        sql = "INSERT INTO Revision(datetimerevision, commentaire) "
-        sql += " VALUES('" + str(datedebutimport) + "', '" + comment + "')"
-        self.dbase.query(sql)
-
-        #self.maxrevision = self.dbase.getMaxRevision()
-        self.maxrevision = self.dbase.getLastPK('Revision')
-        self.currentrevision = int(self.maxrevision)
-        # self.updateWorkingDate() TODO
-
-        # **************** date de la version d'import
+        # import db creation date
         datetravailhorsligne = None
-        if typeimport == 'import_terrain':
-            # datetravailhorsligne
-            sql = "SELECT datetimerevision FROM Revision WHERE pk_revision = 2"
-            datetravailhorsligne = dbaseparserfrom.query(sql)[0][0]
+        dateofflinedbasecreation = None
 
-        # **************** debut de l'iteration sur les tables à importer
+        
+        importedobjetids = []
+        # ************** search conflict if mode = 'update'
+        #if offlineimport:
+        if typeimport == 'update':
+            dictconflicts, importedobjetids, dateofflinedbasecreation = self._resolveConflict(dbaseparserfrom)
+        if debug : logging.getLogger("Lamiaoffline").debug('dictconflicts %s',dictconflicts)
+
+
+        # **************** start importdbase
         counter = 0
         for order in range(1, 10):
-            for dbname in self.dbase.dbasetables:
-                if self.dbase.dbasetables[dbname]['order'] == order:
+            for tablename in self.dbase.dbasetables:
+                if self.dbase.dbasetables[tablename]['order'] == order:
                     counter += 1
-                    logging.getLogger("Lamia_unittest").debug(' ******************* %s *********  ', dbname)
+                    if debug: logging.getLogger("Lamiaoffline").debug(' ******************* %s *********  ', tablename)
+                    self.dbase.messageinstance.updateProgressBar(counter)
+                    self.dbase.beginTransaction()
 
-                    #* global var initialization
-                    importdictid[dbname.lower()] = {}
-                    importdictpk[dbname.lower()] = {}
-                    importdictdeletedpk[dbname.lower()] = []
+                    #* confdatas initialization
+                    confdatas[tablename.lower()]={}
+                    dbconfdatas = confdatas[tablename.lower()]
+                    # import dict : {tablename : {...{idfrom : idto} ...} }
+                    dbconfdatas['importdictid'] = {}                           
+                    # import dict : {tablename : {...{pkfrom : pkto} ...} }
+                    dbconfdatas['importdictpk'] = {}                           
+                    # import dict : {tablename : [pk1, pk2,..] }
+                    dbconfdatas['importdictdeletedpk'] = []                    
+                    #conflictobjetids dict : {..., idobjet:{fields : [], importvalue:[], mainvalue:[]},... }
+                    dbconfdatas['conflictobjetids'] = {}                        
 
-                    pkidfields, noncriticalfield = self._getCriticalandNonCriticalFields(dbname)
-                    if debug: logging.getLogger("Lamia_unittest").debug(' critical, fields,  : %s %s ',
-                                                        str(pkidfields),str(noncriticalfield))
+                    pkidfields, noncriticalfields = self._getCriticalandNonCriticalFields(tablename)
+                    dbconfdatas['pkidfields'], dbconfdatas['noncriticalfields'] = pkidfields, noncriticalfields 
 
-                    results, resultpk = self._getValuesFromImportedTable(typeimport,dbaseparserfrom, dbname, pkidfields, noncriticalfield)
+                    noncriticalresults, pkidresults = self._getValuesFromImportedTable(typeimport,
+                                                                                        dbaseparserfrom,
+                                                                                        tablename,
+                                                                                        pkidfields,
+                                                                                        noncriticalfields)
 
-                    resultsid, indexidfield, indexrevisionend, indexpkdbase, importid, parenttable, indexlkparenttable = self._getIndexofCriticalFields(typeimport,dbaseparserfrom,dbname,pkidfields )
-                    
-                    #* start the iteration in table lines
-                    for i, result in enumerate(results):
-                        if i % 50 == 0 and debug: logging.getLogger("Lamia").debug(' result : %s  ', str(result))
+                    for i, pkidresult in enumerate(pkidresults):
+                        noncriticalresult = noncriticalresults[i]
 
-                        if resultsid is not None:
-                            importid = resultpk[i][indexidfield]
 
-                        # id already exists before - search if it was modified
-                        if resultsid is not None and importid in resultsid:
-                            # get its  datemodif
-                            sqldate = " SELECT MAX(datetimemodification) FROM " + dbname.lower() + "_qgis"
-                            sqldate += " WHERE id_" + dbname.lower() + " = " + str(importid)
-                            resultdatesql = self.dbase.query(sqldate)
-                            resultdate = None
-                            if resultdatesql : # cases 3, 5, 6, 8, 9
-                                resultdate = self.dbase.query(sqldate)[0][0]
-                            else:       # case 4 or 7 : line deleted in main
-                                pass
+                        if tablename[0:2] != 'Tc':
+                            index_pk_tablename = dbconfdatas['pkidfields'].index('pk_' + tablename.lower())
+                            pk_tablename = pkidresult[index_pk_tablename]
+                            id_objet,rev_begin,rev_end,datetimedes = dbaseparserfrom.getValuesFromPk(tablename  + '_qgis',
+                                                                          ['id_objet','lpk_revision_begin','lpk_revision_end','datetimedestruction'],
+                                                                            pk_tablename  )
 
-                            if debug:  logging.getLogger("Lamia").debug('**** existing id : %s / date main : %s / date2 : %s', str(importid), str(resultdate), str(datetravailhorsligne))
+                            if id_objet in importedobjetids:    #initial offline object 
+                                if debug : strdebug = f'Updated Objet : id_objet : {id_objet}, rev_beg : {rev_begin}, rev_end : {rev_end}'
+                                
+                                if rev_begin == 1 and rev_end is None and datetimedes is None:          #subcase 1 or 2 do nothing
+                                    pass
+                                    if debug: logging.getLogger("Lamiaoffline").debug('%s - %s ', strdebug, 'subcase 1, 2')
 
-                            # Search if possible conflict
-                            # isinconflict = False
-                            if resultdate is None :  # case 4 or 7
-                                # not modified while field investigation- create new version - done
-                                if dbname.lower() == 'objet':
-                                    if debug: self.printsql = False
-                                    isinconflict, listfields, listvaluemain, listvalueimport = self.isInConflict(dbaseparserfrom, importid)
-                                    if debug: self.printsql = True
-                                    if debug: logging.getLogger("Lamia").debug('in conflict : %s', str(isinconflict))
-                                    if debug: logging.getLogger("Lamia").debug('date : %s %s', str(resultdate), str(datetravailhorsligne))
-                                    if isinconflict:
-                                        conflictobjetids[importid]={}
-                                        conflictobjetids[importid]['fields'] =  listfields
-                                        conflictobjetids[importid]['mainvalue'] = listvaluemain
-                                        conflictobjetids[importid]['importvalue'] = listvalueimport
+                                elif rev_begin == 1 and rev_end is None and datetimedes is not None:    #subcases 8,9 
+                                    if id_objet in dictconflicts.keys():
+                                        conflictidcase = dictconflicts[id_objet]['case']
 
-                            elif resultdate < datetravailhorsligne or resultdate > datedebutimport:     #case 1, 3 - no conflict
-                                pass
+                                        if conflictidcase == 1 :    #updated in main and deleted in import subcase 8,9
+                                            if debug: logging.getLogger("Lamiaoffline").debug('%s - %s ', strdebug, 'subcase 8,9')
+                                            if dictconflicts[id_objet]['conflictresolved'] == 'import':
+                                                #simple update with datetimedestructionvalue
+                                                self.insertAndUpdateIdPkSqL(mode='update',
+                                                                            fromparser=dbaseparserfrom,
+                                                                            toparser=self.dbase,
+                                                                            tablename=tablename, 
+                                                                            confdatas=confdatas, 
+                                                                            pkidresult= pkidresult,
+                                                                            noncriticalresult=noncriticalresult)
+                                            else:
+                                                #do nothing
+                                                pass
 
-                            else:     # cases  5, 6, 8, 9
-                                if dbname.lower() == 'objet':
-                                    if debug: self.printsql = False
-                                    isinconflict, listfields, listvaluemain, listvalueimport = self.isInConflict(dbaseparserfrom, importid)
-                                    if debug: self.printsql = True
-                                    if debug: logging.getLogger("Lamia").debug('in conflict : %s', str(isinconflict))
-                                    if debug: logging.getLogger("Lamia").debug('date : %s %s', str(resultdate), str(datetravailhorsligne))
-                                    if isinconflict:
-                                        conflictobjetids[importid]={}
-                                        conflictobjetids[importid]['fields'] =  listfields
-                                        conflictobjetids[importid]['mainvalue'] = listvaluemain
-                                        conflictobjetids[importid]['importvalue'] = listvalueimport
+                                elif rev_begin == 1 and rev_end == 2:                                   #subcase 7
+                                    pass
+                                    #do nothing, wait for rev_begin == 2 and rev_end == None
+                                    
+                                elif rev_begin == 2 and rev_end == None:                                #subcase 3, 4, 5, 6  ,11
+                                    if id_objet in dictconflicts.keys():                                #subcase 4,5,6,11
+                                        conflictidcase = dictconflicts[id_objet]['case']
+                                        #case4 = subcase4, case3 = subcase 5, case2 = subcase6, 11
+                                        if conflictidcase == 2:                                         #subcase 6,11
+                                            if dictconflicts[id_objet]['conflictresolved'] == 'import':
+                                                # update main with import value
+                                                self.insertAndUpdateIdPkSqL(mode='update',
+                                                                            fromparser=dbaseparserfrom,
+                                                                            toparser=self.dbase,
+                                                                            tablename=tablename, 
+                                                                            confdatas=confdatas, 
+                                                                            pkidresult= pkidresult,
+                                                                            noncriticalresult=noncriticalresult)
+                                            else:
+                                                pass
+                                                #do nothing keep main deleted
+                                        elif conflictidcase == 3:                                       #subcase 5
+                                            if dictconflicts[id_objet]['conflictresolved'] == 'import': 
+                                                # update main with import value
+                                                self.insertAndUpdateIdPkSqL(mode='update',
+                                                                            fromparser=dbaseparserfrom,
+                                                                            toparser=self.dbase,
+                                                                            tablename=tablename, 
+                                                                            confdatas=confdatas, 
+                                                                            pkidresult= pkidresult,
+                                                                            noncriticalresult=noncriticalresult)
+                                            else:
+                                                #keep main value
+                                                pass
+                                        elif conflictidcase == 4:                                       #subcase 4
+                                            if dictconflicts[id_objet]['conflictresolved'] == 'import':
+                                                self.insertAndUpdateIdPkSqL(mode='update',
+                                                                            fromparser=dbaseparserfrom,
+                                                                            toparser=self.dbase,
+                                                                            tablename=tablename, 
+                                                                            confdatas=confdatas, 
+                                                                            pkidresult= pkidresult,
+                                                                            noncriticalresult=noncriticalresult)
+                                            else:
+                                                #keep main value
+                                                pass
 
-                            # **** in all cases, create a new line or set revisionend  with import table value *****
-                            #   eventualy rewrite it when conflict process
+                                    else:   #no conflict, simple update subcase 3                       #subcase 3
+                                        if debug: logging.getLogger("Lamiaoffline").debug('%s - %s ', strdebug, 'subcase 3')
+                                        self.insertAndUpdateIdPkSqL(mode='update',
+                                                                    fromparser=dbaseparserfrom,
+                                                                    toparser=self.dbase,
+                                                                    tablename=tablename, 
+                                                                    confdatas=confdatas, 
+                                                                    pkidresult= pkidresult,
+                                                                    noncriticalresult=noncriticalresult)
 
-                            # deleted id case
-                            # its sure its an existing pk
-                            # case 3a, 4a, 5a, 6a, 7a, 8a, 9a
-                            if (typeimport == 'import_terrain' and indexrevisionend is not None
-                                    and resultpk[i][indexrevisionend] == 2):
-
-                                if debug: logging.getLogger("Lamia").debug(' set revisionend id, date: %s %s', str(importid), str(resultdate))
-
-                                # case 4a or 7a
-                                if not resultdate:
-                                    sql = " SELECT pk_" + dbname.lower() + "FROM " + dbname.lower() + "_qgis"
-                                    sql += " WHERE id_" + dbname.lower() + " = " + str(importid)
-                                    sql += " AND lpk_revision_end IS NULL"
-                                    resultcase = dbaseparserfrom.query(sql)
-                                    if resultcase:  # case 4a : do nothing - wait for active rev line
-                                        pass
-                                    else:    # case 7a : do nothing
-                                        pass
-
-                                # cases 3a, 5a, 6a, 8a, 9a, 10a, 11a
+                            else:       # new objet in offline
+                                if debug : 
+                                    strdebug = f'New object : id_objet : {id_objet}, rev_beg : {rev_begin}, rev_end : {rev_end}'
+                                    logging.getLogger("Lamiaoffline").debug('%s', strdebug)
+                                
+                                if typeimport == 'update':
+                                    typeinsert = 'append'
                                 else:
-                                    # simply set lpk_revision_end to main table
-                                    if 'lpk_revision_end' in self.dbase.dbasetables[dbname]['fields'].keys():
-                                        # search latest pk in main with same id
-                                        sql = "SELECT pk_" + dbname.lower() + " FROM  " + dbname.lower()
-                                        sql += " WHERE id_" + dbname.lower() + " = " + str(importid)
-                                        sql += " AND lpk_revision_end IS NULL"
-                                        sqlpkmain = self.dbase.query(sql)
-                                        # sqlpkimport = dbaseparserfrom.query(sql)
+                                    typeinsert = typeimport
 
-                                        # add pk to importdictdeletedpk
-                                        importdictdeletedpk[dbname.lower()].append(resultpk[i][indexpkdbase])
-
-                                        if sqlpkmain:
-                                            self.printsql = True
-                                            pkmain = sqlpkmain[0][0]
-                                            datesuppr = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-                                            sql = "UPDATE " + dbname.lower() + " SET lpk_revision_end = " + str(self.maxrevision)
-                                            sql += " , datetimemodification = '" + datesuppr + "'"
-                                            sql += " WHERE pk_" + dbname.lower() + " = " + str(pkmain)
-                                            self.dbase.query(sql, docommit=False)
+                                self.insertAndUpdateIdPkSqL(mode=typeinsert,
+                                                            fromparser=dbaseparserfrom,
+                                                            toparser=self.dbase,
+                                                            tablename=tablename, 
+                                                            confdatas=confdatas, 
+                                                            pkidresult= pkidresult,
+                                                            noncriticalresult=noncriticalresult,
+                                                            ressourcesimport=ressourcesimport)
 
 
-                            # if parent table pk is in  importdictdeletedpk
-                            elif (parenttable is not None
-                                  and parenttable in importdictdeletedpk.keys()
-                                  and resultpk[i][indexlkparenttable] in importdictdeletedpk[parenttable]):
-                                if debug: logging.getLogger("Lamia").debug(' parent revisionend : %s', str(importid))
-                                importdictdeletedpk[dbname.lower()].append(resultpk[i][indexpkdbase])
+                        else:       # tc tables
+                            index_pk_tablename = dbconfdatas['pkidfields'].index('pk_' + tablename.lower())
+                            pk_tablename = pkidresult[index_pk_tablename]
+                            rev_begin,rev_end = dbaseparserfrom.getValuesFromPk(tablename ,
+                                                                          ['lpk_revision_begin','lpk_revision_end'],
+                                                                            pk_tablename  )
+                            if typeimport in ['append','copy']:
+                                if rev_end is None:
+                                    self.insertAndUpdateIdPkSqL(mode=typeimport,
+                                                                fromparser=dbaseparserfrom,
+                                                                toparser=self.dbase,
+                                                                tablename=tablename, 
+                                                                confdatas=confdatas, 
+                                                                pkidresult= pkidresult,
+                                                                noncriticalresult=noncriticalresult)
+                            elif typeimport == 'update':
+                                if rev_begin == 2 and rev_end is None:
+                                    self.insertAndUpdateIdPkSqL(mode='append',
+                                                                fromparser=dbaseparserfrom,
+                                                                toparser=self.dbase,
+                                                                tablename=tablename, 
+                                                                confdatas=confdatas, 
+                                                                pkidresult= pkidresult,
+                                                                noncriticalresult=noncriticalresult)
 
 
-                            # new version case
-                            # case 3b, 4b, 5b, 6b, 11b
-                            else:
-                                if debug: logging.getLogger("Lamia").debug(' new elem : %s', str(importid))
-                                # insert new line in main table
-                                sql = self.createSetValueSentence(type='INSERT',
-                                                                  tablename=dbname,
-                                                                  listoffields=noncriticalfield,
-                                                                  listofrawvalues=result)
-                                self.dbase.query(sql, docommit=True)
-                                # udpate id/pk fields without changing id_table value
-                                sqlup = self.updateIdPkSqL(tablename=dbname,
-                                                           listoffields=pkidfields,
-                                                           listofrawvalues=resultpk[i],
-                                                           dictpk=importdictpk,
-                                                           dictid=importdictid,
-                                                           changeID=False)
-                                self.dbase.query(sqlup, docommit=False)
+                    self.dbase.commitTransaction()
+
+        self.dbase.messageinstance.closeProgressBar()
+
+    def _resolveConflict(self,dbaseparserfrom):
+        # get importedobjetids
+
+        sql = "SELECT datetimerevision FROM Revision WHERE pk_revision = 2"
+        dateofflinedbasecreation = dbaseparserfrom.query(sql)[0][0]
+
+        dictconflicts = {}
+        sql = "SELECT id_objet FROM Objet WHERE lpk_revision_begin = 1"
+        importedobjetids = [elem[0] for elem in dbaseparserfrom.query(sql)]
+
+        # get deleted objetids in import
+        sql = "SELECT id_objet FROM Objet WHERE lpk_revision_begin = 1 AND datetimedestruction  IS NOT NULL"
+        importedobjetidsdeleted = [elem[0] for elem in dbaseparserfrom.query(sql)]
+
+        # get updated objetids in import
+        sql = "SELECT id_objet FROM Objet WHERE lpk_revision_begin = 2 AND lpk_revision_end IS NULL"
+        sql += " AND datetimedestruction  IS NULL "
+        importedobjetidsupdated = [elem[0] for elem in dbaseparserfrom.query(sql)]
+
+        #get still present in main that are present in import
+        sql = "SELECT id_objet FROM Objet "
+        sql += " WHERE id_objet IN ({})".format(','.join([str(id) for id in importedobjetids]))
+        mainobjetstillthere = [elem[0] for elem in self.dbase.query(sql)]
+
+        # get modified ids in main since offineexport
+        sql = "SELECT id_objet FROM Objet WHERE lpk_revision_end IS NULL "
+        sql += " AND datetimedestruction  IS NULL "
+        sql += " AND datetimemodification > '{}'".format(dateofflinedbasecreation)
+        sql += " AND id_objet IN ({})".format(','.join([str(id) for id in importedobjetids]))
+        mainobjetidsupdated = [elem[0] for elem in self.dbase.query(sql)]
+
+        #get deleted ids in main since offineexport
+        sql = "SELECT id_objet FROM Objet WHERE datetimedestruction  IS NOT NULL"
+        sql += " AND datetimedestruction > '{}'".format(dateofflinedbasecreation)
+        sql += " AND id_objet IN ({})".format(','.join([str(id) for id in importedobjetids]))
+        mainobjetidsdeleted = [elem[0] for elem in self.dbase.query(sql)]
+
+        #* conflicts are those updated in main and deleted in import #case1
+        #** and those archived in main and created in import   #case2
+        # and those updated in both     #case3
+        #* and those deleted in main and created in import    #case4
+
+        case1 = list(set(importedobjetidsdeleted) & set(mainobjetidsupdated)) 
+        for id in case1:
+            dictconflicts[id] = {'fields':'/',
+                                'valuemain':'updated',
+                                'valueimport':'deleted',
+                                'case': 1}
+
+        case2 = list(set(importedobjetidsupdated) & set(mainobjetidsdeleted)) 
+        for id in case2:
+            dictconflicts[id] = {'fields':'/',
+                                'valuemain':'deleted',
+                                'valueimport':'updated',
+                                'case': 2}
+        case3 = list(set(importedobjetidsupdated) & set(mainobjetidsupdated)) 
+        for id in case3:
+            isinconflict, listfields, listvaluemain, listvalueimport = self.isInConflict(dbaseparserfrom, id)
+            print('*', id, isinconflict)
+            if isinconflict:
+                dictconflicts[id] = {'fields':listfields,
+                                    'valuemain':listvaluemain,
+                                    'valueimport':listvalueimport,
+                                    'case': 3}
+        case4 = list(set(importedobjetids) - set(mainobjetstillthere))
+        case4 = list(set(case4) - set(importedobjetidsdeleted))
+        for id in case4:
+            dictconflicts[id] = {'fields':'/',
+                                'valuemain':'deleted',
+                                'valueimport':'updated',
+                                'case': 4}
 
 
+        if self.RESOLVECONFLICTTYPE == 'manual':
+            #then resolve conflict
+            for id, iddict in dictconflicts.items():
+                # ui demande
+                message =  ["ID objet              : " + str(id) + '\n' ]
+                message += ["champs                : " + str(iddict['fields']) + '\n']
+                message += ["Imported table values : " + str(iddict['valueimport']) + '\n']
+                message += ["Main table values     : " + str(iddict['valuemain']) + '\n']
+                
+                reply = self.dbase.messageinstance.inputMessage(listtext=message, title='Keep imported value ?', withinput=False)
+                if reply:
+                    iddict['conflictresolved'] = 'import'
+                else:
+                    iddict['conflictresolved'] = 'main'
 
-                        # id does not exists before - create new line or for tc
+        else:
+            for id_objet in dictconflicts.keys():
+                if not 'conflictresolved' in dictconflicts[id_objet].keys():
+                    dictconflicts[id_objet]['conflictresolved'] = self.RESOLVECONFLICTCHOICE
+
+        return dictconflicts, importedobjetids, dateofflinedbasecreation
+
+    def insertAndUpdateIdPkSqL(self,
+                        mode=None,       # copy append update
+                        fromparser=None,
+                        toparser=None,
+                        tablename=None, 
+                        confdatas={}, 
+                        pkidresult= [],
+                        noncriticalresult=[],
+                        ressourcesimport='Full'):   #Full / thumbnails / None
+        
+
+
+        debug = False
+        if False and debug :
+            toparser.printsql = True
+            fromparser.printsql = True
+
+        pktable = None
+        fields = []
+        values = []
+
+        if False and debug and tablename == 'Graphiquedata':
+            logging.getLogger("Lamia_unittest").debug('tablename %s', tablename)
+            logging.getLogger("Lamia_unittest").debug('listoffields %s', listoffields)
+            logging.getLogger("Lamia_unittest").debug('listofrawvalues %s', listofrawvalues)
+            logging.getLogger("Lamia_unittest").debug('dictpk %s', dictpk)
+            logging.getLogger("Lamia_unittest").debug('dictid %s', dictid)
+
+        dbconfdatas = confdatas[tablename.lower()]
+        pkidfields = dbconfdatas.get('pkidfields', None)
+        noncriticalfields = dbconfdatas.get('noncriticalfields', None)
+        #pkidresult = dbconfdatas.get('pkidresult', None)
+        #noncriticalresult = dbconfdatas.get('noncriticalresult', None)
+
+        importdictpk = dbconfdatas.get('importdictpk', None)
+        importdictid = dbconfdatas.get('importdictid', None)
+        importdictdeletedpk = dbconfdatas.get('importdictdeletedpk', None)
+
+        #first inserting new data
+        #restemp = []
+        finalnoncriticalvalues = []
+        if  noncriticalfields != ['*']:
+            #for l, res in enumerate(result):
+            for l, field in enumerate(noncriticalfields):
+                res = noncriticalresult[l]
+                # if noncriticalfields[l] == 'lpk_revision_begin':
+                #     restemp.append(str(1))
+                #     # elif isinstance(res, str) or  ( isinstance(res, unicode) and noncriticalfield[l] != 'geom') :
+                if (isinstance(res, str) or isinstance(res, bytes)) and field != 'geom':
+                    finalnoncriticalvalues.append("'" + str(res).replace("'", "''") + "'")
+                elif 'datetime' in field and res is not None and res != 'None':
+                    finalnoncriticalvalues.append("'" + str(res) + "'")
+                elif field == 'geom' and res is not None:
+                    finalnoncriticalvalues.append("ST_GeomFromText('" + res + "', " + str(self.dbase.crsnumber)  + ")")
+                elif res is None or res == '':
+                    finalnoncriticalvalues.append('NULL')
+                else:
+                    finalnoncriticalvalues.append(str(res))
+
+            # copy les valeurs
+            sql = "INSERT INTO " + tablename + '(' + ','.join(noncriticalfields) + ')'
+            sql += " VALUES(" + ','.join(finalnoncriticalvalues) + ")"
+            if debug: logging.getLogger("Lamiaoffline").debug('non critical insert %s',sql)
+            toparser.query(sql,docommit=False)
+
+            #ressource
+            if tablename == 'Ressource' and ressourcesimport not in ['None']:       #Full / thumbnails / None
+                fileindex = noncriticalfields.index('file')
+                filepath = noncriticalresult[fileindex]
+                withthumbnail = None
+
+
+                # only export reference rasters
+                pkressourceindex = pkidfields.index('pk_ressource' )
+                pkressource = pkidresult[pkressourceindex]
+                pkobjet = fromparser.getValuesFromPk('Ressource_qgis', 'pk_objet', pkressource)
+                childdbname, childpk = self.searchChildfeatureFromPkObjet(fromparser, pkobjet)
+
+
+                if childdbname.lower() == 'rasters':
+                    # sql = " SELECT typeraster FROM Rasters_qgis WHERE pk_rasters = " + str(childpk)
+                    typeraster = self.dbase.getValuesFromPk('Rasters','typeraster',childpk)
+                    # typeraster = self.dbase.query(sql,docommit=False)[0][0]
+                    if typeraster not in ['ORF', 'IRF']:
+                        filepath = None
+                        withthumbnail = 2
+                
+
+                if not self.dbase.utils.isAttributeNull(filepath):
+                    fromfile = os.path.join(fromparser.dbaseressourcesdirectory, filepath)
+                    tofile = os.path.join(toparser.dbaseressourcesdirectory, filepath)
+                    if withthumbnail is None:
+                        if ressourcesimport == 'thumbnails':        #Full / thumbnails / None
+                            withthumbnail=1
                         else:
-                            if debug: logging.getLogger("Lamia").debug('****  new elem id : %s',str(importid))
+                            withthumbnail = 0     
+                    self.dbase.copyRessourceFile(fromfile=fromfile,
+                                            tofile=tofile,
+                                            withthumbnail=withthumbnail,
+                                            copywholedirforraster = True)
 
-                            if (typeimport == 'import_terrain' and indexrevisionend is not None
-                                    and resultpk[i][indexrevisionend] == 2):
-                                # case of line deleted in main and deleted in import - dont t process it
-                                importdictdeletedpk[dbname.lower()].append(resultpk[i][indexpkdbase])
+        else:
+            sql = "INSERT INTO " + tablename + " DEFAULT VALUES"
+            toparser.query(sql,docommit=False)
 
-                            elif (parenttable is not None
-                                  and parenttable in importdictdeletedpk.keys()
-                                  and resultpk[i][indexlkparenttable] in importdictdeletedpk[parenttable]):
-                                if debug: logging.getLogger("Lamia").debug(' parent revisionend : %s', str(importid))
-                                importdictdeletedpk[dbname.lower()].append(resultpk[i][indexpkdbase])
 
-                            else:
-                                # traite la mise en forme du result
-                                if noncriticalfield != ['*']:
-                                    sql = self.createSetValueSentence(type='INSERT',
-                                                                      tablename=dbname,
-                                                                      listoffields=noncriticalfield,
-                                                                      listofrawvalues=result)
-                                else:
-                                    sql = "INSERT INTO " + dbname + " DEFAULT VALUES"
-                                self.dbase.query(sql, docommit=False)
+        #exportparser.commit()
 
-                                # traite les id, pk et lid et lpk
-                                sqlup = self.updateIdPkSqL(tablename=dbname,
-                                                            listoffields=pkidfields,
-                                                            listofrawvalues=resultpk[i],
-                                                            dictpk=importdictpk,
-                                                            dictid=importdictid,
-                                                            changeID=True)
-                                if sqlup:
-                                    self.dbase.query(sqlup, docommit=False)
+        #then updating
+        finalpkidfields = []    #former fields
+        finalpkidsvalues=[]     #former values
+        pktoinsert = None
+        idtoinsert = None
+        for k, field in enumerate(pkidfields):
 
-                                # Ressource case : copy file
-                                if dbname == 'Ressource':
-                                    indexfile = noncriticalfield.index('file')
-                                    filepath = result[indexfile]
-                                    if not dbaseutils.isAttributeNull(filepath):
-                                        filefrom = dbaseparserfrom.completePathOfFile(filepath)
-                                        fileto = os.path.join(self.dbase.dbaseressourcesdirectory, filepath)
-                                        self.dbase.copyRessourceFile(fromfile=filefrom,
-                                                               tofile=fileto,
-                                                               withthumbnail=0,
-                                                               copywholedirforraster=False)
-                    # Finaly commit all
-                    self.dbase.commit()
+            if "pk_" == field[0:3]:
+                pktoinsert = toparser.getLastPK(tablename) #get the pk of noncritical data inserted
+                # print(pktable)
+                #pkoldtable = listofrawvalues[k]
+                pkoldtable = pkidresult[k]
+                importdictpk[pkoldtable] = pktoinsert
 
-                    if debug: logging.getLogger("Lamia").debug(' importdictid %s  ', str(importdictid[dbname.lower()]))
-                    if debug: logging.getLogger("Lamia").debug(' importdictpk %s  ', str(importdictpk[dbname.lower()]))
-                    if debug: logging.getLogger("Lamia").debug(' importdictdeletedpk %s  ', str(importdictdeletedpk[dbname.lower()]))
-                    if debug: logging.getLogger("Lamia").debug(' conflictobjetids %s  ', str(conflictobjetids))
+            elif "id_" == field[0:3]:
 
-        self.resolveConflict(dbaseparserfrom,conflictobjetids )
+                finalpkidfields.append(field)
+                # if changeID :
+                if mode in ['append']:       # copy append update
+                    #idtable = self.dbase.getLastPK(tablename) + 1
+                    idtoinsert = toparser.getmaxColumnValue(tablename, 'id_' + tablename.lower()) + 1
+                else:   #so update copy
+                    idtoinsert = pkidresult[k]
+                finalpkidsvalues.append(str(idtoinsert))
 
-        # if progress is not None: self.qgsiface.messageBar().clearWidgets() TODO
-        #self.normalMessage.emit("Import termine")
+                oldid = pkidresult[k]
+                importdictid[oldid] = idtoinsert
+
+            elif "lid_" == field[0:4]:
+                if pkidresult[k] is None:
+                    continue
+                jointablename = field.split('_')[1]
+                if jointablename in confdatas.keys() and 'importdictid' in confdatas[jointablename].keys():
+                    joinedidsdict = confdatas[jointablename]['importdictid']
+                    if pkidresult[k] in joinedidsdict.keys():
+                        finalpkidfields.append(field)
+                        finalpkidsvalues.append(str(joinedidsdict[pkidresult[k]]))
+                    else:
+                        finalpkidfields.append(field)
+                        finalpkidsvalues.append(str(pkidresult[k]))
+
+                        print('error lid_' )
+                        # print(dictid[field.split('_')[1]].keys())
+                        print('base : ' ,tablename, ' - column : ', field, ' - lid value : ',pkidresult[k]  )
+
+                else:
+                    finalpkidfields.append(field)
+                    finalpkidsvalues.append(str(pkidresult[k]))
+
+            elif "lpk_" == field[0:4]:
+                #if "lpk_revision_begin" in self.dbase.dbasetables[tablename]['fields'].keys():
+                jointablename = field.split('_')[1]
+                if field == "lpk_revision_begin":
+                    if mode in ['append']:# export append update
+                        finalpkidfields.append('lpk_revision_begin')
+                        finalpkidsvalues.append(str(self.dbase.maxrevision))
+                    elif mode in ['update']:
+                        finalpkidfields.append('lpk_revision_begin')
+                        finalpkidsvalues.append(str(self.dbase.maxrevision))
+                        if idtoinsert:
+                            #check if id inserted is a new version of existing id - if so put rev end to former id
+                            tn = tablename.lower()
+                            idtable = idtoinsert
+                            sql = f"SELECT pk_{tn} FROM {tn} WHERE id_{tn} = {idtable} "\
+                                "AND lpk_revision_end IS NULL and datetimedestruction IS NULL"
+                            pk = toparser.query(sql)
+                            if pk:
+                                maxrev = self.dbase.maxrevision
+                                pk = pk[0][0]
+                                sql = f"UPDATE {tn} SET lpk_revision_end = {maxrev} WHERE pk_{tn} = {pk}"
+                                toparser.query(sql)
+
+                    else:   #"export mode"
+                        finalpkidfields.append('lpk_revision_begin')
+                        finalpkidsvalues.append(str(1))
+
+
+
+                elif jointablename in confdatas.keys() and 'importdictpk' in confdatas[jointablename].keys():
+                    
+                    if pkidresult[k] is None:
+                        continue
+
+                    joinedpksdict = confdatas[jointablename]['importdictpk']
+                    if pkidresult[k] in joinedpksdict.keys():
+                        finalpkidfields.append(field)
+                        finalpkidsvalues.append(str(joinedpksdict[pkidresult[k]]))
+                    else:
+                        print('error lpk_', pkidresult)
+
+        if False:
+            pass
+            """
+            if "lpk_revision_begin" in listoffields and not changeID:
+                #pkcurrentable
+                sql = " SELECT pk_" + tablename.lower() + " FROM " + tablename.lower()
+                sql += " WHERE id_" + tablename.lower() + " = " + str(idtable)
+                sql += " AND lpk_revision_end IS NULL"
+
+                tempres = self.dbase.query(sql)
+
+                if len(tempres)>0:
+                    pkcurrenttable = self.dbase.query(sql)[0][0]
+
+
+                    sql = "UPDATE " + tablename.lower() + " SET lpk_revision_end = " + str(self.maxrevision)
+                    sql += " WHERE pk_" + tablename.lower() + " = " + str(pkcurrenttable)
+                    self.dbase.query(sql, docommit=False)
+            """
+            # if i % 50 == 0:
+                # if debug: logging.getLogger("Lamia").debug(' field, value : %s %s  ', str(fields), str(values))
+
+        if pktoinsert is not None and finalpkidfields:
+            # update line
+            setsentence = ''
+            for j, field in enumerate(finalpkidfields):
+                setsentence += finalpkidfields[j] + " = " + str(finalpkidsvalues[j]) + ","
+            setsentence = setsentence[:-1]
+
+
+
+            sqlup = 'UPDATE {} SET {} WHERE pk_{} = {}'.format(tablename.lower(),
+                                                                setsentence,
+                                                                tablename.lower(),
+                                                                pktoinsert)
+            if debug: logging.getLogger("Lamiaoffline").debug('pkid update :  %s',sqlup)
+            toparser.query(sqlup)
+            if tablename[0:2] == 'Tc':
+                print(sqlup)
+
+        dbconfdatas['importdictpk'] = importdictpk
+        dbconfdatas['importdictid'] = importdictid
+        dbconfdatas['importdictdeletedpk'] = importdictdeletedpk
 
     def _getCriticalandNonCriticalFields(self,dbname):
 
@@ -326,12 +709,25 @@ class DBaseOfflineManager():
         
         return pkidfields, noncriticalfield
 
-    def _getValuesFromImportedTable(self, typeimport, dbaseparserfrom, dbname, pkidfields, noncriticalfield):
+    def _getValuesFromImportedTable(self, typeimport, dbaseparserfrom, dbname, pkidfields=[], noncriticalfield=[]):
+        #type import export append update
+        
+        #if typeimport == 'nouvelle' or typeimport == 0:
+        if typeimport in ['append', 'copy']:
+            sqlconstraint = []
+            if dbname[0:2] == 'Tc':
+                sqlconstraint = " WHERE lpk_revision_end IS NULL"
+            else:
+                sqlconstraint = " WHERE lpk_revision_end IS NULL AND datetimedestruction is NULL"
 
-        if typeimport == 'nouvelle':
-            sqlconstraint = " WHERE lpk_revision_end IS NULL"
-        elif typeimport == 'import_terrain':
-            sqlconstraint = " WHERE lpk_revision_begin = 2 OR lpk_revision_end = 2"
+            #sqlconstraint = " WHERE lpk_revision_end IS NULL and datetimedestruction is NULL"
+        #elif typeimport == 'import_terrain' or typeimport == 1:
+        else:   # update
+            if dbname[0:2] == 'Tc':
+                sqlconstraint = " WHERE lpk_revision_end IS NULL"
+            else:
+                #sqlconstraint = " WHERE lpk_revision_end IS NULL AND datetimedestruction is NULL"
+                sqlconstraint = " WHERE lpk_revision_begin = 2 OR lpk_revision_end = 2 or datetimedestruction IS NOT NULL"
 
         #noncriticalfield.insert(-1, 'ST_AsText(ST_Transform(geom,' + str(self.dbase.crsnumber) + '))')
         noncriticalfieldtemp = list(noncriticalfield)
@@ -342,16 +738,18 @@ class DBaseOfflineManager():
         if 'Objet' in self.dbase.getParentTable(dbname):
             sql = "SELECT " + ','.join(noncriticalfieldtemp) + " FROM " + dbname.lower() + "_qgis"
             sql += sqlconstraint
-            sqlpk = "SELECT " + ','.join(pkidfields) + " FROM " + dbname.lower() + "_qgis"
-            sqlpk += sqlconstraint
+            if pkidfields:
+                sqlpk = "SELECT " + ','.join(pkidfields) + " FROM " + dbname.lower() + "_qgis"
+                sqlpk += sqlconstraint
         elif 'lpk_revision_end' in self.dbase.dbasetables[dbname]['fields'].keys():
             sql = "SELECT " + ','.join(noncriticalfieldtemp) + " FROM " + dbname.lower()
             sql += sqlconstraint
-            sqlpk = "SELECT " + ','.join(pkidfields) + " FROM " + dbname.lower()
-            sqlpk += sqlconstraint
+            if pkidfields:
+                sqlpk = "SELECT " + ','.join(pkidfields) + " FROM " + dbname.lower()
+                sqlpk += sqlconstraint
         #elif  'onlyoneparenttable' in self.dbase.dbasetables[dbname].keys():
         elif  dbname[-4:] == 'data':
-            for elem in pkidfields:
+            for elem in pkidfields + noncriticalfield:
                 if elem[0:4] == 'lpk_':
                     parenttablename = elem.split('_')[1].title()
                     break
@@ -360,52 +758,19 @@ class DBaseOfflineManager():
                                                         parenttablename + '_qgis.pk_' + parenttablename.lower(),
                                                         dbname + '.lpk_' + parenttablename.lower())
             sql += sqlconstraint
-            sqlpk = "SELECT " + ','.join(pkidfields) + " FROM " + dbname.lower()
-            sqlpk += " INNER JOIN {} ON {} = {} ".format(parenttablename+ '_qgis',
-                                                        parenttablename + '_qgis.pk_' + parenttablename.lower(),
-                                                        dbname + '.lpk_' + parenttablename.lower())
-            sqlpk += sqlconstraint
+            if pkidfields:
+                sqlpk = "SELECT " + ','.join(pkidfields) + " FROM " + dbname.lower()
+                sqlpk += " INNER JOIN {} ON {} = {} ".format(parenttablename+ '_qgis',
+                                                            parenttablename + '_qgis.pk_' + parenttablename.lower(),
+                                                            dbname + '.lpk_' + parenttablename.lower())
+                sqlpk += sqlconstraint
         else:
             sql = "SELECT " + ','.join(noncriticalfieldtemp) + " FROM " + dbname.lower()
-            sqlpk = "SELECT " + ','.join(pkidfields) + " FROM " + dbname.lower()
+            if pkidfields:
+                sqlpk = "SELECT " + ','.join(pkidfields) + " FROM " + dbname.lower()
         results = dbaseparserfrom.query(sql)
         resultpk = dbaseparserfrom.query(sqlpk)
         return results, resultpk
-
-
-
-    def _getIndexofCriticalFields(self, typeimport,dbaseparserfrom,dbname,pkidfields ):
-
-        #* get previoux existing id and other things for import terrain
-        resultsid = None            # the list of existing id in main table
-        indexidfield = None         # the index of id_ column in pkidfields and resultpk
-        indexrevisionend = None     # the index of lpk_revision_end in pkidfields and resultpk
-        indexpkdbase = None         # the index of pk_ column in pkidfields and resultpk
-        importid = None             # the id in the table lines iteration
-        parenttable = None          # the parent table of actual table - defined as lpk_(parenttable)
-        indexlkparenttable = None   # the index of parent table in pkidfields and resultpk
-
-        if typeimport == 'import_terrain':
-            # get resultsid and indexidfield
-            if "id_" + dbname.lower() in pkidfields:
-                sqlid = "SELECT id_" + dbname.lower() + " FROM " + dbname.lower() + "_qgis"
-                sqlid += " WHERE lpk_revision_begin = 1 "
-                resultsid = [elem[0] for elem in dbaseparserfrom.query(sqlid)]
-                indexidfield = pkidfields.index("id_" + dbname.lower())
-            # get indexrevisionend
-            if "lpk_revision_end" in pkidfields:
-                indexrevisionend = pkidfields.index('lpk_revision_end')
-            # get indexpkdbase
-            indexpkdbase = pkidfields.index("pk_" + dbname.lower())
-            
-            # get eventual parenttable
-            for j, fieldname in enumerate(pkidfields):
-                if fieldname[0:4] == 'lpk_':
-                    parenttable = fieldname.split('_')[1]
-                    indexlkparenttable = j
-
-        return resultsid, indexidfield, indexrevisionend, indexpkdbase, importid, parenttable, indexlkparenttable
-
 
     def isInConflict(self, dbaseparserfrom, conflictobjetid):
         """
@@ -436,7 +801,7 @@ class DBaseOfflineManager():
         """
 
         debug = False
-        if debug: logging.getLogger("Lamia").debug(' isInConflict - idobjet : %s  ', str(conflictobjetid))
+        if debug: logging.getLogger("Lamiaoffline").debug(' isInConflict - idobjet : %s  ', str(conflictobjetid))
 
         # get mainpkobjet and importpkobjet
         sql = " SELECT MAX(pk_objet) FROM Objet WHERE id_objet = " + str(conflictobjetid)
@@ -444,123 +809,43 @@ class DBaseOfflineManager():
         importpkobjetsql = dbaseparserfrom.query(sql)
 
 
+        mainpkobjet = mainpkobjetsql[0][0]
+        importpkobjet = importpkobjetsql[0][0]
 
+        # get child table name and pk
+        mainconflictdbname, mainconflictpk = self.searchChildfeatureFromPkObjet(self.dbase, mainpkobjet)
+        importconflictdbname, importconflictpk = self.searchChildfeatureFromPkObjet(dbaseparserfrom, importpkobjet)
 
+        #get revend of pk
+        sql = "SELECT lpk_revision_end FROM " + mainconflictdbname.lower() + "_qgis"
+        sql += " WHERE pk_" + mainconflictdbname.lower() + " = " + str(mainconflictpk)
+        revendmain = self.dbase.query(sql)[0][0]
+        sql = "SELECT lpk_revision_end FROM " + importconflictdbname.lower() + "_qgis"
+        sql += " WHERE pk_" + importconflictdbname.lower() + " = " + str(importconflictpk)
+        revendimport = dbaseparserfrom.query(sql)[0][0]
 
-        if False:
-            sql = " SELECT pk_objet FROM Objet WHERE id_objet = " + str(conflictobjetid)
-            sql += " AND lpk_revision_end IS NULL"
-            mainpkobjet = None
-            resmain = self.dbase.query(sql)
-            if resmain:
-                mainpkobjet = resmain[0][0]
-            importpkobjet = None
-            resimport = dbaseparserfrom.query(sql)
-            if resimport:
-                importpkobjet = resimport[0][0]
+        allfieldslist = self.dbase.getColumns(mainconflictdbname + '_qgis')
 
-            if mainpkobjet is None:
-                sql = " SELECT pk_objet FROM Objet WHERE id_objet = " + str(conflictobjetid)
-                sql += " AND lpk_revision_end = MAX(lpk_revision_end)"
+        # values from child table
+        sql = "SELECT " + ', '.join(allfieldslist) + " FROM " + mainconflictdbname.lower() + "_qgis"
+        sql += " WHERE pk_" + mainconflictdbname.lower() + " = " + str(mainconflictpk)
+        resmain = self.dbase.query(sql)[0]
+        sql = "SELECT " + ', '.join(allfieldslist) + " FROM " + importconflictdbname.lower() + "_qgis"
+        sql += " WHERE pk_" + importconflictdbname.lower() + " = " + str(importconflictpk)
+        resimport = dbaseparserfrom.query(sql)[0]
 
+        # fields = self.getColumns(mainconflictdbname.lower() + "_qgis")
+        fields = allfieldslist
 
-        # print('mainpkobjetsql',mainpkobjetsql,conflictobjetid)
-        if mainpkobjetsql[0][0] is not None: #cases 3, 5, 6, 8, 9
-
-            mainpkobjet = mainpkobjetsql[0][0]
-            importpkobjet = importpkobjetsql[0][0]
-
-            # get child table name and pk
-            mainconflictdbname, mainconflictpk = self.searchChildfeatureFromPkObjet(self.dbase, mainpkobjet)
-            importconflictdbname, importconflictpk = self.searchChildfeatureFromPkObjet(dbaseparserfrom, importpkobjet)
-
-            #get revend of pk
-            sql = "SELECT lpk_revision_end FROM " + mainconflictdbname.lower() + "_qgis"
+        # get geom
+        resgeom1, resgeom2 = None, None
+        if 'geom' in fields:
+            sql = " SELECT ST_AsText(geom) FROM " + mainconflictdbname.lower() + "_qgis"
             sql += " WHERE pk_" + mainconflictdbname.lower() + " = " + str(mainconflictpk)
-            revendmain = self.dbase.query(sql)[0][0]
-            sql = "SELECT lpk_revision_end FROM " + importconflictdbname.lower() + "_qgis"
+            resgeommain = self.dbase.query(sql)[0][0]
+            sql = " SELECT ST_AsText(geom) FROM " + importconflictdbname.lower() + "_qgis"
             sql += " WHERE pk_" + importconflictdbname.lower() + " = " + str(importconflictpk)
-            revendimport = dbaseparserfrom.query(sql)[0][0]
-
-
-            if revendimport is not None and revendmain is not None:     # main and import has been deleted - non conflict
-                return False, None, None, None
-
-            # construct column names (usefull if both tables are not in same order)
-            #allfieldslist = self.getAllFields(mainconflictdbname)
-            allfieldslist = self.dbase.getColumns(mainconflictdbname + '_qgis')
-
-
-            # values from child table
-            sql = "SELECT " + ', '.join(allfieldslist) + " FROM " + mainconflictdbname.lower() + "_qgis"
-            sql += " WHERE pk_" + mainconflictdbname.lower() + " = " + str(mainconflictpk)
-            resmain = self.dbase.query(sql)[0]
-            sql = "SELECT " + ', '.join(allfieldslist) + " FROM " + importconflictdbname.lower() + "_qgis"
-            sql += " WHERE pk_" + importconflictdbname.lower() + " = " + str(importconflictpk)
-            resimport = dbaseparserfrom.query(sql)[0]
-
-            # fields = self.getColumns(mainconflictdbname.lower() + "_qgis")
-            fields = allfieldslist
-
-            # get geom
-            resgeom1, resgeom2 = None, None
-            if 'geom' in fields:
-                sql = " SELECT ST_AsText(geom) FROM " + mainconflictdbname.lower() + "_qgis"
-                sql += " WHERE pk_" + mainconflictdbname.lower() + " = " + str(mainconflictpk)
-                resgeommain = self.dbase.query(sql)[0][0]
-                sql = " SELECT ST_AsText(geom) FROM " + importconflictdbname.lower() + "_qgis"
-                sql += " WHERE pk_" + importconflictdbname.lower() + " = " + str(importconflictpk)
-                resgeomimport = dbaseparserfrom.query(sql)[0][0]
-
-            if False:
-                print('resmain',resmain)
-                print('resimport',resimport)
-                print('resgeommain',resgeommain)
-                print('resgeomimport', resgeomimport)
-
-
-        else:
-
-            sql = " SELECT pk_objet FROM Objet WHERE id_objet = " + str(conflictobjetid)
-            sql += " AND lpk_revision_end = 2"
-            mainpkobjetsql = dbaseparserfrom.query(sql)
-
-            mainpkobjet = mainpkobjetsql[0][0]
-            importpkobjet = importpkobjetsql[0][0]
-
-            if mainpkobjet == importpkobjet:   #main was deleted and import also - no conflict
-                return False, None, None, None
-
-
-
-            mainconflictdbname, mainconflictpk = self.searchChildfeatureFromPkObjet(dbaseparserfrom, mainpkobjet)
-            importconflictdbname, importconflictpk = self.searchChildfeatureFromPkObjet(dbaseparserfrom, importpkobjet)
-
-            # construct column names (usefull if both tables are not in same order)
-            allfieldslist = self.getAllFields(mainconflictdbname)
-
-            # values from child table
-            sql = "SELECT " + ', '.join(allfieldslist) + " FROM " + mainconflictdbname.lower() + "_qgis"
-            sql += " WHERE pk_" + mainconflictdbname.lower() + " = " + str(mainconflictpk)
-            resmain = dbaseparserfrom.query(sql)[0]
-            sql = "SELECT " + ', '.join(allfieldslist) + " FROM " + importconflictdbname.lower() + "_qgis"
-            sql += " WHERE pk_" + importconflictdbname.lower() + " = " + str(importconflictpk)
-            resimport = dbaseparserfrom.query(sql)[0]
-
-            # fields = self.getColumns(mainconflictdbname.lower() + "_qgis")
-            fields = allfieldslist
-
-            # get geom
-            resgeom1, resgeom2 = None, None
-            if 'geom' in fields:
-                sql = " SELECT ST_AsText(geom) FROM " + mainconflictdbname.lower() + "_qgis"
-                sql += " WHERE pk_" + mainconflictdbname.lower() + " = " + str(mainconflictpk)
-                resgeommain = dbaseparserfrom.query(sql)[0][0]
-                sql = " SELECT ST_AsText(geom) FROM " + importconflictdbname.lower() + "_qgis"
-                sql += " WHERE pk_" + importconflictdbname.lower() + " = " + str(importconflictpk)
-                resgeomimport = dbaseparserfrom.query(sql)[0][0]
-
-
+            resgeomimport = dbaseparserfrom.query(sql)[0][0]
 
 
         # manage fields in conflict
@@ -583,9 +868,9 @@ class DBaseOfflineManager():
                 conflictfields.append(fields[i])
 
         if debug:
-            logging.getLogger("Lamia").debug(' isInConflict - conflictfields : %s  ', str(conflictfields))
-            logging.getLogger("Lamia").debug(' isInConflict - conflict1values : %s  ', str(conflict1values))
-            logging.getLogger("Lamia").debug(' isInConflict - conflict2values : %s  ', str(conflict2values))
+            logging.getLogger("Lamiaoffline").debug(' isInConflict - conflictfields : %s  ', str(conflictfields))
+            logging.getLogger("Lamiaoffline").debug(' isInConflict - conflict1values : %s  ', str(conflict1values))
+            logging.getLogger("Lamiaoffline").debug(' isInConflict - conflict2values : %s  ', str(conflict2values))
 
 
         if len(conflict1values)>0:
@@ -593,307 +878,6 @@ class DBaseOfflineManager():
         else:
             return False, None, None, None
   
-    def resolveConflict(self,dbaseparserfrom,conflictobjetids ):
-        """
-                conflictobjetpks[importid]['fields'] =  listfields
-        conflictobjetpks[importid]['mainvalue'] = listvaluemain
-        conflictobjetpks[importid]['importvalue'] = listvalueimport
-        :param dbaseparserfrom:
-        :param conflictobjetpks:
-        :return:
-        """
-
-        debug = False
-
-        for conflictobjetid in conflictobjetids.keys():
-
-            # cas ou la ligne main a ete supprimee
-            sql = "SELECT lpk_revision_end FROM Objet WHERE id_objet = " + str(conflictobjetid)
-            resendpks = self.dbase.query(sql)
-            listrevendpks = [res[0] for res in resendpks]
-            # id was suppressed before import - re delet it
-            # print('listrevendpks', listrevendpks)
-            if not self.maxrevision in listrevendpks:
-                conflictobjetids[conflictobjetid]['mainvalue'] = 'Supprime'
-
-            # cas ou la ligne import a ete supprimee
-            sql = " SELECT MAX(pk_objet) FROM Objet WHERE id_objet = " + str(conflictobjetid)
-            pkobjet = self.dbase.query(sql)[0][0]
-            if pkobjet is not None:
-                sql = " SELECT  lpk_revision_end FROM Objet WHERE pk_objet = " + str(pkobjet)
-                mainrevend  = self.dbase.query(sql)[0][0]
-                if mainrevend is not None:
-                    conflictobjetids[conflictobjetid]['importvalue'] = 'Supprime'
-
-            # ui demande
-            message =  "ID objet       : " + str(conflictobjetid) + '\n'
-            message += "champs         : " + str(conflictobjetids[conflictobjetid]['fields']) + '\n'
-            message += "valeurs import : " + str(conflictobjetids[conflictobjetid]['importvalue']) + '\n'
-            message += "valeurs main   : " + str(conflictobjetids[conflictobjetid]['mainvalue']) + '\n'
-
-            reply = QMessageBox.question(None, 'Keep import values ?',
-                                            message, QMessageBox.Yes, QMessageBox.No)
-
-            # retour a la valeur du main
-            if reply == QMessageBox.No:
-                if debug : self.printsql = True
-
-                if conflictobjetids[conflictobjetid]['mainvalue'] == 'Supprime':
-                    datesuppr = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-                    sql = " UPDATE Objet SET "
-                    sql += "lpk_revision_begin = " + str(self.maxrevision - 1)
-                    sql += ", lpk_revision_end = " + str(self.maxrevision)
-                    sql += ", datetimedestruction = '" + str(datesuppr) + "'"
-                    sql += " WHERE pk_objet = " + str(pkobjet)
-                    self.dbase.query(sql, docommit=True)
-                    continue
-
-                if conflictobjetids[conflictobjetid]['importvalue'] == 'Supprime':
-                    # to know if deleted object - case of deleted objet in import and not in main
-                    # sql = " SELECT  lpk_revision_end FROM Objet WHERE pk_objet = " + str(pkobjet)
-                    # mainrevend  = self.dbase.query(sql)[0][0]
-                    # if mainrevend is not None:
-                    sql = " UPDATE Objet SET lpk_revision_end = NULL, datetimedestruction = NULL WHERE pk_objet = " + str(pkobjet)
-                    self.dbase.query(sql, docommit=False)
-
-
-                childdbname, childpk = self.searchChildfeatureFromPkObjet(self.dbase, pkobjet)
-                parenttables = [childdbname] + self.dbase.getParentTable(childdbname)
-
-                for tablename in parenttables:
-                    sql = " SELECT pk_" + tablename.lower() + " FROM " +  childdbname.lower() + "_qgis"
-                    sql += " WHERE pk_" + childdbname.lower() + " = " + str(childpk)
-                    pktable = self.dbase.query(sql)[0][0]
-                    fieldstomodif = []
-                    valuetoinsert=[]
-                    for i, field in enumerate(conflictobjetids[conflictobjetid]['fields']):
-                        #for i, field in enumerate(self.dbase.dbasetables[tablename]['fields']):
-                        #if field in conflictobjetids[conflictobjetid]['fields']:
-                        if field in self.dbase.dbasetables[tablename]['fields'].keys():
-                            # print(i, field, conflictobjetids[conflictobjetid]['mainvalue'])
-                            fieldstomodif.append(field)
-                            valuetoinsert.append(conflictobjetids[conflictobjetid]['mainvalue'][i])
-                        elif field == 'geom' and 'geom' in self.dbase.dbasetables[tablename].keys():
-                            fieldstomodif.append(field)
-                            valuetoinsert.append(conflictobjetids[conflictobjetid]['mainvalue'][i])
-
-                    if fieldstomodif:
-                        sql = self.createSetValueSentence(type='UPDATE',
-                                                            tablename=tablename,
-                                                            listoffields=fieldstomodif,
-                                                            listofrawvalues=valuetoinsert)
-                        sql += " WHERE pk_" + tablename.lower() + " = " + str(pktable)
-                        self.dbase.query(sql, docommit=False)
-                self.commit()
-                if debug: self.printsql = False
-
-
-            else:
-                continue
-
-    def exportDbase(self,  exportfile=None ):
-
-        debug = False
-        if debug: logging.getLogger("Lamia").debug('Start ')
-        """
-        if self.qgsiface is not None: TODO
-            # if not self.dbase.standalone:
-            progressMessageBar = self.qgsiface.messageBar().createMessage("Backup...")
-            progress = QProgressBar()
-            progress.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
-            progressMessageBar.layout().addWidget(progress)
-            if int(str(self.qgisversion_int)[0:3]) < 220:
-                self.qgsiface.messageBar().pushWidget(progressMessageBar, self.qgsiface.messageBar().INFO)
-            else:
-                self.qgsiface.messageBar().pushWidget(progressMessageBar, qgis.core.Qgis.Info)
-            # len
-            maxprogress = len(self.dbase.dbasetables.keys())
-            progress.setMaximum(maxprogress)
-        else:
-            progress = None
-        """
-        dbaseparserfact = self.dbase.parserfactory.__class__
-        exportparser = dbaseparserfact('spatialite').getDbaseParser()
-
-        #exportparser = DBaseParser(self.canvas)
-        #exportparser.createDbase(slfile=exportfile,
-        #                         crs = self.dbase.crsnumber,
-        #                         worktype = self.type)
-        exportparser.createDBase(crs=self.dbase.crsnumber, 
-                                worktype=self.dbase.worktype, 
-                                dbaseressourcesdirectory=None, 
-                                variante=None,
-                                slfile=exportfile)
-        exportparser.loadDBase(slfile=exportfile)
-
-        counter = 0
-        for order in range(1,10):
-
-            for dbname in self.dbase.dbasetables:
-
-                if self.dbase.dbasetables[dbname]['order'] == order:
-                    counter += 1
-                    # if progress: progressMessageBar.setText("Import des donnees... : " + dbname) TODO
-                    # self.setLoadingProgressBar(progress, counter) TODO
-                    logging.getLogger("Lamia_unittest").debug(' ******************* %s *********  ', dbname)
-
-
-                    noncriticalfield = []
-
-                    for field in self.dbase.dbasetables[dbname]['fields'].keys():
-                            noncriticalfield.append(field)
-
-
-                    #add geom at rank-1
-                    if 'geom' in self.dbase.dbasetables[dbname].keys():
-                        noncriticalfield.insert(-1, 'ST_AsText(ST_Transform(geom,' + str(self.dbase.crsnumber) + '))')
-
-
-                    sql = ''
-                    if 'Objet' in self.dbase.getParentTable(dbname):
-                        sql = "SELECT " + ','.join(noncriticalfield) + " FROM " + dbname.lower() + "_qgis"
-                        sql += " WHERE lpk_revision_end IS NULL"
-
-
-                    elif 'lpk_revision_end' in self.dbase.dbasetables[dbname]['fields'].keys():
-                        sql = "SELECT " + ','.join(noncriticalfield) + " FROM " + dbname.lower()
-                        sql += " WHERE lpk_revision_end IS NULL"
-
-
-                    else:
-                        sql = "SELECT " + ','.join(noncriticalfield) + " FROM " + dbname.lower()
-
-                    results = self.dbase.query(sql)
-
-                    if 'ST_AsText(ST_Transform(geom,' + str(self.dbase.crsnumber) + '))' in noncriticalfield :
-                        noncriticalfield[noncriticalfield.index('ST_AsText(ST_Transform(geom,' + str(self.dbase.crsnumber) + '))')] = 'geom'
-
-
-                    # noncriticalfield.insert(0, "id_" + dbname)
-
-                    for i, result in enumerate(results):
-
-                        #traite la mise en forme du result
-                        restemp = []
-                        if  noncriticalfield != ['*']:
-                            for l, res in enumerate(result):
-                                if noncriticalfield[l] == 'lpk_revision_begin':
-                                    restemp.append(str(1))
-                                    # elif isinstance(res, str) or  ( isinstance(res, unicode) and noncriticalfield[l] != 'geom') :
-                                elif (isinstance(res, str) or isinstance(res, bytes)) and noncriticalfield[l] != 'geom':
-                                    restemp.append("'" + str(res).replace("'", "''") + "'")
-                                elif 'datetime' in noncriticalfield[l] and res is not None and res != 'None':
-                                    restemp.append("'" + str(res) + "'")
-                                elif noncriticalfield[l] == 'geom' and res is not None:
-                                    # print('geom', "ST_GeomFromText('" + res + "', " + str(self.dbase.crsnumber)  + ")")
-                                    restemp.append("ST_GeomFromText('" + res + "', " + str(self.dbase.crsnumber)  + ")")
-
-                                elif res is None or res == '':
-                                    restemp.append('NULL')
-                                else:
-                                    restemp.append(str(res))
-
-                            # copy les valeurs
-                            if True:
-                                sql = "INSERT INTO " + dbname + '(' + ','.join(noncriticalfield) + ')'
-                                sql += " VALUES(" + ','.join(restemp) + ")"
-                                exportparser.query(sql,docommit=False)
-
-
-
-                            #ressource
-                            if dbname == 'Ressource':
-                                fileindex = noncriticalfield.index('file')
-                                filepath = result[fileindex]
-
-                                pkobjetindex = noncriticalfield.index('lpk_objet')
-                                pkobjet = result[pkobjetindex]
-
-                                childdbname, childpk = self.searchChildfeatureFromPkObjet(self.dbase, pkobjet)
-
-                                # only export reference rasters
-                                if childdbname.lower() == 'rasters':
-                                    sql = " SELECT typeraster FROM Rasters_qgis WHERE pk_rasters = " + str(childpk)
-                                    typeraster = self.dbase.query(sql,docommit=False)[0][0]
-                                    if typeraster not in ['ORF', 'IRF']:
-                                        continue
-
-
-                                if not dbaseutils.isAttributeNull(filepath):
-
-                                    # print(self.dbaseressourcesdirectory,filepath,  exportparser.dbaseressourcesdirectory)
-
-                                    fromfile = os.path.join(self.dbase.dbaseressourcesdirectory, filepath)
-                                    tofile = os.path.join(exportparser.dbaseressourcesdirectory, filepath)
-
-                                    self.dbase.copyRessourceFile(fromfile=fromfile,
-                                                           tofile=tofile,
-                                                           withthumbnail=1,
-                                                           copywholedirforraster = True)
-
-
-                        else:
-                            sql = "INSERT INTO " + dbname + " DEFAULT VALUES"
-                            exportparser.query(sql,docommit=False)
-
-
-                    exportparser.commit()
-
-
-        #update seq file to remember last pk of each table
-        for tablename in self.dbase.dbasetables.keys():
-            if tablename == 'Revision':
-                continue
-            lastpk = self.dbase.getLastPK(tablename)
-            if lastpk > 0:
-                sql = "UPDATE sqlite_sequence SET seq = " + str(lastpk)
-                sql += " WHERE name = '" + str(tablename) + "'"
-                exportparser.query(sql)
-
-        """
-        if self.dbasetype == 'spatialite':
-
-            sql = "SELECT * FROM sqlite_sequence "
-            results = self.dbase.query(sql)
-            for res in results:
-                if res[0] == 'Revision':
-                    continue
-                sql = "UPDATE sqlite_sequence SET seq = " + str(res[1])
-                sql += " WHERE name = '" + str(res[0]) + "'"
-                exportparser.query(sql)
-        elif self.dbasetype == 'postgis':
-            for tablename in self.dbase.dbasetables.keys():
-                lastpk = self.dbase.getLastPK('Revision')
-
-                
-                sql = "SELECT last_value FROM " + self.pgschema + '.' 
-                sql +=  tablename.lower() + '_pk_' + tablename.lower() + '_seq'
-                try:
-                    result = self.dbase.query(sql)[0]
-                    if tablename == 'Revision':
-                        continue
-                    sql = "UPDATE sqlite_sequence SET seq = " + str(result)
-                    sql += " WHERE name = '" + str(tablename) + "'"
-                except TypeError as e:
-                    print('no seq for ' + tablename)
-                except Exception as e:
-                    print(e, ' - no seq for ' + tablename)
-        """
-
-
-
-        datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-        sql = "INSERT INTO Revision(datetimerevision, commentaire)  "
-        sql += " VALUES('" + datecreation + "','travail horsligne')"
-        exportparser.query(sql)
-
-        # if progress is not None: self.qgsiface.messageBar().clearWidgets() TODO
-
-        #finaly create a file keeping in memory the parent dbase
-        tempconffilepath = os.path.join(exportparser.dbaseressourcesdirectory,'config', '.offlinemode')
-        with open(tempconffilepath, 'w', encoding='utf-8') as outfile:
-            json.dump(self.dbase.connectconf, outfile, ensure_ascii=False, indent=4)
-
     def backupBase(self):
 
         debug = False
@@ -909,7 +893,7 @@ class DBaseOfflineManager():
         fileexport = os.path.join(exportdir, 'backup_' + datesuppr + '.sqlite')
 
         dbaseparserfact = self.dbase.parserfactory.__class__
-        backupsqlitedbase = dbaseparserfact('spatialite').getDbaseParser()
+        backupsqlitedbase = dbaseparserfact('spatialite', self.dbase.messageinstance).getDbaseParser()
         backupsqlitedbase.createDBase(crs=self.dbase.crsnumber, 
                                 worktype=self.dbase.worktype, 
                                 dbaseressourcesdirectory=None, 
@@ -959,113 +943,6 @@ class DBaseOfflineManager():
 
         # if progress is not None: self.qgsiface.messageBar().clearWidgets()
         # print(self.dbase.dbasetables)
-
-    def updateIdPkSqL(self,tablename=None, listoffields=[], listofrawvalues=[], dictpk = {}, dictid = {}, changeID = True):
-        
-        debug = False
-        pktable = None
-        fields = []
-        values = []
-
-        if debug and tablename == 'Graphiquedata':
-            logging.getLogger("Lamia_unittest").debug('tablename %s', tablename)
-            logging.getLogger("Lamia_unittest").debug('listoffields %s', listoffields)
-            logging.getLogger("Lamia_unittest").debug('listofrawvalues %s', listofrawvalues)
-            logging.getLogger("Lamia_unittest").debug('dictpk %s', dictpk)
-            logging.getLogger("Lamia_unittest").debug('dictid %s', dictid)
-
-
-        for k, field in enumerate(listoffields):
-
-            if "pk_" == field[0:3]:
-                pktable = self.dbase.getLastPK(tablename)
-                # print(pktable)
-                pkoldtable = listofrawvalues[k]
-                dictpk[tablename.lower()][pkoldtable] = pktable
-
-
-            elif "id_" == field[0:3]:
-
-                fields.append(field)
-                if changeID :
-                    idtable = self.dbase.getLastPK(tablename) + 1
-                else:
-                    idtable = listofrawvalues[k]
-                values.append(str(idtable))
-
-                oldid = listofrawvalues[k]
-                dictid[tablename.lower()][oldid] = idtable
-
-            elif "lid_" == field[0:4]:
-                if field.split('_')[1] in dictid.keys():
-                    if listofrawvalues[k] is not None:
-                        if listofrawvalues[k] in dictid[field.split('_')[1]].keys():
-                            fields.append(field)
-                            values.append(str(dictid[field.split('_')[1]][listofrawvalues[k]]))
-                        else:
-                            fields.append(field)
-                            values.append(str(  listofrawvalues[k]    ))
-
-                            print('error lid_' )
-                            # print(dictid[field.split('_')[1]].keys())
-                            print('base : ' ,tablename, ' - column : ', field, ' - lid value : ',listofrawvalues[k]  )
-
-                else:
-                    if listofrawvalues[k] is not None:
-                        fields.append(field)
-                        values.append(str(listofrawvalues[k]))
-
-            elif "lpk_" == field[0:4]:
-
-                #if "lpk_revision_begin" in self.dbase.dbasetables[tablename]['fields'].keys():
-                if field == "lpk_revision_begin":
-                    fields.append('lpk_revision_begin')
-                    values.append(str(self.maxrevision))
-
-
-
-                elif field.split('_')[1] in dictpk.keys():
-                    if listofrawvalues[k] is not None:
-                        if listofrawvalues[k] in dictpk[field.split('_')[1]].keys():
-                            fields.append(field)
-                            values.append(str(dictpk[field.split('_')[1]][listofrawvalues[k]]))
-                        else:
-                            print('error lpk_', listofrawvalues)
-
-
-        if "lpk_revision_begin" in listoffields and not changeID:
-            #pkcurrentable
-            sql = " SELECT pk_" + tablename.lower() + " FROM " + tablename.lower()
-            sql += " WHERE id_" + tablename.lower() + " = " + str(idtable)
-            sql += " AND lpk_revision_end IS NULL"
-
-            tempres = self.dbase.query(sql)
-
-            if len(tempres)>0:
-                pkcurrenttable = self.dbase.query(sql)[0][0]
-
-
-                sql = "UPDATE " + tablename.lower() + " SET lpk_revision_end = " + str(self.maxrevision)
-                sql += " WHERE pk_" + tablename.lower() + " = " + str(pkcurrenttable)
-                self.dbase.query(sql, docommit=False)
-
-        # if i % 50 == 0:
-            # if debug: logging.getLogger("Lamia").debug(' field, value : %s %s  ', str(fields), str(values))
-
-        if pktable is not None and fields:
-            # update line
-            sqlup = "UPDATE " + tablename.lower() + " SET "
-            for j, field in enumerate(fields):
-                sqlup += field + " = " + str(values[j]) + ","
-            sqlup = sqlup[:-1]
-            sqlup += " WHERE pk_" + tablename.lower() + ' = ' + str(pktable)
-
-            #self.dbase.query(sqlup, docommit=False)
-        else:
-            sqlup = None
-
-
-        return sqlup
 
     def createSetValueSentence(self,type='INSERT',tablename=None, listoffields=[], listofrawvalues=[]):
 
@@ -1117,8 +994,6 @@ class DBaseOfflineManager():
             sql = sql[:-2]
 
         return sql
-
-
 
 
     def searchChildfeatureFromPkObjet(self,dbaseparser, pkobjet):

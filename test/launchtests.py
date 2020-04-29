@@ -10,6 +10,7 @@ import test_a_dbase_simple
 import test_a_autoupdatedbase
 import test_b_qgisqt
 import test_b_qtimporttool
+import test_b_qtofflinemode
 import test_c_exporttool
 import test_c_reporttool
 import test_c_costtool
@@ -33,6 +34,10 @@ def suite():
     #* test_b_qtimporttool
     if 'test_b_qtimporttool' in globals().keys():
         suite.addTest(test_b_qtimporttool.DBaseTest('test_a_generateImport'))
+
+    #* test_b_qtofflinemode
+    if 'test_b_qtofflinemode' in globals().keys():
+        suite.addTest(test_b_qtofflinemode.DBaseTest('test_a_testoffline'))
 
     #* test_c_exporttool
     if 'test_c_exporttool' in globals().keys():

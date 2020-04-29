@@ -14,7 +14,7 @@ typedes;      String;             typedes  ;                  typedes
 
 ###Zonegeo
 ## FROM Zonegeo_now WHERE ST_WITHIN(ST_MakeValid(Desordre_now.geom),ST_MakeValid(Zonegeo_now.geom))
-#pk_zonegeo;     Int;            ;        pk_zonegeo ;  pk_zonegeo
+pk_zonegeo;     Int;            ;        pk_zonegeo ;  pk_zonegeo
 secteur;     String;            ;        commune
 sssecteur;     String;            ;        libelle
 

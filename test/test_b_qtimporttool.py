@@ -22,30 +22,30 @@ class DBaseTest(unittest.TestCase):
     """Test case utilisé pour tester les fonctions du module 'random'."""
     def setUp(self):
         """Initialisation des tests."""
-        self.tempdir = os.path.join(os.path.join(os.path.dirname(__file__)), 'temp')
+        # TESTDIR = os.path.join(os.path.join(os.path.dirname(__file__)), 'temp')
         self.connector = QgisConnector()
-        self.testcdir = os.path.join(self.tempdir, 'c_creation')
-        self.costtdir = os.path.join(self.tempdir, 'cost')
+        self.testcdir = os.path.join(TESTDIR, 'c_creation')
+        self.costtdir = os.path.join(TESTDIR, 'cost')
         if not os.path.isdir(self.costtdir):
             os.mkdir(self.costtdir)
 
 
     def test_a_generateImport(self):
 
-        testcdir = os.path.join(self.tempdir, 'c_creation')
+        #testcdir = os.path.join(TESTDIR, 'c_creation')
 
         DBTYPE = ['base2_digue']
         VARIANTE = ['Lamia']
         work = DBTYPE[0]
         variante = VARIANTE[0]
-        print(testcdir, work, variante)
         if SPATIALITE:
-            slfile = os.path.join(testcdir, 'sl_' + work + '_' + variante, 'test01.sqlite')
+            slfile = os.path.join(self.testcdir, 'sl_' + work + '_' + variante, 'test01.sqlite')
             sqlitedbase = DBaseParserFactory('spatialite').getDbaseParser()
             sqlitedbase.loadDBase(slfile=slfile)
             self.makeTests('spatialite',work, variante, sqlitedbase)
             sqlitedbase.disconnect()
         if POSTGIS:
+            PGschema = work + '_' + variante
             pgdbase = DBaseParserFactory('postgis').getDbaseParser()
             pgdbase.loadDBase(host=PGhost, port=PGport, dbname=PGbase, schema= PGschema, user=PGuser,  password=PGpassword)
             self.makeTests('postgis',work, variante, pgdbase)
@@ -57,7 +57,7 @@ class DBaseTest(unittest.TestCase):
         importwdg = FlowChartWidget(dbase=dbase,
                                     messageinstance=self.connector,
                                     mainifacewidget=None)
-        configdir = os.path.join(os.path.dirname(__file__),'shpforimporttest')
+        configdir = os.path.join(os.path.dirname(__file__),'datas','shpforimporttest')
         importlayerpath = os.path.join(configdir,'TRONCONS_TEST.shp')
         importlayer = qgis.core.QgsVectorLayer(importlayerpath,'testimport','ogr')
         importwdg.initFromandToLayers(fromqgslayer=importlayer,

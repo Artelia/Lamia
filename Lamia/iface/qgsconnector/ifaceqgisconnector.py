@@ -27,7 +27,7 @@ This file is part of LAMIA.
 
 import logging, sys
 import qgis.utils, qgis.core
-from qgis.PyQt.QtWidgets import (QApplication, QProgressBar)
+from qgis.PyQt.QtWidgets import (QDialogButtonBox ,QMessageBox ,QDialog, QApplication, QProgressBar,QFormLayout,QLabel,QLineEdit)
 from qgis.PyQt import QtCore
 
 from ..ifaceabstractconnector import LamiaIFaceAbstractConnectors
@@ -89,3 +89,61 @@ class QgisConnector(LamiaIFaceAbstractConnectors):
         else:
             logging.getLogger( "Lamia_connector" ).info('%s : %s', self.progressbarinittext, 'closing')
         self.progressbar = None
+
+    def inputMessage(self,listtext, title='Lamia input', withinput=True, parent = None):
+       
+        inputdlg = InputdialogLamia(listtext, title, withinput, parent)
+        inputdlg.exec_()
+        return inputdlg.dialogIsFinished()
+
+        
+class InputdialogLamia(QDialog ):
+    def __init__(self, listtext, title, withinput, parent):
+        super(InputdialogLamia, self).__init__(parent)
+        self.setWindowTitle(title)
+        layout = QFormLayout()
+        self.lineedits=[]
+
+        if not withinput:
+            lbl = QLabel(title)
+            lbl.setStyleSheet("font-weight: bold;")
+            layout.addRow(lbl)
+
+        for text in listtext:
+            lbl = QLabel(text)
+            if withinput:
+                le = QLineEdit()
+                self.lineedits.append(le)
+                layout.addRow(lbl,le)
+            else:
+                layout.addRow(lbl)
+
+        butdlg = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel) 
+        butdlg.accepted.connect(self.accept)
+        butdlg.rejected.connect(self.reject)
+        if withinput:
+            butdlg.button(QDialogButtonBox.Ok).setText("Ok")
+            butdlg.button(QDialogButtonBox.Cancel).setText("Cancel")
+        else:
+            butdlg.button(QDialogButtonBox.Ok).setText("YES")
+            butdlg.button(QDialogButtonBox.Cancel).setText("NO")
+
+
+        layout.addRow(butdlg)
+        self.setLayout(layout)
+        self.setWindowTitle("Lamia input")
+
+        self.finished.connect(self.dialogIsFinished)
+
+    def dialogIsFinished(self):
+
+        if (self.result() == 1):
+            if self.lineedits:
+                return [lineedit.text() for lineedit in self.lineedits]
+            else:
+                return True
+        else:
+            if self.lineedits:
+                return []
+            else:
+                return False

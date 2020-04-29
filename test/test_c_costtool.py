@@ -19,19 +19,19 @@ class DBaseTest(unittest.TestCase):
     """Test case utilisé pour tester les fonctions du module 'random'."""
     def setUp(self):
         """Initialisation des tests."""
-        self.tempdir = os.path.join(os.path.join(os.path.dirname(__file__)), 'temp')
+        #TESTDIR = os.path.join(os.path.join(os.path.dirname(__file__)), 'temp')
         self.connector = QgisConnector()
-        self.testcdir = os.path.join(self.tempdir, 'c_creation')
-        self.costtdir = os.path.join(self.tempdir, 'cost')
+        self.testcdir = os.path.join(TESTDIR, 'c_creation')
+        self.costtdir = os.path.join(TESTDIR, 'cost')
         if not os.path.isdir(self.costtdir):
             os.mkdir(self.costtdir)
 
 
     def test_a_generateCost(self):
 
-        testcdir = os.path.join(self.tempdir, 'c_creation')
+        testcdir = os.path.join(TESTDIR, 'c_creation')
         
-        slfile = SLFILE = os.path.join(os.path.dirname(__file__), 'lamia_test','test01.sqlite')
+        slfile = SLFILE = os.path.join(os.path.dirname(__file__), 'datas','lamia_digue','test01.sqlite')
         sqlitedbase = DBaseParserFactory('spatialite').getDbaseParser()
         sqlitedbase.loadDBase(slfile=SLFILE)
         basename = os.path.basename(SLFILE).split('.')[0]

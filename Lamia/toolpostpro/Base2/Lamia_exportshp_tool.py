@@ -247,11 +247,8 @@ class ExportShapefileTool(AbstractLamiaTool):
         # filename = os.path.join(self.createfilesdir, table + '.txt')
         filename = table
 
-        if sys.version_info.major == 2:
-            file = open(filename, 'r')
-        elif sys.version_info.major == 3:
-            file = open(filename, 'r',encoding="utf-8")
-            #file = open(filename, 'rb')
+        file = open(filename, 'r',encoding="utf-8")
+        #file = open(filename, 'rb')
         compt = 0
         actualtable = None
         for line in file:

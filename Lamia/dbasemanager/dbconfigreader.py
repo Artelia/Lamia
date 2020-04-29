@@ -91,6 +91,7 @@ class DBconfigReader():
 
         """
         debug = False
+        self.dbase.messageinstance.showNormalMessage('Creating DBase dictionnary ...')
         if debug: logging.getLogger("Lamia").debug('started')
         if worktype is None:
             raise ValueError('createDBDictionary : worktype not defined')
@@ -145,9 +146,10 @@ class DBconfigReader():
 
 
 
-
     def readOdsDictionnary(self,dictfile=None, vartoread=None):
         debug = False
+
+
         if dictfile is None or not os.path.isfile(dictfile):
             return
 
@@ -271,6 +273,7 @@ class DBconfigReader():
 
         if "Revision" in self.dbasetables.keys():
             self.revisionwork = True
+
 
         return dict(self.dbasetables)
 

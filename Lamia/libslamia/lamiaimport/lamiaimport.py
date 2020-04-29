@@ -65,8 +65,7 @@ class ImportCore():
         parenttables = [rawtablename] + self.dbase.getParentTable(rawtablename)
         self.messageinstance.createProgressBar(inittext="import ...", maxvalue=len(values))
 
-        sql = "BEGIN"
-        self.dbase.query(sql)
+        self.dbase.beginTransaction()
 
         # cas des couches enfant de descriptionsystem
         for i, valueline in enumerate(values):
@@ -87,16 +86,20 @@ class ImportCore():
                 self.updateTable( tablename, lisfield, listvalues, pktable)
 
                 if 'geom' in self.dbase.dbasetables[tablename].keys():
-                    geomsql = "CastToSingle(CastToXY(ST_GeomFromText('"
-                    geomsql += geoms[i]
-                    geomsql += "', " + str(self.dbase.crsnumber) + ")))"
+                    if self.dbase.__class__.TYPE == 'spatialite':
+                        geomsql = "CastToSingle(CastToXY(ST_GeomFromText('"
+                        geomsql += geoms[i]
+                        geomsql += "', " + str(self.dbase.crsnumber) + ")))"
+                    elif self.dbase.__class__.TYPE == 'postgis':
+                        geomsql = "ST_GeometryN(ST_Force2D(ST_GeomFromText('"
+                        geomsql += geoms[i]
+                        geomsql += "', " + str(self.dbase.crsnumber) + ")),0)"
 
                     self.updateTable( tablename, ['geom'], [geomsql], pktable)
 
-        #self.dbase.forcenocommit = True
+        
 
-        sql = "COMMIT"
-        self.dbase.query(sql)
+        self.dbase.commitTransaction()
 
         self.messageinstance.closeProgressBar()
 

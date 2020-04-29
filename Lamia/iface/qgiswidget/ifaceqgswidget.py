@@ -372,7 +372,7 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
                 if self.connector:
                     self.connector.showNormalMessage(' Creation de la base de donnees...')
 
-                self.dbase = DBaseParserFactory('spatialite').getDbaseParser()
+                self.dbase = DBaseParserFactory('spatialite',self.connector).getDbaseParser()
                 self.dbase.createDBase(crs=crsnumber, 
                                         worktype=worktype, 
                                         dbaseressourcesdirectory=resdir, 
@@ -402,7 +402,7 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
                     #self.dbase.createDbase(crs=crsnumber, worktype=worktype, dbasetype='postgis', dbname=nom, schema=schema,
                     #                       user=user, host=adresse, password=password, dbaseressourcesdirectory=resdir,
                     #                       port=port,variante=vartype)
-                    self.dbase = DBaseParserFactory('postgis').getDbaseParser()
+                    self.dbase = DBaseParserFactory('postgis',self.connector).getDbaseParser()
                     self.dbase.createDBase(crs=crsnumber, 
                                             worktype=worktype, 
                                             dbaseressourcesdirectory=resdir, 
@@ -427,13 +427,14 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         - slfile (optionnal)
         - host port dbname schema userpassword (optionnal)
         """
+        self.reinitWidgetbeforeloading()
 
         if 'dbtype' not in kwargs.keys():   #case come from qt event
             kwargs['dbtype'] = self.sender().objectName()[6:]
         success = self._loadDBaseParser(**kwargs)
         if not success:
             return
-        
+        self.connector.showNormalMessage('Loading Layers ...')
         self._loadVectorLayers()
         self._loadStyles()
         self._AddDbaseInRecentsDBase(self.dbase)
@@ -442,33 +443,40 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         self.setVisualMode(visualmode=0)
         
         self.qgiscanvas.updateWorkingDate(dbaseparser=self.dbase)
+    
+    def reinitWidgetbeforeloading(self):
+        # old :self.dbase.visualmode
+        self.interfacemode = None
         
+        self.wdgclasses={}  #dict containing all tools classes (prepro / postpro)
+        self.toolwidgets={} #dict containing all tools widgets (prepro / postpro)
+        self.toolwidgets['desktop_loaded'] = False      #used to store desktoptools are arlready loaded 
+        try:
+            self.MaintreeWidget.disconnect()
+        except:
+            pass
+        self.MaintreeWidget.clear()
+        
+        #behaviour var
+        self.currenttoolwidget = None
+        self.imagedirectory = None
+        self.currentchoosertreewidget = None
+
+        if self.qgiscanvas.rubberBand is not None:
+            self.qgiscanvas.rubberBand.reset(0)
+        self.qgiscanvas.unloadLayersInCanvas()
+        self.gpsutil.closeConnection()
+        try:
+            self.dbase.disconnect()
+        except:
+            pass
+        QApplication.processEvents()
 
     def pullDBase(self, exportfilepath=None):    #for offline mode
-        if exportfilepath is None:
-            if platform.system() == 'Linux':
-                pass
-            elif platform.system() == 'Windows':
-                importdir = "C://Users//Public//Documents"
-            lamiadir = os.path.join(importdir,'lamia')
-            if not os.path.isdir(lamiadir):
-                os.mkdir(lamiadir)
-            dbname = self.dbase.getDBName()
-            dbdir = os.path.join(lamiadir,dbname)
-            if not os.path.isdir(dbdir):
-                os.mkdir(dbdir)
-            else:
-                self.connector.showErrorMessage('Il y a déjà une copie locale de la base... Supprimez la')
-                return
-            
-            lamiafilepath = os.path.join(dbdir,dbname+'.sqlite')
-        else:
-            lamiafilepath = exportfilepath
 
-        
-        self.dbase.dbaseofflinemanager.exportDbase(lamiafilepath)
+        self.dbase.dbaseofflinemanager.pullDBase(exportfilepath)
 
-        self.loadDBase(dbtype='Spatialite',slfile=lamiafilepath)
+        self.loadDBase(dbtype='Spatialite',slfile=exportfilepath)
 
         
     def pushDBase(self):    #for offline mode
@@ -494,7 +502,7 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
                         and user is not None and password is not None):
                     # reset dbase
                     #self.createDBase()
-                    self.dbase = DBaseParserFactory('postgis').getDbaseParser()
+                    self.dbase = DBaseParserFactory('postgis',self.connector).getDbaseParser()
                     self.dbase.loadDBase(host=host, port=port, dbname=dbname, schema=schema, 
                                         user=user, password=password)
 
@@ -513,7 +521,7 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
                     #self.reinitDBase()
                     # reset dbase
                     #self.createDBase()
-                    self.dbase = DBaseParserFactory('spatialite').getDbaseParser()
+                    self.dbase = DBaseParserFactory('spatialite',self.connector).getDbaseParser()
                     self.dbase.loadDBase(slfile=slfile)
                     #self.dbase.loadQgisVectorLayers(file)
                     success = True
@@ -523,6 +531,7 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         return success
 
     def _loadVectorLayers(self):
+        
         self.qgiscanvas.createLayers(self.dbase)
         self.qgiscanvas.loadLayersInCanvas(self.dbase)
 
@@ -1104,7 +1113,7 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         self.actionPostgis.triggered.connect(self.loadDBase)
         self.actionImporter_et_ajouter_la_base.triggered.connect(self.addDBase)
         self.action_pushdb.triggered.connect(self.pushDBase)
-        self.action_pulldb.triggered.connect(self.pullDBase)
+        self.action_pulldb.triggered.connect(lambda: self.pullDBase())
 
         #visual mode menu
         self.actionModeExpert.triggered.connect(self.setVisualMode)
@@ -1144,6 +1153,9 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         debug = False
         if debug: logging.getLogger("Lamia_unittest").debug('Start %s', str(point))
 
+        if self.currenttoolwidget is None:
+            return
+            
         addselection = False
         modifiers = QApplication.keyboardModifiers()
         #print('modif')

@@ -43,13 +43,15 @@ elif platform.system() == 'Linux':
 PGport = 5432
 
 #* Test conf
-SPATIALITE = True
-POSTGIS = False
+SPATIALITE = False
+POSTGIS = True
+
+TESTDIR = os.path.join(os.path.join(os.path.dirname(__file__)), 'testtempfiles')
 
 #* test onparticularfile - uncomment to apply
-if True:
+if False:
     SLFILE = os.path.join(os.path.dirname(__file__), 'lamia_test','test01.sqlite')
-    # SLFILE = os.path.join(os.path.dirname(__file__),'temp', 'c_creation', 'sl_Base2_digue_Lamia','test01.sqlite')
+    #SLFILE = os.path.join(os.path.dirname(__file__),'temp', 'c_creation', 'sl_Base2_digue_Lamia','test01.sqlite')
 if False:
     PGhost = 'localhost'
     PGport = 5432

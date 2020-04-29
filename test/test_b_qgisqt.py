@@ -31,53 +31,20 @@ from settings import *
 
 X_BEGIN = 400000.0
 Y_BEGIN = 6000000.0
-TEST_WITH_FEATURE_CREATION = False
-SHOWIFACE = True
+TEST_WITH_FEATURE_CREATION = True
+SHOWIFACE = False
 
 
 class DBaseTest(unittest.TestCase):
 
     def setUp(self):
         """Initialisation des tests."""
-        self.tempdir = os.path.join(os.path.join(os.path.dirname(__file__)), 'temp')
+        #TESTDIR = os.path.join(os.path.join(os.path.dirname(__file__)), 'temp')
 
-    """
-    def test_a_testSaveFeature(self):
-        testcdir = os.path.join(self.tempdir, 'c_creation')
-        work = 'Base2_assainissement'
-        variante = '2018_SNCF'       # Lamia 2018_SNCF CD41
-        self._initQGis()
-        self._createWin()
-        self._createMainWin()
-        slfile = os.path.normpath(os.path.join(os.path.dirname(__file__), 'lamia_test2','test01.sqlite'))
-        #slfile = os.path.join(testcdir, 'c_creation','sl_Base2_assainissement_CD41','test01.sqlite')
-        slfile = os.path.normpath(os.path.join(testcdir, 'sl_' + work + '_' + variante, 'test01.sqlite'))
-        self.wind.loadDBase(dbtype='Spatialite', slfile=slfile)
-        self.wind.setVisualMode(visualmode=1)
-        #selectfeaturetest
-        if False:
-            toolpreprolist = self.wind.toolwidgets['toolprepro']
-            global i
-            i = 0
-            for toolpreproname, toolpreprovalue in self.wind.toolwidgets['toolprepro'].items():
-                if isinstance(toolpreprovalue, list):
-                    for tt in toolpreprovalue:
-                        self.recursive_creation(tt)
-        extent = self.wind.qgiscanvas.layers['Photo']['layerqgis'].extent().buffered(10.0)
-        self.wind.qgiscanvas.canvas.setExtent(extent)
-
-        # self.wind.qgiscanvas.canvas.xyCoordinates.connect(self.emitpoint)
-        #self.wind.qgiscanvas.canvas.setCenter(qgis.core.QgsPointXY(X_BEGIN, Y_BEGIN))
-        # self.wind.qgiscanvas.canvas.setScale(1000.0)
-        self.mainwin.exec_()
-        self._exitQGis()
-
-
-    """
 
     def test_a_testSaveFeature(self):
 
-        testcdir = os.path.join(self.tempdir, 'c_creation')
+        testcdir = os.path.join(TESTDIR, 'c_creation')
         
 
         if 'SLFILE' in globals().keys() :
@@ -114,7 +81,8 @@ class DBaseTest(unittest.TestCase):
                     if POSTGIS:
                         self._createWin()
                         self._createMainWin()
-                        self.wind.loadDBase(dbtype='Postgis', host=PGhost, port=PGport, dbname=PGbase, schema= work + '_' + variante, user=PGuser,  password=PGpassword)
+                        PGschema = work + '_' + variante
+                        self.wind.loadDBase(dbtype='Postgis', host=PGhost, port=PGport, dbname=PGbase, schema= PGschema, user=PGuser,  password=PGpassword)
                         self.launchTest()
         
         
@@ -126,7 +94,7 @@ class DBaseTest(unittest.TestCase):
             self.showIFace()
 
     def showIFace(self):
-        self.wind.setVisualMode(visualmode=1)
+        self.wind.setVisualMode(visualmode=4)
         if self.wind.qgiscanvas.layers['Infralineaire']['layer'].featureCount() > 0:
             extent = self.wind.qgiscanvas.layers['Infralineaire']['layer'].extent().buffered(10.0)
         else:
@@ -141,6 +109,9 @@ class DBaseTest(unittest.TestCase):
         # self.wind.dbase.printsql = True
         wdg = self.wind.toolwidgets['toolprepro']['Troncon'][0]
         wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
+
+        # res = self.wind.connector.inputMessage(['nom','mdp'])
+        # print(res)
 
 
         self.mainwin.exec_()
@@ -183,13 +154,17 @@ class DBaseTest(unittest.TestCase):
                 X_BEGIN = 100000.0
                 Y_BEGIN = 6000000.0
                 """
-                if 'POINT' in typegeom:
-                    tt.setTempGeometry([qgis.core.QgsPointXY(X_BEGIN + i,Y_BEGIN + 0)])
-                elif 'LINESTRING'  in typegeom:
-                    tt.setTempGeometry([qgis.core.QgsPointXY(X_BEGIN + i,Y_BEGIN + 0),qgis.core.QgsPointXY(X_BEGIN + i,Y_BEGIN + 1)])
+                if tt.DBASETABLENAME != 'Zonegeo':
+                    if 'POINT' in typegeom:
+                        tt.setTempGeometry([qgis.core.QgsPointXY(X_BEGIN + i,Y_BEGIN + 0)])
+                    elif 'LINESTRING'  in typegeom:
+                        tt.setTempGeometry([qgis.core.QgsPointXY(X_BEGIN + i,Y_BEGIN + 0),qgis.core.QgsPointXY(X_BEGIN + i,Y_BEGIN + 1)])
+                    else:
+                        tt.setTempGeometry([qgis.core.QgsPointXY(X_BEGIN + i,Y_BEGIN + 0),qgis.core.QgsPointXY(X_BEGIN + i,Y_BEGIN + 1),
+                                            qgis.core.QgsPointXY(X_BEGIN + i-0.5,Y_BEGIN + 1),qgis.core.QgsPointXY(X_BEGIN + i-0.5,Y_BEGIN + 0)])
                 else:
-                    tt.setTempGeometry([qgis.core.QgsPointXY(X_BEGIN + i,Y_BEGIN + 0),qgis.core.QgsPointXY(X_BEGIN + i,Y_BEGIN + 1),
-                                        qgis.core.QgsPointXY(X_BEGIN + i-0.5,Y_BEGIN + 1),qgis.core.QgsPointXY(X_BEGIN + i-0.5,Y_BEGIN + 0)])
+                        tt.setTempGeometry([qgis.core.QgsPointXY(X_BEGIN - 1,Y_BEGIN - 1),qgis.core.QgsPointXY(X_BEGIN + 50 ,Y_BEGIN - 1),
+                                            qgis.core.QgsPointXY(X_BEGIN + 50,Y_BEGIN + 50),qgis.core.QgsPointXY(X_BEGIN - 1,Y_BEGIN + 50)])
             self.wind.toolbarSave()
             #logging.getLogger("Lamia_unittest").debug('%s - pk created : %s', tt.DBASETABLENAME,tt.currentFeaturePK)
             self.assertIsNotNone(tt.currentFeaturePK)

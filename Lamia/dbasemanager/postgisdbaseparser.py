@@ -35,8 +35,10 @@ from .dbaseparserabstract import *
 
 class PostGisDBaseParser(AbstractDBaseParser):
 
-    def __init__(self, parserfactory):
-         super(PostGisDBaseParser, self).__init__(parserfactory)
+    TYPE = 'postgis'
+
+    def __init__(self, parserfactory,messageinstance):
+         super(PostGisDBaseParser, self).__init__(parserfactory,messageinstance)
 
     
     def connectToDBase(self,
@@ -229,11 +231,11 @@ class PostGisDBaseParser(AbstractDBaseParser):
                 logging.getLogger('Lamia_unittest').debug('%s', sql)
             self.PGiscursor.execute(sql)
             #print(self.PGiscursor.statusmessage )
-            if self.PGiscursor.statusmessage.split(' ')[0] not in ['INSERT', 'UPDATE','SET','CREATE','ALTER','DROP']:
+            if self.PGiscursor.statusmessage.split(' ')[0] not in ['INSERT', 'UPDATE','SET','CREATE','ALTER','DROP','BEGIN','COMMIT']:
                 rows = list(self.PGiscursor.fetchall())
             else:
                 rows = None
-            if docommit:
+            if docommit and self.forcenocommit == False:
                 self.commit()
             return rows
 

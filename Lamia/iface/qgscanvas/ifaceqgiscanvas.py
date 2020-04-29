@@ -89,6 +89,8 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             dbtype = 'postgres'
         
         for rawtablename, rawdict in dbaseparser.dbasetables.items():
+            # if 'geom' not in rawdict:
+            #     continue
             tablenames = [rawtablename]
             tabletypes = ['layer']
             if 'djangoviewsql' in rawdict.keys():
@@ -122,6 +124,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         self.dbaseqgiscrs = qgis.core.QgsCoordinateReferenceSystem()
         self.dbaseqgiscrs.createFromString('EPSG:' + str(dbaseparser.crsnumber))
         self.updateQgsCoordinateTransform()
+
 
 
     def createSingleQgsVectorLayer(self,dbaseparser,tablename='tempvectorlayer',isspatial = True,  sql='', tableid=None):
@@ -211,7 +214,8 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
             dbasetables = self.layers
             for tablename in dbasetables:
-                if 'layerqgis' in dbasetables[tablename].keys():
+                if ('layerqgis' in dbasetables[tablename].keys() 
+                        and dbasetables[tablename]['layerqgis'].geometryType() != qgis.core.QgsWkbTypes.NullGeometry ):
                     qgis.core.QgsProject.instance().addMapLayer(dbasetables[tablename]['layerqgis'], False)
                     lamialegendgroup.addLayer(dbasetables[tablename]['layerqgis'])
 
@@ -231,6 +235,9 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             self.qgislegendnode.removeAllChildren()
             root = qgis.core.QgsProject.instance().layerTreeRoot()
             root.removeChildNode(self.qgislegendnode)
+        elif qgis.utils.iface is None:
+            self.canvas.setLayers([])
+            self.canvas.refresh()
 
 
     def applyStyle(self, worktype, styledir):
@@ -518,6 +525,8 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         # spindex = qgis.core.QgsSpatialIndex(dbasetable['layerqgis'].getFeatures())
         spindex = qgis.core.QgsSpatialIndex(layertoprocess.getFeatures())
         layernearestid = spindex.nearestNeighbor(point2, 1)
+        if not layernearestid:
+            return
 
         point2geom = qgis.core.QgsGeometry.fromPointXY(point2)
         

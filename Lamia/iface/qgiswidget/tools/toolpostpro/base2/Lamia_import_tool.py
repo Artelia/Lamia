@@ -110,7 +110,8 @@ class ImportTool(AbstractLamiaTool):
             layers = [tree_layer.layer() for tree_layer in qgis.core.QgsProject.instance().layerTreeRoot().findLayers()]
             layqgis=[]
             for tablename in self.dbase.dbasetables.keys():
-                layqgis.append(self.dbase.dbasetables[tablename]['layerqgis'])
+                if 'layerqgis' in self.dbase.dbasetables[tablename].keys():
+                    layqgis.append(self.dbase.dbasetables[tablename]['layerqgis'])
 
             for lay in layers:
                 if not lay in layqgis:

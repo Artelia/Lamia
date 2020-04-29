@@ -247,7 +247,20 @@ class ExportShapefileCore():
         return champs
 
 
+    def testIfZonegeoPk(self,**kwargs):
+        champs = kwargs.get('champs',None)
+        champsfile = kwargs.get('champsfile',None)
 
+        if champs is None and champsfile is not None:
+            champs = self.readChamp(champsfile)
+        pkzonegeoinchamps=False
+        for dictchamp in champs:
+            if 'zonegeo' in dictchamp['table'].lower():
+                if 'pk_zonegeo' in dictchamp['fields'].keys():
+                    pkzonegeoinchamps = True
+                    break
+
+        return pkzonegeoinchamps
 
     def buildSql(self,champs, pkzonegeos):
 
@@ -306,7 +319,9 @@ class ExportShapefileCore():
                 else:
                     sql += " WHERE pk_zonegeo IN (" + ','.join(fetids) + ")"
         
-        if len(pkzonegeos) > 0 :
+
+
+        if len(pkzonegeos) > 0 and self.testIfZonegeoPk(champs=champs):
             pkzonegeos_str = [str(pk) for pk in pkzonegeos]
             if 'WHERE' in champmain['sql']:
                 sql += " AND pk_zonegeo IN (" + ','.join(pkzonegeos_str) + ")"

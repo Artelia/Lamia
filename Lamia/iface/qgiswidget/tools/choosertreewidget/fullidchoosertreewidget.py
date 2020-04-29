@@ -47,6 +47,7 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
     def onActivation(self, initfeatureselection=True):
         debug = False
         self.treewidget.clear()
+        self.treewidget.setEnabled(True)
 
         headerlist = [self.toolwidget.DBASETABLENAME]
         #headerlist.insert(0, 'ID')
@@ -514,14 +515,17 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
             res = [self.toolwidget.currentFeaturePK] + list(res)
             #if selecteditems[0].text(0) == self.NEWFEATURETXT:
             if selecteditems[0].text(1) == self.NEWFEATURETXT:
-                self.ids.append(res)
+                #self.ids.append(pd.DataFrame(res, columns=self.ids.columns))
+                self.ids.loc[len(self.ids)] = res
             else:
                 try:
                     self.ids.loc[self.ids['pk'] == self.toolwidget.currentFeaturePK] = [res]
                 except ValueError as e:
                     print(e)
+                    print(self.ids)
+                    print(self.toolwidget.currentFeaturePK)
                     print('*',self.ids.loc[self.ids['pk'] == self.toolwidget.currentFeaturePK])
-                    print('**',[res])
+                    print('**',res)
 
 
             selecteditem = selecteditems[0]
@@ -551,6 +555,11 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
             self.toolwidget.selectFeature(pk=pk)
         """
         self.toolwidget.selectFeature(pk=currentpkitem)
+
+    def getSelectedPks(self):
+        selecteditems = self.treewidget.selectedItems()
+        pks = [int(item.text(0)) for item in selecteditems]
+        return pks
 
     def disconnectTreewidget(self):
         try:

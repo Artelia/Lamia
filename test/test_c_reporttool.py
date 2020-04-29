@@ -19,17 +19,17 @@ class DBaseTest(unittest.TestCase):
     """Test case utilisé pour tester les fonctions du module 'random'."""
     def setUp(self):
         """Initialisation des tests."""
-        self.tempdir = os.path.join(os.path.join(os.path.dirname(__file__)), 'temp')
+        #TESTDIR = os.path.join(os.path.join(os.path.dirname(__file__)), 'temp')
         self.connector = QgisConnector()
-        self.testcdir = os.path.join(self.tempdir, 'c_creation')
-        self.reportdir = os.path.join(self.tempdir, 'report')
+        self.testcdir = os.path.join(TESTDIR, 'c_creation')
+        self.reportdir = os.path.join(TESTDIR, 'report')
         if not os.path.isdir(self.reportdir):
             os.mkdir(self.reportdir)
 
 
     def test_a_generateReport(self):
 
-        testcdir = os.path.join(self.tempdir, 'c_creation')
+        testcdir = os.path.join(TESTDIR, 'c_creation')
         
 
         if 'SLFILE' in globals().keys() :
@@ -146,7 +146,7 @@ class DBaseTest(unittest.TestCase):
                 continue
             conftotest.append(basename)
         
-        # conftotest = ['Infralineaire']        #uncomment to test only one conf 
+        conftotest = ['Infralineaire_PT_PL']        #uncomment to test only one conf 
         for confname in conftotest:
             logging.getLogger("Lamia_unittest").debug('********************** %s %s, %s - exporting conf : %s ...',dbtype, work, variante, confname)
             destfile = os.path.join(self.reportdir, dbtype + '_' + work + '_' + variante + '_' + confname  + '.pdf')

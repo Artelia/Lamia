@@ -453,8 +453,8 @@ class NetWorkCore():
 
                 elif datatype == 'topographie':
 
-                    sql = "SELECT typepointtopo, zmngf,topographie_qgis.pk_topographie, ST_AsText(geom)  FROM Pointtopo_qgis "
-                    sql += " INNER JOIN topographie_qgis ON topographie_qgis.pk_topographie = Pointtopo_qgis.lpk_topographie "
+                    sql = "SELECT typepointtopo, zmngf,topographie_qgis.pk_topographie, ST_AsText(geom)  FROM Topographiedata "
+                    sql += " INNER JOIN topographie_qgis ON topographie_qgis.pk_topographie = Topographiedata.lpk_topographie "
                     sql += "WHERE ST_WITHIN(geom, ST_GeomFromText('" + geomfinalbuffer + "',"+str(self.dbase.crsnumber) + "));"
                     query = self.dbase.query(sql)
                     result = [row[0:4] for row in query]

@@ -657,7 +657,8 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             self.lastselectedpk = self.currentFeaturePK
         #layer action
         if self.parentWidget is None and self.DBASETABLENAME is not None:
-            self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME]['layer'].removeSelection()
+            if self.DBASETABLENAME in self.mainifacewidget.qgiscanvas.layers.keys():
+                self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME]['layer'].removeSelection()
             # self.dbasetable['layer'].removeSelection()
         #form title action
         self.updateFormTitle(**kwargs)
@@ -791,7 +792,8 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         elif reply == QMessageBox.No:
             self.formutils.archiveFeature()
 
-        self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME]['layerqgis'].triggerRepaint()
+        if self.DBASETABLENAME in self.mainifacewidget.qgiscanvas.layers.keys():
+            self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME]['layerqgis'].triggerRepaint()
         #self.canvas.refresh()
         #self.loadChildFeatureinWidget()
 

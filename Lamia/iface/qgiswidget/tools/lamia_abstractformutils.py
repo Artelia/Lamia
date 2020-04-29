@@ -900,22 +900,22 @@ class FormToolUtils(QtCore.QObject):
                                                             ['pk_ressource', 'id_ressource', 'file'],
                                                             featurepk)
         if len(result) > 0:
-            pkressource, idressource, file = result
+            pkressource, idressource, resfile = result
         else:
             return
 
         dbaseressourcesdirectory = self.formtoolwidget.dbase.dbaseressourcesdirectory
-        if file is not None and len(file) > 0:
-            if file[0] == '.':
-                file = os.path.join(dbaseressourcesdirectory,file)
+        if resfile is not None and len(resfile) > 0:
+            if resfile[0] == '.':
+                resfile = os.path.join(dbaseressourcesdirectory,resfile)
             else:
-                if os.path.isfile(file):
-                    filename = os.path.basename(file)
+                if os.path.isfile(resfile):
+                    filename = os.path.basename(resfile)
                     filename = str(idressource) + '_' + filename
                     destinationdir = os.path.join(dbaseressourcesdirectory,self.formtoolwidget.DBASETABLENAME,date)
                     destinationfile = os.path.join(destinationdir, filename)
 
-                    self.formtoolwidget.dbase.copyRessourceFile(fromfile= file,
+                    self.formtoolwidget.dbase.copyRessourceFile(fromfile= resfile,
                                                                 tofile=destinationfile,
                                                                 withthumbnail=0,
                                                                 copywholedirforraster=False)
@@ -1025,6 +1025,11 @@ class FormToolUtils(QtCore.QObject):
         pass
 
     def deleteFeature(self):
+        
+        pkobjet, revobjet = self.formtoolwidget.dbase.getValuesFromPk(self.formtoolwidget.DBASETABLENAME + '_qgis',
+                                                             ['pk_objet','lpk_revision_begin'],
+                                                             self.formtoolwidget.currentFeaturePK)
+        #if revobjet == self.formtoolwidget.dbase.maxrevision:
 
         tablestodel = [self.formtoolwidget.DBASETABLENAME]
         tablestodel += self.formtoolwidget.dbase.getParentTable(self.formtoolwidget.DBASETABLENAME)
@@ -1041,19 +1046,36 @@ class FormToolUtils(QtCore.QObject):
                                                             str(pkvalue))
             self.formtoolwidget.dbase.query(sql)
         self.formtoolwidget.postDeleteFeature()
-
+        """
+        else:
+            datesuppr = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            sql = "UPDATE Objet SET lpk_revision_end = " + str(self.formtoolwidget.dbase.maxrevision)
+            sql += " , datetimedestruction = '" + str(datesuppr) + "'"
+            sql += " , datetimemodification = '" + str(datesuppr) + "'"
+            sql += " WHERE pk_objet = " + str(pkobjet)
+            self.dbase.query(sql)
+        """
 
 
     def archiveFeature(self):
-        pkobjet = self.formtoolwidget.dbase.getValuesFromPk(self.formtoolwidget.DBASETABLENAME + '_qgis',
-                                                                'pk_objet',
-                                                                self.formtoolwidget.currentFeaturePK)
+        pkobjet, revobjet = self.formtoolwidget.dbase.getValuesFromPk(self.formtoolwidget.DBASETABLENAME + '_qgis',
+                                                             ['pk_objet','lpk_revision_begin'],
+                                                             self.formtoolwidget.currentFeaturePK)
+        # if revobjet == self.formtoolwidget.dbase.maxrevision:
         # idobjet = self.currentFeature['id_objet']
         #datesuppr = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
         datesuppr = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         sql = "UPDATE Objet SET datetimedestruction = '" + datesuppr + "'  WHERE pk_objet = " + str(pkobjet) + ";"
         self.formtoolwidget.dbase.query(sql)
-
+        """
+        else:
+            datesuppr = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            sql = "UPDATE Objet SET lpk_revision_end = " + str(self.formtoolwidget.dbase.maxrevision)
+            sql += " , datetimedestruction = '" + str(datesuppr) + "'"
+            sql += " , datetimemodification = '" + str(datesuppr) + "'"
+            sql += " WHERE pk_objet = " + str(pkobjet)
+            self.dbase.query(sql)
+        """
 
     def ___________________utilsFunctions(self):
         pass

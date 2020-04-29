@@ -25,24 +25,45 @@ This file is part of LAMIA.
   * License-Filename: LICENSING.md
  """
 
-
+import logging, sys
 
 class LamiaIFaceAbstractConnectors():
 
     def __init__(self):
-        pass
+        logging.basicConfig( stream=sys.stderr )
+        logging.getLogger("Lamia_connector").setLevel( logging.INFO )
 
-    def showNormalMessage(self,msg):
-        raise NotImplementedError
+    def showNormalMessage(self, text):
+        logging.getLogger( "Lamia_connector" ).info('normalMessage : %s', text)
 
-    def showErrorMessage(self,msg):
-        raise NotImplementedError
+    def showErrorMessage(self,text):
+        logging.getLogger( "Lamia_connector" ).info('ErrorMessage : %s', text)
 
-    def createProgressBar(self):
-        raise NotImplementedError
+    def createProgressBar(self, inittext='', maxvalue=99):
+        self.progressbarinittext = inittext
+        logging.getLogger( "Lamia_connector" ).info('Creating progress bar : %s', inittext)
 
-    def updateProgressBar(self,int):
-        raise NotImplementedError
+    def updateProgressBar(self,val):
+        logging.getLogger( "Lamia_connector" ).info('%s : %d', self.progressbarinittext, val)
 
-    def closeProgressBar(self,int):
-        raise NotImplementedError
+    def closeProgressBar(self):
+        logging.getLogger( "Lamia_connector" ).info('%s : %s', self.progressbarinittext, 'closing')
+
+    def inputMessage(self,listtext, title='Lamia input', withinput=True, parent = None):
+        res=[]
+        print('*** ' + title + (' ***'))
+        if withinput:
+            for text in listtext:
+                restemp = input(text + '? : ') 
+                if restemp:
+                    res.append(restemp)
+        else:
+            for txt in listtext:
+                print(txt)
+            restemp = input('Yes (y) or No (n) ?') 
+            if restemp == 'y':
+                res = True
+            else:
+                res = False
+        
+        return res

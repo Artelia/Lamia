@@ -36,6 +36,7 @@ except ImportError:
     PILexists = False
 from .dbconfigreader import DBconfigReader
 from .dbaseofflinemanager import DBaseOfflineManager
+from ..iface.ifaceabstractconnector import LamiaIFaceAbstractConnectors
 from . import dbaseutils
 
 
@@ -63,7 +64,10 @@ class AbstractDBaseParser():
         """
         # the dictionnary of dbase (cf DBconfigReader)
         self.dbasetables = None
-        self.messageinstance = messageinstance
+        if messageinstance:
+            self.messageinstance = messageinstance
+        else:
+            self.messageinstance = LamiaIFaceAbstractConnectors()
 
         #utils
         self.utils = dbaseutils
@@ -113,7 +117,7 @@ class AbstractDBaseParser():
         self.currentrevision = None
         self.maxrevision = 0
 
-        self.forcenocommit=False
+        self.forcenocommit=False        #force query to no commit
 
         self.connectconf = None    #dict of connection data
 
@@ -222,6 +226,7 @@ class AbstractDBaseParser():
     def loadDBase(self, **kwargs):
         self.connectconf = kwargs
         self.connectToDBase(**kwargs)
+
 
         #init variables
         sql = "SELECT metier, repertoireressources,crs, version, workversion, variante   FROM Basedonnees;"
@@ -484,6 +489,17 @@ class AbstractDBaseParser():
 
     def commit(self):
         raise NotImplementedError 
+
+    def beginTransaction(self):
+        sql = "BEGIN"
+        self.query(sql)
+        self.forcenocommit = True
+
+    def commitTransaction(self):
+        sql = "COMMIT"
+        self.query(sql)
+        self.forcenocommit = False
+
 
     def reInitDBase(self):
         raise NotImplementedError 
@@ -750,6 +766,7 @@ class AbstractDBaseParser():
                                                             featurepk)
 
                 if featlastrevision != self.maxrevision:   #new version feature
+                    print('*********** new feat vers')
                     self.createNewFeatureVersion(tablename,
                                                 featurepk)
                     pktoreturn= self.getLastPK(tablename)
@@ -940,15 +957,15 @@ class AbstractDBaseParser():
             for field in dbasetable['fields'].keys():
                 continuesearchparent = False
                 if 'lpk_' == field[:4]:
-                    tablename = field.split('_')[1].title()
-                    parenttablenamelist.append(tablename)
+                    parenttablename = field.split('_')[1].title()
+                    parenttablenamelist.append(parenttablename)
                     if tablename[-4:] == 'data':
                         continuesearchparent = False
                     elif field[4:] == 'objet':
                         continuesearchparent = False
                     else:
                         continuesearchparent = True
-                    dbasetable = self.dbasetables[tablename]
+                    dbasetable = self.dbasetables[parenttablename]
                     break
                     
 

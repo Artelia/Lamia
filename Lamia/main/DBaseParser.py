@@ -3632,8 +3632,7 @@ class DBaseParser(QtCore.QObject):
                 >datet      12
         9       >datet      11                          >datet      1           2           conflit                             close lastrev                       unclose lastrev
         10      >datet      11          12              >datet      1           2           ok : deleted on main and import     /                                   /
-        11      >datet      11          12              >datet      1           2           conlit                              add new rev                         /  close las rev
-                                                        >datet      2
+
 
         :param dbaseparserfrom:
         :param conflictobjetid:

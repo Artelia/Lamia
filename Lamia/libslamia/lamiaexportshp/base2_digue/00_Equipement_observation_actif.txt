@@ -42,7 +42,7 @@ oh_etancheitecom        ;      String;                             ;            
 
 ###Zonegeo
 ## FROM Zonegeo_qgis WHERE ST_WITHIN(ST_MakeValid(Desordre_now.geom),ST_MakeValid(Zonegeo_qgis.geom))
-#pk_zonegeo;     Int;            ;        pk_zonegeo ;  pk_zonegeo
+pk_zonegeo;     Int;            ;        pk_zonegeo ;  pk_zonegeo
 sssecteur;     String;            ;        libelle
 
 

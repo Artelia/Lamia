@@ -37,8 +37,10 @@ from .dbaseparserabstract import *
 
 class SpatialiteDBaseParser(AbstractDBaseParser):
 
-    def __init__(self, parserfactory):
-         super(SpatialiteDBaseParser, self).__init__(parserfactory)
+    TYPE = 'spatialite'
+
+    def __init__(self, parserfactory,messageinstance):
+         super(SpatialiteDBaseParser, self).__init__(parserfactory,messageinstance)
 
     def connectToDBase(self, slfile=None,**kwargs):
         self.spatialitefile = slfile
@@ -52,7 +54,8 @@ class SpatialiteDBaseParser(AbstractDBaseParser):
 
 
     def getDBName(self):
-        return os.path.basename(self.spatialitefile)
+        name, ext = os.path.splitext(os.path.basename(self.spatialitefile))
+        return name
 
     def generateSQLTableCreationFromDBConfig(self, name, dbasetable, crs):
 

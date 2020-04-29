@@ -8,8 +8,10 @@
 /Lamia/toolpostpro/*/amctools
 .vscode/
 Lamia_*.zip
-test/temp/
-test/lamia_test*
 **/*backup*
 **/*caduc*
 sandbox/*/
+
+test/testtempfiles/
+test/datas/lamia_*
+

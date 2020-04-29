@@ -129,10 +129,11 @@ class ExportShapefileTool(AbstractLamiaTool):
         tabletypepath = self.filemanager.getCurrentPath()
 
 
-        selectedzonegeoitems = self.choosertreewidget.treewidget.selectedItems()
-        ids = [int(item.text(0)) for item in selectedzonegeoitems]
-        pdids = self.choosertreewidget.ids
-        pks = [pdids.loc[pdids['id'] == id]['pk'].values[0] for id in ids]
+        # selectedzonegeoitems = self.choosertreewidget.treewidget.selectedItems()
+        # ids = [int(item.text(0)) for item in selectedzonegeoitems]
+        # pdids = self.choosertreewidget.ids
+        # pks = [pdids.loc[pdids['id'] == id]['pk'].values[0] for id in ids]
+        pks = self.choosertreewidget.getSelectedPks()
 
         self.exporttool.runExport(destinationshapefile=shpfile, 
                                     exportconffilepath=tabletypepath, 
@@ -152,8 +153,9 @@ class UserUI(QWidget):
 
 class ExportShpfileManager(AbstractFileManager):
 
-    def __init__(self,  mainwindows=None, parentwdg=None, fileext=None):
-        super(ExportShpfileManager, self).__init__(mainwindows, parentwdg, fileext)
+    #def __init__(self,  mainwindows=None, parentwdg=None, fileext=None):
+    def __init__(self,  mainwindows=None, toolclass=None, fileext=None):
+        super(ExportShpfileManager, self).__init__(mainwindows, toolclass, fileext)
 
 
     def new(self):
@@ -221,3 +223,14 @@ class ExportShpfileManager(AbstractFileManager):
             indexcombo = self.comboBox_files.findText(txttofind)
             self.comboBox_files.setCurrentIndex(indexcombo)
 
+    def comboChanged(self, comboindex):
+        super().comboChanged(comboindex)
+        tabletypepath = self.getCurrentPath()
+        if tabletypepath:
+            boolzonegeo = self.toolclass.testIfZonegeoPk(champsfile=tabletypepath)
+            self.mainwindows.ElemtreeWidget.clearSelection()
+            self.mainwindows.ElemtreeWidget.setEnabled(boolzonegeo)
+
+
+
+        

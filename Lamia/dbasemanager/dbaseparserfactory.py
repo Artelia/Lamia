@@ -32,14 +32,15 @@ from .postgisdbaseparser import PostGisDBaseParser
 class DBaseParserFactory():
 
        
-    def __init__(self, dbasetype ):
+    def __init__(self, dbasetype ,connector=None):
         self.dbasetype = dbasetype
+        self.connector = connector
 
     def getDbaseParser(self):
         if self.dbasetype == 'spatialite':
-            return SpatialiteDBaseParser(self)
+            return SpatialiteDBaseParser(self,messageinstance=self.connector)
         elif self.dbasetype == 'postgis':
-            return PostGisDBaseParser(self)
+            return PostGisDBaseParser(self,messageinstance=self.connector)
         else:
             raise ValueError('DB format not recognized') 
 

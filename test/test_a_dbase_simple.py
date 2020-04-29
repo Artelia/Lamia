@@ -6,34 +6,27 @@ with warnings.catch_warnings():
 sys.path.append(os.path.join(os.path.join(os.path.dirname(__file__)), '..'))
 from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
 
-#from . import settings
-#import settings
 from settings import *
 
 KEEP_DB_CREATION = True
-# Base2_assainissement  Base2_digue Base2_eaupotable  Base2_eclairagepublic
-# Base2_tramway Base2_chantier
-#DBTYPE = ['Base2_chantier'] 
-SPATIALITE = True
-POSTGIS = True
 
 class DBaseTest(unittest.TestCase):
 
     """Test case utilisé pour tester les fonctions du module 'random'."""
     def setUp(self):
         """Initialisation des tests."""
-        self.tempdir = os.path.join(os.path.join(os.path.dirname(__file__)), 'temp')
-        if os.path.isdir(self.tempdir):
-            shutil.rmtree(self.tempdir, ignore_errors=False, onerror=None)
+        # TESTDIR = os.path.join(os.path.join(os.path.dirname(__file__)), 'temp')
+        if os.path.isdir(TESTDIR):
+            shutil.rmtree(TESTDIR, ignore_errors=False, onerror=None)
             time.sleep(1)
-        os.mkdir(self.tempdir)
+        os.mkdir(TESTDIR)
     
 
 
     def test_a_DbaseInit(self):
         if SPATIALITE:
             sqlitedbase = DBaseParserFactory('spatialite').getDbaseParser()
-            slfile = os.path.join(self.tempdir, 'a_testslinit','test_a.sqlite')
+            slfile = os.path.join(TESTDIR, 'a_testslinit','test_a.sqlite')
             os.mkdir(os.path.dirname(slfile))
             sqlitedbase.initDBase(slfile=slfile)
         if POSTGIS:
@@ -59,7 +52,7 @@ class DBaseTest(unittest.TestCase):
 
 
     def test_c_DbaseCreate(self):
-        testcdir = os.path.join(self.tempdir, 'c_creation')
+        testcdir = os.path.join(TESTDIR, 'c_creation')
         os.mkdir(testcdir)
         for work in DBTYPE:
             sqlitedbase = DBaseParserFactory('spatialite').getDbaseParser()

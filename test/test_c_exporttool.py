@@ -15,31 +15,29 @@ from Lamia.iface.qgsconnector.ifaceqgisconnector import QgisConnector
 #import settings
 from settings import *
 
-SPATIALITE = True
-POSTGIS = True
 
 class DBaseTest(unittest.TestCase):
 
     """Test case utilisé pour tester les fonctions du module 'random'."""
     def setUp(self):
         """Initialisation des tests."""
-        self.tempdir = os.path.join(os.path.join(os.path.dirname(__file__)), 'temp')
+        #TESTDIR = os.path.join(os.path.join(os.path.dirname(__file__)), 'temp')
         self.connector = QgisConnector()
-        self.testcdir = os.path.join(self.tempdir, 'c_creation')
-        self.exportshpdir = os.path.join(self.tempdir, 'exportshp')
+        self.testcdir = os.path.join(TESTDIR, 'c_creation')
+        self.exportshpdir = os.path.join(TESTDIR, 'exportshp')
         if not os.path.isdir(self.exportshpdir):
             os.mkdir(self.exportshpdir)
         """
-        if os.path.isdir(self.tempdir):
-            shutil.rmtree(self.tempdir, ignore_errors=False, onerror=None)
+        if os.path.isdir(TESTDIR):
+            shutil.rmtree(TESTDIR, ignore_errors=False, onerror=None)
             time.sleep(1)
-        os.mkdir(self.tempdir)
+        os.mkdir(TESTDIR)
         """
 
 
     def test_a_generateShapefile(self):
 
-        testcdir = os.path.join(self.tempdir, 'c_creation')
+        testcdir = os.path.join(TESTDIR, 'c_creation')
         
 
         if 'SLFILE' in globals().keys() :
