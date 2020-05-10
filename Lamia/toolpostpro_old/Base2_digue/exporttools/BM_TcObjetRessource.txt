@@ -1,8 +1,0 @@
-###Tcobjetressource
-#nom              type               cst               valeur                    
-lid_ressource;         Int;                  ;               lid_ressource
-lid_objet;         Int;                  ;               lid_objet
-
-
-###main
-FROM Tcobjetressource WHERE lpk_revision_end IS NULL

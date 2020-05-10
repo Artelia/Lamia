@@ -1,6 +1,0 @@
-SELECT *, MIN(ST_Distance(ST_MakeValid(Infralineaire_now.geom), ST_MakeValid(Desordre_now.geom))) AS Distance  FROM Desordre_now INNER JOIN Observation_now ON Observation_now.lid_desordre = Desordre_now.id_desordre INNER JOIN Infralineaire_now GROUP BY Desordre_now.id_desordre;;;;;;;;;;;
-;;;;;;;;;;;
-;;;;;;;;;;;
-Prix;Prix ,*Desordre_now.nombre;Prix ,*ST_Length(Desordre_now.geom);Desordre_now.groupedesordre;Desordre_now.cote;Desordre_now.position;Desordre_now.catdes;Desordre_now.typedes;ST_Length(Desordre_now.geom);Observation_now.nombre;Observation_now.gravite;Infralineaire_now.description1
-1000;500;200;INF;;;ENT;VEG;;;;DIG
-2000;500;200;INF;;;ENT;PET;;;;
