@@ -63,9 +63,9 @@ class InspectiondigueDockWidget(QDockWidget):
     The dock widget used in QGis
     """
 
-    closingPlugin = pyqtSignal()
+    closingPlugin = pyqtSignal(int)
 
-    def __init__(self, canvas, parent=None):
+    def __init__(self, canvas, dockorder, parent=None):
         """!
         Constructor
         @param canvas : current qgsmapcanvas
@@ -74,6 +74,7 @@ class InspectiondigueDockWidget(QDockWidget):
         super(InspectiondigueDockWidget, self).__init__(parent)
         ## The windowwidget put inside te dockwidget
         self.windowwidget = LamiaWindowWidget(canvas,self)
+        self.dockorder = dockorder
 
         if True:
             stylesheet = """
@@ -94,10 +95,11 @@ class InspectiondigueDockWidget(QDockWidget):
 
 
     def closeEvent(self, event):
+        self.windowwidget._reloadQgisToolbar()
         if self.windowwidget.qgiscanvas.rubberBand is not None:
             self.windowwidget.qgiscanvas.rubberBand.reset(0)
         self.windowwidget.qgiscanvas.unloadLayersInCanvas()
 
         self.windowwidget.gpsutil.closeConnection()
-        self.closingPlugin.emit()
+        self.closingPlugin.emit(self.dockorder)
         event.accept()

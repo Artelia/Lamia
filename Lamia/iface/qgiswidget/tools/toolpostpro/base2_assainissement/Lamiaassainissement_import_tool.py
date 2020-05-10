@@ -45,7 +45,7 @@ class AssainissementImportTool(ImportTool):
 
 
     def __init__(self, **kwargs):
-        super(AssainissementImportTool, self).__init__(dbase, **kwargs)
+        super(AssainissementImportTool, self).__init__( **kwargs)
         
         
 

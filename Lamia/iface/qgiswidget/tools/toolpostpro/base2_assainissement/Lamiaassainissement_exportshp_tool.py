@@ -34,5 +34,5 @@ class AssainissementExportShapefileTool(ExportShapefileTool):
 
 
     def __init__(self, **kwargs):
-        super(AssainissementExportShapefileTool, self).__init__(dbase, **kwargs)
+        super(AssainissementExportShapefileTool, self).__init__(**kwargs)
 

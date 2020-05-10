@@ -359,8 +359,8 @@ class AbstractLamiaTool(QWidget):
     def updateToolbarOnToolFrameLoading(self):
         
         if self.mainifacewidget is not None:
-            self.mainifacewidget.toolBarFormCreation.setEnabled(False)
-            self.mainifacewidget.toolBarFormGeom.setEnabled(False)
+            self.mainifacewidget.lamiatoolBarFormCreation.setEnabled(False)
+            self.mainifacewidget.lamiatoolBarFormGeom.setEnabled(False)
 
     def updateToolbarOnToolFrameUnloading(self):
         pass

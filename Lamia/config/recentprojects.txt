@@ -1,2 +1,3 @@
+c:/111_GitProjects/Lamia/sandbox\..\test\datas\lamia_assainissement\test01.sqlite
 c:/111_GitProjects/Lamia/sandbox\..\test\datas\lamia_digue\test01.sqlite
 lamiaunittest.Base2_digue_Lamia@localhost:5432;pvr;pvr

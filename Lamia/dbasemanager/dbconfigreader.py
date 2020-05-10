@@ -421,7 +421,7 @@ class DBconfigReader():
                     if self.dbase.variante =='Lamia':
                         colindexvariante = 5
                     else:
-                        for col in range(sheet.ncols):
+                        for col in range(len(sheetdatas[rowvariantes])):
                             try:
                                 if (sheetdatas[rowvariantes][col] == self.dbase.variante
                                         and sheetdatas[xlrow][col] != '' ):

@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 """
 This file is part of LAMIA.
 
@@ -25,12 +23,10 @@ This file is part of LAMIA.
   * License-Filename: LICENSING.md
  """
 
+from ..base2.lamiabase_topographiedata_tool import BaseTopographiedataTool
 
-from ..base2.lamia_stat_tool import StatTool
+class BaseAssainissementTopogaphiedataTool(BaseTopographiedataTool):
 
-class AssainissementStatTool(StatTool):
 
     def __init__(self, **kwargs):
-        super(AssainissementStatTool, self).__init__(**kwargs)
-
-
+        super(BaseAssainissementTopogaphiedataTool, self).__init__(**kwargs)

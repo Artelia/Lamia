@@ -678,7 +678,7 @@ background-color: rgb(255, 255, 255);</string>
    <addaction name="menuAide"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <widget class="QToolBar" name="toolBarFormCreation">
+  <widget class="QToolBar" name="lamiatoolBarFormCreation">
    <property name="windowTitle">
     <string>toolBar</string>
    </property>
@@ -693,7 +693,7 @@ background-color: rgb(255, 255, 255);</string>
    <addaction name="actiontoolbardelete"/>
    <addaction name="actiontoolbarsave"/>
   </widget>
-  <widget class="QToolBar" name="toolBarFormGeom">
+  <widget class="QToolBar" name="lamiatoolBarFormGeom">
    <property name="windowTitle">
     <string>toolBar</string>
    </property>

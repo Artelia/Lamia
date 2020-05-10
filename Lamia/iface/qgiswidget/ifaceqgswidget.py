@@ -28,14 +28,9 @@ This file is part of LAMIA.
 from qgis.PyQt import QtGui, uic, QtCore
 from unicodedata import normalize
 from qgis.PyQt.QtCore import pyqtSignal, QCoreApplication
-try:
-    from qgis.PyQt.QtGui import (QDockWidget, QMainWindow, QFileDialog, QLabel, QInputDialog,
-                                 QComboBox,QTableWidgetItem,QProgressBar,QApplication,QToolBar,
-                                 QPushButton,QToolButton,QWidget, QMessageBox, QAction)
-except ImportError:
-    from qgis.PyQt.QtWidgets import (QDockWidget, QMainWindow, QFileDialog, QLabel, QInputDialog,
-                                     QComboBox,QTableWidgetItem, QProgressBar,QApplication,QToolBar,
-                                     QPushButton,QToolButton,QWidget, QMessageBox, QAction)
+from qgis.PyQt.QtWidgets import (QDockWidget, QMainWindow, QFileDialog, QLabel, QInputDialog,
+                                    QComboBox,QTableWidgetItem, QProgressBar,QApplication,QToolBar,
+                                    QPushButton,QToolButton,QWidget, QMessageBox, QAction)
 
 
 # other libs import
@@ -73,7 +68,7 @@ from .tools.subwidgets.lamia_numpad import NumPadDialog
 
 import Lamia, time
 from Lamia.libslamia.gps.GPSutil import GpsUtil
-from Lamia.maptool.mapTools import mapToolCapture, mapToolEdit
+# from .maptool.mapTools import mapToolCapture, mapToolEdit
 
 
 class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
@@ -150,6 +145,7 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         self.currenttoolwidget = None
         self.imagedirectory = None
         self.currentchoosertreewidget = None
+        self.toolbarsvisibility = {}    # store qgis tool bar visibility when entering/exiting field mode
 
         # subdialogs
         self.newDBDialog = newDBDialog()
@@ -328,8 +324,21 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
     # **************** File menu actions ***********************
     # ***********************************************************
 
-    def ____________________________________FileMenuActions(self):
+
+
+    def ____________FileMenuActions(self):
         pass
+
+
+    def _dialogForDbaseConf(self, dbtype='spatialite'):
+        if dbtype == 'spatialite':
+            spatialitefile, fileext = self.qfiledlg.getSaveFileName(self, 'Lamia nouveau', '', '*.sqlite')
+            return {'slfile':spatialitefile}
+        elif dbtype == 'postgis':
+            self.connDialog.exec_()
+            adresse, port, nom, schema, user, password = self.connDialog.dialogIsFinished()
+            return {'host':adresse, 'port':port, 'dbname': nom, 'schema':schema, 'user': user, 'password':password}
+
 
     def newDBase(self):
         """
@@ -444,6 +453,8 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         
         self.qgiscanvas.updateWorkingDate(dbaseparser=self.dbase)
     
+
+
     def reinitWidgetbeforeloading(self):
         # old :self.dbase.visualmode
         self.interfacemode = None
@@ -483,7 +494,9 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         self.dbase.dbaseofflinemanager.pushDBase()
 
     def addDBase(self):
-        pass
+        dbconf = self._dialogForDbaseConf()
+        self.dbase.dbaseofflinemanager.addDBase(**dbconf)
+
 
     def _loadDBaseParser(self, **kwargs):
         success = False
@@ -657,7 +670,7 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
     # ***********************************************************
     # **************** Interface mode actions ***********************
     # ***********************************************************
-    def ____________________________________InterfacemodeActions(self):
+    def ____________InterfacemodeActions(self):
         pass
     
     
@@ -704,10 +717,33 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
                 self.loadToolsWidgets(fullloading=True)
 
         self._applyVisualMode()
+        if self.interfacemode == 0 :
+            self._unloadQgisToolbar()
+        else:
+            self._reloadQgisToolbar()
  
+    def _unloadQgisToolbar(self):
+        if not qgis.utils.iface:
+            return
+        
+        for x in qgis.utils.iface.mainWindow().findChildren(QToolBar): 
+            self.toolbarsvisibility[x.objectName()] = x.isVisible()
+            if x.objectName() not in ['Lamia','mFileToolBar','mSnappingToolBar',
+                                      'lamiatoolBarFormCreation', 'lamiatoolBarFormGeom']:
+                x.setVisible(False)
 
+    def _reloadQgisToolbar(self):
+        if not qgis.utils.iface:
+            return
+        if not len(self.toolbarsvisibility):
+            return
+        for x in qgis.utils.iface.mainWindow().findChildren(QToolBar): 
+            if x.objectName() in self.toolbarsvisibility.keys():
+                x.setVisible(  self.toolbarsvisibility[x.objectName()] )
+        self.toolbarsvisibility = {}
 
     def _applyVisualMode(self, actiontext=None):
+
         for tooltype in self.toolwidgets.keys():
             if tooltype == 'desktop_loaded':
                 continue
@@ -726,19 +762,7 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
                         wdg.changeInterfaceMode()
                     else:
                         wdg.changePropertiesWidget()
-        """
-        if self.dbase.dbasetables is not None:
-            for tool in self.tools:
-                tool.changePropertiesWidget(actiontext)
 
-            for tablename in self.dbase.dbasetables.keys():
-                if 'widget' in self.dbase.dbasetables[tablename].keys():
-                    if isinstance(self.dbase.dbasetables[tablename]['widget'], list):
-                        for wdg in self.dbase.dbasetables[tablename]['widget']:
-                            wdg.changePropertiesWidget(actiontext)
-                    else:
-                        self.dbase.dbasetables[tablename]['widget'].changePropertiesWidget(actiontext)
-        """
 
     def loadToolsClasses(self):
         """
@@ -956,7 +980,7 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
     # Settings menu
     #*************************************************************
 
-    def ____________________________________SettingsMenuActions(self):
+    def ____________SettingsMenuActions(self):
         pass
 
     def connectToGPS(self):
@@ -1027,7 +1051,7 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
     # About menu
     #*************************************************************
 
-    def ____________________________________AboutMenuActions(self):
+    def ____________AboutMenuActions(self):
         pass
 
     def openHelp(self):
@@ -1042,7 +1066,7 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
     # toolbar
     #*************************************************************
 
-    def ____________________________________ToolBarActions(self):
+    def ____________ToolBarActions(self):
         pass
 
     def _connectToolBar(self):
@@ -1056,6 +1080,8 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         self.actiontoobargeomnewpolygon.triggered.connect(self.toolbarGeom)
         self.actiontoobargeomaddpoint.triggered.connect(self.toolbarGeom)
         self.actiontoobargeomaddGPSpoint.triggered.connect(self.toolbarGeomAddGPS)
+
+        self.actiontoobargeomeditlayer.triggered.connect(self.addRawLayerInCanvasForEditing)
 
 
 
@@ -1098,12 +1124,15 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         if self.currenttoolwidget and hasattr(self.currenttoolwidget,'toolbarGeomAddGPS'):
             self.currenttoolwidget.toolbarGeomAddGPS()
 
+    def addRawLayerInCanvasForEditing(self):
+        currentdbasetablename = self.currenttoolwidget.DBASETABLENAME
+        self.qgiscanvas.addRawLayerInCanvasForEditing(currentdbasetablename)
 
     #*************************************************************
     # menu
     #*************************************************************
 
-    def ____________________________________MenuActions(self):
+    def ____________MenuActions(self):
         pass
 
     def _connectMenuAndOthers(self):

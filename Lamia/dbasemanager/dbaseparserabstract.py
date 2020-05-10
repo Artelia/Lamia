@@ -224,6 +224,17 @@ class AbstractDBaseParser():
         raise NotImplementedError
 
     def loadDBase(self, **kwargs):
+        """
+        kwargs for postgis :
+            host, 
+            port, 
+            dbname, 
+            schema, 
+            user, 
+            password
+        kwargs for spatialite : 
+            slfile
+        """
         self.connectconf = kwargs
         self.connectToDBase(**kwargs)
 

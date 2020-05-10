@@ -386,6 +386,9 @@ class FormToolUtils(QtCore.QObject):
         
         if hasattr(self.formtoolwidget, 'GEOMETRYSKIP') and self.formtoolwidget.GEOMETRYSKIP :
             pass
+        
+        #if geometry was edited with qgis
+        self.formtoolwidget.mainifacewidget.qgiscanvas.closeRawLayerEditing()
 
         savedfeaturepk = self.formtoolwidget.dbase.manageFeatureCreationOrUpdate(self.formtoolwidget.DBASETABLENAME,
                                                                                 featurepk)

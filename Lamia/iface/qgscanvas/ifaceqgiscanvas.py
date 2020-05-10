@@ -24,7 +24,7 @@ This file is part of LAMIA.
   * SPDX-License-Identifier: GPL-3.0-or-later
   * License-Filename: LICENSING.md
  """
-import os, sys, io, logging, datetime, re
+import os, sys, io, logging, datetime, re, json
 import qgis, qgis.core, qgis.utils, qgis.gui
 from qgis.PyQt import QtGui
 import Lamia
@@ -63,16 +63,24 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         
         self.canvas = qgscanvas
 
+        """
+
+        cadwdg = qgis.gui.QgsAdvancedDigitizingDockWidget(iface.mapCanvas())
+        print(cadwdg.cadEnabled () )
+        cadwdg.enable()
+        """
+
         #init maptools
         self.cadwdg = qgis.gui.QgsAdvancedDigitizingDockWidget(self.canvas)
+        self.cadwdg.enable()
         self.mtoolpoint = mapToolCapture(self.canvas, self.cadwdg,
                                 qgis.gui.QgsMapToolCapture.CapturePoint)
         self.mtoolline = mapToolCapture(self.canvas, self.cadwdg,
                                         qgis.gui.QgsMapToolCapture.CaptureLine)
         self.mtoolpolygon = mapToolCapture(self.canvas, self.cadwdg,
                                         qgis.gui.QgsMapToolCapture.CapturePolygon)
-
         self.pointEmitter = qgis.gui.QgsMapToolEmitPoint(self.canvas)
+
 
         self.updateQgsCoordinateTransform()
 
@@ -80,6 +88,134 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
     def _____________________________layersManagement(self):
         pass
+
+
+    def createLayersForQgisServer(self,dbaseparser,specifichost=None):
+        """
+        used for creating a qgis project configured for using in postgis server
+        """
+        if dbaseparser.TYPE == 'spatialite':
+            return
+        #* create pg_config.conf
+        """
+        [qgisservertest]
+        host=docker.for.win.localhost
+        port=5432
+        user=pvr
+        password=pvr
+        dbname=lamiaunittest
+        """
+        dbqgisserverdirectory = os.path.join(dbaseparser.dbaseressourcesdirectory,'qgisserver')
+        if not os.path.isdir(dbqgisserverdirectory):
+            os.mkdir(dbqgisserverdirectory)
+        
+        pg_configfile = os.path.join(dbqgisserverdirectory,'pg_service.conf')
+        
+        filewriter = open(pg_configfile, 'w', newline='\n')
+        dbaseconf = dbaseparser.connectconf
+        filewriter.write('[qgisserver]\n')
+        if specifichost:
+            filewriter.write('host=' + specifichost + '\n')
+        else:
+            filewriter.write('host=' + dbaseconf['host'] + '\n')
+        filewriter.write('port=' + dbaseconf['port'] + '\n')
+        filewriter.write('user=' + dbaseconf['user'] + '\n')
+        filewriter.write('password=' + dbaseconf['password'] + '\n')
+        filewriter.write('dbname=' + dbaseconf['dbname'] + '\n')
+        filewriter.close()
+
+        #create project with layers inside
+        layers={}
+        project = qgis.core.QgsProject.instance()
+        projectcrs = qgis.core.QgsCoordinateReferenceSystem()
+        projectcrs.createFromString('EPSG:' + str(dbaseparser.crsnumber))
+        project.setCrs(projectcrs)
+
+        for rawtablename, rawdict in dbaseparser.dbasetables.items():
+            # if 'geom' not in rawdict:
+            #     continue
+            tablenames = [rawtablename]
+            tabletypes = ['layer']
+            if 'djangoviewsql' in rawdict.keys():
+                tabletypes += ['layerdjango']
+                tablenames += [rawtablename + '_django']
+            if 'qgisPGviewsql' in rawdict.keys() or 'qgisviewsql' in rawdict.keys() :
+                tabletypes += ['layerqgis']
+                tablenames += [rawtablename + '_qgis']
+            
+            layers[rawtablename] = {}
+            for i, tablename in enumerate(tablenames):
+                tablenamelower = tablename.lower()
+                tabletype = tabletypes[i]
+                #rawlayers
+                uri = qgis.core.QgsDataSourceUri()
+                uri.setConnection('qgisserver',             # the service name
+                                  dbaseparser.pgdb.lower(),
+                                  dbaseparser.pguser,
+                                  dbaseparser.pgpassword,
+                                  qgis.core.QgsDataSourceUri.SslDisable )
+
+                if dbaseparser.isTableSpatial(tablenamelower):
+                    uri.setDataSource(dbaseparser.pgschema.lower(), str(tablenamelower), 'geom', '', "pk_" + rawtablename.lower())
+                    geomtype = dbaseparser.dbasetables[rawtablename]['geom']
+                    if geomtype == 'POINT':
+                        qgsgeomtype = qgis.core.QgsWkbTypes.Point
+                    elif geomtype == 'LINESTRING':
+                        qgsgeomtype = qgis.core.QgsWkbTypes.LineString
+                    elif geomtype == 'MULTIPOLYGON':
+                        qgsgeomtype = qgis.core.QgsWkbTypes.MultiPolygon 
+                    # print(geomtype)
+                    uri.setWkbType(qgsgeomtype)
+                    uri.setSrid(str(dbaseparser.crsnumber))
+                else:
+                    uri.setDataSource(dbaseparser.pgschema.lower(), str(tablenamelower), None, '', "pk_" + rawtablename.lower())
+                layers[rawtablename][tabletype] = qgis.core.QgsVectorLayer(uri.uri(), tablename, 'postgres')
+                layers[rawtablename][tabletype].dataProvider().setEncoding('UTF-8')
+                layers[rawtablename][tabletype].setCrs(projectcrs)
+
+        #load layers and set style
+        root = project.layerTreeRoot()
+        styledirectory = os.path.join(os.path.dirname(Lamia.__file__), 'DBASE', 'style', dbaseparser.worktype, '0_Defaut' )
+        for tablename in layers:
+            if ('layerqgis' in layers[tablename].keys() 
+                    and layers[tablename]['layerqgis'].geometryType() != qgis.core.QgsWkbTypes.NullGeometry ):
+                project.addMapLayer(layers[tablename]['layerqgis'], True)
+                # root.addLayer(layers[tablename]['layerqgis'])
+                # stylepath = os.path.join(styledirectory, tablename + '.qml')
+                # stylepath = os.path.realpath(stylepath)
+                layers[tablename]['layerqgis'].triggerRepaint()
+                layers[tablename]['layerqgis'].dataProvider().reloadData()
+
+
+        if self.canvas:
+            self.canvas.refreshAllLayers()
+            self.canvas.refresh()
+
+        for tablename in layers:
+            if ('layerqgis' in layers[tablename].keys() 
+                    and layers[tablename]['layerqgis'].geometryType() != qgis.core.QgsWkbTypes.NullGeometry ):
+                stylepath = os.path.join(styledirectory, tablename + '.qml')
+                if os.path.isfile(stylepath):
+                    txt, res = layers[tablename]['layerqgis'].loadNamedStyle(stylepath, loadFromLocalDb=False)
+                    if False and not res:   #TODO style do not apply arg !!!!! geometryType() not recognized
+                        print(stylepath, os.path.isfile(stylepath))
+                        print(layers[tablename]['layerqgis'].geometryType() )
+                        print(layers[tablename]['layerqgis'].dataProvider().wkbType () )
+                        print(txt, res)
+                
+
+
+        projectfile = os.path.join(dbqgisserverdirectory,'project.qgs')
+        project.write(projectfile)
+        project.clear()
+
+        #finaly write dbasedbasetables
+        jsonfile = os.path.join(dbqgisserverdirectory,'dbasetables.json')
+        with open(jsonfile, 'w') as outfile:
+            json.dump(dbaseparser.dbasetables, outfile, indent=2)
+
+
+
 
     def createLayers(self, dbaseparser):
 
@@ -89,6 +225,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             dbtype = 'postgres'
         
         for rawtablename, rawdict in dbaseparser.dbasetables.items():
+            #old way for qgislayer
             # if 'geom' not in rawdict:
             #     continue
             tablenames = [rawtablename]
@@ -121,10 +258,64 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                         uri.setDataSource(dbaseparser.pgschema.lower(), str(tablenamelower), None, '', "pk_" + rawtablename.lower())
                 self.layers[rawtablename][tabletype] = qgis.core.QgsVectorLayer(uri.uri(), tablename, dbtype)
 
+            #ValueMap for qgislayer
+            if 'layerqgis' in self.layers[rawtablename].keys():
+                workingvl = self.layers[rawtablename]['layerqgis']
+                cstdict = self._getConstraintFromDBaseTables(dbaseparser, rawtablename)
+                for i, field in enumerate(workingvl.fields()):
+                    if field.name() in cstdict.keys():
+                        config = {'map' : cstdict[field.name()]}
+                        widget_setup = qgis.core.QgsEditorWidgetSetup('ValueMap',config)
+                        workingvl.setEditorWidgetSetup(i, widget_setup)
+
+
+            #new way for qgislayer
+            tabletype = 'layerqgisjoined'
+            # self.layers[rawtablename][tabletype] = qgis.core.QgsVectorLayer(self.layers[rawtablename]['layer'] )
+            self.layers[rawtablename][tabletype] = self.layers[rawtablename]['layer'].clone()
+            currentlayername = rawtablename
+
+            for parentable in dbaseparser.getParentTable(rawtablename):
+                currentField = 'lpk_' + parentable.lower()
+                joinedField = 'pk_' + parentable.lower()
+                joinObject = qgis.core.QgsVectorLayerJoinInfo()
+                joinObject.setJoinFieldName(joinedField)
+                joinObject.setTargetFieldName(currentField)
+                joinObject.setJoinLayerId(self.layers[parentable]['layer'].id())
+                joinObject.setUsingMemoryCache(True)
+                joinObject.setJoinLayer(self.layers[parentable]['layer'])
+                joinObject.setEditable(True)
+                joinObject.setPrefix ('')
+                joinObject.setDynamicFormEnabled(True)
+                self.layers[rawtablename][tabletype].addJoin(joinObject)
+                currentlayername = parentable
+
+            #ValueMap for qgislayerjoined
+            workingvl = self.layers[rawtablename]['layerqgisjoined']
+            cstdict = self._getConstraintFromDBaseTables(dbaseparser, rawtablename)
+            for i, field in enumerate(workingvl.fields()):
+                if field.name() in cstdict.keys():
+                    config = {'map' : cstdict[field.name()]}
+                    widget_setup = qgis.core.QgsEditorWidgetSetup('ValueMap',config)
+                    workingvl.setEditorWidgetSetup(i, widget_setup)
+
+
         self.dbaseqgiscrs = qgis.core.QgsCoordinateReferenceSystem()
         self.dbaseqgiscrs.createFromString('EPSG:' + str(dbaseparser.crsnumber))
         self.updateQgsCoordinateTransform()
 
+
+    def _getConstraintFromDBaseTables(self, dbaseparser, tablename):
+        dictcst = {}
+        parenttables = dbaseparser.getParentTable(tablename) + [tablename]
+        parenttables = parenttables[::-1]
+        for tablename in parenttables:
+            for fieldname, fielddict in dbaseparser.dbasetables[tablename]['fields'].items():
+                if 'Cst' in fielddict:
+                    valuesformap = [[lst[0], lst[1]] for lst in fielddict['Cst']]
+                    qgisvaluesformat = [{var[0]: var[1]} for var in valuesformap]
+                    dictcst[fieldname] =  qgisvaluesformat
+        return dictcst
 
 
     def createSingleQgsVectorLayer(self,dbaseparser,tablename='tempvectorlayer',isspatial = True,  sql='', tableid=None):
@@ -213,20 +404,28 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             self.qgislegendnode = lamialegendgroup
 
             dbasetables = self.layers
-            for tablename in dbasetables:
-                if ('layerqgis' in dbasetables[tablename].keys() 
-                        and dbasetables[tablename]['layerqgis'].geometryType() != qgis.core.QgsWkbTypes.NullGeometry ):
-                    qgis.core.QgsProject.instance().addMapLayer(dbasetables[tablename]['layerqgis'], False)
-                    lamialegendgroup.addLayer(dbasetables[tablename]['layerqgis'])
+            # #old way
+            # for tablename in dbasetables:
+            #     if ('layerqgis' in dbasetables[tablename].keys() 
+            #             and dbasetables[tablename]['layerqgis'].geometryType() != qgis.core.QgsWkbTypes.NullGeometry ):
+            #         qgis.core.QgsProject.instance().addMapLayer(dbasetables[tablename]['layerqgis'], False)
+            #         lamialegendgroup.addLayer(dbasetables[tablename]['layerqgis'])
+            #new way
+            for tablename in self.layers:
+                if ('layerqgis' in self.layers[tablename].keys() 
+                        and self.layers[tablename]['layerqgisjoined'].geometryType() != qgis.core.QgsWkbTypes.NullGeometry 
+                        ):
+                    qgis.core.QgsProject.instance().addMapLayer(self.layers[tablename]['layerqgis'], False)
+                    lamialegendgroup.addLayer(self.layers[tablename]['layerqgis'])
 
         else:
             layerstoadd = []
-            dbasetables = self.layers
-            goodtablekey = [val for val in dbasetables.keys() if 'layerqgis' in dbasetables[val].keys()  ]
+            # dbasetables = self.layers
+            goodtablekey = [val for val in self.layers.keys() if 'layerqgis' in self.layers[val].keys()  ]
             for tablename in goodtablekey:
-                layerstoadd.append(dbasetables[tablename]['layerqgis'])
+                layerstoadd.append(self.layers[tablename]['layerqgis'])
             self.canvas.setLayers(layerstoadd)
-            self.canvas.setExtent(dbasetables['Infralineaire']['layer'].extent())
+            self.canvas.setExtent(self.layers['Infralineaire']['layer'].extent())
             self.canvas.refresh()
 
 
@@ -294,44 +493,22 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                                                             False)
         lamialegendgroup.addLayer(self.dbase.dbasetables[tablename]['layerqgis'])
         """
-        self.editlayer = qgis.core.QgsVectorLayer(self.layers[layername]['layer'].source(),
-                                                self.layers[layername]['layer'].name() + '_edit',
-                                                self.layers[layername]['layer'].providerType())
+        # self.editlayer = qgis.core.QgsVectorLayer(self.layers[layername]['layer'].source(),
+        #                                         self.layers[layername]['layer'].name() + '_edit',
+        #                                         self.layers[layername]['layer'].providerType())
+        self.editlayer = self.layers[layername]['layerqgisjoined']
+
         qgis.core.QgsProject.instance().addMapLayer(self.editlayer, False)
+        if self.qgislegendnode is None: #outsideqgis case
+            return
         self.editfeaturetreelayer = self.qgislegendnode.insertLayer(0,self.editlayer)
         if qgis.utils.iface is not None :
-            self.dbase.qgsiface.setActiveLayer(self.editlayer)
+            qgis.utils.iface.setActiveLayer(self.editlayer)
             self.editlayer.startEditing()
-            self.dbase.qgsiface.actionVertexTool().trigger()
+            qgis.utils.iface.actionVertexTool().trigger()
 
         self.editingrawlayer = True
         
-        
-        """
-        if self.stackedWidget_main.currentIndex() == 0:
-            wdg = self.MaintabWidget.widget(0).layout().itemAt(0).widget()
-
-            self.editfeaturelayer = qgis.core.QgsVectorLayer(wdg.dbasetable['layer'].source(),
-                                                            wdg.dbasetable['layer'].name() + '_edit',
-                                                            wdg.dbasetable['layer'].providerType())
-
-            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                qgis.core.QgsMapLayerRegistry.instance().addMapLayer(self.editfeaturelayer,False)
-                self.editfeaturetreelayer = self.qgislegendnode.insertLayer(0,self.editfeaturelayer)
-                if self.dbase.qgsiface is not None :
-                    self.dbase.qgsiface.setActiveLayer(self.editfeaturelayer)
-                    self.editfeaturelayer.startEditing()
-                    self.dbase.qgsiface.actionNodeTool().trigger()
-            else:
-                qgis.core.QgsProject.instance().addMapLayer(self.editfeaturelayer, False)
-                self.editfeaturetreelayer = self.qgislegendnode.insertLayer(0,self.editfeaturelayer)
-                if self.dbase.qgsiface is not None :
-                    self.dbase.qgsiface.setActiveLayer(self.editfeaturelayer)
-                    self.editfeaturelayer.startEditing()
-                    self.dbase.qgsiface.actionVertexTool().trigger()
-
-            self.editingrawlayer = True
-        """
 
     def closeRawLayerEditing(self, maintreewdgindex=None, savechanges=False):
 
@@ -458,6 +635,12 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
         if self.canvas.mapTool() != self.currentmaptool:
             self.canvas.setMapTool(self.currentmaptool)
+            self.currentmaptool.activate()
+            print(self.currentmaptool.cadDockWidget().cadEnabled () )
+            self.currentmaptool.cadDockWidget().enable()
+            print(self.currentmaptool.cadDockWidget().cadEnabled () )
+            self.currentmaptool.activate()
+
         #self.currentmaptool.stopCapture.connect(self.setTempGeometry)
         self.currentmaptool.stopCapture.connect(fctonstopcapture)
         self.currentmaptool.setMapPoints(listpointinitialgeometry)

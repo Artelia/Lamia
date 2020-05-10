@@ -27,6 +27,7 @@ warnings.filterwarnings("default", category=DeprecationWarning,
 
 from Lamia.iface.qgiswidget.ifaceqgswidget import LamiaWindowWidget
 from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
+from Lamia.iface.qgscanvas.ifaceqgiscanvas import QgisCanvas
 # from settings import *
 
 
@@ -38,23 +39,64 @@ class DBaseViewer():
 
 
     def run(self):
-        
-
-        if True :
-            SLFILE = os.path.join(os.path.dirname(__file__), '..','test','datas','lamia_assainissement','test01.sqlite')
-            #SLFILE = r"C:\Users\Public\Documents\lamia\test01\test01.sqlite"
-            self._createWin()
-            self._createMainWin()
-            self.wind.loadDBase(dbtype='Spatialite', slfile=SLFILE)
+        pgdbase = DBaseParserFactory('postgis').getDbaseParser()
             
         if False:
-            self._createWin()
-            self._createMainWin()
-            self.wind.loadDBase(dbtype='Postgis', host=PGhost, port=PGport, dbname=PGbase, schema= PGschema, user=PGuser,  password=PGpassword)
-            self.launchTest()
+            dbaseressourcesdirectory = os.path.join(os.path.dirname(__file__),'importBM_pg')
+            pgdbase.createDBase(crs='2154', 
+                                worktype='Base2_digue', 
+                                dbaseressourcesdirectory=dbaseressourcesdirectory, 
+                                variante='Lamia',
+                                host='localhost', 
+                                port='5432', 
+                                dbname='lamiaunittest', 
+                                schema='importBM', 
+                                user='pvr',  
+                                password='pvr')
+            pgdbase.loadDBase(host='localhost', 
+                                port='5432', 
+                                dbname='lamiaunittest', 
+                                schema='importBM', 
+                                user='pvr',  
+                                password='pvr')
 
-        self.wind.setVisualMode(visualmode=1)
-        self.showIFace()
+            bmtoimport = os.path.join(os.path.dirname(__file__),'..','test','datas', 'lamia_digue','test01.sqlite')
+
+            pgdbase.dbaseofflinemanager.addDBase(**{'slfile': bmtoimport})
+
+        pgdbase.loadDBase(host='localhost', 
+                            port='5432', 
+                            dbname='lamiaunittest', 
+                            schema='importBM', 
+                            user='pvr',  
+                            password='pvr')
+        canvas = qgis.gui.QgsMapCanvas()
+        canvas.enableAntiAliasing(True)
+        canvascrs = qgis.core.QgsCoordinateReferenceSystem()
+        canvascrs.createFromString('EPSG:2154')
+        canvas.setDestinationCrs(canvascrs)
+        
+        qgscanvas = QgisCanvas(canvas)
+
+        qgscanvas.createLayersForQgisServer(pgdbase)
+
+        if False:
+
+            if True :
+                SLFILE = os.path.join(os.path.dirname(__file__), '..','test','datas','lamia_digue','test01.sqlite')
+                #SLFILE = r"C:\Users\Public\Documents\lamia\test01\test01.sqlite"
+                self._createWin()
+                self._createMainWin()
+                self.wind.loadDBase(dbtype='Spatialite', slfile=SLFILE)
+                
+            if False:
+                self._createWin()
+                self._createMainWin()
+                self.wind.loadDBase(dbtype='Postgis', host=PGhost, port=PGport, dbname=PGbase, schema= PGschema, user=PGuser,  password=PGpassword)
+                self.launchTest()
+
+            self.wind.setVisualMode(visualmode=1)
+            self.showIFace()
         
 
     def showIFace(self):

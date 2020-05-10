@@ -43,7 +43,7 @@ from qgis.PyQt.QtWidgets import (QInputDialog,QTableWidgetItem,QComboBox,QAction
 from ...lamia_abstracttool import AbstractLamiaTool
 #from Lamia.iface.qgiswidget.tools.lamia_abstracttool  import AbstractLamiaTool 
 from Lamia.libslamia.lamiaimport.lamiaimport import ImportCore
-from Lamia.main.DBaseParser import DBaseParser
+# from Lamia.main.DBaseParser import DBaseParser
 
 from .Lamia_import_tool_flowchart import FlowChartWidget
 

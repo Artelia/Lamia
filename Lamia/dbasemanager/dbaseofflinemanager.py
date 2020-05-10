@@ -47,6 +47,19 @@ class DBaseOfflineManager():
     def __init__(self, dbase):
         self.dbase = dbase
 
+    def addDBase(self,**kwargs):
+        if 'slfile' in kwargs.keys():
+            dbaseparserfact = self.dbase.parserfactory.__class__
+            importparser = dbaseparserfact('spatialite',self.dbase.messageinstance).getDbaseParser()
+        elif 'host'in kwargs.keys():
+            dbaseparserfact = self.dbase.parserfactory.__class__
+            importparser = dbaseparserfact('postgis',self.dbase.messageinstance).getDbaseParser()
+        importparser.loadDBase(**kwargs)
+        self.importDBase(importparser, 
+                        typeimport='append',
+                        createnewversion=False,
+                        ressourcesimport='full')
+
     def pullDBase(self,pulledpath):
         
         #create pull dir
@@ -97,8 +110,6 @@ class DBaseOfflineManager():
         with open(tempconffilepath, 'w', encoding='utf-8') as outfile:
             json.dump(self.dbase.connectconf, outfile, ensure_ascii=False, indent=4)
 
-
-
     def pushDBase(self):
         tempconffilepath = os.path.join(self.dbase.dbaseressourcesdirectory,'config', '.offlinemode')
         if not os.path.isfile(tempconffilepath):
@@ -125,7 +136,8 @@ class DBaseOfflineManager():
     def importDBase(self, dbaseparserfrom, 
                           typeimport='append', 
                           createnewversion=True,
-                          ressourcesimport='Full'):
+                          ressourcesimport='Full',
+                          dobackup=True):
         """
         typeimport : append : "simply" append to self.dbase the datas of dbaseparserfrom
         typeimport : update : dbaseparserfrom was created for offline use, now reimport modified data in self.dbase
@@ -681,8 +693,6 @@ class DBaseOfflineManager():
                                                                 pktoinsert)
             if debug: logging.getLogger("Lamiaoffline").debug('pkid update :  %s',sqlup)
             toparser.query(sqlup)
-            if tablename[0:2] == 'Tc':
-                print(sqlup)
 
         dbconfdatas['importdictpk'] = importdictpk
         dbconfdatas['importdictid'] = importdictid
