@@ -548,7 +548,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
 
         """
         if self.gpsutil and self.gpsutil.currentpoint is None:
-            self.mainifacewidget.connector.showErrorMessage('GPS non connecte')
+            self.mainifacewidget.connector.showErrorMessage(self.tr('GPS not connected'))
             return
 
         type = self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME]['layer'].geometryType()
@@ -620,7 +620,8 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
 
     def toolbarDelete(self):
 
-        message = "Supprimer completement l'element (yes) ou l'archiver (no) ? "
+        # message = self.tr("Supprimer completement l'element (yes) ou l'archiver (no) ? ")
+        message = self.tr("Delete feature (yes) or archive (no) ? ")
         reply = QMessageBox.question(self, "Su",
                                            message,
                                            QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
@@ -811,7 +812,3 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         # if debug: logging.getLogger("Lamia_unittest").debug('end tempgeom : %s', self.toWKT(self.tempgeometry))
 
         #self.mtool = None
-
-
-    def ___________________________oldThings(self):
-        pass

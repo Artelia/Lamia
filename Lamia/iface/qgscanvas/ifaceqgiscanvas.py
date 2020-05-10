@@ -26,7 +26,7 @@ This file is part of LAMIA.
  """
 import os, sys, io, logging, datetime, re, json
 import qgis, qgis.core, qgis.utils, qgis.gui
-from qgis.PyQt import QtGui
+from qgis.PyQt import QtGui, QtCore
 import Lamia
 from ..ifaceabstractcanvas import LamiaAbstractIFaceCanvas
 from .maptool.mapTools import mapToolCapture, mapToolEdit
@@ -799,3 +799,4 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
         if debug: logging.getLogger("Lamia").debug('nearestpk, dist %s %s', str(nearestindex), str(distance))
         return nearestindex, distance
+

@@ -1,15 +1,8 @@
-FORMS = ../dialog/InspectionDigue_windowwidget_base.ui \
-../dialog/InspectionDigue_propertieswidget.ui \
-../toolprepro/base2/lamiabase_croquis_tool_ui.ui \
-../toolprepro/base2/lamiabase_pointtopo_tool_ui.ui \
-../toolprepro/base2/lamiabase_raster_tool_ui.ui \
-../toolprepro/base2/lamiabase_zonegeo_tool_ui.ui 
+FORMS = ../iface/qgiswidget/ifaceqgswidget.ui\
 
+SOURCES = ../iface/qgiswidget/ifaceqgswidget.py\
+../iface/qgiswidget/tools/lamia_abstractformtool.py\
+../dbasemanager/dbaseparserabstract.py\
+../dbasemanager/dbaseofflinemanager.py\
 
-SOURCES = ../toolabstract/Lamia_abstract_tool.py \
-../dialog/InspectionDigue_windowwidget.py \
-
-
-
-
-TRANSLATIONS = Lamia_en.ts 
+TRANSLATIONS = Lamia_fr.ts

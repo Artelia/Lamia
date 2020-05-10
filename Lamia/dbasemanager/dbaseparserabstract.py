@@ -121,6 +121,8 @@ class AbstractDBaseParser():
 
         self.connectconf = None    #dict of connection data
 
+
+
     def __________________________DBase_handing(self):
         pass
 

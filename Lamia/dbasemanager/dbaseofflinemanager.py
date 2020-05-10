@@ -76,7 +76,7 @@ class DBaseOfflineManager():
             if not os.path.isdir(dbdir):
                 os.mkdir(dbdir)
             else:
-                self.dbase.messageinstance.showErrorMessage('Il y a déjà une copie locale de la base... Supprimez la')
+                self.dbase.messageinstance.showErrorMessage(self.tr('Il y a déjà une copie locale de la base... Supprimez la'))
                 return
             
             lamiafilepath = os.path.join(dbdir,dbname+'.sqlite')

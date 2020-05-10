@@ -43,6 +43,7 @@ class DBaseViewer():
         if True :
             SLFILE = os.path.join(os.path.dirname(__file__), '..','test','datas','lamia_assainissement','test01.sqlite')
             #SLFILE = r"C:\Users\Public\Documents\lamia\test01\test01.sqlite"
+            self._loadLocale()
             self._createWin()
             self._createMainWin()
             self.wind.loadDBase(dbtype='Spatialite', slfile=SLFILE)
@@ -84,6 +85,7 @@ class DBaseViewer():
 
 
     def _createMainWin(self):
+        
         self.mainwin = UserUI()
         self.mainwin.frame.layout().addWidget(self.canvas)
         self.mainwin.frame_2.layout().addWidget(self.wind)
@@ -110,6 +112,8 @@ class DBaseViewer():
         self.wind.setParent(None)
         self.dbase = self.wind.dbase
         self.mainwin = None
+
+        
 
     def _loadLocale(self):
         # initialize locale
