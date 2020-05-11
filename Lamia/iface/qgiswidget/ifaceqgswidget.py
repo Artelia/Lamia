@@ -30,7 +30,7 @@ from unicodedata import normalize
 from qgis.PyQt.QtCore import pyqtSignal, QCoreApplication
 from qgis.PyQt.QtWidgets import (QDockWidget, QMainWindow, QFileDialog, QLabel, QInputDialog,
                                     QComboBox,QTableWidgetItem, QProgressBar,QApplication,QToolBar,
-                                    QPushButton,QToolButton,QWidget, QMessageBox, QAction)
+                                    QPushButton,QToolButton,QWidget, QMessageBox, QAction, QFrame)
 
 
 # other libs import
@@ -584,7 +584,8 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         for x in qgis.utils.iface.mainWindow().findChildren(QToolBar): 
             self.toolbarsvisibility[x.objectName()] = x.isVisible()
             if x.objectName() not in ['Lamia','mFileToolBar','mSnappingToolBar',
-                                      'lamiatoolBarFormCreation', 'lamiatoolBarFormGeom']:
+                                      'lamiatoolBarFormCreation', 'lamiatoolBarFormGeom',
+                                      'lamiatoolbareditlayer']:
                 x.setVisible(False)
 
     def _reloadQgisToolbar(self):
@@ -938,6 +939,8 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         self.actiontoobargeomaddGPSpoint.triggered.connect(self.toolbarGeomAddGPS)
 
         self.actiontoobargeomeditlayer.triggered.connect(self.addRawLayerInCanvasForEditing)
+        self.actiontoolbarlayersave.triggered.connect(lambda: self.saveRawLayerInCanvasForEditing())
+        self.actiontoolbarlayerundo.triggered.connect(lambda: self.saveRawLayerInCanvasForEditing(savechanges=False))
 
 
 
@@ -983,6 +986,14 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
     def addRawLayerInCanvasForEditing(self):
         currentdbasetablename = self.currenttoolwidget.DBASETABLENAME
         self.qgiscanvas.addRawLayerInCanvasForEditing(currentdbasetablename)
+        for child in self.findChildren((QFrame,QToolBar)): 
+            child.setEnabled(False)
+        self.lamiatoolbareditlayer.setEnabled(True)
+
+    def saveRawLayerInCanvasForEditing(self, savechanges=True):
+        self.qgiscanvas.saveRawLayerInCanvasForEditing(savechanges)
+        for child in self.findChildren((QFrame,QToolBar)): 
+            child.setEnabled(True)
 
     #*************************************************************
     # menu

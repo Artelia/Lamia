@@ -471,7 +471,16 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
         self.connectTreewidget()
 
     def toolbarUndo(self):
-        pass
+        #remove new featureitem
+        self.disconnectTreewidget()
+        founditems = self.treewidget.findItems(self.NEWFEATURETXT, 
+                                                QtCore.Qt.MatchExactly | QtCore.Qt.MatchRecursive, 
+                                                1)
+        root = self.treewidget.invisibleRootItem()
+        for item in founditems:
+            root.removeChild(item)
+        self.selectItemfromPK(self.toolwidget.currentFeaturePK)
+        self.connectTreewidget()
 
     def toolbarDelete(self):
         if self.toolwidget.currentFeaturePK is None:    #feature not correctly saved

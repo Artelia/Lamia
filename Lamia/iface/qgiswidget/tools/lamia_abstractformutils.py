@@ -43,7 +43,7 @@ class FormToolUtils(QtCore.QObject):
         self.formtoolwidget = formtoolwidget
         
 
-    def ___________________actionsOnWidgetCreation(self):
+    def ____________actionsOnWidgetCreation(self):
         pass
 
     def initWidgetBehaviour(self):
@@ -387,8 +387,6 @@ class FormToolUtils(QtCore.QObject):
         if hasattr(self.formtoolwidget, 'GEOMETRYSKIP') and self.formtoolwidget.GEOMETRYSKIP :
             pass
         
-        #if geometry was edited with qgis
-        self.formtoolwidget.mainifacewidget.qgiscanvas.closeRawLayerEditing()
 
         savedfeaturepk = self.formtoolwidget.dbase.manageFeatureCreationOrUpdate(self.formtoolwidget.DBASETABLENAME,
                                                                                 featurepk)
@@ -1018,10 +1016,13 @@ class FormToolUtils(QtCore.QObject):
 
     def _reinitAfterSaving(self):
         #reinit
+        
         layergeomtype = self.formtoolwidget.mainifacewidget.qgiscanvas.layers[self.formtoolwidget.DBASETABLENAME]['layer'].geometryType()
         self.formtoolwidget.mainifacewidget.qgiscanvas.createorresetRubberband(layergeomtype)
         self.formtoolwidget.tempgeometry = None
-        self.formtoolwidget.mainifacewidget.qgiscanvas.layers[self.formtoolwidget.DBASETABLENAME]['layerqgis'].repaintRequested.emit()
+        layer = self.formtoolwidget.mainifacewidget.qgiscanvas.layers[self.formtoolwidget.DBASETABLENAME]['layerqgis']
+        layer.repaintRequested.emit()
+        layer.dataProvider().forceReload()
         # self.mainifacewidget.qgiscanvas.canvas.refresh()
 
     def ___________________actionsOnDeletingFeature(self):

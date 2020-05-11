@@ -516,7 +516,12 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         self.selectFeature()
 
     def toolbarUndo(self):
-        self.selectFeature(pk=self.currentFeaturePK)
+        if self.currentFeaturePK is not None:
+            self.selectFeature(pk=self.currentFeaturePK)
+        elif self.lastselectedpk is not None :
+            self.selectFeature(pk=self.lastselectedpk)
+        else:
+            pass
 
     def toolbarSave(self):
         self.formutils.saveFeature(featurepk=self.currentFeaturePK)

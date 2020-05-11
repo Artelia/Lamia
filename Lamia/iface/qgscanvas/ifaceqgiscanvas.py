@@ -483,20 +483,8 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
         self.editingrawlayer = False
 
-        """
-        if True:
-            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                qgis.core.QgsMapLayerRegistry.instance().addMapLayer(self.dbase.dbasetables[tablename]['layerqgis'],
-                                                                    False)
-            else:
-                qgis.core.QgsProject.instance().addMapLayer(self.dbase.dbasetables[tablename]['layerqgis'],
-                                                            False)
-        lamialegendgroup.addLayer(self.dbase.dbasetables[tablename]['layerqgis'])
-        """
-        # self.editlayer = qgis.core.QgsVectorLayer(self.layers[layername]['layer'].source(),
-        #                                         self.layers[layername]['layer'].name() + '_edit',
-        #                                         self.layers[layername]['layer'].providerType())
-        self.editlayer = self.layers[layername]['layerqgisjoined']
+
+        self.editlayer = self.layers[layername]['layerqgisjoined'].clone()
 
         qgis.core.QgsProject.instance().addMapLayer(self.editlayer, False)
         if self.qgislegendnode is None: #outsideqgis case
@@ -510,7 +498,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         self.editingrawlayer = True
         
 
-    def closeRawLayerEditing(self, maintreewdgindex=None, savechanges=False):
+    def saveRawLayerInCanvasForEditing(self, savechanges=False):
 
         if self.editingrawlayer:
             self.editingrawlayer = False
@@ -518,6 +506,8 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                 self.editlayer.commitChanges()
             else:
                 self.editlayer.rollBack()
+
+            #self.qgislegendnode.removeLayer(self.editlayer)
             self.qgislegendnode.removeLayer(self.editlayer)
 
     def updateWorkingDate(self, dbaseparser, datetimearg=None, revision=None):
