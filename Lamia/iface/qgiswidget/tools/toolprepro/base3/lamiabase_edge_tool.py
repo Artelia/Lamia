@@ -1,0 +1,94 @@
+# -*- coding: utf-8 -*-
+
+"""
+This file is part of LAMIA.
+
+    LAMIA is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    LAMIA is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Foobar.  If not, see <https://www.gnu.org/licenses/>.
+
+"""
+"""
+  * Copyright (c) 2017-2020 ARTELIA Commit <lamia@arteliagroup.com>
+  * 
+  * SPDX-License-Identifier: GPL-3.0-or-later
+  * License-Filename: LICENSING.md
+ """
+import os
+import datetime
+import logging
+import time
+
+from qgis.PyQt import uic, QtCore, QtGui
+from qgis.PyQt.QtWidgets import (QWidget, QLabel, QFrame)
+
+from ...lamia_abstractformtool import AbstractLamiaFormTool
+
+from .lamiabase_camera_tool import BaseCameraTool
+from .lamiabase_sketch_tool import BaseSketchTool
+
+
+debugtime = False
+
+def tr(msg):
+    return QtCore.QCoreApplication.translate('BaseEdgeTool',msg)
+
+class BaseEdgeTool(AbstractLamiaFormTool):
+
+    DBASETABLENAME = 'edge'
+    LOADFIRST = True
+
+    tooltreewidgetCAT = tr('Facilities')
+    tooltreewidgetSUBCAT = tr('Pipes')
+    tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_edge_tool_icon.svg')
+
+
+    def __init__(self, **kwargs):
+        super(BaseEdgeTool, self).__init__(**kwargs)
+        self.instancekwargs = kwargs
+
+
+    def initMainToolWidget(self):
+        # ****************************************************************************************
+        #   userui Field
+
+        self.toolwidgetmain = UserUIField()
+
+        self.formtoolwidgetconfdictmain = {'edge': {'linkfield': 'id_edge',
+                                                    'widgets': {}},
+                                            'object': {'linkfield': 'id_object',
+                                                    'widgets': {'name': self.toolwidgetmain.lineEdit_nom,
+                                                                'comment': self.toolwidgetmain.textBrowser_commentaire}},
+                                            'descriptionsystem': {'linkfield': 'id_descriptionsystem',
+                                                                'widgets': {}}}
+
+        self.dbasechildwdgfield = []
+        self.instancekwargs['parentwidget'] = self
+        self.propertieswdgPHOTOGRAPHIE = BaseCameraTool(**self.instancekwargs)
+        self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
+        self.propertieswdgCROQUIS = BaseSketchTool(**self.instancekwargs)
+        self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+
+
+
+    def postSelectFeature(self):
+        pass
+
+
+
+
+class UserUIField(QWidget):
+    def __init__(self, parent=None):
+        super(UserUIField, self).__init__(parent=parent)
+        uipath = os.path.join(os.path.dirname(__file__), 'lamiabase_edge_tool_ui.ui')
+        uic.loadUi(uipath, self)
+

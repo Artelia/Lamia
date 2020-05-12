@@ -46,7 +46,8 @@ class SpatialiteDBaseParser(AbstractDBaseParser):
         self.spatialitefile = slfile
         self.connSLITE = sqlite3.dbapi2.connect(slfile)
         self.connSLITE.enable_load_extension(True)
-        self.connSLITE.execute("SELECT load_extension('mod_spatialite')")
+        cur = self.connSLITE.cursor()
+        cur.execute("SELECT load_extension('mod_spatialite')")    # mod_spatialite.so
         self.SLITEcursor = self.connSLITE.cursor()
 
     def disconnect(self):
@@ -162,7 +163,7 @@ class SpatialiteDBaseParser(AbstractDBaseParser):
             
             print(sql)
             print('error query', e)
-            #raise TypeError('error query', e)
+            raise TypeError('error query', e)
 
             return None
 

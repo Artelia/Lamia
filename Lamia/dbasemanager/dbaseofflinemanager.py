@@ -223,7 +223,7 @@ class DBaseOfflineManager():
                         noncriticalresult = noncriticalresults[i]
 
 
-                        if tablename[0:2] != 'Tc':
+                        if tablename[0:2].lower() != 'tc':
                             index_pk_tablename = dbconfdatas['pkidfields'].index('pk_' + tablename.lower())
                             pk_tablename = pkidresult[index_pk_tablename]
                             id_objet,rev_begin,rev_end,datetimedes = dbaseparserfrom.getValuesFromPk(tablename  + '_qgis',
@@ -725,7 +725,7 @@ class DBaseOfflineManager():
         #if typeimport == 'nouvelle' or typeimport == 0:
         if typeimport in ['append', 'copy']:
             sqlconstraint = []
-            if dbname[0:2] == 'Tc':
+            if dbname[0:2].lower() == 'tc':
                 sqlconstraint = " WHERE lpk_revision_end IS NULL"
             else:
                 sqlconstraint = " WHERE lpk_revision_end IS NULL AND datetimedestruction is NULL"
@@ -733,7 +733,7 @@ class DBaseOfflineManager():
             #sqlconstraint = " WHERE lpk_revision_end IS NULL and datetimedestruction is NULL"
         #elif typeimport == 'import_terrain' or typeimport == 1:
         else:   # update
-            if dbname[0:2] == 'Tc':
+            if dbname[0:2].lower() == 'tc':
                 sqlconstraint = " WHERE lpk_revision_end IS NULL"
             else:
                 #sqlconstraint = " WHERE lpk_revision_end IS NULL AND datetimedestruction is NULL"

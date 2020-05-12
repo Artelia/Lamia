@@ -425,7 +425,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             for tablename in goodtablekey:
                 layerstoadd.append(self.layers[tablename]['layerqgis'])
             self.canvas.setLayers(layerstoadd)
-            self.canvas.setExtent(self.layers['Infralineaire']['layer'].extent())
+            self.canvas.setExtent(self.layers['edge']['layer'].extent())
             self.canvas.refresh()
 
 

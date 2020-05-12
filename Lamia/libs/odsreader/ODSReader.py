@@ -75,7 +75,11 @@ class ODSReader:
                         if (n.nodeType == 1 and n.tagName == "text:span"):
                             for c in n.childNodes:
                                 if (c.nodeType == 3):
-                                    textContent = u'{}{}'.format(textContent, n.data)
+                                    if hasattr(n, 'data'):
+                                        textContent = u'{}{}'.format(textContent, n.data)
+                                    else:
+                                        textContent = u'{}{}'.format(textContent, n)
+
 
                         if (n.nodeType == 3):
                             textContent = u'{}{}'.format(textContent, n.data)

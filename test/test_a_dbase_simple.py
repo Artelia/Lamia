@@ -59,7 +59,11 @@ class DBaseTest(unittest.TestCase):
             # slfile = os.path.join(testcdir, work ,'test01.sqlite')
             # os.mkdir(os.path.dirname(slfile))
             sqlitedbase.dbconfigreader.createDBDictionary(work)
-            for variante in sqlitedbase.dbconfigreader.variantespossibles:
+            if not 'VARIANTES' in globals().keys():
+                variantes = list(sqlitedbase.dbconfigreader.variantespossibles)
+            else:
+                variantes = globals()['VARIANTES']
+            for variante in variantes:
                 # spatialite
                 if SPATIALITE:
                     logging.getLogger("Lamia_unittest").debug('Creating spatialite %s %s ...', work, variante)

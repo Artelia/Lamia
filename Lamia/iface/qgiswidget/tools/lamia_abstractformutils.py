@@ -398,7 +398,9 @@ class FormToolUtils(QtCore.QObject):
         self.formtoolwidget.postSaveFeature(savedfeaturepk)  #featurepk toknow if new or not
         for lidchooser in self.formtoolwidget.lamiawidgets:
             lidchooser.postSaveFeature(savedfeaturepk)
-        self.saveRessourceFile(savedfeaturepk)
+        self.formtoolwidget.dbase.saveRessourceFile(self.formtoolwidget.DBASETABLENAME, 
+                                                    savedfeaturepk,
+                                                    self.formtoolwidget.currentFeaturePK)
         self._saveParentWidgetRelation(savedfeaturepk)
 
         self.updateDateModification(savedfeaturepk)
@@ -861,20 +863,10 @@ class FormToolUtils(QtCore.QObject):
 
         return fieldvaluetosave
 
-
+    """
     def saveRessourceFile(self,featurepk=None):
-        """
-        Called by saveFeature
-        If ressource file is not in the dbase directory, save it in the dbase directory
 
-        """
-        # get date
-        """
-        sql = "SELECT datetimecreation FROM " + self.dbasetablename.lower() + "_qgis"
-        sql += " WHERE pk_"+ self.dbasetablename.lower() + " = " + str(self.currentFeaturePK)
-        query = self.dbase.query(sql)
-        result = [row[0] for row in query]
-        """
+
         if not 'Ressource' in self.formtoolwidget.dbase.getParentTable(self.formtoolwidget.DBASETABLENAME):
             return
             
@@ -891,12 +883,7 @@ class FormToolUtils(QtCore.QObject):
             return
 
         date = ''.join(datevalue.split('-'))
-        """
-        sql = "SELECT pk_ressource, id_ressource, file FROM " + self.dbasetablename.lower() + "_qgis"
-        sql += " WHERE pk_"+ self.dbasetablename.lower() + " = " + str(self.currentFeaturePK)
-        query = self.dbase.query(sql)
-        result = [row[0:3] for row in query]
-        """
+
         result = self.formtoolwidget.dbase.getValuesFromPk(DBASETABLENAMElower + "_qgis",
                                                             ['pk_ressource', 'id_ressource', 'file'],
                                                             featurepk)
@@ -942,6 +929,7 @@ class FormToolUtils(QtCore.QObject):
                         os.remove(self.formtoolwidget.dbase.completePathOfFile(oldfile))
                     else:
                         pass
+    """
 
     def _saveParentWidgetRelation(self,featurepk=None):
 

@@ -24,7 +24,7 @@ CRS = 2154
 
 DBTYPE = ['Base2_digue', 'Base2_assainissement', 'Base2_eaupotable', 'Base2_eclairagepublic',
          'Base2_chantier', 'Base2_tramway']
-DBTYPE = ['Base2_digue']
+DBTYPE = ['base3_urbandrainage']        #base3
 VARIANTES = ['Lamia']
 
 #* Connexion conf
@@ -43,8 +43,8 @@ elif platform.system() == 'Linux':
 PGport = 5432
 
 #* Test conf
-SPATIALITE = False
-POSTGIS = True
+SPATIALITE = True
+POSTGIS = False
 
 TESTDIR = os.path.join(os.path.join(os.path.dirname(__file__)), 'testtempfiles')
 

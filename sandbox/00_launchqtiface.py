@@ -29,7 +29,8 @@ from Lamia.iface.qgiswidget.ifaceqgswidget import LamiaWindowWidget
 from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
 # from settings import *
 
-
+X_BEGIN = 400000.0
+Y_BEGIN = 6000000.0
 
 class DBaseViewer():
 
@@ -42,11 +43,15 @@ class DBaseViewer():
 
         if True :
             SLFILE = os.path.join(os.path.dirname(__file__), '..','test','datas','lamia_assainissement','test01.sqlite')
+            SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_urbandrainage_Lamia\test01.sqlite"
             #SLFILE = r"C:\Users\Public\Documents\lamia\test01\test01.sqlite"
             self._loadLocale()
             self._createWin()
             self._createMainWin()
             self.wind.loadDBase(dbtype='Spatialite', slfile=SLFILE)
+
+            self.wind.dbase.
+
             
         if False:
             self._createWin()
@@ -60,8 +65,8 @@ class DBaseViewer():
 
     def showIFace(self):
         
-        if self.wind.qgiscanvas.layers['Infralineaire']['layer'].featureCount() > 0:
-            extent = self.wind.qgiscanvas.layers['Infralineaire']['layer'].extent().buffered(10.0)
+        if self.wind.qgiscanvas.layers['edge']['layer'].featureCount() > 0:
+            extent = self.wind.qgiscanvas.layers['edge']['layer'].extent().buffered(10.0)
         else:
             extent = qgis.core.QgsRectangle(X_BEGIN, Y_BEGIN, X_BEGIN + 10, Y_BEGIN + 10)
         # logging.getLogger("Lamia_unittest").debug('Extent : %s', extent)
@@ -72,8 +77,8 @@ class DBaseViewer():
         # wdg = self.wind.toolwidgets['toolpostpro']['Import'][0]
         # wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
         # self.wind.dbase.printsql = True
-        wdg = self.wind.toolwidgets['toolprepro']['Troncon'][0]
-        wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
+        # wdg = self.wind.toolwidgets['toolprepro']['Troncon'][0]
+        # wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
 
         # res = self.wind.connector.inputMessage(['nom','mdp'])
         # print(res)

@@ -155,7 +155,6 @@ class DBconfigReader():
 
         if self.dbasetables is None:
             self.dbasetables = {}
-
         odsdoc = ODSReader(dictfile, clonespannedcolumns=False)
 
         for sheetname in odsdoc.SHEETS.keys():
