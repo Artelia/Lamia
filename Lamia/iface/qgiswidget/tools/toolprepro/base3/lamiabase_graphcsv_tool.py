@@ -50,18 +50,15 @@ from qgis.PyQt.QtWidgets import (QWidget,QComboBox, QDoubleSpinBox, QSpinBox, QH
 from ...lamia_abstractformtool import AbstractLamiaFormTool
 from .lamiabase_graph_tool import BaseGraphTool
 
-
-
-def tr(msg):
-    return QtCore.QCoreApplication.translate('BaseGraphcsvTool',msg)
+base3 = QtCore.QObject()
 
 class BaseGraphcsvTool(AbstractLamiaFormTool):
 
     DBASETABLENAME = 'graph'
     LOADFIRST = False
 
-    tooltreewidgetCAT = tr('Resources')
-    tooltreewidgetSUBCAT = tr('Graph_csv')
+    tooltreewidgetCAT =QtCore.QCoreApplication.translate('base3','Resources')
+    tooltreewidgetSUBCAT =QtCore.QCoreApplication.translate('base3','Graph_csv')
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_graph_tool_icon.png')
 
     PARENTJOIN = {'Profil' : {'colparent': 'id_object',

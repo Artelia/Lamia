@@ -33,10 +33,8 @@ from qgis.PyQt import uic, QtCore
 from qgis.PyQt.QtWidgets import (QWidget, QInputDialog)
 
 from ...lamia_abstractformtool import AbstractLamiaFormTool
+base3 = QtCore.QObject()
 
-
-def tr(msg):
-    return QtCore.QCoreApplication.translate('BaseActorTool',msg)
 
 class BaseActorTool(AbstractLamiaFormTool):
 
@@ -44,8 +42,8 @@ class BaseActorTool(AbstractLamiaFormTool):
     DBASETABLENAME = 'actor'
     LOADFIRST = False
 
-    tooltreewidgetCAT = tr('Management')
-    tooltreewidgetSUBCAT = tr('Actors')
+    tooltreewidgetCAT =QtCore.QCoreApplication.translate('base3','Management')
+    tooltreewidgetSUBCAT =QtCore.QCoreApplication.translate('base3','Actors')
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_actor_tool_icon.png')
 
     tempparentjoin = {}
@@ -54,7 +52,7 @@ class BaseActorTool(AbstractLamiaFormTool):
                     'tctable': 'Tcobjectactor',
                     'tctablecolparent':'lid_object',
                     'tctablecolthistable':'lid_actor'}
-    for tablename in ['edge','delivery']:
+    for tablename in ['edge','delivery','facility']:
         tempparentjoin[tablename] = linkdict
     PARENTJOIN = tempparentjoin
     #CHOOSERTREEWDG_COLSHOW = ['societe', 'nom']
@@ -72,7 +70,7 @@ class BaseActorTool(AbstractLamiaFormTool):
         self.formtoolwidgetconfdictmain = {'actor': {'linkfield': 'id_actor',
                                                         'widgets': {'actorname' : self.toolwidgetmain.lineEdit_nom,
                                                                     'society': self.toolwidgetmain.lineEdit_societe,
-                                                                    'role': self.toolwidgetmain.lineEdit_fonction,
+                                                                    'function': self.toolwidgetmain.lineEdit_fonction,
                                                                     'adress': self.toolwidgetmain.lineEdit_adresse,
                                                                     'phone': self.toolwidgetmain.lineEdit_tel,
                                                                     'mail': self.toolwidgetmain.lineEdit_mail,

@@ -35,9 +35,7 @@ from ...lamia_abstractformtool import AbstractLamiaFormTool
 from .lamiabase_camera_tool import BaseCameraTool
 from .lamiabase_sketch_tool import BaseSketchTool
 
-
-def tr(msg):
-    return QtCore.QCoreApplication.translate('BaseObservationTool',msg)
+base3 = QtCore.QObject()
 
 
 class BaseObservationTool(AbstractLamiaFormTool):
@@ -45,8 +43,8 @@ class BaseObservationTool(AbstractLamiaFormTool):
     DBASETABLENAME = 'observation'
     # LOADFIRST = True
 
-    tooltreewidgetCAT = tr('Condition')
-    tooltreewidgetSUBCAT = tr('Obervation')
+    tooltreewidgetCAT =QtCore.QCoreApplication.translate('base3','Condition')
+    tooltreewidgetSUBCAT =QtCore.QCoreApplication.translate('base3','Observation')
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_observation_tool_icon.png')
 
     PARENTJOIN = {'deficiency' : {'colparent': 'id_deficiency',

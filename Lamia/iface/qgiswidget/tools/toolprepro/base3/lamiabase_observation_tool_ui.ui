@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>Form_base3</class>
+ <widget class="QWidget" name="Form_base3">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -14,7 +14,16 @@
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
-   <property name="margin">
+   <property name="leftMargin">
+    <number>3</number>
+   </property>
+   <property name="topMargin">
+    <number>3</number>
+   </property>
+   <property name="rightMargin">
+    <number>3</number>
+   </property>
+   <property name="bottomMargin">
     <number>3</number>
    </property>
    <item>
@@ -36,7 +45,7 @@
       <item row="1" column="0">
        <widget class="QLabel" name="label_5">
         <property name="text">
-         <string>Urgence</string>
+         <string>Urgency</string>
         </property>
        </widget>
       </item>
@@ -63,14 +72,14 @@
        <item row="5" column="0">
         <widget class="QLabel" name="label_6">
          <property name="text">
-          <string>Evolution</string>
+          <string>Progression</string>
          </property>
         </widget>
        </item>
        <item row="1" column="0">
         <widget class="QLabel" name="label_2">
          <property name="text">
-          <string>Nombre</string>
+          <string>Number</string>
          </property>
         </widget>
        </item>
@@ -84,7 +93,7 @@
        <item row="3" column="0">
         <widget class="QLabel" name="label_7">
          <property name="text">
-          <string>Commentaire</string>
+          <string>Comments</string>
          </property>
         </widget>
        </item>
@@ -173,20 +182,20 @@
    <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
-      <string>Suite à donner</string>
+      <string>Next action</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_4">
       <item row="1" column="0">
        <widget class="QLabel" name="label_8">
         <property name="text">
-         <string>Commentaire</string>
+         <string>Comments</string>
         </property>
        </widget>
       </item>
       <item row="0" column="0">
        <widget class="QLabel" name="label_4">
         <property name="text">
-         <string>Type de suite</string>
+         <string>Next action type</string>
         </property>
        </widget>
       </item>

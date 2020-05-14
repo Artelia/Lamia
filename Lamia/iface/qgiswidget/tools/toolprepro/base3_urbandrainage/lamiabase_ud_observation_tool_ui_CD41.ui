@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>Form_base3_ud</class>
+ <widget class="QWidget" name="Form_base3_ud">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -48,7 +48,7 @@
       <item row="1" column="0">
        <widget class="QLabel" name="label_5">
         <property name="text">
-         <string>Urgence</string>
+         <string>Urgency</string>
         </property>
         <property name="wordWrap">
          <bool>true</bool>
@@ -68,7 +68,7 @@
       <item row="2" column="0">
        <widget class="QLabel" name="label_21">
         <property name="text">
-         <string>Etat général</string>
+         <string>General condition</string>
         </property>
         <property name="wordWrap">
          <bool>true</bool>
@@ -81,7 +81,7 @@
       <item row="3" column="0">
        <widget class="QLabel" name="label_7">
         <property name="text">
-         <string>Commentaire</string>
+         <string>Comments</string>
         </property>
         <property name="wordWrap">
          <bool>true</bool>
@@ -140,7 +140,7 @@
        <item row="5" column="0">
         <widget class="QLabel" name="label_6">
          <property name="text">
-          <string>Evolution</string>
+          <string>Progression</string>
          </property>
          <property name="wordWrap">
           <bool>true</bool>
@@ -150,7 +150,7 @@
        <item row="1" column="0">
         <widget class="QLabel" name="label_2">
          <property name="text">
-          <string>Nombre</string>
+          <string>Number</string>
          </property>
          <property name="wordWrap">
           <bool>true</bool>
@@ -195,7 +195,7 @@
            <item row="0" column="0">
             <widget class="QLabel" name="label_10">
              <property name="text">
-              <string>Etat tampon</string>
+              <string>Cover condition</string>
              </property>
              <property name="wordWrap">
               <bool>true</bool>
@@ -208,7 +208,7 @@
            <item row="1" column="0">
             <widget class="QLabel" name="label_11">
              <property name="text">
-              <string>Etat echelon</string>
+              <string>Steps condition</string>
              </property>
              <property name="wordWrap">
               <bool>true</bool>
@@ -218,7 +218,7 @@
            <item row="3" column="0">
             <widget class="QLabel" name="label_13">
              <property name="text">
-              <string>Etat cunette</string>
+              <string>Culvert condition</string>
              </property>
              <property name="wordWrap">
               <bool>true</bool>
@@ -231,7 +231,7 @@
            <item row="2" column="0">
             <widget class="QLabel" name="label_12">
              <property name="text">
-              <string>Etat regard</string>
+              <string>Manhole condition</string>
              </property>
              <property name="wordWrap">
               <bool>true</bool>
@@ -247,7 +247,7 @@
            <item row="0" column="2">
             <widget class="QLabel" name="label_14">
              <property name="text">
-              <string>Suspicion H2S</string>
+              <string>H2S suspicion</string>
              </property>
              <property name="wordWrap">
               <bool>true</bool>
@@ -260,7 +260,7 @@
            <item row="1" column="2">
             <widget class="QLabel" name="label_15">
              <property name="text">
-              <string>Dépôt</string>
+              <string>Sedimentation</string>
              </property>
              <property name="wordWrap">
               <bool>true</bool>
@@ -273,7 +273,7 @@
            <item row="2" column="2">
             <widget class="QLabel" name="label_16">
              <property name="text">
-              <string>Mise en charge</string>
+              <string>Pressurized flow</string>
              </property>
              <property name="wordWrap">
               <bool>true</bool>
@@ -286,7 +286,7 @@
            <item row="3" column="2">
             <widget class="QLabel" name="label_17">
              <property name="text">
-              <string>Etat entretien général</string>
+              <string>Maintenance opinion</string>
              </property>
              <property name="wordWrap">
               <bool>true</bool>
@@ -313,7 +313,7 @@
        <item row="0" column="0">
         <widget class="QLabel" name="label_9">
          <property name="text">
-          <string>Etat ouverture</string>
+          <string>Opened ?</string>
          </property>
         </widget>
        </item>

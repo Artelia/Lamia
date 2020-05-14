@@ -24,7 +24,11 @@ This file is part of LAMIA.
   * License-Filename: LICENSING.md
  """
 
-
+import sys
+import os
+import datetime, platform
+import subprocess
+import glob
 
 import qgis, qgis.core
 from qgis.PyQt import uic, QtCore, QtGui
@@ -34,18 +38,11 @@ except ImportError:
     from qgis.PyQt.QtWidgets import (QWidget, QLabel, QFrame)
 
 from ...lamia_abstractformtool import AbstractLamiaFormTool
-import os
-import datetime, platform
-import subprocess
-import glob
 from .lamiabase_pictureviewer import PictureViewer
 
 prefixhoto = ''
 numphoto = None
-import sys
-
-def tr(msg):
-    return QtCore.QCoreApplication.translate('BaseCameraTool',msg)
+base3 = QtCore.QObject()
 
 
 class BaseCameraTool(AbstractLamiaFormTool):
@@ -54,8 +51,8 @@ class BaseCameraTool(AbstractLamiaFormTool):
     DBASETABLENAME = 'media'
     LOADFIRST = False
 
-    tooltreewidgetCAT = tr('Resources')
-    tooltreewidgetSUBCAT = tr('Camera')
+    tooltreewidgetCAT =QtCore.QCoreApplication.translate('base3','Resources')
+    tooltreewidgetSUBCAT =QtCore.QCoreApplication.translate('base3','Camera')
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_camera_tool_icon.svg')
     
     tempparentjoin = {}
@@ -64,7 +61,7 @@ class BaseCameraTool(AbstractLamiaFormTool):
                     'tctable': 'Tcobjectresource',
                     'tctablecolparent':'lid_object',
                     'tctablecolthistable':'lid_resource'}
-    for tablename in ['observation', 'node', 'edge', 'equipment']:
+    for tablename in ['observation', 'node', 'edge', 'equipment','facility']:
         tempparentjoin[tablename] = linkdict
     PARENTJOIN = tempparentjoin
 

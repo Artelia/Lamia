@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>Form_base3</class>
+ <widget class="QWidget" name="Form_base3">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -50,7 +50,7 @@
       <item row="0" column="0">
        <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>Fichier</string>
+         <string>File</string>
         </property>
        </widget>
       </item>
@@ -60,7 +60,7 @@
       <item row="1" column="0">
        <widget class="QLabel" name="label">
         <property name="text">
-         <string>Type de graphique</string>
+         <string>Graph type</string>
         </property>
        </widget>
       </item>
@@ -84,7 +84,7 @@
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
-       <string>Vue</string>
+       <string>Plot</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
@@ -102,7 +102,7 @@
      </widget>
      <widget class="QWidget" name="tab_2">
       <attribute name="title">
-       <string>Données</string>
+       <string>Datas</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,10">
        <item>

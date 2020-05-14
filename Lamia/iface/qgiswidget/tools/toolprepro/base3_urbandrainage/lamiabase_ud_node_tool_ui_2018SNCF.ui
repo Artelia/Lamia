@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>Form_base3_ud</class>
+ <widget class="QWidget" name="Form_base3_ud">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>525</width>
+    <width>488</width>
     <height>500</height>
    </rect>
   </property>
@@ -62,45 +62,38 @@
       <item row="3" column="0">
        <widget class="QLabel" name="label_25">
         <property name="text">
-         <string>forme du tampon</string>
+         <string>Cover shape</string>
         </property>
        </widget>
       </item>
       <item row="0" column="0">
        <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>Type de réseau</string>
+         <string>Network type</string>
         </property>
        </widget>
       </item>
       <item row="2" column="0">
        <widget class="QLabel" name="label">
         <property name="text">
-         <string>Type d'ouvrage</string>
+         <string>Node type</string>
         </property>
        </widget>
       </item>
       <item row="5" column="0">
        <widget class="QLabel" name="label_5">
         <property name="text">
-         <string>Libelle</string>
+         <string>Name</string>
         </property>
        </widget>
       </item>
       <item row="2" column="1">
        <widget class="QComboBox" name="comboBox_typeOuvrageAss"/>
       </item>
-      <item row="5" column="1">
-       <widget class="QLineEdit" name="lineEdit_libelle">
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="2">
        <widget class="QLabel" name="label_8">
         <property name="text">
-         <string>Environnement</string>
+         <string>Location</string>
         </property>
        </widget>
       </item>
@@ -110,12 +103,19 @@
       <item row="2" column="2">
        <widget class="QLabel" name="label_3">
         <property name="text">
-         <string>Accessibilite</string>
+         <string>Accessibility</string>
         </property>
        </widget>
       </item>
       <item row="2" column="3">
        <widget class="QComboBox" name="comboBox_accessibilite"/>
+      </item>
+      <item row="5" column="1" colspan="3">
+       <widget class="QLineEdit" name="lineEdit_libelle">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -143,21 +143,21 @@
            <item row="1" column="0">
             <widget class="QLabel" name="label_27">
              <property name="text">
-              <string>Présence de crosse</string>
+              <string>Handle presence</string>
              </property>
             </widget>
            </item>
            <item row="0" column="0">
             <widget class="QLabel" name="label_26">
              <property name="text">
-              <string>Présence d'échelons</string>
+              <string>Steps presence</string>
              </property>
             </widget>
            </item>
            <item row="2" column="0">
             <widget class="QLabel" name="label_30">
              <property name="text">
-              <string>Forme du regard</string>
+              <string>Manhole shape</string>
              </property>
             </widget>
            </item>
@@ -193,7 +193,7 @@
              </property>
              <widget class="QWidget" name="tab">
               <attribute name="title">
-               <string>Armoire elec</string>
+               <string>Electrical cabinet</string>
               </attribute>
               <layout class="QGridLayout" name="gridLayout_8">
                <property name="leftMargin">
@@ -214,7 +214,10 @@
                <item row="2" column="0">
                 <widget class="QLabel" name="label_40">
                  <property name="text">
-                  <string>Telegestion commentaire</string>
+                  <string>Remote monitoring comments</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -224,14 +227,20 @@
                <item row="0" column="0">
                 <widget class="QLabel" name="label_32">
                  <property name="text">
-                  <string>Armoire électrique</string>
+                  <string>Elec. cab presence</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
                <item row="0" column="2">
                 <widget class="QLabel" name="label_34">
                  <property name="text">
-                  <string>Telegestion</string>
+                  <string>Remote monitoring</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -255,7 +264,7 @@
              </widget>
              <widget class="QWidget" name="tab_2">
               <attribute name="title">
-               <string>Interieur</string>
+               <string>Interior</string>
               </attribute>
               <layout class="QGridLayout" name="gridLayout_9">
                <property name="leftMargin">
@@ -276,7 +285,10 @@
                <item row="0" column="0">
                 <widget class="QLabel" name="label_31">
                  <property name="text">
-                  <string>Materiau</string>
+                  <string>Material</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -289,14 +301,20 @@
                <item row="1" column="0">
                 <widget class="QLabel" name="label_41">
                  <property name="text">
-                  <string>Type asservissement</string>
+                  <string>Pump switching controller type</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
                <item row="0" column="3">
                 <widget class="QLabel" name="label_33">
                  <property name="text">
-                  <string>Poires</string>
+                  <string>Float</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -317,7 +335,10 @@
                <item row="1" column="3">
                 <widget class="QLabel" name="label_39">
                  <property name="text">
-                  <string>Trop plein</string>
+                  <string>Overflow</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -328,7 +349,7 @@
              </widget>
              <widget class="QWidget" name="tab_4">
               <attribute name="title">
-               <string>Pompes</string>
+               <string>Pumps</string>
               </attribute>
               <layout class="QGridLayout" name="gridLayout_10">
                <item row="0" column="1">
@@ -341,7 +362,7 @@
                <item row="0" column="0">
                 <widget class="QLabel" name="label_35">
                  <property name="text">
-                  <string>Nombre de pompes</string>
+                  <string>Pumps count</string>
                  </property>
                 </widget>
                </item>
@@ -356,7 +377,7 @@
              </widget>
              <widget class="QWidget" name="tab_3">
               <attribute name="title">
-               <string>Chambre vannes</string>
+               <string>Valve chamber</string>
               </attribute>
              </widget>
             </widget>
@@ -368,14 +389,14 @@
            <item row="1" column="0">
             <widget class="QLabel" name="label_37">
              <property name="text">
-              <string>Alarme ?</string>
+              <string>Alarm presence</string>
              </property>
             </widget>
            </item>
            <item row="2" column="0">
             <widget class="QLabel" name="label_38">
              <property name="text">
-              <string>Automate ?</string>
+              <string>Controller presence</string>
              </property>
             </widget>
            </item>
@@ -388,7 +409,7 @@
            <item row="0" column="0">
             <widget class="QLabel" name="label_36">
              <property name="text">
-              <string>Materiau</string>
+              <string>Material</string>
              </property>
             </widget>
            </item>
@@ -404,7 +425,7 @@
      </widget>
      <widget class="QWidget" name="tab_6">
       <attribute name="title">
-       <string>Géométrie</string>
+       <string>Geometry</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
@@ -451,14 +472,14 @@
           <item row="1" column="0">
            <widget class="QLabel" name="label_24">
             <property name="text">
-             <string>Profondeur </string>
+             <string>Depth</string>
             </property>
            </widget>
           </item>
           <item row="0" column="3">
            <widget class="QLabel" name="label_29">
             <property name="text">
-             <string>Largeur</string>
+             <string>Width</string>
             </property>
            </widget>
           </item>
@@ -475,7 +496,7 @@
           <item row="0" column="0">
            <widget class="QLabel" name="label_28">
             <property name="text">
-             <string>Longueur</string>
+             <string>Lenght</string>
             </property>
            </widget>
           </item>
@@ -570,7 +591,7 @@
           <item row="2" column="0">
            <widget class="QLabel" name="label_22">
             <property name="text">
-             <string>Z tampon</string>
+             <string>Z cover</string>
             </property>
            </widget>
           </item>
@@ -673,7 +694,7 @@
       <item>
        <widget class="QLabel" name="label_7">
         <property name="text">
-         <string>Commentaire</string>
+         <string>Comments</string>
         </property>
        </widget>
       </item>
@@ -815,7 +836,7 @@
       <item row="3" column="2">
        <widget class="QLabel" name="label_70">
         <property name="text">
-         <string>Haut. perche</string>
+         <string>Rod height</string>
         </property>
        </widget>
       </item>

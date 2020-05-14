@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>Form_main</class>
+ <widget class="QWidget" name="Form_main">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -177,7 +177,7 @@ QTabBar::tab:only-one {
          </property>
          <widget class="QWidget" name="tab_2">
           <attribute name="title">
-           <string>Propriétés</string>
+           <string>Properties</string>
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>

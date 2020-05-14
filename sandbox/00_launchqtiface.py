@@ -31,6 +31,7 @@ from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
 
 X_BEGIN = 400000.0
 Y_BEGIN = 6000000.0
+LOCALE = 'fr'       # fr en
 
 class DBaseViewer():
 
@@ -50,8 +51,6 @@ class DBaseViewer():
             self._createMainWin()
             self.wind.loadDBase(dbtype='Spatialite', slfile=SLFILE)
 
-            self.wind.dbase.
-
             
         if False:
             self._createWin()
@@ -59,7 +58,7 @@ class DBaseViewer():
             self.wind.loadDBase(dbtype='Postgis', host=PGhost, port=PGport, dbname=PGbase, schema= PGschema, user=PGuser,  password=PGpassword)
             self.launchTest()
 
-        self.wind.setVisualMode(visualmode=1)
+        
         self.showIFace()
         
 
@@ -71,6 +70,9 @@ class DBaseViewer():
             extent = qgis.core.QgsRectangle(X_BEGIN, Y_BEGIN, X_BEGIN + 10, Y_BEGIN + 10)
         # logging.getLogger("Lamia_unittest").debug('Extent : %s', extent)
         self.wind.qgiscanvas.canvas.setExtent(extent)
+
+        self.wind.setVisualMode(visualmode=0)
+
         # display good widget
         # wdg = self.wind.toolwidgets['toolprepro']['Graphique_csv'][0]
         # wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
@@ -123,17 +125,16 @@ class DBaseViewer():
     def _loadLocale(self):
         # initialize locale
         # locale = QSettings().value('locale/userLocale')[0:2]
-        locale = 'fr'
+        locale = LOCALE      
+        QtCore.QSettings().setValue('locale/userLocale', LOCALE)
+
         plugin_dir = os.path.join(os.path.dirname(__file__),'..', 'Lamia')
         locale_path = os.path.join(
             plugin_dir,
             'i18n',
             'Lamia_{}.qm'.format(locale))
 
-        print(locale_path,qVersion() )
-
         if os.path.exists(locale_path):
-            print('ok')
             self.translator = QTranslator()
             self.translator.load(locale_path)
 

@@ -36,17 +36,15 @@ from ...lamia_abstractformtool import AbstractLamiaFormTool
 from .lamiabase_camera_tool import BaseCameraTool
 from .lamiabase_sketch_tool import BaseSketchTool
 
-
-def tr(msg):
-    return QtCore.QCoreApplication.translate('BaseNodeTool',msg)
+base3 = QtCore.QObject()
 
 class BaseNodeTool(AbstractLamiaFormTool):
 
     DBASETABLENAME = 'node'
     LOADFIRST = True
 
-    tooltreewidgetCAT = tr('Facilities')
-    tooltreewidgetSUBCAT = tr('Nodes')
+    tooltreewidgetCAT =QtCore.QCoreApplication.translate('base3','Facilities')
+    tooltreewidgetSUBCAT =QtCore.QCoreApplication.translate('base3','Nodes')
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_node_tool_icon.svg')
 
     def __init__(self, **kwargs):
@@ -144,7 +142,7 @@ class BaseNodeTool(AbstractLamiaFormTool):
     def postDeleteFeature(self):
         pass
 
-    def _createDeficiency(self, deficiencywdg):
+    def _createDeficiency(self, deficiencywdg,savedfeaturepk):
         if self.currentFeaturePK is None :  #very new equip, not newversion
             deficiencywdg.toolbarNew()
             geomtext = self.dbase.getValuesFromPk('node_qgis',

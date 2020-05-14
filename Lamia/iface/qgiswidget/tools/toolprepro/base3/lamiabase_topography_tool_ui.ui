@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>Form_base3</class>
+ <widget class="QWidget" name="Form_base3">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -38,7 +38,7 @@
       <item row="0" column="0">
        <widget class="QLabel" name="label_5">
         <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Fichier&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;File&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
        </widget>
       </item>
@@ -55,7 +55,7 @@
       <item row="3" column="0">
        <widget class="QLabel" name="label_nom">
         <property name="text">
-         <string>Nom</string>
+         <string>Name</string>
         </property>
        </widget>
       </item>
@@ -132,7 +132,7 @@
       <item>
        <widget class="QPushButton" name="pushButton_open">
         <property name="text">
-         <string>Ouvrir</string>
+         <string>Open</string>
         </property>
        </widget>
       </item>
@@ -151,14 +151,14 @@
       <item row="0" column="0">
        <widget class="QLabel" name="label_7">
         <property name="text">
-         <string>Type de point</string>
+         <string>Point type</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0" colspan="2">
        <widget class="QPushButton" name="pushButton_ajoutpointGPS">
         <property name="text">
-         <string>Ajouter point depuis le GPS</string>
+         <string>Add point from GPS</string>
         </property>
        </widget>
       </item>

@@ -33,15 +33,13 @@ from qgis.PyQt.QtWidgets import (QWidget)
 
 from ...lamia_abstractformtool import AbstractLamiaFormTool
 
-def tr(msg):
-    return QtCore.QCoreApplication.translate('BaseTopographydataTool',msg)
 
 class BaseTopographydataTool(AbstractLamiaFormTool):
 
     DBASETABLENAME = 'topographydata'
     LOADFIRST = False
 
-    tooltreewidgetCAT = tr('Resources')
+    tooltreewidgetCAT =QtCore.QCoreApplication.translate('base3','Resources')
     tooltreewidgetSUBCAT = None
     tooltreewidgetICONPATH = None
 
@@ -127,7 +125,7 @@ class BaseTopographydataTool(AbstractLamiaFormTool):
     def getGPSValues(self):
         if self.mainifacewidget.gpsutil is not None:
             if self.mainifacewidget.gpsutil.currentpoint is None:
-                self.mainifacewidget.errorMessage(self.tr('GPS non connecte'))
+                self.mainifacewidget.errorMessage(QtCore.QCoreApplication.translate('base3','GPS not connected'))
                 return
 
             for i, fieldname in enumerate(self.gpswidget.keys()):
@@ -144,7 +142,7 @@ class BaseTopographydataTool(AbstractLamiaFormTool):
             self.setTempGeometry([self.mainifacewidget.gpsutil.currentpoint],False)
             return True
         else:
-            self.errorMessage(self.tr('GPS non connecte'))
+            self.errorMessage(QtCore.QCoreApplication.translate('base3','GPS not connected'))
             return False
 
 

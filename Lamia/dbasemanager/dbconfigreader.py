@@ -25,7 +25,7 @@ This file is part of LAMIA.
   * SPDX-License-Identifier: GPL-3.0-or-later
   * License-Filename: LICENSING.md
  """
-import os, sys
+import os, sys, locale
 import xlrd
 
 from Lamia.libs.odsreader.ODSReader import ODSReader
@@ -102,6 +102,7 @@ class DBconfigReader():
         createbasefilepath = None
         self.dbasetables = {}
         self.worktype = worktype
+        isbase3 = (worktype.split('_')[0] == 'base3')
 
         self.baseversionspathlist = self.getWorktypeVersionsList(self.worktype.split('_')[0])
         self.baseversionnumbers = [elem[0] for elem in self.baseversionspathlist]
@@ -121,7 +122,10 @@ class DBconfigReader():
             createbasefilepathtoread = self.baseversionspathlist[self.baseversionnumbers.index(baseversiontoread)][1]
 
         # self.basedict = self.readXlsDbDictionnary(createbasefilepathtoread)
-        self.basedict = self.readOdsDictionnary(createbasefilepathtoread)
+        if isbase3:
+            self.basedict = self.readOdsDictionnaryBase3(createbasefilepathtoread)
+        else:
+            self.basedict = self.readOdsDictionnary(createbasefilepathtoread)
         self.baseversion = baseversiontoread
 
 
@@ -134,7 +138,10 @@ class DBconfigReader():
             createworkfilepathtoread = self.workversionspathlist[self.workversionnumbers.index(workversiontoread)][1]
 
         # self.workdict = self.readXlsDbDictionnary(createworkfilepathtoread)
-        self.workdict = self.readOdsDictionnary(createworkfilepathtoread)
+        if isbase3:
+            self.workdict = self.readOdsDictionnaryBase3(createworkfilepathtoread)
+        else:
+            self.workdict = self.readOdsDictionnary(createworkfilepathtoread)
 
         self.workversion = workversiontoread
 
@@ -142,7 +149,10 @@ class DBconfigReader():
         if self.dbase.dbaseressourcesdirectory is not None:
             createfilepath = os.path.join(self.dbase.dbaseressourcesdirectory,'config','dbase',self.worktype + '.ods')
             #self.readXlsDbDictionnary(createworkfilepathtoread)
-            self.readOdsDictionnary(createworkfilepathtoread)
+            if isbase3:
+                self.readOdsDictionnaryBase3(createworkfilepathtoread)
+            else:
+                self.readOdsDictionnary(createworkfilepathtoread)
 
 
 
@@ -276,6 +286,144 @@ class DBconfigReader():
 
         return dict(self.dbasetables)
 
+
+
+    def readOdsDictionnaryBase3(self,dictfile=None, vartoread=None):
+        debug = False
+
+
+
+        if dictfile is None or not os.path.isfile(dictfile):
+            return
+
+        if self.dbasetables is None:
+            self.dbasetables = {}
+        odsdoc = ODSReader(dictfile, clonespannedcolumns=False)
+
+        for sheetname in odsdoc.SHEETS.keys():
+            tablename = sheetname.split('_')
+            fieldname = None
+            cstcolumntoread = None
+            colindexlocalvalue = None
+            order = None
+
+            if len(tablename) == 1:  # non table file
+                continue
+            else:
+                order = tablename[0]
+                tablename = '_'.join(tablename[1:])
+
+            if tablename not in self.dbasetables.keys():
+                self.dbasetables[tablename] = {}
+                self.dbasetables[tablename]['order'] = int(order)
+                self.dbasetables[tablename]['fields'] = {}
+                self.dbasetables[tablename]['showinqgis'] = False
+                self.dbasetables[tablename]['widget'] = []
+                self.dbasetables[tablename]['row_variantes'] = -1
+                self.dbasetables[tablename]['row_locale'] = -1
+
+            firstqgsviewoccurrence = True
+            sheetdatas = odsdoc.SHEETS[sheetname]
+            #uniforming row lengh
+            maxlen=0
+            for row in sheetdatas:
+                if len(row) > maxlen:
+                    maxlen = len(row)
+            for i, row in enumerate(sheetdatas):
+                sheetdatas[i] = row + ['']*(maxlen-len(row))
+
+            for row, rowcontent in enumerate(sheetdatas):
+                firstcol =  sheetdatas[row][0]
+                if firstcol is not None and len(firstcol) > 0 and firstcol[0] == '#':  # comment - pass
+                    if firstcol.strip() == '#DJAN':
+                        self.dbasetables[tablename]['djangoviewsql'] = sheetdatas[row][1].strip()
+                    elif firstcol.strip() == '#QGISSL':
+                        if 'qgisSLviewsql' in self.dbasetables[tablename].keys():
+                            self.dbasetables[tablename]['qgisSLviewsql'] += ' ' + sheetdatas[row][ 1].strip() + ' '
+                        else:
+                            self.dbasetables[tablename]['qgisSLviewsql'] = sheetdatas[row][ 1].strip()
+                    elif firstcol.strip() == '#QGISPG':
+                        if 'qgisPGviewsql' in self.dbasetables[tablename].keys():
+                            self.dbasetables[tablename]['qgisPGviewsql'] += ' ' + sheetdatas[row][ 1].strip() + ' '
+                        else:
+                            self.dbasetables[tablename]['qgisPGviewsql'] = sheetdatas[row][ 1].strip()
+                    elif firstcol.strip() == '#QGIS':
+                        if firstqgsviewoccurrence:
+                            firstqgsviewoccurrence = False
+                            self.dbasetables[tablename]['qgisviewsql'] = ''
+
+                        if 'qgisviewsql' in self.dbasetables[tablename].keys():
+                            self.dbasetables[tablename]['qgisviewsql'] += ' ' + sheetdatas[row][ 1].strip() + ' '
+                        else:
+                            self.dbasetables[tablename]['qgisviewsql'] = sheetdatas[row][ 1].strip()
+                    elif firstcol.strip() == '#EXPO':
+                        self.dbasetables[tablename]['exportviewsql'] = sheetdatas[row][ 1].strip()
+                    elif firstcol.strip() == '#SCAL':
+                        self.dbasetables[tablename]['scale'] = float(sheetdatas[row][ 1].strip())
+                    elif firstcol.strip() == '#SHOW':
+                        value = sheetdatas[row][ 1].strip().strip()
+                        if value == 'YES':
+                            self.dbasetables[tablename]['showinqgis'] = True
+                    elif firstcol.strip() == '#SPATIALINDEX':
+                        value = sheetdatas[row][ 1].strip()
+                        if value == 'YES':
+                            self.dbasetables[tablename]['spatialindex'] = True
+                    # elif firstcol.strip() == '#ONLYONEPARENTTABLE':
+                    #     value = sheetdatas[row][ 1].strip()
+                    #     if value == 'YES':
+                    #         self.dbasetables[tablename]['onlyoneparenttable'] = True
+                    elif firstcol.strip() == '#VARIANTES':
+                        #for colnbr in range(1,sheet.ncols):
+                        for colnbr in range(1,len(rowcontent)):    
+                            value = sheetdatas[row][colnbr]
+                            if value is None:
+                                continue
+                            if  value.strip() != '' :
+                                self.dbasetables[tablename]['row_variantes'] = row
+                                if value not in self.variantespossibles:
+                                    self.variantespossibles.append(sheetdatas[row][colnbr].strip())
+                    elif firstcol.strip() == '#field_name':
+                        self.dbasetables[tablename]['row_locale'] = row
+
+                    else:
+                        continue
+
+                else:   #column declaration
+                    #if firstcol != '':
+                    if firstcol not in [None, '']:
+                        fieldname = sheetdatas[row][ 0].strip()
+                        cstcolumntoread = None
+                        colindexlocalvalue = None
+                        if fieldname == 'geom':
+                            self.dbasetables[tablename]['geom'] = sheetdatas[row][ 1].strip()
+                            continue
+
+                        self.dbasetables[tablename]['fields'][fieldname] = {}
+                        self.dbasetables[tablename]['fields'][fieldname]['PGtype'] = sheetdatas[row][ 1].strip() # the pg type
+
+                        # the foreign key
+                        if sheetdatas[row][2]  not in [None, '']:
+                            self.dbasetables[tablename]['fields'][fieldname]['FK'] = sheetdatas[row][ 2].strip()
+
+                        if sheetdatas[row][3]  not in [None, '']:
+                            self.dbasetables[tablename]['fields'][fieldname]['ParFldCst'] = sheetdatas[row][3].strip()
+
+                        cstcolumntoread, colindexlocalvalue = self.readOdsConstraintsBase3(tablename,fieldname, sheetdatas, row)
+
+                    else:
+                        if fieldname is not None and fieldname != 'geom':
+                            self.readOdsConstraintsBase3(tablename,fieldname,sheetdatas, row,cstcolumntoread, colindexlocalvalue)
+
+
+            if debug and self.dbasetables[tablename]['order'] <= 4:
+                print('**************************')
+                print(self.dbasetables[tablename])
+
+        if "Revision" in self.dbasetables.keys():
+            self.revisionwork = True
+
+
+        return dict(self.dbasetables)
 
     def readXlsDbDictionnary(self, dictfile=None, vartoread=None):
         """
@@ -453,6 +601,87 @@ class DBconfigReader():
                 dbasefield['Cst'][-1].append(None)
 
         return colindexvariante
+
+    def readOdsConstraintsBase3(self, tablename,fieldname  ,sheetdatas, xlrow,cstcolumntoread=None,cstlocalvaluecolumntoread=None):
+        # dbasefield self.dbasetables[tablename]['fields'][fieldname]
+        # print('readConstraints',tablename,fieldname  ,sheet, xlrow)
+        rowvariantes = self.dbasetables[tablename]['row_variantes']
+        rowlocale = self.dbasetables[tablename]['row_locale']
+        colindexvariante = cstcolumntoread
+        colindexlocalvalue = cstlocalvaluecolumntoread
+        dbasefield = self.dbasetables[tablename]['fields'][fieldname]
+        loclanguage = self.dbase.locale
+
+        if colindexvariante is None:
+            colindexvariante = None
+            if self.dbase.variante is None:
+                colindexvariante = 6
+            else:
+                if rowvariantes >= 0 :
+                    if self.dbase.variante =='Lamia':
+                        colindexvariante = 6
+                    else:
+                        for col in range(len(sheetdatas[rowvariantes])):
+                            try:
+                                if (sheetdatas[rowvariantes][col] == self.dbase.variante
+                                        and sheetdatas[xlrow][col] != '' ):
+                                    colindexvariante = col
+                                    # print('colindexvariante', tablename, fieldname, colindexvariante)
+                                    break
+                            except:
+                                print('error',tablename,fieldname ,self.dbase.variante )
+                        #if colindexvariante is None:
+                        #    colindexvariante = 5
+        if colindexvariante is None:
+            colindexvariante = 6
+
+
+        if sheetdatas[xlrow][colindexvariante] is not None and sheetdatas[xlrow][colindexvariante].strip() != '':
+            if 'Cst' in dbasefield.keys():
+                dbasefield['Cst'].append([])
+            else:
+                dbasefield['Cst'] = [[]]
+
+            if colindexlocalvalue is None:
+                #if unicode(sheet.cell_value(xlrow, colindexvariante)).strip() != '':
+                # get showvalue column according to language
+                initcolumn = colindexvariante + 2
+                dictlang={}
+                while (initcolumn < len(sheetdatas[rowlocale]) 
+                        and 'Displayvalue' in sheetdatas[rowlocale][initcolumn].strip() ):
+                    valuesplited = sheetdatas[rowlocale][initcolumn].split('_')
+                    if len(valuesplited):
+                        dictlang[valuesplited[1]] = initcolumn
+                    else:
+                        dictlang['None'] = initcolumn
+                    initcolumn += 1
+                if (loclanguage in dictlang.keys()  
+                        and sheetdatas[xlrow][dictlang[loclanguage]] != '' ) :
+                    colindexlocalvalue = dictlang[loclanguage]
+                elif ('fr' in dictlang.keys()  
+                        and sheetdatas[xlrow][dictlang['fr']] != '' ) :
+                    colindexlocalvalue = dictlang['fr']
+                elif ('None' in dictlang.keys()  
+                        and sheetdatas[xlrow][dictlang['None']] != '' ) :
+                    colindexlocalvalue = dictlang['None']
+
+
+
+            datavalue = self.convertxlsdataToString(sheetdatas[xlrow][colindexvariante])
+            showvalue = self.convertxlsdataToString(sheetdatas[xlrow][colindexlocalvalue])
+
+            if datavalue == 'NULL':
+                datavalue = ''
+            
+            dbasefield['Cst'][-1].append(showvalue.strip())
+            dbasefield['Cst'][-1].append(datavalue.strip())
+
+            if sheetdatas[xlrow][colindexvariante + 1] is not None and sheetdatas[xlrow][colindexvariante + 1].strip() != '':
+                dbasefield['Cst'][-1].append(eval(sheetdatas[xlrow][colindexvariante + 1].strip()))
+            else:
+                dbasefield['Cst'][-1].append(None)
+
+        return colindexvariante, colindexlocalvalue
 
 
     # def readConstraints(self, tablename,fieldname  ,sheet, xlrow,cstcolumntoread=None):

@@ -71,6 +71,8 @@ class SpatialiteDBaseParser(AbstractDBaseParser):
                 sltype = PGTYPE_TO_SLTYPE[dbasetable['fields'][key]['PGtype']]
             elif 'VARCHAR' in dbasetable['fields'][key]['PGtype']:
                 sltype = 'TEXT'
+            if key is None or sltype is None:
+                raise TypeError(key,sltype, name)
             sql['main'] += key + ' ' + sltype + ','
 
             if 'FK' in dbasetable['fields'][key].keys():

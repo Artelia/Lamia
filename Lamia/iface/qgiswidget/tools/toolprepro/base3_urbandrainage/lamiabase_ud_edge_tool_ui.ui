@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>Form_base3_ud</class>
+ <widget class="QWidget" name="Form_base3_ud">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>252</width>
-    <height>379</height>
+    <width>295</width>
+    <height>418</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,7 +26,16 @@
       <enum>QFrame::Raised</enum>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
-      <property name="margin">
+      <property name="leftMargin">
+       <number>3</number>
+      </property>
+      <property name="topMargin">
+       <number>3</number>
+      </property>
+      <property name="rightMargin">
+       <number>3</number>
+      </property>
+      <property name="bottomMargin">
        <number>3</number>
       </property>
       <property name="spacing">
@@ -38,7 +47,7 @@
          <string>...</string>
         </property>
         <property name="icon">
-         <iconset resource="../../resources.qrc">
+         <iconset>
           <normaloff>:/plugins/Lamia/icons/select.png</normaloff>:/plugins/Lamia/icons/select.png</iconset>
         </property>
        </widget>
@@ -56,14 +65,14 @@
       <item row="0" column="1">
        <widget class="QLabel" name="label_5">
         <property name="text">
-         <string>Amont</string>
+         <string>Upstream</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label_9">
         <property name="text">
-         <string>Noeud</string>
+         <string>Node</string>
         </property>
        </widget>
       </item>
@@ -83,7 +92,7 @@
          <string>...</string>
         </property>
         <property name="icon">
-         <iconset resource="../../resources.qrc">
+         <iconset>
           <normaloff>:/plugins/Lamia/icons/select.png</normaloff>:/plugins/Lamia/icons/select.png</iconset>
         </property>
        </widget>
@@ -91,14 +100,14 @@
       <item row="0" column="3">
        <widget class="QLabel" name="label_7">
         <property name="text">
-         <string>Aval</string>
+         <string>Downstream</string>
         </property>
        </widget>
       </item>
       <item row="2" column="0">
        <widget class="QLabel" name="label_8">
         <property name="text">
-         <string>Profondeur</string>
+         <string>Depth</string>
         </property>
        </widget>
       </item>
@@ -115,7 +124,7 @@
          <string>...</string>
         </property>
         <property name="icon">
-         <iconset resource="../../resources.qrc">
+         <iconset>
           <normaloff>:/plugins/Lamia/icons/numpad.png</normaloff>:/plugins/Lamia/icons/numpad.png</iconset>
         </property>
        </widget>
@@ -133,7 +142,7 @@
          <string>...</string>
         </property>
         <property name="icon">
-         <iconset resource="../../resources.qrc">
+         <iconset>
           <normaloff>:/plugins/Lamia/icons/numpad.png</normaloff>:/plugins/Lamia/icons/numpad.png</iconset>
         </property>
        </widget>
@@ -150,7 +159,16 @@
       <enum>QFrame::Raised</enum>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <property name="margin">
+      <property name="leftMargin">
+       <number>3</number>
+      </property>
+      <property name="topMargin">
+       <number>3</number>
+      </property>
+      <property name="rightMargin">
+       <number>3</number>
+      </property>
+      <property name="bottomMargin">
        <number>3</number>
       </property>
       <property name="spacing">
@@ -159,14 +177,14 @@
       <item row="1" column="0">
        <widget class="QLabel" name="label_11">
         <property name="text">
-         <string>Branchement</string>
+         <string>Lateral</string>
         </property>
        </widget>
       </item>
       <item row="5" column="0">
        <widget class="QLabel" name="label_16">
         <property name="text">
-         <string>Année de pose</string>
+         <string>Creation year</string>
         </property>
        </widget>
       </item>
@@ -183,14 +201,14 @@
       <item row="4" column="0">
        <widget class="QLabel" name="label">
         <property name="text">
-         <string>materiau</string>
+         <string>material</string>
         </property>
        </widget>
       </item>
       <item row="2" column="0">
        <widget class="QLabel" name="label_12">
         <property name="text">
-         <string>Type d'écoulement</string>
+         <string>Flow type</string>
         </property>
        </widget>
       </item>
@@ -200,7 +218,7 @@
       <item row="3" column="0">
        <widget class="QLabel" name="label_13">
         <property name="text">
-         <string>Forme de la canalisation</string>
+         <string>Pipe shape</string>
         </property>
        </widget>
       </item>
@@ -210,7 +228,7 @@
       <item row="0" column="0">
        <widget class="QLabel" name="label_4">
         <property name="text">
-         <string>typeReseau</string>
+         <string>Network type</string>
         </property>
        </widget>
       </item>
@@ -236,7 +254,16 @@
       <enum>QFrame::Raised</enum>
      </property>
      <layout class="QGridLayout" name="gridLayout_4">
-      <property name="margin">
+      <property name="leftMargin">
+       <number>3</number>
+      </property>
+      <property name="topMargin">
+       <number>3</number>
+      </property>
+      <property name="rightMargin">
+       <number>3</number>
+      </property>
+      <property name="bottomMargin">
        <number>3</number>
       </property>
       <property name="spacing">
@@ -245,14 +272,14 @@
       <item row="1" column="0">
        <widget class="QLabel" name="label_3">
         <property name="text">
-         <string>Hauteur</string>
+         <string>Height</string>
         </property>
        </widget>
       </item>
       <item row="0" column="0" colspan="2">
        <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>diametreNominal / largeur</string>
+         <string>Nominal diameter / width</string>
         </property>
        </widget>
       </item>
@@ -275,7 +302,7 @@
          <string>...</string>
         </property>
         <property name="icon">
-         <iconset resource="../../resources.qrc">
+         <iconset>
           <normaloff>:/plugins/Lamia/icons/numpad.png</normaloff>:/plugins/Lamia/icons/numpad.png</iconset>
         </property>
         <property name="autoRaise">
@@ -292,7 +319,7 @@
          <string>...</string>
         </property>
         <property name="icon">
-         <iconset resource="../../resources.qrc">
+         <iconset>
           <normaloff>:/plugins/Lamia/icons/numpad.png</normaloff>:/plugins/Lamia/icons/numpad.png</iconset>
         </property>
        </widget>
@@ -325,7 +352,7 @@
       <item row="0" column="0">
        <widget class="QLabel" name="label_15">
         <property name="text">
-         <string>Commentaire</string>
+         <string>Comments</string>
         </property>
        </widget>
       </item>

@@ -32,16 +32,15 @@ from qgis.PyQt.QtWidgets import (QWidget)
 
 from ...lamia_abstractformtool import AbstractLamiaFormTool
 
-def tr(msg):
-    return QtCore.QCoreApplication.translate('BaseReportTool',msg)
+base3 = QtCore.QObject()
 
 class BaseReportTool(AbstractLamiaFormTool):
 
     DBASETABLENAME = 'report'
     LOADFIRST = False
 
-    tooltreewidgetCAT = tr('Resources')
-    tooltreewidgetSUBCAT = tr('Report')
+    tooltreewidgetCAT =QtCore.QCoreApplication.translate('base3','Resources')
+    tooltreewidgetSUBCAT =QtCore.QCoreApplication.translate('base3','Report')
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_report_tool_icon.png')
 
     tempparentjoin = {}

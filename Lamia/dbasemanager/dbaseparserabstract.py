@@ -41,6 +41,8 @@ from . import dbaseutils
 
 
 
+
+
 PGTYPE_TO_SLTYPE = {'VARCHAR' : 'TEXT',
                     'INT' : 'INTEGER',
                     'SERIAL PRIMARY KEY' : 'INTEGER PRIMARY KEY AUTOINCREMENT',
@@ -121,6 +123,20 @@ class AbstractDBaseParser():
         self.forcenocommit=False        #force query to no commit
 
         self.connectconf = None    #dict of connection data
+
+        #language setting
+        self.locale = None
+        try:
+            from qgis.PyQt.QtCore import QSettings
+            if QSettings().value('locale/userLocale') is None:
+                raise ImportError()
+            self.locale = QSettings().value('locale/userLocale')[0:2]
+        except ImportError:
+            import locale
+            localelang, encod = locale.getdefaultlocale()
+            self.locale = localelang.split('_')[0]
+
+
 
 
 

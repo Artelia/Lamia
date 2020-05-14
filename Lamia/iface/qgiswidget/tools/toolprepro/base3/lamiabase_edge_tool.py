@@ -36,19 +36,15 @@ from ...lamia_abstractformtool import AbstractLamiaFormTool
 from .lamiabase_camera_tool import BaseCameraTool
 from .lamiabase_sketch_tool import BaseSketchTool
 
-
-debugtime = False
-
-def tr(msg):
-    return QtCore.QCoreApplication.translate('BaseEdgeTool',msg)
+base3 = QtCore.QObject()
 
 class BaseEdgeTool(AbstractLamiaFormTool):
 
     DBASETABLENAME = 'edge'
     LOADFIRST = True
 
-    tooltreewidgetCAT = tr('Facilities')
-    tooltreewidgetSUBCAT = tr('Pipes')
+    tooltreewidgetCAT =QtCore.QCoreApplication.translate('base3','Facilities')
+    tooltreewidgetSUBCAT =QtCore.QCoreApplication.translate('base3','Pipes')
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_edge_tool_icon.svg')
 
 

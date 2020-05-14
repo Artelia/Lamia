@@ -34,16 +34,16 @@ from qgis.PyQt.QtWidgets import (QWidget)
 
 from ...lamia_abstractformtool import AbstractLamiaFormTool
 
-def tr(msg):
-    return QtCore.QCoreApplication.translate('BaseSketchTool',msg)
+
 
 class BaseRasterTool(AbstractLamiaFormTool):
 
+    base3 = QtCore.QObject()
     DBASETABLENAME = 'rasters'
     LOADFIRST = True
 
-    tooltreewidgetCAT = tr('Resources')
-    tooltreewidgetSUBCAT = tr('Background map')
+    tooltreewidgetCAT =QtCore.QCoreApplication.translate('base3','Resources')
+    tooltreewidgetSUBCAT =QtCore.QCoreApplication.translate('base3','Background map')
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_raster_tool_icon.png')
 
     def __init__(self, **kwargs):

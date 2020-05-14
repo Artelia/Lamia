@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>Form_base3</class>
+ <widget class="QWidget" name="Form_base3">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -23,13 +23,22 @@
       <enum>QFrame::Raised</enum>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <property name="margin">
+      <property name="leftMargin">
+       <number>3</number>
+      </property>
+      <property name="topMargin">
+       <number>3</number>
+      </property>
+      <property name="rightMargin">
+       <number>3</number>
+      </property>
+      <property name="bottomMargin">
        <number>3</number>
       </property>
       <item row="2" column="0">
        <widget class="QLabel" name="label_nom">
         <property name="text">
-         <string>Nom</string>
+         <string>Name</string>
         </property>
        </widget>
       </item>
@@ -52,7 +61,7 @@
    <item>
     <widget class="QGroupBox" name="groupBox_stat">
      <property name="title">
-      <string>Statistiques</string>
+      <string>Statistics</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="0" column="0">

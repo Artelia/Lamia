@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>Form_base3</class>
+ <widget class="QWidget" name="Form_base3">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -75,7 +75,7 @@
           <item>
            <widget class="QPushButton" name="pushButton_opencamera">
             <property name="text">
-             <string>Ouvrir l'appareil photo</string>
+             <string>Open camera app</string>
             </property>
            </widget>
           </item>
@@ -110,7 +110,7 @@
              <item row="1" column="0">
               <widget class="QLabel" name="label_5">
                <property name="text">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Fichier&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;File&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
               </widget>
              </item>
@@ -184,7 +184,7 @@
              <item row="0" column="0">
               <widget class="QLabel" name="label_2">
                <property name="text">
-                <string>Numero photo</string>
+                <string>picture number</string>
                </property>
               </widget>
              </item>
@@ -229,14 +229,14 @@
              <item row="0" column="0">
               <widget class="QPushButton" name="pushButton_openph">
                <property name="text">
-                <string>Voir</string>
+                <string>Show</string>
                </property>
               </widget>
              </item>
              <item row="0" column="1">
               <widget class="QPushButton" name="pushButton_lastph">
                <property name="text">
-                <string>Derniere</string>
+                <string>Last picture</string>
                </property>
               </widget>
              </item>
@@ -246,7 +246,7 @@
           <item>
            <widget class="QStackedWidget" name="stackedWidget_2">
             <property name="currentIndex">
-             <number>1</number>
+             <number>0</number>
             </property>
             <widget class="QWidget" name="principal">
              <layout class="QGridLayout" name="gridLayout_4">
@@ -268,7 +268,7 @@
               <item row="0" column="0">
                <widget class="QPushButton" name="pushButton_defaultphoto_2">
                 <property name="text">
-                 <string>Définir comme photo principale</string>
+                 <string>Define as default picture</string>
                 </property>
                </widget>
               </item>
@@ -307,35 +307,35 @@
               <item row="0" column="0">
                <widget class="QPushButton" name="pushButton_vueensemble">
                 <property name="text">
-                 <string>Vue d'ensemble</string>
+                 <string>Global view</string>
                 </property>
                </widget>
               </item>
               <item row="0" column="1">
                <widget class="QPushButton" name="pushButton_cuve">
                 <property name="text">
-                 <string>Vue cuve</string>
+                 <string>trap view</string>
                 </property>
                </widget>
               </item>
               <item row="0" column="2">
                <widget class="QPushButton" name="pushButton_poires">
                 <property name="text">
-                 <string>Vue poires</string>
+                 <string>Float view</string>
                 </property>
                </widget>
               </item>
               <item row="1" column="1">
                <widget class="QPushButton" name="pushButton_armoire">
                 <property name="text">
-                 <string>vue armoire élec</string>
+                 <string>Controller view</string>
                 </property>
                </widget>
               </item>
               <item row="1" column="0">
                <widget class="QPushButton" name="pushButton_vanne">
                 <property name="text">
-                 <string>Vue vanne</string>
+                 <string>Valve view</string>
                 </property>
                </widget>
               </item>

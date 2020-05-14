@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>Form_base3</class>
+ <widget class="QWidget" name="Form_base3">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>512</width>
+    <width>438</width>
     <height>357</height>
    </rect>
   </property>
@@ -26,7 +26,7 @@
       <item row="0" column="0">
        <widget class="QLabel" name="label">
         <property name="text">
-         <string>Position</string>
+         <string>Point type</string>
         </property>
        </widget>
       </item>
@@ -39,7 +39,7 @@
    <item>
     <widget class="QGroupBox" name="groupBox_2">
      <property name="title">
-      <string>Valeurs</string>
+      <string>Values</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="4" column="0">
@@ -139,7 +139,7 @@
       <item row="4" column="2">
        <widget class="QLabel" name="label_22">
         <property name="text">
-         <string>Haut. perche</string>
+         <string>Rod height</string>
         </property>
         <property name="wordWrap">
          <bool>true</bool>
@@ -220,7 +220,7 @@
    <item>
     <widget class="QPushButton" name="pushButton_catchvalues">
      <property name="text">
-      <string>Acquerir les valeurs GPS</string>
+      <string>Get GPS data</string>
      </property>
     </widget>
    </item>
@@ -359,7 +359,7 @@
       <item row="3" column="2">
        <widget class="QLabel" name="label_70">
         <property name="text">
-         <string>Haut. perche</string>
+         <string>Rod height</string>
         </property>
        </widget>
       </item>

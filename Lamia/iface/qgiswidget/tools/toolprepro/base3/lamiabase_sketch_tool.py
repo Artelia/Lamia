@@ -37,16 +37,15 @@ from qgis.PyQt.QtWidgets import (QWidget,QMainWindow, QSpinBox, QAction, QDialog
 from ...lamia_abstractformtool import AbstractLamiaFormTool
 from .lamiabase_pictureviewer import PictureViewer
 
-def tr(msg):
-    return QtCore.QCoreApplication.translate('BaseSketchTool',msg)
+base3 = QtCore.QObject()
 
 class BaseSketchTool(AbstractLamiaFormTool):
 
     DBASETABLENAME = 'media'
     LOADFIRST = False
 
-    tooltreewidgetCAT = tr('Resources')
-    tooltreewidgetSUBCAT = tr('Sketches')
+    tooltreewidgetCAT =QtCore.QCoreApplication.translate('base3','Resources')
+    tooltreewidgetSUBCAT =QtCore.QCoreApplication.translate('base3','Sketches')
     
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_sketch_tool_icon.png')
 
@@ -56,7 +55,7 @@ class BaseSketchTool(AbstractLamiaFormTool):
                     'tctable': 'Tcobjectresource',
                     'tctablecolparent':'lid_object',
                     'tctablecolthistable':'lid_resource'}
-    for tablename in ['observation', 'node', 'edge', 'equipment']:
+    for tablename in ['observation', 'node', 'edge', 'equipment','facility']:
         tempparentjoin[tablename] = linkdict
     PARENTJOIN = tempparentjoin
 

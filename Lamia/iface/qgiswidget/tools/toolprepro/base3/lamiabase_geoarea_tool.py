@@ -27,23 +27,19 @@ This file is part of LAMIA.
 
 
 import os, datetime
-from qgis.PyQt import uic, QtCore
+from qgis.PyQt import uic, QtCore, QtWidgets
 
 from qgis.PyQt.QtWidgets import (QWidget,QGroupBox,QGridLayout,QLabel,QTableWidgetItem)
 
 from ...lamia_abstractformtool import AbstractLamiaFormTool
-
-
-def tr(msg):
-    return QtCore.QCoreApplication.translate('BaseGeoareaTool',msg)
 
 class BaseGeoareaTool(AbstractLamiaFormTool):
 
     DBASETABLENAME = 'geoarea'
     LOADFIRST = False
 
-    tooltreewidgetCAT = tr('Management')
-    tooltreewidgetSUBCAT = tr('Geographic area')
+    tooltreewidgetCAT = QtCore.QCoreApplication.translate('base3', 'Management')
+    tooltreewidgetSUBCAT = QtCore.QCoreApplication.translate('base3', 'Geographic area')
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_geoarea_tool_icon.svg')
 
     # CHOOSERTREEWDG_COLSHOW = ['libelle']
@@ -66,7 +62,7 @@ class BaseGeoareaTool(AbstractLamiaFormTool):
 
         # rem : il sera affiné le select avec le champ datetimecreation trouvé dans la requete
         # il faut que zone geo soit présent dans la requete
-        self.stats = [[tr('Linear facilities'),
+        self.stats = [[QtCore.QCoreApplication.translate('base3', 'Linear facilities'),
                         ''' SELECT SUM(ST_Length(edge_now.geom)) 
                             FROM edge_now, geoarea 
                             WHERE ST_WITHIN(edge_now.geom, geoarea.geom) ''']
@@ -169,3 +165,4 @@ class UserUI(QWidget):
         super(UserUI, self).__init__(parent=parent)
         uipath = os.path.join(os.path.dirname(__file__), 'lamiabase_geoarea_tool_ui.ui')
         uic.loadUi(uipath, self)
+

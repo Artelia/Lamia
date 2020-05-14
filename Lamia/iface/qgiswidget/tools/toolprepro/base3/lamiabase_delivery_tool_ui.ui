@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>Form_base3</class>
+ <widget class="QWidget" name="Form_base3">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -41,7 +41,7 @@
       <item row="0" column="0">
        <widget class="QLabel" name="label_nom">
         <property name="text">
-         <string>Nom</string>
+         <string>Name</string>
         </property>
        </widget>
       </item>
@@ -88,7 +88,7 @@
       <item row="1" column="0">
        <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>n° marché</string>
+         <string>Delivery ref</string>
         </property>
        </widget>
       </item>
@@ -101,13 +101,13 @@
    <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
-      <string>Propriétés</string>
+      <string>Properties</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
        <widget class="QPushButton" name="pushButton_currentPrestation">
         <property name="text">
-         <string>Définir comme la prestation en cours</string>
+         <string>Define as current delivery</string>
         </property>
        </widget>
       </item>
@@ -117,7 +117,7 @@
    <item>
     <widget class="QGroupBox" name="groupBox_2">
      <property name="title">
-      <string>Intervenants</string>
+      <string>Actors</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_3">
       <property name="leftMargin">
@@ -145,7 +145,7 @@
       <item>
        <widget class="QPushButton" name="pushButton_defineinter">
         <property name="text">
-         <string>Definir les intervenants</string>
+         <string>Define actors</string>
         </property>
        </widget>
       </item>

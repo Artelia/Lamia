@@ -35,9 +35,8 @@ from qgis.PyQt.QtWidgets import (QWidget)
 from ...lamia_abstractformtool import AbstractLamiaFormTool
 from .lamiabase_topographydata_tool import BaseTopographydataTool
 
+base3 = QtCore.QObject()
 
-def tr(msg):
-    return QtCore.QCoreApplication.translate('BaseTopographyTool',msg)
 
 
 class BaseTopographyTool(AbstractLamiaFormTool):
@@ -45,8 +44,8 @@ class BaseTopographyTool(AbstractLamiaFormTool):
     DBASETABLENAME = 'topography'
     LOADFIRST = True
 
-    tooltreewidgetCAT = tr('Resources')
-    tooltreewidgetSUBCAT = tr('Topography')
+    tooltreewidgetCAT =QtCore.QCoreApplication.translate('base3','Resources')
+    tooltreewidgetSUBCAT =QtCore.QCoreApplication.translate('base3','Topography')
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_topography_tool_icon.png')
 
     PARENTJOIN = {'delivery' : {'colparent': 'id_delivery',
@@ -110,7 +109,7 @@ class BaseTopographyTool(AbstractLamiaFormTool):
 
         self.dbasechildwdgfield = []
         self.propertieswdgPOINTTOPO= BaseTopographydataTool(**self.instancekwargs)
-        self.propertieswdgPOINTTOPO.tooltreewidgetSUBCAT = self.tr('Points topo')
+        self.propertieswdgPOINTTOPO.tooltreewidgetSUBCAT =QtCore.QCoreApplication.translate('base3','Topographic point')
         self.dbasechildwdgfield.append(self.propertieswdgPOINTTOPO)
 
 

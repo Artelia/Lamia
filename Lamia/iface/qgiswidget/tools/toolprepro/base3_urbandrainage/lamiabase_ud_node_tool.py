@@ -577,7 +577,7 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
 
     # def postSaveFeature(self, boolnewfeature):
     def postSaveFeature(self, savedfeaturepk=None):
-        self._createDeficiency(self.propertieswdgDesordre)
+        self._createDeficiency(self.propertieswdgDesordre,savedfeaturepk)
         self._moveLinkedTopologicalEdge()
 
         if self.currentFeaturePK is not None and self.dbase.variante in ['2018_SNCF']:

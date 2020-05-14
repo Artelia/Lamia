@@ -37,17 +37,15 @@ from .lamiabase_sketch_tool import BaseSketchTool
 from .lamiabase_topography_tool import BaseTopographyTool
 from .lamiabase_actor_tool import BaseActorTool
 
-
-def tr(msg):
-    return QtCore.QCoreApplication.translate('BaseDeliveryTool',msg)
+base3 = QtCore.QObject()
 
 class BaseDeliveryTool(AbstractLamiaFormTool):
 
     DBASETABLENAME = 'delivery'
     LOADFIRST = False
 
-    tooltreewidgetCAT = tr('Management')
-    tooltreewidgetSUBCAT = tr('Delivery')
+    tooltreewidgetCAT =QtCore.QCoreApplication.translate('base3','Management')
+    tooltreewidgetSUBCAT =QtCore.QCoreApplication.translate('base3','Delivery')
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_delivery_tool_icon.png')
     
 

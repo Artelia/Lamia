@@ -33,16 +33,15 @@ from ...lamia_abstractformtool import AbstractLamiaFormTool
 from .lamiabase_camera_tool import BaseCameraTool
 from .lamiabase_sketch_tool import BaseSketchTool
 
-def tr(msg):
-    return QtCore.QCoreApplication.translate('BaseEquipementTool',msg)
+base3 = QtCore.QObject()
 
 class BaseEquipmentTool(AbstractLamiaFormTool):
 
     DBASETABLENAME = 'equipment'
     LOADFIRST = True
 
-    tooltreewidgetCAT = tr('Facilities')
-    tooltreewidgetSUBCAT = tr('Equipment')
+    tooltreewidgetCAT =QtCore.QCoreApplication.translate('base3','Facilities')
+    tooltreewidgetSUBCAT =QtCore.QCoreApplication.translate('base3','Equipment')
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_equipment_tool_icon.svg')
 
 

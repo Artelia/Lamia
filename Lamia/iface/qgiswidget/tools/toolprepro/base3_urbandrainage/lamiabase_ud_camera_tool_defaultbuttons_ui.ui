@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>Form_base3_ud</class>
+ <widget class="QWidget" name="Form_base3_ud">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -17,35 +17,35 @@
    <item row="0" column="0">
     <widget class="QPushButton" name="pushButton_vueensemble">
      <property name="text">
-      <string>Vue d'ensemble</string>
+      <string>Global view</string>
      </property>
     </widget>
    </item>
    <item row="0" column="1">
     <widget class="QPushButton" name="pushButton_cuve">
      <property name="text">
-      <string>Vue cuve</string>
+      <string>Trap view</string>
      </property>
     </widget>
    </item>
    <item row="0" column="2">
     <widget class="QPushButton" name="pushButton_poires">
      <property name="text">
-      <string>Vue poires</string>
+      <string>Float view</string>
      </property>
     </widget>
    </item>
    <item row="1" column="0">
     <widget class="QPushButton" name="pushButton_vanne">
      <property name="text">
-      <string>Vue vanne</string>
+      <string>Valve view</string>
      </property>
     </widget>
    </item>
    <item row="1" column="1">
     <widget class="QPushButton" name="pushButton_armoire">
      <property name="text">
-      <string>vue armoire élec</string>
+      <string>Controller view</string>
      </property>
     </widget>
    </item>

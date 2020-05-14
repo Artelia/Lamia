@@ -25,33 +25,26 @@ This file is part of LAMIA.
  """
 
 
-
-
-from qgis.PyQt import uic, QtCore
-
-try:
-    from qgis.PyQt.QtGui import (QWidget)
-except ImportError:
-    from qgis.PyQt.QtWidgets import (QWidget)
-
-from ...lamia_abstractformtool import AbstractLamiaFormTool
-
-from .lamiabase_observation_tool import BaseObservationTool
 import os
 import datetime
 import qgis
 
+from qgis.PyQt import uic, QtCore
+from qgis.PyQt.QtWidgets import (QWidget)
 
-def tr(msg):
-    return QtCore.QCoreApplication.translate('BaseDeficiencyTool',msg)
+from ...lamia_abstractformtool import AbstractLamiaFormTool
+from .lamiabase_observation_tool import BaseObservationTool
+
+base3 = QtCore.QObject()
+
 
 class BaseDeficiencyTool(AbstractLamiaFormTool):
 
     DBASETABLENAME = 'deficiency'
     LOADFIRST = True
 
-    tooltreewidgetCAT = tr('Condition')
-    tooltreewidgetSUBCAT = tr('Deficiency')
+    tooltreewidgetCAT =QtCore.QCoreApplication.translate('base3','Condition')
+    tooltreewidgetSUBCAT =QtCore.QCoreApplication.translate('base3','Deficiency')
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_deficiency_tool_icon.png')
     tempparentjoin = {}
     linkdict = {'colparent': 'id_descriptionsystem',

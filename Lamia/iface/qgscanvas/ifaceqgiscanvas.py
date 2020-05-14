@@ -640,7 +640,29 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
     def ______________________________RubberbandManagement(self):
         pass
 
-    def createorresetRubberband(self,type=0):
+
+    def createorresetRubberband(self,type=0, instance=None):
+        """
+        Reset the rubberband
+
+        :param type: geom type
+        """
+        if instance is None:
+            instance = self
+            rbcolor = 'red'
+        else:
+            rbcolor = 'blue'
+        if not hasattr(instance, 'rubberBand'):
+            instance.rubberBand = None
+        
+        if instance.rubberBand is not None:
+            instance.rubberBand.reset(type)
+        else:
+            instance.rubberBand = qgis.gui.QgsRubberBand(self.canvas,type)
+            instance.rubberBand.setWidth(5)
+            instance.rubberBand.setColor(QtGui.QColor(rbcolor))
+
+    def createorresetRubberband_Old(self,type=0):
         """
         Reset the rubberband
 
@@ -653,15 +675,27 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             self.rubberBand.setWidth(5)
             self.rubberBand.setColor(QtGui.QColor("magenta"))
 
-    def createRubberBandForSelection(self, qgsgeom):
+    def createRubberBandForSelection(self, qgsgeom, instance=None):
         # geomtype = qgsgeom.type()
-        self.createorresetRubberband(qgis.core.QgsWkbTypes.LineGeometry)
+        if not instance:
+            instance = self
+        self.createorresetRubberband(qgis.core.QgsWkbTypes.LineGeometry, instance=instance)
         canvasscale = self.canvas.scale() 
         distpixel = 4.0
         dist = distpixel * canvasscale / 1000.0
 
-        bufferedgeom = qgsgeom.buffer(dist, 12).convertToType(qgis.core.QgsWkbTypes.LineGeometry)
-        self.rubberBand.setToGeometry(bufferedgeom, self.dbaseqgiscrs)
+        if not isinstance(qgsgeom,list):
+            qgsgeom = [qgsgeom]
+
+        for geom in qgsgeom:
+            bufferedgeom = geom.buffer(dist, 12).convertToType(qgis.core.QgsWkbTypes.LineGeometry)
+            instance.rubberBand.addGeometry(bufferedgeom, self.dbaseqgiscrs)
+
+
+    def getQgsGeomFromPk(self,dbaseparser, tablename, pk):
+        wkt = dbaseparser.getWktGeomFromPk(tablename, pk)
+        geom = qgis.core.QgsGeometry.fromWkt(wkt)
+        return geom
 
     def _____________________________Functions(self):
         pass
