@@ -32,7 +32,7 @@ from qgis.PyQt.QtWidgets import (QWidget)
 from qgis.PyQt import uic, QtCore
 
 from ..base3.lamiabase_edge_tool import BaseEdgeTool
-
+from ..subwidgets.subwidget_lidchooser import LidChooserWidget
 
 class BaseUrbandrainageEdgeTool(BaseEdgeTool):
 
@@ -74,7 +74,18 @@ class BaseUrbandrainageEdgeTool(BaseEdgeTool):
                                                                 'dateoperationalcreation': self.toolwidgetmain.dateEdit_anneepose,
 
                                                             }}}
-
+            self.ownerwdg = LidChooserWidget(parentwdg=self, 
+                                                    parentlidfield='lid_actor_1', 
+                                                    parentframe=self.toolwidgetmain.frame_owner, 
+                                                    searchdbase='actor', 
+                                                    searchfieldtoshow=['actorname'] )
+            self.lamiawidgets.append(self.ownerwdg)
+            self.operatorwdg = LidChooserWidget(parentwdg=self, 
+                                                    parentlidfield='lid_actor_2', 
+                                                    parentframe=self.toolwidgetmain.frame_operator, 
+                                                    searchdbase='actor', 
+                                                    searchfieldtoshow=['actorname'] )
+            self.lamiawidgets.append(self.operatorwdg)
 
         elif self.dbase.variante in ['CD41']:
 

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="fr" sourcelanguage="en">
+<!DOCTYPE TS><TS version="2.0" language="fr" sourcelanguage="en">
 <context>
     <name>AbstractLamiaFormTool</name>
     <message>
@@ -18,7 +17,7 @@
     <name>DBaseOfflineManager</name>
     <message>
         <location filename="../dbasemanager/dbaseofflinemanager.py" line="79"/>
-        <source>Il y a dÃ©jÃ&#xa0; une copie locale de la base... Supprimez la</source>
+        <source>Il y a d&#xc3;&#xa9;j&#xc3;&#xa0; une copie locale de la base... Supprimez la</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -462,23 +461,23 @@
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_facility_tool_ui.ui" line="64"/>
         <source>Operator</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gestionnaire</translation>
     </message>
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_facility_tool_ui.ui" line="101"/>
         <source>Owner</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Propriétaire</translation>
     </message>
 </context>
 <context>
     <name>Form_base3_ud</name>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_observation_tool_ui_CD41.ui" line="14"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_camera_tool_defaultbuttons_ui.ui" line="14"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_camera_tool_defaultbuttons_ui.ui" line="48"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_camera_tool_defaultbuttons_ui.ui" line="48"/>
         <source>Controller view</source>
         <translation>Vue de l&apos;armoire elec.</translation>
     </message>
@@ -708,22 +707,22 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_camera_tool_defaultbuttons_ui.ui" line="20"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_camera_tool_defaultbuttons_ui.ui" line="20"/>
         <source>Global view</source>
         <translation>Vue générale</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_camera_tool_defaultbuttons_ui.ui" line="27"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_camera_tool_defaultbuttons_ui.ui" line="27"/>
         <source>Trap view</source>
         <translation>Vue de la cuve</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_camera_tool_defaultbuttons_ui.ui" line="34"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_camera_tool_defaultbuttons_ui.ui" line="34"/>
         <source>Float view</source>
         <translation>Vue des poires</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_camera_tool_defaultbuttons_ui.ui" line="41"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_camera_tool_defaultbuttons_ui.ui" line="41"/>
         <source>Valve view</source>
         <translation>Vue des vannes</translation>
     </message>
@@ -753,7 +752,7 @@
         <translation>Branchement</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_edge_tool_ui.ui" line="187"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_edge_tool_ui.ui" line="125"/>
         <source>Creation year</source>
         <translation>Date de pose</translation>
     </message>
@@ -763,7 +762,7 @@
         <translation>Type d&apos;écoulement</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_edge_tool_ui.ui" line="221"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_edge_tool_ui.ui" line="115"/>
         <source>Pipe shape</source>
         <translation>Forme de la canalisation</translation>
     </message>
@@ -978,104 +977,682 @@
         <translation>Nombre de pompes</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="24"/>
-        <source>Main properties</source>
-        <translation>Propriétéd principales</translation>
-    </message>
-    <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="128"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="717"/>
         <source>Depth </source>
         <translation>Profondeur</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="180"/>
-        <source>Secondary properties</source>
-        <translation>Propriétés secondaires</translation>
-    </message>
-    <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="193"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="166"/>
         <source>Low flow channel presence</source>
         <translation>Présence d&apos;une cunette</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="247"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="220"/>
         <source>Siphoid partition</source>
         <translation>Cloison siphoïde</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="254"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="227"/>
         <source>Tip</source>
         <translation>Couvercle</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="267"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="240"/>
         <source>Lateral user type</source>
         <translation>Usager</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="300"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="273"/>
         <source>Exterior</source>
         <translation>Extérieur</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="306"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="279"/>
         <source>Locked site</source>
         <translation>Site vérouillé</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="316"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="289"/>
         <source>Fence presence</source>
         <translation>Présence d&apos;une cloture</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="401"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="374"/>
         <source>Elec. cab locked</source>
         <translation>Armoire éléctrique vérouillée</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="411"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="384"/>
         <source>Pump switching controller</source>
         <translation>Permutation des pompes</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="494"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="467"/>
         <source>Fall protection gratings presence</source>
         <translation>Présence d&apos;une grile anti-chute</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="507"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="480"/>
         <source>Inlet screen presence</source>
         <translation>Présence d&apos;un panier dégrilleur</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="554"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="527"/>
         <source>Guide rail presence</source>
         <translation>Présence de rail de guidage</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="564"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="537"/>
         <source>Pump lifting chain presence</source>
         <translation>Présence d&apos;une chaîne de levage</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="587"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="560"/>
         <source>Check valve presence</source>
         <translation>Présence d&apos;une vanne</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="597"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="570"/>
         <source>Gate valve presence </source>
         <translation>Présence d&apos;un clapet anti-retour</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="610"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="583"/>
         <source>Pressure port presence</source>
         <translation>PRésence d&apos;une prise de pression</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="665"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="638"/>
         <source>Sediment trap</source>
         <translation>Présence d&apos;une fosse de décantation</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="24"/>
+        <source>Main\nproperties</source>
+        <translation>Propriétés\nprincipales</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_edge_tool_ui.ui" line="138"/>
+        <source>Pipe type</source>
+        <translation>Type d&apos;ouvrage</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_edge_tool_ui.ui" line="151"/>
+        <source>Pipe subtype</source>
+        <translation>Sous-type d&apos;ouvrage</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="64"/>
+        <source>Other\nproperties</source>
+        <translation>Propriétés\nautres</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="104"/>
+        <source>Geometry\ntopology</source>
+        <translation>Géométrie\nTopologie</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="129"/>
+        <source>Management</source>
+        <translation>Gestion</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="164"/>
+        <source>Owner</source>
+        <translation>Propriétaire</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="157"/>
+        <source>Operator</source>
+        <translation>Gestionnaire</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="153"/>
+        <source>Secondary\nproperties</source>
+        <translation type="unfinished">Propriétés\nautre</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="33"/>
+        <source>Surface subtype</source>
+        <translation>Sous-type d&apos;ouvrage</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="43"/>
+        <source>Surface type</source>
+        <translation>Type d&apos;ouvrage</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="70"/>
+        <source>Inlet flow condition</source>
+        <translation>Type d&apos;écoulement amont</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="80"/>
+        <source>Outlet flow condition</source>
+        <translation>Type d&apos;écoulement aval</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="110"/>
+        <source>Node link</source>
+        <translation>Noeuds liés</translation>
+    </message>
+</context>
+<context>
+    <name>Form_base3_wds</name>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_observation_tool_ui.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_deficiency_tool_ui.ui" line="56"/>
+        <source>Category</source>
+        <translation>Categorie</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_deficiency_tool_ui.ui" line="79"/>
+        <source>Deficiency type</source>
+        <translation>Type de désordre</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_deficiency_tool_ui.ui" line="89"/>
+        <source>Deficiency origin</source>
+        <translation>Cause</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_deficiency_tool_ui.ui" line="106"/>
+        <source>A remplir avec les spec desordre cat2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_deficiency_tool_ui.ui" line="117"/>
+        <source>des cat3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_equipment_tool_ui.ui" line="24"/>
+        <source>Main\nproperties</source>
+        <translation>Propriétés\nprincipales</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="54"/>
+        <source>Network type</source>
+        <translation>Type de reseau</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_edge_tool_ui_heatingnetwork.ui" line="55"/>
+        <source>Domain</source>
+        <translation>Domaine</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_edge_tool_ui_heatingnetwork.ui" line="68"/>
+        <source>Pipe function</source>
+        <translation>Function</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_edge_tool_ui_heatingnetwork.ui" line="84"/>
+        <source>Lateral ?</source>
+        <translation>Branchement ?</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_observation_tool_ui.ui" line="328"/>
+        <source>Comments</source>
+        <translation>Commentaires</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="160"/>
+        <source>Other\nproperties</source>
+        <translation>Propriétés\nautres</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_edge_tool_ui_heatingnetwork.ui" line="196"/>
+        <source>Material</source>
+        <translation>Materiau</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_edge_tool_ui_heatingnetwork.ui" line="183"/>
+        <source>Joints</source>
+        <translation>Joints</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_edge_tool_ui_heatingnetwork.ui" line="229"/>
+        <source>Cathodic protection</source>
+        <translation>Protection cathodique</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_edge_tool_ui_heatingnetwork.ui" line="219"/>
+        <source>Flow type</source>
+        <translation>Type d&apos;écoulement</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1038"/>
+        <source>Geometry\nTopology</source>
+        <translation>Géométrie\nTopologie</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_edge_tool_ui_heatingnetwork.ui" line="281"/>
+        <source>Top pipe depth</source>
+        <translation>Profondeur de la génératrice supérieure</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1077"/>
+        <source>Diameter</source>
+        <translation>Diamètre</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_observation_tool_ui.ui" line="252"/>
+        <source>...</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_edge_tool_ui_heatingnetwork.ui" line="143"/>
+        <source>Insulation thickness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_edge_tool_ui_heatingnetwork.ui" line="264"/>
+        <source>Diameter ext.</source>
+        <translation>Diamètre ext.</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_edge_tool_ui_heatingnetwork.ui" line="334"/>
+        <source>diam&#xc3;&#xa8;tre int</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="77"/>
+        <source>Equipment type</source>
+        <translation type="unfinished">Type d&apos;équipement</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_equipment_tool_ui.ui" line="64"/>
+        <source>Equipment subtype</source>
+        <translation>Sous type d&apos;équipement</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="103"/>
+        <source>Active</source>
+        <translation>En service</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_equipment_tool_ui.ui" line="81"/>
+        <source>Name</source>
+        <translation>Nom</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="116"/>
+        <source>Construction date</source>
+        <translation>Date de pose</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="126"/>
+        <source>yyyy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_equipment_tool_ui.ui" line="222"/>
+        <source>Volume</source>
+        <translation>Volume</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_equipment_tool_ui.ui" line="232"/>
+        <source>Overflow elevation</source>
+        <translation>Cote de trop plein</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_equipment_tool_ui.ui" line="252"/>
+        <source>Tank number</source>
+        <translation>Nombre de cuves</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_equipment_tool_ui.ui" line="262"/>
+        <source>Culvert elevation</source>
+        <translation>Cote du radier</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_equipment_tool_ui.ui" line="295"/>
+        <source>Sql elevation</source>
+        <translation>Cote sql</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_equipment_tool_ui.ui" line="339"/>
+        <source>Counter number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_equipment_tool_ui.ui" line="373"/>
+        <source>Counter type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1302"/>
+        <source>Y</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1195"/>
+        <source>Z cover</source>
+        <translation type="unfinished">Z tampon</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1421"/>
+        <source>X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1351"/>
+        <source>dY</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1344"/>
+        <source>dX</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1337"/>
+        <source>dZ</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1274"/>
+        <source>GPS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1428"/>
+        <source>/</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1330"/>
+        <source>RAF09</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1365"/>
+        <source>Zgps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1372"/>
+        <source>Z mNGF</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1393"/>
+        <source>Rod height</source>
+        <translation>Hauteur de la perche GPS</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1407"/>
+        <source>Zwgs84</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="237"/>
+        <source>Ventouse</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="313"/>
+        <source>Position</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="378"/>
+        <source>Outlet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="665"/>
+        <source>Localisation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="743"/>
+        <source>Dimension</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="895"/>
+        <source>Chloration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="931"/>
+        <source>Robinet de prise en charge</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_observation_tool_ui.ui" line="59"/>
+        <source>Urgency</source>
+        <translation>Urgence</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_observation_tool_ui.ui" line="66"/>
+        <source>Date</source>
+        <translation>Date</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_observation_tool_ui.ui" line="108"/>
+        <source>Progression</source>
+        <translation>Evolution</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_observation_tool_ui.ui" line="115"/>
+        <source>Number</source>
+        <translation>Nombre</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_observation_tool_ui.ui" line="222"/>
+        <source>Etat g&#xc3;&#xa9;n&#xc3;&#xa9;ral</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_observation_tool_ui.ui" line="232"/>
+        <source>Index compteur</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_observation_tool_ui.ui" line="307"/>
+        <source>Follow-up</source>
+        <translation>Suite à donner</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_observation_tool_ui.ui" line="354"/>
+        <source>Next action type</source>
+        <translation>Type de suite</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_edge_tool_ui_heatingnetwork.ui" line="163"/>
+        <source>Insulation</source>
+        <translation>Calorifugeage</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_edge_tool_ui_heatingnetwork.ui" line="173"/>
+        <source>Insulation type</source>
+        <translation>Type de calorifugeage</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_equipment_tool_ui.ui" line="178"/>
+        <source>Total dynamic head</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1094"/>
+        <source>Depth</source>
+        <translation type="unfinished">Profondeur</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="39"/>
+        <source>Main\properties</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="64"/>
+        <source>Subtype</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="93"/>
+        <source>Function</source>
+        <translation type="unfinished">Fonction</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="175"/>
+        <source>Access</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="188"/>
+        <source>Access shape</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="198"/>
+        <source>Step presence</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message encoding="UTF-8">
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="230"/>
+        <source>Altimétrie</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="632"/>
+        <source>Accessibility</source>
+        <translation type="unfinished">Accessibilité</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="306"/>
+        <source>Valve</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="326"/>
+        <source>Manipulability</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="385"/>
+        <source>Draining</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="437"/>
+        <source>Valve upstream setting</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="444"/>
+        <source>Pressure control valve</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="475"/>
+        <source>Valve downstream setting</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="524"/>
+        <source>Brand type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="534"/>
+        <source>Fire department id</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="544"/>
+        <source>Hydrant</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="760"/>
+        <source>Brand name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="574"/>
+        <source>Conformity</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message encoding="UTF-8">
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="614"/>
+        <source>Général</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="642"/>
+        <source>Node emitter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="655"/>
+        <source>Retrofitable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="882"/>
+        <source>Remote monitoring</source>
+        <translation type="unfinished">Télégestion</translation>
+    </message>
+    <message encoding="UTF-8">
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="695"/>
+        <source>Précisions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="875"/>
+        <source>Maintenance firm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="787"/>
+        <source>Brand ref</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="803"/>
+        <source>Linked equipments</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="839"/>
+        <source>Flow meter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="938"/>
+        <source>Clamp</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="977"/>
+        <source>Special equipment</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1013"/>
+        <source>Other/unknow</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1067"/>
+        <source>Outlet diameter if different</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_observation_tool_ui.ui" line="278"/>
+        <source>Cover condition</source>
+        <translation type="unfinished">Etat du tampon</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_observation_tool_ui.ui" line="288"/>
+        <source>Manhole condition</source>
+        <translation type="unfinished">Etat du regard</translation>
     </message>
 </context>
 <context>
@@ -1229,7 +1806,7 @@
     </message>
     <message>
         <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="208"/>
-        <source>SÃ©lectionner la date Ã&#xa0; laquelle afficher le systÃ¨me</source>
+        <source>S&#xc3;&#xa9;lectionner la date &#xc3;&#xa0; laquelle afficher le syst&#xc3;&#xa8;me</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1284,7 +1861,7 @@
     </message>
     <message>
         <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="738"/>
-        <source>RÃ©pertoire photo</source>
+        <source>R&#xc3;&#xa9;pertoire photo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1364,7 +1941,7 @@
     </message>
     <message>
         <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="859"/>
-        <source>RÃ©initialiser les noeuds</source>
+        <source>R&#xc3;&#xa9;initialiser les noeuds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1399,7 +1976,7 @@
     </message>
     <message>
         <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="894"/>
-        <source>CrÃ©er une copie locale</source>
+        <source>Cr&#xc3;&#xa9;er une copie locale</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1586,7 +2163,7 @@
         <translation>Graphique</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_graphcsv_tool.py" line="61"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_graphcsv_tool.py" line="62"/>
         <source>Graph_csv</source>
         <translation>Graphique csv</translation>
     </message>

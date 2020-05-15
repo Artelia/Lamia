@@ -42,7 +42,7 @@ from .lamiabase_ud_camera_tool import BaseUrbandrainageCameraTool
 from .lamiabase_ud_sketch_tool import BaseUrbandrainageSketchTool
 from .lamiabase_ud_deficiency_tool import BaseUrbandrainageDeficiencyTool
 from .lamiabase_ud_equipment_tool import BaseUrbandrainageEquipmentTool
-
+from ..subwidgets.subwidget_lidchooser import LidChooserWidget
 
 
 class BaseUrbandrainageNodeTool(BaseNodeTool):
@@ -148,6 +148,20 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
 
             self.toolwidgetmain.comboBox_typeOuvrageAss.currentIndexChanged.connect(self.fielduiTypeOhChanged)
             self.toolwidgetmain.pushButton_getGPS.clicked.connect(self.getGPSValue)
+
+            self.ownerwdg = LidChooserWidget(parentwdg=self, 
+                                                    parentlidfield='lid_actor_1', 
+                                                    parentframe=self.toolwidgetmain.frame_owner, 
+                                                    searchdbase='actor', 
+                                                    searchfieldtoshow=['actorname'] )
+            self.lamiawidgets.append(self.ownerwdg)
+            self.operatorwdg = LidChooserWidget(parentwdg=self, 
+                                                    parentlidfield='lid_actor_2', 
+                                                    parentframe=self.toolwidgetmain.frame_operator, 
+                                                    searchdbase='actor', 
+                                                    searchfieldtoshow=['actorname'] )
+            self.lamiawidgets.append(self.operatorwdg)
+
 
             # ****************************************************************************************
             # child widgets

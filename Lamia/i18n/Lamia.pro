@@ -34,6 +34,14 @@ FORMS =     ../iface/qgiswidget/ifaceqgswidget.ui\
             ../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_observation_tool_ui.ui\
             ../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_observation_tool_ui_2018SNCF.ui\
             ../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_observation_tool_ui_CD41.ui\
+            ../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui\
+            ../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_camera_tool_defaultbuttons_ui.ui\
+            ../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_deficiency_tool_ui.ui\
+            ../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_edge_tool_ui.ui\
+            ../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_edge_tool_ui_heatingnetwork.ui\
+            ../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_equipment_tool_ui.ui\
+            ../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui\
+            ../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_observation_tool_ui.ui\
 
 
 
@@ -58,8 +66,21 @@ SOURCES =   ../Lamia.py\
             ../iface/qgiswidget/tools/toolprepro/base3/lamiabase_raster_tool.py\
             ../iface/qgiswidget/tools/toolprepro/base3/lamiabase_report_tool.py\
             ../iface/qgiswidget/tools/toolprepro/base3/lamiabase_sketch_tool.py\
+            ../iface/qgiswidget/tools/toolprepro/base3/lamiabase_ud_surface_tool.py\
             ../iface/qgiswidget/tools/toolprepro/base3/lamiabase_topography_tool.py\
             ../iface/qgiswidget/tools/toolprepro/base3/lamiabase_topographydata_tool.py\
+            ../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_deficiency_tool.py\
+            ../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_edge_tool.py\
+            ../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_equipment_tool.py\
+            ../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_geoarea_tool.py\
+            ../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool.py\
+            ../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_observation_tool.py\
+            ../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_raster_tool.py\
+            ../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_report_tool.py\
+            ../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_sketch_tool.py\
+
+
+
 
 
 TRANSLATIONS = Lamia_fr.ts

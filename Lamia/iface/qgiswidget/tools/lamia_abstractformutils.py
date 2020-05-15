@@ -28,10 +28,12 @@ This file is part of LAMIA.
 from qgis.PyQt.QtWidgets import (QWidget, QTreeWidgetItem, QMessageBox, QFileDialog, QTableWidget,
                                      QHeaderView, QComboBox, QSpinBox,QCheckBox, QPushButton, QDateEdit,QDateTimeEdit, QTextEdit,
                                      QDoubleSpinBox, QDialog, QVBoxLayout, QTreeWidget, QLineEdit, QCheckBox,
-                                     QLabel, QMessageBox, QTextBrowser, QTableWidgetItem,QApplication,QToolButton, QAbstractItemView)
+                                     QLabel, QMessageBox, QTextBrowser, QTableWidgetItem,QApplication,QToolButton, QAbstractItemView,
+                                     QTabWidget)
 """
 from qgis.PyQt.QtWidgets import (QComboBox, QTextEdit,QLineEdit,  QSpinBox, QDoubleSpinBox,
-                                 QDateEdit,QDateTimeEdit, QTextBrowser, QCheckBox, QLabel)
+                                 QDateEdit,QDateTimeEdit, QTextBrowser, QCheckBox, QLabel, QTabWidget,
+                                 QTabBar)
 from qgis.PyQt import QtCore
 import qgis, logging, datetime, os
 import qgis.core
@@ -50,6 +52,21 @@ class FormToolUtils(QtCore.QObject):
         templinkuserwgd = self.formtoolwidget.formtoolwidgetconfdict
         if templinkuserwgd is None:
             raise TypeError('formtoolwidgetconfdict of {} is None'.format(self.formtoolwidget.DBASETABLENAME))
+
+        #set multirowtab
+        tabwidgets = self.formtoolwidget.toolwidget.findChildren(QTabWidget)
+        # https://forum.qt.io/topic/21391/tab-widget-tab-height-to-accommodate-2-line-tab-names/2
+        for tabwdg in tabwidgets:
+            tabbar = tabwdg.tabBar()
+            for index in range(tabbar.count()):
+                text = tabbar.tabText(index)
+                if r'\n' in text.strip():
+                    txtsplit = text.split(r'\n')
+                    newtxt = '\n'.join(txtsplit)
+                    qlab = QLabel(newtxt,tabwdg)
+                    qlab.setTextFormat(QtCore.Qt.PlainText)
+                    tabbar.setTabText(index,'')
+                    tabwdg.tabBar().setTabButton(index, QTabBar.RightSide, qlab)
 
         for tablename in templinkuserwgd:
             dbasetables = self.formtoolwidget.dbase.dbasetables
