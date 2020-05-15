@@ -266,6 +266,13 @@ class PostGisDBaseParser(AbstractDBaseParser):
         else:
             return False
 
+    def getTables(self):
+        # select * from information_schema.tables where table_schema = 'information_schema'
+        # sql = "SELECT name FROM sqlite_master WHERE type='table'"
+        sql = f"SELECT table_name  FROM information_schema.tables WHERE table_schema = '{self.pgschema.lower()}'"
+        result = self.query(sql)
+        return [elem[0] for elem in result]
+
     def getColumns(self, tablename):
         sql = "SELECT column_name FROM information_schema.columns "\
                "WHERE table_name  = '{}' AND table_schema = '{}'".format(tablename.lower(),

@@ -144,6 +144,7 @@ class SpatialiteDBaseParser(AbstractDBaseParser):
         shutil.copyfile(originalfile, slfile)
 
 
+
     def query(self, sql,arguments=[], docommit=True):
         # cursor = self.connSLITE.cursor()
         if self.SLITEcursor is None:
@@ -187,6 +188,11 @@ class SpatialiteDBaseParser(AbstractDBaseParser):
             return True
         else:
             return False
+
+    def getTables(self):
+        sql = "SELECT name FROM sqlite_master WHERE type='table'"
+        result = self.query(sql)
+        return [elem[0] for elem in result]
 
     def getColumns(self, tablename):
         sql = "PRAGMA table_info(" + str(tablename) + ")"

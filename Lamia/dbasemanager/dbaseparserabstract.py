@@ -113,7 +113,7 @@ class AbstractDBaseParser():
         # the current prestation id
         self.currentprestationid = None
 
-        self.version = None  # dbase version
+        self.baseversion = None  # dbase version
         self.workversion = None  # dbase version
 
         self.revisionwork = False
@@ -268,7 +268,10 @@ class AbstractDBaseParser():
 
         #init variables
         # sql = "SELECT metier, repertoireressources,crs, version, workversion, variante   FROM Basedonnees;"
-        sql = "SELECT businessline, resourcesdirectory,crs, baseversion, workversion, variant   FROM database"
+        if 'database' in self.getTables():
+            sql = "SELECT businessline, resourcesdirectory,crs, baseversion, workversion, variant   FROM database"
+        else:
+            sql = "SELECT metier, repertoireressources,crs, version, workversion, variante   FROM Basedonnees"
         query = self.query(sql)
         worktype, resdir, crs , version, workversion, variante  = [row[0:6] for row in query][0]
 
@@ -346,7 +349,8 @@ class AbstractDBaseParser():
                                                     baseversiontoread=newversion,
                                                     workversiontoread=self.workversion)
             dictnew = self.dbconfigreader.basedict
-            pythonupdatefile = self.dbconfigreader.baseversionspathlist[-1][1]
+            indexbaseversionspathlist = self.dbconfigreader.baseversionnumbers.index(newversion)
+            pythonupdatefile = self.dbconfigreader.baseversionspathlist[indexbaseversionspathlist][1]
         if typebase == 'work':
             self.dbconfigreader.createDBDictionary(worktype=self.worktype,
                                                     baseversiontoread=self.baseversion,
@@ -356,7 +360,8 @@ class AbstractDBaseParser():
                                                     baseversiontoread=self.baseversion,
                                                     workversiontoread=newversion)
             dictnew = self.dbconfigreader.workdict
-            pythonupdatefile = self.dbconfigreader.workversionspathlist[-1][1]
+            indexworkversionspathlist = self.dbconfigreader.workversionnumbers.index(newversion)
+            pythonupdatefile = self.dbconfigreader.workversionspathlist[indexworkversionspathlist][1]
         #* get diffs saved in results
         results = []
         for table in dictnew.keys():
@@ -424,80 +429,15 @@ class AbstractDBaseParser():
             self.workversion = newversion
 
         # sql = "UPDATE Basedonnees SET version = '" + str(self.version) + "'"
-        sql = "UPDATE database SET baseversion = '" + str(self.version) + "'"
+        if 'database' in self.getTables():
+            sql = "UPDATE database SET baseversion = '" + str(self.baseversion) + "'"
+        else:
+            sql = "UPDATE Basedonnees SET version = '" + str(self.baseversion) + "'"
         if self.workversion is not None:
             sql += ",workversion = '" + str(self.workversion) + "'"
 
         self.query(sql)
 
-
-        if False:
-            if typebase == 'base':
-                indexnewversion = [ver[0] for ver in baseversions].index(newversion)
-                filenewversion = baseversions[indexnewversion][1]
-                #updates new columsns
-                self.createDBDictionary2(self.type, baseversiontoread=oldversion, workversiontoread=self.workversion)
-                dictold = dict(self.dbasetables)
-                self.createDBDictionary2(self.type, baseversiontoread=newversion, workversiontoread=self.workversion)
-                dictnew = dict(self.dbasetables)
-            elif typebase == 'metier':
-                indexnewversion = [ver[0] for ver in workversions].index(newversion)
-                filenewversion = workversions[indexnewversion][1]
-                #updates new columsns
-                self.createDBDictionary2(self.type, baseversiontoread=self.version, workversiontoread=oldversion)
-                dictold = dict(self.dbasetables)
-                self.createDBDictionary2(self.type, baseversiontoread=self.version, workversiontoread=newversion)
-                dictnew = dict(self.dbasetables)
-
-
-
-            results = []
-
-            for table in dictnew.keys():
-                for field in dictnew[table]['fields']:
-                    if field not in dictold[table]['fields'].keys():
-                        results.append([table, field])
-
-            if debug: logging.getLogger("Lamia").debug('diff : %s', str(results))
-            if self.qgsiface is None:
-                print('diff :',str(results))
-
-            for table, field in results:
-                sql = 'ALTER TABLE ' + table + ' ADD COLUMN ' + field + ' '
-                if self.dbasetype == 'spatialite':
-                    if 'VARCHAR' in dictnew[table]['fields'][field]['PGtype']:
-                        sql += ' TEXT '
-                    else:
-                        sql += PGTYPE_TO_SLTYPE[dictnew[table]['fields'][field]['PGtype']]
-                elif self.dbasetype == 'postgis':
-                    sql += dictnew[table]['fields'][field]['PGtype']
-                self.query(sql)
-
-            # read potential python file
-            pythonfile, ext = os.path.splitext(filenewversion)
-            pythonfile = pythonfile + '.txt'
-
-            if os.path.isfile(pythonfile):
-                pyfile = open(pythonfile,'r')
-                text = pyfile.read()
-                pyfile.close()
-                exec (text)
-
-
-            #update version
-            if typebase == 'base':
-                self.version = newversion
-                self.workversion = self.workversion
-            elif typebase == 'metier':
-                self.version = self.version
-                self.workversion = newversion
-
-            # sql = "UPDATE Basedonnees SET version = '" + str(self.version) + "'"
-            sql = "UPDATE database SET baseversion = '" + str(self.version) + "'"
-            if self.workversion is not None:
-                sql += ",workversion = '" + str(self.workversion) + "'"
-
-            self.query(sql)
 
     def createRessourcesDir(self, dbaseressourcesdirectory, **kwargs):
 

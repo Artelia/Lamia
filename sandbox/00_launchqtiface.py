@@ -44,8 +44,9 @@ class DBaseViewer():
 
         if True :
             SLFILE = os.path.join(os.path.dirname(__file__), '..','test','datas','lamia_assainissement','test01.sqlite')
-            SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_urbandrainage_Lamia\test01.sqlite"
+            # SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_urbandrainage_Lamia\test01.sqlite"
             #SLFILE = r"C:\Users\Public\Documents\lamia\test01\test01.sqlite"
+            SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue\test01.sqlite"
             self._loadLocale()
             self._createWin()
             self._createMainWin()
@@ -63,8 +64,7 @@ class DBaseViewer():
         
 
     def showIFace(self):
-        
-        if self.wind.qgiscanvas.layers['edge']['layer'].featureCount() > 0:
+        if 'edge' in self.wind.qgiscanvas.layers.keys() and self.wind.qgiscanvas.layers['edge']['layer'].featureCount() > 0:
             extent = self.wind.qgiscanvas.layers['edge']['layer'].extent().buffered(10.0)
         else:
             extent = qgis.core.QgsRectangle(X_BEGIN, Y_BEGIN, X_BEGIN + 10, Y_BEGIN + 10)
