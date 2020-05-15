@@ -34,6 +34,8 @@ from ...lamia_abstractformtool import AbstractLamiaFormTool
 from .lamiabase_camera_tool import BaseCameraTool
 from .lamiabase_sketch_tool import BaseSketchTool
 from ..subwidgets.subwidget_tcmanytomany import TcmanytomanyChooserWidget
+from ..subwidgets.subwidget_lidchooser import LidChooserWidget
+from .lamiabase_graphcsv_tool import BaseGraphcsvTool
 
 class BaseSurfaceTool(AbstractLamiaFormTool):
 
@@ -67,6 +69,7 @@ class BaseSurfaceTool(AbstractLamiaFormTool):
         self.formtoolwidgetconfdictmain = {'surface' : {'linkfield' : 'id_delivery',
                                             'widgets' : {
                                                         'surfacetype' : self.toolwidgetmain.comboBox_type,
+                                                        'surfacesubtype' : self.toolwidgetmain.comboBox_subtype,
                                             }},
                             'object' : {'linkfield' : 'id_object',
                                         'widgets' : {}}}
@@ -80,6 +83,11 @@ class BaseSurfaceTool(AbstractLamiaFormTool):
 
         self.propertieswdgPHOTO = BaseCameraTool(**self.instancekwargs)
         self.dbasechildwdgfield.append(self.propertieswdgPHOTO)
+
+        self.propertieswdgGRAPHcsv = BaseGraphcsvTool(**self.instancekwargs)
+        self.dbasechildwdgfield.append(self.propertieswdgGRAPHcsv)
+
+
 
         self.tcsubwidget = TcmanytomanyChooserWidget(parentwdg=self ,
                                                         tcmanytomanyname='tcsurfacedescriptionsystem',

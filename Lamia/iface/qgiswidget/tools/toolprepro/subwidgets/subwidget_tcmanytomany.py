@@ -26,7 +26,7 @@ This file is part of LAMIA.
 import os, logging
 
 from qgis.PyQt.QtWidgets import (QWidget, QVBoxLayout,QTableWidgetItem, QHeaderView, QInputDialog,
-                                    QComboBox, QAbstractItemView)
+                                    QComboBox, QAbstractItemView,QMessageBox,QDialog)
 from qgis.PyQt import uic, QtCore
 
 from .subwidget_abstract import AbstractSubWidget
@@ -82,12 +82,8 @@ class TcmanytomanyChooserWidget(AbstractSubWidget):
         if self.parentwdg.dbase.isTableSpatial(self.childtablename):
             self.isspatial = True
             self.parentwdg.mainifacewidget.qgiscanvas.createorresetRubberband(type=0, instance=self)
-            #self.tableWidget_actors.currentCellChanged(int currentRow, int currentColumn, int previousRow, int previousColumn)
-            # self.tableWidget_actors.currentCellChanged.connect(self._cellChanged)
-            # self.tableWidget_actors.currentItemChanged.connect(self._dummy)
-            self.tableWidget_actors.itemSelectionChanged.connect(self._dummy)
-
-            print(self.rubberBand)
+            self.tableWidget_actors.itemSelectionChanged.connect(self._cellChanged)
+            self.toolButton_add.setText('Pick')
 
 
     def postSelectFeature(self):
@@ -222,7 +218,16 @@ class TcmanytomanyChooserWidget(AbstractSubWidget):
             else:
                 return None
         else:
+            self.parentwdg.mainifacewidget.qgiscanvas.captureGeometry(fctonstopcapture=self.stopCapture,
+                                                                       listpointinitialgeometry=[])
             return None
+
+    def stopCapture(self,points):
+        qgiscanvas = self.parentwdg.mainifacewidget.qgiscanvas
+        pkchild, dist = qgiscanvas.getNearestPk(self.childtablename, points[0])
+        self.addChild(pkchild)
+        self.tableWidget_actors.selectRow(self.tableWidget_actors.rowCount() - 1)
+        qgiscanvas.stopCapture()
 
 
     def removeChild(self):
@@ -230,12 +235,12 @@ class TcmanytomanyChooserWidget(AbstractSubWidget):
         for qtrow in self.tableWidget_actors.selectionModel().selectedRows():
             self.parentwdg.updateFormTitleBackground(subwidgethaschanged=True)
             rowindex = qtrow.row()
-            pkactor = int(self.tableWidget_actors.item(rowindex, 0).text())
-            idactor = self.parentwdg.dbase.getValuesFromPk('actor_qgis',
-                                                            'id_actor',
-                                                            pkactor)
+            pkchild = int(self.tableWidget_actors.item(rowindex, 0).text())
+            idchild = self.parentwdg.dbase.getValuesFromPk(self.childtablename + '_qgis',
+                                                            self.childmanytomanyfield,
+                                                            pkchild)
             parentidobjet = self.parentwdg.dbase.getValuesFromPk(self.parenttablename + '_qgis',
-                                                            'id_object',
+                                                            self.parentmanytomanyfield,
                                                             self.parentwdg.currentFeaturePK)
             tcmanytomanyfieldvalues=[]
             for i, tcmanytomanyfield in enumerate(self.tcmanytomanydisplayfields):
@@ -250,7 +255,11 @@ class TcmanytomanyChooserWidget(AbstractSubWidget):
                     rolerawvalue = "'" + rolerawvalue + "'"
                 tcmanytomanyfieldvalues.append(rolerawvalue)
 
-            sql = f"DELETE FROM tcobjectactor WHERE lid_object = {parentidobjet}  AND lid_actor = {idactor}"
+            # sql = f"DELETE FROM tcobjectactor WHERE lid_object = {parentidobjet}  AND lid_actor = {idactor}"
+            sql = f"DELETE FROM {self.tcmanytomanyname} \
+                     WHERE l{self.parentmanytomanyfield} = {parentidobjet}  \
+                    AND l{self.childmanytomanyfield} = {idchild}"
+
             for i, tcmanytomanyfield in enumerate(self.tcmanytomanydisplayfields):
                 res = tcmanytomanyfieldvalues[i]
                 if res == 'NULL':
@@ -265,33 +274,18 @@ class TcmanytomanyChooserWidget(AbstractSubWidget):
                 self.tableWidget_actors.removeRow(indexrow)
         self._resizeLastSection()
 
-
-
     def _resizeLastSection(self):
         header = self.tableWidget_actors.horizontalHeader()
         header.resizeSections(QHeaderView.ResizeToContents)
         header.setStretchLastSection(True)
         self.tableWidget_actors.update()
 
-
-
     def _getfieldrawlong(self,tablename,fieldname):
         fieldraw = [elem[1] for elem in self.parentwdg.dbase.dbasetables[tablename]['fields'][fieldname]['Cst']]
         fieldlong = [elem[0] for elem in self.parentwdg.dbase.dbasetables[tablename]['fields'][fieldname]['Cst']]
         return fieldraw, fieldlong
 
-    def _cellChanged(self, currentRow, currentColumn, previousRow, previousColumn):
-        # (int currentRow, int currentColumn, int previousRow, int previousColumn)
-        # self.tableWidget_actors.currentCellChanged.connect(self.cellChanged)
-        print(currentRow, currentColumn, previousRow, previousColumn)
-        if currentRow>=0:
-            qgiscanvas = self.parentwdg.mainifacewidget.qgiscanvas
-            pkchild = int(self.tableWidget_actors.item(currentRow, 0).text())
-            geom = qgiscanvas.getQgsGeomFromPk(self.parentwdg.dbase, self.childtablename, pkchild)
-            qgiscanvas.createRubberBandForSelection(geom,instance=self)
-
-    def _dummy(self,arg1=None, arg2=None, arg3=None, arg4=None):
-        print('dum', arg1, arg2, arg3, arg4)
+    def _cellChanged(self):
         qgiscanvas = self.parentwdg.mainifacewidget.qgiscanvas
         geoms=[]
         for qtrow in self.tableWidget_actors.selectionModel().selectedRows():
@@ -299,3 +293,21 @@ class TcmanytomanyChooserWidget(AbstractSubWidget):
             pkchild = int(self.tableWidget_actors.item(currentRow, 0).text())
             geoms.append(qgiscanvas.getQgsGeomFromPk(self.parentwdg.dbase, self.childtablename, pkchild))
         qgiscanvas.createRubberBandForSelection(geoms,instance=self)
+
+
+class pickerDialog(QDialog):
+    def __init__(self, qgiscanvas):
+        super().__init__(None)
+        self.qgiscanvas = qgiscanvas
+        self.setWindowTitle("Dialog")
+        """
+            def captureGeometry(self, 
+                        capturetype=0,
+                        fctonstopcapture=None,
+                        listpointinitialgeometry=[]):
+        """
+        self.qgiscanvas.captureGeometry(fctonstopcapture=self.stopCapture)
+
+    def stopCapture(self,points):
+        print(points)
+

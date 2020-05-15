@@ -71,7 +71,7 @@ class DBaseViewer():
         # logging.getLogger("Lamia_unittest").debug('Extent : %s', extent)
         self.wind.qgiscanvas.canvas.setExtent(extent)
 
-        self.wind.setVisualMode(visualmode=0)
+        self.wind.setVisualMode(visualmode=1)
 
         # display good widget
         # wdg = self.wind.toolwidgets['toolprepro']['Graphique_csv'][0]

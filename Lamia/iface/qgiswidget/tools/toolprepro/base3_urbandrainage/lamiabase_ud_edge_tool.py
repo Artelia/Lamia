@@ -46,6 +46,8 @@ class BaseUrbandrainageEdgeTool(BaseEdgeTool):
             self.toolwidgetmain = UserUIField()
             self.formtoolwidgetconfdictmain = {'edge': {'linkfield': 'id_edge',
                                                         'widgets': { 'sewertype': self.toolwidgetmain.comboBox_typeReseau,
+                                                                    'pipetype': self.toolwidgetmain.comboBox_pipetype,
+                                                                    'pipesubtype': self.toolwidgetmain.comboBox_pipesubtype,
                                                                     'lateral': self.toolwidgetmain.comboBox_branch,
                                                                     'flowtype': self.toolwidgetmain.comboBox_typeecoul,
                                                                     'pipeshape': self.toolwidgetmain.comboBox_formecana,

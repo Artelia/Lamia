@@ -637,6 +637,15 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         #self.currentmaptool.mappoints = listpointinitialgeometry
         self.currentmaptool.startCapturing()
 
+
+    def stopCapture(self):
+        if self.currentmaptool is not None:
+            try:
+                self.currentmaptool.stopCapture.disconnect()
+            except TypeError:
+                pass
+
+
     def ______________________________RubberbandManagement(self):
         pass
 

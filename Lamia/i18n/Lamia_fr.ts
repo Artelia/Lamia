@@ -390,7 +390,7 @@
         <translation>Définir comme le marché courant</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_facility_tool_ui.ui" line="46"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_delivery_tool_ui.ui" line="120"/>
         <source>Actors</source>
         <translation>Intervenants</translation>
     </message>
@@ -455,9 +455,19 @@
         <translation>Editer</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_facility_tool_ui.ui" line="74"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_facility_tool_ui.ui" line="81"/>
         <source>Comment</source>
         <translation>Commentaire</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_facility_tool_ui.ui" line="64"/>
+        <source>Operator</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_facility_tool_ui.ui" line="101"/>
+        <source>Owner</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1087,6 +1097,34 @@
     </message>
 </context>
 <context>
+    <name>Form_subwidget</name>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/subwidgets/subwidget_signature_ui.ui" line="14"/>
+        <source>Form</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/subwidgets/subwidget_lidchooser_ui.ui" line="23"/>
+        <source>Search</source>
+        <translation>Recherche</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/subwidgets/subwidget_tcmanytomany_ui.ui" line="41"/>
+        <source>Add</source>
+        <translation>Ajouter</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/subwidgets/subwidget_tcmanytomany_ui.ui" line="48"/>
+        <source>Remove</source>
+        <translation>Retirer</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/subwidgets/subwidget_signature_ui.ui" line="86"/>
+        <source>Edit</source>
+        <translation>Editer</translation>
+    </message>
+</context>
+<context>
     <name>Lamia</name>
     <message>
         <location filename="../Lamia.py" line="191"/>
@@ -1593,7 +1631,7 @@
         <translation>GPS non connecté</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_facility_tool.py" line="45"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_facility_tool.py" line="46"/>
         <source>Facility</source>
         <translation>Aménagement</translation>
     </message>

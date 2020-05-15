@@ -34,6 +34,7 @@ from .lamiabase_camera_tool import BaseCameraTool
 from .lamiabase_sketch_tool import BaseSketchTool
 from .lamiabase_actor_tool import BaseActorTool
 from ..subwidgets.subwidget_tcmanytomany import TcmanytomanyChooserWidget
+from ..subwidgets.subwidget_lidchooser import LidChooserWidget
 
 
 class BaseFacilityTool(AbstractLamiaFormTool):
@@ -92,18 +93,28 @@ class BaseFacilityTool(AbstractLamiaFormTool):
             # self.propertieswdgACTOR = BaseActorTool(**self.instancekwargs)
             # self.dbasechildwdgfield.append(self.propertieswdgACTOR)
 
-            self.tcsubwidget = TcmanytomanyChooserWidget(parentwdg=self ,
-                                                            tcmanytomanyname='tcobjectactor',
-                                                            childtablename='actor',
-                                                            parentmanytomanyfield='id_object',
-                                                            childmanytomanyfield='id_actor',
-                                                            childdisplayfields=['actorname', 'society'],
-                                                            tcmanytomanydisplayfields=['role'])
-            self.toolwidgetmain.frame_actor.layout().addWidget(self.tcsubwidget)
-            self.lamiawidgets.append(self.tcsubwidget)
+            # self.tcsubwidget = TcmanytomanyChooserWidget(parentwdg=self ,
+            #                                                 tcmanytomanyname='tcobjectactor',
+            #                                                 childtablename='actor',
+            #                                                 parentmanytomanyfield='id_object',
+            #                                                 childmanytomanyfield='id_actor',
+            #                                                 childdisplayfields=['actorname', 'society'],
+            #                                                 tcmanytomanydisplayfields=['role'])
+            # self.toolwidgetmain.frame_actor.layout().addWidget(self.tcsubwidget)
+            # self.lamiawidgets.append(self.tcsubwidget)
             #frame_actor
-
-
+            self.ownerwdg = LidChooserWidget(parentwdg=self, 
+                                                  parentlidfield='lid_actor_1', 
+                                                  parentframe=self.toolwidgetmain.frame_owner, 
+                                                  searchdbase='actor', 
+                                                  searchfieldtoshow=['actorname'] )
+            self.lamiawidgets.append(self.ownerwdg)
+            self.operatorwdg = LidChooserWidget(parentwdg=self, 
+                                                  parentlidfield='lid_actor_2', 
+                                                  parentframe=self.toolwidgetmain.frame_operator, 
+                                                  searchdbase='actor', 
+                                                  searchfieldtoshow=['actorname'] )
+            self.lamiawidgets.append(self.operatorwdg)
 
 
     def postSelectFeature(self):

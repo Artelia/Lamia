@@ -19,6 +19,9 @@ FORMS =     ../iface/qgiswidget/ifaceqgswidget.ui\
             ../iface/qgiswidget/tools/toolprepro/base3/lamiabase_sketch_tool_ui.ui\
             ../iface/qgiswidget/tools/toolprepro/base3/lamiabase_topography_tool_ui.ui\
             ../iface/qgiswidget/tools/toolprepro/base3/lamiabase_topographydata_tool_ui.ui\
+            ../iface/qgiswidget/tools/toolprepro/subwidgets/subwidget_lidchooser_ui.ui\
+            ../iface/qgiswidget/tools/toolprepro/subwidgets/subwidget_tcmanytomany_ui.ui\
+            ../iface/qgiswidget/tools/toolprepro/subwidgets/subwidget_signature_ui.ui\
             ../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_camera_tool_defaultbuttons_ui.ui\
             ../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_deficiency_tool_ui.ui\
             ../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_edge_tool_ui.ui\

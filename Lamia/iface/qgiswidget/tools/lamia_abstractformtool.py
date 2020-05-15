@@ -745,12 +745,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         debug = False
 
         if debug: logging.getLogger("Lamia_unittest").debug('start points : %s %s', self.DBASETABLENAME, points)
-
-        if self.mainifacewidget.qgiscanvas.currentmaptool is not None:
-            try:
-                self.mainifacewidget.qgiscanvas.currentmaptool.stopCapture.disconnect()
-            except TypeError:
-                pass
+        self.mainifacewidget.qgiscanvas.stopCapture()
 
         pointsmapcanvas = []
         pointslayer=[]
