@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog</class>
- <widget class="QDialog" name="Dialog">
+ <class>Dialog_main</class>
+ <widget class="QDialog" name="Dialog_main">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -17,7 +17,7 @@
    <item row="0" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>Adresse</string>
+      <string>Host</string>
      </property>
     </widget>
    </item>
@@ -44,7 +44,7 @@
    <item row="2" column="0">
     <widget class="QLabel" name="label_3">
      <property name="text">
-      <string>Nom BD</string>
+      <string>DB name</string>
      </property>
     </widget>
    </item>
@@ -67,7 +67,7 @@
    <item row="5" column="0">
     <widget class="QLabel" name="label_5">
      <property name="text">
-      <string>Mot de passe</string>
+      <string>Password</string>
      </property>
     </widget>
    </item>
@@ -91,7 +91,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>Dialog</receiver>
+   <receiver>Dialog_main</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -107,7 +107,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>Dialog</receiver>
+   <receiver>Dialog_main</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

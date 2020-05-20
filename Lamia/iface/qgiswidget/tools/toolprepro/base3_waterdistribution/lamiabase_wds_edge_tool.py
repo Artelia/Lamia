@@ -35,7 +35,7 @@ from qgis.PyQt.QtWidgets import (QWidget, QLabel, QFrame)
 from ..base3.lamiabase_edge_tool import BaseEdgeTool
 from .lamiabase_wds_camera_tool import BaseWaterdistributionCameraTool as BaseCameraTool
 from .lamiabase_wds_sketch_tool import BaseWaterdistributionSketchTool as BaseSketchTool
-
+from ..subwidgets.subwidget_edgetonode import EdgeToNodeWidget
 
 
 class BaseWaterdistributionEdgeTool(BaseEdgeTool):
@@ -55,24 +55,24 @@ class BaseWaterdistributionEdgeTool(BaseEdgeTool):
         if self.dbase.variante in [None, 'Lamia']:
             self.toolwidgetmain = UserUIField()
 
-            self.formtoolwidgetconfdictmain = {'Infralineaire': {'linkfield': 'id_infralineaire',
-                                                        'widgets': OrderedDict([('type_eau', self.toolwidgetmain.comboBox_typeeau),
-                                                                                ('branchement', self.toolwidgetmain.comboBox_branchement),
-                                                                                ('domaine', self.toolwidgetmain.comboBox_domaine),
+            self.formtoolwidgetconfdictmain = {'edge': {'linkfield': 'id_edge',
+                                                        'widgets': OrderedDict([('networktype', self.toolwidgetmain.comboBox_typeeau),
+                                                                                ('lateral', self.toolwidgetmain.comboBox_branchement),
+                                                                                ('domain', self.toolwidgetmain.comboBox_domaine),
 
-                                                                                ('diametre_ext', self.toolwidgetmain.doubleSpinBox_diametre),
-                                                                                ('profondeur_generatrice', self.toolwidgetmain.doubleSpinBox_gene),
-                                                                                ('materiau', self.toolwidgetmain.comboBox_materiau),
+                                                                                ('diameterext', self.toolwidgetmain.doubleSpinBox_diametre),
+                                                                                ('depthtoppipe', self.toolwidgetmain.doubleSpinBox_gene),
+                                                                                ('material', self.toolwidgetmain.comboBox_materiau),
                                                                                 ('joint', self.toolwidgetmain.comboBox_joint),
 
-                                                                                ('protection_catodique',self.toolwidgetmain.comboBox_protectioncatho),
-                                                                                ('mode_circulation', self.toolwidgetmain.comboBox_modecircu),
-                                                                                ('fonction_cana',self.toolwidgetmain.comboBox_fonctioncan)
+                                                                                ('cathodicprotection',self.toolwidgetmain.comboBox_protectioncatho),
+                                                                                ('flowtype', self.toolwidgetmain.comboBox_modecircu),
+                                                                                ('pipefunction',self.toolwidgetmain.comboBox_fonctioncan)
                                                                                 ])},
-                                                'Objet': {'linkfield': 'id_objet',
+                                                'object': {'linkfield': 'id_object',
                                                         'widgets': {
-                                                                    'commentaire':self.toolwidgetmain.textBrowser_commentaire}},
-                                                'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
+                                                                    'comment':self.toolwidgetmain.textBrowser_commentaire}},
+                                                'descriptionsystem': {'linkfield': 'id_descriptionsystem',
                                                                     'widgets': {}}}
 
             self.toolwidgetmain.toolButton_diametre.clicked.connect(
@@ -80,45 +80,49 @@ class BaseWaterdistributionEdgeTool(BaseEdgeTool):
             self.toolwidgetmain.toolButton_gene.clicked.connect(
                 lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_gene))
 
-
             self.dbasechildwdgfield = []
             self.instancekwargs['parentwidget'] = self
-
-            #if self.parentWidget is None:
             self.propertieswdgPHOTOGRAPHIE = BaseCameraTool(**self.instancekwargs)
             self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
-
-
             self.propertieswdgCROQUIS = BaseSketchTool(**self.instancekwargs)
             self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
-        elif self.dbase.variante in ['Reseau_chaleur']:
+            self.edgetonode = EdgeToNodeWidget(self,
+                                                lateralfield='lateral',
+                                                upstreamnodeidfield='lid_descriptionsystem_1',
+                                                downstreamnodeidfield='lid_descriptionsystem_2',
+                                                parentframe=self.toolwidgetmain.frame_edgetonode
+                                                 )
+            self.lamiawidgets.append(self.edgetonode)
+
+
+        elif self.dbase.variante in ['urban_heating']:
             self.toolwidgetmain = UserUIField2()
 
             self.formtoolwidgetconfdictmain = {'Infralineaire': {'linkfield': 'id_infralineaire',
                                                         'widgets': OrderedDict(
-                                                            [('type_eau', self.toolwidgetmain.comboBox_typeeau),
-                                                            ('branchement', self.toolwidgetmain.comboBox_branchement),
-                                                            ('domaine', self.toolwidgetmain.comboBox_domaine),
+                                                            [('networktype', self.toolwidgetmain.comboBox_typeeau),
+                                                            ('lateral', self.toolwidgetmain.comboBox_branchement),
+                                                            ('domain', self.toolwidgetmain.comboBox_domaine),
 
-                                                            ('diametre_ext',self.toolwidgetmain.doubleSpinBox_diametre),
-                                                            ('diametre_int',self.toolwidgetmain.doubleSpinBox_diamint),
-                                                            ('profondeur_generatrice',self.toolwidgetmain.doubleSpinBox_gene),
-                                                            ('materiau', self.toolwidgetmain.comboBox_materiau),
+                                                            ('diameterext',self.toolwidgetmain.doubleSpinBox_diametre),
+                                                            ('diameterint',self.toolwidgetmain.doubleSpinBox_diamint),
+                                                            ('depthtoppipe',self.toolwidgetmain.doubleSpinBox_gene),
+                                                            ('material', self.toolwidgetmain.comboBox_materiau),
                                                             ('joint', self.toolwidgetmain.comboBox_joint),
 
-                                                            ('calorifugeage',self.toolwidgetmain.comboBox_calor),
-                                                            ('calorif_typ',self.toolwidgetmain.comboBox_calortype),
-                                                            ('calorif_ep', self.toolwidgetmain.spinBox_calorep),
+                                                            ('insulation',self.toolwidgetmain.comboBox_calor),
+                                                            ('insulationtype',self.toolwidgetmain.comboBox_calortype),
+                                                            ('insulationthickness', self.toolwidgetmain.spinBox_calorep),
 
-                                                            ('protection_catodique',self.toolwidgetmain.comboBox_protectioncatho),
-                                                            ('mode_circulation', self.toolwidgetmain.comboBox_modecircu),
+                                                            ('cathodicprotection',self.toolwidgetmain.comboBox_protectioncatho),
+                                                            ('flowtype', self.toolwidgetmain.comboBox_modecircu),
                                                             (
-                                                            'fonction_cana', self.toolwidgetmain.comboBox_fonctioncan)
+                                                            'pipefunction', self.toolwidgetmain.comboBox_fonctioncan)
                                                             ])},
-                                        'Objet': {'linkfield': 'id_objet',
+                                        'object': {'linkfield': 'id_object',
                                                 'widgets': {
-                                                    'commentaire': self.toolwidgetmain.textBrowser_commentaire}},
+                                                    'comment': self.toolwidgetmain.textBrowser_commentaire}},
                                         'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
                                                             'widgets': {}}}
 
@@ -133,14 +137,18 @@ class BaseWaterdistributionEdgeTool(BaseEdgeTool):
 
             self.dbasechildwdgfield = []
             self.instancekwargs['parentwidget'] = self
-
-
             self.propertieswdgPHOTOGRAPHIE = BaseCameraTool(**self.instancekwargs)
             self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
-
             self.propertieswdgCROQUIS = BaseSketchTool(**self.instancekwargs)
             self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
+            self.edgetonode = EdgeToNodeWidget(self,
+                                                lateralfield='lateral',
+                                                upstreamnodeidfield='lid_descriptionsystem_1',
+                                                downstreamnodeidfield='lid_descriptionsystem_2',
+                                                parentframe=self.toolwidgetmain.frame_edgetonode
+                                                 )
+            self.lamiawidgets.append(self.edgetonode)
 
 
 

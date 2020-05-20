@@ -38,7 +38,7 @@ base3 = QtCore.QObject()
 
 class BaseActorTool(AbstractLamiaFormTool):
 
-
+    PREPROTOOLNAME = 'actor'
     DBASETABLENAME = 'actor'
     LOADFIRST = False
 

@@ -32,23 +32,28 @@ from .subwidget_abstract import AbstractSubWidget
 
 class LidChooserWidget(AbstractSubWidget):
 
+    UIPATH = os.path.join(os.path.dirname(__file__), 'subwidget_lidchooser_ui.ui')
 
-    def __init__(self, parentwdg=None, parentlidfield=None, parentframe=None, searchdbase='', searchfieldtoshow=[] ):
-        super(LidChooserWidget, self).__init__(parent=parentwdg)
-        uipath = os.path.join(os.path.dirname(__file__), 'subwidget_lidchooser_ui.ui')
-        uic.loadUi(uipath, self)
+    def __init__(self, 
+                parentwdg=None,  
+                parentframe=None, 
+                searchdbase='', 
+                searchfieldtoshow=[],
+                parentlidfield=None):
+        super(LidChooserWidget, self).__init__(parent=parentwdg,parentframe=parentframe)
+
         self.parentwdg=parentwdg
         self.parentlidfield=parentlidfield
         self.searchdbase = searchdbase
         self.searchfieldtoshow = searchfieldtoshow
-        self.parentframe = parentframe
+        # self.parentframe = parentframe
 
-        if self.parentframe.layout() is not None:
-            self.parentframe.layout().addWidget(self)
-        else:
-            vlayout = QVBoxLayout()
-            vlayout.addWidget(self)
-            self.parentframe.setLayout(vlayout)
+        # if self.parentframe.layout() is not None:
+        #     self.parentframe.layout().addWidget(self)
+        # else:
+        #     vlayout = QVBoxLayout()
+        #     vlayout.addWidget(self)
+        #     self.parentframe.setLayout(vlayout)
 
         self.lineEdit.textChanged.connect(self.loadDatas)
 
@@ -97,14 +102,14 @@ class LidChooserWidget(AbstractSubWidget):
 
 
     def loadDatas(self, txtstr=None):
-        print('loadDatas', self.parentwdg.DBASETABLENAME)
+        # print('loadDatas', self.parentwdg.DBASETABLENAME)
         self.comboBox_interv.clear()
         fields = ['id_' + self.searchdbase.lower() ] + self.searchfieldtoshow
 
         sql = "SELECT " + ','.join(fields) + " FROM " + self.searchdbase + "_now"
         sql = self.parentwdg.dbase.updateQueryTableNow(sql)
         res = self.parentwdg.dbase.query(sql)
-        print(res)
+        # print(res)
 
         self.comboBox_interv.addItem('/')
         for elem in res:

@@ -38,7 +38,7 @@ from ...lamia_abstractformtool import AbstractLamiaFormTool
 
 class BaseRasterTool(AbstractLamiaFormTool):
 
-    base3 = QtCore.QObject()
+    PREPROTOOLNAME = 'rasters'
     DBASETABLENAME = 'rasters'
     LOADFIRST = True
 

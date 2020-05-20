@@ -38,11 +38,6 @@ from ..base3.lamiabase_deficiency_tool import BaseDeficiencyTool
 from .lamiabase_wds_observation_tool import BaseWaterdistributionObservationTool
 
 
-
-
-
-
-
 class BaseWaterdistributionDeficiencyTool(BaseDeficiencyTool):
 
 
@@ -51,15 +46,13 @@ class BaseWaterdistributionDeficiencyTool(BaseDeficiencyTool):
 
 
     def initMainToolWidget(self):
-
         self.toolwidgetmain = UserUI()
-
-        self.formtoolwidgetconfdictmain = {'Desordre' : {'linkfield' : 'id_desordre',
-                                                        'widgets' : {'groupedesordre': self.toolwidgetmain.comboBox_groupedes,
-                                                                    'type_desordre': self.toolwidgetmain.comboBox_typedes,
-                                                                    'cause_desordre': self.toolwidgetmain.comboBox_cause_des
+        self.formtoolwidgetconfdictmain = {'deficiency' : {'linkfield' : 'id_deficiency',
+                                                        'widgets' : {'deficiencycategory': self.toolwidgetmain.comboBox_groupedes,
+                                                                    'deficiencytype': self.toolwidgetmain.comboBox_typedes,
+                                                                    'deficiencyorigin': self.toolwidgetmain.comboBox_cause_des
                                                                     }},
-                                            'Objet' : {'linkfield' : 'id_objet',
+                                            'object' : {'linkfield' : 'id_object',
                                                     'widgets' : {}}}
 
         self.toolwidgetmain.comboBox_groupedes.currentIndexChanged.connect(self.changeGroupe)
@@ -67,20 +60,8 @@ class BaseWaterdistributionDeficiencyTool(BaseDeficiencyTool):
         # child widgets
         self.dbasechildwdgfield = []
         self.instancekwargs['parentwidget'] = self
-
-
         self.propertieswdgOBSERVATION = BaseWaterdistributionObservationTool(**self.instancekwargs)
         self.dbasechildwdgfield.append(self.propertieswdgOBSERVATION)
-
-
-        #self.propertieswdgOBSERVATION2 = BaseEaupotableObservationTool(**self.instancekwargs)
-        #self.propertieswdgOBSERVATION2.NAME = None
-        #self.toolwidgetmain.tabWidget.widget(0).layout().addWidget(self.propertieswdgOBSERVATION2)
-        #self.dbasechildwdgfield.append(self.propertieswdgOBSERVATION2)
-#
-        #self.toolwidgetmain.tabWidget.widget(1).layout().addWidget(self.propertieswdgOBSERVATION2.propertieswdgPHOTOGRAPHIE)
-        #self.toolwidgetmain.tabWidget.widget(2).layout().addWidget(self.propertieswdgOBSERVATION2.propertieswdgCROQUIS)
-
 
 
 class UserUI(QWidget):

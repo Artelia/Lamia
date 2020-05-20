@@ -49,7 +49,7 @@ class ReportCore():
 
 
 
-    def runReport(self, destinationfile, reportconffilename, pkzonegeos=[]):
+    def runReport(self, destinationfile, reportconffilename, pkzonegeos=[],pklist=None):
         if os.path.isfile(reportconffilename):  #complete path is given in exportconffilepath
             tabletypepath = reportconffilename
         else:   #just filename is given in exportconffilepath
@@ -63,7 +63,7 @@ class ReportCore():
                                                         pdffile=destinationfile,
                                                         #reporttype=reporttype,
                                                         #templatedir=createfilesdir ,
-                                                        pklist=None,
+                                                        pklist=pklist,
                                                         pkzonegeolist=pkzonegeos)
 
         self.impressionpdfworker.work()
@@ -476,30 +476,6 @@ class printPDFBaseWorker(object):
                                         newComposition.itemById(mapname).refresh()
                                         break
 
-                    if False:
-                        geombb = self.currentatlasfeat.geometry().boundingBox()
-                        itemmapbb = newComposition.itemById(mapname).extent()
-                        print('geom ', geombb)
-                        print('item ',itemmapbb)
-                        print('****', itemmapbb.contains(geombb))
-
-                        #else:   # because bad predef scale in qgis 3
-                        if not itemmapbb.contains(geombb):
-                            newComposition.itemById(mapname).setExtent(geombb)
-                            itemmapbb = newComposition.itemById(mapname).extent()
-                            currentmapscale = newComposition.itemById(mapname).scale()
-                            print('newcurrent : ', currentmapscale)
-
-                            print('bad predef')
-                            if int(currentmapscale) not in self.presetscales:
-                                for scale in self.presetscales:
-                                    if currentmapscale >= scale:
-                                        continue
-                                    else:
-                                        if debugscale: logging.getLogger("Lamia_unittest").debug('adjust scale %s', str(scale))
-                                        newComposition.itemById(mapname).setScale(scale)
-                                        break
-
 
                 self.processImages(newComposition, atlas, self.currentatlasfeat)
 
@@ -558,8 +534,6 @@ class printPDFBaseWorker(object):
             sql += ' ' + self.parentprintPDFworker.atlasconfData['childprint']['optionsql']
 
         if debug: logging.getLogger("Lamia_unittest").debug('atlaslayer sql : %s', sql)
-        if debug : 
-            print(self.dbase.query(sql))
 
         atlaslayer = self.qgiscanvas.createSingleQgsVectorLayer(dbaseparser=self.dbase,
                                                                 tablename='atlaslayer',
@@ -574,79 +548,51 @@ class printPDFBaseWorker(object):
 
 
     def processImages(self,newComposition,atlas,atlasfeat):
-        if True:
 
-            #for imageitemname in reportdic['images'].keys():
-            for imageitemname in self.atlasconfData['images'].keys():
-                # get imageitem
-                if False:    #qgis 2 version
-                    imageitem = newComposition.getComposerItemById(imageitemname)
-                else:
-                    imageitem = newComposition.itemById(imageitemname)
-                    # print('****', imageitem.__class__)
-                    # composeritem = newComposition.itemByUuid(compitemuuid)
-                    #imageitem.__class__ = qgis.core.QgsLayoutItemPicture
+        for imageitemname in self.atlasconfData['images'].keys():
+            # get imageitem
+            imageitem = newComposition.itemById(imageitemname)
 
-                # print(imageitemname, imageitem)
+            imageresult = None
+            self.currentimageItem = imageitem
+            # *******************************************************
 
-                # print(imageitem, reportdic['images'][imageitemname])
-                imageresult = None
-                self.currentimageItem = imageitem
-                # *******************************************************
+            if os.path.isfile(self.atlasconfData['images'][imageitemname]):
+                imageresult = self.atlasconfData['images'][imageitemname]
 
-                if os.path.isfile(self.atlasconfData['images'][imageitemname]):
-                    imageresult = self.atlasconfData['images'][imageitemname]
+            elif 'photo' in self.atlasconfData['images'][imageitemname]:
+                table = self.atlasconfData['images'][imageitemname].split('.')[0]
+                photoid = int(self.atlasconfData['images'][imageitemname].split('.')[-1][5:])
+                imageresult = self.getNumberedPhoto(atlasfeat, table, photoid)
+            elif ('croquis' in self.atlasconfData['images'][imageitemname]
+                    or 'sketch' in self.atlasconfData['images'][imageitemname]):
+                table = self.atlasconfData['images'][imageitemname].split('.')[0]
+                photoid = int(self.atlasconfData['images'][imageitemname].split('.')[-1][7:])
+                imageresult = self.getNumberedCroquis(atlasfeat, table, photoid)
 
-                elif 'photo' in self.atlasconfData['images'][imageitemname]:
-                    table = self.atlasconfData['images'][imageitemname].split('.')[0]
-                    photoid = int(self.atlasconfData['images'][imageitemname].split('.')[-1][5:])
-                    imageresult = self.getNumberedPhoto(atlasfeat, table, photoid)
-                elif 'croquis' in self.atlasconfData['images'][imageitemname]:
-                    table = self.atlasconfData['images'][imageitemname].split('.')[0]
-                    photoid = int(self.atlasconfData['images'][imageitemname].split('.')[-1][7:])
-                    imageresult = self.getNumberedCroquis(atlasfeat, table, photoid)
+            elif ('ressource' in self.atlasconfData['images'][imageitemname]
+                    or 'resource' in self.atlasconfData['images'][imageitemname]):
+                table = self.atlasconfData['images'][imageitemname].split('.')[0]
+                ressourcenum = self.atlasconfData['images'][imageitemname].split('.')[-1][9:]
+                imageresult = self.getNumberedResource(atlasfeat, table, ressourcenum)
 
-                elif 'ressource' in self.atlasconfData['images'][imageitemname]:
-                    table = self.atlasconfData['images'][imageitemname].split('.')[0]
-                    #ressourcenum = int(self.atlasconfData['images'][imageitemname].split('.')[-1][9:])
-                    ressourcenum = self.atlasconfData['images'][imageitemname].split('.')[-1][9:]
-                    #imageresult = self.getPhoto(reportdic, currentfeature)
-                    imageresult = self.getNumberedRessource(atlasfeat, table, ressourcenum)
+            elif self.atlasconfData['images'][imageitemname][0:4] == 'logo':
+                imagepath = os.path.join(os.path.dirname(__file__), '..','..', 'DBASE', 'utils', self.atlasconfData['images'][imageitemname] + '.png')
+                imageresult = os.path.join(imagepath)
 
-                elif self.atlasconfData['images'][imageitemname][0:4] == 'logo':
-                    imagepath = os.path.join(os.path.dirname(__file__), '..','..', 'DBASE', 'utils', self.atlasconfData['images'][imageitemname] + '.png')
-                    # print('***********************',imagepath )
-                    imageresult = os.path.join(imagepath)
+            else:
+                typeprocess = self.atlasconfData['images'][imageitemname] 
+                exec('imageresult = self.addonimagesmodule.' +typeprocess + '(self)', locals(), globals() )
+                imageresult = globals()['imageresult']
 
-                else:
-                    typeprocess = self.atlasconfData['images'][imageitemname]
-                    if True :
-                        pass
-                        #self.addonimagesmodule.exportMethod()
-                        exec('imageresult = self.addonimagesmodule.' +typeprocess + '(self)', locals(), globals() )
-                        imageresult = globals()['imageresult']
-                        print('tt' in globals().keys())
-                        print('tt' in locals().keys())
-                        #print('*******************', tt)
-                    if False:
-                        filetoread = os.path.join(os.path.dirname(__file__),self.dbase.worktype.lower(), typeprocess + '.py')
-                        tt = exec(open(filetoread).read(), locals(), globals())
-                        imageresult = tt
-                    if False:
-                        txt = 'imageresult = self.' + typeprocess + '()'
-                        ldict = locals()
-                        exec(txt, globals(), ldict)
-                        imageresult = ldict['imageresult']
-
-
-                if imageitem is not None:
-                    if isinstance(imageitem, qgis.core.QgsLayoutItemPicture):
-                        imageitem.setPicturePath(imageresult)
-                        imageitem.refreshPicture()
-                    if isinstance(imageitem, qgis.core.QgsLayoutFrame):
-                        imageitem.multiFrame().setContentMode(1)
-                        imageitem.multiFrame().setHtml(imageresult)
-                        imageitem.multiFrame().loadHtml()
+            if imageitem is not None:
+                if isinstance(imageitem, qgis.core.QgsLayoutItemPicture):
+                    imageitem.setPicturePath(imageresult)
+                    imageitem.refreshPicture()
+                if isinstance(imageitem, qgis.core.QgsLayoutFrame):
+                    imageitem.multiFrame().setContentMode(1)
+                    imageitem.multiFrame().setHtml(imageresult)
+                    imageitem.multiFrame().loadHtml()
 
 
 
@@ -894,9 +840,13 @@ class printPDFBaseWorker(object):
                         layersformapcomposer.append(coveragelayer)
 
                     elif layername == 'scan25':
-                        sql = "SELECT file from Rasters_qgis"
-                        # sql += " INNER JOIN Ressource ON Rasters.id_ressource = Ressource.id_ressource"
-                        sql += " WHERE typeraster = 'IRF'"
+
+                        if self.dbase.base3version:
+                            sql = "SELECT file from rasters_qgis"
+                            sql += " WHERE rastertype = 'IRF'"
+                        else:
+                            sql = "SELECT file from Rasters_qgis"
+                            sql += " WHERE typeraster = 'IRF'"
                         query = self.dbase.query(sql)
                         results = [row[0] for row in query]
                         if len(results) > 0:
@@ -917,9 +867,12 @@ class printPDFBaseWorker(object):
                                     if debug: logging.getLogger("Lamia_unittest").debug('no scan25 file')
 
                     elif layername == 'ortho':
-                        sql = "SELECT file from Rasters_qgis"
-                        # sql += " INNER JOIN Ressource ON Rasters.id_ressource = Ressource.id_ressource"
-                        sql += " WHERE typeraster = 'ORF'"
+                        if self.dbase.base3version:
+                            sql = "SELECT file from rasters_qgis"
+                            sql += " WHERE rastertype = 'ORF'"
+                        else:
+                            sql = "SELECT file from Rasters_qgis"
+                            sql += " WHERE typeraster = 'ORF'"
                         query = self.dbase.query(sql)
                         results = [row[0] for row in query]
                         if len(results) > 0:
@@ -943,9 +896,13 @@ class printPDFBaseWorker(object):
                         layer = eval(strtoeval)
                         layersformapcomposer.append(layer)
                     else:
-                        sql = "SELECT file from Rasters_qgis"
-                        # sql += " INNER JOIN Ressource ON Rasters.id_ressource = Ressource.id_ressource"
-                        sql += f" WHERE libelle = '{layername}'"
+                        
+                        if self.dbase.base3version:
+                            sql = "SELECT file from rasters_qgis"
+                            sql += f" WHERE name = '{layername}'"
+                        else:
+                            sql = "SELECT file from Rasters_qgis"
+                            sql += f" WHERE libelle = '{layername}'"
                         query = self.dbase.query(sql)
                         results = [row[0] for row in query]
                         filelayer = None
@@ -1343,20 +1300,23 @@ class printPDFBaseWorker(object):
 
 
     def getNumberedPhoto(self, atlasfeat, table, photoid, typeressource = 'PHO'):
-        # print('getNumberedPhoto', photoid)
+
         debug = False
 
         resfile = None
         #get id_objet
         tempsplittedquery = self.dbase.utils.splitSQLSelectFromWhereOrderby(self.atlasconfData['atlaslayersql'])
-        tempsplittedquery['SELECT'] = table + '.id_objet '
+
+        if self.dbase.base3version:
+            tempsplittedquery['SELECT'] = table + '.id_object '
+        else:
+            tempsplittedquery['SELECT'] = table + '.id_objet '
 
         if 'WHERE' in tempsplittedquery.keys():
             tempsplittedquery['WHERE'] += ' AND ' + self.atlasconfData['atlaslayerid'] + ' = ' + str(atlasfeat[self.atlasconfData['atlaslayerid']])
         else:
             tempsplittedquery['WHERE'] = self.atlasconfData['atlaslayerid'] + ' = ' + str(atlasfeat[self.atlasconfData['atlaslayerid']])
-        #tempsplittedquery['WHERE'] += " AND typephoto = 'PHO'"
-        # tempsplittedquery['FROM'] = table
+
         sql = self.dbase.utils.rebuildSplittedQuery(tempsplittedquery)
         sql = self.dbase.updateQueryTableNow(sql)
         query = self.dbase.query(sql)
@@ -1364,8 +1324,12 @@ class printPDFBaseWorker(object):
             return None
         idobjet = [row[0] for row in query][0]
 
-        sql = "SELECT file FROM Photo_now INNER JOIN Tcobjetressource ON lid_ressource = id_ressource"
-        sql += " WHERE Tcobjetressource.lid_objet = " + str(idobjet) + " AND typephoto = '" + typeressource + "'"
+        if self.dbase.base3version:
+            sql = f"SELECT file FROM media_now INNER JOIN tcobjectresource ON lid_resource = id_resource \
+                     WHERE tcobjectresource.lid_object = {idobjet}  AND typemedia = '{typeressource}' "
+        else:
+            sql = "SELECT file FROM Photo_now INNER JOIN Tcobjetressource ON lid_ressource = id_ressource"
+            sql += " WHERE Tcobjetressource.lid_objet = " + str(idobjet) + " AND typephoto = '" + typeressource + "'"
         sql = self.dbase.updateQueryTableNow(sql)
         query = self.dbase.query(sql)
         if query is None:
@@ -1445,135 +1409,47 @@ class printPDFBaseWorker(object):
 
 
 
-    def getNumberedRessource(self, atlasfeat, table,  photoid):
+    def getNumberedResource(self, atlasfeat, table,  photoid):
 
         debug = False
 
         resfile = None
 
-        if False:
-            sql = ' WITH tempquery AS ('
-            sql += self.atlasconfData['atlaslayersql']
-            sql += ' AND '
-            sql += self.dbase.dateVersionConstraintSQL()
-            if self.parentprintPDFworker is not None:
-                sql += ' AND ' + self.parentprintPDFworker.atlasconfData['childprint']['linkcolumn']
-                sql += ' = ' + str(self.parentprintPDFworker.currentid)
-                sql += ' ' + self.parentprintPDFworker.atlasconfData['childprint']['optionsql']
-            sql += '), Ressourcetemp AS( '
-            sql += " SELECT Ressource.id_ressource, file FROM Ressource "
-            sql+=  ") "
-            sql += " SELECT file  FROM Ressourcetemp, tempquery "
-            #sql += " INNER JOIN Tcobjetressource ON id_tcressource = id_ressource "
-            sql += " INNER JOIN Tcobjetressource ON lid_ressource = id_ressource "
-            # sql += " WHERE id_objet = id_tcobjet "
-            sql += " WHERE id_objet = lid_objet "
-            sql += ' AND '
-            # sql += 'id_ressource = ' + str(str(atlasfeat['lk_ressource' + str(photoid)]))
-            sql += 'id_ressource = ' + str(str(atlasfeat['lid_ressource_' + str(photoid)]))
-            if debug: self.logger.debug('sql  %s %s', str(photoid), str(sql))
-            query = self.dbase.query(sql)
-            result = [row for row in query]
-        if True:
-
-            tempsplittedquery = self.dbase.utils.splitSQLSelectFromWhereOrderby(self.atlasconfData['atlaslayersql'])
-            tempsplittedquery['SELECT'] = table + '.lid_ressource_' + str(photoid)
-            if False:
-                if 'WHERE' in tempsplittedquery.keys():
-                    tempsplittedquery['WHERE'] += ' AND ' + self.atlasconfData['atlaslayerid'] + ' = ' + str(atlasfeat.id())
-                else:
-                    tempsplittedquery['WHERE'] = self.atlasconfData['atlaslayerid'] + ' = ' + str(atlasfeat.id())
-                # tempsplittedquery['FROM'] = table
-            else:
-                if 'WHERE' in tempsplittedquery.keys():
-                    tempsplittedquery['WHERE'] += ' AND ' + self.atlasconfData['atlaslayerid'] + ' = ' + str(atlasfeat[self.atlasconfData['atlaslayerid']])
-                else:
-                    tempsplittedquery['WHERE'] = self.atlasconfData['atlaslayerid'] + ' = ' + str(atlasfeat[self.atlasconfData['atlaslayerid']])
-
-            sql = self.dbase.utils.rebuildSplittedQuery(tempsplittedquery)
-            sql = self.dbase.updateQueryTableNow(sql)
-
-            query = self.dbase.query(sql)
-            if len(query) == 0:
-                return None
-            idressource = [row[0] for row in query][0]
-
-            if not self.dbase.utils.isAttributeNull(idressource):
-                sql = "SELECT file FROM Ressource_now WHERE id_ressource = " + str(idressource)
-                sql = self.dbase.updateQueryTableNow(sql)
-                query = self.dbase.query(sql)
-                result = [row for row in query]
-
-                # print(result)
-                if len(result)>0:
-                    resfile = self.dbase.completePathOfFile( result[0][0] )
-
-
-                if False and len(result) > (photoid -1):
-                    resfile = self.dbase.completePathOfFile(result[photoid -1][0])
-                    # print(resfile)
-                if debug: self.logger.debug('resfile  %s', str(resfile))
-        return resfile
-
-
-    def getNumberedRessource2(self, atlasfeat, photoid):
-
-        debug = False
-
-        resfile = None
-
-        if False:
-            sql = ' WITH tempquery AS ('
-            sql += self.atlasconfData['atlaslayersql']
-            sql += ' AND '
-            sql += self.dbase.dateVersionConstraintSQL()
-            if self.parentprintPDFworker is not None:
-                sql += ' AND ' + self.parentprintPDFworker.atlasconfData['childprint']['linkcolumn']
-                sql += ' = ' + str(self.parentprintPDFworker.currentid)
-                sql += ' ' + self.parentprintPDFworker.atlasconfData['childprint']['optionsql']
-            sql += '), Ressourcetemp AS( '
-            sql += " SELECT Ressource.id_ressource, file FROM Ressource "
-            sql+=  ") "
-            sql += " SELECT file  FROM Ressourcetemp, tempquery "
-            #sql += " INNER JOIN Tcobjetressource ON id_tcressource = id_ressource "
-            sql += " INNER JOIN Tcobjetressource ON lid_ressource = id_ressource "
-            # sql += " WHERE id_objet = id_tcobjet "
-            sql += " WHERE id_objet = lid_objet "
-            sql += ' AND '
-            # sql += 'id_ressource = ' + str(str(atlasfeat['lk_ressource' + str(photoid)]))
-            sql += 'id_ressource = ' + str(str(atlasfeat['lid_ressource_' + str(photoid)]))
-            if debug: self.logger.debug('sql  %s %s', str(photoid), str(sql))
-            query = self.dbase.query(sql)
-            result = [row for row in query]
-        if True:
-            idressource = atlasfeat['lid_ressource_' + str(photoid)]
-            sql = "SELECT file FROM Ressource_now WHERE id_ressource = " + str(idressource)
-            sql = self.dbase.updateQueryTableNow(sql)
-            query = self.dbase.query(sql)
-            result = [row for row in query]
-
-
-        # print(result)
-        if len(result)>0:
-            resfile = self.dbase.completePathOfFile( result[0][0] )
-
-
-        if False and len(result) > (photoid -1):
-            resfile = self.dbase.completePathOfFile(result[photoid -1][0])
-            # print(resfile)
-        if debug: self.logger.debug('resfile  %s', str(resfile))
-        return resfile
-
-
-    """
-    def setLoadingProgressBar(self, progressbar, val):
-        if progressbar is not None:
-            progressbar.setValue(val)
+        tempsplittedquery = self.dbase.utils.splitSQLSelectFromWhereOrderby(self.atlasconfData['atlaslayersql'])
+        
+        if self.dbase.base3version:
+            tempsplittedquery['SELECT'] = table + '.lid_resource_' + str(photoid)
         else:
-            if qgis.utils.iface is None:
-                logging.getLogger('Lamia').info('Generation du pdf %d', val )
-        QApplication.processEvents()
-    """
+            tempsplittedquery['SELECT'] = table + '.lid_ressource_' + str(photoid)
+
+        if 'WHERE' in tempsplittedquery.keys():
+            tempsplittedquery['WHERE'] += ' AND ' + self.atlasconfData['atlaslayerid'] + ' = ' + str(atlasfeat[self.atlasconfData['atlaslayerid']])
+        else:
+            tempsplittedquery['WHERE'] = self.atlasconfData['atlaslayerid'] + ' = ' + str(atlasfeat[self.atlasconfData['atlaslayerid']])
+
+        sql = self.dbase.utils.rebuildSplittedQuery(tempsplittedquery)
+        sql = self.dbase.updateQueryTableNow(sql)
+
+        query = self.dbase.query(sql)
+        if len(query) == 0:
+            return None
+        idressource = [row[0] for row in query][0]
+
+        if not self.dbase.utils.isAttributeNull(idressource):
+            if self.dbase.base3version:
+                sql = "SELECT file FROM resource_now WHERE id_resource = " + str(idressource)
+            else:
+                sql = "SELECT file FROM Ressource_now WHERE id_ressource = " + str(idressource)
+            sql = self.dbase.updateQueryTableNow(sql)
+            query = self.dbase.query(sql)
+            result = [row for row in query]
+
+            # print(result)
+            if len(result)>0:
+                resfile = self.dbase.completePathOfFile( result[0][0] )
+
+            if debug: self.logger.debug('resfile  %s', str(resfile))
+        return resfile
 
 
 

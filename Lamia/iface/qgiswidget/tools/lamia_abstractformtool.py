@@ -104,6 +104,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
 
     PARENTJOIN = None
     TABLEFILTERFIELD = {}
+    # GEOMETRYSKIP = True
 
     def __init__(self,                  
                  dbaseparser=None, 
@@ -363,8 +364,8 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                 self.frametoolwidg.setEnabled(False)
        
     def _widgetClicked_manageToolBar(self):
-        #self.mainifacewidget.toolBarFormCreation.setEnabled(False)
-        #self.mainifacewidget.toolBarFormGeom.setEnabled(False)
+
+        # toolbar geom part
         if 'geom' in self.dbase.dbasetables[self.DBASETABLENAME].keys():
             self.mainifacewidget.lamiatoolBarFormGeom.setEnabled(True)
 
@@ -379,7 +380,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             if 'POINT' in dbaselayertype:
                 conf = [True, False, False, False]
             elif 'LINESTRING' in dbaselayertype:
-                if self.DBASETABLENAME in ['Equipement', 'Desordre']:
+                if self.DBASETABLENAME in ['Equipement', 'Desordre','equipment','deficiency']:
                     conf = [True, True, False, True]
                 else:
                     conf = [False, True, False, True]
@@ -388,14 +389,25 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             dictwhattodo = dict(zip(toolbaractions, conf))
             for action, boolenabled in dictwhattodo.items():
                 action.setEnabled(boolenabled)
-
         else:
             self.mainifacewidget.lamiatoolBarFormGeom.setEnabled(False)
 
+        # lamiatoolBarFormCreation part
         if self.parentWidget is not None and self.parentWidget.currentFeaturePK is None:
             self.mainifacewidget.lamiatoolBarFormCreation.setEnabled(False)
         else:
             self.mainifacewidget.lamiatoolBarFormCreation.setEnabled(True)
+
+        # lamiatoolBarTools part
+        if self.currentFeaturePK is not None:
+            self.mainifacewidget.toolBartools.setEnabled(True)
+            # if hasattr(self,'printWidget'):
+            if 'printWidget' in self.__class__.__dict__:    #implemented
+                self.mainifacewidget.actiontoolbartoolsprint.setEnabled(True)
+            else:
+                self.mainifacewidget.actiontoolbartoolsprint.setEnabled(False)
+        else:
+            self.mainifacewidget.toolBartools.setEnabled(False)
 
     def loadChildFeatureinWidget(self):
         debug = False
@@ -412,32 +424,6 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         else:
             self.selectFeature(pk=self.choosertreewidget.ids['pk'][0])
 
-
-        if False:
-            res = self.choosertreewidget.loadIds()
-            # print('***', self.DBASETABLENAME, res)
-            if len(res)==0:
-                self.selectFeature(disabletitle=True)
-                #self.currentFeaturePK = None
-                #self.updateFormTitle(disabletitle=True)
-            else:
-                sql = "SELECT pk_{} FROM {}_now WHERE id_{} = {}".format(self.DBASETABLENAME.lower(),
-                                                                    self.DBASETABLENAME,
-                                                                    self.DBASETABLENAME.lower(),
-                                                                    res[0][0] )
-                sql = self.dbase.sqlNow(sql)
-                pk = self.dbase.query(sql)[0][0]
-                self.selectFeature(pk=pk)
-                #self.currentFeaturePK = pk
-                #self.updateFormTitle()
-
-        if False:
-            minsql = "SELECT min(pk_{}) FROM {}".format(self.DBASETABLENAME.lower(),
-                                                        self.DBASETABLENAME)
-            minpk = self.dbase.query(minsql)
-            if minpk:
-                minpk =  minpk[0][0]
-                self.selectFeature(pk=minpk)
 
     def initMainToolWidget(self):
         pass
@@ -640,6 +626,9 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME]['layerqgis'].triggerRepaint()
         #self.canvas.refresh()
         #self.loadChildFeatureinWidget()
+
+    def printWidget(self):
+        pass
 
     def ____________________________________ToolBarActionsFunctions(self):
         pass

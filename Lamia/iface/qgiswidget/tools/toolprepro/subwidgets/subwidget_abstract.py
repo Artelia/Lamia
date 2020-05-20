@@ -25,15 +25,34 @@ This file is part of LAMIA.
  """
 
 import qgis
-from qgis.PyQt.QtWidgets import (QWidget)
+from qgis.PyQt import uic, QtCore
+from qgis.PyQt.QtWidgets import (QWidget,QVBoxLayout)
 
 class AbstractSubWidget(QWidget):
 
+    UIPATH = None
+
     def __init__(self, parent = None,**kwargs):
         super(AbstractSubWidget, self).__init__(parent=parent)
+        self.parentframe = kwargs.get('parentframe',None)
+        self.loadUIFile()
+        self._loadInParentFrame()
 
     def postSelectFeature(self):
         pass
 
     def postSaveFeature(self, parentfeaturepk=None):
         pass
+
+    def loadUIFile(self):
+        if self.UIPATH:
+            uic.loadUi(self.UIPATH, self)
+
+    def _loadInParentFrame(self):
+        if self.parentframe:
+            if self.parentframe.layout() is not None:
+                self.parentframe.layout().addWidget(self)
+            else:
+                vlayout = QVBoxLayout()
+                vlayout.addWidget(self)
+                self.parentframe.setLayout(vlayout)

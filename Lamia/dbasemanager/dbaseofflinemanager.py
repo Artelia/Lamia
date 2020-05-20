@@ -656,28 +656,6 @@ class DBaseOfflineManager():
                     else:
                         print('error lpk_', pkidresult)
 
-        if False:
-            pass
-            """
-            if "lpk_revision_begin" in listoffields and not changeID:
-                #pkcurrentable
-                sql = " SELECT pk_" + tablename.lower() + " FROM " + tablename.lower()
-                sql += " WHERE id_" + tablename.lower() + " = " + str(idtable)
-                sql += " AND lpk_revision_end IS NULL"
-
-                tempres = self.dbase.query(sql)
-
-                if len(tempres)>0:
-                    pkcurrenttable = self.dbase.query(sql)[0][0]
-
-
-                    sql = "UPDATE " + tablename.lower() + " SET lpk_revision_end = " + str(self.maxrevision)
-                    sql += " WHERE pk_" + tablename.lower() + " = " + str(pkcurrenttable)
-                    self.dbase.query(sql, docommit=False)
-            """
-            # if i % 50 == 0:
-                # if debug: logging.getLogger("Lamia").debug(' field, value : %s %s  ', str(fields), str(values))
-
         if pktoinsert is not None and finalpkidfields:
             # update line
             setsentence = ''

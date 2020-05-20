@@ -35,6 +35,7 @@ from ...lamia_abstractformtool import AbstractLamiaFormTool
 
 class BaseGeoareaTool(AbstractLamiaFormTool):
 
+    PREPROTOOLNAME = 'geoarea'
     DBASETABLENAME = 'geoarea'
     LOADFIRST = False
 

@@ -51,6 +51,7 @@ base3 = QtCore.QObject()
 
 class BaseGraphTool(AbstractLamiaFormTool):
 
+    PREPROTOOLNAME = 'graphdb'
     DBASETABLENAME = 'graph'
     LOADFIRST = False
 

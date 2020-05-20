@@ -36,6 +36,7 @@ from ...lamia_abstractformtool import AbstractLamiaFormTool
 
 class BaseTopographydataTool(AbstractLamiaFormTool):
 
+    PREPROTOOLNAME = 'topographydata'
     DBASETABLENAME = 'topographydata'
     LOADFIRST = False
 

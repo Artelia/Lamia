@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>306</width>
-    <height>439</height>
+    <width>337</width>
+    <height>334</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" stretch="1,1,1,10">
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,10">
    <item>
     <widget class="QFrame" name="frame">
      <property name="frameShape">
@@ -22,10 +22,7 @@
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <layout class="QFormLayout" name="formLayout">
-      <property name="fieldGrowthPolicy">
-       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-      </property>
+     <layout class="QGridLayout" name="gridLayout">
       <property name="leftMargin">
        <number>3</number>
       </property>
@@ -38,25 +35,28 @@
       <property name="bottomMargin">
        <number>3</number>
       </property>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_nom">
+      <item row="1" column="2">
+       <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>Name</string>
+         <string>Delivery ref</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="lineEdit_nom"/>
-      </item>
-      <item row="2" column="0">
+      <item row="3" column="0">
        <widget class="QLabel" name="label">
         <property name="text">
-         <string>Date</string>
+         <string>Start date</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
-       <widget class="QDateEdit" name="dateEdit_date">
+      <item row="3" column="1">
+       <widget class="QDateEdit" name="dateEdit_startdate">
         <property name="specialValueText">
          <string/>
         </property>
@@ -86,30 +86,73 @@
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="label_2">
+       <widget class="QLabel" name="label_nom">
         <property name="text">
-         <string>Delivery ref</string>
+         <string>Name</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
+       <widget class="QLineEdit" name="lineEdit_nom"/>
+      </item>
+      <item row="1" column="3">
        <widget class="QLineEdit" name="lineEdit_nummarche"/>
       </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="groupBox">
-     <property name="title">
-      <string>Properties</string>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
-      <item>
-       <widget class="QPushButton" name="pushButton_currentPrestation">
+      <item row="3" column="2">
+       <widget class="QLabel" name="label_3">
         <property name="text">
-         <string>Define as current delivery</string>
+         <string>Estimated end date</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
         </property>
        </widget>
+      </item>
+      <item row="3" column="3">
+       <widget class="QDateEdit" name="dateEdit_enddate">
+        <property name="specialValueText">
+         <string/>
+        </property>
+        <property name="minimumDateTime">
+         <datetime>
+          <hour>0</hour>
+          <minute>0</minute>
+          <second>0</second>
+          <year>1752</year>
+          <month>9</month>
+          <day>15</day>
+         </datetime>
+        </property>
+        <property name="minimumDate">
+         <date>
+          <year>1752</year>
+          <month>9</month>
+          <day>15</day>
+         </date>
+        </property>
+        <property name="calendarPopup">
+         <bool>true</bool>
+        </property>
+        <property name="currentSectionIndex">
+         <number>0</number>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Delivery category</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" colspan="3">
+       <widget class="QComboBox" name="comboBox_deliverycategory"/>
       </item>
      </layout>
     </widget>
@@ -133,37 +176,31 @@
        <number>3</number>
       </property>
       <item>
-       <widget class="QTextBrowser" name="textBrowser_intervenants">
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>60</height>
-         </size>
+       <widget class="QFrame" name="frame_actor">
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButton_defineinter">
-        <property name="text">
-         <string>Define actors</string>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
         </property>
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <property name="leftMargin">
+          <number>3</number>
+         </property>
+         <property name="topMargin">
+          <number>3</number>
+         </property>
+         <property name="rightMargin">
+          <number>3</number>
+         </property>
+         <property name="bottomMargin">
+          <number>3</number>
+         </property>
+        </layout>
        </widget>
       </item>
      </layout>
     </widget>
-   </item>
-   <item>
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
    </item>
   </layout>
  </widget>

@@ -1,4 +1,6 @@
 FORMS =     ../iface/qgiswidget/ifaceqgswidget.ui\
+            ../iface/qgiswidget/subdialogs/lamia_Connexion_PG.ui\
+            ../iface/qgiswidget/subdialogs/lamia_newDB.ui\
             ../iface/qgiswidget/tools/lamia_abstractformtool.ui\
             ../iface/qgiswidget/tools/toolprepro/base3/lamiabase_actor_tool_ui.ui\
             ../iface/qgiswidget/tools/toolprepro/base3/lamiabase_camera_tool_ui.ui\
@@ -42,6 +44,12 @@ FORMS =     ../iface/qgiswidget/ifaceqgswidget.ui\
             ../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_equipment_tool_ui.ui\
             ../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui\
             ../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_observation_tool_ui.ui\
+            ../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_deficiency_tool_ui.ui\
+            ../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_delivery_tool_ui_orange.ui\
+            ../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_observation_tool_ui.ui\
+            ../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_subobservation_tool_ui.ui\
+            ../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_lamia.ui\
+            ../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui\
 
 
 
@@ -66,7 +74,7 @@ SOURCES =   ../Lamia.py\
             ../iface/qgiswidget/tools/toolprepro/base3/lamiabase_raster_tool.py\
             ../iface/qgiswidget/tools/toolprepro/base3/lamiabase_report_tool.py\
             ../iface/qgiswidget/tools/toolprepro/base3/lamiabase_sketch_tool.py\
-            ../iface/qgiswidget/tools/toolprepro/base3/lamiabase_ud_surface_tool.py\
+            ../iface/qgiswidget/tools/toolprepro/base3/lamiabase_surface_tool.py\
             ../iface/qgiswidget/tools/toolprepro/base3/lamiabase_topography_tool.py\
             ../iface/qgiswidget/tools/toolprepro/base3/lamiabase_topographydata_tool.py\
             ../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_deficiency_tool.py\
@@ -78,8 +86,9 @@ SOURCES =   ../Lamia.py\
             ../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_raster_tool.py\
             ../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_report_tool.py\
             ../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_sketch_tool.py\
-
-
+            ../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_deficiency_tool.py\
+            ../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_deficiency_tool_pv.py\
+            ../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_observation_tool.py\
 
 
 

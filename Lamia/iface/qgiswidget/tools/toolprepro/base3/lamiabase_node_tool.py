@@ -40,6 +40,7 @@ base3 = QtCore.QObject()
 
 class BaseNodeTool(AbstractLamiaFormTool):
 
+    PREPROTOOLNAME = 'node'
     DBASETABLENAME = 'node'
     LOADFIRST = True
 
@@ -155,73 +156,6 @@ class BaseNodeTool(AbstractLamiaFormTool):
             deficiencywdg.parentWidget.currentFeaturePK = savedfeaturepk
             deficiencywdg.toolbarSave()
     
-    def _moveLinkedTopologicalEdge(self):
-
-        if self.currentFeaturePK is not None:
-            nodeiddessys = self.dbase.getValuesFromPk('node_qgis',['id_descriptionsystem'],self.currentFeaturePK )
-            nodegeom = self.formutils.getQgsGeomFromPk(self.currentFeaturePK).asPoint()
-
-            # iterate on lid_descriptionsystem_1 and lid_descriptionsystem_2
-            valuetoiterate = [1, 2]
-            for indexnode in valuetoiterate:
-                sql = "SELECT pk_edge, id_edge FROM edge_now "\
-                      "WHERE lid_descriptionsystem_{} = {} ".format(str(indexnode ),
-                                                                    str(nodeiddessys))
-                sql = self.dbase.sqlNow(sql)
-                result = self.dbase.query(sql)
-                if indexnode == 1 :
-                    indexgeom = 0
-                elif indexnode == 2:
-                    indexgeom = -1
-
-                for fetpk, fetid in result:
-                    geomtext = self.dbase.getValuesFromPk('edge',
-                                'ST_AsText(geom)',
-                                fetpk)
-                    infrafetgeom = qgis.core.QgsGeometry.fromWkt(geomtext).asPolyline()
-
-                    if not self.dbase.utils.areNodesEquals(infrafetgeom[indexgeom], nodegeom):
-                        # fetpk = self.mainifacewidget.toolwidgets['toolprepro']['Troncon'][0].formutils.manageFeatureCreationOrUpdate(fetpk)
-                        fetpk = self.dbase.manageFeatureCreationOrUpdate('edge', fetpk)
-
-                        infrafetgeom[indexgeom] = nodegeom
-                        newgeom = qgis.core.QgsGeometry.fromPolylineXY(infrafetgeom)
-
-                        sql = "UPDATE edge SET geom = ST_GeomFromText('{}',{}) "\
-                              " WHERE pk_edge = {}".format(newgeom.asWkt(),
-                                                                    self.dbase.crsnumber,
-                                                                    fetpk)
-                        self.dbase.query(sql)
-
-                        # move laterals
-                        self._moveLaterals(fetpk, newgeom)
-
-        self.mainifacewidget.qgiscanvas.layers['edge']['layerqgis'].triggerRepaint()
-
-    def _moveLaterals(self, pkinfralin, newgeom):
-
-        fetiddessys = self.dbase.getValuesFromPk('edge_qgis', 'id_descriptionsystem', pkinfralin)
-        dbasetablelayer = self.mainifacewidget.qgiscanvas.layers['edge']['layer']
-        sql = "SELECT pk_edge, id_edge FROM edge_now "\
-              " WHERE lid_descriptionsystem_2 = {} ".format( str(fetiddessys))
-        sql = self.dbase.sqlNow(sql)
-        result2 = self.dbase.query(sql)
-        for fetpk2, fetid2 in result2:
-            # infrafetpk = self.mainifacewidget.toolwidgets['toolprepro']['Troncon'][0].formutils.manageFeatureCreationOrUpdate(fetpk2)
-            fetpk = self.dbase.manageFeatureCreationOrUpdate('edge', fetpk)
-            geomtext = self.dbase.getValuesFromPk('edge',
-                        'ST_AsText(geom)',
-                        infrafetpk)
-            infrafetgeom = qgis.core.QgsGeometry.fromWkt(geomtext).asPolyline()
-            infrafetpoint1 = qgis.core.QgsGeometry().fromPointXY(infrafetgeom[0])
-            newgeom2 = infrafetpoint1.shortestLine(newgeom)
-
-            sql = "UPDATE edge SET geom = ST_GeomFromText('{}',{}) "\
-                    " WHERE pk_edge = {}".format(newgeom2.asWkt(),
-                                                        self.dbase.crsnumber,
-                                                        infrafetpk)
-            self.dbase.query(sql)
-
 
 class UserUI(QWidget):
     def __init__(self, parent=None):

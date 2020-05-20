@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>671</width>
-    <height>425</height>
+    <width>486</width>
+    <height>422</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -600,7 +600,7 @@ background-color: rgb(255, 255, 255);</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>671</width>
+     <width>486</width>
      <height>26</height>
     </rect>
    </property>
@@ -723,6 +723,18 @@ background-color: rgb(255, 255, 255);</string>
    <addaction name="actiontoolbarlayerundo"/>
    <addaction name="actiontoolbarlayersave"/>
   </widget>
+  <widget class="QToolBar" name="toolBartools">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actiontoolbartoolsprint"/>
+  </widget>
   <action name="actionTre">
    <property name="text">
     <string>tre</string>
@@ -815,7 +827,7 @@ background-color: rgb(255, 255, 255);</string>
   </action>
   <action name="actionAide">
    <property name="text">
-    <string>Aide </string>
+    <string>Help</string>
    </property>
   </action>
   <action name="actionA_propos">
@@ -823,7 +835,7 @@ background-color: rgb(255, 255, 255);</string>
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>A propos</string>
+    <string>About...</string>
    </property>
   </action>
   <action name="action_taille_icone">
@@ -891,7 +903,7 @@ background-color: rgb(255, 255, 255);</string>
   </action>
   <action name="action_pulldb">
    <property name="text">
-    <string>Créer une copie locale</string>
+    <string>Pull DB</string>
    </property>
   </action>
   <action name="actionImporter_et_ajouter_la_base">
@@ -906,7 +918,7 @@ background-color: rgb(255, 255, 255);</string>
   </action>
   <action name="actionTables_et_champs">
    <property name="text">
-    <string>Tables et champs</string>
+    <string>Table and fields</string>
    </property>
   </action>
   <action name="actiontoolbarsave">
@@ -1015,6 +1027,15 @@ background-color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
     <string>toolbarlayerundo</string>
+   </property>
+  </action>
+  <action name="actiontoolbartoolsprint">
+   <property name="icon">
+    <iconset resource="../../resources.qrc">
+     <normaloff>:/plugins/Lamia/icons/print.png</normaloff>:/plugins/Lamia/icons/print.png</iconset>
+   </property>
+   <property name="text">
+    <string>toolbartoolsprint</string>
    </property>
   </action>
  </widget>

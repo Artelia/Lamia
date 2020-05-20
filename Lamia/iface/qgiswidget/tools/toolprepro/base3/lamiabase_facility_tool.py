@@ -39,6 +39,7 @@ from ..subwidgets.subwidget_lidchooser import LidChooserWidget
 
 class BaseFacilityTool(AbstractLamiaFormTool):
 
+    PREPROTOOLNAME = 'facility'
     DBASETABLENAME = 'facility'
     LOADFIRST = True
 

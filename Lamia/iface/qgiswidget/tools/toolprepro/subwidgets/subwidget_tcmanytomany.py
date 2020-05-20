@@ -26,14 +26,14 @@ This file is part of LAMIA.
 import os, logging
 
 from qgis.PyQt.QtWidgets import (QWidget, QVBoxLayout,QTableWidgetItem, QHeaderView, QInputDialog,
-                                    QComboBox, QAbstractItemView,QMessageBox,QDialog)
+                                    QComboBox, QAbstractItemView,QMessageBox,QDialog,QVBoxLayout)
 from qgis.PyQt import uic, QtCore
 
 from .subwidget_abstract import AbstractSubWidget
 
 class TcmanytomanyChooserWidget(AbstractSubWidget):
 
-
+    UIPATH = os.path.join(os.path.dirname(__file__), 'subwidget_tcmanytomany_ui.ui')
 
     def __init__(self, 
                 parentwdg ,
@@ -42,10 +42,10 @@ class TcmanytomanyChooserWidget(AbstractSubWidget):
                 parentmanytomanyfield,
                 childmanytomanyfield,
                 childdisplayfields=[],
-                tcmanytomanydisplayfields=[]):
-        super(TcmanytomanyChooserWidget, self).__init__(parent=parentwdg)
-        uipath = os.path.join(os.path.dirname(__file__), 'subwidget_tcmanytomany_ui.ui')
-        uic.loadUi(uipath, self)
+                tcmanytomanydisplayfields=[],
+                parentframe=None):
+        super(TcmanytomanyChooserWidget, self).__init__(parent=parentwdg,parentframe=parentframe)
+
 
         self.parentwdg = parentwdg
         self.parenttablename = self.parentwdg.DBASETABLENAME

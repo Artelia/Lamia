@@ -40,6 +40,7 @@ base3 = QtCore.QObject()
 
 class BaseObservationTool(AbstractLamiaFormTool):
 
+    PREPROTOOLNAME = 'observation'
     DBASETABLENAME = 'observation'
     # LOADFIRST = True
 

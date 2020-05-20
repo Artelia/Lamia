@@ -501,6 +501,8 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
     def toolbarSave(self):
         #if self.toolwidget.currentFeaturePK is None:    #feature not correctly saved
         #    return
+        if self.toolwidget.currentFeaturePK is None:    #saving aborded (ex : no geometry acquired)
+            return
         
         self.disconnectTreewidget()
         selecteditems = self.treewidget.selectedItems()

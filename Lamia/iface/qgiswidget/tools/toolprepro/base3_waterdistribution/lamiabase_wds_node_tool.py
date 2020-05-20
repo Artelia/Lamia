@@ -38,6 +38,7 @@ from ..base3.lamiabase_node_tool import BaseNodeTool
 from .lamiabase_wds_camera_tool import BaseWaterdistributionCameraTool as BaseCameraTool
 from .lamiabase_wds_sketch_tool import BaseWaterdistributionSketchTool as BaseSketchTool
 from .lamiabase_wds_deficiency_tool import BaseWaterdistributionDeficiencyTool
+from ..subwidgets.subwidget_topologicnode import TopologicNodeWidget
 
 
 class BaseWaterdistributionNodeTool(BaseNodeTool):
@@ -46,77 +47,63 @@ class BaseWaterdistributionNodeTool(BaseNodeTool):
     def __init__(self, **kwargs):
         super(BaseWaterdistributionNodeTool, self).__init__(**kwargs)
 
-    """
-    def initTool(self):
-        super(BaseEaupotableNoeudTool, self).initTool()
-        self.NAME = 'Organes'
-        self.magicfunctionENABLED = True
-
-        self.linkagespec = {'Equipement': {'tabletc': None,
-                                           'idsource': 'lid_descriptionsystem_1',
-                                           'idtcsource': None,
-                                           'iddest': 'id_descriptionsystem',
-                                           'idtcdest': None,
-                                           'desttable': ['Equipement','Infralineaire']}}
-    """
-
     def initMainToolWidget(self):
 
         self.toolwidgetmain = UserUI()
-        self.formtoolwidgetconfdictmain = {'Noeud' : {'linkfield' : 'id_noeud',
+        self.formtoolwidgetconfdictmain = {'node' : {'linkfield' : 'id_node',
                                             'widgets' : {
-                                                        'categorie': self.toolwidgetmain.comboBox_cat,
-                                                        'fonction': self.toolwidgetmain.comboBox_fonction,
-                                                        'ss_type_equipement': self.toolwidgetmain.comboBox_soustype,
-                                                        'acces': self.toolwidgetmain.comboBox_acces,
-                                                        'forme_acces': self.toolwidgetmain.comboBox_formeaccess,
-                                                        'diametre_entree': self.toolwidgetmain.doubleSpinBox_diam,
-                                                        'diametre_sortie': self.toolwidgetmain.doubleSpinBox_diamsor,
-                                                        'profondeur' : self.toolwidgetmain.doubleSpinBox_prof,
-                                                        'nature_reseau': self.toolwidgetmain.comboBox_nature_reseau,
-                                                    'pres_echelon': self.toolwidgetmain.comboBox_echelon,
+                                                        'nodetype': self.toolwidgetmain.comboBox_cat,
+                                                        'nodefunction': self.toolwidgetmain.comboBox_fonction,
+                                                        'nodesubtype': self.toolwidgetmain.comboBox_soustype,
+                                                        'access': self.toolwidgetmain.comboBox_acces,
+                                                        'accessshape': self.toolwidgetmain.comboBox_formeaccess,
+                                                        'diameterinlet': self.toolwidgetmain.doubleSpinBox_diam,
+                                                        'diameteroutlet': self.toolwidgetmain.doubleSpinBox_diamsor,
+                                                        'nodedepth' : self.toolwidgetmain.doubleSpinBox_prof,
+                                                        'networktype': self.toolwidgetmain.comboBox_nature_reseau,
+                                                    'presencestep': self.toolwidgetmain.comboBox_echelon,
                                                         #ventouse
-                                                            'altimetrie': self.toolwidgetmain.doubleSpinBox_altim,
+                                                            'nodeelevation': self.toolwidgetmain.doubleSpinBox_altim,
                                                         #vanne
                                                         'localisation': [self.toolwidgetmain.comboBox_localisation,
                                                                         self.toolwidgetmain.comboBox_localisation2],
-                                                        'accessibilite': [self.toolwidgetmain.comboBox_accessibilite,
+                                                        'accessibility': [self.toolwidgetmain.comboBox_accessibilite,
                                                                         self.toolwidgetmain.comboBox_accessibilite2],
-                                                    'manipulable': self.toolwidgetmain.comboBox_manipulable,
-                                                        'position': self.toolwidgetmain.comboBox_position,
+                                                    'manipulability': self.toolwidgetmain.comboBox_manipulable,
+                                                        'nodeposition': self.toolwidgetmain.comboBox_position,
                                                 #vidange
-                                                'exutoire': self.toolwidgetmain.lineEdit_exutoire,
+                                                'presenceoutlet': self.toolwidgetmain.lineEdit_exutoire,
                                                 #reg pression
-                                                'consigne_aval': self.toolwidgetmain.doubleSpinBox_cons_av,
-                                                'consigne_amont': self.toolwidgetmain.doubleSpinBox_cons_am,
+                                                'valvedownstreamsetting': self.toolwidgetmain.doubleSpinBox_cons_av,
+                                                'valveupstreamsetting': self.toolwidgetmain.doubleSpinBox_cons_am,
 
                                                 # hydrant
-                                                'id_cana_sig_sdis': self.toolwidgetmain.spinBox_idsdis,
-                                                'marque': [self.toolwidgetmain.lineEdit_marque,
+                                                'hydrantfiredepartmentid': self.toolwidgetmain.spinBox_idsdis,
+                                                'brandname': [self.toolwidgetmain.lineEdit_marque,
                                                         self.toolwidgetmain.lineEdit_marque2],
-                                                'type': self.toolwidgetmain.lineEdit_type,
-                                                'conformite': self.toolwidgetmain.comboBox_conformite,
+                                                'brandref': self.toolwidgetmain.lineEdit_type,
+                                                'hydrantconformity': self.toolwidgetmain.comboBox_conformite,
 
                                                 #compteur"
-                                                'dimensions': self.toolwidgetmain.doubleSpinBox_dimensions,
-                                                'tete_emettrice': self.toolwidgetmain.comboBox_tete_emettrice,
-                                                'numero': self.toolwidgetmain.spinBox_numero,
-                                                'equipable': self.toolwidgetmain.comboBox_equipable,
+                                                'nodesize': self.toolwidgetmain.doubleSpinBox_dimensions,
+                                                'nodeemitter': self.toolwidgetmain.comboBox_tete_emettrice,
+                                                'nodecountervalue': self.toolwidgetmain.spinBox_numero,
+                                                'retrofitable': self.toolwidgetmain.comboBox_equipable,
                                                 #'localisation': self.toolwidgetmain.comboBox_localisation2,
                                                 #'accessibilite': self.toolwidgetmain.comboBox_accessibilite2,
                                                 # 'marque': self.toolwidgetmain.lineEdit_marque2,
                                                 # 'type': self.toolwidgetmain.lineEdit_type2,
-                                                'entreprise': [self.toolwidgetmain.lineEdit_entreprise,
+                                                'maintenancefirm': [self.toolwidgetmain.lineEdit_entreprise,
                                                             self.toolwidgetmain.lineEdit_entreprise2],
-                                                'telerelevage': [self.toolwidgetmain.comboBox_telerelevage,
+                                                'remotemonitoring': [self.toolwidgetmain.comboBox_telerelevage,
                                                                 self.toolwidgetmain.comboBox_telerelevage2],
-                                                'organes_associes': self.toolwidgetmain.lineEdit_organes_associes,
+                                                'linkedfacilities': self.toolwidgetmain.lineEdit_organes_associes,
 
                                                 #chloration
                                                 #'entreprise': self.toolwidgetmain.lineEdit_entreprise2,
                                                 #'telerelevage': self.toolwidgetmain.comboBox_telerelevage2,
                                                 # robinet de prise en charge
-                                                'collier': self.toolwidgetmain.comboBox_collier,
+                                                'clamp': self.toolwidgetmain.comboBox_collier,
 
                                                 'X': self.toolwidgetmain.doubleSpinBox_X,
                                                 'dX': self.toolwidgetmain.doubleSpinBox_dX,
@@ -127,11 +114,11 @@ class BaseWaterdistributionNodeTool(BaseNodeTool):
 
 
                                                         }},
-                            'Objet' : {'linkfield' : 'id_objet',
-                                        'widgets' : {'commentaire': self.toolwidgetmain.textBrowser_comm}},
-                            'Descriptionsystem' : {'linkfield' : 'id_descriptionsystem',
-                                                    'widgets' : {  'enservice': self.toolwidgetmain.comboBox_enservice,
-                                                                    'annee_fin_pose': self.toolwidgetmain.dateEdit_anneepose}}}
+                            'object' : {'linkfield' : 'id_object',
+                                        'widgets' : {'comment': self.toolwidgetmain.textBrowser_comm}},
+                            'descriptionsystem' : {'linkfield' : 'id_descriptionsystem',
+                                                    'widgets' : {  'operational': self.toolwidgetmain.comboBox_enservice,
+                                                                    'dateoperationalcreation': self.toolwidgetmain.dateEdit_anneepose}}}
 
 
         self.toolwidgetmain.toolButton_diam.clicked.connect(
@@ -140,6 +127,9 @@ class BaseWaterdistributionNodeTool(BaseNodeTool):
             lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_diamsor))
         self.toolwidgetmain.toolButton_prof.clicked.connect(
             lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_prof))
+
+        self.toolwidgetmain.toolButton_idsdis.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.spinBox_idsdis))
 
         self.toolwidgetmain.toolButton_altim.clicked.connect(
             lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_altim))
@@ -173,7 +163,9 @@ class BaseWaterdistributionNodeTool(BaseNodeTool):
         #self.propertieswdgDesordre.groupBox_geom.setParent(None)
         #self.propertieswdgDesordre.frame_editing.setVisible(False)
         #self.toolwidgetmain.tabWidget_2.widget(2).layout().addWidget(self.propertieswdgDesordre)
-
+        self.propertieswdgDesordre.SKIP_LOADING_UI = True
+        self.propertieswdgDesordre.initMainToolWidget()
+        self.propertieswdgDesordre.formtoolwidgetconfdictmain['deficiency']['widgets']['deficiencycategory'] = 'NOD'
         self.dbasechildwdgfield.append(self.propertieswdgDesordre)
 
 
@@ -207,13 +199,14 @@ class BaseWaterdistributionNodeTool(BaseNodeTool):
                           }
 
 
+        self.topologicnode = TopologicNodeWidget(self)
+        self.lamiawidgets.append(self.topologicnode)
+
     # def postInitFeatureProperties(self, feat): 
     def postSelectFeature(self):
-
-        dbasetable = self.dbase.dbasetables['Noeud']
-
+        dbasetable = self.dbase.dbasetables['node']
         if self.currentFeaturePK is not None:
-            lid_dessys = self.dbase.getValuesFromPk('Noeud_qgis',['lid_descriptionsystem_1'],self.currentFeaturePK)
+            lid_dessys = self.dbase.getValuesFromPk('node_qgis',['lid_descriptionsystem_1'],self.currentFeaturePK)
             if lid_dessys is not None:
                 self.toolwidgetmain.comboBox_acces.setEnabled(False)
             else:
@@ -223,37 +216,37 @@ class BaseWaterdistributionNodeTool(BaseNodeTool):
 
 
         if (self.parentWidget is not None and self.parentWidget.currentFeaturePK is not None
-                and self.parentWidget.DBASETABLENAME == 'Equipement'):
+                and self.parentWidget.DBASETABLENAME == 'equipment'):
 
-            type_ouvrage = self.dbase.getValuesFromPk('Equipement_qgis',
-                                                        ['type_ouvrage'],
+            type_ouvrage = self.dbase.getValuesFromPk('equipment_qgis',
+                                                        ['equipmenttype'],
                                                         self.parentWidget.currentFeaturePK)
 
             if type_ouvrage == 'CHE':
-
-                dbasetable['fields']['acces'] = OrderedDict([('PGtype', 'VARCHAR(255'),('ParFldCst','categorie'),('Cst',[[u'Chambre enterrée/regard', 'CHE',['','VEN','VAN','VID','REG','HYD','COM','CHL','RPC','SPE']]])])
+                # dbasetable['fields']['acces'] = OrderedDict([('PGtype', 'VARCHAR(255'),('ParFldCst','categorie'),('Cst',[[u'Chambre enterrée/regard', 'CHE',['','VEN','VAN','VID','REG','HYD','COM','CHL','RPC','SPE']]])])
+                #                                                                                                                                              #  ['','VEN','VAN','VID','REG','HYD','COM','DEB','CHL','RPC','SPE','AUT','IND']
+                rawval = [elem[1] for elem in dbasetable['fields']['access']['Cst']] 
+                cheindex = rawval.index('CHE')
+                dbasetable['fields']['access']['Cst'][cheindex][2] = ['','VEN','VAN','VID','REG','HYD','COM','CHL','RPC','SPE']
 
                 self.toolwidgetmain.comboBox_cat.currentIndexChanged.emit(self.toolwidgetmain.comboBox_cat.currentIndex())
                 self.toolwidgetmain.comboBox_acces.setEnabled(False)
 
             else:
-                if dbasetable['fields']['acces'] != self.allaccessfields:
-                    dbasetable['fields']['acces'] = self.allaccessfields
+                if dbasetable['fields']['access'] != self.allaccessfields:
+                    dbasetable['fields']['access'] = self.allaccessfields
                     self.toolwidgetmain.comboBox_cat.currentIndexChanged.emit(self.toolwidgetmain.comboBox_cat.currentIndex())
         else:
-            if dbasetable['fields']['acces'] != self.allaccessfields:
-                dbasetable['fields']['acces'] = self.allaccessfields
+            if dbasetable['fields']['access'] != self.allaccessfields:
+                dbasetable['fields']['access'] = self.allaccessfields
                 self.toolwidgetmain.comboBox_cat.currentIndexChanged.emit(self.toolwidgetmain.comboBox_cat.currentIndex())
 
 
     def postSaveFeature(self, savedfeaturepk=None):
 
-        # save a disorder on first creation
-        #if self.savingnewfeature and not self.savingnewfeatureVersion:
-
         if self.currentFeaturePK is None:
             self.propertieswdgDesordre.toolbarNew()
-            geomtext = self.dbase.getValuesFromPk('Noeud_qgis',
+            geomtext = self.dbase.getValuesFromPk('node_qgis',
                                             'ST_AsText(geom)',
                                             savedfeaturepk)
 
@@ -265,45 +258,14 @@ class BaseWaterdistributionNodeTool(BaseNodeTool):
             self.currentFeaturePK = savedfeaturepk
             self.propertieswdgDesordre.toolbarSave()
             pkdesordre = self.propertieswdgDesordre.currentFeaturePK
-            sql = "UPDATE Desordre SET groupedesordre = 'NOD' WHERE pk_desordre = {}".format(pkdesordre)
-            self.dbase.query(sql)
-            """
-            pkobjet = self.dbase.createNewObjet()
-            lastiddesordre = self.dbase.getLastId('Desordre') + 1
-            geomtext, iddessys = self.dbase.getValuesFromPk('Noeud_qgis',
-                                                            ['ST_AsText(geom)', 'id_descriptionsystem'],
-                                                            self.currentFeaturePK)
-            qgsgeom = qgis.core.QgsGeometry.fromWkt(geomtext)
-            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                newgeom = qgis.core.QgsGeometry.fromPolyline([qgsgeom.asPoint(), qgsgeom.asPoint()])
-                newgeomwkt = newgeom.exportToWkt()
-            else:
-                #newgeom = qgis.core.QgsGeometry.fromPolylineXY([qgsgeom.asPointXY(), qgsgeom.asPointXY()])
-                #newgeom = qgis.core.QgsGeometry.fromPolylineXY([qgsgeom.asPoint(), qgsgeom.asPoint()])
-                # print('geom',qgsgeom.asWkt() )
-                if qgsgeom.type() == 0: #point
-                    newgeom = qgis.core.QgsGeometry.fromPolylineXY([qgsgeom.asPoint(), qgsgeom.asPoint()])
-                elif qgsgeom.type() == 1: #line
-                    aspoint = qgsgeom.asPolyline()[0]
-                    newgeom = qgis.core.QgsGeometry.fromPolylineXY([aspoint, aspoint])
-                newgeomwkt = newgeom.asWkt()
-
-            sql = self.dbase.createSetValueSentence(type='INSERT',
-                                                    tablename='Desordre',
-                                                    listoffields=['id_desordre', 'lpk_objet', 'groupedesordre',
-                                                                  'lid_descriptionsystem', 'geom'],
-                                                    listofrawvalues=[lastiddesordre, pkobjet, 'NOD',
-                                                                     iddessys, newgeomwkt])
-            self.dbase.query(sql)
-            """
-
-
+            # sql = "UPDATE deficiency SET deficiencycategory = 'NOD' WHERE pk_deficiency = {}".format(pkdesordre)
+            # self.dbase.query(sql)
+            
 
 
     def changeCategorie(self, intcat):
-
         typeeqt = self.toolwidgetmain.comboBox_cat.itemText(intcat)
-        rawtypeeqt = self.dbase.getConstraintRawValueFromText('Noeud', 'categorie', typeeqt)
+        rawtypeeqt = self.dbase.getConstraintRawValueFromText('node', 'nodetype', typeeqt)
         pagecount = self.toolwidgetmain.stackedWidget.count()
         for pageindex in range(pagecount):
             wdgname = self.toolwidgetmain.stackedWidget.widget(pageindex).objectName()
@@ -311,6 +273,7 @@ class BaseWaterdistributionNodeTool(BaseNodeTool):
                 self.toolwidgetmain.stackedWidget.setCurrentIndex(pageindex)
                 return
         self.toolwidgetmain.stackedWidget.setCurrentIndex(pagecount)
+        
 
 
     def magicFunction(self):

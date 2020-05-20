@@ -47,30 +47,30 @@ class BaseWaterdistributionObservationTool(BaseObservationTool):
     def initMainToolWidget(self):
 
         self.toolwidgetmain = UserUI()
-        self.formtoolwidgetconfdictmain = {'Observation' : {'linkfield' : 'id_observation',
+        self.formtoolwidgetconfdictmain = {'observation' : {'linkfield' : 'id_observation',
                                             'widgets' : {
                                                     #general
                                                     'datetimeobservation' : self.toolwidgetmain.dateTimeEdit,
-                                                    'gravite': self.toolwidgetmain.comboBox_urgence,
+                                                    'gravity': self.toolwidgetmain.comboBox_urgence,
 
                                                         # infra
-                                                        'nombre': self.toolwidgetmain.spinBox_nombre,
-                                                        'evolution': self.toolwidgetmain.textEdit_evolution,
+                                                        'number': self.toolwidgetmain.spinBox_nombre,
+                                                        'progression': self.toolwidgetmain.textEdit_evolution,
                                                     #noeud
-                                                    'etattampon' : self.toolwidgetmain.comboBox_etattampon,
-                                                    'etatregard': self.toolwidgetmain.comboBox_etatregard,
+                                                    'conditioncover' : self.toolwidgetmain.comboBox_etattampon,
+                                                    'conditionmanhole': self.toolwidgetmain.comboBox_etatregard,
 
                                                     #equip
-                                                        'etatgeneral': [self.toolwidgetmain.comboBox_etatgen,
+                                                        'conditionglobal': [self.toolwidgetmain.comboBox_etatgen,
                                                                         self.toolwidgetmain.comboBox_etatgen2],
-                                                        'indexcompteur': self.toolwidgetmain.spinBox_indexcompteur,
+                                                        'watercountervalue': self.toolwidgetmain.spinBox_indexcompteur,
 
 
                                                     #general
-                                                    'typesuite': self.toolwidgetmain.comboBox_typesuite,
-                                                    'commentairesuite': self.toolwidgetmain.textEdit_suite}},
-                            'Objet' : {'linkfield' : 'id_objet',
-                                        'widgets' : {'commentaire': self.toolwidgetmain.textEdit_comm}}}
+                                                    'nextactiontype': self.toolwidgetmain.comboBox_typesuite,
+                                                    'nextactioncomment': self.toolwidgetmain.textEdit_suite}},
+                            'object' : {'linkfield' : 'id_object',
+                                        'widgets' : {'comment': self.toolwidgetmain.textEdit_comm}}}
 
         self.toolwidgetmain.toolButton_calc_nb.clicked.connect(
             lambda: self.showNumPad(self.toolwidgetmain.spinBox_nombre))
@@ -82,8 +82,6 @@ class BaseWaterdistributionObservationTool(BaseObservationTool):
         # child widgets
         self.dbasechildwdgfield=[]
         self.instancekwargs['parentwidget'] = self
-        # if self.parentWidget is not None:
-        #if self.parentWidget is None or self.parentWidget is not None and self.parentWidget.dbasetablename == 'Desordre':
         self.propertieswdgPHOTOGRAPHIE = BaseCameraTool(**self.instancekwargs)
         self.dbasechildwdgfield = [self.propertieswdgPHOTOGRAPHIE]
         self.propertieswdgCROQUIS = BaseSketchTool(**self.instancekwargs)
@@ -92,18 +90,17 @@ class BaseWaterdistributionObservationTool(BaseObservationTool):
 
     # def postInitFeatureProperties(self, feat): 
     def postSelectFeature(self):
-        super(BaseEaupotableObservationTool, self).postSelectFeature()
+        super(BaseWaterdistributionObservationTool, self).postSelectFeature()
         self.updateObservationStackedWidget()
 
     def updateObservationStackedWidget(self):
 
-        if ('groupedesordre' in self.dbase.dbasetables['Desordre']['fields'].keys()  ):
+        if ('deficiencycategory' in self.dbase.dbasetables['deficiency']['fields'].keys()  ):
             if self.parentWidget is not None and self.parentWidget.currentFeaturePK is not None:
-                #grpdes = self.parentWidget.currentFeature['groupedesordre']
                 grpdes = self.dbase.getValuesFromPk(self.parentWidget.DBASETABLENAME,
-                                                     'groupedesordre',
+                                                     'deficiencycategory',
                                                       self.parentWidget.currentFeaturePK )
-                grpdescst = [elem[1] for elem in self.dbase.dbasetables['Desordre']['fields']['groupedesordre']['Cst']]
+                grpdescst = [elem[1] for elem in self.dbase.dbasetables['deficiency']['fields']['deficiencycategory']['Cst']]
                 indexgrp = grpdescst.index(grpdes)
                 try:
                     self.toolwidgetmain.stackedWidget.setCurrentIndex(indexgrp)
@@ -113,11 +110,10 @@ class BaseWaterdistributionObservationTool(BaseObservationTool):
 
                 if (grpdes == 'NOD' and self.parentWidget.parentWidget is not None 
                             and self.parentWidget.parentWidget.currentFeaturePK is not None):
-                    if self.parentWidget.parentWidget.DBASETABLENAME == 'Noeud':
-                        #typenoeud = self.parentWidget.parentWidget.currentFeature['typeOuvrageAss']
+                    # print('nodeobs')
+                    if self.parentWidget.parentWidget.DBASETABLENAME == 'node':
                         currenttext = self.parentWidget.parentWidget.toolwidgetmain.comboBox_cat.currentText()
-                        # typenoeud = self.parentWidget.parentWidget.currentFeature['typeOuvrageAss']
-                        typeeqp = self.dbase.getConstraintRawValueFromText('Noeud', 'categorie', currenttext)
+                        typeeqp = self.dbase.getConstraintRawValueFromText('node', 'nodetype', currenttext)
 
                         if typeeqp in ['VEN', 'VAN', 'VID','REG','HYD','CHL','RPC','SPE','AUT','IND']:
                             self.toolwidgetmain.stackedWidget_2.setCurrentIndex(0)
@@ -128,12 +124,9 @@ class BaseWaterdistributionObservationTool(BaseObservationTool):
 
                 if (grpdes == 'EQP' and self.parentWidget.parentWidget is not None 
                             and self.parentWidget.parentWidget.currentFeaturePK is not None):
-                    if self.parentWidget.parentWidget.DBASETABLENAME == 'Equipement':
-                        #typenoeud = self.parentWidget.parentWidget.currentFeature['typeOuvrageAss']
+                    if self.parentWidget.parentWidget.DBASETABLENAME == 'equipment':
                         currenttext = self.parentWidget.parentWidget.toolwidgetmain.comboBox_typeouvrage.currentText()
-                        # typenoeud = self.parentWidget.parentWidget.currentFeature['typeOuvrageAss']
-
-                        typenoeud = self.dbase.getConstraintRawValueFromText('Equipement', 'type_ouvrage', currenttext)
+                        typenoeud = self.dbase.getConstraintRawValueFromText('equipment', 'equipmenttype', currenttext)
 
                         if typenoeud in ['CHE']:
                             self.toolwidgetmain.stackedWidget_3.setCurrentIndex(0)

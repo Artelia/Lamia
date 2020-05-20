@@ -713,7 +713,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         pass
     
     # def getNearestPk(self, dbasetable, dbasetablename, point, comefromcanvas=True):
-    def getNearestPk(self, tablename, point, comefromcanvas=True): 
+    def getNearestPk(self, tablename, point, comefromcanvas=True,fieldconstraint=None): 
         """
         Permet d'avoir le pk du feature le plus proche du qgsvectorlayer correspondant à dbasetablename
         pas besoin de filtre sur les dates et versions on travaille avec le qgsectorlyaer de la table
@@ -742,7 +742,23 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
         # spatialindex creation
         # spindex = qgis.core.QgsSpatialIndex(dbasetable['layerqgis'].getFeatures())
-        spindex = qgis.core.QgsSpatialIndex(layertoprocess.getFeatures())
+        expr=[]
+        if fieldconstraint:
+            expr=[]
+            for k, v in fieldconstraint.items():
+                expr.append( f""" "{k}" = '{v}'  """ )
+            expr = ' and '.join(expr)
+
+        req = qgis.core.QgsFeatureRequest().setFilterExpression(expr)
+        req.setInvalidGeometryCheck(False)
+        # req.setSubsetOfAttributes([])
+        req.setNoAttributes()
+        canvasrect = self.xformreverse.transform(self.canvas.extent())
+        req.setFilterRect(canvasrect)
+        spindex = qgis.core.QgsSpatialIndex(layertoprocess.getFeatures(req))
+
+        
+        # spindex = qgis.core.QgsSpatialIndex(layertoprocess.getFeatures())
         layernearestid = spindex.nearestNeighbor(point2, 1)
         if not layernearestid:
             return

@@ -39,6 +39,7 @@ from .lamiabase_graphcsv_tool import BaseGraphcsvTool
 
 class BaseSurfaceTool(AbstractLamiaFormTool):
 
+    PREPROTOOLNAME = 'surface'
     DBASETABLENAME = 'surface'
     LOADFIRST = True
 
@@ -95,8 +96,9 @@ class BaseSurfaceTool(AbstractLamiaFormTool):
                                                         parentmanytomanyfield='id_surface',
                                                         childmanytomanyfield='id_descriptionsystem',
                                                         childdisplayfields=['id_node', 'name', 'nodetype'],
-                                                        tcmanytomanydisplayfields=[])
-        self.toolwidgetmain.frame_node.layout().addWidget(self.tcsubwidget)
+                                                        tcmanytomanydisplayfields=[],
+                                                        parentframe=self.toolwidgetmain.frame_node)
+                                                        )
         self.lamiawidgets.append(self.tcsubwidget)
 
 

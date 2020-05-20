@@ -43,7 +43,7 @@ from .lamiabase_ud_sketch_tool import BaseUrbandrainageSketchTool
 from .lamiabase_ud_deficiency_tool import BaseUrbandrainageDeficiencyTool
 from .lamiabase_ud_equipment_tool import BaseUrbandrainageEquipmentTool
 from ..subwidgets.subwidget_lidchooser import LidChooserWidget
-
+from ..subwidgets.subwidget_topologicnode import TopologicNodeWidget
 
 class BaseUrbandrainageNodeTool(BaseNodeTool):
 
@@ -212,6 +212,9 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
                                         'gga': 'hauteurperche'}
                                 }
 
+            self.topologicnode = TopologicNodeWidget(self)
+            self.lamiawidgets.append(self.topologicnode)
+
         elif self.dbase.variante in ['2018_SNCF']:
 
             self.toolwidgetmain = UserUI_2()
@@ -346,7 +349,8 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
                               }
 
             #self.dbase.dbasetables['node']['fields']['typeOuvrageAss']['Cst'] = self.modifiedtypeohassdict
-
+            self.topologicnode = TopologicNodeWidget(self)
+            self.lamiawidgets.append(self.topologicnode)
 
         elif self.dbase.variante in ['CD41']:
 
@@ -465,7 +469,8 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
                                         'gga': 'RAF09'},
                               'hauteurperche': {'widget': self.toolwidgetmain.label_hautperche,
                                                 'gga': 'hauteurperche'}}
-
+            self.topologicnode = TopologicNodeWidget(self)
+            self.lamiawidgets.append(self.topologicnode)
 
     def fielduiTypeOhChanged(self, comboindex):
         #print(self.toolwidgetmain.comboBox_typeOuvrageAss.currentText())
@@ -493,9 +498,6 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
 
         #self.propertieswdgDesordre.propertieswdgOBSERVATION2.updateObservationStackedWidget()
         self.propertieswdgDesordre.propertieswdgOBSERVATION.updateObservationStackedWidget()
-
-
-
 
     def fieldui2TypeOhChanged(self, comboindex):
         #print(self.toolwidgetmain_2.comboBox_typeOuvrageAss.currentText())
@@ -592,7 +594,7 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
     # def postSaveFeature(self, boolnewfeature):
     def postSaveFeature(self, savedfeaturepk=None):
         self._createDeficiency(self.propertieswdgDesordre,savedfeaturepk)
-        self._moveLinkedTopologicalEdge()
+        # self._moveLinkedTopologicalEdge()
 
         if self.currentFeaturePK is not None and self.dbase.variante in ['2018_SNCF']:
             libelle=''

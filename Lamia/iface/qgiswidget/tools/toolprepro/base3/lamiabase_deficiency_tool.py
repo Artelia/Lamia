@@ -40,12 +40,14 @@ base3 = QtCore.QObject()
 
 class BaseDeficiencyTool(AbstractLamiaFormTool):
 
+    PREPROTOOLNAME = 'deficiency'
     DBASETABLENAME = 'deficiency'
     LOADFIRST = True
 
     tooltreewidgetCAT =QtCore.QCoreApplication.translate('base3','Condition')
     tooltreewidgetSUBCAT =QtCore.QCoreApplication.translate('base3','Deficiency')
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_deficiency_tool_icon.png')
+    
     tempparentjoin = {}
     linkdict = {'colparent': 'id_descriptionsystem',
                             'colthistable': 'lid_descriptionsystem',
@@ -54,7 +56,8 @@ class BaseDeficiencyTool(AbstractLamiaFormTool):
                                 'tctablecolthistable':None}
     for tablename in ['node', 'edge', 'equipment' ]:
         tempparentjoin[tablename] = linkdict
-    PARENTJOIN = tempparentjoin
+    PARENTJOIN = dict(tempparentjoin)
+
 
 
     def __init__(self, **kwargs):

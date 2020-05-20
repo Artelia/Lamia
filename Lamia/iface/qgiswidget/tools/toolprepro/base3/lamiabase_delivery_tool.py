@@ -37,10 +37,13 @@ from .lamiabase_sketch_tool import BaseSketchTool
 from .lamiabase_topography_tool import BaseTopographyTool
 from .lamiabase_actor_tool import BaseActorTool
 
+from ..subwidgets.subwidget_tcmanytomany import TcmanytomanyChooserWidget
+
 base3 = QtCore.QObject()
 
 class BaseDeliveryTool(AbstractLamiaFormTool):
 
+    PREPROTOOLNAME = 'delivery'
     DBASETABLENAME = 'delivery'
     LOADFIRST = False
 
@@ -49,15 +52,24 @@ class BaseDeliveryTool(AbstractLamiaFormTool):
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_delivery_tool_icon.png')
     
 
+    # tempparentjoin = {}
+    # linkdict = {'colparent': 'id_object',
+    #             'colthistable': 'id_actor',
+    #                 'tctable': 'tcobjectactor',
+    #                 'tctablecolparent':'lid_object',
+    #                 'tctablecolthistable':'lid_actor'}
+    # for tablename in ['actor']:
+    #     tempparentjoin[tablename] = linkdict
+    # PARENTJOIN = dict(tempparentjoin)
     tempparentjoin = {}
     linkdict = {'colparent': 'id_object',
-                'colthistable': 'id_actor',
-                    'tctable': 'tcobjectactor',
+                'colthistable': 'id_delivery',
+                    'tctable': 'tcdeliveryobject',
                     'tctablecolparent':'lid_object',
-                    'tctablecolthistable':'lid_actor'}
-    for tablename in ['actor']:
+                    'tctablecolthistable':'lid_delivery'}
+    for tablename in ['delivery','deficiency']:
         tempparentjoin[tablename] = linkdict
-    PARENTJOIN = tempparentjoin
+    PARENTJOIN = dict(tempparentjoin)
 
 
     def __init__(self, **kwargs):
@@ -70,12 +82,16 @@ class BaseDeliveryTool(AbstractLamiaFormTool):
         self.toolwidgetmain = UserUI()
         self.formtoolwidgetconfdictmain = {'delivery' : {'linkfield' : 'id_delivery',
                                             'widgets' : {
-                                                        'datetimecontract' : self.toolwidgetmain.dateEdit_date,
+                                                        'deliverycategory' : self.toolwidgetmain.comboBox_deliverycategory,
                                                         'contractref': self.toolwidgetmain.lineEdit_nummarche,
+                                                        'datedeliverystarting' : self.toolwidgetmain.dateEdit_startdate,
+                                                        'dateestimatedenddelivery' : self.toolwidgetmain.dateEdit_enddate,
+
                                             }},
                             'object' : {'linkfield' : 'id_object',
                                         'widgets' : {'name': self.toolwidgetmain.lineEdit_nom}}}
-        self.toolwidgetmain.pushButton_currentPrestation.clicked.connect(self.defineCurrentPrestation)
+                                        
+        # self.toolwidgetmain.pushButton_currentPrestation.clicked.connect(self.defineCurrentPrestation)
         #self.toolwidgetmain.pushButton_defineinter.clicked.connect(self.manageLinkage)
 
         # ****************************************************************************************
@@ -92,9 +108,19 @@ class BaseDeliveryTool(AbstractLamiaFormTool):
         self.propertieswdgTOPOGRAPHIE = BaseTopographyTool(**self.instancekwargs)
         self.dbasechildwdgfield.append(self.propertieswdgTOPOGRAPHIE)
 
-        self.propertieswdgACTORS= BaseActorTool(**self.instancekwargs)
-        self.dbasechildwdgfield.append(self.propertieswdgACTORS)
+        # self.propertieswdgACTORS= BaseActorTool(**self.instancekwargs)
+        # self.dbasechildwdgfield.append(self.propertieswdgACTORS)
 
+        self.tcsubwidget = TcmanytomanyChooserWidget(parentwdg=self ,
+                                                        tcmanytomanyname='tcobjectactor',
+                                                        childtablename='actor',
+                                                        parentmanytomanyfield='id_object',
+                                                        childmanytomanyfield='id_actor',
+                                                        childdisplayfields=['actorname', 'society'],
+                                                        tcmanytomanydisplayfields=['role'],
+                                                        parentframe=self.toolwidgetmain.frame_actor)
+        # self.toolwidgetmain.frame_actor.layout().addWidget(self.tcsubwidget)
+        self.lamiawidgets.append(self.tcsubwidget)
 
 
     def defineCurrentPrestation(self):
@@ -110,27 +136,34 @@ class BaseDeliveryTool(AbstractLamiaFormTool):
         pass
     """
 
+
+
     # def postInitFeatureProperties(self, feat):
     def postSelectFeature(self):
         if self.currentFeaturePK is None:
-            datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-            self.formutils.applyResultDict({'datemarche' : datecreation},checkifinforgottenfield=False)
+            datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d"))
+            self.formutils.applyResultDict({'datecontract' : datecreation,
+                                            'datedeliverystarting': datecreation,
+                                            'dateestimatedenddelivery': datecreation,
+                                            },
+                                            
+                                            checkifinforgottenfield=False)
 
-        else:
-            try:
-                idobjet = self.dbase.getValuesFromPk(self.DBASETABLENAME + '_qgis', 
-                                                    'id_object',
-                                                    self.currentFeaturePK)
-                sql = "SELECT tcobjectactor.role, actor.actorname, actor.society  FROM tcobjectactor "
-                sql += " INNER JOIN actor ON tcobjectactor.lid_actor = actor.id_actor "
-                sql += "WHERE lid_object = " + str(idobjet)
-                query = self.dbase.query(sql)
+        # else:
+        #     try:
+        #         idobjet = self.dbase.getValuesFromPk(self.DBASETABLENAME + '_qgis', 
+        #                                             'id_object',
+        #                                             self.currentFeaturePK)
+        #         sql = "SELECT tcobjectactor.role, actor.actorname, actor.society  FROM tcobjectactor "
+        #         sql += " INNER JOIN actor ON tcobjectactor.lid_actor = actor.id_actor "
+        #         sql += "WHERE lid_object = " + str(idobjet)
+        #         query = self.dbase.query(sql)
 
-                result = "\n".join([str(row) for row in query])
-                self.toolwidgetmain.textBrowser_intervenants.clear()
-                self.toolwidgetmain.textBrowser_intervenants.append(result)
-            except KeyError as e:
-                print('postInitFeatureProperties', e)
+        #         result = "\n".join([str(row) for row in query])
+        #         self.toolwidgetmain.textBrowser_intervenants.clear()
+        #         self.toolwidgetmain.textBrowser_intervenants.append(result)
+        #     except KeyError as e:
+        #         print('postInitFeatureProperties', e)
 
 
 

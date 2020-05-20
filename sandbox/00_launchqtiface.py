@@ -45,7 +45,9 @@ class DBaseViewer():
         if True :
             SLFILE = os.path.join(os.path.dirname(__file__), '..','test','datas','lamia_assainissement','test01.sqlite')
             # SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_urbandrainage_Lamia\test01.sqlite"
-            SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_waterdistribution_Lamia\test01.sqlite"
+            # SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_waterdistribution_Lamia\test01.sqlite"
+            # SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_constructionsite_Lamia\test01.sqlite"
+            SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_constructionsite_Orange\test01.sqlite"
             #SLFILE = r"C:\Users\Public\Documents\lamia\test01\test01.sqlite"
             # SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue\test01.sqlite"
             # SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_assainissement\test01.sqlite"
@@ -74,6 +76,7 @@ class DBaseViewer():
         self.wind.qgiscanvas.canvas.setExtent(extent)
 
         self.wind.setVisualMode(visualmode=0)
+        # self.wind.dbase.printsql = True
 
         # display good widget
         # wdg = self.wind.toolwidgets['toolprepro']['Graphique_csv'][0]
@@ -86,7 +89,6 @@ class DBaseViewer():
 
         # res = self.wind.connector.inputMessage(['nom','mdp'])
         # print(res)
-
 
         self.mainwin.exec_()
 

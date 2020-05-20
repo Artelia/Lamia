@@ -160,12 +160,12 @@ class AbstractLamiaTool(QWidget):
 
     def manageLoadingInToolTreeWidget(self):
         if self.mainifacewidget.interfacemode == 0:
-            if self.DBASETABLENAME and self.LOADFIRST:
+            if self.PREPROTOOLNAME and self.LOADFIRST:
                 self.loadWidgetinToolTree()
             else:
                 self.unloadWidgetinToolTree()
         elif self.mainifacewidget.interfacemode == 1:
-            if self.DBASETABLENAME:
+            if self.PREPROTOOLNAME:
                 self.loadWidgetinToolTree()
             else:
                 self.unloadWidgetinToolTree()

@@ -41,6 +41,7 @@ base3 = QtCore.QObject()
 
 class BaseSketchTool(AbstractLamiaFormTool):
 
+    PREPROTOOLNAME = 'sketch'
     DBASETABLENAME = 'media'
     LOADFIRST = False
 
@@ -284,6 +285,7 @@ class BaseSketchTool(AbstractLamiaFormTool):
             fileimage = self.dbase.getValuesFromPk(self.DBASETABLENAME + '_qgis',
                                                  'file',
                                                  self.currentFeaturePK )
+        
         self.editorwindow.saveImage(self.dbase.completePathOfFile(fileimage))
 
 

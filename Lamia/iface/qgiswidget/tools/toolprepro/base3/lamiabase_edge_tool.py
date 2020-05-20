@@ -40,6 +40,7 @@ base3 = QtCore.QObject()
 
 class BaseEdgeTool(AbstractLamiaFormTool):
 
+    PREPROTOOLNAME = 'edge'
     DBASETABLENAME = 'edge'
     LOADFIRST = True
 

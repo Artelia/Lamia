@@ -37,6 +37,7 @@ base3 = QtCore.QObject()
 
 class BaseEquipmentTool(AbstractLamiaFormTool):
 
+    PREPROTOOLNAME = 'equipment'
     DBASETABLENAME = 'equipment'
     LOADFIRST = True
 

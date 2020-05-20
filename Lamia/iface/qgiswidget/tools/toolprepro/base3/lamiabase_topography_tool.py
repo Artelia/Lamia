@@ -41,6 +41,7 @@ base3 = QtCore.QObject()
 
 class BaseTopographyTool(AbstractLamiaFormTool):
 
+    PREPROTOOLNAME = 'topography'
     DBASETABLENAME = 'topography'
     LOADFIRST = True
 

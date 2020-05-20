@@ -47,7 +47,7 @@ base3 = QtCore.QObject()
 
 class BaseCameraTool(AbstractLamiaFormTool):
 
-
+    PREPROTOOLNAME = 'camera'
     DBASETABLENAME = 'media'
     LOADFIRST = False
 

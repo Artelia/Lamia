@@ -36,6 +36,7 @@ base3 = QtCore.QObject()
 
 class BaseReportTool(AbstractLamiaFormTool):
 
+    PREPROTOOLNAME = 'report'
     DBASETABLENAME = 'report'
     LOADFIRST = False
 

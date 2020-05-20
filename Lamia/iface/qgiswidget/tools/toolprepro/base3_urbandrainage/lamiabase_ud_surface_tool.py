@@ -86,8 +86,9 @@ class BaseUrbandrainageSurfaceTool(BaseSurfaceTool):
                                                         parentmanytomanyfield='id_surface',
                                                         childmanytomanyfield='id_descriptionsystem',
                                                         childdisplayfields=['id_node', 'name', 'nodetype'],
-                                                        tcmanytomanydisplayfields=[])
-        self.toolwidgetmain.frame_node.layout().addWidget(self.tcsubwidget)
+                                                        tcmanytomanydisplayfields=[],
+                                                        parentframe=self.toolwidgetmain.frame_node)
+
         self.lamiawidgets.append(self.tcsubwidget)
 
 

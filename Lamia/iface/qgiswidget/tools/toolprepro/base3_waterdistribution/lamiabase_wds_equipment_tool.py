@@ -42,38 +42,32 @@ from .lamiabase_wds_sketch_tool import BaseWaterdistributionSketchTool as BaseSk
 from .lamiabase_wds_deficiency_tool import BaseWaterdistributionDeficiencyTool
 
 
-
-
-
 class BaseWaterdistributionEquipmentTool(BaseEquipmentTool):
-
 
     def __init__(self, **kwargs):
         super(BaseWaterdistributionEquipmentTool, self).__init__(**kwargs)
-
-
 
     def initMainToolWidget(self):
 
         self.toolwidgetmain = UserUI()
 
-        self.formtoolwidgetconfdictmain = {'Equipement' : {'linkfield' : 'id_equipement',
-                                            'widgets' : {'type_ouvrage' : self.toolwidgetmain.comboBox_typeouvrage,
-                                                        'ss_type_ouv' :  self.toolwidgetmain.comboBox_sstype,
+        self.formtoolwidgetconfdictmain = {'equipment' : {'linkfield' : 'id_equipment',
+                                            'widgets' : {'equipmenttype' : self.toolwidgetmain.comboBox_typeouvrage,
+                                                        'equipmentsubtype' :  self.toolwidgetmain.comboBox_sstype,
 
-                                                        'h_mano_tot' : self.toolwidgetmain.doubleSpinBox_hmano,
+                                                        'totaldynamichead' : self.toolwidgetmain.doubleSpinBox_hmano,
 
                                                         'volume': self.toolwidgetmain.doubleSpinBox_volume,
-                                                        'nbre_cuves': self.toolwidgetmain.spinBox_nbrecuves,
-                                                        'cote_sql': self.toolwidgetmain.doubleSpinBox_cotesql,
-                                                        'cote_radier': self.toolwidgetmain.doubleSpinBox_coteradier,
-                                                        'cote_trop_plein': self.toolwidgetmain.doubleSpinBox_cotetp,
+                                                        'tanknumber': self.toolwidgetmain.spinBox_nbrecuves,
+                                                        'elevationsql': self.toolwidgetmain.doubleSpinBox_cotesql,
+                                                        'elevationculvert': self.toolwidgetmain.doubleSpinBox_coteradier,
+                                                        'elevationoverflow': self.toolwidgetmain.doubleSpinBox_cotetp,
 
-                                                        'diametre': self.toolwidgetmain.doubleSpinBox_diam,
-                                                        'nb_compteur': self.toolwidgetmain.doubleSpinBox_nbrecompteur,
-                                                        'fonctionnement': self.toolwidgetmain.comboBox_fonct,
+                                                        'diameter': self.toolwidgetmain.doubleSpinBox_diam,
+                                                        'meternumber': self.toolwidgetmain.doubleSpinBox_nbrecompteur,
+                                                        'metertype': self.toolwidgetmain.comboBox_fonct,
 
-                                                        'profondeur': self.toolwidgetmain.doubleSpinBox_prof,
+                                                        'depthequipment': self.toolwidgetmain.doubleSpinBox_prof,
 
                                                         'X': self.toolwidgetmain.doubleSpinBox_X,
                                                         'dX': self.toolwidgetmain.doubleSpinBox_dX,
@@ -84,14 +78,14 @@ class BaseWaterdistributionEquipmentTool(BaseEquipmentTool):
 
 
                                                         }},
-                                    'Objet': {'linkfield': 'id_objet',
+                                    'object': {'linkfield': 'id_object',
                                                 'widgets': {
-                                                    'commentaire': self.toolwidgetmain.textBrowser_commentaire,
-                                                    'libelle': self.toolwidgetmain.lineEdit_nom}},
-                                    'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
+                                                    'comment': self.toolwidgetmain.textBrowser_commentaire,
+                                                    'name': self.toolwidgetmain.lineEdit_nom}},
+                                    'descriptionsystem': {'linkfield': 'id_descriptionsystem',
                                                             'widgets': {
-                                                                'enservice': self.toolwidgetmain.comboBox_enservice,
-                                                                'annee_fin_pose': self.toolwidgetmain.dateEdit_anneepose
+                                                                'operational': self.toolwidgetmain.comboBox_enservice,
+                                                                'dateoperationalcreation': self.toolwidgetmain.dateEdit_anneepose
                                                                         }}}
 
 
@@ -118,10 +112,7 @@ class BaseWaterdistributionEquipmentTool(BaseEquipmentTool):
         self.toolwidgetmain.toolButton_prof.clicked.connect(
             lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_prof))
 
-
-
         self.toolwidgetmain.comboBox_typeouvrage.currentIndexChanged.connect(self.fielduiTypeOhChanged)
-
         self.toolwidgetmain.pushButton_getGPS.clicked.connect(self.getGPSValue)
 
 
@@ -138,6 +129,9 @@ class BaseWaterdistributionEquipmentTool(BaseEquipmentTool):
         #self.propertieswdgDesordre.pushButton_delFeature.setEnabled(False)
         #self.propertieswdgDesordre.comboBox_featurelist.setEnabled(False)
         #self.propertieswdgDesordre.groupBox_geom.setParent(None)
+        self.propertieswdgDesordre.SKIP_LOADING_UI = True
+        self.propertieswdgDesordre.initMainToolWidget()
+        self.propertieswdgDesordre.formtoolwidgetconfdictmain['deficiency']['widgets']['deficiencycategory'] = 'EQP'
         self.dbasechildwdgfield.append(self.propertieswdgDesordre)
 
         self.propertieswdgNoeud = BaseWaterdistributionNodeTool(**self.instancekwargs)
@@ -183,16 +177,16 @@ class BaseWaterdistributionEquipmentTool(BaseEquipmentTool):
 
 
     def fielduiTypeOhChanged(self, comboindex):
-        #print(self.toolwidgetmain.comboBox_typeOuvrageAss.currentText())
         currenttext = self.toolwidgetmain.comboBox_typeouvrage.currentText()
+        currentrawvalue = typeeqp = self.dbase.getConstraintRawValueFromText('equipment', 'equipmenttype', currenttext)
 
-        if currenttext in ['Station de pompage']:
+        if currentrawvalue in ['SPO']:
             self.toolwidgetmain.stackedWidget.setCurrentIndex(0)
-        elif currenttext in [u'Réservoir']:
+        elif currentrawvalue in ['RES']:
             self.toolwidgetmain.stackedWidget.setCurrentIndex(1)
-        elif currenttext in ['Chambre de comptage']:
+        elif currentrawvalue in ['CHA']:
             self.toolwidgetmain.stackedWidget.setCurrentIndex(2)
-        elif currenttext in [u'Chambre enterrée/regard']:
+        elif currentrawvalue in [u'CHE']:
             self.toolwidgetmain.stackedWidget.setCurrentIndex(3)
         else:
             self.toolwidgetmain.stackedWidget.setCurrentIndex(4)
@@ -250,14 +244,9 @@ class BaseWaterdistributionEquipmentTool(BaseEquipmentTool):
 
     def postSaveFeature(self, savedfeaturepk=None):
 
-
-
-        #self.dbase.dbasetables['Infralineaire']['layerqgis'].triggerRepaint()
-        # save a disorder on first creation
-        #if True and self.savingnewfeature and not self.savingnewfeatureVersion:
         if self.currentFeaturePK is None:
             self.propertieswdgDesordre.toolbarNew()
-            geomtext = self.dbase.getValuesFromPk('Equipement_qgis',
+            geomtext = self.dbase.getValuesFromPk('equipment_qgis',
                                             'ST_AsText(geom)',
                                             savedfeaturepk)
 
@@ -269,40 +258,8 @@ class BaseWaterdistributionEquipmentTool(BaseEquipmentTool):
             self.currentFeaturePK = savedfeaturepk
             self.propertieswdgDesordre.toolbarSave()
             pkdesordre = self.propertieswdgDesordre.currentFeaturePK
-            sql = "UPDATE Desordre SET groupedesordre = 'EQP' WHERE pk_desordre = {}".format(pkdesordre)
-            self.dbase.query(sql)
-
-
-            """
-            pkobjet = self.dbase.createNewObjet()
-            lastiddesordre = self.dbase.getLastId('Desordre') + 1
-            geomtext, iddessys = self.dbase.getValuesFromPk('Equipement_qgis',
-                                                            ['ST_AsText(geom)', 'id_descriptionsystem'],
-                                                            self.currentFeaturePK)
-            qgsgeom = qgis.core.QgsGeometry.fromWkt(geomtext)
-            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                newgeom = qgis.core.QgsGeometry.fromPolyline([qgsgeom.asPoint(), qgsgeom.asPoint()])
-                newgeomwkt = newgeom.exportToWkt()
-            else:
-                #newgeom = qgis.core.QgsGeometry.fromPolylineXY([qgsgeom.asPointXY(), qgsgeom.asPointXY()])
-                if qgsgeom.type() == 0: #point
-                    newgeom = qgis.core.QgsGeometry.fromPolylineXY([qgsgeom.asPoint(), qgsgeom.asPoint()])
-                elif qgsgeom.type() == 1: #line
-                    aspoint = qgsgeom.asPolyline()[0]
-                    newgeom = qgis.core.QgsGeometry.fromPolylineXY([aspoint, aspoint])
-                newgeomwkt = newgeom.asWkt()
-
-            sql = self.dbase.createSetValueSentence(type='INSERT',
-                                                    tablename='Desordre',
-                                                    listoffields=['id_desordre', 'lpk_objet', 'groupedesordre',
-                                                                  'lid_descriptionsystem', 'geom'],
-                                                    listofrawvalues=[lastiddesordre, pkobjet, 'EQP',
-                                                                     iddessys, newgeomwkt])
-            self.dbase.query(sql)
-            """
-
-
-
+            # sql = "UPDATE Desordre SET groupedesordre = 'EQP' WHERE pk_desordre = {}".format(pkdesordre)
+            # self.dbase.query(sql)
 
 
 class UserUI(QWidget):

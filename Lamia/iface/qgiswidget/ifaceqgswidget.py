@@ -604,9 +604,9 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
             if tooltype == 'desktop_loaded':
                 continue
             for toolname in self.toolwidgets[tooltype].keys():
-                toowdg = self.toolwidgets[tooltype][toolname]
-                if isinstance(toowdg, list):
-                    for wdg in toowdg:
+                toolwdg = self.toolwidgets[tooltype][toolname]
+                if isinstance(toolwdg, list):
+                    for wdg in toolwdg:
                         #tool dep
                         if hasattr(wdg, 'changeInterfaceMode'):
                             wdg.changeInterfaceMode()
@@ -614,10 +614,10 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
                             wdg.changePropertiesWidget()
                 else:
                     #tool dep
-                    if hasattr(wdg, 'changeInterfaceMode'):
-                        wdg.changeInterfaceMode()
+                    if hasattr(toolwdg, 'changeInterfaceMode'):
+                        toolwdg.changeInterfaceMode()
                     else:
-                        wdg.changePropertiesWidget()
+                        toolwdg.changePropertiesWidget()
 
 
     def loadToolsClasses(self):
@@ -651,15 +651,19 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
                     if moduletemp.__name__ == obj.__module__:
                         if tooltypetoload == 'toolpostpro' and hasattr(obj,'TOOLNAME'):
                             self.wdgclasses[tooltypetoload][obj.TOOLNAME] = obj
-                        elif (tooltypetoload == 'toolpostpro' and hasattr(obj,'POSTPROTOOLNAME')
-                                and hasattr(obj,'tooltreewidgetSUBCAT') and obj.tooltreewidgetSUBCAT is not None):
-                            self.wdgclasses[tooltypetoload][obj.tooltreewidgetSUBCAT] = obj
+                        elif (tooltypetoload == 'toolpostpro' and hasattr(obj,'POSTPROTOOLNAME')    #dbase3
+                                and hasattr(obj,'POSTPROTOOLNAME') and obj.POSTPROTOOLNAME is not None):
+                            self.wdgclasses[tooltypetoload][obj.POSTPROTOOLNAME] = obj
 
                         if tooltypetoload == 'toolprepro' and  hasattr(obj,'dbasetablename') :   #tool dep
                             self.wdgclasses[tooltypetoload][obj.dbasetablename] = obj
+                        elif (tooltypetoload == 'toolprepro' and hasattr(obj,'DBASETABLENAME')  #dbase3
+                                and hasattr(obj,'PREPROTOOLNAME') and obj.PREPROTOOLNAME is not None) :
+                            self.wdgclasses[tooltypetoload][obj.PREPROTOOLNAME] = obj
                         elif (tooltypetoload == 'toolprepro' and hasattr(obj,'DBASETABLENAME')
                                 and hasattr(obj,'tooltreewidgetSUBCAT') and obj.tooltreewidgetSUBCAT is not None) :
                             self.wdgclasses[tooltypetoload][obj.tooltreewidgetSUBCAT] = obj
+
 
         if debug: logging.getLogger('Lamia_unittest').debug('x %s', str(self.wdgclasses))
 
@@ -695,17 +699,17 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
                 toolwdglist = self.toolwidgets[typewdg][toolname]
                 toolwdgcls = self.wdgclasses[typewdg][toolname]
                 try:
-                    if hasattr(self.wdgclasses[typewdg][toolname],'DBASETABLENAME') and not fullloading:
-                        toolwdglist.append( toolwdgcls(dbaseparser = self.dbase,
+                    if hasattr(self.wdgclasses[typewdg][toolname],'PREPROTOOLNAME') and not fullloading:
+                        self.toolwidgets[typewdg][toolname] =  toolwdgcls(dbaseparser = self.dbase,
                                                         mainifacewidget = self,
                                                         choosertreewidget = self.ElemtreeWidget,
-                                                        parentwidget = None) )
+                                                        parentwidget = None) 
 
                     elif hasattr(self.wdgclasses[typewdg][toolname],'POSTPROTOOLNAME') and fullloading:
-                        toolwdglist.append( toolwdgcls(dbaseparser = self.dbase,
+                        self.toolwidgets[typewdg][toolname] = toolwdgcls(dbaseparser = self.dbase,
                                                         mainifacewidget = self,
                                                         choosertreewidget = self.ElemtreeWidget,
-                                                        parentwidget = None) )
+                                                        parentwidget = None) 
  
                     elif hasattr(self.wdgclasses[typewdg][toolname],'LOADFIRST') and not fullloading:
                         toolwdglist.append( toolwdgcls(dbase = self.dbase,
@@ -718,6 +722,8 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
                                                         dialog = self,
                                                         linkedtreewidget = self.ElemtreeWidget,
                                                         gpsutil = self.gpsutil) )
+
+                    print(toolname, toolwdglist)
                 except TypeError as e:
                     print(toolname, e)
                     #raise TypeError
@@ -728,39 +734,6 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
             self.toolwidgets['desktop_loaded'] = True
         self.connector.closeProgressBar()
 
-        # init progress bar
-        """
-        if self.dbase.qgsiface is not None:
-            progressMessageBar = self.dbase.qgsiface.messageBar().createMessage("Loading widget...")
-            progress = QProgressBar()
-            progress.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
-            progressMessageBar.layout().addWidget(progress)
-            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                self.dbase.qgsiface.messageBar().pushWidget(progressMessageBar, self.dbase.qgsiface.messageBar().INFO)
-            else:
-                self.dbase.qgsiface.messageBar().pushWidget(progressMessageBar, qgis.core.Qgis.Info)
-            lenuifields = len(self.uifields)
-            progress.setMaximum(lenuifields)
-        else:
-            progress = None
-        """
-        """
-        #load ui fields
-        i = 0
-        for uifield in self.uifields:
-            if debugtime: logger.debug(' start %s %.3f', uifield.dbasetablename, self.dbase.getTimeNow() - timestart)
-            dbasename = uifield.dbasetablename
-            self.dbase.dbasetables[dbasename]['widget'].append( uifield(dbase = self.dbase,
-                                                                     dialog = self,
-                                                                     linkedtreewidget = self.ElemtreeWidget,
-                                                                     gpsutil = self.gpsutil) )
-
-            if debugtime: logger.debug(' end %s %.3f', uifield.dbasetablename, self.dbase.getTimeNow()  - timestart)
-            i += 1
-            self.setLoadingProgressBar(progress, i)
-
-        if progress is not None: self.dbase.qgsiface.messageBar().clearWidgets()
-        """
 
     def loadUiDesktop(self, fullloading=False):
 
@@ -941,7 +914,9 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         self.actiontoobargeomeditlayer.triggered.connect(self.addRawLayerInCanvasForEditing)
         self.actiontoolbarlayersave.triggered.connect(lambda: self.saveRawLayerInCanvasForEditing())
         self.actiontoolbarlayerundo.triggered.connect(lambda: self.saveRawLayerInCanvasForEditing(savechanges=False))
-
+        
+        self.actiontoolbartoolsprint.triggered.connect(self.printCurrentFormWidget)
+        self.actiontoolbartoolsprint.setEnabled(False)
 
 
     def toolbarNew(self):
@@ -994,6 +969,10 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         self.qgiscanvas.saveRawLayerInCanvasForEditing(savechanges)
         for child in self.findChildren((QFrame,QToolBar)): 
             child.setEnabled(True)
+
+    def printCurrentFormWidget(self):
+        self.currenttoolwidget.printWidget()
+
 
     #*************************************************************
     # menu
@@ -1070,11 +1049,13 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
             return
         # getCurrentLayer
         tablename = parentwdg.DBASETABLENAME
+        fieldconstraint = parentwdg.TABLEFILTERFIELD
         #qgslayer = self.qgiscanvas.layers[tablename]['layerqgis']
         #point2 = self.qgiscanvas.pointEmitter.toLayerCoordinates(qgslayer, point)
         nearestpk, dist = self.qgiscanvas.getNearestPk(tablename,
                                                         point,  #former point2
-                                                        comefromcanvas=True)
+                                                        comefromcanvas=True,
+                                                        fieldconstraint=fieldconstraint)
         if debug: logging.getLogger("Lamia_unittest").debug('nearestpk %s', str(nearestpk))
         
         if nearestpk is None:   #no element in table
