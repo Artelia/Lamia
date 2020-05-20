@@ -1,20 +1,14 @@
 
 ###atlaslayersql
 # requete sql pour définir la table utilisée pour l'atlas
-SELECT deficiency_now.* , PV.*
-FROM deficiency_now
-LEFT JOIN observation_now as PV ON PV.lid_deficiency = deficiency_now.id_deficiency and PV.observationcategory = 'PVA' 
-LEFT JOIN actor_now as PVintervocc ON PVintervocc.id_intervenant = PV.lid_actor_1
-LEFT JOIN delivery_now as PVdeliveryocc ON PVdeliveryocc.id_delivery = PV.lid_delivery_1
-LEFT JOIN actor_now as PVinterv ON PVinterv.id_intervenant = PV.lid_actor_1
-LEFT JOIN delivery_now as PVdeliverypren ON PVdeliverypren.id_delivery = PV.lid_delivery_2
-LEFT JOIN actor_now as PVintervpren ON PVintervpren.id_intervenant = PV.lid_actor_2
-WHERE deficiencycategory = 'PVE'
-
-
+SELECT deficiency_now.* , NCC.*
+FROM deficiency_now 
+LEFT JOIN observation_now as NCC ON NCC.lid_deficiency = deficiency_now.id_deficiency and NCC.observationcategory = 'NCC' 
+LEFT JOIN actor_now as NCCinterv ON NCCinterv.id_actor = NCC.lid_actor_1
+WHERE deficiencycategory = 'NCO'
 ###atlaslayerid
 # l'identifiant de l'atalslayer
-pk_deficiency
+id_deficiency
 ###spatial
 # indique si l'atalslayer est une couche spatiale ou pas
 True
@@ -28,24 +22,21 @@ deficiency_atlas.qml
 ###atlasdrivemap
 # caractéristiques de la carte (map) qui suit les objets de l'atlas
 #itemname;   minscale;   typescale;      layers
-map1;       2500;       Predefined      ;['atlaslayer','Infralineaire', 'scan25']
+#map1;       2500;       Predefined      ;['atlaslayer','Infralineaire', 'scan25']
 ###generalmap
 # caractéristiques de la carte (map) générale
 # itemname;   minscale;   typescale; layers
-map0    ;           ;             ; ['deficiency', 'scan25']
+#map0    ;           ;             ; ['deficiency', 'scan25']
 #map0    ;           ;             ; []
 ###images
 # traitement des éléments de type image
 #itemname   ; type
-logo1;logo
-NCA_ressource1;PV.photo1
-NCA_ressource2;PV.photo2
-NCA_ressource3;PV.photo3
-PV_signatureMOE;PV.ressource1
-PV_signatureentocc;PV.ressourceentocc
-PV_signatureentpren;PV.ressourceentpren
-
+NCC_signature;NCC.ressource1
+NCC_ressource1;NCC.photo1
+NCC_ressource2;NCC.photo2
+NCC_ressource3;NCC.photo3
 ###childprint
 # impression à la suite d'autres conf d'impression
 #confname;                linkcolumn;             optionsql
 #deficiencys_observation;    observation_now.lid_deficiency ; ORDER BY observation_now.datetimeobservation DESC
+TRAMnonconformitephaseD; NCD.lid_deficiency;

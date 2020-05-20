@@ -249,7 +249,8 @@ class BaseConstructionsiteDeficiencyTool(BaseDeficiencyTool):
                 res = self.dbase.query(sql)
                 if self.dbase.variante in [None, 'Lamia']:
                     if res is not None and len(res) > 0 and not self.dbase.utils.isAttributeNull(res[0][0]):
-                        reporttype = 'TRAMnonconformite'
+                        # reporttype = 'TRAMnonconformite'
+                        reporttype = 'TRAMnonconformitephaseA'
                     else:
                         reporttype = 'TRAMnonconformitephaseA'
                 elif self.dbase.variante in ['Orange']:

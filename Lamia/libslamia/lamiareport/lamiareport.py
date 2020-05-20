@@ -356,18 +356,41 @@ class printPDFBaseWorker(object):
 
 
         #initialize var for page dimension in case of child print
-        if self.parentprintPDFworker is not None:
-            self.heightpx = 0
-            self.currentpageheightpx  = self.parentprintPDFworker.heightpx
-        elif 'childprint' in self.atlasconfData.keys() and len(self.atlasconfData['childprint'].keys()) > 0:
-            parentheightmm = newComposition.itemById('parentheight').rectWithFrame().height()
+        self.heightpx = 0
+        self.currentpageheightpx = 0
+
+
+        if 'childprint' in self.atlasconfData.keys() and len(self.atlasconfData['childprint'].keys()) > 0:
+            # parentheightmm = newComposition.pageItemBounds(newComposition.pageCollection().pageCount() - 1).height()
+            itemheightmm = newComposition.pageItemBounds(newComposition.pageCollection().pageCount() - 1).height()
+            compositionheightmm = newComposition.pageCollection().page(newComposition.pageCollection().pageCount() - 1).pageSize().height()
 
             pageheightmm = self.printer.paperRect(QPrinter.Millimeter).height()
-            self.heightpx = int(parentheightmm / pageheightmm * self.painter.device().height())
-            self.currentpageheightpx = 0
-        else:
-            self.heightpx = 0
-            self.currentpageheightpx = 0
+
+            if itemheightmm > 0.9 * compositionheightmm:
+                self.heightpx += int(compositionheightmm / pageheightmm * self.painter.device().height())
+            else:
+                self.heightpx += int(itemheightmm / pageheightmm * self.painter.device().height())
+            #self.currentpageheightpx = 0
+        if self.parentprintPDFworker is not None:
+            self.heightpx += self.parentprintPDFworker.heightpx
+            self.currentpageheightpx  = self.parentprintPDFworker.heightpx
+
+
+
+        # if self.parentprintPDFworker is not None:
+        #     self.heightpx = 0
+        #     self.currentpageheightpx  = self.parentprintPDFworker.heightpx
+        # elif 'childprint' in self.atlasconfData.keys() and len(self.atlasconfData['childprint'].keys()) > 0:
+        #     # parentheightmm = newComposition.itemById('parentheight').rectWithFrame().height()
+        #     # parentheightmm2 = newComposition.pageItemBounds(newComposition.pageCollection().pageCount() - 1)
+        #     parentheightmm = newComposition.pageItemBounds(newComposition.pageCollection().pageCount() - 1).height()
+        #     pageheightmm = self.printer.paperRect(QPrinter.Millimeter).height()
+        #     self.heightpx = int(parentheightmm / pageheightmm * self.painter.device().height())
+        #     self.currentpageheightpx = 0
+        # else:
+        #     self.heightpx = 0
+        #     self.currentpageheightpx = 0
 
         indexpagetotal = -1
 
@@ -398,14 +421,6 @@ class printPDFBaseWorker(object):
                     #self.setLoadingProgressBar(progress, compt)
                     self.messageinstance.updateProgressBar(compt)
 
-                if False:
-                    filterexpr = '"' + self.atlasconfData['atlaslayerid'] + '" = ' + str(featid)
-                    request = qgis.core.QgsFeatureRequest().setFilterExpression(filterexpr)
-
-                    requ = coveragelayer.getFeatures(qgis.core.QgsFeatureRequest(request))
-
-                    self.currentatlasfeat = coveragelayer.getFeatures(qgis.core.QgsFeatureRequest(request)).__next__()
-            
                 self.currentatlasfeat = coveragelayer.getFeature(featpk)
 
 
@@ -1205,7 +1220,9 @@ class printPDFBaseWorker(object):
             if verticalpositionpx > self.painter.device().height():
                 # print('***************************************************** attention *****************************')
                 self.printer.newPage()
+                self.heightpx = 10
                 self.currentpageheightpx = 10   #margin
+
                 self.idecalage = indexpage
 
 

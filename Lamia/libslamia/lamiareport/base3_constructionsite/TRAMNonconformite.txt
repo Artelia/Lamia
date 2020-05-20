@@ -1,23 +1,24 @@
 
 ###atlaslayersql
 # requete sql pour définir la table utilisée pour l'atlas
-SELECT Desordre_now.* , NCA.*, NCB.*, NCC.*, NCD.*, NCE.*
-FROM Desordre_now
-LEFT JOIN Marche_now ON Desordre_now.lid_marche = Marche_now.id_marche
-LEFT JOIN Observation_now as NCA ON NCA.lid_desordre = Desordre_now.id_desordre and NCA.typeobservation = 'NCA' 
+SELECT deficiency_now.* , NCA.*, NCB.*, NCC.*, NCD.*, NCE.*
+FROM deficiency_now
+LEFT JOIN tcdeliveryobject ON tcdeliveryobject.lid_object = deficiency_now.id_object
+LEFT JOIN delivery_now ON delivery_now.id_delivery = tcdeliveryobject.lid_delivery
+LEFT JOIN observation_now as NCA ON NCA.lid_deficiency = deficiency_now.id_deficiency and NCA.observationcategory = 'NCA' 
 LEFT JOIN Intervenant_now as NCAinterv ON NCAinterv.id_intervenant = NCA.lid_intervenant_1
-LEFT JOIN Observation_now as NCB ON NCB.lid_desordre = Desordre_now.id_desordre and NCB.typeobservation = 'NCB' 
+LEFT JOIN observation_now as NCB ON NCB.lid_deficiency = deficiency_now.id_deficiency and NCB.observationcategory = 'NCB' 
 LEFT JOIN Intervenant_now as NCBinterv ON NCBinterv.id_intervenant = NCB.lid_intervenant_1
 LEFT JOIN Intervenant_now as NCBresponsable ON NCBresponsable.id_intervenant = NCB.lid_intervenant_4
-LEFT JOIN Observation_now as NCC ON NCC.lid_desordre = Desordre_now.id_desordre and NCC.typeobservation = 'NCC' 
+LEFT JOIN observation_now as NCC ON NCC.lid_deficiency = deficiency_now.id_deficiency and NCC.observationcategory = 'NCC' 
 LEFT JOIN Intervenant_now as NCCinterv ON NCCinterv.id_intervenant = NCC.lid_intervenant_1
-LEFT JOIN Observation_now as NCD ON NCD.lid_desordre = Desordre_now.id_desordre and NCD.typeobservation = 'NCD' 
+LEFT JOIN observation_now as NCD ON NCD.lid_deficiency = deficiency_now.id_deficiency and NCD.observationcategory = 'NCD' 
 LEFT JOIN Intervenant_now as NCDinterv ON NCDinterv.id_intervenant = NCD.lid_intervenant_1
-LEFT JOIN Observation_now as NCE ON NCE.lid_desordre = Desordre_now.id_desordre and NCE.typeobservation = 'NCE' 
-WHERE groupedesordre = 'NCO'
+LEFT JOIN observation_now as NCE ON NCE.lid_deficiency = deficiency_now.id_deficiency and NCE.observationcategory = 'NCE' 
+WHERE deficiencycategory = 'NCO'
 ###atlaslayerid
 # l'identifiant de l'atalslayer
-pk_desordre
+pk_deficiency
 ###spatial
 # indique si l'atalslayer est une couche spatiale ou pas
 True
@@ -27,15 +28,15 @@ True
 # autoalongpath;
 ###atlaslayerstyle
 #un style particulier pour l'atlaslayer
-Desordres_atlas.qml
+deficiency_atlas.qml
 ###atlasdrivemap
 # caractéristiques de la carte (map) qui suit les objets de l'atlas
 #itemname;   minscale;   typescale;      layers
-map1;       2500;       Predefined      ;['atlaslayer','Infralineaire', 'scan25']
+map1;       2500;       Predefined      ;['atlaslayer','edge', 'scan25']
 ###generalmap
 # caractéristiques de la carte (map) générale
 # itemname;   minscale;   typescale; layers
-map0    ;           ;             ; ['Desordre', 'scan25']
+map0    ;           ;             ; ['deficiency', 'scan25']
 #map0    ;           ;             ; []
 ###images
 # traitement des éléments de type image
@@ -59,4 +60,4 @@ NCD_signature;NCD.ressource1
 ###childprint
 # impression à la suite d'autres conf d'impression
 #confname;                linkcolumn;             optionsql
-#Desordres_observation;    Observation_now.lid_desordre ; ORDER BY Observation_now.datetimeobservation DESC
+#deficiencys_observation;    observation_now.lid_deficiency ; ORDER BY observation_now.datetimeobservation DESC
