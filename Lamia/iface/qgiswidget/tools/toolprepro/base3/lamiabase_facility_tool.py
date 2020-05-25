@@ -61,7 +61,9 @@ class BaseFacilityTool(AbstractLamiaFormTool):
 
     def __init__(self, **kwargs):
         super(BaseFacilityTool, self).__init__(**kwargs)
-        self.instancekwargs = kwargs
+        self.instancekwargs = kwargs    #depreciated
+        self.instancekwargsforchildwdg = kwargs
+        self.instancekwargsforchildwdg['parentwidget'] = self
         
        
 

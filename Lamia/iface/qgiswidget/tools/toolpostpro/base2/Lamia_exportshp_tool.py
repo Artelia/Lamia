@@ -103,7 +103,7 @@ class ExportShapefileTool(AbstractLamiaTool):
 
         self.toolwidgetmain.groupBox_filemanager.layout().addWidget(self.filemanager)
 
-        self.choosertreewidget = self.mainifacewidget.toolwidgets['toolprepro']['Zone geographique'][0].choosertreewidget
+        self.choosertreewidget = self.mainifacewidget.toolwidgets['toolprepro']['Zonegeo'].choosertreewidget
 
 
 

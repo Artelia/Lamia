@@ -11,7 +11,7 @@ LEFT JOIN delivery_now ON delivery_now.id_delivery = tcdeliveryobject.lid_delive
 WHERE deficiency_now.deficiencycategory = 'CON'
 ###atlaslayerid
 # l'identifiant de l'atalslayer
-pk_deficiency
+id_deficiency
 ###spatial
 # indique si l'atalslayer est une couche spatiale ou pas
 True

@@ -160,17 +160,17 @@ class AbstractLamiaTool(QWidget):
 
     def manageLoadingInToolTreeWidget(self):
         if self.mainifacewidget.interfacemode == 0:
-            if self.PREPROTOOLNAME and self.LOADFIRST:
+            if  hasattr(self, 'PREPROTOOLNAME') and self.PREPROTOOLNAME  and self.LOADFIRST:
                 self.loadWidgetinToolTree()
             else:
                 self.unloadWidgetinToolTree()
         elif self.mainifacewidget.interfacemode == 1:
-            if self.PREPROTOOLNAME:
+            if hasattr(self, 'PREPROTOOLNAME') and  self.PREPROTOOLNAME:
                 self.loadWidgetinToolTree()
             else:
                 self.unloadWidgetinToolTree()
         elif self.mainifacewidget.interfacemode == 4:
-            if self.POSTPROTOOLNAME:
+            if hasattr(self, 'POSTPROTOOLNAME') and  self.POSTPROTOOLNAME:
                 self.loadWidgetinToolTree()
             else:
                 self.unloadWidgetinToolTree()

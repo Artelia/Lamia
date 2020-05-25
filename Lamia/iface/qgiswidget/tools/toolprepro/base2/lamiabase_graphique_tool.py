@@ -54,6 +54,7 @@ from ...lamia_abstractformtool import AbstractLamiaFormTool
 
 class BaseGraphiqueTool(AbstractLamiaFormTool):
 
+    PREPROTOOLNAME = 'Graphique'
     DBASETABLENAME = 'Graphique'
     LOADFIRST = False
 

@@ -7,7 +7,7 @@ LEFT JOIN tcdeliveryobject ON tcdeliveryobject.lid_object = deficiency_now.id_ob
 LEFT JOIN delivery_now ON delivery_now.id_delivery = tcdeliveryobject.lid_delivery
 LEFT JOIN observation_now as NCA ON NCA.lid_deficiency = deficiency_now.id_deficiency and NCA.observationcategory = 'NCA' 
 LEFT JOIN actor_now as NCAinterv ON NCAinterv.id_actor = NCA.lid_actor_1
-WHERE deficiencycategory = 'NCO'
+WHERE deficiencycategory = 'NCO' ORDER BY NCA.datetimeobservation DESC LIMIT 1
 ###atlaslayerid
 # l'identifiant de l'atalslayer
 id_deficiency
@@ -46,4 +46,4 @@ NCA_signature;NCA.ressource1
 # impression à la suite d'autres conf d'impression
 #confname;                linkcolumn;             optionsql
 #deficiencys_observation;    observation_now.lid_deficiency ; ORDER BY observation_now.datetimeobservation DESC
-TRAMnonconformitephaseB; NCB.lid_deficiency;
+TRAMnonconformitephaseB; NCB.lid_deficiency; 

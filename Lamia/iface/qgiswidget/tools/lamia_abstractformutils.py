@@ -74,6 +74,7 @@ class FormToolUtils(QtCore.QObject):
             if tablename in dbasetables.keys():
                 dbasetable = dbasetables[tablename]
                 for field in dbasetable['fields'].keys():
+
                     # for linkuserwdg in [self.linkuserwdg]:
                     for linkuserwdg in [templinkuserwgd]: 
                         if linkuserwdg is None or linkuserwdg.keys() is None:
@@ -90,6 +91,7 @@ class FormToolUtils(QtCore.QObject):
 
                                     templist = [description[0] for description in
                                                 dbasetable['fields'][field]['Cst']]
+
                                     if isinstance(wdgs, QComboBox):
                                         wdgs = [wdgs]
                                     for wdg in wdgs:
@@ -345,6 +347,7 @@ class FormToolUtils(QtCore.QObject):
         resdict = dict(zip(columns, values))
         for k,v in self.formtoolwidget.TABLEFILTERFIELD.items():
             resdict[k] = v
+        
 
         return resdict
 
@@ -361,6 +364,7 @@ class FormToolUtils(QtCore.QObject):
                                                                                                             resultdict.keys())
                         continue
                         # raise ValueError
+
                     self.setValueInWidget(fieldwdg, 
                                           resultdict[field], 
                                           tablename,
@@ -862,7 +866,7 @@ class FormToolUtils(QtCore.QObject):
                     for tablename in childparenttables:
                         dbasetable = self.formtoolwidget.dbase.dbasetables[tablename]
                         if joindict['colthistable'] in dbasetable['fields'].keys():
-                            pktable = self.formtoolwidget.dbase.getValuesFromPk(tablename + '_qgis',
+                            pktable = self.formtoolwidget.dbase.getValuesFromPk(childtblname + '_qgis',
                                                                              'pk_' + tablename.lower(),
                                                                              featurepk)
                             sql = "UPDATE {} SET {} = {} WHERE pk_{} = {}".format(tablename,
@@ -923,7 +927,7 @@ class FormToolUtils(QtCore.QObject):
         layer.dataProvider().forceReload()
         # self.mainifacewidget.qgiscanvas.canvas.refresh()
 
-
+    """
     def createNewSubFeature(self, subwdg, savedfeaturepk):
         if self.formtoolwidget.currentFeaturePK is None :  #very new equip, not newversion
             dbase = self.formtoolwidget.dbase
@@ -949,7 +953,8 @@ class FormToolUtils(QtCore.QObject):
 
             subwdg.parentWidget.currentFeaturePK = savedfeaturepk
             subwdg.toolbarSave()
-
+            subwdg.parentWidget.currentFeaturePK = None
+    """
 
 
     def ___________________actionsOnDeletingFeature(self):

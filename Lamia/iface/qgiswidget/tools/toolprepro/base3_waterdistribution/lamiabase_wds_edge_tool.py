@@ -57,7 +57,7 @@ class BaseWaterdistributionEdgeTool(BaseEdgeTool):
 
             self.formtoolwidgetconfdictmain = {'edge': {'linkfield': 'id_edge',
                                                         'widgets': OrderedDict([('networktype', self.toolwidgetmain.comboBox_typeeau),
-                                                                                ('lateral', self.toolwidgetmain.comboBox_branchement),
+                                                                                ('laterals', self.toolwidgetmain.comboBox_branchement),
                                                                                 ('domain', self.toolwidgetmain.comboBox_domaine),
 
                                                                                 ('diameterext', self.toolwidgetmain.doubleSpinBox_diametre),
@@ -88,7 +88,7 @@ class BaseWaterdistributionEdgeTool(BaseEdgeTool):
             self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
             self.edgetonode = EdgeToNodeWidget(self,
-                                                lateralfield='lateral',
+                                                lateralfield='laterals',
                                                 upstreamnodeidfield='lid_descriptionsystem_1',
                                                 downstreamnodeidfield='lid_descriptionsystem_2',
                                                 parentframe=self.toolwidgetmain.frame_edgetonode
@@ -102,7 +102,7 @@ class BaseWaterdistributionEdgeTool(BaseEdgeTool):
             self.formtoolwidgetconfdictmain = {'Infralineaire': {'linkfield': 'id_infralineaire',
                                                         'widgets': OrderedDict(
                                                             [('networktype', self.toolwidgetmain.comboBox_typeeau),
-                                                            ('lateral', self.toolwidgetmain.comboBox_branchement),
+                                                            ('laterals', self.toolwidgetmain.comboBox_branchement),
                                                             ('domain', self.toolwidgetmain.comboBox_domaine),
 
                                                             ('diameterext',self.toolwidgetmain.doubleSpinBox_diametre),
@@ -143,7 +143,7 @@ class BaseWaterdistributionEdgeTool(BaseEdgeTool):
             self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
             self.edgetonode = EdgeToNodeWidget(self,
-                                                lateralfield='lateral',
+                                                lateralfield='laterals',
                                                 upstreamnodeidfield='lid_descriptionsystem_1',
                                                 downstreamnodeidfield='lid_descriptionsystem_2',
                                                 parentframe=self.toolwidgetmain.frame_edgetonode

@@ -52,7 +52,7 @@ class ReportTool(AbstractLamiaTool):
 
     tooltreewidgetCAT = QtCore.QCoreApplication.translate('base3','Import/export')
     tooltreewidgetSUBCAT = QtCore.QCoreApplication.translate('base3','Report printing')
-    tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'Lamia_rapport_tool_icon.png')
+    tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'Lamia_report_tool_icon.png')
 
     choosertreewidgetMUTIPLESELECTION = True
 
@@ -81,7 +81,7 @@ class ReportTool(AbstractLamiaTool):
         if qgis.utils.iface is None:
             self.toolwidgetmain .lineEdit_nom.setText('c://000_testdigue//test_rapport.pdf')
 
-        self.choosertreewidget = self.mainifacewidget.toolwidgets['toolprepro'][QtCore.QCoreApplication.translate('base3', 'Geographic area')][0].choosertreewidget
+        self.choosertreewidget = self.mainifacewidget.toolwidgets['toolprepro']['geoarea'].choosertreewidget
 
 
     def chooseFile(self):

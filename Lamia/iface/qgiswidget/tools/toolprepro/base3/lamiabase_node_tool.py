@@ -48,9 +48,18 @@ class BaseNodeTool(AbstractLamiaFormTool):
     tooltreewidgetSUBCAT =QtCore.QCoreApplication.translate('base3','Nodes')
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_node_tool_icon.svg')
 
+    PARENTJOIN = {'facility' : {'colparent': 'id_facility',
+                                'colthistable': 'lid_facility',
+                                 'tctable': None,
+                                 'tctablecolparent':None,
+                                 'tctablecolthistable':None}
+                 }
+
     def __init__(self, **kwargs):
         super(BaseNodeTool, self).__init__(**kwargs)
-        self.instancekwargs = kwargs
+        self.instancekwargs = kwargs    #depreciated
+        self.instancekwargsforchildwdg = kwargs
+        self.instancekwargsforchildwdg['parentwidget'] = self
         
 
 
@@ -143,6 +152,7 @@ class BaseNodeTool(AbstractLamiaFormTool):
     def postDeleteFeature(self):
         pass
 
+    """
     def _createDeficiency(self, deficiencywdg,savedfeaturepk):
         if self.currentFeaturePK is None :  #very new equip, not newversion
             deficiencywdg.toolbarNew()
@@ -155,7 +165,8 @@ class BaseNodeTool(AbstractLamiaFormTool):
 
             deficiencywdg.parentWidget.currentFeaturePK = savedfeaturepk
             deficiencywdg.toolbarSave()
-    
+            deficiencywdg.parentWidget.currentFeaturePK = None
+    """
 
 class UserUI(QWidget):
     def __init__(self, parent=None):

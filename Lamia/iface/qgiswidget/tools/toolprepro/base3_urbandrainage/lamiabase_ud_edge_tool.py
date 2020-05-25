@@ -32,6 +32,7 @@ from qgis.PyQt.QtWidgets import (QWidget)
 from qgis.PyQt import uic, QtCore
 
 from ..base3.lamiabase_edge_tool import BaseEdgeTool
+from .lamiabase_ud_graph_tool import BaseUrbandrainageGraphTool
 from ..subwidgets.subwidget_lidchooser import LidChooserWidget
 from ..subwidgets.subwidget_edgetonode import EdgeToNodeWidget
 
@@ -43,119 +44,139 @@ class BaseUrbandrainageEdgeTool(BaseEdgeTool):
 
     def initMainToolWidget(self):
         if self.dbase.variante in [None, 'Lamia','2018_SNCF']:
-            #if self.userwdgfield is None:
-            self.toolwidgetmain = UserUIField()
-            self.formtoolwidgetconfdictmain = {'edge': {'linkfield': 'id_edge',
-                                                        'widgets': { 'sewertype': self.toolwidgetmain.comboBox_typeReseau,
-                                                                    'pipetype': self.toolwidgetmain.comboBox_pipetype,
-                                                                    'pipesubtype': self.toolwidgetmain.comboBox_pipesubtype,
-                                                                    'lateral': self.toolwidgetmain.comboBox_branch,
-                                                                    'flowtype': self.toolwidgetmain.comboBox_typeecoul,
-                                                                    'pipeshape': self.toolwidgetmain.comboBox_formecana,
-
-                                                                    'material': self.toolwidgetmain.comboBox_materiau,
-                                                                    #'anPoseInf': self.toolwidgetmain.dateEdit_anneepose,
-
-
-                                                                    'nominaldiameter': self.toolwidgetmain.doubleSpinBox_diametreNominal,
-                                                                    'height': self.toolwidgetmain.doubleSpinBox_haut,
-                                                                    # 'largeur': self.toolwidgetmain.doubleSpinBox_larg,
-
-                                                                    # 'altAmont': self.toolwidgetmain.doubleSpinBox_altAmont,
-                                                                    # 'altAmont': self.toolwidgetmain.doubleSpinBox_altAval,
-                                                                    'depthup': self.toolwidgetmain.doubleSpinBox_profamont,
-                                                                    'depthdown': self.toolwidgetmain.doubleSpinBox_profaval,
-                                                                    # 'lid_descriptionsystem_1': self.toolwidgetmain.spinBox_lk_noeud1,
-                                                                    # 'lid_descriptionsystem_2': self.toolwidgetmain.spinBox_lk_noeud2
-                                                                    }},
-                                        'object': {'linkfield': 'id_object',
-                                                'widgets': {'comment':self.toolwidgetmain.textBrowser_commentaire}},
-                                        'descriptionsystem': {'linkfield': 'id_descriptionsystem',
-                                                            'widgets': {
-                                                                'dateoperationalcreation': self.toolwidgetmain.dateEdit_anneepose,
-
-                                                            }}}
-            self.ownerwdg = LidChooserWidget(parentwdg=self, 
-                                                    parentlidfield='lid_actor_1', 
-                                                    parentframe=self.toolwidgetmain.frame_owner, 
-                                                    searchdbase='actor', 
-                                                    searchfieldtoshow=['actorname'] )
-            self.lamiawidgets.append(self.ownerwdg)
-            self.operatorwdg = LidChooserWidget(parentwdg=self, 
-                                                    parentlidfield='lid_actor_2', 
-                                                    parentframe=self.toolwidgetmain.frame_operator, 
-                                                    searchdbase='actor', 
-                                                    searchfieldtoshow=['actorname'] )
-            self.lamiawidgets.append(self.operatorwdg)
-            self.edgetonode = EdgeToNodeWidget(self,
-                                                lateralfield='lateral',
-                                                upstreamnodeidfield='lid_descriptionsystem_1',
-                                                downstreamnodeidfield='lid_descriptionsystem_2',
-                                                parentframe=self.toolwidgetmain.frame_edgetonode
-                                                 )
-            self.lamiawidgets.append(self.edgetonode)
-
-        elif self.dbase.variante in ['CD41']:
-
-            # if self.userwdgfield is None:
-            self.toolwidgetmain = UserUIField_2()
-
-            self.formtoolwidgetconfdictmain = {'edge': {'linkfield': 'id_edge',
-                                                        'widgets': {
-                                                            'sewertype': self.toolwidgetmain.comboBox_typeReseau,
-                                                            'lateral': self.toolwidgetmain.comboBox_branch,
-
-                                                            'domain': self.toolwidgetmain.comboBox_domaine,
-                                                            'location': self.toolwidgetmain.comboBox_implant,
-                                                            'flowtype': self.toolwidgetmain.comboBox_typeecoul,
-                                                            'sewerfunction': self.toolwidgetmain.comboBox_fonction,
-
-
-
-
-
-                                                            'material': self.toolwidgetmain.comboBox_materiau,
-                                                            # 'anPoseInf': self.toolwidgetmain.dateEdit_anneepose,
-
-                                                            'nominaldiameter': self.toolwidgetmain.doubleSpinBox_diametreNominal,
-                                                            'height': self.toolwidgetmain.doubleSpinBox_haut,
-                                                            # 'largeur': self.toolwidgetmain.doubleSpinBox_larg,
-
-                                                            # 'altAmont': self.toolwidgetmain.doubleSpinBox_altAmont,
-                                                            # 'altAmont': self.toolwidgetmain.doubleSpinBox_altAval,
-                                                            'depthup': self.toolwidgetmain.doubleSpinBox_profamont,
-                                                            'depthdown': self.toolwidgetmain.doubleSpinBox_profaval,
-                                                            # 'lid_descriptionsystem_1': self.toolwidgetmain.spinBox_lk_noeud1,
-                                                            # 'lid_descriptionsystem_2': self.toolwidgetmain.spinBox_lk_noeud2
-                                                            }},
-                                        'object': {'linkfield': 'id_object',
-                                                'widgets': {
-                                                    'comment': self.toolwidgetmain.textBrowser_commentaire}},
-                                        'descriptionsystem': {'linkfield': 'id_descriptionsystem',
-                                                            'widgets': {
-                                                                'dateoperationalcreation': self.toolwidgetmain.dateEdit_anneepose,
-
-                                                            }}}
+            self._initMainToolWidgetLamia()
             
-            self.toolwidgetmain.toolButton_calc_diam.clicked.connect(
-                lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_diametreNominal))
+        elif self.dbase.variante in ['CD41']:
+            self._initMainToolWidgetCD41()
+            
 
-            self.toolwidgetmain.toolButton_calc_haut.clicked.connect(
-                lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_haut))
+        if self.dbase.variante in [None, 'Lamia']:
+            self.propertieswdgGRAPH = BaseUrbandrainageGraphTool(**self.instancekwargsforchildwdg)
+            self.dbasechildwdgfield.append(self.propertieswdgGRAPH)
 
-            self.toolwidgetmain.toolButton_prof_amont.clicked.connect(
-                lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_profamont))
+        self.edgetonode = EdgeToNodeWidget(self,
+                                            lateralfield='laterals',
+                                            upstreamnodeidfield='lid_descriptionsystem_1',
+                                            downstreamnodeidfield='lid_descriptionsystem_2',
+                                            parentframe=self.toolwidgetmain.frame_edgetonode
+                                                )
+        self.lamiawidgets.append(self.edgetonode)
 
-            self.toolwidgetmain.toolButton_prof_aval.clicked.connect(
-                lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_profaval))
 
-            self.edgetonode = EdgeToNodeWidget(self,
-                                                lateralfield='lateral',
-                                                upstreamnodeidfield='lid_descriptionsystem_1',
-                                                downstreamnodeidfield='lid_descriptionsystem_2',
-                                                parentframe=self.toolwidgetmain.frame_edgetonode
-                                                 )
-            self.lamiawidgets.append(self.edgetonode)
+    def _initMainToolWidgetLamia(self):
+        self.toolwidgetmain = UserUIField()
+        self.formtoolwidgetconfdictmain = {'edge': {'linkfield': 'id_edge',
+                                                    'widgets': { 
+                                                                #'sewertype': self.toolwidgetmain.comboBox_typeReseau,
+                                                                'pipetype': self.toolwidgetmain.comboBox_pipetype,
+                                                                'pipesubtype': self.toolwidgetmain.comboBox_pipesubtype,
+                                                                'laterals': self.toolwidgetmain.comboBox_branch,
+                                                                'flowtype': self.toolwidgetmain.comboBox_typeecoul,
+                                                                'pipeshape': self.toolwidgetmain.comboBox_formecana,
+
+                                                                'material': self.toolwidgetmain.comboBox_materiau,
+                                                                #'anPoseInf': self.toolwidgetmain.dateEdit_anneepose,
+
+
+                                                                'nominaldiameter': self.toolwidgetmain.doubleSpinBox_diametreNominal,
+                                                                'height': self.toolwidgetmain.doubleSpinBox_haut,
+                                                                # 'largeur': self.toolwidgetmain.doubleSpinBox_larg,
+
+                                                                # 'altAmont': self.toolwidgetmain.doubleSpinBox_altAmont,
+                                                                # 'altAmont': self.toolwidgetmain.doubleSpinBox_altAval,
+                                                                'depthup': self.toolwidgetmain.doubleSpinBox_profamont,
+                                                                'depthdown': self.toolwidgetmain.doubleSpinBox_profaval,
+                                                                # 'lid_descriptionsystem_1': self.toolwidgetmain.spinBox_lk_noeud1,
+                                                                # 'lid_descriptionsystem_2': self.toolwidgetmain.spinBox_lk_noeud2
+                                                                }},
+                                    'object': {'linkfield': 'id_object',
+                                            'widgets': {'comment':self.toolwidgetmain.textBrowser_commentaire}},
+                                    'descriptionsystem': {'linkfield': 'id_descriptionsystem',
+                                                        'widgets': {
+                                                                'networktype': self.toolwidgetmain.comboBox_typeReseau,
+                                                                'flowconditionupstream' : self.toolwidgetmain.comboBox_inletflowcondition,
+                                                                'flowconditiondownstream' : self.toolwidgetmain.comboBox_outletflowcondition,
+                                                                'systemfunction': self.toolwidgetmain.comboBox_systemfunction,
+                                                                'dateoperationalcreation': self.toolwidgetmain.dateEdit_anneepose,
+
+                                                        }}}
+
+        self.toolwidgetmain.toolButton_calc_diam.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_diametreNominal))
+
+        self.toolwidgetmain.toolButton_calc_haut.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_haut))
+
+        self.toolwidgetmain.toolButton_prof_amont.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_profamont))
+
+        self.toolwidgetmain.toolButton_prof_aval.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_profaval))
+
+        self.ownerwdg = LidChooserWidget(parentwdg=self, 
+                                                parentlidfield='lid_actor_1', 
+                                                parentframe=self.toolwidgetmain.frame_owner, 
+                                                searchdbase='actor', 
+                                                searchfieldtoshow=['actorname'] )
+        self.lamiawidgets.append(self.ownerwdg)
+        self.operatorwdg = LidChooserWidget(parentwdg=self, 
+                                                parentlidfield='lid_actor_2', 
+                                                parentframe=self.toolwidgetmain.frame_operator, 
+                                                searchdbase='actor', 
+                                                searchfieldtoshow=['actorname'] )
+        self.lamiawidgets.append(self.operatorwdg)
+
+    def _initMainToolWidgetCD41(self):
+        self.toolwidgetmain = UserUIField_2()
+
+        self.formtoolwidgetconfdictmain = {'edge': {'linkfield': 'id_edge',
+                                                    'widgets': {
+                                                        'sewertype': self.toolwidgetmain.comboBox_typeReseau,
+                                                        'laterals': self.toolwidgetmain.comboBox_branch,
+
+                                                        'domain': self.toolwidgetmain.comboBox_domaine,
+                                                        'location': self.toolwidgetmain.comboBox_implant,
+                                                        'flowtype': self.toolwidgetmain.comboBox_typeecoul,
+                                                        'sewerfunction': self.toolwidgetmain.comboBox_fonction,
+
+
+
+
+
+                                                        'material': self.toolwidgetmain.comboBox_materiau,
+                                                        # 'anPoseInf': self.toolwidgetmain.dateEdit_anneepose,
+
+                                                        'nominaldiameter': self.toolwidgetmain.doubleSpinBox_diametreNominal,
+                                                        'height': self.toolwidgetmain.doubleSpinBox_haut,
+                                                        # 'largeur': self.toolwidgetmain.doubleSpinBox_larg,
+
+                                                        # 'altAmont': self.toolwidgetmain.doubleSpinBox_altAmont,
+                                                        # 'altAmont': self.toolwidgetmain.doubleSpinBox_altAval,
+                                                        'depthup': self.toolwidgetmain.doubleSpinBox_profamont,
+                                                        'depthdown': self.toolwidgetmain.doubleSpinBox_profaval,
+                                                        # 'lid_descriptionsystem_1': self.toolwidgetmain.spinBox_lk_noeud1,
+                                                        # 'lid_descriptionsystem_2': self.toolwidgetmain.spinBox_lk_noeud2
+                                                        }},
+                                    'object': {'linkfield': 'id_object',
+                                            'widgets': {
+                                                'comment': self.toolwidgetmain.textBrowser_commentaire}},
+                                    'descriptionsystem': {'linkfield': 'id_descriptionsystem',
+                                                        'widgets': {
+                                                            'dateoperationalcreation': self.toolwidgetmain.dateEdit_anneepose,
+
+                                                        }}}
+        
+        self.toolwidgetmain.toolButton_calc_diam.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_diametreNominal))
+
+        self.toolwidgetmain.toolButton_calc_haut.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_haut))
+
+        self.toolwidgetmain.toolButton_prof_amont.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_profamont))
+
+        self.toolwidgetmain.toolButton_prof_aval.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_profaval))
 
 
     def initAdvancedToolWidget(self):

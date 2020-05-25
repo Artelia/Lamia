@@ -103,7 +103,7 @@ class ExportShapefileTool(AbstractLamiaTool):
 
         self.toolwidgetmain.groupBox_filemanager.layout().addWidget(self.filemanager)
 
-        self.choosertreewidget = self.mainifacewidget.toolwidgets['toolprepro'][QtCore.QCoreApplication.translate('base3', 'Geographic area')][0].choosertreewidget
+        self.choosertreewidget = self.mainifacewidget.toolwidgets['toolprepro']['geoarea'].choosertreewidget
 
 
 

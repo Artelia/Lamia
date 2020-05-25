@@ -25,14 +25,10 @@ This file is part of LAMIA.
  """
 
 
-from collections import OrderedDict
 import os
 import datetime
-import numpy as np
 import sys
-import csv
-import pandas as pd
-import math
+
 
 import matplotlib
 matplotlib.use('agg')
@@ -50,6 +46,7 @@ from qgis.PyQt.QtWidgets import (QWidget,QComboBox, QDoubleSpinBox, QSpinBox, QH
 
 from ...lamia_abstractformtool import AbstractLamiaFormTool
 from .lamiabase_graph_tool import BaseGraphTool
+from Lamia.libslamia.lamiagraph.lamiagraphcsv import GraphMakerCsv
 
 base3 = QtCore.QObject()
 
@@ -66,10 +63,10 @@ class BaseGraphcsvTool(AbstractLamiaFormTool):
     tempparentjoin = {}
     linkdict = {'colparent': 'id_object',
                 'colthistable': 'id_resource',
-                    'tctable': 'tcobjectresource',
-                    'tctablecolparent': 'lid_object',
-                    'tctablecolthistable': 'lid_resource'}
-    for tablename in ['profile','edge','node', 'surface']:
+                    'tctable': 'Tcobjectresource',
+                    'tctablecolparent':'lid_object',
+                    'tctablecolthistable':'lid_resource'}
+    for tablename in ['profile', 'node', 'edge', 'surface','facility']:
         tempparentjoin[tablename] = linkdict
     PARENTJOIN = tempparentjoin
 
@@ -79,9 +76,14 @@ class BaseGraphcsvTool(AbstractLamiaFormTool):
 
     def __init__(self, **kwargs):
         super(BaseGraphcsvTool, self).__init__(**kwargs)
-        self.figuretype = plt.figure()
-        self.axtype = self.figuretype.add_subplot(111)
+        # self.figuretype = plt.figure()
+        # self.axtype = self.figuretype.add_subplot(111)
+        # self.mplfigure = FigureCanvas(self.figuretype)
+
+        self.graphmaker = GraphMakerCsv(self.dbase)
+        self.figuretype = self.graphmaker.figuretype
         self.mplfigure = FigureCanvas(self.figuretype)
+        self.graphspec = self.graphmaker.graphspec
 
     def initMainToolWidget(self):
         # ****************************************************************************************
@@ -94,7 +96,7 @@ class BaseGraphcsvTool(AbstractLamiaFormTool):
                                                             'widgets' : {}},
                                                 'resource' : {'linkfield' : 'id_resource',
                                                             'widgets' : {'file': self.toolwidgetmain.lineEdit_csv}}}
-
+        """
         self.graphspec = {'SIM': {'x': [],
                                   'y':[],
                                 },
@@ -180,6 +182,7 @@ class BaseGraphcsvTool(AbstractLamiaFormTool):
                                             'Crête'],
                                 },      
                          }       
+        """
 
         self.toolwidgetmain.pushButton_addline.clicked.connect(self.addrow)
         self.toolwidgetmain.pushButton_delline.clicked.connect(self.removerow)
@@ -208,10 +211,18 @@ class BaseGraphcsvTool(AbstractLamiaFormTool):
         else:
             self.toolwidgetmain.comboBox_graphtype.setEnabled(False)
 
+    def _disableSubtypeNotInSpec(self):
+        # self.toolwidgetmain.comboBox_graphtype
+        subtypes = self.dbase.dbasetables[self.DBASETABLENAME]['fields']['graphsubtype']['Cst']
+        for i, elem in enumerate(subtypes):
+            if elem[1] not in list(self.graphspec.keys()):
+                self.toolwidgetmain.comboBox_graphtype.model().item(i).setEnabled(False)
+            else:
+                self.toolwidgetmain.comboBox_graphtype.model().item(i).setEnabled(True)
+
     def postSelectFeature(self):
+        self._disableSubtypeNotInSpec()
         self.toolwidgetmain.tableWidget.setRowCount(0)
-        self.axtype.clear()
-        self.figuretype.canvas.draw()
         
         if self.currentFeaturePK is None:
             datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
@@ -220,11 +231,14 @@ class BaseGraphcsvTool(AbstractLamiaFormTool):
             graphtype = self._getGraphType()
             typetext =  self.dbase.getConstraintTextFromRawValue(self.DBASETABLENAME,'graphsubtype',graphtype)
             self.toolwidgetmain.comboBox_graphtype.setCurrentIndex(self.toolwidgetmain.comboBox_graphtype.findText(typetext))
-            graphdatas = self.loadGraphinCsv(self.currentFeaturePK )
+            # graphdatas = self.loadGraphinCsv(self.currentFeaturePK )
+            graphdatas = self.graphmaker.getGraphData(self.currentFeaturePK)
+
             if graphdatas is None:
                 return
             self._fillTableWidgetWithDatas(graphdatas)
-            self.showGraphCsv(self.currentFeaturePK)
+            # self.showGraphCsv(self.currentFeaturePK)
+        self.graphmaker.showGraph(self.currentFeaturePK)
 
         self.enableTypeComboBox()
 
@@ -248,12 +262,8 @@ class BaseGraphcsvTool(AbstractLamiaFormTool):
             sql = "UPDATE resource SET  file = '" + filegraphique + "', datetimeresource = '" + datetimecreation + "'"
             sql += " WHERE pk_resource = " + str(pkres)
             query = self.dbase.query(sql)
-        else:
-            filegraphique = self.dbase.getValuesFromPk(self.DBASETABLENAME + '_qgis',
-                                                        'file',
-                                                        self.currentFeaturePK )
 
-        self.saveGraphinCsv(self.dbase.completePathOfFile(filegraphique))
+        self.saveGraphinCsv(savedfeaturepk)
 
 
     def _getGraphType(self):
@@ -327,156 +337,8 @@ class BaseGraphcsvTool(AbstractLamiaFormTool):
         self.toolwidgetmain.tableWidget.removeRow(introw)
 
         self.enableTypeComboBox()
-
-
-    def showGraphCsv(self, featurepk):
-
-        graphtype = self.dbase.getValuesFromPk(self.DBASETABLENAME,
-                                    'graphsubtype',
-                                    featurepk)
-        graphdatas=self.loadGraphinCsv(featurepk)
-        pdgraphdatas= pd.DataFrame(graphdatas)
-        headersname = list(self.graphspec[graphtype].keys())
-        if len(pdgraphdatas.columns) == len(headersname):
-            pdgraphdatas.columns = headersname
-
-        # self.axtype.clear()
-        self.figuretype.clf(keep_observers=True)
-        if graphtype in ['SIM']:
-            self._makeSIMGraph(pdgraphdatas)
-        elif graphtype in [ 'PTR']:
-            self._makePTRGraph(pdgraphdatas)
-        elif graphtype in [ 'RAD']:
-            self._makeRADGraph(pdgraphdatas)
-
-        self.figuretype.canvas.draw()
-
-
-    def _makeSIMGraph(self,graphdatas):
-        print('sim')
-        # self.figuretype = plt.figure()
-        self.axtype = self.figuretype.add_subplot(111, polar=False, label='plotgraph')
-        try:
-            graphdatas.plot(kind='line', x=0, y=1, ax=self.axtype)
-            self.axtype.grid()
-        except (TypeError,IndexError) as e:
-            print('grapherror', e)
-
-    def _makeRADGraph(self,pdgraphdatas):
-        print('rad')
-        # https://jingwen-z.github.io/data-viz-with-matplotlib-series8-radar-chart/
-
-        # self.figuretype = plt.figure()
-        # self.axtype = self.figuretype.add_subplot(111)
-
-        # self.axtype = plt.subplot(111, polar=True)
-        # self.figuretype.add_subplot(111)
-        self.axtype = self.figuretype.add_subplot(111, polar=True, label='radgraph')
-
-        # print(pdgraphdatas)
-        # print(pdgraphdatas.columns.values.tolist())
-        if not pdgraphdatas.columns.values.tolist():
-            return
-        datas = pdgraphdatas['value'].tolist()
-        # print('*',datas, datas[:1])
-        datas = datas + datas[:1]    #to close graph
-        # print(datas)
-        categories = pdgraphdatas['var'].values
-        # print(categories)
-
-        # categories = list(df)[1:]
-        # values = df.mean().values.flatten().tolist()
-        # values += values[:1] # repeat the first value to close the circular graph
-        angles = [n / float(len(categories)) * 2 * math.pi for n in range(len(categories))]
-        angles += angles[:1]
-
-        # print(angles)
-        # self.axtype = plt.subplot(111, polar=True)
-        # # self.figuretype.add_subplot(111)
-        # self.axtype = self.figuretype.add_subplot(111, polar=True)
-
-        # fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(8, 8),
-        #                     subplot_kw=dict(polar=True))
-
-        # plt.xticks(angles[:-1], categories, color='grey', size=12)
-        self.axtype.set_xticks(angles[:-1])
-        self.axtype.set_xticklabels(categories)
-
-        # setxticksvalues
-        maxdatasvalue = max(datas)
-        log10value = int(math.log10(maxdatasvalue))
-        step = 10**log10value
-        maxstep = 10**log10value * (int(maxdatasvalue/step) + 1)
-        # print(step, maxstep)
-        valuerange = range(step, maxstep, step)
-        valuerangestr = [str(elem) for elem in valuerange]
-        # print(valuerange,valuerangestr )
-
-        self.axtype.set_yticks(valuerange)
-        self.axtype.set_yticklabels(valuerangestr)
-
-        # plt.yticks(np.arange(1, 6), ['1', '2', '3', '4', '5'],
-        #         color='grey', size=12)
-        # plt.yticks(valuerange, valuerangestr,
-        #         color='grey', size=12)
-        # plt.ylim(0, 5)
-        self.axtype.set_rlabel_position(30)
-        
-        self.axtype.plot(angles, datas, linewidth=1, linestyle='solid')
-        self.axtype.fill(angles, datas, 'skyblue', alpha=0.4)
-
-        # plt.show()
-        # self.axtype = ax
-
-
-
-        if False:
-            print(pdgraphdatas)
-            datas = pdgraphdatas['value'].values
-            # values += values[0]    #to close graph
-            print(datas)
-            categories = pdgraphdatas['var'].values
-            print(categories)
-
-            angles=np.linspace(0, 2*math.pi, len(categories), endpoint=False)
-            # close the plot
-            stats=np.concatenate((datas,[datas[0]]))
-            angles=np.concatenate((angles,[angles[0]]))
-            if False:
-                # What will be the angle of each axis in the plot? (we divide the plot / number of variable)
-                N = len(categories)
-                angles = [n / float(N) * 2 * math.pi for n in range(N)]
-                angles += angles[0]
-
-            print(datas)
-            print(angles)
-            print(categories)
-
-            # fig=sns.plt.figure()
-            ax = self.figuretype.add_subplot(111, polar=True)
-            ax.plot(angles, datas, 'o-', linewidth=2)
-            ax.fill(angles, datas, alpha=0.25)
-            ax.set_thetagrids(angles * 180/math.pi, categories)
-            ax.set_title('popo')
-            ax.grid(True)
-
-            if False:
-
-                plt.xticks(angles[:-1], categories, color='grey', size=8)
-                # self.axtype.set_rlabel_position(0)
-                plt.yticks([10,20,30], ["10","20","30"], color="grey", size=7)
-                plt.ylim(0,40)
-
-
-                self.axtype.plot(angles, values, linewidth=1, linestyle='solid')
-                self.axtype.fill(angles, values, 'b', alpha=0.1)
-
-
-
-
-
-
-
+    
+    """
     def _makePTRGraph(self,graphdatas):
 
         # self.figuretype = plt.figure()
@@ -542,38 +404,35 @@ class BaseGraphcsvTool(AbstractLamiaFormTool):
         #plt.ylabel('Z (m)', fontsize=8)
         self.axtype.set_ylabel('Z (m)', fontsize=8)
 
-    def exportgraphCsv(self,featurepk,exportfile,width,height):
-        self.showGraphCsv(featurepk)
-        self.figuretype.set_size_inches(width / 25.4, height / 25.4)
-        self.figuretype.savefig(exportfile, bbox_inches='tight', dpi=150)
+    """
 
-
-
-    def loadGraphinCsv(self,graphpk=None):
-        if graphpk is not None:
-            filegraphique = self.dbase.getValuesFromPk(self.DBASETABLENAME + '_qgis',
-                                                        'file',
-                                                        graphpk )
-        else:
-            filegraphique = self.toolwidgetmain.lineEdit_csv.text()
-        if filegraphique is None or filegraphique == '':
-            return None
-        filegraphique = self.dbase.completePathOfFile(filegraphique)
-        datas=[]
-        with open(filegraphique, newline='') as csvfile:
-            csvreader = csv.reader(csvfile, delimiter=';', quotechar='|')
-            for row in csvreader:
-                datas.append([])
-                for elem in row :
-                    if self.isfloat(elem):
-                        datas[-1].append(float(elem))
-                    else:
-                        datas[-1].append(elem)
-
-        return datas
-
-    def saveGraphinCsv(self,csvpath):
+    def saveGraphinCsv(self,savedfeaturepk):
         """Lit le QTableWidget et enregistre son contenu dans un fichier csv
+        """
+        valuestosave=[]
+        for row in range(0, self.toolwidgetmain.tableWidget.rowCount()):
+                ligne = []
+                for column in range(0, self.toolwidgetmain.tableWidget.columnCount()):
+                    if self.toolwidgetmain.tableWidget.cellWidget(row, column) is not None:
+                        columnwdg = self.toolwidgetmain.tableWidget.cellWidget(row, column)
+                        if isinstance(columnwdg,QComboBox):
+                            value =  columnwdg.currentText()
+                        elif isinstance(columnwdg,QDoubleSpinBox) or isinstance(columnwdg,QSpinBox):
+                            value = str(columnwdg.value())
+                            if value is None:
+                                value = '0.0'
+                        else:
+                            value = 'NULL'
+                    elif self.toolwidgetmain.tableWidget.item(row, column) is not None:
+                        value = self.toolwidgetmain.tableWidget.item(row, column).text().strip()
+                    else:
+                        value=''
+                    
+                    ligne.append(value)
+                valuestosave.append(ligne)
+
+        self.graphmaker.saveGraphData(savedfeaturepk, valuestosave)
+
         """
         with open(csvpath, 'w', newline='') as csvfile:
             csvwriter = csv.writer(csvfile, delimiter=';', quoting=csv.QUOTE_MINIMAL)
@@ -597,13 +456,9 @@ class BaseGraphcsvTool(AbstractLamiaFormTool):
                     
                     ligne.append(value)
                 csvwriter.writerow(ligne)
+        """
 
-    def isfloat(self,txt):
-        try:
-            float(txt)
-            return True 
-        except:
-            return False
+
 
 
 class UserUI(QWidget):

@@ -48,20 +48,19 @@ class BaseSurfaceTool(AbstractLamiaFormTool):
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_delivery_tool_icon.png')
     
 
-    # tempparentjoin = {}
-    # linkdict = {'colparent': 'id_object',
-    #             'colthistable': 'id_actor',
-    #                 'tctable': 'tcobjectactor',
-    #                 'tctablecolparent':'lid_object',
-    #                 'tctablecolthistable':'lid_actor'}
-    # for tablename in ['actor']:
-    #     tempparentjoin[tablename] = linkdict
-    # PARENTJOIN = tempparentjoin
+    PARENTJOIN = {'facility' : {'colparent': 'id_facility',
+                                'colthistable': 'lid_facility',
+                                 'tctable': None,
+                                 'tctablecolparent':None,
+                                 'tctablecolthistable':None}
+                 }
 
 
     def __init__(self, **kwargs):
         super(BaseSurfaceTool, self).__init__(**kwargs)
-        self.instancekwargs = kwargs
+        self.instancekwargs = kwargs    #depreciated
+        self.instancekwargsforchildwdg = kwargs
+        self.instancekwargsforchildwdg['parentwidget'] = self
 
 
     def initMainToolWidget(self):
@@ -98,7 +97,7 @@ class BaseSurfaceTool(AbstractLamiaFormTool):
                                                         childdisplayfields=['id_node', 'name', 'nodetype'],
                                                         tcmanytomanydisplayfields=[],
                                                         parentframe=self.toolwidgetmain.frame_node)
-                                                        )
+                                                        
         self.lamiawidgets.append(self.tcsubwidget)
 
 

@@ -11,6 +11,7 @@ if not sys.warnoptions:
 """
 import networkx
 import Lamia.libs.pyqtgraph
+from pprint import pprint
 
 
 from pprint import pprint
@@ -44,9 +45,9 @@ class DBaseViewer():
 
         if True :
             SLFILE = os.path.join(os.path.dirname(__file__), '..','test','datas','lamia_assainissement','test01.sqlite')
-            # SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_urbandrainage_Lamia\test01.sqlite"
+            SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_urbandrainage_Lamia\test01.sqlite"
             # SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_waterdistribution_Lamia\test01.sqlite"
-            SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_constructionsite_Lamia\test01.sqlite"
+            # SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_constructionsite_Lamia\test01.sqlite"
             # SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_constructionsite_Orange\test01.sqlite"
             #SLFILE = r"C:\Users\Public\Documents\lamia\test01\test01.sqlite"
             # SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue\test01.sqlite"
@@ -60,11 +61,18 @@ class DBaseViewer():
         if False:
             self._createWin()
             self._createMainWin()
+            PGhost = 'localhost'
+            PGport = 5432
+            PGbase = 'lamiaunittest'
+            PGschema = 'base3_urbandrainage_lamia'
+            PGuser = 'pvr'
+            PGpassword = 'pvr'
             self.wind.loadDBase(dbtype='Postgis', host=PGhost, port=PGport, dbname=PGbase, schema= PGschema, user=PGuser,  password=PGpassword)
-            self.launchTest()
+
 
         
         self.showIFace()
+        # self.testReport()
         
 
     def showIFace(self):
@@ -75,24 +83,33 @@ class DBaseViewer():
         # logging.getLogger("Lamia_unittest").debug('Extent : %s', extent)
         self.wind.qgiscanvas.canvas.setExtent(extent)
 
-        self.wind.setVisualMode(visualmode=0)
+        self.wind.setVisualMode(visualmode=1)
         # self.wind.dbase.printsql = True
 
         # display good widget
-        # wdg = self.wind.toolwidgets['toolprepro']['Graphique_csv'][0]
-        # wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
-        # wdg = self.wind.toolwidgets['toolpostpro']['Import'][0]
-        # wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
-        # self.wind.dbase.printsql = True
-        # wdg = self.wind.toolwidgets['toolprepro']['Troncon'][0]
-        # wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
+        if True:
+            if False:
+                self.wind.setVisualMode(visualmode=4)
+                # print(self.wind.toolwidgets['toolpostpro'].keys())
+                wdg = self.wind.toolwidgets['toolpostpro']['reporttools']   
+            if True:
+                wdg = self.wind.toolwidgets['toolprepro']['graphdb']     # deficiency
+            wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
 
-        # res = self.wind.connector.inputMessage(['nom','mdp'])
-        # print(res)
 
         self.mainwin.exec_()
 
  
+    def testReport(self):
+        from Lamia.libslamia.lamiareport.lamiareport import ReportCore
+        exporterreport = ReportCore(self.wind.dbase,
+                                    messageinstance=self.wind.connector)
+
+        destfile = os.path.join(os.path.dirname(__file__), 'testreport.pdf')
+        confname = 'testreport'
+        exporterreport.runReport(destinationfile=destfile,
+                                reportconffilename=confname,
+                                pkzonegeos=[])
 
 
     def _createMainWin(self):

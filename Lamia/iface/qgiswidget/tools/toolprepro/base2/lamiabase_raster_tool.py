@@ -37,6 +37,7 @@ from ...lamia_abstractformtool import AbstractLamiaFormTool
 
 class BaseRasterTool(AbstractLamiaFormTool):
 
+    PREPROTOOLNAME = 'Rasters'
     DBASETABLENAME = 'Rasters'
     LOADFIRST = True
 

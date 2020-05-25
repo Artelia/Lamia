@@ -99,18 +99,21 @@ class BaseConstructionsiteObservationTool(BaseObservationTool):
 
             if 'observationcategory' in self.TABLEFILTERFIELD.keys():
                 observationcategory = self.TABLEFILTERFIELD['observationcategory']
-                #NCA
-                if observationcategory == 'NCA':
+                #Signature
+                if observationcategory in ['NCA', 'NCB', 'NCC', 'NCD']:
                     signatureWidget = SignatureWidget(self, 'lid_actor_1', 'lid_resource_1', 'datetimesignature_1',
                                                             parentframe=self.toolwidgetmain.tabWidget_formvisa.widget(1))
                     self.lamiawidgets.append(signatureWidget)
-                # NCB
-                elif observationcategory == 'NCB':
+                else:
+                    self.toolwidgetmain.tabWidget_formvisa.removeTab(1)
+
+                # Other
+                if observationcategory == 'NCB':
                     lidchooser = LidChooserWidget(parentwdg=self, parentlidfield='lid_actor_1',
                                                                     parentframe = self.toolwidgetmain.frame_choisresp,
                                                                     searchdbase='actor', searchfieldtoshow=['actorname','society'])
                     self.lamiawidgets.append(lidchooser)
-                    self.toolwidgetmain.tabWidget_formvisa.removeTab(1)
+                    # self.toolwidgetmain.tabWidget_formvisa.removeTab(1)
                 # mise dispo
                 elif observationcategory == 'PVA':
                     #entreprise preneuse
@@ -138,8 +141,7 @@ class BaseConstructionsiteObservationTool(BaseObservationTool):
 
                     self.toolwidgetmain.tabWidget_formvisa.removeTab(1)
                 
-                else:
-                    self.toolwidgetmain.tabWidget_formvisa.removeTab(1)
+
 
         elif self.dbase.variante in ['Orange']:
             # ****************************************************************************************

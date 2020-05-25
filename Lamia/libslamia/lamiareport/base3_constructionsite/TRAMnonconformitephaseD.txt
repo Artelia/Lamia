@@ -5,7 +5,12 @@ SELECT deficiency_now.* , NCD.*
 FROM deficiency_now 
 LEFT JOIN observation_now as NCD ON NCD.lid_deficiency = deficiency_now.id_deficiency and NCD.observationcategory = 'NCD' 
 LEFT JOIN actor_now as NCDinterv ON NCDinterv.id_actor = NCD.lid_actor_1
-WHERE deficiencycategory = 'NCO'
+WHERE deficiencycategory = 'NCO' 
+AND NCD.datetimeobservation > (SELECT max(observation_now.datetimeobservation) 
+                                FROM observation_now 
+                                WHERE observation_now.observationcategory = 'NCC' 
+                                AND observation_now.lid_deficiency = deficiency_now.id_deficiency)
+ORDER BY NCD.datetimeobservation DESC LIMIT 1
 ###atlaslayerid
 # l'identifiant de l'atalslayer
 id_deficiency

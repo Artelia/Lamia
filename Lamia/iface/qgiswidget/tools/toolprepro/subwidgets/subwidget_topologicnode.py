@@ -44,11 +44,11 @@ class TopologicNodeWidget(QtCore.QObject):
         self._moveLinkedTopologicalEdge(parentfeaturepk)
    
     def _moveLinkedTopologicalEdge(self, parentfeaturepk):
-        self.currentFeaturePK = parentfeaturepk
+        # self.currentFeaturePK = parentfeaturepk
 
-        if self.currentFeaturePK is not None:
-            nodeiddessys = self.dbase.getValuesFromPk('node_qgis',['id_descriptionsystem'],self.currentFeaturePK )
-            nodegeom = self.formutils.getQgsGeomFromPk(self.currentFeaturePK).asPoint()
+        if parentfeaturepk is not None:
+            nodeiddessys = self.dbase.getValuesFromPk('node_qgis',['id_descriptionsystem'],parentfeaturepk )
+            nodegeom = self.formutils.getQgsGeomFromPk(parentfeaturepk).asPoint()
 
             # iterate on lid_descriptionsystem_1 and lid_descriptionsystem_2
             valuetoiterate = [1, 2]

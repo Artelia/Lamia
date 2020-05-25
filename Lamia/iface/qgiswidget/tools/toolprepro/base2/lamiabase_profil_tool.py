@@ -44,7 +44,7 @@ from .lamiabase_graphique_tool import BaseGraphiqueTool
 
 class BaseProfilTool(AbstractLamiaFormTool):
 
-
+    PREPROTOOLNAME = 'Profil'
     DBASETABLENAME = 'Profil'
     LOADFIRST = True
 

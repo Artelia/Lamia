@@ -1,11 +1,16 @@
 
 ###atlaslayersql
 # requete sql pour définir la table utilisée pour l'atlas
-SELECT deficiency_now.* , NCB.*
+SELECT deficiency_now.* , NCB.* 
 FROM deficiency_now 
 LEFT JOIN observation_now as NCB ON NCB.lid_deficiency = deficiency_now.id_deficiency and NCB.observationcategory = 'NCB' 
 LEFT JOIN actor_now as NCBinterv ON NCBinterv.id_actor = NCB.lid_actor_1
-WHERE deficiencycategory = 'NCO'
+WHERE deficiencycategory = 'NCO' 
+AND NCB.datetimeobservation > (SELECT max(observation_now.datetimeobservation) 
+                                FROM observation_now 
+                                WHERE observation_now.observationcategory = 'NCA' 
+                                AND observation_now.lid_deficiency = deficiency_now.id_deficiency) 
+ORDER BY NCB.datetimeobservation DESC LIMIT 1
 ###atlaslayerid
 # l'identifiant de l'atalslayer
 id_deficiency
@@ -36,4 +41,4 @@ NCB_signature;NCB.ressource1
 # impression à la suite d'autres conf d'impression
 #confname;                linkcolumn;             optionsql
 #deficiencys_observation;    observation_now.lid_deficiency ; ORDER BY observation_now.datetimeobservation DESC
-TRAMnonconformitephaseC; NCC.lid_deficiency;
+TRAMnonconformitephaseC; NCC.lid_deficiency;  

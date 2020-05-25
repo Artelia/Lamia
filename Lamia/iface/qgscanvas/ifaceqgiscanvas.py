@@ -32,8 +32,21 @@ from ..ifaceabstractcanvas import LamiaAbstractIFaceCanvas
 from .maptool.mapTools import mapToolCapture, mapToolEdit
 
 class QgisCanvas(LamiaAbstractIFaceCanvas):
+    """Class managing what happens in gis 2D map. It manages mainly:
+        - the layers displayed
+        - the click in the draw area
+        - all crs transformation
+        - rubberband (temp displayed layer)
+        Here, no dbase in class var, and as few qt as possible
+    """
 
     def __init__(self, canvas=None):
+        """[summary]
+
+        :param canvas: The qgismapcanvas used (either from qgsproject or specific one), defaults to None
+        :type canvas: QgsMapCanvas, optional
+        """
+
         LamiaAbstractIFaceCanvas.__init__(self)
         self.canvas = canvas
         self.mtoolpoint = None
@@ -55,6 +68,11 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         self.currentmaptool = None  #the maptool in use
 
     def setCanvas(self,qgscanvas):
+        """Init method when a canvas is assigned to this class
+
+        :param qgscanvas: The qgismapcanvas used 
+        :type qgscanvas: QgsMapCanvas
+        """
         if self.canvas:
             try:
                 self.canvas.destinationCrsChanged.disconnect(self.updateQgsCoordinateTransform)
@@ -62,13 +80,6 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                 pass
         
         self.canvas = qgscanvas
-
-        """
-
-        cadwdg = qgis.gui.QgsAdvancedDigitizingDockWidget(iface.mapCanvas())
-        print(cadwdg.cadEnabled () )
-        cadwdg.enable()
-        """
 
         #init maptools
         self.cadwdg = qgis.gui.QgsAdvancedDigitizingDockWidget(self.canvas)
@@ -86,25 +97,28 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
         self.canvas.destinationCrsChanged.connect(self.updateQgsCoordinateTransform)
 
-    def _____________________________layersManagement(self):
+    def ____________layersManagement(self):
         pass
 
 
     def createLayersForQgisServer(self,dbaseparser,specifichost=None):
+        """used for creating a qgis project configured for using in postgis server
+
+        :param dbaseparser: The dbase parser to work with
+        :param specifichost: if host for pg_config.conf is not the same as postgis host (docker use)
         """
-        used for creating a qgis project configured for using in postgis server
-        """
+
         if dbaseparser.TYPE == 'spatialite':
             return
         #* create pg_config.conf
-        """
-        [qgisservertest]
-        host=docker.for.win.localhost
-        port=5432
-        user=pvr
-        password=pvr
-        dbname=lamiaunittest
-        """
+
+        # [qgisservertest]
+        # host=docker.for.win.localhost
+        # port=5432
+        # user=pvr
+        # password=pvr
+        # dbname=lamiaunittest
+
         dbqgisserverdirectory = os.path.join(dbaseparser.dbaseressourcesdirectory,'qgisserver')
         if not os.path.isdir(dbqgisserverdirectory):
             os.mkdir(dbqgisserverdirectory)
@@ -218,6 +232,16 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
 
     def createLayers(self, dbaseparser):
+        """create QgsVectorLayer from dbaseparser database
+        store the in self.layers :
+        dict {... {rawtablename : {'layer' : the qgis layer without parent join,
+                                                'layerqgis': the qgis layer from qgis view,
+                                                'layerdjango': the django layer from django view,
+                                        }
+                }
+        :param dbaseparser: the dbaseparser used
+
+        """
 
         if dbaseparser.__class__.__name__ == 'SpatialiteDBaseParser':
             dbtype = 'spatialite'
@@ -520,7 +544,6 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         Change les filtres de toutes les tables qgis en fonction
         """
 
-        #workingdatemodif = QtCore.QDate.fromString(self.workingdate, 'yyyy-MM-dd').addDays(1).toString('yyyy-MM-dd')
         if datetimearg:
             workingdatemodif = datetimearg
         else:
@@ -749,19 +772,21 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                 expr.append( f""" "{k}" = '{v}'  """ )
             expr = ' and '.join(expr)
 
-        req = qgis.core.QgsFeatureRequest().setFilterExpression(expr)
-        req.setInvalidGeometryCheck(False)
-        # req.setSubsetOfAttributes([])
-        req.setNoAttributes()
-        canvasrect = self.xformreverse.transform(self.canvas.extent())
-        req.setFilterRect(canvasrect)
-        spindex = qgis.core.QgsSpatialIndex(layertoprocess.getFeatures(req))
-
-        
+            req = qgis.core.QgsFeatureRequest().setFilterExpression(expr)
+            req.setInvalidGeometryCheck(False)
+            # req.setSubsetOfAttributes([])
+            req.setNoAttributes()
+            if qgis.utils.iface:
+                canvasrect = self.xformreverse.transform(self.canvas.extent())
+                req.setFilterRect(canvasrect)
+            spindex = qgis.core.QgsSpatialIndex(layertoprocess.getFeatures(req))
+        else:
+            spindex = qgis.core.QgsSpatialIndex(layertoprocess.getFeatures())
+            
         # spindex = qgis.core.QgsSpatialIndex(layertoprocess.getFeatures())
         layernearestid = spindex.nearestNeighbor(point2, 1)
         if not layernearestid:
-            return
+            return None, None
 
         point2geom = qgis.core.QgsGeometry.fromPointXY(point2)
         

@@ -39,10 +39,7 @@ from ...lamia_abstractformtool import AbstractLamiaFormTool
 
 class BaseIntervenantTool(AbstractLamiaFormTool):
 
-    LOADFIRST = False
-    dbasetablename = 'Intervenant'
-    specialfieldui = []
-
+    PREPROTOOLNAME = 'Intervenant'
     DBASETABLENAME = 'Intervenant'
     LOADFIRST = False
 

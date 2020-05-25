@@ -1652,7 +1652,7 @@
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="153"/>
         <source>Secondary\nproperties</source>
-        <translation type="unfinished">Propriétés\nautre</translation>
+        <translation type="unfinished">Propriétés\nsecondaires</translation>
     </message>
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="33"/>
@@ -1682,7 +1682,7 @@
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_edge_tool_ui_CD41.ui" line="166"/>
         <source>Geometry\nTopology</source>
-        <translation type="unfinished">Géométrie\nTopologie</translation>
+        <translation>Géométrie\nTopologie</translation>
     </message>
 </context>
 <context>

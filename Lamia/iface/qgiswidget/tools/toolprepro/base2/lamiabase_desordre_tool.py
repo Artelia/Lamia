@@ -46,6 +46,7 @@ import qgis
 
 class BaseDesordreTool(AbstractLamiaFormTool):
 
+    PREPROTOOLNAME = 'Desordre'
     DBASETABLENAME = 'Desordre'
     LOADFIRST = True
 

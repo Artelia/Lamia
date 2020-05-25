@@ -38,6 +38,7 @@ from ...lamia_abstractformtool import AbstractLamiaFormTool
 
 class BaseZonegeoTool(AbstractLamiaFormTool):
 
+    PREPROTOOLNAME = 'Zonegeo'
     DBASETABLENAME = 'Zonegeo'
     LOADFIRST = False
 

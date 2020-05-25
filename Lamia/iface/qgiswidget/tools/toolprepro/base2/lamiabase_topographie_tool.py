@@ -44,6 +44,7 @@ ca fout la merde....
 
 class BaseTopographieTool(AbstractLamiaFormTool):
 
+    PREPROTOOLNAME = 'Topographie'
     DBASETABLENAME = 'Topographie'
     LOADFIRST = True
 

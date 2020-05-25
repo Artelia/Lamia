@@ -699,18 +699,19 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
                 toolwdglist = self.toolwidgets[typewdg][toolname]
                 toolwdgcls = self.wdgclasses[typewdg][toolname]
                 try:
-                    if hasattr(self.wdgclasses[typewdg][toolname],'PREPROTOOLNAME') and not fullloading:
+                    if (hasattr(self.wdgclasses[typewdg][toolname],'PREPROTOOLNAME') and not fullloading):
                         self.toolwidgets[typewdg][toolname] =  toolwdgcls(dbaseparser = self.dbase,
                                                         mainifacewidget = self,
                                                         choosertreewidget = self.ElemtreeWidget,
-                                                        parentwidget = None) 
+                                                        parentwidget = None)                           
 
                     elif hasattr(self.wdgclasses[typewdg][toolname],'POSTPROTOOLNAME') and fullloading:
                         self.toolwidgets[typewdg][toolname] = toolwdgcls(dbaseparser = self.dbase,
                                                         mainifacewidget = self,
                                                         choosertreewidget = self.ElemtreeWidget,
                                                         parentwidget = None) 
- 
+
+
                     elif hasattr(self.wdgclasses[typewdg][toolname],'LOADFIRST') and not fullloading:
                         toolwdglist.append( toolwdgcls(dbase = self.dbase,
                                                         dialog = self,
@@ -723,7 +724,6 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
                                                         linkedtreewidget = self.ElemtreeWidget,
                                                         gpsutil = self.gpsutil) )
 
-                    print(toolname, toolwdglist)
                 except TypeError as e:
                     print(toolname, e)
                     #raise TypeError

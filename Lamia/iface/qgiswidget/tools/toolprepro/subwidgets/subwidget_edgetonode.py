@@ -135,8 +135,7 @@ class EdgeToNodeWidget(AbstractSubWidget):
         wdg = self.parentwdg.formtoolwidgetconfdict[self.parentwdg.DBASETABLENAME]['widgets'][self.lateralfield]
         if isinstance(wdg, QComboBox):
             wdgvalue = wdg.currentText()
-            wdgrawvalue = self.parentwdg.dbase.getConstraintRawValueFromText('edge', self.lateralfield, wdgvalue)
-            print('_isLateral', wdgrawvalue)
+            wdgrawvalue = int(self.parentwdg.dbase.getConstraintRawValueFromText('edge', self.lateralfield, wdgvalue))
             if wdgrawvalue:
                 return True
             else:
@@ -178,6 +177,7 @@ class EdgeToNodeWidget(AbstractSubWidget):
                                                                 point)
             nearestnodeid2, distance2  = qgiscanvas.getNearestPk('node',
                                                                 point)
+
             if distance2 < distance * 1.1 :
                 nearestnodefet = qgiscanvas.layers['node']['layer'].getFeature(nearestnodeid2)
                 nearestnodepoint = nearestnodefet.geometry().asPoint()

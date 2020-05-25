@@ -127,6 +127,9 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                                                     choosertreewidget=choosertreewidget, 
                                                     parentwidget=parentwidget, 
                                                     parent=parent)
+
+
+
         self.installEventFilter(self) 
         # utils class
         self.formutils = FormToolUtils(self)

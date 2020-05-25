@@ -121,7 +121,7 @@ class RapportTool(AbstractLamiaTool):
         if qgis.utils.iface is None:
             self.toolwidgetmain .lineEdit_nom.setText('c://000_testdigue//test_rapport.pdf')
 
-        self.choosertreewidget = self.mainifacewidget.toolwidgets['toolprepro']['Zone geographique'][0].choosertreewidget
+        self.choosertreewidget = self.mainifacewidget.toolwidgets['toolprepro']['Zonegeo'].choosertreewidget
 
 
     def chooseFile(self):

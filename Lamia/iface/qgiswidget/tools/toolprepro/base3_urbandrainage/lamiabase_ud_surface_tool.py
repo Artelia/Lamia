@@ -33,23 +33,31 @@ from .lamiabase_ud_camera_tool import BaseUrbandrainageCameraTool
 from .lamiabase_ud_sketch_tool import BaseUrbandrainageSketchTool
 from ..subwidgets.subwidget_tcmanytomany import TcmanytomanyChooserWidget
 from ..subwidgets.subwidget_lidchooser import LidChooserWidget
-from .lamiabase_ud_graphcsv_tool import BaseUrbandrainageGraphcsvTool
+from .lamiabase_ud_graph_tool import BaseUrbandrainageGraphTool
 
 class BaseUrbandrainageSurfaceTool(BaseSurfaceTool):
 
     def __init__(self, **kwargs):
         super(BaseUrbandrainageSurfaceTool, self).__init__(**kwargs)
 
+
+    def initMainToolWidget(self):
         self.toolwidgetmain = UserUI()
-        self.formtoolwidgetconfdictmain = {'surface' : {'linkfield' : 'id_delivery',
-                                            'widgets' : {
-                                                        'surfacetype' : self.toolwidgetmain.comboBox_type,
-                                                        'surfacesubtype' : self.toolwidgetmain.comboBox_subtype,
-                                                        'flowconditionupstream' : self.toolwidgetmain.comboBox_inletflowcondition,
-                                                        'flowconditiondownstream' : self.toolwidgetmain.comboBox_outletflowcondition,
+        self.formtoolwidgetconfdictmain = {'surface' : {'linkfield' : 'id_surface',
+                                                        'widgets' : {
+                                                                    'surfacetype' : self.toolwidgetmain.comboBox_type,
+                                                                    'surfacesubtype' : self.toolwidgetmain.comboBox_subtype,
                                             }},
-                            'object' : {'linkfield' : 'id_object',
-                                        'widgets' : {}}}
+                                            'descriptionsystem' : {'linkfield' : 'id_descriptionsystem',
+                                                        'widgets' : {
+                                                                    'networktype': self.toolwidgetmain.comboBox_typeReseau,
+                                                                    'flowconditionupstream' : self.toolwidgetmain.comboBox_inletflowcondition,
+                                                                    'flowconditiondownstream' : self.toolwidgetmain.comboBox_outletflowcondition,
+                                                                    'systemfunction': self.toolwidgetmain.comboBox_systemfunction,
+
+                                            }},
+                                        'object' : {'linkfield' : 'id_object',
+                                                    'widgets' : {}}}
         # self.toolwidgetmain.pushButton_currentPrestation.clicked.connect(self.defineCurrentPrestation)
         #self.toolwidgetmain.pushButton_defineinter.clicked.connect(self.manageLinkage)
 
@@ -61,8 +69,9 @@ class BaseUrbandrainageSurfaceTool(BaseSurfaceTool):
         self.propertieswdgPHOTO = BaseUrbandrainageCameraTool(**self.instancekwargs)
         self.dbasechildwdgfield.append(self.propertieswdgPHOTO)
 
-        self.propertieswdgGRAPHcsv = BaseUrbandrainageGraphcsvTool(**self.instancekwargs)
-        self.dbasechildwdgfield.append(self.propertieswdgGRAPHcsv)
+        if self.dbase.variante in [None, 'Lamia']:
+            self.propertieswdgGRAPH = BaseUrbandrainageGraphTool(**self.instancekwargsforchildwdg)
+            self.dbasechildwdgfield.append(self.propertieswdgGRAPH)
 
 
 

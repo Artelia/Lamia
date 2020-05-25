@@ -27,10 +27,31 @@ This file is part of LAMIA.
 
 from ..base3.lamiabase_facility_tool import BaseFacilityTool
 
+from .lamiabase_ud_node_tool import BaseUrbandrainageNodeTool
+from .lamiabase_ud_edge_tool import BaseUrbandrainageEdgeTool
+from .lamiabase_ud_surface_tool import BaseUrbandrainageSurfaceTool
+
 class BaseUrbandrainageFacilityTool(BaseFacilityTool):
 
     def __init__(self, **kwargs):
         super(BaseUrbandrainageFacilityTool, self).__init__(**kwargs)
+
+    def initMainToolWidget(self):
+        super().initMainToolWidget()
+
+        # self.dbasechildwdgfield=[]
+        # self.instancekwargs['parentwidget'] = self
+
+        self.propertieswdgNode = BaseUrbandrainageNodeTool(**self.instancekwargsforchildwdg)
+        self.dbasechildwdgfield.insert(0,self.propertieswdgNode)
+
+        self.propertieswdgEdge = BaseUrbandrainageEdgeTool(**self.instancekwargsforchildwdg)
+        self.dbasechildwdgfield.insert(1,self.propertieswdgEdge)
+
+        self.propertieswdgSurface = BaseUrbandrainageSurfaceTool(**self.instancekwargsforchildwdg)
+        self.dbasechildwdgfield.insert(2,self.propertieswdgSurface)
+
+
 
 
 

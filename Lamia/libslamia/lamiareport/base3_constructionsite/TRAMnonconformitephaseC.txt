@@ -5,7 +5,12 @@ SELECT deficiency_now.* , NCC.*
 FROM deficiency_now 
 LEFT JOIN observation_now as NCC ON NCC.lid_deficiency = deficiency_now.id_deficiency and NCC.observationcategory = 'NCC' 
 LEFT JOIN actor_now as NCCinterv ON NCCinterv.id_actor = NCC.lid_actor_1
-WHERE deficiencycategory = 'NCO'
+WHERE deficiencycategory = 'NCO'  
+AND NCC.datetimeobservation > (SELECT max(observation_now.datetimeobservation) 
+                                FROM observation_now 
+                                WHERE observation_now.observationcategory = 'NCB' 
+                                AND observation_now.lid_deficiency = deficiency_now.id_deficiency)
+ORDER BY NCC.datetimeobservation DESC LIMIT 1
 ###atlaslayerid
 # l'identifiant de l'atalslayer
 id_deficiency
@@ -39,4 +44,5 @@ NCC_ressource3;NCC.photo3
 # impression à la suite d'autres conf d'impression
 #confname;                linkcolumn;             optionsql
 #deficiencys_observation;    observation_now.lid_deficiency ; ORDER BY observation_now.datetimeobservation DESC
-TRAMnonconformitephaseD; NCD.lid_deficiency;
+TRAMnonconformitephaseD; NCD.lid_deficiency; 
+#ORDER BY NCD.datetimeobservation DESC LIMIT 1

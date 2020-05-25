@@ -36,6 +36,7 @@ from ...lamia_abstractformtool import AbstractLamiaFormTool
 from .lamiabase_camera_tool import BaseCameraTool
 from .lamiabase_sketch_tool import BaseSketchTool
 
+
 base3 = QtCore.QObject()
 
 class BaseEdgeTool(AbstractLamiaFormTool):
@@ -48,10 +49,18 @@ class BaseEdgeTool(AbstractLamiaFormTool):
     tooltreewidgetSUBCAT =QtCore.QCoreApplication.translate('base3','Pipes')
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'lamiabase_edge_tool_icon.svg')
 
+    PARENTJOIN = {'facility' : {'colparent': 'id_facility',
+                                'colthistable': 'lid_facility',
+                                 'tctable': None,
+                                 'tctablecolparent':None,
+                                 'tctablecolthistable':None}
+                 }
 
     def __init__(self, **kwargs):
         super(BaseEdgeTool, self).__init__(**kwargs)
-        self.instancekwargs = kwargs
+        self.instancekwargs = kwargs    #depreciated
+        self.instancekwargsforchildwdg = kwargs
+        self.instancekwargsforchildwdg['parentwidget'] = self
 
 
     def initMainToolWidget(self):
