@@ -43,6 +43,7 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
         #self.mainifacewidget = kwargs.get('mainifacewidget', None)
         self.toolwidget = kwargs.get('toolwidget', None)
         self.ids = pd.DataFrame()
+        self.newentryitem = None
 
     def onActivation(self, initfeatureselection=True):
         debug = False
@@ -464,23 +465,45 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
         self.disconnectTreewidget()
         self.toolwidget.frametoolwidg.setEnabled(True)
         parentitem = self.treewidget.invisibleRootItem()
-        newitem = QTreeWidgetItem(['',self.NEWFEATURETXT])
-        parentitem.addChildren([newitem])
-        self.treewidget.setCurrentItem(newitem)
+        self.newentryitem  = QTreeWidgetItem(['',self.NEWFEATURETXT])
+        parentitem.addChildren([self.newentryitem ])
+        self.treewidget.setCurrentItem(self.newentryitem )
         #newitem.setSelected(True)
         self.connectTreewidget()
 
     def toolbarUndo(self):
         #remove new featureitem
         self.disconnectTreewidget()
+        self._removeNewEntry()
+        """
         founditems = self.treewidget.findItems(self.NEWFEATURETXT, 
                                                 QtCore.Qt.MatchExactly | QtCore.Qt.MatchRecursive, 
                                                 1)
         root = self.treewidget.invisibleRootItem()
         for item in founditems:
             root.removeChild(item)
+        """
         self.selectItemfromPK(self.toolwidget.currentFeaturePK)
         self.connectTreewidget()
+
+    def _removeNewEntry(self):
+        if self.newentryitem is not None:
+            try:
+                root = self.treewidget.invisibleRootItem()
+                root.removeChild(self.newentryitem )
+                self.newentryitem = None
+            except RuntimeError:
+                self.newentryitem = None
+        """
+
+        founditems = self.treewidget.findItems(self.NEWFEATURETXT, 
+                                                QtCore.Qt.MatchExactly | QtCore.Qt.MatchRecursive, 
+                                                1)
+        root = self.treewidget.invisibleRootItem()
+        for item in founditems:
+            root.removeChild(item)
+        """
+
 
     def toolbarDelete(self):
         if self.toolwidget.currentFeaturePK is None:    #feature not correctly saved
@@ -525,7 +548,8 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
                 res = [res]
             res = [self.toolwidget.currentFeaturePK] + list(res)
             #if selecteditems[0].text(0) == self.NEWFEATURETXT:
-            if selecteditems[0].text(1) == self.NEWFEATURETXT:
+            # if selecteditems[0].text(1) == self.NEWFEATURETXT:
+            if selecteditems[0] == self.newentryitem:
                 #self.ids.append(pd.DataFrame(res, columns=self.ids.columns))
                 self.ids.loc[len(self.ids)] = res
             else:
@@ -543,6 +567,7 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
             #for i, val in enumerate(res[1:]):
             for i, val in enumerate(res):    
                 selecteditem.setText(i, str(val))
+            self.newentryitem = None
             #self.ids.append([self.toolwidget.currentFeaturePK, id])
             #self.ids.append((id,))
             #
@@ -565,6 +590,7 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
             pk = self.toolwidget.dbase.query(sql)[0][0]
             self.toolwidget.selectFeature(pk=pk)
         """
+        self._removeNewEntry()
         self.toolwidget.selectFeature(pk=currentpkitem)
 
     def getSelectedPks(self):

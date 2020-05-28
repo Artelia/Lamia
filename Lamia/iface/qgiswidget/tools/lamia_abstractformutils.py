@@ -79,7 +79,6 @@ class FormToolUtils(QtCore.QObject):
                     for linkuserwdg in [templinkuserwgd]: 
                         if linkuserwdg is None or linkuserwdg.keys() is None:
                             continue
-
                         if (tablename in linkuserwdg.keys()
                                 and field in linkuserwdg[tablename]['widgets'].keys()):
                             
@@ -920,7 +919,7 @@ class FormToolUtils(QtCore.QObject):
         #reinit
         
         layergeomtype = self.formtoolwidget.mainifacewidget.qgiscanvas.layers[self.formtoolwidget.DBASETABLENAME]['layer'].geometryType()
-        self.formtoolwidget.mainifacewidget.qgiscanvas.createorresetRubberband(layergeomtype)
+        # self.formtoolwidget.mainifacewidget.qgiscanvas.createorresetRubberband(layergeomtype)
         self.formtoolwidget.tempgeometry = None
         layer = self.formtoolwidget.mainifacewidget.qgiscanvas.layers[self.formtoolwidget.DBASETABLENAME]['layerqgis']
         layer.dataProvider().forceReload()

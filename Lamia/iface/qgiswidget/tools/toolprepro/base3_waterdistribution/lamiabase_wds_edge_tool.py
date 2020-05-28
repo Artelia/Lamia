@@ -26,7 +26,6 @@ This file is part of LAMIA.
 
 import os
 import logging
-from collections import OrderedDict
 
 from qgis.PyQt import uic, QtCore, QtGui
 from qgis.PyQt.QtWidgets import (QWidget, QLabel, QFrame)
@@ -56,24 +55,24 @@ class BaseWaterdistributionEdgeTool(BaseEdgeTool):
             self.toolwidgetmain = UserUIField()
 
             self.formtoolwidgetconfdictmain = {'edge': {'linkfield': 'id_edge',
-                                                        'widgets': OrderedDict([('networktype', self.toolwidgetmain.comboBox_typeeau),
-                                                                                ('laterals', self.toolwidgetmain.comboBox_branchement),
-                                                                                ('domain', self.toolwidgetmain.comboBox_domaine),
-
-                                                                                ('diameterext', self.toolwidgetmain.doubleSpinBox_diametre),
-                                                                                ('depthtoppipe', self.toolwidgetmain.doubleSpinBox_gene),
-                                                                                ('material', self.toolwidgetmain.comboBox_materiau),
-                                                                                ('joint', self.toolwidgetmain.comboBox_joint),
-
-                                                                                ('cathodicprotection',self.toolwidgetmain.comboBox_protectioncatho),
-                                                                                ('flowtype', self.toolwidgetmain.comboBox_modecircu),
-                                                                                ('pipefunction',self.toolwidgetmain.comboBox_fonctioncan)
-                                                                                ])},
+                                                        'widgets': {'laterals': self.toolwidgetmain.comboBox_branchement,
+                                                                    'domain': self.toolwidgetmain.comboBox_domaine,
+                                                                    'diameterext': self.toolwidgetmain.doubleSpinBox_diametre,
+                                                                    'depthtoppipe': self.toolwidgetmain.doubleSpinBox_gene,
+                                                                    'material': self.toolwidgetmain.comboBox_materiau,
+                                                                    'joint': self.toolwidgetmain.comboBox_joint,
+                                                                    'cathodicprotection':self.toolwidgetmain.comboBox_protectioncatho,
+                                                                    'flowtype': self.toolwidgetmain.comboBox_modecircu,
+                                                                    'pipefunction':self.toolwidgetmain.comboBox_fonctioncan,
+                                                        }},
                                                 'object': {'linkfield': 'id_object',
                                                         'widgets': {
-                                                                    'comment':self.toolwidgetmain.textBrowser_commentaire}},
+                                                                    'comment':self.toolwidgetmain.textBrowser_commentaire
+                                                                    }},
                                                 'descriptionsystem': {'linkfield': 'id_descriptionsystem',
-                                                                    'widgets': {}}}
+                                                                    'widgets': {
+                                                                        'networktype': self.toolwidgetmain.comboBox_typeeau
+                                                                    }}}
 
             self.toolwidgetmain.toolButton_diametre.clicked.connect(
                 lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_diametre))
@@ -99,32 +98,33 @@ class BaseWaterdistributionEdgeTool(BaseEdgeTool):
         elif self.dbase.variante in ['urban_heating']:
             self.toolwidgetmain = UserUIField2()
 
-            self.formtoolwidgetconfdictmain = {'Infralineaire': {'linkfield': 'id_infralineaire',
-                                                        'widgets': OrderedDict(
-                                                            [('networktype', self.toolwidgetmain.comboBox_typeeau),
-                                                            ('laterals', self.toolwidgetmain.comboBox_branchement),
-                                                            ('domain', self.toolwidgetmain.comboBox_domaine),
+            self.formtoolwidgetconfdictmain = {'edge': {'linkfield': 'id_edge',
+                                                        'widgets': {
+                                                            'networktype': self.toolwidgetmain.comboBox_typeeau,
+                                                            'laterals': self.toolwidgetmain.comboBox_branchement,
+                                                            'domain': self.toolwidgetmain.comboBox_domaine,
 
-                                                            ('diameterext',self.toolwidgetmain.doubleSpinBox_diametre),
-                                                            ('diameterint',self.toolwidgetmain.doubleSpinBox_diamint),
-                                                            ('depthtoppipe',self.toolwidgetmain.doubleSpinBox_gene),
-                                                            ('material', self.toolwidgetmain.comboBox_materiau),
-                                                            ('joint', self.toolwidgetmain.comboBox_joint),
+                                                            'diameterext':self.toolwidgetmain.doubleSpinBox_diametre,
+                                                            'diameterint':self.toolwidgetmain.doubleSpinBox_diamint,
+                                                            'depthtoppipe':self.toolwidgetmain.doubleSpinBox_gene,
+                                                            'material': self.toolwidgetmain.comboBox_materiau,
+                                                            'joint': self.toolwidgetmain.comboBox_joint,
 
-                                                            ('insulation',self.toolwidgetmain.comboBox_calor),
-                                                            ('insulationtype',self.toolwidgetmain.comboBox_calortype),
-                                                            ('insulationthickness', self.toolwidgetmain.spinBox_calorep),
+                                                            'insulation':self.toolwidgetmain.comboBox_calor,
+                                                            'insulationtype':self.toolwidgetmain.comboBox_calortype,
+                                                            'insulationthickness': self.toolwidgetmain.spinBox_calorep,
 
-                                                            ('cathodicprotection',self.toolwidgetmain.comboBox_protectioncatho),
-                                                            ('flowtype', self.toolwidgetmain.comboBox_modecircu),
-                                                            (
-                                                            'pipefunction', self.toolwidgetmain.comboBox_fonctioncan)
-                                                            ])},
+                                                            'cathodicprotection':self.toolwidgetmain.comboBox_protectioncatho,
+                                                            'flowtype': self.toolwidgetmain.comboBox_modecircu,
+                                                            'pipefunction': self.toolwidgetmain.comboBox_fonctioncan
+                                                            }},
                                         'object': {'linkfield': 'id_object',
                                                 'widgets': {
                                                     'comment': self.toolwidgetmain.textBrowser_commentaire}},
-                                        'Descriptionsystem': {'linkfield': 'id_descriptionsystem',
-                                                            'widgets': {}}}
+                                        'descriptionsystem': {'linkfield': 'id_descriptionsystem',
+                                                            'widgets': {
+                                                                'networktype': self.toolwidgetmain.comboBox_typeeau
+                                                            }}}
 
             self.toolwidgetmain.toolButton_diametre.clicked.connect(
                 lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_diametre))

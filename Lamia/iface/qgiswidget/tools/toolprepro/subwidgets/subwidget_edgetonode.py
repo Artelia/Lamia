@@ -112,7 +112,7 @@ class EdgeToNodeWidget(AbstractSubWidget):
                             newgeom = qgis.core.QgsGeometry.fromPolylineXY(fetgeom)
                             layer = qgiscanvas.layers['edge']['layer']
                             layer.startEditing()
-                            success = layer.changeGeometry(self.currentFeaturePK, newgeom)
+                            success = layer.changeGeometry(parentfeaturepk, newgeom)
                             layer.commitChanges()
                         else:
                             self.spinBox_lk_noeud1.setValue(-1)

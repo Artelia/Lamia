@@ -26,7 +26,7 @@ DBTYPE = ['Base2_digue', 'Base2_assainissement', 'Base2_eaupotable', 'Base2_ecla
          'Base2_chantier', 'Base2_tramway']
 DBTYPE = ['base3_urbandrainage', 'base3_waterdistribution', 'base3_constructionsite']
 
-DBTYPE = ['base3_constructionsite']     
+# DBTYPE = ['base3_constructionsite']     
 # VARIANTES = ['Lamia','Orange']
 
 #* Connexion conf

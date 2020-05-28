@@ -39,10 +39,18 @@ from .lamiabase_wds_camera_tool import BaseWaterdistributionCameraTool as BaseCa
 from .lamiabase_wds_sketch_tool import BaseWaterdistributionSketchTool as BaseSketchTool
 from .lamiabase_wds_deficiency_tool import BaseWaterdistributionDeficiencyTool
 from ..subwidgets.subwidget_topologicnode import TopologicNodeWidget
-
+from ..subwidgets.subwidget_gpsvalues import GpsValuesWidget
+from ..subwidgets.subwidget_createsubfeature import CreateSubFeatureWidget
 
 class BaseWaterdistributionNodeTool(BaseNodeTool):
 
+
+    PARENTJOIN = {'equipment' : {'colparent': 'id_descriptionsystem',
+                                'colthistable': 'lid_descriptionsystem_1',
+                                 'tctable': None,
+                                 'tctablecolparent':None,
+                                 'tctablecolthistable':None}
+                 }
 
     def __init__(self, **kwargs):
         super(BaseWaterdistributionNodeTool, self).__init__(**kwargs)
@@ -60,7 +68,7 @@ class BaseWaterdistributionNodeTool(BaseNodeTool):
                                                         'diameterinlet': self.toolwidgetmain.doubleSpinBox_diam,
                                                         'diameteroutlet': self.toolwidgetmain.doubleSpinBox_diamsor,
                                                         'nodedepth' : self.toolwidgetmain.doubleSpinBox_prof,
-                                                        'networktype': self.toolwidgetmain.comboBox_nature_reseau,
+                                                        
                                                     'presencestep': self.toolwidgetmain.comboBox_echelon,
                                                         #ventouse
                                                             'nodeelevation': self.toolwidgetmain.doubleSpinBox_altim,
@@ -118,7 +126,9 @@ class BaseWaterdistributionNodeTool(BaseNodeTool):
                                         'widgets' : {'comment': self.toolwidgetmain.textBrowser_comm}},
                             'descriptionsystem' : {'linkfield' : 'id_descriptionsystem',
                                                     'widgets' : {  'operational': self.toolwidgetmain.comboBox_enservice,
-                                                                    'dateoperationalcreation': self.toolwidgetmain.dateEdit_anneepose}}}
+                                                                    'dateoperationalcreation': self.toolwidgetmain.dateEdit_anneepose,
+                                                                    'networktype': self.toolwidgetmain.comboBox_nature_reseau,
+                                                                    }}}
 
 
         self.toolwidgetmain.toolButton_diam.clicked.connect(
@@ -164,8 +174,9 @@ class BaseWaterdistributionNodeTool(BaseNodeTool):
         #self.propertieswdgDesordre.frame_editing.setVisible(False)
         #self.toolwidgetmain.tabWidget_2.widget(2).layout().addWidget(self.propertieswdgDesordre)
         self.propertieswdgDesordre.SKIP_LOADING_UI = True
-        self.propertieswdgDesordre.initMainToolWidget()
-        self.propertieswdgDesordre.formtoolwidgetconfdictmain['deficiency']['widgets']['deficiencycategory'] = 'NOD'
+        self.propertieswdgDesordre.TABLEFILTERFIELD = {'deficiencycategory': 'NOD' }
+        # self.propertieswdgDesordre.initMainToolWidget()
+        # self.propertieswdgDesordre.formtoolwidgetconfdictmain['deficiency']['widgets']['deficiencycategory'] = 'NOD'
         self.dbasechildwdgfield.append(self.propertieswdgDesordre)
 
 
@@ -176,31 +187,16 @@ class BaseWaterdistributionNodeTool(BaseNodeTool):
         self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
 
-        self.gpswidget = {'x' : {'widget' : self.toolwidgetmain.label_X,
-                                 'gga' : 'Xcrs'},
-                          'y': {'widget': self.toolwidgetmain.label_Y,
-                                'gga': 'Ycrs'},
-                          'zmngf': {'widget': self.toolwidgetmain.label_Z,
-                                'gga': 'zmNGF'},
-                          'dx': {'widget': self.toolwidgetmain.label_dX,
-                                'gst': 'xprecision'},
-                          'dy': {'widget': self.toolwidgetmain.label_dY,
-                                'gst': 'yprecision'},
-                          'dz': {'widget': self.toolwidgetmain.label_dZ,
-                                'gst': 'zprecision'},
-                          'zgps': {'widget': self.toolwidgetmain.label_zgps,
-                                 'gga': 'elevation'},
-                          'zwgs84': {'widget': self.toolwidgetmain.label_zwgs84,
-                                   'gga': 'deltageoid'},
-                          'raf09': {'widget': self.toolwidgetmain.label_raf09,
-                                   'gga': 'RAF09'},
-                          'hauteurperche': {'widget': self.toolwidgetmain.label_hautperche,
-                                    'gga': 'hauteurperche'}
-                          }
-
 
         self.topologicnode = TopologicNodeWidget(self)
         self.lamiawidgets.append(self.topologicnode)
+        self.createdeficiencywdg = CreateSubFeatureWidget(self,self.propertieswdgDesordre)
+        self.lamiawidgets.append(self.createdeficiencywdg)
+        #* gpswidget
+        self.gpswidget = GpsValuesWidget(parentwdg=self,  
+                                        parentframe=self.toolwidgetmain.frame_gps)
+        self.lamiawidgets.append(self.gpswidget)
+
 
     # def postInitFeatureProperties(self, feat): 
     def postSelectFeature(self):
@@ -243,7 +239,8 @@ class BaseWaterdistributionNodeTool(BaseNodeTool):
 
 
     def postSaveFeature(self, savedfeaturepk=None):
-
+        pass
+        """
         if self.currentFeaturePK is None:
             self.propertieswdgDesordre.toolbarNew()
             geomtext = self.dbase.getValuesFromPk('node_qgis',
@@ -260,7 +257,7 @@ class BaseWaterdistributionNodeTool(BaseNodeTool):
             pkdesordre = self.propertieswdgDesordre.currentFeaturePK
             # sql = "UPDATE deficiency SET deficiencycategory = 'NOD' WHERE pk_deficiency = {}".format(pkdesordre)
             # self.dbase.query(sql)
-            
+        """
 
 
     def changeCategorie(self, intcat):
@@ -276,11 +273,17 @@ class BaseWaterdistributionNodeTool(BaseNodeTool):
         
 
 
-    def magicFunction(self):
-        self.featureSelected()
-        #self.lastPhoto()
-        self.addGPSPoint()
-        self.saveFeature()
+    def toolbarMagic(self):
+        self.mainifacewidget.toolbarNew()
+        self.toolbarGeomAddGPS()
+        self.getGPSValue()
+        self.mainifacewidget.toolbarSave()
+
+
+        # self.featureSelected()
+        # #self.lastPhoto()
+        # self.addGPSPoint()
+        # self.saveFeature()
 
 
     def addGPSPoint(self):
@@ -301,12 +304,12 @@ class BaseWaterdistributionNodeTool(BaseNodeTool):
 
 
     def getGPSValue(self):
-        self.assignValue(self.toolwidgetmain.label_X, self.toolwidgetmain.doubleSpinBox_X)
-        self.assignValue(self.toolwidgetmain.label_dX, self.toolwidgetmain.doubleSpinBox_dX)
-        self.assignValue(self.toolwidgetmain.label_Y, self.toolwidgetmain.doubleSpinBox_Y)
-        self.assignValue(self.toolwidgetmain.label_dY, self.toolwidgetmain.doubleSpinBox_dY)
-        self.assignValue(self.toolwidgetmain.label_Z, self.toolwidgetmain.doubleSpinBox_Z)
-        self.assignValue(self.toolwidgetmain.label_dZ, self.toolwidgetmain.doubleSpinBox_dZ)
+        self.assignValue(self.gpswidget.label_X, self.toolwidgetmain.doubleSpinBox_X)
+        self.assignValue(self.gpswidget.label_dX, self.toolwidgetmain.doubleSpinBox_dX)
+        self.assignValue(self.gpswidget.label_Y, self.toolwidgetmain.doubleSpinBox_Y)
+        self.assignValue(self.gpswidget.label_dY, self.toolwidgetmain.doubleSpinBox_dY)
+        self.assignValue(self.gpswidget.label_Z, self.toolwidgetmain.doubleSpinBox_Z)
+        self.assignValue(self.gpswidget.label_dZ, self.toolwidgetmain.doubleSpinBox_dZ)
 
 
     def assignValue(self,wdgfrom, wdgto):

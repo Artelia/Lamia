@@ -138,11 +138,11 @@ class BaseWaterdistributionCameraTool(BaseCameraTool):
 
 
 
-
+        """
     # def postInitFeatureProperties(self, feat): 
     def postSelectFeature(self):
         super(BaseWaterdistributionCameraTool, self).postSelectFeature()
-        """
+
         global numphoto
 
         if self.currentFeaturePK is None:
@@ -186,7 +186,7 @@ class BaseWaterdistributionCameraTool(BaseCameraTool):
                     else:
                         self.toolwidgetmain.stackedWidget_2.setCurrentIndex(2)
         """
-
+    """
     def postSaveFeature(self, boolnewfeature):
 
         global numphoto
@@ -198,7 +198,13 @@ class BaseWaterdistributionCameraTool(BaseCameraTool):
         else:
             numphoto = self.toolwidgetmain.spinBox_numphoto.value() + 1
 
+    """
 
+    def toolbarMagic(self):
+        self.mainifacewidget.toolbarNew()
+        self.lastPhoto()
+        self.toolbarGeomAddGPS()
+        self.mainifacewidget.toolbarSave()
 
 class DefaultButtons(QWidget):
     def __init__(self, parent=None):

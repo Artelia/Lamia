@@ -335,11 +335,13 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         
         #behaviour var
         self.currenttoolwidget = None
-        self.imagedirectory = None
+        # self.imagedirectory = None
         self.currentchoosertreewidget = None
 
-        if self.qgiscanvas.rubberBand is not None:
-            self.qgiscanvas.rubberBand.reset(0)
+        # if self.qgiscanvas.rubberBand is not None:
+        #     self.qgiscanvas.rubberBand.reset(0)
+        self.qgiscanvas.createorresetRubberband(rubtype='all')
+
         self.qgiscanvas.unloadLayersInCanvas()
         self.gpsutil.closeConnection()
         try:
@@ -910,6 +912,7 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
 
     def _connectToolBar(self):
         self.actiontoolbarnew.triggered.connect(self.toolbarNew)
+        self.actiontoolbarmagic.triggered.connect(self.toolbarMagic)
         self.actiontoolbarundo.triggered.connect(self.toolbarUndo)
         self.actiontoolbardelete.triggered.connect(self.toolbarDelete)
         self.actiontoolbarsave.triggered.connect(self.toolbarSave)
@@ -934,6 +937,10 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
             self.currenttoolwidget.toolbarNew()
         if self.currentchoosertreewidget:
             self.currentchoosertreewidget.toolbarNew()
+
+    def toolbarMagic(self):
+        if self.currenttoolwidget and hasattr(self.currenttoolwidget,'toolbarMagic'):
+            self.currenttoolwidget.toolbarMagic()
 
     def toolbarUndo(self):
         logging.getLogger("Lamia_unittest").info('called')
@@ -981,6 +988,7 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
 
     def printCurrentFormWidget(self):
         self.currenttoolwidget.printWidget()
+
 
 
     #*************************************************************

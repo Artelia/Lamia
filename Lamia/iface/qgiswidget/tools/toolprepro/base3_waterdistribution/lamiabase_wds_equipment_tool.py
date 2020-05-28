@@ -40,7 +40,8 @@ from .lamiabase_wds_node_tool import BaseWaterdistributionNodeTool
 from .lamiabase_wds_camera_tool import BaseWaterdistributionCameraTool as BaseCameraTool
 from .lamiabase_wds_sketch_tool import BaseWaterdistributionSketchTool as BaseSketchTool
 from .lamiabase_wds_deficiency_tool import BaseWaterdistributionDeficiencyTool
-
+from ..subwidgets.subwidget_gpsvalues import GpsValuesWidget
+from ..subwidgets.subwidget_createsubfeature import CreateSubFeatureWidget
 
 class BaseWaterdistributionEquipmentTool(BaseEquipmentTool):
 
@@ -130,8 +131,10 @@ class BaseWaterdistributionEquipmentTool(BaseEquipmentTool):
         #self.propertieswdgDesordre.comboBox_featurelist.setEnabled(False)
         #self.propertieswdgDesordre.groupBox_geom.setParent(None)
         self.propertieswdgDesordre.SKIP_LOADING_UI = True
-        self.propertieswdgDesordre.initMainToolWidget()
-        self.propertieswdgDesordre.formtoolwidgetconfdictmain['deficiency']['widgets']['deficiencycategory'] = 'EQP'
+        self.propertieswdgDesordre.TABLEFILTERFIELD = {'deficiencycategory': 'EQP' }
+
+        # self.propertieswdgDesordre.initMainToolWidget()
+        # self.propertieswdgDesordre.formtoolwidgetconfdictmain['deficiency']['widgets']['deficiencycategory'] = 'EQP'
         self.dbasechildwdgfield.append(self.propertieswdgDesordre)
 
         self.propertieswdgNoeud = BaseWaterdistributionNodeTool(**self.instancekwargs)
@@ -144,32 +147,14 @@ class BaseWaterdistributionEquipmentTool(BaseEquipmentTool):
         self.propertieswdgCROQUIS = BaseSketchTool(**self.instancekwargs)
         self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
+        #* gpswidget
+        self.gpswidget = GpsValuesWidget(parentwdg=self,  
+                                        parentframe=self.toolwidgetmain.frame_gps)
+        self.lamiawidgets.append(self.gpswidget)
+        self.createdeficiencywdg = CreateSubFeatureWidget(self,self.propertieswdgDesordre)
+        self.lamiawidgets.append(self.createdeficiencywdg)
 
 
-
-
-
-        self.gpswidget = {'x' : {'widget' : self.toolwidgetmain.label_X,
-                                    'gga' : 'Xcrs'},
-                            'y': {'widget': self.toolwidgetmain.label_Y,
-                                'gga': 'Ycrs'},
-                            'zmngf': {'widget': self.toolwidgetmain.label_Z,
-                                'gga': 'zmNGF'},
-                            'dx': {'widget': self.toolwidgetmain.label_dX,
-                                'gst': 'xprecision'},
-                            'dy': {'widget': self.toolwidgetmain.label_dY,
-                                'gst': 'yprecision'},
-                            'dz': {'widget': self.toolwidgetmain.label_dZ,
-                                'gst': 'zprecision'},
-                            'zgps': {'widget': self.toolwidgetmain.label_zgps,
-                                    'gga': 'elevation'},
-                            'zwgs84': {'widget': self.toolwidgetmain.label_zwgs84,
-                                    'gga': 'deltageoid'},
-                            'raf09': {'widget': self.toolwidgetmain.label_raf09,
-                                    'gga': 'RAF09'},
-                            'hauteurperche': {'widget': self.toolwidgetmain.label_hautperche,
-                                    'gga': 'hauteurperche'}
-                            }
 
 
 
@@ -214,21 +199,26 @@ class BaseWaterdistributionEquipmentTool(BaseEquipmentTool):
 
 
 
-    def magicFunction(self):
-        self.featureSelected()
-        #self.lastPhoto()
-        self.addGPSPoint()
-        self.saveFeature()
+    # def magicFunction(self):
+    #     self.featureSelected()
+    #     #self.lastPhoto()
+    #     self.addGPSPoint()
+    #     self.saveFeature()
+
+    def toolbarMagic(self):
+        self.mainifacewidget.toolbarNew()
+        self.toolbarGeomAddGPS()
+        self.getGPSValue()
+        self.mainifacewidget.toolbarSave()
 
 
     def getGPSValue(self):
-        self.assignValue(self.toolwidgetmain.label_X, self.toolwidgetmain.doubleSpinBox_X)
-        self.assignValue(self.toolwidgetmain.label_dX, self.toolwidgetmain.doubleSpinBox_dX)
-        self.assignValue(self.toolwidgetmain.label_Y, self.toolwidgetmain.doubleSpinBox_Y)
-        self.assignValue(self.toolwidgetmain.label_dY, self.toolwidgetmain.doubleSpinBox_dY)
-        self.assignValue(self.toolwidgetmain.label_Z, self.toolwidgetmain.doubleSpinBox_Z)
-        self.assignValue(self.toolwidgetmain.label_dZ, self.toolwidgetmain.doubleSpinBox_dZ)
-
+        self.assignValue(self.gpswidget.label_X, self.toolwidgetmain.doubleSpinBox_X)
+        self.assignValue(self.gpswidget.label_dX, self.toolwidgetmain.doubleSpinBox_dX)
+        self.assignValue(self.gpswidget.label_Y, self.toolwidgetmain.doubleSpinBox_Y)
+        self.assignValue(self.gpswidget.label_dY, self.toolwidgetmain.doubleSpinBox_dY)
+        self.assignValue(self.gpswidget.label_Z, self.toolwidgetmain.doubleSpinBox_Z)
+        self.assignValue(self.gpswidget.label_dZ, self.toolwidgetmain.doubleSpinBox_dZ)
 
     def assignValue(self,wdgfrom, wdgto):
         if self.isfloat(wdgfrom.text()):
@@ -243,7 +233,8 @@ class BaseWaterdistributionEquipmentTool(BaseEquipmentTool):
 
 
     def postSaveFeature(self, savedfeaturepk=None):
-
+        pass
+        """
         if self.currentFeaturePK is None:
             self.propertieswdgDesordre.toolbarNew()
             geomtext = self.dbase.getValuesFromPk('equipment_qgis',
@@ -260,7 +251,7 @@ class BaseWaterdistributionEquipmentTool(BaseEquipmentTool):
             pkdesordre = self.propertieswdgDesordre.currentFeaturePK
             # sql = "UPDATE Desordre SET groupedesordre = 'EQP' WHERE pk_desordre = {}".format(pkdesordre)
             # self.dbase.query(sql)
-
+        """
 
 class UserUI(QWidget):
     def __init__(self, parent=None):

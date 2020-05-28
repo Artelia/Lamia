@@ -52,7 +52,14 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         self.mtoolpoint = None
         self.mtoolline = None
         self.mtoolpolygon = None
-        self.rubberBand = None
+
+        self.rubberbands = {'main': None,
+                            'child': None,
+                            'capture': None}
+
+        # self.rubberBand = None          #the main parent ruberband
+        # self.rubberbandchild = None     #the child rubberband
+        # self.rubberbandcapture = None   #the capture rubberband
         self.dbaseqgiscrs = None
         if canvas is None and qgis.utils.iface is not None:
             self.setCanvas(qgis.utils.iface.mapCanvas())
@@ -464,9 +471,12 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
     def unloadLayersInCanvas(self):
         if self.qgislegendnode is not None:
-            self.qgislegendnode.removeAllChildren()
-            root = qgis.core.QgsProject.instance().layerTreeRoot()
-            root.removeChildNode(self.qgislegendnode)
+            try:
+                self.qgislegendnode.removeAllChildren()
+                root = qgis.core.QgsProject.instance().layerTreeRoot()
+                root.removeChildNode(self.qgislegendnode)
+            except RuntimeError:
+                self.qgislegendnode = None
         elif qgis.utils.iface is None:
             self.canvas.setLayers([])
             self.canvas.refresh()
@@ -647,7 +657,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                                                         # type=None,
                                                         str(capturetype),
                                                         str(fctonstopcapture))      
-        self.createorresetRubberband(capturetype)
+        self.createorresetRubberband(capturetype, rubtype='capture')
         if capturetype == qgis.core.QgsWkbTypes.PointGeometry:
             self.currentmaptool = self.mtoolpoint
         elif capturetype == qgis.core.QgsWkbTypes.LineGeometry:
@@ -684,47 +694,59 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         pass
 
 
-    def createorresetRubberband(self,type=0, instance=None):
-        """
-        Reset the rubberband
+        
 
-        :param type: geom type
         """
+        self.rubberBand = None          #the main parent ruberband
+        self.rubberbandchild = None     #the child rubberband
+        self.rubberbandcapture = None   #the capture rubberband
+
+        self.rubberbands = {'main': None,
+                            'child': None,
+                            'capture': None}
+
+        """
+    def createorresetRubberband(self,type=0, instance=None, rubtype='main'):
+        """[summary]
+
+        :param type: QgsGeometry type, defaults to 0
+        :param instance: the instance where rubberband is created, defaults to None
+        :param rubtype: the ruberband type, can be main, child, capture, all , defaults to 'main'
+        """
+
+        rbcolors = {'main': 'red',
+                    'child': 'blue',
+                    'capture': 'magenta'}
+
         if instance is None:
             instance = self
-            rbcolor = 'red'
-        else:
-            rbcolor = 'blue'
-        if not hasattr(instance, 'rubberBand'):
-            instance.rubberBand = None
-        
-        if instance.rubberBand is not None:
-            instance.rubberBand.reset(type)
-        else:
-            instance.rubberBand = qgis.gui.QgsRubberBand(self.canvas,type)
-            instance.rubberBand.setWidth(5)
-            instance.rubberBand.setColor(QtGui.QColor(rbcolor))
 
-    def createorresetRubberband_Old(self,type=0):
-        """
-        Reset the rubberband
+        if not hasattr(instance, 'rubberbands'):
+            instance.rubberbands = {'main': None,
+                                    'child': None,
+                                    'capture': None}
 
-        :param type: geom type
-        """
-        if self.rubberBand is not None:
-            self.rubberBand.reset(type)
+        if rubtype == 'all':
+            rubtypelist = ['main', 'child', 'capture']
         else:
-            self.rubberBand = qgis.gui.QgsRubberBand(self.canvas,type)
-            self.rubberBand.setWidth(5)
-            self.rubberBand.setColor(QtGui.QColor("magenta"))
+            rubtypelist = [rubtype]
 
-    def createRubberBandForSelection(self, qgsgeom, instance=None):
-        # geomtype = qgsgeom.type()
+        for rubtyp in rubtypelist:
+            if instance.rubberbands[rubtyp] is not None:
+                instance.rubberbands[rubtyp].reset(type)
+            else:
+                instance.rubberbands[rubtyp] = qgis.gui.QgsRubberBand(self.canvas,type)
+                instance.rubberbands[rubtyp].setWidth(5)
+                instance.rubberbands[rubtyp].setColor(QtGui.QColor(rbcolors[rubtyp]))
+
+
+    def createRubberBandForSelection(self, qgsgeom, instance=None, distpixel = 4.0, rubtype = 'main'):
+
         if not instance:
             instance = self
-        self.createorresetRubberband(qgis.core.QgsWkbTypes.LineGeometry, instance=instance)
-        canvasscale = self.canvas.scale() 
-        distpixel = 4.0
+        
+        self.createorresetRubberband(qgis.core.QgsWkbTypes.LineGeometry, instance=instance, rubtype=rubtype)
+        canvasscale = self.canvas.scale()
         dist = distpixel * canvasscale / 1000.0
 
         if not isinstance(qgsgeom,list):
@@ -732,7 +754,8 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
         for geom in qgsgeom:
             bufferedgeom = geom.buffer(dist, 12).convertToType(qgis.core.QgsWkbTypes.LineGeometry)
-            instance.rubberBand.addGeometry(bufferedgeom, self.dbaseqgiscrs)
+            instance.rubberbands[rubtype].addGeometry(bufferedgeom, self.dbaseqgiscrs)
+        instance.rubberbands[rubtype].show()
 
 
     def getQgsGeomFromPk(self,dbaseparser, tablename, pk):
@@ -885,3 +908,40 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         if debug: logging.getLogger("Lamia").debug('nearestpk, dist %s %s', str(nearestindex), str(distance))
         return nearestindex, distance
 
+    def zoomToFeature(self, tablename, pk):
+        
+        if tablename in self.layers.keys() and 'layerqgis' in self.layers[tablename].keys():
+            layerqgis = self.layers[tablename]['layerqgis' ]
+            featgeom = layerqgis.getFeature(pk).geometry()
+
+            if featgeom.centroid() is not None and not featgeom.centroid().isNull():
+                point2 = self.xform.transform(featgeom.centroid().asPoint())
+            else:
+                print(featgeom.asWkt())
+                point2 = self.xform.transform(qgis.core.QgsPointXY(featgeom.vertexAt(0)))
+
+            self.canvas.setCenter(point2)
+            self.canvas.refresh()
+        """
+        if fid is None:
+            feat = self.currentFeature
+        else:
+            pk = self.getPkFromId(self.dbasetablename,fid)
+            feat = self.dbase.getLayerFeatureByPk(self.dbasetablename,pk )
+        # point2 = xform.transform(feat.geometry().centroid().asPoint())
+
+        if feat.geometry().centroid() is not None and not feat.geometry().centroid().isNull():
+            point2 = self.dbase.xform.transform(feat.geometry().centroid().asPoint())
+        else:
+            print(feat.geometry().asWkt())
+            if sys.version_info.major == 2:
+                point2 = self.dbase.xform.transform(feat.geometry().vertexAt(0) )
+            elif sys.version_info.major == 3:
+                point2 = self.dbase.xform.transform(qgis.core.QgsPointXY(feat.geometry().vertexAt(0)))
+                # print('**', point2)
+        self.canvas.setCenter(point2)
+        self.canvas.refresh()   
+        """
+
+    def makeBlinkFeature(self, table, pk):
+        pass

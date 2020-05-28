@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>543</width>
+    <width>645</width>
     <height>422</height>
    </rect>
   </property>
@@ -600,7 +600,7 @@ background-color: rgb(255, 255, 255);</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>543</width>
+     <width>645</width>
      <height>26</height>
     </rect>
    </property>
@@ -689,6 +689,7 @@ background-color: rgb(255, 255, 255);</string>
     <bool>false</bool>
    </attribute>
    <addaction name="actiontoolbarnew"/>
+   <addaction name="actiontoolbarmagic"/>
    <addaction name="actiontoolbarundo"/>
    <addaction name="actiontoolbardelete"/>
    <addaction name="actiontoolbarsave"/>
@@ -1036,6 +1037,15 @@ background-color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
     <string>toolbartoolsprint</string>
+   </property>
+  </action>
+  <action name="actiontoolbarmagic">
+   <property name="icon">
+    <iconset resource="../../resources.qrc">
+     <normaloff>:/plugins/Lamia/icons/magic-wand.png</normaloff>:/plugins/Lamia/icons/magic-wand.png</iconset>
+   </property>
+   <property name="text">
+    <string>toolbarmagic</string>
    </property>
   </action>
  </widget>

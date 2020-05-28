@@ -140,11 +140,17 @@ class BaseCameraTool(AbstractLamiaFormTool):
             numphoto = numphoto -1
         self.toolwidgetmain.spinBox_numphoto.setValue(numphoto)
     
-    def magicFunction(self):
-        self.featureSelected()
+    # def magicFunction(self):
+    #     self.featureSelected()
+    #     self.lastPhoto()
+    #     self.addGPSPoint()
+    #     self.saveFeature()
+
+    def toolbarMagic(self):
+        self.toolbarNew()
         self.lastPhoto()
-        self.addGPSPoint()
-        self.saveFeature()
+        self.toolbarGeomAddGPS()
+        self.toolbarSave()
 
     def setDefaultPhoto(self):  
         if self.currentFeaturePK is None:
@@ -230,6 +236,19 @@ class BaseCameraTool(AbstractLamiaFormTool):
                 self.formutils.showImageinLabelWidget(self.photowdg, self.toolwidgetmain.lineEdit_file.text())
             else:
                 self.photowdg.clear()
+
+
+    def postSaveFeature(self, boolnewfeature):
+
+        global numphoto
+        if self.currentFeaturePK is None:
+            if self.toolwidgetmain.spinBox_numphoto.value() == -1 :
+                numphoto = None
+            elif numphoto == self.toolwidgetmain.spinBox_numphoto.value():
+                numphoto += 1
+            else:
+                numphoto = self.toolwidgetmain.spinBox_numphoto.value() + 1
+
 
 
     """

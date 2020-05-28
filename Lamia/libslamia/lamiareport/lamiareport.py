@@ -1294,7 +1294,7 @@ class printPDFBaseWorker(QtCore.QObject):
 
     def orderPksAlongPath(self, coveragelayer,zonegeopks=[]):   
 
-        debug = True
+        debug = False
 
         orderedpks = {}
 
