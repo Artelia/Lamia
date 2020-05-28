@@ -100,6 +100,7 @@ class DBconfigReader():
         # first readfiles in ./DBASE\create directory and create self.dbasetables
         createfilepath = None
         createbasefilepath = None
+        self.variantespossibles=[]
         self.dbasetables = {}
         self.worktype = worktype
         isbase3 = (worktype.split('_')[0] == 'base3')

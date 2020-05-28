@@ -32,9 +32,11 @@ class AbstractSubWidget(QWidget):
 
     UIPATH = None
 
-    def __init__(self, parent = None,**kwargs):
-        super(AbstractSubWidget, self).__init__(parent=parent)
+    def __init__(self, parentwdg = None,**kwargs):
+        super(AbstractSubWidget, self).__init__(parent=parentwdg)
+        self.parentwdg = parentwdg
         self.parentframe = kwargs.get('parentframe',None)
+        
         self.loadUIFile()
         self._loadInParentFrame()
 

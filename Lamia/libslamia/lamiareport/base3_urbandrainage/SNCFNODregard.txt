@@ -1,10 +1,10 @@
 ###atlaslayersql
-SELECT Noeud_now.* , Desordre_now.*, Observation_now.* FROM Noeud_now 
-INNER JOIN Desordre_now ON Desordre_now.lid_descriptionsystem = Noeud_now.id_descriptionsystem
-LEFT JOIN Observation_now ON Observation_now.lid_desordre = Desordre_now.id_desordre
-WHERE Noeud_now.typeOuvrageAss = '60'
+SELECT node_now.* , deficiency_now.*, observation_now.* FROM node_now 
+INNER JOIN deficiency_now ON deficiency_now.lid_descriptionsystem = node_now.id_descriptionsystem
+LEFT JOIN observation_now ON observation_now.lid_deficiency = deficiency_now.id_deficiency
+WHERE node_now.nodetype = '60'
 ###atlaslayerid
-id_noeud
+id_node
 ###spatial
 True
 #ordering
@@ -13,18 +13,18 @@ True
 SNCFNoeud.qml
 ###atlasdrivemap
 #itemname;   minscale;   typescale;      layers
-map0;       250;       Predefined      ;['atlaslayer', 'Noeud','Equipement', 'Infralineaire','bati','Voie','Route', 'scan25']
+map0;       250;       Predefined      ;['atlaslayer', 'node', 'equipment', 'edge', 'bati','Voie','Route', 'scan25']
 #map1;       2500;       Predefined      ;[]
 ###generalmap
 #itemname;   minscale;   typescale; layers
-#map0    ;           ;             ; ['Infralineaire', 'ortho']
+#map0    ;           ;             ; ['edge', 'ortho']
 #map0    ;           ;             ; []
 ###images
 #itemname   ; type
-#ressource1;Noeud_now.ressource1
-photo1;Noeud_now.photo1
-photo2;Noeud_now.photo2
-schema;schema_noeud
+#ressource1;node_now.ressource1
+photo1;node_now.photo1
+photo2;node_now.photo2
+schema;schema_node
 tab;tableau_infralin
 ###childprint
 #confname;                linkcolumn;             optionsql

@@ -186,13 +186,13 @@ class StatTool(AbstractLamiaTool):
         try:
             self.toolwidgetmain.comboBoxSavedQueries.currentIndexChanged.disconnect(self.loadTextFile)
         except:
-            print("Disconnect loadTextFile failed")
+            print("Disconnect loadTextFile failed") if self.isDebug else None
 
     def connectComboSavedQueries(self):
         try:
             self.toolwidgetmain.comboBoxSavedQueries.currentIndexChanged.connect(self.loadTextFile)
         except:
-            print("Connect loadTextFile failed")
+            print("Connect loadTextFile failed") if self.isDebug else None
 
     def updateFields(self):
         """
@@ -312,7 +312,7 @@ class StatTool(AbstractLamiaTool):
         :return: list of items, None otherwise
         """
 
-        print("Enter cleanData")
+        # print("Enter cleanData")
 
         try:
             asList = list(zip(*listItems))[index]
@@ -338,7 +338,7 @@ class StatTool(AbstractLamiaTool):
             else:
                 asList = [np.nan if element is None else element for element in asList]
 
-            print("Exit cleanData")
+            # print("Exit cleanData")
             return asList
         except (IndexError, TypeError) as e:
             print("{type}: {exception} raised at {fct}".format(type=sys.exc_info()[0].upper(), exception=e,
@@ -348,7 +348,7 @@ class StatTool(AbstractLamiaTool):
             print("{type}: raised at {fct}".format(type=sys.exc_info()[0].upper(), fct="cleanData"))
             return None
 
-        sys.exit()
+        # sys.exit()
 
 
     # TODO: Not used at the moment ##############################################
@@ -672,14 +672,14 @@ class StatTool(AbstractLamiaTool):
         """
         Updates comboBoxSavedQueries with new/removed files
         """
-        print("Enter {fct}".format(fct=inspect.stack()[0][3]))
+        print("Enter {fct}".format(fct=inspect.stack()[0][3]))  if self.isDebug else None
 
         self.disconnectComboSavedQueries()
         self.disconnectComboSavedQueries()
 
         # Fetches files from directory
         queriesList = self.listFiles(self.dbase.dbaseressourcesdirectory + "/config/statsTools")
-        print(">", queriesList)
+        print(">", queriesList)  if self.isDebug else None
 
         # Clear and add files to comboBox
         self.toolwidgetmain.comboBoxSavedQueries.clear()
@@ -687,7 +687,7 @@ class StatTool(AbstractLamiaTool):
 
         self.connectComboSavedQueries()
 
-        print("Exit {fct}".format(fct=inspect.stack()[0][3]))
+        print("Exit {fct}".format(fct=inspect.stack()[0][3]))  if self.isDebug else None
 
     def listFiles(self, myPath):
         """

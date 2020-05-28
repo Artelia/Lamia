@@ -63,183 +63,11 @@ class BaseConstructionsiteObservationTool(BaseObservationTool):
     def initMainToolWidget(self):
 
         if self.dbase.variante in [None, 'Lamia']:
-            self.toolwidgetmain = UserUI()
-            self.toolwidgetmain.stackedWidget_2.removeWidget(self.toolwidgetmain.stackedWidget_2.widget(0))
-            self.ncawidget = NcaLamia(self.toolwidgetmain)
-            self.toolwidgetmain.stackedWidget_2.insertWidget(0,self.ncawidget)
-            self.toolwidgetmain.stackedWidget_2.widget(0).setObjectName('NCA')
-            
-            self.formtoolwidgetconfdictmain = {'observation' : {'linkfield' : 'id_observation',
-                                                        'widgets' : {'datetimeobservation': self.toolwidgetmain.dateTimeEdit_datetimeobservation,
-                                                            
-                                                                    'ncadescription': self.ncawidget.textBrowser_ncadescription,
-
-                                                                    'ncaquality':self.ncawidget.checkBox_ncathqualite  ,
-                                                                    'ncacivilworks':self.ncawidget.checkBox_ncathouvrage  ,
-                                                                    'ncasafety':self.ncawidget.checkBox_ncathsecurite  ,
-                                                                    'ncasystem':self.ncawidget.checkBox_ncathsystem  ,
-                                                                    'ncaenvironnemental':self.ncawidget.checkBox_ncathenvironnement  ,
-                                                                    'ncaregulatory':self.ncawidget.checkBox_ncathreglementaire  ,
-                                                                    # 'ncathcommentaire' : self.ncawidget.textBrowser_ncathcommentaire,
-                                                                    'gravity': self.ncawidget.comboBox_ncathcategorie,
-
-                                                                    'ncaprocessus': self.ncawidget.textBrowser_ncaprocessus,
-                                                                    'source': self.ncawidget.textBrowser_ncacause,
-                                                                }},
-                                    'object' : {'linkfield' : 'object',
-                                                'widgets' : {
-                                                            'comment': self.ncawidget.textBrowser_ncathcommentaire,
-                                                }}}
-
-            self.tabWidget_page_formvisa = self.toolwidgetmain.tabWidget_formvisa.widget(1)
-
-            self.dbasechildwdgfield = []
-            self.instancekwargs['parentwidget'] = self
-            self.lamiawidgets = []
-
-            if 'observationcategory' in self.TABLEFILTERFIELD.keys():
-                observationcategory = self.TABLEFILTERFIELD['observationcategory']
-                #Signature
-                if observationcategory in ['NCA', 'NCB', 'NCC', 'NCD']:
-                    signatureWidget = SignatureWidget(self, 'lid_actor_1', 'lid_resource_1', 'datetimesignature_1',
-                                                            parentframe=self.toolwidgetmain.tabWidget_formvisa.widget(1))
-                    self.lamiawidgets.append(signatureWidget)
-                else:
-                    self.toolwidgetmain.tabWidget_formvisa.removeTab(1)
-
-                # Other
-                if observationcategory == 'NCB':
-                    lidchooser = LidChooserWidget(parentwdg=self, parentlidfield='lid_actor_1',
-                                                                    parentframe = self.toolwidgetmain.frame_choisresp,
-                                                                    searchdbase='actor', searchfieldtoshow=['actorname','society'])
-                    self.lamiawidgets.append(lidchooser)
-                    # self.toolwidgetmain.tabWidget_formvisa.removeTab(1)
-                # mise dispo
-                elif observationcategory == 'PVA':
-                    #entreprise preneuse
-                    lidchooser = LidChooserWidget(parentwdg=self, 
-                                                    parentlidfield='lid_delivery_1',
-                                                                parentframe = self.toolwidgetmain.frame_entpren_marche,
-                                                                searchdbase='delivery', searchfieldtoshow=['name'])
-                    self.lamiawidgets.append(lidchooser)
-
-                    signatureWidgetPreneuse = SignatureWidget(self, 
-                                                                    'lid_actor_1', 
-                                                                    'lid_resource_1', 
-                                                                    'datetimesignature_1' ,
-                                                                    parentframe=self.toolwidgetmain.groupBox_entpren_sign)
-                    self.lamiawidgets.append(signatureWidgetPreneuse)
-
-                    #entreprise occupante
-                    lidchooser = LidChooserWidget(parentwdg=self, parentlidfield='lid_delivery_2',
-                                                                    parentframe = self.toolwidgetmain.frame_entocc_marche,
-                                                                    searchdbase='delivery', searchfieldtoshow=['name'])
-                    self.lamiawidgets.append(lidchooser)
-                    signatureWidgetOccupante = SignatureWidget(self, 'lid_actor_2', 'lid_resource_2', 'datetimesignature_2',
-                                                                    parentframe=self.toolwidgetmain.groupBox_entocc_sign)
-                    self.lamiawidgets.append(signatureWidgetOccupante)
-
-                    self.toolwidgetmain.tabWidget_formvisa.removeTab(1)
+            self._initMainToolWidgetLamia()
                 
-
-
         elif self.dbase.variante in ['Orange']:
-            # ****************************************************************************************
-            # userui
-            self.toolwidgetmain = UserUI()
-            self.toolwidgetmain.stackedWidget_2.removeWidget(self.toolwidgetmain.stackedWidget_2.widget(0))
-            self.ncawidget = NcaOrange(self.toolwidgetmain)
-            self.toolwidgetmain.stackedWidget_2.insertWidget(0,self.ncawidget)
-            self.toolwidgetmain.stackedWidget_2.widget(0).setObjectName('NCA')
-
-            self.formtoolwidgetconfdictmain = {'observation': {'linkfield': 'id_observation',
-                                                            'widgets': {
-                                                                'datetimeobservation': self.ncawidget.dateTimeEdit_datetimeobs,
-                                                                'ncaweather': self.ncawidget.lineEdit_meteo,
-                                                                # 'nca_mandataire': self.ncawidget.comboBox_mandataire,
-                                                                'ncacontractorsonsite': self.ncawidget.lineEdit_etppres,
-
-                                                                'ncaschedule': self.ncawidget.comboBox_planning,
-                                                                'ncaschedulecomment': self.ncawidget.textBrowser_planningcom,
-
-                                                                'ncaheadcountcontractor': self.ncawidget.spinBox_effectetp,
-                                                                'ncaheadcountsubcontractor': self.ncawidget.spinBox_effectsstraitant,
-                                                                'ncasitesupervisorpresence': self.ncawidget.checkBox_conduc,
-
-                                                                'ncamachinesexcavator': self.ncawidget.checkBox_eng_pelle,
-                                                                'ncamachinesloader': self.ncawidget.checkBox_eng_charg,
-                                                                'ncamachinescompressor': self.ncawidget.checkBox_eng_compres,
-                                                                'ncamachinestrencher': self.ncawidget.checkBox_eng_trancheuse,
-                                                                'ncamachinesdumptruckmaterial': self.ncawidget.checkBox_eng_cam_mat,
-                                                                'ncamachinesdumptruckexcavation': self.ncawidget.checkBox_eng_cam_deblais,
-                                                                'ncamachinesvacuumtruck': self.ncawidget.checkBox_eng_cam_aspi,
-                                                                'ncamachinessprayertruck': self.ncawidget.checkBox_eng_cam_repand,
-                                                                'ncamachinesmixertruck': self.ncawidget.checkBox_eng_cam_malax,
-                                                                'ncamachinescontainer': self.ncawidget.checkBox_eng_container,
-                                                                'ncamachinesroller': self.ncawidget.checkBox_eng_compacteur,
-                                                                'ncamachinesfinisher': self.ncawidget.checkBox_eng_finisseur,
-                                                                'ncamachinesminiloader': self.ncawidget.checkBox_eng_minipelle,
-                                                                'ncamachinesbuckettruck': self.ncawidget.checkBox_eng_nacelle,
-                                                                'ncamachinesothers': self.ncawidget.checkBox_eng_autre,
-
-                                                                'ncasafetystaff': self.ncawidget.comboBox_sec_personnel,
-                                                                'ncasafetysiteprotected': self.ncawidget.comboBox_sec_protection,
-                                                                'ncasafetyregulatorysheetshown': self.ncawidget.comboBox_sec_afficharrete,
-                                                                'ncasafetyconstructionsigns': self.ncawidget.comboBox_sec_panneauxchant,
-                                                                'ncasafetytraficsafety': self.ncawidget.comboBox_sec_circul,
-                                                                'ncasafetylighting': self.ncawidget.comboBox_sec_eclairage,
-                                                                'ncasafetywastedisposal': self.ncawidget.comboBox_sec_stockagedechet,
-                                                                'ncasafetycleanness': self.ncawidget.comboBox_sec_proprete,
-                                                                'ncasafetytrenchprotected': self.ncawidget.comboBox_sec_protectiontranchee,
-                                                                'ncasafetytrenchshoring': self.ncawidget.comboBox_sec_blindage,
-                                                                'ncasafetymarkingsstaking': self.ncawidget.comboBox_sec_reunionmarquage,
-                                                                'ncasafetymarkingsmaintenance': self.ncawidget.comboBox_sec_entretienmarquage,
-                                                                'ncasafetynetworkgatevalvesaccess': self.ncawidget.comboBox_sec_accesscoupure,
-                                                                'ncasafetyworkataheight': self.ncawidget.comboBox_sec_travailhauteur,
-                                                                'ncaregulatorygrievance': self.ncawidget.comboBox_sec_plaintes,
-                                                                'ncaregulatorygrievancecomment': self.ncawidget.lineEdit_sec_plaintes_com,
-
-                                                                }},
-                                            'object': {'linkfield': 'id_object',
-                                                    'widgets': {}}}
-
-
-            self.ncawidget.toolButton_effect_etp.clicked.connect(
-                lambda: self.showNumPad(self.ncawidget.spinBox_effectetp))
-            self.ncawidget.toolButton_effect_sstraitant.clicked.connect(
-                lambda: self.showNumPad(self.ncawidget.spinBox_effectsstraitant))
-
-            self.tabWidget_page_formvisa = self.toolwidgetmain.tabWidget_formvisa.widget(1)
-
-            self.dbasechildwdgfield = []
-            self.instancekwargs['parentwidget'] = self
-            self.lamiawidgets = []
-
-            if 'observationcategory' in self.TABLEFILTERFIELD.keys():
-                observationcategory = self.TABLEFILTERFIELD['observationcategory']
-                #NCA
-                if observationcategory == 'NCA':
-                    self.tabWidget_multivisa = QTabWidget()
-                    self.tabWidget_page_formvisa.layout().addWidget(self.tabWidget_multivisa)
-                    self.tabWidget_multivisa.addTab(QWidget(), 'MOE')
-                    self.tabWidget_multivisa.addTab(QWidget(), 'Entreprise')
-
-
-                    # visa nca MOE
-                    self.signatureWidgetMOE = SignatureWidget(self, 'lid_actor_1', 'lid_resource_1', 'datetimesignature_1',
-                                                            parentframe=self.tabWidget_multivisa.widget(0) )
-                    self.lamiawidgets.append(self.signatureWidgetMOE)
-
-                    # visa nca ETP
-                    self.signatureWidgetETP = SignatureWidget(self, 'lid_actor_2', 'lid_resource_2', 'datetimesignature_2',
-                                                              parentframe=self.tabWidget_multivisa.widget(1)  )
-                    self.lamiawidgets.append(self.signatureWidgetETP)
-
-                    # sous fiche
-                    self.sousficheWidget = BaseConstructionsiteSubObservationTool(**self.instancekwargs)
-                    self.sousficheWidget.tooltreewidgetSUBCAT = 'Fiches\ndétaillées'
-                    self.dbasechildwdgfield.insert(0,self.sousficheWidget)
-
+            self._initMainToolWidgetOrange()
+            
         #* common part
         self.formtoolwidgetconfdictmain['observation']['widgets'].update( {'ncbagreement': self.toolwidgetmain.comboBox_acceptation,
                                                                             'ncbtargetdate': self.toolwidgetmain.dateEdit_datecible,
@@ -295,6 +123,180 @@ class BaseConstructionsiteObservationTool(BaseObservationTool):
         #self.propertieswdgRapport.frame_editing.setVisible(False)
         self.dbasechildwdgfield.append(self.propertieswdgRapport)
 
+    def _initMainToolWidgetLamia(self):
+        self.toolwidgetmain = UserUI()
+        self.toolwidgetmain.stackedWidget_2.removeWidget(self.toolwidgetmain.stackedWidget_2.widget(0))
+        self.ncawidget = NcaLamia(self.toolwidgetmain)
+        self.toolwidgetmain.stackedWidget_2.insertWidget(0,self.ncawidget)
+        self.toolwidgetmain.stackedWidget_2.widget(0).setObjectName('NCA')
+        
+        self.formtoolwidgetconfdictmain = {'observation' : {'linkfield' : 'id_observation',
+                                                    'widgets' : {'datetimeobservation': self.toolwidgetmain.dateTimeEdit_datetimeobservation,
+                                                        
+                                                                'ncadescription': self.ncawidget.textBrowser_ncadescription,
+
+                                                                'ncaquality':self.ncawidget.checkBox_ncathqualite  ,
+                                                                'ncacivilworks':self.ncawidget.checkBox_ncathouvrage  ,
+                                                                'ncasafety':self.ncawidget.checkBox_ncathsecurite  ,
+                                                                'ncasystem':self.ncawidget.checkBox_ncathsystem  ,
+                                                                'ncaenvironnemental':self.ncawidget.checkBox_ncathenvironnement  ,
+                                                                'ncaregulatory':self.ncawidget.checkBox_ncathreglementaire  ,
+                                                                # 'ncathcommentaire' : self.ncawidget.textBrowser_ncathcommentaire,
+                                                                'gravity': self.ncawidget.comboBox_ncathcategorie,
+
+                                                                'ncaprocessus': self.ncawidget.textBrowser_ncaprocessus,
+                                                                'source': self.ncawidget.textBrowser_ncacause,
+                                                            }},
+                                'object' : {'linkfield' : 'object',
+                                            'widgets' : {
+                                                        'comment': self.ncawidget.textBrowser_ncathcommentaire,
+                                            }}}
+
+        self.tabWidget_page_formvisa = self.toolwidgetmain.tabWidget_formvisa.widget(1)
+
+        self.dbasechildwdgfield = []
+        self.instancekwargs['parentwidget'] = self
+        self.lamiawidgets = []
+
+        if 'observationcategory' in self.TABLEFILTERFIELD.keys():
+            observationcategory = self.TABLEFILTERFIELD['observationcategory']
+            #Signature
+            if observationcategory in ['NCA', 'NCB', 'NCC', 'NCD']:
+                signatureWidget = SignatureWidget(self, 'lid_actor_1', 'lid_resource_1', 'datetimesignature_1',
+                                                        parentframe=self.toolwidgetmain.tabWidget_formvisa.widget(1))
+                self.lamiawidgets.append(signatureWidget)
+            else:
+                self.toolwidgetmain.tabWidget_formvisa.removeTab(1)
+
+            # Other
+            if observationcategory == 'NCB':
+                lidchooser = LidChooserWidget(parentwdg=self, parentlidfield='lid_actor_1',
+                                                                parentframe = self.toolwidgetmain.frame_choisresp,
+                                                                searchdbase='actor', searchfieldtoshow=['actorname','society'])
+                self.lamiawidgets.append(lidchooser)
+                # self.toolwidgetmain.tabWidget_formvisa.removeTab(1)
+            # mise dispo
+            elif observationcategory == 'PVA':
+                #entreprise preneuse
+                lidchooser = LidChooserWidget(parentwdg=self, 
+                                                parentlidfield='lid_delivery_1',
+                                                            parentframe = self.toolwidgetmain.frame_entpren_marche,
+                                                            searchdbase='delivery', searchfieldtoshow=['name'])
+                self.lamiawidgets.append(lidchooser)
+
+                signatureWidgetPreneuse = SignatureWidget(self, 
+                                                                'lid_actor_1', 
+                                                                'lid_resource_1', 
+                                                                'datetimesignature_1' ,
+                                                                parentframe=self.toolwidgetmain.groupBox_entpren_sign)
+                self.lamiawidgets.append(signatureWidgetPreneuse)
+
+                #entreprise occupante
+                lidchooser = LidChooserWidget(parentwdg=self, parentlidfield='lid_delivery_2',
+                                                                parentframe = self.toolwidgetmain.frame_entocc_marche,
+                                                                searchdbase='delivery', searchfieldtoshow=['name'])
+                self.lamiawidgets.append(lidchooser)
+                signatureWidgetOccupante = SignatureWidget(self, 'lid_actor_2', 'lid_resource_2', 'datetimesignature_2',
+                                                                parentframe=self.toolwidgetmain.groupBox_entocc_sign)
+                self.lamiawidgets.append(signatureWidgetOccupante)
+
+                self.toolwidgetmain.tabWidget_formvisa.removeTab(1)
+
+    def _initMainToolWidgetOrange(self):
+        # userui
+        self.toolwidgetmain = UserUI()
+        self.toolwidgetmain.stackedWidget_2.removeWidget(self.toolwidgetmain.stackedWidget_2.widget(0))
+        self.ncawidget = NcaOrange(self.toolwidgetmain)
+        self.toolwidgetmain.stackedWidget_2.insertWidget(0,self.ncawidget)
+        self.toolwidgetmain.stackedWidget_2.widget(0).setObjectName('NCA')
+
+        self.formtoolwidgetconfdictmain = {'observation': {'linkfield': 'id_observation',
+                                                        'widgets': {
+                                                            'datetimeobservation': self.ncawidget.dateTimeEdit_datetimeobs,
+                                                            'ncaweather': self.ncawidget.lineEdit_meteo,
+                                                            # 'nca_mandataire': self.ncawidget.comboBox_mandataire,
+                                                            'ncacontractorsonsite': self.ncawidget.lineEdit_etppres,
+
+                                                            'ncaschedule': self.ncawidget.comboBox_planning,
+                                                            'ncaschedulecomment': self.ncawidget.textBrowser_planningcom,
+
+                                                            'ncaheadcountcontractor': self.ncawidget.spinBox_effectetp,
+                                                            'ncaheadcountsubcontractor': self.ncawidget.spinBox_effectsstraitant,
+                                                            'ncasitesupervisorpresence': self.ncawidget.checkBox_conduc,
+
+                                                            'ncamachinesexcavator': self.ncawidget.checkBox_eng_pelle,
+                                                            'ncamachinesloader': self.ncawidget.checkBox_eng_charg,
+                                                            'ncamachinescompressor': self.ncawidget.checkBox_eng_compres,
+                                                            'ncamachinestrencher': self.ncawidget.checkBox_eng_trancheuse,
+                                                            'ncamachinesdumptruckmaterial': self.ncawidget.checkBox_eng_cam_mat,
+                                                            'ncamachinesdumptruckexcavation': self.ncawidget.checkBox_eng_cam_deblais,
+                                                            'ncamachinesvacuumtruck': self.ncawidget.checkBox_eng_cam_aspi,
+                                                            'ncamachinessprayertruck': self.ncawidget.checkBox_eng_cam_repand,
+                                                            'ncamachinesmixertruck': self.ncawidget.checkBox_eng_cam_malax,
+                                                            'ncamachinescontainer': self.ncawidget.checkBox_eng_container,
+                                                            'ncamachinesroller': self.ncawidget.checkBox_eng_compacteur,
+                                                            'ncamachinesfinisher': self.ncawidget.checkBox_eng_finisseur,
+                                                            'ncamachinesminiloader': self.ncawidget.checkBox_eng_minipelle,
+                                                            'ncamachinesbuckettruck': self.ncawidget.checkBox_eng_nacelle,
+                                                            'ncamachinesothers': self.ncawidget.checkBox_eng_autre,
+
+                                                            'ncasafetystaff': self.ncawidget.comboBox_sec_personnel,
+                                                            'ncasafetysiteprotected': self.ncawidget.comboBox_sec_protection,
+                                                            'ncasafetyregulatorysheetshown': self.ncawidget.comboBox_sec_afficharrete,
+                                                            'ncasafetyconstructionsigns': self.ncawidget.comboBox_sec_panneauxchant,
+                                                            'ncasafetytraficsafety': self.ncawidget.comboBox_sec_circul,
+                                                            'ncasafetylighting': self.ncawidget.comboBox_sec_eclairage,
+                                                            'ncasafetywastedisposal': self.ncawidget.comboBox_sec_stockagedechet,
+                                                            'ncasafetycleanness': self.ncawidget.comboBox_sec_proprete,
+                                                            'ncasafetytrenchprotected': self.ncawidget.comboBox_sec_protectiontranchee,
+                                                            'ncasafetytrenchshoring': self.ncawidget.comboBox_sec_blindage,
+                                                            'ncasafetymarkingsstaking': self.ncawidget.comboBox_sec_reunionmarquage,
+                                                            'ncasafetymarkingsmaintenance': self.ncawidget.comboBox_sec_entretienmarquage,
+                                                            'ncasafetynetworkgatevalvesaccess': self.ncawidget.comboBox_sec_accesscoupure,
+                                                            'ncasafetyworkataheight': self.ncawidget.comboBox_sec_travailhauteur,
+                                                            'ncaregulatorygrievance': self.ncawidget.comboBox_sec_plaintes,
+                                                            'ncaregulatorygrievancecomment': self.ncawidget.lineEdit_sec_plaintes_com,
+
+                                                            }},
+                                        'object': {'linkfield': 'id_object',
+                                                'widgets': {}}}
+
+
+        self.ncawidget.toolButton_effect_etp.clicked.connect(
+            lambda: self.showNumPad(self.ncawidget.spinBox_effectetp))
+        self.ncawidget.toolButton_effect_sstraitant.clicked.connect(
+            lambda: self.showNumPad(self.ncawidget.spinBox_effectsstraitant))
+
+        self.tabWidget_page_formvisa = self.toolwidgetmain.tabWidget_formvisa.widget(1)
+
+        self.dbasechildwdgfield = []
+        self.instancekwargs['parentwidget'] = self
+        self.lamiawidgets = []
+
+        if 'observationcategory' in self.TABLEFILTERFIELD.keys():
+            observationcategory = self.TABLEFILTERFIELD['observationcategory']
+            #NCA
+            if observationcategory == 'NCA':
+                self.tabWidget_multivisa = QTabWidget()
+                self.tabWidget_page_formvisa.layout().addWidget(self.tabWidget_multivisa)
+                self.tabWidget_multivisa.addTab(QWidget(), 'MOE')
+                self.tabWidget_multivisa.addTab(QWidget(), 'Entreprise')
+
+
+                # visa nca MOE
+                self.signatureWidgetMOE = SignatureWidget(self, 'lid_actor_1', 'lid_resource_1', 'datetimesignature_1',
+                                                        parentframe=self.tabWidget_multivisa.widget(0) )
+                self.lamiawidgets.append(self.signatureWidgetMOE)
+
+                # visa nca ETP
+                self.signatureWidgetETP = SignatureWidget(self, 'lid_actor_2', 'lid_resource_2', 'datetimesignature_2',
+                                                            parentframe=self.tabWidget_multivisa.widget(1)  )
+                self.lamiawidgets.append(self.signatureWidgetETP)
+
+                # sous fiche
+                self.sousficheWidget = BaseConstructionsiteSubObservationTool(**self.instancekwargs)
+                self.sousficheWidget.tooltreewidgetSUBCAT = 'Fiches\ndétaillées'
+                self.dbasechildwdgfield.insert(0,self.sousficheWidget)
 
 
     def changeGroupe(self, comboindex):

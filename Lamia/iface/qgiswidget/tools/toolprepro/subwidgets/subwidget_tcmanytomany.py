@@ -44,7 +44,8 @@ class TcmanytomanyChooserWidget(AbstractSubWidget):
                 childdisplayfields=[],
                 tcmanytomanydisplayfields=[],
                 parentframe=None):
-        super(TcmanytomanyChooserWidget, self).__init__(parent=parentwdg,parentframe=parentframe)
+        super(TcmanytomanyChooserWidget, self).__init__(parentwdg=parentwdg,
+                                                        parentframe=parentframe)
 
 
         self.parentwdg = parentwdg

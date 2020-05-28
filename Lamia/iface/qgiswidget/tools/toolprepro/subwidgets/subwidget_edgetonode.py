@@ -36,7 +36,8 @@ class EdgeToNodeWidget(AbstractSubWidget):
     UIPATH = os.path.join(os.path.dirname(__file__), 'subwidget_edgetonode_ui.ui')
 
     def __init__(self, parentwdg, lateralfield,upstreamnodeidfield,downstreamnodeidfield, parentframe):
-        super(EdgeToNodeWidget, self).__init__(parent=parentwdg, parentframe=parentframe)
+        super(EdgeToNodeWidget, self).__init__(parentwdg=parentwdg, 
+                                                parentframe=parentframe)
         # uipath = os.path.join(os.path.dirname(__file__), 'subwidget_edgetonode_ui.ui')
         # uic.loadUi(uipath, self)
 
@@ -121,8 +122,17 @@ class EdgeToNodeWidget(AbstractSubWidget):
         # self.upstreamnodeidfield = upstreamnodeidfield
         # self.downstreamnodeidfield = downstreamnodeidfield
 
-        sql = f"UPDATE edge SET {self.upstreamnodeidfield} = {self.spinBox_lk_noeud1.value()}, \
-                                {self.downstreamnodeidfield} = {self.spinBox_lk_noeud2.value()}  \
+        if self.spinBox_lk_noeud1.value() == -1:
+            node1value = 'NULL'
+        else:
+            node1value = self.spinBox_lk_noeud1.value()
+        if self.spinBox_lk_noeud2.value() == -1:
+            node2value = 'NULL'
+        else:
+            node2value = self.spinBox_lk_noeud2.value()
+
+        sql = f"UPDATE edge SET {self.upstreamnodeidfield} = {node1value}, \
+                                {self.downstreamnodeidfield} = {node2value}  \
                 WHERE pk_edge = {parentfeaturepk}"
         dbase.query(sql)
 

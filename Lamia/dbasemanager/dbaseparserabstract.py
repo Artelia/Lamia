@@ -34,12 +34,12 @@ try:
     PILexists = True
 except ImportError:
     PILexists = False
+
+from ..libslamia.lamiareg.updatereg import updateWinReg
 from .dbconfigreader import DBconfigReader
 from .dbaseofflinemanager import DBaseOfflineManager
 from ..iface.ifaceabstractconnector import LamiaIFaceAbstractConnectors
 from . import dbaseutils
-
-
 
 
 
@@ -66,10 +66,11 @@ class AbstractDBaseParser():
         """
         # the dictionnary of dbase (cf DBconfigReader)
         self.dbasetables = None
-        if messageinstance:
-            self.messageinstance = messageinstance
-        else:
+
+        if messageinstance is None:
             self.messageinstance = LamiaIFaceAbstractConnectors()
+        else:
+            self.messageinstance = messageinstance
 
         #utils
         self.utils = dbaseutils
@@ -301,6 +302,7 @@ class AbstractDBaseParser():
         self.currentrevision = query[0][0]
 
         self.base3version = not ('Basedonnees' in self.dbasetables.keys())
+        updateWinReg(worktype=worktype)
 
     def initDBase(self):
         raise NotImplementedError

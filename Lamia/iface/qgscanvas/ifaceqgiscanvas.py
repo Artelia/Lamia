@@ -189,7 +189,10 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
         #load layers and set style
         root = project.layerTreeRoot()
-        styledirectory = os.path.join(os.path.dirname(Lamia.__file__), 'DBASE', 'style', dbaseparser.worktype, '0_Defaut' )
+        if dbaseparser.base3version :
+            styledirectory = os.path.join(os.path.dirname(Lamia.__file__), 'DBASE', 'style', dbaseparser.worktype, '0_default' )
+        else:
+            styledirectory = os.path.join(os.path.dirname(Lamia.__file__), 'DBASE', 'style', dbaseparser.worktype, '0_Defaut' )
         for tablename in layers:
             if ('layerqgis' in layers[tablename].keys() 
                     and layers[tablename]['layerqgis'].geometryType() != qgis.core.QgsWkbTypes.NullGeometry ):
@@ -435,12 +438,15 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             #         qgis.core.QgsProject.instance().addMapLayer(dbasetables[tablename]['layerqgis'], False)
             #         lamialegendgroup.addLayer(dbasetables[tablename]['layerqgis'])
             #new way
-            for tablename in self.layers:
-                if ('layerqgis' in self.layers[tablename].keys() 
-                        and self.layers[tablename]['layerqgisjoined'].geometryType() != qgis.core.QgsWkbTypes.NullGeometry 
-                        ):
-                    qgis.core.QgsProject.instance().addMapLayer(self.layers[tablename]['layerqgis'], False)
-                    lamialegendgroup.addLayer(self.layers[tablename]['layerqgis'])
+            ordergeomtypes = [qgis.core.QgsWkbTypes.PointGeometry ,
+                            qgis.core.QgsWkbTypes.LineGeometry  ,
+                            qgis.core.QgsWkbTypes.PolygonGeometry ]
+            for geomtype in ordergeomtypes:
+                for tablename in self.layers:
+                    if ('layerqgis' in self.layers[tablename].keys() 
+                            and self.layers[tablename]['layerqgisjoined'].geometryType() == geomtype):
+                        qgis.core.QgsProject.instance().addMapLayer(self.layers[tablename]['layerqgis'], False)
+                        lamialegendgroup.addLayer(self.layers[tablename]['layerqgis'])
 
         else:
             layerstoadd = []
@@ -464,6 +470,8 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         elif qgis.utils.iface is None:
             self.canvas.setLayers([])
             self.canvas.refresh()
+        
+        self.layers = {}
 
 
     def applyStyle(self, worktype, styledir):

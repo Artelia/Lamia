@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>518</width>
-    <height>397</height>
+    <width>490</width>
+    <height>306</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -824,17 +824,14 @@
           <property name="spacing">
            <number>3</number>
           </property>
-          <item row="2" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_Z">
-            <property name="minimum">
-             <double>-99.000000000000000</double>
-            </property>
-            <property name="maximum">
-             <double>99999999.000000000000000</double>
+          <item row="1" column="2">
+           <widget class="QLabel" name="label_21">
+            <property name="text">
+             <string>dY</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
+          <item row="0" column="3">
            <widget class="QDoubleSpinBox" name="doubleSpinBox_Y">
             <property name="minimum">
              <double>-99.000000000000000</double>
@@ -844,24 +841,7 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="3">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_dZ">
-            <property name="minimum">
-             <double>-1.000000000000000</double>
-            </property>
-            <property name="maximum">
-             <double>999.000000000000000</double>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_18">
-            <property name="text">
-             <string>Y</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
+          <item row="0" column="4">
            <widget class="QLabel" name="label_22">
             <property name="text">
              <string>Z cover</string>
@@ -878,20 +858,17 @@
             </property>
            </widget>
           </item>
+          <item row="0" column="2">
+           <widget class="QLabel" name="label_18">
+            <property name="text">
+             <string>Y</string>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="0">
            <widget class="QLabel" name="label_15">
             <property name="text">
              <string>X</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_dX">
-            <property name="minimum">
-             <double>-1.000000000000000</double>
-            </property>
-            <property name="maximum">
-             <double>999.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -905,28 +882,51 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="2">
-           <widget class="QLabel" name="label_21">
-            <property name="text">
-             <string>dY</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
+          <item row="1" column="0">
            <widget class="QLabel" name="label_16">
             <property name="text">
              <string>dX</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="2">
+          <item row="1" column="1">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_dX">
+            <property name="minimum">
+             <double>-1.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>999.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="5">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_Z">
+            <property name="minimum">
+             <double>-99.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>99999999.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="4">
            <widget class="QLabel" name="label_23">
             <property name="text">
              <string>dZ</string>
             </property>
            </widget>
           </item>
-          <item row="3" column="0" colspan="4">
+          <item row="1" column="5">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_dZ">
+            <property name="minimum">
+             <double>-1.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>999.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0" colspan="6">
            <widget class="QPushButton" name="pushButton_getGPS">
             <property name="text">
              <string>GPS</string>
@@ -934,6 +934,16 @@
            </widget>
           </item>
          </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QFrame" name="frame_gps">
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
         </widget>
        </item>
        <item>
@@ -1021,177 +1031,6 @@
       </size>
      </property>
     </spacer>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="groupBox_2">
-     <property name="title">
-      <string>GPS</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_17">
-      <property name="leftMargin">
-       <number>3</number>
-      </property>
-      <property name="topMargin">
-       <number>3</number>
-      </property>
-      <property name="rightMargin">
-       <number>3</number>
-      </property>
-      <property name="bottomMargin">
-       <number>3</number>
-      </property>
-      <property name="spacing">
-       <number>3</number>
-      </property>
-      <item row="0" column="3">
-       <widget class="QLabel" name="label_Y">
-        <property name="text">
-         <string>/</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QLabel" name="label_64">
-        <property name="text">
-         <string>Y</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="5">
-       <widget class="QLabel" name="label_dZ">
-        <property name="text">
-         <string>/</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="5">
-       <widget class="QLabel" name="label_Z">
-        <property name="text">
-         <string>/</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLabel" name="label_dX">
-        <property name="text">
-         <string>/</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="6">
-       <widget class="QLabel" name="label_61">
-        <property name="text">
-         <string>RAF09</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="4">
-       <widget class="QLabel" name="label_68">
-        <property name="text">
-         <string>dZ</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_65">
-        <property name="text">
-         <string>dX</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QLabel" name="label_67">
-        <property name="text">
-         <string>dY</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
-       <widget class="QLabel" name="label_dY">
-        <property name="text">
-         <string>/</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_62">
-        <property name="text">
-         <string>Zgps</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="4">
-       <widget class="QLabel" name="label_66">
-        <property name="text">
-         <string>Z mNGF</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QLabel" name="label_zgps">
-        <property name="text">
-         <string>/</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="3">
-       <widget class="QLabel" name="label_hautperche">
-        <property name="text">
-         <string>/</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="2">
-       <widget class="QLabel" name="label_70">
-        <property name="text">
-         <string>Rod height</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="5">
-       <widget class="QLabel" name="label_zwgs84">
-        <property name="text">
-         <string>/</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="4">
-       <widget class="QLabel" name="label_63">
-        <property name="text">
-         <string>Zwgs84</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLabel" name="label_X">
-        <property name="text">
-         <string>/</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_69">
-        <property name="text">
-         <string>X</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="7">
-       <widget class="QLabel" name="label_raf09">
-        <property name="text">
-         <string>/</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0" colspan="8">
-       <widget class="Line" name="line">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
    </item>
   </layout>
  </widget>

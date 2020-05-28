@@ -923,38 +923,11 @@ class FormToolUtils(QtCore.QObject):
         self.formtoolwidget.mainifacewidget.qgiscanvas.createorresetRubberband(layergeomtype)
         self.formtoolwidget.tempgeometry = None
         layer = self.formtoolwidget.mainifacewidget.qgiscanvas.layers[self.formtoolwidget.DBASETABLENAME]['layerqgis']
-        layer.repaintRequested.emit()
         layer.dataProvider().forceReload()
+        layer.repaintRequested.emit()
+        
         # self.mainifacewidget.qgiscanvas.canvas.refresh()
 
-    """
-    def createNewSubFeature(self, subwdg, savedfeaturepk):
-        if self.formtoolwidget.currentFeaturePK is None :  #very new equip, not newversion
-            dbase = self.formtoolwidget.dbase
-            subwdg.toolbarNew()
-
-            if 'geom' in dbase.dbasetables[subwdg.DBASETABLENAME].keys():
-                geomtext = dbase.getValuesFromPk(self.formtoolwidget.DBASETABLENAME + '_qgis',
-                                                'ST_AsText(geom)',
-                                                savedfeaturepk)
-                qgsgeom = qgis.core.QgsGeometry.fromWkt(geomtext)
-
-                if (dbase.dbasetables[self.formtoolwidget.DBASETABLENAME]['geom'] !=  
-                         dbase.dbasetables[subwdg.DBASETABLENAME]['geom']):
-                    selfgeomtype = dbase.dbasetables[self.formtoolwidget.DBASETABLENAME]['geom'].lower()
-                    subwdggeomtype = dbase.dbasetables[subwdg.DBASETABLENAME]['geom'].lower()
-
-                    if selfgeomtype == 'point' and subwdggeomtype == 'linestring':
-                        qgsgeompoint = qgis.core.QgsGeometry.fromWkt(geomtext).asPoint()
-                        qgsgeomforsubwdg = [qgsgeompoint,qgsgeompoint]
-                        subwdg.setTempGeometry(qgsgeomforsubwdg)
-                else:
-                    subwdg.tempgeometry = qgsgeom
-
-            subwdg.parentWidget.currentFeaturePK = savedfeaturepk
-            subwdg.toolbarSave()
-            subwdg.parentWidget.currentFeaturePK = None
-    """
 
 
     def ___________________actionsOnDeletingFeature(self):

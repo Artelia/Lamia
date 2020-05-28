@@ -41,16 +41,15 @@ class DBaseViewer():
 
 
     def run(self):
-        
 
         if True :
-            SLFILE = os.path.join(os.path.dirname(__file__), '..','test','datas','lamia_assainissement','test01.sqlite')
-            SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_urbandrainage_Lamia\test01.sqlite"
+            # SLFILE = os.path.join(os.path.dirname(__file__), '..','test','datas','lamia_assainissement','test01.sqlite')
+            # SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_urbandrainage_Lamia\test01.sqlite"
             # SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_waterdistribution_Lamia\test01.sqlite"
             # SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_constructionsite_Lamia\test01.sqlite"
             # SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_constructionsite_Orange\test01.sqlite"
             #SLFILE = r"C:\Users\Public\Documents\lamia\test01\test01.sqlite"
-            # SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue\test01.sqlite"
+            SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue\test01.sqlite"
             # SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_assainissement\test01.sqlite"
             self._loadLocale()
             self._createWin()
@@ -83,11 +82,11 @@ class DBaseViewer():
         # logging.getLogger("Lamia_unittest").debug('Extent : %s', extent)
         self.wind.qgiscanvas.canvas.setExtent(extent)
 
-        self.wind.setVisualMode(visualmode=1)
+        self.wind.setVisualMode(visualmode=4)
         # self.wind.dbase.printsql = True
 
         # display good widget
-        if True:
+        if False:
             if False:
                 self.wind.setVisualMode(visualmode=4)
                 # print(self.wind.toolwidgets['toolpostpro'].keys())
@@ -105,7 +104,7 @@ class DBaseViewer():
         exporterreport = ReportCore(self.wind.dbase,
                                     messageinstance=self.wind.connector)
 
-        destfile = os.path.join(os.path.dirname(__file__), 'testreport.pdf')
+        destfile = os.path.join(os.path.dirname(__file__),'testoutput', 'testreport.pdf')
         confname = 'testreport'
         exporterreport.runReport(destinationfile=destfile,
                                 reportconffilename=confname,
@@ -185,10 +184,15 @@ def exitQGis():
     qgis.core.QgsApplication.exitQgis()
 
 def main():
+    # os.environ["QT_LOGGING_RULES"] = 'qt.svg.debug=false;qt.svg.warning=false'
     app = initQGis()
     logging.basicConfig(format='%(asctime)s :: %(levelname)s :: %(module)s :: %(funcName)s :: %(message)s',
                         datefmt="%H:%M:%S")
     logging.getLogger( "Lamia_unittest" ).setLevel( logging.DEBUG )
+
+    # os.environ["QT_LOGGING_RULES"] = 'qt.svg.debug=false;qt.svg.warning=false'
+    # print(type(os.environ["QT_LOGGING_RULES"]))
+    # sys.exit()
 
     #unittest.main()
     dbaseviewer = DBaseViewer()

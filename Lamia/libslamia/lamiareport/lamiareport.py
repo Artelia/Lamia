@@ -32,10 +32,13 @@ from qgis.PyQt.QtPrintSupport import QPrinter
 
 from ..lamianetworkx.lamianetworkx import NetWorkCore
 from Lamia.iface.qgscanvas.ifaceqgiscanvas import QgisCanvas
+from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
+from Lamia.iface.qgsconnector.ifaceqgisconnector import QgisConnector
 
 class ReportCore():
 
     POSTPROTOOLNAME = 'reporttools'
+    LAUNCHINQTHREAD = True
 
     def __init__(self, dbaseparser,messageinstance=None):
         #super(ExportShapefileTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil, parentwidget, parent=parent)
@@ -43,10 +46,12 @@ class ReportCore():
         self.messageinstance = messageinstance
         self.tooldir = os.path.join(os.path.dirname(__file__), self.dbase.worktype.lower())
 
+        # self.tasks = []
+
         self.confdataplugin = os.path.join(os.path.dirname(__file__), self.dbase.worktype.lower())
         self.confdataproject = os.path.join(self.dbase.dbaseressourcesdirectory, 'config', self.POSTPROTOOLNAME)
 
-
+        self.printingthread = printingThread(self)
 
 
     def runReport(self, destinationfile, reportconffilename, pkzonegeos=[],pklist=None):
@@ -55,18 +60,57 @@ class ReportCore():
         else:   #just filename is given in exportconffilepath
             tabletypepath = os.path.join(self.tooldir, reportconffilename + '.txt')
 
-        self.impressionpdfworker = printPDFBaseWorker(reportcore=self,
-                                                        #windowdialog=self.windowdialog,
-                                                        parentprintPDFworker=None,
-                                                        reportconffilename=reportconffilename,
-                                                        #confData=self.confData,
-                                                        pdffile=destinationfile,
-                                                        #reporttype=reporttype,
-                                                        #templatedir=createfilesdir ,
-                                                        pklist=pklist,
-                                                        pkzonegeolist=pkzonegeos)
+        self.printingthread.launchThread(reportcore=self,
+                                        #windowdialog=self.windowdialog,
+                                        parentprintPDFworker=None,
+                                        reportconffilename=reportconffilename,
+                                        #confData=self.confData,
+                                        pdffile=destinationfile,
+                                        #reporttype=reporttype,
+                                        #templatedir=createfilesdir ,
+                                        pklist=pklist,
+                                        pkzonegeolist=pkzonegeos)
+        """
+        if self.LAUNCHINQTHREAD:
+            self.printingthread.launchThread(reportcore=self,
+                                                            #windowdialog=self.windowdialog,
+                                                            parentprintPDFworker=None,
+                                                            reportconffilename=reportconffilename,
+                                                            #confData=self.confData,
+                                                            pdffile=destinationfile,
+                                                            #reporttype=reporttype,
+                                                            #templatedir=createfilesdir ,
+                                                            pklist=pklist,
+                                                            pkzonegeolist=pkzonegeos)
 
-        self.impressionpdfworker.work()
+
+            # self.tasks.append( printingThread(reportcore=self,
+            #                                     #windowdialog=self.windowdialog,
+            #                                     parentprintPDFworker=None,
+            #                                     reportconffilename=reportconffilename,
+            #                                     #confData=self.confData,
+            #                                     pdffile=destinationfile,
+            #                                     #reporttype=reporttype,
+            #                                     #templatedir=createfilesdir ,
+            #                                     pklist=pklist,
+            #                                     pkzonegeolist=pkzonegeos)
+            # )
+
+        else:
+            self.impressionpdfworker = printPDFBaseWorker(reportcore=self,
+                                                            #windowdialog=self.windowdialog,
+                                                            parentprintPDFworker=None,
+                                                            reportconffilename=reportconffilename,
+                                                            #confData=self.confData,
+                                                            pdffile=destinationfile,
+                                                            #reporttype=reporttype,
+                                                            #templatedir=createfilesdir ,
+                                                            pklist=pklist,
+                                                            pkzonegeolist=pkzonegeos)
+
+            self.impressionpdfworker.work()
+        """
+
 
 
 
@@ -161,7 +205,98 @@ class ReportCore():
 
 
 
-class printPDFBaseWorker(object):
+class printingThread(QtCore.QObject):
+
+    finished = QtCore.pyqtSignal()
+
+    def __init__(self, reportcore):
+        QtCore.QObject.__init__(self)
+        self.reportcore = reportcore
+        self.printthread = QtCore.QThread()
+        self.reportthreaded = self.reportcore.LAUNCHINQTHREAD
+
+    def launchThread(self, **kwargs):
+
+        if self.reportthreaded  and not self.printthread.isRunning() :
+
+            self.impressionpdfworker = printPDFBaseWorker(**kwargs)
+            # self.printthread = QtCore.QThread()
+            self.impressionpdfworker.moveToThread(self.printthread)
+            self.printthread.started.connect(self.impressionpdfworker.work)
+
+            self.impressionpdfworker.initprogressbar.connect(self.reportcore.messageinstance.createProgressBar)
+            self.impressionpdfworker.updateprogressbar.connect(self.reportcore.messageinstance.updateProgressBar)
+            self.impressionpdfworker.closeprogressbar.connect(self.reportcore.messageinstance.closeProgressBar)
+            self.impressionpdfworker.errormessage.connect(self.reportcore.messageinstance.showErrorMessage)
+            self.impressionpdfworker.finished.connect(self.finished)
+
+            self.printthread.start()
+
+        elif not self.reportthreaded :
+            self.impressionpdfworker = printPDFBaseWorker(**kwargs)
+            self.impressionpdfworker.initprogressbar.connect(self.reportcore.messageinstance.createProgressBar)
+            self.impressionpdfworker.updateprogressbar.connect(self.reportcore.messageinstance.updateProgressBar)
+            self.impressionpdfworker.closeprogressbar.connect(self.reportcore.messageinstance.closeProgressBar)
+            self.impressionpdfworker.errormessage.connect(self.reportcore.messageinstance.showErrorMessage)
+
+            self.impressionpdfworker.work()
+
+            self.reportcore.messageinstance.showNormalMessage('Report ready !')
+
+
+
+
+
+    def finished(self):
+        self.impressionpdfworker.deleteLater()
+        self.printthread.quit()
+        self.printthread.wait()
+        self.printthread.deleteLater()
+
+        self.printthread = QtCore.QThread()     #prepare new thread for next print
+
+        self.reportcore.messageinstance.showNormalMessage('Report ready !')
+
+
+
+
+
+
+class printingTask(qgis.core.QgsTask ):
+
+    emittxt = QtCore.pyqtSignal(str)
+
+    def __init__(self, 
+                description, 
+                **kwargs ):
+        qgis.core.QgsTask.__init__(self, description )
+        # self.time= time
+        # self.kwargs = kwargs
+        print(kwargs)
+        self.impressionpdfworker = printPDFBaseWorker(**kwargs)
+        self.emittxt.connect(self.show)
+
+    def run(self):
+        # logging.getLogger("Lamia_unittest").debug('run')
+        # self.emittxt.emit('run')
+        self.impressionpdfworker.work()
+        # self.completed()
+        return True
+
+    def show(self,txt):
+        logging.getLogger("Lamia_unittest").debug(txt)
+
+    
+
+
+# class printPDFBaseWorker(object):
+class printPDFBaseWorker(QtCore.QObject):
+
+    finished = QtCore.pyqtSignal()
+    initprogressbar = QtCore.pyqtSignal(str,int)
+    updateprogressbar = QtCore.pyqtSignal(int)
+    closeprogressbar = QtCore.pyqtSignal()
+    errormessage = QtCore.pyqtSignal(str)
 
     """
     def __init__(self,
@@ -188,6 +323,12 @@ class printPDFBaseWorker(object):
                 pklist=None,
                 pkzonegeolist=[]):
 
+        # if parentprintPDFworker:
+        #     QtCore.QObject.__init__(self, parent=parentprintPDFworker)
+        # else:
+        QtCore.QObject.__init__(self)
+
+        self.enablemessages = False
         self.reportcore = reportcore
         self.parentprintPDFworker = parentprintPDFworker
 
@@ -198,28 +339,41 @@ class printPDFBaseWorker(object):
         self.pageheightpx = None             #this print page height (without parent print)
 
 
-
         if self.parentprintPDFworker is None:
             self.dbase = self.reportcore.dbase
-            self.messageinstance = self.reportcore.messageinstance
+            # self.dbase = DBaseParserFactory(self.reportcore.dbase.TYPE,self.reportcore.messageinstance).getDbaseParser()
+            # self.dbase.loadDBase(**self.reportcore.dbase.connectconf)
+            # self.dbase.createDBase(crs=crsnumber, 
+            #                         worktype=worktype, 
+            #                         dbaseressourcesdirectory=resdir, 
+            #                         variante=vartype,
+            #                         slfile=spatialitefile)
+            # self.loadDBase(dbtype='Spatialite',
+            #                 slfile=spatialitefile)
+
+
+            # self.messageinstance = self.reportcore.messageinstance
     
             self.pklist = pklist
             self.reportconffilename = reportconffilename
             self.pdffile = pdffile
             self.pkzonegeolist = pkzonegeolist
-            self.qgiscanvas = QgisCanvas()
-            self.qgiscanvas.createLayers(self.dbase)
-            self.qgiscanvas.applyStyle(self.dbase.worktype, '0_defaut')
-            self.networkcore = NetWorkCore(self.dbase, self.messageinstance, self.qgiscanvas)
-            self.project = qgis.core.QgsProject.instance()
+            # self.qgiscanvas = QgisCanvas()
+            # self.qgiscanvas.createLayers(self.dbase)
+            # if self.dbase.base3version :
+            #     self.qgiscanvas.applyStyle(self.dbase.worktype, '0_default')
+            # else:
+            #     self.qgiscanvas.applyStyle(self.dbase.worktype, '0_Defaut')
+            # self.networkcore = NetWorkCore(self.dbase, self.messageinstance, self.qgiscanvas)
+            # self.project = qgis.core.QgsProject.instance()
 
-            self.printer = QPrinter()
-            self.painter = QtGui.QPainter()
-            #self.confData = confData
-            self.confData, self.templatedir = self.createconfData(self.reportconffilename)
+            # self.printer = QPrinter()
+            # self.painter = QtGui.QPainter()
+            # #self.confData = confData
+            # self.confData, self.templatedir = self.createconfData(self.reportconffilename)
 
-            strtoexec = '..{}.lamiareportworktypefunc'.format(self.dbase.worktype.lower())
-            self.addonimagesmodule = importlib.import_module(strtoexec, package=self.__module__)
+            # strtoexec = '..{}.lamiareportworktypefunc'.format(self.dbase.worktype.lower())
+            # self.addonimagesmodule = importlib.import_module(strtoexec, package=self.__module__)
 
             
         else:
@@ -276,7 +430,7 @@ class printPDFBaseWorker(object):
 
 
 
-    def work(self):
+    def work(self ):
         """
         Méthode principale - génère le pdf
         :return:
@@ -284,7 +438,52 @@ class printPDFBaseWorker(object):
         if qgis.utils.iface is not None:
             debug = False
         else:
-            debug = True  # True False
+            debug = False  # True False
+
+        self.initprogressbar.emit('Report preparation ...',0)
+
+        
+
+        if self.parentprintPDFworker is None:   #create specific dbase for specific printing thread
+            # self.project = qgis.core.QgsProject.instance()
+            self.project = qgis.core.QgsProject()
+
+            # self.messageinstance = QgisConnector()
+            self.messageinstance = self.reportcore.messageinstance
+            self.dbase = DBaseParserFactory(self.reportcore.dbase.TYPE).getDbaseParser()
+            self.dbase.loadDBase(**self.reportcore.dbase.connectconf)
+
+            self.canvas = qgis.gui.QgsMapCanvas()
+            self.canvas.enableAntiAliasing(True)
+            dbaseqgiscrs = qgis.core.QgsCoordinateReferenceSystem()
+            dbaseqgiscrs.createFromString('EPSG:' + str(self.dbase.crsnumber))
+            # canvascrs = qgis.core.QgsCoordinateReferenceSystem()
+            # canvascrs.createFromString('EPSG:2154')
+            self.canvas.setDestinationCrs(dbaseqgiscrs)
+
+            self.qgiscanvas = QgisCanvas(canvas = self.canvas)
+            self.qgiscanvas.createLayers(self.dbase)
+            if self.dbase.base3version :
+                self.qgiscanvas.applyStyle(self.dbase.worktype, '0_default')
+            else:
+                self.qgiscanvas.applyStyle(self.dbase.worktype, '0_Defaut')
+            # self.networkcore = NetWorkCore(self.dbase, self.messageinstance, self.qgiscanvas)
+
+            self.networkcore = NetWorkCore(self.dbase, self.messageinstance, self.qgiscanvas)
+
+            self.printer = QPrinter()
+            self.painter = QtGui.QPainter()
+            #self.confData = confData
+            self.confData, self.templatedir = self.createconfData(self.reportconffilename)
+
+            strtoexec = '..{}.lamiareportworktypefunc'.format(self.dbase.worktype.lower())
+            self.addonimagesmodule = importlib.import_module(strtoexec, package=self.__module__)
+
+        else:
+            self.messageinstance = self.parentprintPDFworker.messageinstance
+            self.dbase = self.parentprintPDFworker.dbase
+            self.qgiscanvas = self.parentprintPDFworker.qgiscanvas
+            self.networkcore = self.parentprintPDFworker.networkcore
 
         self.printtype = 'atlas'   #report atlas
         if debug: logging.getLogger("Lamia_unittest").debug('started')
@@ -334,7 +533,7 @@ class printPDFBaseWorker(object):
 
         # ********************* ordering pks for pdf *****************************
         if self.pklist is None :
-            pksforreportdict = self.getOrderedIdsForAtlas(coveragelayer)
+            pksforreportdict = self.getOrderedPksForAtlas(coveragelayer)
         else:
             #idsforreportdict = self.idlist
             pksforreportdict = self.pklist
@@ -343,11 +542,14 @@ class printPDFBaseWorker(object):
 
 
         # ********************* progress bar *****************************
+        self.closeprogressbar.emit()
         lenpks = 0
         for zonegeopk, pks in pksforreportdict.items():
             lenpks += len(pks)
         #progress = self.messageinstance.initProgressBar(pksforreportdict)
-        self.messageinstance.createProgressBar(inittext="Generation du pdf...", maxvalue=lenpks)
+        # if self.enablemessages: self.messageinstance.createProgressBar(inittext="Generation du pdf...", maxvalue=lenpks)
+        self.initprogressbar.emit("Report printing...",lenpks)
+        # print('Generation du pdf')
 
         if self.printtype == 'atlas':
             self.atlasPrinting(mainprinter,
@@ -361,6 +563,9 @@ class printPDFBaseWorker(object):
         for rastlayer in layertoremove:
             self.project.removeMapLayer(rastlayer)
 
+        if self.parentprintPDFworker is None:
+            self.closeprogressbar.emit()
+            self.finished.emit()
 
 
     def reportPrinting(self, mainprinter):
@@ -388,11 +593,11 @@ class printPDFBaseWorker(object):
 
 
                 while mainprinter.next():
-                    print(mainprinter.layout())
+                    # print(mainprinter.layout())
                     exporter = qgis.core.QgsLayoutExporter(mainprinter.layout())
                     exporter.renderPage(self.painter, numpage)
                     exporter.print(self.printer, printsettings )
-                    print(mainprinter.layout().reportContext().feature().attributes())
+                    # print(mainprinter.layout().reportContext().feature().attributes())
 
                     numpage += 1
 
@@ -412,9 +617,9 @@ class printPDFBaseWorker(object):
             debugscale = False
             stop10 = None
         else:
-            debug = True  # True False
+            debug = False  # True False
             debugscale = False
-            stop10 = 4
+            stop10 = None
 
        # *********************************************************************
         # ********************* begin printing  *****************************
@@ -460,7 +665,9 @@ class printPDFBaseWorker(object):
                 compt += 1
                 if self.parentprintPDFworker is None:
                     #self.setLoadingProgressBar(progress, compt)
-                    self.messageinstance.updateProgressBar(compt)
+                    # if self.enablemessages: self.messageinstance.updateProgressBar(compt)
+                    self.updateprogressbar.emit(compt)
+                    # print('Generation du pdf', compt)
 
                 self.currentatlasfeat = coveragelayer.getFeature(featpk)
 
@@ -550,7 +757,7 @@ class printPDFBaseWorker(object):
         if self.parentprintPDFworker is None:
             self.painter.end()
 
-        self.messageinstance.closeProgressBar()
+        # if self.enablemessages: self.messageinstance.closeProgressBar()
         # return
 
         # for rastlayer in layertoremove:
@@ -582,7 +789,8 @@ class printPDFBaseWorker(object):
             if linkcolumnname.split('_')[0] in ['lpk', 'lid']:
                 linkcolumnname = '_'.join(linkcolumnname[1:].split('_')[0:2])
             else:
-                self.messageinstance.showErrorMessage('Erreur sur la champs de liaison childprint')
+                # if self.enablemessages: self.messageinstance.showErrorMessage('Erreur sur la champs de liaison childprint')
+                self.errormessage.emit('Erreur sur la champs de liaison childprint')
                 return False
             
             sqlwhere += ' = ' + str(self.parentprintPDFworker.currentatlasfeat[linkcolumnname])
@@ -641,8 +849,12 @@ class printPDFBaseWorker(object):
 
             else:
                 typeprocess = self.atlasconfData['images'][imageitemname] 
-                exec('imageresult = self.addonimagesmodule.' +typeprocess + '(self)', locals(), globals() )
-                imageresult = globals()['imageresult']
+                if hasattr(self.addonimagesmodule, typeprocess):
+                    func = getattr(self.addonimagesmodule,typeprocess)
+                    imageresult = func(self)
+
+                # exec('imageresult = self.addonimagesmodule.' +typeprocess + '(self)', locals(), globals() )
+                # imageresult = globals()['imageresult']
 
             if imageitem is not None:
                 if isinstance(imageitem, qgis.core.QgsLayoutItemPicture):
@@ -751,37 +963,18 @@ class printPDFBaseWorker(object):
                         finaltxt.append(unicode(val))
 
                 elif 'lamiasql.' in temptxt:
-                    if False:
-                        sql = ' WITH tempquery AS ('
-                        sql += self.atlasconfData['atlaslayersql']
-
-                        sql += ' AND '
-                        sql += self.dbase.dateVersionConstraintSQL()
-                        if self.parentprintPDFworker is not None:
-                            sql += ' AND ' + self.parentprintPDFworker.atlasconfData['childprint']['linkcolumn']
-                            # sql += ' = ' + str(self.parentprintPDFworker.currentid)
-                            # sql += ' = ' + str(self.parentprintPDFworker.currentid)
-                            linktablename = self.parentprintPDFworker.atlasconfData['childprint']['linkcolumn'].split('_')[-1]
-                            sql += ' = ' + str(self.parentprintPDFworker.currentatlasfeat['id_' + linktablename])
-                            sql += ' ' + self.parentprintPDFworker.atlasconfData['childprint']['optionsql']
-                        sql += ') '
-                        sql += temptxt[9:]
-                        sql += ' AND ' + self.atlasconfData['atlaslayerid'] + ' = ' + str(atlasfeatpk)
+                    tempsplittedquery = self.dbase.utils.splitSQLSelectFromWhereOrderby(self.atlasconfData['atlaslayersql'])
+                    #tempsplittedquery['SELECT'] = table + '.' + field
+                    tempsplittedquery['SELECT'] = '(' + temptxt[9:] + ')'
 
 
-                    if True:
-                        tempsplittedquery = self.dbase.utils.splitSQLSelectFromWhereOrderby(self.atlasconfData['atlaslayersql'])
-                        #tempsplittedquery['SELECT'] = table + '.' + field
-                        tempsplittedquery['SELECT'] = '(' + temptxt[9:] + ')'
-
-
-                        if 'WHERE' in tempsplittedquery.keys():
-                            tempsplittedquery['WHERE'] += ' AND ' + self.atlasconfData['atlaslayerid'] + ' = ' + str(atlasfeatpk)
-                        else:
-                            tempsplittedquery['WHERE'] =  self.atlasconfData['atlaslayerid'] + ' = ' + str( atlasfeatpk)
-                        #tempsplittedquery['FROM'] = table
-                        sql = self.dbase.utils.rebuildSplittedQuery(tempsplittedquery)
-                        sql = self.dbase.updateQueryTableNow(sql)
+                    if 'WHERE' in tempsplittedquery.keys():
+                        tempsplittedquery['WHERE'] += ' AND ' + self.atlasconfData['atlaslayerid'] + ' = ' + str(atlasfeatpk)
+                    else:
+                        tempsplittedquery['WHERE'] =  self.atlasconfData['atlaslayerid'] + ' = ' + str( atlasfeatpk)
+                    #tempsplittedquery['FROM'] = table
+                    sql = self.dbase.utils.rebuildSplittedQuery(tempsplittedquery)
+                    sql = self.dbase.updateQueryTableNow(sql)
 
                     if debug: self.logger.debug('lamiasql %s', str(sql))
 
@@ -888,7 +1081,8 @@ class printPDFBaseWorker(object):
         stylepath = os.path.join(self.templatedir, self.atlasconfData['atlaslayerstyle'])
         coveragelayer.loadNamedStyle(stylepath)
         # add coveragelayer to QgsProject
-        qgis.core.QgsProject.instance().addMapLayer(coveragelayer, False)
+        # qgis.core.QgsProject.instance().addMapLayer(coveragelayer, False)
+        self.project.addMapLayer(coveragelayer, False)
         # set coveragelayer to atlas
         atlas.setCoverageLayer(coveragelayer)
         # set scale mode
@@ -919,9 +1113,9 @@ class printPDFBaseWorker(object):
         coveragelayer.loadNamedStyle(stylepath)
 
 
-        print(newComposition.childSections())
+        # print(newComposition.childSections())
         for section in newComposition.childSections():
-            print(section.type())
+            # print(section.type())
             if section.type() == 'SectionFieldGroup':
                 section.setLayer(coveragelayer)
                 section.setField(self.atlasconfData['atlaslayerid'])
@@ -1070,7 +1264,7 @@ class printPDFBaseWorker(object):
 
         return dictfields
 
-    def getOrderedIdsForAtlas(self,coveragelayer):
+    def getOrderedPksForAtlas(self,coveragelayer):
         """
         Renvoi un dictionnaire avec zoneeo_id camme clé et la list des ids du coveragelayer ordonnée comme valeur
         est ensuite lu et itéré lors de la generation de l'atlas
@@ -1080,26 +1274,27 @@ class printPDFBaseWorker(object):
         debug = False
 
         #orderedids = OrderedDict()
-        orderedids = {}
+        orderedpks = {}
         if (self.parentprintPDFworker is None and self.atlasconfData['spatial']
                 and 'ordering' in self.atlasconfData.keys() and self.atlasconfData['ordering'] != ''):
-            orderedids = self.orderIdsAlongPath(coveragelayer,self.pkzonegeolist)
+            orderedpks = self.orderPksAlongPath(coveragelayer,self.pkzonegeolist)
         else:
-            orderedids[0] = [feat[self.atlasconfData['atlaslayerid']] for feat in coveragelayer.getFeatures()]
+            # orderedpks[0] = [feat[self.atlasconfData['atlaslayerid']] for feat in coveragelayer.getFeatures()]
+            orderedpks[0] = [feat.id() for feat in coveragelayer.getFeatures()]
 
-        if len(orderedids) == 0:
-            orderedids[0] = [feat.id() for feat in coveragelayer.getFeatures()]
+        if len(orderedpks) == 0:
+            orderedpks[0] = [feat.id() for feat in coveragelayer.getFeatures()]
 
-        if debug: self.logger.debug('orderedids %s', str(orderedids))
+        if debug: self.logger.debug('orderedpks %s', str(orderedpks))
 
-        if orderedids is None or len(orderedids) == 0:
+        if orderedpks is None or len(orderedpks) == 0:
             return
 
-        return orderedids
+        return orderedpks
 
-    def orderIdsAlongPath(self, coveragelayer,zonegeopks=[]):   
+    def orderPksAlongPath(self, coveragelayer,zonegeopks=[]):   
 
-        debug = False
+        debug = True
 
         orderedpks = {}
 
@@ -1119,7 +1314,7 @@ class printPDFBaseWorker(object):
             query = self.dbase.query(sql)
             zonegeogeom = [row[0] for row in query][0]
             sql = "SELECT Infralineaire_now.pk_infralineaire FROM Infralineaire_now"\
-                  " WHERE ST_WITHIN(ST_MakeValid(Infralineaire_now.geom),ST_GeomFromText('{}',{}))".format(zonegeogeom,
+                  " WHERE ST_WITHIN(ST_StartPoint(Infralineaire_now.geom),ST_GeomFromText('{}',{}))".format(zonegeogeom,
                                                                                                             self.dbase.crsnumber )
             sql = self.dbase.sqlNow(sql)
             query = self.dbase.query(sql)
@@ -1141,7 +1336,10 @@ class printPDFBaseWorker(object):
                 for subgraph in subgraphs:
                     extremities = self.networkcore.getExtremityNodeIndexFromLinearGraph(subgraph)
                     if extremities is None:
-                        self.messageinstance.showErrorMessage('attention presence d un noeud - non traite')
+                        # if self.enablemessages: self.messageinstance.showErrorMessage('attention presence d un noeud - non traite')
+                        self.errormessage.emit('attention presence d un noeud - non traite')
+                        orderedpks[zonegeopk] = dictedgesordered[zonegeopk]
+                        continue
                     
                     if debug: self.logger.debug('zonegeo %s extremities  %s ',zonegeopk, str(extremities))
 
@@ -1165,7 +1363,7 @@ class printPDFBaseWorker(object):
                         res = [int(pk) for pk in datas['pk']]
                         orderedpks[zonegeopk] += res
 
-        
+        if debug: self.logger.debug('orderedpks %s', str(orderedpks))
         return orderedpks
 
 
@@ -1230,7 +1428,7 @@ class printPDFBaseWorker(object):
                     minscale = self.atlasconfData['atlasdrivemap'][atlasmapitem]['minscale']
 
             if newComposition.itemById(mapname).scale() < minscale * 5.0:
-                newComposition.itemById(mapname).setNewScale(minscale * 5.0)
+                newComposition.itemById(mapname).setScale(minscale * 5.0)
 
     def printAtlasPage(self,newComposition,exporter, indexpagetotal, indexpage, idecalage):
         """

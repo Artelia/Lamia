@@ -170,8 +170,6 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         self.splitter_2.setSizes([80, 200])
         if debug: logging.getLogger('Lamia').debug('end')
 
-        print(self.__class__.__name__)
-
 
 
     # ***********************************************************
@@ -242,7 +240,8 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
                                         dbaseressourcesdirectory=resdir, 
                                         variante=vartype,
                                         slfile=spatialitefile)
-                self.dbase.loadDBase(slfile=spatialitefile)
+                self.loadDBase(dbtype='Spatialite',
+                                slfile=spatialitefile)
 
 
         elif dbtype == 'postgis':
@@ -277,12 +276,15 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
                                             schema=schema, 
                                             user=user,  
                                             password=password)
-                    self.dbase.loadDBase(host=adresse, 
+                    self.loadDBase(dbtype='Postgis', 
+                                        host=adresse, 
                                             port=port, 
                                             dbname=nom, 
                                             schema=schema, 
                                             user=user,  
                                             password=password)
+
+
 
     def loadDBase(self, **kwargs):
         """[summary]
@@ -312,16 +314,24 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
 
     def reinitWidgetbeforeloading(self):
         # old :self.dbase.visualmode
+        
+
         self.interfacemode = None
         
         self.wdgclasses={}  #dict containing all tools classes (prepro / postpro)
         self.toolwidgets={} #dict containing all tools widgets (prepro / postpro)
         self.toolwidgets['desktop_loaded'] = False      #used to store desktoptools are arlready loaded 
+
+        self.MaintreeWidget.setStyleSheet('')
         try:
             self.MaintreeWidget.disconnect()
         except:
             pass
         self.MaintreeWidget.clear()
+        self.ElemtreeWidget.clear()
+
+        if self.currenttoolwidget:
+            self.currenttoolwidget.setParent(None)
         
         #behaviour var
         self.currenttoolwidget = None
@@ -542,13 +552,12 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         reset = kwargs.get('reset', None)
         visualmode = kwargs.get('visualmode', None)
 
-        if isinstance(self.sender(), QAction):
+        if visualmode is not None:
+            actionname = visualmodedict[visualmode]
+        elif isinstance(self.sender(), QAction):
             actionname = self.sender().objectName()
         else:
-            if visualmode is not None:
-                actionname = visualmodedict[visualmode]
-            else:
-                return
+            return
         
         qactionchild = self.menuMode.actions()
         for qact in qactionchild:
@@ -585,7 +594,7 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
             self.toolbarsvisibility[x.objectName()] = x.isVisible()
             if x.objectName() not in ['Lamia','mFileToolBar','mSnappingToolBar',
                                       'lamiatoolBarFormCreation', 'lamiatoolBarFormGeom',
-                                      'lamiatoolbareditlayer']:
+                                      'lamiatoolbareditlayer','lamiatoolBartools' ]:
                 x.setVisible(False)
 
     def _reloadQgisToolbar(self):
@@ -1005,6 +1014,10 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
 
         #others
         self.pushButton_selectfeat.clicked.connect(self.selectFeature)
+
+        #on exit qgis : restore toolbars
+        if qgis.utils.iface is not None:
+            qgis.utils.iface.actionExit().triggered.connect(self._reloadQgisToolbar)
 
 
     def selectFeature(self):

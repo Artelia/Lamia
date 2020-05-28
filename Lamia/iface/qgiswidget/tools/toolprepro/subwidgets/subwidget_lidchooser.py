@@ -40,7 +40,8 @@ class LidChooserWidget(AbstractSubWidget):
                 searchdbase='', 
                 searchfieldtoshow=[],
                 parentlidfield=None):
-        super(LidChooserWidget, self).__init__(parent=parentwdg,parentframe=parentframe)
+        super(LidChooserWidget, self).__init__(parentwdg=parentwdg,
+                                                parentframe=parentframe)
 
         self.parentwdg=parentwdg
         self.parentlidfield=parentlidfield

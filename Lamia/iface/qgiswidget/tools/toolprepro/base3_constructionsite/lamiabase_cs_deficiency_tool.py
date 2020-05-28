@@ -243,46 +243,24 @@ class BaseConstructionsiteDeficiencyTool(BaseDeficiencyTool):
                 reporttype = 'procesverbalmiseadisposition'
 
             elif res[0][0][0:2] == 'NC':
-                sql = "SELECT id_observation FROM observation_now WHERE observation_now.observationcategory = 'NCB'"
-                sql += " AND observation_now.lid_deficiency = " + str(currentid)
-                sql = self.dbase.updateQueryTableNow(sql)
-                res = self.dbase.query(sql)
+                # sql = "SELECT id_observation FROM observation_now WHERE observation_now.observationcategory = 'NCB'"
+                # sql += " AND observation_now.lid_deficiency = " + str(currentid)
+                # sql = self.dbase.updateQueryTableNow(sql)
+                # res = self.dbase.query(sql)
                 if self.dbase.variante in [None, 'Lamia']:
-                    if res is not None and len(res) > 0 and not self.dbase.utils.isAttributeNull(res[0][0]):
-                        # reporttype = 'TRAMnonconformite'
-                        reporttype = 'TRAMnonconformitephaseA'
-                    else:
-                        reporttype = 'TRAMnonconformitephaseA'
+                    reporttype = 'TRAMnonconformitephaseA'
+
+                    # if res is not None and len(res) > 0 and not self.dbase.utils.isAttributeNull(res[0][0]):
+                    #     # reporttype = 'TRAMnonconformite'
+                    #     reporttype = 'TRAMnonconformitephaseA'
+                    # else:
+                    #     reporttype = 'TRAMnonconformitephaseA'
                 elif self.dbase.variante in ['Orange']:
-                    print('*********ORANGEnonconformitephaseA')
+                    # print('*********ORANGEnonconformitephaseA')
                     reporttype = 'ORANGEnonconformitephaseA'
 
         else:
             return
-
-        #load rapport tool
-        # if not self.windowdialog.desktopuiloaded:
-        #     self.windowdialog.loadUiDesktop()
-        # wdg = None
-        # for i, tool in enumerate(self.windowdialog.tools):
-        #     # print(tool.__class__.__name__)
-        #     if 'RapportTool' in tool.__class__.__name__:
-        #         wdg = self.windowdialog.tools[i]
-        #         break
-
-        # wdg.createconfData()
-        # impressionpdfworker = inspect.getmodule(wdg).printPDFBaseWorker(dbase=self.dbase,
-        #                                                                  windowdialog=self.windowdialog,
-        #                                                                  parentprintPDFworker=None,
-        #                                                                  confData=wdg.confData,
-        #                                                                  pdffile=pdffielname,
-        #                                                                  reporttype=reportype,
-        #                                                                   templatedir=wdg.confdatamain,
-        #                                                                   #idlist={0: [currentid]},
-        #                                                                  idlist={0: [self.currentFeaturePK]},
-        #                                                                 )
-
-        # impressionpdfworker.work()
 
         #run report
         self.reporttool = ReportCore(dbaseparser=self.dbase,

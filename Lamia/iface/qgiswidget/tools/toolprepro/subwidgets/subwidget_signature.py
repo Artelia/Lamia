@@ -50,7 +50,8 @@ class SignatureWidget(AbstractSubWidget):
                        datetimesig=None,
                        parentframe=None):
         
-        super(SignatureWidget, self).__init__(parent=parentwdg,parentframe=parentframe)
+        super(SignatureWidget, self).__init__(parentwdg=parentwdg,
+                                                parentframe=parentframe)
 
         self.parentwdg = parentwdg
         self.intervenantid = intervenantid
@@ -85,6 +86,7 @@ class SignatureWidget(AbstractSubWidget):
         self.pushButton_editsig.clicked.connect(self.propertieswdgCROQUIS2.editPhoto)
         #self.propertieswdgCROQUIS2.groupBox_elements.setVisible(False)
         #self.propertieswdgCROQUIS2.userwdgfield.frame_editing.setVisible(False)
+        self.parentwdg.CASCADEFEATURESELECTION = True
         self.parentwdg.dbasechildwdgfield.append(self.propertieswdgCROQUIS2)
 
         lidchooser = LidChooserWidget(parentwdg=self.parentwdg, parentlidfield=self.intervenantid,
@@ -106,7 +108,7 @@ class SignatureWidget(AbstractSubWidget):
         #     self.frame_sigedit.setEnabled(True)
 
         # create new sketch if parentcurrentFeaturePK isnone...
-        if self.parentwdg.currentFeaturePK is not None:
+        if self.parentwdg.currentFeaturePK is  None:
             self.propertieswdgCROQUIS2.selectFeature()
 
 
@@ -135,10 +137,11 @@ class SignatureWidget(AbstractSubWidget):
         # print(self.parentframe.objectName())
         # print(self.parentwdg.lamiawidgets)
         if parentfeaturepk is not None:
-            pkparent = self.parentwdg.dbase.getValuesFromPk(self.parentwdg.DBASETABLENAME,
+            signatureid = self.parentwdg.dbase.getValuesFromPk(self.parentwdg.DBASETABLENAME + '_qgis',
                                                             self.signatureid ,
                                                             parentfeaturepk)
-            if pkparent is None:    #first creation
+            print('***', 'self.signatureid',self.propertieswdgCROQUIS2.currentFeaturePK )
+            if signatureid is None:    #first creation
                 #tricky : because lid_ is parent side....
                 tempjoin = dict(self.propertieswdgCROQUIS2.PARENTJOIN)
                 self.propertieswdgCROQUIS2.PARENTJOIN = {}
@@ -151,16 +154,24 @@ class SignatureWidget(AbstractSubWidget):
                                                             'id_resource' ,
                                                             croquispk)
 
-                sql = "UPDATE observation SET " + self.signatureid + " = " + str(resourceid)
-                sql += ' WHERE pk_observation = ' + str(parentfeaturepk)
+                sql = f"UPDATE {self.parentwdg.DBASETABLENAME} SET {self.signatureid} = {resourceid} \
+                        WHERE pk_{self.parentwdg.DBASETABLENAME.lower()} = {parentfeaturepk}"
+
+                # sql = "UPDATE observation SET " + self.signatureid + " = " + str(resourceid)
+                # sql += ' WHERE pk_observation = ' + str(parentfeaturepk)
                 self.parentwdg.dbase.query(sql)
                 self.propertieswdgCROQUIS2.PARENTJOIN = tempjoin
             else:
                 self.propertieswdgCROQUIS2.toolbarSave()
 
             # date
-            sql = "UPDATE observation SET " + self.datetimesigfield + ' = '
-            sql += "'" + self.dateTimeEdit_sig.dateTime().toString('yyyy-MM-dd hh:mm:ss') + "'"
-            sql += " WHERE pk_observation = " + str(parentfeaturepk)
+            sql = f"UPDATE {self.parentwdg.DBASETABLENAME} \
+                   SET {self.datetimesigfield } = '{self.dateTimeEdit_sig.dateTime().toString('yyyy-MM-dd hh:mm:ss')}' \
+                   WHERE pk_{self.parentwdg.DBASETABLENAME.lower()} = {parentfeaturepk}"
+
+
+            # sql = "UPDATE observation SET " + self.datetimesigfield + ' = '
+            # sql += "'" + self.dateTimeEdit_sig.dateTime().toString('yyyy-MM-dd hh:mm:ss') + "'"
+            # sql += " WHERE pk_observation = " + str(parentfeaturepk)
             self.parentwdg.dbase.query(sql)
 

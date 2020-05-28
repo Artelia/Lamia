@@ -17,11 +17,16 @@ def getGraphSpec():
 
                         },
                     'SAS': {
-                            'graphnum1': 'var1',
-                            'graphnum2': 'var2',
-                            'graphnum3': 'var3',
-                            'graphnum4': 'var4',
-                            'graphnum5': 'var5',
+                            'graphnum1': 'Cadre de vie',
+                            'graphnum2': 'Investissement',
+                            'graphnum3': 'Biodiversité',
+                            'graphnum4': 'Exploitation',
+                            'graphnum5': 'Traitement',
+                            'graphnum6': 'Lutte contre les ilots de chaleur',
+                            'graphnum7': 'Récréatif',
+                            'graphnum9': 'Protection',
+                            'graphnum10': 'Facteur de charge',
+                            'graphnum11': 'Autre',
                         },
     }
     

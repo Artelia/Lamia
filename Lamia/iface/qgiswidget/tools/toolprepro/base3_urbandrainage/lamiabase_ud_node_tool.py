@@ -47,6 +47,7 @@ from .lamiabase_ud_graph_tool import BaseUrbandrainageGraphTool
 from ..subwidgets.subwidget_lidchooser import LidChooserWidget
 from ..subwidgets.subwidget_topologicnode import TopologicNodeWidget
 from ..subwidgets.subwidget_createsubfeature import CreateSubFeatureWidget
+from ..subwidgets.subwidget_gpsvalues import GpsValuesWidget
 
 
 
@@ -94,27 +95,9 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
         self.createdeficiencywdg = CreateSubFeatureWidget(self,self.propertieswdgDesordre)
         self.lamiawidgets.append(self.createdeficiencywdg)
         #* gpswidget
-        self.gpswidget = {'x': {'widget': self.toolwidgetmain.label_X,
-                                'gga': 'Xcrs'},
-                            'y': {'widget': self.toolwidgetmain.label_Y,
-                                'gga': 'Ycrs'},
-                            'zmngf': {'widget': self.toolwidgetmain.label_Z,
-                                    'gga': 'zmNGF'},
-                            'dx': {'widget': self.toolwidgetmain.label_dX,
-                                    'gst': 'xprecision'},
-                            'dy': {'widget': self.toolwidgetmain.label_dY,
-                                    'gst': 'yprecision'},
-                            'dz': {'widget': self.toolwidgetmain.label_dZ,
-                                    'gst': 'zprecision'},
-                            'zgps': {'widget': self.toolwidgetmain.label_zgps,
-                                    'gga': 'elevation'},
-                            'zwgs84': {'widget': self.toolwidgetmain.label_zwgs84,
-                                        'gga': 'deltageoid'},
-                            'raf09': {'widget': self.toolwidgetmain.label_raf09,
-                                    'gga': 'RAF09'},
-                            'hauteurperche': {'widget': self.toolwidgetmain.label_hautperche,
-                                            'gga': 'hauteurperche'}}
-
+        self.gpswidget = GpsValuesWidget(parentwdg=self,  
+                                        parentframe=self.toolwidgetmain.frame_gps)
+        self.lamiawidgets.append(self.gpswidget)
 
 
     def _initMainToolWidgetLamia(self):

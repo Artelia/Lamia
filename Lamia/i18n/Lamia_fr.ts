@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="fr" sourcelanguage="en">
+<!DOCTYPE TS><TS version="2.0" language="fr" sourcelanguage="en">
 <context>
     <name>AbstractLamiaFormTool</name>
     <message>
-        <location filename="../iface/qgiswidget/tools/lamia_abstractformtool.py" line="542"/>
+        <location filename="../iface/qgiswidget/tools/lamia_abstractformtool.py" line="545"/>
         <source>GPS not connected</source>
         <translation>GPS non connecté</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/lamia_abstractformtool.py" line="615"/>
+        <location filename="../iface/qgiswidget/tools/lamia_abstractformtool.py" line="618"/>
         <source>Delete feature (yes) or archive (no) ? </source>
         <translation>Supprimer completement l&apos;element (yes) ou l&apos;archiver (no) ?</translation>
     </message>
@@ -18,7 +17,7 @@
     <name>DBaseOfflineManager</name>
     <message>
         <location filename="../dbasemanager/dbaseofflinemanager.py" line="79"/>
-        <source>Il y a dÃ©jÃ&#xa0; une copie locale de la base... Supprimez la</source>
+        <source>Il y a d&#xc3;&#xa9;j&#xc3;&#xa0; une copie locale de la base... Supprimez la</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -133,12 +132,12 @@
 <context>
     <name>Form_base3</name>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_delivery_tool_ui_orange.ui" line="14"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_topographydata_tool_ui.ui" line="14"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_delivery_tool_ui_orange.ui" line="138"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_topography_tool_ui.ui" line="58"/>
         <source>Name</source>
         <translation>Nom</translation>
     </message>
@@ -148,7 +147,7 @@
         <translation>Adresse</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_delivery_tool_ui_orange.ui" line="51"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_actor_tool_ui.ui" line="67"/>
         <source>Society</source>
         <translation>Société</translation>
     </message>
@@ -483,7 +482,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_delivery_tool_ui_orange.ui" line="44"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_delivery_tool_ui.ui" line="41"/>
         <source>Delivery ref</source>
         <translation>Référence du marché</translation>
     </message>
@@ -563,12 +562,12 @@
         <translation type="unfinished">Propriétaire</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_delivery_tool_ui_orange.ui" line="58"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_delivery_tool_ui.ui" line="51"/>
         <source>Start date</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_delivery_tool_ui_orange.ui" line="98"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_delivery_tool_ui.ui" line="107"/>
         <source>Estimated end date</source>
         <translation type="unfinished"></translation>
     </message>
@@ -587,17 +586,17 @@
     </message>
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_deficiency_tool_ui.ui" line="62"/>
-        <source>CatÃ©gorie de Fiche</source>
+        <source>Cat&#xc3;&#xa9;gorie de Fiche</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_deficiency_tool_ui.ui" line="110"/>
-        <source>DÃ©tecteur</source>
+        <source>D&#xc3;&#xa9;tecteur</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_deficiency_tool_ui.ui" line="120"/>
-        <source>nÂ° marche</source>
+        <source>n&#xc2;&#xb0; marche</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -621,7 +620,7 @@
         <translation>Thèmes</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="327"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="317"/>
         <source>Safety</source>
         <translation>Sécurité</translation>
     </message>
@@ -671,12 +670,12 @@
         <translation>Général</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="30"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="33"/>
         <source>Date - time</source>
         <translation>Date</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="40"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="56"/>
         <source>Weather</source>
         <translation>Météo</translation>
     </message>
@@ -686,217 +685,212 @@
         <translation>Sous traitants présents</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="82"/>
-        <source>Contractor</source>
-        <translation>Entreprises présentes</translation>
-    </message>
-    <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="93"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="83"/>
         <source>Planning</source>
         <translation>Planning</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="102"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="92"/>
         <source>Schedule respect</source>
         <translation>Respect du planning</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="112"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="102"/>
         <source>Comments</source>
         <translation>Commentaires</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="143"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="133"/>
         <source>Presence</source>
         <translation>Présence</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="155"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="145"/>
         <source>Contractor headcount</source>
         <translation>Effectif entreprise</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="165"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="155"/>
         <source>Subcontractor headcount</source>
         <translation>Effectif sous-traitant</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="172"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="162"/>
         <source>Site supervisor presence</source>
         <translation>Présence du conducteur de chantier</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="189"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="179"/>
         <source>...</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="205"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="195"/>
         <source>Dump truck excavation</source>
         <translation>Camion déblais</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="212"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="202"/>
         <source>Vacuum truck</source>
         <translation>Camion aspiratrice</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="219"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="209"/>
         <source>Sprayer truck</source>
         <translation>Camion répandeur</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="226"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="216"/>
         <source>Mixer truck</source>
         <translation>Malaxeur</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="233"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="223"/>
         <source>Roller</source>
         <translation>Compacteur</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="240"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="230"/>
         <source>Container</source>
         <translation>Conteneur</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="247"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="237"/>
         <source>Excavator</source>
         <translation>Pelle mécanique</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="254"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="244"/>
         <source>Dump truck materials</source>
         <translation>Camion matériaux</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="261"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="251"/>
         <source>Loader</source>
         <translation>Chargeur</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="268"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="258"/>
         <source>Finisher</source>
         <translation>Finisseur</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="275"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="265"/>
         <source>Trencher</source>
         <translation>Trancheuse</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="282"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="272"/>
         <source>Compressor</source>
         <translation>Compresseur</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="289"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="279"/>
         <source>Miniloader</source>
         <translation>Mini-pelle</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="296"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="286"/>
         <source>Bucket truck</source>
         <translation>Nacelle</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="303"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="293"/>
         <source>Other</source>
         <translation>Autre</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="339"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="329"/>
         <source>Trench shored</source>
         <translation>Tranchées blindées</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="349"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="339"/>
         <source>Trench protected</source>
         <translation>Tranchées protégées (barriérage)</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="365"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="355"/>
         <source>Construction site and surroundings cleanness</source>
         <translation>Propreté du site et de ses abords</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="375"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="365"/>
         <source>Lighting/signs</source>
         <translation>Eclairage/signalisation</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="385"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="375"/>
         <source>Waste disposal/sorting</source>
         <translation>Stockage et tri des déchets</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="398"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="388"/>
         <source>Trafic safety</source>
         <translation>Securité de la circulation</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="411"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="401"/>
         <source>Markings staked</source>
         <translation>Piquetage du marquage réalisé</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="421"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="411"/>
         <source>Regulatory documents shown</source>
         <translation>Affichage des autorisations/arrêtés</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="431"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="421"/>
         <source>Construction signs</source>
         <translation>Panneaux de chantier</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="444"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="434"/>
         <source>Staff safety</source>
         <translation>Sécurité du personnel</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="454"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="444"/>
         <source>Site protected</source>
         <translation>Protection du chantier</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="482"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="472"/>
         <source>Markings maintened</source>
         <translation>Marquage entretenu</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="495"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="485"/>
         <source>Gaz and water gate valve accessible</source>
         <translation>Accessiblité des organes de coupure eau/gaz</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="508"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="498"/>
         <source>Work at a height</source>
         <translation>Travail en hauteur</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="524"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="514"/>
         <source>Grievance</source>
         <translation>Plaintes</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="530"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="520"/>
         <source>Grievance presence</source>
         <translation>Dépôt de plainte</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="540"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="530"/>
         <source>Grievance object</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="149"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="139"/>
         <source>Headcount</source>
         <translation>Effectif</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="199"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui" line="189"/>
         <source>Machines</source>
         <translation></translation>
     </message>
@@ -1007,7 +1001,7 @@
     </message>
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_observation_tool_ui.ui" line="590"/>
-        <source>Suite Ã&#xa0; donner</source>
+        <source>Suite &#xc3;&#xa0; donner</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1025,6 +1019,26 @@
         <source>Form</source>
         <comment>intab</comment>
         <translation>Formulaire</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_delivery_tool_ui_orange.ui" line="51"/>
+        <source>Society</source>
+        <translation type="unfinished">Société</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_delivery_tool_ui_orange.ui" line="58"/>
+        <source>Start date</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_delivery_tool_ui_orange.ui" line="98"/>
+        <source>Estimated end date</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_delivery_tool_ui_orange.ui" line="138"/>
+        <source>Name</source>
+        <translation type="unfinished">Nom</translation>
     </message>
 </context>
 <context>
@@ -1090,7 +1104,7 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui_CD41.ui" line="63"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="63"/>
         <source>Network type</source>
         <translation>Type de reseau</translation>
     </message>
@@ -1520,7 +1534,7 @@
         <translation>Nombre de pompes</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="717"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="776"/>
         <source>Depth </source>
         <translation>Profondeur</translation>
     </message>
@@ -1625,27 +1639,27 @@
         <translation>Sous-type d&apos;ouvrage</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="64"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="77"/>
         <source>Other\nproperties</source>
         <translation>Propriétés\nautres</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="104"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="136"/>
         <source>Geometry\ntopology</source>
         <translation>Géométrie\nTopologie</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="129"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="161"/>
         <source>Management</source>
         <translation>Gestion</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="164"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="196"/>
         <source>Owner</source>
         <translation>Propriétaire</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="157"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="189"/>
         <source>Operator</source>
         <translation>Gestionnaire</translation>
     </message>
@@ -1655,27 +1669,27 @@
         <translation type="unfinished">Propriétés\nsecondaires</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="33"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="30"/>
         <source>Surface subtype</source>
         <translation>Sous-type d&apos;ouvrage</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="43"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="40"/>
         <source>Surface type</source>
         <translation>Type d&apos;ouvrage</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="70"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="89"/>
         <source>Inlet flow condition</source>
         <translation>Type d&apos;écoulement amont</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="80"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="99"/>
         <source>Outlet flow condition</source>
         <translation>Type d&apos;écoulement aval</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="110"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="142"/>
         <source>Node link</source>
         <translation>Noeuds liés</translation>
     </message>
@@ -1683,6 +1697,26 @@
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_edge_tool_ui_CD41.ui" line="166"/>
         <source>Geometry\nTopology</source>
         <translation>Géométrie\nTopologie</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="83"/>
+        <source>Flow condition</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_edge_tool_ui.ui" line="249"/>
+        <source>Edge function</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui.ui" line="686"/>
+        <source>Node function</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_surface_tool_ui.ui" line="109"/>
+        <source>Surface function</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1804,7 +1838,7 @@
     </message>
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_edge_tool_ui_heatingnetwork.ui" line="334"/>
-        <source>diamÃ¨tre int</source>
+        <source>diam&#xc3;&#xa8;tre int</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1994,7 +2028,7 @@
     </message>
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_observation_tool_ui.ui" line="222"/>
-        <source>Etat gÃ©nÃ©ral</source>
+        <source>Etat g&#xc3;&#xa9;n&#xc3;&#xa9;ral</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2064,7 +2098,7 @@
     </message>
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="230"/>
-        <source>AltimÃ©trie</source>
+        <source>Altim&#xc3;&#xa9;trie</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2129,7 +2163,7 @@
     </message>
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="614"/>
-        <source>GÃ©nÃ©ral</source>
+        <source>G&#xc3;&#xa9;n&#xc3;&#xa9;ral</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2149,7 +2183,7 @@
     </message>
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="695"/>
-        <source>PrÃ©cisions</source>
+        <source>Pr&#xc3;&#xa9;cisions</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2265,7 +2299,7 @@
 <context>
     <name>LamiaWindowWidget</name>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="859"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="836"/>
         <source>GPS not connected</source>
         <translation>GPS non connecté</translation>
     </message>
@@ -2300,47 +2334,47 @@
         <translation>Chargement des couches</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="382"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="386"/>
         <source>Choose the file</source>
         <translation>Choisir le fichier</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="775"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="752"/>
         <source>Loading widgets...</source>
         <translation>Chargement des extensions</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="850"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="827"/>
         <source>GPS connected</source>
         <translation>GPS connecté</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="860"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="837"/>
         <source>Rod height : {}</source>
         <translation>Hauteur de la perche GPS : {}</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="854"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="831"/>
         <source>Accuracy : error</source>
         <translation>Précision : erreur</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="863"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="840"/>
         <source>Accuracy : off</source>
         <translation>Précision : désactivé</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="892"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="869"/>
         <source>Rod height</source>
         <translation>Hauteur de la perche GPS</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="892"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="869"/>
         <source>Enter GPS rod height</source>
         <translation>Renseigner la hauteur de perche GPS</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="902"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="879"/>
         <source>Select Directory</source>
         <translation>Choisir le répertoire</translation>
     </message>
@@ -2354,7 +2388,7 @@
     </message>
     <message>
         <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="208"/>
-        <source>SÃ©lectionner la date Ã&#xa0; laquelle afficher le systÃ¨me</source>
+        <source>S&#xc3;&#xa9;lectionner la date &#xc3;&#xa0; laquelle afficher le syst&#xc3;&#xa8;me</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2409,7 +2443,7 @@
     </message>
     <message>
         <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="750"/>
-        <source>RÃ©pertoire photo</source>
+        <source>R&#xc3;&#xa9;pertoire photo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2479,7 +2513,7 @@
     </message>
     <message>
         <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="871"/>
-        <source>RÃ©initialiser les noeuds</source>
+        <source>R&#xc3;&#xa9;initialiser les noeuds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2646,7 +2680,7 @@
 <context>
     <name>base3</name>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_geoarea_tool.py" line="41"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_geoarea_tool.py" line="42"/>
         <source>Management</source>
         <translation>Gestion</translation>
     </message>
@@ -2656,7 +2690,7 @@
         <translation>Intervenants</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_topographydata_tool.py" line="42"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_topographydata_tool.py" line="43"/>
         <source>Resources</source>
         <translation>Ressources</translation>
     </message>
@@ -2666,62 +2700,62 @@
         <translation>Photo</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_observation_tool.py" line="46"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_observation_tool.py" line="47"/>
         <source>Condition</source>
         <translation>Etat</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_deficiency_tool.py" line="47"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_deficiency_tool.py" line="48"/>
         <source>Deficiency</source>
         <translation>Désordre</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_delivery_tool.py" line="50"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_delivery_tool.py" line="51"/>
         <source>Delivery</source>
         <translation>Marché</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_surface_tool.py" line="45"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_surface_tool.py" line="46"/>
         <source>Facilities</source>
         <translation>Infrastructures</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_edge_tool.py" line="47"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_edge_tool.py" line="49"/>
         <source>Pipes</source>
         <translation>Canalisations</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_equipment_tool.py" line="44"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_equipment_tool.py" line="45"/>
         <source>Equipment</source>
         <translation>Equipement</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_geoarea_tool.py" line="42"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_geoarea_tool.py" line="43"/>
         <source>Geographic area</source>
         <translation>Zone géographique</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_geoarea_tool.py" line="65"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_geoarea_tool.py" line="66"/>
         <source>Linear facilities</source>
         <translation>Infrastructures linéaires</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_graph_tool.py" line="58"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_graph_tool.py" line="57"/>
         <source>Graph</source>
         <translation>Graphique</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_graphcsv_tool.py" line="62"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_graphcsv_tool.py" line="60"/>
         <source>Graph_csv</source>
         <translation>Graphique csv</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_node_tool.py" line="47"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_node_tool.py" line="48"/>
         <source>Nodes</source>
         <translation>Noeuds</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_observation_tool.py" line="47"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_observation_tool.py" line="48"/>
         <source>Observation</source>
         <translation>Observation</translation>
     </message>
@@ -2731,37 +2765,37 @@
         <translation>Fond de plan</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_report_tool.py" line="43"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_report_tool.py" line="44"/>
         <source>Report</source>
         <translation>Rapports</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_sketch_tool.py" line="48"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_sketch_tool.py" line="49"/>
         <source>Sketches</source>
         <translation>Schémas</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_topography_tool.py" line="48"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_topography_tool.py" line="49"/>
         <source>Topography</source>
         <translation>Topographie</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_topography_tool.py" line="112"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_topography_tool.py" line="113"/>
         <source>Topographic point</source>
         <translation>Points topo</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_topographydata_tool.py" line="145"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_topographydata_tool.py" line="146"/>
         <source>GPS not connected</source>
         <translation>GPS non connecté</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_facility_tool.py" line="46"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_facility_tool.py" line="47"/>
         <source>Facility</source>
         <translation>Aménagement</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_surface_tool.py" line="46"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_surface_tool.py" line="47"/>
         <source>Surface</source>
         <translation></translation>
     </message>
@@ -2769,39 +2803,39 @@
 <context>
     <name>base3_cs</name>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_deficiency_tool.py" line="43"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_deficiency_tool.py" line="45"/>
         <source>Non-compliance</source>
         <translation>Non conformité</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_deficiency_tool.py" line="50"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_deficiency_tool.py" line="52"/>
         <source>Description</source>
         <translation>Description</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_deficiency_tool.py" line="51"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_deficiency_tool.py" line="53"/>
         <source>Proposal
 notice</source>
         <translation>Proposition\navis</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_deficiency_tool.py" line="54"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_deficiency_tool.py" line="56"/>
         <source>Recherche
 des causes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_deficiency_tool_pv.py" line="42"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_deficiency_tool_pv.py" line="43"/>
         <source>Proces verbal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_deficiency_tool.py" line="52"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_deficiency_tool.py" line="54"/>
         <source>Checking</source>
         <translation>Vérification</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_deficiency_tool.py" line="53"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_deficiency_tool.py" line="55"/>
         <source>Reservation
 removal</source>
         <translation>Levée de réserve</translation>

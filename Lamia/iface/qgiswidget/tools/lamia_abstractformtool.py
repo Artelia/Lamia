@@ -105,6 +105,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
     PARENTJOIN = None
     TABLEFILTERFIELD = {}
     # GEOMETRYSKIP = True
+    CASCADEFEATURESELECTION = False     #select child feature when parent feature is selected - slower
 
     def __init__(self,                  
                  dbaseparser=None, 
@@ -403,14 +404,14 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
 
         # lamiatoolBarTools part
         if self.currentFeaturePK is not None:
-            self.mainifacewidget.toolBartools.setEnabled(True)
+            self.mainifacewidget.lamiatoolBartools.setEnabled(True)
             # if hasattr(self,'printWidget'):
             if 'printWidget' in self.__class__.__dict__:    #implemented
                 self.mainifacewidget.actiontoolbartoolsprint.setEnabled(True)
             else:
                 self.mainifacewidget.actiontoolbartoolsprint.setEnabled(False)
         else:
-            self.mainifacewidget.toolBartools.setEnabled(False)
+            self.mainifacewidget.lamiatoolBartools.setEnabled(False)
 
     def loadChildFeatureinWidget(self):
         debug = False
@@ -499,7 +500,8 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             lidchooser.postSelectFeature()
         if self.currentFeaturePK is not None:   #activate listener only with existing feat
             self.activatesubwidgetchangelistener = True
-        self.currentFeatureChanged.emit()
+        if self.CASCADEFEATURESELECTION:
+            self.currentFeatureChanged.emit()
 
     def toolbarNew(self):
         self.selectFeature()
@@ -679,8 +681,6 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         styling = '.QTabBar::tab:selected#{}'.format(tabbarname)
         styling += ' {border-color: rgb(0, 0, 0);'
         tabwidgetlist = [self.tabWidget]
-        if False and self.parentWidget is None:
-            tabwidgetlist.insert(0,self.tabWidgetmain)
 
         if subwidgethaschanged or disabletitle:
             if subwidgethaschanged:

@@ -1,4 +1,4 @@
-import os
+import os, math
 import numpy as np
 import qgis, qgis.core
 
@@ -9,64 +9,70 @@ def tableau_infralin(self):
 
     # id diam materiau prof  natureeffluent commentaire
     iddessys = atlasfeat['id_descriptionsystem']
-    fields = ['id_infralineaire', 'lid_descriptionsystem_2', 'Round(diametreNominal*1000)', 'profaval', 'materiau',
-              'typeReseau', 'commentaire']
+    # fields = ['id_infralineaire', 'lid_descriptionsystem_2', 'Round(diametreNominal*1000)', 'profaval', 'materiau',
+    #           'typeReseau', 'commentaire']
+    fields = ['id_edge', 'lid_descriptionsystem_2', 'Round(nominaldiameter*1000)', 'depthdown', 'material',
+              'networktype', 'comment']
+
     fieldsnames = ['Identifiant', 'Regard amont <br> ou aval', 'diamètre', 'profondeur', 'materiau',
                    'Type de réseau', 'commentaire']
 
     tabfinal = []
     sql = "SELECT  " + ','.join(fields)
-    sql += " FROM Infralineaire_now WHERE lid_descriptionsystem_2 = " + str(iddessys)
+    sql += " FROM edge_now WHERE lid_descriptionsystem_2 = " + str(iddessys)
     sql = self.dbase.updateQueryTableNow(sql)
 
     query = self.dbase.query(sql)
     for res in query:
         tabfinal.append([])
         for i, field in enumerate(fields):
-            tabfinal[-1].append(self.dbase.getConstraintTextFromRawValue('Infralineaire', field, res[i]))
-        if self.dbase.isAttributeNull(tabfinal[-1][fields.index('profaval')]) and not self.dbase.isAttributeNull(
-                atlasfeat['profradierouvrage']):
-            tabfinal[-1][fields.index('profaval')] = atlasfeat['profradierouvrage']
+            tabfinal[-1].append(self.dbase.getConstraintTextFromRawValue('edge', field, res[i]))
+        if self.dbase.utils.isAttributeNull(tabfinal[-1][fields.index('depthdown')]) and not self.dbase.utils.isAttributeNull(
+                atlasfeat['depthinvert']):
+            tabfinal[-1][fields.index('depthdown')] = atlasfeat['depthinvert']
 
-        sql = "SELECT Noeud_now.Libelle FROM Noeud_now "
-        sql += " INNER JOIN Infralineaire_now ON  Infralineaire_now.lid_descriptionsystem_1 = Noeud_now.id_descriptionsystem "
-        sql += " WHERE Infralineaire_now.id_infralineaire = " + str(res[0])
+        sql = "SELECT node_now.name FROM node_now "
+        sql += " INNER JOIN edge_now ON  edge_now.lid_descriptionsystem_1 = node_now.id_descriptionsystem "
+        sql += " WHERE edge_now.id_edge = " + str(res[0])
         sql = self.dbase.updateQueryTableNow(sql)
         result = self.dbase.query(sql)
 
         if result is not None and len(result) > 0:
             libelle = result[0][0]
-            if self.dbase.isAttributeNull(libelle):
+            if self.dbase.utils.isAttributeNull(libelle):
                 tabfinal[-1][1] = '?'
             else:
                 tabfinal[-1][1] = libelle
         else:
             tabfinal[-1][1] = '?'
 
-    fields = ['id_infralineaire', 'lid_descriptionsystem_2', 'Round(diametreNominal*1000)', 'profamont', 'materiau',
-              'typeReseau', 'commentaire']
+    # fields = ['id_infralineaire', 'lid_descriptionsystem_2', 'Round(diametreNominal*1000)', 'profamont', 'materiau',
+    #           'typeReseau', 'commentaire']
+    fields = ['id_edge', 'lid_descriptionsystem_2', 'Round(nominaldiameter*1000)', 'depthup', 'material',
+              'networktype', 'comment']
+
 
     sql = "SELECT  " + ','.join(fields)
-    sql += " FROM Infralineaire_now WHERE lid_descriptionsystem_1 = " + str(iddessys)
+    sql += " FROM edge_now WHERE lid_descriptionsystem_1 = " + str(iddessys)
     sql = self.dbase.updateQueryTableNow(sql)
 
     query = self.dbase.query(sql)
     for res in query:
         tabfinal.append([])
         for i, field in enumerate(fields):
-            tabfinal[-1].append(self.dbase.getConstraintTextFromRawValue('Infralineaire', field, res[i]))
-        if self.dbase.isAttributeNull(tabfinal[-1][fields.index('profamont')]) and not self.dbase.isAttributeNull(
-                atlasfeat['profradierouvrage']):
-            tabfinal[-1][fields.index('profamont')] = atlasfeat['profradierouvrage']
+            tabfinal[-1].append(self.dbase.getConstraintTextFromRawValue('edge', field, res[i]))
+        if self.dbase.utils.isAttributeNull(tabfinal[-1][fields.index('depthup')]) and not self.dbase.utils.isAttributeNull(
+                atlasfeat['depthinvert']):
+            tabfinal[-1][fields.index('depthup')] = atlasfeat['depthinvert']
 
-        sql = "SELECT Noeud_now.Libelle FROM Noeud_now "
-        sql += " INNER JOIN Infralineaire_now ON  Infralineaire_now.lid_descriptionsystem_2 = Noeud_now.id_descriptionsystem "
-        sql += " WHERE Infralineaire_now.id_infralineaire = " + str(res[0])
+        sql = "SELECT node_now.name FROM node_now "
+        sql += " INNER JOIN edge_now ON  edge_now.lid_descriptionsystem_2 = node_now.id_descriptionsystem "
+        sql += " WHERE edge_now.id_edge = " + str(res[0])
         sql = self.dbase.updateQueryTableNow(sql)
         result = self.dbase.query(sql)
         if result is not None and len(result) > 0:
             libelle = result[0][0]
-            if self.dbase.isAttributeNull(libelle):
+            if self.dbase.utils.isAttributeNull(libelle):
                 tabfinal[-1][1] = '?'
             else:
                 tabfinal[-1][1] = libelle
@@ -163,7 +169,7 @@ def tableau_infralin(self):
 
     return html
 
-def schema_noeud(self):
+def schema_node(self):
 
     debug = False
     atlasfeat = self.currentatlasfeat
@@ -177,7 +183,7 @@ def schema_noeud(self):
 
     iddessys = atlasfeat['id_descriptionsystem']
 
-    sql = "SELECT pk_infralineaire, id_infralineaire FROM Infralineaire_now "
+    sql = "SELECT pk_edge, id_edge FROM edge_now "
     sql += "WHERE lid_descriptionsystem_1 = " + str(iddessys)
     sql = self.dbase.updateQueryTableNow(sql)
 
@@ -185,17 +191,18 @@ def schema_noeud(self):
     compt = -1
     for pk, id in res:  # amont
         compt += 1
-        fetinfra = self.dbase.getLayerFeatureByPk('Infralineaire', pk)
-        fetgeom = qgis.core.QgsGeometry(fetinfra.geometry())
+        # fetinfra = self.dbase.getLayerFeatureByPk('edge', pk)
+        # fetgeom = qgis.core.QgsGeometry(fetinfra.geometry())
+        fetgeom = self.qgiscanvas.getQgsGeomFromPk(self.dbase, 'edge', pk)
         data = np.array([list(elem) for elem in fetgeom.asPolyline()])
 
-        lastlinepoly = self.uniqueSortedDatas(data)
+        lastlinepoly = uniqueSortedDatas(data)
         # print(data)
         # print(lastlinepoly)
         if len(lastlinepoly) >= 2:
             lastlinevector = lastlinepoly[1] - lastlinepoly[0]
             # print('lastlinevector',lastlinevector)
-            angle = self.py_ang(lastlinevector, np.array([1, 0]))
+            angle = py_ang(lastlinevector, np.array([1, 0]))
 
             if not noeudorientenord and compt == 0:
                 initialangle = angle
@@ -203,12 +210,13 @@ def schema_noeud(self):
         else :
             self.windowdialog.errorMessage('schema error - pk infra : ' + str(fetinfra.id()) + ' - polyline trop courte...')
 
-    sql = "SELECT pk_infralineaire, id_infralineaire FROM Infralineaire WHERE lid_descriptionsystem_2 = "
+    sql = "SELECT pk_edge, id_edge FROM edge WHERE lid_descriptionsystem_2 = "
     sql += str(iddessys)
     res = self.dbase.query(sql)
     for pk, id in res:  # aval
-        fetinfra = self.dbase.getLayerFeatureByPk('Infralineaire', pk)
-        fetgeom = qgis.core.QgsGeometry(fetinfra.geometry())
+        # fetinfra = self.dbase.getLayerFeatureByPk('edge', pk)
+        # fetgeom = qgis.core.QgsGeometry(fetinfra.geometry())
+        fetgeom = self.qgiscanvas.getQgsGeomFromPk(self.dbase, 'edge', pk)
         # lastlinepoly = np.array(fetgeom.asPolyline()[:-2])
         # lastlinepoly = np.unique(np.array(fetgeom.asPolyline()), axis=0)
         data = np.array([list(elem) for elem in fetgeom.asPolyline()])
@@ -220,13 +228,13 @@ def schema_noeud(self):
             row_mask = np.append([True], np.any(np.diff(sorted_data, axis=0), 1))
             # Get unique rows
             lastlinepoly = sorted_data[row_mask]
-        lastlinepoly = self.uniqueSortedDatas(data)
+        lastlinepoly = uniqueSortedDatas(data)
         # print(data)
         # print(lastlinepoly)
         if len(lastlinepoly)>=2:
             lastlinevector = lastlinepoly[-2] - lastlinepoly[-1]
             # print('lastlinevector', lastlinevector)
-            angle = self.py_ang(lastlinevector, np.array([1, 0]))
+            angle = py_ang(lastlinevector, np.array([1, 0]))
             resultlinesin.append([id, angle - initialangle])
         else :
             self.windowdialog.errorMessage('schema error - pk infra : ' + str( fetinfra.id()) +  ' - polyline trop courte...')
@@ -298,7 +306,7 @@ def schema_noeud(self):
 
     return html
 
-def uniqueSortedDatas(self, datas):
+def uniqueSortedDatas(datas):
     result = []
 
     for data in datas:
@@ -306,7 +314,7 @@ def uniqueSortedDatas(self, datas):
             result.append(list(data))
     return np.array(result)
 
-def py_ang(self, v1, v2):
+def py_ang(v1, v2):
     """ Returns the angle in radians between vectors 'v1' and 'v2'    """
     ang1 = np.arctan2(*v1[::-1])
     ang2 = np.arctan2(*v2[::-1])

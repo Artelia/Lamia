@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>486</width>
+    <width>543</width>
     <height>422</height>
    </rect>
   </property>
@@ -600,7 +600,7 @@ background-color: rgb(255, 255, 255);</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>486</width>
+     <width>543</width>
      <height>26</height>
     </rect>
    </property>
@@ -723,7 +723,7 @@ background-color: rgb(255, 255, 255);</string>
    <addaction name="actiontoolbarlayerundo"/>
    <addaction name="actiontoolbarlayersave"/>
   </widget>
-  <widget class="QToolBar" name="toolBartools">
+  <widget class="QToolBar" name="lamiatoolBartools">
    <property name="windowTitle">
     <string>toolBar</string>
    </property>
