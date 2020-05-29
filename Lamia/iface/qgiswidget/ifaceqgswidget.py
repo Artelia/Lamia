@@ -300,15 +300,22 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         success = self._loadDBaseParser(**kwargs)
         if not success:
             return
-        self.connector.showNormalMessage(self.tr('Loading Layers ...'))
+        # self.connector.showNormalMessage(self.tr('Loading Layers ...'))
+        self.connector.createProgressBar(self.tr('Loading Layers ...'), 0 )
         self._loadVectorLayers()
         self._loadStyles()
+        QApplication.processEvents()
+        self.connector.closeProgressBar()
         self._AddDbaseInRecentsDBase(self.dbase)
         self.loadToolsClasses()
         self.loadToolsWidgets()
+
+        # self.connector.createProgressBar(self.tr('Loading Layers ...'), 0 )
         self.setVisualMode(visualmode=0)
-        
         self.qgiscanvas.updateWorkingDate(dbaseparser=self.dbase)
+        # self.connector.closeProgressBar()
+
+        self.connector.showNormalMessage('Lamia loaded')
     
 
 
@@ -330,10 +337,10 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         self.MaintreeWidget.clear()
         self.ElemtreeWidget.clear()
 
+
+        #behaviour var
         if self.currenttoolwidget:
             self.currenttoolwidget.setParent(None)
-        
-        #behaviour var
         self.currenttoolwidget = None
         # self.imagedirectory = None
         self.currentchoosertreewidget = None
@@ -348,7 +355,7 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
             self.dbase.disconnect()
         except:
             pass
-        QApplication.processEvents()
+        # QApplication.processEvents()
 
     def pullDBase(self, exportfilepath=None):    #for offline mode
 

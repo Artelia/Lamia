@@ -292,8 +292,8 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                         uri.setDataSource(dbaseparser.pgschema.lower(), str(tablenamelower), None, '', "pk_" + rawtablename.lower())
                 self.layers[rawtablename][tabletype] = qgis.core.QgsVectorLayer(uri.uri(), tablename, dbtype)
 
-            #ValueMap for qgislayer
-            if 'layerqgis' in self.layers[rawtablename].keys():
+            #ValueMap for qgislayer - not done because layer loading is too long
+            if  'layerqgis' in self.layers[rawtablename].keys():
                 workingvl = self.layers[rawtablename]['layerqgis']
                 cstdict = self._getConstraintFromDBaseTables(dbaseparser, rawtablename)
                 for i, field in enumerate(workingvl.fields()):
@@ -492,7 +492,10 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             if 'layerqgis' in self.layers[tablename].keys() :
                 #apply style
                 stylepath = os.path.join(styledirectory, tablename + '.qml')
-                self.layers[tablename]['layerqgis'].loadNamedStyle(stylepath)
+                # self.layers[tablename]['layerqgis'].loadNamedStyle(stylepath)
+                self.layers[tablename]['layerqgis'].loadNamedStyle(stylepath, qgis.core.QgsMapLayer.Symbology )
+                self.layers[tablename]['layerqgis'].loadNamedStyle(stylepath, qgis.core.QgsMapLayer.Labeling  )
+
                 #setvisibility
                 ltl = qgis.core.QgsProject.instance().layerTreeRoot().findLayer(self.layers[tablename]['layerqgis'].id())
                 if tablename in qmlfiles:

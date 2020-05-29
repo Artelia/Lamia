@@ -7,7 +7,7 @@ with warnings.catch_warnings():
 
 if not sys.warnoptions:
     import warnings
-    warnings.simplefilter("ignore")
+    warnings.simplefilter("ignore")qgis
 """
 import networkx
 import Lamia.libs.pyqtgraph
@@ -44,8 +44,8 @@ class DBaseViewer():
 
         if True :
             # SLFILE = os.path.join(os.path.dirname(__file__), '..','test','datas','lamia_assainissement','test01.sqlite')
-            # SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_urbandrainage_Lamia\test01.sqlite"
-            SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_waterdistribution_Lamia\test01.sqlite"
+            SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_urbandrainage_Lamia\test01.sqlite"
+            # SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_waterdistribution_Lamia\test01.sqlite"
             # SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_constructionsite_Lamia\test01.sqlite"
             # SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_constructionsite_Orange\test01.sqlite"
             #SLFILE = r"C:\Users\Public\Documents\lamia\test01\test01.sqlite"
@@ -83,7 +83,7 @@ class DBaseViewer():
         self.wind.qgiscanvas.canvas.setExtent(extent)
 
         self.wind.setVisualMode(visualmode=1)
-        # self.wind.dbase.printsql = True
+        self.wind.dbase.printsql = True
 
         # display good widget
         if False:

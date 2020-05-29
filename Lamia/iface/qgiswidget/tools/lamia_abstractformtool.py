@@ -191,6 +191,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
 
     def toolTreeWidgetCurrentItemChanged(self, param1, param2=None):
         super().toolTreeWidgetCurrentItemChanged(param1, param2=None)
+        
         if isinstance(param1, QTreeWidgetItem) and (isinstance(param2, QTreeWidgetItem) or param2 is None):
             if param1 == self.qtreewidgetitem : #the openend qtreewidgetitem
                 if (qgis.utils.iface is not None 

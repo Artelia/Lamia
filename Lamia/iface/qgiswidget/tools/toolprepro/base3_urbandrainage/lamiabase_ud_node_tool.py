@@ -447,6 +447,12 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
         self.propertieswdgDesordre.propertieswdgOBSERVATION.updateObservationStackedWidget()
 
 
+    def toolbarMagic(self):
+        self.mainifacewidget.toolbarNew()
+        self.toolbarGeomAddGPS()
+        self.getGPSValue()
+        self.mainifacewidget.toolbarSave()
+
 
     def magicFunction(self):
         self.featureSelected()
@@ -458,12 +464,12 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
 
 
     def getGPSValue(self):
-        self.assignValue(self.toolwidgetmain.label_X, self.toolwidgetmain.doubleSpinBox_X)
-        self.assignValue(self.toolwidgetmain.label_dX, self.toolwidgetmain.doubleSpinBox_dX)
-        self.assignValue(self.toolwidgetmain.label_Y, self.toolwidgetmain.doubleSpinBox_Y)
-        self.assignValue(self.toolwidgetmain.label_dY, self.toolwidgetmain.doubleSpinBox_dY)
-        self.assignValue(self.toolwidgetmain.label_Z, self.toolwidgetmain.doubleSpinBox_Z)
-        self.assignValue(self.toolwidgetmain.label_dZ, self.toolwidgetmain.doubleSpinBox_dZ)
+        self.assignValue(self.gpswidget.label_X, self.toolwidgetmain.doubleSpinBox_X)
+        self.assignValue(self.gpswidget.label_dX, self.toolwidgetmain.doubleSpinBox_dX)
+        self.assignValue(self.gpswidget.label_Y, self.toolwidgetmain.doubleSpinBox_Y)
+        self.assignValue(self.gpswidget.label_dY, self.toolwidgetmain.doubleSpinBox_dY)
+        self.assignValue(self.gpswidget.label_Z, self.toolwidgetmain.doubleSpinBox_Z)
+        self.assignValue(self.gpswidget.label_dZ, self.toolwidgetmain.doubleSpinBox_dZ)
 
 
     def assignValue(self,wdgfrom, wdgto):

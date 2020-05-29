@@ -151,9 +151,10 @@ class SpatialiteDBaseParser(AbstractDBaseParser):
             self.SLITEcursor = self.connSLITE.cursor()
         try:
             if self.printsql :
-                if sql.split(' ')[0].lower() in ['update', 'delete','insert']:
-                    #logging.getLogger('Lamia').debug('%s - %s %.3f', docommit, sql,  self.getTimeNow() - timestart)
-                    logging.getLogger('Lamia_unittest').debug('%s - %s ', docommit, sql)
+                logging.getLogger('Lamia_unittest').debug('%s - %s ', docommit, sql)
+                # if sql.split(' ')[0].lower() in ['update', 'delete','insert']:
+                #     #logging.getLogger('Lamia').debug('%s - %s %.3f', docommit, sql,  self.getTimeNow() - timestart)
+                #     logging.getLogger('Lamia_unittest').debug('%s - %s ', docommit, sql)
 
             query = self.SLITEcursor.execute(sql,arguments)
             returnquery = list(query)
