@@ -106,7 +106,6 @@ class DBaseTest(unittest.TestCase):
                     pgdbase.disconnect()
 
         
-
         logging.getLogger("Lamia_unittest").debug('test_c_DbaseCreate OK')
 
  
@@ -119,11 +118,7 @@ def main():
 
 if __name__ == "__main__":
     main()
-    """
-    logging.basicConfig( stream=sys.stderr )
-    logging.getLogger( "Lamia_unittest" ).setLevel( logging.DEBUG )
-    unittest.main()
-    """
+
 
 
 

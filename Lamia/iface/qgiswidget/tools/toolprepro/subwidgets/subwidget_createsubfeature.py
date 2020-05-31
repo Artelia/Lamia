@@ -30,10 +30,11 @@ from qgis.PyQt.QtWidgets import (QWidget)
 
 class CreateSubFeatureWidget(QtCore.QObject):
 
-    def __init__(self, parentwdg,subwidget):
+    def __init__(self, parentwdg,subwidget, condition=None):
         super(CreateSubFeatureWidget, self).__init__()
         self.parentwdg = parentwdg
         self.subwidget = subwidget
+        self.condition = condition
 
         # self.dbase = parentwdg.dbase
         # self.formutils = parentwdg.formutils
@@ -49,6 +50,18 @@ class CreateSubFeatureWidget(QtCore.QObject):
 
         if self.parentwdg.currentFeaturePK is None :  #very new equip, not newversion
             dbase = self.parentwdg.dbase
+
+            if self.condition:
+                # test condition
+                sql = f"SELECT * FROM {self.parentwdg.DBASETABLENAME}_qgis \
+                    WHERE pk_{self.parentwdg.DBASETABLENAME.lower()} = {savedfeaturepk} \
+                        AND {self.condition} "
+                res = dbase.query(sql)
+                if res is None or len(res) == 0:
+                    return
+
+
+            
             self.subwidget.toolbarNew()
 
             if 'geom' in dbase.dbasetables[self.subwidget.DBASETABLENAME].keys():

@@ -1,8 +1,3 @@
-C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_faunaflora_Lamia\test01.sqlite
-C:\111_GitProjects\Lamia\test\datas\lamia_digue\test01.sqlite
-C:/000_testdigue/test01/test02.sqlite
-C:/000_testdigue/test01/test01.sqlite
-C:/000_testdigue/test01/test07.sqlite
+d:/PAT_Git/Lamia/sandbox\..\test\testtempfiles\c_creation\sl_base3_levee_Lamia\test01.sqlite
 lamiaunittest.base3_urbandrainage_lamia@localhost:5432;pvr;pvr
-C:\111_GitProjects\Lamia\test\datas\lamia_assainissement\test01.sqlite
 lamiaunittest.Base2_digue_Lamia@localhost:5432;pvr;pvr

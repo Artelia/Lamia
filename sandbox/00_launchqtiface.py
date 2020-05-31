@@ -37,7 +37,7 @@ LOCALE = 'fr'       # fr en
 class DBaseViewer():
 
     def __init__(self):
-        pass
+        self.testdir = os.path.join(os.path.dirname(__file__), '..','test','testtempfiles','c_creation')
 
 
     def run(self):
@@ -52,6 +52,7 @@ class DBaseViewer():
             #SLFILE = r"C:\Users\Public\Documents\lamia\test01\test01.sqlite"
             # SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue\test01.sqlite"
             # SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_assainissement\test01.sqlite"
+            SLFILE = os.path.join(self.testdir,'sl_base3_levee_Lamia','test01.sqlite')
 
             self._loadLocale()
             self._createWin()
@@ -85,7 +86,7 @@ class DBaseViewer():
         self.wind.qgiscanvas.canvas.setExtent(extent)
 
         self.wind.setVisualMode(visualmode=1)
-        self.wind.dbase.printsql = True
+        # self.wind.dbase.printsql = True
 
         # display good widget
         if False:
@@ -119,7 +120,7 @@ class DBaseViewer():
         self.mainwin.frame.layout().addWidget(self.canvas)
         self.mainwin.frame_2.layout().addWidget(self.wind)
         self.mainwin.setParent(None)
-        self.mainwin.resize(QtCore.QSize(1000,800))
+        self.mainwin.resize(QtCore.QSize(1600,800))
 
     def _createWin(self):
         self.canvas = qgis.gui.QgsMapCanvas()
