@@ -24,9 +24,10 @@ CRS = 2154
 
 DBTYPE = ['Base2_digue', 'Base2_assainissement', 'Base2_eaupotable', 'Base2_eclairagepublic',
          'Base2_chantier', 'Base2_tramway']
-DBTYPE = ['base3_urbandrainage', 'base3_waterdistribution', 'base3_constructionsite']
+DBTYPE = ['base3_urbandrainage', 'base3_waterdistribution', 'base3_constructionsite',
+         'base3_faunaflora']
 
-# DBTYPE = ['base3_constructionsite']     
+DBTYPE = ['base3_faunaflora']     
 # VARIANTES = ['Lamia','Orange']
 
 #* Connexion conf

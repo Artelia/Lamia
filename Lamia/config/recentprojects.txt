@@ -1,7 +1,5 @@
-C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_urbandrainage_Lamia\test01.sqlite
-C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_waterdistribution_Lamia\test01.sqlite
+C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_faunaflora_Lamia\test01.sqlite
 C:\111_GitProjects\Lamia\test\datas\lamia_digue\test01.sqlite
-C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_constructionsite_Orange\test01.sqlite
 C:/000_testdigue/test01/test02.sqlite
 C:/000_testdigue/test01/test01.sqlite
 C:/000_testdigue/test01/test07.sqlite
