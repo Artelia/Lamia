@@ -96,94 +96,7 @@ class BaseGraphcsvTool(AbstractLamiaFormTool):
                                                             'widgets' : {}},
                                                 'resource' : {'linkfield' : 'id_resource',
                                                             'widgets' : {'file': self.toolwidgetmain.lineEdit_csv}}}
-        """
-        self.graphspec = {'SIM': {'x': [],
-                                  'y':[],
-                                },
-                          'RAD': {'var': [],
-                                  'value':[],
-                                },
-                          'PTR': {'x': [],
-                                  'y':[],
-                                  'Position': ['/',
-                                                'Crete',
-                                                'Talus digue',
-                                                'Sommet risberme',
-                                                'Talus risberme',
-                                                'Talus risberme - pied',
-                                                'Pied de digue',
-                                                'Franc-bord',
-                                                'Berge',
-                                                'Pied de berge',
-                                                'Hors digue',
-                                                'Plusieurs parties',
-                                                'Indefini'],
-                                  'Nature': ['/',
-                                            'Abscence de revetement',
-                                            'Dispositif fusible',
-                                            'Enrochement',
-                                            'Fondation meuble',
-                                            'Fondation rocheuse',
-                                            'Contre fosse(cote terre)',
-                                            'Gabion',
-                                            'Indefini',
-                                            'Mur de soutenement',
-                                            'Ouvrage parafouille',
-                                            'Palplanche',
-                                            'Paroi etanche',
-                                            'Perre',
-                                            'Pieux',
-                                            'Remblais',
-                                            'Ouvrage de revanche',
-                                            'Revetement',
-                                            'Seuil, deversoir',
-                                            'Zone de dissipation',
-                                            'Zone urbanisee'],
-                                  'Materiau': ['/',
-                                                'Acier',
-                                                'Bentonite-ciment',
-                                                'Beton',
-                                                'Bois',
-                                                'Concasse 0/80',
-                                                'Dechet carriere 0/400',
-                                                'Enrobe',
-                                                'Fraisat recycle',
-                                                'Galets 0/100',
-                                                'Geotextile',
-                                                'Geomembrane',
-                                                'Graviers 0/33',
-                                                'Grillage',
-                                                'Indefini',
-                                                'Limons',
-                                                'Limons et sables',
-                                                'Moellons',
-                                                'Lit naturel du fosse',
-                                                'Paves',
-                                                'Plaques beton joitives',
-                                                'Panneaux JK',
-                                                'Pierres maconnees',
-                                                'Pierres seches',
-                                                'Remblais',
-                                                'Roches appareilles',
-                                                'Roches betonnees',
-                                                'Roches deversee',
-                                                'Sables',
-                                                'Schistes 0/100',
-                                                'Silts',
-                                                'Terre vegetale',
-                                                'Tuyau drain',
-                                                'Tout venant brut',
-                                                'Vegetalise enherbe',
-                                                'Vegetalise arbustif',
-                                                'Vegetalise boise'],
-                                  'Cote': ['/',
-                                            'Eau',
-                                            'Terre',
-                                            'Crête'],
-                                },      
-                         }       
-        """
-
+ 
         self.toolwidgetmain.pushButton_addline.clicked.connect(self.addrow)
         self.toolwidgetmain.pushButton_delline.clicked.connect(self.removerow)
 
@@ -338,74 +251,7 @@ class BaseGraphcsvTool(AbstractLamiaFormTool):
 
         self.enableTypeComboBox()
     
-    """
-    def _makePTRGraph(self,graphdatas):
-
-        # self.figuretype = plt.figure()
-        self.axtype = self.figuretype.add_subplot(111)
-
-        Xgraph = [0.0]
-        Zgraph = [0.0]
-        typepartie = []
-
-        for i in range(len(graphdatas)):
-            try:
-                Xgraph.append(Xgraph[-1] + float(graphdatas['x'][i]))
-                Zgraph.append(Zgraph[-1] + float(graphdatas['y'][i]))
-                typepartie.append(graphdatas['Nature'][i] + ' - ' + graphdatas['Materiau'][i])
-            except (ValueError, KeyError) as e:
-                return
-
-        label = []
-        for i in range(len(Xgraph)-1):
-            typep = typepartie[i]
-            graphcolor = 'black'
-            graphlinestyle = '-'
-            graphlinewidth = 3.0
-            if 'Vegetalise enherbe' in typep:
-                graphcolor = 'lightgreen'
-            elif 'Vegetalise arbustif' in typep:
-                graphcolor = 'seagreen'
-            elif 'Vegetalise boise' in typep:
-                graphcolor = 'darkgreen'
-            elif 'Gabion' in typep:
-                graphcolor = 'gray'
-                graphlinestyle = '-'
-                graphlinewidth = 5.
-            elif 'Gravier 0/33' in typep:
-                graphcolor = 'darkgray'
-                graphlinestyle = '--'
-            elif 'Enrobe' in typep:
-                graphcolor = 'black'
-                graphlinewidth = 4.
-            elif 'Beton' in typep:
-                graphcolor = 'gray'
-            elif 'Pierre maconnees' in typep:
-                graphcolor = 'gray'
-                graphlinestyle = '--'
-            elif 'Roches appareillees' in typep:
-                graphcolor = 'gray'
-                graphlinestyle = '-.'
-            elif 'Abscence de revetement' in typep:
-                graphcolor = 'saddlebrown'
-
-            if typep not in label:
-                label.append(typep)
-            else:
-                typep = None
-
-            self.axtype.plot([Xgraph[i],Xgraph[i+1]], [Zgraph[i], Zgraph[i+1]], label=typep, color=graphcolor,
-                                linewidth=graphlinewidth, linestyle=graphlinestyle)
-
-        legend = self.axtype.legend(bbox_to_anchor=(0., 1.), loc="lower left", bbox_transform=self.figuretype.transFigure, prop={'size': 8})
-        self.axtype.annotate('TERRE', xy=(0.05, 1.05), xycoords='axes fraction',horizontalalignment='left')
-        self.axtype.annotate('EAU', xy=(0.95, 1.05), xycoords='axes fraction',horizontalalignment='right')
-
-        #plt.ylabel('Z (m)', fontsize=8)
-        self.axtype.set_ylabel('Z (m)', fontsize=8)
-
-    """
-
+ 
     def saveGraphinCsv(self,savedfeaturepk):
         """Lit le QTableWidget et enregistre son contenu dans un fichier csv
         """
@@ -432,31 +278,6 @@ class BaseGraphcsvTool(AbstractLamiaFormTool):
                 valuestosave.append(ligne)
 
         self.graphmaker.saveGraphData(savedfeaturepk, valuestosave)
-
-        """
-        with open(csvpath, 'w', newline='') as csvfile:
-            csvwriter = csv.writer(csvfile, delimiter=';', quoting=csv.QUOTE_MINIMAL)
-            for row in range(0, self.toolwidgetmain.tableWidget.rowCount()):
-                ligne = []
-                for column in range(0, self.toolwidgetmain.tableWidget.columnCount()):
-                    if self.toolwidgetmain.tableWidget.cellWidget(row, column) is not None:
-                        columnwdg = self.toolwidgetmain.tableWidget.cellWidget(row, column)
-                        if isinstance(columnwdg,QComboBox):
-                            value =  columnwdg.currentText()
-                        elif isinstance(columnwdg,QDoubleSpinBox) or isinstance(columnwdg,QSpinBox):
-                            value = str(columnwdg.value())
-                            if value is None:
-                                value = '0.0'
-                        else:
-                            value = 'NULL'
-                    elif self.toolwidgetmain.tableWidget.item(row, column) is not None:
-                        value = self.toolwidgetmain.tableWidget.item(row, column).text().strip()
-                    else:
-                        value=''
-                    
-                    ligne.append(value)
-                csvwriter.writerow(ligne)
-        """
 
 
 

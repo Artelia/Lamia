@@ -1,53 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form_base3_ud</class>
- <widget class="QWidget" name="Form_base3_ud">
+ <class>Form_base3_levee</class>
+ <widget class="QWidget" name="Form_base3_levee">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>334</width>
-    <height>139</height>
+    <width>321</width>
+    <height>135</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <widget class="QPushButton" name="pushButton_vueensemble">
+   <item row="0" column="2">
+    <widget class="QPushButton" name="pushButton_land">
      <property name="text">
-      <string>Global view</string>
+      <string>Landside view</string>
      </property>
     </widget>
    </item>
    <item row="0" column="1">
-    <widget class="QPushButton" name="pushButton_cuve">
+    <widget class="QPushButton" name="pushButton_crest">
      <property name="text">
-      <string>Trap view</string>
+      <string>Crest view</string>
      </property>
     </widget>
    </item>
-   <item row="0" column="2">
-    <widget class="QPushButton" name="pushButton_poires">
+   <item row="0" column="0">
+    <widget class="QPushButton" name="pushButton_water">
      <property name="text">
-      <string>Float view</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QPushButton" name="pushButton_vanne">
-     <property name="text">
-      <string>Valve view</string>
+      <string>Waterside view</string>
      </property>
     </widget>
    </item>
    <item row="1" column="1">
-    <widget class="QPushButton" name="pushButton_armoire">
-     <property name="text">
-      <string>Controller view</string>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
      </property>
-    </widget>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>

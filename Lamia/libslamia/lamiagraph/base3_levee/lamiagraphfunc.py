@@ -11,27 +11,110 @@ def getGraphSpec():
     """
 
 
-    graphdict =    {'SIM': {
+    graphdict = {'SIM': {
                             'graphnum1':'X',
                             'graphnum2':'Y',
 
                         },
-                    'SAS': {
-                            'graphnum1': 'Cadre de vie',
-                            'graphnum2': 'Investissement',
-                            'graphnum3': 'Biodiversité',
-                            'graphnum4': 'Exploitation',
-                            'graphnum5': 'Traitement',
-                            'graphnum6': 'Lutte contre les ilots de chaleur',
-                            'graphnum7': 'Récréatif',
-                            'graphnum9': 'Protection',
-                            'graphnum10': 'Facteur de charge',
-                            'graphnum11': 'Autre',
-                        },
-    }
+                'PTR': {'graphnum1':'X',
+                        'graphnum2':'Y',
+                        'graphchar1': 'Position',
+                        'graphchar2':'Nature',
+                        'graphchar3':'Materiau',
+                        'graphchar4':'Cote',
+                    },      
+                }      
     
 
     return graphdict
+
+    """
+    self.graphspec = {'SIM': {'x': [],
+                                'y':[],
+                            },
+                        'RAD': {'var': [],
+                                'value':[],
+                            },
+                        'PTR': {'x': [],
+                                'y':[],
+                                'Position': ['/',
+                                            'Crete',
+                                            'Talus digue',
+                                            'Sommet risberme',
+                                            'Talus risberme',
+                                            'Talus risberme - pied',
+                                            'Pied de digue',
+                                            'Franc-bord',
+                                            'Berge',
+                                            'Pied de berge',
+                                            'Hors digue',
+                                            'Plusieurs parties',
+                                            'Indefini'],
+                                'Nature': ['/',
+                                        'Abscence de revetement',
+                                        'Dispositif fusible',
+                                        'Enrochement',
+                                        'Fondation meuble',
+                                        'Fondation rocheuse',
+                                        'Contre fosse(cote terre)',
+                                        'Gabion',
+                                        'Indefini',
+                                        'Mur de soutenement',
+                                        'Ouvrage parafouille',
+                                        'Palplanche',
+                                        'Paroi etanche',
+                                        'Perre',
+                                        'Pieux',
+                                        'Remblais',
+                                        'Ouvrage de revanche',
+                                        'Revetement',
+                                        'Seuil, deversoir',
+                                        'Zone de dissipation',
+                                        'Zone urbanisee'],
+                                'Materiau': ['/',
+                                            'Acier',
+                                            'Bentonite-ciment',
+                                            'Beton',
+                                            'Bois',
+                                            'Concasse 0/80',
+                                            'Dechet carriere 0/400',
+                                            'Enrobe',
+                                            'Fraisat recycle',
+                                            'Galets 0/100',
+                                            'Geotextile',
+                                            'Geomembrane',
+                                            'Graviers 0/33',
+                                            'Grillage',
+                                            'Indefini',
+                                            'Limons',
+                                            'Limons et sables',
+                                            'Moellons',
+                                            'Lit naturel du fosse',
+                                            'Paves',
+                                            'Plaques beton joitives',
+                                            'Panneaux JK',
+                                            'Pierres maconnees',
+                                            'Pierres seches',
+                                            'Remblais',
+                                            'Roches appareilles',
+                                            'Roches betonnees',
+                                            'Roches deversee',
+                                            'Sables',
+                                            'Schistes 0/100',
+                                            'Silts',
+                                            'Terre vegetale',
+                                            'Tuyau drain',
+                                            'Tout venant brut',
+                                            'Vegetalise enherbe',
+                                            'Vegetalise arbustif',
+                                            'Vegetalise boise'],
+                                'Cote': ['/',
+                                        'Eau',
+                                        'Terre',
+                                        'Crête'],
+                            },      
+                        }       
+    """
 
 
 
@@ -44,56 +127,70 @@ def SIM(mplfigure,pdgraphdata):
         print('grapherror', e)
 
 
+def PTR(mplfigure,pdgraphdata):
 
-def SAS(mplfigure,pdgraphdata):
-    print('rad')
-    # https://jingwen-z.github.io/data-viz-with-matplotlib-series8-radar-chart/
+        # self.figuretype = plt.figure()
+        # self.axtype = self.figuretype.add_subplot(111)
+        axtype = mplfigure.add_subplot(111, polar=False, label='ptrgraph')
 
+        Xgraph = [0.0]
+        Zgraph = [0.0]
+        typepartie = []
 
-    axtype = mplfigure.add_subplot(111, polar=True, label='radgraph')
+        print(pdgraphdata)
 
-    if not pdgraphdata.columns.values.tolist():
-        return
-    
-    datas = pdgraphdata.loc[0,:].values.tolist()
-    # print('*',datas, datas[:1])
-    datas = datas + datas[:1]    #to close graph
+        for i in range(len(pdgraphdata)):
+            try:
+                Xgraph.append(Xgraph[-1] + float(pdgraphdata['X'][i]))
+                Zgraph.append(Zgraph[-1] + float(pdgraphdata['Y'][i]))
+                typepartie.append(pdgraphdata['Nature'][i] + ' - ' + pdgraphdata['Materiau'][i])
+            except (ValueError, KeyError) as e:
+                return
 
-    categories = pdgraphdata.columns
-    # print(categories)
+        label = []
+        for i in range(len(Xgraph)-1):
+            typep = typepartie[i]
+            graphcolor = 'black'
+            graphlinestyle = '-'
+            graphlinewidth = 3.0
+            if 'Vegetalise enherbe' in typep:
+                graphcolor = 'lightgreen'
+            elif 'Vegetalise arbustif' in typep:
+                graphcolor = 'seagreen'
+            elif 'Vegetalise boise' in typep:
+                graphcolor = 'darkgreen'
+            elif 'Gabion' in typep:
+                graphcolor = 'gray'
+                graphlinestyle = '-'
+                graphlinewidth = 5.
+            elif 'Gravier 0/33' in typep:
+                graphcolor = 'darkgray'
+                graphlinestyle = '--'
+            elif 'Enrobe' in typep:
+                graphcolor = 'black'
+                graphlinewidth = 4.
+            elif 'Beton' in typep:
+                graphcolor = 'gray'
+            elif 'Pierre maconnees' in typep:
+                graphcolor = 'gray'
+                graphlinestyle = '--'
+            elif 'Roches appareillees' in typep:
+                graphcolor = 'gray'
+                graphlinestyle = '-.'
+            elif 'Abscence de revetement' in typep:
+                graphcolor = 'saddlebrown'
 
-    # values += values[:1] # repeat the first value to close the circular graph
-    angles = [n / float(len(categories)) * 2 * math.pi for n in range(len(categories))]
-    angles += angles[:1]
+            if typep not in label:
+                label.append(typep)
+            else:
+                typep = None
 
-    # fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(8, 8),
-    #                     subplot_kw=dict(polar=True))
+            axtype.plot([Xgraph[i],Xgraph[i+1]], [Zgraph[i], Zgraph[i+1]], label=typep, color=graphcolor,
+                                linewidth=graphlinewidth, linestyle=graphlinestyle)
 
-    # plt.xticks(angles[:-1], categories, color='grey', size=12)
-    axtype.set_xticks(angles[:-1])
-    axtype.set_xticklabels(categories)
+        legend = axtype.legend(bbox_to_anchor=(0., 1.), loc="lower left", bbox_transform=mplfigure.transFigure, prop={'size': 8})
+        axtype.annotate('TERRE', xy=(0.05, 1.05), xycoords='axes fraction',horizontalalignment='left')
+        axtype.annotate('EAU', xy=(0.95, 1.05), xycoords='axes fraction',horizontalalignment='right')
 
-    # setxticksvalues
-    maxdatasvalue = max(datas)
-    if maxdatasvalue == 0:
-        return
-    log10value = int(math.log10(maxdatasvalue))
-    step = 10**log10value
-    maxstep = 10**log10value * (int(maxdatasvalue/step) + 1)
-    # print(step, maxstep)
-    valuerange = range(step, maxstep, step)
-    valuerangestr = [str(elem) for elem in valuerange]
-    # print(valuerange,valuerangestr )
-
-    axtype.set_yticks(valuerange)
-    axtype.set_yticklabels(valuerangestr)
-
-    # plt.yticks(np.arange(1, 6), ['1', '2', '3', '4', '5'],
-    #         color='grey', size=12)
-    # plt.yticks(valuerange, valuerangestr,
-    #         color='grey', size=12)
-    # plt.ylim(0, 5)
-    axtype.set_rlabel_position(30)
-    
-    axtype.plot(angles, datas, linewidth=1, linestyle='solid')
-    axtype.fill(angles, datas, 'skyblue', alpha=0.4)
+        #plt.ylabel('Z (m)', fontsize=8)
+        axtype.set_ylabel('Z (m)', fontsize=8)

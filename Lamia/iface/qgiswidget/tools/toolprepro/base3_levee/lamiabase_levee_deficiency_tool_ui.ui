@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>Form_base3_levee</class>
+ <widget class="QWidget" name="Form_base3_levee">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -74,7 +74,7 @@
          <item row="0" column="0">
           <widget class="QLabel" name="label_2">
            <property name="text">
-            <string>Catégorie</string>
+            <string>Category</string>
            </property>
           </widget>
          </item>
@@ -100,21 +100,21 @@
              <item row="4" column="0">
               <widget class="QLabel" name="label">
                <property name="text">
-                <string>Sous-type</string>
+                <string>Sub-subtype</string>
                </property>
               </widget>
              </item>
              <item row="1" column="0">
               <widget class="QLabel" name="label_5">
                <property name="text">
-                <string>Categorie</string>
+                <string>Type</string>
                </property>
               </widget>
              </item>
              <item row="0" column="0">
               <widget class="QLabel" name="label_4">
                <property name="text">
-                <string>Cote</string>
+                <string>Side</string>
                </property>
               </widget>
              </item>
@@ -133,7 +133,7 @@
              <item row="2" column="0">
               <widget class="QLabel" name="label_6">
                <property name="text">
-                <string>Type</string>
+                <string>Subtype</string>
                </property>
               </widget>
              </item>
