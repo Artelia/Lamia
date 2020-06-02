@@ -22,7 +22,6 @@ class DBaseTest(unittest.TestCase):
         os.mkdir(TESTDIR)
     
 
-
     def test_a_DbaseInit(self):
         if SPATIALITE:
             sqlitedbase = DBaseParserFactory('spatialite').getDbaseParser()

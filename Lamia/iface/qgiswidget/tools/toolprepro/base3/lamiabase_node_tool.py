@@ -73,7 +73,7 @@ class BaseNodeTool(AbstractLamiaFormTool):
                                             'descriptionsystem' : {'linkfield' : 'id_descriptionsystem',
                                                         'widgets' : {}}}
 
-
+        self.toolwidgetmain.comboBox_nodecategory.currentIndexChanged.connect(self.changeCategorie)
 
         # ****************************************************************************************
         # child widgets
@@ -151,6 +151,14 @@ class BaseNodeTool(AbstractLamiaFormTool):
 
     def postDeleteFeature(self):
         pass
+
+    def changeCategorie(self,intcat):
+
+        pagecount = self.toolwidget.stackedWidget_category.count()
+        if intcat >= pagecount -1 :
+            self.toolwidget.stackedWidget_category.setCurrentIndex(pagecount -1)
+        else:
+            self.toolwidget.stackedWidget_category.setCurrentIndex(intcat)
 
     """
     def _createDeficiency(self, deficiencywdg,savedfeaturepk):

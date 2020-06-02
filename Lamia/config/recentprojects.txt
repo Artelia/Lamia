@@ -1,3 +1,4 @@
-d:/PAT_Git/Lamia/sandbox\..\test\testtempfiles\c_creation\sl_base3_levee_Lamia\test01.sqlite
+c:/111_GitProjects/Lamia/sandbox\..\test\testtempfiles\c_creation\sl_base3_faunaflora_Lamia\test01.sqlite
+c:/111_GitProjects/Lamia/sandbox\..\test\testtempfiles\c_creation\sl_base3_levee_Lamia\test01.sqlite
 lamiaunittest.base3_urbandrainage_lamia@localhost:5432;pvr;pvr
 lamiaunittest.Base2_digue_Lamia@localhost:5432;pvr;pvr

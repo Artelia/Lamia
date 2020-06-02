@@ -48,11 +48,12 @@ class DBaseViewer():
             # SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_waterdistribution_Lamia\test01.sqlite"
             # SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_constructionsite_Lamia\test01.sqlite"
             # SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_constructionsite_Orange\test01.sqlite"
-            SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_faunaflora_Lamia\test01.sqlite"
+            # SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_faunaflora_Lamia\test01.sqlite"
             #SLFILE = r"C:\Users\Public\Documents\lamia\test01\test01.sqlite"
             # SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue\test01.sqlite"
             # SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_assainissement\test01.sqlite"
-            SLFILE = os.path.join(self.testdir,'sl_base3_levee_Lamia','test01.sqlite')
+            # SLFILE = os.path.join(self.testdir,'sl_base3_levee_Lamia','test01.sqlite')
+            SLFILE = os.path.join(self.testdir,'sl_base3_faunaflora_Lamia','test01.sqlite')
 
             self._loadLocale()
             self._createWin()

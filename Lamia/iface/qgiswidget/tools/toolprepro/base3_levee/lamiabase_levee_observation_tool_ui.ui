@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>Form_base3_levee</class>
+ <widget class="QWidget" name="Form_base3_levee">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>347</width>
+    <width>502</width>
     <height>476</height>
    </rect>
   </property>
@@ -58,12 +58,18 @@
         <property name="text">
          <string>Date</string>
         </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
        </widget>
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label_5">
         <property name="text">
-         <string>Urgence</string>
+         <string>Urgency</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -105,7 +111,7 @@
        <item row="5" column="0">
         <widget class="QLabel" name="label_6">
          <property name="text">
-          <string>Evolution</string>
+          <string>Progression</string>
          </property>
          <property name="wordWrap">
           <bool>true</bool>
@@ -125,7 +131,7 @@
        <item row="1" column="3">
         <widget class="QLabel" name="label_11">
          <property name="text">
-          <string>Longueur (non cartographique)</string>
+          <string>Specific lenght</string>
          </property>
          <property name="wordWrap">
           <bool>true</bool>
@@ -135,7 +141,7 @@
        <item row="3" column="0">
         <widget class="QLabel" name="label_7">
          <property name="text">
-          <string>Commentaire</string>
+          <string>Comment</string>
          </property>
          <property name="wordWrap">
           <bool>true</bool>
@@ -145,7 +151,7 @@
        <item row="1" column="0">
         <widget class="QLabel" name="label_2">
          <property name="text">
-          <string>Nombre</string>
+          <string>Number</string>
          </property>
          <property name="wordWrap">
           <bool>true</bool>
@@ -234,7 +240,7 @@
        <item>
         <widget class="QStackedWidget" name="stackedWidget_2">
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="page">
           <layout class="QGridLayout" name="gridLayout_2">
@@ -263,7 +269,7 @@
            <item row="0" column="0">
             <widget class="QLabel" name="label_3">
              <property name="text">
-              <string>Etat général</string>
+              <string>General condition</string>
              </property>
              <property name="wordWrap">
               <bool>true</bool>
@@ -273,7 +279,7 @@
            <item row="1" column="0">
             <widget class="QLabel" name="label_10">
              <property name="text">
-              <string>Commentaire</string>
+              <string>Comment</string>
              </property>
              <property name="wordWrap">
               <bool>true</bool>
@@ -307,7 +313,7 @@
              </property>
              <widget class="QWidget" name="tab">
               <attribute name="title">
-               <string>Vantellerie</string>
+               <string>Gates\nand valves</string>
               </attribute>
               <layout class="QVBoxLayout" name="verticalLayout_4">
                <item>
@@ -330,7 +336,7 @@
              </widget>
              <widget class="QWidget" name="tab_2">
               <attribute name="title">
-               <string>Génie civil</string>
+               <string>Civil\nwork</string>
               </attribute>
               <layout class="QVBoxLayout" name="verticalLayout_5">
                <item>
@@ -353,7 +359,7 @@
              </widget>
              <widget class="QWidget" name="tab_3">
               <attribute name="title">
-               <string>Manoeuvre</string>
+               <string>Handling</string>
               </attribute>
               <layout class="QVBoxLayout" name="verticalLayout_6">
                <item>
@@ -376,13 +382,13 @@
              </widget>
              <widget class="QWidget" name="tab_4">
               <attribute name="title">
-               <string>Etancheite</string>
+               <string>Sealing</string>
               </attribute>
               <layout class="QVBoxLayout" name="verticalLayout_7">
                <item>
                 <widget class="QCheckBox" name="checkBox_etancheite">
                  <property name="text">
-                  <string>Ouvrage etanche</string>
+                  <string>Sealed facility</string>
                  </property>
                 </widget>
                </item>
@@ -403,7 +409,7 @@
              </widget>
              <widget class="QWidget" name="tab_7">
               <attribute name="title">
-               <string>Envasement</string>
+               <string>Sedimentation</string>
               </attribute>
               <layout class="QVBoxLayout" name="verticalLayout_8">
                <item>
@@ -443,7 +449,7 @@
              </property>
              <widget class="QWidget" name="tab_6">
               <attribute name="title">
-               <string>Génie civil</string>
+               <string>Civil work</string>
               </attribute>
               <layout class="QVBoxLayout" name="verticalLayout_9">
                <item>
@@ -466,7 +472,7 @@
              </widget>
              <widget class="QWidget" name="tab_5">
               <attribute name="title">
-               <string>Envasement</string>
+               <string>Sedimentation</string>
               </attribute>
               <layout class="QVBoxLayout" name="verticalLayout_10">
                <item>
@@ -517,7 +523,7 @@
    <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
-      <string>Suite à donner</string>
+      <string>Next action</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_4">
       <property name="leftMargin">
@@ -538,7 +544,7 @@
       <item row="1" column="0">
        <widget class="QLabel" name="label_8">
         <property name="text">
-         <string>Commentaire</string>
+         <string>Next action comment</string>
         </property>
         <property name="wordWrap">
          <bool>true</bool>
@@ -567,7 +573,7 @@
       <item row="0" column="0">
        <widget class="QLabel" name="label_4">
         <property name="text">
-         <string>Type de suite</string>
+         <string>Next action type</string>
         </property>
         <property name="wordWrap">
          <bool>true</bool>

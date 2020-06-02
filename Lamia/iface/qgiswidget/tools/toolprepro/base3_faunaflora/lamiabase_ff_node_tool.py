@@ -33,11 +33,15 @@ from qgis.PyQt import uic, QtCore, QtGui
 from qgis.PyQt.QtWidgets import (QWidget, QPushButton)
 from ..base3.lamiabase_node_tool import BaseNodeTool
 
-
+from ..subwidgets.subwidget_getfromcatalog import CatalogWidget
 
 
 
 class BaseUrbandrainageNodeTool(BaseNodeTool):
+
+    PREPROTOOLNAME = 'node_fauna'
+    tooltreewidgetSUBCAT =QtCore.QCoreApplication.translate('base3','Fauna')
+    TABLEFILTERFIELD = {'nodecategory': 'FAU' }
 
     def __init__(self, **kwargs):
         super(BaseUrbandrainageNodeTool, self).__init__(**kwargs)
@@ -48,52 +52,43 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
         
         self.toolwidgetmain = UserUI()
         self.formtoolwidgetconfdictmain = {'node' : {'linkfield' : 'id_node',
-                                                    'widgets' : {}},
+                                                    'widgets' : {
+                                                                'nodecategory':self.toolwidgetmain.comboBox_nodecategory,
+                                                                'faunadevstage':self.toolwidgetmain.comboBox_faunadevstage,
+                                                                'number':self.toolwidgetmain.spinBox_number,
+                                                                'faunachar1':self.toolwidgetmain.comboBox_faunachar1,
+
+                                                    }},
                                     'object' : {'linkfield' : 'id_object',
-                                                'widgets' : {'name': self.toolwidgetmain.lineEdit_libelle}},
+                                                'widgets' : {
+                                                    'comment': self.toolwidgetmain.textBrowser_comment,
+                                                    }},
                                     'descriptionsystem' : {'linkfield' : 'id_descriptionsystem',
-                                                'widgets' : {}}}
-        
-
-        self.model = QtGui.QStandardItemModel(self)
-        
-
-
-
-        self.toolwidgetmain.lineEdit_search.textChanged.connect(self.searchTxt)
-
-
-        self.loadCsv()
-
-        self.proxy = QtCore.QSortFilterProxyModel(self)
-        self.proxy.setSourceModel(self.model)
-
-        self.toolwidgetmain.tableView.setModel(self.proxy)
-
-        # https://stackoverflow.com/questions/47201539/how-to-filter-multiple-column-in-qtableview
+                                                'widgets' : {
+                                                            'orderclass': self.toolwidgetmain.lineEdit_orderclass,
+                                                            'commonname':self.toolwidgetmain.lineEdit_commonname,
+                                                            'scientificname':self.toolwidgetmain.lineEdit_scientificcname,
+                                                        
+                                                        }}}
+        self.toolwidgetmain.comboBox_nodecategory.currentIndexChanged.connect(self.changeCategorie)
+        self.toolwidgetmain.toolButton_number.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.spinBox_number))
 
 
-    def searchTxt(self, newtxt):
-        print(newtxt)
-        search = QtCore.QRegExp(  newtxt,
-                                        QtCore.Qt.CaseInsensitive,
-                                        QtCore.QRegExp.RegExp
-                                        )
-        self.proxy.setFilterKeyColumn(0)
-        self.proxy.setFilterRegExp(search)
 
 
-    def loadCsv(self, fileName=None):
+        self.catalogfinder = CatalogWidget(parentwdg=self,
+                                                  parentframe=self.toolwidgetmain.frame_catalog,
+                                                  catalogtype='faunaflora',
+                                                  catalogname = 'LISTE_faune_2019',
+                                                  catalogsheet=None,
+                                                  coltoshow=['Nom français', 'Nom latin'],
+                                                  sheetfield='orderclass',
+                                                  valuefield=["commonname",
+                                                                'scientificname'])
 
-        fileName = os.path.join(os.path.dirname(__file__),'Liste_bota_2020.csv' )
 
-        with open(fileName, newline='') as fileInput:
-            for row in csv.reader(fileInput):    
-                items = [
-                    QtGui.QStandardItem(field)
-                    for field in row
-                ]
-                self.model.appendRow(items)
+
 
 
 
