@@ -88,14 +88,14 @@ class CatalogWidget(AbstractSubWidget):
         self.lineEdit_search.setText('')
 
 
-
-
-
     def applyResults(self):
         if len(self.tableView.selectionModel().selectedRows()) == 0 :
             return
-        rowsel = self.tableView.selectionModel().selectedRows()[0]
-        rowindex = rowsel.row()
+
+        proxysel = self.tableView.selectionModel().selection() 
+        modelsel = self.proxy.mapSelectionToSource(proxysel)
+        rowindex = modelsel.indexes()[0].row()
+
         dicttoapply={}
         for i, fieldname in enumerate(self.valuefield):
             dicttoapply[fieldname] = self.model.row(rowindex)[i]
@@ -143,16 +143,11 @@ class CatalogWidget(AbstractSubWidget):
 
 
     def searchTxt(self, newtxt):
-        # print(newtxt)
-        search = QtCore.QRegExp(  newtxt,
-                                        QtCore.Qt.CaseInsensitive,
-                                        QtCore.QRegExp.RegExp
-                                        )
-        # self.proxy.setFilterKeyColumn(0)
-        # self.proxy.setFilterRegExp(search)
+        # search = QtCore.QRegExp(  newtxt,
+        #                                 QtCore.Qt.CaseInsensitive,
+        #                                 QtCore.QRegExp.RegExp
+        #                                 )
 
-        # self.proxy.setFilterByColumn(newtxt, 0)
-        # self.proxy.setFilterByColumn(newtxt, 1)
 
         self.proxy.setFilterStringandColumn(newtxt, [0,1])
 
@@ -206,7 +201,7 @@ class SortFilterProxyModel(QtCore.QSortFilterProxyModel):
         colcount = model.columnCount()
         row = model.row(source_row)
         if self.filterColumns:
-            tests = [self.filterString in row[col].lower()
+            tests = [self.filterString in str(row[col]).lower()
                     for col in self.filterColumns]
         else:
             tests = [self.filterString in str(row[col]).lower()

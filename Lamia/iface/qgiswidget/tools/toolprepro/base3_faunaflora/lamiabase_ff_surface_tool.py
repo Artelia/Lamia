@@ -31,32 +31,31 @@ from collections import OrderedDict
 
 from qgis.PyQt import uic, QtCore, QtGui
 from qgis.PyQt.QtWidgets import (QWidget, QPushButton)
-from ..base3.lamiabase_node_tool import BaseNodeTool
+from ..base3.lamiabase_surface_tool import BaseSurfaceTool
 
 from ..subwidgets.subwidget_getfromcatalog import CatalogWidget
 
 
 
-class BaseFaunafloraNodeTool(BaseNodeTool):
+class BaseFaunafloraSurfaceTool(BaseSurfaceTool):
 
-    PREPROTOOLNAME = 'node_fauna'
-    tooltreewidgetSUBCAT =QtCore.QCoreApplication.translate('base3','Fauna')
-    TABLEFILTERFIELD = {'nodecategory': 'FAU' }
+    PREPROTOOLNAME = 'surface_flora'
+    tooltreewidgetSUBCAT =QtCore.QCoreApplication.translate('base3','Flora')
+    TABLEFILTERFIELD = {'surfacecategory': 'FLO' }
 
     def __init__(self, **kwargs):
-        super(BaseFaunafloraNodeTool, self).__init__(**kwargs)
+        super(BaseFaunafloraSurfaceTool, self).__init__(**kwargs)
 
 
 
     def initMainToolWidget(self):
         
         self.toolwidgetmain = UserUI()
-        self.formtoolwidgetconfdictmain = {'node' : {'linkfield' : 'id_node',
+        self.formtoolwidgetconfdictmain = {'surface' : {'linkfield' : 'id_surface',
                                                     'widgets' : {
-                                                                'nodecategory':self.toolwidgetmain.comboBox_nodecategory,
-                                                                'faunadevstage':self.toolwidgetmain.comboBox_faunadevstage,
+
                                                                 'number':self.toolwidgetmain.spinBox_number,
-                                                                'faunachar1':self.toolwidgetmain.comboBox_faunachar1,
+
 
                                                     }},
                                     'object' : {'linkfield' : 'id_object',
@@ -65,31 +64,31 @@ class BaseFaunafloraNodeTool(BaseNodeTool):
                                                     }},
                                     'descriptionsystem' : {'linkfield' : 'id_descriptionsystem',
                                                 'widgets' : {
-                                                            'orderclass': self.toolwidgetmain.lineEdit_orderclass,
+                                                            # 'orderclass': self.toolwidgetmain.lineEdit_orderclass,
                                                             'commonname':self.toolwidgetmain.lineEdit_commonname,
                                                             'scientificname':self.toolwidgetmain.lineEdit_scientificcname,
                                                         
                                                         }}}
-        self.toolwidgetmain.comboBox_nodecategory.currentIndexChanged.connect(self.changeCategory)
+        self.toolwidgetmain.comboBox_category.currentIndexChanged.connect(self.changeCategory)
         self.toolwidgetmain.toolButton_number.clicked.connect(
             lambda: self.showNumPad(self.toolwidgetmain.spinBox_number))
-
-
 
 
         self.catalogfinder = CatalogWidget(parentwdg=self,
                                                   parentframe=self.toolwidgetmain.frame_catalog,
                                                   catalogtype='faunaflora',
-                                                  catalogname = 'LISTE_faune_2019',
-                                                  catalogsheet=None,
-                                                  coltoshow=['Nom français', 'Nom latin'],
-                                                  sheetfield='orderclass',
+                                                  catalogname = 'Liste_bota_2020',
+                                                  catalogsheet='#Liste_Naopad_bota_2020',
+                                                  coltoshow=['LB_NOM', 'NOM_VERN'],
+                                                  sheetfield=None,
                                                   valuefield=["commonname",
                                                                 'scientificname'])
         self.lamiawidgets.append(self.catalogfinder)
 
-
-
+    def _widgetClicked_manageToolBar(self):
+        super()._widgetClicked_manageToolBar()
+        print('ok point')
+        self.mainifacewidget.actiontoobargeomnewpoint.setEnabled(True)
 
 
     def postSaveFeature(self, savedfeaturepk=None):
@@ -101,6 +100,6 @@ class BaseFaunafloraNodeTool(BaseNodeTool):
 class UserUI(QWidget):
     def __init__(self, parent=None):
         super(UserUI, self).__init__(parent=parent)
-        uipath = os.path.join(os.path.dirname(__file__), 'lamiabase_ff_node_tool_ui.ui')
+        uipath = os.path.join(os.path.dirname(__file__), 'lamiabase_ff_surface_tool_ui.ui')
         uic.loadUi(uipath, self)
 

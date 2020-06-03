@@ -76,6 +76,8 @@ class BaseSurfaceTool(AbstractLamiaFormTool):
         # self.toolwidgetmain.pushButton_currentPrestation.clicked.connect(self.defineCurrentPrestation)
         #self.toolwidgetmain.pushButton_defineinter.clicked.connect(self.manageLinkage)
 
+        self.toolwidgetmain.comboBox_category.currentIndexChanged.connect(self.changeCategory)
+
         # ****************************************************************************************
         # child widgets
         self.dbasechildwdgfield = []
@@ -110,6 +112,14 @@ class BaseSurfaceTool(AbstractLamiaFormTool):
     def postSaveFeature(self, boolnewfeature):
         pass
 
+
+    def changeCategory(self,intcat):
+
+        pagecount = self.toolwidget.stackedWidget_category.count()
+        if intcat >= pagecount -1 :
+            self.toolwidget.stackedWidget_category.setCurrentIndex(pagecount -1)
+        else:
+            self.toolwidget.stackedWidget_category.setCurrentIndex(intcat)
 
 class UserUI(QWidget):
     def __init__(self, parent=None):

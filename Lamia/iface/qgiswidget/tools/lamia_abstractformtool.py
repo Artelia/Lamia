@@ -770,7 +770,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         :param showinrubberband: True if the temp geometry will be visible with the rubberband
 
         """
-        debug = False
+        debug = True
 
         if debug: logging.getLogger("Lamia_unittest").debug('start points : %s %s', self.DBASETABLENAME, points)
         self.mainifacewidget.qgiscanvas.stopCapture()
@@ -797,6 +797,13 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             points.append(points[0])
             #self.mainifacewidget.qgiscanvas.createorresetRubberband(0)
             capturetype = 0.5
+        elif len(points) == 1 and dbasetable['geom'] == 'POLYGON':
+            qgsgeompoint = qgis.core.QgsGeometry.fromPointXY(points[0])
+            qgsgeompointbuffer = qgsgeompoint.buffer(1,12)
+            points = qgsgeompointbuffer.asPolygon()[0]
+            # points.append(points[0])
+            #self.mainifacewidget.qgiscanvas.createorresetRubberband(0)
+            capturetype = 1.5
         #else:
         #    self.mainifacewidget.qgiscanvas.createorresetRubberband(capturetype)
 
@@ -820,13 +827,13 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         elif capturetype == 1:
             geometryformap = qgis.core.QgsGeometry.fromMultiPolylineXY([pointsmapcanvas])
             geometryforlayer = qgis.core.QgsGeometry.fromMultiPolylineXY([pointslayer])
-        elif capturetype == 2:
+        elif capturetype in [1.5, 2]:
             geometryformap = qgis.core.QgsGeometry.fromPolygonXY([pointsmapcanvas])
             geometryforlayer = qgis.core.QgsGeometry.fromPolygonXY([pointslayer])
 
         #outside qgis bug
         if showinrubberband:
-            if capturetype != 0.5:
+            if capturetype not in [0.5,1.5]:
                 self.mainifacewidget.qgiscanvas.createorresetRubberband(capturetype,rubtype='capture')
             else:
                 self.mainifacewidget.qgiscanvas.createorresetRubberband(0,rubtype='capture')
