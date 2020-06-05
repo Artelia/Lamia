@@ -90,7 +90,13 @@ class BaseEdgeTool(AbstractLamiaFormTool):
         pass
 
 
+    def changeCategory(self,intcat):
 
+        pagecount = self.toolwidget.stackedWidget_category.count()
+        if intcat >= pagecount -1 :
+            self.toolwidget.stackedWidget_category.setCurrentIndex(pagecount -1)
+        else:
+            self.toolwidget.stackedWidget_category.setCurrentIndex(intcat)
 
 class UserUIField(QWidget):
     def __init__(self, parent=None):

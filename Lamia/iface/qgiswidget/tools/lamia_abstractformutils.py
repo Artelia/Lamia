@@ -665,7 +665,7 @@ class FormToolUtils(QtCore.QObject):
 
         if isinstance(wdg, QTextEdit) or isinstance(wdg, QLineEdit):
             if valuetoset is not None:
-                wdg.setText(valuetoset)
+                wdg.setText(str(valuetoset))
             else:
                 wdg.setText('')
         elif isinstance(wdg, QSpinBox) or isinstance(wdg, QDoubleSpinBox):

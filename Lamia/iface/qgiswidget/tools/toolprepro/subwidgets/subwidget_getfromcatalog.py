@@ -24,7 +24,7 @@ This file is part of LAMIA.
   * License-Filename: LICENSING.md
  """
 import os, logging
-
+import pandas as pd
 from qgis.PyQt.QtWidgets import (QWidget, QVBoxLayout, QAbstractItemView, QHeaderView)
 from qgis.PyQt import uic, QtCore, QtGui
 
@@ -149,7 +149,7 @@ class CatalogWidget(AbstractSubWidget):
         #                                 )
 
 
-        self.proxy.setFilterStringandColumn(newtxt, [0,1])
+        self.proxy.setFilterStringandColumn(newtxt, self.coltoshow)
 
 
 
@@ -179,34 +179,36 @@ class PandasModel(QtCore.QAbstractTableModel):
         return None
 
     def row(self, rowindex):
-        return self._data.iloc[rowindex].values
+        # return self._data.iloc[rowindex].values
+        return self._data.iloc[rowindex]
+
 
 
 class SortFilterProxyModel(QtCore.QSortFilterProxyModel):
     def __init__(self, *args, **kwargs):
         QtCore.QSortFilterProxyModel.__init__(self, *args, **kwargs)
-        self.filterString = ''
-        self.filterColumns = []
+        # self.filterString = ''
+        # self.filterColumns = []
+        self.pdresult = None
 
     def setFilterStringandColumn(self, searchstr,cols):
-        self.filterString = searchstr.lower()
-        self.filterColumns = cols
+        # self.filterString = searchstr.lower()
+        # self.filterColumns = cols
+
+        resultslist = []
+        for col in cols:
+            resultslist.append( self.sourceModel()._data[col].str.contains(searchstr,case=False , regex=False) )
+        concatpd = pd.concat(resultslist, axis=1)
+        self.pdresult = concatpd.any(axis='columns')
+
         self.invalidateFilter()
 
 
     def filterAcceptsRow(self, source_row, source_parent):
-
-        model = self.sourceModel()  # the underlying model, 
-                                    # implmented as a python array
-        colcount = model.columnCount()
-        row = model.row(source_row)
-        if self.filterColumns:
-            tests = [self.filterString in str(row[col]).lower()
-                    for col in self.filterColumns]
+        if self.pdresult is not None:
+            try:
+                return self.pdresult.iloc[source_row]
+            except IndexError:
+                return True
         else:
-            tests = [self.filterString in str(row[col]).lower()
-                    for col in range(colcount)]
-
-        return True in tests        # accepts row if any column
-                                    # contains filterString
-
+            return True

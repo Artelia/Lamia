@@ -1,8 +1,0 @@
-.. toctree::
-    :maxdepth: 2
-
-    Introduction
-    D_marche_g_n_rale__license
-    Tutoriel
-    Developpement
-    API

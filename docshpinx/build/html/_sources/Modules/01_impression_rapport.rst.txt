@@ -1,0 +1,297 @@
+.. toctree::
+    :maxdepth: 3
+
+
+Impression de rapports
+#######################################
+
+
+
+Création de rapports
+~~~~~~~~~~~~~~~~~~~~
+
+La création de rapports est accessible depuis l’item Import/export / Impression rapport de l’interface post traitement.
+
+
+La liste des rapports affichés reprend la liste des rapports (*.qpt) situés dans le répertoire du plugin Lamia Lamia/toolpostpro/[votre type de base de données]/rapport tools.
+
+
+NB : le répertoire des plugins est dans c:\\users\[votre_nom]\.\qgis2\\python\\plugins pour QGIS2 , et C:\\Users\\[votre_login]\\AppData\\Roaming\\QGIS\\QGIS3\\profiles\\[votre_nom_de_profil_qgis]\\python\\plugins pour QGIS3.
+
+
+Ainsi, pour créer un nouveau type de rapport (de nom rapport_toto p.ex), il faut créer :
+
+*   un fichier rapport_toto.qpt (la mise en page qgis)
+
+
+
+*   un fchier rapport_toto.txt (la configuration).
+
+
+
+Création du fichier rapport_toto.qpt
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+1. Aller dans QGIS, ouviri le composer et faire Mise en page/enregistrer comme modèle… et l’enregistrer sous le nom de rapport_toto.qpt dans l’emplacement vu au paragraphe précédent. Toujours refaire cette manip à a fin de chaque modif.
+
+
+2. Renseignement des champs Lamia
+
+*   créer une zone de texte
+
+
+
+
+*   |100000000000001F0000001D608AD7BDFD792DA0_png|Renseigner la zone de texte
+
+
+
+Dans cette zone de texte, si vous voulez ajouter un champ lamia, l’écrire comme ceci :
+
+#lamia.[table_requetée_dans_le_sql_de_configuration].[nom du champ voulu].
+
+Par exemple, pour avoir le diamètre nominal d’une canalisation, faire #lamia.Infralineaire.diametrenominal.
+
+Ex :
+
+|1000000000000179000000FA9AFC6676D160909E_png|
+
+Cette zone de texte sera remplacée par les champs voulus lors de l’impression du rapport.
+
+NB : le nom des tables et des champs se trouvent dans les fichiers excel dans Lamia/DBASE/create
+
+
+3. Ajouter des photos
+
+il convient de créer une image
+
+|1000000000000019000000193E5468FD53954B67_png|
+
+Ensuite, dans ses propriétés, nous lui donnerons un identifiant unque qui nous permettra de configurer ce qui apparaît dans l’image 
+
+|100000000000017B000001982BA227EF19B5EEDC_png|
+
+
+Création du fichier rapport_toto.txt
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+IL s’agit du fichier de configuration de l’impression rapport. Les différentes lignes à renseigner sont indiquées ci-après.
+
+*   ###atlaslayersql
+
+
+
+mettre à la suite la requete sql qui va êre utilisée pour créer la table à parcourir par l’atlas. Les noms des tables utilisées ici doivent correspondre au nom des tables utilisée dans le composeur avec #lamia...
+
+ex : SELECT Infralineaire_now.* FROM Infralineaire_now
+
+*   ###atlaslayerid
+
+
+donner le champ contenant l’id utilisé lors du parcours de la table par l’atlas
+
+ex : id_infralineaire
+
+*   ###spatial
+
+
+
+Indiquer ici si la table est spatiale ou pas. Prend la valeur True ou False
+
+*   ###ordering
+
+
+
+indique la méthode d’ordonnancement des éléments parcourus par l’atlas. Si rien n’est mis, ça suit l’ordre des id.
+
+Peut prendre la valeur autoalongpath. Dans ce cas, les ids sont classés selon le parcours de l’infralineaire la plus proche.
+
+*   ###atlaslayerstyle
+
+
+
+nom du fichier .qml (style qgis) pour le style de la couche parcourue par l’atlas.
+
+*   ###atlasdrivemap
+
+
+
+Fourni les caractéristiques des cartes qui suivent la table parcourue par l’atlas.
+
+Ex :
+
+#itemname;   minscale;   typescale;      layers
+
+map1;       2500;       Predefined      ;['atlaslayer', 'Infralineaire', 'scan25']
+
+
+Dans ce cas, la map ayant pour identifiant map1 sera au 1/2500°, avec une échelle de type Predefined (ne change pas selon l’objet), et les couches affichées seront l’atlaslayer (la couche constitue avec la requete sql de ###atlaslayersql), la couche Infralineaire telle qu’elle est stylée dans qgis au moement de l’édition du rapport, et la couche scan25 qui est un raster chargé dans Lamia avec pour attribut « scan25 de référence ».
+
+On peut mettre autant de map que l’on veut.
+
+###generalmap
+
+Fourni les caractéristiques des cartes générales. Même principe que pour ###atlasdrivemap
+
+Ex :
+
+#itemname;   minscale;   typescale; layers
+
+map0    ;           ;             ; ['Infralineaire', 'ortho']
+
+*   ###images
+
+
+
+On met ici les idenifiants des images du composeur, avec u nmot clé à la suite.
+
+Ex :
+
+#itemname   ; type
+
+photo1;Equipement_now.photo1
+
+ici , l’image avec pour identifiant « photo1 » sera rempli avec la première photo liée de l’équipement en cours de parcours par l’atlas.
+
+*   ###childprint
+
+
+
+si on veut rajouter des composeurs à la suite de ce composeur, indiquer ici le nom du composeur à aller chercher.
+
+Ex : 
+#confname;                linkcolumn;             optionsql
+
+Desordres_observation;    Observation_now.lid_desordre ; ORDER BY Observation_now.datetimeobservation DESC
+
+
+Exemple complet de fichier de configuration :
+
+.. code-block:: python
+
+    ###atlaslayersql
+    WITH Gestionnaire AS (SELECT Intervenant.societe, Intervenant.nom , Tcobjetintervenant.lid_objet 
+                     FROM Tcobjetintervenant                      INNER JOIN Intervenant ON Tcobjetintervenant.lid_intervenant = Intervenant.id_intervenant                      WHERE Tcobjetintervenant.fonction = 'GES' )
+    SELECT Equipement_now.* , Gestionnaire.societe, Gestionnaire.nom 
+    FROM Equipement_now
+    LEFT JOIN Gestionnaire ON Gestionnaire.lid_objet = Equipement_now.id_objet
+    WHERE ( Equipement_now.categorie = 'RHF' or Equipement_now.categorie = 'RHO' or Equipement_now.categorie = 'OUH')
+    ###atlaslayerid
+    id_equipement
+    ###spatial
+    True
+    ###ordering
+    #type;               constraint (qgis typo)
+    autoalongpath;      "lid_descriptionsystem_1" IS NULL
+    ###atlaslayerstyle
+    Equipementhydraulique_atlas.qml
+    ###atlasdrivemap
+    #itemname;   minscale;   typescale;      layers
+    map1;       2500;       Predefined      ;['atlaslayer', 'Infralineaire', 'scan25']
+    #map1;       2500;       Predefined      ;[]
+    ###generalmap
+    #itemname;   minscale;   typescale; layers
+    map0    ;           ;             ; ['Infralineaire', 'ortho']
+    #map0    ;           ;             ; []
+    ###images
+    #itemname   ; type
+    photo1;Equipement_now.photo1
+    ###childprint
+    #confname;                        linkcolumn;                               optionsql
+    Equipementhydraulique_annexe;    Equipement_now.lid_descriptionsystem_1 ; 
+
+
+.. |10000000000006130000032E84898FD094C51C15_jpg| image:: images/10000000000006130000032E84898FD094C51C15.jpg
+    :width: 17cm
+    :height: 8.899cm
+
+
+.. |10000000000003340000018B760F28229874C417_png| image:: images/10000000000003340000018B760F28229874C417.png
+    :width: 13.36cm
+    :height: 6.436cm
+
+
+.. |10000000000003090000019ED34C0AA82D11E213_png| image:: images/10000000000003090000019ED34C0AA82D11E213.png
+    :width: 14.785cm
+    :height: 7.878cm
+
+
+.. |10000000000001DF00000197C36F8704C29C5671_png| image:: images/10000000000001DF00000197C36F8704C29C5671.png
+    :width: 7.246cm
+    :height: 6.158cm
+
+
+.. |10000000000002F20000024294FEAEFA32FE0E79_png| image:: images/10000000000002F20000024294FEAEFA32FE0E79.png
+    :width: 9.088cm
+    :height: 6.966cm
+
+
+.. |100000000000039D000000A6145CCA0FAADAA5F3_png| image:: images/100000000000039D000000A6145CCA0FAADAA5F3.png
+    :width: 17cm
+    :height: 3.05cm
+
+
+.. |100000000000039E000001FA9F2022D1734C060D_png| image:: images/100000000000039E000001FA9F2022D1734C060D.png
+    :width: 13.568cm
+    :height: 7.414cm
+
+
+.. |10000000000002A70000010F4851A8DB4C77CE1D_png| image:: images/10000000000002A70000010F4851A8DB4C77CE1D.png
+    :width: 11.848cm
+    :height: 4.729cm
+
+
+.. |10000000000002A9000000579F3B9001CBC63EF0_png| image:: images/10000000000002A9000000579F3B9001CBC63EF0.png
+    :width: 17cm
+    :height: 2.171cm
+
+
+.. |10000000000004050000022A0300C3D5F0472CA5_png| image:: images/10000000000004050000022A0300C3D5F0472CA5.png
+    :width: 17cm
+    :height: 9.151cm
+
+
+.. |10000000000005AA000002B9BF7241689B42235F_png| image:: images/10000000000005AA000002B9BF7241689B42235F.png
+    :width: 14.64cm
+    :height: 7.036cm
+
+
+.. |10000000000002E7000000D891501C02957EE6F3_png| image:: images/10000000000002E7000000D891501C02957EE6F3.png
+    :width: 15.208cm
+    :height: 4.42cm
+
+
+.. |100000000000018E0000008D816B8C367A0FD4F0_png| image:: images/100000000000018E0000008D816B8C367A0FD4F0.png
+    :width: 8.243cm
+    :height: 2.921cm
+
+
+.. |100000000000003C000000181F946EC676A9E4DF_png| image:: images/100000000000003C000000181F946EC676A9E4DF.png
+    :width: 1.588cm
+    :height: 0.635cm
+
+
+.. |10000000000005A5000002B7B782A2ED1192CAF2_png| image:: images/10000000000005A5000002B7B782A2ED1192CAF2.png
+    :width: 17cm
+    :height: 8.176cm
+
+
+.. |100000000000001F0000001D608AD7BDFD792DA0_png| image:: images/100000000000001F0000001D608AD7BDFD792DA0.png
+    :width: 0.82cm
+    :height: 0.767cm
+
+
+.. |1000000000000179000000FA9AFC6676D160909E_png| image:: images/1000000000000179000000FA9AFC6676D160909E.png
+    :width: 6.114cm
+    :height: 4.053cm
+
+
+.. |1000000000000019000000193E5468FD53954B67_png| image:: images/1000000000000019000000193E5468FD53954B67.png
+    :width: 0.661cm
+    :height: 0.661cm
+
+
+.. |100000000000017B000001982BA227EF19B5EEDC_png| image:: images/100000000000017B000001982BA227EF19B5EEDC.png
+    :width: 6.175cm
+    :height: 6.648cm
+

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form_base3</class>
- <widget class="QWidget" name="Form_base3">
+ <class>Form_base3_ff</class>
+ <widget class="QWidget" name="Form_base3_ff">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -126,7 +126,7 @@
        <item row="1" column="0">
         <widget class="QLabel" name="label_7">
          <property name="text">
-          <string>Nom fr</string>
+          <string>Common name</string>
          </property>
          <property name="wordWrap">
           <bool>true</bool>
@@ -139,7 +139,7 @@
        <item row="1" column="2">
         <widget class="QLabel" name="label_8">
          <property name="text">
-          <string>Nom lat</string>
+          <string>Scientific name</string>
          </property>
          <property name="wordWrap">
           <bool>true</bool>

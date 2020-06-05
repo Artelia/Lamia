@@ -2,6 +2,10 @@ FORMS =     ../iface/qgiswidget/ifaceqgswidget.ui\
             ../iface/qgiswidget/subdialogs/lamia_Connexion_PG.ui\
             ../iface/qgiswidget/subdialogs/lamia_newDB.ui\
             ../iface/qgiswidget/tools/lamia_abstractformtool.ui\
+            ../iface/qgiswidget/tools/toolprepro/subwidgets/subwidget_getfromcatalog_ui.ui\
+            ../iface/qgiswidget/tools/toolprepro/subwidgets/subwidget_lidchooser_ui.ui\
+            ../iface/qgiswidget/tools/toolprepro/subwidgets/subwidget_tcmanytomany_ui.ui\
+            ../iface/qgiswidget/tools/toolprepro/subwidgets/subwidget_signature_ui.ui\
             ../iface/qgiswidget/tools/toolprepro/base3/lamiabase_actor_tool_ui.ui\
             ../iface/qgiswidget/tools/toolprepro/base3/lamiabase_camera_tool_ui.ui\
             ../iface/qgiswidget/tools/toolprepro/base3/lamiabase_deficiency_tool_ui.ui\
@@ -21,9 +25,6 @@ FORMS =     ../iface/qgiswidget/ifaceqgswidget.ui\
             ../iface/qgiswidget/tools/toolprepro/base3/lamiabase_sketch_tool_ui.ui\
             ../iface/qgiswidget/tools/toolprepro/base3/lamiabase_topography_tool_ui.ui\
             ../iface/qgiswidget/tools/toolprepro/base3/lamiabase_topographydata_tool_ui.ui\
-            ../iface/qgiswidget/tools/toolprepro/subwidgets/subwidget_lidchooser_ui.ui\
-            ../iface/qgiswidget/tools/toolprepro/subwidgets/subwidget_tcmanytomany_ui.ui\
-            ../iface/qgiswidget/tools/toolprepro/subwidgets/subwidget_signature_ui.ui\
             ../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_camera_tool_defaultbuttons_ui.ui\
             ../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_deficiency_tool_ui.ui\
             ../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_edge_tool_ui.ui\
@@ -50,7 +51,9 @@ FORMS =     ../iface/qgiswidget/ifaceqgswidget.ui\
             ../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_subobservation_tool_ui.ui\
             ../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_lamia.ui\
             ../iface/qgiswidget/tools/toolprepro/base3_constructionsite/ncawidget/lamiabase_cs_observation_nca_orange.ui\
-
+            ../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_node_tool_ui.ui\
+            ../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_tool_ui.ui\
+            ../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_edge_tool_ui.ui\
 
 
 SOURCES =   ../Lamia.py\
@@ -89,7 +92,10 @@ SOURCES =   ../Lamia.py\
             ../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_deficiency_tool.py\
             ../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_deficiency_tool_pv.py\
             ../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_observation_tool.py\
-
+            ../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_node_tool.py\
+            ../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_flo_tool.py\
+            ../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_hab.py\
+            ../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_edge_pro_tool.py\
 
 
 TRANSLATIONS = Lamia_fr.ts

@@ -33,4 +33,4 @@ REM cd %HOMEPATH%\development
 
 
 
-start "PyCharm aware of Quantum GIS" /B "C:\Users\patrice.verchere\AppData\Local\Programs\Microsoft VS Code\Code.exe" %*
+start "PyCharm aware of Quantum GIS" /B "%UserProfile%\AppData\Local\Programs\Microsoft VS Code\Code.exe" %*

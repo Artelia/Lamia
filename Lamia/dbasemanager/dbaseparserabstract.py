@@ -60,10 +60,15 @@ class AbstractDBaseParser():
 
 
     def __init__(self, parserfactory=None,messageinstance=None):
+        """Read the dbase
 
+        :param parserfactory: the parent class
+        :type parserfactory: [type], optional
+        :param messageinstance: [description], defaults to None
+        :type messageinstance: [type], optional
+        :raises ImportError: [description]
         """
-        Init func
-        """
+
         # the dictionnary of dbase (cf DBconfigReader)
         self.dbasetables = None
 

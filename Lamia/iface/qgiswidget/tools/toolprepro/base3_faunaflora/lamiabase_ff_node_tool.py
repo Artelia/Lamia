@@ -33,6 +33,9 @@ from qgis.PyQt import uic, QtCore, QtGui
 from qgis.PyQt.QtWidgets import (QWidget, QPushButton)
 from ..base3.lamiabase_node_tool import BaseNodeTool
 
+from .lamiabase_ff_camera_tool import BaseFaunafloraCameraTool
+from .lamiabase_ff_sketch_tool import BaseFaunafloraSketchTool
+
 from ..subwidgets.subwidget_getfromcatalog import CatalogWidget
 
 
@@ -40,8 +43,11 @@ from ..subwidgets.subwidget_getfromcatalog import CatalogWidget
 class BaseFaunafloraNodeTool(BaseNodeTool):
 
     PREPROTOOLNAME = 'node_fauna'
+    tooltreewidgetCAT =QtCore.QCoreApplication.translate('base3','Inventory')
     tooltreewidgetSUBCAT =QtCore.QCoreApplication.translate('base3','Fauna')
     TABLEFILTERFIELD = {'nodecategory': 'FAU' }
+
+    tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'fauna.png')
 
     def __init__(self, **kwargs):
         super(BaseFaunafloraNodeTool, self).__init__(**kwargs)
@@ -74,7 +80,12 @@ class BaseFaunafloraNodeTool(BaseNodeTool):
         self.toolwidgetmain.toolButton_number.clicked.connect(
             lambda: self.showNumPad(self.toolwidgetmain.spinBox_number))
 
-
+        self.dbasechildwdgfield = []
+        self.instancekwargs['parentwidget'] = self
+        self.propertieswdgPHOTOGRAPHIE = BaseFaunafloraCameraTool(**self.instancekwargs)
+        self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
+        self.propertieswdgCROQUIS = BaseFaunafloraSketchTool(**self.instancekwargs)
+        self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
 
         self.catalogfinder = CatalogWidget(parentwdg=self,

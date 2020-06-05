@@ -770,7 +770,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         :param showinrubberband: True if the temp geometry will be visible with the rubberband
 
         """
-        debug = True
+        debug = False
 
         if debug: logging.getLogger("Lamia_unittest").debug('start points : %s %s', self.DBASETABLENAME, points)
         self.mainifacewidget.qgiscanvas.stopCapture()
@@ -798,11 +798,12 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             #self.mainifacewidget.qgiscanvas.createorresetRubberband(0)
             capturetype = 0.5
         elif len(points) == 1 and dbasetable['geom'] == 'POLYGON':
-            qgsgeompoint = qgis.core.QgsGeometry.fromPointXY(points[0])
-            qgsgeompointbuffer = qgsgeompoint.buffer(1,12)
-            points = qgsgeompointbuffer.asPolygon()[0]
-            # points.append(points[0])
-            #self.mainifacewidget.qgiscanvas.createorresetRubberband(0)
+            # qgsgeompoint = qgis.core.QgsGeometry.fromPointXY(points[0])
+            points = [qgis.core.QgsPointXY(points[0].x() - 1.0, points[0].y() - 1.0),
+                      qgis.core.QgsPointXY(points[0].x()  - 1.0, points[0].y() + 1.0),
+                      qgis.core.QgsPointXY(points[0].x()  + 1.0, points[0].y() + 1.0),
+                      qgis.core.QgsPointXY(points[0].x()  + 1.0, points[0].y() - 1.0),]
+
             capturetype = 1.5
         #else:
         #    self.mainifacewidget.qgiscanvas.createorresetRubberband(capturetype)
@@ -835,6 +836,8 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         if showinrubberband:
             if capturetype not in [0.5,1.5]:
                 self.mainifacewidget.qgiscanvas.createorresetRubberband(capturetype,rubtype='capture')
+            elif capturetype in [1.5]:
+                self.mainifacewidget.qgiscanvas.createorresetRubberband(2,rubtype='capture')
             else:
                 self.mainifacewidget.qgiscanvas.createorresetRubberband(0,rubtype='capture')
             self.mainifacewidget.qgiscanvas.rubberbands['capture'].addGeometry(geometryformap, None)

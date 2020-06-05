@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="2.0" language="fr" sourcelanguage="en">
+<!DOCTYPE TS>
+<TS version="2.1" language="fr" sourcelanguage="en">
 <context>
     <name>AbstractLamiaFormTool</name>
     <message>
-        <location filename="../iface/qgiswidget/tools/lamia_abstractformtool.py" line="545"/>
+        <location filename="../iface/qgiswidget/tools/lamia_abstractformtool.py" line="568"/>
         <source>GPS not connected</source>
         <translation>GPS non connecté</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/lamia_abstractformtool.py" line="618"/>
+        <location filename="../iface/qgiswidget/tools/lamia_abstractformtool.py" line="641"/>
         <source>Delete feature (yes) or archive (no) ? </source>
         <translation>Supprimer completement l&apos;element (yes) ou l&apos;archiver (no) ?</translation>
     </message>
@@ -17,7 +18,7 @@
     <name>DBaseOfflineManager</name>
     <message>
         <location filename="../dbasemanager/dbaseofflinemanager.py" line="79"/>
-        <source>Il y a d&#xc3;&#xa9;j&#xc3;&#xa0; une copie locale de la base... Supprimez la</source>
+        <source>Il y a dÃ©jÃ&#xa0; une copie locale de la base... Supprimez la</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -84,49 +85,54 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="63"/>
+        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="68"/>
         <source>base3_waterdistribution</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="68"/>
+        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="73"/>
         <source>Base2_digue</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="73"/>
+        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="78"/>
         <source>Base2_eclairagepublic</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="78"/>
+        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="83"/>
         <source>Base2_eaupotable</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="83"/>
+        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="88"/>
         <source>Base2_tramway</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="88"/>
+        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="93"/>
         <source>Base2_assainissement</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="93"/>
+        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="98"/>
         <source>Base2_parking</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="98"/>
+        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="103"/>
         <source>Base2_chantier</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="106"/>
+        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="111"/>
         <source>Variante</source>
         <translation></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="63"/>
+        <source>base3_constructionsite</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -297,7 +303,7 @@
         <translation>Fichier</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_node_tool_ui.ui" line="20"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_node_tool_ui.ui" line="42"/>
         <source>GroupBox</source>
         <translation></translation>
     </message>
@@ -554,12 +560,12 @@
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_facility_tool_ui.ui" line="64"/>
         <source>Operator</source>
-        <translation type="unfinished">Gestionnaire</translation>
+        <translation>Gestionnaire</translation>
     </message>
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_facility_tool_ui.ui" line="101"/>
         <source>Owner</source>
-        <translation type="unfinished">Propriétaire</translation>
+        <translation>Propriétaire</translation>
     </message>
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_delivery_tool_ui.ui" line="51"/>
@@ -576,6 +582,11 @@
         <source>Delivery category</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_node_tool_ui.ui" line="29"/>
+        <source>Node category</source>
+        <translation type="unfinished">Type de noeud</translation>
+    </message>
 </context>
 <context>
     <name>Form_base3_cs</name>
@@ -586,17 +597,17 @@
     </message>
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_deficiency_tool_ui.ui" line="62"/>
-        <source>Cat&#xc3;&#xa9;gorie de Fiche</source>
+        <source>CatÃ©gorie de Fiche</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_deficiency_tool_ui.ui" line="110"/>
-        <source>D&#xc3;&#xa9;tecteur</source>
+        <source>DÃ©tecteur</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_deficiency_tool_ui.ui" line="120"/>
-        <source>n&#xc2;&#xb0; marche</source>
+        <source>nÂ° marche</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1001,7 +1012,7 @@
     </message>
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_observation_tool_ui.ui" line="590"/>
-        <source>Suite &#xc3;&#xa0; donner</source>
+        <source>Suite Ã&#xa0; donner</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1039,6 +1050,104 @@
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_delivery_tool_ui_orange.ui" line="138"/>
         <source>Name</source>
         <translation type="unfinished">Nom</translation>
+    </message>
+</context>
+<context>
+    <name>Form_base3_ff</name>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_edge_tool_ui.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_node_tool_ui.ui" line="53"/>
+        <source>Node category</source>
+        <translation>Type de noeud</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_node_tool_ui.ui" line="86"/>
+        <source>Fauna order/class</source>
+        <translation>Ordre/classe</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_node_tool_ui.ui" line="96"/>
+        <source>Fauna development stage</source>
+        <translation>Stade de développement</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_tool_ui.ui" line="73"/>
+        <source>...</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_node_tool_ui.ui" line="116"/>
+        <source>Number</source>
+        <translation>Nombre</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_node_tool_ui.ui" line="158"/>
+        <source>Characteristics</source>
+        <translation>Caractéristiques</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_tool_ui.ui" line="245"/>
+        <source>Comment</source>
+        <translation>Commentaire</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_tool_ui.ui" line="53"/>
+        <source>Surface category</source>
+        <translation>Type de surface</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_tool_ui.ui" line="83"/>
+        <source>Count</source>
+        <translation>Nombre</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_tool_ui.ui" line="159"/>
+        <source>Habitat name</source>
+        <translation>Nom de l&apos;habitat</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_tool_ui.ui" line="169"/>
+        <source>Wet land</source>
+        <translation>Zone humide</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_tool_ui.ui" line="176"/>
+        <source>Habitat code</source>
+        <translation>Code de l&apos;habitat</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_tool_ui.ui" line="186"/>
+        <source>Habitat repository</source>
+        <translation>Rérérentiel de l&apos;habitat</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_tool_ui.ui" line="106"/>
+        <source>Scientific name</source>
+        <translation>Nom scientifique</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_tool_ui.ui" line="93"/>
+        <source>Common name</source>
+        <translation>Nom commun</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_edge_tool_ui.ui" line="32"/>
+        <source>Edge category</source>
+        <translation>Type de ligne</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_edge_tool_ui.ui" line="49"/>
+        <source>Edge type</source>
+        <translation>Type de protocole</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_edge_tool_ui.ui" line="86"/>
+        <source>Comments</source>
+        <translation>Commentaires</translation>
     </message>
 </context>
 <context>
@@ -1139,59 +1248,34 @@
         <translation>Materiau</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui_CD41.ui" line="831"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui_CD41.ui" line="641"/>
         <source>Y</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui_CD41.ui" line="950"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui_CD41.ui" line="631"/>
         <source>X</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui_CD41.ui" line="880"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui_CD41.ui" line="691"/>
         <source>dY</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui_CD41.ui" line="873"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui_CD41.ui" line="681"/>
         <source>dX</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui_CD41.ui" line="866"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui_CD41.ui" line="721"/>
         <source>dZ</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui_CD41.ui" line="803"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui_2018SNCF.ui" line="659"/>
         <source>GPS</source>
         <translation></translation>
-    </message>
-    <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui_CD41.ui" line="957"/>
-        <source>/</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui_CD41.ui" line="859"/>
-        <source>RAF09</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui_CD41.ui" line="894"/>
-        <source>Zgps</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui_CD41.ui" line="901"/>
-        <source>Z mNGF</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui_CD41.ui" line="936"/>
-        <source>Zwgs84</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui_CD41.ui" line="96"/>
@@ -1424,14 +1508,9 @@
         <translation>Longueur</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui_CD41.ui" line="721"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui_CD41.ui" line="671"/>
         <source>Z cover</source>
         <translation>Z tampon</translation>
-    </message>
-    <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_node_tool_ui_CD41.ui" line="922"/>
-        <source>Rod height</source>
-        <translation>Hauteur de la perche GPS</translation>
     </message>
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_urbandrainage/lamiabase_ud_observation_tool_ui.ui" line="84"/>
@@ -1782,7 +1861,7 @@
         <translation>Commentaires</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="160"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="173"/>
         <source>Other\nproperties</source>
         <translation>Propriétés\nautres</translation>
     </message>
@@ -1807,7 +1886,7 @@
         <translation>Type d&apos;écoulement</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1038"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1051"/>
         <source>Geometry\nTopology</source>
         <translation>Géométrie\nTopologie</translation>
     </message>
@@ -1817,7 +1896,7 @@
         <translation>Profondeur de la génératrice supérieure</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1077"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1114"/>
         <source>Diameter</source>
         <translation>Diamètre</translation>
     </message>
@@ -1838,7 +1917,7 @@
     </message>
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_edge_tool_ui_heatingnetwork.ui" line="334"/>
-        <source>diam&#xc3;&#xa8;tre int</source>
+        <source>diamÃ¨tre int</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1907,102 +1986,72 @@
         <translation type="unfinished">Type de compteur</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1302"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1270"/>
         <source>Y</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1195"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1263"/>
         <source>Z cover</source>
         <translation>Z tampon</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1421"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1195"/>
         <source>X</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1351"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1256"/>
         <source>dY</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1344"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1219"/>
         <source>dX</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1337"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1287"/>
         <source>dZ</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1274"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1212"/>
         <source>GPS</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1428"/>
-        <source>/</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1330"/>
-        <source>RAF09</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1365"/>
-        <source>Zgps</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1372"/>
-        <source>Z mNGF</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1393"/>
-        <source>Rod height</source>
-        <translation>Haut. perche GPS</translation>
-    </message>
-    <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1407"/>
-        <source>Zwgs84</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="237"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="250"/>
         <source>Ventouse</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="313"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="326"/>
         <source>Position</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="378"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="391"/>
         <source>Outlet</source>
         <translation>Exutoire</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="665"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="678"/>
         <source>Localisation</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="743"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="756"/>
         <source>Dimension</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="895"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="908"/>
         <source>Chloration</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="931"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="944"/>
         <source>Robinet de prise en charge</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2028,7 +2077,7 @@
     </message>
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_observation_tool_ui.ui" line="222"/>
-        <source>Etat g&#xc3;&#xa9;n&#xc3;&#xa9;ral</source>
+        <source>Etat gÃ©nÃ©ral</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2062,7 +2111,7 @@
         <translation>Hauteur manométrique totale</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1094"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1131"/>
         <source>Depth</source>
         <translation>Profondeur</translation>
     </message>
@@ -2082,147 +2131,147 @@
         <translation>Fonction</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="175"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="188"/>
         <source>Access</source>
         <translation>Accès</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="188"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="201"/>
         <source>Access shape</source>
         <translation>Forme de l&apos;accès</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="198"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="211"/>
         <source>Step presence</source>
         <translation>Présence d&apos;échelon</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="230"/>
-        <source>Altim&#xc3;&#xa9;trie</source>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="243"/>
+        <source>AltimÃ©trie</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="632"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="645"/>
         <source>Accessibility</source>
         <translation>Accessibilité</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="306"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="319"/>
         <source>Valve</source>
         <translation>Vanne</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="326"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="339"/>
         <source>Manipulability</source>
         <translation>Manipulable</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="385"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="398"/>
         <source>Draining</source>
         <translation>Trop-plein</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="437"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="450"/>
         <source>Valve upstream setting</source>
         <translation>Consigne amont</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="444"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="457"/>
         <source>Pressure control valve</source>
         <translation>Régulateur de pression</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="475"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="488"/>
         <source>Valve downstream setting</source>
         <translation>Consigne aval</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="524"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="537"/>
         <source>Brand type</source>
         <translation>Marque</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="534"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="547"/>
         <source>Fire department id</source>
         <translation>Id SDIS</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="544"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="557"/>
         <source>Hydrant</source>
         <translation>Hydrant</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="760"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="773"/>
         <source>Brand name</source>
         <translation>Marque</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="574"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="587"/>
         <source>Conformity</source>
         <translation>Conformité</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="614"/>
-        <source>G&#xc3;&#xa9;n&#xc3;&#xa9;ral</source>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="627"/>
+        <source>GÃ©nÃ©ral</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="642"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="655"/>
         <source>Node emitter</source>
         <translation>Tête emettrice</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="655"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="668"/>
         <source>Retrofitable</source>
         <translation>Equipable</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="882"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="895"/>
         <source>Remote monitoring</source>
         <translation>Télégestion</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="695"/>
-        <source>Pr&#xc3;&#xa9;cisions</source>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="708"/>
+        <source>PrÃ©cisions</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="875"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="888"/>
         <source>Maintenance firm</source>
         <translation>Entreprise maintenance</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="787"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="800"/>
         <source>Brand ref</source>
         <translation>Modèle</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="803"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="816"/>
         <source>Linked equipments</source>
         <translation>Organes associés</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="839"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="852"/>
         <source>Flow meter</source>
         <translation>Débitmètre</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="938"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="951"/>
         <source>Clamp</source>
         <translation>Collier</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="977"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="990"/>
         <source>Special equipment</source>
         <translation>Equipement spécial</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1013"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1026"/>
         <source>Other/unknow</source>
         <translation>Autre/indéterminé</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1067"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="1104"/>
         <source>Outlet diameter if different</source>
         <translation>Diamèter ext. si différent</translation>
     </message>
@@ -2282,6 +2331,26 @@
         <source>Edit</source>
         <translation>Editer</translation>
     </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/subwidgets/subwidget_getfromcatalog_ui.ui" line="88"/>
+        <source>Sheet name</source>
+        <translation>Nom de la feuille</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/subwidgets/subwidget_getfromcatalog_ui.ui" line="119"/>
+        <source>Search :</source>
+        <translation>Recherche : </translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/subwidgets/subwidget_getfromcatalog_ui.ui" line="135"/>
+        <source>Select</source>
+        <translation>Selectionner</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/subwidgets/subwidget_getfromcatalog_ui.ui" line="40"/>
+        <source>Get From Catalog</source>
+        <translation>Rechercher dans le catalogue</translation>
+    </message>
 </context>
 <context>
     <name>Lamia</name>
@@ -2299,7 +2368,7 @@
 <context>
     <name>LamiaWindowWidget</name>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="836"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="850"/>
         <source>GPS not connected</source>
         <translation>GPS non connecté</translation>
     </message>
@@ -2314,67 +2383,67 @@
         <translation>Précision</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="233"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="231"/>
         <source>Lamia new</source>
         <translation>Lamia nouveau</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="215"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="213"/>
         <source>Select resources directory</source>
         <translation>Selectionner le répertoire des resources</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="259"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="258"/>
         <source> Database creation...</source>
         <translation>Création de la base de données</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="301"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="304"/>
         <source>Loading Layers ...</source>
         <translation>Chargement des couches</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="386"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="401"/>
         <source>Choose the file</source>
         <translation>Choisir le fichier</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="752"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="766"/>
         <source>Loading widgets...</source>
         <translation>Chargement des extensions</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="827"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="841"/>
         <source>GPS connected</source>
         <translation>GPS connecté</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="837"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="851"/>
         <source>Rod height : {}</source>
         <translation>Hauteur de la perche GPS : {}</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="831"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="845"/>
         <source>Accuracy : error</source>
         <translation>Précision : erreur</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="840"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="854"/>
         <source>Accuracy : off</source>
         <translation>Précision : désactivé</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="869"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="883"/>
         <source>Rod height</source>
         <translation>Hauteur de la perche GPS</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="869"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="883"/>
         <source>Enter GPS rod height</source>
         <translation>Renseigner la hauteur de perche GPS</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="879"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="893"/>
         <source>Select Directory</source>
         <translation>Choisir le répertoire</translation>
     </message>
@@ -2388,7 +2457,7 @@
     </message>
     <message>
         <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="208"/>
-        <source>S&#xc3;&#xa9;lectionner la date &#xc3;&#xa0; laquelle afficher le syst&#xc3;&#xa8;me</source>
+        <source>SÃ©lectionner la date Ã&#xa0; laquelle afficher le systÃ¨me</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2427,177 +2496,177 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="728"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="729"/>
         <source>toolBar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="740"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="741"/>
         <source>tre</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="745"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="746"/>
         <source>temp</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="750"/>
-        <source>R&#xc3;&#xa9;pertoire photo</source>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="751"/>
+        <source>RÃ©pertoire photo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="758"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="759"/>
         <source>Digue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="763"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="764"/>
         <source>Assainissement</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="776"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="777"/>
         <source>Utilisateur</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="792"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="793"/>
         <source>Expert</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="805"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="806"/>
         <source>postgis</source>
         <translation type="unfinished">postgis</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="810"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="811"/>
         <source>spatialite</source>
         <translation type="unfinished">spatialite</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="820"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="821"/>
         <source>Reinitialier prestation courante</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="825"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="826"/>
         <source>Connect to Qgis GPS</source>
         <translation>Se connecter au GPS QGis</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="843"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="844"/>
         <source>Taille icones</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="848"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="849"/>
         <source>GPS rod height</source>
         <translation>Hauteur de la perche GPS</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="856"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="857"/>
         <source>Post treatment</source>
         <translation>Post traitement</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="861"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="862"/>
         <source>Infralineaires</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="866"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="867"/>
         <source>Imprimer rapport</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="871"/>
-        <source>R&#xc3;&#xa9;initialiser les noeuds</source>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="872"/>
+        <source>RÃ©initialiser les noeuds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="876"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="877"/>
         <source>Export shapefile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="881"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="882"/>
         <source>Import</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="886"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="887"/>
         <source>Mode hors ligne/Reconnexion</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="891"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="892"/>
         <source>version</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="896"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="897"/>
         <source>Importer depuis SIRS Digues</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="901"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="902"/>
         <source>Exporter vers SIRS Digues</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="921"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="922"/>
         <source>Table and fields</source>
         <translation>Table et champs</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="930"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="931"/>
         <source>toolbarsave</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="939"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="940"/>
         <source>toolbarnew</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="948"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="949"/>
         <source>toobargeomnewpoint</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="957"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="958"/>
         <source>toobargeomnewline</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="966"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="967"/>
         <source>toobargeomanewpolygon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="975"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="976"/>
         <source>toolbardelete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="984"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="985"/>
         <source>toolbarundo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="993"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="994"/>
         <source>toobargeomaddpoint</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1002"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1003"/>
         <source>toobargeomaddGPSpoint</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1011"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1012"/>
         <source>toobargeomeditlayer</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2617,63 +2686,68 @@
         <translation>Préférences</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="830"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="831"/>
         <source>Help</source>
         <translation>Aide</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="784"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="785"/>
         <source>Field investigation</source>
         <translation>Terrain</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="800"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="801"/>
         <source>Office</source>
         <translation>Bureau</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="815"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="816"/>
         <source>New DB</source>
         <translation type="unfinished">Nouvelle base de données</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="911"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="912"/>
         <source>Add a DB to this DB</source>
         <translation>RAjouter une DB à la DB actuelle</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="916"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="917"/>
         <source>Push local DB </source>
         <translation>Reverser la base de données sur la base mère</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="768"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="769"/>
         <source>Camera directory</source>
         <translation>Répertoire des photos</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1020"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1021"/>
         <source>toolbarlayersave</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1029"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1030"/>
         <source>toolbarlayerundo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="838"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="839"/>
         <source>About...</source>
         <translation>A propos...</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="906"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="907"/>
         <source>Pull DB</source>
         <translation>Créer une copie locale</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1038"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1039"/>
         <source>toolbartoolsprint</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1048"/>
+        <source>toolbarmagic</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2798,6 +2872,31 @@
         <location filename="../iface/qgiswidget/tools/toolprepro/base3/lamiabase_surface_tool.py" line="47"/>
         <source>Surface</source>
         <translation></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_edge_pro_tool.py" line="44"/>
+        <source>Inventory</source>
+        <translation>Inventaire</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_node_tool.py" line="47"/>
+        <source>Fauna</source>
+        <translation>Faune</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_flo_tool.py" line="47"/>
+        <source>Flora</source>
+        <translation>Flore</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_hab.py" line="47"/>
+        <source>Habitat</source>
+        <translation>Habitat</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_edge_pro_tool.py" line="45"/>
+        <source>Protocol</source>
+        <translation>Protocole</translation>
     </message>
 </context>
 <context>

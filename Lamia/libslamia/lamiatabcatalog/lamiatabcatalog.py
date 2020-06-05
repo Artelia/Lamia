@@ -64,17 +64,17 @@ class TabCatalog():
         pddatas={}
         mypath = os.path.join(os.path.dirname(__file__),self.worktype )
         for (dirpath, dirnames, filenames) in os.walk(mypath):
-            print (filenames)
+            # print (filenames)
             for filename in filenames:
                 basefilename, file_extension = os.path.splitext(filename)
-                print(basefilename,file_extension )
+                # print(basefilename,file_extension )
                 if file_extension=='.ods':
                     filepath = os.path.join(dirpath, filename)
                     xls = pd.ExcelFile(filepath, engine="odf")
                     odsdocsheets = xls.sheet_names
                     pddatas[basefilename] = {}
                     for sheetname in odsdocsheets:
-                        print(sheetname)
+                        # print(sheetname)
                         pddatas[basefilename][sheetname] = pd.read_excel(xls, sheet_name=sheetname, engine="odf")
 
         # print(pddatas['LISTE_faune_2019']['oiseaux'])

@@ -1,16 +1,25 @@
-del /Q %~dp0\source\images
-del %~dp0\source\*.rst
+SET OSGEO4W_ROOT=C:\Program Files\OSGeo4W64-310
 
-python %~dp0\odt2sphinx\odt2sphinx.py documentation.odt %~dp0\source
-REM odt2sphinx documentation.odt %~dp0\source
+cd %OSGEO4W_ROOT%
+@echo off
+call "%OSGEO4W_ROOT%\bin\o4w_env.bat"
+@echo on
+call py3_env.bat
+call qt5_env.bat
+@echo on
 
 del /Q %~dp0\build\html
 
-call  makehtml.bat
+REM call  "%CD%\makehtml.bat"
+
+cd %~dp0
+call make html
 
 @echo Start copy to Lamia\doc_html ...
 xcopy /E /Y /S /I /Q %~dp0\build\html %~dp0\..\Lamia\doc_html
 @echo Finish copy to Lamia\doc_html
+
+cmd /k
 
 
 

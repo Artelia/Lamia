@@ -60,6 +60,11 @@
         </item>
         <item>
          <property name="text">
+          <string>base3_faunaflora</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
           <string>base3_constructionsite</string>
          </property>
         </item>

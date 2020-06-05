@@ -1,0 +1,1014 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="fr" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="fr" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Lamia.dbasemanager.dbconfigreader &mdash; Documentation LAMIA 1.0</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../00_index.html" class="icon icon-home"> LAMIA
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../02_demarche_generale_license.html">Démarche générale, license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../03_00_tutoriel.html">Tutoriel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../04_developpement.html">Developpement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../05_00_API.html">API Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../00_index.html">LAMIA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../00_index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Code du module</a> &raquo;</li>
+        
+      <li>Lamia.dbasemanager.dbconfigreader</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Code source de Lamia.dbasemanager.dbconfigreader</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">unicode_literals</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This file is part of LAMIA.</span>
+
+<span class="sd">LAMIA is free software: you can redistribute it and/or modify</span>
+<span class="sd">it under the terms of the GNU General Public License as published by</span>
+<span class="sd">the Free Software Foundation, either version 3 of the License, or</span>
+<span class="sd">(at your option) any later version.</span>
+
+<span class="sd">LAMIA is distributed in the hope that it will be useful,</span>
+<span class="sd">but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="sd">MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="sd">GNU General Public License for more details.</span>
+
+<span class="sd">You should have received a copy of the GNU General Public License</span>
+<span class="sd">along with Foobar.  If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+
+
+<span class="sd">* Copyright (c) 2017-2020 ARTELIA Commit &lt;lamia@arteliagroup.com&gt;</span>
+<span class="sd">* </span>
+<span class="sd">* SPDX-License-Identifier: GPL-3.0-or-later</span>
+<span class="sd">* License-Filename: LICENSING.md</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">locale</span>
+<span class="kn">import</span> <span class="nn">xlrd</span>
+
+<span class="kn">from</span> <span class="nn">Lamia.libs.odsreader.ODSReader</span> <span class="k">import</span> <span class="n">ODSReader</span>
+
+
+<div class="viewcode-block" id="DBconfigReader"><a class="viewcode-back" href="../../../src_api/05_01_dbasemanager_dbconfigreader.html#Lamia.dbasemanager.dbconfigreader.DBconfigReader">[docs]</a><span class="k">class</span> <span class="nc">DBconfigReader</span><span class="p">():</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dbaseparser</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span> <span class="o">=</span> <span class="n">dbaseparser</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">variantespossibles</span><span class="o">=</span><span class="p">[]</span>
+        <span class="c1"># self.variante = None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">baseversion</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">workversion</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxbaseversion</span><span class="o">=</span><span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxworkversion</span><span class="o">=</span><span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">basedict</span><span class="o">=</span><span class="kc">None</span>  <span class="c1">#dict with only base reading</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">workdict</span><span class="o">=</span><span class="kc">None</span>  <span class="c1">#dict with work reading</span>
+
+
+
+<div class="viewcode-block" id="DBconfigReader.createDBDictionary"><a class="viewcode-back" href="../../../src_api/05_01_dbasemanager_dbconfigreader.html#Lamia.dbasemanager.dbconfigreader.DBconfigReader.createDBDictionary">[docs]</a>    <span class="k">def</span> <span class="nf">createDBDictionary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                            <span class="n">worktype</span><span class="p">,</span> 
+                            <span class="c1">#useprojectdir=False, </span>
+                            <span class="n">baseversiontoread</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+                            <span class="n">workversiontoread</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                            <span class="c1">#chekupdate=True</span>
+                            <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Read the files in ./DBASE/create</span>
+<span class="sd">        A file describes the fields  like that:</span>
+<span class="sd">        #comment</span>
+<span class="sd">        ###Field_name;PG_type;SL_type;Foreignkey_type</span>
+<span class="sd">        ## parent field - used for ui - enable to sort the child fields depending the parent field    (optional)</span>
+<span class="sd">        constraint value description;constraint value value;[depending parent field value]</span>
+
+<span class="sd">        And fill the var self.dbasetables which is a dictionnary like that :</span>
+<span class="sd">        {...{tablename : {&#39;order&#39; : order,</span>
+<span class="sd">                          &#39;geom&#39; : geometry type ,</span>
+<span class="sd">                          &#39;widget&#39; : the table widget,</span>
+<span class="sd">                          &#39;djangoviewsql&#39; : sql statement for initial django view creation</span>
+<span class="sd">                          &#39;qgisviewsql&#39; : sql statement for initial qgis view creation</span>
+<span class="sd">                          &#39;qgisSLviewsql&#39; : sql statement for initial qgis view creation - spatialite compatible</span>
+<span class="sd">                          &#39;qgisPGviewsql&#39; : sql statement for initial qgis view creation - postgis compatible</span>
+<span class="sd">                          &#39;exportviewsql&#39; : sql statement for initial special view creation</span>
+<span class="sd">                          &#39;layer&#39; : real layer</span>
+<span class="sd">                          &#39;layerqgis&#39; : view layer with parent fields</span>
+<span class="sd">                          &#39;layerdjango&#39; : view layer with parent fields</span>
+<span class="sd">                          &#39;showinqgis&#39; : display layer in canvas</span>
+<span class="sd">                          &#39;scale&#39; : visibility scale</span>
+<span class="sd">                          &#39;spatialindex&#39; : create a spatialite spatial index</span>
+<span class="sd">                          &#39;fields&#39; : OrderedDict{...{fieldname : {&#39;PGtype&#39; : PostGis type (integer not null...)</span>
+<span class="sd">                                                                  &#39;SLtype&#39; : spatialite type (integer not null...)</span>
+<span class="sd">                                                                  &#39;FK&#39; (optional) : foreign key definition</span>
+<span class="sd">                                                                  &#39;ParFldCst (optional) : name of the parent field for contraint</span>
+<span class="sd">                                                                  &#39;Cst&#39; (optional) : list of constraint : [description,value,[parent field consraint value]}</span>
+<span class="sd">                                                 ...}</span>
+
+<span class="sd">                          }</span>
+<span class="sd">         ...}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">debug</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">messageinstance</span><span class="o">.</span><span class="n">showNormalMessage</span><span class="p">(</span><span class="s1">&#39;Creating DBase dictionnary ...&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;started&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">worktype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;createDBDictionary : worktype not defined&#39;</span><span class="p">)</span>
+
+
+        <span class="c1"># first readfiles in ./DBASE\create directory and create self.dbasetables</span>
+        <span class="n">createfilepath</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">createbasefilepath</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">variantespossibles</span><span class="o">=</span><span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">worktype</span> <span class="o">=</span> <span class="n">worktype</span>
+        <span class="n">isbase3</span> <span class="o">=</span> <span class="p">(</span><span class="n">worktype</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;base3&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">baseversionspathlist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getWorktypeVersionsList</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">worktype</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">baseversionnumbers</span> <span class="o">=</span> <span class="p">[</span><span class="n">elem</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseversionspathlist</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxbaseversion</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseversionnumbers</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">worktype</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">workversionspathlist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getWorktypeVersionsList</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">worktype</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">workversionnumbers</span> <span class="o">=</span> <span class="p">[</span><span class="n">elem</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">workversionspathlist</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">maxworkversion</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">workversionnumbers</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">workversionspathlist</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">workversionnumbers</span> <span class="o">=</span> <span class="kc">None</span>
+        
+        <span class="c1">#first read base version</span>
+        <span class="k">if</span> <span class="n">baseversiontoread</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">baseversiontoread</span><span class="p">,</span> <span class="n">createbasefilepathtoread</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseversionspathlist</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">createbasefilepathtoread</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseversionspathlist</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">baseversionnumbers</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">baseversiontoread</span><span class="p">)][</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># self.basedict = self.readXlsDbDictionnary(createbasefilepathtoread)</span>
+        <span class="k">if</span> <span class="n">isbase3</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">basedict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readOdsDictionnaryBase3</span><span class="p">(</span><span class="n">createbasefilepathtoread</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">basedict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readOdsDictionnary</span><span class="p">(</span><span class="n">createbasefilepathtoread</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">baseversion</span> <span class="o">=</span> <span class="n">baseversiontoread</span>
+
+
+        <span class="c1">#then read work version:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">workversionspathlist</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">workversiontoread</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">workversiontoread</span><span class="p">,</span> <span class="n">createworkfilepathtoread</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">workversionspathlist</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">createworkfilepathtoread</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">workversionspathlist</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">workversionnumbers</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">workversiontoread</span><span class="p">)][</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># self.workdict = self.readXlsDbDictionnary(createworkfilepathtoread)</span>
+        <span class="k">if</span> <span class="n">isbase3</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">workdict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readOdsDictionnaryBase3</span><span class="p">(</span><span class="n">createworkfilepathtoread</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">workdict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readOdsDictionnary</span><span class="p">(</span><span class="n">createworkfilepathtoread</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">workversion</span> <span class="o">=</span> <span class="n">workversiontoread</span>
+
+        <span class="c1"># finally read project&#39;s dbase if exists</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">dbaseressourcesdirectory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">createfilepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">dbaseressourcesdirectory</span><span class="p">,</span><span class="s1">&#39;config&#39;</span><span class="p">,</span><span class="s1">&#39;dbase&#39;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">worktype</span> <span class="o">+</span> <span class="s1">&#39;.ods&#39;</span><span class="p">)</span>
+            <span class="c1">#self.readXlsDbDictionnary(createworkfilepathtoread)</span>
+            <span class="k">if</span> <span class="n">isbase3</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">readOdsDictionnaryBase3</span><span class="p">(</span><span class="n">createworkfilepathtoread</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">readOdsDictionnary</span><span class="p">(</span><span class="n">createworkfilepathtoread</span><span class="p">)</span></div>
+
+
+
+    <span class="k">def</span> <span class="nf">readOdsDictionnary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dictfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vartoread</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">debug</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+        <span class="k">if</span> <span class="n">dictfile</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">dictfile</span><span class="p">):</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">odsdoc</span> <span class="o">=</span> <span class="n">ODSReader</span><span class="p">(</span><span class="n">dictfile</span><span class="p">,</span> <span class="n">clonespannedcolumns</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">sheetname</span> <span class="ow">in</span> <span class="n">odsdoc</span><span class="o">.</span><span class="n">SHEETS</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">tablename</span> <span class="o">=</span> <span class="n">sheetname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span>
+            <span class="n">fieldname</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">cstcolumntoread</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">order</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tablename</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># non table file</span>
+                <span class="k">continue</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">order</span> <span class="o">=</span> <span class="n">tablename</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">tablename</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tablename</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+            <span class="k">if</span> <span class="n">tablename</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;order&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;fields&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;showinqgis&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;widget&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;row_variantes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+            <span class="n">firstqgsviewoccurrence</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">sheetdatas</span> <span class="o">=</span> <span class="n">odsdoc</span><span class="o">.</span><span class="n">SHEETS</span><span class="p">[</span><span class="n">sheetname</span><span class="p">]</span>
+            <span class="c1">#uniforming row lengh</span>
+            <span class="n">maxlen</span><span class="o">=</span><span class="mi">0</span>
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">sheetdatas</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">maxlen</span><span class="p">:</span>
+                    <span class="n">maxlen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sheetdatas</span><span class="p">):</span>
+                <span class="n">sheetdatas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">maxlen</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">row</span><span class="p">))</span>
+
+            <span class="k">for</span> <span class="n">row</span><span class="p">,</span> <span class="n">rowcontent</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sheetdatas</span><span class="p">):</span>
+                <span class="n">firstcol</span> <span class="o">=</span>  <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">firstcol</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">firstcol</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">firstcol</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;#&#39;</span><span class="p">:</span>  <span class="c1"># comment - pass</span>
+                    <span class="k">if</span> <span class="n">firstcol</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;#DJAN&#39;</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;djangoviewsql&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="k">elif</span> <span class="n">firstcol</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;#QGISSL&#39;</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="s1">&#39;qgisSLviewsql&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;qgisSLviewsql&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;qgisSLviewsql&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="k">elif</span> <span class="n">firstcol</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;#QGISPG&#39;</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="s1">&#39;qgisPGviewsql&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;qgisPGviewsql&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;qgisPGviewsql&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="k">elif</span> <span class="n">firstcol</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;#QGIS&#39;</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">firstqgsviewoccurrence</span><span class="p">:</span>
+                            <span class="n">firstqgsviewoccurrence</span> <span class="o">=</span> <span class="kc">False</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;qgisviewsql&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+                        <span class="k">if</span> <span class="s1">&#39;qgisviewsql&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;qgisviewsql&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;qgisviewsql&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="k">elif</span> <span class="n">firstcol</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;#EXPO&#39;</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;exportviewsql&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="k">elif</span> <span class="n">firstcol</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;#SCAL&#39;</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;scale&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+                    <span class="k">elif</span> <span class="n">firstcol</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;#SHOW&#39;</span><span class="p">:</span>
+                        <span class="n">value</span> <span class="o">=</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                        <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s1">&#39;YES&#39;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;showinqgis&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">elif</span> <span class="n">firstcol</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;#SPATIALINDEX&#39;</span><span class="p">:</span>
+                        <span class="n">value</span> <span class="o">=</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                        <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s1">&#39;YES&#39;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;spatialindex&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="c1"># elif firstcol.strip() == &#39;#ONLYONEPARENTTABLE&#39;:</span>
+                    <span class="c1">#     value = sheetdatas[row][ 1].strip()</span>
+                    <span class="c1">#     if value == &#39;YES&#39;:</span>
+                    <span class="c1">#         self.dbasetables[tablename][&#39;onlyoneparenttable&#39;] = True</span>
+                    <span class="k">elif</span> <span class="n">firstcol</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;#VARIANTES&#39;</span><span class="p">:</span>
+                        <span class="c1">#for colnbr in range(1,sheet.ncols):</span>
+                        <span class="k">for</span> <span class="n">colnbr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">rowcontent</span><span class="p">)):</span>    
+                            <span class="n">value</span> <span class="o">=</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">colnbr</span><span class="p">]</span>
+                            <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                                <span class="k">continue</span>
+                            <span class="k">if</span>  <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;row_variantes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span>
+                                <span class="k">if</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">variantespossibles</span><span class="p">:</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">variantespossibles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">colnbr</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">continue</span>
+
+                <span class="k">else</span><span class="p">:</span>   <span class="c1">#column declaration</span>
+                    <span class="c1">#if firstcol != &#39;&#39;:</span>
+                    <span class="k">if</span> <span class="n">firstcol</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">]:</span>
+                        <span class="n">fieldname</span> <span class="o">=</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                        <span class="n">cstcolumntoread</span> <span class="o">=</span> <span class="kc">None</span>
+                        <span class="k">if</span> <span class="n">fieldname</span> <span class="o">==</span> <span class="s1">&#39;geom&#39;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;geom&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                            <span class="k">continue</span>
+
+                        <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">fieldname</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">fieldname</span><span class="p">][</span><span class="s1">&#39;PGtype&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="c1"># the pg type</span>
+
+                        <span class="c1"># the foreign key</span>
+                        <span class="k">if</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>  <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">]:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">fieldname</span><span class="p">][</span><span class="s1">&#39;FK&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+                        <span class="k">if</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="mi">4</span><span class="p">]</span>  <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">]:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">fieldname</span><span class="p">][</span><span class="s1">&#39;ParFldCst&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span> <span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+                        <span class="n">cstcolumntoread</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readOdsConstraints</span><span class="p">(</span><span class="n">tablename</span><span class="p">,</span><span class="n">fieldname</span><span class="p">,</span> <span class="n">sheetdatas</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">cstcolumntoread</span><span class="p">)</span>
+
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">fieldname</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">fieldname</span> <span class="o">!=</span> <span class="s1">&#39;geom&#39;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">readOdsConstraints</span><span class="p">(</span><span class="n">tablename</span><span class="p">,</span><span class="n">fieldname</span><span class="p">,</span><span class="n">sheetdatas</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span><span class="n">cstcolumntoread</span><span class="p">)</span>
+
+
+            <span class="k">if</span> <span class="n">debug</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;order&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;**************************&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="s2">&quot;Revision&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">revisionwork</span> <span class="o">=</span> <span class="kc">True</span>
+
+
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">)</span>
+
+
+
+    <span class="k">def</span> <span class="nf">readOdsDictionnaryBase3</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dictfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vartoread</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">debug</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+
+        <span class="k">if</span> <span class="n">dictfile</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">dictfile</span><span class="p">):</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">odsdoc</span> <span class="o">=</span> <span class="n">ODSReader</span><span class="p">(</span><span class="n">dictfile</span><span class="p">,</span> <span class="n">clonespannedcolumns</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">sheetname</span> <span class="ow">in</span> <span class="n">odsdoc</span><span class="o">.</span><span class="n">SHEETS</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">tablename</span> <span class="o">=</span> <span class="n">sheetname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span>
+            <span class="n">fieldname</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">cstcolumntoread</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">colindexlocalvalue</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">order</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tablename</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># non table file</span>
+                <span class="k">continue</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">order</span> <span class="o">=</span> <span class="n">tablename</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">tablename</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tablename</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+            <span class="k">if</span> <span class="n">tablename</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;order&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;fields&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;showinqgis&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;widget&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;row_variantes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;row_locale&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+            <span class="n">firstqgsviewoccurrence</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">sheetdatas</span> <span class="o">=</span> <span class="n">odsdoc</span><span class="o">.</span><span class="n">SHEETS</span><span class="p">[</span><span class="n">sheetname</span><span class="p">]</span>
+            <span class="c1">#uniforming row lengh</span>
+            <span class="n">maxlen</span><span class="o">=</span><span class="mi">0</span>
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">sheetdatas</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">maxlen</span><span class="p">:</span>
+                    <span class="n">maxlen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sheetdatas</span><span class="p">):</span>
+                <span class="n">sheetdatas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">maxlen</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">row</span><span class="p">))</span>
+
+            <span class="k">for</span> <span class="n">row</span><span class="p">,</span> <span class="n">rowcontent</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sheetdatas</span><span class="p">):</span>
+                <span class="n">firstcol</span> <span class="o">=</span>  <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">firstcol</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">firstcol</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">firstcol</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;#&#39;</span><span class="p">:</span>  <span class="c1"># comment - pass</span>
+                    <span class="k">if</span> <span class="n">firstcol</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;#DJAN&#39;</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;djangoviewsql&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="k">elif</span> <span class="n">firstcol</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;#QGISSL&#39;</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="s1">&#39;qgisSLviewsql&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;qgisSLviewsql&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;qgisSLviewsql&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="k">elif</span> <span class="n">firstcol</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;#QGISPG&#39;</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="s1">&#39;qgisPGviewsql&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;qgisPGviewsql&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;qgisPGviewsql&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="k">elif</span> <span class="n">firstcol</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;#QGIS&#39;</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">firstqgsviewoccurrence</span><span class="p">:</span>
+                            <span class="n">firstqgsviewoccurrence</span> <span class="o">=</span> <span class="kc">False</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;qgisviewsql&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+                        <span class="k">if</span> <span class="s1">&#39;qgisviewsql&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;qgisviewsql&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;qgisviewsql&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="k">elif</span> <span class="n">firstcol</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;#EXPO&#39;</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;exportviewsql&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="k">elif</span> <span class="n">firstcol</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;#SCAL&#39;</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;scale&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+                    <span class="k">elif</span> <span class="n">firstcol</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;#SHOW&#39;</span><span class="p">:</span>
+                        <span class="n">value</span> <span class="o">=</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                        <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s1">&#39;YES&#39;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;showinqgis&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">elif</span> <span class="n">firstcol</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;#SPATIALINDEX&#39;</span><span class="p">:</span>
+                        <span class="n">value</span> <span class="o">=</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                        <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s1">&#39;YES&#39;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;spatialindex&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="c1"># elif firstcol.strip() == &#39;#ONLYONEPARENTTABLE&#39;:</span>
+                    <span class="c1">#     value = sheetdatas[row][ 1].strip()</span>
+                    <span class="c1">#     if value == &#39;YES&#39;:</span>
+                    <span class="c1">#         self.dbasetables[tablename][&#39;onlyoneparenttable&#39;] = True</span>
+                    <span class="k">elif</span> <span class="n">firstcol</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;#VARIANTES&#39;</span><span class="p">:</span>
+                        <span class="c1">#for colnbr in range(1,sheet.ncols):</span>
+                        <span class="k">for</span> <span class="n">colnbr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">rowcontent</span><span class="p">)):</span>    
+                            <span class="n">value</span> <span class="o">=</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">colnbr</span><span class="p">]</span>
+                            <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                                <span class="k">continue</span>
+                            <span class="k">if</span>  <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;row_variantes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span>
+                                <span class="k">if</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">variantespossibles</span><span class="p">:</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">variantespossibles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">colnbr</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+                    <span class="k">elif</span> <span class="n">firstcol</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;#field_name&#39;</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;row_locale&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span>
+
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">continue</span>
+
+                <span class="k">else</span><span class="p">:</span>   <span class="c1">#column declaration</span>
+                    <span class="c1">#if firstcol != &#39;&#39;:</span>
+                    <span class="k">if</span> <span class="n">firstcol</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">]:</span>
+                        <span class="n">fieldname</span> <span class="o">=</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                        <span class="n">cstcolumntoread</span> <span class="o">=</span> <span class="kc">None</span>
+                        <span class="n">colindexlocalvalue</span> <span class="o">=</span> <span class="kc">None</span>
+                        <span class="k">if</span> <span class="n">fieldname</span> <span class="o">==</span> <span class="s1">&#39;geom&#39;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;geom&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                            <span class="k">continue</span>
+
+                        <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">fieldname</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">fieldname</span><span class="p">][</span><span class="s1">&#39;PGtype&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="c1"># the pg type</span>
+
+                        <span class="c1"># the foreign key</span>
+                        <span class="k">if</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>  <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">]:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">fieldname</span><span class="p">][</span><span class="s1">&#39;FK&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+                        <span class="k">if</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span>  <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">]:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">fieldname</span><span class="p">][</span><span class="s1">&#39;ParFldCst&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+                        <span class="n">cstcolumntoread</span><span class="p">,</span> <span class="n">colindexlocalvalue</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readOdsConstraintsBase3</span><span class="p">(</span><span class="n">tablename</span><span class="p">,</span><span class="n">fieldname</span><span class="p">,</span> <span class="n">sheetdatas</span><span class="p">,</span> <span class="n">row</span><span class="p">)</span>
+
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">fieldname</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">fieldname</span> <span class="o">!=</span> <span class="s1">&#39;geom&#39;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">readOdsConstraintsBase3</span><span class="p">(</span><span class="n">tablename</span><span class="p">,</span><span class="n">fieldname</span><span class="p">,</span><span class="n">sheetdatas</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span><span class="n">cstcolumntoread</span><span class="p">,</span> <span class="n">colindexlocalvalue</span><span class="p">)</span>
+
+
+            <span class="k">if</span> <span class="n">debug</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;order&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;**************************&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="s2">&quot;Revision&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">revisionwork</span> <span class="o">=</span> <span class="kc">True</span>
+
+
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DBconfigReader.readXlsDbDictionnary"><a class="viewcode-back" href="../../../src_api/05_01_dbasemanager_dbconfigreader.html#Lamia.dbasemanager.dbconfigreader.DBconfigReader.readXlsDbDictionnary">[docs]</a>    <span class="k">def</span> <span class="nf">readXlsDbDictionnary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dictfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vartoread</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param dictfile:</span>
+<span class="sd">        :param vartoread:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">debug</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">dictfile</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">dictfile</span><span class="p">):</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">xlsbook</span> <span class="o">=</span> <span class="n">xlrd</span><span class="o">.</span><span class="n">open_workbook</span><span class="p">(</span><span class="n">dictfile</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">sheet</span> <span class="ow">in</span> <span class="n">xlsbook</span><span class="o">.</span><span class="n">sheets</span><span class="p">():</span>
+            <span class="n">tablename</span> <span class="o">=</span> <span class="n">sheet</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span>
+            <span class="n">fieldname</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">cstcolumntoread</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">order</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tablename</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># non table file</span>
+                <span class="k">continue</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">order</span> <span class="o">=</span> <span class="n">tablename</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">tablename</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tablename</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+
+            <span class="k">if</span> <span class="n">tablename</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;order&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;fields&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;showinqgis&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;widget&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;row_variantes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+            <span class="n">firstqgsviewoccurrence</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sheet</span><span class="o">.</span><span class="n">nrows</span><span class="p">):</span>
+                <span class="n">firstcol</span> <span class="o">=</span>  <span class="n">sheet</span><span class="o">.</span><span class="n">cell_value</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">firstcol</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">firstcol</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;#&#39;</span><span class="p">:</span>  <span class="c1"># comment - pass</span>
+                    <span class="k">if</span> <span class="n">firstcol</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;#DJAN&#39;</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;djangoviewsql&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sheet</span><span class="o">.</span><span class="n">cell_value</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="k">elif</span> <span class="n">firstcol</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;#QGISSL&#39;</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="s1">&#39;qgisSLviewsql&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;qgisSLviewsql&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">sheet</span><span class="o">.</span><span class="n">cell_value</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;qgisSLviewsql&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sheet</span><span class="o">.</span><span class="n">cell_value</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="k">elif</span> <span class="n">firstcol</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;#QGISPG&#39;</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="s1">&#39;qgisPGviewsql&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;qgisPGviewsql&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">sheet</span><span class="o">.</span><span class="n">cell_value</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;qgisPGviewsql&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sheet</span><span class="o">.</span><span class="n">cell_value</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="k">elif</span> <span class="n">firstcol</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;#QGIS&#39;</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">firstqgsviewoccurrence</span><span class="p">:</span>
+                            <span class="n">firstqgsviewoccurrence</span> <span class="o">=</span> <span class="kc">False</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;qgisviewsql&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+                        <span class="k">if</span> <span class="s1">&#39;qgisviewsql&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;qgisviewsql&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">sheet</span><span class="o">.</span><span class="n">cell_value</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;qgisviewsql&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sheet</span><span class="o">.</span><span class="n">cell_value</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="k">elif</span> <span class="n">firstcol</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;#EXPO&#39;</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;exportviewsql&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sheet</span><span class="o">.</span><span class="n">cell_value</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="k">elif</span> <span class="n">firstcol</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;#SCAL&#39;</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;scale&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">sheet</span><span class="o">.</span><span class="n">cell_value</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+                    <span class="k">elif</span> <span class="n">firstcol</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;#SHOW&#39;</span><span class="p">:</span>
+                        <span class="n">value</span> <span class="o">=</span> <span class="n">sheet</span><span class="o">.</span><span class="n">cell_value</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                        <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s1">&#39;YES&#39;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;showinqgis&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">elif</span> <span class="n">firstcol</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;#SPATIALINDEX&#39;</span><span class="p">:</span>
+                        <span class="n">value</span> <span class="o">=</span> <span class="n">sheet</span><span class="o">.</span><span class="n">cell_value</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                        <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s1">&#39;YES&#39;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;spatialindex&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="c1"># elif firstcol.strip() == &#39;#ONLYONEPARENTTABLE&#39;:</span>
+                    <span class="c1">#     value = sheet.cell_value(row, 1).strip()</span>
+                    <span class="c1">#     if value == &#39;YES&#39;:</span>
+                    <span class="c1">#         self.dbasetables[tablename][&#39;onlyoneparenttable&#39;] = True</span>
+                    <span class="k">elif</span> <span class="n">firstcol</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;#VARIANTES&#39;</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">colnbr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">sheet</span><span class="o">.</span><span class="n">ncols</span><span class="p">):</span>
+                            <span class="n">value</span> <span class="o">=</span> <span class="n">sheet</span><span class="o">.</span><span class="n">cell_value</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">colnbr</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;row_variantes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span>
+                                <span class="k">if</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">variantespossibles</span><span class="p">:</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">variantespossibles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sheet</span><span class="o">.</span><span class="n">cell_value</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">colnbr</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">continue</span>
+
+                <span class="k">else</span><span class="p">:</span>   <span class="c1">#column declaration</span>
+                    <span class="k">if</span> <span class="n">firstcol</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                        <span class="n">fieldname</span> <span class="o">=</span> <span class="n">sheet</span><span class="o">.</span><span class="n">cell_value</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                        <span class="n">cstcolumntoread</span> <span class="o">=</span> <span class="kc">None</span>
+                        <span class="k">if</span> <span class="n">fieldname</span> <span class="o">==</span> <span class="s1">&#39;geom&#39;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;geom&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sheet</span><span class="o">.</span><span class="n">cell_value</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                            <span class="k">continue</span>
+
+                        <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">fieldname</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">fieldname</span><span class="p">][</span><span class="s1">&#39;PGtype&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sheet</span><span class="o">.</span><span class="n">cell_value</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="c1"># the pg type</span>
+
+                        <span class="c1"># the foreign key</span>
+                        <span class="k">if</span> <span class="n">sheet</span><span class="o">.</span><span class="n">cell_value</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">fieldname</span><span class="p">][</span><span class="s1">&#39;FK&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sheet</span><span class="o">.</span><span class="n">cell_value</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+                        <span class="k">if</span> <span class="n">sheet</span><span class="o">.</span><span class="n">cell_value</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">fieldname</span><span class="p">][</span><span class="s1">&#39;ParFldCst&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sheet</span><span class="o">.</span><span class="n">cell_value</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+                        <span class="n">cstcolumntoread</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readXlsConstraints</span><span class="p">(</span><span class="n">tablename</span><span class="p">,</span><span class="n">fieldname</span><span class="p">,</span> <span class="n">sheet</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">cstcolumntoread</span><span class="p">)</span>
+
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">fieldname</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">fieldname</span> <span class="o">!=</span> <span class="s1">&#39;geom&#39;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">readXlsConstraints</span><span class="p">(</span><span class="n">tablename</span><span class="p">,</span><span class="n">fieldname</span><span class="p">,</span><span class="n">sheet</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span><span class="n">cstcolumntoread</span><span class="p">)</span>
+
+
+            <span class="k">if</span> <span class="n">debug</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;order&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;**************************&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="s2">&quot;Revision&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">revisionwork</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">)</span></div>
+
+
+    <span class="c1"># def readConstraints(self, tablename,fieldname  ,sheet, xlrow,cstcolumntoread=None):</span>
+    <span class="k">def</span> <span class="nf">readOdsConstraints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tablename</span><span class="p">,</span><span class="n">fieldname</span>  <span class="p">,</span><span class="n">sheetdatas</span><span class="p">,</span> <span class="n">xlrow</span><span class="p">,</span><span class="n">cstcolumntoread</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="c1"># dbasefield self.dbasetables[tablename][&#39;fields&#39;][fieldname]</span>
+        <span class="c1"># print(&#39;readConstraints&#39;,tablename,fieldname  ,sheet, xlrow)</span>
+        <span class="n">colindexvariante</span> <span class="o">=</span> <span class="n">cstcolumntoread</span>
+        <span class="n">dbasefield</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">fieldname</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">colindexvariante</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">colindexvariante</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">variante</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">colindexvariante</span> <span class="o">=</span> <span class="mi">5</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;row_variantes&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="p">:</span>
+                    <span class="n">rowvariantes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;row_variantes&#39;</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">variante</span> <span class="o">==</span><span class="s1">&#39;Lamia&#39;</span><span class="p">:</span>
+                        <span class="n">colindexvariante</span> <span class="o">=</span> <span class="mi">5</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sheetdatas</span><span class="p">[</span><span class="n">rowvariantes</span><span class="p">])):</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="k">if</span> <span class="p">(</span><span class="n">sheetdatas</span><span class="p">[</span><span class="n">rowvariantes</span><span class="p">][</span><span class="n">col</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">variante</span>
+                                        <span class="ow">and</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">xlrow</span><span class="p">][</span><span class="n">col</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="p">):</span>
+                                    <span class="n">colindexvariante</span> <span class="o">=</span> <span class="n">col</span>
+                                    <span class="c1"># print(&#39;colindexvariante&#39;, tablename, fieldname, colindexvariante)</span>
+                                    <span class="k">break</span>
+                            <span class="k">except</span><span class="p">:</span>
+                                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span><span class="n">tablename</span><span class="p">,</span><span class="n">fieldname</span> <span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">variante</span> <span class="p">)</span>
+                        <span class="c1">#if colindexvariante is None:</span>
+                        <span class="c1">#    colindexvariante = 5</span>
+        <span class="k">if</span> <span class="n">colindexvariante</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">colindexvariante</span> <span class="o">=</span> <span class="mi">5</span>
+
+        <span class="c1">#if unicode(sheet.cell_value(xlrow, colindexvariante)).strip() != &#39;&#39;:</span>
+        <span class="k">if</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">xlrow</span><span class="p">][</span><span class="n">colindexvariante</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">xlrow</span><span class="p">][</span><span class="n">colindexvariante</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;Cst&#39;</span> <span class="ow">in</span> <span class="n">dbasefield</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">dbasefield</span><span class="p">[</span><span class="s1">&#39;Cst&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dbasefield</span><span class="p">[</span><span class="s1">&#39;Cst&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[[]]</span>
+
+
+            <span class="n">showvalue</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convertxlsdataToString</span><span class="p">(</span><span class="n">sheetdatas</span><span class="p">[</span><span class="n">xlrow</span><span class="p">][</span><span class="n">colindexvariante</span><span class="p">])</span>
+            <span class="n">datavalue</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convertxlsdataToString</span><span class="p">(</span><span class="n">sheetdatas</span><span class="p">[</span><span class="n">xlrow</span><span class="p">][</span><span class="n">colindexvariante</span> <span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">dbasefield</span><span class="p">[</span><span class="s1">&#39;Cst&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">showvalue</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+            <span class="n">dbasefield</span><span class="p">[</span><span class="s1">&#39;Cst&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">datavalue</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+
+            <span class="k">if</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">xlrow</span><span class="p">][</span><span class="n">colindexvariante</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">xlrow</span><span class="p">][</span><span class="n">colindexvariante</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                <span class="n">dbasefield</span><span class="p">[</span><span class="s1">&#39;Cst&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">sheetdatas</span><span class="p">[</span><span class="n">xlrow</span><span class="p">][</span><span class="n">colindexvariante</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dbasefield</span><span class="p">[</span><span class="s1">&#39;Cst&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">colindexvariante</span>
+
+    <span class="k">def</span> <span class="nf">readOdsConstraintsBase3</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tablename</span><span class="p">,</span><span class="n">fieldname</span>  <span class="p">,</span><span class="n">sheetdatas</span><span class="p">,</span> <span class="n">xlrow</span><span class="p">,</span><span class="n">cstcolumntoread</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">cstlocalvaluecolumntoread</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># dbasefield self.dbasetables[tablename][&#39;fields&#39;][fieldname]</span>
+        <span class="c1"># print(&#39;readConstraints&#39;,tablename,fieldname  ,sheet, xlrow)</span>
+        <span class="n">rowvariantes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;row_variantes&#39;</span><span class="p">]</span>
+        <span class="n">rowlocale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;row_locale&#39;</span><span class="p">]</span>
+        <span class="n">colindexvariante</span> <span class="o">=</span> <span class="n">cstcolumntoread</span>
+        <span class="n">colindexlocalvalue</span> <span class="o">=</span> <span class="n">cstlocalvaluecolumntoread</span>
+        <span class="n">dbasefield</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">fieldname</span><span class="p">]</span>
+        <span class="n">loclanguage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">locale</span>
+
+        <span class="k">if</span> <span class="n">colindexvariante</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">colindexvariante</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">variante</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">colindexvariante</span> <span class="o">=</span> <span class="mi">6</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">rowvariantes</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">variante</span> <span class="o">==</span><span class="s1">&#39;Lamia&#39;</span><span class="p">:</span>
+                        <span class="n">colindexvariante</span> <span class="o">=</span> <span class="mi">6</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sheetdatas</span><span class="p">[</span><span class="n">rowvariantes</span><span class="p">])):</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="k">if</span> <span class="p">(</span><span class="n">sheetdatas</span><span class="p">[</span><span class="n">rowvariantes</span><span class="p">][</span><span class="n">col</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">variante</span>
+                                        <span class="ow">and</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">xlrow</span><span class="p">][</span><span class="n">col</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="p">):</span>
+                                    <span class="n">colindexvariante</span> <span class="o">=</span> <span class="n">col</span>
+                                    <span class="c1"># print(&#39;colindexvariante&#39;, tablename, fieldname, colindexvariante)</span>
+                                    <span class="k">break</span>
+                            <span class="k">except</span><span class="p">:</span>
+                                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span><span class="n">tablename</span><span class="p">,</span><span class="n">fieldname</span> <span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">variante</span> <span class="p">)</span>
+                        <span class="c1">#if colindexvariante is None:</span>
+                        <span class="c1">#    colindexvariante = 5</span>
+        <span class="k">if</span> <span class="n">colindexvariante</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">colindexvariante</span> <span class="o">=</span> <span class="mi">6</span>
+
+
+        <span class="k">if</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">xlrow</span><span class="p">][</span><span class="n">colindexvariante</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">xlrow</span><span class="p">][</span><span class="n">colindexvariante</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;Cst&#39;</span> <span class="ow">in</span> <span class="n">dbasefield</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">dbasefield</span><span class="p">[</span><span class="s1">&#39;Cst&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dbasefield</span><span class="p">[</span><span class="s1">&#39;Cst&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[[]]</span>
+
+            <span class="k">if</span> <span class="n">colindexlocalvalue</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1">#if unicode(sheet.cell_value(xlrow, colindexvariante)).strip() != &#39;&#39;:</span>
+                <span class="c1"># get showvalue column according to language</span>
+                <span class="n">initcolumn</span> <span class="o">=</span> <span class="n">colindexvariante</span> <span class="o">+</span> <span class="mi">2</span>
+                <span class="n">dictlang</span><span class="o">=</span><span class="p">{}</span>
+                <span class="k">while</span> <span class="p">(</span><span class="n">initcolumn</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">sheetdatas</span><span class="p">[</span><span class="n">rowlocale</span><span class="p">])</span> 
+                        <span class="ow">and</span> <span class="s1">&#39;Displayvalue&#39;</span> <span class="ow">in</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">rowlocale</span><span class="p">][</span><span class="n">initcolumn</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="p">):</span>
+                    <span class="n">valuesplited</span> <span class="o">=</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">rowlocale</span><span class="p">][</span><span class="n">initcolumn</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">valuesplited</span><span class="p">):</span>
+                        <span class="n">dictlang</span><span class="p">[</span><span class="n">valuesplited</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">initcolumn</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">dictlang</span><span class="p">[</span><span class="s1">&#39;None&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">initcolumn</span>
+                    <span class="n">initcolumn</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">loclanguage</span> <span class="ow">in</span> <span class="n">dictlang</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>  
+                        <span class="ow">and</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">xlrow</span><span class="p">][</span><span class="n">dictlang</span><span class="p">[</span><span class="n">loclanguage</span><span class="p">]]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="p">)</span> <span class="p">:</span>
+                    <span class="n">colindexlocalvalue</span> <span class="o">=</span> <span class="n">dictlang</span><span class="p">[</span><span class="n">loclanguage</span><span class="p">]</span>
+                <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;fr&#39;</span> <span class="ow">in</span> <span class="n">dictlang</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>  
+                        <span class="ow">and</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">xlrow</span><span class="p">][</span><span class="n">dictlang</span><span class="p">[</span><span class="s1">&#39;fr&#39;</span><span class="p">]]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="p">)</span> <span class="p">:</span>
+                    <span class="n">colindexlocalvalue</span> <span class="o">=</span> <span class="n">dictlang</span><span class="p">[</span><span class="s1">&#39;fr&#39;</span><span class="p">]</span>
+                <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;None&#39;</span> <span class="ow">in</span> <span class="n">dictlang</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>  
+                        <span class="ow">and</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">xlrow</span><span class="p">][</span><span class="n">dictlang</span><span class="p">[</span><span class="s1">&#39;None&#39;</span><span class="p">]]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="p">)</span> <span class="p">:</span>
+                    <span class="n">colindexlocalvalue</span> <span class="o">=</span> <span class="n">dictlang</span><span class="p">[</span><span class="s1">&#39;None&#39;</span><span class="p">]</span>
+
+
+
+            <span class="n">datavalue</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convertxlsdataToString</span><span class="p">(</span><span class="n">sheetdatas</span><span class="p">[</span><span class="n">xlrow</span><span class="p">][</span><span class="n">colindexvariante</span><span class="p">])</span>
+            <span class="n">showvalue</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convertxlsdataToString</span><span class="p">(</span><span class="n">sheetdatas</span><span class="p">[</span><span class="n">xlrow</span><span class="p">][</span><span class="n">colindexlocalvalue</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="n">datavalue</span> <span class="o">==</span> <span class="s1">&#39;NULL&#39;</span><span class="p">:</span>
+                <span class="n">datavalue</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            
+            <span class="n">dbasefield</span><span class="p">[</span><span class="s1">&#39;Cst&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">showvalue</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+            <span class="n">dbasefield</span><span class="p">[</span><span class="s1">&#39;Cst&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">datavalue</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+
+            <span class="k">if</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">xlrow</span><span class="p">][</span><span class="n">colindexvariante</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">sheetdatas</span><span class="p">[</span><span class="n">xlrow</span><span class="p">][</span><span class="n">colindexvariante</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                <span class="n">dbasefield</span><span class="p">[</span><span class="s1">&#39;Cst&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">sheetdatas</span><span class="p">[</span><span class="n">xlrow</span><span class="p">][</span><span class="n">colindexvariante</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dbasefield</span><span class="p">[</span><span class="s1">&#39;Cst&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">colindexvariante</span><span class="p">,</span> <span class="n">colindexlocalvalue</span>
+
+
+    <span class="c1"># def readConstraints(self, tablename,fieldname  ,sheet, xlrow,cstcolumntoread=None):</span>
+    <span class="k">def</span> <span class="nf">readXlsConstraints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tablename</span><span class="p">,</span><span class="n">fieldname</span>  <span class="p">,</span><span class="n">sheet</span><span class="p">,</span> <span class="n">xlrow</span><span class="p">,</span><span class="n">cstcolumntoread</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="c1"># dbasefield self.dbasetables[tablename][&#39;fields&#39;][fieldname]</span>
+        <span class="c1"># print(&#39;readConstraints&#39;,tablename,fieldname  ,sheet, xlrow)</span>
+        <span class="n">colindexvariante</span> <span class="o">=</span> <span class="n">cstcolumntoread</span>
+        <span class="n">dbasefield</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">fieldname</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">colindexvariante</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">colindexvariante</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">variante</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">colindexvariante</span> <span class="o">=</span> <span class="mi">5</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;row_variantes&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="p">:</span>
+                    <span class="n">rowvariantes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">][</span><span class="s1">&#39;row_variantes&#39;</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">variante</span> <span class="o">==</span><span class="s1">&#39;Lamia&#39;</span><span class="p">:</span>
+                        <span class="n">colindexvariante</span> <span class="o">=</span> <span class="mi">5</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sheet</span><span class="o">.</span><span class="n">ncols</span><span class="p">):</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="k">if</span> <span class="p">(</span><span class="n">sheet</span><span class="o">.</span><span class="n">cell_value</span><span class="p">(</span><span class="n">rowvariantes</span><span class="p">,</span><span class="n">col</span> <span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">variante</span>
+                                        <span class="ow">and</span> <span class="n">sheet</span><span class="o">.</span><span class="n">cell_value</span><span class="p">(</span><span class="n">xlrow</span><span class="p">,</span><span class="n">col</span> <span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="p">):</span>
+                                    <span class="n">colindexvariante</span> <span class="o">=</span> <span class="n">col</span>
+                                    <span class="c1"># print(&#39;colindexvariante&#39;, tablename, fieldname, colindexvariante)</span>
+                                    <span class="k">break</span>
+                            <span class="k">except</span><span class="p">:</span>
+                                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span><span class="n">tablename</span><span class="p">,</span><span class="n">fieldname</span> <span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">variante</span> <span class="p">)</span>
+                        <span class="c1">#if colindexvariante is None:</span>
+                        <span class="c1">#    colindexvariante = 5</span>
+        <span class="k">if</span> <span class="n">colindexvariante</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">colindexvariante</span> <span class="o">=</span> <span class="mi">5</span>
+
+        <span class="c1">#if unicode(sheet.cell_value(xlrow, colindexvariante)).strip() != &#39;&#39;:</span>
+        <span class="k">if</span> <span class="n">sheet</span><span class="o">.</span><span class="n">cell_value</span><span class="p">(</span><span class="n">xlrow</span><span class="p">,</span> <span class="n">colindexvariante</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;Cst&#39;</span> <span class="ow">in</span> <span class="n">dbasefield</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">dbasefield</span><span class="p">[</span><span class="s1">&#39;Cst&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dbasefield</span><span class="p">[</span><span class="s1">&#39;Cst&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[[]]</span>
+
+
+            <span class="n">showvalue</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convertxlsdataToString</span><span class="p">(</span><span class="n">sheet</span><span class="o">.</span><span class="n">cell_value</span><span class="p">(</span><span class="n">xlrow</span><span class="p">,</span> <span class="n">colindexvariante</span><span class="p">))</span>
+            <span class="n">datavalue</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convertxlsdataToString</span><span class="p">(</span><span class="n">sheet</span><span class="o">.</span><span class="n">cell_value</span><span class="p">(</span><span class="n">xlrow</span><span class="p">,</span> <span class="n">colindexvariante</span> <span class="o">+</span><span class="mi">1</span> <span class="p">))</span>
+            <span class="n">dbasefield</span><span class="p">[</span><span class="s1">&#39;Cst&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">showvalue</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+            <span class="n">dbasefield</span><span class="p">[</span><span class="s1">&#39;Cst&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">datavalue</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+
+            <span class="k">if</span> <span class="n">sheet</span><span class="o">.</span><span class="n">cell_value</span><span class="p">(</span><span class="n">xlrow</span><span class="p">,</span> <span class="n">colindexvariante</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                <span class="n">dbasefield</span><span class="p">[</span><span class="s1">&#39;Cst&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">sheet</span><span class="o">.</span><span class="n">cell_value</span><span class="p">(</span><span class="n">xlrow</span><span class="p">,</span> <span class="n">colindexvariante</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dbasefield</span><span class="p">[</span><span class="s1">&#39;Cst&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">colindexvariante</span>
+
+
+    <span class="k">def</span> <span class="nf">convertxlsdataToString</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="c1">#print(&#39;data1&#39;, data, data.__class__)</span>
+        <span class="k">return</span> <span class="n">data</span>
+
+
+
+<div class="viewcode-block" id="DBconfigReader.getMaxVersionRepository"><a class="viewcode-back" href="../../../src_api/05_01_dbasemanager_dbconfigreader.html#Lamia.dbasemanager.dbconfigreader.DBconfigReader.getMaxVersionRepository">[docs]</a>    <span class="k">def</span> <span class="nf">getMaxVersionRepository</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typemetier</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        REcherche dans Lamia/DBASE/create le repertoire qui correspond au typemetier, avec la plus grande version</span>
+<span class="sd">        s&#39;il n&#39;y a pas de version (lamia avant sept.2018) , renvoi le repertoire avec version = None</span>
+
+<span class="sd">        :param typemetier:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">repository</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">createfilesdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;DBASE&#39;</span><span class="p">,</span> <span class="s1">&#39;create&#39;</span><span class="p">)</span>
+        <span class="n">listrep</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">createfilesdir</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">rep</span> <span class="ow">in</span> <span class="n">listrep</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rep</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="p">:</span>
+                <span class="k">if</span> <span class="n">typemetier</span> <span class="o">==</span> <span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rep</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span> <span class="p">:</span>
+                    <span class="n">versiontemp</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rep</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span>
+                    <span class="k">if</span> <span class="n">versiontemp</span> <span class="o">&gt;</span> <span class="n">version</span><span class="p">:</span>
+                        <span class="n">repository</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">createfilesdir</span><span class="p">,</span><span class="n">rep</span><span class="p">)</span>
+                        <span class="n">version</span> <span class="o">=</span> <span class="n">versiontemp</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">typemetier</span> <span class="o">==</span> <span class="n">rep</span> <span class="p">:</span>
+                    <span class="n">repository</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">createfilesdir</span><span class="p">,</span><span class="n">rep</span><span class="p">)</span>
+
+
+        <span class="k">return</span> <span class="n">repository</span><span class="p">,</span> <span class="n">version</span></div>
+
+
+
+<div class="viewcode-block" id="DBconfigReader.getWorktypeVersionsList"><a class="viewcode-back" href="../../../src_api/05_01_dbasemanager_dbconfigreader.html#Lamia.dbasemanager.dbconfigreader.DBconfigReader.getWorktypeVersionsList">[docs]</a>    <span class="k">def</span> <span class="nf">getWorktypeVersionsList</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">worktype</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return list of versions for worktype</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">debug</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">createfilesdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;DBASE&#39;</span><span class="p">,</span> <span class="s1">&#39;create&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;dbase dir : </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">createfilesdir</span><span class="p">))</span>
+
+        <span class="n">listfiles</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">createfilesdir</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">listfiles</span><span class="p">:</span>
+            <span class="n">filepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">createfilesdir</span><span class="p">,</span><span class="n">filename</span> <span class="p">)</span>
+            <span class="n">filebasename</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+            <span class="c1">#if os.path.isfile(filepath) and ext in [&#39;.xls&#39;, &#39;.xlsx&#39;]:</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span> <span class="ow">and</span> <span class="n">ext</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;.ods&#39;</span><span class="p">]:</span>  
+                <span class="n">filebasenamesplitted</span> <span class="o">=</span> <span class="n">filebasename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">filebasenamesplitted</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">filebasenamesplitted</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="ow">and</span> <span class="n">filebasenamesplitted</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span>
+                        <span class="ow">and</span> <span class="n">worktype</span> <span class="o">==</span> <span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">filebasenamesplitted</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span> <span class="p">):</span>     <span class="c1">#case child of dabse2</span>
+                    <span class="n">versiontemp</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">filebasename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span>
+                    <span class="n">repository</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">createfilesdir</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+                    <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">versiontemp</span><span class="p">,</span> <span class="n">repository</span><span class="p">])</span>
+
+
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;results: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">results</span><span class="p">))</span>
+
+        <span class="n">results</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;results: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">results</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">results</span></div></div>
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Artelia
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
