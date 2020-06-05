@@ -12,7 +12,7 @@ Le menu
     :align: center
 
 Le menu fichier:
-===============
+=====================
 
 Nouvelle base de données
 -----------------------------
@@ -95,18 +95,84 @@ Aide :
 ===============
 
 Aide
-------
+--------
 
 Permet d'acceder à la présente aide
 
 Tables et champs
-------
+----------------------
 
 Permet de visualiser l'ensemble des tables et champs de la base de données en cours
 d'utilisation
 
 
 La barre d'outils:
-=====================
+*********************
+
+Edition d'objet
+===================
+
+.. image:: ./rawimages/completepresentation/toolbar_objectediting.png
+    :width: 200px
+    :align: center
+
+1. Creation d'objet
+
+Permet la création d'un nouvel objet
+
+2. "Baguette magique"
+
+Permet la création de fonctions de raccourcis - souvent la création automatique de l'objet
+à l'endroit de la position GPS lors de la campagne de terrain.
+
+3. Annuler les modifications
+
+4. Supprimer l'objet
+
+5. SAuvegarder l'objet en cours d'édition.
 
 
+
+
+Edition de geometrie
+=======================
+
+.. image:: ./rawimages/completepresentation/toolbar_geomediting.png
+    :width: 200px
+    :align: center
+
+1. Saisie d'un nouveau point
+
+2. Saisie d'une nouvelle ligne
+
+3. Saisie d'un nouveau Polygone
+
+4. Rajout d'un point à une polyligne
+
+5. Rajout d'un point depuis la position GPS.
+
+Cette fonction nécessite que le GPS de Lamia soit connecté.
+
+
+Edition de couche vecteur
+=========================
+
+.. image:: ./rawimages/completepresentation/toolbar_layerediting.png
+    :width: 150px
+    :align: center
+
+1. Ouvrir la couche vecteur de l'objet en cours d'édition
+
+Ceci permet notamment  pour les lignes et les polylignes d'acceder aux fonctions d'édition
+de géomtrie avancées de QGis.
+
+2. Quitter les modifications sans sauvegarder.
+
+3. Enregistrer les modifications.
+
+
+
+Outils
+===================
+
+Cette barre permet d'acceder à divers outils, tels l'impression.

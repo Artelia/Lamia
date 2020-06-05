@@ -95,7 +95,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../03_04_presentation_complete.html">Présentation Complète</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../03_05_description_modules_postpro.html">Description des modules de Post Traitement</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Impression de rapports</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#creation-de-rapports">Création de rapports</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#utilisation-du-module">Utilisation du module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#creation-modification-de-rapports">Création/Modification de rapports</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="02_import.html">Import de données dans Lamia</a></li>
@@ -177,54 +178,54 @@
 </div>
 <div class="section" id="impression-de-rapports">
 <h1>Impression de rapports<a class="headerlink" href="#impression-de-rapports" title="Lien permanent vers ce titre">¶</a></h1>
-<div class="section" id="creation-de-rapports">
-<h2>Création de rapports<a class="headerlink" href="#creation-de-rapports" title="Lien permanent vers ce titre">¶</a></h2>
-<p>La création de rapports est accessible depuis l’item Import/export / Impression rapport de l’interface post traitement.</p>
-<p>La liste des rapports affichés reprend la liste des rapports (<a href="#id1"><span class="problematic" id="id2">*</span></a>.qpt) situés dans le répertoire du plugin Lamia Lamia/toolpostpro/[votre type de base de données]/rapport tools.</p>
-<p>NB : le répertoire des plugins est dans c:\users[votre_nom].qgis2\python\plugins pour QGIS2 , et C:\Users\[votre_login]\AppData\Roaming\QGIS\QGIS3\profiles\[votre_nom_de_profil_qgis]\python\plugins pour QGIS3.</p>
+<div class="section" id="utilisation-du-module">
+<h2>Utilisation du module<a class="headerlink" href="#utilisation-du-module" title="Lien permanent vers ce titre">¶</a></h2>
+<a class="reference internal image-reference" href="../_images/usage.png"><img alt="../_images/usage.png" class="align-center" src="../_images/usage.png" style="width: 400px;" /></a>
+<p>On accède à ce module allant dans « Interface / Post traitement » et en selectionnant
+l’onglet « Impression rapport ».</p>
+<p>Il suffit de :</p>
+<ol class="arabic simple">
+<li><p>Selectionner le type de rapport voulu dans le menu déroulant</p></li>
+<li><p>Selectionner la zone géographique pour laquelle on souhaite les rapports (on peut en selectionner plusieurs) dans la zone en bas à gauche</p></li>
+<li><p>Choisir l’emplacement du fichier de destination (pdf).</p></li>
+<li><p>Cliquer sur Impression rapport</p></li>
+</ol>
+</div>
+<div class="section" id="creation-modification-de-rapports">
+<h2>Création/Modification de rapports<a class="headerlink" href="#creation-modification-de-rapports" title="Lien permanent vers ce titre">¶</a></h2>
+<div class="section" id="presentation-fonctionnement">
+<h3>Présentation / Fonctionnement<a class="headerlink" href="#presentation-fonctionnement" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Les fichiers de configuration d’impression de rapport sont au nobre de deux :
+* le fichier .qpt comprenant le modèle de mise en page qgis
+* un fichier .txt comprenant la configuration de l’impression</p>
+<p>Ces fichiers sont situés :</p>
+<ul class="simple">
+<li><p>soit dans le répertoire du plugin Lamia/libslamia/lamiareport/[nom_du_type_de_la_base_de_donnees_choisie] pour les configurations d’impression standard,</p></li>
+<li><p>soit dans le répertoire créé lors de l’initialisation du projet, et ensuite au chemin suivant : /config/rapporttools pour les configurations d’impression spécifiques au projet.</p></li>
+</ul>
+<p>NB : le répertoire des plugins est dans  C:\Users\[votre_login]\AppData\Roaming\QGIS\QGIS3\profiles\[votre_nom_de_profil_qgis]\python\plugins
+pour QGIS3.</p>
 <p>Ainsi, pour créer un nouveau type de rapport (de nom rapport_toto p.ex), il faut créer :</p>
 <ul class="simple">
+<li><p>un fichier rapport_toto.txt (la configuration).</p></li>
 <li><p>un fichier rapport_toto.qpt (la mise en page qgis)</p></li>
-<li><p>un fchier rapport_toto.txt (la configuration).</p></li>
 </ul>
-<div class="section" id="creation-du-fichier-rapport-toto-qpt">
-<h3>Création du fichier rapport_toto.qpt<a class="headerlink" href="#creation-du-fichier-rapport-toto-qpt" title="Lien permanent vers ce titre">¶</a></h3>
-<ol class="arabic simple">
-<li><p>Aller dans QGIS, ouviri le composer et faire Mise en page/enregistrer comme modèle… et l’enregistrer sous le nom de rapport_toto.qpt dans l’emplacement vu au paragraphe précédent. Toujours refaire cette manip à a fin de chaque modif.</p></li>
-<li><p>Renseignement des champs Lamia</p></li>
-</ol>
-<ul class="simple">
-<li><p>créer une zone de texte</p></li>
-<li><p><a href="#id3"><span class="problematic" id="id4">|</span></a>100000000000001F0000001D608AD7BDFD792DA0_png|Renseigner la zone de texte</p></li>
-</ul>
-<p>Dans cette zone de texte, si vous voulez ajouter un champ lamia, l’écrire comme ceci :</p>
-<p>#lamia.[table_requetée_dans_le_sql_de_configuration].[nom du champ voulu].</p>
-<p>Par exemple, pour avoir le diamètre nominal d’une canalisation, faire #lamia.Infralineaire.diametrenominal.</p>
-<p>Ex :</p>
-<p><a class="reference internal" href="src_lamia_postpro\images/1000000000000179000000FA9AFC6676D160909E.png"><img alt="1000000000000179000000FA9AFC6676D160909E_png" src="src_lamia_postpro\images/1000000000000179000000FA9AFC6676D160909E.png" style="width: 6.114cm; height: 4.053cm;" /></a></p>
-<p>Cette zone de texte sera remplacée par les champs voulus lors de l’impression du rapport.</p>
-<p>NB : le nom des tables et des champs se trouvent dans les fichiers excel dans Lamia/DBASE/create</p>
-<ol class="arabic simple" start="3">
-<li><p>Ajouter des photos</p></li>
-</ol>
-<p>il convient de créer une image</p>
-<p><a class="reference internal" href="src_lamia_postpro\images/1000000000000019000000193E5468FD53954B67.png"><img alt="1000000000000019000000193E5468FD53954B67_png" src="src_lamia_postpro\images/1000000000000019000000193E5468FD53954B67.png" style="width: 0.661cm; height: 0.661cm;" /></a></p>
-<p>Ensuite, dans ses propriétés, nous lui donnerons un identifiant unque qui nous permettra de configurer ce qui apparaît dans l’image</p>
-<p><a class="reference internal" href="src_lamia_postpro\images/100000000000017B000001982BA227EF19B5EEDC.png"><img alt="100000000000017B000001982BA227EF19B5EEDC_png" src="src_lamia_postpro\images/100000000000017B000001982BA227EF19B5EEDC.png" style="width: 6.175cm; height: 6.648cm;" /></a></p>
 </div>
 <div class="section" id="creation-du-fichier-rapport-toto-txt">
 <h3>Création du fichier rapport_toto.txt<a class="headerlink" href="#creation-du-fichier-rapport-toto-txt" title="Lien permanent vers ce titre">¶</a></h3>
-<p>IL s’agit du fichier de configuration de l’impression rapport. Les différentes lignes à renseigner sont indiquées ci-après.</p>
+<p>IL s’agit du fichier de configuration de l’impression rapport. La trame de ce fichier est créé automatiquement lors
+du click sur le bouton « nouveau » du gestionnaire de fichier.</p>
+<p>Les différentes lignes à renseigner sont indiquées ci-après.</p>
 <ul class="simple">
 <li><p>###atlaslayersql</p></li>
 </ul>
 <p>mettre à la suite la requete sql qui va êre utilisée pour créer la table à parcourir par l’atlas. Les noms des tables utilisées ici doivent correspondre au nom des tables utilisée dans le composeur avec #lamia…</p>
-<p>ex : SELECT Infralineaire_now.* FROM Infralineaire_now</p>
+<p>ex : SELECT edge_now.* FROM edge_now</p>
 <ul class="simple">
 <li><p>###atlaslayerid</p></li>
 </ul>
 <p>donner le champ contenant l’id utilisé lors du parcours de la table par l’atlas</p>
-<p>ex : id_infralineaire</p>
+<p>ex : id_edge</p>
 <ul class="simple">
 <li><p>###spatial</p></li>
 </ul>
@@ -233,7 +234,7 @@
 <li><p>###ordering</p></li>
 </ul>
 <p>indique la méthode d’ordonnancement des éléments parcourus par l’atlas. Si rien n’est mis, ça suit l’ordre des id.</p>
-<p>Peut prendre la valeur autoalongpath. Dans ce cas, les ids sont classés selon le parcours de l’infralineaire la plus proche.</p>
+<p>Peut prendre la valeur autoalongpath. Dans ce cas, les ids sont classés selon le parcours de l’edge la plus proche.</p>
 <ul class="simple">
 <li><p>###atlaslayerstyle</p></li>
 </ul>
@@ -245,25 +246,36 @@
 <p>Ex :</p>
 <p>#itemname;   minscale;   typescale;      layers</p>
 <p>map1;       2500;       Predefined      ;[“atlaslayer”, “Infralineaire”, “scan25”]</p>
-<p>Dans ce cas, la map ayant pour identifiant map1 sera au 1/2500°, avec une échelle de type Predefined (ne change pas selon l’objet), et les couches affichées seront l’atlaslayer (la couche constitue avec la requete sql de ###atlaslayersql), la couche Infralineaire telle qu’elle est stylée dans qgis au moement de l’édition du rapport, et la couche scan25 qui est un raster chargé dans Lamia avec pour attribut « scan25 de référence ».</p>
+<p>Dans ce cas, la map ayant pour identifiant map1 dans le .qpt sera au 1/2500°, avec une échelle
+de type Predefined (ne change pas selon l’objet), et les couches affichées seront l’atlaslayer
+(la couche constitue avec la requete sql de ###atlaslayersql), la couche Infralineaire telle qu’elle
+est stylée dans qgis au moment de l’édition du rapport, et la couche scan25 qui est un raster chargé
+dans Lamia avec pour attribut « scan25 de référence ».
+On peut également donner indiquer le nom de couches chargées dans les fonds de plans Lamia.</p>
 <p>On peut mettre autant de map que l’on veut.</p>
 <p>###generalmap</p>
-<p>Fourni les caractéristiques des cartes générales. Même principe que pour ###atlasdrivemap</p>
+<p>Fourni les caractéristiques des cartes générales (ne bouge pas en fonction de l’objet).
+Même principe que pour ###atlasdrivemap</p>
 <p>Ex :</p>
 <p>#itemname;   minscale;   typescale; layers</p>
 <p>map0    ;           ;             ; [“Infralineaire”, “ortho”]</p>
 <ul class="simple">
 <li><p>###images</p></li>
 </ul>
-<p>On met ici les idenifiants des images du composeur, avec u nmot clé à la suite.</p>
+<p>On met ici les identifiants des images du composeur, avec un mot clé à la suite.</p>
 <p>Ex :</p>
 <p>#itemname   ; type</p>
 <p>photo1;Equipement_now.photo1</p>
 <p>ici , l’image avec pour identifiant « photo1 » sera rempli avec la première photo liée de l’équipement en cours de parcours par l’atlas.</p>
+<p>La liste des mots clés prédéfinis sont :</p>
+<p>Des mots clés particuliers peuvent être employés. Dans ce cas il faut développer la fonction python
+qui permet de générer l’image/le code html voulu(e) dans le fichier
+Lamia/libslamia/lamiareport/[nom_du_type_de_la_base_de_donnees_choisie]/lamiareportworktypefunc.py
+(Cf. exemples dans le code Lamia)</p>
 <ul class="simple">
 <li><p>###childprint</p></li>
 </ul>
-<p>si on veut rajouter des composeurs à la suite de ce composeur, indiquer ici le nom du composeur à aller chercher.</p>
+<p>Si on veut rajouter des composeurs à la suite de ce composeur, indiquer ici le nom du composeur à aller chercher.</p>
 <p>Ex :
 #confname;                linkcolumn;             optionsql</p>
 <p>Desordres_observation;    Observation_now.lid_desordre ; ORDER BY Observation_now.datetimeobservation DESC</p>
@@ -300,6 +312,33 @@
 <span class="n">Equipementhydraulique_annexe</span><span class="p">;</span>    <span class="n">Equipement_now</span><span class="o">.</span><span class="n">lid_descriptionsystem_1</span> <span class="p">;</span>
 </pre></div>
 </div>
+</div>
+<div class="section" id="creation-du-fichier-rapport-toto-qpt">
+<h3>Création du fichier rapport_toto.qpt<a class="headerlink" href="#creation-du-fichier-rapport-toto-qpt" title="Lien permanent vers ce titre">¶</a></h3>
+<p>1. Aller dans QGIS, ouvrir le composeur et faire Mise en page/enregistrer comme modèle… et l’enregistrer sous le nom de rapport_toto.qpt
+dans l’emplacement vu au paragraphe précédent. Toujours refaire cette procedure à a fin de chaque modif.</p>
+<ol class="arabic simple" start="2">
+<li><p>Renseignement des champs Lamia</p></li>
+</ol>
+<ul class="simple">
+<li><p>créer une zone de texte</p></li>
+</ul>
+<p>Dans cette zone de texte, si vous voulez ajouter un champ lamia, l’écrire comme ceci :</p>
+<p>#lamia.[table_requetée_dans_le_sql_de_configuration].[nom du champ voulu].</p>
+<p>Par exemple, pour avoir le diamètre nominal d’une canalisation, faire
+#lamia.Infralineaire.diametrenominal#</p>
+<p>Ex :</p>
+<p><a href="#id1"><span class="problematic" id="id2">|1000000000000179000000FA9AFC6676D160909E_png|</span></a></p>
+<p>Cette zone de texte sera remplacée par les champs voulus lors de l’impression du rapport.</p>
+<p>NB : le nom des tables et des champs se trouvent dans le menu Aide/TAble et Champs du plugin Lamia.</p>
+<ol class="arabic simple" start="3">
+<li><p>Ajouter des photos</p></li>
+</ol>
+<p>il convient de créer une image</p>
+<p><a href="#id3"><span class="problematic" id="id4">|1000000000000019000000193E5468FD53954B67_png|</span></a></p>
+<p>Ensuite, dans ses propriétés, nous lui donnerons un identifiant unque qui nous permettra de configurer
+ce qui apparaît dans l’image dans le fichier de configuration toto.txt.</p>
+<p><a href="#id5"><span class="problematic" id="id6">|100000000000017B000001982BA227EF19B5EEDC_png|</span></a></p>
 </div>
 </div>
 </div>
