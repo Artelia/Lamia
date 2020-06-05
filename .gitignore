@@ -6,7 +6,7 @@
 *.py[cod]
 /Lamia/toolpostpro/*/*amc_tool*
 /Lamia/toolpostpro/*/amctools
-
+/Lamia/doc_html/
 
 .vscode/
 Lamia_*.zip
