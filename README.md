@@ -15,4 +15,4 @@ LAMIA is an open-source project developped and maintained by Artelia Group, unde
 
 # Documentation
 
-Documentation is available  <a href="https://artelia.github.io/Lamia/doc/html/build/00_index.html">here</a>
+Documentation is available  <a href="https://artelia.github.io/Lamia/doc/build/html/00_index.html">here</a>
