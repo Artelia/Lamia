@@ -28,10 +28,12 @@ This file is part of LAMIA.
 from qgis.PyQt.QtWidgets import (QWidget, QTreeWidgetItem, QMessageBox, QFileDialog, QTableWidget,
                                      QHeaderView, QComboBox, QSpinBox,QCheckBox, QPushButton, QDateEdit,QDateTimeEdit, QTextEdit,
                                      QDoubleSpinBox, QDialog, QVBoxLayout, QTreeWidget, QLineEdit, QCheckBox,
-                                     QLabel, QMessageBox, QTextBrowser, QTableWidgetItem,QApplication,QToolButton, QAbstractItemView)
+                                     QLabel, QMessageBox, QTextBrowser, QTableWidgetItem,QApplication,QToolButton, QAbstractItemView,
+                                     QTabWidget)
 """
 from qgis.PyQt.QtWidgets import (QComboBox, QTextEdit,QLineEdit,  QSpinBox, QDoubleSpinBox,
-                                 QDateEdit,QDateTimeEdit, QTextBrowser, QCheckBox, QLabel)
+                                 QDateEdit,QDateTimeEdit, QTextBrowser, QCheckBox, QLabel, QTabWidget,
+                                 QTabBar)
 from qgis.PyQt import QtCore
 import qgis, logging, datetime, os
 import qgis.core
@@ -43,7 +45,7 @@ class FormToolUtils(QtCore.QObject):
         self.formtoolwidget = formtoolwidget
         
 
-    def ___________________actionsOnWidgetCreation(self):
+    def ____________actionsOnWidgetCreation(self):
         pass
 
     def initWidgetBehaviour(self):
@@ -51,17 +53,32 @@ class FormToolUtils(QtCore.QObject):
         if templinkuserwgd is None:
             raise TypeError('formtoolwidgetconfdict of {} is None'.format(self.formtoolwidget.DBASETABLENAME))
 
+        #set multirowtab
+        tabwidgets = self.formtoolwidget.toolwidget.findChildren(QTabWidget)
+        # https://forum.qt.io/topic/21391/tab-widget-tab-height-to-accommodate-2-line-tab-names/2
+        for tabwdg in tabwidgets:
+            tabbar = tabwdg.tabBar()
+            for index in range(tabbar.count()):
+                text = tabbar.tabText(index)
+                if r'\n' in text.strip():
+                    txtsplit = text.split(r'\n')
+                    newtxt = '\n'.join(txtsplit)
+                    qlab = QLabel(newtxt,tabwdg)
+                    qlab.setTextFormat(QtCore.Qt.PlainText)
+                    tabbar.setTabText(index,'')
+                    tabwdg.tabBar().setTabButton(index, QTabBar.RightSide, qlab)
+
         for tablename in templinkuserwgd:
             dbasetables = self.formtoolwidget.dbase.dbasetables
 
             if tablename in dbasetables.keys():
                 dbasetable = dbasetables[tablename]
                 for field in dbasetable['fields'].keys():
+
                     # for linkuserwdg in [self.linkuserwdg]:
                     for linkuserwdg in [templinkuserwgd]: 
                         if linkuserwdg is None or linkuserwdg.keys() is None:
                             continue
-
                         if (tablename in linkuserwdg.keys()
                                 and field in linkuserwdg[tablename]['widgets'].keys()):
                             
@@ -73,6 +90,7 @@ class FormToolUtils(QtCore.QObject):
 
                                     templist = [description[0] for description in
                                                 dbasetable['fields'][field]['Cst']]
+
                                     if isinstance(wdgs, QComboBox):
                                         wdgs = [wdgs]
                                     for wdg in wdgs:
@@ -326,6 +344,10 @@ class FormToolUtils(QtCore.QObject):
             values = self.formtoolwidget.dbase.query(sql)[0]
         
         resdict = dict(zip(columns, values))
+        for k,v in self.formtoolwidget.TABLEFILTERFIELD.items():
+            resdict[k] = v
+        
+
         return resdict
 
     def applyResultDict(self, resultdict, checkifinforgottenfield=True):
@@ -341,6 +363,7 @@ class FormToolUtils(QtCore.QObject):
                                                                                                             resultdict.keys())
                         continue
                         # raise ValueError
+
                     self.setValueInWidget(fieldwdg, 
                                           resultdict[field], 
                                           tablename,
@@ -387,8 +410,6 @@ class FormToolUtils(QtCore.QObject):
         if hasattr(self.formtoolwidget, 'GEOMETRYSKIP') and self.formtoolwidget.GEOMETRYSKIP :
             pass
         
-        #if geometry was edited with qgis
-        self.formtoolwidget.mainifacewidget.qgiscanvas.closeRawLayerEditing()
 
         savedfeaturepk = self.formtoolwidget.dbase.manageFeatureCreationOrUpdate(self.formtoolwidget.DBASETABLENAME,
                                                                                 featurepk)
@@ -398,9 +419,11 @@ class FormToolUtils(QtCore.QObject):
         self.saveFeatureProperties(savedfeaturepk)
         self.saveTABLEFILTERFIELD(savedfeaturepk)
         self.formtoolwidget.postSaveFeature(savedfeaturepk)  #featurepk toknow if new or not
-        for lidchooser in self.formtoolwidget.lamiawidgets:
-            lidchooser.postSaveFeature(savedfeaturepk)
-        self.saveRessourceFile(savedfeaturepk)
+        for lamiawidget in self.formtoolwidget.lamiawidgets:
+            lamiawidget.postSaveFeature(savedfeaturepk)
+        self.formtoolwidget.dbase.saveRessourceFile(self.formtoolwidget.DBASETABLENAME, 
+                                                    savedfeaturepk,
+                                                    self.formtoolwidget.currentFeaturePK)
         self._saveParentWidgetRelation(savedfeaturepk)
 
         self.updateDateModification(savedfeaturepk)
@@ -630,116 +653,6 @@ class FormToolUtils(QtCore.QObject):
                 self.formtoolwidget.dbase.query(sql)
 
 
-
-
-
-
-        if False:
-            self.dbasetable['layer'].startEditing()
-
-            if self.windowdialog.interfacemode in [0, 1]:
-                if self.linkuserwdg is not None:
-                    for i, tablename in enumerate(self.linkuserwdg.keys()):
-                        if debug: logging.getLogger("Lamia").debug('start : %s', tablename)
-                        featpk = self.currentFeaturePK
-                        fieldnames = self.linkuserwdg[tablename]['widgets'].keys()
-                        if len(fieldnames) == 0:
-                            continue
-                        result = []
-                        for fieldname in fieldnames:
-                            fieldvaluetosave = self.getValueFromWidget(self.linkuserwdg[tablename]['widgets'][fieldname],
-                                                                    tablename,
-                                                                    fieldname)
-                            if fieldvaluetosave is not None:
-                                result.append(fieldvaluetosave)
-                            else:
-                                result.append(None)
-                        #tablepk
-                        sql = "SELECT pk_" + str(tablename).lower() + " FROM " + str(self.dbasetablename).lower() + "_qgis"
-                        sql += "  WHERE pk_" + self.dbasetablename.lower() + " = " + str(self.currentFeaturePK)
-                        tablepk = self.dbase.query(sql)[0][0]
-
-                        # update sql
-                        sql = "UPDATE " + str(tablename).lower() + " SET "
-                        for i, field in enumerate(fieldnames):
-                            if isinstance(result[i], str) or isinstance(result[i], unicode) :
-                                if result[i] != '':
-                                    resultstring = result[i]
-                                    if "'" in resultstring:
-                                        resultstring = "''".join(resultstring.split("'"))
-                                    resulttemp = "'" + resultstring + "'"
-                                else:
-                                    resulttemp = 'NULL'
-                            elif result[i ] is None:
-                                resulttemp = 'NULL'
-                            else:
-                                # print(type(result[i ]))
-                                resulttemp = str(result[i ])
-
-                            sql += str(field) + " = " + resulttemp + ','
-
-                        sql = sql[:-1]  # remove last ,
-
-                        sql += " WHERE pk_" + str(tablename) + " = " + str(tablepk)
-                        self.dbase.query(sql)
-
-                # lidchoosers
-                for lidchooser in self.lamiawidgets:
-                    lidchooser.saveProperties()
-
-
-
-            if self.windowdialog.interfacemode == 2:
-                if self.linkuserwdg is None:
-                    templinkuserwgd = {self.dbasetablename: {'linkfield': 'ID','widgets': {}}}
-                else:
-                    templinkuserwgd = self.linkuserwdg
-
-                listfieldname = [self.tableWidget.item(row, 0).text() for row in range(self.tableWidget.rowCount())]
-
-                for i, tablename in enumerate(templinkuserwgd.keys()):
-                    dbasetable = self.dbase.dbasetables[tablename]
-                    result = []
-                    for j, field in enumerate(dbasetable['fields'].keys()):
-                        itemindex = listfieldname.index(tablename + '.' + field)
-                        fieldvaluetosave = self.getValueFromWidget(self.tableWidget.cellWidget(itemindex, 1),
-                                                                tablename,
-                                                                field)
-                        if fieldvaluetosave is not None:
-                            result.append(fieldvaluetosave)
-                        else:
-                            result.append(None)
-
-                    #tablepk
-                    sql = "SELECT pk_" + str(tablename).lower() + " FROM " + str(self.dbasetablename).lower() + "_qgis"
-                    sql += "  WHERE pk_" + self.dbasetablename.lower() + " = " + str(self.currentFeaturePK)
-                    tablepk = self.dbase.query(sql)[0][0]
-
-                    # update sql
-                    sql = "UPDATE " + str(tablename).lower() + " SET "
-                    for i, field in enumerate(dbasetable['fields'].keys()):
-                        if field[0:3] in ['pk_', 'id_'] or field[0:4] in ['lpk_']:
-                            continue
-                        if isinstance(result[i], str):
-                            if result[i] != '':
-                                resulttemp = "'" + result[i] + "'"
-                            else:
-                                resulttemp = 'NULL'
-                        elif isinstance(result[i], unicode):
-                            if result[i] != u'':
-                                resulttemp = "'" + result[i] + "'"
-                            else:
-                                resulttemp = 'NULL'
-                        elif result[i ] is None:
-                            resulttemp = 'NULL'
-                        else:
-                            resulttemp = str(result[i])
-                        sql += str(field) + " = " + resulttemp + ','
-
-                    sql = sql[:-1]  # remove last ,
-                    sql += " WHERE pk_" + str(tablename) + " = " + str(tablepk)
-                    self.dbase.query(sql)
-
     def setValueInWidget(self, wdg, valuetoset, table, field):
         """
         Called by initFeatureProperties when iterating the fields
@@ -752,7 +665,7 @@ class FormToolUtils(QtCore.QObject):
 
         if isinstance(wdg, QTextEdit) or isinstance(wdg, QLineEdit):
             if valuetoset is not None:
-                wdg.setText(valuetoset)
+                wdg.setText(str(valuetoset))
             else:
                 wdg.setText('')
         elif isinstance(wdg, QSpinBox) or isinstance(wdg, QDoubleSpinBox):
@@ -863,20 +776,10 @@ class FormToolUtils(QtCore.QObject):
 
         return fieldvaluetosave
 
-
+    """
     def saveRessourceFile(self,featurepk=None):
-        """
-        Called by saveFeature
-        If ressource file is not in the dbase directory, save it in the dbase directory
 
-        """
-        # get date
-        """
-        sql = "SELECT datetimecreation FROM " + self.dbasetablename.lower() + "_qgis"
-        sql += " WHERE pk_"+ self.dbasetablename.lower() + " = " + str(self.currentFeaturePK)
-        query = self.dbase.query(sql)
-        result = [row[0] for row in query]
-        """
+
         if not 'Ressource' in self.formtoolwidget.dbase.getParentTable(self.formtoolwidget.DBASETABLENAME):
             return
             
@@ -893,12 +796,7 @@ class FormToolUtils(QtCore.QObject):
             return
 
         date = ''.join(datevalue.split('-'))
-        """
-        sql = "SELECT pk_ressource, id_ressource, file FROM " + self.dbasetablename.lower() + "_qgis"
-        sql += " WHERE pk_"+ self.dbasetablename.lower() + " = " + str(self.currentFeaturePK)
-        query = self.dbase.query(sql)
-        result = [row[0:3] for row in query]
-        """
+
         result = self.formtoolwidget.dbase.getValuesFromPk(DBASETABLENAMElower + "_qgis",
                                                             ['pk_ressource', 'id_ressource', 'file'],
                                                             featurepk)
@@ -944,6 +842,7 @@ class FormToolUtils(QtCore.QObject):
                         os.remove(self.formtoolwidget.dbase.completePathOfFile(oldfile))
                     else:
                         pass
+    """
 
     def _saveParentWidgetRelation(self,featurepk=None):
 
@@ -966,7 +865,7 @@ class FormToolUtils(QtCore.QObject):
                     for tablename in childparenttables:
                         dbasetable = self.formtoolwidget.dbase.dbasetables[tablename]
                         if joindict['colthistable'] in dbasetable['fields'].keys():
-                            pktable = self.formtoolwidget.dbase.getValuesFromPk(tablename + '_qgis',
+                            pktable = self.formtoolwidget.dbase.getValuesFromPk(childtblname + '_qgis',
                                                                              'pk_' + tablename.lower(),
                                                                              featurepk)
                             sql = "UPDATE {} SET {} = {} WHERE pk_{} = {}".format(tablename,
@@ -1018,20 +917,30 @@ class FormToolUtils(QtCore.QObject):
 
     def _reinitAfterSaving(self):
         #reinit
+        
         layergeomtype = self.formtoolwidget.mainifacewidget.qgiscanvas.layers[self.formtoolwidget.DBASETABLENAME]['layer'].geometryType()
-        self.formtoolwidget.mainifacewidget.qgiscanvas.createorresetRubberband(layergeomtype)
+        # self.formtoolwidget.mainifacewidget.qgiscanvas.createorresetRubberband(layergeomtype)
         self.formtoolwidget.tempgeometry = None
-        self.formtoolwidget.mainifacewidget.qgiscanvas.layers[self.formtoolwidget.DBASETABLENAME]['layerqgis'].repaintRequested.emit()
+        layer = self.formtoolwidget.mainifacewidget.qgiscanvas.layers[self.formtoolwidget.DBASETABLENAME]['layerqgis']
+        layer.dataProvider().forceReload()
+        layer.repaintRequested.emit()
+        
         # self.mainifacewidget.qgiscanvas.canvas.refresh()
+
+
 
     def ___________________actionsOnDeletingFeature(self):
         pass
 
     def deleteFeature(self):
-        
-        pkobjet, revobjet = self.formtoolwidget.dbase.getValuesFromPk(self.formtoolwidget.DBASETABLENAME + '_qgis',
-                                                             ['pk_objet','lpk_revision_begin'],
-                                                             self.formtoolwidget.currentFeaturePK)
+        if self.formtoolwidget.dbase.base3version:
+            pkobjet, revobjet = self.formtoolwidget.dbase.getValuesFromPk(self.formtoolwidget.DBASETABLENAME + '_qgis',
+                                                                ['pk_object','lpk_revision_begin'],
+                                                                self.formtoolwidget.currentFeaturePK)
+        else:
+            pkobjet, revobjet = self.formtoolwidget.dbase.getValuesFromPk(self.formtoolwidget.DBASETABLENAME + '_qgis',
+                                                                ['pk_objet','lpk_revision_begin'],
+                                                                self.formtoolwidget.currentFeaturePK)
         #if revobjet == self.formtoolwidget.dbase.maxrevision:
 
         tablestodel = [self.formtoolwidget.DBASETABLENAME]

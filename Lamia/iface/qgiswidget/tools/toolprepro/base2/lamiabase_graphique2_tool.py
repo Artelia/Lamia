@@ -56,6 +56,7 @@ from ...lamia_abstractformtool import AbstractLamiaFormTool
 
 class BaseGraphique2Tool(AbstractLamiaFormTool):
 
+    PREPROTOOLNAME = 'Graphiquecsv'
     DBASETABLENAME = 'Graphique'
     LOADFIRST = False
 

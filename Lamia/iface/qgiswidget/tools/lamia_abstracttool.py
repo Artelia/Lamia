@@ -160,17 +160,17 @@ class AbstractLamiaTool(QWidget):
 
     def manageLoadingInToolTreeWidget(self):
         if self.mainifacewidget.interfacemode == 0:
-            if self.DBASETABLENAME and self.LOADFIRST:
+            if  hasattr(self, 'PREPROTOOLNAME') and self.PREPROTOOLNAME  and self.LOADFIRST:
                 self.loadWidgetinToolTree()
             else:
                 self.unloadWidgetinToolTree()
         elif self.mainifacewidget.interfacemode == 1:
-            if self.DBASETABLENAME:
+            if hasattr(self, 'PREPROTOOLNAME') and  self.PREPROTOOLNAME:
                 self.loadWidgetinToolTree()
             else:
                 self.unloadWidgetinToolTree()
         elif self.mainifacewidget.interfacemode == 4:
-            if self.POSTPROTOOLNAME:
+            if hasattr(self, 'POSTPROTOOLNAME') and  self.POSTPROTOOLNAME:
                 self.loadWidgetinToolTree()
             else:
                 self.unloadWidgetinToolTree()
@@ -298,60 +298,6 @@ class AbstractLamiaTool(QWidget):
                 self._displayWidget()
                 self.postToolTreeWidgetCurrentItemChanged()
                 
-                # add child widget
-                # self.loadChildWidgets() TODO
-
-
-                """
-                if self.dbasetable is not None and not hasattr(self, 'POSTPROTOOLNAME'):
-                    self.windowdialog.stackedWidget_main.setCurrentIndex(0)
-                    if self.windowdialog.MaintabWidget.widget(0).layout().count() > 0:
-                        self.windowdialog.MaintabWidget.widget(0).layout().itemAt(0).widget().setParent(None)
-                    self.windowdialog.MaintabWidget.widget(0).layout().addWidget(self)
-                    self.windowdialog.MaintabWidget.setCurrentIndex(0)
-                else:
-                    self.windowdialog.stackedWidget_main.setCurrentIndex(1)
-                    if self.windowdialog.stackedWidget_main.widget(1).layout().count() > 0:
-                        self.windowdialog.stackedWidget_main.widget(1).layout().itemAt(0).widget().setParent(None)
-                    self.windowdialog.stackedWidget_main.widget(1).layout().addWidget(self)
-                """
-                # load feature in bottom qtreewidget
-                """
-                if (self.dbasetable is not None
-                        or (self.dbasetablename is not None and os.path.isfile(self.dbasetablename))):
-                    self.loadFeaturesinTreeWdg()
-                    if self.comboBox_featurelist.count() > 0:
-                        if self.parentWidget is None and self.lastidselected is not None :
-                            idwidgetindex = self.comboBox_featurelist.findText(str(self.lastidselected))
-                            if idwidgetindex >= 0 : #-1 not found
-                                self.comboBox_featurelist.setCurrentIndex(idwidgetindex)
-                            else:
-                                self.comboBox_featurelist.currentIndexChanged.emit(0)
-                        else:
-                            self.comboBox_featurelist.currentIndexChanged.emit(0)
-                        if self.linkedtreewidget is not None :
-                            self.linkedtreewidget.invisibleRootItem().child(0).setExpanded(True)
-                    else:
-                        self.initFeatureProperties(None)
-
-                elif hasattr(self, 'combotypeitems'):
-                    self.combowdg.clear()
-                    self.combowdg.addItems(self.combotypeitems)
-                    self.combowdg.setVisible(True)
-                    self.combowdg.currentIndexChanged.connect(self.combotypeitemsChanged)
-                    self.combowdg.currentIndexChanged.emit(0)
-
-                else:
-                    self.linkedtreewidget.clear()
-                """
-                """
-                #change active layer in canvas
-                if qgis.utils.iface is not None and self.dbasetable is not None and self.dbasetable['showinqgis']:
-                    qgis.utils.iface.setActiveLayer(self.dbasetable['layerqgis'])
-
-                # Specific method
-                self.postOnActivation()
-                """
 
     def unloadWidgetInToolFrame(self):
         pass
@@ -370,8 +316,15 @@ class AbstractLamiaTool(QWidget):
         if self.mainifacewidget is not None :
             self.mainifacewidget.stackedWidget_main.setCurrentIndex(1)
             if self.mainifacewidget.stackedWidget_main.widget(1).layout().count() > 0:
-                self.mainifacewidget.stackedWidget_main.widget(1).layout().itemAt(0).widget().setParent(None)
+                currentwdg = self.mainifacewidget.stackedWidget_main.widget(1).layout().itemAt(0).widget()
+                self.mainifacewidget.stackedWidget_main.widget(1).layout().removeWidget(currentwdg)
+                currentwdg.setVisible(False)
+                # self.mainifacewidget.stackedWidget_main.widget(1).layout().itemAt(0).widget().setParent(None)
+
+
+            # if not self in self.mainifacewidget.stackedWidget_main.widget(1).layout():
             self.mainifacewidget.stackedWidget_main.widget(1).layout().addWidget(self)
+            self.setVisible(True)
 
     def activateChooserTreeWidget(self, **kwargs):
         #choosertreewdg things

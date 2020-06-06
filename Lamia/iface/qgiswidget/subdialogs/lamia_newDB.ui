@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog</class>
- <widget class="QDialog" name="Dialog">
+ <class>Dialog_main</class>
+ <widget class="QDialog" name="Dialog_main">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -53,6 +53,26 @@
       </item>
       <item row="1" column="1">
        <widget class="QComboBox" name="comboBox_type">
+        <item>
+         <property name="text">
+          <string>base3_urbandrainage</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>base3_faunaflora</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>base3_constructionsite</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>base3_waterdistribution</string>
+         </property>
+        </item>
         <item>
          <property name="text">
           <string>Base2_digue</string>
@@ -133,7 +153,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>Dialog</receiver>
+   <receiver>Dialog_main</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -149,7 +169,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>Dialog</receiver>
+   <receiver>Dialog_main</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

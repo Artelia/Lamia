@@ -35,6 +35,7 @@ from .lamiabase_croquis_tool import BaseCroquisTool
 
 class BaseEquipementTool(AbstractLamiaFormTool):
 
+    PREPROTOOLNAME = 'Equipement'
     DBASETABLENAME = 'Equipement'
     LOADFIRST = True
 

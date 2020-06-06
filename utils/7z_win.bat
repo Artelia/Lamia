@@ -1,1 +1,0 @@
-"C:\Program Files\7-Zip\7z" a -xr!__pycache__ Lamia.zip ../Lamia/

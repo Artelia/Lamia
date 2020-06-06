@@ -46,6 +46,7 @@ debugtime = False
 
 class BaseInfraLineaireTool(AbstractLamiaFormTool):
 
+    PREPROTOOLNAME = 'Infralineaire'
     DBASETABLENAME = 'Infralineaire'
     LOADFIRST = True
 

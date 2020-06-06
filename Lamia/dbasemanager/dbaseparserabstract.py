@@ -34,6 +34,8 @@ try:
     PILexists = True
 except ImportError:
     PILexists = False
+
+from ..libslamia.lamiareg.updatereg import updateWinReg
 from .dbconfigreader import DBconfigReader
 from .dbaseofflinemanager import DBaseOfflineManager
 from ..iface.ifaceabstractconnector import LamiaIFaceAbstractConnectors
@@ -58,39 +60,48 @@ class AbstractDBaseParser():
 
 
     def __init__(self, parserfactory=None,messageinstance=None):
+        """Read the dbase
 
+        :param parserfactory: the parent class
+        :type parserfactory: [type], optional
+        :param messageinstance: [description], defaults to None
+        :type messageinstance: [type], optional
+        :raises ImportError: [description]
         """
-        Init func
-        """
-        # the dictionnary of dbase (cf DBconfigReader)
+
+        #:the dictionnary of dbase (cf DBconfigReader)
         self.dbasetables = None
-        if messageinstance:
-            self.messageinstance = messageinstance
-        else:
+
+        if messageinstance is None:
             self.messageinstance = LamiaIFaceAbstractConnectors()
+        else:
+            self.messageinstance = messageinstance
 
         #utils
         self.utils = dbaseutils
 
-        # dbase type : Base2_digue, Base2_assainissement ....
+        #:dbase type : Base2_digue, Base2_assainissement ....
         self.worktype = None
+        #:dbase variante
         self.variante = None
-        # crs of dbase
+        #: crs of dbase int
         self.crsnumber = None
-        #self.qgiscrs = None
 
-        #  ressources dir
+        #:ressources dir
         self.dbaseressourcesdirectory = None
 
-        # the parser class (used to create another dbaseparser if needed)
+        #:the parser class (used to create another dbaseparser if needed)
         self.parserfactory = parserfactory
 
-        # tools
+        #:the config reader instance
         self.dbconfigreader = DBconfigReader(self)
+        #:the offline manager instance
         self.dbaseofflinemanager = DBaseOfflineManager(self)
 
-        #for debug purpose
+        #:for debug purpose
         self.printsql = False
+
+        self.base3version = False   #for transition beetween base2 and base3 model
 
         # ?? temp variable for export
         self.featureaddedid = None
@@ -110,7 +121,7 @@ class AbstractDBaseParser():
         # the current prestation id
         self.currentprestationid = None
 
-        self.version = None  # dbase version
+        self.baseversion = None  # dbase version
         self.workversion = None  # dbase version
 
         self.revisionwork = False
@@ -120,6 +131,22 @@ class AbstractDBaseParser():
         self.forcenocommit=False        #force query to no commit
 
         self.connectconf = None    #dict of connection data
+
+        #:language setting
+        self.locale = None
+        try:
+            from qgis.PyQt.QtCore import QSettings
+            if QSettings().value('locale/userLocale') is None:
+                raise ImportError()
+            self.locale = QSettings().value('locale/userLocale')[0:2]
+        except ImportError:
+            import locale
+            localelang, encod = locale.getdefaultlocale()
+            self.locale = localelang.split('_')[0]
+
+
+
+
 
     def __________________________DBase_handing(self):
         pass
@@ -195,15 +222,23 @@ class AbstractDBaseParser():
             variantesql = 'NULL'
         else:
             variantesql = "'" + variante + "'"
-        sql = "INSERT INTO Basedonnees (metier,repertoireressources,crs, version, workversion, variante) "
+        
+        if 'Basedonnees' in self.dbconfigreader.dbasetables.keys():
+            sql = "INSERT INTO Basedonnees (metier,repertoireressources,crs, version, workversion, variante) "
+        else:
+            sql = "INSERT INTO database (businessline,resourcesdirectory,crs, baseversion, workversion, variant) "
         sql += "VALUES('" + worktype + "','" + dbaseressourcesdirectoryrelative + "'," + str(crs) + "," + versionsql
         sql += "," + workversionsql +  ',' + variantesql + ")"
         self.query(sql)
         #Revision table
         datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-        sql = "INSERT INTO Revision (datetimerevision, commentaire) "
+        if 'Basedonnees' in self.dbconfigreader.dbasetables.keys():
+            sql = "INSERT INTO Revision (datetimerevision, commentaire) "
+        else:
+            sql = "INSERT INTO revision (datetimerevision, comment) "
         sql += "VALUES('" + datecreation + "','Premiere version ');"
         self.query(sql)
+        
     
         # Views creation
         for dbname in self.dbconfigreader.dbasetables.keys():
@@ -240,7 +275,11 @@ class AbstractDBaseParser():
 
 
         #init variables
-        sql = "SELECT metier, repertoireressources,crs, version, workversion, variante   FROM Basedonnees;"
+        # sql = "SELECT metier, repertoireressources,crs, version, workversion, variante   FROM Basedonnees;"
+        if 'database' in self.getTables():
+            sql = "SELECT businessline, resourcesdirectory,crs, baseversion, workversion, variant   FROM database"
+        else:
+            sql = "SELECT metier, repertoireressources,crs, version, workversion, variante   FROM Basedonnees"
         query = self.query(sql)
         worktype, resdir, crs , version, workversion, variante  = [row[0:6] for row in query][0]
 
@@ -268,6 +307,9 @@ class AbstractDBaseParser():
         sql = "SELECT MAX(pk_revision) FROM Revision;"
         query = self.query(sql)
         self.currentrevision = query[0][0]
+
+        self.base3version = not ('Basedonnees' in self.dbasetables.keys())
+        updateWinReg(worktype=worktype)
 
     def initDBase(self):
         raise NotImplementedError
@@ -316,7 +358,8 @@ class AbstractDBaseParser():
                                                     baseversiontoread=newversion,
                                                     workversiontoread=self.workversion)
             dictnew = self.dbconfigreader.basedict
-            pythonupdatefile = self.dbconfigreader.baseversionspathlist[-1][1]
+            indexbaseversionspathlist = self.dbconfigreader.baseversionnumbers.index(newversion)
+            pythonupdatefile = self.dbconfigreader.baseversionspathlist[indexbaseversionspathlist][1]
         if typebase == 'work':
             self.dbconfigreader.createDBDictionary(worktype=self.worktype,
                                                     baseversiontoread=self.baseversion,
@@ -326,7 +369,8 @@ class AbstractDBaseParser():
                                                     baseversiontoread=self.baseversion,
                                                     workversiontoread=newversion)
             dictnew = self.dbconfigreader.workdict
-            pythonupdatefile = self.dbconfigreader.workversionspathlist[-1][1]
+            indexworkversionspathlist = self.dbconfigreader.workversionnumbers.index(newversion)
+            pythonupdatefile = self.dbconfigreader.workversionspathlist[indexworkversionspathlist][1]
         #* get diffs saved in results
         results = []
         for table in dictnew.keys():
@@ -393,79 +437,16 @@ class AbstractDBaseParser():
             self.baseversion = self.baseversion
             self.workversion = newversion
 
-        sql = "UPDATE Basedonnees SET version = '" + str(self.version) + "'"
+        # sql = "UPDATE Basedonnees SET version = '" + str(self.version) + "'"
+        if 'database' in self.getTables():
+            sql = "UPDATE database SET baseversion = '" + str(self.baseversion) + "'"
+        else:
+            sql = "UPDATE Basedonnees SET version = '" + str(self.baseversion) + "'"
         if self.workversion is not None:
             sql += ",workversion = '" + str(self.workversion) + "'"
 
         self.query(sql)
 
-
-        if False:
-            if typebase == 'base':
-                indexnewversion = [ver[0] for ver in baseversions].index(newversion)
-                filenewversion = baseversions[indexnewversion][1]
-                #updates new columsns
-                self.createDBDictionary2(self.type, baseversiontoread=oldversion, workversiontoread=self.workversion)
-                dictold = dict(self.dbasetables)
-                self.createDBDictionary2(self.type, baseversiontoread=newversion, workversiontoread=self.workversion)
-                dictnew = dict(self.dbasetables)
-            elif typebase == 'metier':
-                indexnewversion = [ver[0] for ver in workversions].index(newversion)
-                filenewversion = workversions[indexnewversion][1]
-                #updates new columsns
-                self.createDBDictionary2(self.type, baseversiontoread=self.version, workversiontoread=oldversion)
-                dictold = dict(self.dbasetables)
-                self.createDBDictionary2(self.type, baseversiontoread=self.version, workversiontoread=newversion)
-                dictnew = dict(self.dbasetables)
-
-
-
-            results = []
-
-            for table in dictnew.keys():
-                for field in dictnew[table]['fields']:
-                    if field not in dictold[table]['fields'].keys():
-                        results.append([table, field])
-
-            if debug: logging.getLogger("Lamia").debug('diff : %s', str(results))
-            if self.qgsiface is None:
-                print('diff :',str(results))
-
-            for table, field in results:
-                sql = 'ALTER TABLE ' + table + ' ADD COLUMN ' + field + ' '
-                if self.dbasetype == 'spatialite':
-                    if 'VARCHAR' in dictnew[table]['fields'][field]['PGtype']:
-                        sql += ' TEXT '
-                    else:
-                        sql += PGTYPE_TO_SLTYPE[dictnew[table]['fields'][field]['PGtype']]
-                elif self.dbasetype == 'postgis':
-                    sql += dictnew[table]['fields'][field]['PGtype']
-                self.query(sql)
-
-            # read potential python file
-            pythonfile, ext = os.path.splitext(filenewversion)
-            pythonfile = pythonfile + '.txt'
-
-            if os.path.isfile(pythonfile):
-                pyfile = open(pythonfile,'r')
-                text = pyfile.read()
-                pyfile.close()
-                exec (text)
-
-
-            #update version
-            if typebase == 'base':
-                self.version = newversion
-                self.workversion = self.workversion
-            elif typebase == 'metier':
-                self.version = self.version
-                self.workversion = newversion
-
-            sql = "UPDATE Basedonnees SET version = '" + str(self.version) + "'"
-            if self.workversion is not None:
-                sql += ",workversion = '" + str(self.workversion) + "'"
-
-            self.query(sql)
 
     def createRessourcesDir(self, dbaseressourcesdirectory, **kwargs):
 
@@ -723,28 +704,30 @@ class AbstractDBaseParser():
     def createNewObjet(self, docommit=True):
         datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         #lastobjetid = self.getLastId('Objet') + 1
-        lastobjetid = self.getmaxColumnValue('Objet', 'id_objet')
-        sql = "INSERT INTO Objet (id_objet, lpk_revision_begin, datetimecreation, datetimemodification ) "
-        sql += "VALUES(" + str(lastobjetid + 1) + "," + str(self.maxrevision) + ",'" + datecreation + "','" + datecreation + "' )"
-        self.query(sql, docommit=docommit)
-        pkobjet = self.getLastPK('Objet') 
+        if self.base3version:
+            lastobjetid = self.getmaxColumnValue('object', 'id_object')
+            sql = "INSERT INTO object (id_object, lpk_revision_begin, datetimecreation, datetimemodification ) "
+            sql += "VALUES(" + str(lastobjetid + 1) + "," + str(self.maxrevision) + ",'" + datecreation + "','" + datecreation + "' )"
+            self.query(sql, docommit=docommit)
+            pkobjet = self.getLastPK('object') 
+        else:
+            lastobjetid = self.getmaxColumnValue('Objet', 'id_objet')
+            sql = "INSERT INTO Objet (id_objet, lpk_revision_begin, datetimecreation, datetimemodification ) "
+            sql += "VALUES(" + str(lastobjetid + 1) + "," + str(self.maxrevision) + ",'" + datecreation + "','" + datecreation + "' )"
+            self.query(sql, docommit=docommit)
+            pkobjet = self.getLastPK('Objet') 
         return pkobjet
         
     def createNewFeature(self, tablename):
         parenttables = [tablename] + self.getParentTable(tablename)
         parenttablename = None
         for itertablename in parenttables[::-1]:
-            if itertablename == 'Objet':
+            if itertablename in ['Objet','object']:
                 parenttablepk = self.createNewObjet()
                 parenttablename = itertablename
             else:
                 tablepk = self.getLastPK(itertablename) + 1
-                """
-                sql = "INSERT INTO Ressource (id_ressource, lpk_objet) "
-                sql += "VALUES(" + str(lastressourceid) +   "," + str(pkobjet) + ");"
 
-                createSetValueSentence(self,type='INSERT',tablename=None, listoffields=[], listofrawvalues=[]):
-                """
                 if parenttablename is not None :
                     #if not 'onlyoneparenttable' in self.dbasetables[itertablename].keys():
                     if  not itertablename[-4:] == 'data':
@@ -794,16 +777,26 @@ class AbstractDBaseParser():
     def createNewFeatureVersion(self,dbname, rawpk):
 
         #first be sure
-        pkobjet, revbegin = self.getValuesFromPk(dbname + "_qgis", ['pk_objet','lpk_revision_begin'], rawpk)
+        if self.base3version:
+            pkobjet, revbegin = self.getValuesFromPk(dbname + "_qgis", ['pk_object','lpk_revision_begin'], rawpk)
+        else:
+            pkobjet, revbegin = self.getValuesFromPk(dbname + "_qgis", ['pk_objet','lpk_revision_begin'], rawpk)
         if revbegin < self.maxrevision:
-
             #first close object
-            sql = self.createSetValueSentence('UPDATE',
-                                              'Objet',
-                                              ['lpk_revision_end'],
-                                              [self.maxrevision])
-            sql += " WHERE pk_objet = " + str(pkobjet)
-            self.query(sql)
+            if self.base3version:
+                sql = self.createSetValueSentence('UPDATE',
+                                                'object',
+                                                ['lpk_revision_end'],
+                                                [self.maxrevision])
+                sql += " WHERE pk_objet = " + str(pkobjet)
+                self.query(sql)
+            else:
+                sql = self.createSetValueSentence('UPDATE',
+                                                'Objet',
+                                                ['lpk_revision_end'],
+                                                [self.maxrevision])
+                sql += " WHERE pk_object = " + str(pkobjet)
+                self.query(sql)
 
             # then clone parents
             parenttables = self.getParentTable(dbname)[::-1] + [dbname]
@@ -851,7 +844,10 @@ class AbstractDBaseParser():
                 sql += " WHERE pk_" + tablename.lower() + " = " + str(lastpk[i])
                 self.query(sql)
 
-    def saveRessourceFile(self,dbname, featurepk=None):
+    def saveRessourceFile(self,dbname, 
+                                featurepk=None, 
+                                previousfeaturepk=None   #case new version - its the old pk
+                                ):
         """
         Called by saveFeature
         If ressource file is not in the dbase directory, save it in the dbase directory
@@ -864,11 +860,15 @@ class AbstractDBaseParser():
         query = self.dbase.query(sql)
         result = [row[0] for row in query]
         """
-        if not 'Ressource' in self.getParentTable(dbname):
-            return
+        if self.base3version:
+            if not 'resource' in self.getParentTable(dbname):
+                return
+        else:
+            if not 'Ressource' in self.getParentTable(dbname):
+                return
             
         DBASETABLENAMElower = dbname.lower()
-        result = self.formtoolwidget.dbase.getValuesFromPk(DBASETABLENAMElower + "_qgis",
+        result = self.getValuesFromPk(DBASETABLENAMElower + "_qgis",
                                                             'datetimecreation',
                                                             featurepk)
 
@@ -880,14 +880,13 @@ class AbstractDBaseParser():
             return
 
         date = ''.join(datevalue.split('-'))
-        """
-        sql = "SELECT pk_ressource, id_ressource, file FROM " + self.dbasetablename.lower() + "_qgis"
-        sql += " WHERE pk_"+ self.dbasetablename.lower() + " = " + str(self.currentFeaturePK)
-        query = self.dbase.query(sql)
-        result = [row[0:3] for row in query]
-        """
+        if self.base3version:
+            fieldrequested = ['pk_resource', 'id_resource', 'file']
+        else:
+            fieldrequested = ['pk_ressource', 'id_ressource', 'file']
+
         result = self.getValuesFromPk(DBASETABLENAMElower + "_qgis",
-                                                            ['pk_ressource', 'id_ressource', 'file'],
+                                                            fieldrequested,
                                                             featurepk)
         if len(result) > 0:
             pkressource, idressource, file = result
@@ -912,18 +911,28 @@ class AbstractDBaseParser():
 
 
                     finalname = os.path.join('.',os.path.relpath(destinationfile, dbaseressourcesdirectory ))
-                    sql = "UPDATE Ressource SET file = '" + finalname + "' WHERE pk_ressource = " +  str(pkressource) + ";"
-                    query = self.query(sql)
-
-                    #removing old file 
-                    #if self.beforesavingFeature is not None:
-                    if self.formtoolwidget.currentFeaturePK is not None:   #case updating existing feature
-                        sql = "SELECT file FROM Ressource  WHERE pk_ressource = " + str(pkressource) + ";"
+                    if self.base3version:
+                        sql = "UPDATE resource SET file = '" + finalname + "' WHERE pk_resource = " +  str(pkressource) + ";"
                         query = self.query(sql)
-                        result = [row[0] for row in query]
-                        oldfile = result[0]
+
+                        if previousfeaturepk is not None:   #case updating existing feature
+                            sql = "SELECT file FROM resource  WHERE pk_resource = " + str(pkressource) + ";"
+                            query = self.query(sql)
+                            result = [row[0] for row in query]
+                            oldfile = result[0]
+                        else:
+                            oldfile = ''
                     else:
-                        oldfile = ''
+                        sql = "UPDATE Ressource SET file = '" + finalname + "' WHERE pk_ressource = " +  str(pkressource) + ";"
+                        query = self.query(sql)
+
+                        if previousfeaturepk is not None:   #case updating existing feature
+                            sql = "SELECT file FROM Ressource  WHERE pk_ressource = " + str(pkressource) + ";"
+                            query = self.query(sql)
+                            result = [row[0] for row in query]
+                            oldfile = result[0]
+                        else:
+                            oldfile = ''
 
                     newfile = finalname
 
@@ -968,11 +977,14 @@ class AbstractDBaseParser():
             for field in dbasetable['fields'].keys():
                 continuesearchparent = False
                 if 'lpk_' == field[:4]:
-                    parenttablename = field.split('_')[1].title()
+                    if 'Basedonnees' in self.dbasetables.keys():
+                        parenttablename = field.split('_')[1].title()
+                    else:
+                        parenttablename = field.split('_')[1]
                     parenttablenamelist.append(parenttablename)
                     if tablename[-4:] == 'data':
                         continuesearchparent = False
-                    elif field[4:] == 'objet':
+                    elif field[4:] in ['objet','object'] :
                         continuesearchparent = False
                     else:
                         continuesearchparent = True

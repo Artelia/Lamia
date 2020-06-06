@@ -25,20 +25,12 @@ This file is part of LAMIA.
  """
 
 
-
-
-# from PyQt4 import uic, QtGui
 from qgis.PyQt import uic, QtCore, QtGui
-try:
-    from qgis.PyQt.QtGui import QDialog
-except:
-    from qgis.PyQt.QtWidgets import QDialog
+from qgis.PyQt.QtWidgets import QDialog
 
 import os
 
-#FORM_CLASS, _ = uic.loadUiType(os.path.join(os.path.dirname(__file__), 'InspectionDigue_Connexion_PG.ui'))
 
-#class ConnexionPGDialog(QDialog, FORM_CLASS):
 class ConnexionPGDialog(QDialog):
 
     def __init__(self, parent=None):
@@ -60,7 +52,7 @@ class ConnexionPGDialog(QDialog):
         self.lineEdit_nom.setText('PVR_test')
         self.lineEdit_schema.setText('digue')
         self.lineEdit_user.setText('postgres')
-        self.lineEdit_password.setText('PVR')
+        self.lineEdit_password.setText('')
 
 
 

@@ -104,6 +104,9 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
 
     PARENTJOIN = None
     TABLEFILTERFIELD = {}
+    SKIP_LOADING_UI = False
+    # GEOMETRYSKIP = True
+    CASCADEFEATURESELECTION = False     #select child feature when parent feature is selected - slower
 
     def __init__(self,                  
                  dbaseparser=None, 
@@ -126,6 +129,9 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                                                     choosertreewidget=choosertreewidget, 
                                                     parentwidget=parentwidget, 
                                                     parent=parent)
+
+
+
         self.installEventFilter(self) 
         # utils class
         self.formutils = FormToolUtils(self)
@@ -185,6 +191,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
 
     def toolTreeWidgetCurrentItemChanged(self, param1, param2=None):
         super().toolTreeWidgetCurrentItemChanged(param1, param2=None)
+        
         if isinstance(param1, QTreeWidgetItem) and (isinstance(param2, QTreeWidgetItem) or param2 is None):
             if param1 == self.qtreewidgetitem : #the openend qtreewidgetitem
                 if (qgis.utils.iface is not None 
@@ -321,7 +328,6 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         if debug : logging.getLogger("Lamia_unittest").debug('tablename : %s, kwargs : %s',
                                                                 self.DBASETABLENAME, 
                                                                 kwargs)
-
         self.mainifacewidget.currenttoolwidget = self
 
         parentwidget = self
@@ -363,8 +369,10 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                 self.frametoolwidg.setEnabled(False)
        
     def _widgetClicked_manageToolBar(self):
-        #self.mainifacewidget.toolBarFormCreation.setEnabled(False)
-        #self.mainifacewidget.toolBarFormGeom.setEnabled(False)
+
+
+
+        # toolbar geom part
         if 'geom' in self.dbase.dbasetables[self.DBASETABLENAME].keys():
             self.mainifacewidget.lamiatoolBarFormGeom.setEnabled(True)
 
@@ -379,7 +387,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             if 'POINT' in dbaselayertype:
                 conf = [True, False, False, False]
             elif 'LINESTRING' in dbaselayertype:
-                if self.DBASETABLENAME in ['Equipement', 'Desordre']:
+                if self.DBASETABLENAME in ['Equipement', 'Desordre','equipment','deficiency']:
                     conf = [True, True, False, True]
                 else:
                     conf = [False, True, False, True]
@@ -388,14 +396,31 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             dictwhattodo = dict(zip(toolbaractions, conf))
             for action, boolenabled in dictwhattodo.items():
                 action.setEnabled(boolenabled)
-
         else:
             self.mainifacewidget.lamiatoolBarFormGeom.setEnabled(False)
+
+        # lamiatoolBarFormCreation part
+        # toolbar form creation
+        if 'toolbarMagic' in self.__class__.__dict__:    #implemented
+            self.mainifacewidget.actiontoolbarmagic.setEnabled(True)
+        else:
+            self.mainifacewidget.actiontoolbarmagic.setEnabled(False)
 
         if self.parentWidget is not None and self.parentWidget.currentFeaturePK is None:
             self.mainifacewidget.lamiatoolBarFormCreation.setEnabled(False)
         else:
             self.mainifacewidget.lamiatoolBarFormCreation.setEnabled(True)
+
+        # lamiatoolBarTools part
+        if self.currentFeaturePK is not None:
+            self.mainifacewidget.lamiatoolBartools.setEnabled(True)
+            if 'printWidget' in self.__class__.__dict__:    #implemented
+                self.mainifacewidget.actiontoolbartoolsprint.setEnabled(True)
+            else:
+                self.mainifacewidget.actiontoolbartoolsprint.setEnabled(False)
+
+        else:
+            self.mainifacewidget.lamiatoolBartools.setEnabled(False)
 
     def loadChildFeatureinWidget(self):
         debug = False
@@ -407,37 +432,12 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                                                         self.parentWidget.currentFeaturePK,
                                                         self.DBASETABLENAME,
                                                         self.choosertreewidget.ids )
-        if len(self.choosertreewidget.ids)==0:
-            self.selectFeature(pk=None, disabletitle=True)
-        else:
-            self.selectFeature(pk=self.choosertreewidget.ids['pk'][0])
-
-
-        if False:
-            res = self.choosertreewidget.loadIds()
-            # print('***', self.DBASETABLENAME, res)
-            if len(res)==0:
-                self.selectFeature(disabletitle=True)
-                #self.currentFeaturePK = None
-                #self.updateFormTitle(disabletitle=True)
+        if self.CASCADEFEATURESELECTION or self.SKIP_LOADING_UI:
+            if len(self.choosertreewidget.ids)==0:
+                self.selectFeature(pk=None, disabletitle=True)
             else:
-                sql = "SELECT pk_{} FROM {}_now WHERE id_{} = {}".format(self.DBASETABLENAME.lower(),
-                                                                    self.DBASETABLENAME,
-                                                                    self.DBASETABLENAME.lower(),
-                                                                    res[0][0] )
-                sql = self.dbase.sqlNow(sql)
-                pk = self.dbase.query(sql)[0][0]
-                self.selectFeature(pk=pk)
-                #self.currentFeaturePK = pk
-                #self.updateFormTitle()
+                self.selectFeature(pk=self.choosertreewidget.ids['pk'][0])
 
-        if False:
-            minsql = "SELECT min(pk_{}) FROM {}".format(self.DBASETABLENAME.lower(),
-                                                        self.DBASETABLENAME)
-            minpk = self.dbase.query(minsql)
-            if minpk:
-                minpk =  minpk[0][0]
-                self.selectFeature(pk=minpk)
 
     def initMainToolWidget(self):
         pass
@@ -446,6 +446,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         pass
 
     def postToolTreeWidgetCurrentItemChanged(self):
+        self.tabWidget.setCurrentIndex(0)
         self.widgetClicked()
         """
         if self.lastselectedpk is not None:
@@ -483,16 +484,21 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         #print('selectFeature',self.DBASETABLENAME, kwargs)
         debug = False
         self.setEnabled(True)
+        
         self.activatesubwidgetchangelistener = False
         self.tempgeometry = None
         if debug: logging.getLogger("Lamia_unittest").debug('kwargs %s', str(kwargs))
         self.currentFeaturePK = kwargs.get('pk', None)
         #rubberband actions
-        if self.parentWidget is None:
-            self._manageRubberbandOnSelectFeature(self.currentFeaturePK)
+        # if self.parentWidget is None:
+        self._manageRubberbandOnSelectFeature(self.currentFeaturePK)
+
         #remember feature pk
         if self.currentFeaturePK:
             self.lastselectedpk = self.currentFeaturePK
+            self.mainifacewidget.actiontoolbarnew.setEnabled(True)
+
+        
         #layer action
         if self.parentWidget is None and self.DBASETABLENAME is not None:
             if self.DBASETABLENAME in self.mainifacewidget.qgiscanvas.layers.keys():
@@ -510,13 +516,24 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             lidchooser.postSelectFeature()
         if self.currentFeaturePK is not None:   #activate listener only with existing feat
             self.activatesubwidgetchangelistener = True
+
         self.currentFeatureChanged.emit()
 
     def toolbarNew(self):
+        self.mainifacewidget.actiontoolbarnew.setEnabled(False)
+        self._manageRubberbandOnSelectFeature(None)
         self.selectFeature()
 
+    def toolbarMagic(self):
+        pass
+
     def toolbarUndo(self):
-        self.selectFeature(pk=self.currentFeaturePK)
+        if self.currentFeaturePK is not None:
+            self.selectFeature(pk=self.currentFeaturePK)
+        elif self.lastselectedpk is not None :
+            self.selectFeature(pk=self.lastselectedpk)
+        else:
+            pass
 
     def toolbarSave(self):
         self.formutils.saveFeature(featurepk=self.currentFeaturePK)
@@ -548,17 +565,17 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
 
         """
         if self.gpsutil and self.gpsutil.currentpoint is None:
-            self.mainifacewidget.connector.showErrorMessage('GPS non connecte')
+            self.mainifacewidget.connector.showErrorMessage(self.tr('GPS not connected'))
             return
 
-        type = self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME]['layer'].geometryType()
-        self.mainifacewidget.qgiscanvas.createorresetRubberband(type)
+        geomtype = self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME]['layer'].geometryType()
+        self.mainifacewidget.qgiscanvas.createorresetRubberband(geomtype,rubtype='capture')
         layerpoint = self.gpsutil.currentpoint
 
-        if type == 0:       # POINT
+        if geomtype == 0:       # POINT
             self.setTempGeometry([layerpoint],False)
 
-        elif type == 1:      # LINE
+        elif geomtype == 1:      # LINE
             geom = None
             geompoly = self._getCurrentGeomasList()
             if not geompoly:
@@ -588,10 +605,10 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             """
 
     def _getCurrentGeomasList(self):
-        type = self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME]['layer'].geometryType()
+        geomtype = self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME]['layer'].geometryType()
         # self.createorresetRubberband(type)
         initialgeom = []
-        if type == 0:
+        if geomtype == 0:
             if self.tempgeometry is not None:
                 initialgeom = self.tempgeometry.asPoint()
             else:
@@ -600,7 +617,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                                                         self.currentFeaturePK)
                 initialgeom = qgis.core.QgsGeometry.fromWkt(initialgeomwkt).asPoint()
 
-        elif type == 1:      # LINE
+        elif geomtype == 1:      # LINE
             # get the geometry before editing
             if self.tempgeometry is not None:
                 if not self.tempgeometry.isMultipart () :
@@ -620,7 +637,8 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
 
     def toolbarDelete(self):
 
-        message = "Supprimer completement l'element (yes) ou l'archiver (no) ? "
+        # message = self.tr("Supprimer completement l'element (yes) ou l'archiver (no) ? ")
+        message = self.tr("Delete feature (yes) or archive (no) ? ")
         reply = QMessageBox.question(self, "Su",
                                            message,
                                            QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
@@ -634,6 +652,10 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME]['layerqgis'].triggerRepaint()
         #self.canvas.refresh()
         #self.loadChildFeatureinWidget()
+
+    def printWidget(self):
+        pass
+
 
     def ____________________________________ToolBarActionsFunctions(self):
         pass
@@ -681,12 +703,11 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         styling = '.QTabBar::tab:selected#{}'.format(tabbarname)
         styling += ' {border-color: rgb(0, 0, 0);'
         tabwidgetlist = [self.tabWidget]
-        if False and self.parentWidget is None:
-            tabwidgetlist.insert(0,self.tabWidgetmain)
 
         if subwidgethaschanged or disabletitle:
             if subwidgethaschanged:
                 styling += ' background-color : rgb(0, 0, 255) }'
+                self.activatesubwidgetchangelistener = False
             if disabletitle:
                 styling += ' background-color : rgb(150, 150, 150) }'
             for wdg in tabwidgetlist:
@@ -704,14 +725,27 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
 
     def _manageRubberbandOnSelectFeature(self, pkfeature=None):
         
-        if ('geom' in self.dbase.dbasetables[self.DBASETABLENAME].keys()
-                and pkfeature):
-            currentgeom = self.formutils.getQgsGeomFromPk(pkfeature)
-            self.mainifacewidget.qgiscanvas.createRubberBandForSelection(currentgeom)
-            self.mainifacewidget.qgiscanvas.rubberBand.show()
+        self.mainifacewidget.qgiscanvas.createorresetRubberband(rubtype='capture')
 
+        if self.parentWidget is None:
+            if ('geom' in self.dbase.dbasetables[self.DBASETABLENAME].keys()
+                    and pkfeature):
+                currentgeom = self.formutils.getQgsGeomFromPk(pkfeature)
+                self.mainifacewidget.qgiscanvas.createRubberBandForSelection(currentgeom,rubtype='main')
+                # self.mainifacewidget.qgiscanvas.rubberBand.show()
+            else:
+                self.mainifacewidget.qgiscanvas.createorresetRubberband(rubtype='main')
+            self.mainifacewidget.qgiscanvas.createorresetRubberband(rubtype='child')
         else:
-            self.mainifacewidget.qgiscanvas.createorresetRubberband()
+            crtwdg = self.mainifacewidget.currenttoolwidget
+            if crtwdg and crtwdg == self :
+                if  ('geom' in self.dbase.dbasetables[self.DBASETABLENAME].keys() and pkfeature): 
+                    currentgeom = self.formutils.getQgsGeomFromPk(pkfeature)
+                    self.mainifacewidget.qgiscanvas.createRubberBandForSelection(currentgeom, distpixel = 1.0, rubtype='child')
+                    # self.rubberBand.show()
+                else:
+                    self.mainifacewidget.qgiscanvas.createorresetRubberband(rubtype='child')
+
 
     def postSelectFeature(self):
         pass
@@ -739,12 +773,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         debug = False
 
         if debug: logging.getLogger("Lamia_unittest").debug('start points : %s %s', self.DBASETABLENAME, points)
-
-        if self.mainifacewidget.qgiscanvas.currentmaptool is not None:
-            try:
-                self.mainifacewidget.qgiscanvas.currentmaptool.stopCapture.disconnect()
-            except TypeError:
-                pass
+        self.mainifacewidget.qgiscanvas.stopCapture()
 
         pointsmapcanvas = []
         pointslayer=[]
@@ -768,6 +797,14 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             points.append(points[0])
             #self.mainifacewidget.qgiscanvas.createorresetRubberband(0)
             capturetype = 0.5
+        elif len(points) == 1 and dbasetable['geom'] == 'POLYGON':
+            # qgsgeompoint = qgis.core.QgsGeometry.fromPointXY(points[0])
+            points = [qgis.core.QgsPointXY(points[0].x() - 1.0, points[0].y() - 1.0),
+                      qgis.core.QgsPointXY(points[0].x()  - 1.0, points[0].y() + 1.0),
+                      qgis.core.QgsPointXY(points[0].x()  + 1.0, points[0].y() + 1.0),
+                      qgis.core.QgsPointXY(points[0].x()  + 1.0, points[0].y() - 1.0),]
+
+            capturetype = 1.5
         #else:
         #    self.mainifacewidget.qgiscanvas.createorresetRubberband(capturetype)
 
@@ -791,18 +828,20 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         elif capturetype == 1:
             geometryformap = qgis.core.QgsGeometry.fromMultiPolylineXY([pointsmapcanvas])
             geometryforlayer = qgis.core.QgsGeometry.fromMultiPolylineXY([pointslayer])
-        elif capturetype == 2:
+        elif capturetype in [1.5, 2]:
             geometryformap = qgis.core.QgsGeometry.fromPolygonXY([pointsmapcanvas])
             geometryforlayer = qgis.core.QgsGeometry.fromPolygonXY([pointslayer])
 
         #outside qgis bug
         if showinrubberband:
-            if capturetype != 0.5:
-                self.mainifacewidget.qgiscanvas.createorresetRubberband(capturetype)
+            if capturetype not in [0.5,1.5]:
+                self.mainifacewidget.qgiscanvas.createorresetRubberband(capturetype,rubtype='capture')
+            elif capturetype in [1.5]:
+                self.mainifacewidget.qgiscanvas.createorresetRubberband(2,rubtype='capture')
             else:
-                self.mainifacewidget.qgiscanvas.createorresetRubberband(0)
-            self.mainifacewidget.qgiscanvas.rubberBand.addGeometry(geometryformap, None)
-            self.mainifacewidget.qgiscanvas.rubberBand.show()
+                self.mainifacewidget.qgiscanvas.createorresetRubberband(0,rubtype='capture')
+            self.mainifacewidget.qgiscanvas.rubberbands['capture'].addGeometry(geometryformap, None)
+            self.mainifacewidget.qgiscanvas.rubberbands['capture'].show()
         self.tempgeometry = geometryforlayer
         self.lamiageomChanged.emit()
 
@@ -811,7 +850,3 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         # if debug: logging.getLogger("Lamia_unittest").debug('end tempgeom : %s', self.toWKT(self.tempgeometry))
 
         #self.mtool = None
-
-
-    def ___________________________oldThings(self):
-        pass

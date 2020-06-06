@@ -32,23 +32,29 @@ from .subwidget_abstract import AbstractSubWidget
 
 class LidChooserWidget(AbstractSubWidget):
 
+    UIPATH = os.path.join(os.path.dirname(__file__), 'subwidget_lidchooser_ui.ui')
 
-    def __init__(self, parentwdg=None, parentlidfield=None, parentframe=None, searchdbase='', searchfieldtoshow=[] ):
-        super(LidChooserWidget, self).__init__(parent=parentwdg)
-        uipath = os.path.join(os.path.dirname(__file__), 'subwidget_lidchooser_ui.ui')
-        uic.loadUi(uipath, self)
+    def __init__(self, 
+                parentwdg=None,  
+                parentframe=None, 
+                searchdbase='', 
+                searchfieldtoshow=[],
+                parentlidfield=None):
+        super(LidChooserWidget, self).__init__(parentwdg=parentwdg,
+                                                parentframe=parentframe)
+
         self.parentwdg=parentwdg
         self.parentlidfield=parentlidfield
         self.searchdbase = searchdbase
         self.searchfieldtoshow = searchfieldtoshow
-        self.parentframe = parentframe
+        # self.parentframe = parentframe
 
-        if self.parentframe.layout() is not None:
-            self.parentframe.layout().addWidget(self)
-        else:
-            vlayout = QVBoxLayout()
-            vlayout.addWidget(self)
-            self.parentframe.setLayout(vlayout)
+        # if self.parentframe.layout() is not None:
+        #     self.parentframe.layout().addWidget(self)
+        # else:
+        #     vlayout = QVBoxLayout()
+        #     vlayout.addWidget(self)
+        #     self.parentframe.setLayout(vlayout)
 
         self.lineEdit.textChanged.connect(self.loadDatas)
 
@@ -65,14 +71,19 @@ class LidChooserWidget(AbstractSubWidget):
 
         debug = False
 
+        self._disconnectSignals()
+        self.lineEdit.setText('')
         if debug: timestart = self.parentwdg.dbase.getTimeNow()
 
         self.loadDatas()
 
         #choose saved id in combobox
         if self.parentwdg.currentFeaturePK is not None:
-            sql = "SELECT " + str(self.parentlidfield) + " FROM " + self.parentwdg.DBASETABLENAME
-            sql += " WHERE pk_" + self.parentwdg.DBASETABLENAME.lower() + " = " + str(self.parentwdg.currentFeaturePK)
+            sql = f"SELECT {self.parentlidfield}  FROM {self.parentwdg.DBASETABLENAME}_qgis \
+                   WHERE pk_{self.parentwdg.DBASETABLENAME.lower()} = {self.parentwdg.currentFeaturePK} "
+
+            # sql = "SELECT " + str(self.parentlidfield) + " FROM " + self.parentwdg.DBASETABLENAME
+            # sql += " WHERE pk_" + self.parentwdg.DBASETABLENAME.lower() + " = " + str(self.parentwdg.currentFeaturePK)
             res = self.parentwdg.dbase.query(sql)
             if res is not None and len(res) > 0 and res[0][0] is not None:
                 for itemindex in range(self.comboBox_interv.count()):
@@ -85,39 +96,38 @@ class LidChooserWidget(AbstractSubWidget):
         else:
             self.comboBox_interv.setCurrentIndex(0)
 
+        self._connectSignals()
         if debug: logging.getLogger('Lamia').debug('end  %.3f', self.parentwdg.dbase.getTimeNow() - timestart)
 
 
 
 
     def loadDatas(self, txtstr=None):
-        #print('loadDatas', self.parentwdg.DBASETABLENAME)
+        # print('loadDatas', self.parentwdg.DBASETABLENAME)
         self.comboBox_interv.clear()
         fields = ['id_' + self.searchdbase.lower() ] + self.searchfieldtoshow
 
         sql = "SELECT " + ','.join(fields) + " FROM " + self.searchdbase + "_now"
         sql = self.parentwdg.dbase.updateQueryTableNow(sql)
         res = self.parentwdg.dbase.query(sql)
+        # print(res)
 
         self.comboBox_interv.addItem('/')
         for elem in res:
             elemstr = [str(t) for t in elem]
             nomstring = ' / '.join(elemstr)
-            if txtstr is not None:
+            if txtstr in [None, '']:
+                self.comboBox_interv.addItem(nomstring)
+            else:
                 for sselem in elem:
                     if txtstr.lower() in str(sselem).lower():
                         self.comboBox_interv.addItem(nomstring)
-            else:
-                self.comboBox_interv.addItem(nomstring)
-
-
 
     def postSaveFeature(self, parentfeaturepk=None):
         idtxt = self.comboBox_interv.currentText().split(' / ')[0]
 
         if parentfeaturepk is None:
             self.parentwdg.mainifacewidget.connector.showErrorMessage("Enregistrer l'observation d'abord")
-            #self.parentwdg.windowdialog.errorMessage("Enregistrer l'observation d'abord")
             return
 
         if idtxt.isdigit():
@@ -125,6 +135,34 @@ class LidChooserWidget(AbstractSubWidget):
         else:
             valuetoset = 'NULL'
 
-        sql = "UPDATE " + self.parentwdg.DBASETABLENAME + " SET " + self.parentlidfield
-        sql += " = " + valuetoset + " WHERE pk_" + self.parentwdg.DBASETABLENAME.lower() + " = " + str(parentfeaturepk)
-        self.parentwdg.dbase.query(sql)
+        parenttables = [self.parentwdg.DBASETABLENAME] + self.parentwdg.dbase.getParentTable(self.parentwdg.DBASETABLENAME)
+        parenttables = parenttables[::-1]
+        for tablename in parenttables:
+            if self.parentlidfield in self.parentwdg.dbase.dbasetables[tablename]['fields'].keys():
+                tablepk = self.parentwdg.dbase.getValuesFromPk(self.parentwdg.DBASETABLENAME + '_qgis',
+                                                              'pk_' + tablename.lower(),
+                                                               parentfeaturepk)
+                sql = f"UPDATE {tablename} SET {self.parentlidfield} = {valuetoset} \
+                       WHERE pk_{tablename.lower()} = {tablepk}"
+
+                # sql = "UPDATE " + self.parentwdg.DBASETABLENAME + " SET " + self.parentlidfield
+                # sql += " = " + valuetoset + " WHERE pk_" + self.parentwdg.DBASETABLENAME.lower() + " = " + str(parentfeaturepk)
+                self.parentwdg.dbase.query(sql)
+                break
+
+    def _connectSignals(self):
+        self.comboBox_interv.currentIndexChanged.connect(self.comboChanged)
+        self.lineEdit.textChanged.connect(self.loadDatas)
+
+    def _disconnectSignals(self):
+        try:
+            self.comboBox_interv.currentIndexChanged.disconnect(self.comboChanged)
+        except:
+            pass
+        try:
+            self.lineEdit.textChanged.disconnect(self.loadDatas)
+        except:
+            pass
+
+    def comboChanged(self):
+        self.parentwdg.updateFormTitleBackground(subwidgethaschanged=True)

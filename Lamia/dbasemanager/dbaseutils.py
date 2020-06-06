@@ -43,9 +43,9 @@ def rebuildSplittedQuery( sqlin):
     if 'WHERE' in sqlin.keys():
         sqlout += ' WHERE ' + sqlin['WHERE']
     if 'GROUP' in sqlin.keys():
-        sqlout += ' GROUP BY ' + sqlin['GROUP']
+        sqlout += ' GROUP ' + sqlin['GROUP']
     if 'ORDER' in sqlin.keys():
-        sqlout += ' ORDER BY ' + sqlin['ORDER']
+        sqlout += ' ORDER  ' + sqlin['ORDER']
     if 'LIMIT' in sqlin.keys():
         sqlout += ' LIMIT ' + sqlin['LIMIT']
     return sqlout

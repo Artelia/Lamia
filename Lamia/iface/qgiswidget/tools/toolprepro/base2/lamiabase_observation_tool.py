@@ -44,6 +44,7 @@ import datetime
 
 class BaseObservationTool(AbstractLamiaFormTool):
 
+    PREPROTOOLNAME = 'Observation'
     DBASETABLENAME = 'Observation'
     # LOADFIRST = True
 

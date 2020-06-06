@@ -1,0 +1,56 @@
+###Infralineaire
+#nom              type               cst               valeur                    
+ID_SAISIE;         Int;                  ;     id_infralineaire
+ADRESSE;         String;                  ;               Infralineaire_now.rue_libelle
+INSEE;         String;                  ;     NULL
+DOMAINE;         String;                  ;     Infralineaire_now.domaine
+IMPLANT;         String;                  ;     Infralineaire_now.implantation
+TYPE_RES;         String;                  ;     Infralineaire_now.typeReseau
+NOM;         String;                  ;     NULL
+
+TYPE;         String;                  ;     NULL
+MARQUE;         String;                  ;     NULL
+MODELE;         String;                  ;     NULL
+
+DIAMETRE;         Int;                  ;     NULL
+LONGUEUR;         Int;                  ;     ST_Length(Infralineaire_now.geom)
+
+ACCESS;         Int;                  ;     Infralineaire_now.visitable
+
+MAT_BRANCH;         String;                  ;     Infralineaire_now.materiau
+
+
+TYP_USAGER;         String;                  ;     NULL
+CONFORMITE;         String;                  ;     NULL
+
+ENTREPRISE;         String;                  ;     NULL
+DATE_MES;         String;                  ;     NULL
+PERIOD_MES;         String;                  ;     NULL
+
+COTE_RAD;        Double;                             ; CASE WHEN Infralineaire_now.profamont is NULL THEN (Noeud_amont.z - Noeud_amont.profradierouvrage) ELSE (Noeud_amont.z - Infralineaire_now.profamont) END 
+PROF_RAD;        Double;                             ; CASE WHEN Infralineaire_now.profamont is NULL THEN Noeud_amont.profradierouvrage ELSE Infralineaire_now.profamont END 
+COTE_TN;        Double;                             ; Noeud_amont.Z
+
+# COTE_R_AM;        Double;                             ; NULL
+# COTE_R_AV;        Double;                             ; NULL
+# PROF_R_AV;        Double;                             ; NULL
+# PROF_R_AV;        Double;                             ; NULL
+
+ETAT;         String;                  ;     NULL
+
+M_OUVR;         String;                  ;     NULL
+DAT_GEOLOC;         String;                  ;     Infralineaire_now.datetimecreation
+AUT_ GEOLOC;         String;                  ;     'ARTELIA'
+MOD_GEOLOC;         String;                  ;     '01'
+CLASSE_PRE;         String;                  ;     '01'
+REMARQUES;         String;                  ;     Infralineaire_now.commentaire
+
+
+
+
+
+###geom
+geom;         Int;               ;                  ST_AsText(ST_EndPoint(Infralineaire_now.geom))
+
+###main
+FROM Infralineaire_now LEFT JOIN Noeud_now AS Noeud_amont ON Infralineaire_now.lid_descriptionsystem_1 = Noeud_amont.id_descriptionsystem LEFT JOIN Noeud_now AS Noeud_aval ON Infralineaire_now.lid_descriptionsystem_2 = Noeud_aval.id_descriptionsystem WHERE Infralineaire_now.branchement = 1

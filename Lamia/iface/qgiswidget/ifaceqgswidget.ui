@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>501</width>
-    <height>370</height>
+    <width>645</width>
+    <height>422</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -600,7 +600,7 @@ background-color: rgb(255, 255, 255);</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>501</width>
+     <width>645</width>
      <height>26</height>
     </rect>
    </property>
@@ -612,17 +612,17 @@ background-color: rgb(255, 255, 255);</string>
      <locale language="French" country="France"/>
     </property>
     <property name="title">
-     <string>Fichiers</string>
+     <string>Files</string>
     </property>
     <widget class="QMenu" name="menuBases_recentes">
      <property name="title">
-      <string>Bases recentes</string>
+      <string>Recent DB</string>
      </property>
      <addaction name="actionTemp"/>
     </widget>
     <widget class="QMenu" name="menuCharger_base">
      <property name="title">
-      <string>Charger base</string>
+      <string>Load DB</string>
      </property>
      <addaction name="actionPostgis"/>
      <addaction name="actionSpatialite"/>
@@ -644,7 +644,7 @@ background-color: rgb(255, 255, 255);</string>
    </widget>
    <widget class="QMenu" name="menuPreferences">
     <property name="title">
-     <string>Préférences</string>
+     <string>Settings</string>
     </property>
     <addaction name="action_Repertoire_photo"/>
     <addaction name="separator"/>
@@ -666,7 +666,7 @@ background-color: rgb(255, 255, 255);</string>
    </widget>
    <widget class="QMenu" name="menuAide">
     <property name="title">
-     <string>Aide</string>
+     <string>Help</string>
     </property>
     <addaction name="actionAide"/>
     <addaction name="actionA_propos"/>
@@ -689,6 +689,7 @@ background-color: rgb(255, 255, 255);</string>
     <bool>false</bool>
    </attribute>
    <addaction name="actiontoolbarnew"/>
+   <addaction name="actiontoolbarmagic"/>
    <addaction name="actiontoolbarundo"/>
    <addaction name="actiontoolbardelete"/>
    <addaction name="actiontoolbarsave"/>
@@ -708,7 +709,32 @@ background-color: rgb(255, 255, 255);</string>
    <addaction name="actiontoobargeomnewpolygon"/>
    <addaction name="actiontoobargeomaddpoint"/>
    <addaction name="actiontoobargeomaddGPSpoint"/>
+  </widget>
+  <widget class="QToolBar" name="lamiatoolbareditlayer">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
    <addaction name="actiontoobargeomeditlayer"/>
+   <addaction name="actiontoolbarlayerundo"/>
+   <addaction name="actiontoolbarlayersave"/>
+  </widget>
+  <widget class="QToolBar" name="lamiatoolBartools">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actiontoolbartoolsprint"/>
   </widget>
   <action name="actionTre">
    <property name="text">
@@ -740,7 +766,7 @@ background-color: rgb(255, 255, 255);</string>
   </action>
   <action name="action_Repertoire_photo">
    <property name="text">
-    <string>Répertoire photo</string>
+    <string>Camera directory</string>
    </property>
   </action>
   <action name="actionUtilisateur">
@@ -756,7 +782,7 @@ background-color: rgb(255, 255, 255);</string>
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Terrain</string>
+    <string>Field investigation</string>
    </property>
   </action>
   <action name="actionModeExpert">
@@ -772,7 +798,7 @@ background-color: rgb(255, 255, 255);</string>
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Bureau</string>
+    <string>Office</string>
    </property>
   </action>
   <action name="actionPostgis">
@@ -787,7 +813,7 @@ background-color: rgb(255, 255, 255);</string>
   </action>
   <action name="actionNouvelle_base">
    <property name="text">
-    <string>Nouvelle base</string>
+    <string>New DB</string>
    </property>
   </action>
   <action name="actionReinitialier_prestation_courante">
@@ -797,12 +823,12 @@ background-color: rgb(255, 255, 255);</string>
   </action>
   <action name="action_GPSConnection">
    <property name="text">
-    <string>Se connecter au GPS</string>
+    <string>Connect to Qgis GPS</string>
    </property>
   </action>
   <action name="actionAide">
    <property name="text">
-    <string>Aide </string>
+    <string>Help</string>
    </property>
   </action>
   <action name="actionA_propos">
@@ -810,7 +836,7 @@ background-color: rgb(255, 255, 255);</string>
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>A propos</string>
+    <string>About...</string>
    </property>
   </action>
   <action name="action_taille_icone">
@@ -820,7 +846,7 @@ background-color: rgb(255, 255, 255);</string>
   </action>
   <action name="actionHauteur_de_perche_GPS">
    <property name="text">
-    <string>Hauteur de perche GPS</string>
+    <string>GPS rod height</string>
    </property>
   </action>
   <action name="actionPosttraitement">
@@ -828,7 +854,7 @@ background-color: rgb(255, 255, 255);</string>
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Post traitement</string>
+    <string>Post treatment</string>
    </property>
   </action>
   <action name="actionInfralineaires">
@@ -878,22 +904,22 @@ background-color: rgb(255, 255, 255);</string>
   </action>
   <action name="action_pulldb">
    <property name="text">
-    <string>Créer une copie locale</string>
+    <string>Pull DB</string>
    </property>
   </action>
   <action name="actionImporter_et_ajouter_la_base">
    <property name="text">
-    <string>Importer et ajouter une base de données</string>
+    <string>Add a DB to this DB</string>
    </property>
   </action>
   <action name="action_pushdb">
    <property name="text">
-    <string>Reverser la base locale sur la base principale</string>
+    <string>Push local DB </string>
    </property>
   </action>
   <action name="actionTables_et_champs">
    <property name="text">
-    <string>Tables et champs</string>
+    <string>Table and fields</string>
    </property>
   </action>
   <action name="actiontoolbarsave">
@@ -984,6 +1010,42 @@ background-color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
     <string>toobargeomeditlayer</string>
+   </property>
+  </action>
+  <action name="actiontoolbarlayersave">
+   <property name="icon">
+    <iconset resource="../../resources.qrc">
+     <normaloff>:/plugins/Lamia/icons/save.png</normaloff>:/plugins/Lamia/icons/save.png</iconset>
+   </property>
+   <property name="text">
+    <string>toolbarlayersave</string>
+   </property>
+  </action>
+  <action name="actiontoolbarlayerundo">
+   <property name="icon">
+    <iconset resource="../../resources.qrc">
+     <normaloff>:/plugins/Lamia/icons/deselect.png</normaloff>:/plugins/Lamia/icons/deselect.png</iconset>
+   </property>
+   <property name="text">
+    <string>toolbarlayerundo</string>
+   </property>
+  </action>
+  <action name="actiontoolbartoolsprint">
+   <property name="icon">
+    <iconset resource="../../resources.qrc">
+     <normaloff>:/plugins/Lamia/icons/print.png</normaloff>:/plugins/Lamia/icons/print.png</iconset>
+   </property>
+   <property name="text">
+    <string>toolbartoolsprint</string>
+   </property>
+  </action>
+  <action name="actiontoolbarmagic">
+   <property name="icon">
+    <iconset resource="../../resources.qrc">
+     <normaloff>:/plugins/Lamia/icons/magic-wand.png</normaloff>:/plugins/Lamia/icons/magic-wand.png</iconset>
+   </property>
+   <property name="text">
+    <string>toolbarmagic</string>
    </property>
   </action>
  </widget>

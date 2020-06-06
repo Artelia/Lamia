@@ -1,0 +1,44 @@
+
+###atlaslayersql
+# requete sql pour définir la table utilisée pour l'atlas
+SELECT deficiency_now.* , NCD.*
+FROM deficiency_now 
+LEFT JOIN observation_now as NCD ON NCD.lid_deficiency = deficiency_now.id_deficiency and NCD.observationcategory = 'NCD' 
+LEFT JOIN actor_now as NCDinterv ON NCDinterv.id_actor = NCD.lid_actor_1
+WHERE deficiencycategory = 'NCO' 
+AND NCD.datetimeobservation > (SELECT max(observation_now.datetimeobservation) 
+                                FROM observation_now 
+                                WHERE observation_now.observationcategory = 'NCC' 
+                                AND observation_now.lid_deficiency = deficiency_now.id_deficiency)
+ORDER BY NCD.datetimeobservation DESC LIMIT 1
+###atlaslayerid
+# l'identifiant de l'atalslayer
+id_deficiency
+###spatial
+# indique si l'atalslayer est une couche spatiale ou pas
+True
+###ordering
+# type d'ordonnancement si rien : par id croissant, sinon  autoalongpath
+#type; constraint (qgis typo)
+# autoalongpath;
+###atlaslayerstyle
+#un style particulier pour l'atlaslayer
+deficiency_atlas.qml
+###atlasdrivemap
+# caractéristiques de la carte (map) qui suit les objets de l'atlas
+#itemname;   minscale;   typescale;      layers
+#map1;       2500;       Predefined      ;['atlaslayer','Infralineaire', 'scan25']
+###generalmap
+# caractéristiques de la carte (map) générale
+# itemname;   minscale;   typescale; layers
+#map0    ;           ;             ; ['deficiency', 'scan25']
+#map0    ;           ;             ; []
+###images
+# traitement des éléments de type image
+#itemname   ; type
+NCD_signature;NCD.ressource1
+###childprint
+# impression à la suite d'autres conf d'impression
+#confname;                linkcolumn;             optionsql
+#deficiencys_observation;    observation_now.lid_deficiency ; ORDER BY observation_now.datetimeobservation DESC
+# TRAMnonconformitephaseC; NCC.lid_deficiency;

@@ -1,0 +1,30 @@
+###atlaslayersql
+SELECT node_now.* , deficiency_now.*, observation_now.* FROM node_now 
+INNER JOIN deficiency_now ON deficiency_now.lid_descriptionsystem = node_now.id_descriptionsystem
+LEFT JOIN observation_now ON observation_now.lid_deficiency = deficiency_now.id_deficiency
+WHERE node_now.nodetype = '10'
+###atlaslayerid
+id_noeud
+###spatial
+True
+#ordering
+#autopath
+###atlaslayerstyle
+SNCFNoeud.qml
+###atlasdrivemap
+#itemname;   minscale;   typescale;      layers
+map0;       250;       Predefined      ;['atlaslayer', 'node', 'equipment', 'edge', 'bati','Voie','Route', 'scan25']
+#map1;       2500;       Predefined      ;['atlaslayer', 'Equipement', 'Infralineaire', 'scan25']
+###generalmap
+#itemname;   minscale;   typescale; layers
+#map0    ;           ;             ; ['edge', 'ortho']
+#map0    ;           ;             ; []
+###images
+#itemname   ; type
+photo1;node_now.photo1
+photo2;node_now.photo2
+###childprint
+#confname;                linkcolumn;             optionsql
+
+
+

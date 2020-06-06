@@ -80,7 +80,33 @@ class PostGisDBaseParser(AbstractDBaseParser):
     def getDBName(self):
         return self.pgschema
 
+
+
     def generateSQLTableCreationFromDBConfig(self, name, dbasetable, crs):
+
+        sql = {}
+        listFK = []
+        sql['main'] = 'CREATE TABLE '
+        sql['main'] +=  name + '('
+
+        for key in dbasetable['fields']:
+            sql['main'] += key + ' ' + dbasetable['fields'][key]['PGtype']
+            if 'FK' in dbasetable['fields'][key].keys():
+                sql['main'] += ' REFERENCES '  + dbasetable['fields'][key]['FK']
+            sql['main'] += ','
+
+        if sql['main'][-1] == ',':
+            sql['main'] = sql['main'][:-1]
+        sql['main'] = sql['main'] + ');'
+
+        if 'geom' in dbasetable.keys():
+            sql['other'] = []
+            sql['other'].append('ALTER TABLE '  + name
+                                + " ADD  COLUMN   geom geometry('" + dbasetable['geom'] + "'," + str(crs) + ");")
+
+        return sql
+
+    def generateSQLTableCreationFromDBConfigOld(self, name, dbasetable, crs):
 
         sql = {}
         listFK = []
@@ -241,9 +267,11 @@ class PostGisDBaseParser(AbstractDBaseParser):
 
         except psycopg2.ProgrammingError as e:
             print('error query : ', sql, '\n', e, self.PGiscursor.statusmessage )
+            raise TypeError
             return None
         except (psycopg2.DataError, psycopg2.InternalError) as e:
             print('error query : ', sql, '\n', e)
+            raise TypeError
             return None
 
 
@@ -265,6 +293,13 @@ class PostGisDBaseParser(AbstractDBaseParser):
             return True
         else:
             return False
+
+    def getTables(self):
+        # select * from information_schema.tables where table_schema = 'information_schema'
+        # sql = "SELECT name FROM sqlite_master WHERE type='table'"
+        sql = f"SELECT table_name  FROM information_schema.tables WHERE table_schema = '{self.pgschema.lower()}'"
+        result = self.query(sql)
+        return [elem[0] for elem in result]
 
     def getColumns(self, tablename):
         sql = "SELECT column_name FROM information_schema.columns "\

@@ -30,7 +30,7 @@ This file is part of LAMIA.
 Class
 """
 
-import os.path
+import os.path, sys
 import qgis
 from .iface.qgiswidget.lamia_dockwidget import InspectiondigueDockWidget
 
@@ -67,7 +67,6 @@ class Lamia:
         :return Bool Return somethong
         """
 
-        
         ## Save reference to the QGIS interface
         self.iface = iface
 
@@ -168,6 +167,8 @@ class Lamia:
             text=self.tr(u'Lamia'),
             callback=self.run,
             parent=self.iface.mainWindow())
+
+        sys.path.append(os.path.dirname(__file__))
 
     #--------------------------------------------------------------------------
 

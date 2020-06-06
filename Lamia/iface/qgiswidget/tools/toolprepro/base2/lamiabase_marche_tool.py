@@ -39,6 +39,7 @@ from .lamiabase_topographie_tool import BaseTopographieTool
 
 class BaseMarcheTool(AbstractLamiaFormTool):
 
+    PREPROTOOLNAME = 'Marche'
     DBASETABLENAME = 'Marche'
     LOADFIRST = False
 

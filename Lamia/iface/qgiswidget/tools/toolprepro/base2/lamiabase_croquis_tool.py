@@ -40,6 +40,7 @@ from .lamiabase_photoviewer import PhotoViewer
 
 class BaseCroquisTool(AbstractLamiaFormTool):
 
+    PREPROTOOLNAME = 'Croquis'
     DBASETABLENAME = 'Photo'
     LOADFIRST = False
 

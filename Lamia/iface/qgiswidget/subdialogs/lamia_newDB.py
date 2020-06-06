@@ -26,27 +26,14 @@ This file is part of LAMIA.
   * SPDX-License-Identifier: GPL-3.0-or-later
   * License-Filename: LICENSING.md
  """
+import os
 
-
-
-# from PyQt4 import uic, QtGui
 from qgis.PyQt import uic, QtCore, QtGui
-#from ..main.DBaseParser import DBaseParser
-# from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
+from qgis.PyQt.QtWidgets import QDialog
+    
 from Lamia.dbasemanager.dbaseparserabstract import AbstractDBaseParser
 
 
-try:
-    from qgis.PyQt.QtGui import QDialog
-except:
-    from qgis.PyQt.QtWidgets import QDialog
-    
-import os
-
-
-#FORM_CLASS, _ = uic.loadUiType(os.path.join(os.path.dirname(__file__), 'InspectionDigue_newDB.ui'))
-
-#class newDBDialog(QDialog, FORM_CLASS):
 class newDBDialog(QDialog):
 
     def __init__(self, parent=None):

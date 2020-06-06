@@ -89,7 +89,7 @@ class CostTool(AbstractLamiaTool):
         self.toolwidgetmain.toolButton_selected.clicked.connect(self.goToSelectedId)
         self.toolwidgetmain.toolButton_selected.setEnabled(False)
 
-        self.choosertreewidget = self.mainifacewidget.toolwidgets['toolprepro']['Zone geographique'][0].choosertreewidget
+        self.choosertreewidget = self.mainifacewidget.toolwidgets['toolprepro']['Zonegeo'].choosertreewidget
 
 
     def launchCostCalculus(self):

@@ -47,7 +47,7 @@ import sys
 
 class BasePhotoTool(AbstractLamiaFormTool):
 
-
+    PREPROTOOLNAME = 'Photo'
     DBASETABLENAME = 'Photo'
     LOADFIRST = False
 

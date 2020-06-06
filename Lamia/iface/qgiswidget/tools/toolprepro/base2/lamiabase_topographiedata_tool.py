@@ -36,6 +36,7 @@ from ...lamia_abstractformtool import AbstractLamiaFormTool
 
 class BaseTopographiedataTool(AbstractLamiaFormTool):
 
+    PREPROTOOLNAME = 'Topographiedata'
     DBASETABLENAME = 'Topographiedata'
     LOADFIRST = False
 
@@ -246,7 +247,7 @@ class BaseTopographiedataTool(AbstractLamiaFormTool):
                 else:
                     self.formtoolwidgetconfdict[self.dbasetablename]['widgets'][fieldname].setValue(-1.0)
 
-            self.mainifacewidget.qgiscanvas.createorresetRubberband(0)
+            # self.mainifacewidget.qgiscanvas.createorresetRubberband(0)
             self.setTempGeometry([self.mainifacewidget.gpsutil.currentpoint],False)
             return True
         else:

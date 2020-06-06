@@ -76,7 +76,7 @@ class DBaseOfflineManager():
             if not os.path.isdir(dbdir):
                 os.mkdir(dbdir)
             else:
-                self.dbase.messageinstance.showErrorMessage('Il y a déjà une copie locale de la base... Supprimez la')
+                self.dbase.messageinstance.showErrorMessage(self.tr('Il y a déjà une copie locale de la base... Supprimez la'))
                 return
             
             lamiafilepath = os.path.join(dbdir,dbname+'.sqlite')
@@ -223,7 +223,7 @@ class DBaseOfflineManager():
                         noncriticalresult = noncriticalresults[i]
 
 
-                        if tablename[0:2] != 'Tc':
+                        if tablename[0:2].lower() != 'tc':
                             index_pk_tablename = dbconfdatas['pkidfields'].index('pk_' + tablename.lower())
                             pk_tablename = pkidresult[index_pk_tablename]
                             id_objet,rev_begin,rev_end,datetimedes = dbaseparserfrom.getValuesFromPk(tablename  + '_qgis',
@@ -656,28 +656,6 @@ class DBaseOfflineManager():
                     else:
                         print('error lpk_', pkidresult)
 
-        if False:
-            pass
-            """
-            if "lpk_revision_begin" in listoffields and not changeID:
-                #pkcurrentable
-                sql = " SELECT pk_" + tablename.lower() + " FROM " + tablename.lower()
-                sql += " WHERE id_" + tablename.lower() + " = " + str(idtable)
-                sql += " AND lpk_revision_end IS NULL"
-
-                tempres = self.dbase.query(sql)
-
-                if len(tempres)>0:
-                    pkcurrenttable = self.dbase.query(sql)[0][0]
-
-
-                    sql = "UPDATE " + tablename.lower() + " SET lpk_revision_end = " + str(self.maxrevision)
-                    sql += " WHERE pk_" + tablename.lower() + " = " + str(pkcurrenttable)
-                    self.dbase.query(sql, docommit=False)
-            """
-            # if i % 50 == 0:
-                # if debug: logging.getLogger("Lamia").debug(' field, value : %s %s  ', str(fields), str(values))
-
         if pktoinsert is not None and finalpkidfields:
             # update line
             setsentence = ''
@@ -725,7 +703,7 @@ class DBaseOfflineManager():
         #if typeimport == 'nouvelle' or typeimport == 0:
         if typeimport in ['append', 'copy']:
             sqlconstraint = []
-            if dbname[0:2] == 'Tc':
+            if dbname[0:2].lower() == 'tc':
                 sqlconstraint = " WHERE lpk_revision_end IS NULL"
             else:
                 sqlconstraint = " WHERE lpk_revision_end IS NULL AND datetimedestruction is NULL"
@@ -733,7 +711,7 @@ class DBaseOfflineManager():
             #sqlconstraint = " WHERE lpk_revision_end IS NULL and datetimedestruction is NULL"
         #elif typeimport == 'import_terrain' or typeimport == 1:
         else:   # update
-            if dbname[0:2] == 'Tc':
+            if dbname[0:2].lower() == 'tc':
                 sqlconstraint = " WHERE lpk_revision_end IS NULL"
             else:
                 #sqlconstraint = " WHERE lpk_revision_end IS NULL AND datetimedestruction is NULL"

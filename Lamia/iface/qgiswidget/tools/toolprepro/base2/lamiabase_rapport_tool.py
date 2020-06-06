@@ -35,6 +35,7 @@ from ...lamia_abstractformtool import AbstractLamiaFormTool
 
 class BaseRapportTool(AbstractLamiaFormTool):
 
+    PREPROTOOLNAME = 'Rapport'
     DBASETABLENAME = 'Rapport'
     LOADFIRST = False
 

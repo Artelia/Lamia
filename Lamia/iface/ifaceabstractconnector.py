@@ -30,8 +30,9 @@ import logging, sys
 class LamiaIFaceAbstractConnectors():
 
     def __init__(self):
-        logging.basicConfig( stream=sys.stderr )
-        logging.getLogger("Lamia_connector").setLevel( logging.INFO )
+        pass
+        # logging.basicConfig( stream=sys.stderr )
+        # logging.getLogger("Lamia_connector").setLevel( logging.INFO )
 
     def showNormalMessage(self, text):
         logging.getLogger( "Lamia_connector" ).info('normalMessage : %s', text)

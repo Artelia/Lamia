@@ -26,20 +26,40 @@ This file is part of LAMIA.
  """
 import os, sys, io, logging, datetime, re, json
 import qgis, qgis.core, qgis.utils, qgis.gui
-from qgis.PyQt import QtGui
+from qgis.PyQt import QtGui, QtCore
 import Lamia
 from ..ifaceabstractcanvas import LamiaAbstractIFaceCanvas
 from .maptool.mapTools import mapToolCapture, mapToolEdit
 
 class QgisCanvas(LamiaAbstractIFaceCanvas):
+    """Class managing what happens in gis 2D map. It manages mainly:
+        - the layers displayed
+        - the click in the draw area
+        - all crs transformation
+        - rubberband (temp displayed layer)
+        Here, no dbase in class var, and as few qt as possible
+    """
 
     def __init__(self, canvas=None):
+        """[summary]
+
+        :param canvas: The qgismapcanvas used (either from qgsproject or specific one), defaults to None
+        :type canvas: QgsMapCanvas, optional
+        """
+
         LamiaAbstractIFaceCanvas.__init__(self)
         self.canvas = canvas
         self.mtoolpoint = None
         self.mtoolline = None
         self.mtoolpolygon = None
-        self.rubberBand = None
+
+        self.rubberbands = {'main': None,
+                            'child': None,
+                            'capture': None}
+
+        # self.rubberBand = None          #the main parent ruberband
+        # self.rubberbandchild = None     #the child rubberband
+        # self.rubberbandcapture = None   #the capture rubberband
         self.dbaseqgiscrs = None
         if canvas is None and qgis.utils.iface is not None:
             self.setCanvas(qgis.utils.iface.mapCanvas())
@@ -55,6 +75,11 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         self.currentmaptool = None  #the maptool in use
 
     def setCanvas(self,qgscanvas):
+        """Init method when a canvas is assigned to this class
+
+        :param qgscanvas: The qgismapcanvas used 
+        :type qgscanvas: QgsMapCanvas
+        """
         if self.canvas:
             try:
                 self.canvas.destinationCrsChanged.disconnect(self.updateQgsCoordinateTransform)
@@ -62,13 +87,6 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                 pass
         
         self.canvas = qgscanvas
-
-        """
-
-        cadwdg = qgis.gui.QgsAdvancedDigitizingDockWidget(iface.mapCanvas())
-        print(cadwdg.cadEnabled () )
-        cadwdg.enable()
-        """
 
         #init maptools
         self.cadwdg = qgis.gui.QgsAdvancedDigitizingDockWidget(self.canvas)
@@ -86,25 +104,28 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
         self.canvas.destinationCrsChanged.connect(self.updateQgsCoordinateTransform)
 
-    def _____________________________layersManagement(self):
+    def ____________layersManagement(self):
         pass
 
 
     def createLayersForQgisServer(self,dbaseparser,specifichost=None):
+        """used for creating a qgis project configured for using in postgis server
+
+        :param dbaseparser: The dbase parser to work with
+        :param specifichost: if host for pg_config.conf is not the same as postgis host (docker use)
         """
-        used for creating a qgis project configured for using in postgis server
-        """
+
         if dbaseparser.TYPE == 'spatialite':
             return
         #* create pg_config.conf
-        """
-        [qgisservertest]
-        host=docker.for.win.localhost
-        port=5432
-        user=pvr
-        password=pvr
-        dbname=lamiaunittest
-        """
+
+        # [qgisservertest]
+        # host=docker.for.win.localhost
+        # port=5432
+        # user=pvr
+        # password=pvr
+        # dbname=lamiaunittest
+
         dbqgisserverdirectory = os.path.join(dbaseparser.dbaseressourcesdirectory,'qgisserver')
         if not os.path.isdir(dbqgisserverdirectory):
             os.mkdir(dbqgisserverdirectory)
@@ -175,7 +196,10 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
         #load layers and set style
         root = project.layerTreeRoot()
-        styledirectory = os.path.join(os.path.dirname(Lamia.__file__), 'DBASE', 'style', dbaseparser.worktype, '0_Defaut' )
+        if dbaseparser.base3version :
+            styledirectory = os.path.join(os.path.dirname(Lamia.__file__), 'DBASE', 'style', dbaseparser.worktype, '0_default' )
+        else:
+            styledirectory = os.path.join(os.path.dirname(Lamia.__file__), 'DBASE', 'style', dbaseparser.worktype, '0_Defaut' )
         for tablename in layers:
             if ('layerqgis' in layers[tablename].keys() 
                     and layers[tablename]['layerqgis'].geometryType() != qgis.core.QgsWkbTypes.NullGeometry ):
@@ -218,6 +242,16 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
 
     def createLayers(self, dbaseparser):
+        """create QgsVectorLayer from dbaseparser database
+        store the in self.layers :
+        dict {... {rawtablename : {'layer' : the qgis layer without parent join,
+                                                'layerqgis': the qgis layer from qgis view,
+                                                'layerdjango': the django layer from django view,
+                                        }
+                }
+        :param dbaseparser: the dbaseparser used
+
+        """
 
         if dbaseparser.__class__.__name__ == 'SpatialiteDBaseParser':
             dbtype = 'spatialite'
@@ -258,8 +292,8 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                         uri.setDataSource(dbaseparser.pgschema.lower(), str(tablenamelower), None, '', "pk_" + rawtablename.lower())
                 self.layers[rawtablename][tabletype] = qgis.core.QgsVectorLayer(uri.uri(), tablename, dbtype)
 
-            #ValueMap for qgislayer
-            if 'layerqgis' in self.layers[rawtablename].keys():
+            #ValueMap for qgislayer - not done because layer loading is too long
+            if  'layerqgis' in self.layers[rawtablename].keys():
                 workingvl = self.layers[rawtablename]['layerqgis']
                 cstdict = self._getConstraintFromDBaseTables(dbaseparser, rawtablename)
                 for i, field in enumerate(workingvl.fields()):
@@ -411,12 +445,15 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             #         qgis.core.QgsProject.instance().addMapLayer(dbasetables[tablename]['layerqgis'], False)
             #         lamialegendgroup.addLayer(dbasetables[tablename]['layerqgis'])
             #new way
-            for tablename in self.layers:
-                if ('layerqgis' in self.layers[tablename].keys() 
-                        and self.layers[tablename]['layerqgisjoined'].geometryType() != qgis.core.QgsWkbTypes.NullGeometry 
-                        ):
-                    qgis.core.QgsProject.instance().addMapLayer(self.layers[tablename]['layerqgis'], False)
-                    lamialegendgroup.addLayer(self.layers[tablename]['layerqgis'])
+            ordergeomtypes = [qgis.core.QgsWkbTypes.PointGeometry ,
+                            qgis.core.QgsWkbTypes.LineGeometry  ,
+                            qgis.core.QgsWkbTypes.PolygonGeometry ]
+            for geomtype in ordergeomtypes:
+                for tablename in self.layers:
+                    if ('layerqgis' in self.layers[tablename].keys() 
+                            and self.layers[tablename]['layerqgisjoined'].geometryType() == geomtype):
+                        qgis.core.QgsProject.instance().addMapLayer(self.layers[tablename]['layerqgis'], False)
+                        lamialegendgroup.addLayer(self.layers[tablename]['layerqgis'])
 
         else:
             layerstoadd = []
@@ -425,18 +462,26 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             for tablename in goodtablekey:
                 layerstoadd.append(self.layers[tablename]['layerqgis'])
             self.canvas.setLayers(layerstoadd)
-            self.canvas.setExtent(self.layers['Infralineaire']['layer'].extent())
+            if 'edge' in self.layers.keys():
+                self.canvas.setExtent(self.layers['edge']['layer'].extent())
+            else:
+                self.canvas.setExtent(self.layers['Infralineaire']['layer'].extent())
             self.canvas.refresh()
 
 
     def unloadLayersInCanvas(self):
         if self.qgislegendnode is not None:
-            self.qgislegendnode.removeAllChildren()
-            root = qgis.core.QgsProject.instance().layerTreeRoot()
-            root.removeChildNode(self.qgislegendnode)
+            try:
+                self.qgislegendnode.removeAllChildren()
+                root = qgis.core.QgsProject.instance().layerTreeRoot()
+                root.removeChildNode(self.qgislegendnode)
+            except RuntimeError:
+                self.qgislegendnode = None
         elif qgis.utils.iface is None:
             self.canvas.setLayers([])
             self.canvas.refresh()
+        
+        self.layers = {}
 
 
     def applyStyle(self, worktype, styledir):
@@ -447,7 +492,10 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             if 'layerqgis' in self.layers[tablename].keys() :
                 #apply style
                 stylepath = os.path.join(styledirectory, tablename + '.qml')
-                self.layers[tablename]['layerqgis'].loadNamedStyle(stylepath)
+                # self.layers[tablename]['layerqgis'].loadNamedStyle(stylepath)
+                self.layers[tablename]['layerqgis'].loadNamedStyle(stylepath, qgis.core.QgsMapLayer.Symbology )
+                self.layers[tablename]['layerqgis'].loadNamedStyle(stylepath, qgis.core.QgsMapLayer.Labeling  )
+
                 #setvisibility
                 ltl = qgis.core.QgsProject.instance().layerTreeRoot().findLayer(self.layers[tablename]['layerqgis'].id())
                 if tablename in qmlfiles:
@@ -483,20 +531,8 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
         self.editingrawlayer = False
 
-        """
-        if True:
-            if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                qgis.core.QgsMapLayerRegistry.instance().addMapLayer(self.dbase.dbasetables[tablename]['layerqgis'],
-                                                                    False)
-            else:
-                qgis.core.QgsProject.instance().addMapLayer(self.dbase.dbasetables[tablename]['layerqgis'],
-                                                            False)
-        lamialegendgroup.addLayer(self.dbase.dbasetables[tablename]['layerqgis'])
-        """
-        # self.editlayer = qgis.core.QgsVectorLayer(self.layers[layername]['layer'].source(),
-        #                                         self.layers[layername]['layer'].name() + '_edit',
-        #                                         self.layers[layername]['layer'].providerType())
-        self.editlayer = self.layers[layername]['layerqgisjoined']
+
+        self.editlayer = self.layers[layername]['layerqgisjoined'].clone()
 
         qgis.core.QgsProject.instance().addMapLayer(self.editlayer, False)
         if self.qgislegendnode is None: #outsideqgis case
@@ -510,7 +546,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         self.editingrawlayer = True
         
 
-    def closeRawLayerEditing(self, maintreewdgindex=None, savechanges=False):
+    def saveRawLayerInCanvasForEditing(self, savechanges=False):
 
         if self.editingrawlayer:
             self.editingrawlayer = False
@@ -518,6 +554,8 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                 self.editlayer.commitChanges()
             else:
                 self.editlayer.rollBack()
+
+            #self.qgislegendnode.removeLayer(self.editlayer)
             self.qgislegendnode.removeLayer(self.editlayer)
 
     def updateWorkingDate(self, dbaseparser, datetimearg=None, revision=None):
@@ -527,7 +565,6 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         Change les filtres de toutes les tables qgis en fonction
         """
 
-        #workingdatemodif = QtCore.QDate.fromString(self.workingdate, 'yyyy-MM-dd').addDays(1).toString('yyyy-MM-dd')
         if datetimearg:
             workingdatemodif = datetimearg
         else:
@@ -623,7 +660,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                                                         # type=None,
                                                         str(capturetype),
                                                         str(fctonstopcapture))      
-        self.createorresetRubberband(capturetype)
+        self.createorresetRubberband(capturetype, rubtype='capture')
         if capturetype == qgis.core.QgsWkbTypes.PointGeometry:
             self.currentmaptool = self.mtoolpoint
         elif capturetype == qgis.core.QgsWkbTypes.LineGeometry:
@@ -647,37 +684,93 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         #self.currentmaptool.mappoints = listpointinitialgeometry
         self.currentmaptool.startCapturing()
 
+
+    def stopCapture(self):
+        if self.currentmaptool is not None:
+            try:
+                self.currentmaptool.stopCapture.disconnect()
+            except TypeError:
+                pass
+
+
     def ______________________________RubberbandManagement(self):
         pass
 
-    def createorresetRubberband(self,type=0):
-        """
-        Reset the rubberband
 
-        :param type: geom type
+        
+
         """
-        if self.rubberBand is not None:
-            self.rubberBand.reset(type)
+        self.rubberBand = None          #the main parent ruberband
+        self.rubberbandchild = None     #the child rubberband
+        self.rubberbandcapture = None   #the capture rubberband
+
+        self.rubberbands = {'main': None,
+                            'child': None,
+                            'capture': None}
+
+        """
+    def createorresetRubberband(self,type=0, instance=None, rubtype='main'):
+        """[summary]
+
+        :param type: QgsGeometry type, defaults to 0
+        :param instance: the instance where rubberband is created, defaults to None
+        :param rubtype: the ruberband type, can be main, child, capture, all , defaults to 'main'
+        """
+
+        rbcolors = {'main': 'red',
+                    'child': 'blue',
+                    'capture': 'magenta'}
+
+        if instance is None:
+            instance = self
+
+        if not hasattr(instance, 'rubberbands'):
+            instance.rubberbands = {'main': None,
+                                    'child': None,
+                                    'capture': None}
+
+        if rubtype == 'all':
+            rubtypelist = ['main', 'child', 'capture']
         else:
-            self.rubberBand = qgis.gui.QgsRubberBand(self.canvas,type)
-            self.rubberBand.setWidth(5)
-            self.rubberBand.setColor(QtGui.QColor("magenta"))
+            rubtypelist = [rubtype]
 
-    def createRubberBandForSelection(self, qgsgeom):
-        # geomtype = qgsgeom.type()
-        self.createorresetRubberband(qgis.core.QgsWkbTypes.LineGeometry)
-        canvasscale = self.canvas.scale() 
-        distpixel = 4.0
+        for rubtyp in rubtypelist:
+            if instance.rubberbands[rubtyp] is not None:
+                instance.rubberbands[rubtyp].reset(type)
+            else:
+                instance.rubberbands[rubtyp] = qgis.gui.QgsRubberBand(self.canvas,type)
+                instance.rubberbands[rubtyp].setWidth(5)
+                instance.rubberbands[rubtyp].setColor(QtGui.QColor(rbcolors[rubtyp]))
+
+
+    def createRubberBandForSelection(self, qgsgeom, instance=None, distpixel = 4.0, rubtype = 'main'):
+
+        if not instance:
+            instance = self
+        
+        self.createorresetRubberband(qgis.core.QgsWkbTypes.LineGeometry, instance=instance, rubtype=rubtype)
+        canvasscale = self.canvas.scale()
         dist = distpixel * canvasscale / 1000.0
 
-        bufferedgeom = qgsgeom.buffer(dist, 12).convertToType(qgis.core.QgsWkbTypes.LineGeometry)
-        self.rubberBand.setToGeometry(bufferedgeom, self.dbaseqgiscrs)
+        if not isinstance(qgsgeom,list):
+            qgsgeom = [qgsgeom]
+
+        for geom in qgsgeom:
+            bufferedgeom = geom.buffer(dist, 12).convertToType(qgis.core.QgsWkbTypes.LineGeometry)
+            instance.rubberbands[rubtype].addGeometry(bufferedgeom, self.dbaseqgiscrs)
+        instance.rubberbands[rubtype].show()
+
+
+    def getQgsGeomFromPk(self,dbaseparser, tablename, pk):
+        wkt = dbaseparser.getWktGeomFromPk(tablename, pk)
+        geom = qgis.core.QgsGeometry.fromWkt(wkt)
+        return geom
 
     def _____________________________Functions(self):
         pass
     
     # def getNearestPk(self, dbasetable, dbasetablename, point, comefromcanvas=True):
-    def getNearestPk(self, tablename, point, comefromcanvas=True): 
+    def getNearestPk(self, tablename, point, comefromcanvas=True,fieldconstraint=None): 
         """
         Permet d'avoir le pk du feature le plus proche du qgsvectorlayer correspondant à dbasetablename
         pas besoin de filtre sur les dates et versions on travaille avec le qgsectorlyaer de la table
@@ -706,10 +799,28 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
         # spatialindex creation
         # spindex = qgis.core.QgsSpatialIndex(dbasetable['layerqgis'].getFeatures())
-        spindex = qgis.core.QgsSpatialIndex(layertoprocess.getFeatures())
+        expr=[]
+        if fieldconstraint:
+            expr=[]
+            for k, v in fieldconstraint.items():
+                expr.append( f""" "{k}" = '{v}'  """ )
+            expr = ' and '.join(expr)
+
+            req = qgis.core.QgsFeatureRequest().setFilterExpression(expr)
+            req.setInvalidGeometryCheck(False)
+            # req.setSubsetOfAttributes([])
+            req.setNoAttributes()
+            if qgis.utils.iface:
+                canvasrect = self.xformreverse.transform(self.canvas.extent())
+                req.setFilterRect(canvasrect)
+            spindex = qgis.core.QgsSpatialIndex(layertoprocess.getFeatures(req))
+        else:
+            spindex = qgis.core.QgsSpatialIndex(layertoprocess.getFeatures())
+            
+        # spindex = qgis.core.QgsSpatialIndex(layertoprocess.getFeatures())
         layernearestid = spindex.nearestNeighbor(point2, 1)
         if not layernearestid:
-            return
+            return None, None
 
         point2geom = qgis.core.QgsGeometry.fromPointXY(point2)
         
@@ -799,3 +910,41 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
         if debug: logging.getLogger("Lamia").debug('nearestpk, dist %s %s', str(nearestindex), str(distance))
         return nearestindex, distance
+
+    def zoomToFeature(self, tablename, pk):
+        
+        if tablename in self.layers.keys() and 'layerqgis' in self.layers[tablename].keys():
+            layerqgis = self.layers[tablename]['layerqgis' ]
+            featgeom = layerqgis.getFeature(pk).geometry()
+
+            if featgeom.centroid() is not None and not featgeom.centroid().isNull():
+                point2 = self.xform.transform(featgeom.centroid().asPoint())
+            else:
+                print(featgeom.asWkt())
+                point2 = self.xform.transform(qgis.core.QgsPointXY(featgeom.vertexAt(0)))
+
+            self.canvas.setCenter(point2)
+            self.canvas.refresh()
+        """
+        if fid is None:
+            feat = self.currentFeature
+        else:
+            pk = self.getPkFromId(self.dbasetablename,fid)
+            feat = self.dbase.getLayerFeatureByPk(self.dbasetablename,pk )
+        # point2 = xform.transform(feat.geometry().centroid().asPoint())
+
+        if feat.geometry().centroid() is not None and not feat.geometry().centroid().isNull():
+            point2 = self.dbase.xform.transform(feat.geometry().centroid().asPoint())
+        else:
+            print(feat.geometry().asWkt())
+            if sys.version_info.major == 2:
+                point2 = self.dbase.xform.transform(feat.geometry().vertexAt(0) )
+            elif sys.version_info.major == 3:
+                point2 = self.dbase.xform.transform(qgis.core.QgsPointXY(feat.geometry().vertexAt(0)))
+                # print('**', point2)
+        self.canvas.setCenter(point2)
+        self.canvas.refresh()   
+        """
+
+    def makeBlinkFeature(self, table, pk):
+        pass

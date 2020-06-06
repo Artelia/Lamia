@@ -46,7 +46,8 @@ class SpatialiteDBaseParser(AbstractDBaseParser):
         self.spatialitefile = slfile
         self.connSLITE = sqlite3.dbapi2.connect(slfile)
         self.connSLITE.enable_load_extension(True)
-        self.connSLITE.execute("SELECT load_extension('mod_spatialite')")
+        cur = self.connSLITE.cursor()
+        cur.execute("SELECT load_extension('mod_spatialite')")    # mod_spatialite.so
         self.SLITEcursor = self.connSLITE.cursor()
 
     def disconnect(self):
@@ -70,6 +71,8 @@ class SpatialiteDBaseParser(AbstractDBaseParser):
                 sltype = PGTYPE_TO_SLTYPE[dbasetable['fields'][key]['PGtype']]
             elif 'VARCHAR' in dbasetable['fields'][key]['PGtype']:
                 sltype = 'TEXT'
+            if key is None or sltype is None:
+                raise TypeError(key,sltype, name)
             sql['main'] += key + ' ' + sltype + ','
 
             if 'FK' in dbasetable['fields'][key].keys():
@@ -141,14 +144,17 @@ class SpatialiteDBaseParser(AbstractDBaseParser):
         shutil.copyfile(originalfile, slfile)
 
 
+
     def query(self, sql,arguments=[], docommit=True):
         # cursor = self.connSLITE.cursor()
         if self.SLITEcursor is None:
             self.SLITEcursor = self.connSLITE.cursor()
         try:
             if self.printsql :
-                #logging.getLogger('Lamia').debug('%s - %s %.3f', docommit, sql,  self.getTimeNow() - timestart)
                 logging.getLogger('Lamia_unittest').debug('%s - %s ', docommit, sql)
+                # if sql.split(' ')[0].lower() in ['update', 'delete','insert']:
+                #     #logging.getLogger('Lamia').debug('%s - %s %.3f', docommit, sql,  self.getTimeNow() - timestart)
+                #     logging.getLogger('Lamia_unittest').debug('%s - %s ', docommit, sql)
 
             query = self.SLITEcursor.execute(sql,arguments)
             returnquery = list(query)
@@ -162,7 +168,7 @@ class SpatialiteDBaseParser(AbstractDBaseParser):
             
             print(sql)
             print('error query', e)
-            #raise TypeError('error query', e)
+            raise TypeError('error query', e)
 
             return None
 
@@ -184,6 +190,11 @@ class SpatialiteDBaseParser(AbstractDBaseParser):
             return True
         else:
             return False
+
+    def getTables(self):
+        sql = "SELECT name FROM sqlite_master WHERE type='table'"
+        result = self.query(sql)
+        return [elem[0] for elem in result]
 
     def getColumns(self, tablename):
         sql = "PRAGMA table_info(" + str(tablename) + ")"

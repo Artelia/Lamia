@@ -258,7 +258,7 @@ class BaseAssainissementInfraLineaireTool(BaseInfraLineaireTool):
 
             # update canvas
             #self.createorresetRubberband(1)
-            self.mainifacewidget.qgiscanvas.createorresetRubberband(1)
+            # self.mainifacewidget.qgiscanvas.createorresetRubberband(1)
             self.setTempGeometry(tempgeom, False)
 
         # disconnect all
