@@ -47,8 +47,8 @@ class DBaseViewer():
             # SLFILE = os.path.join(self.testdir,'sl_base3_waterdistribution_Lamia','test01.sqlite')
             # SLFILE = os.path.join(self.testdir,'sl_base3_constructionsite_Lamia','test01.sqlite')
             # SLFILE = os.path.join(self.testdir,'sl_base3_constructionsite_Orange','test01.sqlite')
-            # SLFILE = os.path.join(self.testdir,'sl_base3_levee_Lamia','test01.sqlite')
-            SLFILE = os.path.join(self.testdir,'sl_base3_faunaflora_Lamia','test01.sqlite')
+            SLFILE = os.path.join(self.testdir,'sl_base3_levee_Lamia','test01.sqlite')
+            # SLFILE = os.path.join(self.testdir,'sl_base3_faunaflora_Lamia','test01.sqlite')
 
             self._loadLocale()
             self._createWin()

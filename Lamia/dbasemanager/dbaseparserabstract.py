@@ -69,7 +69,7 @@ class AbstractDBaseParser():
         :raises ImportError: [description]
         """
 
-        # the dictionnary of dbase (cf DBconfigReader)
+        #:the dictionnary of dbase (cf DBconfigReader)
         self.dbasetables = None
 
         if messageinstance is None:
@@ -80,25 +80,27 @@ class AbstractDBaseParser():
         #utils
         self.utils = dbaseutils
 
-        # dbase type : Base2_digue, Base2_assainissement ....
+        #:dbase type : Base2_digue, Base2_assainissement ....
         self.worktype = None
+        #:dbase variante
         self.variante = None
-        # crs of dbase
+        #: crs of dbase int
         self.crsnumber = None
-        #self.qgiscrs = None
 
-        #  ressources dir
+        #:ressources dir
         self.dbaseressourcesdirectory = None
 
-        # the parser class (used to create another dbaseparser if needed)
+        #:the parser class (used to create another dbaseparser if needed)
         self.parserfactory = parserfactory
 
-        # tools
+        #:the config reader instance
         self.dbconfigreader = DBconfigReader(self)
+        #:the offline manager instance
         self.dbaseofflinemanager = DBaseOfflineManager(self)
 
-        #for debug purpose
+        #:for debug purpose
         self.printsql = False
+
         self.base3version = False   #for transition beetween base2 and base3 model
 
         # ?? temp variable for export
@@ -130,7 +132,7 @@ class AbstractDBaseParser():
 
         self.connectconf = None    #dict of connection data
 
-        #language setting
+        #:language setting
         self.locale = None
         try:
             from qgis.PyQt.QtCore import QSettings

@@ -907,7 +907,8 @@ class LamiaWindowWidget(QMainWindow,LamiaIFaceAbstractWidget):
         if platform.system() == 'Linux':
             r = subprocess.call(('xdg-open', path))
         elif platform.system() == 'Windows':
-            os.startfile(path)
+            httphelp = "https://artelia.github.io/Lamia/index.html"
+            os.startfile(httphelp)
 
 
     #*************************************************************
