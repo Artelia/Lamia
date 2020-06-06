@@ -27,7 +27,7 @@ Il suffit de :
 
 
 Création/Modification de rapports
-*****************************
+************************************************
 
 Présentation / Fonctionnement
 ========================================

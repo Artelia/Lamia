@@ -2,6 +2,6 @@
 
     "python.pythonPath": "c:\\OSGeo4W64\\apps\\Python37\\python.exe",
     "python.linting.enabled": false,
-    "restructuredtext.confPath": "${workspaceFolder}\\docshpinx\\source",
+    "restructuredtext.confPath": "${workspaceFolder}\\doc\\source",
 
 }

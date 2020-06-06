@@ -101,17 +101,46 @@ autodoc_member_order = 'bysource'
 #
 #html_theme = 'alabaster'
 html_theme = 'sphinx_rtd_theme'
+html_logo = "rawimages/icon.png"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-# html_theme_options = {}
+html_show_sourcelink = False
+html_copy_source = False
+html_theme_options = {
+    'canonical_url': '',
+    #'analytics_id': 'UA-XXXXXXX-1',  #  Provided by Google in your dashboard
+    # 'logo_only': False,
+    'display_version': True,
+    'prev_next_buttons_location': 'bottom',
+    'style_external_links': False,
+    'vcs_pageview_mode': '',
+    # 'style_nav_header_background': 'white',
+    # Toc options
+    'collapse_navigation': True,
+    'sticky_navigation': True,
+    'navigation_depth': 4,
+    'includehidden': True,
+    'titles_only': False
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+html_context = {
+    # 'source_url_prefix': "https://gitlab.com/anarcat/foo/blob/HEAD/doc/",
+    # "display_github": True,
+    # "github_host": "gitlab.com",
+    # "github_user": "anarcat",
+    # "github_repo": 'foo',
+    # "github_version": "HEAD",
+    # "conf_py_path": "/doc/",
+    # "source_suffix": '.rst',
+}
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
@@ -127,6 +156,7 @@ html_sidebars = {
         'donate.html',
     ]
 }
+
 
 # -- Mock ------------------------------------------
 #autodoc_mock_imports = ["qgis","Lamia.dialog"]
@@ -145,19 +175,19 @@ htmlhelp_basename = 'inspecdoc'
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
     #
-    # 'papersize': 'letterpaper',
+    'papersize': 'letterpaper',
 
     # The font size ('10pt', '11pt' or '12pt').
     #
-    # 'pointsize': '10pt',
+    'pointsize': '10pt',
 
     # Additional stuff for the LaTeX preamble.
     #
-    # 'preamble': '',
+    'preamble': '',
 
     # Latex figure (float) alignment
     #
-    # 'figure_align': 'htbp',
+    'figure_align': 'htbp',
 }
 
 # Grouping the document tree into LaTeX files. List of tuples

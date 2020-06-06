@@ -7,7 +7,7 @@
 /Lamia/toolpostpro/*/*amc_tool*
 /Lamia/toolpostpro/*/amctools
 /Lamia/doc_html/
-/docshpinx/source/_build/
+/doc/source/_build/
 
 .vscode/
 Lamia_*.zip

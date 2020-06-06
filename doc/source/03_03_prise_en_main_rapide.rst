@@ -279,7 +279,7 @@ Il redevient rouge si Lamia perd le signal GPS.
 
 
 Modification de l'agencement des fenetres
----------------------------------------
+----------------------------------------------------------
 
 Vous pouvez redéfinir la position de la fenetre Lamia, la taille des
 fenêtres à l'intérieur et l'emplacement des barres d'outils.
