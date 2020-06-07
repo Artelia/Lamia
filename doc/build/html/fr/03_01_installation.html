@@ -1,0 +1,322 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="fr" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="fr" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Installation &mdash; Documentation LAMIA 1.0</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" />
+    <link rel="next" title="La base de données" href="03_02_la_base_de_donnees.html" />
+    <link rel="prev" title="Tutoriel" href="03_00_tutoriel.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #004F83" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> LAMIA
+          
+
+          
+            
+            <img src="../_static/icon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Documentation utilisateur en français</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="00_index.html">Documentation en français</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="01_introduction.html">Introduction</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="03_00_tutoriel.html">Tutoriel</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#librairies-necessaires-en-supplement-de-l-installation-de-qgis">Librairies nécessaires en supplément de l’installation de QGis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#installation-de-qgis-et-des-librairies-sous-windows">Installation de QGis et des librairies sous windows</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#installation-de-qgis-et-des-librairies-sous-linux">Installation de QGis et des librairies sous Linux</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#installation-de-lamia">Installation de Lamia</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="03_02_la_base_de_donnees.html">La base de données</a></li>
+<li class="toctree-l3"><a class="reference internal" href="03_03_prise_en_main_rapide.html">Prise en main rapide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="03_04_presentation_complete.html">Présentation Complète</a></li>
+<li class="toctree-l3"><a class="reference internal" href="03_05_description_modules_postpro.html">Description des modules de Post Traitement</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">User english documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../en/00_index.html">English documentation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../dev/00_index.html">Doc for developpers</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LAMIA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="00_index.html">Documentation en français</a> &raquo;</li>
+        
+          <li><a href="03_00_tutoriel.html">Tutoriel</a> &raquo;</li>
+        
+      <li>Installation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+           <div itemprop="articleBody">
+            
+  <div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Lien permanent vers ce titre">¶</a></h1>
+<div class="section" id="librairies-necessaires-en-supplement-de-l-installation-de-qgis">
+<h2>Librairies nécessaires en supplément de l’installation de QGis<a class="headerlink" href="#librairies-necessaires-en-supplement-de-l-installation-de-qgis" title="Lien permanent vers ce titre">¶</a></h2>
+<p>LAMIA est un module complémentaire pour Qgis 3.10 et supérieures se manifestant sous la forme d’un panneau supplémentaire dans l’application.</p>
+<p>Il s’agit donc dans un premier temps d’installer QGis 3.10.</p>
+<ul class="simple">
+<li><p>Pour windows, nous vous recommendons l’installateur osgeo4w. Cette installateur permet également l’installation des libraiies complémentaires à QGIs permettant le fonctionnement de Lamia.</p></li>
+<li><p>Sous linux, une installation via apt-get est recommendée.</p></li>
+</ul>
+<p>Pour installer LAMIA, les bibliothèques suivantes sont nécessaires :</p>
+<ul class="simple">
+<li><p>pyqgis</p></li>
+<li><p>Numpy</p></li>
+<li><p>Matplotlib</p></li>
+<li><p>Networkx</p></li>
+<li><p>Xlrd (excel reader)</p></li>
+<li><p>Pillow</p></li>
+</ul>
+<p>Ces librairies sont installables à partir de l’installateur osgeo4w pour windows.</p>
+</div>
+<div class="section" id="installation-de-qgis-et-des-librairies-sous-windows">
+<h2>Installation de QGis et des librairies sous windows<a class="headerlink" href="#installation-de-qgis-et-des-librairies-sous-windows" title="Lien permanent vers ce titre">¶</a></h2>
+<div class="section" id="pour-les-employes-d-artelia">
+<h3>Pour les employés d’Artelia<a class="headerlink" href="#pour-les-employes-d-artelia" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Il suffit juste d’installer QGis via l’Arteliastore. L’installation comprend toutes les dépendnaces nécessaires.</p>
+</div>
+<div class="section" id="pour-les-autres">
+<h3>Pour les autres…<a class="headerlink" href="#pour-les-autres" title="Lien permanent vers ce titre">¶</a></h3>
+<ol class="arabic simple">
+<li><p>Télécharger l’installateur osgeo4w.exe sur le site de qgis (<a class="reference external" href="https://www.qgis.org/fr/site/forusers/download.html">ici</a>) et le lancer.</p></li>
+<li><p>Choisir « Advanced Install »</p></li>
+</ol>
+<a class="reference internal image-reference" href="../_images/install_01.png"><img alt="../_images/install_01.png" class="align-center" src="../_images/install_01.png" style="width: 400px;" /></a>
+<ol class="arabic simple" start="3">
+<li><p>Suivre les instructions (configuration proxy notamment) jusqu” à cette fenêtre :</p></li>
+</ol>
+<a class="reference internal image-reference" href="../_images/install_02.png"><img alt="../_images/install_02.png" class="align-center" src="../_images/install_02.png" style="width: 400px;" /></a>
+<p>4. Dans « Desktop » cliquer sur la ligne qgis - la colonne « new » passe de « skeep » à un numero de version
+Ceci indique à l’installateur d’installer qgis.</p>
+<a class="reference internal image-reference" href="../_images/install_03.png"><img alt="../_images/install_03.png" class="align-center" src="../_images/install_03.png" style="width: 400px;" /></a>
+<ol class="arabic simple" start="5">
+<li><p>Dans « Libs », installer de la même façon les librairies citées plus haut:</p></li>
+</ol>
+<ul class="simple">
+<li><p>Numpy</p></li>
+<li><p>Pandas</p></li>
+<li><p>Matplotlib</p></li>
+<li><p>Networkx</p></li>
+<li><p>Xlrd (excel reader)</p></li>
+<li><p>Pillow</p></li>
+</ul>
+<ol class="arabic simple" start="6">
+<li><p>Enfin cliquer sur « Suivant » et attendre la fin de l’installation</p></li>
+</ol>
+</div>
+</div>
+<div class="section" id="installation-de-qgis-et-des-librairies-sous-linux">
+<h2>Installation de QGis et des librairies sous Linux<a class="headerlink" href="#installation-de-qgis-et-des-librairies-sous-linux" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Suivre les instructions d’installation <a class="reference external" href="https://www.qgis.org/fr/site/forusers/download.html">ici</a></p>
+</div>
+<div class="section" id="installation-de-lamia">
+<h2>Installation de Lamia<a class="headerlink" href="#installation-de-lamia" title="Lien permanent vers ce titre">¶</a></h2>
+<div class="section" id="id2">
+<h3>Pour les employés d’Artelia<a class="headerlink" href="#id2" title="Lien permanent vers ce titre">¶</a></h3>
+<p>IL suffit de :</p>
+<ul class="simple">
+<li><p>se rendre dans le menu Extension/Installer gérer les extensions</p></li>
+<li><p>de rechercher « Lamia »</p></li>
+<li><p>de cliquer sur « Installer »</p></li>
+</ul>
+<a class="reference internal image-reference" href="../_images/install_04.png"><img alt="../_images/install_04.png" class="align-center" src="../_images/install_04.png" style="width: 400px;" /></a>
+</div>
+<div class="section" id="id3">
+<h3>… Pour les autres<a class="headerlink" href="#id3" title="Lien permanent vers ce titre">¶</a></h3>
+<p>A partir du fichier .zip fournit par nos soins, dans le menu Extension/Installer gérer les extensions ,
+aller dans l’onglet installer depuis un zip et rechercher le fichier envoyé.</p>
+<a class="reference internal image-reference" href="../_images/install_05.png"><img alt="../_images/install_05.png" class="align-center" src="../_images/install_05.png" style="width: 400px;" /></a>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+    <a href="https://github.com/Artelia/Lamia">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
+    </a>
+
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="03_02_la_base_de_donnees.html" class="btn btn-neutral float-right" title="La base de données" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="03_00_tutoriel.html" class="btn btn-neutral float-left" title="Tutoriel" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Artelia
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -34,6 +34,7 @@
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Recherche" href="../../../search.html" /> 
 </head>
@@ -45,11 +46,11 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+        <div class="wy-side-nav-search"  style="background: #004F83" >
           
 
           
-            <a href="../../../00_index.html" class="icon icon-home"> LAMIA
+            <a href="../../../index.html" class="icon icon-home"> LAMIA
           
 
           
@@ -86,11 +87,17 @@
               
             
             
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../03_00_tutoriel.html">Tutoriel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../04_developpement.html">Developpement</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../05_00_API.html">API Documentation</a></li>
+              <p class="caption"><span class="caption-text">Documentation utilisateur en français</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../fr/00_index.html">Documentation en français</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User english documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../en/00_index.html">English documentation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/00_index.html">Doc for developpers</a></li>
 </ul>
 
             
@@ -105,7 +112,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../00_index.html">LAMIA</a>
+          <a href="../../../index.html">LAMIA</a>
         
       </nav>
 
@@ -134,7 +141,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../../00_index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
         
           <li><a href="../../index.html">Code du module</a> &raquo;</li>
         
@@ -151,6 +158,7 @@
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
            <div itemprop="articleBody">
             
   <h1>Code source de Lamia.dbasemanager.dbconfigreader</h1><div class="highlight"><pre>
@@ -188,7 +196,7 @@
 <span class="kn">from</span> <span class="nn">Lamia.libs.odsreader.ODSReader</span> <span class="kn">import</span> <span class="n">ODSReader</span>
 
 
-<div class="viewcode-block" id="DBconfigReader"><a class="viewcode-back" href="../../../src_api/05_01_dbasemanager_dbconfigreader.html#Lamia.dbasemanager.dbconfigreader.DBconfigReader">[docs]</a><span class="k">class</span> <span class="nc">DBconfigReader</span><span class="p">():</span>
+<div class="viewcode-block" id="DBconfigReader"><a class="viewcode-back" href="../../../dev/src_api/05_01_dbasemanager_dbconfigreader.html#Lamia.dbasemanager.dbconfigreader.DBconfigReader">[docs]</a><span class="k">class</span> <span class="nc">DBconfigReader</span><span class="p">():</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dbaseparser</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span> <span class="o">=</span> <span class="n">dbaseparser</span>
@@ -206,7 +214,7 @@
 
 
 
-<div class="viewcode-block" id="DBconfigReader.createDBDictionary"><a class="viewcode-back" href="../../../src_api/05_01_dbasemanager_dbconfigreader.html#Lamia.dbasemanager.dbconfigreader.DBconfigReader.createDBDictionary">[docs]</a>    <span class="k">def</span> <span class="nf">createDBDictionary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+<div class="viewcode-block" id="DBconfigReader.createDBDictionary"><a class="viewcode-back" href="../../../dev/src_api/05_01_dbasemanager_dbconfigreader.html#Lamia.dbasemanager.dbconfigreader.DBconfigReader.createDBDictionary">[docs]</a>    <span class="k">def</span> <span class="nf">createDBDictionary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
                             <span class="n">worktype</span><span class="p">,</span> 
                             <span class="c1">#useprojectdir=False, </span>
                             <span class="n">baseversiontoread</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
@@ -583,7 +591,7 @@
 
         <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">)</span>
 
-<div class="viewcode-block" id="DBconfigReader.readXlsDbDictionnary"><a class="viewcode-back" href="../../../src_api/05_01_dbasemanager_dbconfigreader.html#Lamia.dbasemanager.dbconfigreader.DBconfigReader.readXlsDbDictionnary">[docs]</a>    <span class="k">def</span> <span class="nf">readXlsDbDictionnary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dictfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vartoread</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="DBconfigReader.readXlsDbDictionnary"><a class="viewcode-back" href="../../../dev/src_api/05_01_dbasemanager_dbconfigreader.html#Lamia.dbasemanager.dbconfigreader.DBconfigReader.readXlsDbDictionnary">[docs]</a>    <span class="k">def</span> <span class="nf">readXlsDbDictionnary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dictfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vartoread</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        :param dictfile:</span>
@@ -910,7 +918,7 @@
 
 
 
-<div class="viewcode-block" id="DBconfigReader.getMaxVersionRepository"><a class="viewcode-back" href="../../../src_api/05_01_dbasemanager_dbconfigreader.html#Lamia.dbasemanager.dbconfigreader.DBconfigReader.getMaxVersionRepository">[docs]</a>    <span class="k">def</span> <span class="nf">getMaxVersionRepository</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typemetier</span><span class="p">):</span>
+<div class="viewcode-block" id="DBconfigReader.getMaxVersionRepository"><a class="viewcode-back" href="../../../dev/src_api/05_01_dbasemanager_dbconfigreader.html#Lamia.dbasemanager.dbconfigreader.DBconfigReader.getMaxVersionRepository">[docs]</a>    <span class="k">def</span> <span class="nf">getMaxVersionRepository</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typemetier</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        REcherche dans Lamia/DBASE/create le repertoire qui correspond au typemetier, avec la plus grande version</span>
 <span class="sd">        s&#39;il n&#39;y a pas de version (lamia avant sept.2018) , renvoi le repertoire avec version = None</span>
@@ -939,7 +947,7 @@
 
 
 
-<div class="viewcode-block" id="DBconfigReader.getWorktypeVersionsList"><a class="viewcode-back" href="../../../src_api/05_01_dbasemanager_dbconfigreader.html#Lamia.dbasemanager.dbconfigreader.DBconfigReader.getWorktypeVersionsList">[docs]</a>    <span class="k">def</span> <span class="nf">getWorktypeVersionsList</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">worktype</span><span class="p">):</span>
+<div class="viewcode-block" id="DBconfigReader.getWorktypeVersionsList"><a class="viewcode-back" href="../../../dev/src_api/05_01_dbasemanager_dbconfigreader.html#Lamia.dbasemanager.dbconfigreader.DBconfigReader.getWorktypeVersionsList">[docs]</a>    <span class="k">def</span> <span class="nf">getWorktypeVersionsList</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">worktype</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        return list of versions for worktype</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -977,6 +985,10 @@
            </div>
            
           </div>
+    <a href="https://github.com/Artelia/Lamia">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
+    </a>
+
           <footer>
   
 

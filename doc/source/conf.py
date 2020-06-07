@@ -56,7 +56,7 @@ templates_path = ['_templates']
 source_suffix = '.rst'
 
 # The master toctree document.
-master_doc = '00_index'
+master_doc = 'index'
 
 # General information about the project.
 project = u'LAMIA'
@@ -101,7 +101,7 @@ autodoc_member_order = 'bysource'
 #
 #html_theme = 'alabaster'
 html_theme = 'sphinx_rtd_theme'
-html_logo = "rawimages/icon.png"
+html_logo = "_static/icon.png"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -116,14 +116,15 @@ html_theme_options = {
     'display_version': True,
     'prev_next_buttons_location': 'bottom',
     'style_external_links': False,
-    'vcs_pageview_mode': '',
-    # 'style_nav_header_background': 'white',
+    # 'vcs_pageview_mode': '',
+    'style_nav_header_background': '#004F83',
     # Toc options
     'collapse_navigation': True,
     'sticky_navigation': True,
     'navigation_depth': 4,
     'includehidden': True,
-    'titles_only': False
+    'titles_only': False,
+    # 'github_banner': True,
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -219,6 +220,11 @@ texinfo_documents = [
      author, 'inspec', 'One line description of project.',
      'Miscellaneous'),
 ]
+
+
+
+def setup(app):
+    app.add_stylesheet('theme_overrides.css')
 
 
 

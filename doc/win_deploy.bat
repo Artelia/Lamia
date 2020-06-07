@@ -19,7 +19,7 @@ REM @echo Start copy to Lamia\doc_html ...
 REM xcopy /E /Y /S /I /Q %~dp0\build\html %~dp0\..\Lamia\doc_html
 REM @echo Finish copy to Lamia\doc_html
 
-cmd /k
+REM cmd /k
 
 
 
