@@ -38,6 +38,7 @@ class DBaseViewer():
 
     def __init__(self):
         self.testdir = os.path.join(os.path.dirname(__file__), '..','test','testtempfiles','c_creation')
+        self.datadir = os.path.join(os.path.dirname(__file__), '..','test','datas')
 
 
     def run(self):
@@ -47,9 +48,13 @@ class DBaseViewer():
             # SLFILE = os.path.join(self.testdir,'sl_base3_waterdistribution_Lamia','test01.sqlite')
             # SLFILE = os.path.join(self.testdir,'sl_base3_constructionsite_Lamia','test01.sqlite')
             # SLFILE = os.path.join(self.testdir,'sl_base3_constructionsite_Orange','test01.sqlite')
-            SLFILE = os.path.join(self.testdir,'sl_base3_levee_Lamia','test01.sqlite')
-            # SLFILE = os.path.join(self.testdir,'sl_base3_faunaflora_Lamia','test01.sqlite')
+            # SLFILE = os.path.join(self.testdir,'sl_base3_levee_Lamia','test01.sqlite')
+            SLFILE = os.path.join(self.testdir,'sl_base3_faunaflora_Lamia','test01.sqlite')
 
+            # SLFILE = os.path.join(self.datadir,'BASSENS','EU','Bassens EU EP.sqlite')
+            SLFILE = r"C:\111_GitProjects\Lamia\Lamia\libslamia\converter\b_result\BACALAN\GPMB Bacalan.sqlite"
+            # SLFILE = r"C:\111_GitProjects\Lamia\Lamia\libslamia\converter\a_source\Pauillac\GPMB Pauillac.sqlite"
+            SLFILE = r"C:\111_GitProjects\Lamia\Lamia\libslamia\converter\c_merge\GPMB Bacalan.sqlite"
             self._loadLocale()
             self._createWin()
             self._createMainWin()

@@ -92,7 +92,8 @@ SOURCES =   ../Lamia.py\
             ../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_deficiency_tool.py\
             ../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_deficiency_tool_pv.py\
             ../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_observation_tool.py\
-            ../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_node_tool.py\
+            ../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_node_tool_fau.py\
+            ../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_node_tool_tre.py\
             ../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_flo_tool.py\
             ../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_hab.py\
             ../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_edge_pro_tool.py\

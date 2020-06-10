@@ -114,6 +114,11 @@ class FormToolUtils(QtCore.QObject):
                                     for wdg in wdgs:
                                         wdg.valueChanged.connect(self.manageMultipleWidgetField)
 
+                            #case TABLEFILTERFIELD : set field unselectionnable
+                            if field in self.formtoolwidget.TABLEFILTERFIELD.keys():
+                                wdg.setEnabled(False)
+
+
     def connectSubWidgetModifications(self):
         for table, tabledict in self.formtoolwidget.formtoolwidgetconfdict.items():
             for field, wdg in tabledict['widgets'].items():
@@ -134,14 +139,8 @@ class FormToolUtils(QtCore.QObject):
 
 
 
-    def initWidgetUI(self, basewidget):
-        """
-        Called by changePropertiesWidget
+    def initWidgetUI_odl(self, basewidget):
 
-        - Init combobox with default values
-
-        - Init Parent/child combobox behaviour
-        """
 
         if self.linkuserwdg:
             templinkuserwgd = {self.dbasetablename: None}
@@ -189,6 +188,7 @@ class FormToolUtils(QtCore.QObject):
                                 elif isinstance(wdgs[0], QSpinBox) or isinstance(wdgs[0], QDoubleSpinBox):
                                     for wdg in wdgs:
                                         wdg.valueChanged.connect(self.manageMultipleWidgetField)
+                            
 
 
     def manageMultipleWidgetField(self):
@@ -347,7 +347,6 @@ class FormToolUtils(QtCore.QObject):
         for k,v in self.formtoolwidget.TABLEFILTERFIELD.items():
             resdict[k] = v
         
-
         return resdict
 
     def applyResultDict(self, resultdict, checkifinforgottenfield=True):
@@ -639,14 +638,7 @@ class FormToolUtils(QtCore.QObject):
                         resulttemp = str(result[i ])
 
                     sql += str(field) + " = " + resulttemp + ','
-                """
-                for fieldname in self.formtoolwidget.TABLEFILTERFIELD.keys():
-                    if fieldname in 
-                if field in self.formtoolwidget.TABLEFILTERFIELD.keys():
-                    value =  self.formtoolwidget.TABLEFILTERFIELD[field]
-                    if isinstance(value, str):
-                        value = "'" + value + "'"
-                """
+
                 sql = sql[:-1]  # remove last ,
 
                 sql += " WHERE pk_" + str(tablename) + " = " + str(tablepk)

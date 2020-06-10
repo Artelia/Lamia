@@ -180,6 +180,10 @@ class AbstractDBaseParser():
 
         self.initDBase(**kwargs)
 
+        self.crsnumber = crs
+        self.variante = variante
+        self.worktype = worktype
+
         baseversion = kwargs.get('baseversion', None)
         workversion = kwargs.get('workversion', None)
 

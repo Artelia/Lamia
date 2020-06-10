@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
-        <script src="../../_static/translations.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/translations.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -37,6 +37,7 @@
   <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Recherche" href="../../search.html" />
+    <link rel="next" title="QGis interface widgets" href="05_02_iface.html" />
     <link rel="prev" title="dbaseutils" href="05_01_dbasemanager_dbaseutils.html" /> 
 </head>
 
@@ -107,6 +108,7 @@
 <li class="toctree-l4 current"><a class="current reference internal" href="#">DBconfigReader</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="05_02_iface.html">QGis interface widgets</a></li>
 </ul>
 </li>
 </ul>
@@ -182,12 +184,12 @@
             
   <div class="section" id="dbconfigreader">
 <h1>DBconfigReader<a class="headerlink" href="#dbconfigreader" title="Lien permanent vers ce titre">¶</a></h1>
-<dl class="py class">
+<dl class="class">
 <dt id="Lamia.dbasemanager.dbconfigreader.DBconfigReader">
-<em class="property">class </em><code class="sig-prename descclassname">Lamia.dbasemanager.dbconfigreader.</code><code class="sig-name descname">DBconfigReader</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dbaseparser</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Lamia/dbasemanager/dbconfigreader.html#DBconfigReader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.dbasemanager.dbconfigreader.DBconfigReader" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><dl class="py method">
+<em class="property">class </em><code class="sig-prename descclassname">Lamia.dbasemanager.dbconfigreader.</code><code class="sig-name descname">DBconfigReader</code><span class="sig-paren">(</span><em class="sig-param">dbaseparser</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Lamia/dbasemanager/dbconfigreader.html#DBconfigReader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.dbasemanager.dbconfigreader.DBconfigReader" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><dl class="method">
 <dt id="Lamia.dbasemanager.dbconfigreader.DBconfigReader.createDBDictionary">
-<code class="sig-name descname">createDBDictionary</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">worktype</span></em>, <em class="sig-param"><span class="n">baseversiontoread</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">workversiontoread</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Lamia/dbasemanager/dbconfigreader.html#DBconfigReader.createDBDictionary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.dbasemanager.dbconfigreader.DBconfigReader.createDBDictionary" title="Lien permanent vers cette définition">¶</a></dt>
+<code class="sig-name descname">createDBDictionary</code><span class="sig-paren">(</span><em class="sig-param">worktype</em>, <em class="sig-param">baseversiontoread=None</em>, <em class="sig-param">workversiontoread=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Lamia/dbasemanager/dbconfigreader.html#DBconfigReader.createDBDictionary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.dbasemanager.dbconfigreader.DBconfigReader.createDBDictionary" title="Lien permanent vers cette définition">¶</a></dt>
 <dd><p>Read the files in ./DBASE/create
 A file describes the fields  like that:
 #comment
@@ -227,9 +229,9 @@ constraint value description;constraint value value;[depending parent field valu
 </div></blockquote>
 </dd></dl>
 
-<dl class="py method">
+<dl class="method">
 <dt id="Lamia.dbasemanager.dbconfigreader.DBconfigReader.readXlsDbDictionnary">
-<code class="sig-name descname">readXlsDbDictionnary</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dictfile</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">vartoread</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Lamia/dbasemanager/dbconfigreader.html#DBconfigReader.readXlsDbDictionnary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.dbasemanager.dbconfigreader.DBconfigReader.readXlsDbDictionnary" title="Lien permanent vers cette définition">¶</a></dt>
+<code class="sig-name descname">readXlsDbDictionnary</code><span class="sig-paren">(</span><em class="sig-param">dictfile=None</em>, <em class="sig-param">vartoread=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Lamia/dbasemanager/dbconfigreader.html#DBconfigReader.readXlsDbDictionnary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.dbasemanager.dbconfigreader.DBconfigReader.readXlsDbDictionnary" title="Lien permanent vers cette définition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Paramètres</dt>
 <dd class="field-odd"><ul class="simple">
@@ -243,9 +245,9 @@ constraint value description;constraint value value;[depending parent field valu
 </dl>
 </dd></dl>
 
-<dl class="py method">
+<dl class="method">
 <dt id="Lamia.dbasemanager.dbconfigreader.DBconfigReader.getMaxVersionRepository">
-<code class="sig-name descname">getMaxVersionRepository</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">typemetier</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Lamia/dbasemanager/dbconfigreader.html#DBconfigReader.getMaxVersionRepository"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.dbasemanager.dbconfigreader.DBconfigReader.getMaxVersionRepository" title="Lien permanent vers cette définition">¶</a></dt>
+<code class="sig-name descname">getMaxVersionRepository</code><span class="sig-paren">(</span><em class="sig-param">typemetier</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Lamia/dbasemanager/dbconfigreader.html#DBconfigReader.getMaxVersionRepository"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.dbasemanager.dbconfigreader.DBconfigReader.getMaxVersionRepository" title="Lien permanent vers cette définition">¶</a></dt>
 <dd><p>REcherche dans Lamia/DBASE/create le repertoire qui correspond au typemetier, avec la plus grande version
 s’il n’y a pas de version (lamia avant sept.2018) , renvoi le repertoire avec version = None</p>
 <dl class="field-list simple">
@@ -258,9 +260,9 @@ s’il n’y a pas de version (lamia avant sept.2018) , renvoi le repertoire ave
 </dl>
 </dd></dl>
 
-<dl class="py method">
+<dl class="method">
 <dt id="Lamia.dbasemanager.dbconfigreader.DBconfigReader.getWorktypeVersionsList">
-<code class="sig-name descname">getWorktypeVersionsList</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">worktype</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Lamia/dbasemanager/dbconfigreader.html#DBconfigReader.getWorktypeVersionsList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.dbasemanager.dbconfigreader.DBconfigReader.getWorktypeVersionsList" title="Lien permanent vers cette définition">¶</a></dt>
+<code class="sig-name descname">getWorktypeVersionsList</code><span class="sig-paren">(</span><em class="sig-param">worktype</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Lamia/dbasemanager/dbconfigreader.html#DBconfigReader.getWorktypeVersionsList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.dbasemanager.dbconfigreader.DBconfigReader.getWorktypeVersionsList" title="Lien permanent vers cette définition">¶</a></dt>
 <dd><p>return list of versions for worktype</p>
 </dd></dl>
 
@@ -279,6 +281,8 @@ s’il n’y a pas de version (lamia avant sept.2018) , renvoi le repertoire ave
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="05_02_iface.html" class="btn btn-neutral float-right" title="QGis interface widgets" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="05_01_dbasemanager_dbaseutils.html" class="btn btn-neutral float-left" title="dbaseutils" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

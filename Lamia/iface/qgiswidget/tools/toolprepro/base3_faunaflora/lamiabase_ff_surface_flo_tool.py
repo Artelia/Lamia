@@ -59,6 +59,9 @@ class BaseFaunafloraFLOSurfaceTool(BaseSurfaceTool):
                                                                 'surfacecategory': self.toolwidgetmain.comboBox_category,
                                                                 'number':self.toolwidgetmain.spinBox_number,
 
+                                                                'florainvasive':self.toolwidgetmain.checkBox_florainvasive,
+                                                                'floraprotected':self.toolwidgetmain.checkBox_floraprotected,
+
 
                                                     }},
                                     'object' : {'linkfield' : 'id_object',

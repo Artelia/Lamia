@@ -1,0 +1,334 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="fr" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="fr" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>LamiaWindowWidget &mdash; Documentation LAMIA 1.0</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../search.html" />
+    <link rel="next" title="LamiaWindowWidget" href="05_02_iface_lamia_abstracttool.html" />
+    <link rel="prev" title="QGis interface widgets" href="05_02_iface.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #004F83" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> LAMIA
+          
+
+          
+            
+            <img src="../../_static/icon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Documentation utilisateur en français</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../fr/00_index.html">Documentation en français</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User english documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../en/00_index.html">English documentation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Development</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../00_index.html">Doc for developpers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../04_developpement.html">Developpement</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../05_00_API.html">API Documentation</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="05_01_dbasemanager.html">dbasemanager Module</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="05_02_iface.html">QGis interface widgets</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">LamiaWindowWidget</a></li>
+<li class="toctree-l4"><a class="reference internal" href="05_02_iface_lamia_abstracttool.html">LamiaWindowWidget</a></li>
+<li class="toctree-l4"><a class="reference internal" href="05_02_iface_lamia_abstractformtool.html">AbstractLamiaFormTool</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">LAMIA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../00_index.html">Doc for developpers</a> &raquo;</li>
+        
+          <li><a href="../05_00_API.html">API Documentation</a> &raquo;</li>
+        
+          <li><a href="05_02_iface.html">QGis interface widgets</a> &raquo;</li>
+        
+      <li>LamiaWindowWidget</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+           <div itemprop="articleBody">
+            
+  <div class="section" id="lamiawindowwidget">
+<h1>LamiaWindowWidget<a class="headerlink" href="#lamiawindowwidget" title="Lien permanent vers ce titre">¶</a></h1>
+<dl class="class">
+<dt id="Lamia.iface.qgiswidget.ifaceqgswidget.LamiaWindowWidget">
+<em class="property">class </em><code class="sig-prename descclassname">Lamia.iface.qgiswidget.ifaceqgswidget.</code><code class="sig-name descname">LamiaWindowWidget</code><span class="sig-paren">(</span><em class="sig-param">canvas=None</em>, <em class="sig-param">dockwgt=None</em>, <em class="sig-param">parent=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Lamia/iface/qgiswidget/ifaceqgswidget.html#LamiaWindowWidget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.iface.qgiswidget.ifaceqgswidget.LamiaWindowWidget" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>the main window widget</p>
+<ul class="simple">
+<li><p>toolbarForm                            *</p></li>
+</ul>
+<ul class="simple">
+<li><ul>
+<li><ul>
+<li></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>tool      *                                                 *</p></li>
+<li><p>treewidget*           tools                                 *</p></li>
+<li><ul>
+<li><ul>
+<li></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>*********</strong>                                                 *
+*           *                                                 *
+* chooser   *                                                 *
+* treewidget*                                                 *
+*           *                                                 *
+*           *                                                 *
+<strong>***********************************************************</strong>
+<strong>***********************************************************</strong></p>
+<dl class="method">
+<dt id="Lamia.iface.qgiswidget.ifaceqgswidget.LamiaWindowWidget.newDBase">
+<code class="sig-name descname">newDBase</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Lamia/iface/qgiswidget/ifaceqgswidget.html#LamiaWindowWidget.newDBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.iface.qgiswidget.ifaceqgswidget.LamiaWindowWidget.newDBase" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>pass</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.iface.qgiswidget.ifaceqgswidget.LamiaWindowWidget.loadDBase">
+<code class="sig-name descname">loadDBase</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Lamia/iface/qgiswidget/ifaceqgswidget.html#LamiaWindowWidget.loadDBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.iface.qgiswidget.ifaceqgswidget.LamiaWindowWidget.loadDBase" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>[summary]
+kwargs contains either var:
+- dbtype : “Postgis” or “Spatialite”
+- slfile (optionnal)
+- host port dbname schema userpassword (optionnal)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.iface.qgiswidget.ifaceqgswidget.LamiaWindowWidget.comboStyleChanged">
+<code class="sig-name descname">comboStyleChanged</code><span class="sig-paren">(</span><em class="sig-param">comboindex</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Lamia/iface/qgiswidget/ifaceqgswidget.html#LamiaWindowWidget.comboStyleChanged"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.iface.qgiswidget.ifaceqgswidget.LamiaWindowWidget.comboStyleChanged" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Listener on style combobox changed
+:param comboindex:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.iface.qgiswidget.ifaceqgswidget.LamiaWindowWidget.setVisualMode">
+<code class="sig-name descname">setVisualMode</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Lamia/iface/qgiswidget/ifaceqgswidget.html#LamiaWindowWidget.setVisualMode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.iface.qgiswidget.ifaceqgswidget.LamiaWindowWidget.setVisualMode" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>pass</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Lamia.iface.qgiswidget.ifaceqgswidget.LamiaWindowWidget.loadToolsClasses">
+<code class="sig-name descname">loadToolsClasses</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Lamia/iface/qgiswidget/ifaceqgswidget.html#LamiaWindowWidget.loadToolsClasses"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.iface.qgiswidget.ifaceqgswidget.LamiaWindowWidget.loadToolsClasses" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Load layers and put them in a legend group in qgis
+Load all modules (prepro, postpro and menu)
+Show field ui</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie</dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+    <a href="https://github.com/Artelia/Lamia">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
+    </a>
+
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="05_02_iface_lamia_abstracttool.html" class="btn btn-neutral float-right" title="LamiaWindowWidget" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="05_02_iface.html" class="btn btn-neutral float-left" title="QGis interface widgets" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Artelia
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

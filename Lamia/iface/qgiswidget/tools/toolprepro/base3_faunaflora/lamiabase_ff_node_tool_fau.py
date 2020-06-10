@@ -40,7 +40,7 @@ from ..subwidgets.subwidget_getfromcatalog import CatalogWidget
 
 
 
-class BaseFaunafloraNodeTool(BaseNodeTool):
+class BaseFaunafloraFaunaNodeTool(BaseNodeTool):
 
     PREPROTOOLNAME = 'node_fauna'
     tooltreewidgetCAT =QtCore.QCoreApplication.translate('base3','Inventory')
@@ -50,7 +50,7 @@ class BaseFaunafloraNodeTool(BaseNodeTool):
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'fauna.png')
 
     def __init__(self, **kwargs):
-        super(BaseFaunafloraNodeTool, self).__init__(**kwargs)
+        super(BaseFaunafloraFaunaNodeTool, self).__init__(**kwargs)
 
 
 
@@ -63,7 +63,7 @@ class BaseFaunafloraNodeTool(BaseNodeTool):
                                                                 'faunadevstage':self.toolwidgetmain.comboBox_faunadevstage,
                                                                 'number':self.toolwidgetmain.spinBox_number,
                                                                 'faunachar1':self.toolwidgetmain.comboBox_faunachar1,
-
+                                                                'faunainvasive':self.toolwidgetmain.checkBox_invasive,
                                                     }},
                                     'object' : {'linkfield' : 'id_object',
                                                 'widgets' : {

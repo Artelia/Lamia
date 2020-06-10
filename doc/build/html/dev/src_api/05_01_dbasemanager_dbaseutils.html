@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
-        <script src="../../_static/translations.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/translations.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -108,6 +108,7 @@
 <li class="toctree-l4"><a class="reference internal" href="05_01_dbasemanager_dbconfigreader.html">DBconfigReader</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="05_02_iface.html">QGis interface widgets</a></li>
 </ul>
 </li>
 </ul>
@@ -183,17 +184,17 @@
             
   <div class="section" id="module-Lamia.dbasemanager.dbaseutils">
 <span id="dbaseutils"></span><h1>dbaseutils<a class="headerlink" href="#module-Lamia.dbasemanager.dbaseutils" title="Lien permanent vers ce titre">¶</a></h1>
-<dl class="py function">
+<dl class="function">
 <dt id="Lamia.dbasemanager.dbaseutils.isAttributeNull">
-<code class="sig-prename descclassname">Lamia.dbasemanager.dbaseutils.</code><code class="sig-name descname">isAttributeNull</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">attr</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Lamia/dbasemanager/dbaseutils.html#isAttributeNull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.dbasemanager.dbaseutils.isAttributeNull" title="Lien permanent vers cette définition">¶</a></dt>
+<code class="sig-prename descclassname">Lamia.dbasemanager.dbaseutils.</code><code class="sig-name descname">isAttributeNull</code><span class="sig-paren">(</span><em class="sig-param">attr</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Lamia/dbasemanager/dbaseutils.html#isAttributeNull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.dbasemanager.dbaseutils.isAttributeNull" title="Lien permanent vers cette définition">¶</a></dt>
 <dd><p>Vérifie si un qgisfeature attribute est NULL - piégeux car le NULL peu prendre plusieurs formes
 :param attr: get an qgisfeature attribute
 :return: True if NULL, else False</p>
 </dd></dl>
 
-<dl class="py function">
+<dl class="function">
 <dt id="Lamia.dbasemanager.dbaseutils.areNodesEquals">
-<code class="sig-prename descclassname">Lamia.dbasemanager.dbaseutils.</code><code class="sig-name descname">areNodesEquals</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node1</span></em>, <em class="sig-param"><span class="n">node2</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Lamia/dbasemanager/dbaseutils.html#areNodesEquals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.dbasemanager.dbaseutils.areNodesEquals" title="Lien permanent vers cette définition">¶</a></dt>
+<code class="sig-prename descclassname">Lamia.dbasemanager.dbaseutils.</code><code class="sig-name descname">areNodesEquals</code><span class="sig-paren">(</span><em class="sig-param">node1</em>, <em class="sig-param">node2</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Lamia/dbasemanager/dbaseutils.html#areNodesEquals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.dbasemanager.dbaseutils.areNodesEquals" title="Lien permanent vers cette définition">¶</a></dt>
 <dd><p>Fonction pour examiner l’égalité géographique de deux points.
 Nécessaire car parfois les arrondis des coordonnées géographiques font que deux points égaux ont une
 différence de qques micromètres

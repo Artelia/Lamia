@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
-        <script src="../../../_static/translations.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../_static/translations.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -163,7 +163,7 @@
             
   <h1>Code source de Lamia.dbasemanager.dbconfigreader</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">unicode_literals</span>
 
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -193,12 +193,12 @@
 <span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">locale</span>
 <span class="kn">import</span> <span class="nn">xlrd</span>
 
-<span class="kn">from</span> <span class="nn">Lamia.libs.odsreader.ODSReader</span> <span class="kn">import</span> <span class="n">ODSReader</span>
+<span class="kn">from</span> <span class="nn">Lamia.libs.odsreader.ODSReader</span> <span class="k">import</span> <span class="n">ODSReader</span>
 
 
 <div class="viewcode-block" id="DBconfigReader"><a class="viewcode-back" href="../../../dev/src_api/05_01_dbasemanager_dbconfigreader.html#Lamia.dbasemanager.dbconfigreader.DBconfigReader">[docs]</a><span class="k">class</span> <span class="nc">DBconfigReader</span><span class="p">():</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dbaseparser</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dbaseparser</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span> <span class="o">=</span> <span class="n">dbaseparser</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">variantespossibles</span><span class="o">=</span><span class="p">[]</span>

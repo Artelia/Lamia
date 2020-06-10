@@ -226,9 +226,14 @@ class DBaseOfflineManager():
                         if tablename[0:2].lower() != 'tc':
                             index_pk_tablename = dbconfdatas['pkidfields'].index('pk_' + tablename.lower())
                             pk_tablename = pkidresult[index_pk_tablename]
-                            id_objet,rev_begin,rev_end,datetimedes = dbaseparserfrom.getValuesFromPk(tablename  + '_qgis',
-                                                                          ['id_objet','lpk_revision_begin','lpk_revision_end','datetimedestruction'],
-                                                                            pk_tablename  )
+                            if self.dbase.base3version:
+                                id_objet,rev_begin,rev_end,datetimedes = dbaseparserfrom.getValuesFromPk(tablename  + '_qgis',
+                                                                            ['id_object','lpk_revision_begin','lpk_revision_end','datetimedestruction'],
+                                                                                pk_tablename  )
+                            else:
+                                id_objet,rev_begin,rev_end,datetimedes = dbaseparserfrom.getValuesFromPk(tablename  + '_qgis',
+                                                                            ['id_objet','lpk_revision_begin','lpk_revision_end','datetimedestruction'],
+                                                                                pk_tablename  )
 
                             if id_objet in importedobjetids:    #initial offline object 
                                 if debug : strdebug = f'Updated Objet : id_objet : {id_objet}, rev_beg : {rev_begin}, rev_end : {rev_end}'
@@ -366,39 +371,81 @@ class DBaseOfflineManager():
     def _resolveConflict(self,dbaseparserfrom):
         # get importedobjetids
 
-        sql = "SELECT datetimerevision FROM Revision WHERE pk_revision = 2"
-        dateofflinedbasecreation = dbaseparserfrom.query(sql)[0][0]
 
+
+        
         dictconflicts = {}
-        sql = "SELECT id_objet FROM Objet WHERE lpk_revision_begin = 1"
-        importedobjetids = [elem[0] for elem in dbaseparserfrom.query(sql)]
 
-        # get deleted objetids in import
-        sql = "SELECT id_objet FROM Objet WHERE lpk_revision_begin = 1 AND datetimedestruction  IS NOT NULL"
-        importedobjetidsdeleted = [elem[0] for elem in dbaseparserfrom.query(sql)]
+        if self.dbase.base3version:
 
-        # get updated objetids in import
-        sql = "SELECT id_objet FROM Objet WHERE lpk_revision_begin = 2 AND lpk_revision_end IS NULL"
-        sql += " AND datetimedestruction  IS NULL "
-        importedobjetidsupdated = [elem[0] for elem in dbaseparserfrom.query(sql)]
+            sql = "SELECT datetimerevision FROM revision WHERE pk_revision = 2"
+            dateofflinedbasecreation = dbaseparserfrom.query(sql)[0][0]
 
-        #get still present in main that are present in import
-        sql = "SELECT id_objet FROM Objet "
-        sql += " WHERE id_objet IN ({})".format(','.join([str(id) for id in importedobjetids]))
-        mainobjetstillthere = [elem[0] for elem in self.dbase.query(sql)]
+            sql = f"SELECT id_object FROM object WHERE lpk_revision_begin = 1"
+            importedobjetids = [elem[0] for elem in dbaseparserfrom.query(sql)]
 
-        # get modified ids in main since offineexport
-        sql = "SELECT id_objet FROM Objet WHERE lpk_revision_end IS NULL "
-        sql += " AND datetimedestruction  IS NULL "
-        sql += " AND datetimemodification > '{}'".format(dateofflinedbasecreation)
-        sql += " AND id_objet IN ({})".format(','.join([str(id) for id in importedobjetids]))
-        mainobjetidsupdated = [elem[0] for elem in self.dbase.query(sql)]
+            # get deleted objetids in import
+            sql = "SELECT id_object FROM object WHERE lpk_revision_begin = 1 AND datetimedestruction  IS NOT NULL"
+            importedobjetidsdeleted = [elem[0] for elem in dbaseparserfrom.query(sql)]
 
-        #get deleted ids in main since offineexport
-        sql = "SELECT id_objet FROM Objet WHERE datetimedestruction  IS NOT NULL"
-        sql += " AND datetimedestruction > '{}'".format(dateofflinedbasecreation)
-        sql += " AND id_objet IN ({})".format(','.join([str(id) for id in importedobjetids]))
-        mainobjetidsdeleted = [elem[0] for elem in self.dbase.query(sql)]
+            # get updated objetids in import
+            sql = "SELECT id_object FROM object WHERE lpk_revision_begin = 2 AND lpk_revision_end IS NULL"
+            sql += " AND datetimedestruction  IS NULL "
+            importedobjetidsupdated = [elem[0] for elem in dbaseparserfrom.query(sql)]
+
+            #get still present in main that are present in import
+            sql = "SELECT id_object FROM object "
+            sql += " WHERE id_object IN ({})".format(','.join([str(id) for id in importedobjetids]))
+            mainobjetstillthere = [elem[0] for elem in self.dbase.query(sql)]
+
+            # get modified ids in main since offineexport
+            sql = "SELECT id_object FROM object WHERE lpk_revision_end IS NULL "
+            sql += " AND datetimedestruction  IS NULL "
+            sql += " AND datetimemodification > '{}'".format(dateofflinedbasecreation)
+            sql += " AND id_object IN ({})".format(','.join([str(id) for id in importedobjetids]))
+            mainobjetidsupdated = [elem[0] for elem in self.dbase.query(sql)]
+
+            #get deleted ids in main since offineexport
+            sql = "SELECT id_object FROM object WHERE datetimedestruction  IS NOT NULL"
+            sql += " AND datetimedestruction > '{}'".format(dateofflinedbasecreation)
+            sql += " AND id_object IN ({})".format(','.join([str(id) for id in importedobjetids]))
+            mainobjetidsdeleted = [elem[0] for elem in self.dbase.query(sql)]
+
+
+        else:
+
+            sql = "SELECT datetimerevision FROM Revision WHERE pk_revision = 2"
+            dateofflinedbasecreation = dbaseparserfrom.query(sql)[0][0]
+
+            sql = f"SELECT id_objet FROM Objet WHERE lpk_revision_begin = 1"
+            importedobjetids = [elem[0] for elem in dbaseparserfrom.query(sql)]
+
+            # get deleted objetids in import
+            sql = "SELECT id_objet FROM Objet WHERE lpk_revision_begin = 1 AND datetimedestruction  IS NOT NULL"
+            importedobjetidsdeleted = [elem[0] for elem in dbaseparserfrom.query(sql)]
+
+            # get updated objetids in import
+            sql = "SELECT id_objet FROM Objet WHERE lpk_revision_begin = 2 AND lpk_revision_end IS NULL"
+            sql += " AND datetimedestruction  IS NULL "
+            importedobjetidsupdated = [elem[0] for elem in dbaseparserfrom.query(sql)]
+
+            #get still present in main that are present in import
+            sql = "SELECT id_objet FROM Objet "
+            sql += " WHERE id_objet IN ({})".format(','.join([str(id) for id in importedobjetids]))
+            mainobjetstillthere = [elem[0] for elem in self.dbase.query(sql)]
+
+            # get modified ids in main since offineexport
+            sql = "SELECT id_objet FROM Objet WHERE lpk_revision_end IS NULL "
+            sql += " AND datetimedestruction  IS NULL "
+            sql += " AND datetimemodification > '{}'".format(dateofflinedbasecreation)
+            sql += " AND id_objet IN ({})".format(','.join([str(id) for id in importedobjetids]))
+            mainobjetidsupdated = [elem[0] for elem in self.dbase.query(sql)]
+
+            #get deleted ids in main since offineexport
+            sql = "SELECT id_objet FROM Objet WHERE datetimedestruction  IS NOT NULL"
+            sql += " AND datetimedestruction > '{}'".format(dateofflinedbasecreation)
+            sql += " AND id_objet IN ({})".format(','.join([str(id) for id in importedobjetids]))
+            mainobjetidsdeleted = [elem[0] for elem in self.dbase.query(sql)]
 
         #* conflicts are those updated in main and deleted in import #case1
         #** and those archived in main and created in import   #case2
@@ -792,7 +839,10 @@ class DBaseOfflineManager():
         if debug: logging.getLogger("Lamiaoffline").debug(' isInConflict - idobjet : %s  ', str(conflictobjetid))
 
         # get mainpkobjet and importpkobjet
-        sql = " SELECT MAX(pk_objet) FROM Objet WHERE id_objet = " + str(conflictobjetid)
+        if self.dbase.base3version:
+            sql = " SELECT MAX(pk_object) FROM object WHERE id_object = " + str(conflictobjetid)
+        else:
+            sql = " SELECT MAX(pk_objet) FROM Objet WHERE id_objet = " + str(conflictobjetid)
         mainpkobjetsql = self.dbase.query(sql)
         importpkobjetsql = dbaseparserfrom.query(sql)
 

@@ -162,7 +162,8 @@ html_sidebars = {
 # -- Mock ------------------------------------------
 #autodoc_mock_imports = ["qgis","Lamia.dialog"]
 autodoc_mock_imports = ["qgis", "numpy", "pprint","pyspatialite","psycopg2","sqlite3","glob", "collections",
-                        "PyQt.QtCore", "PIL", "logging", "xlrd", "math", "re", "os", "sys", "shutils" ]
+                        "PyQt.QtCore", "PIL", "logging", "xlrd", "math", "re", "os", "sys", "shutils",
+                        "pandas" ]
 
 
 # -- Options for HTMLHelp output ------------------------------------------

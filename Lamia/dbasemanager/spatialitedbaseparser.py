@@ -168,7 +168,7 @@ class SpatialiteDBaseParser(AbstractDBaseParser):
             
             print(sql)
             print('error query', e)
-            raise TypeError('error query', e)
+            # raise TypeError('error query', e)
 
             return None
 

@@ -8,6 +8,7 @@
 /Lamia/toolpostpro/*/amctools
 /Lamia/doc_html/
 /doc/source/_build/
+/utils/pyconverter2be3/*/
 
 .vscode/
 Lamia_*.zip
