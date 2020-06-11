@@ -176,3 +176,59 @@ Outils
 ===================
 
 Cette barre permet d'acceder à divers outils, tels l'impression.
+
+
+Elements de configuration
+**************************************
+
+Configurer les styles
+==============================
+
+Il est possible de rajouter une blibliotheque de style adapté à votre projet.
+
+
+1. Créer un répertoire pour le nouveau style
+
+Pour cela, aller dans Préférences/Ouvrir le répertoire du projet et aller ensuite au chemin suivant :
+
+[Répertoire du projet]\\config\\styles
+
+et créer un répertoire dont le nom sera le nom du jeu de style affiché dans Lamia :
+
+.. image:: /_static/completepresentation/stylemenu.png
+    :width: 500px
+    :align: center
+
+
+2. Enregistrement d'un style dans ce répertoire
+
+Ensuite, au sein de qgis, modifier le style de la couche voulue :
+
+Ouvrir les propriétés de la couche voulue (dans le panneau des couches, click droit sur la table voulue 
+et choisir Proriétés...) 
+
+Modifier le style 
+
+Enregistrer le style en cliquant comme le montre le dessin ci-dessous :
+
+.. image:: /_static/completepresentation/stylemenu_save_style.png
+    :width: 500px
+    :align: center
+
+Le style est à enregistrer dans le répertoire créé à l'étape 1, avec un nom identique au nom de la 
+table éditée.
+
+3. Répéter l'enregistrement de style pour toutes les couches devant apparaître dans le jeu de style
+
+Si une table ne dispose pas de fichier .qml dans le répertoire du jeu de style, elle ne 
+s'affichera pas.
+
+Le répertoire doit ressembler au final à ça :
+
+.. image:: /_static/completepresentation/stylemenu_styledir.png
+    :width: 500px
+    :align: center
+
+4. Fermer et relancer Lamia
+
+Les nouveaux styles apparaissent !!! Voilà !

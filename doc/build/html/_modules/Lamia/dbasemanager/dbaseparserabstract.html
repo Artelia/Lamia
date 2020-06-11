@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
-        <script src="../../../_static/translations.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../_static/translations.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -163,7 +163,7 @@
             
   <h1>Code source de Lamia.dbasemanager.dbaseparserabstract</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">unicode_literals</span>
 
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -199,11 +199,11 @@
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="n">PILexists</span> <span class="o">=</span> <span class="kc">False</span>
 
-<span class="kn">from</span> <span class="nn">..libslamia.lamiareg.updatereg</span> <span class="kn">import</span> <span class="n">updateWinReg</span>
-<span class="kn">from</span> <span class="nn">.dbconfigreader</span> <span class="kn">import</span> <span class="n">DBconfigReader</span>
-<span class="kn">from</span> <span class="nn">.dbaseofflinemanager</span> <span class="kn">import</span> <span class="n">DBaseOfflineManager</span>
-<span class="kn">from</span> <span class="nn">..iface.ifaceabstractconnector</span> <span class="kn">import</span> <span class="n">LamiaIFaceAbstractConnectors</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">dbaseutils</span>
+<span class="kn">from</span> <span class="nn">..libslamia.lamiareg.updatereg</span> <span class="k">import</span> <span class="n">updateWinReg</span>
+<span class="kn">from</span> <span class="nn">.dbconfigreader</span> <span class="k">import</span> <span class="n">DBconfigReader</span>
+<span class="kn">from</span> <span class="nn">.dbaseofflinemanager</span> <span class="k">import</span> <span class="n">DBaseOfflineManager</span>
+<span class="kn">from</span> <span class="nn">..iface.ifaceabstractconnector</span> <span class="k">import</span> <span class="n">LamiaIFaceAbstractConnectors</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">dbaseutils</span>
 
 
 
@@ -223,7 +223,7 @@
 <div class="viewcode-block" id="AbstractDBaseParser"><a class="viewcode-back" href="../../../dev/src_api/05_01_dbasemanager_dbaseparserabstract.html#Lamia.dbasemanager.dbaseparserabstract.AbstractDBaseParser">[docs]</a><span class="k">class</span> <span class="nc">AbstractDBaseParser</span><span class="p">():</span>
 
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parserfactory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">messageinstance</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parserfactory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">messageinstance</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Read the dbase</span>
 
 <span class="sd">        :param parserfactory: the parent class</span>
@@ -299,7 +299,7 @@
         <span class="c1">#:language setting</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">locale</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">qgis.PyQt.QtCore</span> <span class="kn">import</span> <span class="n">QSettings</span>
+            <span class="kn">from</span> <span class="nn">qgis.PyQt.QtCore</span> <span class="k">import</span> <span class="n">QSettings</span>
             <span class="k">if</span> <span class="n">QSettings</span><span class="p">()</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="s1">&#39;locale/userLocale&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">locale</span> <span class="o">=</span> <span class="n">QSettings</span><span class="p">()</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="s1">&#39;locale/userLocale&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>

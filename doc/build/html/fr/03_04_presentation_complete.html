@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
-        <script src="../_static/translations.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script type="text/javascript" src="../_static/translations.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -100,6 +100,7 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Présentation Complète</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#le-menu">Le menu</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#la-barre-d-outils">La barre d’outils:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#elements-de-configuration">Elements de configuration</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="03_05_description_modules_postpro.html">Description des modules de Post Traitement</a></li>
@@ -318,6 +319,42 @@ de géomtrie avancées de QGis.</p>
 <div class="section" id="outils">
 <h3>Outils<a class="headerlink" href="#outils" title="Lien permanent vers ce titre">¶</a></h3>
 <p>Cette barre permet d’acceder à divers outils, tels l’impression.</p>
+</div>
+</div>
+<div class="section" id="elements-de-configuration">
+<h2>Elements de configuration<a class="headerlink" href="#elements-de-configuration" title="Lien permanent vers ce titre">¶</a></h2>
+<div class="section" id="configurer-les-styles">
+<h3>Configurer les styles<a class="headerlink" href="#configurer-les-styles" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Il est possible de rajouter une blibliotheque de style adapté à votre projet.</p>
+<ol class="arabic simple">
+<li><p>Créer un répertoire pour le nouveau style</p></li>
+</ol>
+<p>Pour cela, aller dans Préférences/Ouvrir le répertoire du projet et aller ensuite au chemin suivant :</p>
+<p>[Répertoire du projet]\config\styles</p>
+<p>et créer un répertoire dont le nom sera le nom du jeu de style affiché dans Lamia :</p>
+<a class="reference internal image-reference" href="../_images/stylemenu.png"><img alt="../_images/stylemenu.png" class="align-center" src="../_images/stylemenu.png" style="width: 500px;" /></a>
+<ol class="arabic simple" start="2">
+<li><p>Enregistrement d’un style dans ce répertoire</p></li>
+</ol>
+<p>Ensuite, au sein de qgis, modifier le style de la couche voulue :</p>
+<p>Ouvrir les propriétés de la couche voulue (dans le panneau des couches, click droit sur la table voulue
+et choisir Proriétés…)</p>
+<p>Modifier le style</p>
+<p>Enregistrer le style en cliquant comme le montre le dessin ci-dessous :</p>
+<a class="reference internal image-reference" href="../_images/stylemenu_save_style.png"><img alt="../_images/stylemenu_save_style.png" class="align-center" src="../_images/stylemenu_save_style.png" style="width: 500px;" /></a>
+<p>Le style est à enregistrer dans le répertoire créé à l’étape 1, avec un nom identique au nom de la
+table éditée.</p>
+<ol class="arabic simple" start="3">
+<li><p>Répéter l’enregistrement de style pour toutes les couches devant apparaître dans le jeu de style</p></li>
+</ol>
+<p>Si une table ne dispose pas de fichier .qml dans le répertoire du jeu de style, elle ne
+s’affichera pas.</p>
+<p>Le répertoire doit ressembler au final à ça :</p>
+<a class="reference internal image-reference" href="../_images/stylemenu_styledir.png"><img alt="../_images/stylemenu_styledir.png" class="align-center" src="../_images/stylemenu_styledir.png" style="width: 500px;" /></a>
+<ol class="arabic simple" start="4">
+<li><p>Fermer et relancer Lamia</p></li>
+</ol>
+<p>Les nouveaux styles apparaissent !!! Voilà !</p>
 </div>
 </div>
 </div>

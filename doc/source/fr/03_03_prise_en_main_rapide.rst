@@ -297,3 +297,11 @@ lorsque vous faites de la saisie sur tablette.
    :align:   center
 
    exemple n°2 - proposition pour tablette
+
+
+J'ai un bug !!
+=============================================
+
+Aller dans Aide/Reporter un bug
+Vous pourrez ainsi contacter directement l'équipe de développement qui prendra contact avec vous
+pour régler ce problème.

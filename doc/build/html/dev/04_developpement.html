@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
-        <script src="../_static/translations.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script type="text/javascript" src="../_static/translations.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -462,7 +462,7 @@ Choisir l’interpréteur python en allant dans File/settings/Project/project in
 <p>Ensuite, créer un fichier .gitconfig dans votre répertoire « users » (c:/users/ « votre login ») avec dedans :</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">user</span><span class="p">]</span>
                <span class="n">name</span> <span class="o">=</span> <span class="n">toto</span>
-               <span class="n">email</span> <span class="o">=</span> <span class="n">toto</span><span class="o">.</span><span class="n">tata</span><span class="nd">@mongroup</span><span class="o">.</span><span class="n">com</span>
+               <span class="n">email</span> <span class="o">=</span> <span class="n">toto</span><span class="o">.</span><span class="n">tata</span><span class="nd">@mongroup.com</span>
 <span class="p">[</span><span class="n">http</span><span class="p">]</span>
                <span class="n">proxy</span> <span class="o">=</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">XX</span><span class="o">.</span><span class="n">XX</span><span class="o">.</span><span class="n">XX</span><span class="o">.</span><span class="n">XX</span><span class="p">:</span><span class="n">XXXX</span>
 </pre></div>
@@ -494,7 +494,7 @@ Choisir l’interpréteur python en allant dans File/settings/Project/project in
 <span class="kn">from</span> <span class="nn">qgis.PyQt.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span><span class="n">QWidget</span><span class="p">)</span>
     <span class="k">class</span> <span class="nc">CostTool</span><span class="p">(</span><span class="n">AbstractLamiaTool</span><span class="p">):</span>
     <span class="n">TOOLNAME</span> <span class="o">=</span> <span class="s1">&#39;test_module&#39;</span>
-      <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dbase</span><span class="p">,</span> <span class="n">dialog</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">linkedtreewidget</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gpsutil</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">parentwidget</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+      <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dbase</span><span class="p">,</span> <span class="n">dialog</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">linkedtreewidget</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">gpsutil</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">parentwidget</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">CostTool</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dbase</span><span class="p">,</span> <span class="n">dialog</span><span class="p">,</span> <span class="n">linkedtreewidget</span><span class="p">,</span> <span class="n">gpsutil</span><span class="p">,</span><span class="n">parentwidget</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
       <span class="k">def</span> <span class="nf">initTool</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># ****************************************************************************************</span>
@@ -503,15 +503,15 @@ Choisir l’interpréteur python en allant dans File/settings/Project/project in
         <span class="bp">self</span><span class="o">.</span><span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;Couts&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">visualmode</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">groupBox_elements</span><span class="o">.</span><span class="n">setParent</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">frame_editing</span><span class="o">.</span><span class="n">setParent</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">groupBox_elements</span><span class="o">.</span><span class="n">setParent</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_editing</span><span class="o">.</span><span class="n">setParent</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">initFieldUI</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">userwdgfield</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">userwdgfield</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">userwdgfield</span> <span class="o">=</span> <span class="n">UserUI</span><span class="p">()</span>
 
 <span class="k">class</span> <span class="nc">UserUI</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">UserUI</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
         <span class="c1"># self.setupUi(self)</span>
         <span class="n">uipath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;test_module.ui&#39;</span><span class="p">)</span>

@@ -19,3 +19,4 @@ test/testtempfiles/
 test/datas/lamia_*
 *.wav
 *.cprof
+*.exe
