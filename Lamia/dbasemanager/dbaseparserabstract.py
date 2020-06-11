@@ -584,7 +584,8 @@ class AbstractDBaseParser():
                 return ''
 
     def getValuesFromPk(self, dbasename, fields, pk):
-        if isinstance(fields, str) or isinstance(fields, unicode):
+        # if isinstance(fields, str) or isinstance(fields, unicode):
+        if isinstance(fields, str):
             fields = [fields]
         sql = " SELECT " + ','.join(fields) + " FROM " + dbasename
         sql += " WHERE pk_" + dbasename.split('_')[0].lower()

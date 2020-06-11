@@ -23,18 +23,28 @@ This file is part of LAMIA.
   * SPDX-License-Identifier: GPL-3.0-or-later
   * License-Filename: LICENSING.md
  """
- 
+
 import winreg
 import datetime
 import platform
+
 
 def updateWinReg(**kwargs):
 
     datemodif = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
-    if platform.system() == 'Windows':
-        key = winreg.CreateKey(winreg.HKEY_LOCAL_MACHINE, 'SOFTWARE\\Artelia\\Lamia')
-        winreg.SetValueEx(key, 'laststart', 0, winreg.REG_SZ, datemodif) 
+    if platform.system() == "Windows":
+        key = winreg.CreateKey(winreg.HKEY_LOCAL_MACHINE, "SOFTWARE\\Artelia\\Lamia")
+        winreg.SetValueEx(key, "laststart", 0, winreg.REG_SZ, datemodif)
+
+        try:
+            opencount, regtype = winreg.QueryValueEx(key, "lamiaopencount")
+        except FileNotFoundError:
+            opencount = None
+        print("*************", opencount)
+        if not opencount:
+            opencount = 0
+        winreg.SetValueEx(key, "lamiaopencount", 0, winreg.REG_DWORD, opencount + 1)
 
         for k, v in kwargs.items():
-            winreg.SetValueEx(key, k, 0, winreg.REG_SZ, str(v)) 
+            winreg.SetValueEx(key, k, 0, winreg.REG_SZ, str(v))

@@ -58,7 +58,7 @@ class DBaseOfflineManager():
         self.importDBase(importparser, 
                         typeimport='append',
                         createnewversion=False,
-                        ressourcesimport='full')
+                        ressourcesimport='Full')
 
     def pullDBase(self,pulledpath):
         
@@ -145,7 +145,7 @@ class DBaseOfflineManager():
 
         create new version : create new vrsion before import
 
-        ressourcesimport : Full / thumbnails / None  : import all ressources files, or just thumbnails, or None
+        ressourcesimport : Full / thumbnails / none  : import all ressources files, or just thumbnails, or None
         """
         debug = True
 
@@ -571,22 +571,30 @@ class DBaseOfflineManager():
             toparser.query(sql,docommit=False)
 
             #ressource
-            if tablename == 'Ressource' and ressourcesimport not in ['None']:       #Full / thumbnails / None
+            if tablename in ['Ressource', 'resource'] and ressourcesimport not in ['None']:       #Full / thumbnails / None
                 fileindex = noncriticalfields.index('file')
                 filepath = noncriticalresult[fileindex]
                 withthumbnail = None
 
 
                 # only export reference rasters
-                pkressourceindex = pkidfields.index('pk_ressource' )
-                pkressource = pkidresult[pkressourceindex]
-                pkobjet = fromparser.getValuesFromPk('Ressource_qgis', 'pk_objet', pkressource)
+                if self.dbase.base3version:
+                    pkressourceindex = pkidfields.index('pk_resource' )
+                    pkressource = pkidresult[pkressourceindex]
+                    pkobjet = fromparser.getValuesFromPk('resource_qgis', 'pk_object', pkressource)
+                else:
+                    pkressourceindex = pkidfields.index('pk_ressource' )
+                    pkressource = pkidresult[pkressourceindex]
+                    pkobjet = fromparser.getValuesFromPk('Ressource_qgis', 'pk_objet', pkressource)
                 childdbname, childpk = self.searchChildfeatureFromPkObjet(fromparser, pkobjet)
 
 
                 if childdbname.lower() == 'rasters':
                     # sql = " SELECT typeraster FROM Rasters_qgis WHERE pk_rasters = " + str(childpk)
-                    typeraster = self.dbase.getValuesFromPk('Rasters','typeraster',childpk)
+                    if self.dbase.base3version:
+                        typeraster = self.dbase.getValuesFromPk('rasters','rastertype',childpk)
+                    else:
+                        typeraster = self.dbase.getValuesFromPk('Rasters','typeraster',childpk)
                     # typeraster = self.dbase.query(sql,docommit=False)[0][0]
                     if typeraster not in ['ORF', 'IRF']:
                         filepath = None

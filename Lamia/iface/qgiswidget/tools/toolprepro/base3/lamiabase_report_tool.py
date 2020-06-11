@@ -54,6 +54,7 @@ class BaseReportTool(AbstractLamiaFormTool):
         tempparentjoin[tablename] = linkdict
     PARENTJOIN = tempparentjoin
 
+    CHOOSERTREEWDGSPEC = {'colshow': ['name']}
 
     def __init__(self, **kwargs):
         super(BaseReportTool, self).__init__(**kwargs)

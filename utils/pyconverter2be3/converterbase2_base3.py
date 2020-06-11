@@ -35,14 +35,22 @@ def readingConf(conffilename, confdict={}):
                 continue
             if (sheetdatas[row][0] and sheetdatas[row][0] != ''  and sheetdatas[row][0][0] != '#'
                     and sheetdatas[row][3] and sheetdatas[row][3] != ''):
+                
                 confdict[sheetname.split('_')[1]][1][sheetdatas[row][0]] = sheetdatas[row][3]
 
 
     return confdict
 
-def generateSql(confdict):
+def generateSql(sqlitedbasesource, confdict):
     sqllist=[]
     for sourcetable, (destable, fieldconf) in confdict.items():
+        realtablecolumns = sqlitedbasesource.getColumns(sourcetable)
+
+        for fieldname in list(fieldconf.keys()):
+            if not fieldname in realtablecolumns:
+                print(fieldname, ' not found in ', sourcetable)
+                del fieldconf[fieldname]
+
         sql = f"INSERT INTO {destable}({', '.join(list(fieldconf.values()))}) \
                 SELECT {', '.join(list(fieldconf.keys()))} FROM dbasesource.{sourcetable}"
         
@@ -155,22 +163,27 @@ def main(argv):
                     'Base2_assainissement': 'base3_urbandrainage'}
 
     if argv:
-        sourcereldirname = argv[0]
-        odstoread = argv[1].split(' ')
+        workingdir = os.path.join(argv[0])
+        sourcereldirname = argv[1]
+        odstoread = argv[2].split(' ')
         if not isinstance(odstoread, list):
             odstoread=[odstoread]
     else:
         print('no args !!')
         return
 
-    sourcefile = os.path.join(os.path.dirname(__file__),'a_source',sourcereldirname)
+    print(workingdir)
+
+    sourcefile = os.path.join(workingdir,'a_source',sourcereldirname)
     # destdir = os.path.join(os.path.dirname(__file__),'b_result')
-    destfile = os.path.join(os.path.dirname(__file__),'b_result',sourcereldirname)
+    destfile = os.path.join(workingdir,'b_result',sourcereldirname)
 
     if not os.path.isdir(os.path.dirname(destfile)):
         os.makedirs(os.path.dirname(destfile))
 
     # sys.exit()
+    print('Source file is :', os.path.abspath(sourcefile))
+    print('Dest   file is :', os.path.abspath(destfile))
     
     print('Loading source...')
     sqlitedbasesource = DBaseParserFactory('spatialite').getDbaseParser()
@@ -193,7 +206,7 @@ def main(argv):
 
     # print(confdict)
 
-    sqllist = generateSql(confdict)
+    sqllist = generateSql(sqlitedbasesource, confdict)
     print('Conf read')
 
     print('Converting ...')

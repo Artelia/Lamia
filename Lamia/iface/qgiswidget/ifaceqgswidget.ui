@@ -654,6 +654,9 @@ background-color: rgb(255, 255, 255);</string>
     <addaction name="actionReinitialier_prestation_courante"/>
     <addaction name="action_taille_icone"/>
     <addaction name="actionVersion"/>
+    <addaction name="separator"/>
+    <addaction name="actionOpen_project_directory"/>
+    <addaction name="actionOpen_Lamia_directory"/>
    </widget>
    <widget class="QMenu" name="menuMode">
     <property name="title">
@@ -671,6 +674,7 @@ background-color: rgb(255, 255, 255);</string>
     <addaction name="actionAide"/>
     <addaction name="actionA_propos"/>
     <addaction name="actionTables_et_champs"/>
+    <addaction name="actionReport_bug"/>
    </widget>
    <addaction name="menuFichiers"/>
    <addaction name="menuMode"/>
@@ -1046,6 +1050,21 @@ background-color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
     <string>toolbarmagic</string>
+   </property>
+  </action>
+  <action name="actionReport_bug">
+   <property name="text">
+    <string>Report bug</string>
+   </property>
+  </action>
+  <action name="actionOpen_project_directory">
+   <property name="text">
+    <string>Open project directory</string>
+   </property>
+  </action>
+  <action name="actionOpen_Lamia_directory">
+   <property name="text">
+    <string>Open Lamia directory</string>
    </property>
   </action>
  </widget>
