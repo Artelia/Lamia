@@ -8,12 +8,14 @@ path %PATH%;C:\Program Files\Git\cmd;C:\Program Files\Docker\Docker\resources\bi
 path %PATH%;%OSGEO4W_ROOT%\apps\qgis\bin
 path %PATH%;%OSGEO4W_ROOT%\apps\grass\grass78\lib
 path %PATH%;%OSGEO4W_ROOT%\apps\Qt5\bin
+path %PATH%;%UserProfile%\AppData\Roaming\Python\Python37\Scripts
 REM path %PATH%;%OSGEO4W_ROOT%\apps\Qt5\plugins\platforms\qwindows.dll
 REM path %PATH%;%OSGEO4W_ROOT%\apps\Python37\Scripts
 
 REM set PYTHONPATH=%OSGEO4W_ROOT%\apps\Python36
 set PYTHONPATH=%PYTHONPATH%;%OSGEO4W_ROOT%\apps\qgis\python;
 set PYTHONPATH=%PYTHONPATH%;%OSGEO4W_ROOT%\apps\Python37\lib\site-packages
+
 REM set PYTHONPATH=%PYTHONPATH%;C:\Users\patrice.verchere\.qgis2\python\plugins
 set QGIS_PREFIX_PATH=%OSGEO4W_ROOT%\apps\qgis
 

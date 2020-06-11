@@ -1,7 +1,11 @@
+import os, sys
+
+lamiapath = os.path.join(os.path.join(os.path.dirname(__file__)), "..", "..")
+# print(os.path.abspath(lamiapath))
+sys.path.append(lamiapath)
+
 import logging
-import os
 import platform
-import sys
 import unittest
 import warnings
 from pprint import pprint
@@ -17,10 +21,6 @@ from Lamia.iface.qgiswidget.ifaceqgswidget import LamiaWindowWidget
 from qgis.PyQt import QtCore, uic
 from qgis.PyQt.QtCore import QCoreApplication, QSettings, Qt, QTranslator, qVersion
 from qgis.PyQt.QtWidgets import QDialog, QMainWindow, QWidget
-
-lamiapath = os.path.join(os.path.join(os.path.dirname(__file__)), "..", "..")
-# print(os.path.abspath(lamiapath))
-sys.path.append(lamiapath)
 
 
 # warnings.simplefilter("ignore")
