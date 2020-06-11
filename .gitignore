@@ -4,14 +4,11 @@
 #############
 
 *.py[cod]
-/Lamia/toolpostpro/*/*amc_tool*
-/Lamia/toolpostpro/*/amctools
-/Lamia/doc_html/
 /doc/source/_build/
-/utils/pyconverter2be3/*/
+/doc/build/
 
 .vscode/
-Lamia_*.zip
+
 **/*backup*
 **/*caduc*
 sandbox/*/
@@ -20,4 +17,5 @@ test/testtempfiles/
 test/datas/lamia_*
 *.wav
 *.cprof
-
+*.exe
+Lamia_*.zip
