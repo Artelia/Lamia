@@ -23,7 +23,6 @@ lamiapath = os.path.join(os.path.join(os.path.dirname(__file__)), "..", "..")
 sys.path.append(lamiapath)
 
 
-
 # warnings.simplefilter("ignore")
 # os.environ["PYTHONWARNINGS"] = "ignore" # Also affect subprocesses
 warnings.filterwarnings("default", category=DeprecationWarning, module="networkx")
@@ -35,6 +34,7 @@ X_BEGIN = 400000.0
 Y_BEGIN = 6000000.0
 LOCALE = "fr"  # fr en
 INTERFACEINDEX = 0
+# p
 
 
 class DBaseViewer:
