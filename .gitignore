@@ -5,7 +5,7 @@
 
 *.py[cod]
 /doc/source/_build/
-/doc/build/
+# /doc/build/
 test/testtempfiles/
 test/datas/lamia_*
 sandbox/*/

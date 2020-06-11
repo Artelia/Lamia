@@ -344,6 +344,10 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">initDBase</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">crsnumber</span> <span class="o">=</span> <span class="n">crs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">variante</span> <span class="o">=</span> <span class="n">variante</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">worktype</span> <span class="o">=</span> <span class="n">worktype</span>
+
         <span class="n">baseversion</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;baseversion&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">workversion</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;workversion&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
@@ -744,7 +748,8 @@
                 <span class="k">return</span> <span class="s1">&#39;&#39;</span></div>
 
     <span class="k">def</span> <span class="nf">getValuesFromPk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dbasename</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">pk</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="n">unicode</span><span class="p">):</span>
+        <span class="c1"># if isinstance(fields, str) or isinstance(fields, unicode):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">fields</span><span class="p">]</span>
         <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot; SELECT &quot;</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; FROM &quot;</span> <span class="o">+</span> <span class="n">dbasename</span>
         <span class="n">sql</span> <span class="o">+=</span> <span class="s2">&quot; WHERE pk_&quot;</span> <span class="o">+</span> <span class="n">dbasename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
