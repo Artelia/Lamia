@@ -31,7 +31,7 @@ from collections import OrderedDict
 
 from qgis.PyQt import uic, QtCore, QtGui
 from qgis.PyQt.QtWidgets import (QWidget, QPushButton)
-from ..base3.lamiabase_surface_tool import BaseSurfaceTool
+from ..base3.lamiabase_node_tool import BaseNodeTool
 
 from .lamiabase_ff_camera_tool import BaseFaunafloraCameraTool
 from .lamiabase_ff_sketch_tool import BaseFaunafloraSketchTool
@@ -40,28 +40,31 @@ from ..subwidgets.subwidget_getfromcatalog import CatalogWidget
 
 
 
-class BaseFaunafloraFLOSurfaceTool(BaseSurfaceTool):
+class BaseFaunafloraTreeNodeTool(BaseNodeTool):
 
-    PREPROTOOLNAME = 'surface_flora'
+    PREPROTOOLNAME = 'node_tree'
     tooltreewidgetCAT =QtCore.QCoreApplication.translate('base3','Inventory')
-    tooltreewidgetSUBCAT =QtCore.QCoreApplication.translate('base3','Flora')
-    TABLEFILTERFIELD = {'surfacecategory': 'FLO' }
-    tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'flora.png')
+    tooltreewidgetSUBCAT =QtCore.QCoreApplication.translate('base3','Remarkable tree')
+    TABLEFILTERFIELD = {'nodecategory': 'TRE' }
+
+    tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'tree.png')
 
     def __init__(self, **kwargs):
-        super(BaseFaunafloraFLOSurfaceTool, self).__init__(**kwargs)
+        super(BaseFaunafloraTreeNodeTool, self).__init__(**kwargs)
+
+
 
     def initMainToolWidget(self):
         
         self.toolwidgetmain = UserUI()
-        self.formtoolwidgetconfdictmain = {'surface' : {'linkfield' : 'id_surface',
+        self.formtoolwidgetconfdictmain = {'node' : {'linkfield' : 'id_node',
                                                     'widgets' : {
-                                                                'surfacecategory': self.toolwidgetmain.comboBox_category,
-                                                                'number':self.toolwidgetmain.spinBox_number,
-
-                                                                'florainvasive':self.toolwidgetmain.checkBox_florainvasive,
-                                                                'floraprotected':self.toolwidgetmain.checkBox_floraprotected,
-
+                                                                'nodecategory':self.toolwidgetmain.comboBox_nodecategory,
+                                                                'remarkabletreeold':self.toolwidgetmain.checkBox_old,
+                                                                'remarkabletreesenescent':self.toolwidgetmain.checkBox_senescent,
+                                                                'remarkabletreecavity':self.toolwidgetmain.checkBox_cavity,
+                                                                'remarkabletreesaproxylics':self.toolwidgetmain.checkBox_saproxylics,
+                                                                'remarkabletreescenic':self.toolwidgetmain.checkBox_scenic,
 
                                                     }},
                                     'object' : {'linkfield' : 'id_object',
@@ -70,12 +73,9 @@ class BaseFaunafloraFLOSurfaceTool(BaseSurfaceTool):
                                                     }},
                                     'descriptionsystem' : {'linkfield' : 'id_descriptionsystem',
                                                 'widgets' : {
-                                                            # 'orderclass': self.toolwidgetmain.lineEdit_orderclass,
-                                                            'commonname':self.toolwidgetmain.lineEdit_commonname,
-                                                            'scientificname':self.toolwidgetmain.lineEdit_scientificcname,
                                                         
                                                         }}}
-        self.toolwidgetmain.comboBox_category.currentIndexChanged.connect(self.changeCategory)
+        self.toolwidgetmain.comboBox_nodecategory.currentIndexChanged.connect(self.changeCategory)
         self.toolwidgetmain.toolButton_number.clicked.connect(
             lambda: self.showNumPad(self.toolwidgetmain.spinBox_number))
 
@@ -86,22 +86,6 @@ class BaseFaunafloraFLOSurfaceTool(BaseSurfaceTool):
         self.propertieswdgCROQUIS = BaseFaunafloraSketchTool(**self.instancekwargs)
         self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
-        self.catalogfinder = CatalogWidget(parentwdg=self,
-                                                  parentframe=self.toolwidgetmain.frame_catalog_flo,
-                                                  catalogtype='faunaflora',
-                                                  catalogname = 'Liste_bota_2020',
-                                                  catalogsheet='#Liste_Naopad_bota_2020',
-                                                  coltoshow=['LB_NOM', 'NOM_VERN'],
-                                                  sheetfield=None,
-                                                  valuefield=["commonname",
-                                                                'scientificname'])
-        self.lamiawidgets.append(self.catalogfinder)
-
-
-
-    def _widgetClicked_manageToolBar(self):
-        super()._widgetClicked_manageToolBar()
-        self.mainifacewidget.actiontoobargeomnewpoint.setEnabled(True)
 
 
     def postSaveFeature(self, savedfeaturepk=None):
@@ -113,6 +97,6 @@ class BaseFaunafloraFLOSurfaceTool(BaseSurfaceTool):
 class UserUI(QWidget):
     def __init__(self, parent=None):
         super(UserUI, self).__init__(parent=parent)
-        uipath = os.path.join(os.path.dirname(__file__), 'lamiabase_ff_surface_tool_ui.ui')
+        uipath = os.path.join(os.path.dirname(__file__), 'lamiabase_ff_node_tool_ui.ui')
         uic.loadUi(uipath, self)
 

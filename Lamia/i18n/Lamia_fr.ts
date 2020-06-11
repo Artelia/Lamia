@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="fr" sourcelanguage="en">
+<!DOCTYPE TS><TS version="2.0" language="fr" sourcelanguage="en">
 <context>
     <name>AbstractLamiaFormTool</name>
     <message>
@@ -18,7 +17,7 @@
     <name>DBaseOfflineManager</name>
     <message>
         <location filename="../dbasemanager/dbaseofflinemanager.py" line="79"/>
-        <source>Il y a dÃ©jÃ&#xa0; une copie locale de la base... Supprimez la</source>
+        <source>Il y a d&#xc3;&#xa9;j&#xc3;&#xa0; une copie locale de la base... Supprimez la</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -85,53 +84,58 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="68"/>
+        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="73"/>
         <source>base3_waterdistribution</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="73"/>
+        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="78"/>
         <source>Base2_digue</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="78"/>
+        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="83"/>
         <source>Base2_eclairagepublic</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="83"/>
+        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="88"/>
         <source>Base2_eaupotable</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="88"/>
+        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="93"/>
         <source>Base2_tramway</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="93"/>
+        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="98"/>
         <source>Base2_assainissement</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="98"/>
+        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="103"/>
         <source>Base2_parking</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="103"/>
+        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="108"/>
         <source>Base2_chantier</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="111"/>
+        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="116"/>
         <source>Variante</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="63"/>
+        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="68"/>
         <source>base3_constructionsite</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/subdialogs/lamia_newDB.ui" line="63"/>
+        <source>base3_faunaflora</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -597,17 +601,17 @@
     </message>
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_deficiency_tool_ui.ui" line="62"/>
-        <source>CatÃ©gorie de Fiche</source>
+        <source>Cat&#xc3;&#xa9;gorie de Fiche</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_deficiency_tool_ui.ui" line="110"/>
-        <source>DÃ©tecteur</source>
+        <source>D&#xc3;&#xa9;tecteur</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_deficiency_tool_ui.ui" line="120"/>
-        <source>nÂ° marche</source>
+        <source>n&#xc2;&#xb0; marche</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1012,7 +1016,7 @@
     </message>
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_constructionsite/lamiabase_cs_observation_tool_ui.ui" line="590"/>
-        <source>Suite Ã&#xa0; donner</source>
+        <source>Suite &#xc3;&#xa0; donner</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1065,32 +1069,32 @@
         <translation>Type de noeud</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_node_tool_ui.ui" line="86"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_node_tool_ui.ui" line="89"/>
         <source>Fauna order/class</source>
         <translation>Ordre/classe</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_node_tool_ui.ui" line="96"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_node_tool_ui.ui" line="161"/>
         <source>Fauna development stage</source>
         <translation>Stade de développement</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_tool_ui.ui" line="73"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_tool_ui.ui" line="100"/>
         <source>...</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_node_tool_ui.ui" line="116"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_node_tool_ui.ui" line="115"/>
         <source>Number</source>
         <translation>Nombre</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_node_tool_ui.ui" line="158"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_node_tool_ui.ui" line="125"/>
         <source>Characteristics</source>
         <translation>Caractéristiques</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_tool_ui.ui" line="245"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_tool_ui.ui" line="259"/>
         <source>Comment</source>
         <translation>Commentaire</translation>
     </message>
@@ -1100,37 +1104,37 @@
         <translation>Type de surface</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_tool_ui.ui" line="83"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_tool_ui.ui" line="107"/>
         <source>Count</source>
         <translation>Nombre</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_tool_ui.ui" line="159"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_tool_ui.ui" line="173"/>
         <source>Habitat name</source>
         <translation>Nom de l&apos;habitat</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_tool_ui.ui" line="169"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_tool_ui.ui" line="183"/>
         <source>Wet land</source>
         <translation>Zone humide</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_tool_ui.ui" line="176"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_tool_ui.ui" line="190"/>
         <source>Habitat code</source>
         <translation>Code de l&apos;habitat</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_tool_ui.ui" line="186"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_tool_ui.ui" line="200"/>
         <source>Habitat repository</source>
         <translation>Rérérentiel de l&apos;habitat</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_tool_ui.ui" line="106"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_tool_ui.ui" line="130"/>
         <source>Scientific name</source>
         <translation>Nom scientifique</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_tool_ui.ui" line="93"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_tool_ui.ui" line="117"/>
         <source>Common name</source>
         <translation>Nom commun</translation>
     </message>
@@ -1148,6 +1152,41 @@
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_edge_tool_ui.ui" line="86"/>
         <source>Comments</source>
         <translation>Commentaires</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_tool_ui.ui" line="143"/>
+        <source>Invasive</source>
+        <translation>Espèce invasive</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_tool_ui.ui" line="150"/>
+        <source>Protected</source>
+        <translation>Espèce patrimoniale</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_node_tool_ui.ui" line="182"/>
+        <source>Old</source>
+        <translation>Ancien</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_node_tool_ui.ui" line="189"/>
+        <source>Cavity</source>
+        <translation>Cavité</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_node_tool_ui.ui" line="196"/>
+        <source>Senescent</source>
+        <translation>Sénescent</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_node_tool_ui.ui" line="203"/>
+        <source>Saroxylics insects</source>
+        <translation>Insectes saproxyliques</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_node_tool_ui.ui" line="210"/>
+        <source>Scenic</source>
+        <translation>Paysager</translation>
     </message>
 </context>
 <context>
@@ -1917,7 +1956,7 @@
     </message>
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_edge_tool_ui_heatingnetwork.ui" line="334"/>
-        <source>diamÃ¨tre int</source>
+        <source>diam&#xc3;&#xa8;tre int</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2077,7 +2116,7 @@
     </message>
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_observation_tool_ui.ui" line="222"/>
-        <source>Etat gÃ©nÃ©ral</source>
+        <source>Etat g&#xc3;&#xa9;n&#xc3;&#xa9;ral</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2147,7 +2186,7 @@
     </message>
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="243"/>
-        <source>AltimÃ©trie</source>
+        <source>Altim&#xc3;&#xa9;trie</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2212,7 +2251,7 @@
     </message>
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="627"/>
-        <source>GÃ©nÃ©ral</source>
+        <source>G&#xc3;&#xa9;n&#xc3;&#xa9;ral</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2232,7 +2271,7 @@
     </message>
     <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_waterdistribution/lamiabase_wds_node_tool_ui.ui" line="708"/>
-        <source>PrÃ©cisions</source>
+        <source>Pr&#xc3;&#xa9;cisions</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2337,12 +2376,12 @@
         <translation>Nom de la feuille</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/subwidgets/subwidget_getfromcatalog_ui.ui" line="119"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/subwidgets/subwidget_getfromcatalog_ui.ui" line="122"/>
         <source>Search :</source>
         <translation>Recherche : </translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/subwidgets/subwidget_getfromcatalog_ui.ui" line="135"/>
+        <location filename="../iface/qgiswidget/tools/toolprepro/subwidgets/subwidget_getfromcatalog_ui.ui" line="129"/>
         <source>Select</source>
         <translation>Selectionner</translation>
     </message>
@@ -2457,7 +2496,7 @@
     </message>
     <message>
         <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="208"/>
-        <source>SÃ©lectionner la date Ã&#xa0; laquelle afficher le systÃ¨me</source>
+        <source>S&#xc3;&#xa9;lectionner la date &#xc3;&#xa0; laquelle afficher le syst&#xc3;&#xa8;me</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2512,7 +2551,7 @@
     </message>
     <message>
         <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="751"/>
-        <source>RÃ©pertoire photo</source>
+        <source>R&#xc3;&#xa9;pertoire photo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2582,7 +2621,7 @@
     </message>
     <message>
         <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="872"/>
-        <source>RÃ©initialiser les noeuds</source>
+        <source>R&#xc3;&#xa9;initialiser les noeuds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2879,11 +2918,6 @@
         <translation>Inventaire</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_node_tool.py" line="47"/>
-        <source>Fauna</source>
-        <translation>Faune</translation>
-    </message>
-    <message>
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_flo_tool.py" line="47"/>
         <source>Flora</source>
         <translation>Flore</translation>
@@ -2897,6 +2931,16 @@
         <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_edge_pro_tool.py" line="45"/>
         <source>Protocol</source>
         <translation>Protocole</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_node_tool_fau.py" line="47"/>
+        <source>Fauna</source>
+        <translation>Faune</translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_node_tool_tre.py" line="47"/>
+        <source>Remarkable tree</source>
+        <translation>Arbre remarquable</translation>
     </message>
 </context>
 <context>
