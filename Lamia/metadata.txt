@@ -11,7 +11,7 @@ name=Lamia
 qgisMinimumVersion=3.10
 qgisMaximumVersion=3.99
 description=lamia
-version=0.001
+version=1.003
 author=ARTELIA
 email=patrice.verchere@arteliagroup.com
 
@@ -25,6 +25,7 @@ repository=erg
 
 # Uncomment the following line and add your changelog:
 # changelog=
+1.002 : reg permission bug fix
 1.001 : Release of lamia v1
 0.140 : fauna flora completed
 0.139 : fauna flora

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://web.resource.org/cc/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" id="svg2" sodipodi:version="0.32" inkscape:version="0.45.1" width="691.2428" height="776.88379" sodipodi:docbase="/Users/johnolsen/Desktop" sodipodi:docname="PeterM_Tree.svg" inkscape:output_extension="org.inkscape.output.svg.inkscape" version="1.0">
+  <defs id="defs5">
+    <linearGradient id="linearGradient2780">
+      <stop style="stop-color:#4b8247;stop-opacity:1;" offset="0" id="stop2782"/>
+      <stop style="stop-color:#0f170f;stop-opacity:0.0000000" offset="1" id="stop2784"/>
+    </linearGradient>
+    <linearGradient inkscape:collect="always" id="linearGradient2044">
+      <stop style="stop-color:#3f0b0b;stop-opacity:1;" offset="0" id="stop2046"/>
+      <stop style="stop-color:#3f0b0b;stop-opacity:0;" offset="1" id="stop2048"/>
+    </linearGradient>
+    <linearGradient inkscape:collect="always" xlink:href="#linearGradient2044" id="linearGradient2050" x1="-552.68896" y1="477.90662" x2="-552.68896" y2="615.7475" gradientUnits="userSpaceOnUse" gradientTransform="matrix(0.745827,0,0,1,791.5946,155.6063)"/>
+    <linearGradient inkscape:collect="always" xlink:href="#linearGradient2780" id="linearGradient2786" x1="632.578" y1="595.82269" x2="303.45538" y2="373.35645" gradientUnits="userSpaceOnUse"/>
+  </defs>
+  <sodipodi:namedview inkscape:window-height="721" inkscape:window-width="1270" inkscape:pageshadow="2" inkscape:pageopacity="0.0" borderopacity="1.0" bordercolor="#666666" pagecolor="#ffffff" id="base" inkscape:zoom="0.5169323" inkscape:cx="372.04724" inkscape:cy="526.18109" inkscape:window-x="0" inkscape:window-y="22" inkscape:current-layer="svg2"/>
+  <path style="fill:#5b0d0d;fill-opacity:1;fill-rule:nonzero;stroke:#230c0c;stroke-width:18.80332565;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1" d="M 273.05804,436.33311 L 442.38016,436.33311 C 442.38016,436.33311 358.83936,667.94962 474.1896,737.20277 C 337.71513,695.12288 490.09432,808.774 365.67146,750.4567 C 368.15814,734.55198 341.93746,709.03951 235.94703,747.80591 C 363.15855,630.58549 273.05804,436.33311 273.05804,436.33311 z " id="rect1305" sodipodi:nodetypes="cccccc" inkscape:export-filename="/home/peterm/afbeeldingen/svg/tree.png" inkscape:export-xdpi="39.060001" inkscape:export-ydpi="39.060001"/>
+  <path style="opacity:1;fill:#14920d;fill-opacity:1;fill-rule:nonzero;stroke:#165822;stroke-width:18.80332565;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" d="M 393.99906,9.4016628 C 320.71835,9.4016628 256.00292,35.870053 216.54302,76.300563 C 101.30184,80.337933 9.4016538,149.50112 9.4016628,234.36561 C 9.4016628,283.83795 40.644712,328.00923 89.503545,357.07063 C 95.257245,441.46242 210.48169,508.89064 351.68108,508.89065 C 496.5531,508.89065 614.11529,437.91219 614.11527,350.45489 C 614.11527,350.0234 614.03543,349.60232 614.02972,349.17166 C 655.58033,330.35707 681.84113,303.27683 681.84114,273.06204 C 681.84114,241.51697 653.33215,213.30574 608.55462,194.443 C 610.59133,185.7925 611.69139,176.91813 611.69139,167.83742 C 611.69139,80.380123 514.16941,9.4016628 393.99906,9.4016628 z " id="path2035" inkscape:export-filename="/home/peterm/afbeeldingen/svg/tree.png" inkscape:export-xdpi="39.060001" inkscape:export-ydpi="39.060001"/>
+  <metadata>
+    <rdf:RDF>
+      <cc:Work>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <cc:license rdf:resource="http://creativecommons.org/licenses/publicdomain/"/>
+        <dc:publisher>
+          <cc:Agent rdf:about="http://openclipart.org/">
+            <dc:title>Open Clip Art Library</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:title>Tree</dc:title>
+        <dc:date>2006-09-01T00:14:35</dc:date>
+        <dc:description>A simple tree.</dc:description>
+        <dc:source>http://openclipart.org/detail/80/tree-by-peterm</dc:source>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>PeterM</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>cartography</rdf:li>
+            <rdf:li>cartoon</rdf:li>
+            <rdf:li>clip art</rdf:li>
+            <rdf:li>clipart</rdf:li>
+            <rdf:li>colour</rdf:li>
+            <rdf:li>contour</rdf:li>
+            <rdf:li>geography</rdf:li>
+            <rdf:li>green</rdf:li>
+            <rdf:li>map</rdf:li>
+            <rdf:li>map symbol</rdf:li>
+            <rdf:li>nature</rdf:li>
+            <rdf:li>outline</rdf:li>
+            <rdf:li>plant</rdf:li>
+            <rdf:li>rpg</rdf:li>
+            <rdf:li>tree</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+      </cc:Work>
+      <cc:License rdf:about="http://creativecommons.org/licenses/publicdomain/">
+        <cc:permits rdf:resource="http://creativecommons.org/ns#Reproduction"/>
+        <cc:permits rdf:resource="http://creativecommons.org/ns#Distribution"/>
+        <cc:permits rdf:resource="http://creativecommons.org/ns#DerivativeWorks"/>
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+</svg>

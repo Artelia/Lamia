@@ -54,6 +54,15 @@ FORMS =     ../iface/qgiswidget/ifaceqgswidget.ui\
             ../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_node_tool_ui.ui\
             ../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_tool_ui.ui\
             ../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_edge_tool_ui.ui\
+            ../iface/qgiswidget/tools/toolprepro/base3_levee/lamiabase_levee_camera_tool_defaultbuttons_ui.ui\
+            ../iface/qgiswidget/tools/toolprepro/base3_levee/lamiabase_levee_deficiency_tool_ui.ui\
+            ../iface/qgiswidget/tools/toolprepro/base3_levee/lamiabase_levee_edge_tool_ui.ui\
+            ../iface/qgiswidget/tools/toolprepro/base3_levee/lamiabase_levee_edge_tooldesktop_ui.ui\
+            ../iface/qgiswidget/tools/toolprepro/base3_levee/lamiabase_levee_equipment_tool_ui.ui\
+            ../iface/qgiswidget/tools/toolprepro/base3_levee/lamiabase_levee_equipment_tool_ui_SIRS.ui\
+            ../iface/qgiswidget/tools/toolprepro/base3_levee/lamiabase_levee_observation_tool_ui.ui\
+            
+            
 
 
 SOURCES =   ../Lamia.py\
@@ -97,6 +106,20 @@ SOURCES =   ../Lamia.py\
             ../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_flo_tool.py\
             ../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_surface_hab.py\
             ../iface/qgiswidget/tools/toolprepro/base3_faunaflora/lamiabase_ff_edge_pro_tool.py\
+            ../iface/qgiswidget/tools/toolprepro/base3_levee/lamiabase_levee_actor_tool.py\
+            ../iface/qgiswidget/tools/toolprepro/base3_levee/lamiabase_levee_camera_tool.py\
+            ../iface/qgiswidget/tools/toolprepro/base3_levee/lamiabase_levee_deficiency_tool.py\
+            ../iface/qgiswidget/tools/toolprepro/base3_levee/lamiabase_levee_edge_tool.py\
+            ../iface/qgiswidget/tools/toolprepro/base3_levee/lamiabase_levee_equipment_tool.py\
+            ../iface/qgiswidget/tools/toolprepro/base3_levee/lamiabase_levee_geoarea_tool.py\
+            ../iface/qgiswidget/tools/toolprepro/base3_levee/lamiabase_levee_graph_tool.py\
+            ../iface/qgiswidget/tools/toolprepro/base3_levee/lamiabase_levee_graphcsv_tool.py\
+            ../iface/qgiswidget/tools/toolprepro/base3_levee/lamiabase_levee_observation_tool.py\
+            ../iface/qgiswidget/tools/toolprepro/base3_levee/lamiabase_levee_profile_tool.py\
+            ../iface/qgiswidget/tools/toolprepro/base3_levee/lamiabase_levee_raster_tool.py\
+            ../iface/qgiswidget/tools/toolprepro/base3_levee/lamiabase_levee_report_tool.py\
+            ../iface/qgiswidget/tools/toolprepro/base3_levee/lamiabase_levee_sketch_tool.py\
+            ../iface/qgiswidget/tools/toolprepro/base3_levee/lamiabase_levee_topography_tool.py\
 
 
 TRANSLATIONS = Lamia_fr.ts

@@ -364,6 +364,7 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         QApplication.processEvents()
         self.connector.closeProgressBar()
         self._AddDbaseInRecentsDBase(self.dbase)
+
         self.loadToolsClasses()
         self.loadToolsWidgets()
 
@@ -619,9 +620,9 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         except:
             pass
         self.comboBox_style.clear()
-        stylepath = os.path.join(
-            os.path.dirname(Lamia.__file__), "DBASE", "style", self.dbase.worktype
-        )
+
+        stylepath = self.qgiscanvas._getStyleDirectory(self.dbase.worktype)
+
         styledirs = [x[1] for x in os.walk(stylepath) if len(x[1]) > 0]
         if len(styledirs) > 0:
             styledirs = styledirs[0]
@@ -723,26 +724,41 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
 
     def _applyVisualMode(self, actiontext=None):
 
-        for tooltype in self.toolwidgets.keys():
-            if tooltype == "desktop_loaded":
-                continue
-            for toolname in self.toolwidgets[tooltype].keys():
-                toolwdg = self.toolwidgets[tooltype][toolname]
-                if isinstance(toolwdg, list):
-                    for wdg in toolwdg:
-                        # tool dep
-                        if hasattr(wdg, "changeInterfaceMode"):
-                            wdg.changeInterfaceMode()
-                        else:
-                            wdg.changePropertiesWidget()
-                else:
-                    # tool dep
-                    if hasattr(toolwdg, "changeInterfaceMode"):
-                        toolwdg.changeInterfaceMode()
+        if self.dbase.base3version:
+            for toolname in self.toolwidgets.keys():
+                if toolname == "desktop_loaded":
+                    continue
+                toolwdg = self.toolwidgets[toolname]
+                toolwdg.changeInterfaceMode()
+
+        else:
+            for tooltype in self.toolwidgets.keys():
+                if tooltype == "desktop_loaded":
+                    continue
+
+                for toolname in self.toolwidgets[tooltype].keys():
+                    toolwdg = self.toolwidgets[tooltype][toolname]
+                    if isinstance(toolwdg, list):
+                        for wdg in toolwdg:
+                            # tool dep
+                            if hasattr(wdg, "changeInterfaceMode"):
+                                wdg.changeInterfaceMode()
+                            else:
+                                wdg.changePropertiesWidget()
                     else:
-                        toolwdg.changePropertiesWidget()
+                        # tool dep
+                        if hasattr(toolwdg, "changeInterfaceMode"):
+                            toolwdg.changeInterfaceMode()
+                        else:
+                            toolwdg.changePropertiesWidget()
 
     def loadToolsClasses(self):
+        if self.dbase.base3version:
+            self.loadToolsClassesBase3()
+        else:
+            self.loadToolsClassesBase2()
+
+    def loadToolsClassesBase2(self):
         """
         Load layers and put them in a legend group in qgis
         Load all modules (prepro, postpro and menu)
@@ -818,7 +834,75 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         if debug:
             logging.getLogger("Lamia_unittest").debug("x %s", str(self.wdgclasses))
 
+    def loadToolsClassesBase3(self):
+        """
+        Load layers and put them in a legend group in qgis
+        Load all modules (prepro, postpro and menu)
+        Show field ui
+
+        :return:
+        """
+
+        debug = False
+        if debug:
+            logging.getLogger("Lamia").debug("start")
+
+        # tooltypestoload = ["toolprepro", "toolpostpro"]
+
+        modulelistpath = [
+            "Lamia",
+            "worktypeconf",
+            self.dbase.worktype.lower(),
+            "qgswidgets",
+        ]
+
+        path = os.path.join(
+            os.path.dirname(Lamia.__file__), "..", "//".join(modulelistpath)
+        )
+
+        pyfilespath = glob.glob(path + "/*.py")
+        pyfiles = [os.path.basename(f)[:-3] for f in pyfilespath if os.path.isfile(f)]
+        for x in pyfiles:
+            if debug:
+                logging.getLogger("Lamia_unittest").debug("x %s", x)
+            classlistpath = modulelistpath + [x]
+            modulename = ".".join(classlistpath)
+            moduletemp = importlib.import_module(modulename)
+
+            for name, obj in inspect.getmembers(moduletemp, inspect.isclass):
+                if moduletemp.__name__ == obj.__module__:
+                    if (
+                        hasattr(obj, "POSTPROTOOLNAME")
+                        and obj.POSTPROTOOLNAME is not None
+                    ):
+                        self.wdgclasses[obj.POSTPROTOOLNAME] = {
+                            "class": obj,
+                            "type": "postpro",
+                            "loaded": False,
+                            "loadfirst": True
+                            if hasattr(obj, "LOADFIRST") and obj.LOADFIRST
+                            else False,
+                        }
+                    elif (
+                        hasattr(obj, "PREPROTOOLNAME")
+                        and obj.PREPROTOOLNAME is not None
+                    ):
+                        self.wdgclasses[obj.PREPROTOOLNAME] = {
+                            "class": obj,
+                            "type": "prepro",
+                            "loaded": False,
+                            "loadfirst": True
+                            if hasattr(obj, "LOADFIRST") and obj.LOADFIRST
+                            else False,
+                        }
+
     def loadToolsWidgets(self, fullloading=False):
+        if self.dbase.base3version:
+            self.loadToolsWidgetsBase3(fullloading)
+        else:
+            self.loadToolsWidgetsBase2(fullloading)
+
+    def loadToolsWidgetsBase2(self, fullloading=False):
 
         debug = False
         typeswdg = ["toolprepro", "toolpostpro"]
@@ -909,6 +993,147 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
                     # raise TypeError
                 i += 1
                 self.connector.updateProgressBar(i)
+
+        if not self.toolwidgets["desktop_loaded"] and fullloading:
+            self.toolwidgets["desktop_loaded"] = True
+        self.connector.closeProgressBar()
+
+    def loadToolsWidgetsBase3(self, fullloading=False):
+
+        debug = False
+
+        lenprogresspartialloading = len(
+            list(
+                [
+                    elem["loadfirst"]
+                    for elem in self.wdgclasses.values()
+                    if elem["loadfirst"]
+                ]
+            )
+        )
+        lenprogressfullloading = len(self.wdgclasses)
+        """
+        toopreprodict = self.wdgclasses["toolprepro"]
+        lenprogresspartialloading = len(
+            [
+                name
+                for name in toopreprodict.keys()
+                if hasattr(toopreprodict[name], "LOADFIRST")
+                and toopreprodict[name].LOADFIRST
+            ]
+        )
+        lenprogressfullloading = len(self.wdgclasses["toolprepro"]) + len(
+            self.wdgclasses["toolpostpro"]
+        )
+        """
+        # print(lenprogresspartialloading)
+
+        creationstring = self.tr("Loading widgets...")
+        if fullloading:
+            self.connector.createProgressBar(
+                creationstring, lenprogressfullloading - lenprogresspartialloading
+            )
+        else:
+            self.connector.createProgressBar(creationstring, lenprogresspartialloading)
+
+        i = 0
+
+        for wdgname, wdgvalues in self.wdgclasses.items():
+            if not fullloading and wdgvalues["type"] == "postpro":
+                continue
+            if wdgname in self.toolwidgets.keys():
+                continue
+
+            if debug:
+                logging.getLogger("Lamia_unittest").debug("loading %s", wdgname)
+
+            if (
+                wdgvalues["type"] == "prepro"
+                and wdgvalues["loadfirst"]
+                and not fullloading
+            ):
+                self.toolwidgets[wdgname] = wdgvalues["class"](
+                    dbaseparser=self.dbase,
+                    mainifacewidget=self,
+                    choosertreewidget=self.ElemtreeWidget,
+                    parentwidget=None,
+                )
+            else:
+                self.toolwidgets[wdgname] = wdgvalues["class"](
+                    dbaseparser=self.dbase,
+                    mainifacewidget=self,
+                    choosertreewidget=self.ElemtreeWidget,
+                    parentwidget=None,
+                )
+            i += 1
+            self.connector.updateProgressBar(i)
+
+        """
+        for typewdg in typeswdg:
+            if not fullloading and typewdg == "toolpostpro":
+                continue
+            if not typewdg in self.toolwidgets.keys():
+                self.toolwidgets[typewdg] = {}
+            for toolname in self.wdgclasses[typewdg].keys():
+                if toolname in self.toolwidgets[typewdg].keys():
+                    continue
+                if debug:
+                    logging.getLogger("Lamia_unittest").debug("loading %s", toolname)
+                self.toolwidgets[typewdg][toolname] = []
+                toolwdglist = self.toolwidgets[typewdg][toolname]
+                toolwdgcls = self.wdgclasses[typewdg][toolname]
+                try:
+                    if (
+                        hasattr(self.wdgclasses[typewdg][toolname], "PREPROTOOLNAME")
+                        and not fullloading
+                    ):
+                        self.toolwidgets[typewdg][toolname] = toolwdgcls(
+                            dbaseparser=self.dbase,
+                            mainifacewidget=self,
+                            choosertreewidget=self.ElemtreeWidget,
+                            parentwidget=None,
+                        )
+
+                    elif (
+                        hasattr(self.wdgclasses[typewdg][toolname], "POSTPROTOOLNAME")
+                        and fullloading
+                    ):
+                        self.toolwidgets[typewdg][toolname] = toolwdgcls(
+                            dbaseparser=self.dbase,
+                            mainifacewidget=self,
+                            choosertreewidget=self.ElemtreeWidget,
+                            parentwidget=None,
+                        )
+
+                    elif (
+                        hasattr(self.wdgclasses[typewdg][toolname], "LOADFIRST")
+                        and not fullloading
+                    ):
+                        toolwdglist.append(
+                            toolwdgcls(
+                                dbase=self.dbase,
+                                dialog=self,
+                                linkedtreewidget=self.ElemtreeWidget,
+                                gpsutil=self.gpsutil,
+                            )
+                        )
+
+                    else:  # tool dep
+                        toolwdglist.append(
+                            toolwdgcls(
+                                dbase=self.dbase,
+                                dialog=self,
+                                linkedtreewidget=self.ElemtreeWidget,
+                                gpsutil=self.gpsutil,
+                            )
+                        )
+
+                except TypeError as e:
+                    print(toolname, e)
+                    # raise TypeError
+                i += 1
+                self.connector.updateProgressBar(i)
+        """
 
         if not self.toolwidgets["desktop_loaded"] and fullloading:
             self.toolwidgets["desktop_loaded"] = True
