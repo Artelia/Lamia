@@ -24,12 +24,12 @@ def launchIface():
     #  sl_base3_urbandrainage_Lamia   sl_base3_waterdistribution_Lamia
     # sl_base3_constructionsite_Lamia   sl_base3_constructionsite_Orange
     # sl_base3_levee_Lamia      sl_base3_faunaflora_Lamia
-    worktype = "sl_base3_constructionsite_Lamia"
+    worktype = "sl_base3_levee_Lamia"
 
     SLFILE = os.path.join(testdir, worktype, "test01.sqlite")
 
     # SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue\test01.sqlite"
-    # SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue_base3\test01.sqlite"
+    SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue_base3\test01.sqlite"
 
     lamiawidget.loadDBase(dbtype="Spatialite", slfile=SLFILE)
 

@@ -3,7 +3,7 @@ import os, sys, qgis, qgis.core, platform
 from qgis.PyQt.QtWidgets import QDialog
 from qgis.PyQt.QtCore import QCoreApplication, QSettings, QTranslator, qVersion
 from qgis.PyQt import QtCore, uic
-from .settings import *
+from settings import *
 
 lamiapath = os.path.join(os.path.join(os.path.dirname(__file__)), "..")
 sys.path.append(lamiapath)

@@ -26,41 +26,48 @@ This file is part of LAMIA.
 import os, importlib
 import numpy as np
 import pandas as pd
-
+import Lamia
 import matplotlib
-matplotlib.use('agg')
+
+matplotlib.use("agg")
 import matplotlib.pyplot as plt
-font = {'family' : 'normal','weight' : 'bold','size'   : 8}
-matplotlib.rc('font', **font)
-#matplotlib.rc('xtick', labelsize=20)
-#matplotlib.rc('ytick', labelsize=20)
-from matplotlib.backends.backend_qt5agg import (FigureCanvasQTAgg as FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
+
+font = {"family": "normal", "weight": "bold", "size": 8}
+matplotlib.rc("font", **font)
+# matplotlib.rc('xtick', labelsize=20)
+# matplotlib.rc('ytick', labelsize=20)
+from matplotlib.backends.backend_qt5agg import (
+    FigureCanvasQTAgg as FigureCanvas,
+    NavigationToolbar2QT as NavigationToolbar,
+)
 
 
-
-class GraphMaker():
-
-
+class GraphMaker:
     def __init__(self, dbaseparser):
         self.dbase = dbaseparser
 
         self.figuretype = plt.figure()
         self.axtype = self.figuretype.add_subplot(111)
 
-        strtoexec = '..{}.lamiagraphfunc'.format(self.dbase.worktype.lower())
+        if self.dbase.base3version:
+            strtoexec = f"Lamia.worktypeconf.{self.dbase.worktype.lower()}.lamiagraph.lamiagraphfunc"
+        else:
+            strtoexec = f"..{self.dbase.worktype.lower()}.lamiagraphfunc"
         self.graphmodule = importlib.import_module(strtoexec, package=self.__module__)
         self.graphspec = self.graphmodule.getGraphSpec()
 
-    
-    def getGraphData(self,graphpk):
+    def getGraphData(self, graphpk):
 
-        graphtype = self.dbase.getValuesFromPk('graph',
-                            'graphsubtype',
-                            graphpk)
+        graphtype = self.dbase.getValuesFromPk("graph", "graphsubtype", graphpk)
         graphiquedatafields = list(self.graphspec[graphtype].keys())
-        fieldstorequest = ', '.join(graphiquedatafields)
+        fieldstorequest = ", ".join(graphiquedatafields)
 
-        sql = "SELECT " + fieldstorequest + " FROM graphdata WHERE lpk_graph = " + str(graphpk)
+        sql = (
+            "SELECT "
+            + fieldstorequest
+            + " FROM graphdata WHERE lpk_graph = "
+            + str(graphpk)
+        )
         sql += " ORDER BY pk_graphdata"
         query = self.dbase.query(sql)
         if not query:
@@ -70,20 +77,23 @@ class GraphMaker():
         lenrowresult = len(graphiquedatafields)
         resultfinal = []
 
-
         if len(result) > 0:
             for elem in result:
-                resultfinal.append([None]*lenrowresult)
+                resultfinal.append([None] * lenrowresult)
                 for i, field in enumerate(graphiquedatafields):
-                    dbasefield = self.dbase.dbasetables['graphdata']['fields'][field]
-                    if 'Cst' in dbasefield.keys():
+                    dbasefield = self.dbase.dbasetables["graphdata"]["fields"][field]
+                    if "Cst" in dbasefield.keys():
                         if elem[i] is None:
-                            valuetoset = ''
+                            valuetoset = ""
                         else:
                             valuetoset = elem[i]
-                        resultfinal[-1][i] = self.dbase.getConstraintTextFromRawValue('graphdata', field, valuetoset)
-                    elif (dbasefield['PGtype'] == 'INT'
-                            or dbasefield['PGtype'] == 'NUMERIC'):
+                        resultfinal[-1][i] = self.dbase.getConstraintTextFromRawValue(
+                            "graphdata", field, valuetoset
+                        )
+                    elif (
+                        dbasefield["PGtype"] == "INT"
+                        or dbasefield["PGtype"] == "NUMERIC"
+                    ):
                         if elem[i] is not None:
                             resultfinal[-1][i] = round(elem[i], 2)
                         else:
@@ -91,12 +101,9 @@ class GraphMaker():
 
         return resultfinal
 
+    def saveGraphData(self, featurepk, datas):
 
-    def saveGraphData(self,  featurepk, datas):
-
-        graphtype = self.dbase.getValuesFromPk('graph',
-                            'graphsubtype',
-                            featurepk)
+        graphtype = self.dbase.getValuesFromPk("graph", "graphsubtype", featurepk)
 
         sql = "DELETE FROM graphdata WHERE lpk_graph = " + str(featurepk)
         self.dbase.query(sql)
@@ -108,43 +115,39 @@ class GraphMaker():
                     VALUES( {', '.join(data)}, {featurepk} )   "
             self.dbase.query(sql)
 
-
-
     def showGraph(self, graphpk):
         self.figuretype.clf(keep_observers=True)
-        
+
         if graphpk is None:
             self.figuretype.canvas.draw()
             return
 
-        graphtype = self.dbase.getValuesFromPk('graph',
-                            'graphsubtype',
-                            graphpk)
+        graphtype = self.dbase.getValuesFromPk("graph", "graphsubtype", graphpk)
 
         graphdata = self.getGraphData(graphpk)
         if graphdata is None:
             self.figuretype.canvas.draw()
             return
 
-        pdgraphdata= pd.DataFrame(graphdata)
+        pdgraphdata = pd.DataFrame(graphdata)
         headersname = list(self.graphspec[graphtype].values())
         if len(pdgraphdata.columns) == len(headersname):
             pdgraphdata.columns = headersname
 
         if hasattr(self.graphmodule, graphtype):
-            func = getattr(self.graphmodule,graphtype)
-            func(self.figuretype,pdgraphdata)
+            func = getattr(self.graphmodule, graphtype)
+            func(self.figuretype, pdgraphdata)
 
         self.figuretype.canvas.draw()
-        
-    def exportgraph(self,featurepk,exportfile,width,height):
+
+    def exportgraph(self, featurepk, exportfile, width, height):
         self.showGraph(featurepk)
         self.figuretype.set_size_inches(width / 25.4, height / 25.4)
-        self.figuretype.savefig(exportfile, bbox_inches='tight', dpi=150)
+        self.figuretype.savefig(exportfile, bbox_inches="tight", dpi=150)
 
-    def isfloat(self,txt):
+    def isfloat(self, txt):
         try:
             float(txt)
-            return True 
+            return True
         except:
             return False
