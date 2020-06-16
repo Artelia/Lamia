@@ -25,31 +25,34 @@ This file is part of LAMIA.
  """
 import os, logging
 import pandas as pd
-from qgis.PyQt.QtWidgets import (QWidget, QVBoxLayout, QAbstractItemView, QHeaderView)
+from qgis.PyQt.QtWidgets import QWidget, QVBoxLayout, QAbstractItemView, QHeaderView
 from qgis.PyQt import uic, QtCore, QtGui
 
 from .subwidget_abstract import AbstractSubWidget
 from Lamia.libslamia.lamiatabcatalog.lamiatabcatalog import TabCatalog
 
+
 class CatalogWidget(AbstractSubWidget):
 
-    UIPATH = os.path.join(os.path.dirname(__file__), 'subwidget_getfromcatalog_ui.ui')
+    UIPATH = os.path.join(os.path.dirname(__file__), "subwidget_getfromcatalog_ui.ui")
 
-    def __init__(self, 
-                parentwdg=None,  
-                parentframe=None, 
-                catalogtype=None,
-                catalogname=None,
-                catalogsheet=None,
-                coltoshow=None,
-                sheetfield=None,
-                valuefield=None):
-        super(CatalogWidget, self).__init__(parentwdg=parentwdg,
-                                                parentframe=parentframe)
+    def __init__(
+        self,
+        parentwdg=None,
+        parentframe=None,
+        catalogtype=None,
+        catalogname=None,
+        catalogsheet=None,
+        coltoshow=None,
+        sheetfield=None,
+        valuefield=None,
+    ):
+        super(CatalogWidget, self).__init__(
+            parentwdg=parentwdg, parentframe=parentframe
+        )
 
-        self.tableView.setFont(QtGui.QFont("Times",7))
+        self.tableView.setFont(QtGui.QFont("Times", 7))
         self.tableView.setStyleSheet("QTableView { padding: 5px;}")
-        
 
         self.catalogname = catalogname
         self.coltoshow = coltoshow
@@ -61,7 +64,7 @@ class CatalogWidget(AbstractSubWidget):
         if catalogsheet:
             pandasformodel = self.pddatas[catalogname][catalogsheet][coltoshow]
             self.frame_sheet.setVisible(False)
-            self.model = PandasModel(data = pandasformodel)
+            self.model = PandasModel(data=pandasformodel)
         else:
             sheets = list(self.pddatas[catalogname].keys())
             for sheet in sheets:
@@ -70,11 +73,12 @@ class CatalogWidget(AbstractSubWidget):
 
             self.comboBox_sheet.currentIndexChanged.connect(self.updateTableModel)
             self.updateTableModel(0)
-        
+
         self.proxy = SortFilterProxyModel(self)
         self.proxy.setSourceModel(self.model)
         self.tableView.setModel(self.proxy)
         self.tableView.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.tableView.setWordWrap(True)
 
         self._resizeHeader()
 
@@ -83,64 +87,60 @@ class CatalogWidget(AbstractSubWidget):
         self.lineEdit_search.textChanged.connect(self.searchTxt)
         self.pushButton.clicked.connect(self.applyResults)
 
-
     def postSelectFeature(self):
-        self.lineEdit_search.setText('')
-
+        self.lineEdit_search.setText("")
 
     def applyResults(self):
-        if len(self.tableView.selectionModel().selectedRows()) == 0 :
+        if len(self.tableView.selectionModel().selectedRows()) == 0:
             return
 
-        proxysel = self.tableView.selectionModel().selection() 
+        proxysel = self.tableView.selectionModel().selection()
         modelsel = self.proxy.mapSelectionToSource(proxysel)
         rowindex = modelsel.indexes()[0].row()
 
-        dicttoapply={}
+        dicttoapply = {}
         for i, fieldname in enumerate(self.valuefield):
             dicttoapply[fieldname] = self.model.row(rowindex)[i]
         if self.sheetfield:
             dicttoapply[self.sheetfield] = self.comboBox_sheet.currentText()
 
-        self.parentwdg.formutils.applyResultDict(dicttoapply, checkifinforgottenfield=False)
+        self.parentwdg.formutils.applyResultDict(
+            dicttoapply, checkifinforgottenfield=False
+        )
 
     def updateTableModel(self, comboindex):
         combotext = self.comboBox_sheet.itemText(comboindex)
         pandasformodel = self.pddatas[self.catalogname][combotext][self.coltoshow]
         # pandasformodel = self.pddatas[self.catalogname][combotext]
 
-        self.model = PandasModel(data = pandasformodel)
+        self.model = PandasModel(data=pandasformodel)
 
-        if hasattr(self,'proxy'):
+        if hasattr(self, "proxy"):
             self.proxy.setSourceModel(self.model)
             self.tableView.setModel(self.proxy)
-            self.lineEdit_search.setText('')
+            self.lineEdit_search.setText("")
         self._resizeHeader()
 
     def _resizeHeader(self):
         header = self.tableView.horizontalHeader()
-        header.resizeSections(QHeaderView.ResizeToContents)
-        self.tableView.verticalHeader().resizeSections(QHeaderView.ResizeToContents)
+        self.tableView.resizeColumnToContents(0)
+        header.setStretchLastSection(True)
 
-    def _testColsinSheet(self,sheetname):
+    def _testColsinSheet(self, sheetname):
         # for sheetname in list(self.pddatas[self.catalogname].keys()):
-        pandasformodeltotalcols = self.pddatas[self.catalogname][sheetname].columns.tolist()
-        if all(elem in pandasformodeltotalcols  for elem in self.coltoshow ): 
+        pandasformodeltotalcols = self.pddatas[self.catalogname][
+            sheetname
+        ].columns.tolist()
+        if all(elem in pandasformodeltotalcols for elem in self.coltoshow):
             return True
         else:
             return False
 
     def loadCatalogInTable(self, sheetname=None, coltoshow=None):
 
-        for row in csv.reader(fileInput):    
-            items = [
-                QtGui.QStandardItem(field)
-                for field in row
-            ]
+        for row in csv.reader(fileInput):
+            items = [QtGui.QStandardItem(field) for field in row]
             self.model.appendRow(items)
-
-
-
 
     def searchTxt(self, newtxt):
         # search = QtCore.QRegExp(  newtxt,
@@ -148,15 +148,15 @@ class CatalogWidget(AbstractSubWidget):
         #                                 QtCore.QRegExp.RegExp
         #                                 )
 
-
         self.proxy.setFilterStringandColumn(newtxt, self.coltoshow)
-
+        # self._resizeHeader()
 
 
 class PandasModel(QtCore.QAbstractTableModel):
     """
     Class to populate a table view with a pandas dataframe
     """
+
     def __init__(self, data, parent=None):
         QtCore.QAbstractTableModel.__init__(self, parent)
         self._data = data
@@ -183,7 +183,6 @@ class PandasModel(QtCore.QAbstractTableModel):
         return self._data.iloc[rowindex]
 
 
-
 class SortFilterProxyModel(QtCore.QSortFilterProxyModel):
     def __init__(self, *args, **kwargs):
         QtCore.QSortFilterProxyModel.__init__(self, *args, **kwargs)
@@ -191,18 +190,21 @@ class SortFilterProxyModel(QtCore.QSortFilterProxyModel):
         # self.filterColumns = []
         self.pdresult = None
 
-    def setFilterStringandColumn(self, searchstr,cols):
+    def setFilterStringandColumn(self, searchstr, cols):
         # self.filterString = searchstr.lower()
         # self.filterColumns = cols
 
         resultslist = []
         for col in cols:
-            resultslist.append( self.sourceModel()._data[col].str.contains(searchstr,case=False , regex=False) )
+            resultslist.append(
+                self.sourceModel()
+                ._data[col]
+                .str.contains(searchstr, case=False, regex=False)
+            )
         concatpd = pd.concat(resultslist, axis=1)
-        self.pdresult = concatpd.any(axis='columns')
+        self.pdresult = concatpd.any(axis="columns")
 
         self.invalidateFilter()
-
 
     def filterAcceptsRow(self, source_row, source_parent):
         if self.pdresult is not None:

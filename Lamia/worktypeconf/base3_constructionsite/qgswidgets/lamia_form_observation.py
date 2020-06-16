@@ -409,7 +409,7 @@ class NcaLamia(QWidget):
         uipath = os.path.join(
             os.path.dirname(__file__),
             "ncawidget",
-            "lamiabase_cs_observation_nca_lamia.ui",
+            "lamia_form_observation_nca_lamia.ui",
         )
         uic.loadUi(uipath, self)
 
@@ -420,6 +420,6 @@ class NcaOrange(QWidget):
         uipath = os.path.join(
             os.path.dirname(__file__),
             "ncawidget",
-            "lamiabase_cs_observation_nca_orange.ui",
+            "lamia_form_observation_nca_orange.ui",
         )
         uic.loadUi(uipath, self)

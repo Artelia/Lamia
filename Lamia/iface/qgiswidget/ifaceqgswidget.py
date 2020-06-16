@@ -160,9 +160,8 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         self.currenttoolwidget = None
         self.imagedirectory = None
         self.currentchoosertreewidget = None
-        self.toolbarsvisibility = (
-            {}
-        )  # store qgis tool bar visibility when entering/exiting field mode
+        # store qgis tool bar visibility when entering/exiting field mode
+        self.toolbarsvisibility = {}
 
         # subdialogs
         self.newDBDialog = newDBDialog()
@@ -179,6 +178,7 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
             self.imagedirectory = None
 
         # ************** Init actions ******************
+        self._manageQgisDockWidgetOnStart()
         self._connectMenuAndOthers()
         self._connectToolBar()
         self._readRecentDBase()
@@ -690,37 +690,6 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
                 self.loadToolsWidgets(fullloading=True)
 
         self._applyVisualMode()
-        if self.interfacemode == 0:
-            self._unloadQgisToolbar()
-        else:
-            self._reloadQgisToolbar()
-
-    def _unloadQgisToolbar(self):
-        if not qgis.utils.iface:
-            return
-
-        for x in qgis.utils.iface.mainWindow().findChildren(QToolBar):
-            self.toolbarsvisibility[x.objectName()] = x.isVisible()
-            if x.objectName() not in [
-                "Lamia",
-                "mFileToolBar",
-                "mSnappingToolBar",
-                "lamiatoolBarFormCreation",
-                "lamiatoolBarFormGeom",
-                "lamiatoolbareditlayer",
-                "lamiatoolBartools",
-            ]:
-                x.setVisible(False)
-
-    def _reloadQgisToolbar(self):
-        if not qgis.utils.iface:
-            return
-        if not len(self.toolbarsvisibility):
-            return
-        for x in qgis.utils.iface.mainWindow().findChildren(QToolBar):
-            if x.objectName() in self.toolbarsvisibility.keys():
-                x.setVisible(self.toolbarsvisibility[x.objectName()])
-        self.toolbarsvisibility = {}
 
     def _applyVisualMode(self, actiontext=None):
 
@@ -1350,6 +1319,46 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         elif platform.system() == "Windows":
             subprocess.Popen(f'explorer "{os.path.dirname(Lamia.__file__)}"')
 
+    def showHideQgisToolbars(self):
+        if not len(self.toolbarsvisibility):
+            self._unloadQgisToolbar()
+        else:
+            self._reloadQgisToolbar()
+
+    def _unloadQgisToolbar(self):
+        if not qgis.utils.iface:
+            return
+
+        for x in qgis.utils.iface.mainWindow().findChildren(QToolBar):
+            self.toolbarsvisibility[x.objectName()] = x.isVisible()
+            if x.objectName() not in [
+                "Lamia",
+                "mFileToolBar",
+                "mSnappingToolBar",
+                "lamiatoolBarFormCreation",
+                "lamiatoolBarFormGeom",
+                "lamiatoolbareditlayer",
+                "lamiatoolBartools",
+            ]:
+                x.setVisible(False)
+
+    def _reloadQgisToolbar(self):
+        if not qgis.utils.iface:
+            return
+        if not len(self.toolbarsvisibility):
+            return
+        for x in qgis.utils.iface.mainWindow().findChildren(QToolBar):
+            if x.objectName() in self.toolbarsvisibility.keys():
+                x.setVisible(self.toolbarsvisibility[x.objectName()])
+        self.toolbarsvisibility = {}
+
+    def _manageQgisDockWidgetOnStart(self):
+        for x in qgis.utils.iface.mainWindow().findChildren(QDockWidget):
+            if x.objectName() == "GPSInformation":
+                x.setVisible(True)
+            elif x.objectName() == "LayerStyling":
+                x.setVisible(False)
+
     # *************************************************************
     # About menu
     # *************************************************************
@@ -1488,6 +1497,7 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         self.action_Repertoire_photo.triggered.connect(self.setImageDir)
         self.actionOpen_project_directory.triggered.connect(self.openProjectDir)
         self.actionOpen_Lamia_directory.triggered.connect(self.openLamiaDir)
+        self.actionShow_Hide_QGis_toolbars.triggered.connect(self.showHideQgisToolbars)
 
         # about menu
         self.actionAide.triggered.connect(self.openHelp)
@@ -1498,7 +1508,8 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
 
         # on exit qgis : restore toolbars
         if qgis.utils.iface is not None:
-            qgis.utils.iface.actionExit().triggered.connect(self._reloadQgisToolbar)
+            qgis.core.QgsProject.instance().cleared.connect(self._reloadQgisToolbar)
+            # qgis.utils.iface.actionExit().triggered.connect(self._reloadQgisToolbar)
 
     def selectFeature(self):
         pointemitter = self.qgiscanvas.pointEmitter

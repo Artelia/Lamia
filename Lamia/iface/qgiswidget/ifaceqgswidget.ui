@@ -657,6 +657,8 @@ background-color: rgb(255, 255, 255);</string>
     <addaction name="separator"/>
     <addaction name="actionOpen_project_directory"/>
     <addaction name="actionOpen_Lamia_directory"/>
+    <addaction name="separator"/>
+    <addaction name="actionShow_Hide_QGis_toolbars"/>
    </widget>
    <widget class="QMenu" name="menuMode">
     <property name="title">
@@ -1065,6 +1067,11 @@ background-color: rgb(255, 255, 255);</string>
   <action name="actionOpen_Lamia_directory">
    <property name="text">
     <string>Open Lamia directory</string>
+   </property>
+  </action>
+  <action name="actionShow_Hide_QGis_toolbars">
+   <property name="text">
+    <string>Show/Hide QGis toolbars</string>
    </property>
   </action>
  </widget>
