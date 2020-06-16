@@ -1,0 +1,1384 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="fr" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="fr" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Lamia.dbasemanager.dbaseparserabstract &mdash; Documentation LAMIA 1.0</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/js/custom.js"></script>
+        <script src="../../../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../search.html" />
+<script>
+
+	window.onload = function () {
+		var url = window.location.toString()
+		selectorvalue = $('#languageselector').val()
+
+		if (url.includes('/fr/')) {
+			if (selectorvalue != 'fr') {
+				$('#languageselector').val("fr")
+			}
+		} else if (url.includes('/en/')) {
+			if (selectorvalue != 'en') {
+				$('#languageselector').val("en")
+			}
+		}
+	};
+
+	function languageSelector(selectObject) {
+		var value = selectObject.value;
+		var url = window.location.toString()
+
+		if (url.includes('/fr/')) {
+			window.location = url.replace(/fr/, value);
+		} else if (url.includes('/en/')) {
+			window.location = url.replace(/en/, value);
+		} else {
+			window.location = url
+		}
+	}
+</script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #004F83" >
+          
+
+
+          
+            <a href="../../../index.html" class="icon icon-home"> LAMIA
+          
+
+          
+            
+            <img src="../../../_static/icon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+
+<select id='languageselector' style="width: 100% ;border-radius: 20px 20px 20px 20px;"
+	onchange="languageSelector(this)">
+	<option value="en">English documentation</option>
+	<option value="fr">Documentation français</option>
+</select>
+
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Documentation utilisateur en français</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../fr/00_index.html">Documentation en français</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../fr/01_introduction.html">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../fr/03_00_tutoriel.html">Tutoriel</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../fr/03_01_installation.html">Installation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../fr/03_01_installation.html#librairies-necessaires-en-supplement-de-l-installation-de-qgis">Librairies nécessaires en supplément de l’installation de QGis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../fr/03_01_installation.html#installation-de-qgis-et-des-librairies-sous-windows">Installation de QGis et des librairies sous windows</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../fr/03_01_installation.html#installation-de-qgis-et-des-librairies-sous-linux">Installation de QGis et des librairies sous Linux</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../fr/03_01_installation.html#installation-de-lamia">Installation de Lamia</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../fr/03_02_la_base_de_donnees.html">La base de données</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../fr/03_02_la_base_de_donnees.html#l-organisation-generale">L’organisation générale</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../fr/03_02_la_base_de_donnees.html#la-table-objet">La table Objet</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../fr/03_03_prise_en_main_rapide.html">Prise en main rapide</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../fr/03_03_prise_en_main_rapide.html#creer-sa-premiere-base-de-donnees">Créer sa première base de données</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../fr/03_03_prise_en_main_rapide.html#decouverte-de-linterface">Découverte de l’interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../fr/03_03_prise_en_main_rapide.html#cest-parti-premiere-saisie">C’est parti : première saisie</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../fr/03_03_prise_en_main_rapide.html#configuration-minimale-de-lamia">Configuration minimale de Lamia</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../fr/03_03_prise_en_main_rapide.html#j-ai-un-bug">J’ai un bug !!</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../fr/03_04_presentation_complete.html">Présentation Complète</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../fr/03_04_presentation_complete.html#le-menu">Le menu</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../fr/03_04_presentation_complete.html#la-barre-d-outils">La barre d’outils:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../fr/03_04_presentation_complete.html#elements-de-configuration">Elements de configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../fr/03_05_description_modules_postpro.html">Description des modules de Post Traitement</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../fr/src_lamia_postpro/01_impression_rapport.html">Impression de rapports</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../fr/src_lamia_postpro/02_import.html">Import de données dans Lamia</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">User english documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../en/00_index.html">English documentation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/00_index.html">Doc for developpers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../dev/04_developpement.html">Developpement</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../dev/04_developpement.html#fonctionnement-general">Fonctionnement général</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../dev/04_developpement.html#installation-de-lenvironnement-de-developpement-windows">Installation de l’environnement de développement - windows</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../dev/04_developpement.html#install-de-qgis">Install de QGis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../dev/04_developpement.html#install-de-pycharm">Install de Pycharm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../dev/04_developpement.html#script-pour-demarrer-pycharm">Script pour démarrer PyCharm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../dev/04_developpement.html#configuration-de-pycharm">Configuration de PyCharm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../dev/04_developpement.html#test-de-la-configuration">Test de la configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../dev/04_developpement.html#faire-fonctionner-pip">faire fonctionner pip</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../dev/04_developpement.html#cas-pratique-creation-dun-nouveau-module-de-post-traitement">Cas pratique : création d’un nouveau module de post-traitement</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dev/05_00_API.html">API Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../dev/src_api/05_01_dbasemanager.html">dbasemanager Module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../dev/src_api/05_01_dbasemanager_dbaseparserabstract.html">AbstractDBaseParser</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../dev/src_api/05_01_dbasemanager_dbaseutils.html">dbaseutils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../dev/src_api/05_01_dbasemanager_dbconfigreader.html">DBconfigReader</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../dev/src_api/05_02_iface.html">QGis interface widgets</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../dev/src_api/05_02_iface_ifaceqgswidget.html">LamiaWindowWidget</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../dev/src_api/05_02_iface_lamia_abstracttool.html">AbstractLamiaTool</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../dev/src_api/05_02_iface_lamia_abstractformtool.html">AbstractLamiaFormTool</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">LAMIA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Code du module</a> &raquo;</li>
+        
+      <li>Lamia.dbasemanager.dbaseparserabstract</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+           <div itemprop="articleBody">
+            
+  <h1>Code source de Lamia.dbasemanager.dbaseparserabstract</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This file is part of LAMIA.</span>
+
+<span class="sd">    LAMIA is free software: you can redistribute it and/or modify</span>
+<span class="sd">    it under the terms of the GNU General Public License as published by</span>
+<span class="sd">    the Free Software Foundation, either version 3 of the License, or</span>
+<span class="sd">    (at your option) any later version.</span>
+
+<span class="sd">    LAMIA is distributed in the hope that it will be useful,</span>
+<span class="sd">    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="sd">    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="sd">    GNU General Public License for more details.</span>
+
+<span class="sd">    You should have received a copy of the GNU General Public License</span>
+<span class="sd">    along with Foobar.  If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  * Copyright (c) 2017-2020 ARTELIA Commit &lt;lamia@arteliagroup.com&gt;</span>
+<span class="sd">  * </span>
+<span class="sd">  * SPDX-License-Identifier: GPL-3.0-or-later</span>
+<span class="sd">  * License-Filename: LICENSING.md</span>
+<span class="sd"> &quot;&quot;&quot;</span>
+
+<span class="kn">import</span>  <span class="nn">datetime</span> 
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">re</span><span class="o">,</span> <span class="nn">logging</span><span class="o">,</span> <span class="nn">shutil</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">PIL</span>
+    <span class="kn">import</span> <span class="nn">PIL.Image</span>
+    <span class="n">PILexists</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">PILexists</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="kn">from</span> <span class="nn">..libslamia.lamiareg.updatereg</span> <span class="kn">import</span> <span class="n">updateWinReg</span>
+<span class="kn">from</span> <span class="nn">.dbconfigreader</span> <span class="kn">import</span> <span class="n">DBconfigReader</span>
+<span class="kn">from</span> <span class="nn">.dbaseofflinemanager</span> <span class="kn">import</span> <span class="n">DBaseOfflineManager</span>
+<span class="kn">from</span> <span class="nn">..iface.ifaceabstractconnector</span> <span class="kn">import</span> <span class="n">LamiaIFaceAbstractConnectors</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">dbaseutils</span>
+
+
+
+<span class="n">PGTYPE_TO_SLTYPE</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;VARCHAR&#39;</span> <span class="p">:</span> <span class="s1">&#39;TEXT&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;INT&#39;</span> <span class="p">:</span> <span class="s1">&#39;INTEGER&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;SERIAL PRIMARY KEY&#39;</span> <span class="p">:</span> <span class="s1">&#39;INTEGER PRIMARY KEY AUTOINCREMENT&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;TIMESTAMP&#39;</span> <span class="p">:</span> <span class="s1">&#39;TEXT&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;TEXT&#39;</span> <span class="p">:</span> <span class="s1">&#39;TEXT&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;TIMESTAMP WITH TIME ZONE&#39;</span> <span class="p">:</span> <span class="s1">&#39;TEXT&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;REAL&#39;</span><span class="p">:</span> <span class="s1">&#39;REAL&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;NUMERIC&#39;</span><span class="p">:</span> <span class="s1">&#39;REAL&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;BOOLEAN&#39;</span> <span class="p">:</span> <span class="s1">&#39;INTEGER&#39;</span><span class="p">}</span>
+
+<span class="n">PROJECTCONFIGDIRS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;dbase&#39;</span><span class="p">,</span> <span class="s1">&#39;rapporttools&#39;</span><span class="p">,</span> <span class="s1">&#39;styles&#39;</span><span class="p">,</span> <span class="s1">&#39;importtools&#39;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="AbstractDBaseParser"><a class="viewcode-back" href="../../../dev/src_api/05_01_dbasemanager_dbaseparserabstract.html#Lamia.dbasemanager.dbaseparserabstract.AbstractDBaseParser">[docs]</a><span class="k">class</span> <span class="nc">AbstractDBaseParser</span><span class="p">():</span>
+
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parserfactory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">messageinstance</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Read the dbase</span>
+
+<span class="sd">        :param parserfactory: the parent class</span>
+<span class="sd">        :type parserfactory: [type], optional</span>
+<span class="sd">        :param messageinstance: [description], defaults to None</span>
+<span class="sd">        :type messageinstance: [type], optional</span>
+<span class="sd">        :raises ImportError: [description]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1">#:the dictionnary of dbase (cf DBconfigReader)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">messageinstance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">messageinstance</span> <span class="o">=</span> <span class="n">LamiaIFaceAbstractConnectors</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">messageinstance</span> <span class="o">=</span> <span class="n">messageinstance</span>
+
+        <span class="c1">#utils</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">utils</span> <span class="o">=</span> <span class="n">dbaseutils</span>
+
+        <span class="c1">#:dbase type : Base2_digue, Base2_assainissement ....</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">worktype</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#:dbase variante</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">variante</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: crs of dbase int</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">crsnumber</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1">#:ressources dir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dbaseressourcesdirectory</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1">#:the parser class (used to create another dbaseparser if needed)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parserfactory</span> <span class="o">=</span> <span class="n">parserfactory</span>
+
+        <span class="c1">#:the config reader instance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span> <span class="o">=</span> <span class="n">DBconfigReader</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="c1">#:the offline manager instance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dbaseofflinemanager</span> <span class="o">=</span> <span class="n">DBaseOfflineManager</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="c1">#:for debug purpose</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">printsql</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">base3version</span> <span class="o">=</span> <span class="kc">False</span>   <span class="c1">#for transition beetween base2 and base3 model</span>
+
+        <span class="c1"># ?? temp variable for export</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">featureaddedid</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">imagedirectory</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#:visual mode used in ui</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">visualmode</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1">#  not used yet</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">searchbuffer</span> <span class="o">=</span> <span class="mi">20</span>
+        <span class="c1"># used to define the working date in db</span>
+        <span class="c1">#self.workingdate = QtCore.QDate.currentDate().toString(&#39;yyyy-MM-dd&#39;)</span>
+        <span class="c1">#self.workingdate = datetime.now().strftime(&quot;%Y-%m-%d %H:%M:%S&quot;)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">workingdate</span> <span class="o">=</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># self.workingdate = (datetime.datetime.now()).strftime(&quot;%Y-%m-%d&quot;)</span>
+
+        <span class="c1"># the current prestation id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentprestationid</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">baseversion</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># dbase version</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">workversion</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># dbase version</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">revisionwork</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentrevision</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxrevision</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">forcenocommit</span><span class="o">=</span><span class="kc">False</span>        <span class="c1">#force query to no commit</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">connectconf</span> <span class="o">=</span> <span class="kc">None</span>    <span class="c1">#dict of connection data</span>
+
+        <span class="c1">#:language setting</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">locale</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">qgis.PyQt.QtCore</span> <span class="kn">import</span> <span class="n">QSettings</span>
+            <span class="k">if</span> <span class="n">QSettings</span><span class="p">()</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="s1">&#39;locale/userLocale&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">locale</span> <span class="o">=</span> <span class="n">QSettings</span><span class="p">()</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="s1">&#39;locale/userLocale&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">locale</span>
+            <span class="n">localelang</span><span class="p">,</span> <span class="n">encod</span> <span class="o">=</span> <span class="n">locale</span><span class="o">.</span><span class="n">getdefaultlocale</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">locale</span> <span class="o">=</span> <span class="n">localelang</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+
+
+
+
+    <span class="k">def</span> <span class="nf">__________________________DBase_handing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">connectToDBase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="nf">getDBName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+<div class="viewcode-block" id="AbstractDBaseParser.createDBase"><a class="viewcode-back" href="../../../dev/src_api/05_01_dbasemanager_dbaseparserabstract.html#Lamia.dbasemanager.dbaseparserabstract.AbstractDBaseParser.createDBase">[docs]</a>    <span class="k">def</span> <span class="nf">createDBase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                    <span class="n">crs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+                    <span class="n">worktype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+                    <span class="n">dbaseressourcesdirectory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+                    <span class="n">variante</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        kwargs for postgis :</span>
+<span class="sd">          host=&#39;localhost&#39;, </span>
+<span class="sd">          port=None, </span>
+<span class="sd">          dbname=None, </span>
+<span class="sd">          schema=None, </span>
+<span class="sd">          user=None,  </span>
+<span class="sd">          password=None</span>
+<span class="sd">        kwargs for spatialite :</span>
+<span class="sd">          slfile = slfile</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">initDBase</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">crsnumber</span> <span class="o">=</span> <span class="n">crs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">variante</span> <span class="o">=</span> <span class="n">variante</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">worktype</span> <span class="o">=</span> <span class="n">worktype</span>
+
+        <span class="n">baseversion</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;baseversion&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">workversion</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;workversion&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">createDBDictionary</span><span class="p">(</span><span class="n">worktype</span><span class="o">=</span><span class="n">worktype</span><span class="p">,</span>
+                                               <span class="n">baseversiontoread</span><span class="o">=</span><span class="n">baseversion</span><span class="p">,</span>
+                                                <span class="n">workversiontoread</span><span class="o">=</span><span class="n">workversion</span><span class="p">)</span>
+        <span class="n">finaldbaseressourcesdirectory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">createRessourcesDir</span><span class="p">(</span><span class="n">dbaseressourcesdirectory</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># sqlfile contains output of dbase creation script</span>
+        <span class="n">sqlfile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">finaldbaseressourcesdirectory</span><span class="p">,</span> <span class="s1">&#39;sqlcreation.txt&#39;</span><span class="p">)</span>
+        <span class="n">openedsqlfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">sqlfile</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">connectToDBase</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># Tables creation</span>
+        <span class="k">for</span> <span class="n">order</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">dbname</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">dbname</span><span class="p">][</span><span class="s1">&#39;order&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">order</span><span class="p">:</span>
+                    <span class="n">sql</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generateSQLTableCreationFromDBConfig</span><span class="p">(</span><span class="n">dbname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">dbname</span><span class="p">],</span> <span class="n">crs</span><span class="p">)</span>
+                    <span class="n">openedsqlfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">sql</span><span class="p">[</span><span class="s1">&#39;main&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">[</span><span class="s1">&#39;main&#39;</span><span class="p">])</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="s1">&#39;other&#39;</span> <span class="ow">in</span> <span class="n">sql</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                        <span class="k">for</span> <span class="n">sqlother</span> <span class="ow">in</span> <span class="n">sql</span><span class="p">[</span><span class="s1">&#39;other&#39;</span><span class="p">]:</span>
+                            <span class="n">openedsqlfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">sqlother</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                            <span class="c1"># print(sqlother)</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sqlother</span><span class="p">)</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+        <span class="c1"># init table configZ</span>
+        <span class="k">if</span> <span class="n">dbaseressourcesdirectory</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s1">&#39;slfile&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">dbaseressourcesdirectoryrelative</span> <span class="o">=</span> <span class="s1">&#39;.//DBspatialite&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dbaseressourcesdirectoryrelative</span> <span class="o">=</span> <span class="n">finaldbaseressourcesdirectory</span>
+
+        <span class="c1">## Basedonnees table</span>
+        <span class="n">versionsql</span> <span class="o">=</span> <span class="s2">&quot;&#39;&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">baseversion</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;&#39;&quot;</span>
+        <span class="n">workversionsql</span> <span class="o">=</span> <span class="s2">&quot;&#39;&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">workversion</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;&#39;&quot;</span>
+        <span class="k">if</span> <span class="n">variante</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">variantesql</span> <span class="o">=</span> <span class="s1">&#39;NULL&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">variantesql</span> <span class="o">=</span> <span class="s2">&quot;&#39;&quot;</span> <span class="o">+</span> <span class="n">variante</span> <span class="o">+</span> <span class="s2">&quot;&#39;&quot;</span>
+        
+        <span class="k">if</span> <span class="s1">&#39;Basedonnees&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">dbasetables</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;INSERT INTO Basedonnees (metier,repertoireressources,crs, version, workversion, variante) &quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;INSERT INTO database (businessline,resourcesdirectory,crs, baseversion, workversion, variant) &quot;</span>
+        <span class="n">sql</span> <span class="o">+=</span> <span class="s2">&quot;VALUES(&#39;&quot;</span> <span class="o">+</span> <span class="n">worktype</span> <span class="o">+</span> <span class="s2">&quot;&#39;,&#39;&quot;</span> <span class="o">+</span> <span class="n">dbaseressourcesdirectoryrelative</span> <span class="o">+</span> <span class="s2">&quot;&#39;,&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">crs</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="n">versionsql</span>
+        <span class="n">sql</span> <span class="o">+=</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="n">workversionsql</span> <span class="o">+</span>  <span class="s1">&#39;,&#39;</span> <span class="o">+</span> <span class="n">variantesql</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+        <span class="c1">#Revision table</span>
+        <span class="n">datecreation</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="s1">&#39;Basedonnees&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">dbasetables</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;INSERT INTO Revision (datetimerevision, commentaire) &quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;INSERT INTO revision (datetimerevision, comment) &quot;</span>
+        <span class="n">sql</span> <span class="o">+=</span> <span class="s2">&quot;VALUES(&#39;&quot;</span> <span class="o">+</span> <span class="n">datecreation</span> <span class="o">+</span> <span class="s2">&quot;&#39;,&#39;Premiere version &#39;);&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+        
+    
+        <span class="c1"># Views creation</span>
+        <span class="k">for</span> <span class="n">dbname</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">dbasetables</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">dbasetable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">dbname</span><span class="p">]</span>
+
+            <span class="n">sqls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generateSQLViewCreationFromDBConfig</span><span class="p">(</span><span class="n">dbname</span><span class="p">,</span> <span class="n">dbasetable</span><span class="p">,</span> <span class="n">worktype</span><span class="p">,</span> <span class="n">crs</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">sql</span> <span class="ow">in</span> <span class="n">sqls</span><span class="p">:</span>
+                <span class="n">openedsqlfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">sql</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+ 
+
+        <span class="n">openedsqlfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">generateSQLTableCreationFromDBConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="nf">generateSQLViewCreationFromDBConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+<div class="viewcode-block" id="AbstractDBaseParser.loadDBase"><a class="viewcode-back" href="../../../dev/src_api/05_01_dbasemanager_dbaseparserabstract.html#Lamia.dbasemanager.dbaseparserabstract.AbstractDBaseParser.loadDBase">[docs]</a>    <span class="k">def</span> <span class="nf">loadDBase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        kwargs for postgis :</span>
+<span class="sd">            host, </span>
+<span class="sd">            port, </span>
+<span class="sd">            dbname, </span>
+<span class="sd">            schema, </span>
+<span class="sd">            user, </span>
+<span class="sd">            password</span>
+<span class="sd">        kwargs for spatialite : </span>
+<span class="sd">            slfile</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connectconf</span> <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connectToDBase</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+        <span class="c1">#init variables</span>
+        <span class="c1"># sql = &quot;SELECT metier, repertoireressources,crs, version, workversion, variante   FROM Basedonnees;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;database&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">getTables</span><span class="p">():</span>
+            <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT businessline, resourcesdirectory,crs, baseversion, workversion, variant   FROM database&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT metier, repertoireressources,crs, version, workversion, variante   FROM Basedonnees&quot;</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+        <span class="n">worktype</span><span class="p">,</span> <span class="n">resdir</span><span class="p">,</span> <span class="n">crs</span> <span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">workversion</span><span class="p">,</span> <span class="n">variante</span>  <span class="o">=</span> <span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">query</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+
+        <span class="k">if</span> <span class="n">resdir</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;.&#39;</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s1">&#39;spatialitefile&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dbaseressourcesdirectory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spatialitefile</span> <span class="p">),</span> <span class="n">resdir</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dbaseressourcesdirectory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">resdir</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">crsnumber</span> <span class="o">=</span> <span class="n">crs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">baseversion</span> <span class="o">=</span> <span class="n">version</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">workversion</span> <span class="o">=</span> <span class="n">workversion</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">variante</span> <span class="o">=</span> <span class="n">variante</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">worktype</span> <span class="o">=</span> <span class="n">worktype</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxrevision</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getLastPK</span><span class="p">(</span><span class="s1">&#39;Revision&#39;</span><span class="p">)</span>
+
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">createDBDictionary</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">worktype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">dbasetables</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">baseversion</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">maxbaseversion</span> 
+                <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">workversion</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">maxworkversion</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">updateDBaseVersion</span><span class="p">()</span>
+
+        <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT MAX(pk_revision) FROM Revision;&quot;</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentrevision</span> <span class="o">=</span> <span class="n">query</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">base3version</span> <span class="o">=</span> <span class="ow">not</span> <span class="p">(</span><span class="s1">&#39;Basedonnees&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">updateWinReg</span><span class="p">(</span><span class="n">worktype</span><span class="o">=</span><span class="n">worktype</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">initDBase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="nf">updateDBaseVersion</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">debug</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1"># if (self.baseversion &lt; self.dbconfigreader.maxbaseversion </span>
+        <span class="c1">#         or self.workversion &lt; self.dbconfigreader.maxworkversion):</span>
+
+        <span class="c1"># indexbaseversion = [ver[0] for ver in baseversions].index(self.version)</span>
+        <span class="c1"># indexworkversion = [ver[0] for ver in workversions].index(self.workversion)</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia_unittest&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;currentbaseversion </span><span class="si">%s</span><span class="s1"> - verions : </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseversion</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">baseversionnumbers</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia_unittest&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;currentworkversion </span><span class="si">%s</span><span class="s1"> - verions : </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">workversion</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">workversionnumbers</span><span class="p">)</span>
+        <span class="n">indexbaseversion</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">baseversionnumbers</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">baseversion</span><span class="p">)</span>
+        <span class="n">indexworkversion</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">workversionnumbers</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">workversion</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">indexversion</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">indexbaseversion</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">baseversionnumbers</span><span class="p">)</span> <span class="o">-</span><span class="mi">1</span> <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_updateTables</span><span class="p">(</span><span class="s1">&#39;base&#39;</span><span class="p">,</span>
+                              <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">baseversionnumbers</span><span class="p">[</span><span class="n">indexversion</span><span class="p">],</span>
+                              <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">baseversionnumbers</span><span class="p">[</span><span class="n">indexversion</span> <span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="p">)</span>
+
+
+        <span class="k">for</span> <span class="n">indexversion</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">indexworkversion</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">workversionnumbers</span><span class="p">)</span> <span class="o">-</span><span class="mi">1</span> <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_updateTables</span><span class="p">(</span><span class="s1">&#39;work&#39;</span><span class="p">,</span>
+                              <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">workversionnumbers</span><span class="p">[</span><span class="n">indexversion</span><span class="p">],</span>
+                              <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">workversionnumbers</span><span class="p">[</span><span class="n">indexversion</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia_unittest&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;currentbaseversion </span><span class="si">%s</span><span class="s1"> - verions : </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseversion</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">baseversionnumbers</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia_unittest&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;currentworkversion </span><span class="si">%s</span><span class="s1"> - verions : </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">workversion</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">workversionnumbers</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_updateTables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typebase</span><span class="p">,</span> <span class="n">oldversion</span><span class="p">,</span> <span class="n">newversion</span> <span class="p">):</span>
+
+        <span class="n">debug</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia_unittest&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39; </span><span class="si">%s</span><span class="s1"> - old : </span><span class="si">%s</span><span class="s1">, new : </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">typebase</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">oldversion</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">newversion</span><span class="p">))</span>
+        
+        <span class="n">baseversions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">baseversionnumbers</span>
+        <span class="n">workversions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">workversionnumbers</span>
+        
+        <span class="c1">#get old and new dict</span>
+        <span class="k">if</span> <span class="n">typebase</span> <span class="o">==</span> <span class="s1">&#39;base&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">createDBDictionary</span><span class="p">(</span><span class="n">worktype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">worktype</span><span class="p">,</span>
+                                                    <span class="n">baseversiontoread</span><span class="o">=</span><span class="n">oldversion</span><span class="p">,</span>
+                                                    <span class="n">workversiontoread</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">workversion</span><span class="p">)</span>
+            <span class="n">dictold</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">basedict</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">createDBDictionary</span><span class="p">(</span><span class="n">worktype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">worktype</span><span class="p">,</span>
+                                                    <span class="n">baseversiontoread</span><span class="o">=</span><span class="n">newversion</span><span class="p">,</span>
+                                                    <span class="n">workversiontoread</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">workversion</span><span class="p">)</span>
+            <span class="n">dictnew</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">basedict</span>
+            <span class="n">indexbaseversionspathlist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">baseversionnumbers</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">newversion</span><span class="p">)</span>
+            <span class="n">pythonupdatefile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">baseversionspathlist</span><span class="p">[</span><span class="n">indexbaseversionspathlist</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">typebase</span> <span class="o">==</span> <span class="s1">&#39;work&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">createDBDictionary</span><span class="p">(</span><span class="n">worktype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">worktype</span><span class="p">,</span>
+                                                    <span class="n">baseversiontoread</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">baseversion</span><span class="p">,</span>
+                                                    <span class="n">workversiontoread</span><span class="o">=</span><span class="n">oldversion</span><span class="p">)</span>
+            <span class="n">dictold</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">workdict</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">createDBDictionary</span><span class="p">(</span><span class="n">worktype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">worktype</span><span class="p">,</span>
+                                                    <span class="n">baseversiontoread</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">baseversion</span><span class="p">,</span>
+                                                    <span class="n">workversiontoread</span><span class="o">=</span><span class="n">newversion</span><span class="p">)</span>
+            <span class="n">dictnew</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">workdict</span>
+            <span class="n">indexworkversionspathlist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">workversionnumbers</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">newversion</span><span class="p">)</span>
+            <span class="n">pythonupdatefile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">workversionspathlist</span><span class="p">[</span><span class="n">indexworkversionspathlist</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1">#* get diffs saved in results</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">dictnew</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">table</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dictold</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">table</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">dictnew</span><span class="p">[</span><span class="n">table</span><span class="p">][</span><span class="s1">&#39;fields&#39;</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="n">field</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dictold</span><span class="p">[</span><span class="n">table</span><span class="p">][</span><span class="s1">&#39;fields&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">table</span><span class="p">,</span> <span class="n">field</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia_unittest&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;diffs : </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">results</span><span class="p">)</span>
+
+        <span class="c1">#* update dbase</span>
+        <span class="k">for</span> <span class="n">table</span><span class="p">,</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">table</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">field</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1">#table creation</span>
+                <span class="n">sql</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generateSQLTableCreationFromDBConfig</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">dictnew</span><span class="p">[</span><span class="n">table</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">crsnumber</span><span class="p">)</span>
+                <span class="c1">#openedsqlfile.write(sql[&#39;main&#39;] + &#39;\n&#39;)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">[</span><span class="s1">&#39;main&#39;</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+                <span class="k">if</span> <span class="s1">&#39;other&#39;</span> <span class="ow">in</span> <span class="n">sql</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="k">for</span> <span class="n">sqlother</span> <span class="ow">in</span> <span class="n">sql</span><span class="p">[</span><span class="s1">&#39;other&#39;</span><span class="p">]:</span>
+                        <span class="c1">#openedsqlfile.write(sqlother + &#39;\n&#39;)</span>
+                        <span class="c1"># print(sqlother)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sqlother</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+                <span class="c1">#view creation</span>
+                <span class="n">sqls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generateSQLViewCreationFromDBConfig</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">dictnew</span><span class="p">[</span><span class="n">table</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">worktype</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">crsnumber</span><span class="p">)</span>
+                
+                <span class="k">for</span> <span class="n">sql</span> <span class="ow">in</span> <span class="n">sqls</span><span class="p">:</span>
+                    <span class="c1">#openedsqlfile.write(sql + &#39;\n&#39;)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">sql</span> <span class="o">=</span> <span class="s1">&#39;ALTER TABLE &#39;</span> <span class="o">+</span> <span class="n">table</span> <span class="o">+</span> <span class="s1">&#39; ADD COLUMN &#39;</span> <span class="o">+</span> <span class="n">field</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;SpatialiteDBaseParser&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="s1">&#39;VARCHAR&#39;</span> <span class="ow">in</span> <span class="n">dictnew</span><span class="p">[</span><span class="n">table</span><span class="p">][</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">field</span><span class="p">][</span><span class="s1">&#39;PGtype&#39;</span><span class="p">]:</span>
+                        <span class="n">sql</span> <span class="o">+=</span> <span class="s1">&#39; TEXT &#39;</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">sql</span> <span class="o">+=</span> <span class="n">PGTYPE_TO_SLTYPE</span><span class="p">[</span><span class="n">dictnew</span><span class="p">[</span><span class="n">table</span><span class="p">][</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">field</span><span class="p">][</span><span class="s1">&#39;PGtype&#39;</span><span class="p">]]</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;PostGisDBaseParser&#39;</span><span class="p">:</span>
+                    <span class="n">sql</span> <span class="o">+=</span> <span class="n">dictnew</span><span class="p">[</span><span class="n">table</span><span class="p">][</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">field</span><span class="p">][</span><span class="s1">&#39;PGtype&#39;</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+
+        <span class="c1">#* read potential python file</span>
+        <span class="n">pythonfile</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">pythonupdatefile</span><span class="p">)</span>
+        <span class="n">pythonfile</span> <span class="o">=</span> <span class="n">pythonfile</span> <span class="o">+</span> <span class="s1">&#39;.txt&#39;</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">pythonfile</span><span class="p">):</span>
+            <span class="n">pyfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">pythonfile</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">pyfile</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="n">pyfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">exec</span> <span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+
+        <span class="c1">#* update version</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span> <span class="o">=</span> <span class="n">dictnew</span>
+        <span class="k">if</span> <span class="n">typebase</span> <span class="o">==</span> <span class="s1">&#39;base&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">baseversion</span> <span class="o">=</span> <span class="n">newversion</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">workversion</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">workversion</span>
+        <span class="k">elif</span> <span class="n">typebase</span> <span class="o">==</span> <span class="s1">&#39;work&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">baseversion</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseversion</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">workversion</span> <span class="o">=</span> <span class="n">newversion</span>
+
+        <span class="c1"># sql = &quot;UPDATE Basedonnees SET version = &#39;&quot; + str(self.version) + &quot;&#39;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;database&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">getTables</span><span class="p">():</span>
+            <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;UPDATE database SET baseversion = &#39;&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">baseversion</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;&#39;&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;UPDATE Basedonnees SET version = &#39;&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">baseversion</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;&#39;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">workversion</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">sql</span> <span class="o">+=</span> <span class="s2">&quot;,workversion = &#39;&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">workversion</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;&#39;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">createRessourcesDir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dbaseressourcesdirectory</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+      <span class="n">slfile</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;slfile&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+      <span class="k">if</span> <span class="n">dbaseressourcesdirectory</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">slfile</span><span class="p">:</span>
+          <span class="n">dbaseressourcesdirectorytemp</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">slfile</span><span class="p">),</span> <span class="sa">u</span><span class="s1">&#39;DBspatialite&#39;</span><span class="p">)</span>
+      <span class="k">else</span><span class="p">:</span>
+          <span class="n">dbaseressourcesdirectorytemp</span> <span class="o">=</span> <span class="n">dbaseressourcesdirectory</span>
+
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">dbaseressourcesdirectorytemp</span><span class="p">):</span>
+          <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">dbaseressourcesdirectorytemp</span><span class="p">)</span>
+      <span class="n">configdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dbaseressourcesdirectorytemp</span><span class="p">,</span> <span class="s1">&#39;config&#39;</span><span class="p">)</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">configdir</span><span class="p">):</span>
+          <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">configdir</span><span class="p">)</span>
+
+      <span class="k">for</span> <span class="n">tooldir</span> <span class="ow">in</span> <span class="n">PROJECTCONFIGDIRS</span><span class="p">:</span>
+          <span class="n">dbasedir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">configdir</span><span class="p">,</span> <span class="n">tooldir</span><span class="p">)</span>
+          <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">dbasedir</span><span class="p">):</span>
+              <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">dbasedir</span><span class="p">)</span>
+
+      <span class="k">return</span> <span class="n">dbaseressourcesdirectorytemp</span>
+
+    <span class="k">def</span> <span class="nf">__________________________DBase_querying</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span> 
+
+    <span class="k">def</span> <span class="nf">vacuum</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span> 
+
+    <span class="k">def</span> <span class="nf">commit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span> 
+
+    <span class="k">def</span> <span class="nf">beginTransaction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;BEGIN&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">forcenocommit</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">commitTransaction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;COMMIT&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">forcenocommit</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+    <span class="k">def</span> <span class="nf">reInitDBase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span> 
+
+    <span class="k">def</span> <span class="nf">isTableSpatial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span> 
+
+    <span class="k">def</span> <span class="nf">getColumns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tablename</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span> 
+
+    <span class="k">def</span> <span class="nf">getFirstIdColumn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">tablename</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span> 
+
+<div class="viewcode-block" id="AbstractDBaseParser.getLastPK"><a class="viewcode-back" href="../../../dev/src_api/05_01_dbasemanager_dbaseparserabstract.html#Lamia.dbasemanager.dbaseparserabstract.AbstractDBaseParser.getLastPK">[docs]</a>    <span class="k">def</span> <span class="nf">getLastPK</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tablename</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Renvoi la version max de la table Revision</span>
+<span class="sd">        :return: la version max de la table Revision</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span> </div>
+
+    <span class="k">def</span> <span class="nf">getmaxColumnValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tablename</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+        <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT MAX(&quot;</span> <span class="o">+</span> <span class="n">field</span> <span class="o">+</span> <span class="s2">&quot;) FROM &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">tablename</span><span class="p">)</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="n">docommit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">query</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span> <span class="ow">and</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span>  <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>       
+            <span class="k">return</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="AbstractDBaseParser.getConstraintRawValueFromText"><a class="viewcode-back" href="../../../dev/src_api/05_01_dbasemanager_dbaseparserabstract.html#Lamia.dbasemanager.dbaseparserabstract.AbstractDBaseParser.getConstraintRawValueFromText">[docs]</a>    <span class="k">def</span> <span class="nf">getConstraintRawValueFromText</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">txt</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convertie la valeur textuelle  txt de la table lamia &quot;table&quot; vers sa valeur trigramme</span>
+<span class="sd">        :param table: la table lamia considérée</span>
+<span class="sd">        :param field: la colonne considérée</span>
+<span class="sd">        :param txt: la valeur textuelle</span>
+<span class="sd">        :return: le trigramme</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># print(&#39;_getConstraintRawValueFromText&#39;,[value[0] for value in self.dbasetables[table][&#39;fields&#39;][field][&#39;Cst&#39;]], txt )</span>
+        <span class="n">dbasetable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">table</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">dbasetable</span><span class="p">[</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">field</span><span class="p">][</span><span class="s1">&#39;Cst&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">txt</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">dbasetable</span><span class="p">[</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">field</span><span class="p">][</span><span class="s1">&#39;Cst&#39;</span><span class="p">][</span><span class="n">index</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">ValueError</span>  <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="kc">False</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">qgsiface</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;error </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">e</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span><span class="n">field</span> <span class="p">,</span> <span class="nb">str</span><span class="p">([</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">dbasetable</span><span class="p">[</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">field</span><span class="p">][</span><span class="s1">&#39;Cst&#39;</span><span class="p">]]</span> <span class="p">))</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="kc">False</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">qgsiface</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;error </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">e</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span><span class="n">field</span> <span class="p">,</span> <span class="s1">&#39;No contraint&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">txt</span></div>
+
+<div class="viewcode-block" id="AbstractDBaseParser.getConstraintTextFromRawValue"><a class="viewcode-back" href="../../../dev/src_api/05_01_dbasemanager_dbaseparserabstract.html#Lamia.dbasemanager.dbaseparserabstract.AbstractDBaseParser.getConstraintTextFromRawValue">[docs]</a>    <span class="k">def</span> <span class="nf">getConstraintTextFromRawValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">rawvalue</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convertie le trigramme rawvalue de la table lamia &quot;table&quot; vers sa valeur textuelle</span>
+<span class="sd">        :param table: la table lamia considérée</span>
+<span class="sd">        :param field: la colonne considérée</span>
+<span class="sd">        :param rawvalue: le trigramme ou valeur stockée considérée</span>
+<span class="sd">        :return: la valeur textuelle</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># print(&#39;_getConstraintTextFromRawValue&#39;,table, self.dbasetables[table][&#39;fields&#39;][field], rawvalue,field)</span>
+        <span class="c1"># print(&#39;_getConstraintTextFromRawValue&#39;,table, field, rawvalue )</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">table</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+            <span class="ow">and</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">table</span><span class="p">][</span><span class="s1">&#39;fields&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+            <span class="ow">and</span> <span class="s1">&#39;Cst&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">table</span><span class="p">][</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+
+            <span class="n">dbasetable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">table</span><span class="p">]</span>
+            <span class="c1">#if field in dbasetable[&#39;fields&#39;].keys() and &#39;Cst&#39; in dbasetable[&#39;fields&#39;][field].keys():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">dbaseutils</span><span class="o">.</span><span class="n">isAttributeNull</span><span class="p">(</span><span class="n">rawvalue</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rawvalue</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rawvalue</span><span class="p">,</span> <span class="n">long</span><span class="p">):</span>
+                    <span class="n">rawvalue</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">rawvalue</span><span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">dbasetable</span><span class="p">[</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">field</span><span class="p">][</span><span class="s1">&#39;Cst&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">rawvalue</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">dbasetable</span><span class="p">[</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">field</span><span class="p">][</span><span class="s1">&#39;Cst&#39;</span><span class="p">][</span><span class="n">index</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia_unittest&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;error : </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="nb">str</span><span class="p">([</span><span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">dbasetable</span><span class="p">[</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">field</span><span class="p">][</span><span class="s1">&#39;Cst&#39;</span><span class="p">]]))</span>
+                    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">rawvalue</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">dbaseutils</span><span class="o">.</span><span class="n">isAttributeNull</span><span class="p">(</span><span class="n">rawvalue</span><span class="p">):</span>
+                <span class="c1"># print(table, field, rawvalue, type(rawvalue))</span>
+                <span class="k">return</span> <span class="n">rawvalue</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s1">&#39;&#39;</span></div>
+
+    <span class="k">def</span> <span class="nf">getValuesFromPk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dbasename</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">pk</span><span class="p">):</span>
+        <span class="c1"># if isinstance(fields, str) or isinstance(fields, unicode):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">fields</span><span class="p">]</span>
+        <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot; SELECT &quot;</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; FROM &quot;</span> <span class="o">+</span> <span class="n">dbasename</span>
+        <span class="n">sql</span> <span class="o">+=</span> <span class="s2">&quot; WHERE pk_&quot;</span> <span class="o">+</span> <span class="n">dbasename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">sql</span> <span class="o">+=</span> <span class="s2">&quot; = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">pk</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">res</span>  <span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="nb">tuple</span><span class="p">([</span><span class="kc">None</span><span class="p">]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">fields</span><span class="p">))</span>
+    
+    <span class="k">def</span> <span class="nf">getWktGeomFromPk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dbasename</span><span class="p">,</span> <span class="n">pk</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">getValuesFromPk</span><span class="p">(</span><span class="n">dbasename</span><span class="p">,</span> <span class="s1">&#39;ST_AsText(geom)&#39;</span><span class="p">,</span> <span class="n">pk</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">createSetValueSentence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="nb">type</span><span class="o">=</span><span class="s1">&#39;INSERT&#39;</span><span class="p">,</span><span class="n">tablename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">listoffields</span><span class="o">=</span><span class="p">[],</span> <span class="n">listofrawvalues</span><span class="o">=</span><span class="p">[]):</span>
+
+        <span class="n">debug</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">debug</span> <span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39; fields / rawvalues </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">  &#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">listoffields</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">listofrawvalues</span><span class="p">))</span>
+
+        <span class="n">restemp</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">l</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">listofrawvalues</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">major</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">unicode</span><span class="p">)</span> <span class="ow">and</span> <span class="n">listoffields</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;geom&#39;</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">unicode</span><span class="p">):</span>
+                        <span class="n">restemp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span> <span class="o">+</span> <span class="n">res</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s2">&quot;&#39;&#39;&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;&#39;&quot;</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">restemp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">res</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s2">&quot;&#39;&#39;&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;&#39;&quot;</span><span class="p">)</span>
+
+                <span class="k">elif</span> <span class="n">listoffields</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;geom&#39;</span> <span class="ow">and</span> <span class="n">res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="c1"># print(&#39;geom&#39;, &quot;ST_GeomFromText(&#39;&quot; + res + &quot;&#39;, &quot; + str(self.crsnumber)  + &quot;)&quot;)</span>
+                    <span class="n">restemp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;ST_GeomFromText(&#39;&quot;</span> <span class="o">+</span> <span class="n">res</span> <span class="o">+</span> <span class="s2">&quot;&#39;, &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">crsnumber</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">res</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">res</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                    <span class="n">restemp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;NULL&#39;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">restemp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">res</span><span class="p">))</span>
+
+            <span class="k">elif</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">major</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>             
+                <span class="k">if</span> <span class="p">((</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>  <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">))</span>  <span class="ow">and</span> <span class="n">listoffields</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;geom&#39;</span> 
+                        <span class="ow">and</span> <span class="s1">&#39;datetime&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">listoffields</span><span class="p">[</span><span class="n">l</span><span class="p">])</span> <span class="p">:</span>
+                    <span class="n">restemp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">res</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s2">&quot;&#39;&#39;&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;&#39;&quot;</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="s1">&#39;datetime&#39;</span> <span class="ow">in</span> <span class="n">listoffields</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="ow">and</span>  <span class="n">res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">res</span> <span class="o">!=</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
+                        <span class="n">restemp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;&#39;&quot;</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">listoffields</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;geom&#39;</span> <span class="ow">and</span> <span class="n">res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">restemp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;ST_GeomFromText(&#39;&quot;</span> <span class="o">+</span> <span class="n">res</span> <span class="o">+</span> <span class="s2">&quot;&#39;, &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">crsnumber</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">res</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">res</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span>  <span class="p">:</span>
+                    <span class="n">restemp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;NULL&#39;</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>  <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">))</span> <span class="ow">and</span> <span class="s1">&#39;None&#39;</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
+                    <span class="n">restemp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;NULL&#39;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">restemp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">res</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="nb">type</span> <span class="o">==</span> <span class="s1">&#39;INSERT&#39;</span><span class="p">:</span>
+            <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;INSERT INTO &quot;</span> <span class="o">+</span> <span class="n">tablename</span> <span class="o">+</span> <span class="s1">&#39;(&#39;</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">listoffields</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span>
+            <span class="n">sql</span> <span class="o">+=</span> <span class="s2">&quot; VALUES(&quot;</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">restemp</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span>
+
+        <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="s1">&#39;UPDATE&#39;</span><span class="p">:</span>
+            <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot; UPDATE &quot;</span> <span class="o">+</span> <span class="n">tablename</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot; SET &quot;</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">field</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">listoffields</span><span class="p">):</span>
+                <span class="n">sql</span> <span class="o">+=</span> <span class="n">field</span> <span class="o">+</span> <span class="s2">&quot; = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">restemp</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span>
+            <span class="n">sql</span> <span class="o">=</span> <span class="n">sql</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">sql</span>
+
+    <span class="k">def</span> <span class="nf">sqlNow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sqlin</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">sqlout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">updateQueryTableNow</span><span class="p">(</span><span class="n">sqlin</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">sqlout</span>
+
+    <span class="k">def</span> <span class="nf">updateQueryTableNow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sqlin</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        
+        <span class="n">sqllist</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; |,|\(|\)|\.|=&#39;</span><span class="p">,</span> <span class="n">sqlin</span><span class="p">)</span>
+        <span class="n">withsql</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">alreadytables</span><span class="o">=</span><span class="p">[]</span>
+        <span class="k">for</span> <span class="n">sqlword</span> <span class="ow">in</span> <span class="n">sqllist</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;_now&#39;</span> <span class="ow">in</span> <span class="n">sqlword</span><span class="p">:</span>
+                <span class="n">tablename</span><span class="o">=</span><span class="n">sqlword</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_now&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="s1">&#39;lpk_revision_begin&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">getColumns</span><span class="p">(</span><span class="n">tablename</span> <span class="o">+</span> <span class="s1">&#39;_qgis&#39;</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">tablename</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span>  <span class="n">alreadytables</span><span class="p">:</span>
+                        <span class="n">alreadytables</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tablename</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+                        <span class="n">withsql</span> <span class="o">+=</span>  <span class="n">sqlword</span> <span class="o">+</span> <span class="s2">&quot; AS &quot;</span>
+                        <span class="n">withsql</span> <span class="o">+=</span> <span class="s2">&quot; (SELECT * FROM &quot;</span> <span class="o">+</span> <span class="n">tablename</span> <span class="o">+</span> <span class="s2">&quot;_qgis WHERE &quot;</span>
+                        <span class="n">withsql</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dateVersionConstraintSQL</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
+                        <span class="n">withsql</span> <span class="o">+=</span> <span class="s2">&quot;), &quot;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">tablename</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span>  <span class="n">alreadytables</span><span class="p">:</span>
+                        <span class="n">alreadytables</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tablename</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+                        <span class="n">withsql</span> <span class="o">+=</span>  <span class="n">sqlword</span> <span class="o">+</span> <span class="s2">&quot; AS &quot;</span>
+                        <span class="n">withsql</span> <span class="o">+=</span> <span class="s2">&quot; (SELECT * FROM &quot;</span> <span class="o">+</span> <span class="n">tablename</span> <span class="o">+</span> <span class="s2">&quot;), &quot;</span>
+
+        <span class="n">withsql</span> <span class="o">=</span> <span class="n">withsql</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">sqltemp1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">splitSQLSelectFromWhereOrderby</span><span class="p">(</span><span class="n">sqlin</span><span class="p">)</span>
+        <span class="n">sqlout</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">if</span> <span class="s1">&#39;WITH&#39;</span> <span class="ow">in</span> <span class="n">sqltemp1</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">sqlout</span> <span class="o">+=</span> <span class="s1">&#39;WITH &#39;</span> <span class="o">+</span> <span class="n">sqltemp1</span><span class="p">[</span><span class="s1">&#39;WITH&#39;</span><span class="p">]</span>
+            <span class="n">sqlout</span> <span class="o">+=</span> <span class="s1">&#39;, &#39;</span> <span class="o">+</span> <span class="n">withsql</span>
+            <span class="n">sqlout</span> <span class="o">+=</span> <span class="s1">&#39; SELECT &#39;</span> <span class="o">+</span> <span class="n">sqltemp1</span><span class="p">[</span><span class="s1">&#39;SELECT&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; FROM &#39;</span> <span class="o">+</span> <span class="n">sqltemp1</span><span class="p">[</span><span class="s1">&#39;FROM&#39;</span><span class="p">]</span><span class="o">+</span> <span class="s1">&#39; WHERE &#39;</span> <span class="o">+</span> <span class="n">sqltemp1</span><span class="p">[</span><span class="s1">&#39;WHERE&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s1">&#39;ORDER&#39;</span> <span class="ow">in</span> <span class="n">sqltemp1</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">sqlout</span> <span class="o">+=</span> <span class="s1">&#39; ORDER BY &#39;</span> <span class="o">+</span> <span class="n">sqltemp1</span><span class="p">[</span><span class="s1">&#39;ORDER&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s1">&#39;GROUP&#39;</span> <span class="ow">in</span> <span class="n">sqltemp1</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">sqlout</span> <span class="o">+=</span> <span class="s1">&#39; GROUP BY &#39;</span> <span class="o">+</span> <span class="n">sqltemp1</span><span class="p">[</span><span class="s1">&#39;GROUP&#39;</span><span class="p">]</span>
+
+        <span class="k">elif</span> <span class="n">withsql</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="n">sqlout</span> <span class="o">+=</span> <span class="s1">&#39;WITH &#39;</span> <span class="o">+</span> <span class="n">withsql</span> <span class="o">+</span> <span class="n">sqlin</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sqlout</span> <span class="o">+=</span> <span class="n">sqlin</span>
+            
+        <span class="k">return</span> <span class="n">sqlout</span>
+
+    <span class="k">def</span> <span class="nf">_dateVersionConstraintSQL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">specialdate</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="nf">__________________________Feature_creation_saving</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">createNewObjet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">docommit</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">datecreation</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">))</span>
+        <span class="c1">#lastobjetid = self.getLastId(&#39;Objet&#39;) + 1</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">base3version</span><span class="p">:</span>
+            <span class="n">lastobjetid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getmaxColumnValue</span><span class="p">(</span><span class="s1">&#39;object&#39;</span><span class="p">,</span> <span class="s1">&#39;id_object&#39;</span><span class="p">)</span>
+            <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;INSERT INTO object (id_object, lpk_revision_begin, datetimecreation, datetimemodification ) &quot;</span>
+            <span class="n">sql</span> <span class="o">+=</span> <span class="s2">&quot;VALUES(&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">lastobjetid</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maxrevision</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;,&#39;&quot;</span> <span class="o">+</span> <span class="n">datecreation</span> <span class="o">+</span> <span class="s2">&quot;&#39;,&#39;&quot;</span> <span class="o">+</span> <span class="n">datecreation</span> <span class="o">+</span> <span class="s2">&quot;&#39; )&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="n">docommit</span><span class="o">=</span><span class="n">docommit</span><span class="p">)</span>
+            <span class="n">pkobjet</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getLastPK</span><span class="p">(</span><span class="s1">&#39;object&#39;</span><span class="p">)</span> 
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">lastobjetid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getmaxColumnValue</span><span class="p">(</span><span class="s1">&#39;Objet&#39;</span><span class="p">,</span> <span class="s1">&#39;id_objet&#39;</span><span class="p">)</span>
+            <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;INSERT INTO Objet (id_objet, lpk_revision_begin, datetimecreation, datetimemodification ) &quot;</span>
+            <span class="n">sql</span> <span class="o">+=</span> <span class="s2">&quot;VALUES(&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">lastobjetid</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maxrevision</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;,&#39;&quot;</span> <span class="o">+</span> <span class="n">datecreation</span> <span class="o">+</span> <span class="s2">&quot;&#39;,&#39;&quot;</span> <span class="o">+</span> <span class="n">datecreation</span> <span class="o">+</span> <span class="s2">&quot;&#39; )&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="n">docommit</span><span class="o">=</span><span class="n">docommit</span><span class="p">)</span>
+            <span class="n">pkobjet</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getLastPK</span><span class="p">(</span><span class="s1">&#39;Objet&#39;</span><span class="p">)</span> 
+        <span class="k">return</span> <span class="n">pkobjet</span>
+        
+    <span class="k">def</span> <span class="nf">createNewFeature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tablename</span><span class="p">):</span>
+        <span class="n">parenttables</span> <span class="o">=</span> <span class="p">[</span><span class="n">tablename</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">getParentTable</span><span class="p">(</span><span class="n">tablename</span><span class="p">)</span>
+        <span class="n">parenttablename</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">itertablename</span> <span class="ow">in</span> <span class="n">parenttables</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">itertablename</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Objet&#39;</span><span class="p">,</span><span class="s1">&#39;object&#39;</span><span class="p">]:</span>
+                <span class="n">parenttablepk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">createNewObjet</span><span class="p">()</span>
+                <span class="n">parenttablename</span> <span class="o">=</span> <span class="n">itertablename</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">tablepk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getLastPK</span><span class="p">(</span><span class="n">itertablename</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+                <span class="k">if</span> <span class="n">parenttablename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="p">:</span>
+                    <span class="c1">#if not &#39;onlyoneparenttable&#39; in self.dbasetables[itertablename].keys():</span>
+                    <span class="k">if</span>  <span class="ow">not</span> <span class="n">itertablename</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:]</span> <span class="o">==</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span>
+                        <span class="n">maxid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getmaxColumnValue</span><span class="p">(</span><span class="n">itertablename</span><span class="p">,</span> <span class="s1">&#39;id_&#39;</span> <span class="o">+</span> <span class="n">itertablename</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span> <span class="o">+</span> <span class="mi">1</span>
+                        <span class="n">listofields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;id_&#39;</span> <span class="o">+</span> <span class="n">itertablename</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="s1">&#39;lpk_&#39;</span> <span class="o">+</span> <span class="n">parenttablename</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
+                        <span class="n">listofrawvalues</span> <span class="o">=</span> <span class="p">[</span><span class="n">maxid</span><span class="p">,</span> <span class="n">parenttablepk</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">listofields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;lpk_&#39;</span> <span class="o">+</span> <span class="n">parenttablename</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
+                        <span class="n">listofrawvalues</span> <span class="o">=</span> <span class="p">[</span><span class="n">parenttablepk</span><span class="p">]</span>
+                    <span class="n">sql</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">createSetValueSentence</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">&#39;INSERT&#39;</span><span class="p">,</span>
+                                                <span class="n">tablename</span><span class="o">=</span><span class="n">itertablename</span><span class="p">,</span>
+                                                <span class="n">listoffields</span><span class="o">=</span><span class="n">listofields</span><span class="p">,</span>
+                                                <span class="n">listofrawvalues</span><span class="o">=</span><span class="n">listofrawvalues</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+                <span class="n">parenttablename</span> <span class="o">=</span> <span class="n">itertablename</span>
+                <span class="n">parenttablepk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getLastPK</span><span class="p">(</span><span class="n">itertablename</span><span class="p">)</span>
+            
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">getLastPK</span><span class="p">(</span><span class="n">tablename</span><span class="p">)</span>
+
+<div class="viewcode-block" id="AbstractDBaseParser.manageFeatureCreationOrUpdate"><a class="viewcode-back" href="../../../dev/src_api/05_01_dbasemanager_dbaseparserabstract.html#Lamia.dbasemanager.dbaseparserabstract.AbstractDBaseParser.manageFeatureCreationOrUpdate">[docs]</a>    <span class="k">def</span> <span class="nf">manageFeatureCreationOrUpdate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tablename</span><span class="p">,</span> <span class="n">featurepk</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Called by saveFeature - Manage versioning</span>
+<span class="sd">        return pk of object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">featurepk</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="p">:</span>  <span class="c1">#existing feature saved</span>
+            <span class="k">if</span> <span class="s1">&#39;lpk_revision_begin&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">getColumns</span><span class="p">(</span><span class="n">tablename</span> <span class="o">+</span> <span class="s1">&#39;_qgis&#39;</span><span class="p">):</span>
+                <span class="n">featlastrevision</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getValuesFromPk</span><span class="p">(</span><span class="n">tablename</span> <span class="o">+</span> <span class="s1">&#39;_qgis&#39;</span><span class="p">,</span>
+                                                        <span class="s1">&#39;lpk_revision_begin&#39;</span><span class="p">,</span>
+                                                            <span class="n">featurepk</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">featlastrevision</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxrevision</span><span class="p">:</span>   <span class="c1">#new version feature</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;*********** new feat vers&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">createNewFeatureVersion</span><span class="p">(</span><span class="n">tablename</span><span class="p">,</span>
+                                                <span class="n">featurepk</span><span class="p">)</span>
+                    <span class="n">pktoreturn</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getLastPK</span><span class="p">(</span><span class="n">tablename</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>       <span class="c1">#simple feature update</span>
+                    <span class="n">pktoreturn</span> <span class="o">=</span> <span class="n">featurepk</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">pktoreturn</span> <span class="o">=</span> <span class="n">featurepk</span>
+
+        <span class="k">else</span><span class="p">:</span>           <span class="c1"># feature creation</span>
+            <span class="n">pktoreturn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">createNewFeature</span><span class="p">(</span><span class="n">tablename</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">pktoreturn</span></div>
+
+    <span class="k">def</span> <span class="nf">createNewFeatureVersion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dbname</span><span class="p">,</span> <span class="n">rawpk</span><span class="p">):</span>
+
+        <span class="c1">#first be sure</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">base3version</span><span class="p">:</span>
+            <span class="n">pkobjet</span><span class="p">,</span> <span class="n">revbegin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getValuesFromPk</span><span class="p">(</span><span class="n">dbname</span> <span class="o">+</span> <span class="s2">&quot;_qgis&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;pk_object&#39;</span><span class="p">,</span><span class="s1">&#39;lpk_revision_begin&#39;</span><span class="p">],</span> <span class="n">rawpk</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pkobjet</span><span class="p">,</span> <span class="n">revbegin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getValuesFromPk</span><span class="p">(</span><span class="n">dbname</span> <span class="o">+</span> <span class="s2">&quot;_qgis&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;pk_objet&#39;</span><span class="p">,</span><span class="s1">&#39;lpk_revision_begin&#39;</span><span class="p">],</span> <span class="n">rawpk</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">revbegin</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxrevision</span><span class="p">:</span>
+            <span class="c1">#first close object</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">base3version</span><span class="p">:</span>
+                <span class="n">sql</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">createSetValueSentence</span><span class="p">(</span><span class="s1">&#39;UPDATE&#39;</span><span class="p">,</span>
+                                                <span class="s1">&#39;object&#39;</span><span class="p">,</span>
+                                                <span class="p">[</span><span class="s1">&#39;lpk_revision_end&#39;</span><span class="p">],</span>
+                                                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">maxrevision</span><span class="p">])</span>
+                <span class="n">sql</span> <span class="o">+=</span> <span class="s2">&quot; WHERE pk_objet = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">pkobjet</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">sql</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">createSetValueSentence</span><span class="p">(</span><span class="s1">&#39;UPDATE&#39;</span><span class="p">,</span>
+                                                <span class="s1">&#39;Objet&#39;</span><span class="p">,</span>
+                                                <span class="p">[</span><span class="s1">&#39;lpk_revision_end&#39;</span><span class="p">],</span>
+                                                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">maxrevision</span><span class="p">])</span>
+                <span class="n">sql</span> <span class="o">+=</span> <span class="s2">&quot; WHERE pk_object = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">pkobjet</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+
+            <span class="c1"># then clone parents</span>
+            <span class="n">parenttables</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getParentTable</span><span class="p">(</span><span class="n">dbname</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">dbname</span><span class="p">]</span>
+            <span class="c1"># get pkparents</span>
+            <span class="n">pknames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;pk_&#39;</span> <span class="o">+</span> <span class="n">parenttablename</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">parenttablename</span> <span class="ow">in</span> <span class="n">parenttables</span><span class="p">]</span>
+            <span class="n">parentspk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getValuesFromPk</span><span class="p">(</span><span class="n">dbname</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;_qgis&quot;</span><span class="p">,</span> <span class="n">pknames</span><span class="p">,</span> <span class="n">rawpk</span><span class="p">)</span>
+
+            <span class="n">lastpk</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">tablename</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">parenttables</span><span class="p">):</span>
+                <span class="n">pkfields</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">nonpkfields</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">fields</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">getColumns</span><span class="p">(</span><span class="n">tablename</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">fields</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;pk_&#39;</span> <span class="ow">or</span> <span class="n">fields</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;lpk_&#39;</span><span class="p">:</span>
+                        <span class="n">pkfields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">fields</span> <span class="o">==</span> <span class="s1">&#39;geom&#39;</span><span class="p">:</span>
+                        <span class="n">nonpkfields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;ST_AsText(geom)&#39;</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">nonpkfields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getValuesFromPk</span><span class="p">(</span><span class="n">tablename</span><span class="p">,</span> <span class="n">nonpkfields</span><span class="p">,</span><span class="n">parentspk</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">)</span>
+
+                <span class="n">nonpkfields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;geom&#39;</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="s1">&#39;ST_AsText(geom)&#39;</span> <span class="k">else</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">nonpkfields</span><span class="p">]</span>
+                <span class="n">sql</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">createSetValueSentence</span><span class="p">(</span><span class="s1">&#39;INSERT&#39;</span><span class="p">,</span>
+                                                  <span class="n">tablename</span><span class="p">,</span>
+                                                  <span class="n">nonpkfields</span><span class="p">,</span>
+                                                  <span class="nb">list</span><span class="p">(</span><span class="n">values</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+                <span class="n">lastpk</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getLastPK</span><span class="p">(</span><span class="n">tablename</span><span class="p">))</span>
+                <span class="n">fieldstoupdate</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">valuestoupdate</span><span class="o">=</span><span class="p">[]</span>
+                <span class="k">if</span> <span class="s1">&#39;lpk_revision_begin&#39;</span> <span class="ow">in</span> <span class="n">pkfields</span><span class="p">:</span>
+                    <span class="n">fieldstoupdate</span> <span class="o">+=</span><span class="p">[</span><span class="s1">&#39;lpk_revision_begin&#39;</span><span class="p">,</span> <span class="s1">&#39;lpk_revision_end&#39;</span><span class="p">]</span>
+                    <span class="n">valuestoupdate</span> <span class="o">+=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">maxrevision</span><span class="p">,</span><span class="kc">None</span><span class="p">]</span>
+                <span class="k">if</span> <span class="s1">&#39;datetimemodification&#39;</span> <span class="ow">in</span> <span class="n">nonpkfields</span><span class="p">:</span>
+                    <span class="n">datemodif</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">))</span>
+                    <span class="n">fieldstoupdate</span> <span class="o">+=</span><span class="p">[</span><span class="s1">&#39;datetimemodification&#39;</span><span class="p">]</span>
+                    <span class="n">valuestoupdate</span> <span class="o">+=</span> <span class="p">[</span><span class="n">datemodif</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="s1">&#39;lpk_&#39;</span> <span class="o">+</span> <span class="n">parenttables</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">pkfields</span><span class="p">:</span>
+                    <span class="n">fieldstoupdate</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;lpk_&quot;</span> <span class="o">+</span> <span class="n">parenttables</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
+                    <span class="n">valuestoupdate</span> <span class="o">+=</span> <span class="p">[</span><span class="n">lastpk</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+
+                <span class="n">sql</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">createSetValueSentence</span><span class="p">(</span><span class="s1">&#39;UPDATE&#39;</span><span class="p">,</span>
+                                                  <span class="n">tablename</span><span class="p">,</span>
+                                                  <span class="n">fieldstoupdate</span><span class="p">,</span>
+                                                  <span class="n">valuestoupdate</span><span class="p">)</span>
+                <span class="n">sql</span> <span class="o">+=</span> <span class="s2">&quot; WHERE pk_&quot;</span> <span class="o">+</span> <span class="n">tablename</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot; = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">lastpk</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+
+<div class="viewcode-block" id="AbstractDBaseParser.saveRessourceFile"><a class="viewcode-back" href="../../../dev/src_api/05_01_dbasemanager_dbaseparserabstract.html#Lamia.dbasemanager.dbaseparserabstract.AbstractDBaseParser.saveRessourceFile">[docs]</a>    <span class="k">def</span> <span class="nf">saveRessourceFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dbname</span><span class="p">,</span> 
+                                <span class="n">featurepk</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+                                <span class="n">previousfeaturepk</span><span class="o">=</span><span class="kc">None</span>   <span class="c1">#case new version - its the old pk</span>
+                                <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Called by saveFeature</span>
+<span class="sd">        If ressource file is not in the dbase directory, save it in the dbase directory</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># get date</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        sql = &quot;SELECT datetimecreation FROM &quot; + self.dbasetablename.lower() + &quot;_qgis&quot;</span>
+<span class="sd">        sql += &quot; WHERE pk_&quot;+ self.dbasetablename.lower() + &quot; = &quot; + str(self.currentFeaturePK)</span>
+<span class="sd">        query = self.dbase.query(sql)</span>
+<span class="sd">        result = [row[0] for row in query]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">base3version</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;resource&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">getParentTable</span><span class="p">(</span><span class="n">dbname</span><span class="p">):</span>
+                <span class="k">return</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;Ressource&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">getParentTable</span><span class="p">(</span><span class="n">dbname</span><span class="p">):</span>
+                <span class="k">return</span>
+            
+        <span class="n">DBASETABLENAMElower</span> <span class="o">=</span> <span class="n">dbname</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getValuesFromPk</span><span class="p">(</span><span class="n">DBASETABLENAMElower</span> <span class="o">+</span> <span class="s2">&quot;_qgis&quot;</span><span class="p">,</span>
+                                                            <span class="s1">&#39;datetimecreation&#39;</span><span class="p">,</span>
+                                                            <span class="n">featurepk</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">datevalue</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">result</span><span class="p">),</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">datevalue</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">):</span>
+                <span class="n">datevalue</span> <span class="o">=</span> <span class="n">datevalue</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">date</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">datevalue</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">base3version</span><span class="p">:</span>
+            <span class="n">fieldrequested</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;pk_resource&#39;</span><span class="p">,</span> <span class="s1">&#39;id_resource&#39;</span><span class="p">,</span> <span class="s1">&#39;file&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fieldrequested</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;pk_ressource&#39;</span><span class="p">,</span> <span class="s1">&#39;id_ressource&#39;</span><span class="p">,</span> <span class="s1">&#39;file&#39;</span><span class="p">]</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getValuesFromPk</span><span class="p">(</span><span class="n">DBASETABLENAMElower</span> <span class="o">+</span> <span class="s2">&quot;_qgis&quot;</span><span class="p">,</span>
+                                                            <span class="n">fieldrequested</span><span class="p">,</span>
+                                                            <span class="n">featurepk</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">pkressource</span><span class="p">,</span> <span class="n">idressource</span><span class="p">,</span> <span class="n">file</span> <span class="o">=</span> <span class="n">result</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">dbaseressourcesdirectory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbaseressourcesdirectory</span>
+        <span class="k">if</span> <span class="n">file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">file</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">file</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;.&#39;</span><span class="p">:</span>
+                <span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dbaseressourcesdirectory</span><span class="p">,</span><span class="n">file</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+                    <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+                    <span class="n">filename</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">idressource</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">filename</span>
+                    <span class="n">destinationdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dbaseressourcesdirectory</span><span class="p">,</span><span class="n">dbname</span><span class="p">,</span><span class="n">date</span><span class="p">)</span>
+                    <span class="n">destinationfile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">destinationdir</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">copyRessourceFile</span><span class="p">(</span><span class="n">fromfile</span><span class="o">=</span> <span class="n">file</span><span class="p">,</span>
+                                            <span class="n">tofile</span><span class="o">=</span><span class="n">destinationfile</span><span class="p">,</span>
+                                            <span class="n">withthumbnail</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                            <span class="n">copywholedirforraster</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+
+                    <span class="n">finalname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">destinationfile</span><span class="p">,</span> <span class="n">dbaseressourcesdirectory</span> <span class="p">))</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">base3version</span><span class="p">:</span>
+                        <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;UPDATE resource SET file = &#39;&quot;</span> <span class="o">+</span> <span class="n">finalname</span> <span class="o">+</span> <span class="s2">&quot;&#39; WHERE pk_resource = &quot;</span> <span class="o">+</span>  <span class="nb">str</span><span class="p">(</span><span class="n">pkressource</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;;&quot;</span>
+                        <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+
+                        <span class="k">if</span> <span class="n">previousfeaturepk</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>   <span class="c1">#case updating existing feature</span>
+                            <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT file FROM resource  WHERE pk_resource = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">pkressource</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;;&quot;</span>
+                            <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+                            <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">query</span><span class="p">]</span>
+                            <span class="n">oldfile</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">oldfile</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;UPDATE Ressource SET file = &#39;&quot;</span> <span class="o">+</span> <span class="n">finalname</span> <span class="o">+</span> <span class="s2">&quot;&#39; WHERE pk_ressource = &quot;</span> <span class="o">+</span>  <span class="nb">str</span><span class="p">(</span><span class="n">pkressource</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;;&quot;</span>
+                        <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+
+                        <span class="k">if</span> <span class="n">previousfeaturepk</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>   <span class="c1">#case updating existing feature</span>
+                            <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT file FROM Ressource  WHERE pk_ressource = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">pkressource</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;;&quot;</span>
+                            <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+                            <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">query</span><span class="p">]</span>
+                            <span class="n">oldfile</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">oldfile</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+                    <span class="n">newfile</span> <span class="o">=</span> <span class="n">finalname</span>
+
+                    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">completePathOfFile</span><span class="p">(</span><span class="n">oldfile</span><span class="p">))</span> <span class="ow">and</span> <span class="n">oldfile</span> <span class="o">!=</span> <span class="n">newfile</span><span class="p">:</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">completePathOfFile</span><span class="p">(</span><span class="n">oldfile</span><span class="p">))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="AbstractDBaseParser.completePathOfFile"><a class="viewcode-back" href="../../../dev/src_api/05_01_dbasemanager_dbaseparserabstract.html#Lamia.dbasemanager.dbaseparserabstract.AbstractDBaseParser.completePathOfFile">[docs]</a>    <span class="k">def</span> <span class="nf">completePathOfFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">filetoprocess</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Génère le path complet du filetoprocess demandé. Utile quand on a un chemin relatif</span>
+<span class="sd">        :param filetoprocess: le chemin rentré (relatif ou absolu)</span>
+<span class="sd">        :return: le chemin absolu</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">completefile</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="c1">#if int(str(self.qgisversion_int)[0:3]) &lt; 220 and isinstance(filetoprocess, QtCore.QPyNullVariant):</span>
+        <span class="c1">#    filetoprocess = None</span>
+        <span class="k">if</span> <span class="n">filetoprocess</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">completefile</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">filetoprocess</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">filetoprocess</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;.&#39;</span><span class="p">:</span>
+                <span class="n">completefile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dbaseressourcesdirectory</span><span class="p">,</span> <span class="n">filetoprocess</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">completefile</span> <span class="o">=</span> <span class="n">filetoprocess</span>
+            <span class="n">completefile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">completefile</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">completefile</span></div>
+
+<div class="viewcode-block" id="AbstractDBaseParser.getParentTable"><a class="viewcode-back" href="../../../dev/src_api/05_01_dbasemanager_dbaseparserabstract.html#Lamia.dbasemanager.dbaseparserabstract.AbstractDBaseParser.getParentTable">[docs]</a>    <span class="k">def</span> <span class="nf">getParentTable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tablename</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get Parents table name</span>
+<span class="sd">        :param tablename:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parenttablenamelist</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">dbasetable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">tablename</span><span class="p">]</span>
+        <span class="n">continuesearchparent</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1">#if &#39;onlyoneparenttable&#39; in dbasetable.keys() and dbasetable[&#39;onlyoneparenttable&#39;] :</span>
+        <span class="c1">#    onlyoneiteration = True</span>
+
+        <span class="k">while</span> <span class="n">continuesearchparent</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">dbasetable</span><span class="p">[</span><span class="s1">&#39;fields&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">continuesearchparent</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">if</span> <span class="s1">&#39;lpk_&#39;</span> <span class="o">==</span> <span class="n">field</span><span class="p">[:</span><span class="mi">4</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="s1">&#39;Basedonnees&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                        <span class="n">parenttablename</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">title</span><span class="p">()</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">parenttablename</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">parenttablenamelist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parenttablename</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">tablename</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:]</span> <span class="o">==</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span>
+                        <span class="n">continuesearchparent</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="k">elif</span> <span class="n">field</span><span class="p">[</span><span class="mi">4</span><span class="p">:]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;objet&#39;</span><span class="p">,</span><span class="s1">&#39;object&#39;</span><span class="p">]</span> <span class="p">:</span>
+                        <span class="n">continuesearchparent</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">continuesearchparent</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">dbasetable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="n">parenttablename</span><span class="p">]</span>
+                    <span class="k">break</span>
+                    
+
+        <span class="k">return</span> <span class="n">parenttablenamelist</span></div>
+
+<div class="viewcode-block" id="AbstractDBaseParser.copyRessourceFile"><a class="viewcode-back" href="../../../dev/src_api/05_01_dbasemanager_dbaseparserabstract.html#Lamia.dbasemanager.dbaseparserabstract.AbstractDBaseParser.copyRessourceFile">[docs]</a>    <span class="k">def</span> <span class="nf">copyRessourceFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">fromfile</span><span class="p">,</span> <span class="n">tofile</span><span class="p">,</span> <span class="n">withthumbnail</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">copywholedirforraster</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param fromrep:</span>
+<span class="sd">        :param fromfile:</span>
+<span class="sd">        :param torep:</span>
+<span class="sd">        :param withthumbnail: 0 : copy  file + create thumbnail ; 1 : copy only thumnail; 2 : copyonly file</span>
+<span class="sd">        :param copywholedirforraster:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">debug</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Copy </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">fromfile</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">tofile</span><span class="p">))</span>
+
+        <span class="n">fromfile</span> <span class="o">=</span> <span class="n">fromfile</span>
+        <span class="n">fromdir</span> <span class="o">=</span>  <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">fromfile</span><span class="p">)</span>
+        <span class="n">fromfilename</span><span class="p">,</span> <span class="n">fromfileext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">fromfile</span><span class="p">))</span>
+        <span class="n">destinationfile</span> <span class="o">=</span> <span class="n">tofile</span>
+        <span class="n">destinationdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">destinationfile</span><span class="p">)</span>
+        <span class="n">destinationfilename</span><span class="p">,</span> <span class="n">destinationfileext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">destinationfile</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fromfile</span><span class="p">):</span>
+
+            <span class="k">if</span> <span class="n">copywholedirforraster</span> <span class="ow">and</span> <span class="s1">&#39;Rasters&#39;</span> <span class="ow">in</span> <span class="n">fromfile</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">destinationdir</span><span class="p">):</span>
+                    <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span><span class="n">fromdir</span><span class="p">,</span> <span class="n">destinationdir</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">destinationdir</span><span class="p">):</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">destinationdir</span><span class="p">)</span>
+
+                <span class="n">fromfilebase</span><span class="p">,</span> <span class="n">fromext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">fromfile</span><span class="p">)</span>
+                <span class="n">tofilebase</span><span class="p">,</span> <span class="n">toext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">destinationfile</span><span class="p">)</span>
+
+
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fromfilebase</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">fromfilebase</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;croquis&#39;</span><span class="p">:</span>
+                    <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">fromfile</span><span class="p">,</span> <span class="n">destinationfile</span><span class="p">)</span>
+
+                <span class="k">elif</span> <span class="n">fromext</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;.shp&#39;</span><span class="p">]:</span>
+                    <span class="n">dirfiles</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">fromdir</span><span class="p">)</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fromdir</span><span class="p">,</span><span class="n">f</span><span class="p">))]</span>
+                    <span class="k">for</span> <span class="n">dirfile</span> <span class="ow">in</span> <span class="n">dirfiles</span><span class="p">:</span>
+                        <span class="n">dirfilebase</span><span class="p">,</span> <span class="n">dirfileext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">dirfile</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">dirfilebase</span> <span class="o">==</span> <span class="n">fromfilename</span><span class="p">:</span>
+                            <span class="n">fromshpfile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fromdir</span><span class="p">,</span><span class="n">dirfilebase</span> <span class="o">+</span> <span class="n">dirfileext</span> <span class="p">)</span>
+                            <span class="n">toshpfile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">destinationdir</span><span class="p">,</span><span class="n">destinationfilename</span> <span class="o">+</span> <span class="n">dirfileext</span><span class="p">)</span>
+                            <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">fromshpfile</span><span class="p">,</span> <span class="n">toshpfile</span><span class="p">)</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">withthumbnail</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="n">PILexists</span> <span class="ow">and</span> <span class="n">fromext</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;.jpeg&#39;</span><span class="p">,</span> <span class="s1">&#39;.png&#39;</span><span class="p">]:</span>
+
+                        <span class="n">possibletbnailfile</span> <span class="o">=</span> <span class="n">fromfilebase</span> <span class="o">+</span> <span class="s2">&quot;_thumbnail.png&quot;</span>
+                        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">possibletbnailfile</span><span class="p">):</span>
+                            <span class="k">if</span> <span class="n">possibletbnailfile</span> <span class="o">!=</span> <span class="n">tofilebase</span> <span class="o">+</span> <span class="s2">&quot;_thumbnail.png&quot;</span><span class="p">:</span>
+                                <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">possibletbnailfile</span><span class="p">,</span> <span class="n">tofilebase</span> <span class="o">+</span> <span class="s2">&quot;_thumbnail.png&quot;</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">size</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">256</span>
+                            <span class="n">im</span> <span class="o">=</span> <span class="n">PIL</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">fromfile</span><span class="p">)</span>
+                            <span class="n">im</span><span class="o">.</span><span class="n">thumbnail</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+                            <span class="n">im</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">tofilebase</span> <span class="o">+</span> <span class="s2">&quot;_thumbnail.png&quot;</span><span class="p">,</span> <span class="s2">&quot;PNG&quot;</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">withthumbnail</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]:</span>
+                        <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">fromfile</span><span class="p">,</span> <span class="n">destinationfile</span><span class="p">)</span></div></div>
+
+
+</pre></div>
+
+           </div>
+           
+          </div>
+<a href="https://github.com/Artelia/Lamia">
+	<img style="position: absolute; top: 0; right: 0; border: 0;"
+		src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
+</a>
+
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Artelia
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,669 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="fr" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="fr" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Developpement &mdash; Documentation LAMIA 1.0</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="../_static/js/custom.js"></script>
+        <script src="../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" />
+    <link rel="next" title="API Documentation" href="05_00_API.html" />
+    <link rel="prev" title="Doc for developpers" href="00_index.html" />
+<script>
+
+	window.onload = function () {
+		var url = window.location.toString()
+		selectorvalue = $('#languageselector').val()
+
+		if (url.includes('/fr/')) {
+			if (selectorvalue != 'fr') {
+				$('#languageselector').val("fr")
+			}
+		} else if (url.includes('/en/')) {
+			if (selectorvalue != 'en') {
+				$('#languageselector').val("en")
+			}
+		}
+	};
+
+	function languageSelector(selectObject) {
+		var value = selectObject.value;
+		var url = window.location.toString()
+
+		if (url.includes('/fr/')) {
+			window.location = url.replace(/fr/, value);
+		} else if (url.includes('/en/')) {
+			window.location = url.replace(/en/, value);
+		} else {
+			window.location = url
+		}
+	}
+</script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #004F83" >
+          
+
+
+          
+            <a href="../index.html" class="icon icon-home"> LAMIA
+          
+
+          
+            
+            <img src="../_static/icon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+
+<select id='languageselector' style="width: 100% ;border-radius: 20px 20px 20px 20px;"
+	onchange="languageSelector(this)">
+	<option value="en">English documentation</option>
+	<option value="fr">Documentation français</option>
+</select>
+
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Documentation utilisateur en français</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../fr/00_index.html">Documentation en français</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../fr/01_introduction.html">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fr/03_00_tutoriel.html">Tutoriel</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../fr/03_01_installation.html">Installation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../fr/03_01_installation.html#librairies-necessaires-en-supplement-de-l-installation-de-qgis">Librairies nécessaires en supplément de l’installation de QGis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../fr/03_01_installation.html#installation-de-qgis-et-des-librairies-sous-windows">Installation de QGis et des librairies sous windows</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../fr/03_01_installation.html#installation-de-qgis-et-des-librairies-sous-linux">Installation de QGis et des librairies sous Linux</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../fr/03_01_installation.html#installation-de-lamia">Installation de Lamia</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../fr/03_02_la_base_de_donnees.html">La base de données</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../fr/03_02_la_base_de_donnees.html#l-organisation-generale">L’organisation générale</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../fr/03_02_la_base_de_donnees.html#la-table-objet">La table Objet</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../fr/03_03_prise_en_main_rapide.html">Prise en main rapide</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../fr/03_03_prise_en_main_rapide.html#creer-sa-premiere-base-de-donnees">Créer sa première base de données</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../fr/03_03_prise_en_main_rapide.html#decouverte-de-linterface">Découverte de l’interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../fr/03_03_prise_en_main_rapide.html#cest-parti-premiere-saisie">C’est parti : première saisie</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../fr/03_03_prise_en_main_rapide.html#configuration-minimale-de-lamia">Configuration minimale de Lamia</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../fr/03_03_prise_en_main_rapide.html#j-ai-un-bug">J’ai un bug !!</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../fr/03_04_presentation_complete.html">Présentation Complète</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../fr/03_04_presentation_complete.html#le-menu">Le menu</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../fr/03_04_presentation_complete.html#la-barre-d-outils">La barre d’outils:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../fr/03_04_presentation_complete.html#elements-de-configuration">Elements de configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../fr/03_05_description_modules_postpro.html">Description des modules de Post Traitement</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../fr/src_lamia_postpro/01_impression_rapport.html">Impression de rapports</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../fr/src_lamia_postpro/02_import.html">Import de données dans Lamia</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">User english documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../en/00_index.html">English documentation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Development</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="00_index.html">Doc for developpers</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Developpement</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#fonctionnement-general">Fonctionnement général</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#installation-de-lenvironnement-de-developpement-windows">Installation de l’environnement de développement - windows</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#install-de-qgis">Install de QGis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#install-de-pycharm">Install de Pycharm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#script-pour-demarrer-pycharm">Script pour démarrer PyCharm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#configuration-de-pycharm">Configuration de PyCharm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#test-de-la-configuration">Test de la configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#faire-fonctionner-pip">faire fonctionner pip</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#cas-pratique-creation-dun-nouveau-module-de-post-traitement">Cas pratique : création d’un nouveau module de post-traitement</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="05_00_API.html">API Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src_api/05_01_dbasemanager.html">dbasemanager Module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="src_api/05_01_dbasemanager_dbaseparserabstract.html">AbstractDBaseParser</a></li>
+<li class="toctree-l4"><a class="reference internal" href="src_api/05_01_dbasemanager_dbaseutils.html">dbaseutils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="src_api/05_01_dbasemanager_dbconfigreader.html">DBconfigReader</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="src_api/05_02_iface.html">QGis interface widgets</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="src_api/05_02_iface_ifaceqgswidget.html">LamiaWindowWidget</a></li>
+<li class="toctree-l4"><a class="reference internal" href="src_api/05_02_iface_lamia_abstracttool.html">AbstractLamiaTool</a></li>
+<li class="toctree-l4"><a class="reference internal" href="src_api/05_02_iface_lamia_abstractformtool.html">AbstractLamiaFormTool</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LAMIA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="00_index.html">Doc for developpers</a> &raquo;</li>
+        
+      <li>Developpement</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+           <div itemprop="articleBody">
+            
+  <div class="toctree-wrapper compound">
+</div>
+<div class="section" id="developpement">
+<h1>Developpement<a class="headerlink" href="#developpement" title="Lien permanent vers ce titre">¶</a></h1>
+<div class="section" id="fonctionnement-general">
+<h2>Fonctionnement général<a class="headerlink" href="#fonctionnement-general" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Le code repose principalement sur trois classes.</p>
+<ul class="simple">
+<li><p>La classe « Lamia.dialog.InspectionDigue_windowwidget.InspectiondigueWindowWidget », qui est chargée au démarrage. Il s’agit du QDockWidget apparaissant au click sur l’icone Lamia dans l’interface QGis.</p></li>
+<li><p>La classe « Lamia.main.DBaseParser.DBaseParser ». Il s’agit d’un QObject chargé de l’ensemble des intéractions avec la base de données.</p></li>
+<li><p>La classe « Lamia.toolabstract. Lamia_abstract_tool. AbstractLamiaTool » qui est un widget abstrait dont héritent tous les widgets apparaissant sur l’écran « propriétés ».</p></li>
+</ul>
+<p>L’activité lors de l’ouverture de la base de données est schématisée ci-dessous :</p>
+<dl class="simple">
+<dt><a class="reference internal" href="dev\images/100000000000035B00000225B974C2810960DA56.png"><img alt="100000000000035B00000225B974C2810960DA56_png" src="dev\images/100000000000035B00000225B974C2810960DA56.png" style="width: 13.996cm; height: 8.945cm;" /></a></dt><dd><p><em>InspectiondigueWindowWidget</em>  est créé lors de l’ouverture de Lamia. Au chargement/création de la base de données, la classe DBaseParser est créée en variable  <em>d’InspectiondigueWindowWidget</em>  et cette classe se charge de la création et de la lecture de la base de données.</p>
+</dd>
+</dl>
+<p>Ensuite, * InspectiondigueWindowWidget.DBaseLoaded*  charge l’ensemble des widgets (tous héritant de AbstractLamiaTool) apparaissant dans l’écran en bas à droite du  <em>InspectiondigueWindowWidget</em> .</p>
+<p>Ainsi, le code est structuré de la façon suivante :</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 11%" />
+<col style="width: 89%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>Dossier</strong></p></td>
+<td><p><strong>Contenu</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>+—dialog</p></td>
+<td><p>Contient les fichiers sources des interfaces graphiques des boites de dialogues de LAMIA ainsi que les codes python pour les gérer.</p>
+<p>Il contient notamment InspectiondigueWindowWidget .</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>+—main</p></td>
+<td><p>Contient le main de LAMIA qui importe le DBaseParser et le DBaseParser qui initialise l’environnement LAMIA.</p></td>
+</tr>
+<tr class="row-even"><td><p>+—toolabstract</p></td>
+<td><p>Contient Lamia_abstract_tool.py qui est la classe abstraite dont héritent tous les widgets présents en bas à droite de InspectiondigueWindowWidget .</p></td>
+</tr>
+</tbody>
+</table>
+<p>Les éléments propres à la création et à la manipulation de la base de données sont ici :</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 86%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>Dossier</strong></p></td>
+<td><p><strong>Contenu</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>+—DBASE</p></td>
+<td><p>Dossier contenant tous les éléments nécessaires à la création des bases de données</p></td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>+—BPU</p>
+</td>
+<td><p>Dossier contenant les bordereaux de prix permettant le chiffrage automatique des travaux</p></td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>+—create</p>
+</td>
+<td><p>Dossier contenant tous les fichiers excel embarquant la description des tables ainsi que les nomenclatures</p></td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>+—sqlite_base</p>
+</td>
+<td><p>Dossier contenant la base SQLITE utilisée pour amorcée la création des bases de données</p></td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>+—style</p>
+</td>
+<td><p>Contient les feuilles de styles utilisées pour l’affichage de l’interface LAMIA</p></td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>—utils</p>
+</td>
+<td><p>Contient des ressources d’affichage</p></td>
+</tr>
+</tbody>
+</table>
+<p>Tous les widgets apparaissant en bas à droite d’ <em>InspectiondigueWindowWidget</em>  et héritant de AbstractLamiaTool sont stockés ici :</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 87%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>Dossier</strong></p></td>
+<td><p><strong>Contenu</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>+—toolpostpro</p></td>
+<td><p>Outils de post-production (synthèses, exports, rapports, …)</p></td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>+—Base2</p>
+</td>
+<td><p>Outils génériques d’import, d’export, de synthèse, de gestion des paths, de génération des rapports, d’étude de coûts, …</p></td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>+—[Type métier]</p>
+</td>
+<td><p>Outils de post-traitement adaptés au métier.</p></td>
+</tr>
+<tr class="row-odd"><td><p>—toolprepro</p></td>
+<td><p>Interfaces graphiques et classes pythons permettant de manipuler la base de données</p></td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>+—Base2</p>
+</td>
+<td><p>Outils génériques</p></td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>+—[Type métier]</p>
+</td>
+<td><p>Outils d’alimentation de la base de données adaptés au métier.</p></td>
+</tr>
+</tbody>
+</table>
+<p>En plus de ces packages, les packages suivants sont également utilisés.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 79%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>Dossier</strong></p></td>
+<td><p><strong>Contenu</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>+—config</p></td>
+<td><p>Stock les données récemment utilisées à conserver en mémoire comme l’adresse des dernières bases utilisées</p></td>
+</tr>
+<tr class="row-odd"><td><p>+—gps</p></td>
+<td><p>Contient les outils de connexion et d’exploitation des GPS</p></td>
+</tr>
+<tr class="row-even"><td><p>+—html</p></td>
+<td><p>Contient des outils de mise en page (js, css, images, polices, …)</p></td>
+</tr>
+<tr class="row-odd"><td><p>+—icons</p></td>
+<td><p>Contient les icones utilisés dans LAMIA</p></td>
+</tr>
+<tr class="row-even"><td><p>+—lamiautils</p></td>
+<td><p>Vide</p></td>
+</tr>
+<tr class="row-odd"><td><p>+—libs</p></td>
+<td><p>Continent certaines librairies embarquées directement dans LAMIA, souvent parce qu’elles ont été modifiées</p></td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>+—cloudant</p>
+</td>
+<td><p>Librairie de connexion à une base NoSQL (lien avec SIRS Digues)</p></td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>+—cloudant_2_10</p>
+</td>
+<td><p>Librairie de connexion à une base NoSQL (lien avec SIRS Digues)</p></td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>+—pyqtgraph</p>
+</td>
+<td><p>Librairie de génération de graphiques</p></td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>—xlrd</p>
+</td>
+<td><p>Librairie de lecture de fichier Excel utilisée pour la création des bases de données</p></td>
+</tr>
+<tr class="row-even"><td><p>+—maptool</p></td>
+<td><p>Contient les éléments d’interaction avec la cartographie de Qgis</p></td>
+</tr>
+<tr class="row-odd"><td><p>+—toolgeneral</p></td>
+<td><p>Contient des modules complémentaires pour LAMIA</p></td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>+—LAMIA_to_SIRS</p>
+</td>
+<td><p>Permet de faire la passerelle depuis LAMIA vers SIRS Digues</p></td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>+—LAMIA_to_SIRS_VCouch1_7</p>
+</td>
+<td><p>Permet de faire la passerelle depuis LAMIA vers SIRS Digues V1.7</p></td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>+—SIRS_to_LAMIA</p>
+</td>
+<td><p>Permet de faire la passerelle depuis SIRS Digues vers LAMIA</p></td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>—SIRS_to_LAMIA_VCouch1_7</p>
+</td>
+<td><p>Permet de faire la passerelle depuis SIRS Digues vers
+LAMIA</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="installation-de-lenvironnement-de-developpement-windows">
+<h2>Installation de l’environnement de développement - windows<a class="headerlink" href="#installation-de-lenvironnement-de-developpement-windows" title="Lien permanent vers ce titre">¶</a></h2>
+<div class="section" id="install-de-qgis">
+<h3>Install de QGis<a class="headerlink" href="#install-de-qgis" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Il faut tout d’abord installer qgis à l’aide l’<a class="reference external" href="https://www.qgis.org/en/site/forusers/download.html">installateur OSGEO</a>.</p>
+<p>Choisir « Advanced install », et au dernier écran, choisir l’installation de :</p>
+<ul class="simple">
+<li><p>Dans Desktop :</p>
+<ul>
+<li><p>qgis</p></li>
+<li><p>grass</p></li>
+</ul>
+</li>
+<li><p>Dans libs :</p>
+<ul>
+<li><p>python3-networkx</p></li>
+<li><p>python3-numpy</p></li>
+<li><p>python3-pillow</p></li>
+<li><p>python3-matplotlib</p></li>
+<li><p>python3-numpy</p></li>
+<li><p>python3-xlrd</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="install-de-pycharm">
+<h3>Install de Pycharm<a class="headerlink" href="#install-de-pycharm" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Installer pycharm CE depuis leur <a class="reference external" href="https://www.jetbrains.com/pycharm/download/#section=windows">site internet</a>.</p>
+</div>
+<div class="section" id="script-pour-demarrer-pycharm">
+<h3>Script pour démarrer PyCharm<a class="headerlink" href="#script-pour-demarrer-pycharm" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Afin de se faciliter la vie , il faut lancer pycharm avec le script suivant à mettre dans un .bat :</p>
+</div>
+<div class="section" id="configuration-de-pycharm">
+<h3>Configuration de PyCharm<a class="headerlink" href="#configuration-de-pycharm" title="Lien permanent vers ce titre">¶</a></h3>
+<div class="section" id="installation-sans-gihub-intere-a-pycharm">
+<h4>Installation sans gihub intéré à pycharm<a class="headerlink" href="#installation-sans-gihub-intere-a-pycharm" title="Lien permanent vers ce titre">¶</a></h4>
+<p>Créer un nouveau projet. Le chemin du projet doit pointer sur un répertoire contenant le clone github de <a class="reference external" href="https://github.com/Artelia/Lamia">Lamia</a>. Ainsi, il sera créé un répertoire (Github p.ex), contenant un fichier __init__.py vide, et contenant un sous répertoire Lamia contenant le clone de github.
+Choisir l’interpréteur python en allant dans File/settings/Project/project interpreter et créer un interpreteur en pointant sur le PYTHONHOME défini dans le .bat de lancement de PyCharm.</p>
+</div>
+<div class="section" id="installation-avec-gihub-integre-a-pycharm-derriere-un-proxy">
+<h4>Installation avec gihub intégré à pycharm, derrière un proxy<a class="headerlink" href="#installation-avec-gihub-integre-a-pycharm-derriere-un-proxy" title="Lien permanent vers ce titre">¶</a></h4>
+<p>Télécharger git et l’installer.</p>
+<p>Dans pycharmsettingsAppearancesysem settingshttp proxy renseigner l’adresse et la port du proxy</p>
+<p>Dans pycharmsettingsversion controlgit définir le répertoire où est installé git.exe</p>
+<p>Dans pycharmsettingsversion controlgithub ajouter votre compte github</p>
+<p>Ensuite, créer un fichier .gitconfig dans votre répertoire « users » (c:/users/ « votre login ») avec dedans :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">user</span><span class="p">]</span>
+               <span class="n">name</span> <span class="o">=</span> <span class="n">toto</span>
+               <span class="n">email</span> <span class="o">=</span> <span class="n">toto</span><span class="o">.</span><span class="n">tata</span><span class="nd">@mongroup</span><span class="o">.</span><span class="n">com</span>
+<span class="p">[</span><span class="n">http</span><span class="p">]</span>
+               <span class="n">proxy</span> <span class="o">=</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">XX</span><span class="o">.</span><span class="n">XX</span><span class="o">.</span><span class="n">XX</span><span class="o">.</span><span class="n">XX</span><span class="p">:</span><span class="n">XXXX</span>
+</pre></div>
+</div>
+<p>Enfin, lancer pycharm, aller dans VCSget from version control… et choisir le projet github à cloner et le répertoire de destination</p>
+</div>
+</div>
+<div class="section" id="test-de-la-configuration">
+<h3>Test de la configuration<a class="headerlink" href="#test-de-la-configuration" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Ouvrir le fichier Github/Lamia/test/00_test_main.py.</p>
+<p>Définir la variable path de la méthode testMethod vers un fichier lamia valide.</p>
+<p>Lancer le script.</p>
+<p>Si tout se passe bien, Lamia se lance !!</p>
+</div>
+<div class="section" id="faire-fonctionner-pip">
+<h3>faire fonctionner pip<a class="headerlink" href="#faire-fonctionner-pip" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Si pip ne marche pas, ouvrir le fichier OSGeo4W64\apps\Python37\Scriptspip3.exe, rechercher « c : » et remplacer le path à la suite par le bon path.</p>
+</div>
+</div>
+<div class="section" id="cas-pratique-creation-dun-nouveau-module-de-post-traitement">
+<h2>Cas pratique : création d’un nouveau module de post-traitement<a class="headerlink" href="#cas-pratique-creation-dun-nouveau-module-de-post-traitement" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Nous voulons créer un module de post-traitement pour le métier « éclairage ».</p>
+<p>Dans ce cas, il faut créer un fichier test_module.py dans le répertoire lamia/toolpostpro/Base2_eclairage.</p>
+<p>Ensuite, il convient de créer un widget avec QtDesigner et de l’enregistrer sous “test_module.ui” dans le même répertoire.</p>
+<p>Ce fichier aura la structure minimale suivante :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">...toolabstract.Lamia_abstract_tool</span> <span class="kn">import</span> <span class="n">AbstractLamiaTool</span>
+<span class="kn">from</span> <span class="nn">qgis.PyQt</span> <span class="kn">import</span> <span class="n">uic</span>
+<span class="kn">from</span> <span class="nn">qgis.PyQt.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span><span class="n">QWidget</span><span class="p">)</span>
+    <span class="k">class</span> <span class="nc">CostTool</span><span class="p">(</span><span class="n">AbstractLamiaTool</span><span class="p">):</span>
+    <span class="n">TOOLNAME</span> <span class="o">=</span> <span class="s1">&#39;test_module&#39;</span>
+      <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dbase</span><span class="p">,</span> <span class="n">dialog</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">linkedtreewidget</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gpsutil</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">parentwidget</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">CostTool</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dbase</span><span class="p">,</span> <span class="n">dialog</span><span class="p">,</span> <span class="n">linkedtreewidget</span><span class="p">,</span> <span class="n">gpsutil</span><span class="p">,</span><span class="n">parentwidget</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
+      <span class="k">def</span> <span class="nf">initTool</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># ****************************************************************************************</span>
+        <span class="c1"># Main spec</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">CAT</span> <span class="o">=</span> <span class="s1">&#39;Synthese&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;Couts&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">visualmode</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">groupBox_elements</span><span class="o">.</span><span class="n">setParent</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_editing</span><span class="o">.</span><span class="n">setParent</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">initFieldUI</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">userwdgfield</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">userwdgfield</span> <span class="o">=</span> <span class="n">UserUI</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">UserUI</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">UserUI</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
+        <span class="c1"># self.setupUi(self)</span>
+        <span class="n">uipath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;test_module.ui&#39;</span><span class="p">)</span>
+        <span class="n">uic</span><span class="o">.</span><span class="n">loadUi</span><span class="p">(</span><span class="n">uipath</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+<a href="https://github.com/Artelia/Lamia">
+	<img style="position: absolute; top: 0; right: 0; border: 0;"
+		src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
+</a>
+
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="05_00_API.html" class="btn btn-neutral float-right" title="API Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="00_index.html" class="btn btn-neutral float-left" title="Doc for developpers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Artelia
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

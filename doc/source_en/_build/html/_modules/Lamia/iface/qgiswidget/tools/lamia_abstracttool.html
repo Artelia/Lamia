@@ -1,0 +1,695 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="fr" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="fr" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Lamia.iface.qgiswidget.tools.lamia_abstracttool &mdash; Documentation LAMIA 1.0</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+        <script src="../../../../../_static/language_data.js"></script>
+        <script src="../../../../../_static/js/custom.js"></script>
+        <script src="../../../../../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../../../search.html" />
+<script>
+
+	window.onload = function () {
+		var url = window.location.toString()
+		selectorvalue = $('#languageselector').val()
+
+		if (url.includes('/fr/')) {
+			if (selectorvalue != 'fr') {
+				$('#languageselector').val("fr")
+			}
+		} else if (url.includes('/en/')) {
+			if (selectorvalue != 'en') {
+				$('#languageselector').val("en")
+			}
+		}
+	};
+
+	function languageSelector(selectObject) {
+		var value = selectObject.value;
+		var url = window.location.toString()
+
+		if (url.includes('/fr/')) {
+			window.location = url.replace(/fr/, value);
+		} else if (url.includes('/en/')) {
+			window.location = url.replace(/en/, value);
+		} else {
+			window.location = url
+		}
+	}
+</script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #004F83" >
+          
+
+
+          
+            <a href="../../../../../index.html" class="icon icon-home"> LAMIA
+          
+
+          
+            
+            <img src="../../../../../_static/icon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+
+<select id='languageselector' style="width: 100% ;border-radius: 20px 20px 20px 20px;"
+	onchange="languageSelector(this)">
+	<option value="en">English documentation</option>
+	<option value="fr">Documentation français</option>
+</select>
+
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Documentation utilisateur en français</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../fr/00_index.html">Documentation en français</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../fr/01_introduction.html">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../fr/03_00_tutoriel.html">Tutoriel</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../fr/03_01_installation.html">Installation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../fr/03_01_installation.html#librairies-necessaires-en-supplement-de-l-installation-de-qgis">Librairies nécessaires en supplément de l’installation de QGis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../fr/03_01_installation.html#installation-de-qgis-et-des-librairies-sous-windows">Installation de QGis et des librairies sous windows</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../fr/03_01_installation.html#installation-de-qgis-et-des-librairies-sous-linux">Installation de QGis et des librairies sous Linux</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../fr/03_01_installation.html#installation-de-lamia">Installation de Lamia</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../fr/03_02_la_base_de_donnees.html">La base de données</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../fr/03_02_la_base_de_donnees.html#l-organisation-generale">L’organisation générale</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../fr/03_02_la_base_de_donnees.html#la-table-objet">La table Objet</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../fr/03_03_prise_en_main_rapide.html">Prise en main rapide</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../fr/03_03_prise_en_main_rapide.html#creer-sa-premiere-base-de-donnees">Créer sa première base de données</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../fr/03_03_prise_en_main_rapide.html#decouverte-de-linterface">Découverte de l’interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../fr/03_03_prise_en_main_rapide.html#cest-parti-premiere-saisie">C’est parti : première saisie</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../fr/03_03_prise_en_main_rapide.html#configuration-minimale-de-lamia">Configuration minimale de Lamia</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../fr/03_03_prise_en_main_rapide.html#j-ai-un-bug">J’ai un bug !!</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../fr/03_04_presentation_complete.html">Présentation Complète</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../fr/03_04_presentation_complete.html#le-menu">Le menu</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../fr/03_04_presentation_complete.html#la-barre-d-outils">La barre d’outils:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../fr/03_04_presentation_complete.html#elements-de-configuration">Elements de configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../fr/03_05_description_modules_postpro.html">Description des modules de Post Traitement</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../fr/src_lamia_postpro/01_impression_rapport.html">Impression de rapports</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../fr/src_lamia_postpro/02_import.html">Import de données dans Lamia</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">User english documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../en/00_index.html">English documentation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../dev/00_index.html">Doc for developpers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../dev/04_developpement.html">Developpement</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../dev/04_developpement.html#fonctionnement-general">Fonctionnement général</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../dev/04_developpement.html#installation-de-lenvironnement-de-developpement-windows">Installation de l’environnement de développement - windows</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../dev/04_developpement.html#install-de-qgis">Install de QGis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../dev/04_developpement.html#install-de-pycharm">Install de Pycharm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../dev/04_developpement.html#script-pour-demarrer-pycharm">Script pour démarrer PyCharm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../dev/04_developpement.html#configuration-de-pycharm">Configuration de PyCharm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../dev/04_developpement.html#test-de-la-configuration">Test de la configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../dev/04_developpement.html#faire-fonctionner-pip">faire fonctionner pip</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../dev/04_developpement.html#cas-pratique-creation-dun-nouveau-module-de-post-traitement">Cas pratique : création d’un nouveau module de post-traitement</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../dev/05_00_API.html">API Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../dev/src_api/05_01_dbasemanager.html">dbasemanager Module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../dev/src_api/05_01_dbasemanager_dbaseparserabstract.html">AbstractDBaseParser</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../dev/src_api/05_01_dbasemanager_dbaseutils.html">dbaseutils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../dev/src_api/05_01_dbasemanager_dbconfigreader.html">DBconfigReader</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../dev/src_api/05_02_iface.html">QGis interface widgets</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../dev/src_api/05_02_iface_ifaceqgswidget.html">LamiaWindowWidget</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../dev/src_api/05_02_iface_lamia_abstracttool.html">AbstractLamiaTool</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../dev/src_api/05_02_iface_lamia_abstractformtool.html">AbstractLamiaFormTool</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">LAMIA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../../index.html">Code du module</a> &raquo;</li>
+        
+      <li>Lamia.iface.qgiswidget.tools.lamia_abstracttool</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+           <div itemprop="articleBody">
+            
+  <h1>Code source de Lamia.iface.qgiswidget.tools.lamia_abstracttool</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This file is part of LAMIA.</span>
+
+<span class="sd">    LAMIA is free software: you can redistribute it and/or modify</span>
+<span class="sd">    it under the terms of the GNU General Public License as published by</span>
+<span class="sd">    the Free Software Foundation, either version 3 of the License, or</span>
+<span class="sd">    (at your option) any later version.</span>
+
+<span class="sd">    LAMIA is distributed in the hope that it will be useful,</span>
+<span class="sd">    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="sd">    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="sd">    GNU General Public License for more details.</span>
+
+<span class="sd">    You should have received a copy of the GNU General Public License</span>
+<span class="sd">    along with Foobar.  If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  * Copyright (c) 2017-2020 ARTELIA Commit &lt;lamia@arteliagroup.com&gt;</span>
+<span class="sd">  * </span>
+<span class="sd">  * SPDX-License-Identifier: GPL-3.0-or-later</span>
+<span class="sd">  * License-Filename: LICENSING.md</span>
+<span class="sd"> &quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">qgis.PyQt.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span><span class="n">QWidget</span><span class="p">,</span> <span class="n">QTreeWidgetItem</span><span class="p">,</span> <span class="n">QAbstractItemView</span><span class="p">,</span> <span class="n">QVBoxLayout</span> <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">qgis.PyQt</span> <span class="kn">import</span> <span class="n">QtGui</span>
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">logging</span>
+
+<span class="kn">from</span> <span class="nn">..subdialogs.lamia_linkage</span> <span class="kn">import</span> <span class="n">LinkageDialog</span>
+<span class="kn">from</span> <span class="nn">.subwidgets.lamia_numpad</span> <span class="kn">import</span> <span class="n">NumPadDialog</span>
+<span class="c1"># from ..maptool.mapTools import mapToolCapture TODO</span>
+
+<div class="viewcode-block" id="AbstractLamiaTool"><a class="viewcode-back" href="../../../../../dev/src_api/05_02_iface_lamia_abstracttool.html#Lamia.iface.qgiswidget.tools.lamia_abstracttool.AbstractLamiaTool">[docs]</a><span class="k">class</span> <span class="nc">AbstractLamiaTool</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class is the abstract class for every widget loaded in the right part of te dockwidget.</span>
+<span class="sd">    If you want another widget, you have :</span>
+
+<span class="sd">    - create a file in Lamia.toolpostpro.[the_job]</span>
+
+<span class="sd">    - Fill it with the following code :</span>
+
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        class ExampleTool(AbstractLamiaTool):</span>
+<span class="sd">            TOOLNAME = &#39;test_module&#39;          #is TOOLNAME exists, lamia recognize it as postpro tool</span>
+
+<span class="sd">            def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):</span>
+<span class="sd">                super(ExampleTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)</span>
+
+<span class="sd">            def initTool(self):     # it s inside this function that we configure the minimal behaviour</span>
+<span class="sd">                self.CAT = &#39;Synthese&#39;       #The first col tree widget in the left side of lamia dock</span>
+<span class="sd">                self.NAME = &#39;Couts&#39;        #The second col tree widget in the left side of lamia dock</span>
+<span class="sd">                self.visualmode = [4]       # put in list in which visual mode you want to see the widget (4 for post pro)</span>
+
+<span class="sd">                self.groupBox_elements.setParent(None)      # disable managing part of he widget</span>
+<span class="sd">                self.frame_editing.setParent(None)          # disable editing part of he widget</span>
+
+<span class="sd">            def initFieldUI(self):      # load the widget to appear</span>
+<span class="sd">                if self.userwdgfield is None:</span>
+<span class="sd">                    self.userwdgfield = UserUI()</span>
+
+<span class="sd">        class UserUI(QWidget):                  #load the ui made with QT Designer</span>
+<span class="sd">            def __init__(self, parent=None):</span>
+<span class="sd">                super(UserUI, self).__init__(parent=parent)</span>
+<span class="sd">                uipath = os.path.join(os.path.dirname(__file__), &#39;test_module.ui&#39;)</span>
+<span class="sd">                uic.loadUi(uipath, self)</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">DBASETABLENAME</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">LOADFIRST</span><span class="o">=</span><span class="kc">False</span>
+    <span class="n">POSTPROTOOLNAME</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># tooltreewidget conf</span>
+    <span class="n">tooltreewidgetCAT</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">tooltreewidgetSUBCAT</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">tooltreewidgetICONPATH</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="c1"># choosertreewidget conf</span>
+    <span class="n">choosertreewidgetMUTIPLESELECTION</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                 <span class="n">dbaseparser</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+                 <span class="n">mainifacewidget</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+                 <span class="n">choosertreewidget</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+                 <span class="n">parentwidget</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+                 <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialisation of AbstractLamiaTool</span>
+
+<span class="sd">        :param dbaseparser:              The DBaseParser class</span>
+<span class="sd">        :param mainifacewidget:             The mainifacewidget class</span>
+<span class="sd">        :param choosertreewidget:   The QTreeWidget Wwhee the ids appears</span>
+<span class="sd">        :param parentwidget:       the parentWidget class</span>
+<span class="sd">        :param parent:             the Qt parent</span>
+
+<span class="sd">        ***************************************************************</span>
+<span class="sd">        ******************      mainifacewidget************************</span>
+<span class="sd">        ***************************************************************</span>
+<span class="sd">        *           *                                                 *</span>
+<span class="sd">        * tool      *    mainifacewidget.toolframe.addWidget(self)    *</span>
+<span class="sd">        * treewidget*                                                 *</span>
+<span class="sd">        *           *                                                 *</span>
+<span class="sd">        *           *                                                 *</span>
+<span class="sd">        *           *                                                 *</span>
+<span class="sd">        *************                                                 *</span>
+<span class="sd">        *           *                                                 *</span>
+<span class="sd">        * chooser   *                                                 *</span>
+<span class="sd">        * treewidget*                                                 *</span>
+<span class="sd">        *           *                                                 *</span>
+<span class="sd">        *           *                                                 *</span>
+<span class="sd">        ***************************************************************</span>
+<span class="sd">        ***************************************************************</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">AbstractLamiaTool</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setObjectName</span><span class="p">(</span><span class="s1">&#39;lamiatoolwidget&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_loadUI</span><span class="p">()</span>
+        <span class="c1"># ***** main var</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span> <span class="o">=</span> <span class="n">dbaseparser</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parentWidget</span> <span class="o">=</span> <span class="n">parentwidget</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span> <span class="o">=</span> <span class="n">mainifacewidget</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">choosertreewidget</span> <span class="o">=</span> <span class="n">choosertreewidget</span>
+
+        <span class="c1"># var used by tooltreewidget</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tooltreewidget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">MaintreeWidget</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tooltreewidget</span><span class="o">.</span><span class="n">currentItemChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">toolTreeWidgetCurrentItemChanged</span><span class="p">)</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">qtreewidgetitem</span> <span class="o">=</span> <span class="kc">None</span>     <span class="c1">#the tool treewidgetitem in tooltreewidget</span>
+
+
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">toolwidget</span> <span class="o">=</span> <span class="kc">None</span>      <span class="c1">#the widget loaded in self.toolwidgetmainlayout defined in inherited class</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">toolwidgetmain</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1">#the widget defined in inherited class - become self.toolwidget when loaded in layout</span>
+
+        <span class="c1"># subwidgets</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numpaddialog</span> <span class="o">=</span> <span class="n">NumPadDialog</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_loadUI</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#qwidgetconf</span>
+        <span class="n">toolwidgetmainlayout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">()</span>
+        <span class="n">toolwidgetmainlayout</span><span class="o">.</span><span class="n">setMargin</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">toolwidgetmainlayout</span><span class="p">)</span>
+        <span class="c1">#uipath = os.path.join(os.path.dirname(__file__), &#39;lamiabaseassainissement_observation_tool_ui_CD41.ui&#39;)</span>
+        <span class="c1">#uic.loadUi(uipath, self)</span>
+
+    <span class="k">def</span> <span class="nf">___________________widgetBehaviourWithToolTreeWidget</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">changeInterfaceMode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">manageLoadingInToolTreeWidget</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">manageWidgetToLoadInMainLayout</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">manageLoadingInToolTreeWidget</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">interfacemode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span>  <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;PREPROTOOLNAME&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">PREPROTOOLNAME</span>  <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">LOADFIRST</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">loadWidgetinToolTree</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">unloadWidgetinToolTree</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">interfacemode</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;PREPROTOOLNAME&#39;</span><span class="p">)</span> <span class="ow">and</span>  <span class="bp">self</span><span class="o">.</span><span class="n">PREPROTOOLNAME</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">loadWidgetinToolTree</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">unloadWidgetinToolTree</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">interfacemode</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;POSTPROTOOLNAME&#39;</span><span class="p">)</span> <span class="ow">and</span>  <span class="bp">self</span><span class="o">.</span><span class="n">POSTPROTOOLNAME</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">loadWidgetinToolTree</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">unloadWidgetinToolTree</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">manageWidgetToLoadInMainLayout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolwidgetmain</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">initMainToolWidget</span><span class="p">()</span>                                   
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolwidgetmain</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>    
+            <span class="c1">#former self.userwdg = self.userwdgfield</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">toolwidget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolwidgetmain</span>  
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1">#self.frametoolwidg.layout().itemAt(0).widget().setVisible(False)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">itemAt</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">widget</span><span class="p">()</span><span class="o">.</span><span class="n">setParent</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">toolwidget</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">initMainToolWidget</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="AbstractLamiaTool.loadWidgetinToolTree"><a class="viewcode-back" href="../../../../../dev/src_api/05_02_iface_lamia_abstracttool.html#Lamia.iface.qgiswidget.tools.lamia_abstracttool.AbstractLamiaTool.loadWidgetinToolTree">[docs]</a>    <span class="k">def</span> <span class="nf">loadWidgetinToolTree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Called on the widget creation in windowsdialog</span>
+<span class="sd">        load the widget in the main stacked widget</span>
+<span class="sd">        call onActivationRaw when qtreewidgetitem is clicked in MaintreeWidget</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># add qtreewidget item in MaintreeWidget</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">parentWidget</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            
+            <span class="n">arb</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">tooltreewidgetCAT</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tooltreewidgetSUBCAT</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;qtreewidgetitem&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">qtreewidgetitem</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">qtreewidgetitem</span> <span class="o">=</span> <span class="n">QTreeWidgetItem</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">qtreewidgetitem</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">arb</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">qtreewidgetitem</span><span class="o">.</span><span class="n">setFlags</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qtreewidgetitem</span><span class="o">.</span><span class="n">flags</span><span class="p">())</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tooltreewidgetICONPATH</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">qtreewidgetitem</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">QtGui</span><span class="o">.</span><span class="n">QIcon</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tooltreewidgetICONPATH</span><span class="p">))</span>
+
+
+            <span class="n">wdgitem</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">root</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tooltreewidget</span><span class="o">.</span><span class="n">invisibleRootItem</span><span class="p">()</span>
+            <span class="n">child_count</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">childCount</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">child_count</span><span class="p">):</span>
+                <span class="n">item</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">child</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="n">arb</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                    <span class="n">wdgitem</span> <span class="o">=</span> <span class="n">item</span>
+                    <span class="k">break</span>
+            <span class="k">if</span> <span class="n">wdgitem</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">wdgitem</span> <span class="o">=</span> <span class="n">QTreeWidgetItem</span><span class="p">()</span>
+                <span class="n">wdgitem</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">arb</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tooltreewidget</span><span class="o">.</span><span class="n">addTopLevelItems</span><span class="p">([</span><span class="n">wdgitem</span><span class="p">])</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">qtreewidgetitem</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">wdgitem</span><span class="o">.</span><span class="n">child</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">wdgitem</span><span class="o">.</span><span class="n">childCount</span><span class="p">())]:</span>
+                <span class="n">wdgitem</span><span class="o">.</span><span class="n">addChild</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qtreewidgetitem</span><span class="p">)</span>
+            <span class="n">wdgitem</span><span class="o">.</span><span class="n">setExpanded</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AbstractLamiaTool.unloadWidgetinToolTree"><a class="viewcode-back" href="../../../../../dev/src_api/05_02_iface_lamia_abstracttool.html#Lamia.iface.qgiswidget.tools.lamia_abstracttool.AbstractLamiaTool.unloadWidgetinToolTree">[docs]</a>    <span class="k">def</span> <span class="nf">unloadWidgetinToolTree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Unload the widget in the main stacked widget</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">arb</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">tooltreewidgetCAT</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tooltreewidgetSUBCAT</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">wdgitem</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">root</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tooltreewidget</span><span class="o">.</span><span class="n">invisibleRootItem</span><span class="p">()</span>
+            <span class="n">child_count</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">childCount</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">child_count</span><span class="p">):</span>
+                <span class="n">item</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">child</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="n">arb</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                    <span class="n">wdgitem</span> <span class="o">=</span> <span class="n">item</span>
+                    <span class="k">break</span>
+            <span class="k">if</span> <span class="n">wdgitem</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">wdgitem</span> <span class="o">=</span> <span class="n">root</span>
+            <span class="n">wdgitem</span><span class="o">.</span><span class="n">removeChild</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qtreewidgetitem</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">wdgitem</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tooltreewidget</span><span class="o">.</span><span class="n">invisibleRootItem</span><span class="p">()</span> <span class="ow">and</span> <span class="n">wdgitem</span><span class="o">.</span><span class="n">childCount</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tooltreewidget</span><span class="o">.</span><span class="n">invisibleRootItem</span><span class="p">()</span><span class="o">.</span><span class="n">removeChild</span><span class="p">(</span><span class="n">wdgitem</span><span class="p">)</span></div>
+
+            <span class="c1"># self.disconnectIdsGui()</span>
+
+    <span class="c1">#def loadWidgetInToolFrame(self, param1, param2=None):</span>
+<div class="viewcode-block" id="AbstractLamiaTool.toolTreeWidgetCurrentItemChanged"><a class="viewcode-back" href="../../../../../dev/src_api/05_02_iface_lamia_abstracttool.html#Lamia.iface.qgiswidget.tools.lamia_abstracttool.AbstractLamiaTool.toolTreeWidgetCurrentItemChanged">[docs]</a>    <span class="k">def</span> <span class="nf">toolTreeWidgetCurrentItemChanged</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param1</span><span class="p">,</span> <span class="n">param2</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Manage the activation of widget when tool&#39;s icon is clicked on main QTreeWidget</span>
+
+<span class="sd">        Do:</span>
+
+<span class="sd">        - display tool widget</span>
+
+<span class="sd">        - load features in ElemtreeWidget</span>
+
+<span class="sd">        - connect ElemtreeWidget click to featureSelected</span>
+
+<span class="sd">        - Finaly, call postOnActivation method, which is a function to be overloaded</span>
+
+<span class="sd">        TODO : display or not the layer</span>
+
+
+<span class="sd">        :param param1:  a QTreeWidgetItem (the one activated in main QTreeWidget)</span>
+<span class="sd">        :param param2: a QTreeWidgetItem (the one desactivated in main QTreeWidget)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">debug</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1">#before all</span>
+        
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param1</span><span class="p">,</span> <span class="n">QTreeWidgetItem</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">param2</span><span class="p">,</span> <span class="n">QTreeWidgetItem</span><span class="p">)</span> <span class="ow">or</span> <span class="n">param2</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>    <span class="c1"># signal from treeWidget_utils</span>
+            <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;step 1 </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">, </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">param1</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="n">param1</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">qtreewidgetitem</span><span class="p">,</span> <span class="n">param2</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">param2</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">qtreewidgetitem</span><span class="p">:</span>  <span class="c1">#the closed qtreewidgetitem</span>
+                <span class="k">if</span> <span class="n">debug</span> <span class="ow">and</span> <span class="n">param2</span> <span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;step 2 desactivation </span><span class="si">%s</span><span class="s1"> &#39;</span><span class="p">,</span> <span class="n">param2</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">updateToolbarOnToolFrameUnloading</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">unloadWidgetInToolFrame</span><span class="p">()</span>
+
+                <span class="c1"># self.postOnDesactivation()    TODO</span>
+                <span class="c1"># if param2 == param1:      TODO</span>
+                <span class="c1">#    self.lastidselected = None</span>
+
+            <span class="k">if</span> <span class="n">param1</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">qtreewidgetitem</span> <span class="p">:</span> <span class="c1">#the openend qtreewidgetitem</span>
+                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;step 3 activation </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">param1</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">param2</span><span class="p">)</span>
+                <span class="c1"># manage display in canvas</span>
+                <span class="c1"># self._checkLayerVisibility() TODO</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">createorresetRubberband</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">currenttoolwidget</span> <span class="o">=</span> <span class="bp">self</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">updateToolbarOnToolFrameLoading</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">activateChooserTreeWidget</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_displayWidget</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">postToolTreeWidgetCurrentItemChanged</span><span class="p">()</span></div>
+                
+
+    <span class="k">def</span> <span class="nf">unloadWidgetInToolFrame</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">updateToolbarOnToolFrameLoading</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">lamiatoolBarFormCreation</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">lamiatoolBarFormGeom</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">updateToolbarOnToolFrameUnloading</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">_displayWidget</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># manage widget display</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">stackedWidget_main</span><span class="o">.</span><span class="n">setCurrentIndex</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">stackedWidget_main</span><span class="o">.</span><span class="n">widget</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">currentwdg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">stackedWidget_main</span><span class="o">.</span><span class="n">widget</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">itemAt</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">widget</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">stackedWidget_main</span><span class="o">.</span><span class="n">widget</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">removeWidget</span><span class="p">(</span><span class="n">currentwdg</span><span class="p">)</span>
+                <span class="n">currentwdg</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+                <span class="c1"># self.mainifacewidget.stackedWidget_main.widget(1).layout().itemAt(0).widget().setParent(None)</span>
+
+
+            <span class="c1"># if not self in self.mainifacewidget.stackedWidget_main.widget(1).layout():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">stackedWidget_main</span><span class="o">.</span><span class="n">widget</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">activateChooserTreeWidget</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1">#choosertreewdg things</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">choosertreewidget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">choosertreewidget</span><span class="p">,</span><span class="s1">&#39;treewidget&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">choosertreewidgetMUTIPLESELECTION</span>  <span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">choosertreewidget</span><span class="o">.</span><span class="n">treewidget</span><span class="o">.</span><span class="n">setSelectionMode</span><span class="p">(</span><span class="n">QAbstractItemView</span><span class="o">.</span><span class="n">ExtendedSelection</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">choosertreewidget</span><span class="o">.</span><span class="n">treewidget</span><span class="o">.</span><span class="n">setSelectionMode</span><span class="p">(</span><span class="n">QAbstractItemView</span><span class="o">.</span><span class="n">SingleSelection</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">currentchoosertreewidget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">currentchoosertreewidget</span><span class="o">.</span><span class="n">disconnectTreewidget</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">currentchoosertreewidget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">choosertreewidget</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">choosertreewidget</span><span class="o">.</span><span class="n">onActivation</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">ElemtreeWidget</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">postToolTreeWidgetCurrentItemChanged</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">_____________________subwidgets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">showNumPad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">finalwdg</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numpaddialog</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
+        <span class="n">number</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">numpaddialog</span><span class="o">.</span><span class="n">dialogIsFinished</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">number</span><span class="p">:</span>
+            <span class="n">finalwdg</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="AbstractLamiaTool.showImageinLabelWidget"><a class="viewcode-back" href="../../../../../dev/src_api/05_02_iface_lamia_abstracttool.html#Lamia.iface.qgiswidget.tools.lamia_abstracttool.AbstractLamiaTool.showImageinLabelWidget">[docs]</a>    <span class="k">def</span> <span class="nf">showImageinLabelWidget</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wdg</span><span class="p">,</span><span class="n">savedfile</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Show the image file in the text widget</span>
+<span class="sd">        Manage thumbnail image</span>
+
+<span class="sd">        :param wdg: the text widget</span>
+<span class="sd">        :param savedfile: the image file</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">filetoshow</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">completePathOfFile</span><span class="p">(</span><span class="n">savedfile</span><span class="p">)</span>
+        <span class="n">possiblethumbnail</span><span class="p">,</span><span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filetoshow</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">possiblethumbnail</span> <span class="o">+</span> <span class="s2">&quot;_thumbnail.png&quot;</span><span class="p">):</span>
+            <span class="n">filetoshow</span> <span class="o">=</span> <span class="n">possiblethumbnail</span> <span class="o">+</span> <span class="s2">&quot;_thumbnail.png&quot;</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filetoshow</span><span class="p">):</span>
+            <span class="n">wdg</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+            <span class="n">wdg</span><span class="o">.</span><span class="n">setPixmap</span><span class="p">(</span><span class="n">filetoshow</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">wdg</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+            <span class="n">wdg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;Image non trouvee&#39;</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+<a href="https://github.com/Artelia/Lamia">
+	<img style="position: absolute; top: 0; right: 0; border: 0;"
+		src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
+</a>
+
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Artelia
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

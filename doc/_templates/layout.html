@@ -1,0 +1,102 @@
+{% extends '!layout.html' %}
+
+{%- block extrahead %}
+<script>
+
+	window.onload = function () {
+		var url = window.location.toString()
+		selectorvalue = $('#languageselector').val()
+
+		console.log(selectorvalue)
+
+		if (selectorvalue == null) {
+			// $('#languageselector').on('change', languageSelector())
+			return
+		}
+
+		// $('#languageselector').on('change', null)
+
+		if (url.includes('/fr/')) {
+			if (selectorvalue != 'fr') {
+				$('#languageselector').val("fr")
+			}
+		} else if (url.includes('/en/')) {
+			if (selectorvalue != 'en') {
+				$('#languageselector').val("en")
+			}
+		} else if (url.includes('/dev/')) {
+			if (selectorvalue != 'dev') {
+				$('#languageselector').val("dev")
+			}
+		}
+
+		// $('#languageselector').on('change', languageSelector())
+	};
+
+	function testSelectOK() {
+		var url = window.location.toString()
+		selectorvalue = $('#languageselector').val()
+
+		if (url.includes('/fr/')) {
+			if (selectorvalue != 'fr') {
+				return true
+			}
+		} else if (url.includes('/en/')) {
+			if (selectorvalue != 'en') {
+				return true
+			}
+		} else if (url.includes('/dev/')) {
+			if (selectorvalue != 'dev') {
+				return true
+			}
+		}
+
+		return false
+
+	}
+
+	function languageSelector() {
+
+		if (testSelectOK()) {
+			return
+		}
+
+		// $('#languageselector').on('change', null)
+
+		var value = $('#languageselector').val();
+		var url = window.location.toString()
+
+		var n = url.indexOf("build")
+
+		finalurl = url.substring(0, n) + 'build/' + value + '/html/index.html'
+		console.log(finalurl)
+		window.location = finalurl
+
+		// if (url.includes('/fr/')) {
+		// 	window.location = url.replace(/fr/, value);
+		// } else if (url.includes('/en/')) {
+		// 	window.location = url.replace(/en/, value);
+		// } else {
+		// 	window.location = url
+		// }
+	}
+</script>
+{% endblock %}
+
+{% block document %}
+{{super()}}
+<a href="https://github.com/Artelia/Lamia">
+	<img style="position: absolute; top: 0; right: 0; border: 0;"
+		src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
+</a>
+{% endblock %}
+
+{% block sidebartitle %}
+{{super()}}
+
+<select id='languageselector' style="width: 100% ;border-radius: 20px 20px 20px 20px;">
+	<option value="en">English documentation</option>
+	<option value="fr">Documentation français</option>
+	<option value="dev">Documentation for developpers</option>
+</select>
+{% endblock %}
