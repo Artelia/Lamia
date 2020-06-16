@@ -76,9 +76,18 @@ Le projet Lamia est constitué de deux composantes :
 
     <div style="display: flex;flex-direction: column;">
         <div style="display: flex;flex-direction: row;">
-            <p style="flex: 3 ">
+            <p style="flex: 2 ">
+            
             la base de données géographique (PostGis, Spatialite)
-            </p>
+            <br>La base de données de LAMIA est structurée de façon à 
+            s’adapter à toute infrastructure linéaire. 
+            <br>Les thèmes traités par cette base de données sont :
+            <br> •	La description du patrimoine (caractéristiques géométriques, fonctionnelles…) ;
+            <br> •	Les ressources au sens large que l’on peut associer à ce patrimoine 
+            (photographies, rapports, relevés de terrain…) ;
+            <br> •	Les éléments de gestion (annuaire des prestataires et usagers, zones de gestion, etc…) ;
+            <br> •	Les éléments relatifs au suivi de l’état du patrimoine.
+
             <div data-aos="fade-left" data-aos-duration="3000" data-aos-anchor-placement="center-bottom" 
                     style="flex: 1 ;margin: 20px;">
                 <img height="75px" src="_static/presentation/database.png">
