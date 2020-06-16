@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
-        <script src="_static/translations.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -38,6 +38,10 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Recherche" href="search.html" />
     <link rel="next" title="Documentation en français" href="doc/00_index.html" />
+
+<link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+<!-- help for aos : https://michalsnik.github.io/aos/  -->
+
 <script>
 
 	window.onload = function () {
@@ -52,26 +56,49 @@
 			if (selectorvalue != 'en') {
 				$('#languageselector').val("en")
 			}
+		} else if (url.includes('/dev/')) {
+			if (selectorvalue != 'dev') {
+				$('#languageselector').val("dev")
+			}
 		}
+
 	};
 
-	function languageSelector(selectObject) {
-		var value = selectObject.value;
+	function testSelectOK() {
 		var url = window.location.toString()
+		selectorvalue = $('#languageselector').val()
 
+		if (url.includes('/fr/')) {
+			if (selectorvalue != 'fr') {
+				return false
+			}
+		} else if (url.includes('/en/')) {
+			if (selectorvalue != 'en') {
+				return false
+			}
+		} else if (url.includes('/dev/')) {
+			if (selectorvalue != 'dev') {
+				return false
+			}
+		}
+
+		return true
+
+	}
+
+
+	function languageSelector() {
+
+		if (testSelectOK()) {
+			return
+		}
+		var value = $('#languageselector').val();
+		var url = window.location.toString()
 		var n = url.indexOf("build")
-
 		finalurl = url.substring(0, n) + 'build/' + value + '/html/index.html'
 		console.log(finalurl)
 		window.location = finalurl
 
-		// if (url.includes('/fr/')) {
-		// 	window.location = url.replace(/fr/, value);
-		// } else if (url.includes('/en/')) {
-		// 	window.location = url.replace(/en/, value);
-		// } else {
-		// 	window.location = url
-		// }
 	}
 </script>
 
@@ -118,10 +145,10 @@
 
           
 
-<select id='languageselector' style="width: 100% ;border-radius: 20px 20px 20px 20px;"
-	onchange="languageSelector(this)">
-	<option value="en">English documentation</option>
-	<option value="fr">Documentation français</option>
+<select id='languageselector' style="width: 100% ;border-radius: 20px 20px 20px 20px;" onchange=languageSelector()>
+	<option value="en">English user documentation</option>
+	<option value="fr">Documentation utilisateur français</option>
+	<option value="dev">Documentation for developpers</option>
 </select>
 
         </div>
@@ -238,48 +265,173 @@
             
   <div class="toctree-wrapper compound">
 </div>
-<div class="toctree-wrapper compound">
-</div>
-<div class="contents local topic" id="sommaire">
-<ul class="simple">
-<li><p><a class="reference internal" href="#le-projet-lamia" id="id4">Le projet Lamia</a></p></li>
-<li><p><a class="reference internal" href="#fonctionnalites" id="id5">Fonctionnalités</a></p></li>
-<li><p><a class="reference internal" href="#toc" id="id6">TOC</a></p></li>
-</ul>
-</div>
 <div class="section" id="le-projet-lamia">
-<h1><a class="toc-backref" href="#id4">Le projet Lamia</a><a class="headerlink" href="#le-projet-lamia" title="Lien permanent vers ce titre">¶</a></h1>
-<p>Nous cherchons à aider à la construction de base de données robustes et cohérentes qui pourront vivre pendant des années et permettre le développement d’une connaissance forte des infrastructures afin de permettre le passage d’une approche de déconstruction/reconstruction à une approche de gestion patrimoniale et de maintenance préventive.</p>
-<p>Notre but final est de permettre une réduction des coûts de maintenance des grandes infrastructures linéaires telles que les digues, les routes ou encore les ponts, tout en en limitant drastiquement l’impact écologique.</p>
-<p>Nous cherchons à fournir à tous les secteurs public et privé un outil simple d’utilisation pour la collecte, la maintenance et la vie d’une donnée de grande qualité sur les infrastructures linéaires.</p>
-<p>Le projet LAMIA est développé et maintenu par ARTELIA et diffusé sous licence GNU GPL v3 (ou postérieure).</p>
-<table class="docutils align-default" id="id1">
-<caption><span class="caption-text">This is a list table with images in it.</span><a class="headerlink" href="#id1" title="Lien permanent vers ce tableau">¶</a></caption>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><div class="figure align-default" id="id2">
-<img alt="_images/qs_01.png" src="_images/qs_01.png" />
-<p class="caption"><span class="caption-text">This is a short caption for a figure.</span><a class="headerlink" href="#id2" title="Lien permanent vers cette image">¶</a></p>
+<h1>Le projet Lamia<a class="headerlink" href="#le-projet-lamia" title="Lien permanent vers ce titre">¶</a></h1>
+<div style="display: flex;flex-direction: column;">
+    <div style="display: flex;flex-direction: row;">
+        <p style="flex: 3 ">
+        Dans le cadre de sa transformation digitale et afin d’améliorer sa qualité de service,
+        Artelia a mis au point une solution numérique globale destinée à la gestion patrimoniale
+        d’infrastructures linéaires : le projet LAMIA. <br>
+        Les types d'infrastructures actuellement prises en compte par Lamia sont :
+        </p>
+        <div data-aos="fade-left" style="flex: 1 ;margin: 20px;">
+            <img height="300" src="_static/presentation/logoArtelia.png">
+        </div>
+    </div>
+    <div style="display: flex;flex-direction: row;">
+        <p style="flex: 3 ">
+        Gestion patrimoniale des <b>réseaux d'assainissement</b> urbains
+        </p>
+        <div data-aos="fade-left" style="flex: 1 ;margin: 20px;">
+            <img height="75px" src="_static/presentation/assainissement.png">
+        </div>
+    </div>
+
+    <div style="display: flex;flex-direction: row;">
+        <p style="flex: 3 ">
+        Gestion patrimoniale des <b>réseaux d'eau potable</b>
+        </p>
+        <div data-aos="fade-left" style="flex: 1 ;margin: 20px;">
+            <img height="75px" src="_static/presentation/waterdistribution.jpg">
+        </div>
+    </div>
+
+    <div style="display: flex;flex-direction: row;">
+        <p style="flex: 3 ">
+        Gestion patrimoniale des <b>digues</b> de protection contre les inondations
+        </p>
+        <div data-aos="fade-left" style="flex: 1 ;margin: 20px;">
+            <img height="75px" src="_static/presentation/levee.png">
+        </div>
+    </div>
+    <div style="display: flex;flex-direction: row;">
+        <p style="flex: 3 ">
+        Relevés de terrain <b>faune/flore</b>
+        </p>
+        <div data-aos="fade-left" style="flex: 1 ;margin: 20px;">
+            <img height="75px" src="_static/presentation/faunaflora.png">
+        </div>
+    </div>
+    <div style="display: flex;flex-direction: row;">
+        <p style="flex: 3 ">
+        Le suivi de <b>chantier</b>
+        </p>
+        <div data-aos="fade-left" style="flex: 1 ;margin: 20px;">
+            <img height="75px" src="_static/presentation/constructionsite.png">
+        </div>
+    </div>
+</div><p>Le projet Lamia est constitué de deux composantes :</p>
+<div style="display: flex;flex-direction: column;">
+    <div style="display: flex;flex-direction: row;">
+        <p style="flex: 3 ">
+        la base de données géographique
+        </p>
+        <div data-aos="fade-left" data-aos-duration="3000" data-aos-anchor-placement="center-bottom"
+                style="flex: 1 ;margin: 20px;">
+            <img height="75px" src="_static/presentation/database.png">
+        </div>
+    </div>
+
+    <div style="display: flex;flex-direction: row;">
+        <p style="flex: 2 ">
+        les outils d’accès et de consultation de cette base de données
+        </p>
+        <div data-aos="fade-left"  data-aos-duration="3000"  data-aos-anchor-placement="center-bottom"
+                style="flex: 1 ;margin: 20px;">
+            <img height="75px" src="_static/presentation/qgisiface.png">
+        </div>
+    </div>
+</div><p>L’ensemble de ces briques sont développées en open-source.</p>
 </div>
-</td>
-<td><div class="figure align-default" id="id3">
-<img alt="_images/qs_02.png" src="_images/qs_02.png" />
-<p class="caption"><span class="caption-text">This is a short caption for a figure.</span><a class="headerlink" href="#id3" title="Lien permanent vers cette image">¶</a></p>
-</div>
-</td>
-</tr>
-</tbody>
-</table>
+<div class="section" id="objectif-du-projet">
+<h1>Objectif du projet<a class="headerlink" href="#objectif-du-projet" title="Lien permanent vers ce titre">¶</a></h1>
+<p>Nous cherchons à aider à la construction de base de données robustes et cohérentes
+qui pourront vivre pendant des années et permettre le développement d’une connaissance
+forte des infrastructures afin de permettre le passage d’une approche de
+déconstruction/reconstruction à une approche de gestion patrimoniale et de
+maintenance préventive.</p>
+<p>Notre but final est de permettre une réduction des coûts de maintenance
+des grandes infrastructures linéaires telles que les digues, les routes ou encore
+les ponts, tout en en limitant drastiquement l’impact écologique.</p>
+<p>Nous cherchons à fournir à tous les secteurs public et privé un outil simple
+d’utilisation pour la collecte, la maintenance et la vie d’une donnée de grande qualité
+sur les infrastructures linéaires.</p>
 </div>
 <div class="section" id="fonctionnalites">
-<h1><a class="toc-backref" href="#id5">Fonctionnalités</a><a class="headerlink" href="#fonctionnalites" title="Lien permanent vers ce titre">¶</a></h1>
+<h1>Fonctionnalités<a class="headerlink" href="#fonctionnalites" title="Lien permanent vers ce titre">¶</a></h1>
+<div class="section" id="acquisition-et-exploitation-de-donnees-terrain">
+<h2>Acquisition et exploitation de données terrain<a class="headerlink" href="#acquisition-et-exploitation-de-donnees-terrain" title="Lien permanent vers ce titre">¶</a></h2>
+<div style="display: flex;flex-direction: row;">
+    <p style="flex: 2 ">
+    L’interface sous QGis, associé à un GPS (tablette ou spécifique) permet la saisie
+    géoréférencée des éléments observés sur site.
+    L’interface de saisie a été élaborée en étroite collaboration
+    avec les agents de terrain pour en faire un outil accepté.
+    </p>
+    <div data-aos="flip-down"  data-aos-duration="1000" data-aos-anchor-placement="center-bottom"
+            style="flex: 1 ;margin: 20px;">
+            <img height="75px" src="_static/presentation/dataacquisition.png">
+    </div>
+</div></div>
+<div class="section" id="import-et-export-de-la-donnee">
+<h2>Import et export de la donnée<a class="headerlink" href="#import-et-export-de-la-donnee" title="Lien permanent vers ce titre">¶</a></h2>
+<div style="display: flex;flex-direction: row;">
+    <p style="flex: 2 ">
+    Lamia permet d'importer les données de source variée de façon ergonomique, et permet
+    également l'export vers des formats variés (shapefile, rapports au format pdf, ...)
+    </p>
+    <div data-aos="flip-down"  data-aos-duration="1000" data-aos-anchor-placement="center-bottom"
+            style="flex: 1 ;margin: 20px;">
+            <img height="75px" src="_static/presentation/importexport.png">
+    </div>
+</div></div>
+<div class="section" id="gestion-patrimoniale">
+<h2>Gestion patrimoniale<a class="headerlink" href="#gestion-patrimoniale" title="Lien permanent vers ce titre">¶</a></h2>
+<div style="display: flex;flex-direction: row;">
+    <p style="flex: 2 ">
+    Lamia possède des modules d’import permettant
+    l’intégration de tout type de base de données des fournisseurs.
+    Le module d’Analyse Multi-Critère (AMC) permet ensuite d’exploiter
+    ces données pour réaliser une priorisation des travaux à réaliser.
+    </p>
+    <div data-aos="flip-down"  data-aos-duration="1000" data-aos-anchor-placement="center-bottom"
+            style="flex: 1 ;margin: 20px;">
+        <p>Todo</p>
+    </div>
+</div></div>
+<div class="section" id="suivi-de-chantier">
+<h2>Suivi de chantier<a class="headerlink" href="#suivi-de-chantier" title="Lien permanent vers ce titre">¶</a></h2>
+<div style="display: flex;flex-direction: row;">
+    <p style="flex: 2 ">
+    Lamia permet le suivi de chantier avec un process de traçabilité
+    des non conformités :
+    Description, proposition de l’entreprise, accord du MOE,
+    vérification sur site et levée de réserve.
+    </p>
+    <div data-aos="flip-down"  data-aos-duration="1000" data-aos-anchor-placement="center-bottom"
+            style="flex: 1 ;margin: 20px;">
+        <img height="200px" src="_static/presentation/chantier.png">
+    </div>
+</div></div>
+<div class="section" id="votre-usage">
+<h2>… votre usage !<a class="headerlink" href="#votre-usage" title="Lien permanent vers ce titre">¶</a></h2>
+<div style="display: flex;flex-direction: row;">
+    <p style="flex: 2 ">
+    Lamia est suffisamment généraliste pour s’adapter à tout usage associé à la gestion
+    d’infrastructure linéaire. Exprimez-nous vos besoins et nous étudierons l’intégration
+    de nouveaux usages dans LAMIA !
+    </p>
+    <div data-aos="flip-down"  data-aos-duration="1000" data-aos-anchor-placement="center-bottom"
+            style="flex: 1 ;margin: 20px;">
+        <img height="200px" src="_static/presentation/usersatisfaction.png">
+    </div>
+</div></div>
 </div>
-<div class="section" id="toc">
-<h1><a class="toc-backref" href="#id6">TOC</a><a class="headerlink" href="#toc" title="Lien permanent vers ce titre">¶</a></h1>
-<p>azdazd</p>
+<div class="section" id="open-source">
+<h1>Open Source<a class="headerlink" href="#open-source" title="Lien permanent vers ce titre">¶</a></h1>
+<p>Le projet LAMIA est développé et maintenu par ARTELIA et diffusé sous licence GNU GPL v3
+(ou postérieure).</p>
 </div>
 
 
@@ -290,6 +442,10 @@
 	<img style="position: absolute; top: 0; right: 0; border: 0;"
 		src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
 </a>
+<script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script>
+	AOS.init();
+</script>
 
           <footer>
   

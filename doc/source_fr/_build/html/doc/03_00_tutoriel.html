@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
-        <script src="../_static/translations.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script type="text/javascript" src="../_static/translations.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -39,6 +39,10 @@
     <link rel="search" title="Recherche" href="../search.html" />
     <link rel="next" title="Installation" href="03_01_installation.html" />
     <link rel="prev" title="Introduction" href="01_introduction.html" />
+
+<link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+<!-- help for aos : https://michalsnik.github.io/aos/  -->
+
 <script>
 
 	window.onload = function () {
@@ -53,26 +57,49 @@
 			if (selectorvalue != 'en') {
 				$('#languageselector').val("en")
 			}
+		} else if (url.includes('/dev/')) {
+			if (selectorvalue != 'dev') {
+				$('#languageselector').val("dev")
+			}
 		}
+
 	};
 
-	function languageSelector(selectObject) {
-		var value = selectObject.value;
+	function testSelectOK() {
 		var url = window.location.toString()
+		selectorvalue = $('#languageselector').val()
 
+		if (url.includes('/fr/')) {
+			if (selectorvalue != 'fr') {
+				return false
+			}
+		} else if (url.includes('/en/')) {
+			if (selectorvalue != 'en') {
+				return false
+			}
+		} else if (url.includes('/dev/')) {
+			if (selectorvalue != 'dev') {
+				return false
+			}
+		}
+
+		return true
+
+	}
+
+
+	function languageSelector() {
+
+		if (testSelectOK()) {
+			return
+		}
+		var value = $('#languageselector').val();
+		var url = window.location.toString()
 		var n = url.indexOf("build")
-
 		finalurl = url.substring(0, n) + 'build/' + value + '/html/index.html'
 		console.log(finalurl)
 		window.location = finalurl
 
-		// if (url.includes('/fr/')) {
-		// 	window.location = url.replace(/fr/, value);
-		// } else if (url.includes('/en/')) {
-		// 	window.location = url.replace(/en/, value);
-		// } else {
-		// 	window.location = url
-		// }
 	}
 </script>
 
@@ -119,10 +146,10 @@
 
           
 
-<select id='languageselector' style="width: 100% ;border-radius: 20px 20px 20px 20px;"
-	onchange="languageSelector(this)">
-	<option value="en">English documentation</option>
-	<option value="fr">Documentation français</option>
+<select id='languageselector' style="width: 100% ;border-radius: 20px 20px 20px 20px;" onchange=languageSelector()>
+	<option value="en">English user documentation</option>
+	<option value="fr">Documentation utilisateur français</option>
+	<option value="dev">Documentation for developpers</option>
 </select>
 
         </div>
@@ -336,6 +363,10 @@
 	<img style="position: absolute; top: 0; right: 0; border: 0;"
 		src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
 </a>
+<script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script>
+	AOS.init();
+</script>
 
           <footer>
   

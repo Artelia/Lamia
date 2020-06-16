@@ -1,0 +1,521 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="fr" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="fr" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Impression de rapports &mdash; Documentation LAMIA 1.0</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../search.html" />
+    <link rel="next" title="Import de données dans Lamia" href="02_import.html" />
+    <link rel="prev" title="Description des modules de Post Traitement" href="../03_05_description_modules_postpro.html" />
+
+<link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+<!-- help for aos : https://michalsnik.github.io/aos/  -->
+
+<script>
+
+	window.onload = function () {
+		var url = window.location.toString()
+		selectorvalue = $('#languageselector').val()
+
+		if (url.includes('/fr/')) {
+			if (selectorvalue != 'fr') {
+				$('#languageselector').val("fr")
+			}
+		} else if (url.includes('/en/')) {
+			if (selectorvalue != 'en') {
+				$('#languageselector').val("en")
+			}
+		} else if (url.includes('/dev/')) {
+			if (selectorvalue != 'dev') {
+				$('#languageselector').val("dev")
+			}
+		}
+
+	};
+
+	function testSelectOK() {
+		var url = window.location.toString()
+		selectorvalue = $('#languageselector').val()
+
+		if (url.includes('/fr/')) {
+			if (selectorvalue != 'fr') {
+				return false
+			}
+		} else if (url.includes('/en/')) {
+			if (selectorvalue != 'en') {
+				return false
+			}
+		} else if (url.includes('/dev/')) {
+			if (selectorvalue != 'dev') {
+				return false
+			}
+		}
+
+		return true
+
+	}
+
+
+	function languageSelector() {
+
+		if (testSelectOK()) {
+			return
+		}
+		var value = $('#languageselector').val();
+		var url = window.location.toString()
+		var n = url.indexOf("build")
+		finalurl = url.substring(0, n) + 'build/' + value + '/html/index.html'
+		console.log(finalurl)
+		window.location = finalurl
+
+	}
+</script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #004F83" >
+          
+
+
+          
+            <a href="../../index.html" class="icon icon-home"> LAMIA
+          
+
+          
+            
+            <img src="../../_static/icon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+
+<select id='languageselector' style="width: 100% ;border-radius: 20px 20px 20px 20px;" onchange=languageSelector()>
+	<option value="fr">Documentation utilisateur français</option>
+	<option value="en">English user documentation</option>
+	<option value="dev">Documentation for developpers</option>
+</select>
+
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Documentation utilisateur en français</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../00_index.html">Documentation en français</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../01_introduction.html">Introduction</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../03_00_tutoriel.html">Tutoriel</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../03_01_installation.html">Installation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../03_01_installation.html#librairies-necessaires-en-supplement-de-l-installation-de-qgis">Librairies nécessaires en supplément de l’installation de QGis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_01_installation.html#installation-de-qgis-et-des-librairies-sous-windows">Installation de QGis et des librairies sous windows</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_01_installation.html#installation-de-qgis-et-des-librairies-sous-linux">Installation de QGis et des librairies sous Linux</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_01_installation.html#installation-de-lamia">Installation de Lamia</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../03_02_la_base_de_donnees.html">La base de données</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../03_02_la_base_de_donnees.html#l-organisation-generale">L’organisation générale</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_02_la_base_de_donnees.html#la-table-objet">La table Objet</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../03_03_prise_en_main_rapide.html">Prise en main rapide</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../03_03_prise_en_main_rapide.html#creer-sa-premiere-base-de-donnees">Créer sa première base de données</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_03_prise_en_main_rapide.html#decouverte-de-linterface">Découverte de l’interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_03_prise_en_main_rapide.html#cest-parti-premiere-saisie">C’est parti : première saisie</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_03_prise_en_main_rapide.html#configuration-minimale-de-lamia">Configuration minimale de Lamia</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_03_prise_en_main_rapide.html#j-ai-un-bug">J’ai un bug !!</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../03_04_presentation_complete.html">Présentation Complète</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../03_04_presentation_complete.html#le-menu">Le menu</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_04_presentation_complete.html#la-barre-d-outils">La barre d’outils:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_04_presentation_complete.html#elements-de-configuration">Elements de configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../03_05_description_modules_postpro.html">Description des modules de Post Traitement</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Impression de rapports</a></li>
+<li class="toctree-l4"><a class="reference internal" href="02_import.html">Import de données dans Lamia</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">LAMIA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../00_index.html">Documentation en français</a> &raquo;</li>
+        
+          <li><a href="../03_00_tutoriel.html">Tutoriel</a> &raquo;</li>
+        
+          <li><a href="../03_05_description_modules_postpro.html">Description des modules de Post Traitement</a> &raquo;</li>
+        
+      <li>Impression de rapports</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+           <div itemprop="articleBody">
+            
+  <div class="toctree-wrapper compound">
+</div>
+<div class="section" id="impression-de-rapports">
+<h1>Impression de rapports<a class="headerlink" href="#impression-de-rapports" title="Lien permanent vers ce titre">¶</a></h1>
+<div class="section" id="utilisation-du-module">
+<h2>Utilisation du module<a class="headerlink" href="#utilisation-du-module" title="Lien permanent vers ce titre">¶</a></h2>
+<a class="reference internal image-reference" href="../../_images/usage.png"><img alt="../../_images/usage.png" class="align-center" src="../../_images/usage.png" style="width: 400px;" /></a>
+<p>On accède à ce module allant dans « Interface / Post traitement » et en selectionnant
+l’onglet « Impression rapport ».</p>
+<p>Il suffit de :</p>
+<ol class="arabic simple">
+<li><p>Selectionner le type de rapport voulu dans le menu déroulant</p></li>
+<li><p>Selectionner la zone géographique pour laquelle on souhaite les rapports (on peut en selectionner plusieurs) dans la zone en bas à gauche</p></li>
+<li><p>Choisir l’emplacement du fichier de destination (pdf).</p></li>
+<li><p>Cliquer sur Impression rapport</p></li>
+</ol>
+</div>
+<div class="section" id="creation-modification-de-rapports">
+<h2>Création/Modification de rapports<a class="headerlink" href="#creation-modification-de-rapports" title="Lien permanent vers ce titre">¶</a></h2>
+<div class="section" id="presentation-fonctionnement">
+<h3>Présentation / Fonctionnement<a class="headerlink" href="#presentation-fonctionnement" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Les fichiers de configuration d’impression de rapport sont au nobre de deux :
+* le fichier .qpt comprenant le modèle de mise en page qgis
+* un fichier .txt comprenant la configuration de l’impression</p>
+<p>Ces fichiers sont situés :</p>
+<ul class="simple">
+<li><p>soit dans le répertoire du plugin Lamia/libslamia/lamiareport/[nom_du_type_de_la_base_de_donnees_choisie] pour les configurations d’impression standard,</p></li>
+<li><p>soit dans le répertoire créé lors de l’initialisation du projet, et ensuite au chemin suivant : /config/rapporttools pour les configurations d’impression spécifiques au projet.</p></li>
+</ul>
+<p>NB : le répertoire des plugins est dans  C:\Users\[votre_login]\AppData\Roaming\QGIS\QGIS3\profiles\[votre_nom_de_profil_qgis]\python\plugins
+pour QGIS3.</p>
+<p>Ainsi, pour créer un nouveau type de rapport (de nom rapport_toto p.ex), il faut créer :</p>
+<ul class="simple">
+<li><p>un fichier rapport_toto.txt (la configuration).</p></li>
+<li><p>un fichier rapport_toto.qpt (la mise en page qgis)</p></li>
+</ul>
+</div>
+<div class="section" id="creation-du-fichier-rapport-toto-txt">
+<h3>Création du fichier rapport_toto.txt<a class="headerlink" href="#creation-du-fichier-rapport-toto-txt" title="Lien permanent vers ce titre">¶</a></h3>
+<p>IL s’agit du fichier de configuration de l’impression rapport. La trame de ce fichier est créé automatiquement lors
+du click sur le bouton « nouveau » du gestionnaire de fichier.</p>
+<p>Les différentes lignes à renseigner sont indiquées ci-après.</p>
+<ul class="simple">
+<li><p>###atlaslayersql</p></li>
+</ul>
+<p>mettre à la suite la requete sql qui va êre utilisée pour créer la table à parcourir par l’atlas. Les noms des tables utilisées ici doivent correspondre au nom des tables utilisée dans le composeur avec #lamia…</p>
+<p>ex : SELECT edge_now.* FROM edge_now</p>
+<ul class="simple">
+<li><p>###atlaslayerid</p></li>
+</ul>
+<p>donner le champ contenant l’id utilisé lors du parcours de la table par l’atlas</p>
+<p>ex : id_edge</p>
+<ul class="simple">
+<li><p>###spatial</p></li>
+</ul>
+<p>Indiquer ici si la table est spatiale ou pas. Prend la valeur True ou False</p>
+<ul class="simple">
+<li><p>###ordering</p></li>
+</ul>
+<p>indique la méthode d’ordonnancement des éléments parcourus par l’atlas. Si rien n’est mis, ça suit l’ordre des id.</p>
+<p>Peut prendre la valeur autoalongpath. Dans ce cas, les ids sont classés selon le parcours de l’edge la plus proche.</p>
+<ul class="simple">
+<li><p>###atlaslayerstyle</p></li>
+</ul>
+<p>nom du fichier .qml (style qgis) pour le style de la couche parcourue par l’atlas.</p>
+<ul class="simple">
+<li><p>###atlasdrivemap</p></li>
+</ul>
+<p>Fourni les caractéristiques des cartes qui suivent la table parcourue par l’atlas.</p>
+<p>Ex :</p>
+<p>#itemname;   minscale;   typescale;      layers</p>
+<p>map1;       2500;       Predefined      ;[“atlaslayer”, “Infralineaire”, “scan25”]</p>
+<p>Dans ce cas, la map ayant pour identifiant map1 dans le .qpt sera au 1/2500°, avec une échelle
+de type Predefined (ne change pas selon l’objet), et les couches affichées seront l’atlaslayer
+(la couche constitue avec la requete sql de ###atlaslayersql), la couche Infralineaire telle qu’elle
+est stylée dans qgis au moment de l’édition du rapport, et la couche scan25 qui est un raster chargé
+dans Lamia avec pour attribut « scan25 de référence ».
+On peut également donner indiquer le nom de couches chargées dans les fonds de plans Lamia.</p>
+<p>On peut mettre autant de map que l’on veut.</p>
+<p>###generalmap</p>
+<p>Fourni les caractéristiques des cartes générales (ne bouge pas en fonction de l’objet).
+Même principe que pour ###atlasdrivemap</p>
+<p>Ex :</p>
+<p>#itemname;   minscale;   typescale; layers</p>
+<p>map0    ;           ;             ; [“Infralineaire”, “ortho”]</p>
+<ul class="simple">
+<li><p>###images</p></li>
+</ul>
+<p>On met ici les identifiants des images du composeur, avec un mot clé à la suite.</p>
+<p>Ex :</p>
+<p>#itemname   ; type</p>
+<p>photo1;Equipement_now.photo1</p>
+<p>ici , l’image avec pour identifiant « photo1 » sera rempli avec la première photo liée de l’équipement en cours de parcours par l’atlas.</p>
+<p>La liste des mots clés prédéfinis sont :</p>
+<ul class="simple">
+<li><p>[nom_table].photo[indexphoto] : affiche la photo n°[indexphoto] associée à la table nom_table</p></li>
+<li><p>[nom_table].croquis[indexcroquis] : affiche le croquis n°[indexcroquis] associée à la table nom_table</p></li>
+<li><p>[nom_table].ressource[indexressource] : affiche la ressource dont l’id est stockée dans le champ « lid_resource_[indexressource] » de la table [nom table]</p></li>
+</ul>
+<p>Des mots clés particuliers peuvent être employés. Dans ce cas il faut développer la fonction python
+qui permet de générer l’image/le code html voulu(e) dans le fichier
+Lamia/libslamia/lamiareport/[nom_du_type_de_la_base_de_donnees_choisie]/lamiareportworktypefunc.py
+(Cf. exemples dans le code Lamia)</p>
+<ul class="simple">
+<li><p>###childprint</p></li>
+</ul>
+<p>Si on veut rajouter des composeurs à la suite de ce composeur, indiquer ici le nom du composeur à aller chercher.</p>
+<p>Ex :
+#confname;                linkcolumn;             optionsql</p>
+<p>Desordres_observation;    Observation_now.lid_desordre ; ORDER BY Observation_now.datetimeobservation DESC</p>
+<p>Exemple complet de fichier de configuration :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">###atlaslayersql</span>
+<span class="n">WITH</span> <span class="n">Gestionnaire</span> <span class="n">AS</span> <span class="p">(</span><span class="n">SELECT</span> <span class="n">Intervenant</span><span class="o">.</span><span class="n">societe</span><span class="p">,</span> <span class="n">Intervenant</span><span class="o">.</span><span class="n">nom</span> <span class="p">,</span> <span class="n">Tcobjetintervenant</span><span class="o">.</span><span class="n">lid_objet</span>
+                 <span class="n">FROM</span> <span class="n">Tcobjetintervenant</span>                      <span class="n">INNER</span> <span class="n">JOIN</span> <span class="n">Intervenant</span> <span class="n">ON</span> <span class="n">Tcobjetintervenant</span><span class="o">.</span><span class="n">lid_intervenant</span> <span class="o">=</span> <span class="n">Intervenant</span><span class="o">.</span><span class="n">id_intervenant</span>                      <span class="n">WHERE</span> <span class="n">Tcobjetintervenant</span><span class="o">.</span><span class="n">fonction</span> <span class="o">=</span> <span class="s1">&#39;GES&#39;</span> <span class="p">)</span>
+<span class="n">SELECT</span> <span class="n">Equipement_now</span><span class="o">.*</span> <span class="p">,</span> <span class="n">Gestionnaire</span><span class="o">.</span><span class="n">societe</span><span class="p">,</span> <span class="n">Gestionnaire</span><span class="o">.</span><span class="n">nom</span>
+<span class="n">FROM</span> <span class="n">Equipement_now</span>
+<span class="n">LEFT</span> <span class="n">JOIN</span> <span class="n">Gestionnaire</span> <span class="n">ON</span> <span class="n">Gestionnaire</span><span class="o">.</span><span class="n">lid_objet</span> <span class="o">=</span> <span class="n">Equipement_now</span><span class="o">.</span><span class="n">id_objet</span>
+<span class="n">WHERE</span> <span class="p">(</span> <span class="n">Equipement_now</span><span class="o">.</span><span class="n">categorie</span> <span class="o">=</span> <span class="s1">&#39;RHF&#39;</span> <span class="ow">or</span> <span class="n">Equipement_now</span><span class="o">.</span><span class="n">categorie</span> <span class="o">=</span> <span class="s1">&#39;RHO&#39;</span> <span class="ow">or</span> <span class="n">Equipement_now</span><span class="o">.</span><span class="n">categorie</span> <span class="o">=</span> <span class="s1">&#39;OUH&#39;</span><span class="p">)</span>
+<span class="c1">###atlaslayerid</span>
+<span class="n">id_equipement</span>
+<span class="c1">###spatial</span>
+<span class="bp">True</span>
+<span class="c1">###ordering</span>
+<span class="c1">#type;               constraint (qgis typo)</span>
+<span class="n">autoalongpath</span><span class="p">;</span>      <span class="s2">&quot;lid_descriptionsystem_1&quot;</span> <span class="n">IS</span> <span class="n">NULL</span>
+<span class="c1">###atlaslayerstyle</span>
+<span class="n">Equipementhydraulique_atlas</span><span class="o">.</span><span class="n">qml</span>
+<span class="c1">###atlasdrivemap</span>
+<span class="c1">#itemname;   minscale;   typescale;      layers</span>
+<span class="n">map1</span><span class="p">;</span>       <span class="mi">2500</span><span class="p">;</span>       <span class="n">Predefined</span>      <span class="p">;[</span><span class="s1">&#39;atlaslayer&#39;</span><span class="p">,</span> <span class="s1">&#39;Infralineaire&#39;</span><span class="p">,</span> <span class="s1">&#39;scan25&#39;</span><span class="p">]</span>
+<span class="c1">#map1;       2500;       Predefined      ;[]</span>
+<span class="c1">###generalmap</span>
+<span class="c1">#itemname;   minscale;   typescale; layers</span>
+<span class="n">map0</span>    <span class="p">;</span>           <span class="p">;</span>             <span class="p">;</span> <span class="p">[</span><span class="s1">&#39;Infralineaire&#39;</span><span class="p">,</span> <span class="s1">&#39;ortho&#39;</span><span class="p">]</span>
+<span class="c1">#map0    ;           ;             ; []</span>
+<span class="c1">###images</span>
+<span class="c1">#itemname   ; type</span>
+<span class="n">photo1</span><span class="p">;</span><span class="n">Equipement_now</span><span class="o">.</span><span class="n">photo1</span>
+<span class="c1">###childprint</span>
+<span class="c1">#confname;                        linkcolumn;                               optionsql</span>
+<span class="n">Equipementhydraulique_annexe</span><span class="p">;</span>    <span class="n">Equipement_now</span><span class="o">.</span><span class="n">lid_descriptionsystem_1</span> <span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="creation-du-fichier-rapport-toto-qpt">
+<h3>Création du fichier rapport_toto.qpt<a class="headerlink" href="#creation-du-fichier-rapport-toto-qpt" title="Lien permanent vers ce titre">¶</a></h3>
+<p>1. Aller dans QGIS, ouvrir le composeur et faire Mise en page/enregistrer comme modèle… et l’enregistrer sous le nom de rapport_toto.qpt
+dans l’emplacement vu au paragraphe précédent. Toujours refaire cette procedure à a fin de chaque modif.</p>
+<ol class="arabic simple" start="2">
+<li><p>Renseignement des champs Lamia</p></li>
+</ol>
+<ul class="simple">
+<li><p>créer une zone de texte</p></li>
+</ul>
+<a class="reference internal image-reference" href="../../_images/qpt_field.png"><img alt="../../_images/qpt_field.png" class="align-center" src="../../_images/qpt_field.png" style="width: 300px;" /></a>
+<p>Dans cette zone de texte, si vous voulez ajouter un champ lamia, l’écrire comme ceci :</p>
+<p>#lamia.[table_requetée_dans_le_sql_de_configuration].[nom du champ voulu]#</p>
+<p>Par exemple, pour avoir le diamètre nominal d’une canalisation, faire
+#lamia.Infralineaire.diametrenominal#</p>
+<p>Cette zone de texte sera remplacée par les champs voulus lors de l’impression du rapport.</p>
+<p>NB : le nom des tables et des champs se trouvent dans le menu Aide/TAble et Champs du plugin Lamia.</p>
+<ul class="simple">
+<li><p>Faire une requete sql</p></li>
+</ul>
+<a class="reference internal image-reference" href="../../_images/qpt_sql.png"><img alt="../../_images/qpt_sql.png" class="align-center" src="../../_images/qpt_sql.png" style="width: 400px;" /></a>
+<p>il est possible également d’afficher le résultat d’une requete sql comme ceci :</p>
+<p>#lamiasql.SELECT champtruc FROM tableMachin#</p>
+<p>où table machin a été définie dans la requete sql principale du fichier de configuration</p>
+<ul class="simple">
+<li><p>associer une fonction qgis à un résultat lamia</p></li>
+</ul>
+<p>il est possible d’utiliser une fonction qgis (round() par exemple) avec comme argument un champ lamia:</p>
+<p>Round(#lamia.Infralineaire.diametrenominal#)</p>
+<ol class="arabic simple" start="3">
+<li><p>Ajouter des photos</p></li>
+</ol>
+<a class="reference internal image-reference" href="../../_images/qpt_id_photo.png"><img alt="../../_images/qpt_id_photo.png" class="align-center" src="../../_images/qpt_id_photo.png" style="width: 600px;" /></a>
+<p>il convient de créer une image</p>
+<p>Ensuite, dans ses propriétés, nous lui donnerons un identifiant unque qui nous permettra de configurer
+ce qui apparaît dans l’image dans le fichier de configuration toto.txt.</p>
+<ol class="arabic simple" start="4">
+<li><p>Ajouter les cartes</p></li>
+</ol>
+<p>Ajouter des cartes à la mise en page et penser à leur donner un identifiant qui sera utilisé dans le fichier
+de configuration.</p>
+<a class="reference internal image-reference" href="../../_images/qpt_id_map.png"><img alt="../../_images/qpt_id_map.png" class="align-center" src="../../_images/qpt_id_map.png" style="width: 600px;" /></a>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+<a href="https://github.com/Artelia/Lamia">
+	<img style="position: absolute; top: 0; right: 0; border: 0;"
+		src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
+</a>
+<script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script>
+	AOS.init();
+</script>
+
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="02_import.html" class="btn btn-neutral float-right" title="Import de données dans Lamia" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../03_05_description_modules_postpro.html" class="btn btn-neutral float-left" title="Description des modules de Post Traitement" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Artelia
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
