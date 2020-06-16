@@ -148,12 +148,11 @@ class BaseUrbandrainageEdgeTool(BaseEdgeTool):
             "edge": {
                 "linkfield": "id_edge",
                 "widgets": {
-                    "sewertype": self.toolwidgetmain.comboBox_typeReseau,
+                    # "sewertype": self.toolwidgetmain.comboBox_typeReseau,
                     "laterals": self.toolwidgetmain.comboBox_branch,
                     "domain": self.toolwidgetmain.comboBox_domaine,
                     "location": self.toolwidgetmain.comboBox_implant,
                     "flowtype": self.toolwidgetmain.comboBox_typeecoul,
-                    "sewerfunction": self.toolwidgetmain.comboBox_fonction,
                     "material": self.toolwidgetmain.comboBox_materiau,
                     # 'anPoseInf': self.toolwidgetmain.dateEdit_anneepose,
                     "nominaldiameter": self.toolwidgetmain.doubleSpinBox_diametreNominal,
@@ -174,7 +173,9 @@ class BaseUrbandrainageEdgeTool(BaseEdgeTool):
             "descriptionsystem": {
                 "linkfield": "id_descriptionsystem",
                 "widgets": {
+                    "networktype": self.toolwidgetmain.comboBox_typeReseau,
                     "dateoperationalcreation": self.toolwidgetmain.dateEdit_anneepose,
+                    "systemfunction": self.toolwidgetmain.comboBox_fonction,
                 },
             },
         }

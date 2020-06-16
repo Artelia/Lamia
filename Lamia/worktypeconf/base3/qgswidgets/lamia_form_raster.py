@@ -56,11 +56,11 @@ class BaseRasterTool(AbstractLamiaFormTool):
         self.formtoolwidgetconfdictmain = {
             "rasters": {
                 "linkfield": "id_rasters",
-                "widgets": {"typeraster": self.toolwidgetmain.comboBox_type},
+                "widgets": {"rastertype": self.toolwidgetmain.comboBox_type},
             },
             "object": {
                 "linkfield": "id_object",
-                "widgets": {"libelle": self.toolwidgetmain.lineEdit_libelle},
+                "widgets": {"name": self.toolwidgetmain.lineEdit_libelle},
             },
             "resource": {
                 "linkfield": "id_resource",

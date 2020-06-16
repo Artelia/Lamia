@@ -100,6 +100,7 @@ class BaseWaterdistributionEdgeTool(BaseEdgeTool):
                 parentframe=self.toolwidgetmain.frame_edgetonode,
             )
             self.lamiawidgets.append(self.edgetonode)
+
         elif self.dbase.variante in ["urban_heating"]:
             self.toolwidgetmain = UserUIField2()
 
@@ -107,7 +108,6 @@ class BaseWaterdistributionEdgeTool(BaseEdgeTool):
                 "edge": {
                     "linkfield": "id_edge",
                     "widgets": {
-                        "networktype": self.toolwidgetmain.comboBox_typeeau,
                         "laterals": self.toolwidgetmain.comboBox_branchement,
                         "domain": self.toolwidgetmain.comboBox_domaine,
                         "diameterext": self.toolwidgetmain.doubleSpinBox_diametre,

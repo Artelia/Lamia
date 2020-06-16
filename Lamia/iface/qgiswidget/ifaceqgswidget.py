@@ -1353,6 +1353,8 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         self.toolbarsvisibility = {}
 
     def _manageQgisDockWidgetOnStart(self):
+        if not qgis.utils.iface:
+            return
         for x in qgis.utils.iface.mainWindow().findChildren(QDockWidget):
             if x.objectName() == "GPSInformation":
                 x.setVisible(True)

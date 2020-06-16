@@ -8,14 +8,17 @@ with warnings.catch_warnings():
 # comment for desactivating tests
 from settings import *
 from test_utils import *
-import test_a_dbase_simple
-import test_a_autoupdatedbase
+
+# import test_a_dbase_simple
+
+# import test_a_autoupdatedbase
 import test_b_qgisqt
-import test_b_qtimporttool
-import test_b_qtofflinemode
-import test_c_exporttool
-import test_c_reporttool
-import test_c_costtool
+
+# import test_b_qtimporttool
+# import test_b_qtofflinemode
+# import test_c_exporttool
+# import test_c_reporttool
+# import test_c_costtool
 
 
 def suite():
@@ -28,6 +31,7 @@ def suite():
         suite.addTest(test_a_dbase_simple.DBaseTest("test_c_DbaseCreate"))
 
         # * test_a_autoupdatedbase
+    if "test_a_autoupdatedbase" in globals().keys():
         suite.addTest(test_a_autoupdatedbase.DBaseTest("test_a_updatedbase"))
 
     # * test_b_qgisqt

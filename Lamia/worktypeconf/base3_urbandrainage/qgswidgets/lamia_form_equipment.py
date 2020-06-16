@@ -50,7 +50,6 @@ class BaseUrbandrainageEquipmentTool(BaseEquipmentTool):
                     "linkfield": "id_equipment",
                     "widgets": {
                         "equipmentcategory": self.toolwidgetmain.comboBox_cat,
-                        "sewertype": self.toolwidgetmain.comboBox_typeres,
                         "equipmenttype": self.toolwidgetmain.comboBox_typeapp,
                     },
                 },
@@ -60,7 +59,7 @@ class BaseUrbandrainageEquipmentTool(BaseEquipmentTool):
                 },
                 "descriptionsystem": {
                     "linkfield": "id_descriptionsystem",
-                    "widgets": {},
+                    "widgets": {"networktype": self.toolwidgetmain.comboBox_typeres,},
                 },
             }
             self.toolwidgetmain.comboBox_cat.currentIndexChanged.connect(
@@ -89,7 +88,7 @@ class BaseUrbandrainageEquipmentTool(BaseEquipmentTool):
                         "equipmentcategory": self.toolwidgetmain.comboBox_cat,
                         "domain": self.toolwidgetmain.comboBox_domaine,
                         "location": self.toolwidgetmain.comboBox_implant,
-                        "sewertype": self.toolwidgetmain.comboBox_typeres,
+                        # "sewertype": self.toolwidgetmain.comboBox_typeres,
                         "equipmenttype": self.toolwidgetmain.comboBox_typeapp,
                         "accessibility": self.toolwidgetmain.comboBox_access,
                     },
@@ -100,7 +99,7 @@ class BaseUrbandrainageEquipmentTool(BaseEquipmentTool):
                 },
                 "descriptionsystem": {
                     "linkfield": "id_descriptionsystem",
-                    "widgets": {},
+                    "widgets": {"networktype": self.toolwidgetmain.comboBox_typeres,},
                 },
             }
             self.toolwidgetmain.comboBox_cat.currentIndexChanged.connect(

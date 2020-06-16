@@ -121,7 +121,7 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
         self.toolwidgetmain = UserUI()
         self.formtoolwidgetconfdictmain = {
             "node": {
-                "linkfield": "id_noeud",
+                "linkfield": "id_node",
                 "widgets": {
                     # 'sewertype': self.toolwidgetmain.comboBox_typeReseau,
                     "location": self.toolwidgetmain.comboBox_environnement,
@@ -243,7 +243,7 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
             "node": {
                 "linkfield": "id_node",
                 "widgets": {
-                    "sewertype": self.toolwidgetmain.comboBox_typeReseau,
+                    # "sewertype": self.toolwidgetmain.comboBox_typeReseau,
                     "location": self.toolwidgetmain.comboBox_environnement,
                     "nodetype": self.toolwidgetmain.comboBox_typeOuvrageAss,
                     "manholecovershape": self.toolwidgetmain.comboBox_Formetampon,
@@ -279,7 +279,7 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
                     "psoverflow": self.toolwidgetmain.comboBox_surverse,
                     # 'PRpompebarreguidage': self.toolwidgetmain.comboBox_barrresguidage,
                     # 'PRpompechainerelevage': self.toolwidgetmain.comboBox_pompe_relevage,
-                    "PRnbrepompes": self.toolwidgetmain.spinBox_pompes,
+                    "pspumpnumber": self.toolwidgetmain.spinBox_pompes,
                     # 'PRclapet': self.toolwidgetmain.comboBox_vanne_clapet,
                     # 'PRvannes': self.toolwidgetmain.comboBox_vanne_vanne,
                     # 'PRprisepression': self.toolwidgetmain.comboBox_vanne_prisepression,
@@ -306,7 +306,10 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
                     "comment": self.toolwidgetmain.textBrowser_commentaire,
                 },
             },
-            "descriptionsystem": {"linkfield": "id_descriptionsystem", "widgets": {}},
+            "descriptionsystem": {
+                "linkfield": "id_descriptionsystem",
+                "widgets": {"networktype": self.toolwidgetmain.comboBox_typeReseau,},
+            },
         }
 
         self.toolwidgetmain.toolButton_longueur.clicked.connect(
@@ -336,7 +339,7 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
                 "linkfield": "id_noeud",
                 "widgets": {
                     "domain": self.toolwidgetmain.comboBox_domaine,
-                    "sewertype": self.toolwidgetmain.comboBox_typeReseau,
+                    # "sewertype": self.toolwidgetmain.comboBox_typeReseau,
                     "location": self.toolwidgetmain.comboBox_environnement,
                     "nodetype": self.toolwidgetmain.comboBox_typeOuvrageAss,
                     "nodesubtype": self.toolwidgetmain.comboBox_soustype,
@@ -353,7 +356,7 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
                     # Equipement
                     # ouvrage de regul
                     "psremotemonitoring": self.toolwidgetmain.comboBox_telegestion_2,
-                    "prof01": self.toolwidgetmain.comboBox_telegestion_2,
+                    "depth1": self.toolwidgetmain.comboBox_telegestion_2,
                     # PR
                     "psnominalcapacity": self.toolwidgetmain.doubleSpinBox_capanom,
                     "pspumpnumber": self.toolwidgetmain.spinBox_pompes2,
@@ -378,7 +381,10 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
                 "linkfield": "id_object",
                 "widgets": {"comment": self.toolwidgetmain.textBrowser_commentaire},
             },
-            "descriptionsystem": {"linkfield": "id_descriptionsystem", "widgets": {}},
+            "descriptionsystem": {
+                "linkfield": "id_descriptionsystem",
+                "widgets": {"networktype": self.toolwidgetmain.comboBox_typeReseau,},
+            },
         }
 
         self.toolwidgetmain.toolButton_longueur.clicked.connect(
@@ -511,7 +517,7 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
         if self.currentFeaturePK is not None and self.dbase.variante in ["2018_SNCF"]:
             libelle = ""
             sql = (
-                "SELECT nodetype,sewertype ,id_node  FROM Noeud WHERE pk_node = "
+                "SELECT nodetype, networktype ,id_node  FROM node_qgis WHERE pk_node = "
                 + str(self.currentFeaturePK)
             )
             typeouvrage, typereseau, idnoeud = self.dbase.query(sql)[0]

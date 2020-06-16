@@ -61,7 +61,7 @@ class BaseSketchTool(AbstractLamiaFormTool):
         "tctablecolparent": "lid_object",
         "tctablecolthistable": "lid_resource",
     }
-    for tablename in ["observation", "node", "edge", "equipment", "facility"]:
+    for tablename in ["observation", "node", "edge", "surface", "equipment", "facility"]:
         tempparentjoin[tablename] = linkdict
     PARENTJOIN = tempparentjoin
 

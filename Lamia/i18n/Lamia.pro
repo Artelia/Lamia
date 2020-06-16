@@ -61,7 +61,7 @@ FORMS =     ../iface/qgiswidget/ifaceqgswidget.ui\
             ../worktypeconf/base3_levee/qgswidgets/lamia_form_equipment_ui.ui\
             ../worktypeconf/base3_levee/qgswidgets/lamia_form_equipment_ui_SIRS.ui\
             ../worktypeconf/base3_levee/qgswidgets/lamia_form_observation_ui.ui\
-            
+
             
 
 
