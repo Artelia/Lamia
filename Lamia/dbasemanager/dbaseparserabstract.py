@@ -56,6 +56,7 @@ PGTYPE_TO_SLTYPE = {
 }
 
 PROJECTCONFIGDIRS = ["dbase", "rapporttools", "styles", "importtools"]
+# PROJECTCONFIGDIRS = ["dbase", "qgswidgets", "qgsstyles", "lamiacost", "lamiaexportshp"]
 
 
 class AbstractDBaseParser:
@@ -150,7 +151,6 @@ class AbstractDBaseParser:
 
         # raise exceptions for debug
         self.raiseexceptions = False
-
 
     def __________________________DBase_handing(self):
         pass

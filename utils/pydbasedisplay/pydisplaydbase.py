@@ -7,16 +7,60 @@ from test.test_utils import *
 import Lamia
 
 from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
-import networkx
+from Lamia.iface.ifaceabstractconnector import LamiaIFaceAbstractConnectors
 import warnings
 
-warnings.filterwarnings("default", category=DeprecationWarning, module="networkx")
-INTERFACEINDEX = 0
+# warnings.filterwarnings("ignore")
+# os.environ["PYTHONWARNINGS"] = "ignore"
+
+# with warnings.catch_warnings(record=True) as w:
+# Cause all warnings to always be triggered.
+# warnings.simplefilter("always")
+# Trigger a warning.
+# fxn()
+# print(w)
+# Verify some things
+# assert len(w) == 1
+# assert issubclass(w[-1].category, DeprecationWarning)
+# assert "deprecated" in str(w[-1].message)
+
+
+# default ignore
+import networkx
+
+warnings.filterwarnings("ignore", category=DeprecationWarning, module="networkx")
+
+import Lamia.libs.pyqtgraph
+
+warnings.filterwarnings(
+    "ignore", category=DeprecationWarning, module="Lamia.libs.pyqtgraph"
+)
+
+import numpy
+
+warnings.filterwarnings("ignore", message="numpy.ufunc size changed")
+
+# warnings.filterwarnings("ignore", category=RuntimeWarning, module="numpy")
+# warnings.filterwarnings("ignore")
+
+# with warnings.catch_warnings():
+#     warnings.filterwarnings("ignore")
+# warnings.filterwarnings("default", category=DeprecationWarning, module="numpy")
+# warnings.filterwarnings("default", category=RuntimeWarning, module="numpy")
+
+numpy.seterr(all="ignore")
+
+from Lamia.iface.qgsconnector.ifaceloggingconnector import LoggingConnector
+
+INTERFACEINDEX = 4
 
 
 def launchIface():
     translator = loadLocale()
     mainwin, canvas, lamiawidget = getDisplayWidget()
+
+    lamiawidget.connector = LoggingConnector()
+    # lamiawidget.dbase.messageinstance = lamiawidget.connector
 
     testdir = os.path.join(
         os.path.dirname(Lamia.__file__), "../test/testtempfiles/c_creation"
@@ -29,7 +73,7 @@ def launchIface():
     SLFILE = os.path.join(testdir, worktype, "test01.sqlite")
 
     # SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue\test01.sqlite"
-    # SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue_base3\test01.sqlite"
+    SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue_base3\test01.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\GPMB\c_merge_ass\mergeddbase.sqlite"
 
     lamiawidget.loadDBase(dbtype="Spatialite", slfile=SLFILE)
