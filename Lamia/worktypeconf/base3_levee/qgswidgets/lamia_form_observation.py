@@ -79,71 +79,75 @@ class BaseLeveeObservationTool(BaseObservationTool):
     def initMainToolWidget(self):
         # ****************************************************************************************
         # userui Desktop
-        if self.dbase.variante in [None, "Lamia"]:
-
-            self.toolwidgetmain = UserUI()
-            self.formtoolwidgetconfdictmain = {
-                "observation": {
-                    "linkfield": "id_observation",
-                    "widgets": {
-                        "datetimeobservation": self.toolwidgetmain.dateTimeEdit,
-                        "number": self.toolwidgetmain.spinBox_nombre,
-                        "specificlenght": self.toolwidgetmain.doubleSpinBox_longueur,
-                        "gravity": self.toolwidgetmain.comboBox_urgence,
-                        "conditionglobal": self.toolwidgetmain.comboBox_etatgen,
-                        "conditionglobalcom": self.toolwidgetmain.textBrowser_etatgencom,
-                        "oh_etatvantellerie": self.toolwidgetmain.comboBox_etatvantellerie,
-                        "oh_etatvantelleriecom": self.toolwidgetmain.textBrowser_vanteleriecom,
-                        "eqconditioncivilwork": [
-                            self.toolwidgetmain.comboBox_etatGC,
-                            self.toolwidgetmain.comboBox_etatGC_2,
-                        ],
-                        "eqconditioncivilworkcom": [
-                            self.toolwidgetmain.textBrowser_etatGC,
-                            self.toolwidgetmain.textBrowser_etatGC_2,
-                        ],
-                        "eqhandlingtest": self.toolwidgetmain.comboBox_manoeuvre,
-                        "eqhandlingtestcom": self.toolwidgetmain.textBrowser_manoeuvre,
-                        "eqconditionsealing": self.toolwidgetmain.checkBox_etancheite,
-                        "eqconditionsealingcom": self.toolwidgetmain.textBrowser__etancheite,
-                        "eqconditionsedimentation": [
-                            self.toolwidgetmain.comboBox_envas,
-                            self.toolwidgetmain.comboBox_envas2,
-                        ],
-                        "eqconditionsedimentationcom": [
-                            self.toolwidgetmain.textBrowser_envascom,
-                            self.toolwidgetmain.textBrowser_envascom2,
-                        ],
-                        "progression": self.toolwidgetmain.textEdit_evolution,
-                        "nextactiontype": self.toolwidgetmain.comboBox_typesuite,
-                        "nextactioncomment": self.toolwidgetmain.textEdit_suite,
-                    },
+        self.toolwidgetmain = UserUI()
+        self.formtoolwidgetconfdictmain = {
+            "observation": {
+                "linkfield": "id_observation",
+                "widgets": {
+                    "datetimeobservation": self.toolwidgetmain.dateTimeEdit,
+                    "number": self.toolwidgetmain.spinBox_nombre,
+                    "specificlenght": self.toolwidgetmain.doubleSpinBox_longueur,
+                    "gravity": self.toolwidgetmain.comboBox_urgence,
+                    "conditionglobal": self.toolwidgetmain.comboBox_etatgen,
+                    "conditionglobalcom": self.toolwidgetmain.textBrowser_etatgencom,
+                    "oh_etatvantellerie": self.toolwidgetmain.comboBox_etatvantellerie,
+                    "oh_etatvantelleriecom": self.toolwidgetmain.textBrowser_vanteleriecom,
+                    "eqconditioncivilwork": [
+                        self.toolwidgetmain.comboBox_etatGC,
+                        self.toolwidgetmain.comboBox_etatGC_2,
+                    ],
+                    "eqconditioncivilworkcom": [
+                        self.toolwidgetmain.textBrowser_etatGC,
+                        self.toolwidgetmain.textBrowser_etatGC_2,
+                    ],
+                    "eqhandlingtest": self.toolwidgetmain.comboBox_manoeuvre,
+                    "eqhandlingtestcom": self.toolwidgetmain.textBrowser_manoeuvre,
+                    "eqconditionsealing": self.toolwidgetmain.checkBox_etancheite,
+                    "eqconditionsealingcom": self.toolwidgetmain.textBrowser__etancheite,
+                    "eqconditionsedimentation": [
+                        self.toolwidgetmain.comboBox_envas,
+                        self.toolwidgetmain.comboBox_envas2,
+                    ],
+                    "eqconditionsedimentationcom": [
+                        self.toolwidgetmain.textBrowser_envascom,
+                        self.toolwidgetmain.textBrowser_envascom2,
+                    ],
+                    "progression": self.toolwidgetmain.textEdit_evolution,
+                    "nextactiontype": self.toolwidgetmain.comboBox_typesuite,
+                    "nextactioncomment": self.toolwidgetmain.textEdit_suite,
                 },
-                "object": {
-                    "linkfield": "id_object",
-                    "widgets": {"comment": self.toolwidgetmain.textEdit_comm},
-                },
-            }
+            },
+            "object": {
+                "linkfield": "id_object",
+                "widgets": {"comment": self.toolwidgetmain.textEdit_comm},
+            },
+        }
 
-            self.toolwidgetmain.toolButton_calc_nb.clicked.connect(
-                lambda: self.showNumPad(self.toolwidgetmain.spinBox_nombre)
-            )
-            self.toolwidgetmain.toolButton_longueur.clicked.connect(
-                lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_longueur)
-            )
+        self.toolwidgetmain.toolButton_calc_nb.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.spinBox_nombre)
+        )
+        self.toolwidgetmain.toolButton_longueur.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_longueur)
+        )
 
-            # ****************************************************************************************
-            # child widgets
-            self.dbasechildwdgfield = []
-            self.instancekwargs["parentwidget"] = self
-            # if self.parentWidget is not None:
-            # if self.parentWidget is None or self.parentWidget is not None and self.parentWidget.dbasetablename == 'Desordre':
-            self.propertieswdgPHOTOGRAPHIE = BaseLeveeCameraTool(**self.instancekwargs)
-            self.dbasechildwdgfield = [self.propertieswdgPHOTOGRAPHIE]
-            self.propertieswdgCROQUIS = BaseLeveeSketchTool(**self.instancekwargs)
-            self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
-        elif self.dbase.variante in ["SIRS"]:
+        # ****************************************************************************************
+        # child widgets
+        self.dbasechildwdgfield = []
+        self.instancekwargs["parentwidget"] = self
+        # if self.parentWidget is not None:
+        # if self.parentWidget is None or self.parentWidget is not None and self.parentWidget.dbasetablename == 'Desordre':
+        self.propertieswdgPHOTOGRAPHIE = BaseLeveeCameraTool(**self.instancekwargs)
+        self.dbasechildwdgfield = [self.propertieswdgPHOTOGRAPHIE]
+        self.propertieswdgCROQUIS = BaseLeveeSketchTool(**self.instancekwargs)
+        self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
+        if self.dbase.variante in ["SIRS"]:
+            self.toolwidgetmain.toolButton_longueur.setEnabled(False)
+            self.toolwidgetmain.doubleSpinBox_longueur.setEnabled(False)
+            self.toolwidgetmain.comboBox_typesuite.setEnabled(False)
+            self.toolwidgetmain.textEdit_comm.setEnabled(False)
+
+            """
             self.toolwidgetmain = UserUISirs()
 
             self.formtoolwidgetconfdictmain = {
@@ -186,6 +190,7 @@ class BaseLeveeObservationTool(BaseObservationTool):
             self.dbasechildwdgfield = [self.propertieswdgPHOTOGRAPHIE]
             self.propertieswdgCROQUIS = BaseLeveeSketchTool(**self.instancekwargs)
             self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+            """
 
     def equipementTypeChanged(self, currentindex):
         if self.toolwidgetmain is None:
@@ -193,6 +198,7 @@ class BaseLeveeObservationTool(BaseObservationTool):
         currenttext = (
             self.parentWidget.parentWidget.toolwidgetmain.comboBox_type.currentText()
         )
+
         if currenttext in ["Vanne", "Clapet"]:
             self.toolwidgetmain.stackedWidget_2.setCurrentIndex(1)
         elif currenttext in ["Exutoire"]:
@@ -233,6 +239,7 @@ class UserUI(QWidget):
         uic.loadUi(uipath, self)
 
 
+"""
 class UserUISirs(QWidget):
     def __init__(self, parent=None):
         super(UserUISirs, self).__init__(parent=parent)
@@ -240,3 +247,4 @@ class UserUISirs(QWidget):
             os.path.dirname(__file__), "lamia_form_observation_ui_SIRS.ui"
         )
         uic.loadUi(uipath, self)
+"""

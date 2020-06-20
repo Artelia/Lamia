@@ -808,9 +808,10 @@ class AbstractDBaseParser:
                 + sqltemp1["SELECT"]
                 + " FROM "
                 + sqltemp1["FROM"]
-                + " WHERE "
-                + sqltemp1["WHERE"]
             )
+            if "WHERE" in sqltemp1.keys():
+                sqlout += " WHERE " + sqltemp1["WHERE"]
+            
             if "ORDER" in sqltemp1.keys():
                 sqlout += " ORDER BY " + sqltemp1["ORDER"]
             if "GROUP" in sqltemp1.keys():

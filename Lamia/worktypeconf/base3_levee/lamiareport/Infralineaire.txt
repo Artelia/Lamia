@@ -1,14 +1,13 @@
 ###atlaslayersql
-WITH Gestionnaire AS (SELECT Intervenant.societe, Intervenant.nom  , Tcobjetintervenant.lid_objet 
-                 FROM Tcobjetintervenant  
-                 INNER JOIN Intervenant ON Tcobjetintervenant.lid_intervenant = Intervenant.id_intervenant  
-                 WHERE Tcobjetintervenant.fonction = 'GES' )
-SELECT Infralineaire_now.* , Gestionnaire.societe, Gestionnaire.nom 
-FROM Infralineaire_now 
-LEFT JOIN Gestionnaire ON Gestionnaire.lid_objet = Infralineaire_now.id_objet
-WHERE Infralineaire_now.id_infralineaire = Infralineaire_now.id_infralineaire
+WITH operator AS (SELECT actor.society, actor.actorname  , tcobjectactor.lid_object 
+                 FROM tcobjectactor  
+                 INNER JOIN actor ON tcobjectactor.lid_actor = actor.id_actor  
+                 WHERE tcobjectactor.role = 'GES' )
+SELECT edge_now.* , operator.society, operator.actorname 
+FROM edge_now 
+LEFT JOIN operator ON operator.lid_object = edge_now.id_object
 ###atlaslayerid
-pk_infralineaire
+id_edge
 ###spatial
 True
 ###ordering
@@ -17,19 +16,19 @@ autopath
 Infralineaire_atlas.qml
 ###atlasdrivemap
 #itemname;   minscale;   typescale;      layers
-map1;       2500;       Auto       ;['atlaslayer', 'Equipement', 'ortho']
+map1;       2500;       Auto       ;['atlaslayer', 'equipment', 'ortho']
 ###generalmap
 #itemname;   minscale;   typescale; layers
-map0    ;           ;             ; ['Infralineaire', 'scan25']
+map0    ;           ;             ; ['edge', 'scan25']
 ###images
 #itemname   ; type
 logo;logo_artelia
-photo1 ;Infralineaire_now.photo1
-photo2 ;Infralineaire_now.photo2
-photo3 ;Infralineaire_now.photo3
-photo4 ;Infralineaire_now.photo4
-photo5 ;Infralineaire_now.photo5
-photo6 ;Infralineaire_now.photo6
+photo1 ;edge_now.photo1
+photo2 ;edge_now.photo2
+photo3 ;edge_now.photo3
+photo4 ;edge_now.photo4
+photo5 ;edge_now.photo5
+photo6 ;edge_now.photo6
 
 ###childprint
 #confname;                linkcolumn;             optionsql

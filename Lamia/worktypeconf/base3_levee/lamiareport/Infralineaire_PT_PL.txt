@@ -1,14 +1,13 @@
 ###atlaslayersql
-WITH Gestionnaire AS (SELECT Intervenant.societe, Intervenant.nom  , Tcobjetintervenant.lid_objet 
-                 FROM Tcobjetintervenant  
-                 INNER JOIN Intervenant ON Tcobjetintervenant.lid_intervenant = Intervenant.id_intervenant  
-                 WHERE Tcobjetintervenant.fonction = 'GES' )
-SELECT Infralineaire_now.* , Gestionnaire.societe, Gestionnaire.nom 
-FROM Infralineaire_now 
-LEFT JOIN Gestionnaire ON Gestionnaire.lid_objet = Infralineaire_now.id_objet
-WHERE Infralineaire_now.id_infralineaire = Infralineaire_now.id_infralineaire
+WITH operator AS (SELECT actor.society, actor.actorname  , tcobjectactor.lid_object 
+                 FROM tcobjectactor  
+                 INNER JOIN actor ON tcobjectactor.lid_actor = actor.id_actor  
+                 WHERE tcobjectactor.role = 'GES' )
+SELECT edge_now.* , operator.society, operator.actorname 
+FROM edge_now 
+LEFT JOIN operator ON operator.lid_object = edge_now.id_object
 ###atlaslayerid
-id_infralineaire
+id_edge
 ###spatial
 True
 ###ordering
@@ -17,17 +16,17 @@ autopath
 Infralineaire_atlas.qml
 ###atlasdrivemap
 #itemname;   minscale;   typescale;      layers
-map1;       2500;       Auto      ;['atlaslayer', 'Equipement', 'scan25']
+map1;       2500;       Auto      ;['atlaslayer', 'equipment', 'scan25']
 #map1;       2500;       Predefined      ;[]
 ###generalmap
 #itemname;   minscale;   typescale; layers
-map0    ;           ;             ; ['Infralineaire', 'ortho']
+map0    ;           ;             ; ['edge', 'ortho']
 #map0    ;           ;             ; []
 ###images
 #itemname   ; type
-photo;Infralineaire_now.ressource2
+photo;edge_now.ressource2
 logo;logo_artelia
-graph;profile
+#graph;profile
 profiltravers;profiltravers
 ###childprint
 #confname;                linkcolumn;             optionsql

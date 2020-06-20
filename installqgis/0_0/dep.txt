@@ -1,0 +1,16 @@
+[‎19/‎06/‎2020 14:53]  FICKENSTAHLER François:  
+*qgis-ltr
+*setuptools
+*ffmpeg
+*gdal-ecw
+*pyopengl
+*pyspatialite
+*python-networkx
+*python-shapely
+*python-numpy
+*matplotlib
+*grass
+*saga-ltr
+xlrd
+pandas 
+ 

@@ -47,15 +47,26 @@ class LeveeSIRSTool(AbstractLamiaTool):
         super(LeveeSIRSTool, self).__init__(**kwargs)
         self.sirsconverter = SirsConverter(self.dbase)
 
+        if self.dbase.variante in [None, "Lamia"]:
+            self.POSTPROTOOLNAME = None
+
     def initMainToolWidget(self):
 
         self.toolwidgetmain = UserUI()
 
-        self.toolwidgetmain.lineEdit_user.textChanged.connect(self.reinitLabelConnection)
-        self.toolwidgetmain.lineEdit_password.textChanged.connect(self.reinitLabelConnection)
+        self.toolwidgetmain.lineEdit_user.textChanged.connect(
+            self.reinitLabelConnection
+        )
+        self.toolwidgetmain.lineEdit_password.textChanged.connect(
+            self.reinitLabelConnection
+        )
         self.toolwidgetmain.lineEdit_ip.textChanged.connect(self.reinitLabelConnection)
-        self.toolwidgetmain.lineEdit_port.textChanged.connect(self.reinitLabelConnection)
-        self.toolwidgetmain.lineEdit_dbname.textChanged.connect(self.reinitLabelConnection)
+        self.toolwidgetmain.lineEdit_port.textChanged.connect(
+            self.reinitLabelConnection
+        )
+        self.toolwidgetmain.lineEdit_dbname.textChanged.connect(
+            self.reinitLabelConnection
+        )
 
         self.toolwidgetmain.pushButton_test.clicked.connect(self.testConnection)
         self.toolwidgetmain.pushButton_import.clicked.connect(self.importSIRS)
@@ -74,21 +85,21 @@ class LeveeSIRSTool(AbstractLamiaTool):
 
         client, my_db = self.sirsconverter.getSirsConnection()
 
-        if client :
+        if client:
             self.setConnectionLabelOK()
         else:
             self.setConnectionLabelError(my_db)
 
-
-
     def setConnectionLabelOK(self):
-        self.toolwidgetmain.label_test.setStyleSheet("QLabel { background-color : green}")
-        self.toolwidgetmain.label_test.setText('OK')
+        self.toolwidgetmain.label_test.setStyleSheet(
+            "QLabel { background-color : green}"
+        )
+        self.toolwidgetmain.label_test.setText("OK")
 
         self.toolwidgetmain.pushButton_import.setEnabled(True)
         self.toolwidgetmain.pushButton_export.setEnabled(True)
 
-    def setConnectionLabelError(self,errortxt):
+    def setConnectionLabelError(self, errortxt):
         self.toolwidgetmain.label_test.setStyleSheet("QLabel { background-color : red}")
         self.toolwidgetmain.label_test.setText(errortxt)
 
@@ -97,7 +108,7 @@ class LeveeSIRSTool(AbstractLamiaTool):
 
     def reinitLabelConnection(self):
         self.toolwidgetmain.label_test.setStyleSheet("")
-        self.toolwidgetmain.label_test.setText('...')
+        self.toolwidgetmain.label_test.setText("...")
 
         self.toolwidgetmain.pushButton_import.setEnabled(False)
         self.toolwidgetmain.pushButton_export.setEnabled(False)
@@ -106,9 +117,6 @@ class LeveeSIRSTool(AbstractLamiaTool):
 
         sql = "SELECT id_object FROM object"
         res = self.dbase.query(sql)
-
-        print(len(res))
-
         if len(res) > 0:
             self.dbase.messageinstance.showErrorMessage(
                 QtCore.QCoreApplication.translate(
@@ -117,36 +125,15 @@ class LeveeSIRSTool(AbstractLamiaTool):
             )
             return
 
-        if not self._isSirsVariant():
-            return
-
         sirsconnectiondict = self._getConnectiondata()
         self.sirsconverter.sirsconnectiondict = sirsconnectiondict
         self.sirsconverter.import_sirs()
 
     def exportSIRS(self):
 
-        if not self._isSirsVariant():
-            return
-
         sirsconnectiondict = self._getConnectiondata()
         self.sirsconverter.sirsconnectiondict = sirsconnectiondict
         self.sirsconverter.export_lamia()
-
-
-    def _isSirsVariant(self):
-        sql = "SELECT variant FROM database"
-        res = self.dbase.query(sql)[0]
-        if res != "SIRS":
-            self.dbase.messageinstance.showErrorMessage(
-                QtCore.QCoreApplication.translate(
-                    "base3",
-                    "DBASE is not a SIRS variant ! recreate a DBASE with SIRS variant",
-                )
-            )
-            return False
-        
-        return True
 
     def _getConnectiondata(self):
         user = self.toolwidgetmain.lineEdit_user.text()
@@ -155,15 +142,13 @@ class LeveeSIRSTool(AbstractLamiaTool):
         port = self.toolwidgetmain.lineEdit_port.text()
         dbname = self.toolwidgetmain.lineEdit_dbname.text()
 
-        sirsconnectiondict={
-            'user':user,
-            'password': password,
-            'ip': ip,
-            'port':port,
-            'dbname': dbname,
+        sirsconnectiondict = {
+            "user": user,
+            "password": password,
+            "ip": ip,
+            "port": port,
+            "dbname": dbname,
         }
-
-        
 
         return sirsconnectiondict
 

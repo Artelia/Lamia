@@ -53,28 +53,34 @@ class BaseLeveeEquipmentTool(BaseEquipmentTool):
 
     def initMainToolWidget(self):
 
-        if self.dbase.variante in [None, "Lamia"]:
-            self.initMainToolWidgetLamia()
+        # if self.dbase.variante in [None, "Lamia"]:
+        self.initMainToolWidgetLamia()
 
-        elif self.dbase.variante in ["SIRS"]:
+        if self.dbase.variante in ["SIRS"]:
             self.initMainToolWidgetSirs()
 
         self.dbasechildwdgfield = []
         self.instancekwargs["parentwidget"] = self
 
-        self.propertieswdgDesordre = BaseLeveeDeficiencyTool(**self.instancekwargs)
-        # self.propertieswdgDesordre.userwdgfield.frame_2.setParent(None)
-        # self.propertieswdgDesordre.pushButton_addFeature.setEnabled(False)
-        # self.propertieswdgDesordre.pushButton_delFeature.setEnabled(False)
-        # self.propertieswdgDesordre.comboBox_featurelist.setEnabled(False)
-        # self.propertieswdgDesordre.groupBox_geom.setParent(None)
-        self.propertieswdgDesordre.SKIP_LOADING_UI = True
-        self.propertieswdgDesordre.TABLEFILTERFIELD = {"deficiencycategory": "EQP"}
-        self.propertieswdgDesordre.initMainToolWidget()
-        self.toolwidgetmain.comboBox_type.currentIndexChanged.connect(
-            self.propertieswdgDesordre.propertieswdgOBSERVATION.equipementTypeChanged
-        )
-        self.dbasechildwdgfield.append(self.propertieswdgDesordre)
+        if self.dbase.variante in [None, "Lamia"]:
+            self.propertieswdgDesordre = BaseLeveeDeficiencyTool(**self.instancekwargs)
+            # self.propertieswdgDesordre.userwdgfield.frame_2.setParent(None)
+            # self.propertieswdgDesordre.pushButton_addFeature.setEnabled(False)
+            # self.propertieswdgDesordre.pushButton_delFeature.setEnabled(False)
+            # self.propertieswdgDesordre.comboBox_featurelist.setEnabled(False)
+            # self.propertieswdgDesordre.groupBox_geom.setParent(None)
+            self.propertieswdgDesordre.SKIP_LOADING_UI = True
+            self.propertieswdgDesordre.TABLEFILTERFIELD = {"deficiencycategory": "EQP"}
+            self.propertieswdgDesordre.initMainToolWidget()
+            self.toolwidgetmain.comboBox_type.currentIndexChanged.connect(
+                self.propertieswdgDesordre.propertieswdgOBSERVATION.equipementTypeChanged
+            )
+            self.dbasechildwdgfield.append(self.propertieswdgDesordre)
+
+            self.createdeficiencywdg = CreateSubFeatureWidget(
+                self, self.propertieswdgDesordre, condition="equipmentcategory='OUH'"
+            )
+            self.lamiawidgets.append(self.createdeficiencywdg)
 
         self.propertieswdgPHOTOGRAPHIE = BaseLeveeCameraTool(**self.instancekwargs)
         self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
@@ -88,11 +94,6 @@ class BaseLeveeEquipmentTool(BaseEquipmentTool):
             # if self.parentWidget is not None and self.parentWidget.DBASETABLENAME == 'Equipement':
             #    self.propertieswdgEQUIPEMENT.dbasechildwdgfield.remove(self.propertieswdgEQUIPEMENT.propertieswdgEQUIPEMENT)
             self.dbasechildwdgfield.append(self.propertieswdgEQUIPEMENT)
-
-        self.createdeficiencywdg = CreateSubFeatureWidget(
-            self, self.propertieswdgDesordre, condition="equipmentcategory='OUH'"
-        )
-        self.lamiawidgets.append(self.createdeficiencywdg)
 
     def initMainToolWidgetLamia(self):
         self.toolwidgetmain = UserUI()
@@ -152,6 +153,16 @@ class BaseLeveeEquipmentTool(BaseEquipmentTool):
         )
 
     def initMainToolWidgetSirs(self):
+        self.toolwidgetmain.comboBox_securite.setEnabled(False)
+        try:
+            self.toolwidgetmain.comboBox_type.currentIndexChanged.disconnect(
+                self.typeponctuelChanged
+            )
+        except:
+            pass
+        self.toolwidgetmain.stackedWidget_2.setCurrentIndex(1)
+
+    def initMainToolWidgetSirs_old(self):
         self.toolwidgetmain = UserUISirs()
         self.formtoolwidgetconfdictmain = {
             "equipment": {
@@ -243,20 +254,33 @@ class BaseLeveeEquipmentTool(BaseEquipmentTool):
         else:
             self.toolwidgetmain.stackedWidget_2.setCurrentIndex(1)
 
-    def changeCategorie(self, intcat):
-        if "Ponctuel" in self.toolwidget.comboBox_cat.currentText():
+    def changeCategorie(self, intcat=None):
+        combotxt = self.toolwidget.comboBox_cat.currentText()
+        catval = self.dbase.getConstraintRawValueFromText(
+            "equipment", "equipmentcategory", combotxt
+        )
+
+        if catval[0] == "O":
             self.toolwidget.stackedWidget.setCurrentIndex(1)
+            self.mainifacewidget.actiontoobargeomnewpoint.setEnabled(True)
+            self.mainifacewidget.actiontoobargeomnewline.setEnabled(False)
             # self.pushButton_addPoint.setEnabled(True)
             # self.pushButton_addLine.setEnabled(False)
 
-        elif "Lineaire" in self.toolwidget.comboBox_cat.currentText():
+        elif catval[0] == "R":
             self.toolwidget.stackedWidget.setCurrentIndex(0)
+            self.mainifacewidget.actiontoobargeomnewpoint.setEnabled(False)
+            self.mainifacewidget.actiontoobargeomnewline.setEnabled(True)
             # self.pushButton_addPoint.setEnabled(False)
             # self.pushButton_addLine.setEnabled(True)
         else:
             pass
             # self.pushButton_addPoint.setEnabled(False)
             # self.pushButton_addLine.setEnabled(False)
+
+    def postSelectFeature(self):
+        super().postSelectFeature()
+        self.changeCategorie()
 
     """
     def postInitFeatureProperties(self, feat):
@@ -337,7 +361,6 @@ class BaseLeveeEquipmentTool(BaseEquipmentTool):
 
         return True
 
-
     """
 
 
@@ -347,11 +370,3 @@ class UserUI(QWidget):
         uipath = os.path.join(os.path.dirname(__file__), "lamia_form_equipment_ui.ui")
         uic.loadUi(uipath, self)
 
-
-class UserUISirs(QWidget):
-    def __init__(self, parent=None):
-        super(UserUISirs, self).__init__(parent=parent)
-        uipath = os.path.join(
-            os.path.dirname(__file__), "lamia_form_equipment_ui_SIRS.ui"
-        )
-        uic.loadUi(uipath, self)

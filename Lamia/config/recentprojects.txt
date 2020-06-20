@@ -1,11 +1,6 @@
+C:\111_GitProjects\Lamia\Lamia\../test/testtempfiles/c_creation\sl_base3_levee_Lamia\test01.sqlite
+C:\111_GitProjects\Lamia\Lamia\../test/testtempfiles/c_creation\sl_base3_levee_SIRS\test01.sqlite
 C:\111_GitProjects\Lamia\test\datas\lamia_digue_base3\test01.sqlite
-c:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_waterdistribution_urban_heating\test01.sqlite
-c:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_waterdistribution_Lamia\test01.sqlite
-c:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_urbandrainage_2018_SNCF\test01.sqlite
-c:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_urbandrainage_CD41\test01.sqlite
-c:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_urbandrainage_Lamia\test01.sqlite
 C:\01_WORKINGDIR\GPMB\c_merge_ass\mergeddbase.sqlite
-C:\111_GitProjects\Lamia\Lamia\../test/testtempfiles/c_creation\sl_base3_faunaflora_Lamia\test01.sqlite
 c:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_levee_SIRS\test01.sqlite
 c:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_levee_Lamia\test01.sqlite
-c:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_faunaflora_Lamia\test01.sqlite

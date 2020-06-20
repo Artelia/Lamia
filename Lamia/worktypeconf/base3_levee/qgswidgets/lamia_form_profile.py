@@ -30,3 +30,7 @@ from ...base3.qgswidgets.lamia_form_profile import BaseProfileTool
 class BaseLeveeProfileTool(BaseProfileTool):
     def __init__(self, **kwargs):
         super(BaseLeveeProfileTool, self).__init__(**kwargs)
+
+        if self.dbase.variante in ["SIRS"]:
+            self.tooltreewidgetSUBCAT = None
+            self.LOADFIRST = False

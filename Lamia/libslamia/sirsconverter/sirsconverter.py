@@ -48,17 +48,16 @@ Recherche une valeur dans une base CouchDB
 class SirsConverter:
     def __init__(self, dbaseparser):
         self.parsertemp = dbaseparser
-        self.sirsconnectiondict={
-            'user':None,
-            'password': None,
-            'ip': None,
-            'port':None,
-            'dbname': None,
+        self.sirsconnectiondict = {
+            "user": None,
+            "password": None,
+            "ip": None,
+            "port": None,
+            "dbname": None,
         }
 
         self.client = None
         self.my_db = None
-
 
     def find_val(db=None, limit=1000000, val=None):
         if not db:
@@ -95,6 +94,7 @@ class SirsConverter:
     :return: liste contenant toutes les clés de la BDD
     """
 
+    # not used
     def lst_keys(db=None, limit=1000000):
 
         if not db:
@@ -135,7 +135,7 @@ class SirsConverter:
     :param limit: Nombre d'enregistrements sur lesquels effectuer la recherche
     :return: liste contenant toutes les classes de la BDD
     """
-
+    # not used
     def lst_class(db=None, limit=1000000):
 
         if not db:
@@ -149,7 +149,6 @@ class SirsConverter:
         else:
             my_db = db
         """
-
 
         lst_class = []
 
@@ -176,7 +175,7 @@ class SirsConverter:
     :param clas: Liste des classes sur lesquelles effectuer la recherche
     :param limit: Nombre d'enregistrements sur lesquels effectuer la recherche
     """
-
+    # not used
     def lst_val_class(db=None, clas=[], limit=1000000):
 
         if not db:
@@ -208,7 +207,7 @@ class SirsConverter:
     :param clas: Liste des classes sur lesquelles effectuer la recherche
     :param limit: Nombre d'enregistrements sur lesquels effectuer la recherche
     """
-
+    # not used
     def lst_key_class(db=None, clas=[], limit=1000000):
 
         if not db:
@@ -243,7 +242,7 @@ class SirsConverter:
     :param clas: Liste des classes et sous-classes sur lesquelles effectuer la recherche
     :param limit: Nombre d'enregistrements sur lesquels effectuer la recherche
     """
-
+    # not used
     def lst_key_ss_class(db=None, clas=[], limit=1000000):
 
         if not db:
@@ -282,7 +281,7 @@ class SirsConverter:
     :param clas: Liste des classes, sous-classes et sous-sous-classes sur lesquelles effectuer la recherche
     :param limit: Nombre d'enregistrements sur lesquels effectuer la recherche
     """
-
+    # not used
     def lst_key_ss_ss_class(db=None, clas=[], limit=1000000):
 
         if not db:
@@ -296,7 +295,6 @@ class SirsConverter:
         else:
             my_db = db
         """
-
 
         for c in clas:
             lst_keys = []
@@ -489,38 +487,47 @@ class SirsConverter:
     """
 
     def getSirsConnection(self):
+        """Return Cloudant instances for connection
+        need self.sirsconnectiondict to be defined
 
-        url = "http://" + self.sirsconnectiondict['ip'] + ":" + self.sirsconnectiondict['port']
+        :return: cloudant client and database
+        """
 
-        client = Cloudant(
-            self.sirsconnectiondict['user'], 
-            self.sirsconnectiondict['password'], 
-            url=url
+        url = (
+            "http://"
+            + self.sirsconnectiondict["ip"]
+            + ":"
+            + self.sirsconnectiondict["port"]
         )
 
-        
+        client = Cloudant(
+            self.sirsconnectiondict["user"],
+            self.sirsconnectiondict["password"],
+            url=url,
+        )
+
         try:
             client.connect()
         except requests.exceptions.InvalidURL:
-            return None, 'Invalid url' +  url
+            return None, "Invalid url" + url
         except urllib3.exceptions.NewConnectionError:
-            return None, 'getaddrinfo failed'
+            return None, "getaddrinfo failed"
         except requests.exceptions.ConnectionError:
-            return None, 'ConnectionError with url : ' +  url
+            return None, "ConnectionError with url : " + url
         except urllib3.exceptions.MaxRetryError:
-            return None, 'Max retries exceeded with url : ' +  url
+            return None, "Max retries exceeded with url : " + url
 
-        my_db = client[self.sirsconnectiondict['dbname']]
+        my_db = client[self.sirsconnectiondict["dbname"]]
 
         return client, my_db
 
-
     def disconnectSirs():
+        """Disconnect cloudant client
+        """
         if self.client:
             self.client.disconnect()
             self.client = None
             self.my_db = None
-
 
     def import_sirs(only_valid=True):
         # Ouverture du fichier de config
@@ -552,7 +559,9 @@ class SirsConverter:
 
         self.client, self.my_db = self.getSirsConnection()
 
-
+        if self.client is None:
+            print("Failed to connect")
+            return
 
         """
         # Réinitialisation de la base SQLite
@@ -638,7 +647,9 @@ class SirsConverter:
                     lst_pho = doc["photos"]
                     for pho in lst_pho:
                         if param["import_pho"]:
-                            self.import_pho(pho, rs, param_pho, vars, dico_id, rep_res_lamia)
+                            self.import_pho(
+                                pho, rs, param_pho, vars, dico_id, rep_res_lamia
+                            )
 
         # MAJ de la BDD Lamia
         for table in [
@@ -663,7 +674,6 @@ class SirsConverter:
         # bdd_sql.close()
         # self.client.disconnect()
         self.disconnectSirs()
-
 
     """
     Export d'une BDD LAMIA vers SIRS
@@ -701,6 +711,10 @@ class SirsConverter:
 
         self.client, self.my_db = self.getSirsConnection()
 
+        if self.client is None:
+            print("Failed to connect")
+            return
+
         # Récupération des paramètres relatifs aux observation et aux photos
         param_obs = config["ss_table"]["observations"]
         param_pho = config["ss_table"]["photos"]
@@ -713,11 +727,15 @@ class SirsConverter:
 
         # Création d'un dictionnaire de correspondance entre les IDs Lamia & les IDs SIRS (pour les tronçons)
         dico_infra = dict()
+        sql = "SELECT pk_edge, importtable FROM edge_qgis"
+        rows = self.dbase.query(sql)
+        """
         rs.execute(
             "SELECT pk_edge, importtable FROM (object INNER JOIN descriptionsystem ON object.pk_object = descriptionsystem.lpk_object) "
             "INNER JOIN edge ON descriptionsystem.pk_descriptionsystem = edge.lpk_descriptionsystem"
         )
         rows = rs.fetchall()
+        """
         for row in rows:
             dico_infra[row[0]] = row[1]
 
@@ -980,11 +998,7 @@ class SirsConverter:
 
         # Récupération de la géométrie du tronçon
         rs = bdd.cursor()
-        rs.execute(
-            "SELECT ASTEXT(geom) FROM edge WHERE pk_edge = {}".format(
-                id_infra
-            )
-        )
+        rs.execute("SELECT ASTEXT(geom) FROM edge WHERE pk_edge = {}".format(id_infra))
         row = rs.fetchone()
         geom_infra = QgsGeometry.fromWkt(row[0])
         long_infra = geom_infra.length()

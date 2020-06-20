@@ -128,6 +128,12 @@ class BaseLeveeEdgeTool(BaseEdgeTool):
         self.propertieswdgCROQUIS = BaseLeveeSketchTool(**self.instancekwargs)
         self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
+        if self.dbase.variante in ["SIRS"]:
+            self.toolwidgetmain.tabWidget.tabBar().setTabEnabled(1, False)
+            self.toolwidgetmain.comboBox_contitution.setEnabled(False)
+            self.toolwidgetmain.dateEdit_datecontruct.setEnabled(False)
+            self.toolwidgetmain.comboBox_etat_fonc.setEnabled(False)
+
     def initAdvancedToolWidget(self):
 
         self.toolwidgetadvanced = UserUIDesktop()

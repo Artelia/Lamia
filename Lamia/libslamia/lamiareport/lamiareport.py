@@ -40,7 +40,7 @@ from Lamia.iface.qgsconnector.ifaceqgisconnector import QgisConnector
 class ReportCore:
 
     POSTPROTOOLNAME = "reporttools"
-    LAUNCHINQTHREAD = True
+    LAUNCHINQTHREAD = False
 
     def __init__(self, dbaseparser, messageinstance=None):
         # super(ExportShapefileTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil, parentwidget, parent=parent)
@@ -533,6 +533,9 @@ class printPDFBaseWorker(QtCore.QObject):
 
         # ********************* set atlas and linked composeritem *****************************
         coveragelayer = self.setCoverageLayer()
+        if coveragelayer is None:
+            return
+
         layertoremove.append(coveragelayer)
         mainprinter = None
         if self.printtype == "atlas":
@@ -877,6 +880,11 @@ class printPDFBaseWorker(QtCore.QObject):
         if debug:
             logging.getLogger("Lamia_unittest").debug("atlaslayer sql : %s", sql)
 
+        #test sql validity
+        res = self.dbase.query(sql) 
+        if res is None:
+            return None
+
         atlaslayer = self.qgiscanvas.createSingleQgsVectorLayer(
             dbaseparser=self.dbase,
             tablename="atlaslayer",
@@ -1066,6 +1074,10 @@ class printPDFBaseWorker(QtCore.QObject):
                         self.logger.debug("sql %s", str(sql))
 
                     query = self.dbase.query(sql)
+                    if query is None:
+                        finaltxt.append("Error in template")
+                        continue
+
                     valtemp = [row[0] for row in query][0]
                     rawtable = table.split("_")[0]  # split in cas _qgis table
 
@@ -1126,6 +1138,10 @@ class printPDFBaseWorker(QtCore.QObject):
                         self.logger.debug("lamiasql %s", str(sql))
 
                     query = self.dbase.query(sql)
+                    if query is None:
+                        finaltxt.append("Error sql in template")
+                        continue
+
                     result = [row for row in query]
                     if len(result) > 0:
                         txtresult = [

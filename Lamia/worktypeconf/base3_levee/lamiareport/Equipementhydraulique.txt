@@ -1,35 +1,35 @@
 ###atlaslayersql
-WITH Gestionnaire AS (SELECT Intervenant.societe, Intervenant.nom  , Tcobjetintervenant.lid_objet 
-                 FROM Tcobjetintervenant  
-                 INNER JOIN Intervenant ON Tcobjetintervenant.lid_intervenant = Intervenant.id_intervenant  
-                 WHERE Tcobjetintervenant.fonction = 'GES' )
-SELECT Equipement_now.* , Gestionnaire.societe, Gestionnaire.nom 
-FROM Equipement_now
-LEFT JOIN Gestionnaire ON Gestionnaire.lid_objet = Equipement_now.id_objet
-WHERE ( Equipement_now.categorie = 'RHF' or Equipement_now.categorie = 'RHO' or Equipement_now.categorie = 'OUH')
+WITH operator AS (SELECT actor.society, actor.actorname  , tcobjectactor.lid_object 
+                 FROM tcobjectactor  
+                 INNER JOIN actor ON tcobjectactor.lid_actor = actor.id_actor  
+                 WHERE tcobjectactor.role = 'GES' )
+SELECT equipment_now.* , operator.society, operator.actorname 
+FROM equipment_now
+LEFT JOIN operator ON operator.lid_object = equipment_now.id_object
+WHERE ( equipment_now.equipmentcategory = 'RHF' or equipment_now.equipmentcategory = 'RHO' or equipment_now.equipmentcategory = 'OUH')
 ###atlaslayerid
-id_equipement
+id_equipment
 ###spatial
 True
 ###ordering
 #type;               constraint (qgis typo)
 autoalongpath;      "lid_descriptionsystem_1" IS NULL
 ###atlaslayerstyle
-Equipementhydraulique_atlas.qml
+equipmenthydraulique_atlas.qml
 ###atlasdrivemap
 #itemname;   minscale;   typescale;      layers
-map1;       2500;       Predefined      ;['atlaslayer', 'Infralineaire', 'scan25']
+map1;       2500;       Predefined      ;['atlaslayer', 'edge', 'scan25']
 #map1;       2500;       Predefined      ;[]
 ###generalmap
 #itemname;   minscale;   typescale; layers
-map0    ;           ;             ; ['Infralineaire', 'ortho']
+map0    ;           ;             ; ['edge', 'ortho']
 #map0    ;           ;             ; []
 ###images
 #itemname   ; type
-photo1;Equipement_now.photo1
+photo1;equipment_now.photo1
 ###childprint
 #confname;                        linkcolumn;                               optionsql
-Equipementhydraulique_annexe;    Equipement_now.lid_descriptionsystem_1 ;  
+Equipementhydraulique_annexe;    equipment_now.lid_descriptionsystem_1 ;  
 
 
 

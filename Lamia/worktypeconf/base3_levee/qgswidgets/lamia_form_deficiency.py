@@ -108,6 +108,9 @@ class BaseLeveeDeficiencyTool(BaseDeficiencyTool):
         self.propertieswdgOBSERVATION.tooltreewidgetSUBCAT = "Observation"
         self.dbasechildwdgfield.append(self.propertieswdgOBSERVATION)
 
+        if self.dbase.variante in ["SIRS"]:
+            self.toolwidgetmain.comboBox_sstypedes.setEnabled(False)
+
         # self.propertieswdgOBSERVATION2 = BaseDigueObservationTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
         # self.propertieswdgOBSERVATION2.NAME = None
         # self.toolwidgetmain.tabWidget.widget(0).layout().addWidget(self.propertieswdgOBSERVATION2)

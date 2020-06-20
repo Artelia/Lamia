@@ -54,3 +54,7 @@ from ...base3.qgswidgets.lamia_form_topography import BaseTopographyTool
 class BaseLeveeTopographyTool(BaseTopographyTool):
     def __init__(self, **kwargs):
         super(BaseLeveeTopographyTool, self).__init__(**kwargs)
+
+        if self.dbase.variante in ["SIRS"]:
+            self.tooltreewidgetSUBCAT = None
+            self.LOADFIRST = False

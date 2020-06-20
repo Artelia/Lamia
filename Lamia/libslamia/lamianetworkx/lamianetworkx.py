@@ -296,6 +296,91 @@ class NetWorkCore:
 
         return datas
 
+    def getLongitudinalProfile(
+        self,
+        geomprojectionpks=None,
+        datatype=None,
+        graphtype="Profillong",
+        tablesql=None,
+    ):
+        """Ask pk on first sql select and ST_AsText(geom)  on second !!!
+
+        :param geomprojectionpks: [description], defaults to None
+        :type geomprojectionpks: [type], optional
+        :param datatype: [description], defaults to None
+        :type datatype: [type], optional
+        :param graphtype: [description], defaults to "Profillong"
+        :type graphtype: str, optional
+        :param tablesql: [description], defaults to None
+        :type tablesql: [type], optional
+        """
+
+        geomprojection = self.getQgsGeomFromPks(geomprojectionpks)
+
+        if geomprojection is not None:
+            geomfinalbuffer = geomprojection.buffer(200, 12).asWkt()
+
+            # request table sq in buffer
+            sqlsplitted = self.dbase.utils.splitSQLSelectFromWhereOrderby(tablesql)
+            if "WHERE" in sqlsplitted.keys():
+                sqlsplitted["WHERE"] += " AND "
+            else:
+                sqlsplitted["WHERE"] = ""
+            sqlsplitted[
+                "WHERE"
+            ] += f"WHERE ST_WITHIN(ST_MakeValid(geom), \
+                                        ST_GeomFromText('{geomfinalbuffer}', {self.dbase.crsnumber}))"
+            sql = self.dbase.utils.rebuildSplittedQuery(sqlsplitted)
+            sql = self.dbase.sqlNow(sql)
+            results = self.dbase.query(sql)
+
+            datas = {"x": [], "id": [], "xy": []}
+            for iterelem in result:
+                pkelem = result[0]
+                geomelem = result[1]
+
+                qgsgeomelem = qgis.core.QgsGeometry.fromWkt(geomelem)
+
+                geomtype = qgsgeomelem.type()
+                if geomtype == 0:
+                    pass
+
+                elif geomtype == 1:
+                    pass
+
+                # startpoint
+                geompointequipementpoint1 = geomequipement.asPolyline()[0]
+                geompointequipement1 = qgis.core.QgsGeometry.fromPoint(
+                    geompointequipementpoint1
+                )
+                # getNearestPk
+                # def getNearestPk(self, tablename, point, comefromcanvas=True, fieldconstraint=None):
+                nearestinfralinid1, dist = self.dbase.getNearestId(
+                    self.dbase.dbasetables["Infralineaire"],
+                    "Infralineaire",
+                    geompointequipementpoint1,
+                    comefromcanvas=False,
+                )
+                # endpoint
+                geompointequipementpoint2 = geomequipement.asPolyline()[-1]
+                geompointequipement2 = qgis.core.QgsGeometry.fromPoint(
+                    geompointequipementpoint1
+                )
+                nearestinfralinid2, dist = self.dbase.getNearestId(
+                    self.dbase.dbasetables["Infralineaire"],
+                    "Infralineaire",
+                    geompointequipementpoint2,
+                    comefromcanvas=False,
+                )
+
+                if nearestinfralinid1 in geomprojectionpks:
+                    # print('ok')
+                    distline = geomprojection.lineLocatePoint(geompointequipement1)
+                    datas["equipement"]["xy"].append([distline, int(iterequipement[0])])
+                elif nearestinfralinid2 in geomprojectionpks:
+                    distline = geomprojection.lineLocatePoint(geompointequipement2)
+                    datas["equipement"]["xy"].append([distline, int(iterequipement[0])])
+
     # def getGraphData(self, geomprojection=None, geomprojectionids= None, datatype=None,graphtype='Profillong' ):
     def getGraphData(
         self, geomprojectionpks=None, datatype=None, graphtype="Profillong"
