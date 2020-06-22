@@ -54,6 +54,8 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         self.mtoolline = None
         self.mtoolpolygon = None
 
+        self.mtoolPan = None
+
         self.rubberbands = {"main": None, "child": None, "capture": None}
 
         # self.rubberBand = None          #the main parent ruberband
@@ -102,6 +104,8 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             self.canvas, self.cadwdg, qgis.gui.QgsMapToolCapture.CapturePolygon
         )
         self.pointEmitter = qgis.gui.QgsMapToolEmitPoint(self.canvas)
+
+        self.mtoolPan = qgis.gui.QgsMapToolPan(self.canvas)
 
         self.updateQgsCoordinateTransform()
 
@@ -695,6 +699,11 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
     def _____________________________maptoolsManagement(self):
         pass
+
+    def panCanvas(self):
+        # self.mtoolPan = None
+        self.canvas.setMapTool(self.mtoolPan)
+        # self.canvas.panActionStart(self.canvas.mouseLastXY())
 
     def toolsetChanged(self, newtool, oldtool=None):
         # print('toolsetchanged', newtool,oldtool )

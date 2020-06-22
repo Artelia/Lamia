@@ -40,7 +40,7 @@ from Lamia.iface.qgsconnector.ifaceqgisconnector import QgisConnector
 class ReportCore:
 
     POSTPROTOOLNAME = "reporttools"
-    LAUNCHINQTHREAD = False
+    LAUNCHINQTHREAD = True
 
     def __init__(self, dbaseparser, messageinstance=None):
         # super(ExportShapefileTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil, parentwidget, parent=parent)
@@ -880,8 +880,8 @@ class printPDFBaseWorker(QtCore.QObject):
         if debug:
             logging.getLogger("Lamia_unittest").debug("atlaslayer sql : %s", sql)
 
-        #test sql validity
-        res = self.dbase.query(sql) 
+        # test sql validity
+        res = self.dbase.query(sql)
         if res is None:
             return None
 

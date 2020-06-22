@@ -52,7 +52,7 @@ numpy.seterr(all="ignore")
 
 from Lamia.iface.qgsconnector.ifaceloggingconnector import LoggingConnector
 
-INTERFACEINDEX = 0
+INTERFACEINDEX = 4
 
 
 def launchIface():
@@ -68,13 +68,14 @@ def launchIface():
     #  sl_base3_urbandrainage_Lamia   sl_base3_waterdistribution_Lamia
     # sl_base3_constructionsite_Lamia   sl_base3_constructionsite_Orange
     # sl_base3_levee_Lamia   sl_base3_levee_SIRS   sl_base3_faunaflora_Lamia
-    worktype = "sl_base3_levee_Lamia"
+    worktype = "sl_base3_faunaflora_Lamia"
 
     SLFILE = os.path.join(testdir, worktype, "test01.sqlite")
 
     # SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue\test01.sqlite"
-    # SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue_base3\test01.sqlite"
+    SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue_base3\test01.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\GPMB\c_merge_ass\mergeddbase.sqlite"
+    # SLFILE = r"C:\111_GitProjects\Lamia\utils\pynetworktool\networktest_geographic\test01.sqlite"
 
     lamiawidget.loadDBase(dbtype="Spatialite", slfile=SLFILE)
 
@@ -83,8 +84,9 @@ def launchIface():
     lamiawidget.dbase.printsql = False  # False True
 
     #   toolpostpro     toolprepro
-    # wdg = self.wind.toolwidgets["toolpostpro"]["reporttools"]
+    # wdg = lamiawidget.toolwidgets["networktool"]
     # wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
+    # wdg.analyseSubdomains()
 
     mainwin.exec_()
 

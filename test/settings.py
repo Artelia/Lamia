@@ -2,6 +2,7 @@ import socket
 import platform
 import os, sys, qgis, qgis.core
 
+
 # fr en
 LOCALE = "fr"
 # * creation conf
@@ -20,7 +21,7 @@ DBTYPE = [
     # "base3_urbandrainage",
     # "base3_waterdistribution",
     # "base3_constructionsite",
-    # "base3_faunaflora",
+    "base3_faunaflora",
     "base3_levee",
 ]
 

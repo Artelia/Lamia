@@ -49,6 +49,19 @@ class BaseFaunafloraFLOSurfaceTool(BaseSurfaceTool):
     TABLEFILTERFIELD = {"surfacecategory": "FLO"}
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), "flora.png")
 
+    CHOOSERTREEWDGSPEC = {"colshow": ["surface_now.scientificname"]}
+
+    linkdict = {
+        "colparent": "id_descriptionsystem",
+        "colthistable": "lid_descriptionsystem_1",
+        "tctable": None,
+        "tctablecolparent": None,
+        "tctablecolthistable": None,
+    }
+    for tablename in ["node", "edge", "equipment"]:
+        BaseSurfaceTool.PARENTJOIN[tablename] = linkdict
+    # PARENTJOIN = tempparentjoin
+
     def __init__(self, **kwargs):
         super(BaseFaunafloraFLOSurfaceTool, self).__init__(**kwargs)
 
@@ -100,7 +113,7 @@ class BaseFaunafloraFLOSurfaceTool(BaseSurfaceTool):
             catalogsheet="#Liste_Naopad_bota_2020",
             coltoshow=["LB_NOM", "NOM_VERN"],
             sheetfield=None,
-            valuefield=["commonname", "scientificname"],
+            valuefield=["scientificname", "commonname"],
         )
         self.lamiawidgets.append(self.catalogfinder)
 

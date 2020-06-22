@@ -41,7 +41,7 @@ from qgis.PyQt.QtWidgets import QAction, QDockWidget, QToolBar
 
 
 # Initialize Qt resources from file resources.py
-from . import resources_rc
+from .iface import resources_rc
 
 
 """

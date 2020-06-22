@@ -11,7 +11,7 @@ name=Lamia
 qgisMinimumVersion=3.10
 qgisMaximumVersion=3.99
 description=lamia
-version=1.004
+version=1.005
 author=ARTELIA
 email=patrice.verchere@arteliagroup.com
 

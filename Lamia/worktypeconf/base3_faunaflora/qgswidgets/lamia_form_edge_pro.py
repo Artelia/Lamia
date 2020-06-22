@@ -35,6 +35,8 @@ from ...base3.qgswidgets.lamia_form_edge import BaseEdgeTool
 
 from .lamia_form_camera import BaseFaunafloraCameraTool
 from .lamia_form_sketch import BaseFaunafloraSketchTool
+from .lamia_form_surface_flo import BaseFaunafloraFLOSurfaceTool
+from .lamia_form_node_fau import BaseFaunafloraFaunaNodeTool
 
 
 class BaseFaunafloraEdgeTool(BaseEdgeTool):
@@ -72,6 +74,15 @@ class BaseFaunafloraEdgeTool(BaseEdgeTool):
 
         self.dbasechildwdgfield = []
         self.instancekwargs["parentwidget"] = self
+
+        self.propertieswdgFlora = BaseFaunafloraFLOSurfaceTool(**self.instancekwargs)
+        self.propertieswdgFlora.GEOMETRYSKIP = True
+        self.dbasechildwdgfield.append(self.propertieswdgFlora)
+
+        self.propertieswdgFauna = BaseFaunafloraFaunaNodeTool(**self.instancekwargs)
+        self.propertieswdgFauna.GEOMETRYSKIP = True
+        self.dbasechildwdgfield.append(self.propertieswdgFauna)
+
         self.propertieswdgPHOTOGRAPHIE = BaseFaunafloraCameraTool(**self.instancekwargs)
         self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
         self.propertieswdgCROQUIS = BaseFaunafloraSketchTool(**self.instancekwargs)

@@ -789,7 +789,7 @@ class NetWorkCore:
             except networkx.exception.NetworkXNoPath:
                 print("no path")
                 # self.userwdgfield.label_pathids.setText('Pas de chemin')
-                return
+                return None, None
 
             # shortestids = self.getIdsFromPath(shortestpathedges)
             shortestpks = self.getInfralineairePkFromNxEdges(shortestpathedges)
@@ -920,8 +920,19 @@ class NetWorkCore:
             pprint(self.edgesreversenodeindex)
     """
 
+    def computeNXGraph(self, listpks=[], graphtype="geographic", tolerance=None):
+        if graphtype == "geographic":
+            if tolerance is None:
+                tolerance = 1.0
+            self.computeNXGraphGeographic(listpks=[], tolerance=tolerance)
+        elif graphtype == "topologic":
+            self.computeNXGraphTopologic(listpks=[])
+
+    def computeNXGraphTopologic(self, listpks=[]):
+        pass
+
     # def computeNXGraph(self, listids=None):
-    def computeNXGraph(self, listpks=[]):
+    def computeNXGraphGeographic(self, listpks=[], tolerance=2.0):
         """
         compute networkx graph for all infralineaire or for listids if specified
         Calcul le networkx graph pour toutes les infralineaires ou seulement pour les infralineaires dont
@@ -943,11 +954,16 @@ class NetWorkCore:
         # sql += ' WHERE '
         # sql += self.dbase.dateVersionConstraintSQL()
         if self.dbase.base3version:
-            sql = (
-                "SELECT edge_now.pk_edge, "
-                "ST_AsText(ST_StartPoint(edge_now.geom)), ST_AsText(ST_EndPoint(edge_now.geom)) "
-                "FROM edge_now "
-            )
+            # sql = (
+            #     "SELECT edge_now.pk_edge, "
+            #     "ST_AsText(ST_StartPoint(edge_now.geom)), ST_AsText(ST_EndPoint(edge_now.geom)) "
+            #     "FROM edge_now "
+            # )
+            sql = "SELECT edge_now.pk_edge, \
+                 X(ST_StartPoint(edge_now.geom)), Y(ST_StartPoint(edge_now.geom)), \
+                 X(ST_EndPoint(edge_now.geom)), Y(ST_EndPoint(edge_now.geom))\
+                FROM edge_now "
+
             if listpks:
                 if len(listpks) == 1:
                     sql += " WHERE edge_now.pk_edge = " + str(listpks[0])
@@ -971,10 +987,95 @@ class NetWorkCore:
         sql = self.dbase.sqlNow(sql)
         query = self.dbase.query(sql)
         # print('sql', sql, query)
+
         if len(query) > 0:
             rawpoints = []
             # ids=[]
             pks = []
+
+            nodepkxy = np.array(query)
+            nodepkxy[:, 0] = nodepkxy[:, 0].astype(int)
+            tolerancenodepk = []
+
+            for i, row in enumerate(nodepkxy):
+                npstartnode = row[1:3]
+                npendnode = row[3:5]
+                npstartnodes = nodepkxy[:, 1:3]
+                npendnodes = nodepkxy[:, 3:5]
+
+                for npnode in [npstartnode, npendnode]:
+                    for npnodes in [npstartnodes, npendnodes]:
+                        # find index in npnodes where npnode equal npnodes
+                        npindexrealequal = np.where(np.all(npnodes == npnode, axis=1))[
+                            0
+                        ]
+                        # find index in npnodes where npnode within tolerance from npnodes
+                        dist1 = np.linalg.norm(npnodes - npnode, axis=1)
+                        npindextolerance = np.where(dist1 < tolerance)[0]
+
+                        # remove  from npindextolerance index that are equal
+                        npindextolerance = np.delete(
+                            npindextolerance,
+                            np.where(npindextolerance == npindexrealequal),
+                        )
+
+                        # if npindextolerance is not null, change point value in origin array (nodepkxy)
+                        # and add edge pk values in tolerancenodepk
+                        if npindextolerance.size == 0:
+                            continue
+                        npnodes[npindextolerance] = npnode
+                        tolerancenodepk.append(
+                            [row[0], nodepkxy[npindextolerance, 0].tolist()]
+                        )
+
+            edgepks = nodepkxy[:, 0].astype(int)
+
+            # compute unique points for graph
+            flattenxystartend = np.concatenate((nodepkxy[:, 1:3], nodepkxy[:, 3:5]))
+            uniquepoints, uniqueindexfromoriginal, uniqueindextooriginal = np.unique(
+                flattenxystartend, return_index=True, return_inverse=True, axis=0
+            )
+
+            nodegeombyindex = flattenxystartend[uniqueindexfromoriginal]
+
+            listedgenodedefined = np.transpose(
+                np.reshape(uniqueindextooriginal, (2, -1))
+            )
+
+            lstedgepk = np.insert(listedgenodedefined, 2, edgepks, axis=1)
+
+            for edge1, edge2, edgepk in lstedgepk:
+                nxgraph.add_edge(edge1, edge2, edgepk=edgepk)
+
+            # nxgraph.add_edges_from([(edge[0], edge[1], edgepk=edge[2]) for edge in edgepk])
+
+            # sys.exit()
+
+            npedges = listedgenodedefined
+            npreverseedges = np.flip(listedgenodedefined, 1)
+
+            self.nxgraph = nxgraph
+            self.edgespks = edgepks
+            self.nodegeom = nodegeombyindex
+            self.edgesnodeindex = npedges
+            self.edgesreversenodeindex = npreverseedges
+
+            """
+            sys.exit()
+
+            # rawpoints = np.array(rawpoints)
+
+            # create 1d array with startxy1, startxy2, ..., startxyn, endxy1, endxyy2, ...,endxyn
+            # pointstemp = np.append(rawpoints[:, 0], rawpoints[:, 1], axis=0)
+            # convert to string to manage np.unique with couple of xy
+            # pointstemp1 = np.array([str(row) for row in pointstemp])
+            # get unique point with index compared to pointstemp1
+            points, index1, index2 = np.unique(
+                pointstemp1, return_index=True, return_inverse=True
+            )
+
+            sys.exit()
+
             for row in query:
                 # print(row[1], row[2])
                 # print([float(elem1) for elem1 in row[1].split('(')[1][:-1].split(' ')])
@@ -1029,12 +1130,26 @@ class NetWorkCore:
             print("self.edgesreversenodeindex : ")
             pprint(self.edgesreversenodeindex)
 
+        """
+
     def getSubGraphs(self):
         # return networkx.connected_component_subgraphs(self.nxgraph)
         return [
             self.nxgraph.subgraph(c).copy()
             for c in networkx.connected_components(self.nxgraph)
         ]
+
+    def getSubGraphsEdgePks(self):
+        edgenodepks = []
+        for nxsubdomain in self.getSubGraphs():
+            temp = nxsubdomain.edges(data=True)
+            # print(nxsubdomain.edges.data("edgepk"))
+            edgesdata = nxsubdomain.edges.data("edgepk")
+            edgespk = [elem[2] for elem in edgesdata]
+
+            edgenodepks.append(edgespk)
+
+        return edgenodepks
 
     def getShortestPath(self, indexstart, indexstop):
         return networkx.shortest_path(self.nxgraph, indexstart, indexstop)
@@ -1166,3 +1281,13 @@ class NetWorkCore:
             export_area.resize(w, h)
             export_area.setVisible(True)
             export_area.setVisible(False)
+
+    def nearestNode(self, pointaslist):
+        # closest point
+        # def closest_node(node, nodes):
+        nodes = np.asarray(self.nodegeom)
+        node = np.array(pointaslist)
+        dist_2 = np.sum((nodes - node) ** 2, axis=1)
+        indexnode = np.argmin(dist_2)
+        geomnode = nodes[indexnode]
+        return indexnode, geomnode

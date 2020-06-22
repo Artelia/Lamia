@@ -41,6 +41,10 @@ from ...base3.qgswidgets.lamia_form_pictureviewer import PictureViewer
 from .lamia_form_graph import BaseLeveeGraphTool
 from .lamia_form_profile import BaseLeveeProfileTool
 
+from Lamia.iface.qgiswidget.tools.form_subwidgets.subwidget_tcmanytomany import (
+    TcmanytomanyChooserWidget,
+)
+
 
 class BaseLeveeEdgeTool(BaseEdgeTool):
 
@@ -214,6 +218,20 @@ class BaseLeveeEdgeTool(BaseEdgeTool):
             self.propertieswdgPROFIL = BaseLeveeProfilelTool(**self.instancekwargs)
             self.dbasechildwdgdesktop.append(self.propertieswdgPROFIL)
 
+        # actors
+        if True:
+            self.tcsubwidget = TcmanytomanyChooserWidget(
+                parentwdg=self,
+                tcmanytomanyname="tcobjectactor",
+                childtablename="actor",
+                parentmanytomanyfield="id_object",
+                childmanytomanyfield="id_actor",
+                childdisplayfields=["actorname", "society"],
+                tcmanytomanydisplayfields=["role"],
+                parentframe=self.toolwidgetadvanced.frame_actor,
+            )
+            self.lamiawidgets.append(self.tcsubwidget)
+
         # self.initWidgets()
 
     # def postInitFeatureProperties(self, feat):
@@ -229,7 +247,7 @@ class BaseLeveeEdgeTool(BaseEdgeTool):
                 self.postSelectFeatureAdvanced()
 
     def postSelectFeatureAdvanced(self):
-
+        """
         # * intervenants
         # pkobjet
         # sql = "SELECT id_objet FROM Infralineaire_qgis WHERE pk_infralineaire = " + str(self.currentFeaturePK)
@@ -249,7 +267,7 @@ class BaseLeveeEdgeTool(BaseEdgeTool):
         result = "\n".join([str(row) for row in query])
         self.toolwidgetadvanced.textBrowser_intervenants.clear()
         self.toolwidgetadvanced.textBrowser_intervenants.append(result)
-
+        """
         # * photo
         lkressource = self.dbase.getValuesFromPk(
             "edge_qgis", "lid_resource_2", self.currentFeaturePK

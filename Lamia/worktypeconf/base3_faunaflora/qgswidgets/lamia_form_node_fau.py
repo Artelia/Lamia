@@ -50,6 +50,18 @@ class BaseFaunafloraFaunaNodeTool(BaseNodeTool):
 
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), "fauna.png")
 
+    linkdict = {
+        "colparent": "id_descriptionsystem",
+        "colthistable": "lid_descriptionsystem_1",
+        "tctable": None,
+        "tctablecolparent": None,
+        "tctablecolthistable": None,
+    }
+    for tablename in ["node", "edge", "equipment"]:
+        BaseNodeTool.PARENTJOIN[tablename] = linkdict
+
+    CHOOSERTREEWDGSPEC = {"colshow": ["node_now.scientificname"]}
+
     def __init__(self, **kwargs):
         super(BaseFaunafloraFaunaNodeTool, self).__init__(**kwargs)
 

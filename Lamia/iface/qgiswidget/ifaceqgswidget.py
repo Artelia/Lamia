@@ -1507,11 +1507,14 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
 
         # others
         self.pushButton_selectfeat.clicked.connect(self.selectFeature)
+        self.pushButton_qgspan.clicked.connect(self.panCanvas)
 
         # on exit qgis : restore toolbars
         if qgis.utils.iface is not None:
             qgis.core.QgsProject.instance().cleared.connect(self._reloadQgisToolbar)
-            # qgis.utils.iface.actionExit().triggered.connect(self._reloadQgisToolbar)
+
+    def panCanvas(self):
+        self.qgiscanvas.panCanvas()
 
     def selectFeature(self):
         pointemitter = self.qgiscanvas.pointEmitter
@@ -1548,6 +1551,10 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         parentwdg = self.currenttoolwidget
         while parentwdg.parentWidget is not None:
             parentwdg = parentwdg.parentWidget
+
+        if hasattr(parentwdg, 'selectPickedFeature'):
+            parentwdg.selectPickedFeature(point)
+            return
 
         if not (
             hasattr(parentwdg, "DBASETABLENAME")
