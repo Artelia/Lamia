@@ -320,8 +320,6 @@ class AbstractDBaseParser:
         self.variante = variante
         self.worktype = worktype
 
-        self.maxrevision = self.getLastPK("Revision")
-
         self.dbconfigreader.createDBDictionary(self.worktype)
         self.dbasetables = self.dbconfigreader.dbasetables
 
@@ -331,11 +329,19 @@ class AbstractDBaseParser:
         ):
             self.updateDBaseVersion()
 
+        """
         sql = "SELECT MAX(pk_revision) FROM Revision;"
         query = self.query(sql)
         self.currentrevision = query[0][0]
-
+        """
         self.base3version = not ("Basedonnees" in self.dbasetables.keys())
+
+        if self.base3version:
+            self.maxrevision = self.getLastPK("revision")
+        else:
+            self.maxrevision = self.getLastPK("Revision")
+        self.currentrevision = int(self.maxrevision)
+
         updateWinReg(worktype=worktype)
 
     def initDBase(self):
@@ -803,15 +809,10 @@ class AbstractDBaseParser:
         if "WITH" in sqltemp1.keys():
             sqlout += "WITH " + sqltemp1["WITH"]
             sqlout += ", " + withsql
-            sqlout += (
-                " SELECT "
-                + sqltemp1["SELECT"]
-                + " FROM "
-                + sqltemp1["FROM"]
-            )
+            sqlout += " SELECT " + sqltemp1["SELECT"] + " FROM " + sqltemp1["FROM"]
             if "WHERE" in sqltemp1.keys():
                 sqlout += " WHERE " + sqltemp1["WHERE"]
-            
+
             if "ORDER" in sqltemp1.keys():
                 sqlout += " ORDER BY " + sqltemp1["ORDER"]
             if "GROUP" in sqltemp1.keys():

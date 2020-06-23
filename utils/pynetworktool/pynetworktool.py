@@ -112,9 +112,12 @@ def main(argv):
     # sys.exit()
 
     SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue_base3\test01.sqlite"
-    # SLFILE = os.path.join(
-    #     os.path.dirname(__file__), "networktest_geographic/test01.sqlite"
-    # )
+    SLFILE = os.path.join(
+        os.path.dirname(__file__), "networktest_geographic/test01.sqlite"
+    )
+    SLFILE = (
+        r"C:\111_GitProjects\Lamia\test\datas\lamia_assainissement_base3\test01.sqlite"
+    )
     tempparser = DBaseParserFactory("spatialite").getDbaseParser()
     tempparser.loadDBase(dbtype="Spatialite", slfile=SLFILE)
 
@@ -128,9 +131,19 @@ def main(argv):
         tempparser, messageinstance=tempparser.messageinstance, qgiscanvas=qgiscanvas,
     )
 
-    networkcore.computeNXGraph(graphtype="geographic", tolerance=0.0)
-    edgelist = networkcore.getSubGraphsEdgePks()
-    print(edgelist)
+    networkcore.computeNXGraph(graphtype="geographic", tolerance=1.0)
+    # indexnode, geomnode = networkcore.nearestNode([0.0, 0.0])
+    # print(indexnode, geomnode)
+    # print(networkcore.nxgraph.node[indexnode])
+
+    # 606684.5652478811,6686971.11283365 606714.9569556911,6687093.518868188
+    qgisgeom, shortestpks = networkcore.getQgisgeomBetweenPoints(
+        [606684.5652478811, 6686971.11283365], [606714.9569556911, 6687093.518868188]
+    )
+    print(shortestpks)
+
+    # edgelist = networkcore.getSubGraphsEdgePks()
+    # print(edgelist)
 
     exitQGis()
 

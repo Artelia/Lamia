@@ -63,106 +63,411 @@ class NetWorkCore:
         self.figuretype = plt.figure()
         self.axtype = self.figuretype.add_subplot(111)
 
-    """
-    def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
-        super(PathTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
-
-        
-    def initTool(self):
-        # ****************************************************************************************
-        # Main spec
-        self.CAT = 'Synthese'
-        self.NAME = 'Chemins'
-        self.visualmode = [4]
-        # self.PointENABLED = True
-        # self.LineENABLED = True
-        # self.PolygonEnabled = True
-        # self.magicfunctionENABLED = True
-        # self.linkagespec = None
-        # self.pickTable = None
-        # print(self.dbase.recentsdbase)
-
-        if self.dbase.dbasetype == 'spatialite':
-            fielpathname = 'path_' + os.path.basename(self.dbase.spatialitefile).split('.')[0]
-        elif self.dbase.dbasetype == 'postgis':
-            fielpathname = 'path_' + str(self.dbase.pghost)+ '_' + str(self.dbase.pgdb) + '_' + str(self.dbase.pgschema)
-        self.dbasetablename = os.path.join(os.path.dirname(__file__), '..', 'config', fielpathname + '.txt')
-        #networkx var
+        # the global graph computed
         self.nxgraph = None
-        self.ids = None
-        self.indexnoeuds = None
-        self.infralinfaces = None
-        self.reverseinfralinfaces = None
-        self.indexnoeuds = None
-        # rubberband var
-        self.rubberBand = qgis.gui.QgsRubberBand(self.canvas,self.dbase.dbasetables['Infralineaire']['layer'].geometryType())
-        self.rubberBand.setWidth(5)
-        self.rubberBand.setColor(QtGui.QColor("magenta"))
+        # list of edge pks
+        # old : use networkx.get_edge_attributes(self.nxgraph, "pk").values()
+        self.edgespks = None
+        # list of node geom in same order as self.nxgraph.nodes()
+        # old : use list(networkx.get_node_attributes(self.nxgraph, "xy").values())
+        self.nodegeom = None
+        # old - same as self.nxgraph.edges()
+        self.edgesnodeindex = None
+        # old - same as np.flip(np.array(self.nxgraph.edges()), 1)
+        self.edgesreversenodeindex = None
 
-        self.rubberbandtrack = qgis.gui.QgsVertexMarker(self.canvas)
-        self.rubberbandtrack.setColor(QtGui.QColor(QtCore.Qt.red))
-        self.rubberbandtrack.setIconSize(5)
-        self.rubberbandtrack.setIconType(qgis.gui.QgsVertexMarker.ICON_BOX) # or ICON_CROSS, ICON_X
-        self.rubberbandtrack.setPenWidth(3)
-        # matplotlib var
-        self.figuretype = plt.figure()
-        self.axtype = self.figuretype.add_subplot(111)
+        #: list of pk of nodes linked by tolerance
+        self.tolerancenodepk = None
 
-        self.postOnActivation()
-        
-        self.iconpath = os.path.join(os.path.dirname(__file__), 'Lamia_path_tool_icon.png')
+    def __________________GraphCreation():
+        pass
 
-        # ****************************************************************************************
-        # properties ui
-        self.groupBox_elements.setParent(None)
-        self.frame_editing.setParent(None)
+    def computeNXGraph(self, listpks=[], graphtype="geographic", tolerance=None):
+        if graphtype == "geographic":
+            if tolerance is None:
+                tolerance = 0.0
+            self.computeNXGraphGeographic(listpks=[], tolerance=tolerance)
+        elif graphtype == "topologic":
+            self.computeNXGraphTopologic(listpks=[])
 
-    def initFieldUI(self):
+    def computeNXGraphTopologic(self, listpks=[]):
+        debug = False
+        nxgraph = pks = indexnoeuds = infralinfaces = reverseinfralinfaces = None
+        nxgraph = networkx.Graph()
 
-        # ****************************************************************************************
-        # userui Desktop
-        if self.userwdgfield is None:
+        # get nodes
+        if self.dbase.base3version:
+            sql = "SELECT pk_node, X(geom), Y(geom) FROM node_now"
+        else:
+            sql = "SELECT pk_noeud, X(geom), Y(geom) FROM Noeud_now"
+        sql = self.dbase.sqlNow(sql)
+        query = self.dbase.query(sql)
 
-            # ****************************************************************************************
-            # userui
+        if len(query) == 0:
+            return
 
-            self.userwdgfield = UserUI()
-            self.linkuserwdgfield = [self.userwdgfield.lineEdit_nom,
-                                self.userwdgfield.lineEdit_start,
-                                self.userwdgfield.lineEdit_end]
+        nodepkxy = np.array(query, dtype=np.float64)
+        nodepkxy[:, 0] = nodepkxy[:, 0].astype(int)
+        # remove none
+        nodepkxy = nodepkxy[np.all(nodepkxy != None, axis=1)]
+        # remove np.nan
+        nodepkxy = nodepkxy[~np.isnan(nodepkxy).any(axis=1)]
 
-            self.linkuserwdgfield = {self.dbasetablename: [self.userwdgfield.lineEdit_nom,
-                                                        self.userwdgfield.lineEdit_start,
-                                                        self.userwdgfield.lineEdit_end]}
+        for pk_node, x, y in nodepkxy:
+            nxgraph.add_node(pk_node, xy=[x, y])
+        if self.dbase.base3version:
+            sql = " SELECT edge_now.pk_edge, startnode.pk_node, endnode.pk_node FROM edge_now \
+                    INNER JOIN node_now as startnode ON edge_now.lid_descriptionsystem_1 = startnode.id_descriptionsystem \
+                    INNER JOIN node_now as endnode ON edge_now.lid_descriptionsystem_2 = endnode.id_descriptionsystem     "
+        else:
+            sql = " SELECT Infralineaire_now.pk_infralineaire, startnode.pk_noeud, endnode.pk_noeud FROM Infralineaire_now \
+                    INNER JOIN Noeud_now as startnode ON Infralineaire_now.lid_descriptionsystem_1 = startnode.id_descriptionsystem \
+                    INNER JOIN Noeud_now as endnode ON Infralineaire_now.lid_descriptionsystem_2 = endnode.id_descriptionsystem     "
+        sql = self.dbase.sqlNow(sql)
+        query = self.dbase.query(sql)
+        for pk_edge, pk_startnode, pk_endnode in query:
+            nxgraph.add_edge(pk_startnode, pk_endnode, pk=pk_edge)
 
-            self.userwdgfield.pushButton_pickstart.clicked.connect(self.getPickResult)
-            self.userwdgfield.pushButton_pickend.clicked.connect(self.getPickResult)
+        self.nxgraph = nxgraph
 
-            # plot
-            if False:
-                self.plotWdg = pg.PlotWidget()
-                datavline = pg.InfiniteLine(0, angle=90, pen=pg.mkPen('r', width=1), name='cross_vertical')
-                datahline = pg.InfiniteLine(0, angle=0, pen=pg.mkPen('r', width=1), name='cross_horizontal')
-                self.plotWdg.addItem(datavline)
-                self.plotWdg.addItem(datahline)
-                self.userwdgfield.frame_chart.layout().addWidget(self.plotWdg)
-                self.userwdgfield.checkBox_track.stateChanged.connect(self.activateMouseTracking)
-                self.doTracking = True
-                self.showcursor = True
+        nodes = np.asarray(
+            list(networkx.get_node_attributes(self.nxgraph, "xy").values())
+        )
 
-                self.userwdgfield.comboBox_chart_theme.addItems(['Profil'])
-                self.userwdgfield.comboBox_chart_theme.currentIndexChanged.connect(self.computeGraph)
-            if True:
-                self.figuretype = plt.figure()
-                self.axtype = self.figuretype.add_subplot(111)
-                self.mplfigure = FigureCanvas(self.figuretype)
-                self.userwdgfield.frame_chart.layout().addWidget(self.mplfigure)
-                self.toolbar = NavigationToolbar(self.mplfigure, self.userwdgfield.frame_chart)
-                self.userwdgfield.frame_chart.layout().addWidget(self.toolbar)
+    def computeNXGraphGeographic(self, listpks=[], tolerance=0.0):
+        """
+        compute networkx graph for all infralineaire or for listids if specified
+        Calcul le networkx graph pour toutes les infralineaires ou seulement pour les infralineaires dont
+        l'id est fournie
+        :param listids: optionnel - les id d'infralineaire sur lequels on veut faire le graph
+        :return: nxgraph : le graph netxworkx
+                 ids : list des id
+                  indexnoeuds : list où l'ordre est l'index du noeud selon le graph , et la valeur le xy du noeud
+                   infralinfaces : les index des extremites correspondant aux id dans le sens de la geometrie
+                    reverseinfralinfaces : les index des extremites correspondant aux id dans le sens inverse de la geometrie
+        """
+        debug = False
+        nxgraph = pks = indexnoeuds = infralinfaces = reverseinfralinfaces = None
+        nxgraph = networkx.Graph()
 
-                self.userwdgfield.comboBox_chart_theme.currentIndexChanged.connect(self.computeGraph)
+        if self.dbase.base3version:
+            sql = "SELECT edge_now.pk_edge, \
+                 X(ST_StartPoint(edge_now.geom)), Y(ST_StartPoint(edge_now.geom)), \
+                 X(ST_EndPoint(edge_now.geom)), Y(ST_EndPoint(edge_now.geom))\
+                FROM edge_now "
 
-    """
+            if listpks:
+                if len(listpks) == 1:
+                    sql += " WHERE edge_now.pk_edge = " + str(listpks[0])
+                else:
+                    sql += " WHERE edge_now.pk_edge IN " + str(tuple(listpks))
+        else:
+            sql = "SELECT Infralineaire_now.pk_infralineaire, \
+                 X(ST_StartPoint(Infralineaire_now.geom)), Y(ST_StartPoint(Infralineaire_now.geom)), \
+                 X(ST_EndPoint(Infralineaire_now.geom)), Y(ST_EndPoint(Infralineaire_now.geom))\
+                 FROM Infralineaire_now "
+            if listpks:
+                if len(listpks) == 1:
+                    sql += " WHERE Infralineaire_now.pk_infralineaire = " + str(
+                        listpks[0]
+                    )
+                else:
+                    sql += " WHERE Infralineaire_now.pk_infralineaire IN " + str(
+                        tuple(listpks)
+                    )
+
+        sql = self.dbase.sqlNow(sql)
+        query = self.dbase.query(sql)
+
+        if len(query) > 0:
+            rawpoints = []
+            pks = []
+
+            nodepkxy = np.array(query, dtype=np.float64)
+            nodepkxy[:, 0] = nodepkxy[:, 0].astype(int)
+            # remove None value
+            nodepkxy = nodepkxy[np.all(nodepkxy != None, axis=1)]
+            # remove np.nan
+            nodepkxy = nodepkxy[~np.isnan(nodepkxy).any(axis=1)]
+
+            self.tolerancenodepk = []
+
+            for i, row in enumerate(nodepkxy):
+                npstartnode = row[1:3]
+                npendnode = row[3:5]
+                npstartnodes = nodepkxy[:, 1:3]
+                npendnodes = nodepkxy[:, 3:5]
+
+                for npnode in [npstartnode, npendnode]:
+                    for npnodes in [npstartnodes, npendnodes]:
+                        # find index in npnodes where npnode equal npnodes
+                        npindexrealequal = np.where(np.all(npnodes == npnode, axis=1))[
+                            0
+                        ]
+                        # find index in npnodes where npnode within tolerance from npnodes
+                        dist1 = np.linalg.norm(npnodes - npnode, axis=1)
+                        npindextolerance = np.where(dist1 < tolerance)[0]
+                        # remove  from npindextolerance index that are equal
+                        npindextolerance = np.delete(
+                            npindextolerance,
+                            np.where(npindextolerance == npindexrealequal),
+                        )
+                        # if npindextolerance is not null, change point value in origin array (nodepkxy)
+                        # and add edge pk values in tolerancenodepk
+                        if npindextolerance.size == 0:
+                            continue
+                        npnodes[npindextolerance] = npnode
+                        self.tolerancenodepk.append(
+                            [row[0], nodepkxy[npindextolerance, 0].tolist()]
+                        )
+
+            edgepks = nodepkxy[:, 0].astype(int)
+
+            # compute unique points for graph
+            flattenxystartend = np.concatenate((nodepkxy[:, 1:3], nodepkxy[:, 3:5]))
+
+            uniquepoints, uniqueindexfromoriginal, uniqueindextooriginal = np.unique(
+                flattenxystartend, return_index=True, return_inverse=True, axis=0
+            )
+
+            nodegeombyindex = flattenxystartend[uniqueindexfromoriginal]
+
+            listedgenodedefined = np.transpose(
+                np.reshape(uniqueindextooriginal, (2, -1))
+            )
+
+            lstedgepk = np.insert(listedgenodedefined, 2, edgepks, axis=1)
+            for edge1, edge2, edgepk in lstedgepk:
+                nxgraph.add_edge(edge1, edge2, pk=edgepk)
+
+            for nodeindex in nxgraph.nodes():
+                nxgraph.node[nodeindex]["xy"] = nodegeombyindex[nodeindex].tolist()
+
+            npedges = listedgenodedefined
+            npreverseedges = np.flip(listedgenodedefined, 1)
+
+            self.nxgraph = nxgraph
+            self.edgespks = edgepks
+            self.nodegeom = nodegeombyindex
+            self.edgesnodeindex = npedges
+            self.edgesreversenodeindex = npreverseedges
+
+    def getSubGraphs(self):
+        # return networkx.connected_component_subgraphs(self.nxgraph)
+        return [
+            self.nxgraph.subgraph(c).copy()
+            for c in networkx.connected_components(self.nxgraph)
+        ]
+
+    def getSubGraphsEdgePks(self):
+        edgenodepks = []
+        for nxsubdomain in self.getSubGraphs():
+            edgesdata = nxsubdomain.edges.data("pk")
+            edgespk = [elem[2] for elem in edgesdata]
+            edgenodepks.append(edgespk)
+
+        return edgenodepks
+
+    def __________________GraphFunctions():
+        pass
+
+    def getExtremityNodeIndexFromLinearGraph(self, nxgraph):
+        npedges = np.ravel(list(nxgraph.edges()))
+        unique, counts = np.unique(npedges, return_counts=True)
+        edgeextremite = unique[np.where(counts == 1)]
+        edgenoeud = unique[np.where(counts > 2)]
+
+        if len(edgenoeud) > 0:  # graph is not a line
+            return None
+        else:
+            return list(
+                edgeextremite
+            )  # logiquement cette list comporte deux elements : le noeud de depart et d 'arrivee
+
+    def __________________ShortestPathFunctions():
+        pass
+
+    def getShortestPath(self, indexstart, indexstop):
+        return networkx.shortest_path(self.nxgraph, indexstart, indexstop)
+
+    def __________________GraphToGisLayerfunctions():
+        pass
+
+    # def computePath(self,  point1, point2, alsocomputegraph=True):
+    def getQgisgeomBetweenPoints(self, point1, point2):
+        """
+        Calcul le plus court chemin entre point1 et point2
+        Dessine le chemin sur le rubberband
+        Défini self.geomfinal : le qgsgeomtry entre le point1 et 2
+                self.geomfinalids : les ids entre le point1 1 et 2
+
+        :param point1:
+        :param point2:
+        :param alsocomputegraph:
+        :return:
+        """
+
+        if self.nxgraph is None:
+            return
+
+        node1index, node1geom = self.nearestNode(point1)
+        node2index, node2geom = self.nearestNode(point2)
+
+        try:
+            shortestpathedges = networkx.shortest_path(
+                self.nxgraph, node1index, node2index
+            )
+        except networkx.exception.NetworkXNoPath:
+            return None, None
+
+        shortestpks = self.getInfralineairePkFromNxEdges(shortestpathedges)
+        geomfinal = self.getQgsGeomFromPks(shortestpks)
+
+        return geomfinal, shortestpks
+
+        if alsocomputegraph:
+            self.computeGraph()
+
+    # def getIdsFromPath(self,pathedges, ids=None, infralinfaces=None, reverseinfralinfaces=None):
+    def getInfralineairePkFromNxEdges(self, nxpathedges):
+        """
+        :param pathedges: the edges of the path
+        :return: np.array [..[id, reverse = True/False : if the geom is in the same direction of path edge]...]
+        """
+        # print('getIdsFromPath',pathedges)
+        if self.nxgraph is None:
+            print("nograph")
+            return
+        # if ids is None and infralinfaces is None and reverseinfralinfaces is None  :
+        #    if self.nxgraph is None:
+        #        self.computeNXGraphForAll()
+        #    ids = self.ids
+        #    infralinfaces = self.infralinfaces
+        #    reverseinfralinfaces = self.reverseinfralinfaces
+        shortestids = []
+
+        # print('***********************getIdsFromPath***')
+        # print(pathedges)
+        # print(ids)
+
+        for i in range(len(nxpathedges) - 1):
+            singlepath = [nxpathedges[i], nxpathedges[i + 1]]
+
+            # print(singlepath)
+            # print('infra', infralinfaces)
+            # print()
+            edgesnodeindex = np.array(self.nxgraph.edges())
+            edgesreversenodeindex = np.flip(edgesnodeindex, 1)
+            edgespks = np.array(
+                list(networkx.get_edge_attributes(self.nxgraph, "pk").values())
+            )
+            reverse = 0  # not reverse
+            index = np.where(np.all(edgesnodeindex == singlepath, axis=1))[0]
+            # print('index1', index)
+            if len(index) == 0:
+                index = np.where(np.all(edgesreversenodeindex == singlepath, axis=1))[0]
+                reverse = 1
+            # print(ids)
+            # print('index2', index)
+            shortestids.append([edgespks[index[0]], reverse])
+        shortestids = np.array(shortestids)
+        return shortestids
+
+    def getQgsGeomFromPks(self, pksreverse):
+        """
+        convertie une serie d'ids qui forment un path en polyligne
+        :param ids: les ids dont on veut assembler la geometrie
+        :return: la geometrie
+        """
+        geomfinalnodes = []
+        # for id, reverse in ids:
+        for pk, reversebool in pksreverse:
+            # print('id, reverse', id, reverse)
+            # feat = self.dbase.getLayerFeatureById('Infralineaire', id)
+            # geom = feat.geometry()
+            if self.dbase.base3version:
+                geomtxt = self.dbase.getValuesFromPk("edge", "ST_AsText(geom)", pk)
+            else:
+                geomtxt = self.dbase.getValuesFromPk(
+                    "Infralineaire", "ST_AsText(geom)", pk
+                )
+            geom = qgis.core.QgsGeometry.fromWkt(geomtxt).asPolyline()
+            # nodes = geom.asPolyline()
+            if reversebool:
+                geom.reverse()
+                # geom = qgis.core.QgsGeometry.fromPolyline(nodes)
+            geomfinalnodes += geom
+
+        geom = qgis.core.QgsGeometry.fromPolylineXY(geomfinalnodes)
+        return geom
+
+    # def getOrderedProjectedIds(self, geomprojection=None, geomprojectionids= None, layertoproject=None,constraint=''):
+    def getOrderedProjectedPks(
+        self, pathpksreverse=None, layertoproject=None, constraint=""
+    ):
+        """
+        Projette sur la ligne geomprojection constituée des infralineaire d'id geomprojectionids
+        les éléments du qgsvectorlayer layertoproject les plus proches de geomprojection
+        :param geomprojection: la geometrie sur laquelle on se projette
+        :param geomprojectionids: les id dont est constituée la geometrie sur laquelle on se projette
+        :return: datas : dict : 'x' : lenght along the geomprojection
+                                     'y' : pk de la couche layertoproject (choisi pour être id_..)
+                                     'xy' : list with [x,y]
+        """
+        debug = False
+        if debug:
+            logging.getLogger("Lamia").debug("start")
+
+        datas = {}
+        geomprojection = self.getQgsGeomFromPks(pathpksreverse)
+        geomprojectionpks = list(pathpksreverse[:, 0])
+
+        if geomprojection is not None:
+            # init la valeur retournée
+            datas = {"x": [], "pk": [], "xy": []}
+            # iteration sur layertoproject pour retenir seulement les éléments les plus près de la geomprojection
+            layertoproject.setSubsetString(constraint)
+            for fet in layertoproject.getFeatures():
+                # met en forme la geoemtrie
+                layergeomtype = layertoproject.geometryType()
+                if fet.geometry() is None:
+                    continue
+                if layergeomtype == 0:
+                    geom = [fet.geometry().asPoint()]
+                elif layergeomtype == 1:
+                    geom = fet.geometry().asPolyline()
+
+                # iteration sur le premier et dernier point de la geometrie pour voir si l'infralineaire la plus
+                # proche est dans la list  geomprojectionids
+                for point in [geom[0], geom[-1]]:
+
+                    geompointequipement1 = qgis.core.QgsGeometry.fromPointXY(point)
+                    if self.dbase.base3version:
+                        nearestinfralinpk, dist = self.qgiscanvas.getNearestPk(
+                            "edge", point, comefromcanvas=False
+                        )
+                    else:
+                        nearestinfralinpk, dist = self.qgiscanvas.getNearestPk(
+                            "Infralineaire", point, comefromcanvas=False
+                        )
+
+                    # nearestinfralinid = self.dbase.getLayerFeatureByPk('Infralineaire', nearestinfralinpk)['id_infralineaire']
+                    if nearestinfralinpk in geomprojectionpks:
+                        distline = geomprojection.lineLocatePoint(geompointequipement1)
+                        datas["xy"].append([distline, int(fet.id())])
+                        break
+            # met en forme le resultat notamment en le classant par abscisse sur la geomprojection
+            if len(datas["xy"]) > 0:
+                xy = np.array(datas["xy"])
+                xysorted = xy[xy[:, 0].argsort()]
+                datas["x"] = xysorted[:, 0]
+                datas["pk"] = xysorted[:, 1]
+            layertoproject.setSubsetString("")
+
+        return datas
+
+    def __________________VizFunctions():
+        pass
 
     def computeGraph(self):
         # print('computeGraph')
@@ -230,71 +535,6 @@ class NetWorkCore:
                 # self.axtype.grid()
             self.figuretype.canvas.draw()
         # self.plotWdg.addLegend()
-
-    # def getOrderedProjectedIds(self, geomprojection=None, geomprojectionids= None, layertoproject=None,constraint=''):
-    def getOrderedProjectedPks(
-        self, pathpksreverse=None, layertoproject=None, constraint=""
-    ):
-        """
-        Projette sur la ligne geomprojection constituée des infralineaire d'id geomprojectionids
-        les éléments du qgsvectorlayer layertoproject les plus proches de geomprojection
-        :param geomprojection: la geometrie sur laquelle on se projette
-        :param geomprojectionids: les id dont est constituée la geometrie sur laquelle on se projette
-        :return: datas : dict : 'x' : lenght along the geomprojection
-                                     'y' : pk de la couche layertoproject (choisi pour être id_..)
-                                     'xy' : list with [x,y]
-        """
-        debug = False
-        if debug:
-            logging.getLogger("Lamia").debug("start")
-
-        datas = {}
-        geomprojection = self.getQgsGeomFromPks(pathpksreverse)
-        geomprojectionpks = list(pathpksreverse[:, 0])
-
-        if geomprojection is not None:
-            # init la valeur retournée
-            datas = {"x": [], "pk": [], "xy": []}
-            # iteration sur layertoproject pour retenir seulement les éléments les plus près de la geomprojection
-            layertoproject.setSubsetString(constraint)
-            for fet in layertoproject.getFeatures():
-                # met en forme la geoemtrie
-                layergeomtype = layertoproject.geometryType()
-                if fet.geometry() is None:
-                    continue
-                if layergeomtype == 0:
-                    geom = [fet.geometry().asPoint()]
-                elif layergeomtype == 1:
-                    geom = fet.geometry().asPolyline()
-
-                # iteration sur le premier et dernier point de la geometrie pour voir si l'infralineaire la plus
-                # proche est dans la list  geomprojectionids
-                for point in [geom[0], geom[-1]]:
-
-                    geompointequipement1 = qgis.core.QgsGeometry.fromPointXY(point)
-                    if self.dbase.base3version:
-                        nearestinfralinpk, dist = self.qgiscanvas.getNearestPk(
-                            "edge", point, comefromcanvas=False
-                        )
-                    else:
-                        nearestinfralinpk, dist = self.qgiscanvas.getNearestPk(
-                            "Infralineaire", point, comefromcanvas=False
-                        )
-
-                    # nearestinfralinid = self.dbase.getLayerFeatureByPk('Infralineaire', nearestinfralinpk)['id_infralineaire']
-                    if nearestinfralinpk in geomprojectionpks:
-                        distline = geomprojection.lineLocatePoint(geompointequipement1)
-                        datas["xy"].append([distline, int(fet.id())])
-                        break
-            # met en forme le resultat notamment en le classant par abscisse sur la geomprojection
-            if len(datas["xy"]) > 0:
-                xy = np.array(datas["xy"])
-                xysorted = xy[xy[:, 0].argsort()]
-                datas["x"] = xysorted[:, 0]
-                datas["pk"] = xysorted[:, 1]
-            layertoproject.setSubsetString("")
-
-        return datas
 
     def getLongitudinalProfile(
         self,
@@ -712,493 +952,6 @@ class NetWorkCore:
         # print('datas', datas)
         return datas
 
-    def getPickResult(self):
-        # print('cliekd')
-        if self.sender() == self.userwdgfield.pushButton_pickstart:
-            self.tempbutton = "start"
-        elif self.sender() == self.userwdgfield.pushButton_pickend:
-            self.tempbutton = "end"
-        self.pointEmitter.canvasClicked.connect(self.selectPickedFeature)
-        self.canvas.setMapTool(self.pointEmitter)
-
-    """
-    def selectPickedFeature(self, point):
-        pointfromcanvas = point
-        # print(pointfromcanvas)
-
-        self.rubberBand.reset(self.dbase.dbasetables['Infralineaire']['layer'].geometryType())
-        try:
-            self.pointEmitter.canvasClicked.disconnect(self.selectPickedFeature)
-        except:
-            pass
-        if False:
-            # print(self.canvas.mapSettings().destinationCrs().authid(), self.dbase.qgiscrs.authid())
-            xform = qgis.core.QgsCoordinateTransform( self.canvas.mapSettings().destinationCrs(),self.dbase.qgiscrs)
-            success = qgis.core.QgsGeometry.fromPoint(pointfromcanvas).transform(xform)
-            # print(pointfromcanvas)
-        point2 = self.pointEmitter.toLayerCoordinates(self.dbase.dbasetables['Infralineaire']['layerqgis'], point)
-        # print(point2)
-
-        if self.tempbutton == 'start':
-            self.userwdgfield.lineEdit_start.setText(str(point2.x()) + ',' + str(point2.y()))
-        elif self.tempbutton == 'end':
-            self.userwdgfield.lineEdit_end.setText(str(point2.x()) + ',' + str(point2.y()))
-
-        try:
-            point1 = np.array([float(elem1) for elem1 in self.userwdgfield.lineEdit_start.text().split(',')])
-            point2 = np.array([float(elem1) for elem1 in self.userwdgfield.lineEdit_end.text().split(',')])
-        except ValueError:
-            print('ValueError')
-            return
-
-        self.computePath(point1, point2)
-    """
-
-    # def computePath(self,  point1, point2, alsocomputegraph=True):
-    def getQgisgeomBetweenPoints(self, point1, point2):
-        """
-        Calcul le plus court chemin entre point1 et point2
-        Dessine le chemin sur le rubberband
-        Défini self.geomfinal : le qgsgeomtry entre le point1 et 2
-                self.geomfinalids : les ids entre le point1 1 et 2
-
-        :param point1:
-        :param point2:
-        :param alsocomputegraph:
-        :return:
-        """
-
-        if self.nxgraph is None:
-            self.computeNXGraph()
-
-        point1 = np.array(point1)
-        point2 = np.array(point2)
-        if self.nodegeom is not None:
-            dist1 = np.linalg.norm(self.nodegeom - point1, axis=1)
-            index = np.where(dist1 == np.amin(dist1))
-            networkpoint1 = index[0][0]
-            dist2 = np.linalg.norm(self.nodegeom - point2, axis=1)
-            index = np.where(dist2 == np.amin(dist2))
-            networkpoint2 = index[0][0]
-
-            try:
-                shortestpathedges = networkx.shortest_path(
-                    self.nxgraph, networkpoint1, networkpoint2
-                )
-                # print('shortestpathedges', shortestpathedges)
-            except networkx.exception.NetworkXNoPath:
-                print("no path")
-                # self.userwdgfield.label_pathids.setText('Pas de chemin')
-                return None, None
-
-            # shortestids = self.getIdsFromPath(shortestpathedges)
-            shortestpks = self.getInfralineairePkFromNxEdges(shortestpathedges)
-            # self.geomfinal = self.getQgsGeomFromPks(shortestpks)
-            geomfinal = self.getQgsGeomFromPks(shortestpks)
-
-            return geomfinal, shortestpks
-            """
-            # print(self.geomfinal.asPolyline())
-            # xform = qgis.core.QgsCoordinateTransform(self.dbase.qgiscrs ,self.canvas.mapSettings().destinationCrs())
-            #success = qgis.core.QgsGeometry.fromPoint(pointfromcanvas).transform(xform)
-            geomforrubberband = qgis.core.QgsGeometry(self.geomfinal)
-            #geomforrubberband.transform(xform)
-            geomforrubberband.transform(self.dbase.xform)
-            # print(geomforrubberband.asPolyline())
-            self.rubberBand.addGeometry(geomforrubberband, None)
-
-            if len(shortestpks)>0:
-                #self.geomfinalnodes = geomfinalnodes
-                #self.geomfinal = qgis.core.QgsGeometry.fromPolyline(geomfinalnodes)
-                self.geomfinalids = shortestpks[:,0]
-
-                # print('self.geomfinalnodes',self.geomfinalnodes)
-                # print('self.geomfinal', self.geomfinal)
-                # print('self.geomfinalids', self.geomfinalids)
-                self.userwdgfield.label_pathids.setText(str(list(self.geomfinalids)))
-
-                self.rubberBand.show()
-            else:
-                self.geomfinalnodes = None
-                self.geomfinal = None
-                self.geomfinalids = []
-            """
-            if alsocomputegraph:
-                self.computeGraph()
-
-    # def getIdsFromPath(self,pathedges, ids=None, infralinfaces=None, reverseinfralinfaces=None):
-    def getInfralineairePkFromNxEdges(self, nxpathedges):
-        """
-        :param pathedges: the edges of the path
-        :return: np.array [..[id, reverse = True/False : if the geom is in the same direction of path edge]...]
-        """
-        # print('getIdsFromPath',pathedges)
-        if self.nxgraph is None:
-            self.computeNXGraph()
-        # if ids is None and infralinfaces is None and reverseinfralinfaces is None  :
-        #    if self.nxgraph is None:
-        #        self.computeNXGraphForAll()
-        #    ids = self.ids
-        #    infralinfaces = self.infralinfaces
-        #    reverseinfralinfaces = self.reverseinfralinfaces
-        shortestids = []
-
-        # print('***********************getIdsFromPath***')
-        # print(pathedges)
-        # print(ids)
-
-        for i in range(len(nxpathedges) - 1):
-            singlepath = [nxpathedges[i], nxpathedges[i + 1]]
-
-            # print(singlepath)
-            # print('infra', infralinfaces)
-            # print()
-            reverse = 0  # not reverse
-            index = np.where(np.all(self.edgesnodeindex == singlepath, axis=1))[0]
-            # print('index1', index)
-            if len(index) == 0:
-                index = np.where(
-                    np.all(self.edgesreversenodeindex == singlepath, axis=1)
-                )[0]
-                reverse = 1
-            # print(ids)
-            # print('index2', index)
-            shortestids.append([self.edgespks[index[0]], reverse])
-        shortestids = np.array(shortestids)
-        return shortestids
-
-    # def getGeomFromIds(self,ids):
-    def getQgsGeomFromPks(self, pksreverse):
-        """
-        convertie une serie d'ids qui forment un path en polyligne
-        :param ids: les ids dont on veut assembler la geometrie
-        :return: la geometrie
-        """
-        geomfinalnodes = []
-        # for id, reverse in ids:
-        for pk, reversebool in pksreverse:
-            # print('id, reverse', id, reverse)
-            # feat = self.dbase.getLayerFeatureById('Infralineaire', id)
-            # geom = feat.geometry()
-            if self.dbase.base3version:
-                geomtxt = self.dbase.getValuesFromPk("edge", "ST_AsText(geom)", pk)
-            else:
-                geomtxt = self.dbase.getValuesFromPk(
-                    "Infralineaire", "ST_AsText(geom)", pk
-                )
-            geom = qgis.core.QgsGeometry.fromWkt(geomtxt).asPolyline()
-            # nodes = geom.asPolyline()
-            if reversebool:
-                geom.reverse()
-                # geom = qgis.core.QgsGeometry.fromPolyline(nodes)
-            geomfinalnodes += geom
-
-        geom = qgis.core.QgsGeometry.fromPolylineXY(geomfinalnodes)
-        return geom
-
-    """
-    def postOnActivation(self):
-        # print('post path activ')
-        self.computeNXGraphForAll()
-        #self.nxgraph, self.indexnoeuds, self.infralinfaces, self.reverseinfralinfaces= self.computeNXGraph()
-
-
-    def computeNXGraphForAll(self):
-        debug = False
-        #self.nxgraph, self.nodepks, self.nodeindex, self.infralinfaces, self.reverseinfralinfaces = self.computeNXGraph()
-        self.nxgraph, self.edgespks, self.nodegeom, self.edgesnodeindex, self.edgesreversenodeindex = self.computeNXGraph()
-        if debug:
-            pprint('self.nxgraph :')
-            pprint(self.nxgraph)
-            print('self.edgespks : ')
-            pprint(self.edgespks)
-            print('self.nodegeom : ')
-            pprint(self.nodegeom)
-            print('self.edgesnodeindex : ')
-            pprint(self.edgesnodeindex)
-            print('self.edgesreversenodeindex : ')
-            pprint(self.edgesreversenodeindex)
-    """
-
-    def computeNXGraph(self, listpks=[], graphtype="geographic", tolerance=None):
-        if graphtype == "geographic":
-            if tolerance is None:
-                tolerance = 1.0
-            self.computeNXGraphGeographic(listpks=[], tolerance=tolerance)
-        elif graphtype == "topologic":
-            self.computeNXGraphTopologic(listpks=[])
-
-    def computeNXGraphTopologic(self, listpks=[]):
-        pass
-
-    # def computeNXGraph(self, listids=None):
-    def computeNXGraphGeographic(self, listpks=[], tolerance=2.0):
-        """
-        compute networkx graph for all infralineaire or for listids if specified
-        Calcul le networkx graph pour toutes les infralineaires ou seulement pour les infralineaires dont
-        l'id est fournie
-        :param listids: optionnel - les id d'infralineaire sur lequels on veut faire le graph
-        :return: nxgraph : le graph netxworkx
-                 ids : list des id
-                  indexnoeuds : list où l'ordre est l'index du noeud selon le graph , et la valeur le xy du noeud
-                   infralinfaces : les index des extremites correspondant aux id dans le sens de la geometrie
-                    reverseinfralinfaces : les index des extremites correspondant aux id dans le sens inverse de la geometrie
-        """
-        debug = False
-        nxgraph = pks = indexnoeuds = infralinfaces = reverseinfralinfaces = None
-        nxgraph = networkx.Graph()
-
-        # sql = "SELECT Infralineaire_qgis.id_infralineaire,"
-        # sql += " ST_AsText(ST_StartPoint(Infralineaire_qgis.geom)), ST_AsText(ST_EndPoint(Infralineaire_qgis.geom))"
-        # sql += " FROM Infralineaire_qgis "
-        # sql += ' WHERE '
-        # sql += self.dbase.dateVersionConstraintSQL()
-        if self.dbase.base3version:
-            # sql = (
-            #     "SELECT edge_now.pk_edge, "
-            #     "ST_AsText(ST_StartPoint(edge_now.geom)), ST_AsText(ST_EndPoint(edge_now.geom)) "
-            #     "FROM edge_now "
-            # )
-            sql = "SELECT edge_now.pk_edge, \
-                 X(ST_StartPoint(edge_now.geom)), Y(ST_StartPoint(edge_now.geom)), \
-                 X(ST_EndPoint(edge_now.geom)), Y(ST_EndPoint(edge_now.geom))\
-                FROM edge_now "
-
-            if listpks:
-                if len(listpks) == 1:
-                    sql += " WHERE edge_now.pk_edge = " + str(listpks[0])
-                else:
-                    sql += " WHERE edge_now.pk_edge IN " + str(tuple(listpks))
-        else:
-            sql = (
-                "SELECT Infralineaire_now.pk_infralineaire, "
-                "ST_AsText(ST_StartPoint(Infralineaire_now.geom)), ST_AsText(ST_EndPoint(Infralineaire_now.geom)) "
-                "FROM Infralineaire_now "
-            )
-            if listpks:
-                if len(listpks) == 1:
-                    sql += " WHERE Infralineaire_now.pk_infralineaire = " + str(
-                        listpks[0]
-                    )
-                else:
-                    sql += " WHERE Infralineaire_now.pk_infralineaire IN " + str(
-                        tuple(listpks)
-                    )
-        sql = self.dbase.sqlNow(sql)
-        query = self.dbase.query(sql)
-        # print('sql', sql, query)
-
-        if len(query) > 0:
-            rawpoints = []
-            # ids=[]
-            pks = []
-
-            nodepkxy = np.array(query)
-            nodepkxy[:, 0] = nodepkxy[:, 0].astype(int)
-            tolerancenodepk = []
-
-            for i, row in enumerate(nodepkxy):
-                npstartnode = row[1:3]
-                npendnode = row[3:5]
-                npstartnodes = nodepkxy[:, 1:3]
-                npendnodes = nodepkxy[:, 3:5]
-
-                for npnode in [npstartnode, npendnode]:
-                    for npnodes in [npstartnodes, npendnodes]:
-                        # find index in npnodes where npnode equal npnodes
-                        npindexrealequal = np.where(np.all(npnodes == npnode, axis=1))[
-                            0
-                        ]
-                        # find index in npnodes where npnode within tolerance from npnodes
-                        dist1 = np.linalg.norm(npnodes - npnode, axis=1)
-                        npindextolerance = np.where(dist1 < tolerance)[0]
-
-                        # remove  from npindextolerance index that are equal
-                        npindextolerance = np.delete(
-                            npindextolerance,
-                            np.where(npindextolerance == npindexrealequal),
-                        )
-
-                        # if npindextolerance is not null, change point value in origin array (nodepkxy)
-                        # and add edge pk values in tolerancenodepk
-                        if npindextolerance.size == 0:
-                            continue
-                        npnodes[npindextolerance] = npnode
-                        tolerancenodepk.append(
-                            [row[0], nodepkxy[npindextolerance, 0].tolist()]
-                        )
-
-            edgepks = nodepkxy[:, 0].astype(int)
-
-            # compute unique points for graph
-            flattenxystartend = np.concatenate((nodepkxy[:, 1:3], nodepkxy[:, 3:5]))
-            uniquepoints, uniqueindexfromoriginal, uniqueindextooriginal = np.unique(
-                flattenxystartend, return_index=True, return_inverse=True, axis=0
-            )
-
-            nodegeombyindex = flattenxystartend[uniqueindexfromoriginal]
-
-            listedgenodedefined = np.transpose(
-                np.reshape(uniqueindextooriginal, (2, -1))
-            )
-
-            lstedgepk = np.insert(listedgenodedefined, 2, edgepks, axis=1)
-
-            for edge1, edge2, edgepk in lstedgepk:
-                nxgraph.add_edge(edge1, edge2, edgepk=edgepk)
-
-            # nxgraph.add_edges_from([(edge[0], edge[1], edgepk=edge[2]) for edge in edgepk])
-
-            # sys.exit()
-
-            npedges = listedgenodedefined
-            npreverseedges = np.flip(listedgenodedefined, 1)
-
-            self.nxgraph = nxgraph
-            self.edgespks = edgepks
-            self.nodegeom = nodegeombyindex
-            self.edgesnodeindex = npedges
-            self.edgesreversenodeindex = npreverseedges
-
-            """
-            sys.exit()
-
-            # rawpoints = np.array(rawpoints)
-
-            # create 1d array with startxy1, startxy2, ..., startxyn, endxy1, endxyy2, ...,endxyn
-            # pointstemp = np.append(rawpoints[:, 0], rawpoints[:, 1], axis=0)
-            # convert to string to manage np.unique with couple of xy
-            # pointstemp1 = np.array([str(row) for row in pointstemp])
-            # get unique point with index compared to pointstemp1
-            points, index1, index2 = np.unique(
-                pointstemp1, return_index=True, return_inverse=True
-            )
-
-            sys.exit()
-
-            for row in query:
-                # print(row[1], row[2])
-                # print([float(elem1) for elem1 in row[1].split('(')[1][:-1].split(' ')])
-                if row[1] is not None and row[2] is not None:
-                    x = [float(elem1) for elem1 in row[1].split("(")[1][:-1].split(" ")]
-                    y = [float(elem2) for elem2 in row[2].split("(")[1][:-1].split(" ")]
-                    rawpoints.append([x, y])
-                    # startpoints.append([float(elem1) for elem1 in row[1].split('(')[1][:-1].split(' ')])
-                    # endpoints.append([float(elem2) for elem2 in row[2].split('(')[1][:-1].split(' ')])
-                    pks.append(row[0])
-                # print([float(elem1) for elem1 in row[1].split('(')[1][:-1].split(' ')])
-                # print([float(elem2) for elem2 in row[2].split('(')[1][:-1].split(' ')])
-
-            pks = np.array(pks)
-            rawpoints = np.array(rawpoints)
-
-            # create 1d array with startxy1, startxy2, ..., startxyn, endxy1, endxyy2, ...,endxyn
-            pointstemp = np.append(rawpoints[:, 0], rawpoints[:, 1], axis=0)
-            # convert to string to manage np.unique with couple of xy
-            pointstemp1 = np.array([str(row) for row in pointstemp])
-            # get unique point with index compared to pointstemp1
-            points, index1, index2 = np.unique(
-                pointstemp1, return_index=True, return_inverse=True
-            )
-            # list of unique points
-            pointsarr = pointstemp[index1]  # the uniques points
-            # list of unique point index compared to pointstemp1
-            index2bis = np.transpose(np.reshape(index2, (2, -1)))
-            #
-            nxgraph.add_edges_from([(edge[0], edge[1]) for edge in index2bis])
-            indexnoeuds = pointsarr
-            infralinfaces = index2bis
-            reverseinfralinfaces = np.flip(infralinfaces, 1)
-
-        (
-            self.nxgraph,
-            self.edgespks,
-            self.nodegeom,
-            self.edgesnodeindex,
-            self.edgesreversenodeindex,
-        ) = (nxgraph, pks, indexnoeuds, infralinfaces, reverseinfralinfaces)
-
-        if debug:
-            pprint("self.nxgraph :")
-            pprint(self.nxgraph)
-            print("self.edgespks : ")
-            pprint(self.edgespks)
-            print("self.nodegeom : ")
-            pprint(self.nodegeom)
-            print("self.edgesnodeindex : ")
-            pprint(self.edgesnodeindex)
-            print("self.edgesreversenodeindex : ")
-            pprint(self.edgesreversenodeindex)
-
-        """
-
-    def getSubGraphs(self):
-        # return networkx.connected_component_subgraphs(self.nxgraph)
-        return [
-            self.nxgraph.subgraph(c).copy()
-            for c in networkx.connected_components(self.nxgraph)
-        ]
-
-    def getSubGraphsEdgePks(self):
-        edgenodepks = []
-        for nxsubdomain in self.getSubGraphs():
-            temp = nxsubdomain.edges(data=True)
-            # print(nxsubdomain.edges.data("edgepk"))
-            edgesdata = nxsubdomain.edges.data("edgepk")
-            edgespk = [elem[2] for elem in edgesdata]
-
-            edgenodepks.append(edgespk)
-
-        return edgenodepks
-
-    def getShortestPath(self, indexstart, indexstop):
-        return networkx.shortest_path(self.nxgraph, indexstart, indexstop)
-
-    def getExtremityNodeIndexFromLinearGraph(self, nxgraph):
-        npedges = np.ravel(list(nxgraph.edges()))
-        unique, counts = np.unique(npedges, return_counts=True)
-        edgeextremite = unique[np.where(counts == 1)]
-        edgenoeud = unique[np.where(counts > 2)]
-
-        if len(edgenoeud) > 0:  # graph is not a line
-            return None
-        else:
-            return list(
-                edgeextremite
-            )  # logiquement cette list comporte deux elements : le noeud de depart et d 'arrivee
-
-    """
-    def postInitFeatureProperties(self, feat):
-        # print('post path')
-        if self.rubberBand is not None:
-            self.rubberBand.reset(self.dbase.dbasetables['Infralineaire']['layer'].geometryType())
-        self.userwdgfield.label_pathids.setText('')
-
-        try:
-            point1 = np.array([float(elem1) for elem1 in self.userwdgfield.lineEdit_start.text().split(',')])
-            point2 = np.array([float(elem1) for elem1 in self.userwdgfield.lineEdit_end.text().split(',')])
-        except ValueError:
-            print('ValueError')
-            return
-
-        self.computePath(point1, point2)
-
-
-
-    def postOnDesactivation(self):
-        if self.rubberBand is not None:
-            self.rubberBand.reset(self.dbase.dbasetables['Infralineaire']['layer'].geometryType())
-        if False:
-            try:
-                self.plotWdg.scene().sigMouseMoved.disconnect(self.mouseMovedPyQtGraph)
-            except Exception as e:
-                print(e)
-        try:
-            self.pointEmitter.canvasClicked.disconnect(self.selectPickedFeature)
-        except Exception as e:
-            print(e)
-    """
-
     def exportCurrentGraph(self, point1, point2, datatype, graphtype, w, h, exportfile):
 
         debug = False
@@ -1285,9 +1038,18 @@ class NetWorkCore:
     def nearestNode(self, pointaslist):
         # closest point
         # def closest_node(node, nodes):
-        nodes = np.asarray(self.nodegeom)
-        node = np.array(pointaslist)
-        dist_2 = np.sum((nodes - node) ** 2, axis=1)
-        indexnode = np.argmin(dist_2)
-        geomnode = nodes[indexnode]
+        # nodes = np.asarray(self.nodegeom)
+        nxindexvalues = networkx.get_node_attributes(self.nxgraph, "xy")
+        nxindexes = np.array(list(nxindexvalues.keys()))
+        nodesgeom = np.array(list(nxindexvalues.values()))
+
+        # nodes = np.asarray(
+        #     list(networkx.get_node_attributes(self.nxgraph, "xy").values())
+        # )
+
+        nodegeom = np.array(pointaslist)
+        dist_2 = np.sum((nodesgeom - nodegeom) ** 2, axis=1)
+        npindex = np.argmin(dist_2)
+        indexnode = nxindexes[npindex]
+        geomnode = nodesgeom[npindex]
         return indexnode, geomnode

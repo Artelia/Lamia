@@ -1,3 +1,5 @@
+C:\111_GitProjects\Lamia\test\datas\lamia_assainissement_base3\test01.sqlite
+C:\111_GitProjects\Lamia\test\datas\lamia_assainissement\test01.sqlite
 C:\111_GitProjects\Lamia\test\datas\lamia_digue_base3\test01.sqlite
 C:\111_GitProjects\Lamia\utils\pynetworktool\networktest_geographic\test01.sqlite
 C:\111_GitProjects\Lamia\test\datas\lamia_digue\test01.sqlite
