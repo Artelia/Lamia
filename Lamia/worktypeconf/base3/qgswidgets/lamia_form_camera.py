@@ -138,12 +138,6 @@ class BaseCameraTool(AbstractLamiaFormTool):
         self.toolwidgetmain.toolButton_calc.clicked.connect(
             lambda: self.showNumPad(self.toolwidgetmain.spinBox_numphoto)
         )
-        if platform.system() == "Linux":
-            self.toolwidgetmain.pushButton_opencamera.setEnabled(False)
-        elif platform.system() == "Windows":
-            self.toolwidgetmain.pushButton_opencamera.clicked.connect(
-                lambda: self.openCameraApp()
-            )
 
     def changeNumPhoto(self):
         global numphoto
@@ -186,12 +180,6 @@ class BaseCameraTool(AbstractLamiaFormTool):
             + ";"
         )
         query = self.dbase.query(sql)
-
-    def openCameraApp(self):
-        if platform.system() == "Linux":
-            pass
-        elif platform.system() == "Windows":
-            subprocess.run("start microsoft.windows.camera:", shell=True)
 
     def choosePhoto(self):
         file = None

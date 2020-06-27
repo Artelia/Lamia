@@ -1412,6 +1412,7 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
 
         self.actiontoolbartoolsprint.triggered.connect(self.printCurrentFormWidget)
         self.actiontoolbartoolsprint.setEnabled(False)
+        self.actiontoolbartoolscamera.triggered.connect(self.openCamera)
 
     def toolbarNew(self):
         logging.getLogger("Lamia_unittest").info("called")
@@ -1475,6 +1476,13 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
 
     def printCurrentFormWidget(self):
         self.currenttoolwidget.printWidget()
+
+    def openCamera(self):
+
+        if platform.system() == "Linux":
+            pass
+        elif platform.system() == "Windows":
+            subprocess.run("start microsoft.windows.camera:", shell=True)
 
     # *************************************************************
     # menu

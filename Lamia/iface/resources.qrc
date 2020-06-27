@@ -31,5 +31,6 @@
         <file>../icons/Copyselection.png</file>
         <file>../icons/Paste.png</file>
         <file>../icons/print.png</file>
+        <file>../icons/camera_icon.svg</file>
     </qresource>
 </RCC>
