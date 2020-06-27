@@ -73,12 +73,14 @@ def launchIface():
     SLFILE = os.path.join(testdir, worktype, "test01.sqlite")
 
     # SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue\test01.sqlite"
-    SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue_base3\test01.sqlite"
+    # SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue_base3\test01.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\GPMB\c_merge_ass\mergeddbase.sqlite"
     # SLFILE = r"C:\111_GitProjects\Lamia\utils\pynetworktool\networktest_geographic\test01.sqlite"
     SLFILE = (
         r"C:\111_GitProjects\Lamia\test\datas\lamia_assainissement_base3\test01.sqlite"
     )
+    # SLFILE = r"M:\FR\BOR\VT\FLUVIAL\4352024_33_Conformite_digues_BM\6_Reglementaire\61_Calculs\Basedonnees\BD_totale_ind12_tempPVR.sqlite"
+    SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue_base3\test01.sqlite"
 
     lamiawidget.loadDBase(dbtype="Spatialite", slfile=SLFILE)
 
@@ -100,8 +102,8 @@ def main():
         format="%(asctime)s :: %(levelname)s :: %(module)s :: %(funcName)s :: %(message)s",
         datefmt="%H:%M:%S",
     )
-    # logging.getLogger("Lamia_unittest").setLevel(logging.DEBUG)
-    logging.getLogger("Lamia").setLevel(logging.DEBUG)
+    logging.getLogger("Lamia_unittest").setLevel(logging.DEBUG)
+    # logging.getLogger("Lamia").setLevel(logging.DEBUG)
 
     app = initQGis()
 

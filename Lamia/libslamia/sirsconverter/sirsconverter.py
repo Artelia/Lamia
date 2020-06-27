@@ -59,7 +59,7 @@ class SirsConverter:
         self.client = None
         self.my_db = None
 
-    def find_val(db=None, limit=1000000, val=None):
+    def find_val(self, db=None, limit=1000000, val=None):
         if not db:
             self.client, self.my_db = self.getSirsConnection()
 
@@ -95,7 +95,7 @@ class SirsConverter:
     """
 
     # not used
-    def lst_keys(db=None, limit=1000000):
+    def lst_keys(self, db=None, limit=1000000):
 
         if not db:
             self.client, self.my_db = self.getSirsConnection()
@@ -136,7 +136,7 @@ class SirsConverter:
     :return: liste contenant toutes les classes de la BDD
     """
     # not used
-    def lst_class(db=None, limit=1000000):
+    def lst_class(self, db=None, limit=1000000):
 
         if not db:
             self.client, self.my_db = self.getSirsConnection()
@@ -176,7 +176,7 @@ class SirsConverter:
     :param limit: Nombre d'enregistrements sur lesquels effectuer la recherche
     """
     # not used
-    def lst_val_class(db=None, clas=[], limit=1000000):
+    def lst_val_class(self, db=None, clas=[], limit=1000000):
 
         if not db:
             self.client, self.my_db = self.getSirsConnection()
@@ -208,7 +208,7 @@ class SirsConverter:
     :param limit: Nombre d'enregistrements sur lesquels effectuer la recherche
     """
     # not used
-    def lst_key_class(db=None, clas=[], limit=1000000):
+    def lst_key_class(self, db=None, clas=[], limit=1000000):
 
         if not db:
             self.client, self.my_db = self.getSirsConnection()
@@ -243,7 +243,7 @@ class SirsConverter:
     :param limit: Nombre d'enregistrements sur lesquels effectuer la recherche
     """
     # not used
-    def lst_key_ss_class(db=None, clas=[], limit=1000000):
+    def lst_key_ss_class(self, db=None, clas=[], limit=1000000):
 
         if not db:
             self.client, self.my_db = self.getSirsConnection()
@@ -282,7 +282,7 @@ class SirsConverter:
     :param limit: Nombre d'enregistrements sur lesquels effectuer la recherche
     """
     # not used
-    def lst_key_ss_ss_class(db=None, clas=[], limit=1000000):
+    def lst_key_ss_ss_class(self, db=None, clas=[], limit=1000000):
 
         if not db:
             self.client, self.my_db = self.getSirsConnection()
@@ -325,7 +325,7 @@ class SirsConverter:
     :return: Champs à insérer dans la requête, Valeurs à insérer dans la requête, Lien vers image si existant
     """
 
-    def analyse_param(doc, param, vars, dico_id):
+    def analyse_param(self, doc, param, vars, dico_id):
         txt_fld = ""
         txt_val = ""
         img = None
@@ -362,7 +362,7 @@ class SirsConverter:
                     val = '"{}"'.format(str(val).replace('"', '""'))
                 if p["type"] == "img":
                     img = val
-                    val = '".\Photo\{}"'.format(str(val).replace('"', '""'))
+                    val = '".\media\{}"'.format(str(val).replace('"', '""'))
                 if p["type"] == "date":
                     if len(val) == 19:
                         val = '"{}"'.format(str(val).replace('"', '""'))
@@ -396,7 +396,7 @@ class SirsConverter:
     :return: Identifiant de l'objet créé
     """
 
-    def lamia_insert(doc, rs, tab, param, vars, dico_id, rep_res_lamia=None):
+    def lamia_insert(self, doc, rs, tab, param, vars, dico_id, rep_res_lamia=None):
         tf, tv, img = self.analyse_param(doc, param, vars, dico_id)
         sql = "INSERT INTO {} ({}) VALUES ({})".format(tab, tf, tv)
         rs.execute(sql)
@@ -406,7 +406,7 @@ class SirsConverter:
             img_lamia = os.path.join(
                 os.path.dirname(nom_sql), rep_res_lamia, "media", img
             )
-            parsertemp.copyRessourceFile(img_sirs, img_lamia, withthumbnail=1)
+            self.parsertemp.copyRessourceFile(img_sirs, img_lamia, withthumbnail=1)
         return last_id
 
     """
@@ -418,7 +418,7 @@ class SirsConverter:
     :param dico_id: Dico de correspondance entre les identifiants SIRS et LAMIA
     """
 
-    def import_obs(obs, rs, param_obs, vars, dico_id):
+    def import_obs(self, obs, rs, param_obs, vars, dico_id):
         vars["$id_sirs_cur_obs"] = obs[param_obs["id"]]
         dico_id[vars["$id_sirs_cur_obs"]] = {}
         if param_obs["create_obj"]:
@@ -447,7 +447,7 @@ class SirsConverter:
     :param rep_res_lamia: Répertoire où sont enregistrées les ressources LAMIA
     """
 
-    def import_pho(pho, rs, param_pho, vars, dico_id, rep_res_lamia):
+    def import_pho(self, pho, rs, param_pho, vars, dico_id, rep_res_lamia):
         vars["$id_sirs_cur_pho"] = pho[param_pho["id"]]
         dico_id[vars["$id_sirs_cur_pho"]] = {}
         if param_pho["create_obj"]:
@@ -521,7 +521,7 @@ class SirsConverter:
 
         return client, my_db
 
-    def disconnectSirs():
+    def disconnectSirs(self):
         """Disconnect cloudant client
         """
         if self.client:
@@ -529,7 +529,7 @@ class SirsConverter:
             self.client = None
             self.my_db = None
 
-    def import_sirs(only_valid=True):
+    def import_sirs(self, only_valid=True):
         # Ouverture du fichier de config
         config_path = os.path.join(os.path.dirname(__file__), "config_apn.json")
         config = json.load(open(config_path, "r"))
@@ -679,7 +679,7 @@ class SirsConverter:
     Export d'une BDD LAMIA vers SIRS
     """
 
-    def export_lamia(export_img=True):
+    def export_lamia(self, export_img=True):
         # Ouverture du fichier de config
         config_path = os.path.join(os.path.dirname(__file__), "config_apn.json")
         config = json.load(open(config_path, "r"))
@@ -728,7 +728,7 @@ class SirsConverter:
         # Création d'un dictionnaire de correspondance entre les IDs Lamia & les IDs SIRS (pour les tronçons)
         dico_infra = dict()
         sql = "SELECT pk_edge, importtable FROM edge_qgis"
-        rows = self.dbase.query(sql)
+        rows = self.parsertemp.query(sql)
         """
         rs.execute(
             "SELECT pk_edge, importtable FROM (object INNER JOIN descriptionsystem ON object.pk_object = descriptionsystem.lpk_object) "
@@ -761,7 +761,7 @@ class SirsConverter:
         usr["@class"] = "fr.sirs.core.model.Utilisateur"
         usr["_id"] = id_usr
         usr["designation"] = "ARTELIA {}".format(
-            datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+            datetime.now().strftime("%Y%m%d%H%M%S")
         )
         usr["valid"] = True
         self.my_db.create_document(usr)
@@ -951,7 +951,7 @@ class SirsConverter:
     :param data: Données à nettoyer
     """
 
-    def clean_data(data):
+    def clean_data(self, data):
         # Suppression des champs non utiles dans SIRS
         l_key_del = []
         for key in data.keys():
@@ -966,7 +966,7 @@ class SirsConverter:
     :param rec: Enregistrement à initialiser
     """
 
-    def init_geom(rec):
+    def init_geom(self, rec):
         rec["borne_debut_aval"] = False
         rec["borne_debut_distance"] = 0
         rec["prDebut"] = 0
@@ -984,7 +984,7 @@ class SirsConverter:
     :return: Géométrie au format SIRS, Premier noeud de la géométrie, Dernier noeud de la géométrie
     """
 
-    def create_sirs_geom(bdd, nm_class, id_obj, id_infra):
+    def create_sirs_geom(self, bdd, nm_class, id_obj, id_infra):
         dst_min, dst_max, param_min, param_max = None, None, None, None
         if nm_class == "Desordre":
             table = "deficiency"
@@ -1094,7 +1094,7 @@ class SirsConverter:
     :return: Géométrie au format SIRS, Premier noeud de la géométrie, Dernier noeud de la géométrie
     """
 
-    def create_sirs_geom_by_sql(bdd, nm_class, id_obj, id_infra):
+    def create_sirs_geom_by_sql(self, bdd, nm_class, id_obj, id_infra):
         if nm_class == "Desordre":
             table = "deficiency"
             fld = "pk_deficiency"
@@ -1147,7 +1147,7 @@ class SirsConverter:
     :return: Requête SQL à executer, Champs SIRS associés, Format des valeurs récupérées, Indique si une géométrie est à créer
     """
 
-    def create_qry_export(nm_class, param):
+    def create_qry_export(self, nm_class, param):
         is_geom = False
 
         # Initialisation de la requête en fonction de la classe de l'objet
@@ -1237,7 +1237,7 @@ class SirsConverter:
         elif nm_class == "PhotoTroncon":
             sql_txt = (
                 "{s} FROM(((((media INNER JOIN resource ON media.lpk_resource = resource.pk_resource) "
-                "INNER JOIN Tcobjetresource ON resource.id_resource = Tcobjetresource.lid_resource) "
+                "INNER JOIN tcobjectresource ON resource.id_resource = tcobjectresource.lid_resource) "
                 "INNER JOIN object as tronc ON tcobjectresource.lid_object = tronc.id_object) "
                 "INNER JOIN object ON resource.lpk_object = object.pk_object) "
                 "INNER JOIN descriptionsystem ON tronc.pk_object = descriptionsystem.lpk_object) "
@@ -1289,7 +1289,7 @@ class SirsConverter:
     :return: True si le champ doit être récupéré, False sinon 
     """
 
-    def recup_fld(param_fld):
+    def recup_fld(self, param_fld):
         recup = False
         if "sirs" in param_fld.keys():
             if "exp" in param_fld.keys():

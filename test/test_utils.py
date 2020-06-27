@@ -10,11 +10,23 @@ sys.path.append(lamiapath)
 import Lamia
 from test.settings import *
 
+qgissettingpath = os.path.join(
+    os.path.dirname(Lamia.__file__), "..", "utils/qgisconfig.txt"
+)
+qgissettingpath = os.path.abspath(qgissettingpath)
+QGISSETTINGS = {}
+with open(qgissettingpath) as f:
+    for line in f:
+        QGISSETTINGS[line.split("=")[0]] = os.path.normpath(line.split("=")[1].strip())
+
+
 def initQGis():
-    if platform.system() == "Windows":
-        qgis_path = "C://OSGeo4W64//apps//qgis-ltr"
-    elif platform.system() == "Linux":
-        qgis_path = "/usr"
+
+    # if platform.system() == "Windows":
+    #     qgis_path = "C://OSGeo4W64//apps//qgis-ltr"
+    # elif platform.system() == "Linux":
+    #     qgis_path = "/usr"
+    qgis_path = QGISSETTINGS["QGISPATH"]
 
     app = qgis.core.QgsApplication([], True)
     qgis.core.QgsApplication.setPrefixPath(qgis_path, True)

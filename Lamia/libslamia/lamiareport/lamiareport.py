@@ -40,7 +40,10 @@ from Lamia.iface.qgsconnector.ifaceqgisconnector import QgisConnector
 class ReportCore:
 
     POSTPROTOOLNAME = "reporttools"
-    LAUNCHINQTHREAD = True
+    if qgis.utils.iface is None:
+        LAUNCHINQTHREAD = False
+    else:
+        LAUNCHINQTHREAD = True
 
     def __init__(self, dbaseparser, messageinstance=None):
         # super(ExportShapefileTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil, parentwidget, parent=parent)
@@ -455,7 +458,7 @@ class printPDFBaseWorker(QtCore.QObject):
         if qgis.utils.iface is not None:
             debug = False
         else:
-            debug = False  # True False
+            debug = True  # True False
 
         self.initprogressbar.emit("Report preparation ...", 0)
 
@@ -477,6 +480,7 @@ class printPDFBaseWorker(QtCore.QObject):
             # canvascrs = qgis.core.QgsCoordinateReferenceSystem()
             # canvascrs.createFromString('EPSG:2154')
             self.canvas.setDestinationCrs(dbaseqgiscrs)
+            self.project.setCrs(dbaseqgiscrs)
 
             self.qgiscanvas = QgisCanvas(canvas=self.canvas)
             self.qgiscanvas.createLayers(self.dbase)
@@ -649,7 +653,7 @@ class printPDFBaseWorker(QtCore.QObject):
         else:
             debug = False  # True False
             debugscale = False
-            stop10 = None
+            stop10 = 3
 
         # *********************************************************************
         # ********************* begin printing  *****************************
@@ -990,6 +994,7 @@ class printPDFBaseWorker(QtCore.QObject):
         """
 
         debug = False
+
         atlasfeatid = atlasfeat.id()
         atlasfeatpk = atlasfeat[self.atlasconfData["atlaslayerid"]]
 
@@ -1336,11 +1341,11 @@ class printPDFBaseWorker(QtCore.QObject):
                                         rlayer.renderer().setOpacity(0.5)
                                     except:
                                         pass
-                                    qgis.core.QgsProject.instance().addMapLayer(
-                                        rlayer, False
-                                    )
+                                    # qgis.core.QgsProject.instance().addMapLayer(
+                                    self.project.addMapLayer(rlayer, False)
                                     layersformapcomposer.append(rlayer)
                                     layertoremove.append(rlayer)
+
                                 else:
                                     if debug:
                                         logging.getLogger("Lamia_unittest").debug(
@@ -1367,9 +1372,9 @@ class printPDFBaseWorker(QtCore.QObject):
                                     )
                                     if qgis.utils.iface is not None:
                                         rlayer.renderer().setOpacity(0.5)
-                                    qgis.core.QgsProject.instance().addMapLayer(
-                                        rlayer, False
-                                    )
+                                    # qgis.core.QgsProject.instance().addMapLayer(
+                                    self.project.addMapLayer(rlayer, False)
+
                                     layersformapcomposer.append(rlayer)
                                     layertoremove.append(rlayer)
                                 else:
@@ -1406,9 +1411,8 @@ class printPDFBaseWorker(QtCore.QObject):
                                 )
                                 if qgis.utils.iface is not None:
                                     rlayer.renderer().setOpacity(0.5)
-                                qgis.core.QgsProject.instance().addMapLayer(
-                                    rlayer, False
-                                )
+                                # qgis.core.QgsProject.instance().addMapLayer(
+                                self.project.addMapLayer(rlayer, False)
                                 layersformapcomposer.append(rlayer)
                                 layertoremove.append(rlayer)
 
@@ -1420,6 +1424,8 @@ class printPDFBaseWorker(QtCore.QObject):
 
                 temp1 = newComposition.itemById(mapname)
                 temp1.__class__ = qgis.core.QgsLayoutItemMap
+                # for lay in layersformapcomposer:
+                #     print(lay.extent(), lay.name(), lay.crs().authid())
                 temp1.setLayers(layersformapcomposer)
                 temp1.setKeepLayerSet(True)
 
@@ -1553,7 +1559,7 @@ class printPDFBaseWorker(QtCore.QObject):
             self.logger.debug("dictedgesordered %s", str(dictedgesordered))
 
         # get pathtool and init it
-        self.networkcore.computeNXGraph()
+        # self.networkcore.computeNXGraph()
 
         # begin ordering process
         if len(dictedgesordered) > 0:

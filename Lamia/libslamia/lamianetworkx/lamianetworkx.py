@@ -82,13 +82,11 @@ class NetWorkCore:
     def __________________GraphCreation():
         pass
 
-    def computeNXGraph(self, listpks=[], graphtype="geographic", tolerance=None):
+    def computeNXGraph(self, listpks=[], graphtype="geographic", tolerance=0.0):
         if graphtype == "geographic":
-            if tolerance is None:
-                tolerance = 0.0
-            self.computeNXGraphGeographic(listpks=[], tolerance=tolerance)
+            self.computeNXGraphGeographic(listpks=listpks, tolerance=tolerance)
         elif graphtype == "topologic":
-            self.computeNXGraphTopologic(listpks=[])
+            self.computeNXGraphTopologic(listpks=listpks)
 
     def computeNXGraphTopologic(self, listpks=[]):
         debug = False
@@ -146,6 +144,7 @@ class NetWorkCore:
                    infralinfaces : les index des extremites correspondant aux id dans le sens de la geometrie
                     reverseinfralinfaces : les index des extremites correspondant aux id dans le sens inverse de la geometrie
         """
+        # print("computeNXGraphGeographic", listpks)
         debug = False
         nxgraph = pks = indexnoeuds = infralinfaces = reverseinfralinfaces = None
         nxgraph = networkx.Graph()

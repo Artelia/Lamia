@@ -50,6 +50,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
         LamiaAbstractIFaceCanvas.__init__(self)
         self.canvas = canvas
+        self.mtooltorestore = None
         self.mtoolpoint = None
         self.mtoolline = None
         self.mtoolpolygon = None
@@ -747,6 +748,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                 str(capturetype),
                 str(fctonstopcapture),
             )
+        self.mtooltorestore = self.currentmaptool
         self.createorresetRubberband(capturetype, rubtype="capture")
         if capturetype == qgis.core.QgsWkbTypes.PointGeometry:
             self.currentmaptool = self.mtoolpoint
@@ -765,18 +767,22 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             print(self.currentmaptool.cadDockWidget().cadEnabled())
             self.currentmaptool.activate()
 
-        # self.currentmaptool.stopCapture.connect(self.setTempGeometry)
         self.currentmaptool.stopCapture.connect(fctonstopcapture)
         self.currentmaptool.setMapPoints(listpointinitialgeometry)
-        # self.currentmaptool.mappoints = listpointinitialgeometry
         self.currentmaptool.startCapturing()
 
-    def stopCapture(self):
+    def stopCapture(self, **kwargs):
         if self.currentmaptool is not None:
             try:
                 self.currentmaptool.stopCapture.disconnect()
             except TypeError:
                 pass
+        if self.mtooltorestore is not None:
+            self.canvas.setMapTool(self.mtooltorestore)
+            self.currentmaptool.activate()
+            self.mtooltorestore = None
+        else:
+            self.panCanvas()
 
     def ______________________________RubberbandManagement(self):
         pass
@@ -853,7 +859,9 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         pass
 
     # def getNearestPk(self, dbasetable, dbasetablename, point, comefromcanvas=True):
-    def getNearestPk(self, tablename, point, comefromcanvas=True, fieldconstraint=None):
+    def getNearestPk(
+        self, tablename, point, comefromcanvas=True, fieldconstraint=None, spindex=None
+    ):
         """
         Permet d'avoir le pk du feature le plus proche du qgsvectorlayer correspondant à dbasetablename
         pas besoin de filtre sur les dates et versions on travaille avec le qgsectorlyaer de la table
@@ -887,22 +895,23 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         # spatialindex creation
         # spindex = qgis.core.QgsSpatialIndex(dbasetable['layerqgis'].getFeatures())
         expr = []
-        if fieldconstraint:
-            expr = []
-            for k, v in fieldconstraint.items():
-                expr.append(f""" "{k}" = '{v}'  """)
-            expr = " and ".join(expr)
+        if spindex is None:
+            if fieldconstraint:
+                expr = []
+                for k, v in fieldconstraint.items():
+                    expr.append(f""" "{k}" = '{v}'  """)
+                expr = " and ".join(expr)
 
-            req = qgis.core.QgsFeatureRequest().setFilterExpression(expr)
-            req.setInvalidGeometryCheck(False)
-            # req.setSubsetOfAttributes([])
-            req.setNoAttributes()
-            if qgis.utils.iface:
-                canvasrect = self.xformreverse.transform(self.canvas.extent())
-                req.setFilterRect(canvasrect)
-            spindex = qgis.core.QgsSpatialIndex(layertoprocess.getFeatures(req))
-        else:
-            spindex = qgis.core.QgsSpatialIndex(layertoprocess.getFeatures())
+                req = qgis.core.QgsFeatureRequest().setFilterExpression(expr)
+                req.setInvalidGeometryCheck(False)
+                # req.setSubsetOfAttributes([])
+                req.setNoAttributes()
+                if qgis.utils.iface:
+                    canvasrect = self.xformreverse.transform(self.canvas.extent())
+                    req.setFilterRect(canvasrect)
+                spindex = qgis.core.QgsSpatialIndex(layertoprocess.getFeatures(req))
+            else:
+                spindex = qgis.core.QgsSpatialIndex(layertoprocess.getFeatures())
 
         # spindex = qgis.core.QgsSpatialIndex(layertoprocess.getFeatures())
         layernearestid = spindex.nearestNeighbor(point2, 1)

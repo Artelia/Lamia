@@ -539,6 +539,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         self.formutils.saveFeature(featurepk=self.currentFeaturePK)
 
     def toolbarGeom(self):
+
         sender = self.mainifacewidget.sender()
         if sender is not None:
             logging.getLogger("Lamia_unittest").debug('toolbarGeom %s', str(sender.objectName()))
