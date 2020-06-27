@@ -52,7 +52,7 @@ numpy.seterr(all="ignore")
 
 from Lamia.iface.qgsconnector.ifaceloggingconnector import LoggingConnector
 
-INTERFACEINDEX = 4
+INTERFACEINDEX = 0
 
 
 def launchIface():
@@ -80,7 +80,7 @@ def launchIface():
         r"C:\111_GitProjects\Lamia\test\datas\lamia_assainissement_base3\test01.sqlite"
     )
     # SLFILE = r"M:\FR\BOR\VT\FLUVIAL\4352024_33_Conformite_digues_BM\6_Reglementaire\61_Calculs\Basedonnees\BD_totale_ind12_tempPVR.sqlite"
-    SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue_base3\test01.sqlite"
+    # SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue_base3\test01.sqlite"
 
     lamiawidget.loadDBase(dbtype="Spatialite", slfile=SLFILE)
 

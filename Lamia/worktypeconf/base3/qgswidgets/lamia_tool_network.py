@@ -317,12 +317,12 @@ class NetworkTool(AbstractLamiaTool):
             pointemitter.canvasClicked.disconnect(self.selectPathPickedFeature)
         except TypeError:
             pass
-        try:
-            self.qgiscanvas.canvas.mapToolSet.disconnect(self.qgiscanvas.toolsetChanged)
-        except TypeError:
-            pass
+        # try:
+        #     self.qgiscanvas.canvas.mapToolSet.disconnect(self.qgiscanvas.toolsetChanged)
+        # except TypeError:
+        #     pass
         pointemitter.canvasClicked.connect(self.selectPathPickedFeature)
-        self.qgiscanvas.canvas.mapToolSet.connect(self.qgiscanvas.toolsetChanged)
+        # self.qgiscanvas.canvas.mapToolSet.connect(self.qgiscanvas.toolsetChanged)
         self.qgiscanvas.canvas.setMapTool(pointemitter)
 
     def selectPathPickedFeature(self, point):

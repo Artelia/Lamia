@@ -111,6 +111,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         self.updateQgsCoordinateTransform()
 
         self.canvas.destinationCrsChanged.connect(self.updateQgsCoordinateTransform)
+        self.canvas.mapToolSet.connect(self.toolsetChanged)
 
     def ____________layersManagement(self):
         pass
@@ -704,14 +705,12 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
     def panCanvas(self):
         # self.mtoolPan = None
         self.canvas.setMapTool(self.mtoolPan)
+
         # self.canvas.panActionStart(self.canvas.mouseLastXY())
 
     def toolsetChanged(self, newtool, oldtool=None):
-        # print('toolsetchanged', newtool,oldtool )
-        # self.closeEditFeature()
-        if newtool != self.pointEmitter:
-            self.pointEmitter.canvasClicked.disconnect()
-            self.canvas.mapToolSet.disconnect(self.toolsetChanged)
+
+        self.mtooltorestore = oldtool
 
     def captureGeometry(
         self, capturetype=0, fctonstopcapture=None, listpointinitialgeometry=[]
@@ -748,7 +747,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                 str(capturetype),
                 str(fctonstopcapture),
             )
-        self.mtooltorestore = self.currentmaptool
+
         self.createorresetRubberband(capturetype, rubtype="capture")
         if capturetype == qgis.core.QgsWkbTypes.PointGeometry:
             self.currentmaptool = self.mtoolpoint
@@ -762,9 +761,9 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         if self.canvas.mapTool() != self.currentmaptool:
             self.canvas.setMapTool(self.currentmaptool)
             self.currentmaptool.activate()
-            print(self.currentmaptool.cadDockWidget().cadEnabled())
+            # print(self.currentmaptool.cadDockWidget().cadEnabled())
             self.currentmaptool.cadDockWidget().enable()
-            print(self.currentmaptool.cadDockWidget().cadEnabled())
+            # print(self.currentmaptool.cadDockWidget().cadEnabled())
             self.currentmaptool.activate()
 
         self.currentmaptool.stopCapture.connect(fctonstopcapture)
@@ -777,12 +776,8 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                 self.currentmaptool.stopCapture.disconnect()
             except TypeError:
                 pass
-        if self.mtooltorestore is not None:
-            self.canvas.setMapTool(self.mtooltorestore)
-            self.currentmaptool.activate()
-            self.mtooltorestore = None
-        else:
-            self.panCanvas()
+        self.currentmaptool = self.mtooltorestore
+        self.canvas.setMapTool(self.mtooltorestore)
 
     def ______________________________RubberbandManagement(self):
         pass
@@ -1055,36 +1050,13 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             if featgeom.centroid() is not None and not featgeom.centroid().isNull():
                 point2 = self.xform.transform(featgeom.centroid().asPoint())
             else:
-                print(featgeom.asWkt())
+                # print(featgeom.asWkt())
                 point2 = self.xform.transform(
                     qgis.core.QgsPointXY(featgeom.vertexAt(0))
                 )
 
             self.canvas.setCenter(point2)
             self.canvas.refresh()
-        """
-        if fid is None:
-            feat = self.currentFeature
-        else:
-            pk = self.getPkFromId(self.dbasetablename,fid)
-            feat = self.dbase.getLayerFeatureByPk(self.dbasetablename,pk )
-        # point2 = xform.transform(feat.geometry().centroid().asPoint())
-
-        if feat.geometry().centroid() is not None and not feat.geometry().centroid().isNull():
-            point2 = self.dbase.xform.transform(feat.geometry().centroid().asPoint())
-        else:
-            print(feat.geometry().asWkt())
-            if sys.version_info.major == 2:
-                point2 = self.dbase.xform.transform(feat.geometry().vertexAt(0) )
-            elif sys.version_info.major == 3:
-                point2 = self.dbase.xform.transform(qgis.core.QgsPointXY(feat.geometry().vertexAt(0)))
-                # print('**', point2)
-        self.canvas.setCenter(point2)
-        self.canvas.refresh()   
-        """
-
-    def makeBlinkFeature(self, table, pk):
-        pass
 
     def _getStyleDirectory(self, worktype):
         base2styledirectory = os.path.join(

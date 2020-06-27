@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>645</width>
-    <height>422</height>
+    <width>684</width>
+    <height>574</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -611,7 +611,7 @@ background-color: rgb(255, 255, 255);</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>645</width>
+     <width>684</width>
      <height>26</height>
     </rect>
    </property>
@@ -709,6 +709,7 @@ background-color: rgb(255, 255, 255);</string>
    <addaction name="actiontoolbarmagic"/>
    <addaction name="actiontoolbarundo"/>
    <addaction name="actiontoolbardelete"/>
+   <addaction name="actiontoolbarzoomto"/>
    <addaction name="actiontoolbarsave"/>
   </widget>
   <widget class="QToolBar" name="lamiatoolBarFormGeom">
@@ -1083,6 +1084,18 @@ background-color: rgb(255, 255, 255);</string>
   <action name="actionShow_Hide_QGis_toolbars">
    <property name="text">
     <string>Show/Hide QGis toolbars</string>
+   </property>
+  </action>
+  <action name="actiontoolbarzoomto">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/plugins/Lamia/icons/Find_32x32.png</normaloff>:/plugins/Lamia/icons/Find_32x32.png</iconset>
+   </property>
+   <property name="text">
+    <string>toolbarzoomto</string>
+   </property>
+   <property name="toolTip">
+    <string>toolbarzoomto</string>
    </property>
   </action>
  </widget>

@@ -1391,6 +1391,7 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         self.actiontoolbarmagic.triggered.connect(self.toolbarMagic)
         self.actiontoolbarundo.triggered.connect(self.toolbarUndo)
         self.actiontoolbardelete.triggered.connect(self.toolbarDelete)
+        self.actiontoolbarzoomto.triggered.connect(self.toolbarZoomTo)
         self.actiontoolbarsave.triggered.connect(self.toolbarSave)
 
         self.actiontoobargeomnewpoint.triggered.connect(self.toolbarGeom)
@@ -1436,6 +1437,10 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
             self.currenttoolwidget.toolbarDelete()
         if self.currentchoosertreewidget:
             self.currentchoosertreewidget.toolbarDelete()
+
+    def toolbarZoomTo(self):
+        if self.currenttoolwidget and hasattr(self.currenttoolwidget, "toolbarZoomTo"):
+            self.currenttoolwidget.toolbarZoomTo()
 
     def toolbarSave(self):
         logging.getLogger("Lamia_unittest").info("called")
@@ -1517,21 +1522,21 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         self.qgiscanvas.panCanvas()
 
     def selectFeature(self):
+
         pointemitter = self.qgiscanvas.pointEmitter
         try:
             pointemitter.canvasClicked.disconnect(self.selectPickedFeature)
         except TypeError:
             pass
-        try:
-            self.qgiscanvas.canvas.mapToolSet.disconnect(self.qgiscanvas.toolsetChanged)
-        except TypeError:
-            pass
+        # try:
+        #     self.qgiscanvas.canvas.mapToolSet.disconnect(self.qgiscanvas.toolsetChanged)
+        # except TypeError:
+        #     pass
         pointemitter.canvasClicked.connect(self.selectPickedFeature)
-        self.qgiscanvas.canvas.mapToolSet.connect(self.qgiscanvas.toolsetChanged)
+        # self.qgiscanvas.canvas.mapToolSet.connect(self.qgiscanvas.toolsetChanged)
         self.qgiscanvas.canvas.setMapTool(pointemitter)
 
     def selectPickedFeature(self, point, tablename=None):
-
         debug = False
         if debug:
             logging.getLogger("Lamia_unittest").debug("Start %s", str(point))
@@ -1552,7 +1557,7 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         while parentwdg.parentWidget is not None:
             parentwdg = parentwdg.parentWidget
 
-        if hasattr(parentwdg, 'selectPickedFeature'):
+        if hasattr(parentwdg, "selectPickedFeature"):
             parentwdg.selectPickedFeature(point)
             return
 
