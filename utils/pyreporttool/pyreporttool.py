@@ -17,7 +17,7 @@ from Lamia.iface.qgscanvas.ifaceqgiscanvas import QgisCanvas
 import numpy as np
 import cProfile
 
-PROFILING = False
+PROFILING = True
 
 
 def main(argv):
@@ -52,12 +52,9 @@ def main(argv):
     if PROFILING:
         pr.disable()
         cprofilepath = os.path.join(os.path.dirname(__file__), "pyreport.cprof")
-        print(cprofilepath)
         pr.dump_stats(cprofilepath)
 
-    # REm : run
-    # python -m snakeviz pyreport.cprof
-    # for viz
+    # REm : run     python -m snakeviz pyreport.cprof       for viz
 
     exitQGis()
 

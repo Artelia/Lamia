@@ -40,7 +40,6 @@ from Lamia.worktypeconf.base3.qgswidgets.lamia_form_sketch import BaseSketchTool
 from .subwidget_lidchooser import LidChooserWidget
 
 
-
 class SignatureWidget(AbstractSubWidget):
 
     UIPATH = os.path.join(os.path.dirname(__file__), "subwidget_signature_ui.ui")
@@ -87,7 +86,6 @@ class SignatureWidget(AbstractSubWidget):
             }
         }
 
-
         self.propertieswdgCROQUIS2.NAME = None
         self.propertieswdgCROQUIS2.SKIP_LOADING_UI = True
         # self.propertieswdgCROQUIS2.choosertreewidget = None
@@ -106,7 +104,6 @@ class SignatureWidget(AbstractSubWidget):
             searchfieldtoshow=["actorname", "society"],
         )
         self.parentwdg.lamiawidgets.append(lidchooser)
-
 
     def postSelectFeature(self):
         debug = False
@@ -145,7 +142,6 @@ class SignatureWidget(AbstractSubWidget):
                 "end  %.3f", self.parentwdg.dbase.getTimeNow() - timestart
             )
 
-
     def postSaveFeature(self, parentfeaturepk=None):
         # print(self.parentframe.objectName())
         # print(self.parentwdg.lamiawidgets)
@@ -155,9 +151,7 @@ class SignatureWidget(AbstractSubWidget):
                 self.signatureid,
                 parentfeaturepk,
             )
-            print(
-                "***", "self.signatureid", self.propertieswdgCROQUIS2.currentFeaturePK
-            )
+
             if signatureid is None:  # first creation
                 # tricky : because lid_ is parent side....
                 tempjoin = dict(self.propertieswdgCROQUIS2.PARENTJOIN)

@@ -105,6 +105,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             self.canvas, self.cadwdg, qgis.gui.QgsMapToolCapture.CapturePolygon
         )
         self.pointEmitter = qgis.gui.QgsMapToolEmitPoint(self.canvas)
+        self.pointEmitter.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 
         self.mtoolPan = qgis.gui.QgsMapToolPan(self.canvas)
 
@@ -774,7 +775,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         if self.currentmaptool is not None:
             try:
                 self.currentmaptool.stopCapture.disconnect()
-            except TypeError:
+            except (TypeError, AttributeError):
                 pass
         self.currentmaptool = self.mtooltorestore
         self.canvas.setMapTool(self.mtooltorestore)

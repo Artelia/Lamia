@@ -1892,7 +1892,7 @@ class printPDFBaseWorker(QtCore.QObject):
         sql = self.dbase.updateQueryTableNow(sql)
 
         query = self.dbase.query(sql)
-        if len(query) == 0:
+        if not query or len(query) == 0:
             return None
         idressource = [row[0] for row in query][0]
 

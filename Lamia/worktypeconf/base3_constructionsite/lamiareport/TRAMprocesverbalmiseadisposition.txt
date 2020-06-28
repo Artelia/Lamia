@@ -4,11 +4,11 @@
 SELECT deficiency_now.* , PV.*
 FROM deficiency_now
 LEFT JOIN observation_now as PV ON PV.lid_deficiency = deficiency_now.id_deficiency and PV.observationcategory = 'PVA' 
-LEFT JOIN actor_now as PVintervocc ON PVintervocc.id_intervenant = PV.lid_actor_1
+LEFT JOIN actor_now as PVintervocc ON PVintervocc.id_actor = PV.lid_actor_1
 LEFT JOIN delivery_now as PVdeliveryocc ON PVdeliveryocc.id_delivery = PV.lid_delivery_1
-LEFT JOIN actor_now as PVinterv ON PVinterv.id_intervenant = PV.lid_actor_1
+LEFT JOIN actor_now as PVinterv ON PVinterv.id_actor = PV.lid_actor_1
 LEFT JOIN delivery_now as PVdeliverypren ON PVdeliverypren.id_delivery = PV.lid_delivery_2
-LEFT JOIN actor_now as PVintervpren ON PVintervpren.id_intervenant = PV.lid_actor_2
+LEFT JOIN actor_now as PVintervpren ON PVintervpren.id_actor = PV.lid_actor_2
 WHERE deficiencycategory = 'PVE'
 
 

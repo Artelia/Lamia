@@ -53,9 +53,13 @@ numpy.seterr(all="ignore")
 from Lamia.iface.qgsconnector.ifaceloggingconnector import LoggingConnector
 
 INTERFACEINDEX = 0
+PROFILING = False
 
 
 def launchIface():
+    if PROFILING:
+        pr = cProfile.Profile()
+
     translator = loadLocale()
     mainwin, canvas, lamiawidget = getDisplayWidget()
 
@@ -68,7 +72,7 @@ def launchIface():
     #  sl_base3_urbandrainage_Lamia   sl_base3_waterdistribution_Lamia
     # sl_base3_constructionsite_Lamia   sl_base3_constructionsite_Orange
     # sl_base3_levee_Lamia   sl_base3_levee_SIRS   sl_base3_faunaflora_Lamia
-    worktype = "sl_base3_constructionsite_Lamia"
+    worktype = "sl_base3_urbandrainage_Lamia"
 
     SLFILE = os.path.join(testdir, worktype, "test01.sqlite")
 
@@ -88,12 +92,20 @@ def launchIface():
     lamiawidget.dbase.raiseexceptions = True  # False True
     lamiawidget.dbase.printsql = False  # False True
 
+    if PROFILING:
+        pr.enable()
     #   toolpostpro     toolprepro
     # wdg = lamiawidget.toolwidgets["networktool"]
     # wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
     # wdg.analyseSubdomains()
 
     mainwin.exec_()
+
+    if PROFILING:
+        pr.disable()
+        cprofilepath = os.path.join(os.path.dirname(__file__), "pydisplay.cprof")
+        pr.dump_stats(cprofilepath)
+        # REm : run     python -m snakeviz pydisplay.cprof       for viz
 
 
 def main():

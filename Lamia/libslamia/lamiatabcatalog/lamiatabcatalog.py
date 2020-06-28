@@ -31,7 +31,6 @@ import pandas as pd
 
 import zipfile
 
-# sys.path.append(os.path.join(os.path.dirname(__file__),'..','..','libs'))
 import Lamia
 from Lamia.libs.odsreader.ODSReader import ODSReader
 

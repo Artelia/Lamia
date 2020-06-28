@@ -1310,14 +1310,16 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
             pass
         elif platform.system() == "Windows":
             subprocess.Popen(
-                f'explorer "{os.path.abspath(self.dbase.dbaseressourcesdirectory)}"'
+                f'explorer "{os.path.realpath(os.path.abspath(self.dbase.dbaseressourcesdirectory))}"'
             )
 
     def openLamiaDir(self):
         if platform.system() == "Linux":
             pass
         elif platform.system() == "Windows":
-            subprocess.Popen(f'explorer "{os.path.dirname(Lamia.__file__)}"')
+            subprocess.Popen(
+                f'explorer "{os.path.realpath(os.path.dirname(Lamia.__file__))}"'
+            )
 
     def showHideQgisToolbars(self):
         if not len(self.toolbarsvisibility):

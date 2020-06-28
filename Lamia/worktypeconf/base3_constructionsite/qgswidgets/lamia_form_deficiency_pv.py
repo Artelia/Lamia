@@ -29,9 +29,13 @@ from qgis.PyQt.QtWidgets import QWidget
 
 from ...base3.qgswidgets.lamia_form_deficiency import BaseDeficiencyTool
 from .lamia_form_observation import BaseConstructionsiteObservationTool
+from Lamia.libslamia.lamiareport.lamiareport import ReportCore
 
 from Lamia.iface.qgiswidget.tools.form_subwidgets.subwidget_lidchooser import (
     LidChooserWidget,
+)
+from Lamia.iface.qgiswidget.tools.form_subwidgets.subwidget_createsubfeature import (
+    CreateSubFeatureWidget,
 )
 
 
@@ -84,6 +88,12 @@ class BaseConstructionsiteDeficiencyTool(BaseDeficiencyTool):
             # exec('self.dbasechildwdgfield.append(self.propertieswdgOBSERVATION{} )'.format(observationcategory))
             self.dbasechildwdgfield.append(self.temppropertieswdgOBSERVATION)
 
+            # * lamiawdg
+            self.createobswdg = CreateSubFeatureWidget(
+                self, self.temppropertieswdgOBSERVATION
+            )
+            self.lamiawidgets.append(self.createobswdg)
+
         else:
             self.unloadWidgetinToolTree()
             self.loadWidgetinToolTree = lambda: None
@@ -102,10 +112,12 @@ class BaseConstructionsiteDeficiencyTool(BaseDeficiencyTool):
     def postSelectFeature(self):
         super().postSelectFeature()
 
+    """
     def postSaveFeature(self, savedfeaturepk=None):
         self.formutils.createNewSubFeature(
             self.temppropertieswdgOBSERVATION, savedfeaturepk
         )
+    """
 
     def printWidget(self):
 
@@ -115,17 +127,18 @@ class BaseConstructionsiteDeficiencyTool(BaseDeficiencyTool):
             os.mkdir(pdfdirectory)
 
         currentid = self.dbase.getValuesFromPk(
-            "Desordre", "id_desordre", self.currentFeaturePK
+            "deficiency", "id_deficiency", self.currentFeaturePK
         )
 
         date = str(datetime.datetime.now().strftime("%Y%m%d_%H%M%S"))
 
-        filename = str(currentid) + "_desordre_" + date + ".pdf"
+        filename = str(currentid) + "_deficiency_" + date + ".pdf"
 
-        pdffielname = os.path.join(pdfdirectory, filename)
+        pdffilename = os.path.join(pdfdirectory, filename)
+
         # choose phaseA report or phase C report
         sql = (
-            "SELECT typeobservation FROM  Observation_now WHERE Observation_now.lid_desordre = "
+            "SELECT observationcategory FROM  observation_now WHERE observation_now.lid_deficiency = "
             + str(currentid)
         )
         sql = self.dbase.updateQueryTableNow(sql)
@@ -137,10 +150,10 @@ class BaseConstructionsiteDeficiencyTool(BaseDeficiencyTool):
             and not self.dbase.utils.isAttributeNull(res[0][0])
         ):
             if res[0][0] == "PVA":
-                reportype = "procesverbalmiseadisposition"
-
+                reporttype = "TRAMprocesverbalmiseadisposition"
+            """
             elif res[0][0][0:2] == "NC":
-                sql = "SELECT id_observation FROM Observation_now WHERE Observation_now.typeobservation = 'NCB'"
+                sql = "SELECT id_observation FROM observation_now WHERE observation_now.typeobservation = 'NCB'"
                 sql += " AND Observation_now.lid_desordre = " + str(currentid)
                 sql = self.dbase.updateQueryTableNow(sql)
                 res = self.dbase.query(sql)
@@ -156,34 +169,19 @@ class BaseConstructionsiteDeficiencyTool(BaseDeficiencyTool):
                 elif self.dbase.variante in ["Orange"]:
                     print("*********ORANGEnonconformitephaseA")
                     reportype = "ORANGEnonconformitephaseA"
-
+            """
         else:
             return
 
-        # load rapport tool
-        if not self.windowdialog.desktopuiloaded:
-            self.windowdialog.loadUiDesktop()
-        wdg = None
-        for i, tool in enumerate(self.windowdialog.tools):
-            # print(tool.__class__.__name__)
-            if "RapportTool" in tool.__class__.__name__:
-                wdg = self.windowdialog.tools[i]
-                break
-
-        wdg.createconfData()
-        impressionpdfworker = inspect.getmodule(wdg).printPDFBaseWorker(
-            dbase=self.dbase,
-            windowdialog=self.windowdialog,
-            parentprintPDFworker=None,
-            confData=wdg.confData,
-            pdffile=pdffielname,
-            reporttype=reportype,
-            templatedir=wdg.confdatamain,
-            # idlist={0: [currentid]},
-            idlist={0: [self.currentFeaturePK]},
+        # run report
+        self.reporttool = ReportCore(
+            dbaseparser=self.dbase, messageinstance=self.mainifacewidget.connector
         )
-
-        impressionpdfworker.work()
+        self.reporttool.runReport(
+            destinationfile=pdffilename,
+            reportconffilename=reporttype,
+            pklist={0: [self.currentFeaturePK]},
+        )
 
 
 class UserUI(QWidget):

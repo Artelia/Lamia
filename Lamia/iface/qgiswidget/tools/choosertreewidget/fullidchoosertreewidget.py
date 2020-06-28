@@ -171,7 +171,16 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
             hasattr(self.toolwidget, "CHOOSERTREEWDGSPEC")
             and "colshow" in self.toolwidget.CHOOSERTREEWDGSPEC.keys()
         ):
-            fields_to_request += self.toolwidget.CHOOSERTREEWDGSPEC["colshow"]
+            # fields_to_request += (
+            #     self.toolwidget.DBASETABLENAME
+            #     + "_now."
+            #     + self.toolwidget.CHOOSERTREEWDGSPEC["colshow"]
+            # )
+            fields_to_request += [
+                self.toolwidget.DBASETABLENAME + "_now." + fldname
+                for fldname in self.toolwidget.CHOOSERTREEWDGSPEC["colshow"]
+            ]
+
             pandascolumns += self.toolwidget.CHOOSERTREEWDGSPEC["colshow"]
 
         sql = "SELECT {} FROM {}_now ".format(
