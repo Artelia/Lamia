@@ -225,7 +225,7 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         pass
         """
         # dialog with dbtype, worktype, vartype  chooser
-        self.newDBDialog.comboBox_type.currentIndexChanged.emit(0)
+        # self.newDBDialog.comboBox_type.currentIndexChanged.emit(0)
         self.newDBDialog.exec_()
         dbtype, worktype, vartype = self.newDBDialog.dialogIsFinished()
         if dbtype is None:
