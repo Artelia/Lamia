@@ -53,10 +53,12 @@ import time
 from qgis.PyQt import QtGui, uic, QtCore
 from qgis.PyQt.QtCore import pyqtSignal
 from .ifaceqgswidget import LamiaWindowWidget
+
 try:
     from qgis.PyQt.QtGui import QDockWidget, QMainWindow
 except:
     from qgis.PyQt.QtWidgets import QDockWidget, QMainWindow
+
 
 class InspectiondigueDockWidget(QDockWidget):
     """!
@@ -73,7 +75,7 @@ class InspectiondigueDockWidget(QDockWidget):
         """
         super(InspectiondigueDockWidget, self).__init__(parent)
         ## The windowwidget put inside te dockwidget
-        self.windowwidget = LamiaWindowWidget(canvas,self)
+        self.windowwidget = LamiaWindowWidget(canvas, self)
         self.dockorder = dockorder
 
         if True:
@@ -82,22 +84,17 @@ class InspectiondigueDockWidget(QDockWidget):
                                     background-color: rgba(0, 55, 90,80);
                                     }
                         """
-            stylesheet=''
+            stylesheet = ""
             self.windowwidget.setStyleSheet(stylesheet)
 
-
         self.setWidget(self.windowwidget)
-        self.setWindowTitle('Lamia')
-
-
-
-
+        self.setWindowTitle("Lamia")
 
 
     def closeEvent(self, event):
-        self.windowwidget._reloadQgisToolbar()
+        # self.windowwidget._reloadQgisToolbar()
         # if self.windowwidget.qgiscanvas.rubberBand is not None:
-        self.windowwidget.qgiscanvas.createorresetRubberband(rubtype='all')
+        self.windowwidget.qgiscanvas.createorresetRubberband(rubtype="all")
         self.windowwidget.qgiscanvas.unloadLayersInCanvas()
 
         self.windowwidget.gpsutil.closeConnection()

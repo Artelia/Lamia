@@ -27,21 +27,22 @@ This file is part of LAMIA.
 
 import pandas as pd
 import logging
-from qgis.PyQt.QtWidgets import  QTreeWidgetItem, QHeaderView
+from qgis.PyQt.QtWidgets import QTreeWidgetItem, QHeaderView
 from qgis.PyQt import QtCore
 
 from ..lamia_abstractchoosertreewidget import AbstractChooserTreeWidget
 
+
 class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
 
-    NEWFEATURETXT = 'Nouveau'
+    NEWFEATURETXT = "Nouveau"
 
     def __init__(self, **kwargs):
         super(FullIDChooserTreeWidget, self).__init__(**kwargs)
-        #self.treewidget = kwargs.get('choosertreewidget', None)
-        #self.dbase = kwargs.get('dbaseparser', None)
-        #self.mainifacewidget = kwargs.get('mainifacewidget', None)
-        self.toolwidget = kwargs.get('toolwidget', None)
+        # self.treewidget = kwargs.get('choosertreewidget', None)
+        # self.dbase = kwargs.get('dbaseparser', None)
+        # self.mainifacewidget = kwargs.get('mainifacewidget', None)
+        self.toolwidget = kwargs.get("toolwidget", None)
         self.ids = pd.DataFrame()
         self.newentryitem = None
 
@@ -51,7 +52,7 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
         self.treewidget.setEnabled(True)
 
         headerlist = [self.toolwidget.DBASETABLENAME]
-        #headerlist.insert(0, 'ID')
+        # headerlist.insert(0, 'ID')
         self.treewidget.setColumnCount(len(headerlist))
         self.treewidget.header().setVisible(True)
         self.treewidget.setHeaderItem(QTreeWidgetItem(headerlist))
@@ -68,26 +69,38 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
         if self.treewidget.topLevelItemCount() == 0 :
             self.toolwidget.frametoolwidg.setEnabled(False)
         """
-        if debug :
-            logging.getLogger("Lamia_unittest").debug('ids :  ' )
-            logging.getLogger("Lamia_unittest").debug('%s ', self.ids )
-        
+        if debug:
+            logging.getLogger("Lamia_unittest").debug("ids :  ")
+            logging.getLogger("Lamia_unittest").debug("%s ", self.ids)
+
         if initfeatureselection:
-            if self.treewidget.topLevelItemCount() > 0 :
-                if self.ids is None: 
+            if self.treewidget.topLevelItemCount() > 0:
+                if self.ids is None:
                     return
-                if self.toolwidget.lastselectedpk is None : 
-                    self.treewidget.setCurrentItem(self.treewidget.invisibleRootItem().child(0))
+                if self.toolwidget.lastselectedpk is None:
+                    self.treewidget.setCurrentItem(
+                        self.treewidget.invisibleRootItem().child(0)
+                    )
                 else:
-                    indexids = self.ids.index[self.ids['pk'] == self.toolwidget.lastselectedpk].tolist()
-                    if debug :
-                        logging.getLogger("Lamia_unittest").debug('lastselectedpk : %s ',self.toolwidget.lastselectedpk )
-                        logging.getLogger("Lamia_unittest").debug('indexids : %s ',indexids )
+                    indexids = self.ids.index[
+                        self.ids["pk"] == self.toolwidget.lastselectedpk
+                    ].tolist()
+                    if debug:
+                        logging.getLogger("Lamia_unittest").debug(
+                            "lastselectedpk : %s ", self.toolwidget.lastselectedpk
+                        )
+                        logging.getLogger("Lamia_unittest").debug(
+                            "indexids : %s ", indexids
+                        )
                     if indexids:
                         indexid = indexids[0]
-                        self.treewidget.setCurrentItem(self.treewidget.invisibleRootItem().child(indexid))
+                        self.treewidget.setCurrentItem(
+                            self.treewidget.invisibleRootItem().child(indexid)
+                        )
                     else:
-                        self.treewidget.setCurrentItem(self.treewidget.invisibleRootItem().child(0))
+                        self.treewidget.setCurrentItem(
+                            self.treewidget.invisibleRootItem().child(0)
+                        )
 
         self.connectTreewidget()
 
@@ -98,17 +111,18 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
         self._manageTreeWidgetHeader()
         parentitem = self.treewidget.invisibleRootItem()
 
-        #parentitem.addChildren([QTreeWidgetItem([str(val) for val in row[1:]]) for row in self.ids.values])
-        parentitem.addChildren([QTreeWidgetItem([str(val) for val in row]) for row in self.ids.values])
+        # parentitem.addChildren([QTreeWidgetItem([str(val) for val in row[1:]]) for row in self.ids.values])
+        parentitem.addChildren(
+            [QTreeWidgetItem([str(val) for val in row]) for row in self.ids.values]
+        )
         self.connectTreewidget()
 
-
     def _manageTreeWidgetHeader(self):
-        
+
         # headerlist = list(self.qtreewidgetfields)
-        # headerlist = list(self.ids.columns)[1:] 
+        # headerlist = list(self.ids.columns)[1:]
         headerlist = list(self.ids.columns)
-        #headerlist.insert(0, 'spec')
+        # headerlist.insert(0, 'spec')
         self.treewidget.setColumnCount(len(headerlist))
         self.treewidget.header().setVisible(True)
         self.treewidget.setHeaderItem(QTreeWidgetItem(headerlist))
@@ -116,22 +130,21 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
         lenheaderlist = len(headerlist)
         for i in range(lenheaderlist):
             header.setSectionResizeMode(i, QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(lenheaderlist-1, QHeaderView.Stretch)
-        self.treewidget.setColumnHidden(0,True)
+        header.setSectionResizeMode(lenheaderlist - 1, QHeaderView.Stretch)
+        self.treewidget.setColumnHidden(0, True)
 
-
-    def selectItemfromPK(self,pk ):
+    def selectItemfromPK(self, pk):
         # id = self.toolwidget.dbase.getValuesFromPk(self.toolwidget.DBASETABLENAME,
         #                                     'id_' + self.toolwidget.DBASETABLENAME.lower(),
         #                                     pk)
-        # founditems = self.treewidget.findItems(str(id), 
-        founditems = self.treewidget.findItems(str(pk), 
-                                                QtCore.Qt.MatchExactly | QtCore.Qt.MatchRecursive, 
-                                                0)
+        # founditems = self.treewidget.findItems(str(id),
+        founditems = self.treewidget.findItems(
+            str(pk), QtCore.Qt.MatchExactly | QtCore.Qt.MatchRecursive, 0
+        )
         if len(founditems) > 0:
             founditem = founditems[0]
             self.treewidget.setCurrentItem(founditem)
-            return True 
+            return True
         else:
             return False
 
@@ -139,112 +152,150 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
         debug = False
         # CHOOSERTREEWDG_COLSHOW = ['datetimeobservation']
         dbnamelower = self.toolwidget.DBASETABLENAME.lower()
-        fields_to_request = ['pk_' + dbnamelower]
-        pandascolumns = ['pk']
-        #if not 'onlyoneparenttable' in self.toolwidget.dbase.dbasetables[self.toolwidget.DBASETABLENAME].keys():
-        if  not dbnamelower[-4:] == 'data':
-            fields_to_request += ['id_' + dbnamelower]
-            pandascolumns += ['id']
+        fields_to_request = ["pk_" + dbnamelower]
+        pandascolumns = ["pk"]
+        # if not 'onlyoneparenttable' in self.toolwidget.dbase.dbasetables[self.toolwidget.DBASETABLENAME].keys():
+        if not dbnamelower[-4:] == "data":
+            fields_to_request += ["id_" + dbnamelower]
+            pandascolumns += ["id"]
         else:
-            fields_to_request += ['pk_' + dbnamelower]
-            pandascolumns += ['pk2']
+            fields_to_request += ["pk_" + dbnamelower]
+            pandascolumns += ["pk2"]
         """
         if (hasattr(self.toolwidget, 'CHOOSERTREEWDG_COLSHOW') 
                 and len(self.toolwidget.CHOOSERTREEWDG_COLSHOW) > 0 ):
             fields_to_request += self.toolwidget.CHOOSERTREEWDG_COLSHOW
             pandascolumns += self.toolwidget.CHOOSERTREEWDG_COLSHOW
         """
-        if (hasattr(self.toolwidget, 'CHOOSERTREEWDGSPEC') 
-                and 'colshow' in self.toolwidget.CHOOSERTREEWDGSPEC.keys()):
-            fields_to_request += self.toolwidget.CHOOSERTREEWDGSPEC['colshow']
-            pandascolumns += self.toolwidget.CHOOSERTREEWDGSPEC['colshow']
+        if (
+            hasattr(self.toolwidget, "CHOOSERTREEWDGSPEC")
+            and "colshow" in self.toolwidget.CHOOSERTREEWDGSPEC.keys()
+        ):
+            # fields_to_request += (
+            #     self.toolwidget.DBASETABLENAME
+            #     + "_now."
+            #     + self.toolwidget.CHOOSERTREEWDGSPEC["colshow"]
+            # )
+            fields_to_request += [
+                self.toolwidget.DBASETABLENAME + "_now." + fldname
+                for fldname in self.toolwidget.CHOOSERTREEWDGSPEC["colshow"]
+            ]
 
-        sql = "SELECT {} FROM {}_now ".format(', '.join(fields_to_request),
-                                                        self.toolwidget.DBASETABLENAME    )
-        
-        if self.toolwidget.parentWidget is not None and self.toolwidget.parentWidget.currentFeaturePK is not None:
+            pandascolumns += self.toolwidget.CHOOSERTREEWDGSPEC["colshow"]
+
+        sql = "SELECT {} FROM {}_now ".format(
+            ", ".join(fields_to_request), self.toolwidget.DBASETABLENAME
+        )
+
+        if (
+            self.toolwidget.parentWidget is not None
+            and self.toolwidget.parentWidget.currentFeaturePK is not None
+        ):
             parenttablename = self.toolwidget.parentWidget.DBASETABLENAME
-            if self.toolwidget.PARENTJOIN and parenttablename in  self.toolwidget.PARENTJOIN.keys():
+            if (
+                self.toolwidget.PARENTJOIN
+                and parenttablename in self.toolwidget.PARENTJOIN.keys()
+            ):
                 joindict = self.toolwidget.PARENTJOIN[parenttablename]
                 thistablename = self.toolwidget.DBASETABLENAME
-                if joindict['tctable'] is None:
+                if joindict["tctable"] is None:
                     if parenttablename != thistablename:
-                        sql += "JOIN {}_now ON {} = {}"\
-                                " WHERE pk_{} = {}".format(parenttablename,
-                                                            parenttablename + '_now.' + joindict['colparent'],
-                                                            thistablename + '_now.' + joindict['colthistable'],
-                                                            parenttablename.lower(),
-                                                            self.toolwidget.parentWidget.currentFeaturePK)
+                        sql += "JOIN {}_now ON {} = {}" " WHERE pk_{} = {}".format(
+                            parenttablename,
+                            parenttablename + "_now." + joindict["colparent"],
+                            thistablename + "_now." + joindict["colthistable"],
+                            parenttablename.lower(),
+                            self.toolwidget.parentWidget.currentFeaturePK,
+                        )
                     else:
-                        valsearched = self.toolwidget.dbase.getValuesFromPk(thistablename + '_qgis',
-                                                                            joindict['colparent'],
-                                                                            self.toolwidget.parentWidget.currentFeaturePK)
+                        valsearched = self.toolwidget.dbase.getValuesFromPk(
+                            thistablename + "_qgis",
+                            joindict["colparent"],
+                            self.toolwidget.parentWidget.currentFeaturePK,
+                        )
                         if valsearched is not None:
-                            sql += " WHERE {} = {}".format(joindict['colthistable'],
-                                                            valsearched)
-                            #print('***', sql)
+                            sql += " WHERE {} = {}".format(
+                                joindict["colthistable"], valsearched
+                            )
+                            # print('***', sql)
                         else:
                             sql = None
                 else:
-                    
-                    sql += "INNER JOIN {} ON {} = {} "\
-                        "INNER JOIN {}_now ON {} = {} "\
-                        "WHERE pk_{} = {} ".format(joindict['tctable'],
-                                                    thistablename + '_now.' + joindict['colthistable'],
-                                                    joindict['tctable'] + '.' + joindict['tctablecolthistable'],
-                                                    parenttablename,
-                                                    joindict['tctable'] + '.' + joindict['tctablecolparent'],
-                                                    parenttablename + '_now.' + joindict['colparent'],
-                                                        parenttablename.lower(),
-                                                        self.toolwidget.parentWidget.currentFeaturePK)
+
+                    sql += (
+                        "INNER JOIN {} ON {} = {} "
+                        "INNER JOIN {}_now ON {} = {} "
+                        "WHERE pk_{} = {} ".format(
+                            joindict["tctable"],
+                            thistablename + "_now." + joindict["colthistable"],
+                            joindict["tctable"] + "." + joindict["tctablecolthistable"],
+                            parenttablename,
+                            joindict["tctable"] + "." + joindict["tctablecolparent"],
+                            parenttablename + "_now." + joindict["colparent"],
+                            parenttablename.lower(),
+                            self.toolwidget.parentWidget.currentFeaturePK,
+                        )
+                    )
 
             if sql is not None:
                 sql = self.dbase.sqlNow(sql)
-            #query = self.dbase.query(sql)
-            #self.ids = pd.DataFrame(query, columns = ['pk', 'id']) 
-            #print(self.ids)
-            #return query
-        elif self.toolwidget.parentWidget is not None :
+            # query = self.dbase.query(sql)
+            # self.ids = pd.DataFrame(query, columns = ['pk', 'id'])
+            # print(self.ids)
+            # return query
+        elif self.toolwidget.parentWidget is not None:
             sql = None
         else:
             sql = self.dbase.sqlNow(sql)
 
         if sql:
-            if hasattr(self.toolwidget, 'TABLEFILTERFIELD') and self.toolwidget.TABLEFILTERFIELD is not None:
+            if (
+                hasattr(self.toolwidget, "TABLEFILTERFIELD")
+                and self.toolwidget.TABLEFILTERFIELD is not None
+            ):
                 for fieldname, fieldvalue in self.toolwidget.TABLEFILTERFIELD.items():
-                    if isinstance(fieldvalue,str):
+                    if isinstance(fieldvalue, str):
                         fieldvalue = "'" + fieldvalue + "'"
-                    sqlsplitted = self.toolwidget.dbase.utils.splitSQLSelectFromWhereOrderby(sql)
-                    if 'WHERE' in sqlsplitted.keys():
-                        sql += " AND {} = {}".format(fieldname,fieldvalue)
+                    sqlsplitted = self.toolwidget.dbase.utils.splitSQLSelectFromWhereOrderby(
+                        sql
+                    )
+                    if "WHERE" in sqlsplitted.keys():
+                        sql += " AND {} = {}".format(fieldname, fieldvalue)
                     else:
-                        sql += " WHERE  {} = {}".format(fieldname,fieldvalue)
-            if debug: logging.getLogger("Lamia_unittest").debug('sql : %s', sql)
-            if debug: logging.getLogger("Lamia_unittest").debug('search : %s', self.dbase.query('show search_path'))
-            
-            query = self.dbase.query(sql)
-            self.ids = pd.DataFrame(query, columns = pandascolumns) 
-        else:
-            self.ids = pd.DataFrame(columns = pandascolumns) 
+                        sql += " WHERE  {} = {}".format(fieldname, fieldvalue)
+            if debug:
+                logging.getLogger("Lamia_unittest").debug("sql : %s", sql)
+            if debug:
+                logging.getLogger("Lamia_unittest").debug(
+                    "search : %s", self.dbase.query("show search_path")
+                )
 
-        #* sorting ids
-        if (hasattr(self.toolwidget, 'CHOOSERTREEWDGSPEC') 
-                and 'sort' in self.toolwidget.CHOOSERTREEWDGSPEC.keys()):
-            sortcolumn = self.toolwidget.CHOOSERTREEWDGSPEC['sort'][0]
-            if self.toolwidget.CHOOSERTREEWDGSPEC['sort'][1] == 'ASC':
+            query = self.dbase.query(sql)
+            self.ids = pd.DataFrame(query, columns=pandascolumns)
+        else:
+            self.ids = pd.DataFrame(columns=pandascolumns)
+
+        # * sorting ids
+        if (
+            hasattr(self.toolwidget, "CHOOSERTREEWDGSPEC")
+            and "sort" in self.toolwidget.CHOOSERTREEWDGSPEC.keys()
+        ):
+            sortcolumn = self.toolwidget.CHOOSERTREEWDGSPEC["sort"][0]
+            if self.toolwidget.CHOOSERTREEWDGSPEC["sort"][1] == "ASC":
                 ascending = True
             else:
                 ascending = False
-        elif 'id' in pandascolumns:
-            sortcolumn = 'id'
+        elif "id" in pandascolumns:
+            sortcolumn = "id"
             ascending = True
         else:
-            sortcolumn = 'pk'
+            sortcolumn = "pk"
             ascending = True
-        self.ids.sort_values(sortcolumn,ascending=ascending, inplace=True )
+        self.ids.sort_values(sortcolumn, ascending=ascending, inplace=True)
         self.ids.reset_index(drop=True, inplace=True)
 
-        if debug: logging.getLogger("Lamia_unittest").debug('ids : %s', self.ids)
+        if debug:
+            logging.getLogger("Lamia_unittest").debug("ids : %s", self.ids)
 
     def loadFeaturesinTreeWdg_caduc(self):
         """
@@ -254,11 +305,15 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
 
         debug = False
 
-        if debug: timestart = self.dbase.getTimeNow()
+        if debug:
+            timestart = self.dbase.getTimeNow()
 
         self.disconnectIdsGui()
 
-        if debug: logging.getLogger("Lamia").debug('Start %s %s %s', self.dbasetablename, self.NAME, self.parentWidget)
+        if debug:
+            logging.getLogger("Lamia").debug(
+                "Start %s %s %s", self.dbasetablename, self.NAME, self.parentWidget
+            )
 
         # clear treewidget
         self._clearLinkedTreeWidget()
@@ -267,7 +322,7 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
         parentitem = None
         if self.linkedtreewidget is not None:
             headerlist = list(self.qtreewidgetfields)
-            headerlist.insert(0, 'ID')
+            headerlist.insert(0, "ID")
             self.linkedtreewidget.setColumnCount(len(headerlist))
             self.linkedtreewidget.header().setVisible(True)
             self.linkedtreewidget.setHeaderItem(QTreeWidgetItem(headerlist))
@@ -276,24 +331,36 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
             if sys.version_info.major == 2:
                 for i in range(lenheaderlist):
                     header.setResizeMode(i, QHeaderView.ResizeToContents)
-                header.setResizeMode(lenheaderlist-1, QHeaderView.Stretch)
-            elif  sys.version_info.major == 3:
+                header.setResizeMode(lenheaderlist - 1, QHeaderView.Stretch)
+            elif sys.version_info.major == 3:
                 for i in range(lenheaderlist):
                     header.setSectionResizeMode(i, QHeaderView.ResizeToContents)
-                header.setSectionResizeMode(lenheaderlist-1, QHeaderView.Stretch)
+                header.setSectionResizeMode(lenheaderlist - 1, QHeaderView.Stretch)
 
             parentitem = self.linkedtreewidget.invisibleRootItem()
-        elif (self.parentWidget is not None and self.parentWidget.linkedtreewidget is not None
-                and self.parentWidget.currentFeature is not None):
+        elif (
+            self.parentWidget is not None
+            and self.parentWidget.linkedtreewidget is not None
+            and self.parentWidget.currentFeature is not None
+        ):
             root = self.parentWidget.linkedtreewidget.invisibleRootItem()
-            indexchild = [root.child(i).text(0) for i in range(root.childCount())].index(str(self.parentWidget.dbasetablename))
+            indexchild = [
+                root.child(i).text(0) for i in range(root.childCount())
+            ].index(str(self.parentWidget.dbasetablename))
             tempitem = root.child(indexchild)
             if self.dbase.revisionwork:
-                parentfeat = self.dbase.getLayerFeatureByPk( self.parentWidget.dbasetablename, self.parentWidget.currentFeature.id() )
-                parentid = parentfeat['id_' + self.parentWidget.dbasetablename]
-                indexchild = [tempitem.child(i).text(0) for i in range(tempitem.childCount())].index(str(parentid))
+                parentfeat = self.dbase.getLayerFeatureByPk(
+                    self.parentWidget.dbasetablename,
+                    self.parentWidget.currentFeature.id(),
+                )
+                parentid = parentfeat["id_" + self.parentWidget.dbasetablename]
+                indexchild = [
+                    tempitem.child(i).text(0) for i in range(tempitem.childCount())
+                ].index(str(parentid))
             else:
-                indexchild = [tempitem.child(i).text(0) for i in range(tempitem.childCount())].index(str(self.parentWidget.currentFeature.id()))
+                indexchild = [
+                    tempitem.child(i).text(0) for i in range(tempitem.childCount())
+                ].index(str(self.parentWidget.currentFeature.id()))
             parentitem = tempitem.child(indexchild)
 
         # selection of particular feature to load (if parentfeature, or window only mode)
@@ -302,9 +369,23 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
         # creation de la liste des elements qui figurent dans le linkedtreewidget
         lenqtreewidg = len(self.qtreewidgetfields) + 1
         if sys.version_info.major == 2:
-            self.treefeatlist = [[id[0], QTreeWidgetItem([str(id[i]) if not isinstance(id[i], unicode) else id[i] for i in range(lenqtreewidg)])] for id in ids]
+            self.treefeatlist = [
+                [
+                    id[0],
+                    QTreeWidgetItem(
+                        [
+                            str(id[i]) if not isinstance(id[i], unicode) else id[i]
+                            for i in range(lenqtreewidg)
+                        ]
+                    ),
+                ]
+                for id in ids
+            ]
         else:
-            self.treefeatlist = [[id[0], QTreeWidgetItem([str(id[i]) for i in range(lenqtreewidg)])] for id in ids]
+            self.treefeatlist = [
+                [id[0], QTreeWidgetItem([str(id[i]) for i in range(lenqtreewidg)])]
+                for id in ids
+            ]
 
         # ajout des ids dans le qtreewidgetitem parent
         if parentitem is not None:
@@ -313,32 +394,45 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
                 for i in range(parentitem.parent().childCount()):
                     if parentitem.parent().child(i) != parentitem:
                         parentitem.parent().child(i).takeChildren()
-                if self.dbasetablename in [parentitem.child(i).text(0) for i in range(parentitem.childCount())]:
-                    index = [parentitem.child(i).text(0) for i in range(parentitem.childCount())].index(self.dbasetablename)
+                if self.dbasetablename in [
+                    parentitem.child(i).text(0) for i in range(parentitem.childCount())
+                ]:
+                    index = [
+                        parentitem.child(i).text(0)
+                        for i in range(parentitem.childCount())
+                    ].index(self.dbasetablename)
                     parentitem.child(index).takeChildren()
                     parentqtreewdgitem = parentitem.child(index)
                 else:
-                    parentqtreewdgitem = QTreeWidgetItem(parentitem, [self.dbasetablename])
+                    parentqtreewdgitem = QTreeWidgetItem(
+                        parentitem, [self.dbasetablename]
+                    )
             else:
                 parentqtreewdgitem = QTreeWidgetItem(parentitem, [self.dbasetablename])
                 # print(parentqtreewdgitem.text(0))
 
             parentqtreewdgitem.addChildren([elem[1] for elem in self.treefeatlist])
 
-        if debug: logging.getLogger('Lamia').debug('feat list %s', str(self.treefeatlist))
+        if debug:
+            logging.getLogger("Lamia").debug("feat list %s", str(self.treefeatlist))
 
         # enable/disable le widget selon que des ids ont ete trouves
         if len(self.treefeatlist) > 0:
             self.groupBox_properties.setEnabled(True)
             self.groupBox_geom.setEnabled(True)
-            self.comboBox_featurelist.addItems([str(elem[0]) for elem in self.treefeatlist])
+            self.comboBox_featurelist.addItems(
+                [str(elem[0]) for elem in self.treefeatlist]
+            )
         else:
             self.groupBox_properties.setEnabled(False)
             self.groupBox_geom.setEnabled(False)
             self.currentFeature = None
             self.initFeatureProperties(None)
 
-        if debug: logging.getLogger('Lamia').debug('end  %.3f', self.dbase.getTimeNow()  - timestart)
+        if debug:
+            logging.getLogger("Lamia").debug(
+                "end  %.3f", self.dbase.getTimeNow() - timestart
+            )
         self.connectIdsGui()
 
     def loadIds_caduc(self):
@@ -350,113 +444,177 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
 
         ids = []
         if self.dbasetablename is not None:
-                
-            strid = 'id_' + self.dbasetablename.lower()
+
+            strid = "id_" + self.dbasetablename.lower()
             sql = "SELECT " + strid
-            if len(self.qtreewidgetfields)>0 :
-                sql += "," + ','.join(self.qtreewidgetfields)
-            sql += " FROM " + self.dbasetablename.lower() + '_now'
+            if len(self.qtreewidgetfields) > 0:
+                sql += "," + ",".join(self.qtreewidgetfields)
+            sql += " FROM " + self.dbasetablename.lower() + "_now"
             sql = self.dbase.updateQueryTableNow(sql)
 
-            if (self.parentWidget is not None and self.linkagespec is not None
-                    and self.parentWidget.currentFeature is not None):
+            if (
+                self.parentWidget is not None
+                and self.linkagespec is not None
+                and self.parentWidget.currentFeature is not None
+            ):
                 linkagespeckey = None
                 for key in self.linkagespec.keys():
-                    if self.parentWidget.dbasetablename in self.linkagespec[key]['desttable']:
+                    if (
+                        self.parentWidget.dbasetablename
+                        in self.linkagespec[key]["desttable"]
+                    ):
                         linkagespeckey = key
                 if linkagespeckey is not None:
                     linkagetemp = self.linkagespec[linkagespeckey]
 
-                    if linkagetemp['tabletc'] is None:
+                    if linkagetemp["tabletc"] is None:
 
-                        #linkagedest
-                        sqltemp = " SELECT " + linkagetemp['iddest'] + " FROM " + self.parentWidget.dbasetablename.lower() + '_qgis'
-                        sqltemp += " WHERE pk_" + self.parentWidget.dbasetablename.lower() + " = " + str(self.parentWidget.currentFeaturePK)
+                        # linkagedest
+                        sqltemp = (
+                            " SELECT "
+                            + linkagetemp["iddest"]
+                            + " FROM "
+                            + self.parentWidget.dbasetablename.lower()
+                            + "_qgis"
+                        )
+                        sqltemp += (
+                            " WHERE pk_"
+                            + self.parentWidget.dbasetablename.lower()
+                            + " = "
+                            + str(self.parentWidget.currentFeaturePK)
+                        )
 
                         linkagedest = self.dbase.query(sqltemp)[0][0]
                         if linkagedest is None:
                             # print('None find')
                             return []
-                        sql += " AND " + linkagetemp['idsource'] + " = " + str(linkagedest)
-                        #TODO versionning
+                        sql += (
+                            " AND " + linkagetemp["idsource"] + " = " + str(linkagedest)
+                        )
+                        # TODO versionning
 
-                    elif linkagetemp['tabletc'] == 'within':
-                        sqltemp = " SELECT "+ linkagetemp['iddest']
+                    elif linkagetemp["tabletc"] == "within":
+                        sqltemp = " SELECT " + linkagetemp["iddest"]
                         if len(self.qtreewidgetfields) > 0:
-                            sqltemp += "," + ','.join(self.qtreewidgetfields)
-                        sqltemp += " FROM " + self.dbasetablename.lower() + "_now" + ', ' + self.parentWidget.dbasetablename.lower()
-                        sqltemp += " WHERE ST_WITHIN(ST_MakeValid(" + self.parentWidget.dbasetablename.lower() + ".geom) , "
-                        sqltemp += "ST_MakeValid(" + self.dbasetablename.lower() + "_now.geom) )"
-                        sqltemp += " AND pk_" + self.parentWidget.dbasetablename.lower() + " = " + str(self.parentWidget.currentFeaturePK)
+                            sqltemp += "," + ",".join(self.qtreewidgetfields)
+                        sqltemp += (
+                            " FROM "
+                            + self.dbasetablename.lower()
+                            + "_now"
+                            + ", "
+                            + self.parentWidget.dbasetablename.lower()
+                        )
+                        sqltemp += (
+                            " WHERE ST_WITHIN(ST_MakeValid("
+                            + self.parentWidget.dbasetablename.lower()
+                            + ".geom) , "
+                        )
+                        sqltemp += (
+                            "ST_MakeValid("
+                            + self.dbasetablename.lower()
+                            + "_now.geom) )"
+                        )
+                        sqltemp += (
+                            " AND pk_"
+                            + self.parentWidget.dbasetablename.lower()
+                            + " = "
+                            + str(self.parentWidget.currentFeaturePK)
+                        )
                         sqltemp = self.dbase.updateQueryTableNow(sqltemp)
                         sql = sqltemp
                     else:
-                        #get parent feature field for link
-                        sqltemp = "SELECT " + linkagetemp['iddest']
-                        sqltemp += " FROM " + self.parentWidget.dbasetablename.lower() + "_qgis"
-                        sqltemp += " WHERE pk_" + self.parentWidget.dbasetablename.lower() + " = "
+                        # get parent feature field for link
+                        sqltemp = "SELECT " + linkagetemp["iddest"]
+                        sqltemp += (
+                            " FROM "
+                            + self.parentWidget.dbasetablename.lower()
+                            + "_qgis"
+                        )
+                        sqltemp += (
+                            " WHERE pk_"
+                            + self.parentWidget.dbasetablename.lower()
+                            + " = "
+                        )
                         sqltemp += str(self.parentWidget.currentFeaturePK)
                         res = self.dbase.query(sqltemp)
                         linkidparent = res[0][0]
 
-                        sqltemp = "SELECT " + linkagetemp['idtcsource'] + " FROM " + linkagetemp['tabletc']
-                        sqltemp += " WHERE " + linkagetemp['idtcdest'] + " = "
-                        #sqltemp += str(self.parentWidget.currentFeature[linkagetemp['iddest']])
+                        sqltemp = (
+                            "SELECT "
+                            + linkagetemp["idtcsource"]
+                            + " FROM "
+                            + linkagetemp["tabletc"]
+                        )
+                        sqltemp += " WHERE " + linkagetemp["idtcdest"] + " = "
+                        # sqltemp += str(self.parentWidget.currentFeature[linkagetemp['iddest']])
                         sqltemp += str(linkidparent)
-                        sqltemp += " AND lpk_revision_begin <= " + str(self.dbase.currentrevision)
-                        if self.dbase.dbasetype == 'postgis':
-                            sqltemp += " AND CASE WHEN lpk_revision_end IS NOT NULL THEN "
-                            sqltemp += " lpk_revision_end > " + str(self.dbase.currentrevision)
+                        sqltemp += " AND lpk_revision_begin <= " + str(
+                            self.dbase.currentrevision
+                        )
+                        if self.dbase.dbasetype == "postgis":
+                            sqltemp += (
+                                " AND CASE WHEN lpk_revision_end IS NOT NULL THEN "
+                            )
+                            sqltemp += " lpk_revision_end > " + str(
+                                self.dbase.currentrevision
+                            )
                             sqltemp += " ELSE TRUE END "
-                        elif self.dbase.dbasetype == 'spatialite':
-                            sqltemp += " AND CASE WHEN lpk_revision_end IS NOT NULL THEN "
-                            sqltemp += " lpk_revision_end > " + str(self.dbase.currentrevision)
+                        elif self.dbase.dbasetype == "spatialite":
+                            sqltemp += (
+                                " AND CASE WHEN lpk_revision_end IS NOT NULL THEN "
+                            )
+                            sqltemp += " lpk_revision_end > " + str(
+                                self.dbase.currentrevision
+                            )
                             sqltemp += " ELSE 1 END"
 
                         query = self.dbase.query(sqltemp)
 
-                        if len(query) > 0 :
+                        if len(query) > 0:
                             idstemp = [str(row[0]) for row in query]
-                            idssql = '(' + ','.join(idstemp) + ')'
-                            sql += " AND " + linkagetemp['idsource'] + " IN " + idssql
+                            idssql = "(" + ",".join(idstemp) + ")"
+                            sql += " AND " + linkagetemp["idsource"] + " IN " + idssql
                         else:
                             return ids
 
             sqlbeforepost = str(sql)
             sql = self.postloadIds(sql)
             if sql == sqlbeforepost and self.dbasetablename is not None:
-                strid = 'id_' + self.dbasetablename.lower()
-                sql += ' ORDER BY ' + strid
+                strid = "id_" + self.dbasetablename.lower()
+                sql += " ORDER BY " + strid
 
-            sql += ';'
+            sql += ";"
             query = self.dbase.query(sql)
 
             if query != None:
                 ids = [row for row in query]
-                i=0
-                j=0
-                res=[]
-                for row in ids :
-                    j=0
-                    res=res+[[]]
-                    for id in row :
-                        if j>0:
-                            res[i] += [self.dbase.getConstraintTextFromRawValue(self.dbasetablename,
-                                                                                self.qtreewidgetfields[j - 1],
-                                                                                ids[i][j])]
-                        else :
-                            res[i]+=[ids[i][j]]
-                        j=j+1
-                    i=i+1
-                ids=res
-
+                i = 0
+                j = 0
+                res = []
+                for row in ids:
+                    j = 0
+                    res = res + [[]]
+                    for id in row:
+                        if j > 0:
+                            res[i] += [
+                                self.dbase.getConstraintTextFromRawValue(
+                                    self.dbasetablename,
+                                    self.qtreewidgetfields[j - 1],
+                                    ids[i][j],
+                                )
+                            ]
+                        else:
+                            res[i] += [ids[i][j]]
+                        j = j + 1
+                    i = i + 1
+                ids = res
 
         return ids
 
     def onDesactivation(self):
         pass
 
-    def selectFeature(self,pk=None):
+    def selectFeature(self, pk=None):
         self.disconnectTreewidget()
         self.selectItemfromPK(pk)
         self.connectTreewidget()
@@ -465,14 +623,14 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
         self.disconnectTreewidget()
         self.toolwidget.frametoolwidg.setEnabled(True)
         parentitem = self.treewidget.invisibleRootItem()
-        self.newentryitem  = QTreeWidgetItem(['',self.NEWFEATURETXT])
-        parentitem.addChildren([self.newentryitem ])
-        self.treewidget.setCurrentItem(self.newentryitem )
-        #newitem.setSelected(True)
+        self.newentryitem = QTreeWidgetItem(["", self.NEWFEATURETXT])
+        parentitem.addChildren([self.newentryitem])
+        self.treewidget.setCurrentItem(self.newentryitem)
+        # newitem.setSelected(True)
         self.connectTreewidget()
 
     def toolbarUndo(self):
-        #remove new featureitem
+        # remove new featureitem
         self.disconnectTreewidget()
         self._removeNewEntry()
         """
@@ -490,7 +648,7 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
         if self.newentryitem is not None:
             try:
                 root = self.treewidget.invisibleRootItem()
-                root.removeChild(self.newentryitem )
+                root.removeChild(self.newentryitem)
                 self.newentryitem = None
             except RuntimeError:
                 self.newentryitem = None
@@ -504,79 +662,94 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
             root.removeChild(item)
         """
 
-
     def toolbarDelete(self):
-        if self.toolwidget.currentFeaturePK is None:    #feature not correctly saved
+        if self.toolwidget.currentFeaturePK is None:  # feature not correctly saved
             return
 
-        id = self.toolwidget.dbase.getValuesFromPk(self.toolwidget.DBASETABLENAME,
-                                            'id_' + self.toolwidget.DBASETABLENAME.lower(),
-                                            self.toolwidget.currentFeaturePK)
-        founditems = self.treewidget.findItems(str(id), 
-                                                QtCore.Qt.MatchExactly | QtCore.Qt.MatchRecursive, 
-                                                0)
-        if len(founditems)>0:
+        id = self.toolwidget.dbase.getValuesFromPk(
+            self.toolwidget.DBASETABLENAME,
+            "id_" + self.toolwidget.DBASETABLENAME.lower(),
+            self.toolwidget.currentFeaturePK,
+        )
+        founditems = self.treewidget.findItems(
+            str(id), QtCore.Qt.MatchExactly | QtCore.Qt.MatchRecursive, 0
+        )
+        if len(founditems) > 0:
             idx = self.treewidget.invisibleRootItem().indexOfChild(founditems[0])
             self.treewidget.invisibleRootItem().takeChild(idx)
             # self.ids.remove(id)
             self.ids = self.ids[self.ids.id != id]
 
     def toolbarSave(self):
-        #if self.toolwidget.currentFeaturePK is None:    #feature not correctly saved
+        # if self.toolwidget.currentFeaturePK is None:    #feature not correctly saved
         #    return
-        if self.toolwidget.currentFeaturePK is None:    #saving aborded (ex : no geometry acquired)
+        if (
+            self.toolwidget.currentFeaturePK is None
+        ):  # saving aborded (ex : no geometry acquired)
             return
-        
+
         self.disconnectTreewidget()
         selecteditems = self.treewidget.selectedItems()
-        #if len(selecteditems) > 0 and selecteditems[0].text(0) == self.NEWFEATURETXT:
-        if len(selecteditems) > 0 :
-            #if not 'onlyoneparenttable' in self.toolwidget.dbase.dbasetables[self.toolwidget.DBASETABLENAME].keys():
-            if  not self.toolwidget.DBASETABLENAME[-4:] == 'data':
-                fieldtorequest = ['id_' + self.toolwidget.DBASETABLENAME.lower()]
+        # if len(selecteditems) > 0 and selecteditems[0].text(0) == self.NEWFEATURETXT:
+        if len(selecteditems) > 0:
+            # if not 'onlyoneparenttable' in self.toolwidget.dbase.dbasetables[self.toolwidget.DBASETABLENAME].keys():
+            if not self.toolwidget.DBASETABLENAME[-4:] == "data":
+                fieldtorequest = ["id_" + self.toolwidget.DBASETABLENAME.lower()]
             else:
-                fieldtorequest = ['pk_' + self.toolwidget.DBASETABLENAME.lower()]
-            #if hasattr(self.toolwidget, 'CHOOSERTREEWDG_COLSHOW') :
-            if (hasattr(self.toolwidget, 'CHOOSERTREEWDGSPEC') 
-                    and 'colshow' in self.toolwidget.CHOOSERTREEWDGSPEC.keys()):
-                fieldtorequest += self.toolwidget.CHOOSERTREEWDGSPEC['colshow']
+                fieldtorequest = ["pk_" + self.toolwidget.DBASETABLENAME.lower()]
+            # if hasattr(self.toolwidget, 'CHOOSERTREEWDG_COLSHOW') :
+            if (
+                hasattr(self.toolwidget, "CHOOSERTREEWDGSPEC")
+                and "colshow" in self.toolwidget.CHOOSERTREEWDGSPEC.keys()
+            ):
+                fieldtorequest += [
+                    fldname.split(".")[-1]
+                    for fldname in self.toolwidget.CHOOSERTREEWDGSPEC["colshow"]
+                ]
 
-            res = self.toolwidget.dbase.getValuesFromPk(self.toolwidget.DBASETABLENAME + '_qgis',
-                                                        fieldtorequest,
-                                                        self.toolwidget.currentFeaturePK)
+            res = self.toolwidget.dbase.getValuesFromPk(
+                self.toolwidget.DBASETABLENAME + "_qgis",
+                fieldtorequest,
+                self.toolwidget.currentFeaturePK,
+            )
             if isinstance(res, int):
                 res = [res]
             res = [self.toolwidget.currentFeaturePK] + list(res)
-            #if selecteditems[0].text(0) == self.NEWFEATURETXT:
+            # if selecteditems[0].text(0) == self.NEWFEATURETXT:
             # if selecteditems[0].text(1) == self.NEWFEATURETXT:
             if selecteditems[0] == self.newentryitem:
-                #self.ids.append(pd.DataFrame(res, columns=self.ids.columns))
+                # self.ids.append(pd.DataFrame(res, columns=self.ids.columns))
                 self.ids.loc[len(self.ids)] = res
             else:
                 try:
-                    self.ids.loc[self.ids['pk'] == self.toolwidget.currentFeaturePK] = [res]
+                    self.ids.loc[self.ids["pk"] == self.toolwidget.currentFeaturePK] = [
+                        res
+                    ]
                 except ValueError as e:
                     print(e)
                     print(self.ids)
                     print(self.toolwidget.currentFeaturePK)
-                    print('*',self.ids.loc[self.ids['pk'] == self.toolwidget.currentFeaturePK])
-                    print('**',res)
-
+                    print(
+                        "*",
+                        self.ids.loc[
+                            self.ids["pk"] == self.toolwidget.currentFeaturePK
+                        ],
+                    )
+                    print("**", res)
 
             selecteditem = selecteditems[0]
-            #for i, val in enumerate(res[1:]):
-            for i, val in enumerate(res):    
+            # for i, val in enumerate(res[1:]):
+            for i, val in enumerate(res):
                 selecteditem.setText(i, str(val))
             self.newentryitem = None
-            #self.ids.append([self.toolwidget.currentFeaturePK, id])
-            #self.ids.append((id,))
+            # self.ids.append([self.toolwidget.currentFeaturePK, id])
+            # self.ids.append((id,))
             #
-            #if self.ids.index.max() :
+            # if self.ids.index.max() :
             #    self.ids.loc[self.ids.index.max()+1].append([id])
-            #else:
+            # else:
             #    self.ids.loc[0].append([id])
         self.connectTreewidget()
-
 
     def qtreeitemSelected(self, **kwargs):
         currentpkitem = int(self.treewidget.currentItem().text(0))
@@ -603,7 +776,6 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
             self.treewidget.itemSelectionChanged.disconnect()
         except TypeError:
             pass
-
 
     def connectTreewidget(self):
         pass

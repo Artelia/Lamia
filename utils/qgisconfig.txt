@@ -1,0 +1,3 @@
+OSGEOPATH=C:\Program Files\QGIS.3.10.6
+QGISPATH=C:\Program Files\QGIS.3.10.6\apps\qgis-ltr
+#QGISPATH=/usr/....

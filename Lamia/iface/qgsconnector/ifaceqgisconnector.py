@@ -42,26 +42,20 @@ class QgisConnector(LamiaIFaceAbstractConnectors):
 
         self.progressbar=None
 
-        if qgis.utils.iface is None:
-            logging.basicConfig( stream=sys.stderr )
-            logging.getLogger("Lamia_connector").setLevel( logging.INFO )
 
 
     def showNormalMessage(self, text):
         if qgis.utils.iface is not None:
             qgis.utils.iface.messageBar().pushMessage("Lamia " ,text, qgis.core.Qgis.Info)
             # QApplication.processEvents()
-        else:
-            logging.getLogger( "Lamia_connector" ).info('normalMessage : %s', text)
+
         
 
 
     def showErrorMessage(self,text):
         if qgis.utils.iface is not None:
             qgis.utils.iface.messageBar().pushMessage("Lamia " ,text, qgis.core.Qgis.Critical )
-            # QApplication.processEvents()
-        else:
-            logging.getLogger( "Lamia_connector" ).info('ErrorMessage : %s', text)
+
 
     def createProgressBar(self, inittext='', maxvalue=99):
         self.progressbarinittext = inittext
@@ -72,22 +66,18 @@ class QgisConnector(LamiaIFaceAbstractConnectors):
             progressMessageBar.layout().addWidget(self.progressbar)
             qgis.utils.iface.messageBar().pushWidget(progressMessageBar, qgis.core.Qgis.Info)
             self.progressbar.setMaximum(maxvalue)
-        else:
-            logging.getLogger( "Lamia_connector" ).info('Creating progress bar : %s', inittext)
+
 
     def updateProgressBar(self,val):
         if qgis.utils.iface is not None and self.progressbar is not None:
             self.progressbar.setValue(val)
-            # QApplication.processEvents()
-        else:
-            logging.getLogger( "Lamia_connector" ).info('%s : %d', self.progressbarinittext, val)
+
         
 
     def closeProgressBar(self):
         if qgis.utils.iface is not None: 
             qgis.utils.iface.messageBar().clearWidgets()
-        else:
-            logging.getLogger( "Lamia_connector" ).info('%s : %s', self.progressbarinittext, 'closing')
+
         self.progressbar = None
 
     def inputMessage(self,listtext, title='Lamia input', withinput=True, parent = None):

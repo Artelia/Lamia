@@ -17,4 +17,5 @@ sandbox/*/
 
 *.wav
 *.cprof
+*.exe
 Lamia_*.zip
