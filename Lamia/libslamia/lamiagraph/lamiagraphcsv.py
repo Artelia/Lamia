@@ -29,21 +29,24 @@ import pandas as pd
 import csv
 
 import matplotlib
-matplotlib.use('agg')
+
+matplotlib.use("agg")
 import matplotlib.pyplot as plt
-font = {'family' : 'normal','weight' : 'bold','size'   : 8}
-matplotlib.rc('font', **font)
-#matplotlib.rc('xtick', labelsize=20)
-#matplotlib.rc('ytick', labelsize=20)
-from matplotlib.backends.backend_qt5agg import (FigureCanvasQTAgg as FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
+
+font = {"family": "normal", "weight": "bold", "size": 8}
+matplotlib.rc("font", **font)
+# matplotlib.rc('xtick', labelsize=20)
+# matplotlib.rc('ytick', labelsize=20)
+from matplotlib.backends.backend_qt5agg import (
+    FigureCanvasQTAgg as FigureCanvas,
+    NavigationToolbar2QT as NavigationToolbar,
+)
 
 
 from .lamiagraph import GraphMaker
 
 
-
 class GraphMakerCsv(GraphMaker):
-
 
     def __init__(self, dbaseparser):
         self.dbase = dbaseparser
@@ -51,28 +54,27 @@ class GraphMakerCsv(GraphMaker):
         self.figuretype = plt.figure()
         self.axtype = self.figuretype.add_subplot(111)
 
-
-        strtoexec = '..{}.lamiagraphfunccsv'.format(self.dbase.worktype.lower())
+        if self.dbase.base3version:
+            strtoexec = f"Lamia.worktypeconf.{self.dbase.worktype.lower()}.lamiagraph.lamiagraphfunc"
+        else:
+            strtoexec = f"..{self.dbase.worktype.lower()}.lamiagraphfunc"
         self.graphmodule = importlib.import_module(strtoexec, package=self.__module__)
         self.graphspec = self.graphmodule.getGraphSpec()
 
+    def getGraphData(self, graphpk):
 
-    def getGraphData(self,graphpk):
+        filegraphique = self.dbase.getValuesFromPk("graph_qgis", "file", graphpk)
 
-        filegraphique = self.dbase.getValuesFromPk( 'graph_qgis',
-                                                    'file',
-                                                    graphpk )
- 
-        if filegraphique is None or filegraphique == '':
+        if filegraphique is None or filegraphique == "":
             return None
         filegraphique = self.dbase.completePathOfFile(filegraphique)
-        datas=[]
+        datas = []
         if os.path.isfile(filegraphique):
-            with open(filegraphique, newline='') as csvfile:
-                csvreader = csv.reader(csvfile, delimiter=';', quotechar='|')
+            with open(filegraphique, newline="") as csvfile:
+                csvreader = csv.reader(csvfile, delimiter=";", quotechar="|")
                 for row in csvreader:
                     datas.append([])
-                    for elem in row :
+                    for elem in row:
                         if self.isfloat(elem):
                             datas[-1].append(float(elem))
                         else:
@@ -82,15 +84,13 @@ class GraphMakerCsv(GraphMaker):
 
         return datas
 
-    def saveGraphData(self,  featurepk, datas):
+    def saveGraphData(self, featurepk, datas):
 
-        csvpath = self.dbase.getValuesFromPk('graph_qgis',
-                                            'file',
-                                            featurepk)
+        csvpath = self.dbase.getValuesFromPk("graph_qgis", "file", featurepk)
         csvpath = self.dbase.completePathOfFile(csvpath)
-        with open(csvpath, 'w', newline='') as csvfile:
-           csvwriter = csv.writer(csvfile, delimiter=';', quoting=csv.QUOTE_MINIMAL)
-           for data in datas:
-               print(data)
-               csvwriter.writerow(data)
-        
+        with open(csvpath, "w", newline="") as csvfile:
+            csvwriter = csv.writer(csvfile, delimiter=";", quoting=csv.QUOTE_MINIMAL)
+            for data in datas:
+                print(data)
+                csvwriter.writerow(data)
+

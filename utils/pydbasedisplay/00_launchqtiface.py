@@ -1,7 +1,11 @@
+import os, sys
+
+lamiapath = os.path.join(os.path.join(os.path.dirname(__file__)), "..", "..")
+# print(os.path.abspath(lamiapath))
+sys.path.append(lamiapath)
+
 import logging
-import os
 import platform
-import sys
 import unittest
 import warnings
 from pprint import pprint
@@ -18,11 +22,6 @@ from qgis.PyQt import QtCore, uic
 from qgis.PyQt.QtCore import QCoreApplication, QSettings, Qt, QTranslator, qVersion
 from qgis.PyQt.QtWidgets import QDialog, QMainWindow, QWidget
 
-lamiapath = os.path.join(os.path.join(os.path.dirname(__file__)), "..", "..")
-# print(os.path.abspath(lamiapath))
-sys.path.append(lamiapath)
-
-
 
 # warnings.simplefilter("ignore")
 # os.environ["PYTHONWARNINGS"] = "ignore" # Also affect subprocesses
@@ -35,25 +34,27 @@ X_BEGIN = 400000.0
 Y_BEGIN = 6000000.0
 LOCALE = "fr"  # fr en
 INTERFACEINDEX = 0
+# p
 
 
 class DBaseViewer:
     def __init__(self):
         self.testdir = os.path.join(
-            os.path.dirname(__file__), "..", "test", "testtempfiles", "c_creation"
+            os.path.dirname(__file__), "..", "..", "test", "testtempfiles", "c_creation"
         )
 
     def run(self):
 
         if True:
-            # SLFILE = os.path.join(self.testdir,'sl_base3_urbandrainage_Lamia','test01.sqlite')
-            # SLFILE = os.path.join(self.testdir,'sl_base3_waterdistribution_Lamia','test01.sqlite')
-            # SLFILE = os.path.join(self.testdir,'sl_base3_constructionsite_Lamia','test01.sqlite')
-            # SLFILE = os.path.join(self.testdir,'sl_base3_constructionsite_Orange','test01.sqlite')
-            # SLFILE = os.path.join(self.testdir,'sl_base3_levee_Lamia','test01.sqlite')
-            # SLFILE = os.path.join(self.testdir,'sl_base3_faunaflora_Lamia','test01.sqlite')
 
-            SLFILE = r"C:\01_WORKINGDIR\GPMB\c_merge_ass\mergeddbase.sqlite"
+            #  sl_base3_urbandrainage_Lamia   sl_base3_waterdistribution_Lamia
+            # sl_base3_constructionsite_Lamia   sl_base3_constructionsite_Orange
+            # sl_base3_levee_Lamia      sl_base3_faunaflora_Lamia
+            worktype = "sl_base3_levee_Lamia"
+            SLFILE = os.path.join(self.testdir, worktype, "test01.sqlite")
+
+            # SLFILE = r"C:\01_WORKINGDIR\GPMB\c_merge_ass\mergeddbase.sqlite"
+
             self._loadLocale()
             self._createWin()
             self._createMainWin()

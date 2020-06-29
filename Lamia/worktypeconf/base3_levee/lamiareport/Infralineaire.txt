@@ -1,0 +1,37 @@
+###atlaslayersql
+WITH operator AS (SELECT actor.society, actor.actorname  , tcobjectactor.lid_object 
+                 FROM tcobjectactor  
+                 INNER JOIN actor ON tcobjectactor.lid_actor = actor.id_actor  
+                 WHERE tcobjectactor.role = 'GES' )
+SELECT edge_now.* , operator.society, operator.actorname 
+FROM edge_now 
+LEFT JOIN operator ON operator.lid_object = edge_now.id_object
+###atlaslayerid
+id_edge
+###spatial
+True
+###ordering
+autopath
+###atlaslayerstyle
+Infralineaire_atlas.qml
+###atlasdrivemap
+#itemname;   minscale;   typescale;      layers
+map1;       2500;       Auto       ;['atlaslayer', 'equipment', 'ortho']
+###generalmap
+#itemname;   minscale;   typescale; layers
+map0    ;           ;             ; ['edge', 'scan25']
+###images
+#itemname   ; type
+logo;logo_artelia
+photo1 ;edge_now.photo1
+photo2 ;edge_now.photo2
+photo3 ;edge_now.photo3
+photo4 ;edge_now.photo4
+photo5 ;edge_now.photo5
+photo6 ;edge_now.photo6
+
+###childprint
+#confname;                linkcolumn;             optionsql
+
+
+

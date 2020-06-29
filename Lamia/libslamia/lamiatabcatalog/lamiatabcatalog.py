@@ -23,7 +23,7 @@ This file is part of LAMIA.
   * SPDX-License-Identifier: GPL-3.0-or-later
   * License-Filename: LICENSING.md
  """
- 
+
 import winreg, sys
 import datetime
 import platform, os
@@ -31,20 +31,19 @@ import pandas as pd
 
 import zipfile
 
-sys.path.append(os.path.join(os.path.dirname(__file__),'..','..','libs'))
-from odsreader.ODSReader import ODSReader
+import Lamia
+from Lamia.libs.odsreader.ODSReader import ODSReader
 
 
-class TabCatalog():
+class TabCatalog:
 
     _instances = set()
 
     def __init__(self, worktype):
-        self.worktype =worktype
+        self.worktype = worktype
         self.pddatas = self.loadPandasDatas()
 
         self._instances.add(self)
-
 
     def getInstance(worktype):
         inst = None
@@ -57,33 +56,38 @@ class TabCatalog():
 
         return inst
 
-
     def loadPandasDatas(self):
 
         # f = []
-        pddatas={}
-        mypath = os.path.join(os.path.dirname(__file__),self.worktype )
+        pddatas = {}
+        # mypath = os.path.join(os.path.dirname(__file__), self.worktype)
+
+        mypath = os.path.join(
+            os.path.dirname(Lamia.__file__),
+            "worktypeconf",
+            self.worktype,
+            "lamiatabcatalog",
+        )
+
         for (dirpath, dirnames, filenames) in os.walk(mypath):
             # print (filenames)
             for filename in filenames:
                 basefilename, file_extension = os.path.splitext(filename)
                 # print(basefilename,file_extension )
-                if file_extension=='.ods':
+                if file_extension == ".ods":
                     filepath = os.path.join(dirpath, filename)
                     xls = pd.ExcelFile(filepath, engine="odf")
                     odsdocsheets = xls.sheet_names
                     pddatas[basefilename] = {}
                     for sheetname in odsdocsheets:
                         # print(sheetname)
-                        pddatas[basefilename][sheetname] = pd.read_excel(xls, sheet_name=sheetname, engine="odf")
+                        pddatas[basefilename][sheetname] = pd.read_excel(
+                            xls, sheet_name=sheetname, engine="odf"
+                        )
 
-        # print(pddatas['LISTE_faune_2019']['oiseaux'])
+        # print(pddatas["LISTE_faune_2019"]["oiseaux"])
 
         return pddatas
-
-
-
-
 
 
 # print('1')

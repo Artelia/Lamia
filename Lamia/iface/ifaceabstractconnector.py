@@ -35,36 +35,20 @@ class LamiaIFaceAbstractConnectors():
         # logging.getLogger("Lamia_connector").setLevel( logging.INFO )
 
     def showNormalMessage(self, text):
-        logging.getLogger( "Lamia_connector" ).info('normalMessage : %s', text)
+        pass
 
     def showErrorMessage(self,text):
-        logging.getLogger( "Lamia_connector" ).info('ErrorMessage : %s', text)
+        pass
 
     def createProgressBar(self, inittext='', maxvalue=99):
         self.progressbarinittext = inittext
-        logging.getLogger( "Lamia_connector" ).info('Creating progress bar : %s', inittext)
+        pass
 
     def updateProgressBar(self,val):
-        logging.getLogger( "Lamia_connector" ).info('%s : %d', self.progressbarinittext, val)
+        pass
 
     def closeProgressBar(self):
-        logging.getLogger( "Lamia_connector" ).info('%s : %s', self.progressbarinittext, 'closing')
+        pass
 
     def inputMessage(self,listtext, title='Lamia input', withinput=True, parent = None):
-        res=[]
-        print('*** ' + title + (' ***'))
-        if withinput:
-            for text in listtext:
-                restemp = input(text + '? : ') 
-                if restemp:
-                    res.append(restemp)
-        else:
-            for txt in listtext:
-                print(txt)
-            restemp = input('Yes (y) or No (n) ?') 
-            if restemp == 'y':
-                res = True
-            else:
-                res = False
-        
-        return res
+        pass

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>645</width>
-    <height>422</height>
+    <width>683</width>
+    <height>574</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -188,7 +188,7 @@
                      <string/>
                     </property>
                     <property name="pixmap">
-                     <pixmap resource="../../resources.qrc">:/plugins/Lamia/icons/eye2.svg</pixmap>
+                     <pixmap resource="../resources.qrc">:/plugins/Lamia/icons/eye2.svg</pixmap>
                     </property>
                     <property name="scaledContents">
                      <bool>false</bool>
@@ -214,7 +214,7 @@
                      <string>...</string>
                     </property>
                     <property name="icon">
-                     <iconset resource="../../resources.qrc">
+                     <iconset resource="../resources.qrc">
                       <normaloff>:/plugins/Lamia/icons/Calendar_icon.png</normaloff>:/plugins/Lamia/icons/Calendar_icon.png</iconset>
                     </property>
                     <property name="iconSize">
@@ -304,7 +304,7 @@ background-color: rgb(255, 255, 255);
                  <property name="frameShadow">
                   <enum>QFrame::Raised</enum>
                  </property>
-                 <layout class="QGridLayout" name="gridLayout">
+                 <layout class="QGridLayout" name="gridLayout" columnstretch="3,1">
                   <property name="leftMargin">
                    <number>0</number>
                   </property>
@@ -329,8 +329,19 @@ background-color: rgb(255, 255, 255);
                      <string/>
                     </property>
                     <property name="icon">
-                     <iconset resource="../../resources.qrc">
+                     <iconset resource="../resources.qrc">
                       <normaloff>:/plugins/Lamia/icons/select.png</normaloff>:/plugins/Lamia/icons/select.png</iconset>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QPushButton" name="pushButton_qgspan">
+                    <property name="text">
+                     <string/>
+                    </property>
+                    <property name="icon">
+                     <iconset resource="../resources.qrc">
+                      <normaloff>:/plugins/Lamia/icons/qgspan.svg</normaloff>:/plugins/Lamia/icons/qgspan.svg</iconset>
                     </property>
                    </widget>
                   </item>
@@ -498,7 +509,7 @@ background-color: rgb(255, 255, 255);</string>
               </property>
               <widget class="QWidget" name="tab">
                <attribute name="icon">
-                <iconset resource="../../resources.qrc">
+                <iconset resource="../resources.qrc">
                  <normaloff>:/plugins/Lamia/icons/main.png</normaloff>:/plugins/Lamia/icons/main.png</iconset>
                </attribute>
                <attribute name="title">
@@ -518,7 +529,7 @@ background-color: rgb(255, 255, 255);</string>
               </widget>
               <widget class="QWidget" name="tab_2">
                <attribute name="icon">
-                <iconset resource="../../resources.qrc">
+                <iconset resource="../resources.qrc">
                  <normaloff>:/plugins/Lamia/icons/link.svg</normaloff>:/plugins/Lamia/icons/link.svg</iconset>
                </attribute>
                <attribute name="title">
@@ -600,7 +611,7 @@ background-color: rgb(255, 255, 255);</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>645</width>
+     <width>683</width>
      <height>26</height>
     </rect>
    </property>
@@ -657,6 +668,8 @@ background-color: rgb(255, 255, 255);</string>
     <addaction name="separator"/>
     <addaction name="actionOpen_project_directory"/>
     <addaction name="actionOpen_Lamia_directory"/>
+    <addaction name="separator"/>
+    <addaction name="actionShow_Hide_QGis_toolbars"/>
    </widget>
    <widget class="QMenu" name="menuMode">
     <property name="title">
@@ -696,6 +709,7 @@ background-color: rgb(255, 255, 255);</string>
    <addaction name="actiontoolbarmagic"/>
    <addaction name="actiontoolbarundo"/>
    <addaction name="actiontoolbardelete"/>
+   <addaction name="actiontoolbarzoomto"/>
    <addaction name="actiontoolbarsave"/>
   </widget>
   <widget class="QToolBar" name="lamiatoolBarFormGeom">
@@ -739,6 +753,7 @@ background-color: rgb(255, 255, 255);</string>
     <bool>false</bool>
    </attribute>
    <addaction name="actiontoolbartoolsprint"/>
+   <addaction name="actiontoolbartoolscamera"/>
   </widget>
   <action name="actionTre">
    <property name="text">
@@ -928,7 +943,7 @@ background-color: rgb(255, 255, 255);</string>
   </action>
   <action name="actiontoolbarsave">
    <property name="icon">
-    <iconset resource="../../resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/plugins/Lamia/icons/save.png</normaloff>:/plugins/Lamia/icons/save.png</iconset>
    </property>
    <property name="text">
@@ -937,7 +952,7 @@ background-color: rgb(255, 255, 255);</string>
   </action>
   <action name="actiontoolbarnew">
    <property name="icon">
-    <iconset resource="../../resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/plugins/Lamia/icons/Add_48x48.png</normaloff>:/plugins/Lamia/icons/Add_48x48.png</iconset>
    </property>
    <property name="text">
@@ -946,7 +961,7 @@ background-color: rgb(255, 255, 255);</string>
   </action>
   <action name="actiontoobargeomnewpoint">
    <property name="icon">
-    <iconset resource="../../resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/plugins/Lamia/icons/mActionCapturePoint.svg</normaloff>:/plugins/Lamia/icons/mActionCapturePoint.svg</iconset>
    </property>
    <property name="text">
@@ -955,7 +970,7 @@ background-color: rgb(255, 255, 255);</string>
   </action>
   <action name="actiontoobargeomnewline">
    <property name="icon">
-    <iconset resource="../../resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/plugins/Lamia/icons/mActionCaptureLine.svg</normaloff>:/plugins/Lamia/icons/mActionCaptureLine.svg</iconset>
    </property>
    <property name="text">
@@ -964,7 +979,7 @@ background-color: rgb(255, 255, 255);</string>
   </action>
   <action name="actiontoobargeomnewpolygon">
    <property name="icon">
-    <iconset resource="../../resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/plugins/Lamia/icons/mActionCapturePolygon.svg</normaloff>:/plugins/Lamia/icons/mActionCapturePolygon.svg</iconset>
    </property>
    <property name="text">
@@ -973,7 +988,7 @@ background-color: rgb(255, 255, 255);</string>
   </action>
   <action name="actiontoolbardelete">
    <property name="icon">
-    <iconset resource="../../resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/plugins/Lamia/icons/Delete_48x48.png</normaloff>:/plugins/Lamia/icons/Delete_48x48.png</iconset>
    </property>
    <property name="text">
@@ -982,7 +997,7 @@ background-color: rgb(255, 255, 255);</string>
   </action>
   <action name="actiontoolbarundo">
    <property name="icon">
-    <iconset resource="../../resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/plugins/Lamia/icons/deselect.png</normaloff>:/plugins/Lamia/icons/deselect.png</iconset>
    </property>
    <property name="text">
@@ -991,7 +1006,7 @@ background-color: rgb(255, 255, 255);</string>
   </action>
   <action name="actiontoobargeomaddpoint">
    <property name="icon">
-    <iconset resource="../../resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/plugins/Lamia/icons/mActionAddNodesItem1.svg</normaloff>:/plugins/Lamia/icons/mActionAddNodesItem1.svg</iconset>
    </property>
    <property name="text">
@@ -1000,7 +1015,7 @@ background-color: rgb(255, 255, 255);</string>
   </action>
   <action name="actiontoobargeomaddGPSpoint">
    <property name="icon">
-    <iconset resource="../../resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/plugins/Lamia/icons/mActionAddNodesItemGPS.svg</normaloff>:/plugins/Lamia/icons/mActionAddNodesItemGPS.svg</iconset>
    </property>
    <property name="text">
@@ -1009,7 +1024,7 @@ background-color: rgb(255, 255, 255);</string>
   </action>
   <action name="actiontoobargeomeditlayer">
    <property name="icon">
-    <iconset resource="../../resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/plugins/Lamia/icons/mActionVertexTool2.svg</normaloff>:/plugins/Lamia/icons/mActionVertexTool2.svg</iconset>
    </property>
    <property name="text">
@@ -1018,7 +1033,7 @@ background-color: rgb(255, 255, 255);</string>
   </action>
   <action name="actiontoolbarlayersave">
    <property name="icon">
-    <iconset resource="../../resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/plugins/Lamia/icons/save.png</normaloff>:/plugins/Lamia/icons/save.png</iconset>
    </property>
    <property name="text">
@@ -1027,7 +1042,7 @@ background-color: rgb(255, 255, 255);</string>
   </action>
   <action name="actiontoolbarlayerundo">
    <property name="icon">
-    <iconset resource="../../resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/plugins/Lamia/icons/deselect.png</normaloff>:/plugins/Lamia/icons/deselect.png</iconset>
    </property>
    <property name="text">
@@ -1036,7 +1051,7 @@ background-color: rgb(255, 255, 255);</string>
   </action>
   <action name="actiontoolbartoolsprint">
    <property name="icon">
-    <iconset resource="../../resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/plugins/Lamia/icons/print.png</normaloff>:/plugins/Lamia/icons/print.png</iconset>
    </property>
    <property name="text">
@@ -1045,7 +1060,7 @@ background-color: rgb(255, 255, 255);</string>
   </action>
   <action name="actiontoolbarmagic">
    <property name="icon">
-    <iconset resource="../../resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/plugins/Lamia/icons/magic-wand.png</normaloff>:/plugins/Lamia/icons/magic-wand.png</iconset>
    </property>
    <property name="text">
@@ -1067,9 +1082,36 @@ background-color: rgb(255, 255, 255);</string>
     <string>Open Lamia directory</string>
    </property>
   </action>
+  <action name="actionShow_Hide_QGis_toolbars">
+   <property name="text">
+    <string>Show/Hide QGis toolbars</string>
+   </property>
+  </action>
+  <action name="actiontoolbarzoomto">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/plugins/Lamia/icons/Find_32x32.png</normaloff>:/plugins/Lamia/icons/Find_32x32.png</iconset>
+   </property>
+   <property name="text">
+    <string>toolbarzoomto</string>
+   </property>
+   <property name="toolTip">
+    <string>toolbarzoomto</string>
+   </property>
+  </action>
+  <action name="actiontoolbartoolscamera">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/plugins/Lamia/icons/camera_icon.svg</normaloff>:/plugins/Lamia/icons/camera_icon.svg</iconset>
+   </property>
+   <property name="text">
+    <string>toolbartoolscamera</string>
+   </property>
+  </action>
  </widget>
  <resources>
-  <include location="../../resources.qrc"/>
+  <include location="../resources.qrc"/>
+  <include location="../resources.qrc"/>
  </resources>
  <connections/>
 </ui>

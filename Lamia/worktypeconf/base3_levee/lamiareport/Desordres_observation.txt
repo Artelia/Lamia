@@ -1,0 +1,30 @@
+###atlaslayersql
+SELECT observation_now.*  
+FROM observation_now
+WHERE observation_now.id_observation = observation_now.id_observation
+###atlaslayerid
+id_observation
+###spatial
+False
+###ordering
+
+###atlaslayerstyle
+
+###atlasdrivemap
+#itemname;   minscale;   typescale;      layers
+
+###generalmap
+#itemname;   minscale;   typescale; layers
+
+###images
+#itemname   ; type
+photo1 ;observation_now.photo1
+photo2;observation_now.photo2
+photo3;observation_now.photo3
+
+###childprint
+#confname;                linkcolumn;             optionsql
+
+
+
+

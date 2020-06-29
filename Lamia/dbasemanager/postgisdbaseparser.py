@@ -32,19 +32,24 @@ import psycopg2
 from .dbaseparserabstract import *
 
 
-
 class PostGisDBaseParser(AbstractDBaseParser):
 
-    TYPE = 'postgis'
+    TYPE = "postgis"
 
-    def __init__(self, parserfactory,messageinstance):
-         super(PostGisDBaseParser, self).__init__(parserfactory,messageinstance)
+    def __init__(self, parserfactory, messageinstance):
+        super(PostGisDBaseParser, self).__init__(parserfactory, messageinstance)
 
-    
-    def connectToDBase(self,
-                        host='localhost', port=None, dbname=None, schema=None, user=None, password=None,
-                        **kwargs):
-        self.dbasetype = 'postgis'
+    def connectToDBase(
+        self,
+        host="localhost",
+        port=None,
+        dbname=None,
+        schema=None,
+        user=None,
+        password=None,
+        **kwargs,
+    ):
+        self.dbasetype = "postgis"
         self.pgport = port
         self.pghost = host
         self.pgdb = dbname
@@ -54,7 +59,15 @@ class PostGisDBaseParser(AbstractDBaseParser):
 
         # connexion
         # connect to postgres for checking database existence
-        connectstr = "dbname='postgres' user='" + user + "' host='" + host + "' password='" + password + "'"
+        connectstr = (
+            "dbname='postgres' user='"
+            + user
+            + "' host='"
+            + host
+            + "' password='"
+            + password
+            + "'"
+        )
         connpgis = psycopg2.connect(connectstr)
         pgiscursor = connpgis.cursor()
         connpgis.autocommit = True
@@ -62,16 +75,17 @@ class PostGisDBaseParser(AbstractDBaseParser):
         connpgis.close()
 
         # connexion to database
-        connectstr = "dbname='" + self.pgdb.lower() + "' user='" + user + "' host='" + host
+        connectstr = (
+            "dbname='" + self.pgdb.lower() + "' user='" + user + "' host='" + host
+        )
         connectstr += "' password='" + password + "'"
         self.connPGis = psycopg2.connect(connectstr)
         self.PGiscursor = self.connPGis.cursor()
 
-        #searchpath
-        sql = 'SET search_path TO ' + self.pgschema.lower() + ', public;'
+        # searchpath
+        sql = "SET search_path TO " + self.pgschema.lower() + ", public;"
         self.query(sql)
         self.commit()
-
 
     def disconnect(self):
         self.PGiscursor.close()
@@ -80,29 +94,34 @@ class PostGisDBaseParser(AbstractDBaseParser):
     def getDBName(self):
         return self.pgschema
 
-
-
     def generateSQLTableCreationFromDBConfig(self, name, dbasetable, crs):
 
         sql = {}
         listFK = []
-        sql['main'] = 'CREATE TABLE '
-        sql['main'] +=  name + '('
+        sql["main"] = "CREATE TABLE "
+        sql["main"] += name + "("
 
-        for key in dbasetable['fields']:
-            sql['main'] += key + ' ' + dbasetable['fields'][key]['PGtype']
-            if 'FK' in dbasetable['fields'][key].keys():
-                sql['main'] += ' REFERENCES '  + dbasetable['fields'][key]['FK']
-            sql['main'] += ','
+        for key in dbasetable["fields"]:
+            sql["main"] += key + " " + dbasetable["fields"][key]["PGtype"]
+            if "FK" in dbasetable["fields"][key].keys():
+                sql["main"] += " REFERENCES " + dbasetable["fields"][key]["FK"]
+            sql["main"] += ","
 
-        if sql['main'][-1] == ',':
-            sql['main'] = sql['main'][:-1]
-        sql['main'] = sql['main'] + ');'
+        if sql["main"][-1] == ",":
+            sql["main"] = sql["main"][:-1]
+        sql["main"] = sql["main"] + ");"
 
-        if 'geom' in dbasetable.keys():
-            sql['other'] = []
-            sql['other'].append('ALTER TABLE '  + name
-                                + " ADD  COLUMN   geom geometry('" + dbasetable['geom'] + "'," + str(crs) + ");")
+        if "geom" in dbasetable.keys():
+            sql["other"] = []
+            sql["other"].append(
+                "ALTER TABLE "
+                + name
+                + " ADD  COLUMN   geom geometry('"
+                + dbasetable["geom"]
+                + "',"
+                + str(crs)
+                + ");"
+            )
 
         return sql
 
@@ -110,81 +129,111 @@ class PostGisDBaseParser(AbstractDBaseParser):
 
         sql = {}
         listFK = []
-        sql['main'] = 'CREATE TABLE '
-        sql['main'] += self.pgschema + '.' + name + '('
+        sql["main"] = "CREATE TABLE "
+        sql["main"] += self.pgschema + "." + name + "("
 
-        for key in dbasetable['fields']:
-            sql['main'] += key + ' ' + dbasetable['fields'][key]['PGtype']
-            if 'FK' in dbasetable['fields'][key].keys():
-                sql['main'] += ' REFERENCES ' + self.pgschema.lower() + '.' + dbasetable['fields'][key]['FK']
-            sql['main'] += ','
+        for key in dbasetable["fields"]:
+            sql["main"] += key + " " + dbasetable["fields"][key]["PGtype"]
+            if "FK" in dbasetable["fields"][key].keys():
+                sql["main"] += (
+                    " REFERENCES "
+                    + self.pgschema.lower()
+                    + "."
+                    + dbasetable["fields"][key]["FK"]
+                )
+            sql["main"] += ","
 
-        if sql['main'][-1] == ',':
-            sql['main'] = sql['main'][:-1]
-        sql['main'] = sql['main'] + ');'
+        if sql["main"][-1] == ",":
+            sql["main"] = sql["main"][:-1]
+        sql["main"] = sql["main"] + ");"
 
-        if 'geom' in dbasetable.keys():
-            sql['other'] = []
-            sql['other'].append('ALTER TABLE ' + self.pgschema + '.' + name
-                                + " ADD  COLUMN   geom geometry('" + dbasetable['geom'] + "'," + str(crs) + ");")
+        if "geom" in dbasetable.keys():
+            sql["other"] = []
+            sql["other"].append(
+                "ALTER TABLE "
+                + self.pgschema
+                + "."
+                + name
+                + " ADD  COLUMN   geom geometry('"
+                + dbasetable["geom"]
+                + "',"
+                + str(crs)
+                + ");"
+            )
 
         return sql
 
-    def generateSQLViewCreationFromDBConfig(self, dbname, dbasetable,worktype, crs ):
+    def generateSQLViewCreationFromDBConfig(self, dbname, dbasetable, worktype, crs):
         """
         return sql list to be queried
         """
-        finalsqllist=[]
-        viewnames={}
-        if 'djangoviewsql' in dbasetable.keys():
-            viewnames['djangoviewsql'] = str(dbname) + '_django'
+        finalsqllist = []
+        viewnames = {}
+        if "djangoviewsql" in dbasetable.keys():
+            viewnames["djangoviewsql"] = str(dbname) + "_django"
 
-        if  'qgisPGviewsql' in dbasetable.keys():
-            viewnames['qgisPGviewsql'] = str(dbname) + '_qgis'
-        elif 'qgisviewsql' in dbasetable.keys():
-            viewnames['qgisviewsql'] = str(dbname) + '_qgis'
+        if "qgisPGviewsql" in dbasetable.keys():
+            viewnames["qgisPGviewsql"] = str(dbname) + "_qgis"
+        elif "qgisviewsql" in dbasetable.keys():
+            viewnames["qgisviewsql"] = str(dbname) + "_qgis"
 
-        if 'exportviewsql' in dbasetable.keys():
-            viewnames['exportviewsql'] = str(dbname) + '_export'
+        if "exportviewsql" in dbasetable.keys():
+            viewnames["exportviewsql"] = str(dbname) + "_export"
 
         for viewname in viewnames.keys():
-            sql = 'CREATE VIEW ' + str(viewnames[viewname]) + ' AS '
-            if dbasetable[viewname].strip() != '':
+            sql = "CREATE VIEW " + str(viewnames[viewname]) + " AS "
+            if dbasetable[viewname].strip() != "":
                 sql += dbasetable[viewname]
             else:
-                sql += 'SELECT * FROM ' + str(dbname)
+                sql += "SELECT * FROM " + str(dbname)
             finalsqllist.append(sql)
 
             if self.isTableSpatial(dbname):
                 dbnamelower = dbname.lower()
                 idcolumnname = self.getFirstIdColumn(dbname)
                 viewlower = viewnames[viewname].lower()
-                sql = 'INSERT INTO geometry_columns(f_table_catalog, f_table_schema, f_table_name, '
+                sql = "INSERT INTO geometry_columns(f_table_catalog, f_table_schema, f_table_name, "
                 sql += 'f_geometry_column, coord_dimension, srid, "type") VALUES ('
-                sql += "'" + worktype.lower() + "', '" + self.pgschema.lower() + "', '" + str( viewlower) + "','geom',2,"
-                sql += str(crs) + ",'" + dbasetable['geom'] + "' );"
+                sql += (
+                    "'"
+                    + worktype.lower()
+                    + "', '"
+                    + self.pgschema.lower()
+                    + "', '"
+                    + str(viewlower)
+                    + "','geom',2,"
+                )
+                sql += str(crs) + ",'" + dbasetable["geom"] + "' );"
                 finalsqllist.append(sql)
 
         return finalsqllist
 
     def initDBase(self, **kwargs):
-        host=kwargs.get('host', 'localhost')
-        port=kwargs.get('port', 5432)
-        dbname=kwargs.get('dbname', None)
-        schema=kwargs.get('schema', None)
-        user=kwargs.get('user', None)
-        password=kwargs.get('password', None)
-        
-        if None in [dbname, schema, user,password ]:
-            raise ValueError('Init DBase : postgis conf not complete')
+        host = kwargs.get("host", "localhost")
+        port = kwargs.get("port", 5432)
+        dbname = kwargs.get("dbname", None)
+        schema = kwargs.get("schema", None)
+        user = kwargs.get("user", None)
+        password = kwargs.get("password", None)
+
+        if None in [dbname, schema, user, password]:
+            raise ValueError("Init DBase : postgis conf not complete")
 
         # connexion
         # connect to postgres for checking database existence
-        connectstr = "dbname='postgres' user='" + user + "' host='" + host + "' password='" + password + "'"
+        connectstr = (
+            "dbname='postgres' user='"
+            + user
+            + "' host='"
+            + host
+            + "' password='"
+            + password
+            + "'"
+        )
         try:
             connpgis = psycopg2.connect(connectstr)
         except psycopg2.OperationalError as e:
-            print('Error connecting : ' , connectstr, '\n', e)
+            print("Error connecting : ", connectstr, "\n", e)
             return
         pgiscursor = connpgis.cursor()
         connpgis.autocommit = True
@@ -195,7 +244,7 @@ class PostGisDBaseParser(AbstractDBaseParser):
         rows = pgiscursor.fetchall()
         rows = [elem[0] for elem in rows]
         if dbname.lower() not in rows:
-            pgiscursor.execute('CREATE DATABASE ' + dbname)
+            pgiscursor.execute("CREATE DATABASE " + dbname)
         connpgis.autocommit = True
         pgiscursor.close()
         connpgis.close()
@@ -207,13 +256,13 @@ class PostGisDBaseParser(AbstractDBaseParser):
         self.PGiscursor = self.connPGis.cursor()
         self.connPGis.autocommit = True
 
-        #check if postgis extension exists
+        # check if postgis extension exists
         sql = "Select * FROM pg_extension"
         self.PGiscursor.execute(sql)
         rows = self.PGiscursor.fetchall()
         result = [elem[0] for elem in rows]
-        if 'postgis' not in result:
-            sql = 'CREATE EXTENSION postgis'
+        if "postgis" not in result:
+            sql = "CREATE EXTENSION postgis"
             try:
                 self.PGiscursor.execute(sql)
                 self.commit()
@@ -231,33 +280,38 @@ class PostGisDBaseParser(AbstractDBaseParser):
 
         if schema.lower() in result:
             try:
-                sql = 'DROP SCHEMA ' + schema + ' CASCADE'
+                sql = "DROP SCHEMA " + schema + " CASCADE"
                 self.query(sql)
                 self.commit()
             except Exception as e:
                 print(e)
-        sql = 'CREATE SCHEMA ' + schema
+        sql = "CREATE SCHEMA " + schema
         self.query(sql)
         self.commit()
 
         # configure search_path
-        sql = 'SET search_path TO ' + schema + ',public'
+        sql = "SET search_path TO " + schema + ",public"
         self.query(sql)
         self.commit()
         self.disconnect()
-
-
-
-
-    def query(self, sql,arguments=[], docommit=True):
+    def query(self, sql, arguments=[], docommit=True):
         if self.PGiscursor is None:
             self.PGiscursor = self.connPGis.cursor()
         try:
-            if self.printsql :
-                logging.getLogger('Lamia_unittest').debug('%s', sql)
+            if self.printsql:
+                logging.getLogger("Lamia_unittest").debug("%s", sql)
             self.PGiscursor.execute(sql)
-            #print(self.PGiscursor.statusmessage )
-            if self.PGiscursor.statusmessage.split(' ')[0] not in ['INSERT', 'UPDATE','SET','CREATE','ALTER','DROP','BEGIN','COMMIT']:
+            # print(self.PGiscursor.statusmessage )
+            if self.PGiscursor.statusmessage.split(" ")[0] not in [
+                "INSERT",
+                "UPDATE",
+                "SET",
+                "CREATE",
+                "ALTER",
+                "DROP",
+                "BEGIN",
+                "COMMIT",
+            ]:
                 rows = list(self.PGiscursor.fetchall())
             else:
                 rows = None
@@ -266,30 +320,31 @@ class PostGisDBaseParser(AbstractDBaseParser):
             return rows
 
         except psycopg2.ProgrammingError as e:
-            print('error query : ', sql, '\n', e, self.PGiscursor.statusmessage )
-            raise TypeError
+            print("error query : ", sql, "\n", e, self.PGiscursor.statusmessage)
+            if self.raiseexceptions:
+                raise TypeError
             return None
         except (psycopg2.DataError, psycopg2.InternalError) as e:
-            print('error query : ', sql, '\n', e)
-            raise TypeError
+            print("error query : ", sql, "\n", e)
+            if self.raiseexceptions:
+                raise TypeError
             return None
 
-
     def vacuum(self):
-        raise NotImplementedError 
+        raise NotImplementedError
 
     def commit(self):
         self.connPGis.commit()
 
     def reInitDBase(self):
-        raise NotImplementedError 
+        raise NotImplementedError
 
-    def isTableSpatial(self,tablename ):
-        #sql = "SELECT column_name FROM information_schema.columns WHERE table_name  = '" +  str(tablename).lower() + "'"
-        #query = self.query(sql)
-        #result = [row[0] for row in query]
+    def isTableSpatial(self, tablename):
+        # sql = "SELECT column_name FROM information_schema.columns WHERE table_name  = '" +  str(tablename).lower() + "'"
+        # query = self.query(sql)
+        # result = [row[0] for row in query]
         result = self.getColumns(tablename.lower())
-        if 'geom' in result:
+        if "geom" in result:
             return True
         else:
             return False
@@ -302,48 +357,61 @@ class PostGisDBaseParser(AbstractDBaseParser):
         return [elem[0] for elem in result]
 
     def getColumns(self, tablename):
-        sql = "SELECT column_name FROM information_schema.columns "\
-               "WHERE table_name  = '{}' AND table_schema = '{}'".format(tablename.lower(),
-                                                                        self.pgschema.lower())
+        sql = (
+            "SELECT column_name FROM information_schema.columns "
+            "WHERE table_name  = '{}' AND table_schema = '{}'".format(
+                tablename.lower(), self.pgschema.lower()
+            )
+        )
         query = self.query(sql)
         result = [row[0] for row in query]
         return result
 
-    def getFirstIdColumn(self,tablename):
-        #sql = "SELECT column_name FROM information_schema.columns WHERE table_name  = '" +  str(tablename).lower() + "'"
-        #query = self.query(sql)
-        #result = [row[0] for row in query]
+    def getFirstIdColumn(self, tablename):
+        # sql = "SELECT column_name FROM information_schema.columns WHERE table_name  = '" +  str(tablename).lower() + "'"
+        # query = self.query(sql)
+        # result = [row[0] for row in query]
         columns = self.getColumns(tablename.lower())
         for fieldname in columns:
-            if 'pk_' in fieldname:
+            if "pk_" in fieldname:
                 return fieldname
 
-
     def getLastPK(self, tablename):
-        sql = "SELECT last_value FROM "  
-        sql +=  tablename.lower() + '_pk_' + tablename.lower() + '_seq'
-        
+        sql = "SELECT last_value FROM "
+        sql += tablename.lower() + "_pk_" + tablename.lower() + "_seq"
+
         try:
             result = self.query(sql)[0][0]
             return result
         except TypeError as e:
-            print('no seq for ' + tablename)
+            print("no seq for " + tablename)
             return 0
         except Exception as e:
-            print(e, ' - no seq for ' + tablename)
+            print(e, " - no seq for " + tablename)
             return 0
 
     def _dateVersionConstraintSQL(self, specialdate=None):
-        if specialdate is None or specialdate == 'now':
-            #workingdatemodif = QtCore.QDate.fromString(self.workingdate, 'yyyy-MM-dd').addDays(1).toString('yyyy-MM-dd')
-            workingdatemodif = (datetime.datetime.now() + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+        if specialdate is None or specialdate == "now":
+            # workingdatemodif = QtCore.QDate.fromString(self.workingdate, 'yyyy-MM-dd').addDays(1).toString('yyyy-MM-dd')
+            workingdatemodif = (
+                datetime.datetime.now() + datetime.timedelta(days=1)
+            ).strftime("%Y-%m-%d")
         else:
-            workingdatemodif = QtCore.QDate.fromString(specialdate, 'dd/MM/yyyy').addDays(1).toString('yyyy-MM-dd')
+            workingdatemodif = (
+                QtCore.QDate.fromString(specialdate, "dd/MM/yyyy")
+                .addDays(1)
+                .toString("yyyy-MM-dd")
+            )
 
-
-        sqlin = ' datetimecreation <= ' + "'" + workingdatemodif + "'"
-        sqlin += ' AND CASE WHEN datetimedestruction IS NOT NULL  '
-        sqlin += 'THEN datetimedestruction > ' + "'" + workingdatemodif + "'" + ' ELSE TRUE END'
+        sqlin = " datetimecreation <= " + "'" + workingdatemodif + "'"
+        sqlin += " AND CASE WHEN datetimedestruction IS NOT NULL  "
+        sqlin += (
+            "THEN datetimedestruction > "
+            + "'"
+            + workingdatemodif
+            + "'"
+            + " ELSE TRUE END"
+        )
         sqlin += " AND lpk_revision_begin <= " + str(self.currentrevision)
         sqlin += " AND CASE WHEN lpk_revision_end IS NOT NULL THEN "
         sqlin += " lpk_revision_end > " + str(self.currentrevision)

@@ -160,9 +160,8 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         self.currenttoolwidget = None
         self.imagedirectory = None
         self.currentchoosertreewidget = None
-        self.toolbarsvisibility = (
-            {}
-        )  # store qgis tool bar visibility when entering/exiting field mode
+        # store qgis tool bar visibility when entering/exiting field mode
+        self.toolbarsvisibility = {}
 
         # subdialogs
         self.newDBDialog = newDBDialog()
@@ -179,6 +178,7 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
             self.imagedirectory = None
 
         # ************** Init actions ******************
+        self._manageQgisDockWidgetOnStart()
         self._connectMenuAndOthers()
         self._connectToolBar()
         self._readRecentDBase()
@@ -225,7 +225,7 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         pass
         """
         # dialog with dbtype, worktype, vartype  chooser
-        self.newDBDialog.comboBox_type.currentIndexChanged.emit(0)
+        # self.newDBDialog.comboBox_type.currentIndexChanged.emit(0)
         self.newDBDialog.exec_()
         dbtype, worktype, vartype = self.newDBDialog.dialogIsFinished()
         if dbtype is None:
@@ -364,6 +364,7 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         QApplication.processEvents()
         self.connector.closeProgressBar()
         self._AddDbaseInRecentsDBase(self.dbase)
+
         self.loadToolsClasses()
         self.loadToolsWidgets()
 
@@ -619,9 +620,9 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         except:
             pass
         self.comboBox_style.clear()
-        stylepath = os.path.join(
-            os.path.dirname(Lamia.__file__), "DBASE", "style", self.dbase.worktype
-        )
+
+        stylepath = self.qgiscanvas._getStyleDirectory(self.dbase.worktype)
+
         styledirs = [x[1] for x in os.walk(stylepath) if len(x[1]) > 0]
         if len(styledirs) > 0:
             styledirs = styledirs[0]
@@ -689,60 +690,44 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
                 self.loadToolsWidgets(fullloading=True)
 
         self._applyVisualMode()
-        if self.interfacemode == 0:
-            self._unloadQgisToolbar()
-        else:
-            self._reloadQgisToolbar()
-
-    def _unloadQgisToolbar(self):
-        if not qgis.utils.iface:
-            return
-
-        for x in qgis.utils.iface.mainWindow().findChildren(QToolBar):
-            self.toolbarsvisibility[x.objectName()] = x.isVisible()
-            if x.objectName() not in [
-                "Lamia",
-                "mFileToolBar",
-                "mSnappingToolBar",
-                "lamiatoolBarFormCreation",
-                "lamiatoolBarFormGeom",
-                "lamiatoolbareditlayer",
-                "lamiatoolBartools",
-            ]:
-                x.setVisible(False)
-
-    def _reloadQgisToolbar(self):
-        if not qgis.utils.iface:
-            return
-        if not len(self.toolbarsvisibility):
-            return
-        for x in qgis.utils.iface.mainWindow().findChildren(QToolBar):
-            if x.objectName() in self.toolbarsvisibility.keys():
-                x.setVisible(self.toolbarsvisibility[x.objectName()])
-        self.toolbarsvisibility = {}
 
     def _applyVisualMode(self, actiontext=None):
 
-        for tooltype in self.toolwidgets.keys():
-            if tooltype == "desktop_loaded":
-                continue
-            for toolname in self.toolwidgets[tooltype].keys():
-                toolwdg = self.toolwidgets[tooltype][toolname]
-                if isinstance(toolwdg, list):
-                    for wdg in toolwdg:
-                        # tool dep
-                        if hasattr(wdg, "changeInterfaceMode"):
-                            wdg.changeInterfaceMode()
-                        else:
-                            wdg.changePropertiesWidget()
-                else:
-                    # tool dep
-                    if hasattr(toolwdg, "changeInterfaceMode"):
-                        toolwdg.changeInterfaceMode()
+        if self.dbase.base3version:
+            for toolname in self.toolwidgets.keys():
+                if toolname == "desktop_loaded":
+                    continue
+                toolwdg = self.toolwidgets[toolname]
+                toolwdg.changeInterfaceMode()
+
+        else:
+            for tooltype in self.toolwidgets.keys():
+                if tooltype == "desktop_loaded":
+                    continue
+
+                for toolname in self.toolwidgets[tooltype].keys():
+                    toolwdg = self.toolwidgets[tooltype][toolname]
+                    if isinstance(toolwdg, list):
+                        for wdg in toolwdg:
+                            # tool dep
+                            if hasattr(wdg, "changeInterfaceMode"):
+                                wdg.changeInterfaceMode()
+                            else:
+                                wdg.changePropertiesWidget()
                     else:
-                        toolwdg.changePropertiesWidget()
+                        # tool dep
+                        if hasattr(toolwdg, "changeInterfaceMode"):
+                            toolwdg.changeInterfaceMode()
+                        else:
+                            toolwdg.changePropertiesWidget()
 
     def loadToolsClasses(self):
+        if self.dbase.base3version:
+            self.loadToolsClassesBase3()
+        else:
+            self.loadToolsClassesBase2()
+
+    def loadToolsClassesBase2(self):
         """
         Load layers and put them in a legend group in qgis
         Load all modules (prepro, postpro and menu)
@@ -818,7 +803,75 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         if debug:
             logging.getLogger("Lamia_unittest").debug("x %s", str(self.wdgclasses))
 
+    def loadToolsClassesBase3(self):
+        """
+        Load layers and put them in a legend group in qgis
+        Load all modules (prepro, postpro and menu)
+        Show field ui
+
+        :return:
+        """
+
+        debug = False
+        if debug:
+            logging.getLogger("Lamia").debug("start")
+
+        # tooltypestoload = ["toolprepro", "toolpostpro"]
+
+        modulelistpath = [
+            "Lamia",
+            "worktypeconf",
+            self.dbase.worktype.lower(),
+            "qgswidgets",
+        ]
+
+        path = os.path.join(
+            os.path.dirname(Lamia.__file__), "..", "//".join(modulelistpath)
+        )
+
+        pyfilespath = glob.glob(path + "/*.py")
+        pyfiles = [os.path.basename(f)[:-3] for f in pyfilespath if os.path.isfile(f)]
+        for x in pyfiles:
+            if debug:
+                logging.getLogger("Lamia_unittest").debug("x %s", x)
+            classlistpath = modulelistpath + [x]
+            modulename = ".".join(classlistpath)
+            moduletemp = importlib.import_module(modulename)
+
+            for name, obj in inspect.getmembers(moduletemp, inspect.isclass):
+                if moduletemp.__name__ == obj.__module__:
+                    if (
+                        hasattr(obj, "POSTPROTOOLNAME")
+                        and obj.POSTPROTOOLNAME is not None
+                    ):
+                        self.wdgclasses[obj.POSTPROTOOLNAME] = {
+                            "class": obj,
+                            "type": "postpro",
+                            "loaded": False,
+                            "loadfirst": True
+                            if hasattr(obj, "LOADFIRST") and obj.LOADFIRST
+                            else False,
+                        }
+                    elif (
+                        hasattr(obj, "PREPROTOOLNAME")
+                        and obj.PREPROTOOLNAME is not None
+                    ):
+                        self.wdgclasses[obj.PREPROTOOLNAME] = {
+                            "class": obj,
+                            "type": "prepro",
+                            "loaded": False,
+                            "loadfirst": True
+                            if hasattr(obj, "LOADFIRST") and obj.LOADFIRST
+                            else False,
+                        }
+
     def loadToolsWidgets(self, fullloading=False):
+        if self.dbase.base3version:
+            self.loadToolsWidgetsBase3(fullloading)
+        else:
+            self.loadToolsWidgetsBase2(fullloading)
+
+    def loadToolsWidgetsBase2(self, fullloading=False):
 
         debug = False
         typeswdg = ["toolprepro", "toolpostpro"]
@@ -909,6 +962,147 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
                     # raise TypeError
                 i += 1
                 self.connector.updateProgressBar(i)
+
+        if not self.toolwidgets["desktop_loaded"] and fullloading:
+            self.toolwidgets["desktop_loaded"] = True
+        self.connector.closeProgressBar()
+
+    def loadToolsWidgetsBase3(self, fullloading=False):
+
+        debug = False
+
+        lenprogresspartialloading = len(
+            list(
+                [
+                    elem["loadfirst"]
+                    for elem in self.wdgclasses.values()
+                    if elem["loadfirst"]
+                ]
+            )
+        )
+        lenprogressfullloading = len(self.wdgclasses)
+        """
+        toopreprodict = self.wdgclasses["toolprepro"]
+        lenprogresspartialloading = len(
+            [
+                name
+                for name in toopreprodict.keys()
+                if hasattr(toopreprodict[name], "LOADFIRST")
+                and toopreprodict[name].LOADFIRST
+            ]
+        )
+        lenprogressfullloading = len(self.wdgclasses["toolprepro"]) + len(
+            self.wdgclasses["toolpostpro"]
+        )
+        """
+        # print(lenprogresspartialloading)
+
+        creationstring = self.tr("Loading widgets...")
+        if fullloading:
+            self.connector.createProgressBar(
+                creationstring, lenprogressfullloading - lenprogresspartialloading
+            )
+        else:
+            self.connector.createProgressBar(creationstring, lenprogresspartialloading)
+
+        i = 0
+
+        for wdgname, wdgvalues in self.wdgclasses.items():
+            if not fullloading and wdgvalues["type"] == "postpro":
+                continue
+            if wdgname in self.toolwidgets.keys():
+                continue
+
+            if debug:
+                logging.getLogger("Lamia_unittest").debug("loading %s", wdgname)
+
+            if (
+                wdgvalues["type"] == "prepro"
+                and wdgvalues["loadfirst"]
+                and not fullloading
+            ):
+                self.toolwidgets[wdgname] = wdgvalues["class"](
+                    dbaseparser=self.dbase,
+                    mainifacewidget=self,
+                    choosertreewidget=self.ElemtreeWidget,
+                    parentwidget=None,
+                )
+            else:
+                self.toolwidgets[wdgname] = wdgvalues["class"](
+                    dbaseparser=self.dbase,
+                    mainifacewidget=self,
+                    choosertreewidget=self.ElemtreeWidget,
+                    parentwidget=None,
+                )
+            i += 1
+            self.connector.updateProgressBar(i)
+
+        """
+        for typewdg in typeswdg:
+            if not fullloading and typewdg == "toolpostpro":
+                continue
+            if not typewdg in self.toolwidgets.keys():
+                self.toolwidgets[typewdg] = {}
+            for toolname in self.wdgclasses[typewdg].keys():
+                if toolname in self.toolwidgets[typewdg].keys():
+                    continue
+                if debug:
+                    logging.getLogger("Lamia_unittest").debug("loading %s", toolname)
+                self.toolwidgets[typewdg][toolname] = []
+                toolwdglist = self.toolwidgets[typewdg][toolname]
+                toolwdgcls = self.wdgclasses[typewdg][toolname]
+                try:
+                    if (
+                        hasattr(self.wdgclasses[typewdg][toolname], "PREPROTOOLNAME")
+                        and not fullloading
+                    ):
+                        self.toolwidgets[typewdg][toolname] = toolwdgcls(
+                            dbaseparser=self.dbase,
+                            mainifacewidget=self,
+                            choosertreewidget=self.ElemtreeWidget,
+                            parentwidget=None,
+                        )
+
+                    elif (
+                        hasattr(self.wdgclasses[typewdg][toolname], "POSTPROTOOLNAME")
+                        and fullloading
+                    ):
+                        self.toolwidgets[typewdg][toolname] = toolwdgcls(
+                            dbaseparser=self.dbase,
+                            mainifacewidget=self,
+                            choosertreewidget=self.ElemtreeWidget,
+                            parentwidget=None,
+                        )
+
+                    elif (
+                        hasattr(self.wdgclasses[typewdg][toolname], "LOADFIRST")
+                        and not fullloading
+                    ):
+                        toolwdglist.append(
+                            toolwdgcls(
+                                dbase=self.dbase,
+                                dialog=self,
+                                linkedtreewidget=self.ElemtreeWidget,
+                                gpsutil=self.gpsutil,
+                            )
+                        )
+
+                    else:  # tool dep
+                        toolwdglist.append(
+                            toolwdgcls(
+                                dbase=self.dbase,
+                                dialog=self,
+                                linkedtreewidget=self.ElemtreeWidget,
+                                gpsutil=self.gpsutil,
+                            )
+                        )
+
+                except TypeError as e:
+                    print(toolname, e)
+                    # raise TypeError
+                i += 1
+                self.connector.updateProgressBar(i)
+        """
 
         if not self.toolwidgets["desktop_loaded"] and fullloading:
             self.toolwidgets["desktop_loaded"] = True
@@ -1116,14 +1310,58 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
             pass
         elif platform.system() == "Windows":
             subprocess.Popen(
-                f'explorer "{os.path.abspath(self.dbase.dbaseressourcesdirectory)}"'
+                f'explorer "{os.path.realpath(os.path.abspath(self.dbase.dbaseressourcesdirectory))}"'
             )
 
     def openLamiaDir(self):
         if platform.system() == "Linux":
             pass
         elif platform.system() == "Windows":
-            subprocess.Popen(f'explorer "{os.path.dirname(Lamia.__file__)}"')
+            subprocess.Popen(
+                f'explorer "{os.path.realpath(os.path.dirname(Lamia.__file__))}"'
+            )
+
+    def showHideQgisToolbars(self):
+        if not len(self.toolbarsvisibility):
+            self._unloadQgisToolbar()
+        else:
+            self._reloadQgisToolbar()
+
+    def _unloadQgisToolbar(self):
+        if not qgis.utils.iface:
+            return
+
+        for x in qgis.utils.iface.mainWindow().findChildren(QToolBar):
+            self.toolbarsvisibility[x.objectName()] = x.isVisible()
+            if x.objectName() not in [
+                "Lamia",
+                "mFileToolBar",
+                "mSnappingToolBar",
+                "lamiatoolBarFormCreation",
+                "lamiatoolBarFormGeom",
+                "lamiatoolbareditlayer",
+                "lamiatoolBartools",
+            ]:
+                x.setVisible(False)
+
+    def _reloadQgisToolbar(self):
+        if not qgis.utils.iface:
+            return
+        if not len(self.toolbarsvisibility):
+            return
+        for x in qgis.utils.iface.mainWindow().findChildren(QToolBar):
+            if x.objectName() in self.toolbarsvisibility.keys():
+                x.setVisible(self.toolbarsvisibility[x.objectName()])
+        self.toolbarsvisibility = {}
+
+    def _manageQgisDockWidgetOnStart(self):
+        if not qgis.utils.iface:
+            return
+        for x in qgis.utils.iface.mainWindow().findChildren(QDockWidget):
+            if x.objectName() == "GPSInformation":
+                x.setVisible(True)
+            elif x.objectName() == "LayerStyling":
+                x.setVisible(False)
 
     # *************************************************************
     # About menu
@@ -1155,6 +1393,7 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         self.actiontoolbarmagic.triggered.connect(self.toolbarMagic)
         self.actiontoolbarundo.triggered.connect(self.toolbarUndo)
         self.actiontoolbardelete.triggered.connect(self.toolbarDelete)
+        self.actiontoolbarzoomto.triggered.connect(self.toolbarZoomTo)
         self.actiontoolbarsave.triggered.connect(self.toolbarSave)
 
         self.actiontoobargeomnewpoint.triggered.connect(self.toolbarGeom)
@@ -1175,6 +1414,7 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
 
         self.actiontoolbartoolsprint.triggered.connect(self.printCurrentFormWidget)
         self.actiontoolbartoolsprint.setEnabled(False)
+        self.actiontoolbartoolscamera.triggered.connect(self.openCamera)
 
     def toolbarNew(self):
         logging.getLogger("Lamia_unittest").info("called")
@@ -1200,6 +1440,10 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
             self.currenttoolwidget.toolbarDelete()
         if self.currentchoosertreewidget:
             self.currentchoosertreewidget.toolbarDelete()
+
+    def toolbarZoomTo(self):
+        if self.currenttoolwidget and hasattr(self.currenttoolwidget, "toolbarZoomTo"):
+            self.currenttoolwidget.toolbarZoomTo()
 
     def toolbarSave(self):
         logging.getLogger("Lamia_unittest").info("called")
@@ -1235,6 +1479,13 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
     def printCurrentFormWidget(self):
         self.currenttoolwidget.printWidget()
 
+    def openCamera(self):
+
+        if platform.system() == "Linux":
+            pass
+        elif platform.system() == "Windows":
+            subprocess.run("start microsoft.windows.camera:", shell=True)
+
     # *************************************************************
     # menu
     # *************************************************************
@@ -1263,6 +1514,7 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         self.action_Repertoire_photo.triggered.connect(self.setImageDir)
         self.actionOpen_project_directory.triggered.connect(self.openProjectDir)
         self.actionOpen_Lamia_directory.triggered.connect(self.openLamiaDir)
+        self.actionShow_Hide_QGis_toolbars.triggered.connect(self.showHideQgisToolbars)
 
         # about menu
         self.actionAide.triggered.connect(self.openHelp)
@@ -1270,27 +1522,31 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
 
         # others
         self.pushButton_selectfeat.clicked.connect(self.selectFeature)
+        self.pushButton_qgspan.clicked.connect(self.panCanvas)
 
         # on exit qgis : restore toolbars
         if qgis.utils.iface is not None:
-            qgis.utils.iface.actionExit().triggered.connect(self._reloadQgisToolbar)
+            qgis.core.QgsProject.instance().cleared.connect(self._reloadQgisToolbar)
+
+    def panCanvas(self):
+        self.qgiscanvas.panCanvas()
 
     def selectFeature(self):
+
         pointemitter = self.qgiscanvas.pointEmitter
         try:
             pointemitter.canvasClicked.disconnect(self.selectPickedFeature)
         except TypeError:
             pass
-        try:
-            self.qgiscanvas.canvas.mapToolSet.disconnect(self.qgiscanvas.toolsetChanged)
-        except TypeError:
-            pass
+        # try:
+        #     self.qgiscanvas.canvas.mapToolSet.disconnect(self.qgiscanvas.toolsetChanged)
+        # except TypeError:
+        #     pass
         pointemitter.canvasClicked.connect(self.selectPickedFeature)
-        self.qgiscanvas.canvas.mapToolSet.connect(self.qgiscanvas.toolsetChanged)
+        # self.qgiscanvas.canvas.mapToolSet.connect(self.qgiscanvas.toolsetChanged)
         self.qgiscanvas.canvas.setMapTool(pointemitter)
 
     def selectPickedFeature(self, point, tablename=None):
-
         debug = False
         if debug:
             logging.getLogger("Lamia_unittest").debug("Start %s", str(point))
@@ -1310,6 +1566,10 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         parentwdg = self.currenttoolwidget
         while parentwdg.parentWidget is not None:
             parentwdg = parentwdg.parentWidget
+
+        if hasattr(parentwdg, "selectPickedFeature"):
+            parentwdg.selectPickedFeature(point)
+            return
 
         if not (
             hasattr(parentwdg, "DBASETABLENAME")

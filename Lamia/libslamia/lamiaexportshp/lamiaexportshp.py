@@ -25,114 +25,134 @@ This file is part of LAMIA.
  """
 
 
-
-
 import os, importlib
 from collections import OrderedDict
 import sys, glob, inspect, logging, textwrap
+import Lamia
 
 import qgis
 from qgis.PyQt import QtGui, uic, QtCore, QtXml
 
 
+class ExportShapefileCore:
 
-class ExportShapefileCore():
+    POSTPROTOOLNAME = "exporttools"
 
-    POSTPROTOOLNAME = 'exporttools'
-
-    def __init__(self, dbaseparser,messageinstance=None):
-        #super(ExportShapefileTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil, parentwidget, parent=parent)
+    def __init__(self, dbaseparser, messageinstance=None):
+        # super(ExportShapefileTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil, parentwidget, parent=parent)
         self.dbase = dbaseparser
         self.messageinstance = messageinstance
-        self.tooldir = os.path.join(os.path.dirname(__file__), self.dbase.worktype.lower())
+        if self.dbase.base3version:
+            self.tooldir = os.path.join(
+                os.path.dirname(Lamia.__file__),
+                "worktypeconf",
+                self.dbase.worktype.lower(),
+                "lamiaexportshp",
+            )
+        else:
+            self.tooldir = os.path.join(
+                os.path.dirname(__file__), self.dbase.worktype.lower()
+            )
 
-        self.confdataplugin = os.path.join(os.path.dirname(__file__), self.dbase.worktype.lower())
-        self.confdataproject = os.path.join(self.dbase.dbaseressourcesdirectory, 'config', self.POSTPROTOOLNAME)
-
-
+        self.confdataplugin = self.tooldir
+        self.confdataproject = os.path.join(
+            self.dbase.dbaseressourcesdirectory, "config", self.POSTPROTOOLNAME
+        )
 
     def runExport(self, destinationshapefile, exportconffilepath, pkzonegeos=[]):
 
         debug = False
-        #shpfile = self.userwdgfield.lineEdit_nom.text()
-        #shpfile = destinationshapefile
-        #tabletype = self.userwdgfield.comboBox_type.currentText()
+        # shpfile = self.userwdgfield.lineEdit_nom.text()
+        # shpfile = destinationshapefile
+        # tabletype = self.userwdgfield.comboBox_type.currentText()
         if False:
             tabletype = self.filemanager.getCurrentText()
             tabletypepath = self.filemanager.getCurrentPath()
-        if os.path.isfile(exportconffilepath):  #complete path is given in exportconffilepath
+        if os.path.isfile(
+            exportconffilepath
+        ):  # complete path is given in exportconffilepath
             tabletypepath = exportconffilepath
-        else:   #just filename is given in exportconffilepath
-            tabletypepath = os.path.join(self.tooldir, exportconffilepath + '.txt')
+        else:  # just filename is given in exportconffilepath
+            tabletypepath = os.path.join(self.tooldir, exportconffilepath + ".txt")
 
-        #tabletype = os.path.basename(tabletypepath)
+        # tabletype = os.path.basename(tabletypepath)
 
-        #self.pdffile = destinationshapefile
+        # self.pdffile = destinationshapefile
         self.champs = self.readChamp(tabletypepath)
 
         self.fieldsforshp = self.buildQgsFields(self.champs)
         sql = self.buildSql(self.champs, pkzonegeos)
-        if debug: logging.getLogger('Lamia').debug('sql %s', sql)
+        if debug:
+            logging.getLogger("Lamia").debug("sql %s", sql)
 
         query = self.dbase.query(sql)
         if query is None:
             return
 
         self.result = [list(row) for row in query]
-        if debug: logging.getLogger('Lamia').debug('result %s', str(self.result))
-        #Lamia.libslamia.lamiaexportshp
-        strtoexec = '..{}.lamiaexportshpworktypefunc'.format(self.dbase.worktype.lower())
+        if debug:
+            logging.getLogger("Lamia").debug("result %s", str(self.result))
+        # Lamia.libslamia.lamiaexportshp
+
+        if self.dbase.base3version:
+            strtoexec = f"Lamia.worktypeconf.{self.dbase.worktype.lower()}.lamiaexportshp.lamiaexportshpworktypefunc"
+        else:
+            strtoexec = f"..{self.dbase.worktype.lower()}.lamiaexportshpworktypefunc"
+
         mymodule = importlib.import_module(strtoexec, package=self.__module__)
         mymodule.exportMethod(self)
 
-        #self.postprepareData(tabletype)
+        # self.postprepareData(tabletype)
 
-        if debug: logging.getLogger('Lamia').debug('result post : %s', str(self.result))
+        if debug:
+            logging.getLogger("Lamia").debug("result post : %s", str(self.result))
         geomtype = qgis.core.QgsWkbTypes.NoGeometry
         for table in self.champs:
-            if 'main' == table['table']:
-                champmain = table['sql']
+            if "main" == table["table"]:
+                champmain = table["sql"]
 
         for table in self.champs:
-            if 'geom' in table['table']:
-                sqlgeom = table['fields']['geom']['value']
-                if 'ST_AsText(' in sqlgeom :
-                    geomval = sqlgeom.split('ST_AsText(')[1][:-1]
+            if "geom" in table["table"]:
+                sqlgeom = table["fields"]["geom"]["value"]
+                if "ST_AsText(" in sqlgeom:
+                    geomval = sqlgeom.split("ST_AsText(")[1][:-1]
                     print(geomval)
-                else :
-                    geomval = 'geom'
+                else:
+                    geomval = "geom"
 
                 try:
-                    sql = ' SELECT ST_GeometryType(St_MakeValid(' + geomval + ')) ' + champmain
+                    sql = (
+                        " SELECT ST_GeometryType(St_MakeValid("
+                        + geomval
+                        + ")) "
+                        + champmain
+                    )
                     sql = self.dbase.updateQueryTableNow(sql)
                     res = self.dbase.query(sql)[0][0]
                 except (TypeError, IndexError) as e:
-                    sql = ' SELECT ST_GeometryType(' + geomval + ') ' + champmain
+                    sql = " SELECT ST_GeometryType(" + geomval + ") " + champmain
                     sql = self.dbase.updateQueryTableNow(sql)
                     print(e)
                     res = self.dbase.query(sql)
                     if res:
                         res = res[0][0]
 
-                if res == 'LINESTRING':
+                if res == "LINESTRING":
                     geomtype = qgis.core.QgsWkbTypes.LineString
-                elif res == 'POINT':
+                elif res == "POINT":
                     geomtype = qgis.core.QgsWkbTypes.Point
 
-        self.fillShapefile(destinationshapefile,
-                           geomtype,
-                           self.fieldsforshp,
-                           self.champs,
-                           self.result)
-
+        self.fillShapefile(
+            destinationshapefile, geomtype, self.fieldsforshp, self.champs, self.result
+        )
 
     def new(self, confpath):
-        
+
         if not os.path.exists(self.confdataproject):
             os.mkdir(self.confdataproject)
 
-        conf_file = open(confpath, 'w', encoding="utf-8")
-        conftxt =   """
+        conf_file = open(confpath, "w", encoding="utf-8")
+        conftxt = """
                     # les lignes de commentaires commencent par #
                     
                     # la requete sql créée est formée ainsi :
@@ -178,10 +198,7 @@ class ExportShapefileCore():
         conf_file.write(textwrap.dedent(conftxt))
         conf_file.close()
 
-
-
-
-    def readChamp(self,table):
+    def readChamp(self, table):
         """
 
         :param table:
@@ -198,178 +215,185 @@ class ExportShapefileCore():
         champs = []
         filename = table
 
-        file = open(filename, 'r',encoding="utf-8")
+        file = open(filename, "r", encoding="utf-8")
         compt = 0
         actualtable = None
         for line in file:
             if len(line.strip()) == 0:
                 continue
-
-
-            if line[0:3] == '###':          # new field
+            if line[0:3] == "###":  # new field
                 line = line[3:].strip()
-                if debug: logging.getLogger("Lamia").debug('fieldname %s', line)
+                if debug:
+                    logging.getLogger("Lamia").debug("fieldname %s", line)
                 actualtable = line
                 champs.append({})
-                champs[-1]['table'] = actualtable
-                champs[-1]['sql'] = None
-                champs[-1]['fields'] = OrderedDict()
-            elif line[0:2] == '##':         # parent field constraint name
-                champs[-1]['sql'] = [ssline.strip() for ssline in line[2:].split(';')]
-            elif line[0] == '#':            # comment - pass
+                champs[-1]["table"] = actualtable
+                champs[-1]["sql"] = None
+                champs[-1]["fields"] = OrderedDict()
+            elif line[0:2] == "##":  # parent field constraint name
+                champs[-1]["sql"] = [ssline.strip() for ssline in line[2:].split(";")]
+            elif line[0] == "#":  # comment - pass
                 continue
-            else:                           # field constraint
-                if actualtable not in ['main','with']:
-                    linesplit = line.split(';')
-                    champs[-1]['fields'][linesplit[0].strip()] = {}
-                    if linesplit[1].strip() != '':
-                        champs[-1]['fields'][linesplit[0].strip()]['type'] = linesplit[1].strip()
+            else:  # field constraint
+                if actualtable not in ["main", "with"]:
+                    linesplit = line.split(";")
+                    champs[-1]["fields"][linesplit[0].strip()] = {}
+                    if linesplit[1].strip() != "":
+                        champs[-1]["fields"][linesplit[0].strip()]["type"] = linesplit[
+                            1
+                        ].strip()
                     else:
-                        champs[-1]['fields'][linesplit[0].strip()]['type'] = None
-                    if linesplit[2].strip() != '':
-                        champs[-1]['fields'][linesplit[0].strip()]['cst'] = linesplit[2].strip()
+                        champs[-1]["fields"][linesplit[0].strip()]["type"] = None
+                    if linesplit[2].strip() != "":
+                        champs[-1]["fields"][linesplit[0].strip()]["cst"] = linesplit[
+                            2
+                        ].strip()
                     else:
-                        champs[-1]['fields'][linesplit[0].strip()]['cst'] = None
-                    if linesplit[3].strip() != '':
-                        champs[-1]['fields'][linesplit[0].strip()]['value'] = linesplit[3].strip()
+                        champs[-1]["fields"][linesplit[0].strip()]["cst"] = None
+                    if linesplit[3].strip() != "":
+                        champs[-1]["fields"][linesplit[0].strip()]["value"] = linesplit[
+                            3
+                        ].strip()
                     else:
-                        champs[-1]['fields'][linesplit[0].strip()]['value'] = None
+                        champs[-1]["fields"][linesplit[0].strip()]["value"] = None
 
-                    if len(linesplit) == 5 and linesplit[4].strip() != '':
-                        champs[-1]['fields'][linesplit[0].strip()]['as'] = linesplit[4].strip()
+                    if len(linesplit) == 5 and linesplit[4].strip() != "":
+                        champs[-1]["fields"][linesplit[0].strip()]["as"] = linesplit[
+                            4
+                        ].strip()
                     else:
-                        champs[-1]['fields'][linesplit[0].strip()]['as'] = None
+                        champs[-1]["fields"][linesplit[0].strip()]["as"] = None
                 else:
-                    champs[-1]['sql'] = line.strip()
+                    champs[-1]["sql"] = line.strip()
             compt += 1
 
         file.close()
         return champs
 
-
-    def testIfZonegeoPk(self,**kwargs):
-        champs = kwargs.get('champs',None)
-        champsfile = kwargs.get('champsfile',None)
+    def testIfZonegeoPk(self, **kwargs):
+        champs = kwargs.get("champs", None)
+        champsfile = kwargs.get("champsfile", None)
 
         if champs is None and champsfile is not None:
             champs = self.readChamp(champsfile)
-        pkzonegeoinchamps=False
+        pkzonegeoinchamps = False
         for dictchamp in champs:
-            if 'zonegeo' in dictchamp['table'].lower():
-                if 'pk_zonegeo' in dictchamp['fields'].keys():
+            if "zonegeo" in dictchamp["table"].lower():
+                if "pk_zonegeo" in dictchamp["fields"].keys():
                     pkzonegeoinchamps = True
                     break
 
         return pkzonegeoinchamps
 
-    def buildSql(self,champs, pkzonegeos):
+    def buildSql(self, champs, pkzonegeos):
 
         debug = False
 
-        sql = ''
-
+        sql = ""
 
         for i, table in enumerate(champs):
-            if table['table']  in [ 'with']:
-                sql += champs['with']
+            if table["table"] in ["with"]:
+                sql += champs["with"]
 
-        sql += ' SELECT '
+        sql += " SELECT "
         for table in champs:
-            if table['table'] not in ['main','with']:
-                for i, name in enumerate(table['fields'].keys()):
-                    attr = table['fields'][name]
-                    if attr['value'] is None:
-                        sql += 'NULL, '
+            if table["table"] not in ["main", "with"]:
+                for i, name in enumerate(table["fields"].keys()):
+                    attr = table["fields"][name]
+                    if attr["value"] is None:
+                        sql += "NULL, "
                     else:
-                        if table['sql'] is None:
-                            sql += attr['value'] + ', '
+                        if table["sql"] is None:
+                            sql += attr["value"] + ", "
                         else:
                             sql += "( SELECT "
-                            sql += attr['value'] + ' '
-                            sql += table['sql'][0]
-                            if len(table['sql'])>1:
-                                sql += ' ' + table['sql'][1]
-                            sql += '), '
-                    if table['fields'][name]['as'] is not None :
-                        sql = sql[:-2] + " AS " + table['fields'][name]['as'] + ", "
-
+                            sql += attr["value"] + " "
+                            sql += table["sql"][0]
+                            if len(table["sql"]) > 1:
+                                sql += " " + table["sql"][1]
+                            sql += "), "
+                    if table["fields"][name]["as"] is not None:
+                        sql = sql[:-2] + " AS " + table["fields"][name]["as"] + ", "
 
         sql = sql[:-2]
 
         for i, table in enumerate(champs):
-            if table['table']  in [ 'main']:
-                sql += ' ' + table['sql']
+            if table["table"] in ["main"]:
+                sql += " " + table["sql"]
                 champmain = table
 
-        if debug: logging.getLogger("Lamia").debug('sql before now : %s ', sql)
+        if debug:
+            logging.getLogger("Lamia").debug("sql before now : %s ", sql)
         sql = self.dbase.updateQueryTableNow(sql)
-        if debug : logging.getLogger("Lamia").debug('sql after  now : %s ',sql )
+        if debug:
+            logging.getLogger("Lamia").debug("sql after  now : %s ", sql)
 
         # export by zonegeo
-        #boundinggeom = None
+        # boundinggeom = None
         if False:
-            if len(self.dbase.dbasetables['Zonegeo']['layerqgis'].selectedFeatures()) >= 1:
+            if (
+                len(self.dbase.dbasetables["Zonegeo"]["layerqgis"].selectedFeatures())
+                >= 1
+            ):
                 fetids = []
-                currentfeats = self.dbase.dbasetables['Zonegeo']['layerqgis'].selectedFeatures()
+                currentfeats = self.dbase.dbasetables["Zonegeo"][
+                    "layerqgis"
+                ].selectedFeatures()
                 for fet in currentfeats:
                     fetids.append(str(fet.id()))
 
-                if 'WHERE' in champmain['sql']:
-                    sql += " AND pk_zonegeo IN (" + ','.join(fetids) + ")"
+                if "WHERE" in champmain["sql"]:
+                    sql += " AND pk_zonegeo IN (" + ",".join(fetids) + ")"
                 else:
-                    sql += " WHERE pk_zonegeo IN (" + ','.join(fetids) + ")"
-        
-
+                    sql += " WHERE pk_zonegeo IN (" + ",".join(fetids) + ")"
 
         if len(pkzonegeos) > 0 and self.testIfZonegeoPk(champs=champs):
             pkzonegeos_str = [str(pk) for pk in pkzonegeos]
-            if 'WHERE' in champmain['sql']:
-                sql += " AND pk_zonegeo IN (" + ','.join(pkzonegeos_str) + ")"
+            if "WHERE" in champmain["sql"]:
+                sql += " AND pk_zonegeo IN (" + ",".join(pkzonegeos_str) + ")"
             else:
-                sql += " WHERE pk_zonegeo IN (" + ','.join(pkzonegeos_str) + ")"
-
-
+                sql += " WHERE pk_zonegeo IN (" + ",".join(pkzonegeos_str) + ")"
 
         return sql
-
-
 
     def buildQgsFields(self, champs):
         fields = qgis.core.QgsFields()
         for i, table in enumerate(champs):
-            if table['table'] not in ['geom', 'main', 'with']:
-                for j, name in enumerate(table['fields'].keys()):
+            if table["table"] not in ["geom", "main", "with"]:
+                for j, name in enumerate(table["fields"].keys()):
                     if name in [field.name() for field in fields]:
-                        self.messageinstance.showErrorMessage("ATTENTION Champ " + name + " deja utilise")
+                        self.messageinstance.showErrorMessage(
+                            "ATTENTION Champ " + name + " deja utilise"
+                        )
 
-                    typefield = eval('QtCore.QVariant.' + table['fields'][name]['type'])
+                    typefield = eval("QtCore.QVariant." + table["fields"][name]["type"])
                     fields.append(qgis.core.QgsField(name, typefield))
 
         return fields
-
-
 
     def fillShapefile(self, filename, typegeom, fields, champs, result):
 
         debug = False
 
         dbaseqgiscrs = qgis.core.QgsCoordinateReferenceSystem()
-        dbaseqgiscrs.createFromString('EPSG:' + str(self.dbase.crsnumber))
+        dbaseqgiscrs.createFromString("EPSG:" + str(self.dbase.crsnumber))
 
-        writer = qgis.core.QgsVectorFileWriter(filename,
-                                                'utf-8',
-                                                fields,
-                                                typegeom,
-                                                # qgis.core.QGis.WKBPoint,
-                                                # qgis.core.QGis.WKBLineString,
-                                                dbaseqgiscrs,
-                                                driverName="ESRI Shapefile")
-
+        writer = qgis.core.QgsVectorFileWriter(
+            filename,
+            "utf-8",
+            fields,
+            typegeom,
+            # qgis.core.QGis.WKBPoint,
+            # qgis.core.QGis.WKBLineString,
+            dbaseqgiscrs,
+            driverName="ESRI Shapefile",
+        )
 
         for row in result:
-            if debug: logging.getLogger('Lamia').debug('res %s', str(row))
+            if debug:
+                logging.getLogger("Lamia").debug("res %s", str(row))
             feat = qgis.core.QgsFeature(fields)
-            if typegeom != qgis.core.QgsWkbTypes.NoGeometry :
+            if typegeom != qgis.core.QgsWkbTypes.NoGeometry:
                 if row[-1] is not None:
                     feat.setGeometry(qgis.core.QgsGeometry.fromWkt(row[-1]))
                 else:
@@ -377,22 +401,29 @@ class ExportShapefileCore():
 
             compteur = -1
             for table in champs:
-                if table['table'] not in['geom', 'main', 'with' ] and 'postpro' not in table['table']:
-                    for i, name in enumerate(table['fields'].keys()):
+                if (
+                    table["table"] not in ["geom", "main", "with"]
+                    and "postpro" not in table["table"]
+                ):
+                    for i, name in enumerate(table["fields"].keys()):
                         compteur += 1
-                        if table['fields'][name]['cst'] is not None:
-                            feat[compteur] = self.dbase.getConstraintTextFromRawValue(table['table'],
-                                                                               table['fields'][name]['cst'],
-                                                                               row[compteur])
+                        if table["fields"][name]["cst"] is not None:
+                            feat[compteur] = self.dbase.getConstraintTextFromRawValue(
+                                table["table"],
+                                table["fields"][name]["cst"],
+                                row[compteur],
+                            )
                         else:
                             feat[compteur] = row[compteur]
-                elif 'postpro' in table['table']  :
+                elif "postpro" in table["table"]:
                     compteur += 1
                     feat[compteur] = row[compteur]
 
-            if debug: logging.getLogger('Lamia').debug('fet %s -  %s', str(feat.id()), str(feat.attributes()))
+            if debug:
+                logging.getLogger("Lamia").debug(
+                    "fet %s -  %s", str(feat.id()), str(feat.attributes())
+                )
             success = writer.addFeature(feat)
 
         del writer
-        self.messageinstance.showNormalMessage('Export termine')
-
+        self.messageinstance.showNormalMessage("Export termine")
