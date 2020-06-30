@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>683</width>
+    <width>799</width>
     <height>574</height>
    </rect>
   </property>
@@ -611,7 +611,7 @@ background-color: rgb(255, 255, 255);</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>683</width>
+     <width>799</width>
      <height>26</height>
     </rect>
    </property>
@@ -657,9 +657,15 @@ background-color: rgb(255, 255, 255);</string>
     <property name="title">
      <string>Settings</string>
     </property>
+    <widget class="QMenu" name="menuConnect_to_port">
+     <property name="title">
+      <string>Connect to port</string>
+     </property>
+    </widget>
     <addaction name="action_Repertoire_photo"/>
     <addaction name="separator"/>
     <addaction name="action_GPSConnection"/>
+    <addaction name="menuConnect_to_port"/>
     <addaction name="actionHauteur_de_perche_GPS"/>
     <addaction name="separator"/>
     <addaction name="actionReinitialier_prestation_courante"/>
@@ -753,6 +759,17 @@ background-color: rgb(255, 255, 255);</string>
     <bool>false</bool>
    </attribute>
    <addaction name="actiontoolbartoolsprint"/>
+  </widget>
+  <widget class="QToolBar" name="lamiatoolBarglobaltools">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
    <addaction name="actiontoolbartoolscamera"/>
   </widget>
   <action name="actionTre">

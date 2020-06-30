@@ -63,7 +63,6 @@ class newDBDialog(QDialog):
             basepath = os.path.join(wrktypedir, worktype, "dbase")
             if os.path.isdir(basepath):
                 finalworktype.append(worktype)
-        print(finalworktype)
         self.comboBox_type.addItems(finalworktype)
 
     def searchVar(self, comboindex):

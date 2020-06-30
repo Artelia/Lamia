@@ -137,6 +137,9 @@ class BaseLeveeEdgeTool(BaseEdgeTool):
             self.toolwidgetmain.comboBox_contitution.setEnabled(False)
             self.toolwidgetmain.dateEdit_datecontruct.setEnabled(False)
             self.toolwidgetmain.comboBox_etat_fonc.setEnabled(False)
+        elif self.dbase.variante in ["Lamia", None]:
+            self.propertieswdgProfile = BaseLeveeProfileTool(**self.instancekwargs)
+            self.dbasechildwdgfield.append(self.propertieswdgProfile)
 
     def initAdvancedToolWidget(self):
 
@@ -214,8 +217,8 @@ class BaseLeveeEdgeTool(BaseEdgeTool):
         else:
             self.propertieswdgPROFILLONG = None
 
-        if False:
-            self.propertieswdgPROFIL = BaseLeveeProfilelTool(**self.instancekwargs)
+        if True:
+            self.propertieswdgPROFIL = BaseLeveeProfileTool(**self.instancekwargs)
             self.dbasechildwdgdesktop.append(self.propertieswdgPROFIL)
 
         # actors
@@ -247,27 +250,7 @@ class BaseLeveeEdgeTool(BaseEdgeTool):
                 self.postSelectFeatureAdvanced()
 
     def postSelectFeatureAdvanced(self):
-        """
-        # * intervenants
-        # pkobjet
-        # sql = "SELECT id_objet FROM Infralineaire_qgis WHERE pk_infralineaire = " + str(self.currentFeaturePK)
-        # idobjet = self.dbase.query(sql)[0][0]
 
-        idobjet = self.dbase.getValuesFromPk(
-            "edge_qgis", "id_object", self.currentFeaturePK
-        )
-        sql = f"SELECT tcobjectactor.role, actor.actorname,actor.society  FROM tcobjectactor \
-                INNER JOIN actor ON tcobjectactor.lid_actor = actor.id_actor \
-                WHERE lid_object = {idobjet} "
-
-        # sql = "SELECT Tcobjetintervenant.fonction, Intervenant.nom,Intervenant.societe  FROM Tcobjetintervenant "
-        # sql += " INNER JOIN Intervenant ON Tcobjetintervenant.lid_intervenant = Intervenant.id_intervenant "
-        # sql += "WHERE lid_objet = " + str(idobjet)
-        query = self.dbase.query(sql)
-        result = "\n".join([str(row) for row in query])
-        self.toolwidgetadvanced.textBrowser_intervenants.clear()
-        self.toolwidgetadvanced.textBrowser_intervenants.append(result)
-        """
         # * photo
         lkressource = self.dbase.getValuesFromPk(
             "edge_qgis", "lid_resource_2", self.currentFeaturePK

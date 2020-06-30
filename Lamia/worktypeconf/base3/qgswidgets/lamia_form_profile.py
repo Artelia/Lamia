@@ -103,8 +103,6 @@ class BaseProfileTool(AbstractLamiaFormTool):
             "descriptionsystem": {"linkfield": "id_descriptionsystem", "widgets": {}},
         }
 
-        self.toolwidgetmain.comboBox_type.currentIndexChanged.connect(self.changeType)
-
         # child widgets
         self.dbasechildwdgfield = []
         self.instancekwargs["parentwidget"] = self
@@ -118,127 +116,60 @@ class BaseProfileTool(AbstractLamiaFormTool):
         self.propertieswdgPHOTO = BaseCameraTool(**self.instancekwargs)
         self.dbasechildwdgfield.append(self.propertieswdgPHOTO)
 
-    def postOnActivation(self):
-        pass
-
-    def postOnDesactivation(self):
-        pass
-
-    def setAsDefault(self):
-        if self.parentWidget.currentFeaturePK is not None:
-            if self.toolwidgetmain.stackedWidget.currentIndex() == 0:
-                currentwdg = self.propertieswdgCROQUIS
-            elif self.toolwidgetmain.stackedWidget.currentIndex() == 1:
-                currentwdg = self.propertieswdgGRAPH
-
-            if currentwdg.currentFeaturePK is not None:
-                # idressoruce
-                sql = (
-                    "SELECT id_ressource FROM "
-                    + currentwdg.DBASETABLENAME.lower()
-                    + "_qgis"
-                )
-                sql += (
-                    " WHERE pk_"
-                    + currentwdg.DBASETABLENAME.lower()
-                    + " = "
-                    + str(self.currentwdg.currentFeaturePK)
-                )
-                idressource = self.dbase.query(sql)[0][0]
-
-                pkparentfeature = self.parentWidget.currentFeaturePK
-
-                sql = (
-                    "UPDATE "
-                    + str(self.parentWidget.DBASETABLENAME.lower())
-                    + " SET  lid_ressource_4 = "
-                    + str(idressource)
-                )
-                sql += (
-                    " WHERE pk_"
-                    + str(self.parentWidget.DBASETABLENAME.lower())
-                    + " = "
-                    + str(pkparentfeature)
-                )
-
-                query = self.dbase.query(sql)
-                self.dbase.commit()
-
-    def changeType(self, comboint):
-        self.toolwidgetmain.stackedWidget.setCurrentIndex(comboint)
-
-    # def postInitFeatureProperties(self, feat):
     def postSelectFeature(self):
         if self.currentFeaturePK is None:
-            # datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
-            # self.initFeatureProperties(feat, 'Date', datecreation)
 
-            # datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
-            # self.initFeatureProperties(feat, self.DBASETABLENAME, 'date', datecreation)
             datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
             self.formutils.applyResultDict(
                 {"dateprofil": datecreation}, checkifinforgottenfield=False
             )
 
-            # if self.parentWidget is not None:
-            #    if self.parentWidget.DBASETABLENAME == 'Infralineaire' and self.parentWidget.currentFeaturePK is not None:
-            #        #parent id_dessys
-            #        sql = "SELECT id_descriptionsystem FROM Infralineaire_qgis WHERE pk_infralineaire = " + str(self.parentWidget.currentFeaturePK)
-            #        pkdessys = self.dbase.query(sql)[0][0]
-            #        # TODO
-            #        self.initFeatureProperties(self.currentFeature,'Profil', 'lid_descriptionsystem', pkdessys)
-            #        #self.formutils.applyResultDict({'date' : datecreation},checkifinforgottenfield=False)
+        # if self.parentWidget is None:
+        #     self.toolwidgetmain.pushButton_setasdefault.setEnabled(False)
+        # else:
+        #     self.toolwidgetmain.pushButton_setasdefault.setEnabled(True)
 
-    """
-    def createParentFeature(self):
-        pkobjet = self.dbase.createNewObjet()
-
-        if False:
-
-            # lastrevision = self.dbase.maxrevision
-            # datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
-            datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-            lastobjetid = self.dbase.getLastId('Objet') + 1
-            sql = "INSERT INTO Objet (id_objet, lpk_revision_begin, datetimecreation ) "
-            sql += "VALUES(" + str(lastobjetid) + "," + str(self.dbase.maxrevision) + ",'" + datecreation + "');"
-            query = self.dbase.query(sql)
-            self.dbase.commit()
-            pkobjet = self.dbase.getLastRowId('Objet')
-
-        # sql = "INSERT INTO Descriptionsystem (id_objet) VALUES(" + str(idobjet) + ");"
-        lastdescriptionsystemid = self.dbase.getLastId('Descriptionsystem') + 1
-        sql = "INSERT INTO Descriptionsystem (id_descriptionsystem, lpk_objet) "
-        sql += "VALUES(" + str(lastdescriptionsystemid) + "," + str(pkobjet) + ");"
-        query = self.dbase.query(sql)
-        self.dbase.commit()
-        pksys = self.dbase.getLastRowId('Descriptionsystem')
-
-        # idnoeud = self.currentFeature.id()
-        pkprofil = self.currentFeaturePK
-        lastidprofil = self.dbase.getLastId('Profil') + 1
-        sql = "UPDATE Profil SET id_profil = " + str(lastidprofil) + ","
-        sql += "lpk_descriptionsystem = " + str(pksys)
-        sql += " WHERE pk_profil = " + str(pkprofil)
-        query = self.dbase.query(sql)
-        self.dbase.commit()
-
-
-
-        if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
-            if self.parentWidget.DBASETABLENAME == 'Infralineaire':
-                # print(self.parentWidget.currentFeature.attributes())
-                #currentparentlinkfield = self.parentWidget.currentFeature['id_descriptionsystem']
-                #currentparentlinkfield
-                sql = "SELECT id_descriptionsystem FROM Profil_qgis WHERE pk_profil = " + str(pkprofil)
-                currentparentlinkfield = self.dabse.query(sql)[0][0]
-
-                sql = "UPDATE Profil SET lid_descriptionsystem = " + str(currentparentlinkfield) + " WHERE pk_profil = " + str(pkprofil) + ";"
-                query = self.dbase.query(sql)
-                self.dbase.commit()
-    """
+        # if self.parentWidget is not None:
+        #    if self.parentWidget.DBASETABLENAME == 'Infralineaire' and self.parentWidget.currentFeaturePK is not None:
+        #        #parent id_dessys
+        #        sql = "SELECT id_descriptionsystem FROM Infralineaire_qgis WHERE pk_infralineaire = " + str(self.parentWidget.currentFeaturePK)
+        #        pkdessys = self.dbase.query(sql)[0][0]
+        #        # TODO
+        #        self.initFeatureProperties(self.currentFeature,'Profil', 'lid_descriptionsystem', pkdessys)
+        #        #self.formutils.applyResultDict({'date' : datecreation},checkifinforgottenfield=False)
 
     def postSaveFeature(self, savedfeaturepk=None):
-        pass
+        self.setAsDefault()
+
+    def setAsDefault(self):
+        if self.parentWidget and self.parentWidget.currentFeaturePK is not None:
+
+            mainprofiletype = self.toolwidgetmain.comboBox_type.currentText()
+            rawval = self.dbase.getConstraintRawValueFromText(
+                "profile", "profiletype", mainprofiletype
+            )
+            if rawval == "GRA":
+                wdg = self.propertieswdgGRAPH
+                tbl = "graph"
+            elif rawval == "CRO":
+                wdg = self.propertieswdgCROQUIS
+                tbl = "media"
+            elif rawval == "PHO":
+                wdg = self.propertieswdgPHOTO
+                tbl = "media"
+
+            resourcepk = wdg.currentFeaturePK
+            if resourcepk is None:
+                idresource = "NULL"
+            else:
+                idresource = self.dbase.getValuesFromPk(
+                    f"{tbl}_qgis", "id_resource", resourcepk
+                )
+
+            sql = f"UPDATE {self.parentWidget.DBASETABLENAME} \
+                    SET  lid_resource_4 = {idresource} \
+                    WHERE pk_{self.parentWidget.DBASETABLENAME} = {self.parentWidget.currentFeaturePK}"
+            self.dbase.query(sql)
 
 
 class UserUI(QWidget):

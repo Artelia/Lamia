@@ -188,6 +188,9 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         if debug:
             logging.getLogger("Lamia").debug("end")
 
+        # ******* dev actions
+        self.hideDevQWidgets()
+
     # ***********************************************************
     # **************** File menu actions ***********************
     # ***********************************************************
@@ -1210,8 +1213,25 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         pass
 
     def connectToGPS(self):
+        # self.actionHauteur_de_perche_GPS
+        # ports = self.gpsutil.getAvailablePorts()
+        # for portname, portid in ports:
+        #     self.actionHauteur_de_perche_GPS.addAction(portname)
+        if True:
+            self.gpsutil.setCRS(self.qgiscanvas.dbaseqgiscrs)
+            success = self.gpsutil.connectToGPS()
+
+    def connectToPort(self):
+        self.menuConnect_to_port.clear()
+        ports = self.gpsutil.getAvailablePorts()
+        for portname, portid in ports:
+            newAct = QAction(portname, self)
+            self.menuConnect_to_port.addAction(newAct)
+            newAct.triggered.connect(self.portClicked)
+
+    def portClicked(self):
         self.gpsutil.setCRS(self.qgiscanvas.dbaseqgiscrs)
-        success = self.gpsutil.connectToGPS()
+        self.gpsutil.connectToPort(self.sender().text())
 
     def GPSconnected(self, success):
         if success:
@@ -1341,6 +1361,7 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
                 "lamiatoolBarFormGeom",
                 "lamiatoolbareditlayer",
                 "lamiatoolBartools",
+                "lamiatoolBarglobaltools",
             ]:
                 x.setVisible(False)
 
@@ -1509,6 +1530,7 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         self.actionPosttraitement.triggered.connect(self.setVisualMode)
         # settings menu
         self.actionHauteur_de_perche_GPS.triggered.connect(self.setHauteurPerche)
+        self.menuConnect_to_port.aboutToShow.connect(self.connectToPort)
         self.action_GPSConnection.triggered.connect(self.connectToGPS)
         self.gpsutil.GPSConnected.connect(self.GPSconnected)
         self.action_Repertoire_photo.triggered.connect(self.setImageDir)
@@ -1615,3 +1637,12 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         if self.currentchoosertreewidget is not None:
             self.currentchoosertreewidget.selectFeature(pk=nearestpk)
         """
+
+    def ____________devFeature(self):
+        pass
+
+    def hideDevQWidgets(self):
+        if qgis.utils.iface is None:
+            return
+
+        self.menuConnect_to_port.setEnabled(False)

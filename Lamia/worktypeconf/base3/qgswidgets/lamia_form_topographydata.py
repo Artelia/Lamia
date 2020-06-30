@@ -32,6 +32,9 @@ from qgis.PyQt import uic, QtGui, QtCore
 from qgis.PyQt.QtWidgets import QWidget
 
 from Lamia.iface.qgiswidget.tools.lamia_abstractformtool import AbstractLamiaFormTool
+from Lamia.iface.qgiswidget.tools.form_subwidgets.subwidget_gpsvalues import (
+    GpsValuesWidget,
+)
 
 
 class BaseTopographydataTool(AbstractLamiaFormTool):
@@ -45,7 +48,7 @@ class BaseTopographydataTool(AbstractLamiaFormTool):
     tooltreewidgetICONPATH = None
 
     PARENTJOIN = {
-        "Topography": {
+        "topography": {
             "colparent": "pk_topography",
             "colthistable": "lpk_topography",
             "tctable": None,
@@ -67,7 +70,7 @@ class BaseTopographydataTool(AbstractLamiaFormTool):
                     "topographydatatype": self.toolwidgetmain.comboBox_position,
                     "x": self.toolwidgetmain.doubleSpinBox_X,
                     "y": self.toolwidgetmain.doubleSpinBox_Y,
-                    "zmngf": self.toolwidgetmain.doubleSpinBox_Zngf,
+                    "zmngf": self.toolwidgetmain.doubleSpinBox_Z,
                     "dx": self.toolwidgetmain.doubleSpinBox_dX,
                     "dy": self.toolwidgetmain.doubleSpinBox_dY,
                     "dz": self.toolwidgetmain.doubleSpinBox_dZ,
@@ -81,6 +84,7 @@ class BaseTopographydataTool(AbstractLamiaFormTool):
 
         self.toolwidgetmain.pushButton_catchvalues.clicked.connect(self.getGPSValues)
 
+        """
         self.gpswidget = {
             "x": {"widget": self.toolwidgetmain.label_X, "gga": "Xcrs"},
             "y": {"widget": self.toolwidgetmain.label_Y, "gga": "Ycrs"},
@@ -96,6 +100,13 @@ class BaseTopographydataTool(AbstractLamiaFormTool):
                 "gga": "hauteurperche",
             },
         }
+        """
+
+        # * gpswidget
+        self.gpswidget = GpsValuesWidget(
+            parentwdg=self, parentframe=self.toolwidgetmain.frame_gps
+        )
+        self.lamiawidgets.append(self.gpswidget)
 
     def postSelectFeature(self):
         pass
@@ -124,8 +135,41 @@ class BaseTopographydataTool(AbstractLamiaFormTool):
                 self.mainifacewidget.errorMessage(
                     QtCore.QCoreApplication.translate("base3", "GPS not connected")
                 )
-                return
+                return False
 
+            self.assignValue(
+                self.gpswidget.label_X, self.toolwidgetmain.doubleSpinBox_X
+            )
+            self.assignValue(
+                self.gpswidget.label_dX, self.toolwidgetmain.doubleSpinBox_dX
+            )
+            self.assignValue(
+                self.gpswidget.label_Y, self.toolwidgetmain.doubleSpinBox_Y
+            )
+            self.assignValue(
+                self.gpswidget.label_dY, self.toolwidgetmain.doubleSpinBox_dY
+            )
+            self.assignValue(
+                self.gpswidget.label_Z, self.toolwidgetmain.doubleSpinBox_Z
+            )
+            self.assignValue(
+                self.gpswidget.label_dZ, self.toolwidgetmain.doubleSpinBox_dZ
+            )
+            # **
+            self.assignValue(
+                self.gpswidget.label_zgps, self.toolwidgetmain.doubleSpinBox_Zgps
+            )
+            self.assignValue(
+                self.gpswidget.label_hautperche,
+                self.toolwidgetmain.doubleSpinBox_hautperche,
+            )
+            self.assignValue(
+                self.gpswidget.label_zwgs84, self.toolwidgetmain.doubleSpinBox_Zwgs84
+            )
+            self.assignValue(
+                self.gpswidget.label_raf09, self.toolwidgetmain.doubleSpinBox_raf09
+            )
+            """
             for i, fieldname in enumerate(self.gpswidget.keys()):
                 try:
                     value = float(self.gpswidget[fieldname]["widget"].text())
@@ -141,12 +185,24 @@ class BaseTopographydataTool(AbstractLamiaFormTool):
                     ].setValue(-1.0)
 
             self.mainifacewidget.qgiscanvas.createorresetRubberband(0)
+            """
             self.setTempGeometry([self.mainifacewidget.gpsutil.currentpoint], False)
             return True
         else:
             self.errorMessage(
                 QtCore.QCoreApplication.translate("base3", "GPS not connected")
             )
+            return False
+
+    def assignValue(self, wdgfrom, wdgto):
+        if self.isfloat(wdgfrom.text()):
+            wdgto.setValue(float(wdgfrom.text()))
+
+    def isfloat(self, value):
+        try:
+            float(value)
+            return True
+        except ValueError:
             return False
 
 

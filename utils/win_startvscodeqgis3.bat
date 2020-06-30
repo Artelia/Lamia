@@ -1,6 +1,7 @@
 call %~dp0/win_setqgisenv.bat
 
-path %PATH%;C:\Program Files\Git\cmd;C:\Program Files\Docker\Docker\resources\bin;C:\Users\patrice.verchere\AppData\Local\Programs\Git\cmd;C:\ProgramData\DockerDesktop\version-bin
+path C:\Program Files\Git\cmd;%UserProfile%\AppData\Local\Programs\Git\cmd;%PATH%
+path C:\Program Files\Docker\Docker\resources\bin;C:\ProgramData\DockerDesktop\version-bin;%PATH%
 
 
 REM save my life !!!

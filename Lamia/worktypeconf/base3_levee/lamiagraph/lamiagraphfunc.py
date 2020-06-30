@@ -137,7 +137,7 @@ def PTR(mplfigure,pdgraphdata):
         Zgraph = [0.0]
         typepartie = []
 
-        print(pdgraphdata)
+        # print(pdgraphdata)
 
         for i in range(len(pdgraphdata)):
             try:

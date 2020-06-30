@@ -33,6 +33,10 @@ from qgis.PyQt.QtWidgets import QWidget
 
 from Lamia.iface.qgiswidget.tools.lamia_abstractformtool import AbstractLamiaFormTool
 from .lamia_form_topographydata import BaseTopographydataTool
+from Lamia.iface.qgiswidget.tools.form_subwidgets.subwidget_gpsvalues import (
+    GpsValuesWidget,
+)
+
 
 base3 = QtCore.QObject()
 
@@ -90,6 +94,7 @@ class BaseTopographyTool(AbstractLamiaFormTool):
             ]["Cst"]
         ]
         self.toolwidgetmain.comboBox_typepoints.addItems(typpointlist)
+        """
         self.gpswidget = {
             "x": {"widget": self.toolwidgetmain.label_X, "gga": "Xcrs"},
             "y": {"widget": self.toolwidgetmain.label_Y, "gga": "Ycrs"},
@@ -105,7 +110,7 @@ class BaseTopographyTool(AbstractLamiaFormTool):
                 "gga": "hauteurperche",
             },
         }
-
+        """
         # ****************************************************************************************
         # child widgets
         self.instancekwargs["parentwidget"] = self
@@ -116,6 +121,12 @@ class BaseTopographyTool(AbstractLamiaFormTool):
             "base3", "Topographic point"
         )
         self.dbasechildwdgfield.append(self.propertieswdgPOINTTOPO)
+
+        # * gpswidget
+        self.gpswidget = GpsValuesWidget(
+            parentwdg=self, parentframe=self.toolwidgetmain.frame_gps
+        )
+        self.lamiawidgets.append(self.gpswidget)
 
     def postSaveFeature(self, savedfeaturepk=None):
 
@@ -163,6 +174,15 @@ class BaseTopographyTool(AbstractLamiaFormTool):
             os.startfile(filepath)
 
     def ajoutPointGPS(self):
+        self.propertieswdgPOINTTOPO.toolbarNew()
+        self.propertieswdgPOINTTOPO.getGPSValues()
+        self.propertieswdgPOINTTOPO.toolwidgetmain.comboBox_position.setCurrentIndex(
+            self.toolwidgetmain.comboBox_typepoints.currentIndex()
+        )
+        # self.lastPhoto()
+        # self.toolbarGeomAddGPS()
+        self.propertieswdgPOINTTOPO.toolbarSave()
+        """
         self.propertieswdgPOINTTOPO.featureSelected()
         self.propertieswdgPOINTTOPO.userwdg.comboBox_position.setCurrentIndex(
             self.userwdg.comboBox_typepoints.currentIndex()
@@ -170,6 +190,7 @@ class BaseTopographyTool(AbstractLamiaFormTool):
         success = self.propertieswdgPOINTTOPO.getGPSValues()
         if success:
             self.propertieswdgPOINTTOPO.saveFeature()
+        """
 
     def importer(self):
         pass
