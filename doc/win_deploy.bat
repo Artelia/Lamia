@@ -1,13 +1,4 @@
-REM SET OSGEO4W_ROOT=C:\OSGeo4W64
-SET OSGEO4W_ROOT=C:\Program Files\OSGeo4W64-310
-
-cd %OSGEO4W_ROOT%
-@echo off
-call "%OSGEO4W_ROOT%\bin\o4w_env.bat"
-@echo on
-call py3_env.bat
-call qt5_env.bat
-@echo on
+call %~dp0/../utils/win_setqgisenv.bat
 
 del  /Q /S %~dp0\build\
 
