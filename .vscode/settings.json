@@ -1,8 +1,5 @@
 {
-
     "python.pythonPath": "C:\\PROGRA~1\\QGIS31~1.6\\bin\\python3.exe",
     "python.linting.enabled": false,
     "restructuredtext.confPath": "${workspaceFolder}\\doc\\source",
-     "http.proxy": "http://proxy-a.arteliagroup:3128",
-     "https.proxy": "http://proxy-a.arteliagroup:3128",
 }
