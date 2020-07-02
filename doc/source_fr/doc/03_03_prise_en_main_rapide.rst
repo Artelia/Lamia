@@ -1,6 +1,6 @@
 
-Prise en main rapide
-##################################
+Prise en main rapide - premiere utilisation "au bureau"
+################################################################
 
 Cette partie contient le minimum à savoir avant d’utiliser Lamia. Il est fortement conseillé de lire 
 ce paragraphe.
@@ -226,56 +226,6 @@ sur un onglet à droite de l'onglet "Propriétés". Vous créerez alors un objet
 
 
 
-Configuration minimale de Lamia
-=============================================
-
-.. note:: N'arrêtez pas le tutoriel ici !! la configuration vue ici vous fera gagner du temps !!
-
-
-Définition du répertoire de photo par défaut
--------------------------------------------------------
-
-En cas d’utilisation de l’appareil photo de la tablette, il est possible de rapatrier automatiquement 
-la dernière photo prise avec l’appareil photo. En revanche, il faut dire à Lamia où se situe 
-le répertoire on son stockées les photos.
-
-Pour ce faire, dans la fenètre Lamia, aller dans Préférences/Répertoire Photo et choisir le 
-répertoire où sont stockées les photos prises avec la tablette.
-
-Ensuite, lors de l'utilisation du bouton "Baguette magique" dans la barre d'outil (à côté du +), et lorsque
-vous êtes dans l'onglet "Photographie", Lamia créera automatiquement un nouvelle photo avec la dernière photo
-prise. Si en plus vous êtes connecté au GPS (Cf. ci après), la photo se localisera automatiquement là où vous êtes.
-
-
-
-Utilisation d’un GPS
----------------------------------------
-
-QGis et Lamia peuvent fonctionner avec un GPS. Après avoir correctement configuré le GPS (Cf. explications 
-dans les chapitres suivants) pour pouvoir communiquer avec qgis, la procédure de configuration 
-est la suivante.
-
-
-1. Aller dans Préférences/Hauteur de perche et saisir la hauteur de la perche GPS.
-
-2. Dans Qgis, aller dans le menu Vue/Panneau et cliquer sur information GPS. Un panneau apparaîtra permettant 
-de connecter Qgis au GPS. Clicker sur connecter. Le petit rectangle grisé en haut à droite passe au 
-vert lorsque la conenction avec le GPS est établie.
-
-.. image:: /../_static/quickstart/qs_11.png
-    :width: 500px
-    :align: center
-
-3. Dans les menus Lamia, aller dans Préférences/se connecter au GPS pour connecter Lamia au Gps 
-reconnu par Qgis.
-
-Si le GPS est opérationnel, en bas de la fentre Lamia GPS connecté apparaît en vert. 
-
-.. image:: /../_static/quickstart/qs_12.png
-    :width: 500px
-    :align: center
-
-Il redevient rouge si Lamia perd le signal GPS.
 
 
 Modification de l'agencement des fenetres
