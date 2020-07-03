@@ -99,6 +99,53 @@ Il suffira de cliquer sur le bouton suivant pour effectuer cette action :
     :width: 500px
     :align: center
 
+
+Utilisation du module "Levés topographiques"
+---------------------------------------------------------------
+
+Il est possible de réaliser des levé topographiques de précision centimétrique avec Lamia. Pour réaliser cela, 
+les étapes sont :
+
+1. Connecter le GPS centimétrique à Lamia 
+
+Cf. Utilisation d’un GPS dans cette page
+
+2. Se rendre dans l'onglet "Topographie"
+
+Créer une nouvelle campagne topographique (icone + et renseigner les champs).
+
+3. Saisir un repère de nivellement GPS
+
+Ce point est primordial si l'on veut être certain de la fiabilité des données GPS relevées.
+
+Se rendre sur le (`site de l'IGN <https://www.geoportail.gouv.fr/donnees/reseau-de-nivellement>`_)
+et rechercher le point de nivellement le plus proche du secteur de travail.
+
+Ensuite réaliser un levé avec la procédure décrite dans l'étape 4 et s'assurer 
+du bon fonctionnement du GPS.
+
+4. Saisir les points voulus avec le GPS.
+
+Selectionner le type de point voulu et cliquer sur "Ajouter un point GPS". C'est tout !
+
+.. image:: /../_static/quickstart/topo_01.png
+    :width: 500px
+    :align: center
+
+Le point est stocké dans les points associés à la campagne topographiques, qui sont consultables en allant
+dans l'onglet 'Points topos'.
+
+.. note::
+
+    lors de l'utilisation d'un GPS centimétrique, s'assurer que la précision affichée lors de la saisie du point 
+    correspond bien à la précision voulue.
+
+5. Export des points en .dxf
+
+A la fin de la campagne topographique, il est possible d'exporter l'ensemble des points relevés en cliquant sur le bouton
+"Export en DXF". Le fichier dxf créé se situe dans le répertoire du projet Lamia.
+
+
 Ajouter une photo
 ==============================================
 
