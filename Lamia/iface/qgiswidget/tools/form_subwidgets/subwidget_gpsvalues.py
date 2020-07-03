@@ -25,45 +25,36 @@ This file is part of LAMIA.
  """
 import os, logging
 
-from qgis.PyQt.QtWidgets import (QWidget, QVBoxLayout)
+from qgis.PyQt.QtWidgets import QWidget, QVBoxLayout
 from qgis.PyQt import uic, QtCore
 
 from .subwidget_abstract import AbstractSubWidget
 
+
 class GpsValuesWidget(AbstractSubWidget):
 
-    UIPATH = os.path.join(os.path.dirname(__file__), 'subwidget_gpsvalues_ui.ui')
+    UIPATH = os.path.join(os.path.dirname(__file__), "subwidget_gpsvalues_ui.ui")
 
-    def __init__(self, 
-                parentwdg=None,  
-                parentframe=None):
-        super(GpsValuesWidget, self).__init__(parentwdg=parentwdg,
-                                              parentframe=parentframe)
+    def __init__(self, parentwdg=None, parentframe=None):
+        super(GpsValuesWidget, self).__init__(
+            parentwdg=parentwdg, parentframe=parentframe
+        )
 
         self.gpsutil = self.parentwdg.mainifacewidget.gpsutil
         self.gpsutil.GPSConnected.connect(self.displayGPS)
 
-        self.gpswidget = {'x' : {'widget' : self.label_X,
-                                    'gga' : 'Xcrs'},
-                            'y': {'widget': self.label_Y,
-                                    'gga': 'Ycrs'},
-                            'zmngf': {'widget': self.label_Z,
-                                    'gga': 'zmNGF'},
-                            'dx': {'widget': self.label_dX,
-                                    'gst': 'xprecision'},
-                            'dy': {'widget': self.label_dY,
-                                    'gst': 'yprecision'},
-                            'dz': {'widget': self.label_dZ,
-                                    'gst': 'zprecision'},
-                            'zgps': {'widget': self.label_zgps,
-                                    'gga': 'elevation'},
-                            'zwgs84': {'widget': self.label_zwgs84,
-                                    'gga': 'deltageoid'},
-                            'raf09': {'widget': self.label_raf09,
-                                    'gga': 'RAF09'},
-                            'hauteurperche': {'widget': self.label_hautperche,
-                                        'gga': 'hauteurperche'}
-                            }
+        self.gpswidget = {
+            "x": {"widget": self.label_X, "gga": "Xcrs"},
+            "y": {"widget": self.label_Y, "gga": "Ycrs"},
+            "zmngf": {"widget": self.label_Z, "gga": "zmNGF"},
+            "dx": {"widget": self.label_dX, "gst": "xprecision"},
+            "dy": {"widget": self.label_dY, "gst": "yprecision"},
+            "dz": {"widget": self.label_dZ, "gst": "zprecision"},
+            "zgps": {"widget": self.label_zgps, "gga": "elevation"},
+            "zwgs84": {"widget": self.label_zwgs84, "gga": "deltageoid"},
+            "raf09": {"widget": self.label_raf09, "gga": "RAF09"},
+            "hauteurperche": {"widget": self.label_hautperche, "gga": "hauteurperche"},
+        }
 
         # if self.gpsutil is not None and (self.gpswidget is not None or (self.dbasetable is not None and 'geom' in self.dbasetable.keys())):
         #     self.gpsutil.GPSConnected.connect(self.displayGPS)
@@ -79,8 +70,8 @@ class GpsValuesWidget(AbstractSubWidget):
         if active:
             if self.gpswidget is not None:
                 for key in self.gpswidget.keys():
-                    if self.gpswidget[key]['widget'] is not None:
-                        self.gpswidget[key]['widget'].setEnabled(True)
+                    if self.gpswidget[key]["widget"] is not None:
+                        self.gpswidget[key]["widget"].setEnabled(True)
                 self.gpsutil.ggasentence.connect(self.displayGGA)
                 self.gpsutil.gstsentence.connect(self.displayGST)
             # self.pushButton_rajoutPointGPS.setEnabled(True)
@@ -96,11 +87,9 @@ class GpsValuesWidget(AbstractSubWidget):
                 except:
                     pass
                 for key in self.gpswidget.keys():
-                    if self.gpswidget[key]['widget'] is not None:
-                        self.gpswidget[key]['widget'].setText('/')
-                        self.gpswidget[key]['widget'].setEnabled(False)
-
-
+                    if self.gpswidget[key]["widget"] is not None:
+                        self.gpswidget[key]["widget"].setText("/")
+                        self.gpswidget[key]["widget"].setEnabled(False)
 
     def displayGGA(self, dictgga):
         """
@@ -108,16 +97,21 @@ class GpsValuesWidget(AbstractSubWidget):
 
         :param dictgga: the dict where widgets to display gga are defined
         """
+
         for key in self.gpswidget.keys():
-            if 'gga' in self.gpswidget[key].keys() and self.gpswidget[key]['widget'] is not None:
-                if dictgga[self.gpswidget[key]['gga']] is not None:
+            if (
+                "gga" in self.gpswidget[key].keys()
+                and self.gpswidget[key]["widget"] is not None
+            ):
+                if dictgga[self.gpswidget[key]["gga"]] is not None:
                     try:
-                        self.gpswidget[key]['widget'].setText(str(round(dictgga[self.gpswidget[key]['gga']], 2)))
+                        self.gpswidget[key]["widget"].setText(
+                            str(round(dictgga[self.gpswidget[key]["gga"]], 2))
+                        )
                     except KeyError:
                         pass
                 else:
-                    self.gpswidget[key]['widget'].setText('/')
-
+                    self.gpswidget[key]["widget"].setText("/")
 
     def displayGST(self, dictgst):
         """
@@ -126,9 +120,14 @@ class GpsValuesWidget(AbstractSubWidget):
         :param dictgst: the dict where widgets to display gst are defined
         """
         for key in self.gpswidget.keys():
-            if 'gst' in self.gpswidget[key].keys() and self.gpswidget[key]['widget'] is not None:
-                if dictgst[self.gpswidget[key]['gst']] is not None:
-                    self.gpswidget[key]['widget'].setText(str(round(dictgst[self.gpswidget[key]['gst']],2)))
+            if (
+                "gst" in self.gpswidget[key].keys()
+                and self.gpswidget[key]["widget"] is not None
+            ):
+                if dictgst[self.gpswidget[key]["gst"]] is not None:
+                    self.gpswidget[key]["widget"].setText(
+                        str(round(dictgst[self.gpswidget[key]["gst"]], 2))
+                    )
                 else:
-                    self.gpswidget[key]['widget'].setText('/')
+                    self.gpswidget[key]["widget"].setText("/")
 

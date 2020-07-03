@@ -27,9 +27,13 @@ This file is part of LAMIA.
 
 import os
 import datetime
+import platform
+import subprocess
 
 from qgis.PyQt import uic, QtCore
 from qgis.PyQt.QtWidgets import QWidget
+
+from Lamia.libslamia.lamiadxfexport.lamiadxfexport import ExporDxfCore
 
 from Lamia.iface.qgiswidget.tools.lamia_abstractformtool import AbstractLamiaFormTool
 from .lamia_form_topographydata import BaseTopographydataTool
@@ -66,6 +70,7 @@ class BaseTopographyTool(AbstractLamiaFormTool):
     def __init__(self, **kwargs):
         super(BaseTopographyTool, self).__init__(**kwargs)
         self.instancekwargs = kwargs
+        self.lamiadxfexport = ExporDxfCore(self.dbase)
 
     def initMainToolWidget(self):
 
@@ -209,6 +214,23 @@ class BaseTopographyTool(AbstractLamiaFormTool):
             self.formutils.applyResultDict(
                 {"datetimeresource": datecreation}, checkifinforgottenfield=False
             )
+
+    def DxfExport(self):
+        if self.currentFeaturePK:
+            currentid = self.dbase.getValuesFromPk(
+                "topography", "id_topography", self.currentFeaturePK
+            )
+            date = str(datetime.datetime.now().strftime("%Y%m%d_%H%M%S"))
+            dxffilename = str(currentid) + "_topography_" + date + ".dxf"
+
+            filepath = self.lamiadxfexport.exportTopography(
+                self.currentFeaturePK, dxffilename
+            )
+
+            if platform.system() == "Windows":
+                subprocess.Popen(
+                    f'explorer "{os.path.realpath(os.path.abspath(os.path.dirname(filepath)))}"'
+                )
 
 
 class UserUI(QWidget):

@@ -22,11 +22,14 @@
 
 	"remoteEnv": {
 		"PATH": "${containerEnv:PATH}:/usr/src/Lamia",
-		"PYTHONPATH": "${containerEnv:PYTHONPATH}:/usr/src/Lamia:/usr/share/qgis/python:/usr/share/qgis/python/plugins:/usr/lib/python36.zip:/usr/lib/python3.6",
+		"PYTHONPATH": "${containerEnv:PYTHONPATH}:/usr/src/Lamia:/usr/share/qgis/python:/usr/share/qgis/python/plugins:/usr/lib/python38.zip:/usr/lib/python3.8",
 		//"DISPLAY": "10.20.75.139:0.0",
 		"DISPLAY": "192.168.1.17:0.0",
 		"LANG" : "C.UTF-8",
 		"LIBGL_ALWAYS_INDIRECT" : "1",
+		"SET QGIS_DISABLE_MESSAGE_HOOKS" : "1",
+		"SET QGIS_NO_OVERRIDE_IMPORT" : "1",
+		"SET QT_LOGGING_RULES" : "*.debug=false;*.warning=false",
 		//"http_proxy": "http://proxy-a.arteliagroup.com:3128",
 		//"https_proxy": "http://proxy-a.arteliagroup.com:3128",
 	},
@@ -46,6 +49,7 @@
 
 	// Uncomment the next line to run commands after the container is created - for example installing git.
 	// "postCreateCommand": "apt-get update && apt-get install -y git",
+	// Only work if software-properties-common is installed
 	"postCreateCommand": "sudo apt-get install git git-flow tree nano -y",
 
 	// Uncomment when using a ptrace-based debugger like C++, Go, and Rust

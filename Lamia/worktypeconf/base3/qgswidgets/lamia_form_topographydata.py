@@ -132,7 +132,7 @@ class BaseTopographydataTool(AbstractLamiaFormTool):
     def getGPSValues(self):
         if self.mainifacewidget.gpsutil is not None:
             if self.mainifacewidget.gpsutil.currentpoint is None:
-                self.mainifacewidget.errorMessage(
+                self.mainifacewidget.connector.showErrorMessage(
                     QtCore.QCoreApplication.translate("base3", "GPS not connected")
                 )
                 return False
@@ -189,7 +189,7 @@ class BaseTopographydataTool(AbstractLamiaFormTool):
             self.setTempGeometry([self.mainifacewidget.gpsutil.currentpoint], False)
             return True
         else:
-            self.errorMessage(
+            self.mainifacewidget.connector.showErrorMessage(
                 QtCore.QCoreApplication.translate("base3", "GPS not connected")
             )
             return False

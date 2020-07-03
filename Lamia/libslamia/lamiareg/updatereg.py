@@ -23,8 +23,10 @@ This file is part of LAMIA.
   * SPDX-License-Identifier: GPL-3.0-or-later
   * License-Filename: LICENSING.md
  """
-
-import winreg
+try:
+    import winreg
+except ModuleNotFoundError:
+    pass
 import datetime
 import platform
 

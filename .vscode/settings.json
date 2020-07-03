@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "C:\\PROGRA~1\\QGIS31~1.6\\bin\\python3.exe",
+    "python.pythonPath": "C:\\PROGRA~1\\QGIS31~1.6\\apps\\Python37\\python.exe",
     "python.linting.enabled": false,
     "restructuredtext.confPath": "${workspaceFolder}\\doc\\source",
 }

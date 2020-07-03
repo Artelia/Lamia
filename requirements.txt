@@ -1,6 +1,10 @@
 xlrd==1.1.0
 networkx==2.2
-pandas==0.25.1
+pandas
 pylint
+django
+black
+sphinx
+sphinx-rtd-theme
 #psycopg2
 #sqlite3

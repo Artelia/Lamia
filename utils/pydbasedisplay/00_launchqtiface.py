@@ -50,7 +50,7 @@ class DBaseViewer:
             #  sl_base3_urbandrainage_Lamia   sl_base3_waterdistribution_Lamia
             # sl_base3_constructionsite_Lamia   sl_base3_constructionsite_Orange
             # sl_base3_levee_Lamia      sl_base3_faunaflora_Lamia
-            worktype = "sl_base3_levee_Lamia"
+            worktype = "sl_base3_constructionsite_Lamia"
             SLFILE = os.path.join(self.testdir, worktype, "test01.sqlite")
 
             # SLFILE = r"C:\01_WORKINGDIR\GPMB\c_merge_ass\mergeddbase.sqlite"
