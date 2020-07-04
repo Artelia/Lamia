@@ -1,1 +1,1 @@
-c:/111_GitProjects/Lamia/utils/pydbasedisplay\..\..\test\testtempfiles\c_creation\sl_base3_constructionsite_Lamia\test01.sqlite
+/usr/src/Lamia/utils/pydbasedisplay/../../test/testtempfiles/c_creation/sl_base3_constructionsite_Lamia/test01.sqlite

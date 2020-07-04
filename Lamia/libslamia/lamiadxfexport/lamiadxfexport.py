@@ -24,10 +24,11 @@ This file is part of LAMIA.
   * License-Filename: LICENSING.md
  """
 
+
+
+
 import os
 from Lamia.libs.dxfwrite import DXFEngine as dxf
-
-
 class ExporDxfCore:
 
     POSTPROTOOLNAME = "exportdxftools"
@@ -39,7 +40,8 @@ class ExporDxfCore:
 
     def exportTopography(self, pktopotoexport=None, filename=None):
 
-        exportdir = os.path.join(self.dbase.dbaseressourcesdirectory, "exportdxf")
+        exportdir = os.path.join(
+            self.dbase.dbaseressourcesdirectory, "exportdxf")
         if not os.path.isdir(exportdir):
             os.mkdir(exportdir)
 
@@ -51,7 +53,12 @@ class ExporDxfCore:
         drawing = dxf.drawing(exportfilename)
 
         for topographydatatype, x, y, zmngf in res:
-
+            if (self.dbase.utils.isAttributeNull(x)
+                    or self.dbase.utils.isAttributeNull(y)
+                    or self.dbase.utils.isAttributeNull(zmngf)):
+                continue
+            if self.dbase.utils.isAttributeNull(topographydatatype):
+                topographydatatype = "0"
             drawing.add_layer(topographydatatype)
             point = dxf.point((x, y, zmngf), layer=topographydatatype)
             drawing.add(point)
@@ -60,4 +67,3 @@ class ExporDxfCore:
         drawing.save()
 
         return exportfilename
-

@@ -6,5 +6,7 @@ django
 black
 sphinx
 sphinx-rtd-theme
+autopep8
+pycodestyle
 #psycopg2
 #sqlite3

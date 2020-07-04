@@ -1,26 +1,26 @@
-import re, math, datetime
-try :
+import re
+import math
+import datetime
+try:
     from qgis.PyQt import QtCore
     TRY_QT = True
 except ImportError:
     TRY_QT = False
 
 
-
-
 def splitSQLSelectFromWhereOrderby(sqlin):
     sqltemp = sqlin.split(' ')
-    indexparenthesis=0
+    indexparenthesis = 0
 
-    specwords = ['WITH', 'SELECT', 'FROM', 'WHERE', 'GROUP','ORDER','LIMIT']
-    listres={}
+    specwords = ['WITH', 'SELECT', 'FROM', 'WHERE', 'GROUP', 'ORDER', 'LIMIT']
+    listres = {}
     actualsqlword = None
     for sqlword in sqltemp:
         if '(' in sqlword or ')' in sqlword:
             indexparenthesis += sqlword.count('(')
             indexparenthesis += - sqlword.count(')')
             listres[actualsqlword] += ' ' + sqlword
-        elif  sqlword.strip() in specwords and indexparenthesis == 0 :
+        elif sqlword.strip() in specwords and indexparenthesis == 0:
             actualsqlword = sqlword.strip()
             listres[actualsqlword] = ''
         else:
@@ -32,7 +32,8 @@ def splitSQLSelectFromWhereOrderby(sqlin):
 
     return listres
 
-def rebuildSplittedQuery( sqlin):
+
+def rebuildSplittedQuery(sqlin):
     sqlout = ''
     if 'WITH' in sqlin.keys():
         sqlout += ' WITH ' + sqlin['WITH']
@@ -50,6 +51,7 @@ def rebuildSplittedQuery( sqlin):
         sqlout += ' LIMIT ' + sqlin['LIMIT']
     return sqlout
 
+
 def isAttributeNull(attr):
     """
     Vérifie si un qgisfeature attribute est NULL - piégeux car le NULL peu prendre plusieurs formes
@@ -64,14 +66,16 @@ def isAttributeNull(attr):
         return True
     """
 
-    if TRY_QT and isinstance(attr, QtCore.QVariant) and attr.isNull() :
+    if TRY_QT and isinstance(attr, QtCore.QVariant) and attr.isNull():
         return True
-    elif (isinstance(attr,bytes) or isinstance(attr,str)) and (attr == 'NULL' or attr == '' or attr == 'None') :
+    elif ((isinstance(attr, bytes) or isinstance(attr, str))
+            and (attr == 'NULL' or attr == '' or attr == 'None')):
         return True
     elif attr is None:
         return True
     else:
         return False
+
 
 def areNodesEquals(node1, node2):
     """
@@ -82,7 +86,7 @@ def areNodesEquals(node1, node2):
     :param node2: point2 (list 2x1)
     :return: Boolean, en fonction de l'égalité geographique des points
     """
-    dist = math.sqrt( (node2[0] - node1[0])**2 + (node2[1]-node1[1])**2 )
+    dist = math.sqrt((node2[0] - node1[0])**2 + (node2[1]-node1[1])**2)
     if dist < 0.01:
         return True
     else:

@@ -1,31 +1,30 @@
-import os, sys
+from qgis.PyQt.QtWidgets import QDialog, QMainWindow, QWidget
+from qgis.PyQt.QtCore import QCoreApplication, QSettings, Qt, QTranslator, qVersion
+from qgis.PyQt import QtCore, uic
+from Lamia.iface.qgiswidget.ifaceqgswidget import LamiaWindowWidget
+from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
+import qgis.gui
+import qgis.core
+import qgis
+import Lamia.libs.pyqtgraph
+import networkx
+from pprint import pprint
+import warnings
+import unittest
+import platform
+import logging
+import os
+import sys
 
 lamiapath = os.path.join(os.path.join(os.path.dirname(__file__)), "..", "..")
 # print(os.path.abspath(lamiapath))
 sys.path.append(lamiapath)
 
-import logging
-import platform
-import unittest
-import warnings
-from pprint import pprint
-
-import networkx
-
-import Lamia.libs.pyqtgraph
-import qgis
-import qgis.core
-import qgis.gui
-from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
-from Lamia.iface.qgiswidget.ifaceqgswidget import LamiaWindowWidget
-from qgis.PyQt import QtCore, uic
-from qgis.PyQt.QtCore import QCoreApplication, QSettings, Qt, QTranslator, qVersion
-from qgis.PyQt.QtWidgets import QDialog, QMainWindow, QWidget
-
 
 # warnings.simplefilter("ignore")
 # os.environ["PYTHONWARNINGS"] = "ignore" # Also affect subprocesses
-warnings.filterwarnings("default", category=DeprecationWarning, module="networkx")
+warnings.filterwarnings(
+    "default", category=DeprecationWarning, module="networkx")
 
 
 # from settings import *
@@ -40,7 +39,8 @@ INTERFACEINDEX = 0
 class DBaseViewer:
     def __init__(self):
         self.testdir = os.path.join(
-            os.path.dirname(__file__), "..", "..", "test", "testtempfiles", "c_creation"
+            os.path.dirname(
+                __file__), "..", "..", "test", "testtempfiles", "c_creation"
         )
 
     def run(self):
@@ -83,17 +83,13 @@ class DBaseViewer:
         # self.testReport()
 
     def showIFace(self):
-        if (
-            "edge" in self.wind.qgiscanvas.layers.keys()
-            and self.wind.qgiscanvas.layers["edge"]["layer"].featureCount() > 0
-        ):
-            extent = (
-                self.wind.qgiscanvas.layers["edge"]["layer"].extent().buffered(10.0)
-            )
+        if ("edge" in self.wind.qgiscanvas.layers.keys()
+                and self.wind.qgiscanvas.layers["edge"]["layer"].featureCount() > 0):
+            extent = (self.wind.qgiscanvas.layers["edge"]["layer"].extent().buffered(
+                10.0))
         else:
             extent = qgis.core.QgsRectangle(
-                X_BEGIN, Y_BEGIN, X_BEGIN + 10, Y_BEGIN + 10
-            )
+                X_BEGIN, Y_BEGIN, X_BEGIN + 10, Y_BEGIN + 10)
         # logging.getLogger("Lamia_unittest").debug('Extent : %s', extent)
         self.wind.qgiscanvas.canvas.setExtent(extent)
 
@@ -107,8 +103,10 @@ class DBaseViewer:
                 # print(self.wind.toolwidgets['toolpostpro'].keys())
                 wdg = self.wind.toolwidgets["toolpostpro"]["reporttools"]
             if True:
-                wdg = self.wind.toolwidgets["toolprepro"]["graphdb"]  # deficiency
-            wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
+                # deficiency
+                wdg = self.wind.toolwidgets["toolprepro"]["graphdb"]
+            wdg.tooltreewidget.currentItemChanged.emit(
+                wdg.qtreewidgetitem, None)
 
         self.mainwin.exec_()
 
@@ -119,13 +117,11 @@ class DBaseViewer:
             self.wind.dbase, messageinstance=self.wind.connector
         )
 
-        destfile = os.path.join(
-            os.path.dirname(__file__), "testoutput", "testreport.pdf"
-        )
+        destfile = os.path.join(os.path.dirname(
+            __file__), "testoutput", "testreport.pdf")
         confname = "testreport"
         exporterreport.runReport(
-            destinationfile=destfile, reportconffilename=confname, pkzonegeos=[]
-        )
+            destinationfile=destfile, reportconffilename=confname, pkzonegeos=[])
 
     def _createMainWin(self):
 
@@ -162,8 +158,10 @@ class DBaseViewer:
         locale = LOCALE
         QtCore.QSettings().setValue("locale/userLocale", LOCALE)
 
-        plugin_dir = os.path.join(os.path.dirname(__file__), "..", "..", "Lamia")
-        locale_path = os.path.join(plugin_dir, "i18n", "Lamia_{}.qm".format(locale))
+        plugin_dir = os.path.join(
+            os.path.dirname(__file__), "..", "..", "Lamia")
+        locale_path = os.path.join(
+            plugin_dir, "i18n", "Lamia_{}.qm".format(locale))
 
         if os.path.exists(locale_path):
             self.translator = QTranslator()

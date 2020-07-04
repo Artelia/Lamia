@@ -99,25 +99,8 @@ class BaseTopographyTool(AbstractLamiaFormTool):
             ]["Cst"]
         ]
         self.toolwidgetmain.comboBox_typepoints.addItems(typpointlist)
-        """
-        self.gpswidget = {
-            "x": {"widget": self.toolwidgetmain.label_X, "gga": "Xcrs"},
-            "y": {"widget": self.toolwidgetmain.label_Y, "gga": "Ycrs"},
-            "zmngf": {"widget": self.toolwidgetmain.label_Z, "gga": "zmNGF"},
-            "dx": {"widget": self.toolwidgetmain.label_dX, "gst": "xprecision"},
-            "dy": {"widget": self.toolwidgetmain.label_dY, "gst": "yprecision"},
-            "dz": {"widget": self.toolwidgetmain.label_dZ, "gst": "zprecision"},
-            "zgps": {"widget": self.toolwidgetmain.label_zgps, "gga": "elevation"},
-            "zwgs84": {"widget": self.toolwidgetmain.label_zwgs84, "gga": "deltageoid"},
-            "raf09": {"widget": self.toolwidgetmain.label_raf09, "gga": "RAF09"},
-            "hauteurperche": {
-                "widget": self.toolwidgetmain.label_hautperche,
-                "gga": "hauteurperche",
-            },
-        }
-        """
-        # ****************************************************************************************
-        # child widgets
+
+        # * child widgets
         self.instancekwargs["parentwidget"] = self
 
         self.dbasechildwdgfield = []
@@ -184,18 +167,7 @@ class BaseTopographyTool(AbstractLamiaFormTool):
         self.propertieswdgPOINTTOPO.toolwidgetmain.comboBox_position.setCurrentIndex(
             self.toolwidgetmain.comboBox_typepoints.currentIndex()
         )
-        # self.lastPhoto()
-        # self.toolbarGeomAddGPS()
         self.propertieswdgPOINTTOPO.toolbarSave()
-        """
-        self.propertieswdgPOINTTOPO.featureSelected()
-        self.propertieswdgPOINTTOPO.userwdg.comboBox_position.setCurrentIndex(
-            self.userwdg.comboBox_typepoints.currentIndex()
-        )
-        success = self.propertieswdgPOINTTOPO.getGPSValues()
-        if success:
-            self.propertieswdgPOINTTOPO.saveFeature()
-        """
 
     def importer(self):
         pass
