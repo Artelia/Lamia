@@ -664,7 +664,8 @@ class AbstractDBaseParser:
             dbasetable = self.dbasetables[table]
             # if field in dbasetable['fields'].keys() and 'Cst' in dbasetable['fields'][field].keys():
             if not dbaseutils.isAttributeNull(rawvalue):
-                if isinstance(rawvalue, int) or isinstance(rawvalue, long):
+                # if isinstance(rawvalue, int) or isinstance(rawvalue, long):
+                if isinstance(rawvalue, int):
                     rawvalue = str(rawvalue)
                 try:
                     index = [

@@ -1,1 +1,6 @@
-/usr/src/Lamia/utils/pydbasedisplay/../../test/testtempfiles/c_creation/sl_base3_constructionsite_Lamia/test01.sqlite
+C:\111_GitProjects\Lamia\test\datas\lamia_assainissement_base3\test01.sqlite
+C:\01_WORKINGDIR\cier\AEP Cieux.sqlite
+C:\111_GitProjects\Lamia\test\datas\lamia_assainissement\test01.sqlite
+c:/111_GitProjects/Lamia/utils/pydbasedisplay\..\..\Lamia\../test/testtempfiles/c_creation\sl_base3_constructionsite_Lamia\test01.sqlite
+c:/111_GitProjects/Lamia/utils/pydbasedisplay\..\..\Lamia\../test/testtempfiles/c_creation\sl_base3_urbandrainage_Lamia\test01.sqlite
+c:/111_GitProjects/Lamia/utils/pydbasedisplay\..\..\test\testtempfiles\c_creation\sl_base3_constructionsite_Lamia\test01.sqlite

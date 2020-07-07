@@ -72,7 +72,7 @@ def launchIface():
     #  sl_base3_urbandrainage_Lamia   sl_base3_waterdistribution_Lamia
     # sl_base3_constructionsite_Lamia   sl_base3_constructionsite_Orange
     # sl_base3_levee_Lamia   sl_base3_levee_SIRS   sl_base3_faunaflora_Lamia
-    worktype = "sl_base3_urbandrainage_Lamia"
+    worktype = "sl_base3_constructionsite_Lamia"
 
     SLFILE = os.path.join(testdir, worktype, "test01.sqlite")
 
@@ -80,11 +80,12 @@ def launchIface():
     # SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue_base3\test01.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\GPMB\c_merge_ass\mergeddbase.sqlite"
     # SLFILE = r"C:\111_GitProjects\Lamia\utils\pynetworktool\networktest_geographic\test01.sqlite"
-    # SLFILE = (
-    #     r"C:\111_GitProjects\Lamia\test\datas\lamia_assainissement_base3\test01.sqlite"
-    # )
+    SLFILE = (
+        r"C:\111_GitProjects\Lamia\test\datas\lamia_assainissement_base3\test01.sqlite"
+    )
     # SLFILE = r"M:\FR\BOR\VT\FLUVIAL\4352024_33_Conformite_digues_BM\6_Reglementaire\61_Calculs\Basedonnees\BD_totale_ind12_tempPVR.sqlite"
     # SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue_base3\test01.sqlite"
+    # SLFILE = r"C:\01_WORKINGDIR\cier\AEP Cieux.sqlite"
 
     lamiawidget.loadDBase(dbtype="Spatialite", slfile=SLFILE)
 

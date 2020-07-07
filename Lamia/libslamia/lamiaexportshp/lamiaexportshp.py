@@ -408,11 +408,15 @@ class ExportShapefileCore:
                     for i, name in enumerate(table["fields"].keys()):
                         compteur += 1
                         if table["fields"][name]["cst"] is not None:
-                            feat[compteur] = self.dbase.getConstraintTextFromRawValue(
+                            csttext = self.dbase.getConstraintTextFromRawValue(
                                 table["table"],
                                 table["fields"][name]["cst"],
                                 row[compteur],
                             )
+                            if not self.dbase.utils.isAttributeNull(csttext):
+                                feat[compteur] = csttext
+                            else:
+                                feat[compteur] = qgis.core.NULL
                         else:
                             feat[compteur] = row[compteur]
                 elif "postpro" in table["table"]:
@@ -426,4 +430,5 @@ class ExportShapefileCore:
             success = writer.addFeature(feat)
 
         del writer
-        self.messageinstance.showNormalMessage("Export termine")
+        if self.messageinstance is not None:
+            self.messageinstance.showNormalMessage("Export termine")

@@ -11,7 +11,7 @@ name=Lamia
 qgisMinimumVersion=3.10
 qgisMaximumVersion=3.99
 description=lamia
-version=1.007
+version=1.008
 author=ARTELIA
 email=patrice.verchere@arteliagroup.com
 
@@ -25,6 +25,7 @@ repository=erg
 
 # Uncomment the following line and add your changelog:
 # changelog=
+1.008 : constructionsite - gps topo - dxf export
 1.007 : gps bug fix
 1.006 : bug fix
 1.004 : bugfix

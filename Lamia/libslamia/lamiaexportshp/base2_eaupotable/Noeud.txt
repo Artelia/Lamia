@@ -1,7 +1,53 @@
 ###Noeud
 #nom              type               cst               valeur                    
 id_noeud;         Int;                  ;               id_noeud
-ss_type_equipement;       String;           ss_type_equipement;         ss_type_equipement
+categorie;      String;   categorie   ;                  Noeud_now.categorie
+diametre_entree;      Double;               ;                  Noeud_now.diametre_entree
+diametre_sortie;      Double;               ;                  Noeud_now.diametre_sortie
+profondeur;      Double;               ;                  Noeud_now.profondeur
+fonction;      String;    fonction    ;                  Noeud_now.fonction
+ss_type_equipement;      String;   ss_type_equipement    ;                  Noeud_now.ss_type_equipement
+nature_reseau;      String;     nature_reseau   ;                  Noeud_now.nature_reseau
+acces;      String;     acces  ;                  Noeud_now.acces
+forme_acces;      String;  forme_acces     ;                  Noeud_now.forme_acces
+
+id_cana_sig_sdis;      Int;               ;                  Noeud_now.id_cana_sig_sdis
+id_eap;      String;               ;                  Noeud_now.id_eap
+date_essai;      String;               ;                  Noeud_now.date_essai
+conformite;      Int;     conformite      ;                  Noeud_now.conformite
+debit;      Double;               ;                  Noeud_now.debit
+pese;      Double;               ;                  Noeud_now.pese
+date_pese;      String;               ;                  Noeud_now.date_pese
+
+consigne_aval;      Double;               ;                  Noeud_now.consigne_aval
+altimetrie;      Double;               ;                  Noeud_now.altimetrie
+consigne_amont;      Double;               ;                  Noeud_now.consigne_amont
+
+position;      Int;     position       ;                  Noeud_now.position
+
+exutoire;      String;               ;                  Noeud_now.exutoire
+
+dimensions;      Double;               ;                  Noeud_now.dimensions
+tete_emettrice;      Int;     tete_emettrice    ;                  Noeud_now.tete_emettrice
+numero;      Int;               ;                  Noeud_now.numero
+equipable;      Int;   equipable    ;                  Noeud_now.equipable
+
+collier;      Int;               ;                  Noeud_now.collier
+
+localisation;      String;   localisation       ;                  Noeud_now.exutoire
+pres_echelon;      Int;    pres_echelon     ;                  Noeud_now.pres_echelon
+accessibilite;      Int;    accessibilite     ;                  Noeud_now.accessibilite
+manipulable;      Int;    manipulable     ;                  Noeud_now.manipulable
+
+marque;      String;               ;                  Noeud_now.marque
+type;      String;               ;                  Noeud_now.type
+
+entreprise;      String;               ;                  Noeud_now.entreprise
+telerelevage;      String;    telerelevage    ;                  Noeud_now.telerelevage
+
+organes_associes;      String;               ;                  Noeud_now.organes_associes
+
+
 X;               Double;                               ;     X
 Y;               Double;                               ;     Y
 Z;               Double;                               ;     Z
