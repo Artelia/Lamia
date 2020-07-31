@@ -321,7 +321,7 @@ class FormToolUtils(QtCore.QObject):
         specify tablename, parentfield, childfield and combochild for not combo included in formtoolwidgetconfdict
         """
 
-        debug = False
+        debug = True
         if debug:
             senderwdg = self.sender()
             print("**", senderwdg.objectName())

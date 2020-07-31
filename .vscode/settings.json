@@ -2,4 +2,6 @@
     "python.pythonPath": "C:\\PROGRA~1\\QGIS31~1.6\\apps\\Python37\\python.exe",
     "python.linting.enabled": false,
     "restructuredtext.confPath": "${workspaceFolder}\\doc\\source",
+    "gitlab.instanceUrl": "http://gitlab.arteliagroup.com/",
+    "git.ignoreLimitWarning": true,
 }

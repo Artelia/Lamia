@@ -9,6 +9,10 @@
 test/testtempfiles/
 test/datas/lamia_*
 sandbox/*/
+frontend/
+frontend/home2
+frontend/home
+frontend/home/node_modules
 
 
 .vscode/

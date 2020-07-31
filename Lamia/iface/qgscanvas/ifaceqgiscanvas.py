@@ -24,7 +24,7 @@ This file is part of LAMIA.
   * SPDX-License-Identifier: GPL-3.0-or-later
   * License-Filename: LICENSING.md
  """
-import os, sys, io, logging, datetime, re, json
+import os, sys, io, logging, datetime, re, json, platform
 import qgis, qgis.core, qgis.utils, qgis.gui
 from qgis.PyQt import QtGui, QtCore
 import Lamia
@@ -354,37 +354,42 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                             "ValueMap", config
                         )
                         workingvl.setEditorWidgetSetup(i, widget_setup)
+
             # new way for qgislayer
             tabletype = "layerqgisjoined"
             # self.layers[rawtablename][tabletype] = qgis.core.QgsVectorLayer(self.layers[rawtablename]['layer'] )
-            self.layers[rawtablename][tabletype] = self.layers[rawtablename][
-                "layer"
-            ].clone()
-            currentlayername = rawtablename
+            if  platform.system() == "Windows":  # bug with ubuntu when cloning
+                self.layers[rawtablename][tabletype] = self.layers[rawtablename][
+                    "layer"
+                ].clone()
 
-            for parentable in dbaseparser.getParentTable(rawtablename):
-                currentField = "lpk_" + parentable.lower()
-                joinedField = "pk_" + parentable.lower()
-                joinObject = qgis.core.QgsVectorLayerJoinInfo()
-                joinObject.setJoinFieldName(joinedField)
-                joinObject.setTargetFieldName(currentField)
-                joinObject.setJoinLayerId(self.layers[parentable]["layer"].id())
-                joinObject.setUsingMemoryCache(True)
-                joinObject.setJoinLayer(self.layers[parentable]["layer"])
-                joinObject.setEditable(True)
-                joinObject.setPrefix("")
-                joinObject.setDynamicFormEnabled(True)
-                self.layers[rawtablename][tabletype].addJoin(joinObject)
-                currentlayername = parentable
+                currentlayername = rawtablename
 
-            # ValueMap for qgislayerjoined
-            workingvl = self.layers[rawtablename]["layerqgisjoined"]
-            cstdict = self._getConstraintFromDBaseTables(dbaseparser, rawtablename)
-            for i, field in enumerate(workingvl.fields()):
-                if field.name() in cstdict.keys():
-                    config = {"map": cstdict[field.name()]}
-                    widget_setup = qgis.core.QgsEditorWidgetSetup("ValueMap", config)
-                    workingvl.setEditorWidgetSetup(i, widget_setup)
+                for parentable in dbaseparser.getParentTable(rawtablename):
+                    currentField = "lpk_" + parentable.lower()
+                    joinedField = "pk_" + parentable.lower()
+                    joinObject = qgis.core.QgsVectorLayerJoinInfo()
+                    joinObject.setJoinFieldName(joinedField)
+                    joinObject.setTargetFieldName(currentField)
+                    joinObject.setJoinLayerId(self.layers[parentable]["layer"].id())
+                    joinObject.setUsingMemoryCache(True)
+                    joinObject.setJoinLayer(self.layers[parentable]["layer"])
+                    joinObject.setEditable(True)
+                    joinObject.setPrefix("")
+                    joinObject.setDynamicFormEnabled(True)
+                    self.layers[rawtablename][tabletype].addJoin(joinObject)
+                    currentlayername = parentable
+
+                # ValueMap for qgislayerjoined
+                workingvl = self.layers[rawtablename]["layerqgisjoined"]
+                cstdict = self._getConstraintFromDBaseTables(dbaseparser, rawtablename)
+                for i, field in enumerate(workingvl.fields()):
+                    if field.name() in cstdict.keys():
+                        config = {"map": cstdict[field.name()]}
+                        widget_setup = qgis.core.QgsEditorWidgetSetup(
+                            "ValueMap", config
+                        )
+                        workingvl.setEditorWidgetSetup(i, widget_setup)
 
         self.dbaseqgiscrs = qgis.core.QgsCoordinateReferenceSystem()
         self.dbaseqgiscrs.createFromString("EPSG:" + str(dbaseparser.crsnumber))

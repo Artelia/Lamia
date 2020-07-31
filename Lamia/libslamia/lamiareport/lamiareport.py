@@ -651,9 +651,9 @@ class printPDFBaseWorker(QtCore.QObject):
             debugscale = False
             stop10 = None
         else:
-            debug = False  # True False
+            debug = True  # True False
             debugscale = False
-            stop10 = 3
+            stop10 = None
 
         # *********************************************************************
         # ********************* begin printing  *****************************
@@ -1498,7 +1498,7 @@ class printPDFBaseWorker(QtCore.QObject):
 
     def orderPksAlongPath(self, coveragelayer, zonegeopks=[]):
 
-        debug = False
+        debug = True
 
         orderedpks = {}
 
@@ -1572,12 +1572,13 @@ class printPDFBaseWorker(QtCore.QObject):
                     extremities = self.networkcore.getExtremityNodeIndexFromLinearGraph(
                         subgraph
                     )
-                    if extremities is None:
+                    # if extremities is None:
+                    if not extremities:
                         # if self.enablemessages: self.messageinstance.showErrorMessage('attention presence d un noeud - non traite')
                         self.errormessage.emit(
                             "attention presence d un noeud - non traite"
                         )
-                        orderedpks[zonegeopk] = dictedgesordered[zonegeopk]
+                        # orderedpks[zonegeopk] = dictedgesordered[zonegeopk]
                         continue
 
                     if debug:
@@ -1619,7 +1620,7 @@ class printPDFBaseWorker(QtCore.QObject):
                             constraint=self.atlasconfData["ordering"].split(";")[1],
                         )
 
-                        # print('datas', datas)
+                        print("datas", datas)
                         res = [int(pk) for pk in datas["pk"]]
                         orderedpks[zonegeopk] += res
 
