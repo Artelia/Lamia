@@ -1,0 +1,22 @@
+ npm install --save-dev webpack-bundle-tracker@0.4.3
+ 
+ pass data from django to react
+ https://stackoverflow.com/questions/43927944/pass-data-from-django-view-to-react       NO
+ https://adamj.eu/tech/2020/02/18/safely-including-data-for-javascript-in-a-django-template/
+ 
+ netstat -ntlp
+ kill -9 [PID]
+ 
+ bootstrap react
+ https://stackoverflow.com/questions/27872136/bootstrap-classes-do-not-work-in-reactjs-component
+ 
+ qgisserver multiple files
+ https://gis.stackexchange.com/questions/75054/qgis-server-loads-only-one-qgs-project-file
+ 
+ serialize
+ https://blog.juanwolf.fr/fr/posts/programming/creer-api-rest-django-rest-framework/
+ https://stackoverflow.com/questions/45532965/django-rest-framework-serializer-without-a-model
+ https://www.django-rest-framework.org/api-guide/serializers/
+ securize axios
+ https://stackoverflow.com/questions/61716825/django-session-authentication-and-axios-post-signals
+ https://manikos.github.io/django-axios-and-csrf-token

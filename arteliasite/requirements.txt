@@ -1,0 +1,8 @@
+pylint
+django
+autopep8
+pycodestyle
+#psycopg2
+#sqlite3
+django-webpack-loader
+djangorestframework

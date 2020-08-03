@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load render_bundle from webpack_loader %}
+
+
+
+{% block content %}
+<!-- <div id="root" style="height:100vh"> -->
+<!-- <div id="root"> -->
+<div id="root" style="height:calc(100vh - 130px);">
+</div>
+{{ context|json_script:"context" }}
+{% render_bundle 'main' %}
+{% endblock %}
+{% block footer %}{% endblock %}
