@@ -49,3 +49,6 @@ Tips:
  securize axios
  https://stackoverflow.com/questions/61716825/django-session-authentication-and-axios-post-signals
  https://manikos.github.io/django-axios-and-csrf-token
+ 
+ #query projects with a user
+ Project.objects.filter(users__username='pvr')

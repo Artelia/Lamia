@@ -134,8 +134,15 @@
 
 
     {% block content %}
+    <p>popo</p>
+    {% for project in projects %}
+    <p>{{ project.nom }}</p>
+    {% endfor %}
     <div id="root" class="container-fluid" style="height:calc(100vh - 130px)">
     </div>
+
+
+
 
 
     <!-- Footer -->

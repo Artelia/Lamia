@@ -6,6 +6,8 @@ from django.views.generic import View, TemplateView
 from django.contrib.auth import authenticate, login, logout
 from .serializers import PostSerializer
 
+from .models import User, Project
+
 # Create your views here.
 
 
@@ -36,8 +38,8 @@ class BaseView(View):
     def get(self, request):
         print(request)
         context = {"mytext": "popo"}
-
-        return render(request, self.mytemplate, {"context": json.dumps(context)})
+        queryset =  Project.objects.all()
+        return render(request, self.mytemplate, {"context": json.dumps(context),'projects':queryset})
 
     def post(self, request, **kwargs):
         # print("post", request.POST)
@@ -53,11 +55,12 @@ class BaseView(View):
             login(request, user)
             # Redirect to a success page.
             # return HttpResponseRedirect("/account/loggedin/")
+            # queryset =  Project.objects.filter(users__username=user)
+            return render(request, self.mytemplate)
         else:
             logout(request)
             return redirect("home")
 
-        return render(request, self.mytemplate)
 
 
 class IndexView(BaseView):
