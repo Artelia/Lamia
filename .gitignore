@@ -9,6 +9,9 @@
 test/testtempfiles/
 test/datas/lamia_*
 sandbox/*/
+arteliasite/node_modules
+frontend/
+
 
 
 .vscode/

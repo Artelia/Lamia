@@ -1,0 +1,456 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Export de données dans Lamia &mdash; Documentation LAMIA 1.0</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script src="../../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../search.html" />
+    <link rel="prev" title="Import de données dans Lamia" href="02_import.html" />
+
+<link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+<!-- help for aos : https://michalsnik.github.io/aos/  -->
+
+<script>
+
+	window.onload = function () {
+		var url = window.location.toString()
+		selectorvalue = $('#languageselector').val()
+
+		if (url.includes('/fr/')) {
+			if (selectorvalue != 'fr') {
+				$('#languageselector').val("fr")
+			}
+		} else if (url.includes('/en/')) {
+			if (selectorvalue != 'en') {
+				$('#languageselector').val("en")
+			}
+		} else if (url.includes('/dev/')) {
+			if (selectorvalue != 'dev') {
+				$('#languageselector').val("dev")
+			}
+		}
+
+	};
+
+	function testSelectOK() {
+		var url = window.location.toString()
+		selectorvalue = $('#languageselector').val()
+
+		if (url.includes('/fr/')) {
+			if (selectorvalue != 'fr') {
+				return false
+			}
+		} else if (url.includes('/en/')) {
+			if (selectorvalue != 'en') {
+				return false
+			}
+		} else if (url.includes('/dev/')) {
+			if (selectorvalue != 'dev') {
+				return false
+			}
+		}
+
+		return true
+
+	}
+
+
+	function languageSelector() {
+
+		if (testSelectOK()) {
+			return
+		}
+		var value = $('#languageselector').val();
+		var url = window.location.toString()
+		var n = url.indexOf("build")
+		finalurl = url.substring(0, n) + 'build/' + value + '/html/index.html'
+		console.log(finalurl)
+		window.location = finalurl
+
+	}
+</script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #004F83" >
+          
+
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> LAMIA
+          
+
+          
+            
+            <img src="../../_static/icon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+
+<select id='languageselector' style="width: 100% ;border-radius: 20px 20px 20px 20px;" onchange=languageSelector()>
+	<option value="fr">Documentation utilisateur français</option>
+	<option value="en">English user documentation</option>
+	<option value="dev">Documentation for developpers</option>
+</select>
+
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Documentation utilisateur en français</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../00_index.html">Documentation en français</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../01_introduction.html">Introduction</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../03_00_tutoriel.html">Tutoriel</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../03_01_installation.html">Installation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../03_01_installation.html#librairies-necessaires-en-supplement-de-l-installation-de-qgis">Librairies nécessaires en supplément de l’installation de QGis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_01_installation.html#installation-de-qgis-et-des-librairies-sous-windows">Installation de QGis et des librairies sous windows</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_01_installation.html#installation-de-qgis-et-des-librairies-sous-linux">Installation de QGis et des librairies sous Linux</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_01_installation.html#installation-de-lamia">Installation de Lamia</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../03_02_la_base_de_donnees.html">La base de données</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../03_02_la_base_de_donnees.html#l-organisation-generale">L’organisation générale</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_02_la_base_de_donnees.html#la-table-objet">La table Objet</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../03_03_prise_en_main_rapide.html">Prise en main rapide - premiere utilisation « au bureau »</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../03_03_prise_en_main_rapide.html#creer-sa-premiere-base-de-donnees">Créer sa première base de données</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_03_prise_en_main_rapide.html#decouverte-de-linterface">Découverte de l’interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_03_prise_en_main_rapide.html#cest-parti-premiere-saisie">C’est parti : première saisie</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_03_prise_en_main_rapide.html#j-ai-un-bug">J’ai un bug !!</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../03_03a_configurationterrain.html">Prise en main rapide - premiere utilisation « sur le terrain »</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../03_03a_configurationterrain.html#definition-du-repertoire-de-photo-par-defaut">Définition du répertoire de photo par défaut</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_03a_configurationterrain.html#utilisation-dun-gps">Utilisation d’un GPS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_03a_configurationterrain.html#utilisation-des-fonctions-gps-dans-lamia">Utilisation des fonctions GPS dans Lamia</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_03a_configurationterrain.html#ajouter-une-photo">Ajouter une photo</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../03_04_presentation_complete.html">Présentation Complète</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../03_04_presentation_complete.html#le-menu">Le menu</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_04_presentation_complete.html#la-barre-d-outils">La barre d’outils:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_04_presentation_complete.html#elements-de-configuration">Elements de configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../03_05_description_modules_postpro.html">Description des modules de Post Traitement</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="01_impression_rapport.html">Impression de rapports</a></li>
+<li class="toctree-l4"><a class="reference internal" href="02_import.html">Import de données dans Lamia</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Export de données dans Lamia</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">LAMIA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../00_index.html">Documentation en français</a> &raquo;</li>
+        
+          <li><a href="../03_00_tutoriel.html">Tutoriel</a> &raquo;</li>
+        
+          <li><a href="../03_05_description_modules_postpro.html">Description des modules de Post Traitement</a> &raquo;</li>
+        
+      <li>Export de données dans Lamia</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+           <div itemprop="articleBody">
+            
+  <div class="toctree-wrapper compound">
+</div>
+<div class="section" id="export-de-donnees-dans-lamia">
+<h1>Export de données dans Lamia<a class="headerlink" href="#export-de-donnees-dans-lamia" title="Lien permanent vers ce titre">¶</a></h1>
+<div class="section" id="export-a-partir-des-couches-qgis">
+<h2>Export à partir des couches qgis<a class="headerlink" href="#export-a-partir-des-couches-qgis" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Il est possible d’exporter directement les couches qgis. Pour cela,
+aller dans l’onglet couches et faire un click droit sur la couche voulue.</p>
+<p>Dans le menu déroulant, choisir Exporter / Sauvegarder les entitées sous…</p>
+<p>Renseigner la fenêtre, en faisant attention de cocher « Remplacer toutes les valeurs
+brutes des champs sélectionnés … »</p>
+<a class="reference internal image-reference" href="../../_images/rawexport.png"><img alt="../../_images/rawexport.png" class="align-center" src="../../_images/rawexport.png" style="width: 300px;" /></a>
+</div>
+<div class="section" id="utilisation-du-module-d-export">
+<h2>Utilisation du module d’export<a class="headerlink" href="#utilisation-du-module-d-export" title="Lien permanent vers ce titre">¶</a></h2>
+<p>On accède à ce module allant dans « Interface / Post traitement » et en selectionnant
+l’onglet « Export shp ».</p>
+<p>Ce module permet de configurer des exports spécifiques, associant plus tables entre elles.</p>
+<p>Choisir le type d’export voulu, le fichier de destination et cliquer sur « exporter ».</p>
+<div class="section" id="presentation-fonctionnement">
+<h3>Présentation / Fonctionnement<a class="headerlink" href="#presentation-fonctionnement" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Ce module lit un fichier texte situé :</p>
+<ul class="simple">
+<li><p>soit dans le répertoire du plugin Lamia (menu Préférences / Ouvrir le répertoire de Lamia) et ensuite dans le sous répertoire Lamia\worktypeconf\[type_de_base_de_données]\lamiaexportshp</p></li>
+<li><p>soit dans le répertoire du projet (menu Préférences / Ouvrir le répertoire du projet)  et ensuite dans le sous répertoire config\exportshp</p></li>
+</ul>
+<p>Ce fichier contient les instructions pour réaliser l’export.</p>
+</div>
+<div class="section" id="configuration-du-fichier-texte">
+<h3>Configuration du fichier texte<a class="headerlink" href="#configuration-du-fichier-texte" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Le fichier a la structure minimale suivante :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">###Infralineaire</span>
+<span class="c1">#nom              type               cst               valeur</span>
+<span class="n">typeReseau</span><span class="p">;</span>               <span class="n">String</span><span class="p">;</span>   <span class="n">typeReseau</span>   <span class="p">;</span>     <span class="n">Infralineaire_now</span><span class="o">.</span><span class="n">typeReseau</span>
+
+<span class="c1">###geom</span>
+<span class="n">geom</span><span class="p">;</span>         <span class="n">Int</span><span class="p">;</span>               <span class="p">;</span>                  <span class="n">ST_AsText</span><span class="p">(</span><span class="n">Infralineaire_now</span><span class="o">.</span><span class="n">geom</span><span class="p">)</span>
+
+<span class="c1">###main</span>
+<span class="n">FROM</span> <span class="n">Infralineaire_now</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>###main</strong></p></li>
+</ul>
+<p>la partie <strong>###main</strong> sert a executer la requete générale (la partie FROM de la requete SQL). Les tables demandées dans les
+parties avant doivent y figurer. On peut également réaliser des jointures dans cette requete :</p>
+<p>ex: FROM Infralineaire_now LEFT JOIN Noeud_now AS Noeud_amont ON Infralineaire_now.lid_descriptionsystem_1 = Noeud_amont.id_descriptionsystem</p>
+<ul class="simple">
+<li><p><strong>###geom</strong></p></li>
+</ul>
+<p>La partie <strong>###geom</strong> doit être déclarée commme dans l’exemple pour affectée une géométrie à la couche d’export.</p>
+<ul class="simple">
+<li><p><strong>###[Nom_de_table]</strong></p></li>
+</ul>
+<p>Enfin, les champs à exporter sont dans une partie ###[Nom de table]
+l’information comporte 4 parties séparées par des points virgules :</p>
+<ul class="simple">
+<li><p>Le nom du champ dans la table finale;</p></li>
+<li><p>Le type du champ (String, Int ou Double)</p></li>
+<li><p>Le nom du champ Lamia lorsque le champ dispose d’une table de correspondance de valeur - le nom de table affecté à ###[nomde table] doit être juste pour que cela fonctionne;</p></li>
+<li><p>Et enfin, une requete de type SELECT qui s’appliquera sur la partie ###Main vue ci-avant. C’est ici que l’on choisi le champ de la table Lamia.</p></li>
+<li><p><strong># commentaire</strong></p></li>
+</ul>
+<p>LEs commentaires peuvent s’insérer avec une ligne commencant par “# “</p>
+</div>
+<div class="section" id="exemple-complet">
+<h3>Exemple complet<a class="headerlink" href="#exemple-complet" title="Lien permanent vers ce titre">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">###Infralineaire</span>
+<span class="c1">#nom              type               cst               valeur</span>
+<span class="n">id_infralineaire</span><span class="p">;</span>         <span class="n">Int</span><span class="p">;</span>                  <span class="p">;</span>     <span class="n">id_infralineaire</span>
+<span class="n">lk_descriptionsystem1</span><span class="p">;</span>    <span class="n">Int</span><span class="p">;</span>                  <span class="p">;</span>     <span class="n">Infralineaire_now</span><span class="o">.</span><span class="n">lid_descriptionsystem_1</span>
+<span class="n">lk_descriptionsystem2</span><span class="p">;</span>    <span class="n">Int</span><span class="p">;</span>                  <span class="p">;</span>     <span class="n">lid_descriptionsystem_2</span>
+<span class="n">typeReseau</span><span class="p">;</span>               <span class="n">String</span><span class="p">;</span>   <span class="n">typeReseau</span>   <span class="p">;</span>     <span class="n">Infralineaire_now</span><span class="o">.</span><span class="n">typeReseau</span>
+<span class="n">modeCirculation</span><span class="p">;</span>        <span class="n">String</span><span class="p">;</span>   <span class="n">modeCirculation</span> <span class="p">;</span>     <span class="n">modeCirculation</span>
+<span class="n">formecanalisation</span><span class="p">;</span>               <span class="n">String</span><span class="p">;</span>   <span class="n">formecanalisation</span>   <span class="p">;</span>     <span class="n">formecanalisation</span>
+<span class="n">diametreNominal</span><span class="p">;</span>               <span class="n">Double</span><span class="p">;</span>      <span class="p">;</span>     <span class="n">diametreNominal</span>
+<span class="n">hauteur</span><span class="p">;</span>               <span class="n">Double</span><span class="p">;</span>       <span class="p">;</span>     <span class="n">hauteur</span>
+<span class="n">materiau</span><span class="p">;</span>               <span class="n">String</span><span class="p">;</span>      <span class="n">materiau</span>   <span class="p">;</span>     <span class="n">materiau</span>
+<span class="n">branchement</span><span class="p">;</span>               <span class="n">String</span><span class="p">;</span>         <span class="p">;</span>     <span class="n">CASE</span> <span class="n">WHEN</span> <span class="n">branchement</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">THEN</span> <span class="s1">&#39;Principal&#39;</span> <span class="n">ELSE</span> <span class="s1">&#39;Branchement&#39;</span> <span class="n">END</span>
+
+<span class="c1">###Descriptionsystem</span>
+<span class="n">id_descriptionsystem</span><span class="p">;</span>         <span class="n">Int</span><span class="p">;</span>               <span class="p">;</span>                  <span class="n">Infralineaire_now</span><span class="o">.</span><span class="n">id_descriptionsystem</span>
+<span class="n">annee_debut_pose</span><span class="p">;</span>         <span class="n">String</span><span class="p">;</span>               <span class="p">;</span>                  <span class="n">Infralineaire_now</span><span class="o">.</span><span class="n">annee_debut_pose</span>
+<span class="n">date_miseHorsService</span><span class="p">;</span>         <span class="n">String</span><span class="p">;</span>               <span class="p">;</span>                  <span class="n">Infralineaire_now</span><span class="o">.</span><span class="n">date_miseHorsService</span>
+
+<span class="c1">###Objet</span>
+<span class="c1">#nom              type               cst               valeur</span>
+<span class="n">id_objet</span><span class="p">;</span>         <span class="n">Int</span><span class="p">;</span>               <span class="p">;</span>                  <span class="n">Infralineaire_now</span><span class="o">.</span><span class="n">id_objet</span>
+<span class="n">commentaire</span><span class="p">;</span>      <span class="n">String</span><span class="p">;</span>               <span class="p">;</span>                  <span class="n">Infralineaire_now</span><span class="o">.</span><span class="n">commentaire</span>
+<span class="n">datetimecreation</span><span class="p">;</span>      <span class="n">String</span><span class="p">;</span>               <span class="p">;</span>                  <span class="n">Infralineaire_now</span><span class="o">.</span><span class="n">datetimecreation</span>
+<span class="n">datetimemodification</span><span class="p">;</span>      <span class="n">String</span><span class="p">;</span>               <span class="p">;</span>                  <span class="n">Infralineaire_now</span><span class="o">.</span><span class="n">datetimemodification</span>
+
+<span class="c1">###Infralineaire1</span>
+<span class="c1">#nom              type               cst               valeur</span>
+<span class="n">feamont</span><span class="p">;</span>        <span class="n">Double</span><span class="p">;</span>                             <span class="p">;</span> <span class="n">CASE</span> <span class="n">WHEN</span> <span class="n">Infralineaire_now</span><span class="o">.</span><span class="n">profamont</span> <span class="ow">is</span> <span class="n">NULL</span> <span class="n">THEN</span> <span class="p">(</span><span class="n">Noeud_amont</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="n">Noeud_amont</span><span class="o">.</span><span class="n">profradierouvrage</span><span class="p">)</span> <span class="n">ELSE</span> <span class="p">(</span><span class="n">Noeud_amont</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="n">Infralineaire_now</span><span class="o">.</span><span class="n">profamont</span><span class="p">)</span> <span class="n">END</span>
+<span class="n">feaval</span><span class="p">;</span>        <span class="n">Double</span><span class="p">;</span>                             <span class="p">;</span> <span class="n">CASE</span> <span class="n">WHEN</span> <span class="n">Infralineaire_now</span><span class="o">.</span><span class="n">profaval</span> <span class="ow">is</span> <span class="n">NULL</span> <span class="n">THEN</span> <span class="p">(</span><span class="n">Noeud_aval</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="n">Noeud_aval</span><span class="o">.</span><span class="n">profradierouvrage</span><span class="p">)</span> <span class="n">ELSE</span> <span class="p">(</span><span class="n">Noeud_aval</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="n">Infralineaire_now</span><span class="o">.</span><span class="n">profaval</span><span class="p">)</span> <span class="n">END</span>
+<span class="n">longueur</span><span class="p">;</span><span class="n">Double</span><span class="p">;</span>     <span class="p">;</span><span class="n">ST_Length</span><span class="p">(</span><span class="n">Infralineaire_now</span><span class="o">.</span><span class="n">geom</span><span class="p">)</span>
+<span class="n">pentepc</span><span class="p">;</span>        <span class="n">Double</span><span class="p">;</span>                             <span class="p">;((</span> <span class="n">CASE</span> <span class="n">WHEN</span> <span class="n">Infralineaire_now</span><span class="o">.</span><span class="n">profamont</span> <span class="ow">is</span> <span class="n">NULL</span> <span class="n">THEN</span> <span class="p">(</span><span class="n">Noeud_amont</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="n">Noeud_amont</span><span class="o">.</span><span class="n">profradierouvrage</span><span class="p">)</span> <span class="n">ELSE</span> <span class="p">(</span><span class="n">Noeud_amont</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="n">Infralineaire_now</span><span class="o">.</span><span class="n">profamont</span><span class="p">)</span> <span class="n">END</span>  <span class="p">)</span> <span class="o">-</span> <span class="n">CASE</span> <span class="n">WHEN</span> <span class="n">Infralineaire_now</span><span class="o">.</span><span class="n">profaval</span> <span class="ow">is</span> <span class="n">NULL</span> <span class="n">THEN</span> <span class="p">(</span><span class="n">Noeud_aval</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="n">Noeud_aval</span><span class="o">.</span><span class="n">profradierouvrage</span><span class="p">)</span> <span class="n">ELSE</span> <span class="p">(</span><span class="n">Noeud_aval</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="n">Infralineaire_now</span><span class="o">.</span><span class="n">profaval</span><span class="p">)</span> <span class="n">END</span> <span class="p">)</span> <span class="o">/</span> <span class="n">ST_Length</span><span class="p">(</span><span class="n">Infralineaire_now</span><span class="o">.</span><span class="n">geom</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+
+<span class="c1">###geom</span>
+<span class="n">geom</span><span class="p">;</span>         <span class="n">Int</span><span class="p">;</span>               <span class="p">;</span>                  <span class="n">ST_AsText</span><span class="p">(</span><span class="n">Infralineaire_now</span><span class="o">.</span><span class="n">geom</span><span class="p">)</span>
+
+<span class="c1">###main</span>
+<span class="n">FROM</span> <span class="n">Infralineaire_now</span> <span class="n">LEFT</span> <span class="n">JOIN</span> <span class="n">Noeud_now</span> <span class="n">AS</span> <span class="n">Noeud_amont</span> <span class="n">ON</span> <span class="n">Infralineaire_now</span><span class="o">.</span><span class="n">lid_descriptionsystem_1</span> <span class="o">=</span> <span class="n">Noeud_amont</span><span class="o">.</span><span class="n">id_descriptionsystem</span> <span class="n">LEFT</span> <span class="n">JOIN</span> <span class="n">Noeud_now</span> <span class="n">AS</span> <span class="n">Noeud_aval</span> <span class="n">ON</span> <span class="n">Infralineaire_now</span><span class="o">.</span><span class="n">lid_descriptionsystem_2</span> <span class="o">=</span> <span class="n">Noeud_aval</span><span class="o">.</span><span class="n">id_descriptionsystem</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+<a href="https://github.com/Artelia/Lamia">
+	<img style="position: absolute; top: 0; right: 0; border: 0;"
+		src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
+</a>
+<script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script>
+	AOS.init();
+</script>
+
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="02_import.html" class="btn btn-neutral float-left" title="Import de données dans Lamia" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Artelia
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
