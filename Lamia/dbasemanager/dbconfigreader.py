@@ -68,7 +68,7 @@ class DBconfigReader:
                           'geom' : geometry type ,
                           'widget' : the table widget,
                           'djangoviewsql' : sql statement for initial django view creation
-                          'qgisviewsql' : sql statement for initial qgis view creation
+                          'qgisviewsql' : sql statement for initial qgis    view creation
                           'qgisSLviewsql' : sql statement for initial qgis view creation - spatialite compatible
                           'qgisPGviewsql' : sql statement for initial qgis view creation - postgis compatible
                           'exportviewsql' : sql statement for initial special view creation
@@ -159,9 +159,9 @@ class DBconfigReader:
             )
             # self.readXlsDbDictionnary(createworkfilepathtoread)
             if isbase3:
-                self.readOdsDictionnaryBase3(createworkfilepathtoread)
+                self.readOdsDictionnaryBase3(createfilepath)
             else:
-                self.readOdsDictionnary(createworkfilepathtoread)
+                self.readOdsDictionnary(createfilepath)
 
     def readOdsDictionnary(self, dictfile=None, vartoread=None):
         debug = False

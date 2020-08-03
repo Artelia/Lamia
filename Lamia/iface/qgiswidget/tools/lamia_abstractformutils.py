@@ -321,7 +321,7 @@ class FormToolUtils(QtCore.QObject):
         specify tablename, parentfield, childfield and combochild for not combo included in formtoolwidgetconfdict
         """
 
-        debug = True
+        debug = False
         if debug:
             senderwdg = self.sender()
             print("**", senderwdg.objectName())
@@ -456,13 +456,17 @@ class FormToolUtils(QtCore.QObject):
                     wdgconfdict = self.formtoolwidget.formtoolwidgetconfdictmain
 
                 if childfieldname in wdgconfdict[parenttablename]["widgets"]:
+                    reinitcombo = False
                     if combochild is None:
+                        reinitcombo = True
                         combochild = wdgconfdict[parenttablename]["widgets"][
                             childfieldname
                         ]
                     combochild.clear()
                     if len(listtoadd) > 0:
                         combochild.addItems(listtoadd)
+                    if reinitcombo:
+                        combochild = None
 
     def ___________________actionsOnFeatureSelection(self):
         pass
