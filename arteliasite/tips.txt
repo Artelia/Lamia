@@ -1,9 +1,38 @@
- npm install --save-dev webpack-bundle-tracker@0.4.3
+1 Install python venv with requirements :
+note : django rest, django webpack
+
+2 install nodejs and npm and node packages
+requirements are in package.json
+npm install #for requirement install
+npm install -D XXX # for installing XXX
+
+3 Configure webpackloader
+sources :
+https://medium.com/uva-mobile-devhub/set-up-react-in-your-django-project-with-webpack-4fe1f8455396
+https://www.valentinog.com/blog/drf/#setting-up-react-and-webpack
+
+cf webpack.config.js, .babelrc and django settings
+
+note : use  npm install --save-dev webpack-bundle-tracker@0.4.3 newer are buggy
+
+run loader :
+npm run watch
+
+4 Launch django
+
+python manage.py makemigrations 
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py runserver
+
+
+Tips:
  
  pass data from django to react
  https://stackoverflow.com/questions/43927944/pass-data-from-django-view-to-react       NO
  https://adamj.eu/tech/2020/02/18/safely-including-data-for-javascript-in-a-django-template/
  
+ kill django on linux
  netstat -ntlp
  kill -9 [PID]
  

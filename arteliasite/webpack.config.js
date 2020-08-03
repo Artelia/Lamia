@@ -5,15 +5,15 @@ var BundleTracker = require('webpack-bundle-tracker');
 module.exports = {
   context: __dirname,
 
-  entry: './mysite/pvr/static/js/index',
+  entry: './lamiacarto/static/lamiacarto/js/index',
 
   output: {
-    path: path.resolve('./mysite/pvr/static/bundles/'),
+    path: path.resolve('./lamiacarto/static/lamiacarto/bundles/'),
     filename: "[name]-[hash].js",
   },
 
   plugins: [
-    new BundleTracker({ filename: './mysite/webpack-stats.json' }),
+    new BundleTracker({ filename: './lamiacarto/webpack-stats.json' }),
   ],
   module: {
     rules: [
