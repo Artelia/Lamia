@@ -7,7 +7,17 @@ router = routers.SimpleRouter()
 
 urlpatterns = [
     path("", views.BaseView.as_view(), name="home"),
-    path("index", views.IndexView.as_view(), name="index"),
-    path("posts", views.PostViewSet.as_view(), name="posts"),
+    # path("index", views.IndexView.as_view(), name="index"),
+    path(
+        "lamiaproject/<int:project_id>",
+        views.LamiaProjectView.as_view(),
+        name="lamiaproject",
+    ),
+    path("lamiaapi/<int:project_id>", views.PostViewSet.as_view(), name="lamiaapi",),
+    path(
+        "lamiaapi/<int:project_id>/<str:tablename>",
+        views.PostViewSet.as_view(),
+        name="lamiaapi",
+    ),
 ]
 

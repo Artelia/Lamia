@@ -1,0 +1,49 @@
+
+###observation
+#name               type                 cst                  value                
+pk_observation      ;String              ;                    ;observation_now.pk_observation
+id_observation      ;Int                 ;                    ;observation_now.id_observation
+lpk_object          ;Int                 ;                    ;observation_now.lpk_object
+datetimeobservation ;String              ;                    ;observation_now.datetimeobservation
+source              ;String              ;                    ;observation_now.source
+number              ;Int                 ;                    ;observation_now.number
+conditionglobal     ;String              ;conditionglobal     ;observation_now.conditionglobal
+gravity             ;String              ;gravity             ;observation_now.gravity
+progression         ;String              ;                    ;observation_now.progression
+nextactiontype      ;String              ;nextactiontype      ;observation_now.nextactiontype
+nextactioncomment   ;String              ;                    ;observation_now.nextactioncomment
+nextactiontypecomment;String              ;                    ;observation_now.nextactiontypecomment
+lid_delivery        ;Int                 ;                    ;observation_now.lid_delivery
+lid_deficiency      ;Int                 ;                    ;observation_now.lid_deficiency
+nextactionsubtype   ;String              ;nextactionsubtype   ;observation_now.nextactionsubtype
+conditioncover      ;String              ;conditioncover      ;observation_now.conditioncover
+conditionstep       ;String              ;conditionstep       ;observation_now.conditionstep
+conditionmanhole    ;String              ;conditionmanhole    ;observation_now.conditionmanhole
+conditionculvert    ;String              ;conditionculvert    ;observation_now.conditionculvert
+conditioncontroller ;String              ;conditioncontroller ;observation_now.conditioncontroller
+presenceh2s         ;String              ;presenceh2s         ;observation_now.presenceh2s
+presencepressurizedflow;String              ;presencepressurizedflow;observation_now.presencepressurizedflow
+presencesediments   ;String              ;presencesediments   ;observation_now.presencesediments
+presenceinfiltrationtosewer;String              ;presenceinfiltrationtosewer;observation_now.presenceinfiltrationtosewer
+presenceinfiltration;String              ;presenceinfiltration;observation_now.presenceinfiltration
+presenceroots       ;String              ;presenceroots       ;observation_now.presenceroots
+maintenanceopinion  ;String              ;maintenanceopinion  ;observation_now.maintenanceopinion
+equipmentopenclose  ;String              ;equipmentopenclose  ;observation_now.equipmentopenclose
+
+###object
+#name               type                 cst                  value                
+pk_object           ;String              ;                    ;observation_now.pk_object
+id_object           ;Int                 ;                    ;observation_now.id_object
+lpk_revision_begin  ;Int                 ;                    ;observation_now.lpk_revision_begin
+lpk_revision_end    ;Int                 ;                    ;observation_now.lpk_revision_end
+datetimecreation    ;String              ;                    ;observation_now.datetimecreation
+datetimemodification;String              ;                    ;observation_now.datetimemodification
+datetimedestruction ;String              ;                    ;observation_now.datetimedestruction
+comment             ;String              ;                    ;observation_now.comment
+name                ;String              ;                    ;observation_now.name
+importid            ;Int                 ;                    ;observation_now.importid
+importtable         ;String              ;                    ;observation_now.importtable
+lid_actor_creator   ;Int                 ;                    ;observation_now.lid_actor_creator
+
+###main
+FROM observation_now

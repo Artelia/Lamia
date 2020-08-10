@@ -7,7 +7,10 @@ path C:\Program Files\Docker\Docker\resources\bin;C:\ProgramData\DockerDesktop\v
 
 REM pip --user for vscode : black, sphinx, sphonx rtd theme
 path %UserProfile%\AppData\Roaming\Python\Python37\Scripts;%PATH%
+path C:\Program Files\nodejs\;%PATH%
+path %SYSTEMROOT%\System32\OpenSSH\;%PATH%
 set PYTHONPATH=%UserProfile%\AppData\Roaming\python\Python37\site-packages;%PYTHONPATH%
+
 
 
 REM save my life !!!

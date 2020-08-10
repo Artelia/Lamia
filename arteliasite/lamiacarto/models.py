@@ -9,17 +9,22 @@ class User(AbstractUser):
 
 
 class Project(models.Model):
-    id_projet = models.AutoField(primary_key=True)
-    nom = models.CharField(max_length=255)
-    postgisdb = models.CharField(max_length=255)
-    postgisuser = models.CharField(max_length=255)
-    postgispw = models.CharField(max_length=255)
-    qgisserverurl = models.CharField(max_length=255)
-    users = models.ManyToManyField(User, related_name="users")
+    id_project = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+
+    pghost = models.CharField(max_length=255, blank=True)
+    pgport = models.IntegerField(blank=True)
+    pgdbname = models.CharField(max_length=255, blank=True)
+    pgschema = models.CharField(max_length=255, blank=True)
+    pguser = models.CharField(max_length=255, blank=True)
+    pgpassword = models.CharField(max_length=255, blank=True)
+
+    qgisserverurl = models.CharField(max_length=255, blank=True)
+    users = models.ManyToManyField(User, related_name="users", blank=True)
 
     def __str__(self):
-        return self.nom
+        return self.name
 
     class Meta:
-        db_table = "projet"
+        db_table = "project"
 

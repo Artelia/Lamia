@@ -7,8 +7,24 @@ lpk_descriptionsystem;Int                 ;                    ;edge_now.lpk_des
 lid_resource_1      ;Int                 ;                    ;edge_now.lid_resource_1
 lid_descriptionsystem_1;Int                 ;                    ;edge_now.lid_descriptionsystem_1
 lid_descriptionsystem_2;Int                 ;                    ;edge_now.lid_descriptionsystem_2
-edgecategory        ;String              ;edgecategory        ;edge_now.edgecategory
-edgetype            ;String              ;edgetype            ;edge_now.edgetype
+material            ;String              ;material            ;edge_now.material
+nominaldiameter     ;Int                 ;                    ;edge_now.nominaldiameter
+pipetype            ;String              ;pipetype            ;edge_now.pipetype
+pipesubtype         ;String              ;pipesubtype         ;edge_now.pipesubtype
+pipeshape           ;String              ;                    ;edge_now.pipeshape
+height              ;Double              ;                    ;edge_now.height
+laterals            ;String              ;laterals            ;edge_now.laterals
+flowtype            ;String              ;flowtype            ;edge_now.flowtype
+elevationup         ;Double              ;                    ;edge_now.elevationup
+elevationdown       ;Double              ;                    ;edge_now.elevationdown
+depthup             ;Double              ;                    ;edge_now.depthup
+depthdown           ;Double              ;                    ;edge_now.depthdown
+domain              ;String              ;                    ;edge_now.domain
+location            ;String              ;                    ;edge_now.location
+accessibility       ;Int                 ;                    ;edge_now.accessibility
+beddingmaterial     ;String              ;                    ;edge_now.beddingmaterial
+soiltype            ;String              ;                    ;edge_now.soiltype
+soilmoisture        ;String              ;                    ;edge_now.soilmoisture
 
 ###descriptionsystem
 #name               type                 cst                  value                
@@ -16,14 +32,14 @@ pk_descriptionsystem;String              ;                    ;edge_now.pk_descr
 id_descriptionsystem;Int                 ;                    ;edge_now.id_descriptionsystem
 lpk_object          ;Int                 ;                    ;edge_now.lpk_object
 strategicvalue      ;String              ;                    ;edge_now.strategicvalue
-operational         ;Int                 ;operational         ;edge_now.operational
+operational         ;String              ;operational         ;edge_now.operational
 operationalstate    ;String              ;                    ;edge_now.operationalstate
 dateoperationalcreation;String              ;                    ;edge_now.dateoperationalcreation
 dateoperationalcreationupper;String              ;                    ;edge_now.dateoperationalcreationupper
 operationaldatecreationaccuracy;String              ;operationaldatecreationaccuracy;edge_now.operationaldatecreationaccuracy
 datetimeoperationaldestruction;String              ;                    ;edge_now.datetimeoperationaldestruction
-geotrackingxyquality;Int                 ;geotrackingxyquality;edge_now.geotrackingxyquality
-geotrackingzquality ;Int                 ;geotrackingzquality ;edge_now.geotrackingzquality
+geotrackingxyquality;String              ;geotrackingxyquality;edge_now.geotrackingxyquality
+geotrackingzquality ;String              ;geotrackingzquality ;edge_now.geotrackingzquality
 geotrackingdate     ;String              ;                    ;edge_now.geotrackingdate
 geotrackingsource   ;String              ;                    ;edge_now.geotrackingsource
 parameters          ;String              ;                    ;edge_now.parameters
@@ -36,16 +52,16 @@ lid_actor_1         ;Int                 ;                    ;edge_now.lid_acto
 lid_actor_2         ;Int                 ;                    ;edge_now.lid_actor_2
 lid_actor_3         ;Int                 ;                    ;edge_now.lid_actor_3
 lid_facility        ;Int                 ;                    ;edge_now.lid_facility
-float_1             ;String              ;                    ;edge_now.float_1
-float_2             ;String              ;                    ;edge_now.float_2
-float_3             ;String              ;                    ;edge_now.float_3
-float_4             ;String              ;                    ;edge_now.float_4
-float_5             ;String              ;                    ;edge_now.float_5
-float_6             ;String              ;                    ;edge_now.float_6
-float_7             ;String              ;                    ;edge_now.float_7
-float_8             ;String              ;                    ;edge_now.float_8
-float_9             ;String              ;                    ;edge_now.float_9
-float_10            ;String              ;                    ;edge_now.float_10
+float_1             ;Double              ;                    ;edge_now.float_1
+float_2             ;Double              ;                    ;edge_now.float_2
+float_3             ;Double              ;                    ;edge_now.float_3
+float_4             ;Double              ;                    ;edge_now.float_4
+float_5             ;Double              ;                    ;edge_now.float_5
+float_6             ;Double              ;                    ;edge_now.float_6
+float_7             ;Double              ;                    ;edge_now.float_7
+float_8             ;Double              ;                    ;edge_now.float_8
+float_9             ;Double              ;                    ;edge_now.float_9
+float_10            ;Double              ;                    ;edge_now.float_10
 string_1            ;String              ;                    ;edge_now.string_1
 string_2            ;String              ;                    ;edge_now.string_2
 string_3            ;String              ;                    ;edge_now.string_3
@@ -56,9 +72,10 @@ string_7            ;String              ;                    ;edge_now.string_7
 string_8            ;String              ;                    ;edge_now.string_8
 string_9            ;String              ;                    ;edge_now.string_9
 string_10           ;String              ;                    ;edge_now.string_10
-commonname          ;String              ;                    ;edge_now.commonname
-scientificname      ;String              ;                    ;edge_now.scientificname
-orderclass          ;String              ;                    ;edge_now.orderclass
+networktype         ;String              ;networktype         ;edge_now.networktype
+flowconditionupstream;String              ;flowconditionupstream;edge_now.flowconditionupstream
+flowconditiondownstream;String              ;flowconditiondownstream;edge_now.flowconditiondownstream
+systemfunction      ;String              ;systemfunction      ;edge_now.systemfunction
 
 ###object
 #name               type                 cst                  value                

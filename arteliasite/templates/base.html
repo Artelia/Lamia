@@ -5,13 +5,19 @@
 <!-- https://mdbootstrap.com/docs/jquery/navigation/navbar/ -->
 
 <head>
-
-    <!-- <link rel="stylesheet" href="/media/css/style.css" /> -->
     <title>{% block title %}Lamia home{% endblock %}</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}">
     <!-- Some amazing markup -->
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}">
     <script src="{% static 'jquery/dist/jquery.min.js' %}"></script>
     <script src="{% static 'bootstrap/dist/js/bootstrap.js' %}"></script>
+    <!-- <link rel="stylesheet" href="/media/css/style.css" /> -->
+
+
+    <link rel="stylesheet" type="text/css" href="{% static 'lamiacarto/css/Features-Boxed.css' %}">
+
+
+    {% block head %}
+    {% endblock %}
 </head>
 
 <body>
@@ -21,12 +27,13 @@
         <div class="container">
             <a class="navbar-brand" href="https://arteliagroup.com">
                 <!-- Brand -->
-                <img src="{% static 'pictures/logo_white.png' %}" width="100" height="50" alt=""></a>
+                <img src="{% static 'lamiacarto/pictures/logo_white.png' %}" width="100" height="50" alt=""></a>
             <!-- Artelia -->
             <!-- width="30" height="30" -->
             <a class="navbar-brand" href="#">
                 <!-- Brand -->
-                <img src="{% static 'pictures/Logo_LAMIA_transparent.png' %}" width="50" height="50" alt=""></a>
+                <img src="{% static 'lamiacarto/pictures/Logo_LAMIA_transparent.png' %}" width="50" height="50"
+                    alt=""></a>
             <button class="navbar-toggler border-0" type="button" data-toggle="collapse"
                 data-target="#exCollapsingNavbar">
                 &#9776;
@@ -46,10 +53,15 @@
                         <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-333" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">Projects
                         </a>
+
                         <div class="dropdown-menu dropdown-default" aria-labelledby="navbarDropdownMenuLink-333">
-                            <a class="dropdown-item" href="{% url 'index' %}">Demo</a>
-                            <a class=" dropdown-item" href="#">Another action</a>
+                            {% for item in projects %}
+                            <a class="dropdown-item"
+                                href="{% url 'lamiaproject'  project_id=item.id_project%}">{{ item.name }}</a>
+                            {% endfor %}
                         </div>
+
+
                     </li>
                 </ul>
                 <ul class=" nav navbar-nav flex-row justify-content-between ml-auto">
@@ -87,7 +99,8 @@
                                             class="form-control form-control-sm" type="text">
                                     </div>
                                     <div class="form-group">
-                                        <button type="submit" class="btn btn-primary btn-block">Login</button>
+                                        <button type="submit" name='login'
+                                            class="btn btn-primary btn-block">Login</button>
 
                                     </div>
                                     <!-- <div class="form-group text-center">
@@ -134,15 +147,74 @@
 
 
     {% block content %}
-    <p>popo</p>
-    {% for project in projects %}
-    <p>{{ project.nom }}</p>
-    {% endfor %}
-    <div id="root" class="container-fluid" style="height:calc(100vh - 130px)">
+
+    <div>
+        <div class="header-dark"
+            style="background-image:url({% static 'lamiacarto/pictures/hero.jpg' %}); background-size:cover">
+            <div class=" container hero">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2">
+                        <h1 class="text-center"
+                            style="padding-top:120px;font-weight:bold;font-family:'Open Sans', sans-serif;margin-bottom:30px; color:rgb(250,253,255)">
+                            Welcome to Lamia</h1>
+                        <h1 class="text-center"
+                            style="font-size:30px;padding-top:0px;font-weight:bold;font-family:'Open Sans', sans-serif;padding-bottom:200px; color:rgb(250,253,255)">
+                            The Open sourced Asset Management </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-
-
+    <div id="features" class="features-boxed">
+        <div class="container">
+            <div class="intro">
+                <h2 class="text-center" style="padding-top:70px;">Features </h2>
+                <p class="text-center">All the features that Lamia provides for your projects.</p>
+            </div>
+            <div class="row features">
+                <div class="col-md-4 col-sm-6 item">
+                    <div class="box"><i class="glyphicon glyphicon-map-marker icon"></i>
+                        <h3 class="name">Google Maps &amp; Street View</h3>
+                        <p class="description">Integrate the real location of the projects with Google Maps &amp; Google
+                            Street View.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 item">
+                    <div class="box"><i class="glyphicon glyphicon-repeat icon"></i>
+                        <h3 class="name">Immersive experience</h3>
+                        <p class="description">Upload 360° images into the secure artelia360 cloud.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 item">
+                    <div class="box"><i class="glyphicon glyphicon-list-alt icon"></i>
+                        <h3 class="name">Database</h3>
+                        <p class="description">Manage all the project information with the realtime dashboard.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 item">
+                    <div class="box"><i class="glyphicon glyphicon-camera icon"></i>
+                        <h3 class="name">Media</h3>
+                        <p class="description">All the media information of the project classified by phases and dates.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 item">
+                    <div class="box"><i class="glyphicon glyphicon-arrow-down icon"></i>
+                        <h3 class="name">Attachments</h3>
+                        <p class="description">The main files of the projects can be uploaded to Artelia 360.com.&nbsp;
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 item">
+                    <div class="box"><i class="glyphicon glyphicon-phone icon"></i>
+                        <h3 class="name">Mobile-Friendly</h3>
+                        <p class="description">Artelia360 is available in all the devices. PC, Mobile, Tablet</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <!-- Footer -->

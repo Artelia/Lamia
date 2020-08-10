@@ -31,9 +31,11 @@ def createDefaultTxtExport(dbaseparser, tablename):
         for fieldname, fieldconf in dbaseparser.dbasetables[table]["fields"].items():
             # define export type
             shptype = ""
-            if fieldconf["PGtype"] in ["INT"]:
+            if "Cst" in fieldconf.keys() and fieldconf["Cst"] is not None:
+                shptype = "String"
+            elif fieldconf["PGtype"] in ["INT"]:
                 shptype = "Int"
-            elif fieldconf["PGtype"] in ["Real"]:
+            elif fieldconf["PGtype"] in ["REAL", "Real"]:
                 shptype = "Double"
             else:
                 shptype = "String"
@@ -74,10 +76,14 @@ def main(argv):
         "base3_faunaflora",
         "base3_levee",
     """
-    dbaseparser.dbconfigreader.createDBDictionary("base3_faunaflora")
+    dbaseparser.dbconfigreader.createDBDictionary("base3_urbandrainage")
     createDefaultTxtExport(dbaseparser, "node")
     createDefaultTxtExport(dbaseparser, "edge")
     createDefaultTxtExport(dbaseparser, "surface")
+    createDefaultTxtExport(dbaseparser, "deficiency")
+    createDefaultTxtExport(dbaseparser, "observation")
+    createDefaultTxtExport(dbaseparser, "media")
+    createDefaultTxtExport(dbaseparser, "equipment")
 
 
 if __name__ == "__main__":

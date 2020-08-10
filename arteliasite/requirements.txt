@@ -6,3 +6,4 @@ pycodestyle
 #sqlite3
 django-webpack-loader
 djangorestframework
+django-cors-headers

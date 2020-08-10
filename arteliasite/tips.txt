@@ -52,3 +52,29 @@ Tips:
  
  #query projects with a user
  Project.objects.filter(users__username='pvr')
+ 
+ bug with async and webpack/babel
+ https://medium.com/@binyamin/enabling-async-await-and-generator-functions-in-babel-node-and-express-71e941b183e2
+ 
+ postgres admin
+ https://stackoverflow.com/questions/760210/how-do-you-create-a-read-only-user-in-postgresql
+ 
+ admin for a schema
+ https://tableplus.com/blog/2018/04/postgresql-how-to-grant-access-to-users.html
+ https://stackoverflow.com/questions/760210/how-do-you-create-a-read-only-user-in-postgresql
+ * pgadmin : 
+ 1 dbase : properties/security : select the user and "connect" (= GRANT CONNECT ON DATABASE database_name TO username;)
+ 2 schema : Properties/security : select the user and "usage" (=GRANT USAGE ON SCHEMA schema_name TO username;)
+ 3  schema : Properties/default privilege : select the user and "select" (=ALTER DEFAULT PRIVILEGES IN SCHEMA public    GRANT SELECT ON TABLES TO xxx;;)
+  but this does not affect existing tables - so make the query:
+  GRANT SELECT ON ALL TABLES IN SCHEMA public TO xxx;    for applying to existing tables
+  
+  NB : REVOKE SELECT ON ALL TABLES IN SCHEMA public FROM user;     to revoke
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

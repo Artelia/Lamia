@@ -1,7 +1,7 @@
 import React from 'react';
 // import Map from "ol/map";
 //open layers and styles
-// var ol = require('ol');
+var ol = require('ol');
 // require('ol/css/ol.css');
 // import * as ol from 'ol';
 import 'ol/ol.css';
@@ -37,38 +37,48 @@ class OLCanvasReact extends React.Component {
     super(props);
     this.mainiface = this.props.mainiface
     // this.dbase = new DbaseCommunication()
-
   }
 
+
+
   componentDidMount() {
+    console.log('DidMount ', this.constructor.name, this.props.qgisserverurl)
 
     // create feature layer and vector source
-    var featuresLayer = new Vector({
-      source: new VectorSource({
-        features: []
-      })
-    });
+    // var qgislayer = new Vector({
+    //   source: new VectorSource({
+    //     features: []
+    //   })
+    // });
+
+    var qgislayer = new TileLayer();
+
     // console.log(this.mainiface.mainwidgetdom.type.toolwdgclass.workclasses)
     // console.log(OLCanvasReact.workclasses)
-    let layers = []
-    // let workclasses = this.mainiface.mainwidgetdom.type.toolwdgclass.workclasses
-    Object.keys(OLCanvasReact.workclasses).forEach((tablename) => layers.push(tablename.charAt(0).toUpperCase()
-      + tablename.substr(1).toLowerCase()
-      + '_qgis')
-    )
+    // let layers = []
+    // // let workclasses = this.mainiface.mainwidgetdom.type.toolwdgclass.workclasses
+    // Object.keys(OLCanvasReact.workclasses).forEach((tablename) => layers.push(tablename.charAt(0).toUpperCase()
+    //   + tablename.substr(1).toLowerCase()
+    //   + '_qgis')
+    // )
     // console.log(layers)
-
-    var qgislayer = new TileLayer({
-      // extent: [-13884991, 2870341, -7455066, 6338219],
-      source: new TileWMS({
-        url: 'http://localhost:8380/',
-        params: {
-          'LAYERS': layers,
-          'TRANSPARENT': true,
-        },
-        serverType: 'qgis'
-      })
-    });
+    // console.log('**', this.props.qgisserverurl)
+    // if ([null, false].includes(this.props.qgisserverurl)) {
+    //   console.log('not inc')
+    // } else {
+    //   console.log('okok')
+    // }
+    // var qgislayer = new TileLayer({
+    //   // extent: [-13884991, 2870341, -7455066, 6338219],
+    //   source: new TileWMS({
+    //     url: 'http://localhost:8380/',
+    //     params: {
+    //       'LAYERS': layers,
+    //       'TRANSPARENT': true,
+    //     },
+    //     serverType: 'qgis'
+    //   })
+    // });
 
 
     // create map object with feature layer
@@ -79,7 +89,7 @@ class OLCanvasReact extends React.Component {
         new TileLayer({
           source: new OSM()
         }),
-        featuresLayer,
+        // featuresLayer,
         qgislayer,
       ],
       controls: defaultControls({
@@ -108,12 +118,12 @@ class OLCanvasReact extends React.Component {
 
     // map.on('click', this.handleMapClick.bind(this));
 
-    var updateLegend = function (resolution) {
-      var graphicUrl = qgislayer.getSource().getLegendUrl(resolution);
-      console.log('rr', graphicUrl)
-      // var img = $('#legend')
-      // img.src = graphicUrl;
-    };
+    // var updateLegend = function (resolution) {
+    //   var graphicUrl = qgislayer.getSource().getLegendUrl(resolution);
+    //   console.log('rr', graphicUrl)
+    //   // var img = $('#legend')
+    //   // img.src = graphicUrl;
+    // };
 
     // // Initial legend
     // var resolution = map.getView().getResolution();
@@ -136,33 +146,125 @@ class OLCanvasReact extends React.Component {
     // save map and layer references to local state
     this.setState({
       map: map,
-      featuresLayer: featuresLayer,
-      // qgislayer: qgislayer,
+      // featuresLayer: featuresLayer,
+      qgislayer: qgislayer,
     });
+
+  }
+
+  shouldComponentUpdate_(nextProps, nextState) {
+    console.log('shouldComponentUpdate ', this.constructor.name, this.props.qgisserverurl)
+
+    console.log('**', this.props.qgisserverurl)
+    if ([null, false].includes(this.props.qgisserverurl)) {
+      console.log('not inc')
+    } else {
+      console.log('okok')
+    }
+    let layers = []
+    // let workclasses = this.mainiface.mainwidgetdom.type.toolwdgclass.workclasses
+    Object.keys(OLCanvasReact.workclasses).forEach((tablename) => layers.push(tablename.charAt(0).toUpperCase()
+      + tablename.substr(1).toLowerCase()
+      + '_qgis')
+    )
+    var qgislayer = new TileLayer({
+      // extent: [-13884991, 2870341, -7455066, 6338219],
+      source: new TileWMS({
+        url: 'http://localhost:8380/',
+        params: {
+          'LAYERS': layers,
+          'TRANSPARENT': true,
+        },
+        serverType: 'qgis'
+      })
+    });
+
+    this.setState({ qgislayer: qgislayer })
+
 
   }
 
   // pass new features from props into the OpenLayers layer object
   componentDidUpdate(prevProps, prevState) {
-    this.state.featuresLayer.setSource(
-      new VectorSource({
-        features: this.props.routes
-      })
-    );
+    console.log('DidUpdate ', this.constructor.name, this.props.qgisserverurl)
+
+
+
+
+    // this.state.featuresLayer.setSource(
+    //   new VectorSource({
+    //     features: this.props.routes
+    //   })
+    // );
   }
 
+  componentWillReceiveProps(nextProps) {
+    console.log('componentWillReceiveProps ', this.constructor.name, this.props.qgisserverurl, nextProps)
 
+    console.log('**', nextProps.qgisserverurl)
+    if ([null, false].includes(nextProps.qgisserverurl)) {
+      console.log('not inc')
+    } else {
+
+      console.log('okok')
+
+      let layers = []
+      // let workclasses = this.mainiface.mainwidgetdom.type.toolwdgclass.workclasses
+      Object.keys(OLCanvasReact.workclasses).forEach((tablename) => layers.push(tablename.charAt(0).toUpperCase()
+        + tablename.substr(1).toLowerCase()
+        + '_qgis')
+      )
+      var qgislayer = new TileLayer({
+        // extent: [-13884991, 2870341, -7455066, 6338219],
+        source: new TileWMS({
+          url: nextProps.qgisserverurl,
+          params: {
+            'LAYERS': layers,
+            'TRANSPARENT': true,
+          },
+          serverType: 'qgis'
+        })
+      });
+
+      // this.setState({ qgislayer: qgislayer })
+
+      this.state.qgislayer.setSource(
+        new TileWMS({
+          url: nextProps.qgisserverurl,
+          params: {
+            'LAYERS': layers,
+            'TRANSPARENT': true,
+          },
+          serverType: 'qgis'
+        })
+      );
+
+    }
+
+  }
 
   render() {
+    console.log('render ', this.constructor.name, this.props.qgisserverurl)
+
+    // this.addQgsLayer()
+
     const debug = false;
     let mainol = <p></p>;
     if (debug) {
       mainol = <p style={{ backgroundColor: 'red' }} >{this.constructor.name}</p>
     }
+    let qgisserverstate = null;
+    if (this.props.qgisserverurl === null) {
+      qgisserverstate = <p>Loading qgisserver ... </p>
+    } else if (this.props.qgisserverurl === false) {
+      qgisserverstate = <p>Qgisserver no found - contact admin </p>
+    };
 
     return (
+
       < div ref="mapContainer" style={{ width: '100%', height: '100%', backgroundColor: 'transparent' }
       }>
+        {qgisserverstate}
         {mainol}
       </div >
     );

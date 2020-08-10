@@ -1,4 +1,4 @@
-import os, sys
+import os, sys, logging
 
 import qgis, qgis.core
 
@@ -11,6 +11,7 @@ import Lamia
 from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
 
 from Lamia.libslamia.lamiaexportshp.lamiaexportshp import ExportShapefileCore
+
 
 import cProfile
 
@@ -27,6 +28,7 @@ def main(argv):
     SLFILE = (
         r"C:\111_GitProjects\Lamia\test\datas\lamia_assainissement_base3\test01.sqlite"
     )
+    SLFILE = r"C:\01_WORKINGDIR\perigord\CC_Bastides_Dordogne_Perigord_finale.sqlite"
 
     tempparser = DBaseParserFactory("spatialite").getDbaseParser()
     tempparser.loadDBase(dbtype="Spatialite", slfile=SLFILE)
@@ -35,14 +37,20 @@ def main(argv):
 
     print("start ExportShapefileCore")
 
-    lamiashpexport = ExportShapefileCore(tempparser)
+    from Lamia.iface.qgsconnector.ifaceloggingconnector import LoggingConnector
+
+    connector = LoggingConnector()
+    lamiashpexport = ExportShapefileCore(tempparser, messageinstance=connector)
+    lamiashpexport.SHOWSQL = False
+    logging.getLogger("Lamia_unittest").setLevel(logging.DEBUG)
+    logging.getLogger("Lamia").setLevel(logging.DEBUG)
 
     if PROFILING:
         pr.enable()
 
     lamiashpexport.runExport(
         destinationshapefile=r"C:\01_WORKINGDIR\toto\popo.shp",
-        exportconffilepath="edge",
+        exportconffilepath="node_observation",
         pkzonegeos=[],
     )
 

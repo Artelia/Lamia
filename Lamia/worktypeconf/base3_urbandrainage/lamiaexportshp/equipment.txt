@@ -9,7 +9,7 @@ lid_resource_1      ;Int                 ;                    ;equipment_now.lid
 lid_descriptionsystem_1;Int                 ;                    ;equipment_now.lid_descriptionsystem_1
 domain              ;String              ;domain              ;equipment_now.domain
 location            ;String              ;location            ;equipment_now.location
-equipmenttype       ;Int                 ;equipmenttype       ;equipment_now.equipmenttype
+equipmenttype       ;String              ;equipmenttype       ;equipment_now.equipmenttype
 accessibility       ;String              ;                    ;equipment_now.accessibility
 
 ###descriptionsystem
@@ -18,14 +18,14 @@ pk_descriptionsystem;String              ;                    ;equipment_now.pk_
 id_descriptionsystem;Int                 ;                    ;equipment_now.id_descriptionsystem
 lpk_object          ;Int                 ;                    ;equipment_now.lpk_object
 strategicvalue      ;String              ;                    ;equipment_now.strategicvalue
-operational         ;Int                 ;operational         ;equipment_now.operational
+operational         ;String              ;operational         ;equipment_now.operational
 operationalstate    ;String              ;                    ;equipment_now.operationalstate
 dateoperationalcreation;String              ;                    ;equipment_now.dateoperationalcreation
 dateoperationalcreationupper;String              ;                    ;equipment_now.dateoperationalcreationupper
 operationaldatecreationaccuracy;String              ;operationaldatecreationaccuracy;equipment_now.operationaldatecreationaccuracy
 datetimeoperationaldestruction;String              ;                    ;equipment_now.datetimeoperationaldestruction
-geotrackingxyquality;Int                 ;geotrackingxyquality;equipment_now.geotrackingxyquality
-geotrackingzquality ;Int                 ;geotrackingzquality ;equipment_now.geotrackingzquality
+geotrackingxyquality;String              ;geotrackingxyquality;equipment_now.geotrackingxyquality
+geotrackingzquality ;String              ;geotrackingzquality ;equipment_now.geotrackingzquality
 geotrackingdate     ;String              ;                    ;equipment_now.geotrackingdate
 geotrackingsource   ;String              ;                    ;equipment_now.geotrackingsource
 parameters          ;String              ;                    ;equipment_now.parameters
@@ -38,16 +38,16 @@ lid_actor_1         ;Int                 ;                    ;equipment_now.lid
 lid_actor_2         ;Int                 ;                    ;equipment_now.lid_actor_2
 lid_actor_3         ;Int                 ;                    ;equipment_now.lid_actor_3
 lid_facility        ;Int                 ;                    ;equipment_now.lid_facility
-float_1             ;String              ;                    ;equipment_now.float_1
-float_2             ;String              ;                    ;equipment_now.float_2
-float_3             ;String              ;                    ;equipment_now.float_3
-float_4             ;String              ;                    ;equipment_now.float_4
-float_5             ;String              ;                    ;equipment_now.float_5
-float_6             ;String              ;                    ;equipment_now.float_6
-float_7             ;String              ;                    ;equipment_now.float_7
-float_8             ;String              ;                    ;equipment_now.float_8
-float_9             ;String              ;                    ;equipment_now.float_9
-float_10            ;String              ;                    ;equipment_now.float_10
+float_1             ;Double              ;                    ;equipment_now.float_1
+float_2             ;Double              ;                    ;equipment_now.float_2
+float_3             ;Double              ;                    ;equipment_now.float_3
+float_4             ;Double              ;                    ;equipment_now.float_4
+float_5             ;Double              ;                    ;equipment_now.float_5
+float_6             ;Double              ;                    ;equipment_now.float_6
+float_7             ;Double              ;                    ;equipment_now.float_7
+float_8             ;Double              ;                    ;equipment_now.float_8
+float_9             ;Double              ;                    ;equipment_now.float_9
+float_10            ;Double              ;                    ;equipment_now.float_10
 string_1            ;String              ;                    ;equipment_now.string_1
 string_2            ;String              ;                    ;equipment_now.string_2
 string_3            ;String              ;                    ;equipment_now.string_3

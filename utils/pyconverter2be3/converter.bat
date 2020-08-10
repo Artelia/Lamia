@@ -1,7 +1,7 @@
 call %~dp0/../win_setqgisenv.bat
 cd %~dp0
 
-SET SOURCEFILE="C:\01_WORKINGDIR\lamia\from\CC_Bastides_Dordogne_Perigord-B.sqlite"
+SET SOURCEFILE="C:\01_WORKINGDIR\lamia\from\CC_Bastides_Dordogne_Perigord3.sqlite"
 REM ***** ASS ***********
 REM \BACALAN\GPMB Bacalan.sqlite       BASSENS\EU\Bassens EU EP.sqlite  BLAYE\GPMB Blaye.sqlite
 REM Pauillac\GPMB Pauillac.sqlite   POLE NAVAL\EU\Pole naval.sqlite Verdon port bloc\GPMB Port Bloc.sqlite

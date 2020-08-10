@@ -37,6 +37,7 @@ from qgis.PyQt import QtGui, uic, QtCore, QtXml
 class ExportShapefileCore:
 
     POSTPROTOOLNAME = "exporttools"
+    SHOWSQL = False
 
     def __init__(self, dbaseparser, messageinstance=None):
         # super(ExportShapefileTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil, parentwidget, parent=parent)
@@ -82,7 +83,8 @@ class ExportShapefileCore:
 
         self.fieldsforshp = self.buildQgsFields(self.champs)
         sql = self.buildSql(self.champs, pkzonegeos)
-        if debug:
+
+        if debug or self.SHOWSQL:
             logging.getLogger("Lamia").debug("sql %s", sql)
 
         query = self.dbase.query(sql)
@@ -116,7 +118,7 @@ class ExportShapefileCore:
                 sqlgeom = table["fields"]["geom"]["value"]
                 if "ST_AsText(" in sqlgeom:
                     geomval = sqlgeom.split("ST_AsText(")[1][:-1]
-                    print(geomval)
+                    # print(geomval)
                 else:
                     geomval = "geom"
 
@@ -361,13 +363,15 @@ class ExportShapefileCore:
         for i, table in enumerate(champs):
             if table["table"] not in ["geom", "main", "with"]:
                 for j, name in enumerate(table["fields"].keys()):
+                    typefield = eval("QtCore.QVariant." + table["fields"][name]["type"])
                     if name in [field.name() for field in fields]:
                         self.messageinstance.showErrorMessage(
                             "ATTENTION Champ " + name + " deja utilise"
                         )
-
-                    typefield = eval("QtCore.QVariant." + table["fields"][name]["type"])
-                    fields.append(qgis.core.QgsField(name, typefield))
+                        fields.append(qgis.core.QgsField(name + str(i), typefield))
+                    else:
+                        # typefield = eval("QtCore.QVariant." + table["fields"][name]["type"])
+                        fields.append(qgis.core.QgsField(name, typefield))
 
         return fields
 
@@ -393,6 +397,7 @@ class ExportShapefileCore:
             if debug:
                 logging.getLogger("Lamia").debug("res %s", str(row))
             feat = qgis.core.QgsFeature(fields)
+
             if typegeom != qgis.core.QgsWkbTypes.NoGeometry:
                 if row[-1] is not None:
                     feat.setGeometry(qgis.core.QgsGeometry.fromWkt(row[-1]))
@@ -432,3 +437,4 @@ class ExportShapefileCore:
         del writer
         if self.messageinstance is not None:
             self.messageinstance.showNormalMessage("Export termine")
+

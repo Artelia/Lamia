@@ -5,18 +5,18 @@ pk_node             ;String              ;                    ;node_now.pk_node
 id_node             ;Int                 ;                    ;node_now.id_node
 lpk_descriptionsystem;Int                 ;                    ;node_now.lpk_descriptionsystem
 lid_descriptionsystem_1;Int                 ;                    ;node_now.lid_descriptionsystem_1
-elevationinvert     ;String              ;                    ;node_now.elevationinvert
-elevationcover      ;String              ;                    ;node_now.elevationcover
-depthinvert         ;String              ;                    ;node_now.depthinvert
-altitude1           ;String              ;                    ;node_now.altitude1
-depth1              ;String              ;                    ;node_now.depth1
+elevationinvert     ;Double              ;                    ;node_now.elevationinvert
+elevationcover      ;Double              ;                    ;node_now.elevationcover
+depthinvert         ;Double              ;                    ;node_now.depthinvert
+altitude1           ;Double              ;                    ;node_now.altitude1
+depth1              ;Double              ;                    ;node_now.depth1
 nodetype            ;String              ;nodetype            ;node_now.nodetype
 nodesubtype         ;String              ;nodesubtype         ;node_now.nodesubtype
 accessibility       ;String              ;accessibility       ;node_now.accessibility
 domain              ;String              ;                    ;node_now.domain
 location            ;String              ;location            ;node_now.location
-width               ;String              ;                    ;node_now.width
-lenght              ;String              ;                    ;node_now.lenght
+width               ;Double              ;                    ;node_now.width
+lenght              ;Double              ;                    ;node_now.lenght
 lid_resource_1      ;Int                 ;                    ;node_now.lid_resource_1
 lid_resource_2      ;Int                 ;                    ;node_now.lid_resource_2
 lid_resource_3      ;Int                 ;                    ;node_now.lid_resource_3
@@ -25,48 +25,48 @@ lid_resource_5      ;Int                 ;                    ;node_now.lid_reso
 lid_resource_6      ;Int                 ;                    ;node_now.lid_resource_6
 manholecovershape   ;String              ;manholecovershape   ;node_now.manholecovershape
 manholecovertype    ;String              ;                    ;node_now.manholecovertype
-manholecoverdiameter;String              ;                    ;node_now.manholecoverdiameter
+manholecoverdiameter;Double              ;                    ;node_now.manholecoverdiameter
 manholematerial     ;String              ;                    ;node_now.manholematerial
 manholeshape        ;String              ;manholeshape        ;node_now.manholeshape
-presencesteps       ;Int                 ;presencesteps       ;node_now.presencesteps
-presencehandle      ;Int                 ;presencehandle      ;node_now.presencehandle
-presencelowflowchannel;Int                 ;presencelowflowchannel;node_now.presencelowflowchannel
-presencesiphoidpartition;Int                 ;presencesiphoidpartition;node_now.presencesiphoidpartition
-presencelid         ;Int                 ;presencelid         ;node_now.presencelid
-psnominalcapacity   ;String              ;                    ;node_now.psnominalcapacity
-psfence             ;Int                 ;psfence             ;node_now.psfence
-psstormwaterinlet   ;Int                 ;psstormwaterinlet   ;node_now.psstormwaterinlet
-pslocked            ;Int                 ;pslocked            ;node_now.pslocked
-psh2streatment      ;Int                 ;psh2streatment      ;node_now.psh2streatment
-pseleccabinet       ;Int                 ;pseleccabinet       ;node_now.pseleccabinet
-pseleccabinetlocked ;Int                 ;pseleccabinetlocked ;node_now.pseleccabinetlocked
-psremotemonitoring  ;Int                 ;psremotemonitoring  ;node_now.psremotemonitoring
+presencesteps       ;String              ;presencesteps       ;node_now.presencesteps
+presencehandle      ;String              ;presencehandle      ;node_now.presencehandle
+presencelowflowchannel;String              ;presencelowflowchannel;node_now.presencelowflowchannel
+presencesiphoidpartition;String              ;presencesiphoidpartition;node_now.presencesiphoidpartition
+presencelid         ;String              ;presencelid         ;node_now.presencelid
+psnominalcapacity   ;Double              ;                    ;node_now.psnominalcapacity
+psfence             ;String              ;psfence             ;node_now.psfence
+psstormwaterinlet   ;String              ;psstormwaterinlet   ;node_now.psstormwaterinlet
+pslocked            ;String              ;pslocked            ;node_now.pslocked
+psh2streatment      ;String              ;psh2streatment      ;node_now.psh2streatment
+pseleccabinet       ;String              ;pseleccabinet       ;node_now.pseleccabinet
+pseleccabinetlocked ;String              ;pseleccabinetlocked ;node_now.pseleccabinetlocked
+psremotemonitoring  ;String              ;psremotemonitoring  ;node_now.psremotemonitoring
 psremotemonitoringcomment;String              ;                    ;node_now.psremotemonitoringcomment
-pspumpswitchingcontroller;Int                 ;pspumpswitchingcontroller;node_now.pspumpswitchingcontroller
+pspumpswitchingcontroller;String              ;pspumpswitchingcontroller;node_now.pspumpswitchingcontroller
 pspumpswitchingcontrollertype;String              ;pspumpswitchingcontrollertype;node_now.pspumpswitchingcontrollertype
 psfloatnumber       ;Int                 ;                    ;node_now.psfloatnumber
 psfailurecontrollertype;String              ;psfailurecontrollertype;node_now.psfailurecontrollertype
 psmaterial          ;String              ;psmaterial          ;node_now.psmaterial
-psfallprotectiongratings;Int                 ;psfallprotectiongratings;node_now.psfallprotectiongratings
-psoverflow          ;Int                 ;psoverflow          ;node_now.psoverflow
-psinletscreen       ;Int                 ;psinletscreen       ;node_now.psinletscreen
+psfallprotectiongratings;String              ;psfallprotectiongratings;node_now.psfallprotectiongratings
+psoverflow          ;String              ;psoverflow          ;node_now.psoverflow
+psinletscreen       ;String              ;psinletscreen       ;node_now.psinletscreen
 pspumpnumber        ;Int                 ;                    ;node_now.pspumpnumber
-psguiderail         ;Int                 ;psguiderail         ;node_now.psguiderail
-pspumpliftingchain  ;Int                 ;pspumpliftingchain  ;node_now.pspumpliftingchain
-pscheckvalve        ;Int                 ;pscheckvalve        ;node_now.pscheckvalve
-psgatevalve         ;Int                 ;psgatevalve         ;node_now.psgatevalve
-pspressureport      ;Int                 ;pspressureport      ;node_now.pspressureport
+psguiderail         ;String              ;psguiderail         ;node_now.psguiderail
+pspumpliftingchain  ;String              ;pspumpliftingchain  ;node_now.pspumpliftingchain
+pscheckvalve        ;String              ;pscheckvalve        ;node_now.pscheckvalve
+psgatevalve         ;String              ;psgatevalve         ;node_now.psgatevalve
+pspressureport      ;String              ;pspressureport      ;node_now.pspressureport
 DSHroleouvrage      ;String              ;                    ;node_now.DSHroleouvrage
 lateralusercategory ;String              ;lateralusercategory ;node_now.lateralusercategory
-presencealarm       ;Int                 ;presencealarm       ;node_now.presencealarm
-presencecontroller  ;Int                 ;presencecontroller  ;node_now.presencecontroller
-sedimenttrap        ;Int                 ;sedimenttrap        ;node_now.sedimenttrap
-X                   ;String              ;                    ;node_now.X
-dX                  ;String              ;                    ;node_now.dX
-Y                   ;String              ;                    ;node_now.Y
-dY                  ;String              ;                    ;node_now.dY
-Z                   ;String              ;                    ;node_now.Z
-dZ                  ;String              ;                    ;node_now.dZ
+presencealarm       ;String              ;presencealarm       ;node_now.presencealarm
+presencecontroller  ;String              ;presencecontroller  ;node_now.presencecontroller
+sedimenttrap        ;String              ;sedimenttrap        ;node_now.sedimenttrap
+X                   ;Double              ;                    ;node_now.X
+dX                  ;Double              ;                    ;node_now.dX
+Y                   ;Double              ;                    ;node_now.Y
+dY                  ;Double              ;                    ;node_now.dY
+Z                   ;Double              ;                    ;node_now.Z
+dZ                  ;Double              ;                    ;node_now.dZ
 
 ###descriptionsystem
 #name               type                 cst                  value                
@@ -74,14 +74,14 @@ pk_descriptionsystem;String              ;                    ;node_now.pk_descr
 id_descriptionsystem;Int                 ;                    ;node_now.id_descriptionsystem
 lpk_object          ;Int                 ;                    ;node_now.lpk_object
 strategicvalue      ;String              ;                    ;node_now.strategicvalue
-operational         ;Int                 ;operational         ;node_now.operational
+operational         ;String              ;operational         ;node_now.operational
 operationalstate    ;String              ;                    ;node_now.operationalstate
 dateoperationalcreation;String              ;                    ;node_now.dateoperationalcreation
 dateoperationalcreationupper;String              ;                    ;node_now.dateoperationalcreationupper
 operationaldatecreationaccuracy;String              ;operationaldatecreationaccuracy;node_now.operationaldatecreationaccuracy
 datetimeoperationaldestruction;String              ;                    ;node_now.datetimeoperationaldestruction
-geotrackingxyquality;Int                 ;geotrackingxyquality;node_now.geotrackingxyquality
-geotrackingzquality ;Int                 ;geotrackingzquality ;node_now.geotrackingzquality
+geotrackingxyquality;String              ;geotrackingxyquality;node_now.geotrackingxyquality
+geotrackingzquality ;String              ;geotrackingzquality ;node_now.geotrackingzquality
 geotrackingdate     ;String              ;                    ;node_now.geotrackingdate
 geotrackingsource   ;String              ;                    ;node_now.geotrackingsource
 parameters          ;String              ;                    ;node_now.parameters
@@ -94,16 +94,16 @@ lid_actor_1         ;Int                 ;                    ;node_now.lid_acto
 lid_actor_2         ;Int                 ;                    ;node_now.lid_actor_2
 lid_actor_3         ;Int                 ;                    ;node_now.lid_actor_3
 lid_facility        ;Int                 ;                    ;node_now.lid_facility
-float_1             ;String              ;                    ;node_now.float_1
-float_2             ;String              ;                    ;node_now.float_2
-float_3             ;String              ;                    ;node_now.float_3
-float_4             ;String              ;                    ;node_now.float_4
-float_5             ;String              ;                    ;node_now.float_5
-float_6             ;String              ;                    ;node_now.float_6
-float_7             ;String              ;                    ;node_now.float_7
-float_8             ;String              ;                    ;node_now.float_8
-float_9             ;String              ;                    ;node_now.float_9
-float_10            ;String              ;                    ;node_now.float_10
+float_1             ;Double              ;                    ;node_now.float_1
+float_2             ;Double              ;                    ;node_now.float_2
+float_3             ;Double              ;                    ;node_now.float_3
+float_4             ;Double              ;                    ;node_now.float_4
+float_5             ;Double              ;                    ;node_now.float_5
+float_6             ;Double              ;                    ;node_now.float_6
+float_7             ;Double              ;                    ;node_now.float_7
+float_8             ;Double              ;                    ;node_now.float_8
+float_9             ;Double              ;                    ;node_now.float_9
+float_10            ;Double              ;                    ;node_now.float_10
 string_1            ;String              ;                    ;node_now.string_1
 string_2            ;String              ;                    ;node_now.string_2
 string_3            ;String              ;                    ;node_now.string_3
