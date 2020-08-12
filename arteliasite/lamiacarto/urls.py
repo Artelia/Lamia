@@ -19,5 +19,6 @@ urlpatterns = [
         views.PostViewSet.as_view(),
         name="lamiaapi",
     ),
+    path("lamiafunc/<int:project_id>", views.LamiaFuncAPI.as_view(), name="lamiafunc",),
 ]
 

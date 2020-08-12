@@ -10,7 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
-import os
+import os, logging
+import logging.config
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -38,7 +40,7 @@ INSTALLED_APPS = [
     "lamiacarto",
     "webpack_loader",
     "rest_framework",
-    "corsheaders",
+    # "corsheaders",
 ]
 
 
@@ -133,3 +135,30 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [
     os.path.abspath(os.path.join(BASE_DIR, "node_modules")),
 ]
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        # "console": {"format": "%(thread)d-%(name)-12s %(levelname)-8s %(message)s"},
+        "console": {
+            "format": "%(asctime)s :: %(thread)d :: %(levelname)s :: %(module)s :: %(funcName)s :: %(message)s",
+            "datefmt": "%H:%M:%S",
+        },
+        "file": {"format": "%(asctime)s %(name)-12s %(levelname)-8s %(message)s"},
+    },
+    "handlers": {
+        "console": {"class": "logging.StreamHandler", "formatter": "console",},
+    },
+    "loggers": {
+        "": {"handlers": ["console"], "level": "DEBUG", "propagate": True,},
+        "Lamia.iface.qgscanvas.ifaceqgiscanvas": {
+            "handlers": ["console"],
+            "level": "DEBUG",
+            "propagate": True,
+            "formatter": "console",
+        },
+    },
+}
+
+logging.config.dictConfig(LOGGING)

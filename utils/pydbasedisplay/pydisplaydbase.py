@@ -96,7 +96,17 @@ def launchIface():
 
     print(TGREEN, f"Opening {os.path.abspath(SLFILE)}", ENDC)
 
-    lamiawidget.loadDBase(dbtype="Spatialite", slfile=SLFILE)
+    # lamiawidget.loadDBase(dbtype="Spatialite", slfile=SLFILE)
+    lamiawidget.loadDBase(
+        dbtype="Postgis",
+        host="localhost",
+        # host="localhost",
+        port=5432,
+        dbname="lamiaunittest",
+        schema="importbm",
+        user="pvr",
+        password="pvr",
+    )
 
     lamiawidget.setVisualMode(visualmode=INTERFACEINDEX)
     lamiawidget.dbase.raiseexceptions = True  # False True
@@ -125,6 +135,7 @@ def main():
         datefmt="%H:%M:%S",
     )
     logging.getLogger("Lamia_unittest").setLevel(logging.DEBUG)
+    logging.getLogger("Lamia.iface.qgscanvas.ifaceqgiscanvas").setLevel(logging.DEBUG)
     # logging.getLogger("Lamia").setLevel(logging.DEBUG)
 
     app = initQGis()

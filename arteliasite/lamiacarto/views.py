@@ -9,6 +9,8 @@ from .serializers import PostSerializer
 
 from .models import User, Project
 from .lamiaforsession import LamiaSession
+import logging
+import qgis.core
 
 # Create your views here.
 
@@ -59,25 +61,46 @@ class PostViewSet(views.APIView):
         return Response(results)
 
 
+class LamiaFuncAPI(views.APIView):
+    def get(self, request, **kwargs):
+        return Response(None)
+
+    def post(self, request, **kwargs):
+        """ 
+        in kwargs : get url arguments : ex kwargs.get("project_id")
+        in request.POST : get values sent b html formular
+            ex         id = request.POST.get("id")  (where id is id of html form)
+                        pw = request.POST.get("pw")
+        IN request.data : get data sent with post from client
+        in   request.session : you can set or get values
+            ex :   request.session["idproject"] = idproject
+            print(request.session.items())
+        """
+        projectid = kwargs.get("project_id")
+
+        if request.data["func"] == "nearest":
+            nearestpk, dist = LamiaSession.getInstance(projectid).getNearestPk(
+                request.data["layer"], request.data["coords"]
+            )
+            result = json.dumps({"nearestpk": nearestpk, "dist": dist})
+            logging.getLogger().debug(f"nearest {result}")
+            return Response(result)
+
+        return Response(None)
+
+
 class BaseView(View):
     mytemplate = "base.html"
 
     def get(self, request):
-        # print("***", request.session.keys())
-        print("SESSION : ", request.session)
-        print("SESSION items : ", request.session.items(), request.session.session_key)
-        # print("***", request.session.session_key)
+        logging.getLogger().debug("BaseView")
+
         if request.user.is_authenticated:
             return self.loggedUser(request)
         else:
             return self.notloggedUser(request)
 
     def post(self, request, **kwargs):
-        # print("post", request.POST)
-        # print(request.POST.dict())
-        # print(request.POST.items())
-
-        # if 'login' in request.POST.items()
 
         id = request.POST.get("id")
         pw = request.POST.get("pw")
@@ -86,23 +109,17 @@ class BaseView(View):
         if user is not None and user.is_active:
             # Correct password, and the user is marked "active"
             login(request, user)
-            # Redirect to a success page.
-            # return HttpResponseRedirect("/account/loggedin/")
             return self.loggedUser(request)
 
         else:
             logout(request)
-            # return self.notloggedUser(request)
             return redirect("home")
 
     def loggedUser(self, request):
-
         queryset = Project.objects.filter(users__username=request.user)
         return render(request, self.mytemplate, {"projects": queryset})
 
     def notloggedUser(self, request):
-        # return redirect("home")
-        print(request)
         request.session["idproject"] = 1
         context = {"mytext": "popo"}
         queryset = Project.objects.filter(id_project=1)
@@ -117,44 +134,18 @@ class LamiaProjectView(BaseView):
     mytemplate = "lamiacarto/index.html"
 
     def get(self, request, **kwargs):
-        # context = {"mytext": "popo"}
-        # print('ùù')
-        # print(request.GET)
-        # print(kwargs)
-        print("***", request.session.items())
+        logging.getLogger().debug("LamiaProjectView")
 
         queryset = Project.objects.filter(id_project=kwargs.get("project_id"))
         idproject = queryset.values("id_project")[0]["id_project"]
 
         LamiaSession.getInstance(idproject)
-        # queryset = Project.objects.filter(id_project=idproject)
-        # queryval = queryset.values()[0]
-        # print(queryval["qgisserverurl"])
-        # lamiaparser.loadDBase(
-        #     dbtype="Postgis",
-        #     host=queryval["pghost"],
-        #     # host="localhost",
-        #     port=queryval["pgport"],
-        #     dbname=queryval["pgdbname"],
-        #     schema=queryval["pgschema"],
-        #     user=queryval["pguser"],
-        #     password=queryval["pgpassword"],
-        # )
 
-        # print("**", queryset.values("id_projet", "qgisserverurl"))
         context = json.dumps(list(queryset.values("id_project", "qgisserverurl"))[0])
-        print("SESSION : ", request.session)
+
         request.session["idproject"] = idproject
         if idproject > 1 and not request.user.is_authenticated:
             return redirect("home")
-
-        # print(queryset.values)
-        # context = queryset[0].as_dict()
-        # # dictionaries = [ obj.as_dict() for obj in self.get_queryset() ]
-        # print(list(queryset))
-        # print(context)
-
-        # return render(request, self.mytemplate, {"context": json.dumps(context)})
 
         return render(request, self.mytemplate, {"context": context})
 

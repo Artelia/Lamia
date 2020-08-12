@@ -1,0 +1,58 @@
+div.sidebar {
+    position: absolute;
+    top: 3.5em;
+    /* topbar: 3.5em */
+    /* bottombar is high 3em at 75% font size, hence at 100% font size it is 0.75 * 3em = 2.25em */
+    max-height: calc(100vh - 5.75em);
+    max-height: calc(var(--vh, 1vh) * 100 - 5.75em);
+    background-color: @container_bg@;
+    transition: transform 0.25s;
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.75);
+    display: flex;
+    flex-direction: column;
+    max-width: 100vw;
+}
+
+div.sidebar div.sidebar-titlebar {
+    color: @titlebar_fg@;
+    background-color: @titlebar_bg@;
+    height: 2.5em;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+}
+
+div.sidebar span.sidebar-titlebar-icon {
+    flex: 0 0 auto;
+    margin: 0 0.25em;
+}
+
+div.sidebar span.sidebar-titlebar-title {
+    font-weight: bold;
+    flex: 0 0 auto;
+}
+
+div.sidebar span.sidebar-titlebar-spacer {
+    flex: 1 1 auto;
+}
+
+div.sidebar div.sidebar-titlebar span.sidebar-title {
+    font-weight: bold;
+    display: inline-flex;
+    width: calc(100% - 3em);
+    align-items: center;
+}
+
+div.sidebar span.sidebar-titlebar-closeicon {
+    flex: 0 0 auto;
+    margin: 0 0.25em;
+    font-size: large;
+}
+
+div.sidebar div.sidebar-body {
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: calc(100vh - 8.25em); /* viewport - topbar - bottombar - sidebar_titlebar*/
+    max-height: calc(var(--vh, 1vh) * 100 - 8.25em); /* viewport - topbar - bottombar - sidebar_titlebar*/
+    flex: 1 1 auto;
+}

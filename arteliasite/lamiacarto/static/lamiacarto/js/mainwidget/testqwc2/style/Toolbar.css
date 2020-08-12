@@ -1,0 +1,18 @@
+#Toolbar {
+    margin: 0.25em;
+    flex: 0 0 auto;
+}
+
+#Toolbar > .icon {
+    width: 2.5em;
+    height: 2.5em;
+    margin-right: 0.25em;
+    padding: 0.25em;
+    border: 1px solid transparent;
+}
+
+#Toolbar > .icon:hover,
+#Toolbar > .toolbar-item-active {
+    border: 1px solid @item_border@;
+    background-color: @button_hover_bg@;
+}

@@ -1,1 +1,1 @@
-{"status":"done","chunks":{"main":[{"name":"main-28111df8f575d5f1eed7.js","path":"C:\\111_GitProjects\\Lamia\\arteliasite\\lamiacarto\\static\\lamiacarto\\bundles\\main-28111df8f575d5f1eed7.js"}]}}
+{"status":"done","chunks":{"main":[{"name":"main-b2bd2a20b5ee8b27f95e.js","path":"C:\\111_GitProjects\\Lamia\\arteliasite\\lamiacarto\\static\\lamiacarto\\bundles\\main-b2bd2a20b5ee8b27f95e.js"}]},"error":"ModuleNotFoundError","message":"Module not found: Error: Can't resolve '..MainIface' in 'C:\\111_GitProjects\\Lamia\\arteliasite\\lamiacarto\\static\\lamiacarto\\js\\canvas'"}

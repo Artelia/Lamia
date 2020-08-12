@@ -16,14 +16,19 @@ import OSM from 'ol/source/OSM'
 // import Select from 'ol/interaction/Select';
 // import {click, pointerMove, altKeyOnly} from 'ol/events/condition';
 // import {defaults as defaultInteractions, DragRotateAndZoom} from 'ol/interaction';
-import { defaults as defaultControls } from 'ol/control';
+import Select from 'ol/interaction/Select';
+import { altKeyOnly, click, pointerMove } from 'ol/events/condition'
+import { defaults as defaultControls, MousePosition } from 'ol/control';
 import ScaleLine from 'ol/control/ScaleLine';
+// import createStringXY from 'ol/coordinate';
 // import Draw from 'ol/control/Draw';
 import $ from 'jquery';
-
+import MainIfaceReact from '../MainIface'
 
 // import DbaseCommunication from '../dbase/dbasecommunicate'
 // https://taylor.callsen.me/using-reactflux-with-openlayers-3-and-other-third-party-libraries/
+
+
 
 class OLCanvasReact extends React.Component {
 
@@ -33,17 +38,30 @@ class OLCanvasReact extends React.Component {
     'equipement': 'EquipementWdg',
   }
 
+  debug = true
+
   constructor(props) {
+    if (OLCanvasReact.exists) {
+      return OLCanvasReact.instance;
+    }
     super(props);
-    this.mainiface = this.props.mainiface
+    OLCanvasReact.instance = this;
+    OLCanvasReact.exists = true;
+
+    // let olclickevtkey = null
+    var select = null
+
+
+    // this.mainiface = this.props.mainiface
     // this.dbase = new DbaseCommunication()
   }
 
 
 
   componentDidMount() {
-    console.log('DidMount ', this.constructor.name, this.props.qgisserverurl)
-
+    if (this.debug) {
+      console.log('DidMount ', this.constructor.name, this.props.qgisserverurl)
+    }
     // create feature layer and vector source
     // var qgislayer = new Vector({
     //   source: new VectorSource({
@@ -108,16 +126,34 @@ class OLCanvasReact extends React.Component {
       // ])
       ,
       view: new View({
+        // projection: 'EPSG:3857',
+        // center: [0, 0],
+        // zoom: 2,
         center: [-61015.32359086573, 5594194.573559809], //Boulder
         zoom: 15,
+        // projection: 'EPSG:2154',
         // interactions: defaultInteractions(),
       })
     });
     // let scaleline = new ScaleLine()
     // map.addInteraction(scaleline);
 
-    // map.on('click', this.handleMapClick.bind(this));
+    map.on('click', this.handleMapClick.bind(this));
 
+    // var mouse_position = new MousePosition({
+    //   // coordinateFormat: createStringXY(4),
+    //   // projection: 'EPSG:2154'
+    // });
+    // map.addControl(mouse_position);
+
+    var selectClick = new Select({
+      condition: click,
+    });
+
+    this.select = new Select()
+
+    map.addInteraction(selectClick)
+    map.addInteraction(this.select)
     // var updateLegend = function (resolution) {
     //   var graphicUrl = qgislayer.getSource().getLegendUrl(resolution);
     //   console.log('rr', graphicUrl)
@@ -133,9 +169,9 @@ class OLCanvasReact extends React.Component {
     //   var resolution = event.target.getResolution();
     //   updateLegend(resolution);
     // });
-    map.on('singleclick', function (evt) {
-      console.log(evt.coordinate);
-    });
+    // map.on('singleclick', function (evt) {
+    //   console.log(evt.coordinate);
+    // });
 
     // var selectClick = new Select({
     //   condition: click
@@ -152,14 +188,35 @@ class OLCanvasReact extends React.Component {
 
   }
 
-  shouldComponentUpdate_(nextProps, nextState) {
-    console.log('shouldComponentUpdate ', this.constructor.name, this.props.qgisserverurl)
 
-    console.log('**', this.props.qgisserverurl)
-    if ([null, false].includes(this.props.qgisserverurl)) {
-      console.log('not inc')
-    } else {
-      console.log('okok')
+
+
+  handleMapClick(event) {
+    // create WKT writer
+    // var wktWriter = new ol.format.WKT();
+
+    // derive map coordinate (references map from Wrapper Component state)
+    var clickedCoordinate = this.state.map.getCoordinateFromPixel(event.pixel);
+    console.log('**', clickedCoordinate)
+
+
+    return clickedCoordinate
+  }
+
+  disconnectEventKey(evtkey) {
+    ol.Observable.unByKey(evtkey)
+  }
+
+  shouldComponentUpdate_(nextProps, nextState) {
+    if (this.debug) {
+      console.log('shouldComponentUpdate ', this.constructor.name, this.props.qgisserverurl)
+
+      console.log('**', this.props.qgisserverurl)
+      if ([null, false].includes(this.props.qgisserverurl)) {
+        console.log('not inc')
+      } else {
+        console.log('okok')
+      }
     }
     let layers = []
     // let workclasses = this.mainiface.mainwidgetdom.type.toolwdgclass.workclasses
@@ -186,8 +243,9 @@ class OLCanvasReact extends React.Component {
 
   // pass new features from props into the OpenLayers layer object
   componentDidUpdate(prevProps, prevState) {
-    console.log('DidUpdate ', this.constructor.name, this.props.qgisserverurl)
-
+    if (this.debug) {
+      console.log('DidUpdate ', this.constructor.name, this.props.qgisserverurl)
+    }
 
 
 
@@ -199,14 +257,17 @@ class OLCanvasReact extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('componentWillReceiveProps ', this.constructor.name, this.props.qgisserverurl, nextProps)
 
-    console.log('**', nextProps.qgisserverurl)
+    if (this.debug) {
+      console.log('componentWillReceiveProps ', this.constructor.name, this.props.qgisserverurl, nextProps)
+      console.log('**', nextProps.qgisserverurl)
+    }
+
     if ([null, false].includes(nextProps.qgisserverurl)) {
       console.log('not inc')
     } else {
 
-      console.log('okok')
+      this.debug ? console.log('okok') : null
 
       let layers = []
       // let workclasses = this.mainiface.mainwidgetdom.type.toolwdgclass.workclasses
@@ -214,6 +275,8 @@ class OLCanvasReact extends React.Component {
         + tablename.substr(1).toLowerCase()
         + '_qgis')
       )
+      // projectdata = MainIfaceReact.projectdata
+
       var qgislayer = new TileLayer({
         // extent: [-13884991, 2870341, -7455066, 6338219],
         source: new TileWMS({
@@ -226,7 +289,7 @@ class OLCanvasReact extends React.Component {
         })
       });
 
-      // this.setState({ qgislayer: qgislayer })
+      this.setState({ qgislayer: qgislayer })
 
       this.state.qgislayer.setSource(
         new TileWMS({
@@ -244,8 +307,9 @@ class OLCanvasReact extends React.Component {
   }
 
   render() {
-    console.log('render ', this.constructor.name, this.props.qgisserverurl)
-
+    if (this.debug) {
+      console.log('render ', this.constructor.name, this.props.qgisserverurl)
+    }
     // this.addQgsLayer()
 
     const debug = false;

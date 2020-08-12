@@ -13,3 +13,7 @@ create a pg_service.conf and make a link to it with PGSERVICEFILE=c:\PGSERVICEFI
 access API :
     http://localhost:8380/wfs3/collections
     http://localhost:8380/qgisserver/wfs3/collections/Infralineaire_qgis/items/1.json
+
+
+openlayers nearest
+https://gis.stackexchange.com/questions/61479/how-to-get-a-feature-that-lies-closest-to-a-point-in-openlayers

@@ -30,7 +30,20 @@ module.exports = {
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader']
-      }
+      },
+      {
+        test: /\.(ttf|eot|svg)(\?v=[0-9].[0-9].[0-9])?$/, use: {
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]',
+            esModule: false
+          }
+        }
+      },
+      {
+        test: /\.ui$/i,
+        use: 'raw-loader',
+      },
     ]
   },
   resolve: {

@@ -1,0 +1,204 @@
+* {
+    cursor: inherit;
+    box-sizing: border-box;
+}
+
+:after, :before {
+    box-sizing: border-box;
+}
+
+html, body {
+    overflow: hidden;
+    cursor: default;
+    color: @base_fg@;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    margin: 0;
+    padding: 0;
+}
+
+input, select, button, textarea {
+    border-radius: 0;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    margin: 0;
+}
+
+textarea, input:not([type=checkbox]):not([type=radio]):not([type=range]) {
+    -webkit-appearance: none;
+    cursor:text;
+    padding: 0.25em;
+}
+
+/** Range slider **/
+input[type=range]{
+    -webkit-appearance: none;
+    outline: none;
+}
+
+input[type=range]::-moz-range-track {
+    background: #ddd;
+    height: 4px;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+    background: #ddd;
+    height: 4px;
+}
+
+input[type=range]::-moz-range-thumb {
+    -webkit-appearance: none;
+    border: 1px solid @map_button_bg@;
+    border-radius: 50%;
+    height: 12px;
+    width: 12px;
+    box-sizing: border-box;
+    background: @map_button_fg@;
+    margin-top: -3.5px;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: 1px solid @map_button_bg@;
+    border-radius: 50%;
+    height: 12px;
+    width: 12px;
+    box-sizing: border-box;
+    background: @map_button_fg@;
+    margin-top: -3.5px;
+}
+
+/* IE */
+input[type=range]::-ms-track {
+    color: transparent;
+    box-sizing: border-box;
+    height: 12px;
+    border: 4px solid transparent;
+}
+input[type=range]::-ms-fill-lower {
+    background: #777;
+}
+input[type=range]::-ms-fill-upper {
+    background: #ccc;
+}
+input[type=range]::-ms-thumb {
+    border: 1px solid @map_button_bg@;
+    border-radius: 50%;
+    height: 12px;
+    width: 12px;
+    box-sizing: border-box;
+    background: @map_button_fg@;
+}
+
+input[type=range]::-ms-tooltip {
+    display: none;
+}
+
+a {
+    cursor:pointer;
+    color: #337ab7;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+html, body, #container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+ul {
+    margin: 0;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+h1, h2, h3, h4 {
+    font-weight: 500;
+    margin: 0.5em 0;
+}
+
+h1 { font-size: 160%; }
+h2 { font-size: 150%; }
+h3 { font-size: 140%; }
+h4 { font-size: 130%; }
+h5 { font-size: 120%; }
+h6 { font-size: 110%; }
+
+
+button.button {
+    display: inline-flex;
+    border: 1px solid @item_border@;
+    padding: 0.25em;
+    align-items: center;
+    justify-content: center;
+    background-color: @button_bg@;
+    height: 2em;
+}
+
+button.button:disabled {
+    color: @item_border@;
+    cursor: default;
+}
+
+button.button > * {
+    flex: 0 0 auto;
+}
+
+button.button:focus {
+    outline: 0;
+}
+
+button.button > .icon
+{
+    margin-right: 0.25em;
+}
+button.button.pressed:not(:disabled) {
+    background-color: @item_active@;
+    color: white;
+}
+
+button.button:not(:disabled):active > * {
+    position: relative!important;
+    left: 1px;
+    top: 1px;
+}
+
+button.button:not(:disabled):hover {
+    background-color: @button_hover_bg@;
+}
+
+button.button.pressed:not(:disabled):hover {
+    background-color: @item_active_hover@;
+}
+
+select.combo {
+    border: 1px solid @item_border@;
+    background-color: white;
+    height: 2em;
+}
+
+span.react-numeric-input > input {
+  border-radius: 0!important;
+  height: 2em;
+  width: 100%;
+  border: 1px solid @item_border@!important;
+}
+
+span.react-numeric-input > b {
+    border: 1px solid @item_border@!important;
+    background: @button_bg@!important;
+    color: @base_fg@!important;
+}
+
+span.react-numeric-input > b:hover {
+    background: @button_hover_bg@!important;
+}

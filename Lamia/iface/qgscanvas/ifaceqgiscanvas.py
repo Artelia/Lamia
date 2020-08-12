@@ -273,7 +273,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         with open(jsonfile, "w") as outfile:
             json.dump(dbaseparser.dbasetables, outfile, indent=2)
 
-    def createLayers(self, dbaseparser):
+    def createLayers(self, dbaseparser, alsoqgisjoined=True):
         """create QgsVectorLayer from dbaseparser database
         store the in self.layers :
         dict {... {rawtablename : {'layer' : the qgis layer without parent join,
@@ -285,6 +285,8 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
         """
 
+        debug = False
+
         if dbaseparser.__class__.__name__ == "SpatialiteDBaseParser":
             dbtype = "spatialite"
         elif dbaseparser.__class__.__name__ == "PostGisDBaseParser":
@@ -294,6 +296,9 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             # old way for qgislayer
             # if 'geom' not in rawdict:
             #     continue
+            if debug:
+                logging.getLogger(__name__).debug(f"createLayers {rawtablename}")
+
             tablenames = [rawtablename]
             tabletypes = ["layer"]
             if "djangoviewsql" in rawdict.keys():
@@ -318,7 +323,9 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                 elif dbtype == "postgres":
                     uri.setConnection(
                         dbaseparser.pghost,
+                        # "docker.for.win.localhost",
                         str(dbaseparser.pgport),
+                        # dbaseparser.pgport,
                         dbaseparser.pgdb.lower(),
                         dbaseparser.pguser,
                         dbaseparser.pgpassword,
@@ -339,9 +346,18 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                             "",
                             "pk_" + rawtablename.lower(),
                         )
+
                 self.layers[rawtablename][tabletype] = qgis.core.QgsVectorLayer(
                     uri.uri(), tablename, dbtype
                 )
+                if debug:
+                    # print("createLayers raw created", rawtablename)
+                    logging.getLogger(__name__).debug(
+                        f"createLayers {tablename} {uri.uri()}"
+                    )
+                    logging.getLogger(__name__).debug(
+                        f"createLayers isvalid : {self.layers[rawtablename][tabletype].isValid()}"
+                    )
 
             # ValueMap for qgislayer - not done because layer loading is too long
             if "layerqgis" in self.layers[rawtablename].keys():
@@ -355,10 +371,15 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                         )
                         workingvl.setEditorWidgetSetup(i, widget_setup)
 
+                if debug:
+                    print("createLayers qgisview created", rawtablename)
+
             # new way for qgislayer
             tabletype = "layerqgisjoined"
             # self.layers[rawtablename][tabletype] = qgis.core.QgsVectorLayer(self.layers[rawtablename]['layer'] )
-            if  platform.system() == "Windows":  # bug with ubuntu when cloning
+            if (
+                alsoqgisjoined and platform.system() == "Windows"
+            ):  # bug with ubuntu when cloning
                 self.layers[rawtablename][tabletype] = self.layers[rawtablename][
                     "layer"
                 ].clone()
@@ -603,6 +624,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         """
 
         if self.dbaseqgiscrs is not None and self.canvas is not None:
+            print('**', qgis.core.QgsProject.instance())
             self.xform = qgis.core.QgsCoordinateTransform(
                 self.dbaseqgiscrs,
                 self.canvas.mapSettings().destinationCrs(),
@@ -874,24 +896,40 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         :return: le pk de la table dbasetablenamele plus proche du point
         """
         debug = False
+        if debug:
+            # logging.getLogger(__name__).setLevel(logging.DEBUG)
+            logging.getLogger().debug(f"START {tablename}")
+            # print(self.layers.keys())
+            # print(__name__, point)
+
         layertoprocess = self.layers[tablename][
             "layerqgis"
         ]  # layer qgis has conf with only good versions
         # checking if layer is spatial one
         # isspatial = dbasetable['layerqgis'].isSpatial()
+        # print(self.layers[tablename]["layer"].dataProvider().sourceName())
+        # self.layers[tablename]["layer"].triggerRepaint()
+        # print(self.layers[tablename]["layer"].featureCount())
+        # dp = self.layers[tablename]["layer"].dataProvider()
+
+        # print(type(layertoprocess))
+        # print([fl.name() for fl in layertoprocess.fields()])
+
+        if isinstance(point, list):
+            point = qgis.core.QgsPointXY(point[0], point[1])
         isspatial = layertoprocess.isSpatial()
         if not isspatial:
             return None, None
 
         # crs transform if needed
         if debug:
-            logging.getLogger("Lamia").debug("pointbefore %s", str(point))
+            logging.getLogger().debug("pointbefore %s", str(point))
         if comefromcanvas:
             point2 = self.xformreverse.transform(point)
         else:
             point2 = point
         if debug:
-            logging.getLogger("Lamia").debug("pointafter %s", str(point2))
+            logging.getLogger("__name__").debug("pointafter %s", str(point2))
 
         # spatialindex creation
         # spindex = qgis.core.QgsSpatialIndex(dbasetable['layerqgis'].getFeatures())
@@ -916,6 +954,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
         # spindex = qgis.core.QgsSpatialIndex(layertoprocess.getFeatures())
         layernearestid = spindex.nearestNeighbor(point2, 1)
+        print("layernearestid", layernearestid)
         if not layernearestid:
             return None, None
 
@@ -948,7 +987,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             disfrompoint = nearestfetgeom.distance(point2geom)
 
             if debug:
-                logging.getLogger("Lamia").debug(
+                logging.getLogger("__name__").debug(
                     "nearestfetgeom - dist %s %s",
                     str(nearestfetgeom.asWkt()),
                     str(disfrompoint),
@@ -960,7 +999,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             idsintersectingbbox = spindex.intersects(bboxtofilter)
 
             if debug:
-                logging.getLogger("Lamia").debug(
+                logging.getLogger("__name__").debug(
                     "idsintersectingbbox %s", str(idsintersectingbbox)
                 )
 
@@ -977,7 +1016,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                 featgeom = feat.geometry()
 
                 if debug:
-                    logging.getLogger("Lamia").debug(
+                    logging.getLogger("__name__").debug(
                         "intersectingid %s  - is valid : %s - type : %s - multi : %s",
                         str(intersectingid),
                         str(featgeom.isGeosValid()),
@@ -1005,13 +1044,13 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                     else:
                         continue
                 if debug:
-                    logging.getLogger("Lamia").debug(
+                    logging.getLogger("__name__").debug(
                         "distance : %s - ispoint : %s", str(dist), str(ispoint)
                     )
                 # algo for keeping point in linestring layer as nearest
                 # if point is nearest than 1.2 x dist from nearest line
                 if debug:
-                    logging.getLogger("Lamia").debug(
+                    logging.getLogger("__name__").debug(
                         "distance : %s - ispoint : %s - geomfinalispoint : %s - finaldist : %s",
                         str(dist),
                         str(ispoint),
@@ -1039,7 +1078,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                     nearestindex = intersectingid
                     finalgeomispoint = ispoint
         if debug:
-            logging.getLogger("Lamia").debug(
+            logging.getLogger(__name__).debug(
                 "nearestpk, dist %s %s", str(nearestindex), str(distance)
             )
         return nearestindex, distance
@@ -1076,3 +1115,4 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             )
 
         return styledirectory
+
