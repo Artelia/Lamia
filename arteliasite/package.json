@@ -29,6 +29,7 @@
     "pg": "^8.3.0",
     "popper.js": "^1.16.1",
     "raw-loader": "^4.0.1",
+    "react-simple-tree-menu": "^1.1.18",
     "style-loader": "^1.2.1",
     "url-exist": "^2.0.2",
     "url-exist-sync": "^1.0.2",

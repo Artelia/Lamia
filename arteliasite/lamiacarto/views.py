@@ -14,6 +14,9 @@ import qgis.core
 
 # Create your views here.
 
+# * ******************************************************************************
+# * ************************** API ***********************************
+
 
 class APIFactory:
 
@@ -91,10 +94,14 @@ class LamiaFuncAPI(views.APIView):
             )
             geomson = geom.asJson()
             result = json.dumps({"nearestpk": nearestpk, "dist": dist, "geom": geomson})
-            logging.getLogger().debug(f"nearest {result}")
+            # logging.getLogger().debug(f"nearest {result}")
             return Response(result)
 
         return Response(None)
+
+
+# * ******************************************************************************
+# * ************************** Views ***********************************
 
 
 class BaseView(View):

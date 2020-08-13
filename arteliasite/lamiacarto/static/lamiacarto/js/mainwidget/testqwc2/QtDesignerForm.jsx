@@ -149,6 +149,9 @@ class QtDesignerForm extends React.Component {
             return (<div className="qt-designer-form-line"></div>);
         } else if (widget.class === "QTextEdit") {
             return (<textarea name={elname} value={value} onChange={(ev) => updateField(widget.name, ev.target.value)}></textarea>);
+        } else if (widget.class === "QTextBrowser") {
+            return (<textarea name={elname} value={value} onChange={(ev) => updateField(widget.name, ev.target.value)}></textarea>);
+
         } else if (widget.class === "QLineEdit") {
             let placeholder = prop.placeholderText || "";
             return (<input name={elname} placeholder={placeholder} type="text" value={value} onChange={(ev) => updateField(widget.name, ev.target.value)} />);

@@ -10,6 +10,7 @@ axios.defaults.xsrfCookieName = "csrftoken"
 class EditingFormReact extends React.Component {
     static olcanvas = new OLCanvasReact()
     projectdata = JSON.parse(JSON.parse(document.getElementById('context').textContent))
+    table = null
 
     constructor(props) {
         super(props);
@@ -47,6 +48,8 @@ class EditingFormReact extends React.Component {
         // create WKT writer
         // var wktWriter = new ol.format.WKT();
 
+        let debug = true
+
         // derive map coordinate (references map from Wrapper Component state)
         var clickedCoordinate = EditingFormReact.olcanvas.state.map.getCoordinateFromPixel(event.pixel);
         // console.log('*', clickedCoordinate)
@@ -54,7 +57,7 @@ class EditingFormReact extends React.Component {
         // ask nearest pk
         let res = await axios.post('http://localhost:8000/lamiafunc/' + this.projectdata.id_project.toString(), {
             func: 'nearest',
-            layer: 'Infralineaire',
+            layer: this.table,
             coords: clickedCoordinate,
         })
         // console.log(res)
@@ -62,9 +65,9 @@ class EditingFormReact extends React.Component {
 
         // get feature from wfs3
         // ex : http://localhost:8380/qgisserver/wfs3/collections/Infralineaire_qgis/items/1.json
-        let temp = EditingFormReact.olcanvas.props.qgisserverurl + 'qgisserver/wfs3/collections/' + 'Infralineaire_qgis' + '/items/' + response.nearestpk + '.json'
+        let temp = EditingFormReact.olcanvas.state.qgisserverurl + 'qgisserver/wfs3/collections/' + this.table + '_qgis/items/' + response.nearestpk + '.json'
         let feat = await axios.get(temp)
-        // console.log(feat)
+        debug ? console.log('feat', feat) : null
 
         // add to sellayer
         let selsource = EditingFormReact.olcanvas.state.sellayer.getSource()
@@ -76,6 +79,16 @@ class EditingFormReact extends React.Component {
 
         EditingFormReact.olcanvas.state.sellayer.setSource(selsource)
 
+        // update form
+        this.setState({
+            currentfeatprop: {},
+        });
+        let datas = feat.data.properties
+        debug ? console.log('feat.data.properties', datas) : null
+
+        this.setState({
+            currentfeatprop: datas,
+        });
 
     }
 

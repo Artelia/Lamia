@@ -134,6 +134,7 @@ STATIC_URL = "/static/"
 
 STATICFILES_DIRS = [
     os.path.abspath(os.path.join(BASE_DIR, "node_modules")),
+    os.path.abspath(os.path.join(BASE_DIR, "..", "Lamia", "worktypeconf")),
 ]
 
 LOGGING = {

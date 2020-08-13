@@ -18,72 +18,72 @@ class LamiaSession:
         logging.getLogger().debug(f"Init lamia session project n {idproject}")
         self.idproject = idproject
 
-        self.mainwin, self.canvas, self.lamiawidget = getDisplayWidget()
+        # * var1 : load entire widget
+        if False:
+            self.mainwin, self.canvas, self.lamiawidget = getDisplayWidget()
 
-        self.lamiaparser = DBaseParserFactory("postgis").getDbaseParser()
+            self.canvas.enableAntiAliasing(True)
+            canvascrs = qgis.core.QgsCoordinateReferenceSystem()
+            canvascrs.createFromString("EPSG:3857")
+            self.canvas.setDestinationCrs(canvascrs)
 
-        create canvas and LamiaWindowWidget
-        canvas = qgis.gui.QgsMapCanvas()
-        canvas.enableAntiAliasing(True)
-        canvascrs = qgis.core.QgsCoordinateReferenceSystem()
-        canvascrs.createFromString("EPSG:3857")
-        canvas.setDestinationCrs(canvascrs)
+            self.lamiaparser = self.lamiawidget.dbase
+            self.qgscanvas = self.mainwin.qgiscanvas
 
-        # self.qgscanvas.setCanvas(canvas)
-        self.qgscanvas = QgisCanvas(canvas)
+            queryset = Project.objects.filter(id_project=idproject)
+            queryval = queryset.values()[0]
 
-        # self.lamiaparser = self.lamiawidget.dbase
-        # print("**", list(queryset.values("id_projet", "qgisserverurl"))[0])
-        # self.lamiaparser = DBaseParserFactory("spatialite").getDbaseParser()
-        # self.lamiaparser.loadDBase(dbtype="Spatialite", slfile=SLFILE)
-        queryset = Project.objects.filter(id_project=idproject)
-        queryval = queryset.values()[0]
-        # print(queryval["qgisserverurl"])
+            self._instances.add(self)
 
-        self._instances.add(self)
+            logging.getLogger().debug(f"Init lamia session loading ... {idproject}")
 
-        logging.getLogger().debug(f"Init lamia session loading ... {idproject}")
+            self.lamiawidget.loadDBase(
+                dbtype="Postgis",
+                host=queryval["pghost"],
+                # host="localhost",
+                port=int(queryval["pgport"]),
+                dbname=queryval["pgdbname"],
+                schema=queryval["pgschema"],
+                user=queryval["pguser"],
+                password=queryval["pgpassword"],
+            )
 
-        self.lamiaparser.loadDBase(
-            dbtype="Postgis",
-            host=queryval["pghost"],
-            # host="localhost",
-            port=int(queryval["pgport"]),
-            dbname=queryval["pgdbname"],
-            schema=queryval["pgschema"],
-            user=queryval["pguser"],
-            password=queryval["pgpassword"],
-        )
+        # * var2 : load dbaseparser and qgiscanvas
+        else:
 
-        self.qgscanvas.createLayers(self.lamiaparser, alsoqgisjoined=False)
+            self.lamiaparser = DBaseParserFactory("postgis").getDbaseParser()
 
-        # print("Init lamia session loading ... ", idproject)
-        # print(
-        #     "Postgis",
-        #     "host",
-        #     queryval["pghost"],
-        #     # host="localhost",
-        #     "port",
-        #     queryval["pgport"],
-        #     "dbname",
-        #     queryval["pgdbname"],
-        #     "schema",
-        #     queryval["pgschema"],
-        #     "user",
-        #     queryval["pguser"],
-        #     "password",
-        #     queryval["pgpassword"],
-        # )
-        # self.lamiawidget.loadDBase(
-        #     dbtype="Postgis",
-        #     host=queryval["pghost"],
-        #     # host="localhost",
-        #     port=queryval["pgport"],
-        #     dbname=queryval["pgdbname"],
-        #     schema=queryval["pgschema"],
-        #     user=queryval["pguser"],
-        #     password=queryval["pgpassword"],
-        # )
+            # create canvas and LamiaWindowWidget
+            canvas = qgis.gui.QgsMapCanvas()
+            canvas.enableAntiAliasing(True)
+            canvascrs = qgis.core.QgsCoordinateReferenceSystem()
+            canvascrs.createFromString("EPSG:3857")
+            canvas.setDestinationCrs(canvascrs)
+
+            self.qgscanvas = QgisCanvas(canvas)
+
+            queryset = Project.objects.filter(id_project=idproject)
+            queryval = queryset.values()[0]
+            # print(queryval["qgisserverurl"])
+
+            self._instances.add(self)
+
+            logging.getLogger().debug(f"Init lamia session loading ... {idproject}")
+
+            self.lamiaparser.loadDBase(
+                dbtype="Postgis",
+                host=queryval["pghost"],
+                # host="localhost",
+                port=int(queryval["pgport"]),
+                dbname=queryval["pgdbname"],
+                schema=queryval["pgschema"],
+                user=queryval["pguser"],
+                password=queryval["pgpassword"],
+            )
+
+            self.qgscanvas.createLayers(self.lamiaparser, alsoqgisjoined=False)
+
+            print("Init lamia session loading ... ", idproject)
 
         logging.getLogger().debug(f"Init lamia session loaded {idproject}")
 

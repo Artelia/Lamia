@@ -191,7 +191,7 @@ class OLCanvasReact extends React.Component {
       //   + '_qgis')
       // )
       let layers = []
-      collections.data.collections.forEach((coll) => layers.push(coll.id))
+      collections.data.collections.forEach((coll) => coll.id != 'report_qgis' ? layers.push(coll.id) : null)
 
       let qgslayer = this.state.qgislayer
       qgslayer.setSource(

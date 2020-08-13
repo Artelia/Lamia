@@ -5,14 +5,16 @@ import React from 'react';
 
 //
 // import './App.css';
-import MainWidgetReact from './mainwidget/mainwidget'
+// import MainWidgetReact from './mainwidget/mainwidget'
 // import LCanvasReact from './canvas/leaflet'
 import OLCanvasReact from './canvas/openlayers'
 // import QtDesignerForm from './mainwidget/testqwc2/QtDesignerForm'
 import EditingFormReact from './mainwidget/editingformwidget'
+import ToolTreeWidgetReact from './mainwidget/tooltreewidget'
+
 
 // const QtDesignerForm = require('./qwc2/components/QtDesignerForm');
-// import QtDesignerForm from './testqwc2/QtDesignerForm'
+// import QtDesignerForm from './testqwc2/edgewidget'
 import $ from 'jquery'
 import Cookies from 'js-cookie'
 
@@ -54,16 +56,19 @@ class MainIfaceReact extends React.Component {
   render() {
 
     return (
-      < div className="row " style={{ height: '100%' }}>
+      <div class="container-fluid" style={{ height: '100%' }}>
+        < div className="row " style={{ height: '100%' }}>
 
-        <div className="col-8 border bg-light">
-          <OLCanvasReact />
-        </div>
-        <div className="col-4 border bg-light">
-          <EditingFormReact />
-        </div>
-      </div >
-
+          <div className="col-6 border bg-light">
+            <OLCanvasReact />
+          </div>
+          <div className="col-6 border bg-light">
+            {/* <EditingFormReact /> */}
+            {/* <EdgeEditingFormReact /> */}
+            <ToolTreeWidgetReact />
+          </div>
+        </div >
+      </div>
     )
   }
 }
