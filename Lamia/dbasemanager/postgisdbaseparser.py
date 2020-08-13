@@ -294,6 +294,37 @@ class PostGisDBaseParser(AbstractDBaseParser):
         self.query(sql)
         self.commit()
         self.disconnect()
+
+    def checkIfPGShcemaExists(
+        self, host, dbname, schema, user, password
+    ):
+        dbexists = False
+        schemaexists = False
+
+        # connexion to database
+        connectstr = "dbname='" + dbname.lower() + "' user='" + user + "' host='" + host
+        connectstr += "' password='" + password + "'"
+        try:
+            self.connPGis = psycopg2.connect(connectstr)
+        except psycopg2.OperationalError as e:
+            print("Error connecting : ", connectstr, "\n", e)
+            return dbexists, schemaexists
+
+        dbexists = True
+        pgiscursor = self.connPGis.cursor()
+
+        sql = "SELECT * FROM pg_namespace"
+        # sql = "select schema_name from information_schema.schemata"
+        # query = self.query(sql)
+        self.PGiscursor.execute(sql)
+        rows = self.PGiscursor.fetchall()
+        result = [row[1] for row in rows]
+
+        if schema.lower() in result:
+            schemaexists = True
+
+        return dbexists, schemaexists
+
     def query(self, sql, arguments=[], docommit=True):
         if self.PGiscursor is None:
             self.PGiscursor = self.connPGis.cursor()

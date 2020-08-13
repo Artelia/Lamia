@@ -13,6 +13,9 @@ create a pg_service.conf and make a link to it with PGSERVICEFILE=c:\PGSERVICEFI
 access API :
     http://localhost:8380/wfs3/collections
     http://localhost:8380/qgisserver/wfs3/collections/Infralineaire_qgis/items/1.json
+    http://localhost:8380/qgisserver/wfs3/collections/edge_qgis/items/1.json?MAP=/etc/qgisserver/projectgpmb.qgs
+    http://localhost:8380/qgisserver/wfs3/collections?
+    http://localhost:8380/qgisserver/wfs3/collections?MAP=/etc/qgisserver/projectgpmb.qgs
 
 
 openlayers nearest

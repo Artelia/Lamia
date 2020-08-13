@@ -281,7 +281,7 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
                 self.loadDBase(dbtype="Spatialite", slfile=spatialitefile)
 
         elif dbtype == "postgis":
-            self.connDialog.exec_()
+            self.connPGDialog.exec_()
             (
                 adresse,
                 port,
@@ -289,7 +289,7 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
                 schema,
                 user,
                 password,
-            ) = self.connDialog.dialogIsFinished()
+            ) = self.connPGDialog.dialogIsFinished()
             if (
                 adresse is not None
                 and port is not None

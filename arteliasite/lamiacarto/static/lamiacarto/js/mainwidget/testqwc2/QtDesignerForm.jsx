@@ -13,11 +13,19 @@ const assign = require('object-assign');
 // PVR const Icon = require("./Icon");
 // PVR const ResizeableWindow = require("./ResizeableWindow");
 const axios = require('axios');
+axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
+axios.defaults.xsrfCookieName = "csrftoken"
+
 const xml2js = require('xml2js');
 
 require('./style/QtDesignerForm.css');
+require('./style/tabwidget.css');
 
 class QtDesignerForm extends React.Component {
+
+    //pvr
+    debugui = false
+
     static propTypes = {
         form: PropTypes.string,
         values: PropTypes.object,
@@ -34,7 +42,6 @@ class QtDesignerForm extends React.Component {
         formdata: null
     }
     componentDidMount() {
-        console.log('popo', this.props)
         let url = this.props.form;
         if (url && url.startsWith(":/")) {
             // pvr let assetsPath = ConfigUtils.getConfigProp("assetsPath");
@@ -62,6 +69,11 @@ class QtDesignerForm extends React.Component {
         );
     }
     renderLayout = (layout, values, updateField, nametransform = (name) => name) => {
+        this.debugui ? console.log('layout', layout) : null
+        if (!layout.item) { return }
+
+
+
         let containerClass = "";
         let itemStyle = item => ({});
         let containerStyle = {};
@@ -89,7 +101,9 @@ class QtDesignerForm extends React.Component {
         } else {
             return null;
         }
+
         return (
+
             <div className={containerClass} style={containerStyle}>
                 {layout.item.map((item, idx) => {
                     return (
@@ -124,6 +138,7 @@ class QtDesignerForm extends React.Component {
         return columns;
     }
     renderWidget = (widget, values, updateField, nametransform = (name) => name) => {
+        this.debugui ? console.log('widget', widget) : null
         let value = (values || {})[widget.name] || "";
         let prop = widget.property || {};
         let attr = widget.attribute || {};
@@ -167,11 +182,52 @@ class QtDesignerForm extends React.Component {
             return (
                 <input name={elname} type="date" min={min} max={max} value={value} onChange={(ev) => updateField(widget.name, ev.target.value)} />
             );
+        } else if (widget.class === "QFrame") {
+            return (
+                <div style={{ height: '100%', width: '100%' }}>
+                    {this.renderLayout(widget.layout, values, updateField, nametransform)};
+                </div>
+            )
+
+        } else if (widget.class === "QStackedWidget") {
+            null
+
+        } else if (widget.class === "QTabWidget") {
+
+            // https://codepen.io/mikestreety/pen/yVNNNm
+            let listdom = []
+            widget.widget.forEach(function (widget, index) {
+                let checked = ''
+                index === 0 ? checked = 'checked="checked"' : ''
+                if (index === 0) {
+                    listdom.push(<input type="radio" key={3 * index} name="tabs" id={'tab' + index.toString()} defaultChecked />)
+                } else {
+                    listdom.push(<input type="radio" key={3 * index} name="tabs" id={'tab' + index.toString()} />)
+                }
+
+                listdom.push(<label key={3 * index + 1} for={'tab' + index.toString()}>{widget.attribute.title.replace('\\n', ' ')}</label>)
+                listdom.push(
+                    <div className="tab" key={3 * index + 2} >
+                        {this.renderWidget(widget, values, updateField, nametransform)}
+                    </div>)
+            }.bind(this));
+
+            //style={{ height: '100%', width: '100%' }}
+
+            return (
+                <div className="tabs" >
+                    {listdom}
+                </div>
+
+            )
+
         } else if (widget.class === "QWidget") {
             if (widget.name.startsWith("nrel__")) {
                 return this.renderNRelation(widget);
-            } else {
+            } else if (widget.layout) {
                 return this.renderLayout(widget.layout, values, updateField, nametransform);
+            } else {
+                return null
             }
         }
         return null;
@@ -225,7 +281,6 @@ class QtDesignerForm extends React.Component {
         });
         let root = json.ui.widget;
         this.reformatWidget(root);
-        // console.log(root);
         this.setState({ formdata: root });
     }
     reformatWidget = (widget) => {
@@ -243,9 +298,16 @@ class QtDesignerForm extends React.Component {
         }
         if (widget.layout) {
             this.reformatLayout(widget.layout);
+        } else if (widget.widget) {
+            widget.widget = Array.isArray(widget.widget) ? widget.widget : [widget.widget];
+            widget.widget.forEach(widget => {
+                this.reformatWidget(widget)
+            });
         }
     }
     reformatLayout = (layout) => {
+
+        if (!layout.item) { return }
         layout.item = Array.isArray(layout.item) ? layout.item : [layout.item];
         layout.item.forEach(item => {
             if (item.widget) {

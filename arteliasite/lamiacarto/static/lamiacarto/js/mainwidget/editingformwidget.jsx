@@ -13,7 +13,7 @@ class EditingFormReact extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { 'currentlayer': '', 'currentfeatprop': {} }
+        this.state = { 'currentlayer': '', 'currentfeatprop': {}, 'formui': ':/lamia_form_edge_ui.ui' }
         // let olcanvas = new OLCanvasReact()
         // console.log('ol', olcanvas)
     }
@@ -49,20 +49,32 @@ class EditingFormReact extends React.Component {
 
         // derive map coordinate (references map from Wrapper Component state)
         var clickedCoordinate = EditingFormReact.olcanvas.state.map.getCoordinateFromPixel(event.pixel);
-        console.log('*', clickedCoordinate)
+        // console.log('*', clickedCoordinate)
 
-        axios.post('http://localhost:8000/lamiafunc/' + this.projectdata.id_project.toString(), {
+        // ask nearest pk
+        let res = await axios.post('http://localhost:8000/lamiafunc/' + this.projectdata.id_project.toString(), {
             func: 'nearest',
             layer: 'Infralineaire',
             coords: clickedCoordinate,
-        }).then(function (reponse) {
-            console.log('***', reponse);
-            let pk = reponse.nearestpk
-            let feat = EditingFormReact.olcanvas.state.qgislayer.getSource().getFeatureById(pk)
-            console.log(feat)
-        });
+        })
+        // console.log(res)
+        let response = JSON.parse(res.data)
 
+        // get feature from wfs3
+        // ex : http://localhost:8380/qgisserver/wfs3/collections/Infralineaire_qgis/items/1.json
+        let temp = EditingFormReact.olcanvas.props.qgisserverurl + 'qgisserver/wfs3/collections/' + 'Infralineaire_qgis' + '/items/' + response.nearestpk + '.json'
+        let feat = await axios.get(temp)
+        // console.log(feat)
 
+        // add to sellayer
+        let selsource = EditingFormReact.olcanvas.state.sellayer.getSource()
+        selsource.clear()
+        let jsonfeat = selsource.getFormat().readFeatures(feat.data)
+
+        selsource.addFeatures(jsonfeat)
+        selsource.getFeatures()[0].getGeometry().transform('EPSG:4326', 'EPSG:3857')
+
+        EditingFormReact.olcanvas.state.sellayer.setSource(selsource)
 
 
     }
@@ -72,7 +84,6 @@ class EditingFormReact extends React.Component {
         if (sourceid == 'canvaspick') {
             console.log(this.olcanvas)
         }
-
 
     }
 
@@ -95,7 +106,7 @@ class EditingFormReact extends React.Component {
                     </div>
                 </div>
                 <div className="row" style={{ height: '100%' }}>
-                    <QtDesignerForm updateField={this.updateField} form={':/form.ui'} values={this.state.currentfeatprop} />
+                    <QtDesignerForm updateField={this.updateField} form={this.state.formui} values={this.state.currentfeatprop} />
                 </div>
             </div>
 

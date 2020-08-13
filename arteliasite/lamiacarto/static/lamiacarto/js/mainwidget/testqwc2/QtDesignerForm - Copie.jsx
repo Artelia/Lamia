@@ -299,10 +299,15 @@ class QtDesignerForm extends React.Component {
                 return assign(res, { [prop.name]: prop[Object.keys(prop).find(key => key !== "name")] });
             }, {});
         }
+
         if (widget.layout) {
             this.reformatLayout(widget.layout);
+        } else if (widget.widget) {
+            console.log('widget.widget', widget.widget)
+            this.reformatWidget(widget.widget[0])
         }
     }
+
     reformatLayout = (layout) => {
         layout.item = Array.isArray(layout.item) ? layout.item : [layout.item];
         layout.item.forEach(item => {

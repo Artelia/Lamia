@@ -18,11 +18,11 @@ class LamiaSession:
         logging.getLogger().debug(f"Init lamia session project n {idproject}")
         self.idproject = idproject
 
-        # self.mainwin, self.canvas, self.lamiawidget = getDisplayWidget()
+        self.mainwin, self.canvas, self.lamiawidget = getDisplayWidget()
 
         self.lamiaparser = DBaseParserFactory("postgis").getDbaseParser()
 
-        # create canvas and LamiaWindowWidget
+        create canvas and LamiaWindowWidget
         canvas = qgis.gui.QgsMapCanvas()
         canvas.enableAntiAliasing(True)
         canvascrs = qgis.core.QgsCoordinateReferenceSystem()

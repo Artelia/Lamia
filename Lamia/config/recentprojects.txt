@@ -1,3 +1,4 @@
+lamiaunittest.importgpmb@localhost:5432;pvr;pvr
 lamiaunittest.importbm@localhost:5432;pvr;pvr
 lamiaunittest.importbm@localhost:8080;pvr;pvr
 C:\01_WORKINGDIR\perigord\CC_Bastides_Dordogne_Perigord_finale.sqlite

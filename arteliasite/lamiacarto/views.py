@@ -63,6 +63,8 @@ class PostViewSet(views.APIView):
 
 class LamiaFuncAPI(views.APIView):
     def get(self, request, **kwargs):
+        projectid = kwargs.get("project_id")
+        lamiassession = LamiaSession.getInstance(projectid)
         return Response(None)
 
     def post(self, request, **kwargs):
@@ -79,10 +81,16 @@ class LamiaFuncAPI(views.APIView):
         projectid = kwargs.get("project_id")
 
         if request.data["func"] == "nearest":
-            nearestpk, dist = LamiaSession.getInstance(projectid).getNearestPk(
+            lamiassession = LamiaSession.getInstance(projectid)
+            nearestpk, dist = lamiassession.getNearestPk(
                 request.data["layer"], request.data["coords"]
             )
-            result = json.dumps({"nearestpk": nearestpk, "dist": dist})
+
+            geom = lamiassession.qgscanvas.getQgsGeomFromPk(
+                lamiassession.lamiaparser, request.data["layer"], nearestpk
+            )
+            geomson = geom.asJson()
+            result = json.dumps({"nearestpk": nearestpk, "dist": dist, "geom": geomson})
             logging.getLogger().debug(f"nearest {result}")
             return Response(result)
 
@@ -139,7 +147,7 @@ class LamiaProjectView(BaseView):
         queryset = Project.objects.filter(id_project=kwargs.get("project_id"))
         idproject = queryset.values("id_project")[0]["id_project"]
 
-        LamiaSession.getInstance(idproject)
+        # LamiaSession.getInstance(idproject)
 
         context = json.dumps(list(queryset.values("id_project", "qgisserverurl"))[0])
 
