@@ -1,0 +1,18 @@
+{
+    "Infralineaire_qgis": {
+        "layerName": "Infralineaire",
+        "geomType": "LineString ",
+        "fields": [
+            {
+                "id": "description1",
+                "name": "description1",
+                "type": "text"
+            },{
+                "id": "description2",
+                "name": "description2",
+                "type": "text"
+            }
+        ]
+    }
+
+}

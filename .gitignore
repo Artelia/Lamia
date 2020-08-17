@@ -11,8 +11,10 @@ test/datas/lamia_*
 sandbox/*/
 frontend/
 arteliasite/node_modules
-arteliasite/lamiacarto/static/lamiacarto/bundles
 
+arteliasite/lamiacarto/static/lamiacarto/bundles
+arteliasiteV2/node_modules
+arteliasiteV2/qwc2
 
 
 .vscode/

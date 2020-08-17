@@ -11,6 +11,7 @@ module.exports = {
     path: path.resolve('./lamiacarto/static/lamiacarto/bundles/'),
     filename: "[name]-[hash].js",
   },
+  
 
   plugins: [
     new BundleTracker({ filename: './lamiacarto/webpack-stats.json' }),
@@ -47,7 +48,10 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['*', '.js', '.jsx']
+    extensions: ['*', '.js', '.jsx'],
+    //alias: {
+    //  forms: path.resolve(__dirname, '..', 'Lamia/worktypeconf/'),
+    //},
   }
 
 };

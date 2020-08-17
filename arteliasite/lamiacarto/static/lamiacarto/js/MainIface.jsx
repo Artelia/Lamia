@@ -9,7 +9,7 @@ import React from 'react';
 // import LCanvasReact from './canvas/leaflet'
 import OLCanvasReact from './canvas/openlayers'
 // import QtDesignerForm from './mainwidget/testqwc2/QtDesignerForm'
-import EditingFormReact from './mainwidget/editingformwidget'
+// import EditingFormReact from './mainwidget/editingformwidget'
 import ToolTreeWidgetReact from './mainwidget/tooltreewidget'
 
 
@@ -27,6 +27,7 @@ class MainIfaceReact extends React.Component {
 
   constructor(props) {
     super(props);
+
     // this.state = { 'qgisserverurl': null, 'currentfeatprop': {} }
     // this.state = { 'qgisserverurl': null }
 
@@ -56,13 +57,13 @@ class MainIfaceReact extends React.Component {
   render() {
 
     return (
-      <div class="container-fluid" style={{ height: '100%' }}>
+      <div className="container-fluid" style={{ height: '100%' }}>
         < div className="row " style={{ height: '100%' }}>
 
-          <div className="col-6 border bg-light">
+          <div className="col-8 border bg-light">
             <OLCanvasReact />
           </div>
-          <div className="col-6 border bg-light">
+          <div className="col-4 border bg-light">
             {/* <EditingFormReact /> */}
             {/* <EdgeEditingFormReact /> */}
             <ToolTreeWidgetReact />

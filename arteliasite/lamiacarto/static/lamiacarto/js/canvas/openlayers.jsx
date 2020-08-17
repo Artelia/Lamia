@@ -15,7 +15,7 @@ import TileWMS from 'ol/source/TileWMS'
 import Vector from 'ol/layer/Vector'
 import OSM from 'ol/source/OSM'
 import { GeoJSON } from 'ol/format';
-import { Circle as CircleStyle, Fill, Stroke, Style } from 'ol/style';
+import { Circle, Fill, Stroke, Style } from 'ol/style';
 // import Select from 'ol/interaction/Select';
 // import {click, pointerMove, altKeyOnly} from 'ol/events/condition';
 // import {defaults as defaultInteractions, DragRotateAndZoom} from 'ol/interaction';
@@ -85,7 +85,17 @@ class OLCanvasReact extends React.Component {
           color: 'green',
           width: 6,
         }),
-      }),
+
+        image: new Circle({
+          radius: 5,
+          fill: new Fill({ color: 'green' }),
+          stroke: new Stroke({
+            color: 'green', width: 2
+          }),
+        })
+
+
+      })
     });
 
 
