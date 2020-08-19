@@ -68,7 +68,7 @@ class ToolTreeWidgetReact extends React.Component {
           <div className="col-md-12 mb-4">
 
             <div className="btn-toolbar " role="group" aria-label="Basic example">
-              <div className="btn-group mr-2" role="group" aria-label="First group">
+              {/* <div className="btn-group mr-2" role="group" aria-label="First group">
                 <div className="dropdown">
                   <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Layers
@@ -77,7 +77,7 @@ class ToolTreeWidgetReact extends React.Component {
                     {dropdown}
                   </div>
                 </div>
-              </div>
+              </div> */}
               <div className="btn-group mr-2" role="group" aria-label="First group">
 
                 <button type="button" className="btn btn-secondary" id="canvaspick" onClick={this.onclick}>Pick</button>

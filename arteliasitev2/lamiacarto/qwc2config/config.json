@@ -6,6 +6,7 @@
   "featureReportService": "http://localhost:5020/",
   "translationsPath": "/static/assets/translations",
   "assetsPath": "/static/assets",
+  "formsPath": "",
   "urlPositionFormat": "centerAndZoom",
   "urlPositionCrs": "",
   "omitUrlParameterUpdates": false,
@@ -142,7 +143,7 @@
                   "key": "Editing",
                   "icon": "editing",
                   "themeWhitelist": [
-                    "QWC2 Test 2056"
+                    "Lamia"
                   ]
                 },
                 {
@@ -397,7 +398,7 @@
                   "key": "Editing",
                   "icon": "editing",
                   "themeWhitelist": [
-                    "QWC2 Test 2056"
+                    "Lamia"
                   ]
                 },
                 {

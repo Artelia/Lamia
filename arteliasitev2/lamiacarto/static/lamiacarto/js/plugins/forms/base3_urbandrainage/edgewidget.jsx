@@ -1,4 +1,5 @@
 // import EditingFormReact from '../editingformwidget'
+// const EditingFormReact = require('../editingformwidget')
 const EditingFormReact = require('../editingformwidget')
 //
 

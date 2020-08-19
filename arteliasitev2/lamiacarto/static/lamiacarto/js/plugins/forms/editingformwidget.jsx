@@ -3,9 +3,11 @@ const React = require('react');
 
 // import QtDesignerForm from './QtDesignerForm'
 const QtDesignerForm = require('./QtDesignerForm');
+// const QtDesignerForm = require('qwc2/components/QtDesignerForm');
 // import OLCanvasReact from './../../canvas/openlayers'
 // import OLCanvasReact from '../../canvas/openlayers'
 //
+// const { clickOnMap } = require("qwc2/actions/map");
 
 
 
@@ -16,7 +18,7 @@ class EditingFormReact extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { 'currentlayer': '', 'currentfeatprop': {}, 'formui': ':/lamia_form_edge_ui.ui' }
+        // this.state = { 'currentlayer': '', 'currentfeatprop': {}, 'formui': ':/lamia_form_edge_ui.ui' }
         // https://www.freecodecamp.org/news/react-changing-state-of-child-component-from-parent-8ab547436271/
         this.currentform = React.createRef()
         // let olcanvas = new OLCanvasReact()
@@ -50,7 +52,8 @@ class EditingFormReact extends React.Component {
 
     render() {
 
-        let qtform = <QtDesignerForm domLoaded={this.domLoaded} ref={this.currentform} updateField={this.updateField} form={this.state.formui} values={this.state.currentfeatprop} />
+        let qtform = <QtDesignerForm domLoaded={this.domLoaded} ref={this.currentform}
+            updateField={this.updateField} form={this.state.formui} values={this.state.currentfeatprop} />
 
         return (
             <div className="container" style={{ height: '100%' }}>
@@ -83,3 +86,25 @@ class EditingFormReact extends React.Component {
 
 // export default EditingFormReact;
 module.exports = EditingFormReact;
+// module.exports = { EditingPlugin: EditingFormReact };
+
+// module.exports = (iface) => {
+//     return {
+//         EditingPlugin: connect(state => ({
+//             enabled: state.task ? state.task.id === 'Editing' : false,
+//             theme: state.theme ? state.theme.current : null,
+//             layers: state.layers ? state.layers.flat : [],
+//             map: state.map || {},
+//             iface: iface,
+//             editing: state.editing || {},
+//         })
+//             //  ,{
+//             //     clickOnMap: clickOnMap,
+//             //     changeEditingState: changeEditingState,
+//             //     setCurrentTaskBlocked: setCurrentTaskBlocked,
+//             //     refreshLayer: refreshLayer,
+//             //     changeLayerProperty: changeLayerProperty
+//             // }
+//         )(EditingFormReact)
+//     }
+// };
