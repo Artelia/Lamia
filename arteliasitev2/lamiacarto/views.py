@@ -151,6 +151,8 @@ class LamiaProjectView(BaseView):
     def get(self, request, **kwargs):
         logging.getLogger().debug("LamiaProjectView")
 
+        print("kwargs", kwargs)
+
         queryset = Project.objects.filter(id_project=kwargs.get("project_id"))
         idproject = queryset.values("id_project")[0]["id_project"]
 

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { SearchProviders, searchProviderFactory } = require('./SearchProviders');
+const {SearchProviders, searchProviderFactory} = require('./SearchProviders');
 const EditingInterface = require('./EditingInterface');
 const renderHelp = require('./Help');
 
@@ -26,40 +26,39 @@ module.exports = {
                 ScaleBarSupport: require('qwc2/plugins/map/ScaleBarSupport'),
                 SelectionSupport: require('qwc2/plugins/map/SelectionSupport')
             }),
-            // HomeButtonPlugin: require('qwc2/plugins/HomeButton'),
+            HomeButtonPlugin: require('qwc2/plugins/HomeButton'),
             LocateButtonPlugin: require('qwc2/plugins/LocateButton'),
-            // ZoomInPlugin: require('qwc2/plugins/ZoomButtons'),
-            // ZoomOutPlugin: require('qwc2/plugins/ZoomButtons'),
+            ZoomInPlugin: require('qwc2/plugins/ZoomButtons'),
+            ZoomOutPlugin: require('qwc2/plugins/ZoomButtons'),
             TaskButtonPlugin: require('qwc2/plugins/TaskButton'),
             BackgroundSwitcherPlugin: require('qwc2/plugins/BackgroundSwitcher'),
             TopBarPlugin: require('qwc2/plugins/TopBar')({
-                AppMenu: require("qwc2/components/AppMenu"),
-                Search: require("qwc2/components/Search")(SearchProviders, searchProviderFactory),
-                Toolbar: require("qwc2/components/Toolbar"),
-                FullscreenSwitcher: require("qwc2/components/FullscreenSwitcher")
+                 AppMenu: require("qwc2/components/AppMenu"),
+                 Search: require("qwc2/components/Search")(SearchProviders, searchProviderFactory),
+                 Toolbar: require("qwc2/components/Toolbar"),
+                 FullscreenSwitcher: require("qwc2/components/FullscreenSwitcher")
             }),
             BottomBarPlugin: require('qwc2/plugins/BottomBar'),
-            // MeasurePlugin: require('qwc2/plugins/Measure'),
+            MeasurePlugin: require('qwc2/plugins/Measure'),
             ThemeSwitcherPlugin: require('qwc2/plugins/ThemeSwitcher'),
             LayerTreePlugin: require('qwc2/plugins/LayerTree'),
-            LamiaPlugin: require('qwc2/plugins/Lamia'),
             IdentifyPlugin: require('qwc2/plugins/Identify'),
             MapTipPlugin: require('qwc2/plugins/MapTip'),
             SharePlugin: require('qwc2/plugins/Share'),
-            // MapCopyrightPlugin: require('qwc2/plugins/MapCopyright'),
-            // PrintPlugin: require('qwc2/plugins/Print'),
-            // HelpPlugin: require('qwc2/plugins/Help')(renderHelp),
-            // DxfExportPlugin: require('qwc2/plugins/DxfExport'),
-            // RasterExportPlugin: require('qwc2/plugins/RasterExport'),
-            // RedliningPlugin: require('qwc2/plugins/Redlining')({
-            //     BufferSupport: require('qwc2/plugins/redlining/RedliningBufferSupport')
-            // }),
-            // EditingPlugin: require('qwc2/plugins/Editing')(EditingInterface),
-            // MapComparePlugin: require('qwc2/plugins/MapCompare'),
-            // HeightProfilePlugin: require('qwc2/plugins/HeightProfile'),
-            // MapInfoTooltipPlugin: require('qwc2/plugins/MapInfoTooltip'),
-            // IdentifyRegionPlugin: require('qwc2/plugins/IdentifyRegion'),
-            // StartupMarkerPlugin: require('qwc2/plugins/StartupMarker')
+            MapCopyrightPlugin: require('qwc2/plugins/MapCopyright'),
+            PrintPlugin: require('qwc2/plugins/Print'),
+            HelpPlugin: require('qwc2/plugins/Help')(renderHelp),
+            DxfExportPlugin: require('qwc2/plugins/DxfExport'),
+            RasterExportPlugin: require('qwc2/plugins/RasterExport'),
+            RedliningPlugin: require('qwc2/plugins/Redlining')({
+                // BufferSupport: require('qwc2/plugins/redlining/RedliningBufferSupport')
+            }),
+            EditingPlugin: require('qwc2/plugins/Editing')(EditingInterface),
+            MapComparePlugin: require('qwc2/plugins/MapCompare'),
+            HeightProfilePlugin: require('qwc2/plugins/HeightProfile'),
+            MapInfoTooltipPlugin: require('qwc2/plugins/MapInfoTooltip'),
+            IdentifyRegionPlugin: require('qwc2/plugins/IdentifyRegion'),
+            StartupMarkerPlugin: require('qwc2/plugins/StartupMarker')
         },
         cfg: {
             IdentifyPlugin: {
@@ -88,25 +87,25 @@ module.exports = {
         // If omitted, the default handler is used which downloads capabilities for each service to restore the layer
     },*/
     supportedLocales: {
-        "pt": {
-            code: "pt-BR",
-            description: "Português Brasil",
-            localeData: require('react-intl/locale-data/pt')
-        },
-        "it": {
-            code: "it-IT",
-            description: "Italiano",
-            localeData: require('react-intl/locale-data/it')
-        },
-        "en": {
+         "pt": {
+             code: "pt-BR",
+             description: "Português Brasil",
+             localeData: require('react-intl/locale-data/pt')
+         },
+         "it": {
+             code: "it-IT",
+             description: "Italiano",
+             localeData: require('react-intl/locale-data/it')
+         },
+         "en": {
             code: "en-US",
             description: "English",
             localeData: require('react-intl/locale-data/en')
-        },
-        "fr": {
-            code: "fr-FR",
-            description: "Français",
-            localeData: require('react-intl/locale-data/fr')
+         },
+         "fr": {
+           code: "fr-FR",
+           description: "Français",
+           localeData: require('react-intl/locale-data/fr')
         },
         "de": {
             code: "de-DE",
@@ -123,5 +122,5 @@ module.exports = {
             description: "Русский",
             localeData: require('react-intl/locale-data/ru')
         }
-    }
+   }
 };

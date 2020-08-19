@@ -1,15 +1,17 @@
 const webpack = require('webpack');
 const path = require('path');
 const os = require('os');
+const BundleTracker = require('webpack-bundle-tracker');
 const styleConfig = require("./styleConfig");
 
 const nodeEnv = process.env.NODE_ENV || 'development';
 const isProd = nodeEnv === 'production';
 
 
-let styleReplacements = Object.keys(styleConfig).map(key => ({search: "@" + key + "@", replace: styleConfig[key], flags: "g"}));
+let styleReplacements = Object.keys(styleConfig).map(key => ({ search: "@" + key + "@", replace: styleConfig[key], flags: "g" }));
 
 const plugins = [
+  new BundleTracker({ filename: './lamiacarto/webpack-stats.json' }),
   new webpack.DefinePlugin({
     'process.env': { NODE_ENV: JSON.stringify(nodeEnv) }
   }),
@@ -20,8 +22,8 @@ const plugins = [
   new webpack.NormalModuleReplacementPlugin(/openlayers$/, path.join(__dirname, "qwc2", "libs", "openlayers")),
   new webpack.NoEmitOnErrorsPlugin(),
   new webpack.LoaderOptionsPlugin({
-      debug: !isProd,
-      minimize: isProd
+    debug: !isProd,
+    minimize: isProd
   })
 ];
 
@@ -30,16 +32,19 @@ if (!isProd) {
 }
 
 module.exports = {
+  context: __dirname,
+
   devtool: isProd ? 'source-map' : 'eval',
   mode: nodeEnv === "production" ? "production" : "development",
   entry: {
-    'webpack-dev-server': 'webpack-dev-server/client?http://0.0.0.0:8081',
+    'webpack-dev-server': 'webpack-dev-server/client?http://0.0.0.0:3232',
     'webpack': 'webpack/hot/only-dev-server',
-    'QWC2App': path.join(__dirname, "js", "app")
+    'QWC2App': path.join(__dirname, "lamiacarto", "static", "lamiacarto", "js", "app")
   },
   output: {
-    path: path.join(__dirname, './dist'),
-    publicPath: "/dist/",
+    path: path.join(__dirname, "lamiacarto", "static", "lamiacarto", 'dist'),
+    // publicPath: "/dist/",
+    // publicPath: "/static/lamiacarto/dist/",
     filename: '[name].js'
   },
   plugins,
@@ -63,9 +68,9 @@ module.exports = {
       {
         test: /\.css$/,
         use: [
-          {loader: 'style-loader'},
-          {loader: 'css-loader'},
-          {loader: 'string-replace-loader', options: {multiple: styleReplacements}}
+          { loader: 'style-loader' },
+          { loader: 'css-loader' },
+          { loader: 'string-replace-loader', options: { multiple: styleReplacements } }
         ]
       },
       {
@@ -91,8 +96,8 @@ module.exports = {
         test: /\.jsx?$/,
         exclude: os.platform() === 'win32' ? /node_modules\\(?!(qwc2)\\).*/ : /node_modules\/(?!(qwc2)\/).*/,
         use: {
-            loader: 'babel-loader',
-            options: { babelrcRoots: ['.', path.resolve(__dirname, 'node_modules', 'qwc2')] }
+          loader: 'babel-loader',
+          options: { babelrcRoots: ['.', path.resolve(__dirname, 'node_modules', 'qwc2')] }
         }
       },
       {
@@ -103,6 +108,7 @@ module.exports = {
   },
   devServer: {
     hot: true,
-    contentBase: './'
+    contentBase: './',
+    writeToDisk: true,
   }
 };

@@ -46,7 +46,8 @@ INSTALLED_APPS = [
 
 WEBPACK_LOADER = {
     "DEFAULT": {
-        "BUNDLE_DIR_NAME": "lamiacarto/bundles/",
+        "BUNDLE_DIR_NAME": "lamiacarto/dist/",
+        # "BUNDLE_DIR_NAME": "dist/",
         # 'STATS_FILE': os.path.join(BASE_DIR, 'pvr', 'static','bundles', 'webpack-stats.json'),
         "STATS_FILE": os.path.join(BASE_DIR, "lamiacarto", "webpack-stats.json"),
     }
@@ -135,6 +136,8 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [
     os.path.abspath(os.path.join(BASE_DIR, "node_modules")),  # for bootstrap
     ("forms", os.path.abspath(os.path.join(BASE_DIR, "..", "Lamia", "worktypeconf"))),
+    ("assets", os.path.join(BASE_DIR, "lamiacarto", "assets")),
+    ("qwc2config", os.path.join(BASE_DIR, "lamiacarto", "qwc2config")),
 ]
 
 LOGGING = {

@@ -8,12 +8,13 @@
 
 const React = require('react');
 const ReactDOM = require('react-dom');
+//popo
 
 const appConfig = require('./appConfig');
 const StandardApp = require('qwc2/components/StandardApp');
 require('../icons/build/qwc2-icons.css');
 
 ReactDOM.render(
-    <StandardApp appConfig={appConfig}/>,
+    <StandardApp appConfig={appConfig} style={{ position: "relative", top: "50px" }} />,
     document.getElementById('container')
 );

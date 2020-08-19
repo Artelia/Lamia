@@ -36,7 +36,7 @@ List of major new features. For full details, please consult the [commit history
 
 **Incompatible changes**:
 
-- `enableExport` has been replaced by `exportFormat` in the Identify plugin configuration parameters in config.json
+- `exportFormat` has been replaced by `enableExport` in the Identify plugin configuration parameters in config.json
 - The `qwc2` submodule is now registered as a yarn workspace dependency (see [`package.json`](https://github.com/qgis/qwc2-demo-app/blob/master/package.json)), all it's dependencies were moved to `qwc2/package.json`. The `webpack.config.js` also needs to be updated, see commit [6ff4ce0](https://github.com/qgis/qwc2-demo-app/commit/6ff4ce04b19043933ad177772eff21f45d721963). At the same time, the MapStore2 and QWC2Components trees were merged in the qwc2 submdoule.
 - The `qwc2-icons.css` stylesheet isn't loaded anymore by the `Icon.jsx` component in the `qwc2` submodule, but needs to be referenced in the application specific code, for instance by adding to `js/app.jsx`
 
@@ -50,6 +50,7 @@ List of major new features. For full details, please consult the [commit history
 - Identify isn't automatically enabled anymore while the Layers panel is open. You need to explicitly set `"mapClickAction": "identify"` in the corresponding `menuItems` and/or `toolbarItems` configuration in `config.json`, as in the sample [`config.json`](https://github.com/qgis/qwc2-demo-app/blob/master/config.json).
 - `identifyEnabled` in the `menuItems` and `toolbarItems` items is deprecated, use `"mapClickAction": "identify"`.
 - The `LayersButton` is replaced by the more generic `TaskButton`, see the sample [`config.json`](https://github.com/qgis/qwc2-demo-app/blob/master/config.json).
+- The `proxyServiceUrl` in `config.json` is no longer supported, and `ProxyUtils` has been removed. Usage of `ProxyUtils.addProxyIfNeeded` in `SearchProviders.js` and `EditingInterface.js` needs to be removed. (Usage of `ProxyUtils.addProxyIfNeeded` was never complete in QWC2 and worked only for a fraction of calls, for development purposes, use a CORS plugin instead).
 
 
 

@@ -1,0 +1,60 @@
+change in makeiconkit : 
+
+let dest = 'lamiacarto/static/lamiacarto/icons/build'
+// mkdirp.sync('icons/build');
+mkdirp.sync(dest);
+
+change in configutils :
+
+let configFile = '/static/qwc2config/config.json';
+
+change in config.json :
+
+  "translationsPath": "/static/assets/translations",
+  "assetsPath": "/static/assets",
+  
+ change in settings.py :
+  
+  STATICFILES_DIRS = [
+    os.path.abspath(os.path.join(BASE_DIR, "node_modules")),  # for bootstrap
+    ("forms", os.path.abspath(os.path.join(BASE_DIR, "..", "Lamia", "worktypeconf"))),
+    ("assets", os.path.join(BASE_DIR, "lamiacarto", "assets")),
+    ("qwc2config", os.path.join(BASE_DIR, "lamiacarto", "qwc2config")),
+]
+
+change in themesConfig :
+
+// const themesConfig = process.env["QWC2_THEMES_CONFIG"] || "themesConfig.json";
+const themesConfig = './lamiacarto/qwc2config/themesConfig.json'
+
+in StandardApp :
+
+axios.get("/static/qwc2config/themes.json").then(response => {
+
+in webpack.config.json :
+
+  entry: {
+    'webpack-dev-server': 'webpack-dev-server/client?http://0.0.0.0:3232',
+    'webpack': 'webpack/hot/only-dev-server',
+    'QWC2App': path.join(__dirname, "lamiacarto", "static", "lamiacarto", "js", "app")
+  },
+  output: {
+    path: path.join(__dirname, "lamiacarto", "static", "lamiacarto", 'dist'),
+    // publicPath: "/dist/",
+    // publicPath: "/static/lamiacarto/dist/",
+    filename: '[name].js'
+  },
+  
+    devServer: {
+    hot: true,
+    contentBase: './',
+    writeToDisk: true,
+  }
+  
+in package.json scripts :
+
+"watch": "npm run tsupdate && npm run themesconfig && npm run iconfont && webpack --config webpack.config.js --watch --mode development",
+
+
+
+
