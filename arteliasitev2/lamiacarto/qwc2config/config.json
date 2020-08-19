@@ -318,6 +318,14 @@
       {
         "name": "TaskButton",
         "cfg": {
+          "position": 6,
+          "task": "Lamia",
+          "icon": "list-alt"
+        }
+      },
+      {
+        "name": "TaskButton",
+        "cfg": {
           "position": 5,
           "task": "LayerTree",
           "icon": "list-alt"
@@ -487,6 +495,10 @@
           "showToggleAllLayersCheckbox": true
         },
         "mapClickAction": "identify"
+      },
+      {
+        "name": "Lamia",
+        "cfg": {}
       },
       {
         "name": "Identify",

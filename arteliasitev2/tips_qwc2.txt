@@ -33,6 +33,8 @@ axios.get("/static/qwc2config/themes.json").then(response => {
 
 in webpack.config.json :
 
+const styleConfig = require("./lamiacarto/qwc2config/styleConfig");
+
   entry: {
     'webpack-dev-server': 'webpack-dev-server/client?http://0.0.0.0:3232',
     'webpack': 'webpack/hot/only-dev-server',
@@ -55,6 +57,10 @@ in package.json scripts :
 
 "watch": "npm run tsupdate && npm run themesconfig && npm run iconfont && webpack --config webpack.config.js --watch --mode development",
 
+sidebar.css : 
 
+div.sidebar {
+    position: absolute;
+    top: 5.0em;
 
 

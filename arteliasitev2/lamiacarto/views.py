@@ -1,5 +1,9 @@
 from django.shortcuts import render, redirect
-import json
+import json, os, sys
+
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
+import arteliasitev2.qwc2.scripts.themesConfig as themesConfig
+
 from rest_framework import views
 from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
@@ -11,6 +15,7 @@ from .models import User, Project
 from .lamiaforsession import LamiaSession
 import logging
 import qgis.core
+
 
 # Create your views here.
 
@@ -164,7 +169,14 @@ class LamiaProjectView(BaseView):
         if idproject > 1 and not request.user.is_authenticated:
             return redirect("home")
 
-        return render(request, self.mytemplate, {"context": context})
+        conffile = os.path.join(
+            os.path.dirname(os.path.realpath(__file__)),
+            "qwc2config",
+            "themesConfig_lamia.json",
+        )
+
+        datab = json.dumps(themesConfig.genThemes(conffile))
+        return render(request, self.mytemplate, {"context": context, "themes": datab})
 
     def post(self, request, **kwargs):
         return BaseView.post(self, request, **kwargs)
