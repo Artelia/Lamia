@@ -1,6 +1,8 @@
-import EditingFormReact from '../editingformwidget'
-import $ from 'jquery';
-import ReactDOM from "react-dom";
+// import EditingFormReact from '../editingformwidget'
+const EditingFormReact = require('../editingformwidget')
+// import $ from 'jquery';
+const $ = require('jquery')
+// import ReactDOM from "react-dom";
 //
 
 class MediaEditingFormReact extends EditingFormReact {
@@ -29,15 +31,15 @@ class MediaEditingFormReact extends EditingFormReact {
         console.log('***', $('input[name="spinBox_numphoto"]'))
     }
 
-    async componentDidMount() {
-        // console.log('media componentDidMount')
-        // await this.currentform.current.componentDidMount()
+    // async componentDidMount() {
+    //     // console.log('media componentDidMount')
+    //     // await this.currentform.current.componentDidMount()
 
-        // console.log('media componentDidMount2')
-        // let node = ReactDOM.findDOMNode(this);
-        // console.log(node.querySelector('[name="spinBox_numphoto"]'))
+    //     // console.log('media componentDidMount2')
+    //     // let node = ReactDOM.findDOMNode(this);
+    //     // console.log(node.querySelector('[name="spinBox_numphoto"]'))
 
-    }
+    // }
 
     componentDidUpdate() {
         // console.log('media componentDidUpdate')
@@ -64,4 +66,5 @@ class MediaEditingFormReact extends EditingFormReact {
 
 }
 
-export default MediaEditingFormReact;
+// export default MediaEditingFormReact;
+module.exports = MediaEditingFormReact;

@@ -1,4 +1,5 @@
-import EditingFormReact from '../editingformwidget'
+// import EditingFormReact from '../editingformwidget'
+const EditingFormReact = require('../editingformwidget')
 //
 
 class NodeEditingFormReact extends EditingFormReact {
@@ -18,4 +19,5 @@ class NodeEditingFormReact extends EditingFormReact {
 
 }
 
-export default NodeEditingFormReact;
+// export default NodeEditingFormReact;
+module.exports = NodeEditingFormReact;

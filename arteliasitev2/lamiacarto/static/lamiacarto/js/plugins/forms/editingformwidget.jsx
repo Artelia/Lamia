@@ -1,9 +1,10 @@
 // import React from 'react';
 const React = require('react');
+const { connect } = require('react-redux');
 
 // import QtDesignerForm from './QtDesignerForm'
-const QtDesignerForm = require('./QtDesignerForm');
-// const QtDesignerForm = require('qwc2/components/QtDesignerForm');
+// const QtDesignerForm = require('./QtDesignerForm');
+const QtDesignerForm = require('qwc2/components/QtDesignerForm');
 // import OLCanvasReact from './../../canvas/openlayers'
 // import OLCanvasReact from '../../canvas/openlayers'
 //
@@ -83,10 +84,23 @@ class EditingFormReact extends React.Component {
 }
 
 
-
-// export default EditingFormReact;
 module.exports = EditingFormReact;
-// module.exports = { EditingPlugin: EditingFormReact };
+
+
+// module.exports = (iface) => {
+//     return (
+//         connect(state => ({
+//             enabled: state.task ? state.task.id === 'Editing' : false,
+//             theme: state.theme ? state.theme.current : null,
+//             layers: state.layers ? state.layers.flat : [],
+//             map: state.map || {},
+//             iface: iface,
+//             editing: state.editing || {},
+//         }))(EditingFormReact)
+//     )
+// };
+
+
 
 // module.exports = (iface) => {
 //     return {
@@ -108,3 +122,38 @@ module.exports = EditingFormReact;
 //         )(EditingFormReact)
 //     }
 // };
+
+
+
+// module.exports = (iface) => {
+//     return {
+//         EditingPlugin: connect(state => ({
+//             enabled: state.task ? state.task.id === 'Editing' : false,
+//             theme: state.theme ? state.theme.current : null,
+//             layers: state.layers ? state.layers.flat : [],
+//             map: state.map || {},
+//             iface: iface,
+//             editing: state.editing || {},
+//         }), {
+//             clickOnMap: clickOnMap,
+//             changeEditingState: changeEditingState,
+//             setCurrentTaskBlocked: setCurrentTaskBlocked,
+//             refreshLayer: refreshLayer,
+//             changeLayerProperty: changeLayerProperty
+//         })(Editing)
+//     }
+// };
+
+
+// const MapStateToProps = state => ({
+//     enabled: state.task ? state.task.id === 'Editing' : false,
+//     theme: state.theme ? state.theme.current : null,
+//     layers: state.layers ? state.layers.flat : [],
+//     map: state.map || {},
+//     iface: iface,
+//     editing: state.editing || {},
+// })
+
+// module.exports = connect(MapStateToProps)(EditingFormReact)
+
+

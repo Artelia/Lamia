@@ -94,10 +94,12 @@ class LamiaFuncAPI(views.APIView):
                 request.data["layer"], request.data["coords"]
             )
 
-            geom = lamiassession.qgscanvas.getQgsGeomFromPk(
-                lamiassession.lamiaparser, request.data["layer"], nearestpk
-            )
-            geomson = geom.asJson()
+            # geom = lamiassession.qgscanvas.getQgsGeomFromPk(
+            #     lamiassession.lamiaparser, request.data["layer"], nearestpk
+            # )
+            # geomson = geom.asJson()
+            geomson = None
+            
             result = json.dumps({"nearestpk": nearestpk, "dist": dist, "geom": geomson})
             # logging.getLogger().debug(f"nearest {result}")
             return Response(result)

@@ -52,7 +52,10 @@
             [
                 "@babel/preset-env",
                 {
-                    "modules": false
+                    "modules": false,
+                    "targets": {
+                      "node": "10"
+                    }
                 }
             ],
             "@babel/preset-react"
