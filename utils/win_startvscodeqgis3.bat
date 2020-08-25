@@ -13,7 +13,7 @@ path %SYSTEMROOT%\System32\OpenSSH\;%PATH%
 set PYTHONPATH=%UserProfile%\AppData\Roaming\python\Python37\site-packages;%PYTHONPATH%
 
 
-
+SET PGSERVICEFILE=C:\PGSERVICEFILE\pg_service.conf
 REM save my life !!!
 SET QGIS_DISABLE_MESSAGE_HOOKS=1
 SET QGIS_NO_OVERRIDE_IMPORT=1

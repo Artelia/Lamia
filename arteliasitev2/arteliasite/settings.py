@@ -81,6 +81,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "django.template.context_processors.media",
             ],
         },
     },
@@ -139,6 +140,12 @@ STATICFILES_DIRS = [
     ("assets", os.path.join(BASE_DIR, "lamiacarto", "assets")),
     ("qwc2config", os.path.join(BASE_DIR, "lamiacarto", "qwc2config")),
 ]
+
+MEDIA_ROOT = os.path.join("C:/", "media")
+MEDIA_URL = "/media/"
+
+print(os.path.normpath(MEDIA_ROOT))
+
 
 LOGGING = {
     "version": 1,

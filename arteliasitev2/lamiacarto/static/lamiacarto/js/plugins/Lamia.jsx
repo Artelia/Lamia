@@ -25,11 +25,10 @@ const MapUtils = require('qwc2/utils/MapUtils');
 const EdgeEditingFormReact = require('./forms/base3_urbandrainage/edgewidget')
 const NodeEditingFormReact = require('./forms/base3_urbandrainage/nodewidget')
 const MediaEditingFormReact = require('./forms/base3_urbandrainage/mediawidget')
+const ReportEditingFormReact = require('./forms/base3_urbandrainage/reportwidget')
 
+const { changeSelectionState } = require('qwc2/actions/selection');
 
-const axios = require('axios');
-axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
-axios.defaults.xsrfCookieName = "csrftoken"
 
 class Lamia extends React.Component {
     static propTypes = {}
@@ -42,7 +41,8 @@ class Lamia extends React.Component {
     workclasses = [
         EdgeEditingFormReact,
         NodeEditingFormReact,
-        MediaEditingFormReact
+        MediaEditingFormReact,
+        ReportEditingFormReact
     ]
 
     projectdata = JSON.parse(JSON.parse(document.getElementById('context').textContent))
@@ -51,7 +51,9 @@ class Lamia extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { 'visualmode': 1, 'currentwdg': null }
+        this.state = { 'visualmode': 1, 'currentwdg': null, 'values': null }
+
+        console.log(window.location.host)
 
     }
 
@@ -118,8 +120,84 @@ class Lamia extends React.Component {
         console.log('componentDidMount', this.props)
     }
 
+
     shouldComponentUpdate(nextProps, nextState) {
-        // console.log('shouldComponentUpdate', this.props)
+        if (nextState !== this.state) {
+            return true
+        }
+        if (nextProps.point == this.props.point) {
+            return false
+        }
+        return true
+    }
+
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.layers) {
+            let found = nextProps.layers.find(layer => layer.title === "Lamiasel")
+            // console.log('found', !found, found)
+            if (!found) {
+                let layer = {
+                    title: "Lamiasel",
+                    type: 'vector',
+                    layertreehidden: true,
+                };
+                nextProps.addLayer(layer);
+            }
+
+            // let snapStyle = [
+            //     new ol.style.Style({
+            //         fill: new ol.style.Fill({ color: [255, 255, 255, 0.05] }),
+            //         stroke: new ol.style.Stroke({ color: '#3399CC', width: 1 })
+            //     }),
+            //     new ol.style.Style({
+            //         image: new ol.style.RegularShape({
+            //             fill: new ol.style.Fill({ color: [255, 255, 255, 0.05] }),
+            //             stroke: new ol.style.Stroke({ color: '#3399CC', width: 1 }),
+            //             points: 4,
+            //             radius: 5,
+            //             angle: Math.PI / 4
+            //         }),
+            //         geometry: (feature) => {
+            //             if (feature.getGeometry().getType() === "Point") {
+            //                 return new ol.geom.MultiPoint([feature.getGeometry().getCoordinates()]);
+            //             } else if (feature.getGeometry().getType() === "LineString") {
+            //                 return new ol.geom.MultiPoint(feature.getGeometry().getCoordinates());
+            //             } else {
+            //                 return new ol.geom.MultiPoint(feature.getGeometry().getCoordinates()[0]);
+            //             }
+            //         }
+            //     })
+            // ];
+            // this.snapSource = new ol.source.Vector();
+            // this.snapLayer = new ol.layer.Vector({
+            //     title: 'Lamiasel',
+            //     source: this.snapSource,
+            //     zIndex: 1000000,
+            //     style: snapStyle
+            // });
+            // // this.props.map.addLayer(this.snapLayer);
+            // nextProps.addLayer(this.snapLayer);
+
+        }
+
+    }
+
+
+    componentWillReceiveProps_(nextProps) {
+        console.log('componentWillReceiveProps')
+
+        console.log('mapchange', nextProps.map !== this.props.map)
+        if (nextProps.map !== this.props.map) {
+            return false
+        }
+        // console.log('shouldComponentUpdate', nextProps)
+        // console.log(this.props)
+        // console.log('shouldComponentUpdate', nextState)
+
+        // console.log('pp', nextProps === this.props)
+        // console.log('pp', nextState === this.state)
+
         let found = this.props.layers.find(layer => layer.title === "Lamiasel")
         console.log('found', !found, found)
         if (!found) {
@@ -130,63 +208,18 @@ class Lamia extends React.Component {
             this.props.addLayer(layer);
             return false
         }
-
-        if (this.props.point) {
+        console.log('point diff', nextProps.point !== this.props.point)
+        if (nextProps.point !== this.props.point) {
             this.handleMapClick()
             return false
-
-
         }
 
 
 
         // console.log('shouldComponentUpdate', this.props)
-        return true
+        return false
     }
 
-    async handleMapClick(event) {
-        let t = this.props.point
-        console.log('handleMapClick', t.coordinate)
-
-        let res = await axios.post('http://localhost:8000/lamiafunc/' + this.projectdata.id_project.toString(), {
-            func: 'nearest',
-            layer: this.state.currentwdg.table,
-            coords: t.coordinate,
-        })
-        let response = JSON.parse(res.data)
-
-        console.log(response)
-
-        let temp = this.projectdata.qgisserverurl + 'qgisserver/wfs3/collections/' + this.state.currentwdg.table + '_qgis/items/' + response.nearestpk + '.json'
-        console.log('req', temp)
-        let feat = await axios.get(temp)
-        console.log('feat', feat)
-
-        let ollayer = this.props.layers.find(layer => layer.title === "Lamiasel")
-
-        // this.props.addLayerFeatures({
-        //     name: filename,
-        //     title: filename.replace(/\.[^/.]+$/, ""),
-        //     zoomToExtent: true
-        // }, features, true);
-
-        this.props.addLayerFeatures(ollayer, [feat.data], true);
-
-        // let selsource = ollayer.getSource()
-        // selsource.clear()
-        // let jsonfeat = selsource.getFormat().readFeatures(feat.data)
-
-        // selsource.addFeatures(jsonfeat)
-        // selsource.getFeatures()[0].getGeometry().transform('EPSG:4326', 'EPSG:3857')
-
-        // ollayer.setSource(selsource)
-
-        console.log('ok')
-
-
-        // this.state.currentwdg
-
-    }
 
     render() {
         console.log('render Lamia', this.props.point)
@@ -226,6 +259,8 @@ class Lamia extends React.Component {
         // };
         // this.props.addLayer(layer);
 
+        let thisiface = { getKeyValues: this.getKeyValues }
+
         return (
             <div>
                 <SideBar id="Lamia" width={this.state.sidebarwidth || this.props.width}
@@ -236,7 +271,12 @@ class Lamia extends React.Component {
                 >
                     <div role="body" >
                         {/* {tooltree} */}
-                        {(this.state.currentwdg === null) ? < div></div> : <this.state.currentwdg />}
+                        {(this.state.currentwdg === null) ? < div></div> : <this.state.currentwdg
+                            point={this.props.map.clickPoint}
+                            layers={this.props.layers}
+                            addLayerFeatures={this.props.addLayerFeatures}
+                            changeSelectionState={this.props.changeSelectionState}
+                            selection={this.props.selection} />}
                     </div>
                     {/* {() => ({
                         body: this.renderBody()
@@ -246,6 +286,10 @@ class Lamia extends React.Component {
                 {/* <LayerInfoWindow windowSize={this.props.layerInfoWindowSize} bboxDependentLegend={this.props.bboxDependentLegend} /> */}
             </div>
         );
+    }
+
+    getKeyValues() {
+        return {}
     }
 
     buttonmenuclick(evt) {
@@ -319,20 +363,22 @@ class Lamia extends React.Component {
 
 
 const selector = (state) => ({
-    enabled: state.task ? state.task.id === 'Editing' : false,
-    theme: state.theme ? state.theme.current : null,
+    // enabled: state.task ? state.task.id === 'Editing' : false,
+    // theme: state.theme ? state.theme.current : null,
     layers: state.layers ? state.layers.flat : [],
     map: state.map || {},
     point: state.map && state.map.clickPoint,
+    selection: state.selection,
     // iface: iface,
-    editing: state.editing || {},
+    // editing: state.editing || {},
 })
 
 module.exports = {
     LamiaPlugin: connect(selector,
         {
             addLayer: addLayer,
-            addLayerFeatures: addLayerFeatures
+            addLayerFeatures: addLayerFeatures,
+            changeSelectionState: changeSelectionState
         })(Lamia),
     reducers: {
     }

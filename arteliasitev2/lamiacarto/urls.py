@@ -1,6 +1,8 @@
 from . import views
 from django.urls import path
 from rest_framework import routers
+from django.conf import settings
+from django.conf.urls.static import static
 
 router = routers.SimpleRouter()
 # router.register(r"posts", views.PostViewSet)
@@ -19,6 +21,9 @@ urlpatterns = [
         views.PostViewSet.as_view(),
         name="lamiaapi",
     ),
-    path("lamiafunc/<int:project_id>", views.LamiaFuncAPI.as_view(), name="lamiafunc",),
+    # path("lamiafunc/<int:project_id>", views.LamiaFuncAPI.as_view(), name="lamiafunc",),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

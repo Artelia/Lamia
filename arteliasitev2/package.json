@@ -54,7 +54,7 @@
                 {
                     "modules": false,
                     "targets": {
-                      "node": "10"
+                        "node": "10"
                     }
                 }
             ],
@@ -64,6 +64,7 @@
     "dependencies": {
         "bootstrap": "^4.5.2",
         "jquery": "^3.5.1",
+        "js-file-download": "^0.4.12",
         "popper.js": "^1.16.1",
         "webpack-bundle-tracker": "0.4.3"
     }

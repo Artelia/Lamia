@@ -124,74 +124,74 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
                 "linkfield": "id_node",
                 "widgets": {
                     # 'sewertype': self.toolwidgetmain.comboBox_typeReseau,
-                    "location": self.toolwidgetmain.comboBox_environnement,
-                    "nodetype": self.toolwidgetmain.comboBox_typeOuvrageAss,
-                    "nodesubtype": self.toolwidgetmain.comboBox_soustype,
-                    "manholecovershape": self.toolwidgetmain.comboBox_Formetampon,
-                    "accessibility": self.toolwidgetmain.comboBox_accessibilite,
+                    "location": self.toolwidgetmain.location,
+                    "nodetype": self.toolwidgetmain.nodetype,
+                    "nodesubtype": self.toolwidgetmain.nodesubtype,
+                    "manholecovershape": self.toolwidgetmain.manholecovershape,
+                    "accessibility": self.toolwidgetmain.accessibility,
                     # regard
-                    "presencesteps": self.toolwidgetmain.comboBox_echelon,
-                    "presencehandle": self.toolwidgetmain.comboBox_crosse,
-                    "presencelowflowchannel": self.toolwidgetmain.comboBox_cunette,
-                    "manholeshape": self.toolwidgetmain.comboBox_formeregard,
-                    "manholematerial": self.toolwidgetmain.comboBox_regmat,
+                    "presencesteps": self.toolwidgetmain.presencesteps,
+                    "presencehandle": self.toolwidgetmain.presencehandle,
+                    "presencelowflowchannel": self.toolwidgetmain.presencelowflowchannel,
+                    "manholeshape": self.toolwidgetmain.manholeshape,
+                    "manholematerial": self.toolwidgetmain.manholematerial,
                     # branchement
-                    "presencesiphoidpartition": self.toolwidgetmain.comboBox_cloisonsiphoide,
-                    "presencelid": self.toolwidgetmain.comboBox_couvercle,
-                    "lateralusercategory": self.toolwidgetmain.comboBox_typeusager,
+                    "presencesiphoidpartition": self.toolwidgetmain.presencesiphoidpartition,
+                    "presencelid": self.toolwidgetmain.presencelid,
+                    "lateralusercategory": self.toolwidgetmain.lateralusercategory,
                     # avaloir
-                    "sedimenttrap": self.toolwidgetmain.comboBox_decant,
+                    "sedimenttrap": self.toolwidgetmain.sedimenttrap,
                     # PR
                     "psfence": self.toolwidgetmain.comboBox_cloture,
-                    "pslocked": self.toolwidgetmain.comboBox_verouille,
-                    "psh2streatment": self.toolwidgetmain.comboBox_h2s,
+                    "pslocked": self.toolwidgetmain.pslocked,
+                    "psh2streatment": self.toolwidgetmain.psh2streatment,
                     "pseleccabinet": self.toolwidgetmain.comboBox_posteelec,
-                    "pseleccabinetlocked": self.toolwidgetmain.comboBox_armoire_verouille,
+                    "pseleccabinetlocked": self.toolwidgetmain.pseleccabinetlocked,
                     "psremotemonitoring": [
-                        self.toolwidgetmain.comboBox_telegestion,
-                        self.toolwidgetmain.comboBox_DSHalarme,
+                        self.toolwidgetmain.psremotemonitoring,
+                        self.toolwidgetmain.psremotemonitoring_2,
                     ],
-                    "psremotemonitoringcomment": self.toolwidgetmain.textBrowser_telegestioncom,
-                    "pspumpswitchingcontroller": self.toolwidgetmain.comboBox_permut_pompes,
+                    "psremotemonitoringcomment": self.toolwidgetmain.psremotemonitoringcomment,
+                    "pspumpswitchingcontroller": self.toolwidgetmain.pspumpswitchingcontroller,
                     "psmaterial": [
-                        self.toolwidgetmain.comboBox_PRmateriau,
-                        self.toolwidgetmain.comboBox_DSH_materiau,
+                        self.toolwidgetmain.psmaterial,
+                        self.toolwidgetmain.psmaterial_2,
                     ],
-                    "psfallprotectiongratings": self.toolwidgetmain.comboBox_antichute,
-                    "psinletscreen": self.toolwidgetmain.comboBox_panierdegrileur,
-                    "pspumpswitchingcontrollertype": self.toolwidgetmain.comboBox_typeasservissement,
-                    "psfloatnumber": self.toolwidgetmain.spinBox_poires,
-                    "psoverflow": self.toolwidgetmain.comboBox_surverse,
-                    "psguiderail": self.toolwidgetmain.comboBox_barrresguidage,
-                    "pspumpliftingchain": self.toolwidgetmain.comboBox_pompe_relevage,
-                    "pspumpnumber": self.toolwidgetmain.spinBox_pompes,
-                    "pscheckvalve": self.toolwidgetmain.comboBox_vanne_clapet,
-                    "psgatevalve": self.toolwidgetmain.comboBox_vanne_vanne,
-                    "pspressureport": self.toolwidgetmain.comboBox_vanne_prisepression,
+                    "psfallprotectiongratings": self.toolwidgetmain.psfallprotectiongratings,
+                    "psinletscreen": self.toolwidgetmain.psinletscreen,
+                    "pspumpswitchingcontrollertype": self.toolwidgetmain.pspumpswitchingcontrollertype,
+                    "psfloatnumber": self.toolwidgetmain.psfloatnumber,
+                    "psoverflow": self.toolwidgetmain.psoverflow,
+                    "psguiderail": self.toolwidgetmain.psguiderail,
+                    "pspumpliftingchain": self.toolwidgetmain.pspumpliftingchain,
+                    "pspumpnumber": self.toolwidgetmain.pspumpnumber,
+                    "pscheckvalve": self.toolwidgetmain.pscheckvalve,
+                    "psgatevalve": self.toolwidgetmain.psgatevalve,
+                    "pspressureport": self.toolwidgetmain.pspressureport,
                     # DSH
                     # DSH materiau : self.toolwidgetmain_2.comboBox_DSH_materiau cf PR
                     #'DSHpresencealarme': self.toolwidgetmain_2.comboBox_DSHalarme,
-                    "presencecontroller": self.toolwidgetmain.comboBox_automate,
+                    "presencecontroller": self.toolwidgetmain.presencecontroller,
                     # autre
-                    "depthinvert": self.toolwidgetmain.doubleSpinBox_profradierouvrage,
-                    "width": self.toolwidgetmain.doubleSpinBox_largeur,
-                    "lenght": self.toolwidgetmain.doubleSpinBox_longueur,
-                    "X": self.toolwidgetmain.doubleSpinBox_X,
-                    "dX": self.toolwidgetmain.doubleSpinBox_dX,
-                    "Y": self.toolwidgetmain.doubleSpinBox_Y,
-                    "dY": self.toolwidgetmain.doubleSpinBox_dY,
-                    "Z": self.toolwidgetmain.doubleSpinBox_Z,
-                    "dZ": self.toolwidgetmain.doubleSpinBox_dZ,
+                    "depthinvert": self.toolwidgetmain.depthinvert,
+                    "width": self.toolwidgetmain.width,
+                    "lenght": self.toolwidgetmain.lenght,
+                    "X": self.toolwidgetmain.X,
+                    "dX": self.toolwidgetmain.dX,
+                    "Y": self.toolwidgetmain.Y,
+                    "dY": self.toolwidgetmain.dY,
+                    "Z": self.toolwidgetmain.Z,
+                    "dZ": self.toolwidgetmain.dZ,
                 },
             },
             "object": {
                 "linkfield": "id_object",
-                "widgets": {"comment": self.toolwidgetmain.textBrowser_commentaire},
+                "widgets": {"comment": self.toolwidgetmain.comment},
             },
             "descriptionsystem": {
                 "linkfield": "id_descriptionsystem",
                 "widgets": {
-                    "networktype": self.toolwidgetmain.comboBox_typeReseau,
+                    "networktype": self.toolwidgetmain.networktype,
                     "flowconditionupstream": self.toolwidgetmain.comboBox_inletflowcondition,
                     "flowconditiondownstream": self.toolwidgetmain.comboBox_outletflowcondition,
                     "systemfunction": self.toolwidgetmain.comboBox_systemfunction,
@@ -215,7 +215,7 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
             lambda: self.showNumPad(self.toolwidgetmain.spinBox_pompes)
         )
 
-        self.toolwidgetmain.comboBox_typeOuvrageAss.currentIndexChanged.connect(
+        self.toolwidgetmain.nodetype.currentIndexChanged.connect(
             self.fielduiTypeOhChanged
         )
         self.toolwidgetmain.pushButton_getGPS.clicked.connect(self.getGPSValue)
@@ -244,15 +244,15 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
                 "linkfield": "id_node",
                 "widgets": {
                     # "sewertype": self.toolwidgetmain.comboBox_typeReseau,
-                    "location": self.toolwidgetmain.comboBox_environnement,
-                    "nodetype": self.toolwidgetmain.comboBox_typeOuvrageAss,
-                    "manholecovershape": self.toolwidgetmain.comboBox_Formetampon,
-                    "accessibility": self.toolwidgetmain.comboBox_accessibilite,
+                    "location": self.toolwidgetmain.location,
+                    "nodetype": self.toolwidgetmain.nodetype,
+                    "manholecovershape": self.toolwidgetmain.manholecovershape,
+                    "accessibility": self.toolwidgetmain.accessibility,
                     # regard
-                    "presencesteps": self.toolwidgetmain.comboBox_echelon,
-                    "presencehandle": self.toolwidgetmain.comboBox_crosse,
+                    "presencesteps": self.toolwidgetmain.presencesteps,
+                    "presencehandle": self.toolwidgetmain.presencehandle,
                     # 'presencecunette': self.toolwidgetmain.comboBox_cunette,
-                    "manholeshape": self.toolwidgetmain.comboBox_formeregard,
+                    "manholeshape": self.toolwidgetmain.manholeshape,
                     # 'formeregard': self.toolwidgetmain.comboBox_formeregard,
                     # branchement
                     # 'cloisonsiphoide': self.toolwidgetmain.comboBox_cloisonsiphoide,
@@ -263,23 +263,23 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
                     "pseleccabinet": self.toolwidgetmain.comboBox_posteelec,
                     # 'PRarmoireelecverouillee': self.toolwidgetmain.comboBox_armoire_verouille,
                     "psremotemonitoring": [
-                        self.toolwidgetmain.comboBox_telegestion,
-                        self.toolwidgetmain.comboBox_DSHalarme,
+                        self.toolwidgetmain.psremotemonitoring,
+                        self.toolwidgetmain.psremotemonitoring_2,
                     ],
-                    "psremotemonitoringcomment": self.toolwidgetmain.textBrowser_telegestioncom,
+                    "psremotemonitoringcomment": self.toolwidgetmain.psremotemonitoringcomment,
                     # 'PRpermutautopompe': self.toolwidgetmain.comboBox_permut_pompes,
                     "psmaterial": [
-                        self.toolwidgetmain.comboBox_PRmateriau,
-                        self.toolwidgetmain.comboBox_DSH_materiau,
+                        self.toolwidgetmain.psmaterial,
+                        self.toolwidgetmain.psmaterial_2,
                     ],
                     # 'PRgrilleantichute': self.toolwidgetmain.comboBox_antichute,
                     # 'PRpanierdegrilleur': self.toolwidgetmain.comboBox_panierdegrileur,
-                    "pspumpswitchingcontrollertype": self.toolwidgetmain.comboBox_typeasservissement,
-                    "psfloatnumber": self.toolwidgetmain.spinBox_poires,
-                    "psoverflow": self.toolwidgetmain.comboBox_surverse,
+                    "pspumpswitchingcontrollertype": self.toolwidgetmain.pspumpswitchingcontrollertype,
+                    "psfloatnumber": self.toolwidgetmain.psfloatnumber,
+                    "psoverflow": self.toolwidgetmain.psoverflow,
                     # 'PRpompebarreguidage': self.toolwidgetmain.comboBox_barrresguidage,
                     # 'PRpompechainerelevage': self.toolwidgetmain.comboBox_pompe_relevage,
-                    "pspumpnumber": self.toolwidgetmain.spinBox_pompes,
+                    "pspumpnumber": self.toolwidgetmain.pspumpnumber,
                     # 'PRclapet': self.toolwidgetmain.comboBox_vanne_clapet,
                     # 'PRvannes': self.toolwidgetmain.comboBox_vanne_vanne,
                     # 'PRprisepression': self.toolwidgetmain.comboBox_vanne_prisepression,
@@ -288,27 +288,27 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
                     # 'DSHpresencealarme': self.toolwidgetmain.comboBox_DSHalarme,
                     "presencecontroller": self.toolwidgetmain.comboBox_automate,
                     # autre
-                    "depthinvert": self.toolwidgetmain.doubleSpinBox_profradierouvrage,
-                    "width": self.toolwidgetmain.doubleSpinBox_largeur,
-                    "lenght": self.toolwidgetmain.doubleSpinBox_longueur,
-                    "X": self.toolwidgetmain.doubleSpinBox_X,
-                    "dX": self.toolwidgetmain.doubleSpinBox_dX,
-                    "Y": self.toolwidgetmain.doubleSpinBox_Y,
-                    "dY": self.toolwidgetmain.doubleSpinBox_dY,
-                    "Z": self.toolwidgetmain.doubleSpinBox_Z,
-                    "dZ": self.toolwidgetmain.doubleSpinBox_dZ,
+                    "depthinvert": self.toolwidgetmain.depthinvert,
+                    "width": self.toolwidgetmain.width,
+                    "lenght": self.toolwidgetmain.lenght,
+                    "X": self.toolwidgetmain.X,
+                    "dX": self.toolwidgetmain.dX,
+                    "Y": self.toolwidgetmain.Y,
+                    "dY": self.toolwidgetmain.dY,
+                    "Z": self.toolwidgetmain.Z,
+                    "dZ": self.toolwidgetmain.dZ,
                 },
             },
             "object": {
                 "linkfield": "id_object",
                 "widgets": {
-                    "name": self.toolwidgetmain.lineEdit_libelle,
-                    "comment": self.toolwidgetmain.textBrowser_commentaire,
+                    "name": self.toolwidgetmain.name,
+                    "comment": self.toolwidgetmain.comment,
                 },
             },
             "descriptionsystem": {
                 "linkfield": "id_descriptionsystem",
-                "widgets": {"networktype": self.toolwidgetmain.comboBox_typeReseau,},
+                "widgets": {"networktype": self.toolwidgetmain.networktype,},
             },
         }
 
@@ -328,7 +328,7 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
             lambda: self.showNumPad(self.toolwidgetmain.spinBox_pompes)
         )
 
-        self.toolwidgetmain.comboBox_typeOuvrageAss.currentIndexChanged.connect(
+        self.toolwidgetmain.nodetype.currentIndexChanged.connect(
             self.fieldui2TypeOhChanged
         )
 
@@ -338,52 +338,52 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
             "node": {
                 "linkfield": "id_noeud",
                 "widgets": {
-                    "domain": self.toolwidgetmain.comboBox_domaine,
+                    "domain": self.toolwidgetmain.domain,
                     # "sewertype": self.toolwidgetmain.comboBox_typeReseau,
-                    "location": self.toolwidgetmain.comboBox_environnement,
-                    "nodetype": self.toolwidgetmain.comboBox_typeOuvrageAss,
-                    "nodesubtype": self.toolwidgetmain.comboBox_soustype,
+                    "location": self.toolwidgetmain.location,
+                    "nodetype": self.toolwidgetmain.nodetype,
+                    "nodesubtype": self.toolwidgetmain.nodesubtype,
                     # regard
                     "accessibility": [
-                        self.toolwidgetmain.comboBox_accessibilite,
-                        self.toolwidgetmain.comboBox_accessibilite2,
+                        self.toolwidgetmain.accessibility,
+                        self.toolwidgetmain.accessibility_2,
                     ],
-                    "manholematerial": self.toolwidgetmain.comboBox_reg_materiau,
+                    "manholematerial": self.toolwidgetmain.manholematerial,
                     # diam_regard : longeur
-                    "manholecovertype": self.toolwidgetmain.comboBox_typetampon,
-                    "manholecoverdiameter": self.toolwidgetmain.doubleSpinBox_diamtampon,
-                    "presencesteps": self.toolwidgetmain.comboBox_echelon,
+                    "manholecovertype": self.toolwidgetmain.manholecovertype,
+                    "manholecoverdiameter": self.toolwidgetmain.manholecoverdiameter,
+                    "presencesteps": self.toolwidgetmain.presencesteps,
                     # Equipement
                     # ouvrage de regul
-                    "psremotemonitoring": self.toolwidgetmain.comboBox_telegestion_2,
-                    "depth1": self.toolwidgetmain.comboBox_telegestion_2,
+                    "psremotemonitoring": self.toolwidgetmain.psremotemonitoring,
+                    "depth1": self.toolwidgetmain.depth1,
                     # PR
-                    "psnominalcapacity": self.toolwidgetmain.doubleSpinBox_capanom,
-                    "pspumpnumber": self.toolwidgetmain.spinBox_pompes2,
-                    "psh2streatment": self.toolwidgetmain.comboBox_traithdeuxs,
-                    "psoverflow": self.toolwidgetmain.comboBox_surverse2,
+                    "psnominalcapacity": self.toolwidgetmain.psnominalcapacity,
+                    "pspumpnumber": self.toolwidgetmain.pspumpnumber,
+                    "psh2streatment": self.toolwidgetmain.psh2streatment,
+                    "psoverflow": self.toolwidgetmain.psoverflow,
                     # avaloir
-                    "sedimenttrap": self.toolwidgetmain.comboBox_decant,
+                    "sedimenttrap": self.toolwidgetmain.sedimenttrap,
                     # dimgrille : longeur
                     # autre
-                    "depthinvert": self.toolwidgetmain.doubleSpinBox_profradierouvrage,
-                    "width": self.toolwidgetmain.doubleSpinBox_largeur,
-                    "lenght": self.toolwidgetmain.doubleSpinBox_longueur,
-                    "X": self.toolwidgetmain.doubleSpinBox_X,
-                    "dX": self.toolwidgetmain.doubleSpinBox_dX,
-                    "Y": self.toolwidgetmain.doubleSpinBox_Y,
-                    "dY": self.toolwidgetmain.doubleSpinBox_dY,
-                    "Z": self.toolwidgetmain.doubleSpinBox_Z,
-                    "dZ": self.toolwidgetmain.doubleSpinBox_dZ,
+                    "depthinvert": self.toolwidgetmain.depthinvert,
+                    "width": self.toolwidgetmain.width,
+                    "lenght": self.toolwidgetmain.lenght,
+                    "X": self.toolwidgetmain.X,
+                    "dX": self.toolwidgetmain.dX,
+                    "Y": self.toolwidgetmain.Y,
+                    "dY": self.toolwidgetmain.dY,
+                    "Z": self.toolwidgetmain.Z,
+                    "dZ": self.toolwidgetmain.dZ,
                 },
             },
             "object": {
                 "linkfield": "id_object",
-                "widgets": {"comment": self.toolwidgetmain.textBrowser_commentaire},
+                "widgets": {"comment": self.toolwidgetmain.comment},
             },
             "descriptionsystem": {
                 "linkfield": "id_descriptionsystem",
-                "widgets": {"networktype": self.toolwidgetmain.comboBox_typeReseau,},
+                "widgets": {"networktype": self.toolwidgetmain.networktype,},
             },
         }
 
@@ -409,13 +409,13 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
             lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_profradierouvrage)
         )
 
-        self.toolwidgetmain.comboBox_typeOuvrageAss.currentIndexChanged.connect(
+        self.toolwidgetmain.nodetype.currentIndexChanged.connect(
             self.fieldui3TypeOhChanged
         )
 
     def fielduiTypeOhChanged(self, comboindex):
-        # print(self.toolwidgetmain.comboBox_typeOuvrageAss.currentText())
-        currenttext = self.toolwidgetmain.comboBox_typeOuvrageAss.currentText()
+        # print(self.toolwidgetmain.nodetype.currentText())
+        currenttext = self.toolwidgetmain.nodetype.currentText()
 
         if currenttext in ["Regard", "Regard mixte EP EU"]:
             self.toolwidgetmain.stackedWidget.setCurrentIndex(0)
@@ -439,8 +439,8 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
         self.propertieswdgDesordre.propertieswdgOBSERVATION.updateObservationStackedWidget()
 
     def fieldui2TypeOhChanged(self, comboindex):
-        # print(self.toolwidgetmain_2.comboBox_typeOuvrageAss.currentText())
-        currenttext = self.toolwidgetmain.comboBox_typeOuvrageAss.currentText()
+        # print(self.toolwidgetmain_2.nodetype.currentText())
+        currenttext = self.toolwidgetmain.nodetype.currentText()
         if currenttext in ["Regard", "Avaloir", "Grille"]:
             self.toolwidgetmain.stackedWidget.setCurrentIndex(0)
         elif currenttext in ["Poste de refoulement"]:
@@ -460,8 +460,8 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
         self.propertieswdgDesordre.propertieswdgOBSERVATION.updateObservationStackedWidget()
 
     def fieldui3TypeOhChanged(self, comboindex):
-        # print(self.toolwidgetmain_2.comboBox_typeOuvrageAss.currentText())
-        currenttext = self.toolwidgetmain.comboBox_typeOuvrageAss.currentText()
+        # print(self.toolwidgetmain_2.nodetype.currentText())
+        currenttext = self.toolwidgetmain.nodetype.currentText()
         if currenttext in ["Regard"]:
             self.toolwidgetmain.stackedWidget.setCurrentIndex(0)
         elif currenttext in [""]:
@@ -493,12 +493,12 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
         self.toolbarSave()
 
     def getGPSValue(self):
-        self.assignValue(self.gpswidget.label_X, self.toolwidgetmain.doubleSpinBox_X)
-        self.assignValue(self.gpswidget.label_dX, self.toolwidgetmain.doubleSpinBox_dX)
-        self.assignValue(self.gpswidget.label_Y, self.toolwidgetmain.doubleSpinBox_Y)
-        self.assignValue(self.gpswidget.label_dY, self.toolwidgetmain.doubleSpinBox_dY)
-        self.assignValue(self.gpswidget.label_Z, self.toolwidgetmain.doubleSpinBox_Z)
-        self.assignValue(self.gpswidget.label_dZ, self.toolwidgetmain.doubleSpinBox_dZ)
+        self.assignValue(self.gpswidget.label_X, self.toolwidgetmain.X)
+        self.assignValue(self.gpswidget.label_dX, self.toolwidgetmain.dX)
+        self.assignValue(self.gpswidget.label_Y, self.toolwidgetmain.Y)
+        self.assignValue(self.gpswidget.label_dY, self.toolwidgetmain.dY)
+        self.assignValue(self.gpswidget.label_Z, self.toolwidgetmain.Z)
+        self.assignValue(self.gpswidget.label_dZ, self.toolwidgetmain.dZ)
 
     def assignValue(self, wdgfrom, wdgto):
         if self.isfloat(wdgfrom.text()):
@@ -563,7 +563,7 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
                 + str(pkobjet)
             )
             self.dbase.query(sql)
-            self.toolwidgetmain.lineEdit_libelle.setText(libelle)
+            self.toolwidgetmain.name.setText(libelle)
 
 
 class UserUI(QWidget):

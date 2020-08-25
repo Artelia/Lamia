@@ -16,6 +16,8 @@ from .lamiaforsession import LamiaSession
 import logging
 import qgis.core
 
+import threading
+
 
 # Create your views here.
 
@@ -23,19 +25,18 @@ import qgis.core
 # * ************************** API ***********************************
 
 
-class APIFactory:
+class APIFactory_:
 
     renderer_classes = [JSONRenderer]
 
-    def getresult(**kwargs):
+    def getresult(request, **kwargs):
         print("APIFactory", kwargs)
-        projectid = kwargs.get("project_id")
 
+        projectid = kwargs.get("project_id")
+        tablename = kwargs.get("tablename", None)
         lamiaparser = LamiaSession.getInstance(projectid).lamiaparser
 
-        tablename = kwargs.get("tablename", None)
-
-        if tablename is None:
+        if tablename is None:  # request on project
             queryset = Project.objects.filter(id_project=projectid)
             # id_projet = queryset.values("id_projet")[0]
             # print(queryset.values_list())
@@ -53,20 +54,42 @@ class APIFactory:
 class PostViewSet(views.APIView):
     def get(self, request, **kwargs):
         print("kwargs", kwargs)
-        jsonresult = APIFactory.getresult(**kwargs)
+        jsonresult = APIFactory.getresult(request, **kwargs)
         # yourdata = [{"likes": 10, "comments": 0}, {"likes": 4, "comments": 23}]
         # results = PostSerializer(yourdata, many=True).data
         return Response(jsonresult)
         # return JsonResponse(jsonresult)
 
     def post(self, request, **kwargs):
-        print("***", kwargs)
-        print(request.POST)
-        # print(request.headers)
-        print(request.data)
-        yourdata = [{"likes": 10, "comments": 0}, {"likes": 4, "comments": 23}]
-        results = PostSerializer(yourdata, many=True).data
-        return Response(results)
+        projectid = kwargs.get("project_id")
+        tablename = kwargs.get("tablename", None)
+        lamiaparser = LamiaSession.getInstance(projectid).lamiaparser
+        func = request.data["function"]
+
+        if tablename is None:  # request on project
+            if func == "dbasetables":
+                dbasetables = lamiaparser.dbasetables
+                return Response(dbasetables)
+
+        else:
+            if func == "dbasetables":
+                qgistables = [tablename] + lamiaparser.getParentTable(tablename)
+                dbtableresponse = {}
+                for table in qgistables:
+                    # res = {**dict1, **dict2}
+                    dbtableresponse = {
+                        **dbtableresponse,
+                        **lamiaparser.dbasetables[table]["fields"],
+                    }
+                # dbasetables = lamiaparser.dbasetables[tablename]
+                return Response(dbtableresponse)
+
+            elif func == "nearest":
+                nearestpk = LamiaSession.getInstance(projectid).getNearestPk(
+                    tablename, request.data["coords"]
+                )
+                result = json.dumps({"nearestpk": nearestpk})
+                return Response(result)
 
 
 class LamiaFuncAPI(views.APIView):
@@ -76,6 +99,7 @@ class LamiaFuncAPI(views.APIView):
         return Response(None)
 
     def post(self, request, **kwargs):
+
         """ 
         in kwargs : get url arguments : ex kwargs.get("project_id")
         in request.POST : get values sent b html formular
@@ -89,19 +113,40 @@ class LamiaFuncAPI(views.APIView):
         projectid = kwargs.get("project_id")
 
         if request.data["func"] == "nearest":
-            lamiassession = LamiaSession.getInstance(projectid)
-            nearestpk, dist = lamiassession.getNearestPk(
+            print("launch", request.data)
+            # lamiasession=LamiaSession.getInstance(projectid)
+            # t = threading.Thread(
+            #     name="Qgis", target=LamiaSession.getInstance(projectid)
+            # )
+            # t.start()
+            # res = t.join()
+            # print('')
+            # lamiassession = LamiaSession.getInstance(projectid)
+            print(threading.current_thread().name)
+            nearestpk = LamiaSession.getInstance(projectid).getNearestPk(
                 request.data["layer"], request.data["coords"]
             )
+            # t = threading.Thread(
+            #     name="Qgis",
+            #     target=LamiaSession.getInstance(projectid).getNearestPk(
+            #         request.data["layer"], request.data["coords"]
+            #     ),
+            # )
+            # t.start()
+            # res = t.join()
+            # print("ok id", res)
+            # print(threading.current_thread().name)
 
             # geom = lamiassession.qgscanvas.getQgsGeomFromPk(
             #     lamiassession.lamiaparser, request.data["layer"], nearestpk
             # )
             # geomson = geom.asJson()
             geomson = None
-            
-            result = json.dumps({"nearestpk": nearestpk, "dist": dist, "geom": geomson})
+
+            # result = json.dumps({"nearestpk": nearestpk, "dist": dist, "geom": geomson})
+            result = json.dumps({"nearestpk": nearestpk})
             # logging.getLogger().debug(f"nearest {result}")
+            print("sendres")
             return Response(result)
 
         return Response(None)
@@ -165,7 +210,11 @@ class LamiaProjectView(BaseView):
 
         # LamiaSession.getInstance(idproject)
 
-        context = json.dumps(list(queryset.values("id_project", "qgisserverurl"))[0])
+        context = json.dumps(
+            list(
+                queryset.values("id_project", "qgisserverurl", "pgdbname", "pgschema")
+            )[0]
+        )
 
         request.session["idproject"] = idproject
         if idproject > 1 and not request.user.is_authenticated:

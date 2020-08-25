@@ -156,6 +156,8 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         filewriter.write("dbname=" + dbaseconf["dbname"] + "\n")
         filewriter.close()
 
+        # SET PGSERVICEFILE=C:\PGSERVICEFILE\pg_service.conf
+
         # create project with layers inside
         layers = {}
         project = qgis.core.QgsProject.instance()
@@ -228,13 +230,31 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             defaultstyledirectory = os.path.join(styledirectory, "0_default",)
         else:
             defaultstyledirectory = os.path.join(styledirectory, "0_Defaut",)
+
         for tablename in layers:
             if (
                 "layerqgis" in layers[tablename].keys()
                 and layers[tablename]["layerqgis"].geometryType()
                 != qgis.core.QgsWkbTypes.NullGeometry
             ):
+                stylepath = os.path.normpath(
+                    os.path.join(defaultstyledirectory, tablename + ".qml")
+                )
+                if os.path.isfile(stylepath):
+                    print(
+                        "stylepath",
+                        tablename,
+                        stylepath,
+                        layers[tablename][
+                            "layerqgis"
+                        ].wkbType(),  # wkbType()  geometryType()
+                    )
+                    txt, res = layers[tablename]["layerqgis"].loadNamedStyle(
+                        stylepath, qgis.core.QgsMapLayer.Symbology
+                    )
+                    print(txt, res)
                 project.addMapLayer(layers[tablename]["layerqgis"], True)
+                # root.addLayer(layers[tablename]["layerqgis"])
                 # root.addLayer(layers[tablename]['layerqgis'])
                 # stylepath = os.path.join(styledirectory, tablename + '.qml')
                 # stylepath = os.path.realpath(stylepath)
@@ -245,27 +265,59 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             self.canvas.refreshAllLayers()
             self.canvas.refresh()
 
-        for tablename in layers:
-            if (
-                "layerqgis" in layers[tablename].keys()
-                and layers[tablename]["layerqgis"].geometryType()
-                != qgis.core.QgsWkbTypes.NullGeometry
-            ):
-                stylepath = os.path.join(defaultstyledirectory, tablename + ".qml")
-                if os.path.isfile(stylepath):
-                    txt, res = layers[tablename]["layerqgis"].loadNamedStyle(
-                        stylepath, loadFromLocalDb=False
+        if False:
+            for tablename in layers:
+                if (
+                    "layerqgis"
+                    in layers[tablename].keys()
+                    # and layers[tablename]["layerqgis"].geometryType()
+                    # != qgis.core.QgsWkbTypes.NullGeometry
+                ):
+                    stylepath = os.path.normpath(
+                        os.path.join(defaultstyledirectory, tablename + ".qml")
                     )
-                    if (
-                        False and not res
-                    ):  # TODO style do not apply arg !!!!! geometryType() not recognized
-                        print(stylepath, os.path.isfile(stylepath))
-                        print(layers[tablename]["layerqgis"].geometryType())
-                        print(layers[tablename]["layerqgis"].dataProvider().wkbType())
-                        print(txt, res)
+                    print("stylepath", stylepath)
+                    if os.path.isfile(stylepath):
+                        print("ok")
+                        txt, res = layers[tablename]["layerqgis"].loadNamedStyle(
+                            stylepath, loadFromLocalDb=False
+                        )
+                        if (
+                            False and not res
+                        ):  # TODO style do not apply arg !!!!! geometryType() not recognized
+                            print(stylepath, os.path.isfile(stylepath))
+                            print(layers[tablename]["layerqgis"].geometryType())
+                            print(
+                                layers[tablename]["layerqgis"].dataProvider().wkbType()
+                            )
+                            print(txt, res)
 
         projectfile = os.path.join(dbqgisserverdirectory, "project.qgs")
         project.write(projectfile)
+
+        propro = qgis.core.QgsProject.instance()
+        propro.read(projectfile)
+        print(propro.fileName())
+
+        # layers = QgsProject.instance().mapLayers()
+        for layid in propro.mapLayers():
+            # print(lay)
+
+            lay = propro.mapLayer(layid)
+            db = lay.dataProvider()
+            print(lay.featureCount())
+            print(db.uri().wkbType(), lay.wkbType())
+
+            # print("la", lay.name(), lay.wkbType())
+            stylepath = os.path.normpath(
+                os.path.join(defaultstyledirectory, lay.name().split("_")[0] + ".qml")
+            )
+
+            if False and os.path.isfile(stylepath):
+                print(stylepath)
+                txt, res = lay.loadNamedStyle(stylepath, loadFromLocalDb=False)
+                print(txt, res)
+
         project.clear()
 
         # finaly write dbasedbasetables
@@ -624,7 +676,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         """
 
         if self.dbaseqgiscrs is not None and self.canvas is not None:
-            print('**', qgis.core.QgsProject.instance())
+            print("**", qgis.core.QgsProject.instance())
             self.xform = qgis.core.QgsCoordinateTransform(
                 self.dbaseqgiscrs,
                 self.canvas.mapSettings().destinationCrs(),
@@ -954,7 +1006,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
         # spindex = qgis.core.QgsSpatialIndex(layertoprocess.getFeatures())
         layernearestid = spindex.nearestNeighbor(point2, 1)
-        print("layernearestid", layernearestid)
+        # print("layernearestid", layernearestid)
         if not layernearestid:
             return None, None
 

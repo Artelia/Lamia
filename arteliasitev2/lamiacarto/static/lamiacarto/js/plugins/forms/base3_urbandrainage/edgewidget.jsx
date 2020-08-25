@@ -7,21 +7,25 @@ class EdgeEditingFormReact extends EditingFormReact {
 
     static firstdir = 'Assets'
     static label = 'Edges'
-    static table = 'edge'
+    table = 'edge'
 
     constructor(props) {
         super(props);
-        this.state = { 'currentlayer': '', 'currentfeatprop': {}, 'formui': ':/static/forms/base3_urbandrainage/qgswidgets/lamia_form_edge_ui.ui' }
-        // let olcanvas = new OLCanvasReact()
-        // console.log('ol', olcanvas)
+        this.state = {
+            'currentlayer': '',
+            'currentfeatprop': {},
+            'formui': ':/static/forms/base3_urbandrainage/qgswidgets/lamia_form_edge_ui.ui',
+            ...this.state
+        }
+
     }
 
 
     domLoaded() {
         console.log('okok edge')
-        console.log('***', $('[name="comboBox_typeReseau"]'))
+        console.log('***', $('[name="networktype"]'))
 
-        let comb = $('select[name="comboBox_typeReseau"]')
+        let comb = $('select[name="networktype"]')
 
         comb.append($('<option>', {
             value: 1,
@@ -33,5 +37,4 @@ class EdgeEditingFormReact extends EditingFormReact {
 
 }
 
-// export default EdgeEditingFormReact;
 module.exports = EdgeEditingFormReact;

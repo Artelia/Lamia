@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>697</width>
+    <width>563</width>
     <height>370</height>
    </rect>
   </property>
@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget_2">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_6">
       <attribute name="title">
@@ -64,10 +64,10 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QComboBox" name="comboBox_typeReseau"/>
+           <widget class="QComboBox" name="networktype"/>
           </item>
           <item row="2" column="1">
-           <widget class="QComboBox" name="comboBox_environnement"/>
+           <widget class="QComboBox" name="location"/>
           </item>
           <item row="6" column="0">
            <widget class="QLabel" name="label_25">
@@ -80,7 +80,7 @@
            </widget>
           </item>
           <item row="6" column="1">
-           <widget class="QComboBox" name="comboBox_Formetampon"/>
+           <widget class="QComboBox" name="manholecovershape"/>
           </item>
           <item row="1" column="0">
            <widget class="QLabel" name="label">
@@ -93,7 +93,7 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QComboBox" name="comboBox_typeOuvrageAss"/>
+           <widget class="QComboBox" name="nodetype"/>
           </item>
           <item row="1" column="3">
            <widget class="QLabel" name="label_54">
@@ -106,10 +106,10 @@
            </widget>
           </item>
           <item row="1" column="4">
-           <widget class="QComboBox" name="comboBox_soustype"/>
+           <widget class="QComboBox" name="nodesubtype"/>
           </item>
           <item row="2" column="4">
-           <widget class="QComboBox" name="comboBox_accessibilite"/>
+           <widget class="QComboBox" name="accessibility"/>
           </item>
          </layout>
         </widget>
@@ -131,7 +131,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QTextBrowser" name="textBrowser_commentaire">
+           <widget class="QTextBrowser" name="comment">
             <property name="maximumSize">
              <size>
               <width>16777215</width>
@@ -168,7 +168,7 @@
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QComboBox" name="comboBox_crosse"/>
+            <widget class="QComboBox" name="presencehandle"/>
            </item>
            <item row="0" column="0">
             <widget class="QLabel" name="label_26">
@@ -178,10 +178,10 @@
             </widget>
            </item>
            <item row="3" column="1">
-            <widget class="QComboBox" name="comboBox_cunette"/>
+            <widget class="QComboBox" name="presencelowflowchannel"/>
            </item>
            <item row="0" column="1">
-            <widget class="QComboBox" name="comboBox_echelon"/>
+            <widget class="QComboBox" name="presencesteps"/>
            </item>
            <item row="1" column="0">
             <widget class="QLabel" name="label_27">
@@ -191,7 +191,7 @@
             </widget>
            </item>
            <item row="2" column="1">
-            <widget class="QComboBox" name="comboBox_formeregard"/>
+            <widget class="QComboBox" name="manholeshape"/>
            </item>
            <item row="2" column="0">
             <widget class="QLabel" name="label_30">
@@ -208,7 +208,7 @@
             </widget>
            </item>
            <item row="4" column="1">
-            <widget class="QComboBox" name="comboBox_regmat"/>
+            <widget class="QComboBox" name="manholematerial"/>
            </item>
           </layout>
          </widget>
@@ -229,10 +229,10 @@
             </widget>
            </item>
            <item row="2" column="1">
-            <widget class="QComboBox" name="comboBox_couvercle"/>
+            <widget class="QComboBox" name="presencelid"/>
            </item>
            <item row="0" column="1">
-            <widget class="QComboBox" name="comboBox_cloisonsiphoide"/>
+            <widget class="QComboBox" name="presencesiphoidpartition"/>
            </item>
            <item row="1" column="0">
             <widget class="QLabel" name="label_11">
@@ -242,7 +242,7 @@
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QComboBox" name="comboBox_typeusager"/>
+            <widget class="QComboBox" name="lateralusercategory"/>
            </item>
           </layout>
          </widget>
@@ -266,7 +266,7 @@
            <item>
             <widget class="QTabWidget" name="tabWidget">
              <property name="currentIndex">
-              <number>0</number>
+              <number>4</number>
              </property>
              <widget class="QWidget" name="tab_5">
               <attribute name="title">
@@ -294,10 +294,10 @@
                 </widget>
                </item>
                <item row="1" column="1">
-                <widget class="QComboBox" name="comboBox_verouille"/>
+                <widget class="QComboBox" name="pslocked"/>
                </item>
                <item row="0" column="1">
-                <widget class="QComboBox" name="comboBox_cloture"/>
+                <widget class="QComboBox" name="psfence"/>
                </item>
                <item row="2" column="0">
                 <widget class="QLabel" name="label_9">
@@ -307,7 +307,7 @@
                 </widget>
                </item>
                <item row="2" column="1">
-                <widget class="QComboBox" name="comboBox_h2s"/>
+                <widget class="QComboBox" name="psh2streatment"/>
                </item>
               </layout>
              </widget>
@@ -327,7 +327,7 @@
                 </widget>
                </item>
                <item row="0" column="1">
-                <widget class="QComboBox" name="comboBox_posteelec"/>
+                <widget class="QComboBox" name="pseleccabinet"/>
                </item>
                <item row="0" column="0">
                 <widget class="QLabel" name="label_32">
@@ -350,10 +350,10 @@
                 </widget>
                </item>
                <item row="2" column="1">
-                <widget class="QComboBox" name="comboBox_telegestion"/>
+                <widget class="QComboBox" name="psremotemonitoring"/>
                </item>
                <item row="3" column="1">
-                <widget class="QTextBrowser" name="textBrowser_telegestioncom">
+                <widget class="QTextBrowser" name="psremotemonitoringcomment">
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
@@ -366,7 +366,7 @@
                 </widget>
                </item>
                <item row="1" column="1">
-                <widget class="QComboBox" name="comboBox_armoire_verouille"/>
+                <widget class="QComboBox" name="pseleccabinetlocked"/>
                </item>
                <item row="1" column="0">
                 <widget class="QLabel" name="label_44">
@@ -389,7 +389,7 @@
                 </widget>
                </item>
                <item row="4" column="1">
-                <widget class="QComboBox" name="comboBox_permut_pompes"/>
+                <widget class="QComboBox" name="pspumpswitchingcontroller"/>
                </item>
               </layout>
              </widget>
@@ -409,7 +409,7 @@
                 </widget>
                </item>
                <item row="3" column="1" colspan="2">
-                <widget class="QComboBox" name="comboBox_typeasservissement"/>
+                <widget class="QComboBox" name="pspumpswitchingcontrollertype"/>
                </item>
                <item row="4" column="0">
                 <widget class="QLabel" name="label_33">
@@ -422,7 +422,7 @@
                 </widget>
                </item>
                <item row="5" column="1" colspan="2">
-                <widget class="QComboBox" name="comboBox_surverse"/>
+                <widget class="QComboBox" name="psoverflow"/>
                </item>
                <item row="3" column="0">
                 <widget class="QLabel" name="label_41">
@@ -435,14 +435,14 @@
                 </widget>
                </item>
                <item row="4" column="1">
-                <widget class="QSpinBox" name="spinBox_poires">
+                <widget class="QSpinBox" name="psfloatnumber">
                  <property name="minimum">
                   <number>-1</number>
                  </property>
                 </widget>
                </item>
                <item row="0" column="1" colspan="2">
-                <widget class="QComboBox" name="comboBox_PRmateriau"/>
+                <widget class="QComboBox" name="psmaterial"/>
                </item>
                <item row="4" column="2">
                 <widget class="QToolButton" name="toolButton_poires">
@@ -472,7 +472,7 @@
                 </widget>
                </item>
                <item row="1" column="1" colspan="2">
-                <widget class="QComboBox" name="comboBox_antichute"/>
+                <widget class="QComboBox" name="psfallprotectiongratings"/>
                </item>
                <item row="2" column="0">
                 <widget class="QLabel" name="label_47">
@@ -485,7 +485,7 @@
                 </widget>
                </item>
                <item row="2" column="1" colspan="2">
-                <widget class="QComboBox" name="comboBox_panierdegrileur"/>
+                <widget class="QComboBox" name="psinletscreen"/>
                </item>
               </layout>
              </widget>
@@ -495,7 +495,7 @@
               </attribute>
               <layout class="QGridLayout" name="gridLayout_10">
                <item row="2" column="1">
-                <widget class="QSpinBox" name="spinBox_pompes">
+                <widget class="QSpinBox" name="pspumpnumber">
                  <property name="minimum">
                   <number>-1</number>
                  </property>
@@ -519,7 +519,7 @@
                 </widget>
                </item>
                <item row="0" column="1" colspan="2">
-                <widget class="QComboBox" name="comboBox_barrresguidage"/>
+                <widget class="QComboBox" name="psguiderail"/>
                </item>
                <item row="0" column="0">
                 <widget class="QLabel" name="label_48">
@@ -542,7 +542,7 @@
                 </widget>
                </item>
                <item row="1" column="1" colspan="2">
-                <widget class="QComboBox" name="comboBox_pompe_relevage"/>
+                <widget class="QComboBox" name="pspumpliftingchain"/>
                </item>
               </layout>
              </widget>
@@ -552,7 +552,7 @@
               </attribute>
               <layout class="QGridLayout" name="gridLayout_12">
                <item row="1" column="1">
-                <widget class="QComboBox" name="comboBox_vanne_vanne"/>
+                <widget class="QComboBox" name="psgatevalve"/>
                </item>
                <item row="1" column="0">
                 <widget class="QLabel" name="label_51">
@@ -575,7 +575,7 @@
                 </widget>
                </item>
                <item row="0" column="1">
-                <widget class="QComboBox" name="comboBox_vanne_clapet"/>
+                <widget class="QComboBox" name="pscheckvalve"/>
                </item>
                <item row="2" column="0">
                 <widget class="QLabel" name="label_52">
@@ -588,7 +588,7 @@
                 </widget>
                </item>
                <item row="2" column="1">
-                <widget class="QComboBox" name="comboBox_vanne_prisepression"/>
+                <widget class="QComboBox" name="pspressureport"/>
                </item>
               </layout>
              </widget>
@@ -599,10 +599,10 @@
          <widget class="QWidget" name="deshuileur">
           <layout class="QGridLayout" name="gridLayout_7">
            <item row="2" column="1">
-            <widget class="QComboBox" name="comboBox_automate"/>
+            <widget class="QComboBox" name="presencecontroller"/>
            </item>
            <item row="1" column="1">
-            <widget class="QComboBox" name="comboBox_DSHalarme"/>
+            <widget class="QComboBox" name="psremotemonitoring_2"/>
            </item>
            <item row="1" column="0">
             <widget class="QLabel" name="label_37">
@@ -626,7 +626,7 @@
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QComboBox" name="comboBox_DSH_materiau"/>
+            <widget class="QComboBox" name="psmaterial_2"/>
            </item>
           </layout>
          </widget>
@@ -640,7 +640,7 @@
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QComboBox" name="comboBox_decant"/>
+            <widget class="QComboBox" name="sedimenttrap"/>
            </item>
           </layout>
          </widget>
@@ -664,7 +664,7 @@
          </property>
          <layout class="QGridLayout" name="gridLayout_6">
           <item row="3" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_longueur">
+           <widget class="QDoubleSpinBox" name="lenght">
             <property name="minimum">
              <double>-1.000000000000000</double>
             </property>
@@ -702,7 +702,7 @@
            </widget>
           </item>
           <item row="3" column="4">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_largeur">
+           <widget class="QDoubleSpinBox" name="width">
             <property name="minimum">
              <double>-1.000000000000000</double>
             </property>
@@ -722,7 +722,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_profradierouvrage">
+           <widget class="QDoubleSpinBox" name="depthinvert">
             <property name="minimum">
              <double>-1.000000000000000</double>
             </property>
@@ -773,7 +773,7 @@
            </widget>
           </item>
           <item row="0" column="3">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_Y">
+           <widget class="QDoubleSpinBox" name="Y">
             <property name="minimum">
              <double>-99.000000000000000</double>
             </property>
@@ -790,7 +790,7 @@
            </widget>
           </item>
           <item row="1" column="3">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_dY">
+           <widget class="QDoubleSpinBox" name="dY">
             <property name="minimum">
              <double>-1.000000000000000</double>
             </property>
@@ -814,7 +814,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_X">
+           <widget class="QDoubleSpinBox" name="X">
             <property name="minimum">
              <double>-99.000000000000000</double>
             </property>
@@ -831,7 +831,7 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_dX">
+           <widget class="QDoubleSpinBox" name="dX">
             <property name="minimum">
              <double>-1.000000000000000</double>
             </property>
@@ -841,7 +841,7 @@
            </widget>
           </item>
           <item row="0" column="5">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_Z">
+           <widget class="QDoubleSpinBox" name="Z">
             <property name="minimum">
              <double>-99.000000000000000</double>
             </property>
@@ -858,7 +858,7 @@
            </widget>
           </item>
           <item row="1" column="5">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_dZ">
+           <widget class="QDoubleSpinBox" name="dZ">
             <property name="minimum">
              <double>-1.000000000000000</double>
             </property>

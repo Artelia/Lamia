@@ -74,14 +74,14 @@ class BaseReportTool(AbstractLamiaFormTool):
             "report": {"linkfield": "id_rapport", "widgets": {}},
             "object": {
                 "linkfield": "id_objet",
-                "widgets": {"name": self.toolwidgetmain.lineEdit_nom},
+                "widgets": {"name": self.toolwidgetmain.name},
             },
             "resource": {
                 "linkfield": "id_resource",
                 "widgets": {
-                    "file": self.toolwidgetmain.lineEdit_file,
-                    "description": self.toolwidgetmain.lineEdit_description,
-                    "datetimeresource": self.toolwidgetmain.dateTimeEdit,
+                    "file": self.toolwidgetmain.file,
+                    "description": self.toolwidgetmain.description,
+                    "datetimeresource": self.toolwidgetmain.datetimeresource,
                 },
             },
         }

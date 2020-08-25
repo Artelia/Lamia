@@ -6,18 +6,20 @@ class NodeEditingFormReact extends EditingFormReact {
 
     static firstdir = 'Assets'
     static label = 'Nodes'
-    static table = 'node'
+    table = 'node'
 
     constructor(props) {
         super(props);
-        this.state = { 'currentlayer': '', 'currentfeatprop': {}, 'formui': ':/static/forms/base3_urbandrainage/qgswidgets/lamia_form_node_ui.ui' }
-        // let olcanvas = new OLCanvasReact()
-        // console.log('ol', olcanvas)
+        this.state = {
+            'currentlayer': '',
+            'currentfeatprop': {},
+            'formui': ':/static/forms/base3_urbandrainage/qgswidgets/lamia_form_node_ui.ui',
+            ...this.state
+        }
     }
 
 
 
 }
 
-// export default NodeEditingFormReact;
 module.exports = NodeEditingFormReact;

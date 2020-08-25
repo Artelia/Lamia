@@ -9,22 +9,81 @@ const QtDesignerForm = require('qwc2/components/QtDesignerForm');
 // import OLCanvasReact from '../../canvas/openlayers'
 //
 // const { clickOnMap } = require("qwc2/actions/map");
+const VectorLayerUtils = require('qwc2/utils/VectorLayerUtils');
 
-
+const axios = require('axios');
+axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
+axios.defaults.xsrfCookieName = "csrftoken"
 
 class EditingFormReact extends React.Component {
-    // static olcanvas = new OLCanvasReact()
 
     table = null
 
+    projectdata = JSON.parse(JSON.parse(document.getElementById('context').textContent))
+
     constructor(props) {
         super(props);
-        // this.state = { 'currentlayer': '', 'currentfeatprop': {}, 'formui': ':/lamia_form_edge_ui.ui' }
         // https://www.freecodecamp.org/news/react-changing-state-of-child-component-from-parent-8ab547436271/
         this.currentform = React.createRef()
-        // let olcanvas = new OLCanvasReact()
-        // console.log('ol', olcanvas)
+        this.state = { isloading: true }
     }
+
+    componentDidMount() {
+        this.getKeyvalues()
+    }
+
+    async getKeyvalues() {
+        // keyvalues = { 'comboBox_typeReseau': [{ key: 'popo', value: 'tete' }] }
+
+        let url = 'http://' + window.location.host + '/lamiaapi/' + this.projectdata.id_project + '/' + this.table
+        let res = await axios.post(url, {
+            function: 'dbasetables',
+        })
+        let dictfields = res.data
+        let keyvalues = {}
+        for (const [key, value] of Object.entries(dictfields)) {
+            if (value.Cst) {
+                keyvalues[key] = []
+                for (const [keyb, valueb] of Object.entries(value.Cst)) {
+                    keyvalues[key].push({ key: valueb[1], value: valueb[0] })
+                }
+            }
+        }
+        this.setState({ isloading: false, keyvalues: keyvalues })
+
+    }
+
+
+    domLoaded() {
+        null
+    }
+
+    async componentWillReceiveProps(nextProps) {
+        // triggered on click on map
+
+        if (!nextProps.point.coordinate) {
+            return
+        }
+        let url = 'http://' + window.location.host + '/lamiaapi/' + this.projectdata.id_project + '/' + this.table
+        let res = await axios.post(url, {
+            function: 'nearest',
+            // layer: this.table,
+            coords: nextProps.point.coordinate,
+        })
+        let response = JSON.parse(res.data)
+        let temp = this.projectdata.qgisserverurl + 'qgisserver/wfs3/collections/' + this.table + '_qgis/items/' + response.nearestpk + '.json'
+        let feat = await axios.get(temp)
+
+        console.log(feat.data.properties)
+
+        this.setState({ currentfeatprop: feat.data.properties })
+
+        feat.data.geometry = VectorLayerUtils.reprojectGeometry(feat.data.geometry, 'EPSG:4326', 'EPSG:3857')
+        let ollayer = this.props.layers.find(layer => layer.title === "Lamiasel")
+        this.props.addLayerFeatures(ollayer, [feat.data], true);
+    }
+
+
 
     updateField = (key, value) => {
 
@@ -39,13 +98,6 @@ class EditingFormReact extends React.Component {
     }
 
 
-    onclick__(e) {
-        let sourceid = event.target.id
-        if (sourceid == 'canvaspick') {
-            console.log(this.olcanvas)
-        }
-
-    }
 
     domLoaded() {
         null
@@ -53,29 +105,16 @@ class EditingFormReact extends React.Component {
 
     render() {
 
+        if (this.state.isloading) {
+            return (<p>Loading ... </p>)
+        }
+
         let qtform = <QtDesignerForm domLoaded={this.domLoaded} ref={this.currentform}
-            updateField={this.updateField} form={this.state.formui} values={this.state.currentfeatprop} />
+            updateField={this.updateField} form={this.state.formui} values={this.state.currentfeatprop}
+            keyvalues={this.state.keyvalues} domLoaded={this.domLoaded.bind(this)} />
 
         return (
             <div className="container" style={{ height: '100%' }}>
-
-                {/* <div className="row">
-
-
-                    <div className="col-md-12 mb-4">
-
-                        <div className="btn-group" role="group" aria-label="Basic example">
-                            <button type="button" className="btn btn-secondary" id="canvaspick" onClick={this.onclick}>Pick</button>
-                            <button type="button" className="btn btn-secondary" onClick={this.onclick}>Middle</button>
-                            <button type="button" className="btn btn-secondary" onClick={this.onclick}>Right</button>
-                        </div>
-
-                    </div>
-                </div> */}
-                {/* <div className="row" style={{ height: '100%' }}>
-                    <QtDesignerForm updateField={this.updateField} form={this.state.formui} values={this.state.currentfeatprop} />
-                </div> */}
-                {/* <QtDesignerForm updateField={this.updateField} form={this.state.formui} values={this.state.currentfeatprop} /> */}
                 {qtform}
             </div>
 
@@ -83,77 +122,4 @@ class EditingFormReact extends React.Component {
     }
 }
 
-
 module.exports = EditingFormReact;
-
-
-// module.exports = (iface) => {
-//     return (
-//         connect(state => ({
-//             enabled: state.task ? state.task.id === 'Editing' : false,
-//             theme: state.theme ? state.theme.current : null,
-//             layers: state.layers ? state.layers.flat : [],
-//             map: state.map || {},
-//             iface: iface,
-//             editing: state.editing || {},
-//         }))(EditingFormReact)
-//     )
-// };
-
-
-
-// module.exports = (iface) => {
-//     return {
-//         EditingPlugin: connect(state => ({
-//             enabled: state.task ? state.task.id === 'Editing' : false,
-//             theme: state.theme ? state.theme.current : null,
-//             layers: state.layers ? state.layers.flat : [],
-//             map: state.map || {},
-//             iface: iface,
-//             editing: state.editing || {},
-//         })
-//             //  ,{
-//             //     clickOnMap: clickOnMap,
-//             //     changeEditingState: changeEditingState,
-//             //     setCurrentTaskBlocked: setCurrentTaskBlocked,
-//             //     refreshLayer: refreshLayer,
-//             //     changeLayerProperty: changeLayerProperty
-//             // }
-//         )(EditingFormReact)
-//     }
-// };
-
-
-
-// module.exports = (iface) => {
-//     return {
-//         EditingPlugin: connect(state => ({
-//             enabled: state.task ? state.task.id === 'Editing' : false,
-//             theme: state.theme ? state.theme.current : null,
-//             layers: state.layers ? state.layers.flat : [],
-//             map: state.map || {},
-//             iface: iface,
-//             editing: state.editing || {},
-//         }), {
-//             clickOnMap: clickOnMap,
-//             changeEditingState: changeEditingState,
-//             setCurrentTaskBlocked: setCurrentTaskBlocked,
-//             refreshLayer: refreshLayer,
-//             changeLayerProperty: changeLayerProperty
-//         })(Editing)
-//     }
-// };
-
-
-// const MapStateToProps = state => ({
-//     enabled: state.task ? state.task.id === 'Editing' : false,
-//     theme: state.theme ? state.theme.current : null,
-//     layers: state.layers ? state.layers.flat : [],
-//     map: state.map || {},
-//     iface: iface,
-//     editing: state.editing || {},
-// })
-
-// module.exports = connect(MapStateToProps)(EditingFormReact)
-
-

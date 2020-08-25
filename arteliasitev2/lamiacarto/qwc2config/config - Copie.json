@@ -24,7 +24,12 @@
   "wmsDpi": 96,
   "wmsHidpi": true,
   "defaultFeatureStyle": {
-    "strokeColor": "green",
+    "strokeColor": [
+      0,
+      0,
+      255,
+      1
+    ],
     "strokeWidth": 6,
     "strokeDash": [
       4

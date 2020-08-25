@@ -9,13 +9,34 @@ class MediaEditingFormReact extends EditingFormReact {
 
     static firstdir = 'Resources'
     static label = 'Media'
-    static table = 'media'
+    table = 'media'
+
+    projectdata = JSON.parse(JSON.parse(document.getElementById('context').textContent))
 
     constructor(props) {
         super(props);
         this.state = { 'currentlayer': '', 'currentfeatprop': {}, 'formui': ':/static/forms/base3/qgswidgets/lamia_form_camera_ui.ui' }
         // let olcanvas = new OLCanvasReact()
         // console.log('ol', olcanvas)
+    }
+
+
+
+    componentWillUpdate(nextProps, nextState) {
+        console.log('next', nextState)
+        console.log('next', nextState.currentfeatprop.file)
+
+        if (nextState.currentfeatprop.file !== this.state.currentfeatprop.file) {
+
+            console.log('***', $('div[name="frame_ph"]'))
+            let url = ("http://" + window.location.host + '/media/'
+                + this.projectdata.pgdbname + '/' + this.projectdata.pgschema + '/'
+                + nextState.currentfeatprop.file)
+            // $('div[name="frame_ph"]')
+            // $('#theDiv').prepend($('<img>',{id:'theImg',src:'theImg.png'}))
+            $("#lamiamedia").remove();
+            $('div[name="frame_ph"]').prepend($('<img>', { id: 'lamiamedia', src: url, width: 200 }))
+        }
     }
 
     render() {
@@ -27,8 +48,14 @@ class MediaEditingFormReact extends EditingFormReact {
 
     domLoaded() {
         console.log('okok media')
-        console.log($('#spinBox_numphoto'))
-        console.log('***', $('input[name="spinBox_numphoto"]'))
+        // console.log($('#spinBox_numphoto'))
+        console.log('***', $('div[name="frame_ph"]'))
+
+        let url = ("http://" + window.location.host + '/media/'
+            + this.projectdata.pgdbname + '/' + this.projectdata.pgschema + '/'
+            + $('input[name="file"]').val())
+
+
     }
 
     // async componentDidMount() {
