@@ -153,9 +153,10 @@ class LamiaSession(Thread):
         LIMIT 1
         """
 
-        res = self.lamiaparser.query(sql)[0][0]
+        res = self.lamiaparser.query(sql)
+        self.lamiaparser.commitTransaction()
         print(res)
-        return res
+        return res[0][0]
 
     def join(self, *args):
         Thread.join(self, *args)

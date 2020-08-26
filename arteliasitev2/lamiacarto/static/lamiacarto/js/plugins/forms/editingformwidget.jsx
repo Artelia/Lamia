@@ -1,24 +1,16 @@
-// import React from 'react';
 const React = require('react');
 const { connect } = require('react-redux');
-
-// import QtDesignerForm from './QtDesignerForm'
-// const QtDesignerForm = require('./QtDesignerForm');
 const QtDesignerForm = require('qwc2/components/QtDesignerForm');
-// import OLCanvasReact from './../../canvas/openlayers'
-// import OLCanvasReact from '../../canvas/openlayers'
-//
-// const { clickOnMap } = require("qwc2/actions/map");
-const VectorLayerUtils = require('qwc2/utils/VectorLayerUtils');
 
 const axios = require('axios');
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
 axios.defaults.xsrfCookieName = "csrftoken"
 
+
 class EditingFormReact extends React.Component {
 
     table = null
-
+    childwdg = []
     projectdata = JSON.parse(JSON.parse(document.getElementById('context').textContent))
 
     constructor(props) {
@@ -28,8 +20,68 @@ class EditingFormReact extends React.Component {
         this.state = { isloading: true }
     }
 
+    render() {
+        console.log('render editingform', this.constructor.name)
+
+        if (this.state.isloading) {
+            return (<p>Loading ... </p>)
+        }
+
+        let qtform = <QtDesignerForm domLoaded={this.domLoaded} ref={this.currentform}
+            updateField={this.updateField} form={this.state.formui} values={this.state.currentfeatprop}
+            keyvalues={this.state.keyvalues} domLoaded={this.domLoaded.bind(this)} />
+
+
+        let childdom = []
+        this.childwdg.forEach((childwd, idx) => {
+            // console.log(childwd)
+            // console.log('***', childwd.table, childwd.label)
+            childdom.push(<input value={idx + 1} type="radio" id={'maintab' + childwd.label} key={'maintab' + childwd.label + idx * 3} name={this.table} onChange={this.handleTabChange} />)
+            childdom.push(<label htmlFor={'maintab' + childwd.label} key={'maintab' + childwd.label + idx * 3 + 1}>{childwd.label}</label>)
+            let Childwd = childwd
+            childdom.push(
+                <div className="qt-designer-tab" key={'maintab' + childwd.label + idx * 3 + 2}>
+                    {<Childwd
+                        ref={this.childrefs[idx]}
+                        setCurrentWidgetInstance={this.props.setCurrentWidgetInstance}
+                        parentwdg={this} />}
+                </div>
+            )
+        })
+
+        return (
+            <div className="qt-designer-tabs" name={this.table}>
+                <input type="radio" value={0} id={'maintab' + this.table} name={this.table} defaultChecked={true} onChange={this.handleTabChange} />
+                <label htmlFor={'maintab' + this.table}>{'Properties'}</label>
+                <div className="qt-designer-tab"  >
+                    {qtform}
+                </div>
+                {childdom}
+
+            </div>
+        )
+    }
+
+
     componentDidMount() {
+        this.childrefs = []
+        this.childwdg.forEach((childwd, idx) => {
+            this.childrefs.push(React.createRef())
+        })
         this.getKeyvalues()
+    }
+
+
+    others_________________________() { }
+
+    updateField = (key, value) => {
+        let tempvar = this.state.currentfeatprop
+        Object.assign(tempvar, { [key]: value })
+        this.setState({ currentfeatprop: tempvar })
+    }
+
+    domLoaded() {
+        null
     }
 
     async getKeyvalues() {
@@ -54,72 +106,18 @@ class EditingFormReact extends React.Component {
     }
 
 
-    domLoaded() {
-        null
+    handleTabChange = (evt) => {
+        console.log('change', evt.target.value, this.constructor.name)
+        console.log(this.childrefs)
+        let currentinstance = null
+        if (evt.target.value == 0) {
+            currentinstance = this
+        } else { currentinstance = this.childrefs[evt.target.value - 1].current }
+
+        this.props.setCurrentWidgetInstance(currentinstance)
+
     }
 
-    async componentWillReceiveProps(nextProps) {
-        // triggered on click on map
-
-        if (!nextProps.point.coordinate) {
-            return
-        }
-        let url = 'http://' + window.location.host + '/lamiaapi/' + this.projectdata.id_project + '/' + this.table
-        let res = await axios.post(url, {
-            function: 'nearest',
-            // layer: this.table,
-            coords: nextProps.point.coordinate,
-        })
-        let response = JSON.parse(res.data)
-        let temp = this.projectdata.qgisserverurl + 'qgisserver/wfs3/collections/' + this.table + '_qgis/items/' + response.nearestpk + '.json'
-        let feat = await axios.get(temp)
-
-        console.log(feat.data.properties)
-
-        this.setState({ currentfeatprop: feat.data.properties })
-
-        feat.data.geometry = VectorLayerUtils.reprojectGeometry(feat.data.geometry, 'EPSG:4326', 'EPSG:3857')
-        let ollayer = this.props.layers.find(layer => layer.title === "Lamiasel")
-        this.props.addLayerFeatures(ollayer, [feat.data], true);
-    }
-
-
-
-    updateField = (key, value) => {
-
-
-        let tempvar = this.state.currentfeatprop
-        Object.assign(tempvar, { [key]: value })
-
-        this.setState({ currentfeatprop: tempvar })
-
-        console.log('updateField', key, value)
-        console.log('updateField', this.state.currentfeatprop)
-    }
-
-
-
-    domLoaded() {
-        null
-    }
-
-    render() {
-
-        if (this.state.isloading) {
-            return (<p>Loading ... </p>)
-        }
-
-        let qtform = <QtDesignerForm domLoaded={this.domLoaded} ref={this.currentform}
-            updateField={this.updateField} form={this.state.formui} values={this.state.currentfeatprop}
-            keyvalues={this.state.keyvalues} domLoaded={this.domLoaded.bind(this)} />
-
-        return (
-            <div className="container" style={{ height: '100%' }}>
-                {qtform}
-            </div>
-
-        )
-    }
 }
 
 module.exports = EditingFormReact;
