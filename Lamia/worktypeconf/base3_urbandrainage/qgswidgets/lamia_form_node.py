@@ -142,10 +142,10 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
                     # avaloir
                     "sedimenttrap": self.toolwidgetmain.sedimenttrap,
                     # PR
-                    "psfence": self.toolwidgetmain.comboBox_cloture,
+                    "psfence": self.toolwidgetmain.psfence,
                     "pslocked": self.toolwidgetmain.pslocked,
                     "psh2streatment": self.toolwidgetmain.psh2streatment,
-                    "pseleccabinet": self.toolwidgetmain.comboBox_posteelec,
+                    "pseleccabinet": self.toolwidgetmain.pseleccabinet,
                     "pseleccabinetlocked": self.toolwidgetmain.pseleccabinetlocked,
                     "psremotemonitoring": [
                         self.toolwidgetmain.psremotemonitoring,
@@ -192,9 +192,9 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
                 "linkfield": "id_descriptionsystem",
                 "widgets": {
                     "networktype": self.toolwidgetmain.networktype,
-                    "flowconditionupstream": self.toolwidgetmain.comboBox_inletflowcondition,
-                    "flowconditiondownstream": self.toolwidgetmain.comboBox_outletflowcondition,
-                    "systemfunction": self.toolwidgetmain.comboBox_systemfunction,
+                    "flowconditionupstream": self.toolwidgetmain.flowconditionupstream,
+                    "flowconditiondownstream": self.toolwidgetmain.flowconditiondownstream,
+                    "systemfunction": self.toolwidgetmain.systemfunction,
                 },
             },
         }

@@ -68,16 +68,18 @@ class BaseUrbandrainageObservationTool(BaseObservationTool):
                         "presencepressurizedflow": self.toolwidgetmain.presencepressurizedflow,
                         "maintenanceopinion": self.toolwidgetmain.maintenanceopinion,
                         # DIV
-                        "conditionglobal": [self.toolwidgetmain.conditionglobal,
-                                            self.toolwidgetmain.conditionglobal_2,
-                                            self.toolwidgetmain.conditionglobal_3,]
+                        "conditionglobal": [
+                            self.toolwidgetmain.conditionglobal,
+                            self.toolwidgetmain.conditionglobal_2,
+                            self.toolwidgetmain.conditionglobal_3,
+                        ],
                         # PR
                         "conditioncontroller": self.toolwidgetmain.conditioncontroller,
                         #'evolution': self.toolwidgetmain.textEdit_evolution,
                         #'commentaires': self.toolwidgetmain.textEdit_comm,
                         #'suite': self.toolwidgetmain.textEdit_suite,
                         "nextactiontype": self.toolwidgetmain.nextactiontype,
-                        "nextactioncomment": self.toolwidgetmain.comboBox_precisionsuite,
+                        "nextactioncomment": self.toolwidgetmain.nextactioncomment,
                     },
                 },
                 "object": {
@@ -246,7 +248,7 @@ class BaseUrbandrainageObservationTool(BaseObservationTool):
                     ):
                         if self.parentWidget.parentWidget.DBASETABLENAME == "node":
                             currenttext = (
-                                self.parentWidget.parentWidget.toolwidgetmain.comboBox_typeOuvrageAss.currentText()
+                                self.parentWidget.parentWidget.toolwidgetmain.nodetype.currentText()
                             )
                             typenoeud = self.dbase.getConstraintRawValueFromText(
                                 "node", "nodetype", currenttext
@@ -267,7 +269,7 @@ class BaseUrbandrainageObservationTool(BaseObservationTool):
                     ):
                         if self.parentWidget.parentWidget.DBASETABLENAME == "node":
                             currenttext = (
-                                self.parentWidget.parentWidget.toolwidgetmain.comboBox_typeOuvrageAss.currentText()
+                                self.parentWidget.parentWidget.toolwidgetmain.nodetype.currentText()
                             )
                             typenoeud = self.dbase.getConstraintRawValueFromText(
                                 "node", "nodetype", currenttext
@@ -289,7 +291,7 @@ class BaseUrbandrainageObservationTool(BaseObservationTool):
                     ):
                         if self.parentWidget.parentWidget.DBASETABLENAME == "node":
                             currenttext = (
-                                self.parentWidget.parentWidget.toolwidgetmain.comboBox_typeOuvrageAss.currentText()
+                                self.parentWidget.parentWidget.toolwidgetmain.nodetype.currentText()
                             )
                             typenoeud = self.dbase.getConstraintRawValueFromText(
                                 "node", "nodetype", currenttext

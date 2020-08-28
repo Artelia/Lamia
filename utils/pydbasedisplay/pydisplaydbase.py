@@ -103,7 +103,7 @@ def launchIface():
         # host="localhost",
         port=5432,
         dbname="lamiaunittest",
-        schema="importbm",
+        schema="importgpmb",
         user="pvr",
         password="pvr",
     )
