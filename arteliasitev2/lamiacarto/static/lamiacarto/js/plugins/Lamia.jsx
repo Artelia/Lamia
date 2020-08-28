@@ -31,6 +31,7 @@ const EdgeEditingFormReact = require('./forms/base3_urbandrainage/edgewidget')
 const NodeEditingFormReact = require('./forms/base3_urbandrainage/nodewidget')
 const MediaEditingFormReact = require('./forms/base3_urbandrainage/mediawidget')
 const ReportEditingFormReact = require('./forms/base3_urbandrainage/reportwidget')
+const IdChooser = require('./idchooser')
 
 const { changeSelectionState } = require('qwc2/actions/selection');
 
@@ -59,6 +60,7 @@ class Lamia extends React.Component {
         this.currentwdginstance = null
         this.currentref = React.createRef()
         this.mainwdgrefcreated = false
+        this.idchooserref = React.createRef()
     }
 
     componentDidMount() {
@@ -149,7 +151,7 @@ class Lamia extends React.Component {
             </div>
         )
 
-        let idsdropdown = this.createIdDrop.bind(this)()
+        // let idsdropdown = this.createIdDrop.bind(this)()
 
         let idsdrop = (
             <div className="btn-group mr-2" role="group" aria-label="First group">
@@ -158,7 +160,7 @@ class Lamia extends React.Component {
                         Ids
               </button>
                     <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        {idsdropdown}
+                        {<IdChooser ref={this.idchooserref} mainiface={this} />}
                     </div>
                 </div>
             </div>
@@ -176,7 +178,7 @@ class Lamia extends React.Component {
         let extraTitlebarContent = (
             <div className="btn-toolbar " role="group" aria-label="Basic example" style={{ marginLeft: "1em" }}>
                 {layersdrop}
-                {idsdrop}
+                {<IdChooser ref={this.idchooserref} mainiface={this} />}
                 {butonmenu}
             </div>
         );
@@ -240,7 +242,8 @@ class Lamia extends React.Component {
         let finaldatas = []
 
 
-        for (var id in this.currentwdginstance.ids) {
+        // for (var id in this.currentwdginstance.ids) {
+        for (var id in this.state.ids) {
             console.log(id)
             finaldatas.push(<a className="dropdown-item" id={id} key={id}
                 onClick={this.handleLayerChanged.bind(this)}
@@ -298,12 +301,14 @@ class Lamia extends React.Component {
         });
         this.mainwdgrefcreated = false
         this.setState({ mainwdg: goodclass })
+
         // this.setState({ mainwdg: goodclass, currentwdginstance: this.currentref.current })
     }
 
     setCurrentWidgetInstance = (cwi) => {
         this.currentwdginstance = cwi
-        // this.setState({ currentwdginstance: cwi })
+        // this.setState({ ids: cwi.ids })
+        this.idchooserref.current.setState({ ids: cwi.ids })
     }
 
 }

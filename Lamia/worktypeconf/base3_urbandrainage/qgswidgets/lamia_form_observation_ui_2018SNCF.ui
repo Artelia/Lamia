@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>573</width>
-    <height>751</height>
+    <width>445</width>
+    <height>419</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -50,10 +50,10 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QComboBox" name="comboBox_urgence"/>
+       <widget class="QComboBox" name="gravity"/>
       </item>
       <item row="0" column="1">
-       <widget class="QDateTimeEdit" name="dateTimeEdit">
+       <widget class="QDateTimeEdit" name="datetimeobservation">
         <property name="calendarPopup">
          <bool>true</bool>
         </property>
@@ -148,7 +148,7 @@
           <item row="0" column="0">
            <widget class="QStackedWidget" name="stackedWidget_2">
             <property name="currentIndex">
-             <number>0</number>
+             <number>3</number>
             </property>
             <widget class="QWidget" name="page_6">
              <layout class="QGridLayout" name="gridLayout_5">
@@ -160,7 +160,7 @@
                </widget>
               </item>
               <item row="0" column="1">
-               <widget class="QComboBox" name="comboBox_etattampon"/>
+               <widget class="QComboBox" name="conditioncover"/>
               </item>
               <item row="1" column="0">
                <widget class="QLabel" name="label_11">
@@ -177,7 +177,7 @@
                </widget>
               </item>
               <item row="1" column="1">
-               <widget class="QComboBox" name="comboBox_etatechelon"/>
+               <widget class="QComboBox" name="conditionstep"/>
               </item>
               <item row="2" column="0">
                <widget class="QLabel" name="label_12">
@@ -187,10 +187,10 @@
                </widget>
               </item>
               <item row="2" column="1">
-               <widget class="QComboBox" name="comboBox_etatregard"/>
+               <widget class="QComboBox" name="conditionmanhole"/>
               </item>
               <item row="3" column="1">
-               <widget class="QComboBox" name="comboBox_etatcunette"/>
+               <widget class="QComboBox" name="conditionculvert"/>
               </item>
               <item row="0" column="2">
                <widget class="QLabel" name="label_14">
@@ -200,7 +200,7 @@
                </widget>
               </item>
               <item row="0" column="3">
-               <widget class="QComboBox" name="comboBox_h2s"/>
+               <widget class="QComboBox" name="presenceh2s"/>
               </item>
               <item row="1" column="2">
                <widget class="QLabel" name="label_15">
@@ -210,7 +210,7 @@
                </widget>
               </item>
               <item row="1" column="3">
-               <widget class="QComboBox" name="comboBox_depot"/>
+               <widget class="QComboBox" name="presencesediments"/>
               </item>
               <item row="2" column="2">
                <widget class="QLabel" name="label_16">
@@ -220,7 +220,7 @@
                </widget>
               </item>
               <item row="2" column="3">
-               <widget class="QComboBox" name="comboBox_miseencharge"/>
+               <widget class="QComboBox" name="presencepressurizedflow"/>
               </item>
               <item row="3" column="2">
                <widget class="QLabel" name="label_17">
@@ -230,7 +230,7 @@
                </widget>
               </item>
               <item row="3" column="3">
-               <widget class="QComboBox" name="comboBox_entretiengeneral"/>
+               <widget class="QComboBox" name="maintenanceopinion"/>
               </item>
              </layout>
             </widget>
@@ -244,7 +244,7 @@
                </widget>
               </item>
               <item row="1" column="1">
-               <widget class="QComboBox" name="comboBox_etatbache"/>
+               <widget class="QComboBox" name="conditionglobal"/>
               </item>
               <item row="0" column="0">
                <widget class="QLabel" name="label_3">
@@ -254,7 +254,7 @@
                </widget>
               </item>
               <item row="0" column="1">
-               <widget class="QComboBox" name="comboBox_PRetattampon"/>
+               <widget class="QComboBox" name="conditioncover_2"/>
               </item>
               <item row="2" column="0">
                <widget class="QLabel" name="label_8">
@@ -264,7 +264,7 @@
                </widget>
               </item>
               <item row="2" column="1">
-               <widget class="QComboBox" name="comboBox_etatasservissement"/>
+               <widget class="QComboBox" name="conditioncontroller"/>
               </item>
              </layout>
             </widget>
@@ -285,10 +285,10 @@
                </widget>
               </item>
               <item row="1" column="1">
-               <widget class="QComboBox" name="comboBox_DSHencombrement"/>
+               <widget class="QComboBox" name="presencesediments_2"/>
               </item>
               <item row="0" column="1">
-               <widget class="QComboBox" name="comboBox_DSHetageneral"/>
+               <widget class="QComboBox" name="conditionglobal_2"/>
               </item>
              </layout>
             </widget>
@@ -302,7 +302,7 @@
                </widget>
               </item>
               <item row="0" column="1">
-               <widget class="QComboBox" name="comboBox_DIVetatgeneral"/>
+               <widget class="QComboBox" name="conditionglobal_3"/>
               </item>
              </layout>
             </widget>
@@ -355,7 +355,7 @@
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QTextEdit" name="textEdit_comm">
+          <widget class="QTextEdit" name="comment">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>

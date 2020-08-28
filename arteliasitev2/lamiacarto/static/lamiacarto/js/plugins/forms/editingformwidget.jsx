@@ -98,6 +98,14 @@ class EditingFormReact extends React.Component {
                 childref.current.updateProperties()
             })
         }
+        // console.log('*', this.constructor.name)
+        // console.log(this.props.mainiface.currentwdginstance === this, this.props.mainiface.state.ids !== this.ids)
+        // console.log(this.ids, this.props.mainiface.state.ids)
+
+        // if ((this.props.mainiface.currentwdginstance === this) && (this.props.mainiface.state.ids !== this.ids)) {
+        //     console.log('stating id', this.constructor.name)
+        //     this.props.mainiface.setState({ ids: this.ids })
+        // }
     }
 
 
@@ -106,7 +114,7 @@ class EditingFormReact extends React.Component {
 
     async updateProperties() {
         if (this.props.parentproperties) {
-            console.log('up', this.constructor.name)
+            // console.log('up', this.constructor.name)
             let parentpk = this.props.parentproperties['pk_' + this.props.parentwdg.table]
             console.log('*', this.props.parentwdg.table, this.props.parentproperties['pk_' + this.props.parentwdg.table])
 
@@ -125,20 +133,21 @@ class EditingFormReact extends React.Component {
             })
 
             this.ids = JSON.parse(res.data)
-            // this.ids = res.data
-            console.log('resp ids', this.ids)
-            if (Object.entries(this.ids).length === 0) {
+
+
+            if ((Object.entries(this.ids).length === 0) || (!this.ids.pk)) {
                 this.setState({ currentfeatprop: {} })
                 return
+            } else {
+                // console.log('***', this.table, this.ids)
+                // let featdata = await this.getPropertiesFromPk(this.ids.pk[0])
+                // this.setState({ currentfeatprop: featdata.properties })
+                this.displayProperties(this.ids.pk[0])
             }
 
-            // if (Object.entries(this.ids.pk).length !== 0) {
-            if (this.ids.pk) {
-                console.log('***', this.table, this.ids)
-                let featdata = await this.getPropertiesFromPk(this.ids.pk[0])
-                this.setState({ currentfeatprop: featdata.properties })
-            } else {
-                this.setState({ currentfeatprop: {} })
+            if (this.props.mainiface.currentwdginstance === this) {
+                console.log('idrend up', this.constructor.name)
+                this.props.mainiface.idchooserref.current.setState({ ids: this.ids })
             }
 
 
@@ -146,6 +155,11 @@ class EditingFormReact extends React.Component {
 
 
 
+    }
+
+    async displayProperties(pk) {
+        let featdata = await this.getPropertiesFromPk(pk)
+        this.setState({ currentfeatprop: featdata.properties })
     }
 
     async pointClicked(coords) {
@@ -164,6 +178,8 @@ class EditingFormReact extends React.Component {
 
         this.setState({ currentfeatprop: featdata.properties })
 
+
+
         featdata.geometry = VectorLayerUtils.reprojectGeometry(featdata.geometry, 'EPSG:4326', 'EPSG:3857')
         let ollayer = this.props.mainiface.props.layers.find(layer => layer.title === "Lamiasel")
         this.props.mainiface.props.addLayerFeatures(ollayer, [featdata], true);
@@ -173,6 +189,7 @@ class EditingFormReact extends React.Component {
     async getPropertiesFromPk(pk) {
         let temp = this.projectdata.qgisserverurl + 'qgisserver/wfs3/collections/' + this.table + '_qgis/items/' + pk + '.json'
         let feat = await axios.get(temp)
+        console.log('feat', this.constructor.name, feat.data)
         return feat.data
     }
 

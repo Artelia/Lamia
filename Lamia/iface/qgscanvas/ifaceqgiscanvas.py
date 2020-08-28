@@ -234,7 +234,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         for tablename in layers:
             if (
                 "layerqgis" in layers[tablename].keys()
-                and layers[tablename]["layerqgis"].geometryType()
+                # and layers[tablename]["layerqgis"].geometryType()
                 != qgis.core.QgsWkbTypes.NullGeometry
             ):
                 stylepath = os.path.normpath(

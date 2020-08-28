@@ -60,7 +60,7 @@ class MediaEditingFormReact extends EditingFormReact {
 
 
     updateImage = () => {
-        if (this.state.currentfeatprop.file) {
+        if ((this.state.currentfeatprop.file) && (this.state.currentfeatprop.file !== undefined)) {
             let url = ("http://" + window.location.host + '/media/'
                 + this.projectdata.pgdbname + '/' + this.projectdata.pgschema + '/'
                 + this.state.currentfeatprop.file)

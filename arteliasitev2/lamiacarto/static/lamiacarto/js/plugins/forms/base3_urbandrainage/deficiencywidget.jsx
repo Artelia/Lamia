@@ -14,7 +14,7 @@ class DeficiencyEditingFormReact extends EditingFormReact {
     static label = 'Deficiency'
     table = 'deficiency'
 
-    // childwdg = [ObservationEditingFormReact]
+    childwdg = [ObservationEditingFormReact]
 
 
     constructor(props) {

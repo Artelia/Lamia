@@ -46,39 +46,43 @@ class BaseUrbandrainageObservationTool(BaseObservationTool):
                 "observation": {
                     "linkfield": "id_observation",
                     "widgets": {
-                        "datetimeobservation": self.toolwidgetmain.dateTimeEdit,
+                        "datetimeobservation": self.toolwidgetmain.datetimeobservation,
                         #'nombre' : self.toolwidgetmain.spinBox_nombre,
-                        "gravity": self.toolwidgetmain.comboBox_urgence,
+                        "gravity": self.toolwidgetmain.gravity,
                         # regard
                         "conditioncover": [
-                            self.toolwidgetmain.comboBox_etattampon,
-                            self.toolwidgetmain.comboBox_PRetattampon,
+                            self.toolwidgetmain.conditioncover,
+                            self.toolwidgetmain.conditioncover_2,
                         ],
-                        "conditionstep": self.toolwidgetmain.comboBox_etatechelon,
-                        "conditionmanhole": self.toolwidgetmain.comboBox_etatregard,
-                        "conditionculvert": self.toolwidgetmain.comboBox_etatcunette,
-                        "presenceinfiltrationtosewer": self.toolwidgetmain.comboBox_ecpp,
-                        "presenceinfiltration": self.toolwidgetmain.comboBox_infiltration,
-                        "presenceroots": self.toolwidgetmain.comboBox_racines,
-                        "presenceh2s": self.toolwidgetmain.comboBox_h2s,
+                        "conditionstep": self.toolwidgetmain.conditionstep,
+                        "conditionmanhole": self.toolwidgetmain.conditionmanhole,
+                        "conditionculvert": self.toolwidgetmain.conditionculvert,
+                        "presenceinfiltrationtosewer": self.toolwidgetmain.presenceinfiltrationtosewer,
+                        "presenceinfiltration": self.toolwidgetmain.presenceinfiltration,
+                        "presenceroots": self.toolwidgetmain.presenceroots,
+                        "presenceh2s": self.toolwidgetmain.presenceh2s,
                         "presencesediments": [
-                            self.toolwidgetmain.comboBox_depot,
-                            self.toolwidgetmain.comboBox_DSHencombrement,
+                            self.toolwidgetmain.presencesediments,
+                            self.toolwidgetmain.presencesediments_2,
                         ],
-                        "presencepressurizedflow": self.toolwidgetmain.comboBox_miseencharge,
-                        "maintenanceopinion": self.toolwidgetmain.comboBox_entretiengeneral,
+                        "presencepressurizedflow": self.toolwidgetmain.presencepressurizedflow,
+                        "maintenanceopinion": self.toolwidgetmain.maintenanceopinion,
                         # DIV
-                        "conditionglobal": self.toolwidgetmain.comboBox_DIVetatgeneral,
+                        "conditionglobal": [self.toolwidgetmain.conditionglobal,
+                                            self.toolwidgetmain.conditionglobal_2,
+                                            self.toolwidgetmain.conditionglobal_3,]
+                        # PR
+                        "conditioncontroller": self.toolwidgetmain.conditioncontroller,
                         #'evolution': self.toolwidgetmain.textEdit_evolution,
                         #'commentaires': self.toolwidgetmain.textEdit_comm,
                         #'suite': self.toolwidgetmain.textEdit_suite,
-                        "nextactiontype": self.toolwidgetmain.comboBox_typesuite,
+                        "nextactiontype": self.toolwidgetmain.nextactiontype,
                         "nextactioncomment": self.toolwidgetmain.comboBox_precisionsuite,
                     },
                 },
                 "object": {
                     "linkfield": "id_object",
-                    "widgets": {"comment": self.toolwidgetmain.textEdit_comm},
+                    "widgets": {"comment": self.toolwidgetmain.comment},
                 },
             }
 
@@ -106,32 +110,32 @@ class BaseUrbandrainageObservationTool(BaseObservationTool):
                 "observation": {
                     "linkfield": "id_observation",
                     "widgets": {
-                        "datetimeobservation": self.toolwidgetmain.dateTimeEdit,
+                        "datetimeobservation": self.toolwidgetmain.datetimeobservation,
                         # 'nombre' : self.toolwidgetmain.spinBox_nombre,
-                        "gravity": self.toolwidgetmain.comboBox_urgence,
+                        "gravity": self.toolwidgetmain.gravity,
                         # regard
                         "conditioncover": [
-                            self.toolwidgetmain.comboBox_etattampon,
-                            self.toolwidgetmain.comboBox_PRetattampon,
+                            self.toolwidgetmain.conditioncover,
+                            self.toolwidgetmain.conditioncover_2,
                         ],
-                        "conditionstep": self.toolwidgetmain.comboBox_etatechelon,
-                        "conditionmanhole": self.toolwidgetmain.comboBox_etatregard,
-                        "conditionculvert": self.toolwidgetmain.comboBox_etatcunette,
-                        "presenceh2s": self.toolwidgetmain.comboBox_h2s,
+                        "conditionstep": self.toolwidgetmain.conditionstep,
+                        "conditionmanhole": self.toolwidgetmain.conditionmanhole,
+                        "conditionculvert": self.toolwidgetmain.conditionculvert,
+                        "presenceh2s": self.toolwidgetmain.presenceh2s,
                         "presencesediments": [
-                            self.toolwidgetmain.comboBox_depot,
-                            self.toolwidgetmain.comboBox_DSHencombrement,
+                            self.toolwidgetmain.presencesediments,
+                            self.toolwidgetmain.presencesediments_2,
                         ],
-                        "presencepressurizedflow": self.toolwidgetmain.comboBox_miseencharge,
-                        "maintenanceopinion": self.toolwidgetmain.comboBox_entretiengeneral,
+                        "presencepressurizedflow": self.toolwidgetmain.presencepressurizedflow,
+                        "maintenanceopinion": self.toolwidgetmain.maintenanceopinion,
                         # PR
                         # 'etattampon': self.toolwidgetmain.comboBox_PRetattampon,
                         "conditionglobal": [
-                            self.toolwidgetmain.comboBox_etatbache,
-                            self.toolwidgetmain.comboBox_DSHetageneral,
-                            self.toolwidgetmain.comboBox_DIVetatgeneral,
+                            self.toolwidgetmain.conditionglobal,
+                            self.toolwidgetmain.conditionglobal_2,
+                            self.toolwidgetmain.conditionglobal_3,
                         ],
-                        "conditioncontroller": self.toolwidgetmain.comboBox_etatasservissement,
+                        "conditioncontroller": self.toolwidgetmain.conditioncontroller,
                         # DSH
                         # 'etatgeneral': self.toolwidgetmain.comboBox_DSHetageneral,
                         # 'ensablement': self.toolwidgetmain.comboBox_DSHencombrement,
@@ -141,7 +145,7 @@ class BaseUrbandrainageObservationTool(BaseObservationTool):
                 },
                 "object": {
                     "linkfield": "id_object",
-                    "widgets": {"comment": self.toolwidgetmain.textEdit_comm},
+                    "widgets": {"comment": self.toolwidgetmain.comment},
                 },
             }
 
@@ -167,27 +171,27 @@ class BaseUrbandrainageObservationTool(BaseObservationTool):
                 "observation": {
                     "linkfield": "id_observation",
                     "widgets": {
-                        "datetimeobservation": self.toolwidgetmain.dateTimeEdit,
+                        "datetimeobservation": self.toolwidgetmain.datetimeobservation,
                         # 'nombre' : self.toolwidgetmain.spinBox_nombre,
-                        "gravity": self.toolwidgetmain.comboBox_urgence,
-                        "conditionglobal": self.toolwidgetmain.comboBox_etatgeneral,
+                        "gravity": self.toolwidgetmain.gravity,
+                        "conditionglobal": self.toolwidgetmain.conditionglobal,
                         # regard
-                        "conditioncover": self.toolwidgetmain.comboBox_etattampon,
-                        "conditionstep": self.toolwidgetmain.comboBox_etatechelon,
-                        "conditionmanhole": self.toolwidgetmain.comboBox_etatregard,
-                        "conditionculvert": self.toolwidgetmain.comboBox_etatcunette,
-                        "presenceh2s": self.toolwidgetmain.comboBox_h2s,
-                        "presencesediments": self.toolwidgetmain.comboBox_depot,
-                        "presencepressurizedflow": self.toolwidgetmain.comboBox_miseencharge,
-                        "maintenanceopinion": self.toolwidgetmain.comboBox_entretiengeneral,
+                        "conditioncover": self.toolwidgetmain.conditioncover,
+                        "conditionstep": self.toolwidgetmain.conditionstep,
+                        "conditionmanhole": self.toolwidgetmain.conditionmanhole,
+                        "conditionculvert": self.toolwidgetmain.conditionculvert,
+                        "presenceh2s": self.toolwidgetmain.presenceh2s,
+                        "presencesediments": self.toolwidgetmain.presencesediments,
+                        "presencepressurizedflow": self.toolwidgetmain.presencepressurizedflow,
+                        "maintenanceopinion": self.toolwidgetmain.maintenanceopinion,
                         # eqp
-                        "equipmentopenclose": self.toolwidgetmain.comboBox_etatouv
+                        "equipmentopenclose": self.toolwidgetmain.equipmentopenclose
                         #'etat': self.toolwidgetmain.comboBox_etatgeneral,
                     },
                 },
                 "object": {
                     "linkfield": "id_object",
-                    "widgets": {"comment": self.toolwidgetmain.textEdit_comm},
+                    "widgets": {"comment": self.toolwidgetmain.comment},
                 },
             }
 
