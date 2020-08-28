@@ -34,14 +34,16 @@ debugconnector = False
 
 
 class AbstractChooserTreeWidget(QtCore.QObject):
-
     def __init__(self, **kwargs):
         super(AbstractChooserTreeWidget, self).__init__()
-        self.dbase = kwargs.get('dbaseparser', None)
-        self.mainifacewidget = kwargs.get('mainifacewidget', None)
-        self.treewidget = self.mainifacewidget.ElemtreeWidget
+        self.dbase = kwargs.get("dbaseparser", None)
+        self.mainifacewidget = kwargs.get("mainifacewidget", None)
+        if hasattr(self.mainifacewidget, "ElemtreeWidget"):
+            self.treewidget = self.mainifacewidget.ElemtreeWidget
+        else:
+            self.treewidget = None
 
-    def selectFeature(self,pk=None):
+    def selectFeature(self, pk=None):
         raise NotImplementedError
 
     def toolbarNew(self):
@@ -53,10 +55,8 @@ class AbstractChooserTreeWidget(QtCore.QObject):
     def toolbarDelete(self):
         raise NotImplementedError
 
-
     def toolbarSave(self):
         raise NotImplementedError
-    
 
     def onActivation(self):
         raise NotImplementedError
@@ -70,7 +70,6 @@ class AbstractChooserTreeWidget(QtCore.QObject):
     def disconnectTreewidget(self):
         raise NotImplementedError
 
-
     def connectTreewidget(self):
         raise NotImplementedError
-    
+

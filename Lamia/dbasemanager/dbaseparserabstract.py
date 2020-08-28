@@ -784,6 +784,7 @@ class AbstractDBaseParser:
         return sqlout
 
     def updateQueryTableNow(self, sqlin, date=None):
+        import threading
 
         sqllist = re.split(" |,|\(|\)|\.|=", sqlin)
         withsql = ""

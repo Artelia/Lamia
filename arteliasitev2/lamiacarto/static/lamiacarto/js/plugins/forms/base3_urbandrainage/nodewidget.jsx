@@ -10,7 +10,10 @@ class NodeEditingFormReact extends EditingFormReact {
     static label = 'Nodes'
     table = 'node'
 
-    childwdg = [MediaEditingFormReact, DeficiencyEditingFormReact]
+    childwdg = [
+        MediaEditingFormReact,
+        DeficiencyEditingFormReact
+    ]
 
     constructor(props) {
         super(props);

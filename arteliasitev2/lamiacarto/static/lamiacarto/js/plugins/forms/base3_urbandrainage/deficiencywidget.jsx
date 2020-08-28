@@ -14,7 +14,7 @@ class DeficiencyEditingFormReact extends EditingFormReact {
     static label = 'Deficiency'
     table = 'deficiency'
 
-    childwdg = [ObservationEditingFormReact]
+    // childwdg = [ObservationEditingFormReact]
 
 
     constructor(props) {
@@ -25,6 +25,22 @@ class DeficiencyEditingFormReact extends EditingFormReact {
             'formui': '',
             ...this.state
         }
+
+
+        let tempparentjoin = {}
+        let linkdict = {
+            "colparent": "id_descriptionsystem",
+            "colthistable": "lid_descriptionsystem",
+            "tctable": null,
+            "tctablecolparent": null,
+            "tctablecolthistable": null,
+        }
+        let tables = ["node", "edge", "equipment"]
+        tables.forEach((el) => {
+            tempparentjoin[el] = linkdict
+        })
+        this.PARENTJOIN = tempparentjoin
+
 
     }
 

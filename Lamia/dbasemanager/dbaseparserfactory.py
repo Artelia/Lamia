@@ -27,6 +27,7 @@ This file is part of LAMIA.
  """
 from .spatialitedbaseparser import SpatialiteDBaseParser
 from .postgisdbaseparser import PostGisDBaseParser
+from .djangodbaseparser import DjangoDBaseParser
 
 
 class DBaseParserFactory():
@@ -41,6 +42,8 @@ class DBaseParserFactory():
             return SpatialiteDBaseParser(self,messageinstance=self.connector)
         elif self.dbasetype == 'postgis':
             return PostGisDBaseParser(self,messageinstance=self.connector)
+        elif self.dbasetype == 'django':
+            return DjangoDBaseParser(self,messageinstance=self.connector)
         else:
             raise ValueError('DB format not recognized') 
 

@@ -63,7 +63,11 @@ class PostViewSet(views.APIView):
     def post(self, request, **kwargs):
         projectid = kwargs.get("project_id")
         tablename = kwargs.get("tablename", None)
-        lamiaparser = LamiaSession.getInstance(projectid).lamiaparser
+        lamiasession = LamiaSession.getInstance(projectid)
+        lamiaparser = lamiasession.lamiaparser
+        # threading.current_thread().name
+        # if threading.current_thread().name in lamiasession.cursors.keys()
+        # lamiaparser.PGiscursor = None  # force thread safe cursor
         func = request.data["function"]
 
         if tablename is None:  # request on project
@@ -90,6 +94,22 @@ class PostViewSet(views.APIView):
                 )
                 result = json.dumps({"nearestpk": nearestpk})
                 return Response(result)
+
+            elif func == "getids":
+                confobject = type("confobject", (object,), {})
+                confobject.DBASETABLENAME = tablename
+                confobject.PARENTJOIN = request.data["parentjoin"]
+                if "tablefilterfield" in request.data.keys():
+                    confobject.TABLEFILTERFIELD = request.data["tablefilterfield"]
+                if "choosertreewdgspec" in request.data.keys():
+                    confobject.CHOOSERTREEWDGSPEC = request.data["choosertreewdgspec"]
+
+                confobject.parentWidget = type("confobject", (object,), {})
+                confobject.parentWidget.DBASETABLENAME = request.data["parenttablename"]
+                confobject.parentWidget.currentFeaturePK = request.data["parentpk"]
+
+                ids = LamiaSession.getInstance(projectid).getIds(confobject)
+                return Response(ids)
 
 
 class LamiaFuncAPI(views.APIView):

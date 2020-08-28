@@ -17,7 +17,25 @@ class ObservationEditingFormReact extends EditingFormReact {
             'formui': ':/static/forms/base3_urbandrainage/qgswidgets/lamia_form_observation_ui.ui',
             ...this.state
         }
-        // this.props = { childwdg: [MediaEditingFormReact], ...this.props }
+
+        this.PARENTJOIN = {
+            "deficiency": {
+                "colparent": "id_deficiency",
+                "colthistable": "lid_deficiency",
+                "tctable": null,
+                "tctablecolparent": null,
+                "tctablecolthistable": null,
+            }
+        }
+
+        this.CHOOSERTREEWDGSPEC = {
+            "colshow": ["datetimeobservation"],
+            "sort": ["datetimeobservation", "DESC"],
+        }
+
+
+
+
     }
 
 

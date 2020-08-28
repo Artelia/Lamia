@@ -1,6 +1,7 @@
 const React = require('react');
 const { connect } = require('react-redux');
 const QtDesignerForm = require('qwc2/components/QtDesignerForm');
+const VectorLayerUtils = require('qwc2/utils/VectorLayerUtils');
 
 const axios = require('axios');
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
@@ -17,11 +18,29 @@ class EditingFormReact extends React.Component {
         super(props);
         // https://www.freecodecamp.org/news/react-changing-state-of-child-component-from-parent-8ab547436271/
         this.currentform = React.createRef()
-        this.state = { isloading: true }
+        this.maintab = React.createRef()
+        this.state = { isloading: true, ids: [] }
+        this.childrefs = []
+        this.ids = {}
+
+        this.PARENTJOIN = null
+        this.TABLEFILTERFIELD = null
+
+
     }
 
+    // static getDerivedStateFromProps(props, state) {
+    //     console.log('getDerivedStateFromProps')
+    //     if (props.parentwdg) {
+    //         console.log(props.parentwdg.table)
+    //         console.log(props.parentproperties)
+    //     }
+    //     return null
+
+    // }
+
     render() {
-        console.log('render editingform', this.constructor.name)
+        console.log('render', this.constructor.name)
 
         if (this.state.isloading) {
             return (<p>Loading ... </p>)
@@ -43,8 +62,10 @@ class EditingFormReact extends React.Component {
                 <div className="qt-designer-tab" key={'maintab' + childwd.label + idx * 3 + 2}>
                     {<Childwd
                         ref={this.childrefs[idx]}
-                        setCurrentWidgetInstance={this.props.setCurrentWidgetInstance}
-                        parentwdg={this} />}
+                        // setCurrentWidgetInstance={this.props.setCurrentWidgetInstance}
+                        mainiface={this.props.mainiface}
+                        parentwdg={this}
+                        parentproperties={this.state.currentfeatprop} />}
                 </div>
             )
         })
@@ -71,8 +92,89 @@ class EditingFormReact extends React.Component {
         this.getKeyvalues()
     }
 
+    componentDidUpdate() {
+        if (this.childrefs) {
+            this.childrefs.forEach((childref, idx) => {
+                childref.current.updateProperties()
+            })
+        }
+    }
+
 
     others_________________________() { }
+
+
+    async updateProperties() {
+        if (this.props.parentproperties) {
+            console.log('up', this.constructor.name)
+            let parentpk = this.props.parentproperties['pk_' + this.props.parentwdg.table]
+            console.log('*', this.props.parentwdg.table, this.props.parentproperties['pk_' + this.props.parentwdg.table])
+
+            if (!parentpk) { return }
+
+
+            let url = 'http://' + window.location.host + '/lamiaapi/' + this.projectdata.id_project + '/' + this.table
+
+            let res = await axios.post(url, {
+                function: 'getids',
+                parentjoin: this.PARENTJOIN,
+                tablefilterfield: this.TABLEFILTERFIELD,
+                choosertreewdgspec: this.CHOOSERTREEWDGSPEC,
+                parenttablename: this.props.parentwdg.table,
+                parentpk: parentpk,
+            })
+
+            this.ids = JSON.parse(res.data)
+            // this.ids = res.data
+            console.log('resp ids', this.ids)
+            if (Object.entries(this.ids).length === 0) {
+                this.setState({ currentfeatprop: {} })
+                return
+            }
+
+            // if (Object.entries(this.ids.pk).length !== 0) {
+            if (this.ids.pk) {
+                console.log('***', this.table, this.ids)
+                let featdata = await this.getPropertiesFromPk(this.ids.pk[0])
+                this.setState({ currentfeatprop: featdata.properties })
+            } else {
+                this.setState({ currentfeatprop: {} })
+            }
+
+
+        }
+
+
+
+    }
+
+    async pointClicked(coords) {
+
+        let url = 'http://' + window.location.host + '/lamiaapi/' + this.projectdata.id_project + '/' + this.table
+        let res = await axios.post(url, {
+            function: 'nearest',
+            // layer: this.table,
+            coords: coords,
+        })
+        let response = JSON.parse(res.data)
+
+        // let temp = this.projectdata.qgisserverurl + 'qgisserver/wfs3/collections/' + this.table + '_qgis/items/' + response.nearestpk + '.json'
+        // let feat = await axios.get(temp)
+        let featdata = await this.getPropertiesFromPk(response.nearestpk)
+
+        this.setState({ currentfeatprop: featdata.properties })
+
+        featdata.geometry = VectorLayerUtils.reprojectGeometry(featdata.geometry, 'EPSG:4326', 'EPSG:3857')
+        let ollayer = this.props.mainiface.props.layers.find(layer => layer.title === "Lamiasel")
+        this.props.mainiface.props.addLayerFeatures(ollayer, [featdata], true);
+
+    }
+
+    async getPropertiesFromPk(pk) {
+        let temp = this.projectdata.qgisserverurl + 'qgisserver/wfs3/collections/' + this.table + '_qgis/items/' + pk + '.json'
+        let feat = await axios.get(temp)
+        return feat.data
+    }
 
     updateField = (key, value) => {
         let tempvar = this.state.currentfeatprop
@@ -107,14 +209,14 @@ class EditingFormReact extends React.Component {
 
 
     handleTabChange = (evt) => {
-        console.log('change', evt.target.value, this.constructor.name)
-        console.log(this.childrefs)
+        // console.log('change', evt.target.value, this.constructor.name)
+        // console.log(this.childrefs)
         let currentinstance = null
         if (evt.target.value == 0) {
             currentinstance = this
         } else { currentinstance = this.childrefs[evt.target.value - 1].current }
 
-        this.props.setCurrentWidgetInstance(currentinstance)
+        this.props.mainiface.setCurrentWidgetInstance(currentinstance)
 
     }
 

@@ -27,17 +27,18 @@ This file is part of LAMIA.
  """
 
 import os, sys, shutil, datetime
-import psycopg2
+from django.db import connection
+import django
 
 from .dbaseparserabstract import *
 
 
-class PostGisDBaseParser(AbstractDBaseParser):
+class DjangoDBaseParser(AbstractDBaseParser):
 
-    TYPE = "postgis"
+    TYPE = "django"
 
     def __init__(self, parserfactory, messageinstance):
-        super(PostGisDBaseParser, self).__init__(parserfactory, messageinstance)
+        super(DjangoDBaseParser, self).__init__(parserfactory, messageinstance)
 
     def connectToDBase(
         self,
@@ -49,38 +50,40 @@ class PostGisDBaseParser(AbstractDBaseParser):
         password=None,
         **kwargs,
     ):
-        self.dbasetype = "postgis"
-        self.pgport = port
-        self.pghost = host
-        self.pgdb = dbname
+        # self.dbasetype = "postgis"
+        # self.pgport = port
+        # self.pghost = host
+        # self.pgdb = dbname
         self.pgschema = schema
-        self.pguser = user
-        self.pgpassword = password
+        # self.pguser = user
+        # self.pgpassword = password
 
-        # connexion
-        # connect to postgres for checking database existence
-        connectstr = (
-            "dbname='postgres' user='"
-            + user
-            + "' host='"
-            + host
-            + "' password='"
-            + password
-            + "'"
-        )
-        connpgis = psycopg2.connect(connectstr)
-        pgiscursor = connpgis.cursor()
-        connpgis.autocommit = True
-        pgiscursor.close()
-        connpgis.close()
+        # # connexion
+        # # connect to postgres for checking database existence
+        # connectstr = (
+        #     "dbname='postgres' user='"
+        #     + user
+        #     + "' host='"
+        #     + host
+        #     + "' password='"
+        #     + password
+        #     + "'"
+        # )
+        # connpgis = psycopg2.connect(connectstr)
+        # pgiscursor = connpgis.cursor()
+        # connpgis.autocommit = True
+        # pgiscursor.close()
+        # connpgis.close()
 
-        # connexion to database
-        connectstr = (
-            "dbname='" + self.pgdb.lower() + "' user='" + user + "' host='" + host
-        )
-        connectstr += "' password='" + password + "'"
-        self.connPGis = psycopg2.connect(connectstr)
-        self.PGiscursor = self.connPGis.cursor()
+        # # connexion to database
+        # connectstr = (
+        #     "dbname='" + self.pgdb.lower() + "' user='" + user + "' host='" + host
+        # )
+        # connectstr += "' password='" + password + "'"
+        # self.connPGis = psycopg2.connect(connectstr)
+        # self.PGiscursor = self.connPGis.cursor()
+
+        self.djangocursor = connection.cursor()
 
         # searchpath
         sql = "SET search_path TO " + self.pgschema.lower() + ", public;"
@@ -94,7 +97,7 @@ class PostGisDBaseParser(AbstractDBaseParser):
     def getDBName(self):
         return self.pgschema
 
-    def generateSQLTableCreationFromDBConfig(self, name, dbasetable, crs):
+    def generateSQLTableCreationFromDBConfig_oldd(self, name, dbasetable, crs):
 
         sql = {}
         listFK = []
@@ -125,7 +128,7 @@ class PostGisDBaseParser(AbstractDBaseParser):
 
         return sql
 
-    def generateSQLTableCreationFromDBConfigOld(self, name, dbasetable, crs):
+    def generateSQLTableCreationFromDBConfig_Old(self, name, dbasetable, crs):
 
         sql = {}
         listFK = []
@@ -163,7 +166,9 @@ class PostGisDBaseParser(AbstractDBaseParser):
 
         return sql
 
-    def generateSQLViewCreationFromDBConfig(self, dbname, dbasetable, worktype, crs):
+    def generateSQLViewCreationFromDBConfig_old(
+        self, dbname, dbasetable, worktype, crs
+    ):
         """
         return sql list to be queried
         """
@@ -208,7 +213,7 @@ class PostGisDBaseParser(AbstractDBaseParser):
 
         return finalsqllist
 
-    def initDBase(self, **kwargs):
+    def initDBase_old(self, **kwargs):
         host = kwargs.get("host", "localhost")
         port = kwargs.get("port", 5432)
         dbname = kwargs.get("dbname", None)
@@ -295,9 +300,7 @@ class PostGisDBaseParser(AbstractDBaseParser):
         self.commit()
         self.disconnect()
 
-    def checkIfPGShcemaExists(
-        self, host, dbname, schema, user, password
-    ):
+    def checkIfPGShcemaExists_old(self, host, dbname, schema, user, password):
         dbexists = False
         schemaexists = False
 
@@ -325,51 +328,24 @@ class PostGisDBaseParser(AbstractDBaseParser):
 
         return dbexists, schemaexists
 
-    def query(self, sql, arguments=[], docommit=True):
-        with self.connPGis.cursor() as cursor:
+    def query(self, sql):
+        with connection.cursor() as c:
             try:
-                if self.printsql:
-                    logging.getLogger("Lamia_unittest").debug("%s", sql)
-                cursor.execute(sql)
-                # print(self.PGiscursor.statusmessage )
-                if cursor.statusmessage.split(" ")[0] not in [
-                    "INSERT",
-                    "UPDATE",
-                    "SET",
-                    "CREATE",
-                    "ALTER",
-                    "DROP",
-                    "BEGIN",
-                    "COMMIT",
-                ]:
-                    rows = list(cursor.fetchall())
-                else:
-                    rows = None
-                if docommit and self.forcenocommit == False:
-                    self.commit()
+                c.execute(sql)
+                rows = c.fetchall()
                 return rows
+            except django.db.utils.ProgrammingError:
+                print("error", sql)
 
-            except psycopg2.ProgrammingError as e:
-                print("error query : ", sql, "\n", e, cursor.statusmessage)
-                if self.raiseexceptions:
-                    raise TypeError
-                return None
-            except (psycopg2.DataError, psycopg2.InternalError) as e:
-                print("error query : ", sql, "\n", e)
-                if self.raiseexceptions:
-                    raise TypeError
-                return None
-    
-
-    def query_old(self, sql, arguments=[], docommit=True):
-        if self.PGiscursor is None:
-            self.PGiscursor = self.connPGis.cursor()
+    def query_(self, sql, arguments=[], docommit=True):
+        if self.djangocursor is None:
+            self.djangocursor = connection.cursor()
         try:
             if self.printsql:
                 logging.getLogger("Lamia_unittest").debug("%s", sql)
-            self.PGiscursor.execute(sql)
+            self.djangocursor.execute(sql)
             # print(self.PGiscursor.statusmessage )
-            if self.PGiscursor.statusmessage.split(" ")[0] not in [
+            if self.djangocursor.statusmessage.split(" ")[0] not in [
                 "INSERT",
                 "UPDATE",
                 "SET",
@@ -379,19 +355,14 @@ class PostGisDBaseParser(AbstractDBaseParser):
                 "BEGIN",
                 "COMMIT",
             ]:
-                rows = list(self.PGiscursor.fetchall())
+                rows = list(self.djangocursor.fetchall())
             else:
                 rows = None
             if docommit and self.forcenocommit == False:
                 self.commit()
             return rows
 
-        except psycopg2.ProgrammingError as e:
-            print("error query : ", sql, "\n", e, self.PGiscursor.statusmessage)
-            if self.raiseexceptions:
-                raise TypeError
-            return None
-        except (psycopg2.DataError, psycopg2.InternalError) as e:
+        except Exception as e:
             print("error query : ", sql, "\n", e)
             if self.raiseexceptions:
                 raise TypeError
@@ -401,7 +372,8 @@ class PostGisDBaseParser(AbstractDBaseParser):
         raise NotImplementedError
 
     def commit(self):
-        self.connPGis.commit()
+        pass
+        # self.connPGis.commit()
 
     def reInitDBase(self):
         raise NotImplementedError

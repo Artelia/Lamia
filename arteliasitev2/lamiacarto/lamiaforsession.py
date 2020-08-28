@@ -5,22 +5,25 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
 import Lamia
 from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
 from Lamia.iface.qgscanvas.ifaceqgiscanvas import QgisCanvas
+from Lamia.libslamia.dbaseutils.chooserid import IDChooser
 from .models import Project
 from test.test_utils import *
+import pprint
+
 
 import threading
 
 
-class LamiaSession(Thread):
+class LamiaSession:
 
     _instances = set()
 
     def __init__(self, idproject):
-        super()
+        # super()
 
         # app = initQGis()
 
-        logging.getLogger().debug(f"Init lamia session project n {idproject}")
+        # logging.getLogger().debug(f"Init lamia session project n {idproject}")
         print(threading.current_thread().name)
         self.idproject = idproject
 
@@ -55,7 +58,7 @@ class LamiaSession(Thread):
             )
 
         # * var2 : load dbaseparser and qgiscanvas
-        else:
+        if True:
             queryset = Project.objects.filter(id_project=idproject)
             queryval = queryset.values()[0]
             self.lamiaparser = DBaseParserFactory("postgis").getDbaseParser()
@@ -92,9 +95,21 @@ class LamiaSession(Thread):
 
             # self.qgscanvas.createLayers(self.lamiaparser, alsoqgisjoined=False)
 
-            print("Init lamia session loading ... ", idproject)
+            # print("Init lamia session loading ... ", idproject)
 
-        logging.getLogger().debug(f"Init lamia session loaded {idproject}")
+        # * var3 django
+        if False:
+            queryset = Project.objects.filter(id_project=idproject)
+            queryval = queryset.values()[0]
+            self.lamiaparser = DBaseParserFactory("django").getDbaseParser()
+            self.lamiaparser.loadDBase(schema=queryval["pgschema"])
+
+            self._instances.add(self)
+            # print("Init lamia session loading ... ", idproject)
+
+        # self.idchooser = IDChooser(toolwidget=None, dbaseparser=self.lamiaparser,)
+        self.cursors = {}
+        # logging.getLogger().debug(f"Init lamia session loaded {idproject}")
 
         # exitQGis()
 
@@ -103,33 +118,18 @@ class LamiaSession(Thread):
         for obj in __class__._instances:
             # print (obj.worktype) # prints 'a' and 'c'
             if obj.idproject == idproject:
-                logging.getLogger().debug(f"recycle  instance {idproject}")
+                # logging.getLogger().debug(f"recycle  instance {idproject}")
                 inst = obj
         if inst is None:
-            logging.getLogger().debug(f"create instance {idproject}")
+            # logging.getLogger().debug(f"create instance {idproject}")
             inst = LamiaSession(idproject)
 
         return inst
 
-    def getNearestPk_(self, layername, coords):
-        print("init")
-        print(threading.current_thread().name)
-        app = initQGis()  #  why ?
-        print("done")
-        print(threading.current_thread().name)
-        pk, dist = self.qgscanvas.getNearestPk(layername, coords, comefromcanvas=True)
-        # pk, dist = 2, None
-        return pk, dist
-        # self._return = (pk, dist)
-
     def getNearestPk(self, layername, coords):
+        # print("getNearestPk", threading.current_thread().name)
+
         coords = f"POINT({coords[0]} {coords[1]})"
-
-        # sql = f"SELECT  ST_AsText(ST_Transform(ST_GeomFromText('{coords}',3857), {self.lamiaparser.crsnumber}))"
-        # res = self.lamiaparser.query(sql)[0][0]
-        # print(res)
-
-        # 'SRID=26918;POINT(583571.905921312 4506714.34119218)'::geometry
 
         sql = f"""
         WITH closest_candidates AS (
@@ -152,12 +152,21 @@ class LamiaSession(Thread):
             )
         LIMIT 1
         """
-
-        res = self.lamiaparser.query(sql)
-        self.lamiaparser.commitTransaction()
-        print(res)
+        try:
+            res = self.lamiaparser.query(sql)
+            self.lamiaparser.commitTransaction()
+        except Exception as e:
+            print("getNearestPk error", e)
+        # print(res)
         return res[0][0]
 
-    def join(self, *args):
-        Thread.join(self, *args)
-        return self._return
+    def getIds(self, confobject):
+        # print("getIds", threading.current_thread().name)
+        try:
+            idchooser = IDChooser(toolwidget=confobject, dbase=self.lamiaparser)
+            ids = idchooser.loadIds().to_json()
+        except Exception as e:
+            print("getIds error", e)
+            ids = json.dumps({})
+        return ids
+

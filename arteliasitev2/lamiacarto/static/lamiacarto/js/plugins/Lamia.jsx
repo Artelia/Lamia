@@ -55,8 +55,10 @@ class Lamia extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { 'visualmode': 1, 'mainwdg': null, 'values': null, 'currentwdginstance': null }
+        this.state = { 'visualmode': 1, 'mainwdg': null, 'values': null }
+        this.currentwdginstance = null
         this.currentref = React.createRef()
+        this.mainwdgrefcreated = false
     }
 
     componentDidMount() {
@@ -78,13 +80,19 @@ class Lamia extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
+
+        let returnvalue = false
         if (nextState !== this.state) {
-            return true
+            returnvalue = true
         }
-        if (nextProps.point == this.props.point) {
-            return false
+
+        if (nextProps.point !== this.props.point) {
+            if (nextProps.point) {
+                this.pointClicked.bind(this)(nextProps.point.coordinate)
+            }
         }
-        return true
+
+        return returnvalue
     }
 
     componentWillReceiveProps_(nextProps) {
@@ -126,7 +134,7 @@ class Lamia extends React.Component {
     render() {
         console.log('render Lamia', this.props.point)
 
-        let dropdown = this.createToolbar.bind(this)()
+        let layersdropdown = this.createLayerDrop.bind(this)()
 
         let layersdrop = (
             <div className="btn-group mr-2" role="group" aria-label="First group">
@@ -135,11 +143,28 @@ class Lamia extends React.Component {
                         Layers
               </button>
                     <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        {dropdown}
+                        {layersdropdown}
                     </div>
                 </div>
             </div>
         )
+
+        let idsdropdown = this.createIdDrop.bind(this)()
+
+        let idsdrop = (
+            <div className="btn-group mr-2" role="group" aria-label="First group">
+                <div className="dropdown">
+                    <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Ids
+              </button>
+                    <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        {idsdropdown}
+                    </div>
+                </div>
+            </div>
+        )
+
+
 
         let butonmenu = (
             <div className="btn-group mr-2" role="group" aria-label="First group">
@@ -151,6 +176,7 @@ class Lamia extends React.Component {
         let extraTitlebarContent = (
             <div className="btn-toolbar " role="group" aria-label="Basic example" style={{ marginLeft: "1em" }}>
                 {layersdrop}
+                {idsdrop}
                 {butonmenu}
             </div>
         );
@@ -167,7 +193,7 @@ class Lamia extends React.Component {
                         {/* {tooltree} */}
                         {(this.state.mainwdg === null) ? < div></div> : <this.state.mainwdg
                             ref={this.currentref}
-                            setCurrentWidgetInstance={this.setCurrentWidgetInstance}
+                            mainiface={this}
                         />}
                     </div>
                 </SideBar>
@@ -179,38 +205,22 @@ class Lamia extends React.Component {
 
 
     componentDidUpdate() {
-        let instance = null
-        if (!this.state.currentwdginstance) {
-            instance = this.currentref.current
-        } else {
-            instance = this.state.currentwdginstance
-        }
-
-        if (this.props.point) {
-            this.pointClicked.bind(this)(instance, this.props.point.coordinate)
+        if (!this.mainwdgrefcreated) {
+            this.mainwdgrefcreated = true
+            this.currentwdginstance = this.currentref.current
         }
     }
 
+
     others_________________________() { }
 
-    async pointClicked(instance, coords) {
-
-        let url = 'http://' + window.location.host + '/lamiaapi/' + this.projectdata.id_project + '/' + instance.table
-        let res = await axios.post(url, {
-            function: 'nearest',
-            // layer: this.table,
-            coords: coords,
-        })
-        let response = JSON.parse(res.data)
-        let temp = this.projectdata.qgisserverurl + 'qgisserver/wfs3/collections/' + instance.table + '_qgis/items/' + response.nearestpk + '.json'
-        let feat = await axios.get(temp)
-
-        instance.setState({ currentfeatprop: feat.data.properties })
-
-        feat.data.geometry = VectorLayerUtils.reprojectGeometry(feat.data.geometry, 'EPSG:4326', 'EPSG:3857')
-        let ollayer = this.props.layers.find(layer => layer.title === "Lamiasel")
-        this.props.addLayerFeatures(ollayer, [feat.data], true);
-
+    async pointClicked(coords) {
+        let wdg = this.currentwdginstance
+        while (wdg.props.parentwdg) {
+            wdg = wdg.props.parentwdg
+            console.log('click*', wdg.constructor.name)
+        }
+        wdg.pointClicked(coords)
     }
 
 
@@ -220,7 +230,33 @@ class Lamia extends React.Component {
     }
 
 
-    createToolbar() {
+    createIdDrop() {
+
+
+        if (!this.currentwdginstance) { return }
+
+        console.log('createIdDrop', this.currentwdginstance.ids)
+
+        let finaldatas = []
+
+
+        for (var id in this.currentwdginstance.ids) {
+            console.log(id)
+            finaldatas.push(<a className="dropdown-item" id={id} key={id}
+                onClick={this.handleLayerChanged.bind(this)}
+            // onClick={() => this.handleLayerChanged.bind(this)}
+            >
+                {id}
+            </a >
+            )
+            // finaldatas.push(<a className="dropdown-item" id={dataraw[firstdir][seconddir].label} >{seconddir}</a>)
+        }
+
+
+        return finaldatas
+    }
+
+    createLayerDrop() {
 
         let dataraw = {}
 
@@ -260,12 +296,14 @@ class Lamia extends React.Component {
                 goodclass = reactclass
             }
         });
+        this.mainwdgrefcreated = false
         this.setState({ mainwdg: goodclass })
         // this.setState({ mainwdg: goodclass, currentwdginstance: this.currentref.current })
     }
 
     setCurrentWidgetInstance = (cwi) => {
-        this.setState({ currentwdginstance: cwi })
+        this.currentwdginstance = cwi
+        // this.setState({ currentwdginstance: cwi })
     }
 
 }

@@ -149,6 +149,7 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
             return False
 
     def loadIds(self):
+
         debug = False
         # CHOOSERTREEWDG_COLSHOW = ['datetimeobservation']
         dbnamelower = self.toolwidget.DBASETABLENAME.lower()
