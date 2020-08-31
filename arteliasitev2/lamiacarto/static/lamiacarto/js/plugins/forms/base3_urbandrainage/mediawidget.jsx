@@ -55,6 +55,7 @@ class MediaEditingFormReact extends EditingFormReact {
     }
 
     componentDidUpdate() {
+
         this.updateImage()
     }
 

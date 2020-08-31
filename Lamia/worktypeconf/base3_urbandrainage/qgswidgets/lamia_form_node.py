@@ -418,43 +418,43 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
         currenttext = self.toolwidgetmain.nodetype.currentText()
 
         if currenttext in ["Regard", "Regard mixte EP EU"]:
-            self.toolwidgetmain.stackedWidget.setCurrentIndex(0)
+            self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(0)
         elif currenttext in ["Branchement"]:
-            self.toolwidgetmain.stackedWidget.setCurrentIndex(1)
+            self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(1)
         elif currenttext in ["Poste de refoulement"]:
-            self.toolwidgetmain.stackedWidget.setCurrentIndex(2)
+            self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(2)
             """
             elif sys.version_info < (3, 0) and currenttext in ['Débourbeur/déshuileur'.decode('utf8')]:
-                self.toolwidgetmain.stackedWidget.setCurrentIndex(3)
+                self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(3)
             elif sys.version_info > (3, 0) and currenttext in ['Débourbeur/déshuileur']:
-                self.toolwidgetmain.stackedWidget.setCurrentIndex(3)
+                self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(3)
             """
         elif currenttext in ["Débourbeur/déshuileur"]:
-            self.toolwidgetmain.stackedWidget.setCurrentIndex(3)
+            self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(3)
         elif currenttext in ["Avaloir", "Grille", "Grille avaloir"]:
-            self.toolwidgetmain.stackedWidget.setCurrentIndex(4)
+            self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(4)
         else:
-            self.toolwidgetmain.stackedWidget.setCurrentIndex(5)
-        # self.propertieswdgDesordre.propertieswdgOBSERVATION2.updateObservationStackedWidget()
+            self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(5)
+        # self.propertieswdgDesordre.propertieswdgOBSERVATION2.updateObservationackedWidget_obs()
         self.propertieswdgDesordre.propertieswdgOBSERVATION.updateObservationStackedWidget()
 
     def fieldui2TypeOhChanged(self, comboindex):
         # print(self.toolwidgetmain_2.nodetype.currentText())
         currenttext = self.toolwidgetmain.nodetype.currentText()
         if currenttext in ["Regard", "Avaloir", "Grille"]:
-            self.toolwidgetmain.stackedWidget.setCurrentIndex(0)
+            self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(0)
         elif currenttext in ["Poste de refoulement"]:
-            self.toolwidgetmain.stackedWidget.setCurrentIndex(1)
+            self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(1)
             """
             elif sys.version_info < (3, 0) and currenttext in ['Débourbeur/déshuileur'.decode('utf8')]:
-                self.toolwidgetmain.stackedWidget.setCurrentIndex(2)
+                self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(2)
             elif sys.version_info > (3, 0) and currenttext in ['Débourbeur/déshuileur']:
-                self.toolwidgetmain.stackedWidget.setCurrentIndex(2)
+                self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(2)
         """
         elif currenttext in ["Débourbeur/déshuileur"]:
-            self.toolwidgetmain.stackedWidget.setCurrentIndex(2)
+            self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(2)
         else:
-            self.toolwidgetmain.stackedWidget.setCurrentIndex(3)
+            self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(3)
 
         # self.propertieswdgDesordre.propertieswdgOBSERVATION2.updateObservationStackedWidget()
         self.propertieswdgDesordre.propertieswdgOBSERVATION.updateObservationStackedWidget()
@@ -463,17 +463,17 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
         # print(self.toolwidgetmain_2.nodetype.currentText())
         currenttext = self.toolwidgetmain.nodetype.currentText()
         if currenttext in ["Regard"]:
-            self.toolwidgetmain.stackedWidget.setCurrentIndex(0)
+            self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(0)
         elif currenttext in [""]:
-            self.toolwidgetmain.stackedWidget.setCurrentIndex(1)
+            self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(1)
         elif currenttext in ["Ouvrage de régulation"]:
-            self.toolwidgetmain.stackedWidget.setCurrentIndex(2)
+            self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(2)
         elif currenttext in ["Poste de refoulement"]:
-            self.toolwidgetmain.stackedWidget.setCurrentIndex(3)
+            self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(3)
         elif currenttext in ["Avaloir"]:
-            self.toolwidgetmain.stackedWidget.setCurrentIndex(4)
+            self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(4)
         else:
-            self.toolwidgetmain.stackedWidget.setCurrentIndex(5)
+            self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(5)
 
         # self.propertieswdgDesordre.propertieswdgOBSERVATION2.updateObservationStackedWidget()
         self.propertieswdgDesordre.propertieswdgOBSERVATION.updateObservationStackedWidget()

@@ -3,6 +3,8 @@ const { connect } = require('react-redux');
 const QtDesignerForm = require('qwc2/components/QtDesignerForm');
 const VectorLayerUtils = require('qwc2/utils/VectorLayerUtils');
 
+const Message = require('qwc2/components/I18N/Message');
+
 const axios = require('axios');
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
 axios.defaults.xsrfCookieName = "csrftoken"
@@ -56,7 +58,7 @@ class EditingFormReact extends React.Component {
             // console.log(childwd)
             // console.log('***', childwd.table, childwd.label)
             childdom.push(<input value={idx + 1} type="radio" id={'maintab' + childwd.label} key={'maintab' + childwd.label + idx * 3} name={this.table} onChange={this.handleTabChange} />)
-            childdom.push(<label htmlFor={'maintab' + childwd.label} key={'maintab' + childwd.label + idx * 3 + 1}>{childwd.label}</label>)
+            childdom.push(<label htmlFor={'maintab' + childwd.label} key={'maintab' + childwd.label + idx * 3 + 1}><Message msgId={'qtdesigner.' + childwd.label} /></label>)
             let Childwd = childwd
             childdom.push(
                 <div className="qt-designer-tab" key={'maintab' + childwd.label + idx * 3 + 2}>
@@ -73,7 +75,7 @@ class EditingFormReact extends React.Component {
         return (
             <div className="qt-designer-tabs" name={this.table}>
                 <input type="radio" value={0} id={'maintab' + this.table} name={this.table} defaultChecked={true} onChange={this.handleTabChange} />
-                <label htmlFor={'maintab' + this.table}>{'Properties'}</label>
+                <label htmlFor={'maintab' + this.table}><Message msgId={'qtdesigner.Properties'} /></label>
                 <div className="qt-designer-tab"  >
                     {qtform}
                 </div>
@@ -158,8 +160,12 @@ class EditingFormReact extends React.Component {
     }
 
     async displayProperties(pk) {
-        let featdata = await this.getPropertiesFromPk(pk)
-        this.setState({ currentfeatprop: featdata.properties })
+        let featdata = {}
+        if (pk !== undefined) {
+            featdata = await this.getPropertiesFromPk(pk)
+            featdata = featdata.properties
+        }
+        this.setState({ currentfeatprop: featdata })
     }
 
     async pointClicked(coords) {
@@ -236,6 +242,20 @@ class EditingFormReact extends React.Component {
         this.props.mainiface.setCurrentWidgetInstance(currentinstance)
 
     }
+
+    setStackedCurrentIndex = ((stackedname, stackedindex) => {
+        let elm = $('div[name="' + stackedname + '"]')
+        if (!elm.length) { return }
+        elm[0].childNodes.forEach((node, idx) => {
+            let toto = $(node)
+            if (stackedindex === idx) {
+                toto.css("display", 'block')
+            } else {
+                toto.css("display", 'none')
+            }
+        })
+    })
+
 
 }
 

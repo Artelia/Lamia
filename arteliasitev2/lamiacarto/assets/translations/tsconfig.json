@@ -1,18 +1,6 @@
 {
   "languages": [
-    "de-DE",
-    "de-CH",
-    "en-US",
-    "es-ES",
-    "fr-FR",
-    "it-IT",
-    "pl-PL",
-    "pt-BR",
-    "ro-RO",
-    "ru-RU",
-    "sv-SE",
-    "tr-TR",
-    "cs-CZ"
+    "fr-FR"
   ],
   "strings": [
     "appmenu.items.ExternalLink",

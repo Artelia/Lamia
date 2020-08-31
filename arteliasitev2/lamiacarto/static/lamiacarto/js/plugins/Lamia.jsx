@@ -82,15 +82,19 @@ class Lamia extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-
         let returnvalue = false
+
+
         if (nextState !== this.state) {
             returnvalue = true
         }
 
         if (nextProps.point !== this.props.point) {
             if (nextProps.point) {
-                this.pointClicked.bind(this)(nextProps.point.coordinate)
+                let wdg = this.currentwdginstance
+                if (wdg && wdg !== undefined) {
+                    this.pointClicked.bind(this)(nextProps.point.coordinate)
+                }
             }
         }
 

@@ -38,7 +38,17 @@ class ObservationEditingFormReact extends EditingFormReact {
 
     }
 
+    componentDidUpdate() {
+        super.componentDidUpdate()
+        this.updateStacked()
+    }
 
+    updateStacked = (() => {
+        if (this.props.parentwdg && this.props.parentwdg.props.parentwdg && this.props.parentwdg.props.parentwdg.table === 'node') {
+
+        }
+
+    })
 
 }
 
