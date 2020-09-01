@@ -176,12 +176,12 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
                     "depthinvert": self.toolwidgetmain.depthinvert,
                     "width": self.toolwidgetmain.width,
                     "lenght": self.toolwidgetmain.lenght,
-                    "X": self.toolwidgetmain.X,
-                    "dX": self.toolwidgetmain.dX,
-                    "Y": self.toolwidgetmain.Y,
-                    "dY": self.toolwidgetmain.dY,
-                    "Z": self.toolwidgetmain.Z,
-                    "dZ": self.toolwidgetmain.dZ,
+                    "x": self.toolwidgetmain.x,
+                    "dx": self.toolwidgetmain.dx,
+                    "y": self.toolwidgetmain.y,
+                    "dy": self.toolwidgetmain.dy,
+                    "z": self.toolwidgetmain.z,
+                    "dz": self.toolwidgetmain.dz,
                 },
             },
             "object": {
@@ -200,19 +200,19 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
         }
 
         self.toolwidgetmain.toolButton_longueur.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_longueur)
+            lambda: self.showNumPad(self.toolwidgetmain.lenght)
         )
         self.toolwidgetmain.toolButton_largeur.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_largeur)
+            lambda: self.showNumPad(self.toolwidgetmain.width)
         )
         self.toolwidgetmain.toolButton_calc.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_profradierouvrage)
+            lambda: self.showNumPad(self.toolwidgetmain.depthinvert)
         )
         self.toolwidgetmain.toolButton_poires.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.spinBox_poires)
+            lambda: self.showNumPad(self.toolwidgetmain.psfloatnumber)
         )
         self.toolwidgetmain.toolButton_pompes.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.spinBox_pompes)
+            lambda: self.showNumPad(self.toolwidgetmain.pspumpnumber)
         )
 
         self.toolwidgetmain.nodetype.currentIndexChanged.connect(
@@ -260,7 +260,7 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
                     # PR
                     # 'PRcloture': self.toolwidgetmain.comboBox_cloture,
                     # 'PRverouille': self.toolwidgetmain.comboBox_verouille,
-                    "pseleccabinet": self.toolwidgetmain.comboBox_posteelec,
+                    "pseleccabinet": self.toolwidgetmain.pseleccabinet,
                     # 'PRarmoireelecverouillee': self.toolwidgetmain.comboBox_armoire_verouille,
                     "psremotemonitoring": [
                         self.toolwidgetmain.psremotemonitoring,
@@ -286,17 +286,17 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
                     # DSH
                     # DSH materiau : self.toolwidgetmain.comboBox_DSH_materiau cf PR
                     # 'DSHpresencealarme': self.toolwidgetmain.comboBox_DSHalarme,
-                    "presencecontroller": self.toolwidgetmain.comboBox_automate,
+                    "presencecontroller": self.toolwidgetmain.presencecontroller,
                     # autre
                     "depthinvert": self.toolwidgetmain.depthinvert,
                     "width": self.toolwidgetmain.width,
                     "lenght": self.toolwidgetmain.lenght,
-                    "X": self.toolwidgetmain.X,
-                    "dX": self.toolwidgetmain.dX,
-                    "Y": self.toolwidgetmain.Y,
-                    "dY": self.toolwidgetmain.dY,
-                    "Z": self.toolwidgetmain.Z,
-                    "dZ": self.toolwidgetmain.dZ,
+                    "x": self.toolwidgetmain.x,
+                    "dx": self.toolwidgetmain.dx,
+                    "y": self.toolwidgetmain.y,
+                    "dy": self.toolwidgetmain.dy,
+                    "z": self.toolwidgetmain.z,
+                    "dz": self.toolwidgetmain.dz,
                 },
             },
             "object": {
@@ -313,19 +313,19 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
         }
 
         self.toolwidgetmain.toolButton_longueur.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_longueur)
+            lambda: self.showNumPad(self.toolwidgetmain.lenght)
         )
         self.toolwidgetmain.toolButton_largeur.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_largeur)
+            lambda: self.showNumPad(self.toolwidgetmain.width)
         )
         self.toolwidgetmain.toolButton_calc.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_profradierouvrage)
+            lambda: self.showNumPad(self.toolwidgetmain.depthinvert)
         )
         self.toolwidgetmain.toolButton_poires.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.spinBox_poires)
+            lambda: self.showNumPad(self.toolwidgetmain.psfloatnumber)
         )
         self.toolwidgetmain.toolButton_pompes.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.spinBox_pompes)
+            lambda: self.showNumPad(self.toolwidgetmain.pspumpnumber)
         )
 
         self.toolwidgetmain.nodetype.currentIndexChanged.connect(
@@ -369,12 +369,12 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
                     "depthinvert": self.toolwidgetmain.depthinvert,
                     "width": self.toolwidgetmain.width,
                     "lenght": self.toolwidgetmain.lenght,
-                    "X": self.toolwidgetmain.X,
-                    "dX": self.toolwidgetmain.dX,
-                    "Y": self.toolwidgetmain.Y,
-                    "dY": self.toolwidgetmain.dY,
-                    "Z": self.toolwidgetmain.Z,
-                    "dZ": self.toolwidgetmain.dZ,
+                    "x": self.toolwidgetmain.x,
+                    "dx": self.toolwidgetmain.dx,
+                    "y": self.toolwidgetmain.y,
+                    "dy": self.toolwidgetmain.dy,
+                    "z": self.toolwidgetmain.z,
+                    "dz": self.toolwidgetmain.dz,
                 },
             },
             "object": {
@@ -388,25 +388,25 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
         }
 
         self.toolwidgetmain.toolButton_longueur.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_longueur)
+            lambda: self.showNumPad(self.toolwidgetmain.lenght)
         )
         self.toolwidgetmain.toolButton_diamtampon.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_diamtampon)
+            lambda: self.showNumPad(self.toolwidgetmain.manholecoverdiameter)
         )
         self.toolwidgetmain.toolButton_profsurverse.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_profsurverse)
+            lambda: self.showNumPad(self.toolwidgetmain.depth1)
         )
         self.toolwidgetmain.toolButton_capanom.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_capanom)
+            lambda: self.showNumPad(self.toolwidgetmain.psnominalcapacity)
         )
         self.toolwidgetmain.toolButton_pompes2.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.spinBox_pompes2)
+            lambda: self.showNumPad(self.toolwidgetmain.pspumpnumber)
         )
         self.toolwidgetmain.toolButton_largeur.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_largeur)
+            lambda: self.showNumPad(self.toolwidgetmain.width)
         )
         self.toolwidgetmain.toolButton_calc.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_profradierouvrage)
+            lambda: self.showNumPad(self.toolwidgetmain.depthinvert)
         )
 
         self.toolwidgetmain.nodetype.currentIndexChanged.connect(
@@ -418,23 +418,23 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
         currenttext = self.toolwidgetmain.nodetype.currentText()
 
         if currenttext in ["Regard", "Regard mixte EP EU"]:
-            self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(0)
+            self.toolwidgetmain.stackedWidget_node.setCurrentIndex(0)
         elif currenttext in ["Branchement"]:
-            self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(1)
+            self.toolwidgetmain.stackedWidget_node.setCurrentIndex(1)
         elif currenttext in ["Poste de refoulement"]:
-            self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(2)
+            self.toolwidgetmain.stackedWidget_node.setCurrentIndex(2)
             """
             elif sys.version_info < (3, 0) and currenttext in ['Débourbeur/déshuileur'.decode('utf8')]:
-                self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(3)
+                self.toolwidgetmain.stackedWidget_node.setCurrentIndex(3)
             elif sys.version_info > (3, 0) and currenttext in ['Débourbeur/déshuileur']:
-                self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(3)
+                self.toolwidgetmain.stackedWidget_node.setCurrentIndex(3)
             """
         elif currenttext in ["Débourbeur/déshuileur"]:
-            self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(3)
+            self.toolwidgetmain.stackedWidget_node.setCurrentIndex(3)
         elif currenttext in ["Avaloir", "Grille", "Grille avaloir"]:
-            self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(4)
+            self.toolwidgetmain.stackedWidget_node.setCurrentIndex(4)
         else:
-            self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(5)
+            self.toolwidgetmain.stackedWidget_node.setCurrentIndex(5)
         # self.propertieswdgDesordre.propertieswdgOBSERVATION2.updateObservationackedWidget_obs()
         self.propertieswdgDesordre.propertieswdgOBSERVATION.updateObservationStackedWidget()
 
@@ -442,19 +442,19 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
         # print(self.toolwidgetmain_2.nodetype.currentText())
         currenttext = self.toolwidgetmain.nodetype.currentText()
         if currenttext in ["Regard", "Avaloir", "Grille"]:
-            self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(0)
+            self.toolwidgetmain.stackedWidget_node.setCurrentIndex(0)
         elif currenttext in ["Poste de refoulement"]:
-            self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(1)
+            self.toolwidgetmain.stackedWidget_node.setCurrentIndex(1)
             """
             elif sys.version_info < (3, 0) and currenttext in ['Débourbeur/déshuileur'.decode('utf8')]:
-                self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(2)
+                self.toolwidgetmain.stackedWidget_node.setCurrentIndex(2)
             elif sys.version_info > (3, 0) and currenttext in ['Débourbeur/déshuileur']:
-                self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(2)
+                self.toolwidgetmain.stackedWidget_node.setCurrentIndex(2)
         """
         elif currenttext in ["Débourbeur/déshuileur"]:
-            self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(2)
+            self.toolwidgetmain.stackedWidget_node.setCurrentIndex(2)
         else:
-            self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(3)
+            self.toolwidgetmain.stackedWidget_node.setCurrentIndex(3)
 
         # self.propertieswdgDesordre.propertieswdgOBSERVATION2.updateObservationStackedWidget()
         self.propertieswdgDesordre.propertieswdgOBSERVATION.updateObservationStackedWidget()
@@ -463,17 +463,17 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
         # print(self.toolwidgetmain_2.nodetype.currentText())
         currenttext = self.toolwidgetmain.nodetype.currentText()
         if currenttext in ["Regard"]:
-            self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(0)
+            self.toolwidgetmain.stackedWidget_node.setCurrentIndex(0)
         elif currenttext in [""]:
-            self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(1)
+            self.toolwidgetmain.stackedWidget_node.setCurrentIndex(1)
         elif currenttext in ["Ouvrage de régulation"]:
-            self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(2)
+            self.toolwidgetmain.stackedWidget_node.setCurrentIndex(2)
         elif currenttext in ["Poste de refoulement"]:
-            self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(3)
+            self.toolwidgetmain.stackedWidget_node.setCurrentIndex(3)
         elif currenttext in ["Avaloir"]:
-            self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(4)
+            self.toolwidgetmain.stackedWidget_node.setCurrentIndex(4)
         else:
-            self.toolwidgetmain.stackedWidget_obs.setCurrentIndex(5)
+            self.toolwidgetmain.stackedWidget_node.setCurrentIndex(5)
 
         # self.propertieswdgDesordre.propertieswdgOBSERVATION2.updateObservationStackedWidget()
         self.propertieswdgDesordre.propertieswdgOBSERVATION.updateObservationStackedWidget()
@@ -493,12 +493,12 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
         self.toolbarSave()
 
     def getGPSValue(self):
-        self.assignValue(self.gpswidget.label_X, self.toolwidgetmain.X)
-        self.assignValue(self.gpswidget.label_dX, self.toolwidgetmain.dX)
-        self.assignValue(self.gpswidget.label_Y, self.toolwidgetmain.Y)
-        self.assignValue(self.gpswidget.label_dY, self.toolwidgetmain.dY)
-        self.assignValue(self.gpswidget.label_Z, self.toolwidgetmain.Z)
-        self.assignValue(self.gpswidget.label_dZ, self.toolwidgetmain.dZ)
+        self.assignValue(self.gpswidget.label_X, self.toolwidgetmain.x)
+        self.assignValue(self.gpswidget.label_dX, self.toolwidgetmain.dx)
+        self.assignValue(self.gpswidget.label_Y, self.toolwidgetmain.y)
+        self.assignValue(self.gpswidget.label_dY, self.toolwidgetmain.dy)
+        self.assignValue(self.gpswidget.label_Z, self.toolwidgetmain.z)
+        self.assignValue(self.gpswidget.label_dZ, self.toolwidgetmain.dz)
 
     def assignValue(self, wdgfrom, wdgto):
         if self.isfloat(wdgfrom.text()):

@@ -1,34 +1,34 @@
-###Noeud
+###node
 #nom              type               cst               valeur                    
-ID_SAISIE;         Int;                  ;               id_equipement
-ADRESSE;         String;                  ;               Equipement_now.rue_libelle
+ID_SAISIE;         Int;                  ;               id_equipment
+ADRESSE;         String;                  ;               equipment_now.streetname
 INSEE;         String;                  ;     NULL
-DOMAINE;         String;                  ;     Equipement_now.domaine
-IMPLANT;         String;                  ;     Equipement_now.environnement
-TYPE_RES;         String;                  ;     Equipement_now.typeReseau
+domain;         String;                  ;     equipment_now.domain
+IMPLANT;         String;                  ;     equipment_now.location
+TYPE_RES;         String;                  ;     equipment_now.networktype
 NOM;         String;                  ;     NULL
-TYPE;         String;                  ;     CASE WHEN Equipement_now.typeAppAss <10 THEN '0'|| Equipement_now.typeAppAss ELSE cast(Equipement_now.typeAppAss as text) END
+TYPE;         String;                  ;     CASE WHEN equipment_now.equipmenttype <10 THEN '0'|| equipment_now.equipmenttype ELSE cast(equipment_now.equipmenttype as text) END
 MARQUE;         String;                  ;     NULL
 MODELE;         String;                  ;     NULL
 DIAMETRE;         Int;                  ;     NULL
-ACCESS;         String;                  ;     Equipement_now.accessibilite
+ACCESS;         String;                  ;     equipment_now.accessibility
 ETAT_OUV;         String;                  ;     NULL
 ENTREPRISE;         String;                  ;     NULL
 DATE_MES;         String;                  ;     NULL
 PERIOD_MES;         String;                  ;     NULL
 
-ETAT;         String;                  ;     Observation_now.etatgeneral
+ETAT;         String;                  ;     observation_now.conditionglobal
 M_OUVR;         String;                  ;     NULL
-DAT_GEOLOC;         String;                  ;     Equipement_now.datetimecreation
+DAT_GEOLOC;         String;                  ;     equipment_now.datetimecreation
 AUT_ GEOLOC;         String;                  ;     'ARTELIA'
 MOD_GEOLOC;         String;                  ;     '01'
 CLASSE_PRE;         String;                  ;     '01'
-REMARQUES;         String;                  ;     Equipement_now.commentaire
+REMARQUES;         String;                  ;     equipment_now.comment
 
 
 ###geom
-geom;         Int;               ;                  ST_AsText(ST_MakeValid(Equipement_now.geom))
+geom;         Int;               ;                  ST_AsText(ST_MakeValid(equipment_now.geom))
 
 
 ###main
-FROM Equipement_now INNER JOIN Desordre_now ON Desordre_now.lid_descriptionsystem = Equipement_now.id_descriptionsystem LEFT JOIN Observation_now ON Observation_now.lid_desordre = Desordre_now.id_desordre
+FROM equipment_now INNER JOIN deficiency_now ON deficiency_now.lid_descriptionsystem = equipment_now.id_descriptionsystem LEFT JOIN observation_now ON observation_now.lid_deficiency = deficiency_now.id_deficiency

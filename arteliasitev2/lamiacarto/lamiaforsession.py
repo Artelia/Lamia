@@ -61,7 +61,7 @@ class LamiaSession:
         if True:
             queryset = Project.objects.filter(id_project=idproject)
             queryval = queryset.values()[0]
-            self.lamiaparser = DBaseParserFactory("postgis").getDbaseParser()
+            self.lamiaparser = DBaseParserFactory("django").getDbaseParser()
             if False:
                 # create canvas and LamiaWindowWidget
                 canvas = qgis.gui.QgsMapCanvas()

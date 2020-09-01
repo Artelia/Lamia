@@ -1,4 +1,11 @@
+C:\01_WORKINGDIR\cons\cons.sqlite
+C:/01_WORKINGDIR/cons/cons.sqlite
+C:\01_WORKINGDIR\GPMB\c_merge_ass\mergeddbase.sqlite
+lamiaunittest.base3_urbandrainage_2018_SNCF@localhost:5432;pvr;pvr
+c:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_urbandrainage_2018_SNCF\test01.sqlite
+lamiaunittest.base3_urbandrainage_CD41@localhost:5432;pvr;pvr
+c:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_urbandrainage_CD41\test01.sqlite
+lamiaunittest.base3_urbandrainage_Lamia@localhost:5432;pvr;pvr
+c:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_urbandrainage_Lamia\test01.sqlite
 lamiaunittest.importgpmb@localhost:5432;pvr;pvr
 lamiaunittest.importbm@localhost:5432;pvr;pvr
-lamiaunittest.importbm@localhost:8080;pvr;pvr
-C:\01_WORKINGDIR\perigord\CC_Bastides_Dordogne_Perigord_finale.sqlite

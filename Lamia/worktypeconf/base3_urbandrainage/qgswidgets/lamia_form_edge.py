@@ -109,19 +109,19 @@ class BaseUrbandrainageEdgeTool(BaseEdgeTool):
         }
 
         self.toolwidgetmain.toolButton_calc_diam.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_diametreNominal)
+            lambda: self.showNumPad(self.toolwidgetmain.nominaldiameter)
         )
 
         self.toolwidgetmain.toolButton_calc_haut.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_haut)
+            lambda: self.showNumPad(self.toolwidgetmain.height)
         )
 
         self.toolwidgetmain.toolButton_prof_amont.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_profamont)
+            lambda: self.showNumPad(self.toolwidgetmain.depthup)
         )
 
         self.toolwidgetmain.toolButton_prof_aval.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_profaval)
+            lambda: self.showNumPad(self.toolwidgetmain.depthdown)
         )
 
         self.ownerwdg = LidChooserWidget(
@@ -149,7 +149,7 @@ class BaseUrbandrainageEdgeTool(BaseEdgeTool):
                 "linkfield": "id_edge",
                 "widgets": {
                     # "sewertype": self.toolwidgetmain.comboBox_typeReseau,
-                    "laterals": self.toolwidgetmain.comboBox_branch,
+                    "laterals": self.toolwidgetmain.laterals,
                     "domain": self.toolwidgetmain.domain,
                     "location": self.toolwidgetmain.location,
                     "flowtype": self.toolwidgetmain.flowtype,

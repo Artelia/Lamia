@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>438</width>
-    <height>388</height>
+    <width>487</width>
+    <height>341</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,7 +22,14 @@
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <layout class="QFormLayout" name="formLayout_2">
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="2">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Point subtype</string>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="0">
        <widget class="QLabel" name="label">
         <property name="text">
@@ -33,14 +40,7 @@
       <item row="0" column="1">
        <widget class="QComboBox" name="comboBox_type"/>
       </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>Point subtype</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
+      <item row="0" column="3">
        <widget class="QComboBox" name="comboBox_subtype"/>
       </item>
      </layout>
@@ -52,6 +52,16 @@
       <string>Values</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="1">
+       <widget class="QDoubleSpinBox" name="doubleSpinBox_X">
+        <property name="minimum">
+         <double>-1.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>9999999.000000000000000</double>
+        </property>
+       </widget>
+      </item>
       <item row="4" column="0">
        <widget class="QLabel" name="label_13">
         <property name="text">
@@ -69,16 +79,6 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QDoubleSpinBox" name="doubleSpinBox_X">
-        <property name="minimum">
-         <double>-1.000000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>9999999.000000000000000</double>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="2">
        <widget class="QLabel" name="label_14">
         <property name="text">
@@ -86,65 +86,39 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_5">
+      <item row="0" column="4">
+       <widget class="QLabel" name="label_11">
         <property name="text">
-         <string>X</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="1">
-       <widget class="QDoubleSpinBox" name="doubleSpinBox_Zgps">
-        <property name="minimum">
-         <double>-100.000000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>9999.000000000000000</double>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="1">
-       <widget class="QDoubleSpinBox" name="doubleSpinBox_Zwgs84">
-        <property name="minimum">
-         <double>-100.000000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>9999.000000000000000</double>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="2">
-       <widget class="QLabel" name="label_16">
-        <property name="text">
-         <string>RAF09</string>
+         <string>Z NGF</string>
         </property>
         <property name="wordWrap">
          <bool>true</bool>
         </property>
        </widget>
       </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="label_18">
+      <item row="1" column="4">
+       <widget class="QLabel" name="label_15">
         <property name="text">
-         <string>Z gps</string>
+         <string>dZ</string>
         </property>
-        <property name="wordWrap">
-         <bool>true</bool>
+       </widget>
+      </item>
+      <item row="1" column="5">
+       <widget class="QDoubleSpinBox" name="doubleSpinBox_dZ">
+        <property name="minimum">
+         <double>-1.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QDoubleSpinBox" name="doubleSpinBox_dX">
+        <property name="minimum">
+         <double>-1.000000000000000</double>
         </property>
        </widget>
       </item>
       <item row="4" column="3">
        <widget class="QDoubleSpinBox" name="doubleSpinBox_hautperche"/>
-      </item>
-      <item row="5" column="3">
-       <widget class="QDoubleSpinBox" name="doubleSpinBox_raf09">
-        <property name="minimum">
-         <double>-999.000000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>999.000000000000000</double>
-        </property>
-       </widget>
       </item>
       <item row="4" column="2">
        <widget class="QLabel" name="label_22">
@@ -163,13 +137,17 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="4">
-       <widget class="QLabel" name="label_11">
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_7">
         <property name="text">
-         <string>Z NGF</string>
+         <string>dX</string>
         </property>
-        <property name="wordWrap">
-         <bool>true</bool>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>X</string>
         </property>
        </widget>
       </item>
@@ -196,31 +174,53 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_7">
-        <property name="text">
-         <string>dX</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QDoubleSpinBox" name="doubleSpinBox_dX">
+      <item row="4" column="1">
+       <widget class="QDoubleSpinBox" name="doubleSpinBox_Zwgs84">
         <property name="minimum">
-         <double>-1.000000000000000</double>
+         <double>-100.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>9999.000000000000000</double>
         </property>
        </widget>
       </item>
-      <item row="1" column="4">
-       <widget class="QLabel" name="label_15">
-        <property name="text">
-         <string>dZ</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="5">
-       <widget class="QDoubleSpinBox" name="doubleSpinBox_dZ">
+      <item row="4" column="5">
+       <widget class="QDoubleSpinBox" name="doubleSpinBox_Zgps">
         <property name="minimum">
-         <double>-1.000000000000000</double>
+         <double>-100.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>9999.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="4">
+       <widget class="QLabel" name="label_18">
+        <property name="text">
+         <string>Z gps</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="6">
+       <widget class="QLabel" name="label_16">
+        <property name="text">
+         <string>RAF09</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="7">
+       <widget class="QDoubleSpinBox" name="doubleSpinBox_raf09">
+        <property name="minimum">
+         <double>-999.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>999.000000000000000</double>
         </property>
        </widget>
       </item>

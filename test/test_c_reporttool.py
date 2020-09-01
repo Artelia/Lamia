@@ -1,12 +1,14 @@
 import unittest, os, logging, sys, shutil, logging, time, glob
-sys.path.append(os.path.join(os.path.join(os.path.dirname(__file__)), '..'))
+
+sys.path.append(os.path.join(os.path.join(os.path.dirname(__file__)), ".."))
 import warnings
+
 with warnings.catch_warnings():
-    warnings.filterwarnings("ignore",category=DeprecationWarning)
+    warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 
 import qgis, qgis.core
-from qgis.PyQt.QtWidgets import  (QApplication)
+from qgis.PyQt.QtWidgets import QApplication
 
 from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
 from Lamia.libslamia.lamiareport.lamiareport import ReportCore
@@ -14,63 +16,83 @@ from Lamia.iface.qgsconnector.ifaceqgisconnector import QgisConnector
 
 from settings import *
 
+
 class DBaseTest(unittest.TestCase):
 
     """Test case utilisé pour tester les fonctions du module 'random'."""
+
     def setUp(self):
         """Initialisation des tests."""
-        #TESTDIR = os.path.join(os.path.join(os.path.dirname(__file__)), 'temp')
+        # TESTDIR = os.path.join(os.path.join(os.path.dirname(__file__)), 'temp')
         self.connector = QgisConnector()
-        self.testcdir = os.path.join(TESTDIR, 'c_creation')
-        self.reportdir = os.path.join(TESTDIR, 'report')
+        self.testcdir = os.path.join(TESTDIR, "c_creation")
+        self.reportdir = os.path.join(TESTDIR, "report")
         if not os.path.isdir(self.reportdir):
             os.mkdir(self.reportdir)
 
-
     def test_a_generateReport(self):
 
-        testcdir = os.path.join(TESTDIR, 'c_creation')
-        
+        testcdir = os.path.join(TESTDIR, "c_creation")
 
-        if 'SLFILE' in globals().keys() :
-            sqlitedbase = DBaseParserFactory('spatialite').getDbaseParser()
+        if "SLFILE" in globals().keys():
+            sqlitedbase = DBaseParserFactory("spatialite").getDbaseParser()
             sqlitedbase.loadDBase(slfile=SLFILE)
-            basename = os.path.basename(SLFILE).split('.')[0]
-            sqlitedbase.variante = 'test' if sqlitedbase.variante is None else sqlitedbase.variante
-            self.makeTests(basename,sqlitedbase.worktype, sqlitedbase.variante, sqlitedbase)
+            basename = os.path.basename(SLFILE).split(".")[0]
+            sqlitedbase.variante = (
+                "test" if sqlitedbase.variante is None else sqlitedbase.variante
+            )
+            self.makeTests(
+                basename, sqlitedbase.worktype, sqlitedbase.variante, sqlitedbase
+            )
             sqlitedbase.disconnect()
-        elif 'PGschema' in globals().keys():
-            pgdbase = DBaseParserFactory('postgis').getDbaseParser()
-            pgdbase.loadDBase(host=PGhost, port=PGport, dbname=PGbase, schema= PGschema, user=PGuser,  password=PGpassword)
+        elif "PGschema" in globals().keys():
+            pgdbase = DBaseParserFactory("postgis").getDbaseParser()
+            pgdbase.loadDBase(
+                host=PGhost,
+                port=PGport,
+                dbname=PGbase,
+                schema=PGschema,
+                user=PGuser,
+                password=PGpassword,
+            )
             basename = PGschema
-            self.makeTests(basename,pgdbase.worktype, pgdbase.variante, sqlitedbase)
+            self.makeTests(basename, pgdbase.worktype, pgdbase.variante, sqlitedbase)
             pgdbase.disconnect()
         else:
             for work in DBTYPE:
-                sqlitedbase = DBaseParserFactory('spatialite').getDbaseParser()
+                sqlitedbase = DBaseParserFactory("spatialite").getDbaseParser()
                 sqlitedbase.dbconfigreader.createDBDictionary(work)
 
-                if not 'VARIANTES' in globals().keys():
+                if not "VARIANTES" in globals().keys():
                     variantes = list(sqlitedbase.dbconfigreader.variantespossibles)
                 else:
-                    variantes = globals()['VARIANTES']
+                    variantes = globals()["VARIANTES"]
 
                 for variante in variantes:
-                    logging.getLogger("Lamia_unittest").debug('*************** Opening %s %s', work, variante)
+                    logging.getLogger("Lamia_unittest").debug(
+                        "*************** Opening %s %s", work, variante
+                    )
 
                     if SPATIALITE:
-                        slfile = os.path.join(testcdir, 'sl_' + work + '_' + variante, 'test01.sqlite')
-                        sqlitedbase = DBaseParserFactory('spatialite').getDbaseParser()
+                        slfile = os.path.join(
+                            testcdir, "sl_" + work + "_" + variante, "test01.sqlite"
+                        )
+                        sqlitedbase = DBaseParserFactory("spatialite").getDbaseParser()
                         sqlitedbase.loadDBase(slfile=slfile)
-                        self.makeTests('spatialite',work, variante, sqlitedbase)
+                        self.makeTests("spatialite", work, variante, sqlitedbase)
                         sqlitedbase.disconnect()
                     if POSTGIS:
-                        pgdbase = DBaseParserFactory('postgis').getDbaseParser()
-                        pgdbase.loadDBase(host=PGhost, port=PGport, dbname=PGbase, schema= work + '_' + variante, user=PGuser,  password=PGpassword)
-                        self.makeTests('postgis',work, variante, pgdbase)
+                        pgdbase = DBaseParserFactory("postgis").getDbaseParser()
+                        pgdbase.loadDBase(
+                            host=PGhost,
+                            port=PGport,
+                            dbname=PGbase,
+                            schema=work + "_" + variante,
+                            user=PGuser,
+                            password=PGpassword,
+                        )
+                        self.makeTests("postgis", work, variante, pgdbase)
                         pgdbase.disconnect()
-        
-        
 
     """
     def test_c_DbaseCreate(self):
@@ -131,40 +153,46 @@ class DBaseTest(unittest.TestCase):
         self._exitQGis()
     """
 
+    def makeTests(self, dbtype, work, variante, dbase):
 
-
-    def makeTests(self,dbtype,  work, variante, dbase):
-
-        exporterreport = ReportCore(dbase,
-                                    messageinstance=self.connector)
+        exporterreport = ReportCore(dbase, messageinstance=self.connector)
 
         conftotest = []
 
-        for filename in glob.glob(os.path.join(exporterreport.confdataplugin, '*.txt' )):
-            basename = os.path.basename(filename).split('.')[0]
-            if basename == 'README':
+        for filename in glob.glob(os.path.join(exporterreport.confdataplugin, "*.txt")):
+            basename = os.path.basename(filename).split(".")[0]
+            if basename == "README":
                 continue
             conftotest.append(basename)
-        
-        conftotest = ['Infralineaire_PT_PL']        #uncomment to test only one conf 
+
+        # conftotest = ['Infralineaire_PT_PL']        #uncomment to test only one conf
         for confname in conftotest:
-            logging.getLogger("Lamia_unittest").debug('********************** %s %s, %s - exporting conf : %s ...',dbtype, work, variante, confname)
-            destfile = os.path.join(self.reportdir, dbtype + '_' + work + '_' + variante + '_' + confname  + '.pdf')
-            exporterreport.runReport(destinationfile=destfile,
-                                    reportconffilename=confname,
-                                    pkzonegeos=[])
-
-
- 
+            logging.getLogger("Lamia_unittest").debug(
+                "********************** %s %s, %s - exporting conf : %s ...",
+                dbtype,
+                work,
+                variante,
+                confname,
+            )
+            destfile = os.path.join(
+                self.reportdir,
+                dbtype + "_" + work + "_" + variante + "_" + confname + ".pdf",
+            )
+            exporterreport.runReport(
+                destinationfile=destfile, reportconffilename=confname, pkzonegeos=[]
+            )
 
 
 def main():
     app = initQGis()
-    logging.basicConfig(format='%(asctime)s :: %(levelname)s :: %(module)s :: %(funcName)s :: %(message)s',
-                        datefmt="%H:%M:%S")
-    logging.getLogger( "Lamia_unittest" ).setLevel( logging.DEBUG )
+    logging.basicConfig(
+        format="%(asctime)s :: %(levelname)s :: %(module)s :: %(funcName)s :: %(message)s",
+        datefmt="%H:%M:%S",
+    )
+    logging.getLogger("Lamia_unittest").setLevel(logging.DEBUG)
     unittest.main()
     exitQGis()
+
 
 if __name__ == "__main__":
     main()
@@ -173,6 +201,4 @@ if __name__ == "__main__":
     logging.getLogger( "Lamia_unittest" ).setLevel( logging.DEBUG )
     unittest.main()
     """
-
-
 

@@ -77,9 +77,10 @@ class BaseUrbandrainageObservationTool(BaseObservationTool):
                         "conditioncontroller": self.toolwidgetmain.conditioncontroller,
                         #'evolution': self.toolwidgetmain.textEdit_evolution,
                         #'commentaires': self.toolwidgetmain.textEdit_comm,
-                        #'suite': self.toolwidgetmain.textEdit_suite,
+                        # "suite": self.toolwidgetmain.textEdit_suite,
                         "nextactiontype": self.toolwidgetmain.nextactiontype,
                         "nextactioncomment": self.toolwidgetmain.nextactioncomment,
+                        "nextactionsubtype": self.toolwidgetmain.nextactionsubtype,
                     },
                 },
                 "object": {

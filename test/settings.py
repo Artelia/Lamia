@@ -9,20 +9,20 @@ LOCALE = "fr"
 CRS = 2154
 # * DBase conf
 
-DBTYPE = [
-    "Base2_digue",
-    "Base2_assainissement",
-    "Base2_eaupotable",
-    "Base2_eclairagepublic",
-    "Base2_chantier",
-    "Base2_tramway",
-]
+# DBTYPE = [
+#     "Base2_digue",
+#     "Base2_assainissement",
+#     "Base2_eaupotable",
+#     "Base2_eclairagepublic",
+#     "Base2_chantier",
+#     "Base2_tramway",
+# ]
 DBTYPE = [
     "base3_urbandrainage",
-    "base3_waterdistribution",
-    "base3_constructionsite",
-    "base3_faunaflora",
-    "base3_levee",
+    # "base3_waterdistribution",
+    # "base3_constructionsite",
+    # "base3_faunaflora",
+    # "base3_levee",
 ]
 
 

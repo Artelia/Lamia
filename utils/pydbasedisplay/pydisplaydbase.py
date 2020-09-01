@@ -92,21 +92,23 @@ def launchIface():
     # SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue_base3\test01.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\cier\AEP Cieux.sqlite"
     # SLFILE = r"M:\FR\BOR\VT\FLUVIAL\4352789_33_BM_surveillance_digues_PI_Ambes\05_ETUDES\052_Calculs\Basedonnees\VTA_Ambes_ind2_PVR.sqlite"
-    SLFILE = r"C:\01_WORKINGDIR\perigord\CC_Bastides_Dordogne_Perigord_finale.sqlite"
+    # SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_constructionsite_Orange\test01.sqlite"
+    SLFILE = r"C:\01_WORKINGDIR\GPMB\c_merge_ass\mergeddbase.sqlite"
+    SLFILE = r"C:\01_WORKINGDIR\cons\cons.sqlite"
 
     print(TGREEN, f"Opening {os.path.abspath(SLFILE)}", ENDC)
 
-    # lamiawidget.loadDBase(dbtype="Spatialite", slfile=SLFILE)
-    lamiawidget.loadDBase(
-        dbtype="Postgis",
-        host="localhost",
-        # host="localhost",
-        port=5432,
-        dbname="lamiaunittest",
-        schema="importgpmb",
-        user="pvr",
-        password="pvr",
-    )
+    lamiawidget.loadDBase(dbtype="Spatialite", slfile=SLFILE)
+    # lamiawidget.loadDBase(
+    #     dbtype="Postgis",
+    #     host="localhost",
+    #     # host="localhost",
+    #     port=5432,
+    #     dbname="lamiaunittest",
+    #     schema="importgpmb",
+    #     user="pvr",
+    #     password="pvr",
+    # )
 
     lamiawidget.setVisualMode(visualmode=INTERFACEINDEX)
     lamiawidget.dbase.raiseexceptions = True  # False True

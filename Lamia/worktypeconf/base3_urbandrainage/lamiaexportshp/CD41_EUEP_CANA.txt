@@ -1,29 +1,29 @@
-###Infralineaire
+###edge
 #nom              type               cst               valeur                    
-ID_SAISIE;         Int;                  ;     id_infralineaire
-NOMRUE;         String;                  ;     Infralineaire_now.rue_libelle
+ID_SAISIE;         Int;                  ;     id_edge
+NOMRUE;         String;                  ;     edge_now.streetname
 CODEVOIE;         String;                  ;     NULL
 INSEE;         String;                  ;     NULL
-DOMAINE;         String;                  ;     Infralineaire_now.domaine
-IMPLANT;         String;                  ;     Infralineaire_now.implantation
-TYPE_RES;         String;                  ;     Infralineaire_now.typeReseau
-TYPE_ECOUL;         String;                  ;     Infralineaire_now.modeCirculation
-DIAMETRE;         Int;                  ;     Infralineaire_now.diametreNominal * 1000
+domain;         String;                  ;     edge_now.domain
+IMPLANT;         String;                  ;     edge_now.location
+TYPE_RES;         String;                  ;     edge_now.networktype
+TYPE_ECOUL;         String;                  ;     edge_now.flowtype
+DIAMETRE;         Int;                  ;     edge_now.nominaldiameter * 1000
 PREC_DIAM;         String;                  ;     NULL
 DIAM_INT;         Int;                  ;     0
 DIAM_EXT;         Int;                  ;     0
-MATERIAU;         String;                  ;     Infralineaire_now.materiau
+MATERIAU;         String;                  ;     edge_now.material
 ANNEE_POSE;         String;                  ;     NULL
 PERIOD_POS;         String;                  ;     NULL
-FONCTION;         String;                  ;     Infralineaire_now.fonctionCannAss
+FONCTION;         String;                  ;     edge_now.systemfunction
 
-Z_AMONT;        Double;                             ; CASE WHEN Infralineaire_now.profamont is NULL THEN (Noeud_amont.z - Noeud_amont.profradierouvrage) ELSE (Noeud_amont.z - Infralineaire_now.profamont) END 
-Z_AVAL;        Double;                             ; CASE WHEN Infralineaire_now.profaval is NULL THEN (Noeud_aval.z - Noeud_aval.profradierouvrage) ELSE (Noeud_aval.z - Infralineaire_now.profaval) END
+Z_AMONT;        Double;                             ; CASE WHEN edge_now.depthup is NULL THEN (upstream_node.z - upstream_node.depthinvert) ELSE (upstream_node.z - edge_now.depthup) END 
+Z_AVAL;        Double;                             ; CASE WHEN edge_now.depthdown is NULL THEN (downstream_node.z - downstream_node.depthinvert) ELSE (downstream_node.z - edge_now.depthdown) END
 
-PROF_AMONT;        Double;                             ; CASE WHEN Infralineaire_now.profamont is NULL THEN Noeud_amont.profradierouvrage ELSE Infralineaire_now.profamont END 
-PROF_AVAL;        Double;                             ; CASE WHEN Infralineaire_now.profaval is NULL THEN  Noeud_aval.profradierouvrage ELSE  Infralineaire_now.profaval END
+PROF_AMONT;        Double;                             ; CASE WHEN edge_now.depthup is NULL THEN upstream_node.depthinvert ELSE edge_now.depthup END 
+PROF_AVAL;        Double;                             ; CASE WHEN edge_now.depthdown is NULL THEN  downstream_node.depthinvert ELSE  edge_now.depthdown END
 
-PENTE;        Double;                             ;(( CASE WHEN Infralineaire_now.profamont is NULL THEN (Noeud_amont.z - Noeud_amont.profradierouvrage) ELSE (Noeud_amont.z - Infralineaire_now.profamont) END  ) - CASE WHEN Infralineaire_now.profaval is NULL THEN (Noeud_aval.z - Noeud_aval.profradierouvrage) ELSE (Noeud_aval.z - Infralineaire_now.profaval) END ) / ST_Length(Infralineaire_now.geom) * 100
+PENTE;        Double;                             ;(( CASE WHEN edge_now.depthup is NULL THEN (upstream_node.z - upstream_node.depthinvert) ELSE (upstream_node.z - edge_now.depthup) END  ) - CASE WHEN edge_now.depthdown is NULL THEN (downstream_node.z - downstream_node.depthinvert) ELSE (downstream_node.z - edge_now.depthdown) END ) / ST_Length(edge_now.geom) * 100
 
 
 VISITABLE;         String;                  ;     NULL
@@ -41,21 +41,21 @@ PROT_EXT;         String;                  ;     NULL
 DEPOT;         String;                  ;     NULL
 CORROSION;         String;                  ;     NULL
 
-NB_BRANCH;         Int;                  ; (SELECT COUNT(branchement.id_infralineaire) FROM Infralineaire_now as branchement WHERE branchement.lid_descriptionsystem_2 = Infralineaire_now.id_descriptionsystem AND branchement.branchement = 1)
+NB_BRANCH;         Int;                  ; (SELECT COUNT(lateralsql.id_edge) FROM edge_now as lateralsql WHERE lateralsql.lid_descriptionsystem_2 = edge_now.id_descriptionsystem AND lateralsql.laterals = 1)
 
 SECT_COLL;         String;                  ;     NULL
 SECTO;         String;                  ;     NULL
-DAT_GEOLOC;         String;                  ;     Infralineaire_now.datetimecreation
+DAT_GEOLOC;         String;                  ;     edge_now.datetimecreation
 AUT_ GEOLOC;         String;                  ;     'ARTELIA'
 MOD_GEOLOC;         String;                  ;     NULL
 CLASSE_PRE;         String;                  ;     NULL
 VAL_ATT;         String;                  ;     'ARTELIA'
-REMARQUES;         String;                  ;     Infralineaire_now.commentaire
+REMARQUES;         String;                  ;     edge_now.comment
 
 
 
 ###geom
-geom;         Int;               ;                  ST_AsText(Infralineaire_now.geom)
+geom;         Int;               ;                  ST_AsText(edge_now.geom)
 
 ###main
-FROM Infralineaire_now LEFT JOIN Noeud_now AS Noeud_amont ON Infralineaire_now.lid_descriptionsystem_1 = Noeud_amont.id_descriptionsystem LEFT JOIN Noeud_now AS Noeud_aval ON Infralineaire_now.lid_descriptionsystem_2 = Noeud_aval.id_descriptionsystem WHERE Infralineaire_now.branchement = 0
+FROM edge_now LEFT JOIN node_now AS upstream_node ON edge_now.lid_descriptionsystem_1 = upstream_node.id_descriptionsystem LEFT JOIN node_now AS downstream_node ON edge_now.lid_descriptionsystem_2 = downstream_node.id_descriptionsystem WHERE edge_now.laterals = 0

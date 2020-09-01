@@ -92,8 +92,17 @@ importid            ;Int                 ;                    ;edge_now.importid
 importtable         ;String              ;                    ;edge_now.importtable
 lid_actor_creator   ;Int                 ;                    ;edge_now.lid_actor_creator
 
+###Infralineaire1
+#nom              type               cst               valeur  
+z_up;        Double;                             ; CASE WHEN edge_now.depthup is NULL THEN (upstream_node.z - upstream_node.depthinvert) ELSE (upstream_node.z - edge_now.depthup) END 
+z_down;        Double;                             ; CASE WHEN edge_now.depthdown is NULL THEN (downstream_node.z - downstream_node.depthinvert) ELSE (downstream_node.z - edge_now.depthdown) END
+depth_up;        Double;                             ; CASE WHEN edge_now.depthup is NULL THEN upstream_node.depthinvert ELSE edge_now.depthup END 
+depth_down;        Double;                             ; CASE WHEN edge_now.depthdown is NULL THEN  downstream_node.depthinvert ELSE  edge_now.depthdown END
+slope;        Double;                             ;(( CASE WHEN edge_now.depthup is NULL THEN (upstream_node.z - upstream_node.depthinvert) ELSE (upstream_node.z - edge_now.depthup) END  ) - CASE WHEN edge_now.depthdown is NULL THEN (downstream_node.z - downstream_node.depthinvert) ELSE (downstream_node.z - edge_now.depthdown) END ) / ST_Length(edge_now.geom) * 100
+
+
 ###geom
 geom                ;String              ;                    ;ST_AsText(edge_now.geom)
 
 ###main
-FROM edge_now
+FROM edge_now LEFT JOIN node_now AS upstream_node ON edge_now.lid_descriptionsystem_1 = upstream_node.id_descriptionsystem LEFT JOIN node_now AS downstream_node ON edge_now.lid_descriptionsystem_2 = downstream_node.id_descriptionsystem

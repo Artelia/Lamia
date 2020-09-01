@@ -143,7 +143,7 @@ class FormToolUtils(QtCore.QObject):
                                     )
 
                             # multiple wdg for field management
-                            if isinstance(wdgs, list):
+                            if isinstance(wdgs, list) and len(wdgs) > 1:
                                 if isinstance(wdgs[0], QComboBox):
                                     for wdg in wdgs:
                                         wdg.currentIndexChanged.connect(
@@ -266,16 +266,14 @@ class FormToolUtils(QtCore.QObject):
         """
         senderwdg = self.sender()
 
-        # for tablename in self.linkuserwdg:
         for tablename in self.formtoolwidget.formtoolwidgetconfdict:
-            # for fieldname in self.linkuserwdg[tablename]['widgets'].keys():
             for fieldname in self.formtoolwidget.formtoolwidgetconfdict[tablename][
                 "widgets"
             ].keys():
-                # wdgs = self.linkuserwdg[tablename]['widgets'][fieldname]
                 wdgs = self.formtoolwidget.formtoolwidgetconfdict[tablename]["widgets"][
                     fieldname
                 ]
+
                 if isinstance(wdgs, list) and senderwdg in wdgs:
                     if isinstance(senderwdg, QComboBox):
                         for wdg in wdgs:
@@ -853,6 +851,11 @@ class FormToolUtils(QtCore.QObject):
         :param table:       the table of the value
         :param field:       the field of the value
         """
+
+        if isinstance(wdg, list):
+            for subwdg in wdg:
+                self.setValueInWidget(subwdg, valuetoset, table, field)
+            return
 
         if isinstance(wdg, QTextEdit) or isinstance(wdg, QLineEdit):
             if valuetoset is not None:

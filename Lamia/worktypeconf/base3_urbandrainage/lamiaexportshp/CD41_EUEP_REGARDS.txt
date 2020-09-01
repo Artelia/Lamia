@@ -1,41 +1,41 @@
-###Noeud
+###node
 #nom              type               cst               valeur                    
-ID_SAISIE;         Int;                  ;               id_noeud
-ADRESSE;         String;                  ;               Noeud_now.rue_libelle
+ID_SAISIE;         Int;                  ;               id_node
+ADRESSE;         String;                  ;               node_now.streetname
 INSEE;         String;                  ;     NULL
-DOMAINE;         String;                  ;     Noeud_now.domaine
-IMPLANT;         String;                  ;     Noeud_now.environnement
-TYPE_RES;         String;                  ;     Noeud_now.typeReseau
+domain;         String;                  ;     node_now.domain
+IMPLANT;         String;                  ;     node_now.location
+TYPE_RES;         String;                  ;     node_now.networktype
 NOM;         String;                  ;     NULL
-TYPE;         String;                  ;     Noeud_now.tampon_forme
+TYPE;         String;                  ;     node_now.manholecovershape
 TAMPON;         String;                  ;     NULL
-ACCESSIBIL;         String;                  ;     Noeud_now.accessibilite
-MATERIAU;         String;                  ;     Noeud_now.regard_materiau
+ACCESSIBIL;         String;                  ;     node_now.accessibility
+MATERIAU;         String;                  ;     node_now.manholematerial
 DIAM_INT;         Int;                  ;     NULL
-TYP_TAMPON;         String;                  ;     Noeud_now.tampon_type
+TYP_TAMPON;         String;                  ;     node_now.manholecovertype
 FABRICANT;         String;                  ;     NULL
-DIAMETRE;         Int;                  ;     Noeud_now.tampon_diam * 1000
+DIAMETRE;         Int;                  ;     node_now.manholecoverdiameter * 1000
 ENTREPRISE;         String;                  ;     NULL
 DATE_MES;         String;                  ;     NULL
 PERIOD_MES;         String;                  ;     NULL
-PROF_RAD;               Double;                               ;     Noeud_now.profradierouvrage
-COTE_RAD;               Double;                               ;     Noeud_now.Z - Noeud_now.profradierouvrage
-COTE_TN;               Double;                               ;     Noeud_now.Z
-ETAT;         String;                  ;     Observation_now.etatgeneral
+PROF_RAD;               Double;                               ;     node_now.depthinvert
+COTE_RAD;               Double;                               ;     node_now.Z - node_now.depthinvert
+COTE_TN;               Double;                               ;     node_now.Z
+ETAT;         String;                  ;     observation_now.conditionglobal
 M_OUVR;         String;                  ;     NULL
-DAT_GEOLOC;         String;                  ;     Noeud_now.datetimecreation
+DAT_GEOLOC;         String;                  ;     node_now.datetimecreation
 AUT_ GEOLOC;         String;                  ;     'ARTELIA'
 MOD_GEOLOC;         String;                  ;     '01'
 CLASSE_PRE;         String;                  ;     '01'
-REMARQUES;         String;                  ;     Noeud_now.commentaire
+REMARQUES;         String;                  ;     node_now.comment
 
 
 
 
 
 ###geom
-geom;         Int;               ;                  ST_AsText(Noeud_now.geom)
+geom;         Int;               ;                  ST_AsText(node_now.geom)
 
 
 ###main
-FROM Noeud_now INNER JOIN Desordre_now ON Desordre_now.lid_descriptionsystem = Noeud_now.id_descriptionsystem LEFT JOIN Observation_now ON Observation_now.lid_desordre = Desordre_now.id_desordre WHERE Noeud_now.typeOuvrageAss = '60'
+FROM node_now INNER JOIN deficiency_now ON deficiency_now.lid_descriptionsystem = node_now.id_descriptionsystem LEFT JOIN observation_now ON observation_now.lid_deficiency = deficiency_now.id_deficiency WHERE node_now.nodetype = '60'

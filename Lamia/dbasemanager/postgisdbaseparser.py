@@ -295,9 +295,7 @@ class PostGisDBaseParser(AbstractDBaseParser):
         self.commit()
         self.disconnect()
 
-    def checkIfPGShcemaExists(
-        self, host, dbname, schema, user, password
-    ):
+    def checkIfPGShcemaExists(self, host, dbname, schema, user, password):
         dbexists = False
         schemaexists = False
 
@@ -326,42 +324,6 @@ class PostGisDBaseParser(AbstractDBaseParser):
         return dbexists, schemaexists
 
     def query(self, sql, arguments=[], docommit=True):
-        with self.connPGis.cursor() as cursor:
-            try:
-                if self.printsql:
-                    logging.getLogger("Lamia_unittest").debug("%s", sql)
-                cursor.execute(sql)
-                # print(self.PGiscursor.statusmessage )
-                if cursor.statusmessage.split(" ")[0] not in [
-                    "INSERT",
-                    "UPDATE",
-                    "SET",
-                    "CREATE",
-                    "ALTER",
-                    "DROP",
-                    "BEGIN",
-                    "COMMIT",
-                ]:
-                    rows = list(cursor.fetchall())
-                else:
-                    rows = None
-                if docommit and self.forcenocommit == False:
-                    self.commit()
-                return rows
-
-            except psycopg2.ProgrammingError as e:
-                print("error query : ", sql, "\n", e, cursor.statusmessage)
-                if self.raiseexceptions:
-                    raise TypeError
-                return None
-            except (psycopg2.DataError, psycopg2.InternalError) as e:
-                print("error query : ", sql, "\n", e)
-                if self.raiseexceptions:
-                    raise TypeError
-                return None
-    
-
-    def query_old(self, sql, arguments=[], docommit=True):
         if self.PGiscursor is None:
             self.PGiscursor = self.connPGis.cursor()
         try:

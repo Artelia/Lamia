@@ -109,7 +109,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidgetspec">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -132,9 +132,9 @@
         <number>3</number>
        </property>
        <item>
-        <widget class="QStackedWidget" name="stackedWidget">
+        <widget class="QStackedWidget" name="stackedWidget_node">
          <property name="currentIndex">
-          <number>4</number>
+          <number>2</number>
          </property>
          <widget class="QWidget" name="page_3">
           <layout class="QGridLayout" name="gridLayout_2">
@@ -616,7 +616,7 @@
            <number>3</number>
           </property>
           <item row="0" column="1">
-           <widget class="QDoubleSpinBox" name="X">
+           <widget class="QDoubleSpinBox" name="x">
             <property name="minimum">
              <double>-99.000000000000000</double>
             </property>
@@ -646,7 +646,7 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QDoubleSpinBox" name="dX">
+           <widget class="QDoubleSpinBox" name="dx">
             <property name="minimum">
              <double>-1.000000000000000</double>
             </property>
@@ -656,7 +656,7 @@
            </widget>
           </item>
           <item row="1" column="3">
-           <widget class="QDoubleSpinBox" name="dY">
+           <widget class="QDoubleSpinBox" name="dy">
             <property name="minimum">
              <double>-1.000000000000000</double>
             </property>
@@ -696,7 +696,7 @@
            </widget>
           </item>
           <item row="0" column="3">
-           <widget class="QDoubleSpinBox" name="Y">
+           <widget class="QDoubleSpinBox" name="y">
             <property name="minimum">
              <double>-99.000000000000000</double>
             </property>
@@ -706,7 +706,7 @@
            </widget>
           </item>
           <item row="0" column="5">
-           <widget class="QDoubleSpinBox" name="Z">
+           <widget class="QDoubleSpinBox" name="z">
             <property name="minimum">
              <double>-99.000000000000000</double>
             </property>
@@ -726,7 +726,7 @@
            </widget>
           </item>
           <item row="1" column="5">
-           <widget class="QDoubleSpinBox" name="dZ">
+           <widget class="QDoubleSpinBox" name="dz">
             <property name="minimum">
              <double>-1.000000000000000</double>
             </property>

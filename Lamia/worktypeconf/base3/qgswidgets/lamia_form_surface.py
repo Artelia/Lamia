@@ -51,7 +51,7 @@ class BaseSurfaceTool(AbstractLamiaFormTool):
     tooltreewidgetCAT = QtCore.QCoreApplication.translate("base3", "Facilities")
     tooltreewidgetSUBCAT = QtCore.QCoreApplication.translate("base3", "Surface")
     tooltreewidgetICONPATH = os.path.join(
-        os.path.dirname(__file__), "lamiabase_delivery_tool_icon.png"
+        os.path.dirname(__file__), "lamia_form_surface_icon.svg"
     )
 
     PARENTJOIN = {
