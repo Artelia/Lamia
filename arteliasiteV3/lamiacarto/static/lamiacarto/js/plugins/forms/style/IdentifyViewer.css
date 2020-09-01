@@ -1,0 +1,206 @@
+div.identify-body {
+    background-color: @container_bg@;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+div.identify-body div.identify-results-container {
+    overflow-y: auto;
+    flex: 1 1 50%;
+    min-height: 0;
+    background-color: white;
+    border: 1px solid @item_border@;
+    padding: 0.25em;
+    margin-bottom: 0.25em;
+    font-size: small;
+}
+
+div.identify-layer-expandable {
+    position: relative;
+    margin-left: 1em;
+}
+
+div.identify-layer-expandable > div.identify-layer-entries {
+    display: none;
+}
+
+div.identify-layer-expanded > div.identify-layer-entries {
+    display: block;
+}
+
+div.identify-layer-expandable:before {
+    content: "";
+    border-color: transparent @base_fg@;
+    border-width: 0.35em 0 0.35em 0.45em;
+    border-style: solid;
+    display: block;
+    height: 0;
+    width: 0;
+    left: -1em;
+    top: 0.3em;
+    position: absolute;
+}
+
+div.identify-layer-expanded:before {
+    border-color: @base_fg@ transparent;
+    border-width: 0.45em 0.35em 0 0.35em;
+    top: 0.4em;
+}
+
+div.identify-layer-entries {
+    padding: 0.25em 0.25em 0.25em 1em;
+}
+
+div.identify-result-entry {
+    display: flex;
+}
+
+div.identify-result-entry span.clickable {
+    cursor: pointer;
+}
+
+div.identify-result-entry span.active {
+    font-weight: bold;
+}
+
+div.identify-result-entry > span:first-child {
+    flex: 1 1 auto;
+}
+
+div.identify-result-entry span.identify-remove-result,
+div.identify-result-entry span.identify-export-result {
+    margin: 0 0.25em;
+    color: @item_border@;
+    cursor: pointer;
+    visibility: hidden;
+    font-size: large;
+    flex: 0 0 auto;
+}
+
+div.identify-result-entry:hover > span.identify-remove-result,
+div.identify-result-entry:hover > span.identify-export-result {
+    visibility: visible;
+}
+
+div.identify-body div.identify-flat-results-list {
+    overflow: auto;
+    flex: 1 1 auto;
+}
+
+div.identify-body .identify-result-tree-frame {
+    flex: 1 1 50%;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid @item_border@;
+}
+
+div.identify-body .identify-result-frame-normal {
+    margin-top: 0.25em;
+    border: 1px solid @item_border@;
+}
+
+div.identify-body .identify-result-frame-highlighted {
+    margin-top: 0.25em;
+    border: 1px solid @item_active@;
+}
+
+div.identify-body .identify-result-title {
+    background-color: #ddd;
+    padding: 0.25em;
+    font-weight: bold;
+    flex: 0 0 auto;
+    font-size: small;
+    display: flex;
+}
+
+div.identify-body .identify-result-title > span:first-child {
+    flex: 1 1 auto;
+}
+
+div.identify-body .identify-result-title > span.icon {
+    flex: 0 0 auto;
+    padding-left: 0.25em;
+}
+
+div.identify-body .identify-result-title > span.icon:hover {
+    color: @item_active@;
+}
+
+div.identify-result-container {
+    padding: 0.25em;
+}
+
+div.identify-body .identify-result-tree-frame > div.identify-result-container {
+    overflow-y: auto;
+}
+
+div.identify-body .identify-result-box {
+    border: 0;
+    background-color: white;
+    font-size: small;
+    width: 100%;
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+    overflow: auto;
+}
+
+div.identify-body table.attribute-list {
+    width: 100%;
+    table-layout: fixed;
+}
+
+div.identify-body table.attribute-list tr:nth-child(even) {
+    background-color: #F0F0F0;
+}
+
+div.identify-body table.attribute-list td {
+    overflow: hidden;
+    vertical-align: top;
+    text-overflow: ellipsis;
+}
+
+div.identify-body table.attribute-list td:first-child {
+    padding-left: 0.25em;
+}
+
+div.identify-body table.attribute-list td:last-child {
+    padding-right: 0.25em;
+}
+
+div.identify-body table.attribute-list td.ellipsis {
+    white-space: nowrap;
+}
+
+div.identify-body td.identify-attr-title {
+    min-width: 10ch;
+    width: 40%;
+    padding-right: 1em;
+}
+
+div.identify-body td.identify-attr-value {
+    max-width: 0;
+    width: 60%;
+}
+
+div.identify-body div.identify-buttonbox {
+    margin-top: 0.5em;
+    text-align: right;
+    flex: 0 0 auto;
+}
+
+div.identify-body div.identify-result-feature-report-frame {
+    padding: 0.25em 0.5em;
+    font-size: small;
+    display: flex;
+    align-items: center;
+}
+
+div.identify-body div.identify-result-feature-report-frame > div.spinner {
+    width: 1em;
+    height: 1em;
+    margin-left: 0.5em;
+}

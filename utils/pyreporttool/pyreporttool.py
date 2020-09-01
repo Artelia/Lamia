@@ -26,6 +26,7 @@ def main(argv):
 
     SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue\test01.sqlite"
     SLFILE = r"M:\FR\BOR\VT\FLUVIAL\4352789_33_BM_surveillance_digues_PI_Ambes\05_ETUDES\052_Calculs\Basedonnees\VTA_Ambes_ind2_PVR.sqlite"
+    SLFILE = r"C:\01_WORKINGDIR\orange\toto.sqlite"
 
     tempparser = DBaseParserFactory("spatialite").getDbaseParser()
     tempparser.loadDBase(dbtype="Spatialite", slfile=SLFILE)
@@ -45,7 +46,10 @@ def main(argv):
 
     # Infralineaire Equipementhydraulique Desordres
     reportcore.runReport(
-        r"C:\000_testdigue\des.pdf", "Desordres", pkzonegeos=[1, 2], pklist=None,
+        r"C:\000_testdigue\des.pdf",
+        "ORANGEnonconformitephaseA",
+        pkzonegeos=[],
+        pklist=None,
     )
     # except Exception as e:
     #     print(e)

@@ -1,0 +1,22 @@
+wfs3 :
+
+https://docs.qgis.org/3.10/fr/docs/user_manual/working_with_ogc/server/services.html#wfs3-ogc-api-features
+https://pblottiere.github.io/2019/09/18/wfs3/
+
+pg_service.conf
+https://georezo.net/forum/viewtopic.php?id=113298
+declarer PGSERVICEFILE=c:\PGSERVICEFILE\pg_service.conf
+
+enable wfs3 features
+in qgsproject file, with global project settings/qgsserver, enable wfs for layers
+create a pg_service.conf and make a link to it with PGSERVICEFILE=c:\PGSERVICEFILE\pg_service.conf (both for working and for docker)
+access API :
+    http://localhost:8380/wfs3/collections
+    http://localhost:8380/qgisserver/wfs3/collections/Infralineaire_qgis/items/1.json
+    http://localhost:8380/qgisserver/wfs3/collections/edge_qgis/items/1.json?MAP=/etc/qgisserver/projectgpmb.qgs
+    http://localhost:8380/qgisserver/wfs3/collections?
+    http://localhost:8380/qgisserver/wfs3/collections?MAP=/etc/qgisserver/projectgpmb.qgs
+
+
+openlayers nearest
+https://gis.stackexchange.com/questions/61479/how-to-get-a-feature-that-lies-closest-to-a-point-in-openlayers

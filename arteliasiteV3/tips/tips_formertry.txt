@@ -1,0 +1,40 @@
+QGIS server
+___________
+local : 192.168.1.17
+
+https://docs.qgis.org/3.10/en/docs/user_manual/working_with_ogc/server/config.html
+
+https://hub.docker.com/r/camptocamp/qgis-server/tags
+
+docker pull camptocamp/qgis-server:3.10
+
+C:\111_GitProjects\testreact\qgisproject
+
+******************************
+install docker image :
+
+docker run -d -p 8380:80 -e DISPLAY=192.168.1.17:0.0 -e QGIS_SERVER_IGNORE_BAD_LAYERS='true' -e QUERY_STRING="MAP=/etc/qgisserver/project.qgs&SERVICE=WMS&REQUEST=GetCapabilities" --name ggisserver --mount source=C:\111_GitProjects\testreact\qgisproject,target=/etc/qgisserver,type=bind,consistency=delegated camptocamp/qgis-server:3.10
+
+important : mount your project on /etc/qgisserver
+            mount a service on /etc/qgisserver and declare docker variable
+pg_service.conf exemple :
+[qgisservertest]
+host=docker.for.win.localhost
+port=xx
+user=xxx
+password=xxx
+dbname=xxx
+
+open qgis in docker (>qgis) and load layers with host : docker.for.win.localhost
+in qgis project, layers must be loaded as postgis layer, using the configured service (here qgisservertest)
+******************************
+
+http://localhost:8380/?SERVICE=WMS&REQUEST=GetCapabilities
+
+Openlayers
+
+https://go.yuri.at/bringing-a-map-online-with-qgis-server-and-openlayers/
+
+https://gis.stackexchange.com/questions/49180/how-do-i-show-my-wms-layer-using-qgis-server-and-openlayers
+
+https://www.geomatick.com/2017/01/14/afficher-des-flux-wmts-et-wfs-avec-openlayers-depuis-geoserver/

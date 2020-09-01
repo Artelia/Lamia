@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
 from django.views.generic import View, TemplateView
 from django.contrib.auth import authenticate, login, logout
+
 from .serializers import PostSerializer
 
 from .models import User, Project

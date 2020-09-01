@@ -37,7 +37,7 @@ module.exports = {
   devtool: isProd ? 'source-map' : 'eval',
   mode: nodeEnv === "production" ? "production" : "development",
   entry: {
-    'webpack-dev-server': 'webpack-dev-server/client?http://0.0.0.0:3232',
+    'webpack-dev-server': 'webpack-dev-server/client?http://0.0.0.0:3233',
     'webpack': 'webpack/hot/only-dev-server',
     'QWC2App': path.join(__dirname, "lamiacarto", "static", "lamiacarto", "js", "app")
   },

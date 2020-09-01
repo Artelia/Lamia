@@ -13,9 +13,10 @@ frontend/
 arteliasite/node_modules
 
 
-arteliasiteV2/node_modules
-arteliasiteV2/qwc2
-
+arteliasitev2/node_modules
+arteliasitev2/qwc2
+arteliasitev3/node_modules
+arteliasitev2test/
 
 .vscode/
 **/*backup*

@@ -27,8 +27,6 @@ This file is part of LAMIA.
  """
 
 import os, sys, shutil, datetime
-from django.db import connection
-import django
 
 from .postgisdbaseparser import *
 

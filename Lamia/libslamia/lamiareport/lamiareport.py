@@ -43,7 +43,7 @@ class ReportCore:
     if qgis.utils.iface is None:
         LAUNCHINQTHREAD = False
     else:
-        LAUNCHINQTHREAD = True
+        LAUNCHINQTHREAD = False
 
     def __init__(self, dbaseparser, messageinstance=None):
         # super(ExportShapefileTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil, parentwidget, parent=parent)
@@ -1171,7 +1171,8 @@ class printPDFBaseWorker(QtCore.QObject):
                 composeritem, qgis._core.QgsLayoutFrame
             ):
                 composeritem.multiFrame().setHtml(txt)
-                composeritem.multiFrame().loadHtml()
+                # composeritem.multiFrame().loadHtml()
+                composeritem.multiFrame().refresh()
 
     def createComposition(self, mapsettings):
         """

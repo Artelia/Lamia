@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "artelialogin",
     "lamiacarto",
     "webpack_loader",
     "rest_framework",
@@ -124,7 +125,7 @@ AUTH_PASSWORD_VALIDATORS = [
     # {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
 ]
 
-AUTH_USER_MODEL = "lamiacarto.User"
+AUTH_USER_MODEL = "artelialogin.User"
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
