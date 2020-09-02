@@ -1,9 +1,8 @@
 {
-  "locale": "cs-CZ",
+  "locale": "de-CH",
   "messages": {
     "appmenu": {
       "items": {
-        "ExternalLink": "",
         "DxfExport": "",
         "Help": "",
         "LayerTree": "",
@@ -17,20 +16,10 @@
         "Redlining": "",
         "Editing": "",
         "Login": "",
-        "Logout": ""
+        "Logout": "",
+        "ExternalLink": ""
       },
       "menulabel": ""
-    },
-    "search": {
-      "coordinates": "",
-      "more": "",
-      "search": "",
-      "searchall": "",
-      "all": "",
-      "themes": "",
-      "invisiblelayer": "",
-      "enablelayer": "",
-      "existinglayer": ""
     },
     "bgswitcher": {
       "nobg": ""
@@ -50,6 +39,8 @@
       "symbologyscale": ""
     },
     "editing": {
+      "maximize": "Maximieren",
+      "minimize": "Minimieren",
       "canceldelete": "",
       "commit": "",
       "delete": "",
@@ -186,6 +177,17 @@
       "size": "",
       "text": "",
       "width": ""
+    },
+    "search": {
+      "more": "",
+      "search": "",
+      "searchall": "",
+      "all": "",
+      "themes": "",
+      "invisiblelayer": "",
+      "enablelayer": "",
+      "existinglayer": "",
+      "coordinates": ""
     },
     "searchbox": {
       "coordinates": "",

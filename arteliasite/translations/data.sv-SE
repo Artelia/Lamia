@@ -3,7 +3,6 @@
   "messages": {
     "appmenu": {
       "items": {
-        "ExternalLink": "",
         "DxfExport": "DXF Export",
         "Help": "Hjälp",
         "LayerTree": "Lager & teckenförklaring",
@@ -17,20 +16,10 @@
         "Redlining": "Rita",
         "Editing": "Redigera",
         "Login": "Logga in",
-        "Logout": "Logga ut"
+        "Logout": "Logga ut",
+        "ExternalLink": ""
       },
       "menulabel": "Karta & Verktyg"
-    },
-    "search": {
-      "coordinates": "Koordinater",
-      "more": "Mer",
-      "search": "",
-      "searchall": "",
-      "all": "",
-      "themes": "",
-      "invisiblelayer": "",
-      "enablelayer": "",
-      "existinglayer": ""
     },
     "bgswitcher": {
       "nobg": "Ingen bakgrund"
@@ -50,6 +39,8 @@
       "symbologyscale": "Symbolskala:"
     },
     "editing": {
+      "maximize": "Maximera",
+      "minimize": "Minimera",
       "canceldelete": "Radera inte",
       "commit": "Skicka",
       "delete": "Radera",
@@ -186,6 +177,17 @@
       "size": "Storlek",
       "text": "Text",
       "width": "Bredd"
+    },
+    "search": {
+      "more": "Mer",
+      "search": "",
+      "searchall": "",
+      "all": "",
+      "themes": "",
+      "invisiblelayer": "",
+      "enablelayer": "",
+      "existinglayer": "",
+      "coordinates": "Koordinater"
     },
     "searchbox": {
       "coordinates": "",

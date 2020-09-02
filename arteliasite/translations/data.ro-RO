@@ -3,7 +3,6 @@
   "messages": {
     "appmenu": {
       "items": {
-        "ExternalLink": "Link extern",
         "DxfExport": "Export DXF",
         "Help": "Ajutor",
         "LayerTree": "Straturi & Legendă",
@@ -17,20 +16,10 @@
         "Redlining": "Evidențiere",
         "Editing": "Editare",
         "Login": "Conectează-te",
-        "Logout": "Deconectează-te"
+        "Logout": "Deconectează-te",
+        "ExternalLink": "Link extern"
       },
       "menulabel": "Hărți & Unelte"
-    },
-    "search": {
-      "coordinates": "Coordonate",
-      "more": "Mai multe...",
-      "search": "Caută",
-      "searchall": "Caută în toate",
-      "all": "Toate",
-      "themes": "Hărți tematice",
-      "invisiblelayer": "Rezultatul este într-un strat invizibil",
-      "enablelayer": "Activare strat",
-      "existinglayer": "Strat existent"
     },
     "bgswitcher": {
       "nobg": "Fără fundal"
@@ -50,6 +39,8 @@
       "symbologyscale": "Scara simboluri:"
     },
     "editing": {
+      "maximize": "Maximizează",
+      "minimize": "Minimizează",
       "canceldelete": "Elimină modificările",
       "commit": "Salvează",
       "delete": "Șterge",
@@ -186,6 +177,17 @@
       "size": "Mărime",
       "text": "Text",
       "width": "Lățime"
+    },
+    "search": {
+      "more": "Mai multe...",
+      "search": "Caută",
+      "searchall": "Caută în toate",
+      "all": "Toate",
+      "themes": "Hărți tematice",
+      "invisiblelayer": "Rezultatul este într-un strat invizibil",
+      "enablelayer": "Activare strat",
+      "existinglayer": "Strat existent",
+      "coordinates": "Coordonate"
     },
     "searchbox": {
       "coordinates": "Coordonate",

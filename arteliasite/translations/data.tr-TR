@@ -3,7 +3,6 @@
   "messages": {
     "appmenu": {
       "items": {
-        "ExternalLink": "",
         "DxfExport": "DXF'e Veri Aktar",
         "Help": "Yardım",
         "LayerTree": "Katmanlar & Gösterim",
@@ -17,20 +16,10 @@
         "Redlining": "Çizim",
         "Editing": "Düzenleme",
         "Login": "Giriş",
-        "Logout": "Çıkış"
+        "Logout": "Çıkış",
+        "ExternalLink": ""
       },
       "menulabel": "Harita & Araçlar"
-    },
-    "search": {
-      "coordinates": "",
-      "more": "Daha fazla...",
-      "search": "Ara",
-      "searchall": "Bir yer ara ya da harita ekle...",
-      "all": "Tümü",
-      "themes": "Temalar",
-      "invisiblelayer": "Sonuç, görünmeyen bir katmanda bulunuyor.",
-      "enablelayer": "Geçerli katman",
-      "existinglayer": "Katman zaten haritada mevcut"
     },
     "bgswitcher": {
       "nobg": "Arkaplan Yok"
@@ -50,6 +39,8 @@
       "symbologyscale": "Sembol Ölçeği:"
     },
     "editing": {
+      "maximize": "Büyült",
+      "minimize": "Küçült",
       "canceldelete": "Silme",
       "commit": "Onayla",
       "delete": "Sil",
@@ -186,6 +177,17 @@
       "size": "Boyut",
       "text": "Metin",
       "width": "Genişlik"
+    },
+    "search": {
+      "more": "Daha fazla...",
+      "search": "Ara",
+      "searchall": "Bir yer ara ya da harita ekle...",
+      "all": "Tümü",
+      "themes": "Temalar",
+      "invisiblelayer": "Sonuç, görünmeyen bir katmanda bulunuyor.",
+      "enablelayer": "Geçerli katman",
+      "existinglayer": "Katman zaten haritada mevcut",
+      "coordinates": ""
     },
     "searchbox": {
       "coordinates": "Koordinatlar",

@@ -3,7 +3,6 @@
   "messages": {
     "appmenu": {
       "items": {
-        "ExternalLink": "",
         "DxfExport": "Exportar DXF",
         "Help": "Ayuda",
         "LayerTree": "Capas & Leyenda",
@@ -17,20 +16,10 @@
         "Redlining": "Línea de demarcación",
         "Editing": "Editando",
         "Login": "Inicio de sesión",
-        "Logout": "Cierre de sesión"
+        "Logout": "Cierre de sesión",
+        "ExternalLink": ""
       },
       "menulabel": "Mapa & Herramientas"
-    },
-    "search": {
-      "coordinates": "",
-      "more": "Más...",
-      "search": "Buscar",
-      "searchall": "Buscar lugares o agregar mapas...",
-      "all": "Todo",
-      "themes": "Temas",
-      "invisiblelayer": "",
-      "enablelayer": "",
-      "existinglayer": ""
     },
     "bgswitcher": {
       "nobg": "Sin fondo"
@@ -50,6 +39,8 @@
       "symbologyscale": "Escala de la simbología:"
     },
     "editing": {
+      "maximize": "Maximizar",
+      "minimize": "Minimizar",
       "canceldelete": "No borrar",
       "commit": "Confirmar",
       "delete": "Borrar",
@@ -186,6 +177,17 @@
       "size": "Tamaño",
       "text": "Texto",
       "width": "Ancho"
+    },
+    "search": {
+      "more": "Más...",
+      "search": "Buscar",
+      "searchall": "Buscar lugares o agregar mapas...",
+      "all": "Todo",
+      "themes": "Temas",
+      "invisiblelayer": "",
+      "enablelayer": "",
+      "existinglayer": "",
+      "coordinates": ""
     },
     "searchbox": {
       "coordinates": "",

@@ -3,7 +3,6 @@
   "messages": {
     "appmenu": {
       "items": {
-        "ExternalLink": "Collegamento esterno",
         "DxfExport": "Esporta su DXF",
         "Help": "Aiuto",
         "LayerTree": "Livelli",
@@ -17,20 +16,10 @@
         "Redlining": "Strumenti di disegno",
         "Editing": "Strumenti di modifica",
         "Login": "Accedi",
-        "Logout": "Disconnetti"
+        "Logout": "Disconnetti",
+        "ExternalLink": "Collegamento esterno"
       },
       "menulabel": "Mappa e strumenti"
-    },
-    "search": {
-      "coordinates": "Coordinate",
-      "more": "Altri risultati",
-      "search": "Cerca",
-      "searchall": "Cerca località o aggiungi cartine...",
-      "all": "Tutti",
-      "themes": "Temi",
-      "invisiblelayer": "Il risultato si trova su un livello che non è visibile.",
-      "enablelayer": "Attivare il livello",
-      "existinglayer": "Il livello esiste già nella mappa"
     },
     "bgswitcher": {
       "nobg": "Nessuno sfondo"
@@ -50,6 +39,8 @@
       "symbologyscale": "Scala per la simbologia"
     },
     "editing": {
+      "maximize": "Massimizza",
+      "minimize": "Minimizza",
       "canceldelete": "Annulla",
       "commit": "Salva",
       "delete": "Elimina",
@@ -186,6 +177,17 @@
       "size": "Dimensione",
       "text": "Testo",
       "width": "Larghezza"
+    },
+    "search": {
+      "more": "Altri risultati",
+      "search": "Cerca",
+      "searchall": "Cerca località o aggiungi cartine...",
+      "all": "Tutti",
+      "themes": "Temi",
+      "invisiblelayer": "Il risultato si trova su un livello che non è visibile.",
+      "enablelayer": "Attivare il livello",
+      "existinglayer": "Il livello esiste già nella mappa",
+      "coordinates": "Coordinate"
     },
     "searchbox": {
       "coordinates": "Coordinate",

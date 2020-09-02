@@ -53,22 +53,27 @@ class APIFactory:
             dbasetables = lamiaparser.dbasetables
             return dbasetables
 
-        elif tablename == "themes":
+        elif tablename == "themes.json":
             conffile = os.path.join(
                 os.path.dirname(os.path.realpath(__file__)),
-                "lamiacarto",
                 "static",
                 "qwc2config",
                 "themesConfig_lamia.json",
             )
-            datab = json.dumps(themesConfig.genThemes(conffile))
-            return Response(dbasetables)
+            datab = themesConfig.genThemes(conffile)
+            return datab
 
         elif tablename.split("/")[0] == "translations":
-            return {}
+            translationfile = os.path.join(settings.BASE_DIR, tablename)
+            print(translationfile)
+            with open(translationfile) as f:
+                data = json.load(f)
+            return data
 
         elif tablename == "config.json":
-            configpath = fn = os.path.join(os.path.dirname(__file__), 'static','qwc2config','config.json')
+            configpath = fn = os.path.join(
+                os.path.dirname(__file__), "static", "qwc2config", "config.json"
+            )
             with open(configpath) as f:
                 data = json.load(f)
             return data
@@ -150,6 +155,10 @@ class LamiaProjectView(BaseView):
 
         url1 = kwargs.get("conffile", "")
         if url1 == "config.json":
+            return redirect(
+                "lamiaapi", project_id=request.session["idproject"], tablename=url1
+            )
+        elif url1 == "themes.json":
             return redirect(
                 "lamiaapi", project_id=request.session["idproject"], tablename=url1
             )

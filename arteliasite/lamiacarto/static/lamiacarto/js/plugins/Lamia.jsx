@@ -2,26 +2,8 @@
 const React = require('react');
 const { connect } = require('react-redux');
 const { SideBar } = require('qwc2/components/SideBar');
-const { setCurrentTask } = require('qwc2/actions/task');
-// import ToolTreeWidgetReact from './tooltreewidget'
-// const ToolTreeWidgetReact = require('./tooltreewidget')
-
-// import VectorLayer from 'ol/layer/Vector';
-// const VectorLayer = require('ol/layer/Vector')
-
-// import VectorSource from 'ol/source/Vector'
-// const { VectorSource } = require('ol/source/Vector')
-// import { GeoJSON } from 'ol/format';
-// const { GeoJSON } = require('ol/format')
-
-// const ol = require('ol');
-const VectorLayerUtils = require('qwc2/utils/VectorLayerUtils');
-const ol = require('openlayers');
-const { Map, Layer } = require('qwc2/plugins/map/MapComponents');
-
 const { addLayer, addLayerFeatures } = require('qwc2/actions/layers')
-
-const MapUtils = require('qwc2/utils/MapUtils');
+const { changeSelectionState } = require('qwc2/actions/selection');
 
 const axios = require('axios');
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
@@ -33,7 +15,7 @@ const MediaEditingFormReact = require('./forms/base3_urbandrainage/mediawidget')
 const ReportEditingFormReact = require('./forms/base3_urbandrainage/reportwidget')
 const IdChooser = require('./idchooser')
 
-const { changeSelectionState } = require('qwc2/actions/selection');
+require('./qwc2/style/SideBar.css');
 
 
 class Lamia extends React.Component {

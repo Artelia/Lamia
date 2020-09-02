@@ -3,7 +3,6 @@
   "messages": {
     "appmenu": {
       "items": {
-        "ExternalLink": "External Link",
         "DxfExport": "DXF Export",
         "Help": "Help",
         "LayerTree": "Layers & Legend",
@@ -17,20 +16,10 @@
         "Redlining": "Redlining",
         "Editing": "Editing",
         "Login": "Login",
-        "Logout": "Logout"
+        "Logout": "Logout",
+        "ExternalLink": "External Link"
       },
       "menulabel": "Map & Tools"
-    },
-    "search": {
-      "coordinates": "Coordinates",
-      "more": "More...",
-      "search": "Search",
-      "searchall": "Search places or add maps...",
-      "all": "All",
-      "themes": "Themes",
-      "invisiblelayer": "The result lies on a layer which is not visible.",
-      "enablelayer": "Enable layer",
-      "existinglayer": "The layer already exists in the map"
     },
     "bgswitcher": {
       "nobg": "No background"
@@ -50,6 +39,8 @@
       "symbologyscale": "Symbology scale:"
     },
     "editing": {
+      "maximize": "Maximize",
+      "minimize": "Minimize",
       "canceldelete": "Don't delete",
       "commit": "Commit",
       "delete": "Delete",
@@ -186,6 +177,17 @@
       "size": "Size",
       "text": "Text",
       "width": "Width"
+    },
+    "search": {
+      "more": "More...",
+      "search": "Search",
+      "searchall": "Search places or add maps...",
+      "all": "All",
+      "themes": "Themes",
+      "invisiblelayer": "The result lies on a layer which is not visible.",
+      "enablelayer": "Enable layer",
+      "existinglayer": "The layer already exists in the map",
+      "coordinates": "Coordinates"
     },
     "searchbox": {
       "coordinates": "Coordinates",
