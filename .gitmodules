@@ -1,0 +1,3 @@
+[submodule "qwc2"]
+	path = qwc2
+	url = https://github.com/Artelia/qwc2.git
