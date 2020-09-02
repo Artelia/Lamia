@@ -14,13 +14,13 @@ urlpatterns = [
         name="lamiaproject",
     ),
     path(
-        "lamiaproject/<str:conffile>",
+        "lamiaproject/<path:conffile>",
         views.LamiaProjectView.as_view(),
         name="lamiaproject",
     ),
     path("lamiaapi/<int:project_id>", views.LamiaApiView.as_view(), name="lamiaapi",),
     path(
-        "lamiaapi/<int:project_id>/<str:tablename>",
+        "lamiaapi/<int:project_id>/<path:tablename>",
         views.LamiaApiView.as_view(),
         name="lamiaapi",
     ),

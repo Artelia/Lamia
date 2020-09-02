@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 import json, os, sys
+from django.conf import settings
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
-import arteliasitev3.qwc2.scripts.themesConfig as themesConfig
+sys.path.append(settings.BASE_DIR)
+import qwc2.scripts.themesConfig as themesConfig
 
 from rest_framework import views
 from rest_framework.response import Response
@@ -27,12 +28,12 @@ import threading
 # * ************************** API ***********************************
 
 
-class APIFactory_:
+class APIFactory:
 
     renderer_classes = [JSONRenderer]
 
     def getresult(request, **kwargs):
-        print("APIFactory", kwargs)
+        # print("APIFactory", kwargs)
 
         projectid = kwargs.get("project_id")
         tablename = kwargs.get("tablename", None)
@@ -63,10 +64,19 @@ class APIFactory_:
             datab = json.dumps(themesConfig.genThemes(conffile))
             return Response(dbasetables)
 
+        elif tablename.split("/")[0] == "translations":
+            return {}
+
+        elif tablename == "config.json":
+            configpath = fn = os.path.join(os.path.dirname(__file__), 'static','qwc2config','config.json')
+            with open(configpath) as f:
+                data = json.load(f)
+            return data
+
 
 class LamiaApiView(views.APIView):
     def get(self, request, **kwargs):
-        print("kwargs", kwargs)
+        # print("kwargs", kwargs)
         jsonresult = APIFactory.getresult(request, **kwargs)
         # yourdata = [{"likes": 10, "comments": 0}, {"likes": 4, "comments": 23}]
         # results = PostSerializer(yourdata, many=True).data
@@ -134,12 +144,19 @@ class LamiaProjectView(BaseView):
     mytemplate = "lamiacarto/index.html"
 
     def get(self, request, **kwargs):
-        logging.getLogger().debug("LamiaProjectView")
+        # logging.getLogger().debug("LamiaProjectView")
 
-        print("*", kwargs)
+        # print("*", kwargs)
 
-        if kwargs.get("conffile", None) == "config.json":
-            return redirect("lamiaapi", project_id=request.session["idproject"])
+        url1 = kwargs.get("conffile", "")
+        if url1 == "config.json":
+            return redirect(
+                "lamiaapi", project_id=request.session["idproject"], tablename=url1
+            )
+        elif url1.split("/")[0] == "translations":
+            return redirect(
+                "lamiaapi", project_id=request.session["idproject"], tablename=url1
+            )
 
         queryset = Project.objects.filter(id_project=kwargs.get("project_id"))
         idproject = queryset.values("id_project")[0]["id_project"]

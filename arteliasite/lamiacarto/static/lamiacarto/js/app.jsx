@@ -15,12 +15,7 @@ require('../icons/build/qwc2-icons.css');
 const bootstrap = require('bootstrap')
 require('bootstrap/dist/css/bootstrap.min.css')
 
-
-context = JSON.parse(JSON.parse(document.getElementById('context').textContent))
-themeurl = window.location.host + '/lamiaapi/' + context.id_project + '/themes'
-console.log(themeurl)
-
 ReactDOM.render(
-    <StandardApp appConfig={appConfig} themes={themeurl} style={{ position: "relative", top: "50px" }} />,
+    <StandardApp appConfig={appConfig} style={{ position: "relative", top: "50px" }} />,
     document.getElementById('container')
 );

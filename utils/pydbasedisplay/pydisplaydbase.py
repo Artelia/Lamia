@@ -94,8 +94,8 @@ def launchIface():
     # SLFILE = r"M:\FR\BOR\VT\FLUVIAL\4352789_33_BM_surveillance_digues_PI_Ambes\05_ETUDES\052_Calculs\Basedonnees\VTA_Ambes_ind2_PVR.sqlite"
     # SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_constructionsite_Orange\test01.sqlite"
     SLFILE = r"C:\01_WORKINGDIR\GPMB\c_merge_ass\mergeddbase.sqlite"
-    SLFILE = r"C:\01_WORKINGDIR\cons\cons.sqlite"
-    SLFILE = r"C:\01_WORKINGDIR\orange\toto.sqlite"
+    # SLFILE = r"C:\01_WORKINGDIR\cons\cons.sqlite"
+    # SLFILE = r"C:\01_WORKINGDIR\orange\toto.sqlite"
 
     print(TGREEN, f"Opening {os.path.abspath(SLFILE)}", ENDC)
 

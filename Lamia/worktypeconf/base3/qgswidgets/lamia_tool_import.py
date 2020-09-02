@@ -100,7 +100,7 @@ class ImportTool(AbstractLamiaTool):
     def initMainToolWidget(self):
 
         self.toolwidgetmain = UserUI()
-        # self.toolwidgetmain.toolButton_update.clicked.connect(self.updateShowedTable)
+        self.toolwidgetmain.toolButton_update.clicked.connect(self._updateFromTables)
 
         items = ["edge", "node", "equipment", "media", "actor"]
         self.toolwidgetmain.comboBox_typeimport.addItems(items)
@@ -128,13 +128,19 @@ class ImportTool(AbstractLamiaTool):
                 .layerTreeRoot()
                 .findLayers()
             ]
-            layqgis = []
-            for tablename in self.dbase.dbasetables.keys():
-                if "layerqgis" in self.dbase.dbasetables[tablename].keys():
-                    layqgis.append(self.dbase.dbasetables[tablename]["layerqgis"])
-
+            layqgisname = []
+            for tablename in self.mainifacewidget.qgiscanvas.layers.keys():
+                if (
+                    "layerqgis"
+                    in self.mainifacewidget.qgiscanvas.layers[tablename].keys()
+                ):
+                    layqgisname.append(
+                        self.mainifacewidget.qgiscanvas.layers[tablename][
+                            "layerqgis"
+                        ].name()
+                    )
             for lay in layers:
-                if not lay in layqgis:
+                if not lay.name() in layqgisname:
                     self.toolwidgetmain.comboBox_tableimport.addItems([lay.name()])
 
     def ___________________________________flowchartpart(self):
@@ -175,13 +181,22 @@ class ImportTool(AbstractLamiaTool):
             if self.currentlayer is None:
                 import Lamia
 
-                lamiapath = os.path.dirname(Lamia.__file__)
-                layerpath = os.path.join(
-                    lamiapath, "..", "test", "shpforimporttest", "TRONCONS_TEST.shp"
+                lamiapath = os.path.normpath(os.path.dirname(Lamia.__file__))
+                layerdirpath = os.path.join(
+                    lamiapath, "..", "test", "datas", "shpforimporttest"
                 )
-                print("*********layerpath", layerpath)
-                # layerpath = os.path.join(os.path.dirname(__file__), '..','..','..','test','99_import_test_files','reseau_L93.shp.shp')
-                self.currentlayer = qgis.core.QgsVectorLayer(layerpath, "test", "ogr")
+                if False:
+                    layerpath = os.path.join(layerdirpath, "TRONCONS_TEST.shp")
+                    # print("*********layerpath", layerpath)
+                    self.currentlayer = qgis.core.QgsVectorLayer(
+                        layerpath, "test", "ogr"
+                    )
+                if True:
+                    layerpath = os.path.join(layerdirpath, "te.csv")
+                    # print("*********layerpath", layerpath)
+                    self.currentlayer = qgis.core.QgsVectorLayer(
+                        layerpath, "test", "ogr"
+                    )
                 print(self.currentlayer.featureCount())
 
     def initProgressBar(self, lenprogress):

@@ -33,6 +33,7 @@ from qgis.PyQt import uic, QtCore
 
 from ...base3.qgswidgets.lamia_form_edge import BaseEdgeTool
 from .lamia_form_graph import BaseUrbandrainageGraphTool
+from .lamia_form_camera import BaseUrbandrainageCameraTool
 from Lamia.iface.qgiswidget.tools.form_subwidgets.subwidget_lidchooser import (
     LidChooserWidget,
 )
@@ -140,6 +141,11 @@ class BaseUrbandrainageEdgeTool(BaseEdgeTool):
             searchfieldtoshow=["actorname"],
         )
         self.lamiawidgets.append(self.operatorwdg)
+
+        self.propertieswdgPHOTOGRAPHIE = BaseUrbandrainageCameraTool(
+            **self.instancekwargsforchildwdg
+        )
+        self.dbasechildwdgfield.append(self.propertieswdgPHOTOGRAPHIE)
 
     def _initMainToolWidgetCD41(self):
         self.toolwidgetmain = UserUIField_2()

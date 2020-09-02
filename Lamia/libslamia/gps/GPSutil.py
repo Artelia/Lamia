@@ -50,6 +50,7 @@ import os
 import qgis
 import sys
 import qgis.utils
+import io
 
 # qgis.utils.uninstallErrorHook()     #for standart output
 
@@ -103,12 +104,9 @@ class GpsUtil(QtCore.QObject):
 
         # raf09
         self.raf09filepath = os.path.join(os.path.dirname(__file__), "raf09.mnt")
-        if sys.version_info.major == 2:
-            self.raf09file = open(self.raf09filepath, "r")
-        elif sys.version_info.major == 3:
-            self.raf09file = open(self.raf09filepath, "r")
+        self.raf09file = open(self.raf09filepath, "r")
 
-        line1 = self.raf09file.readline().strip()
+        line1 = self.raf09file.readline()
         linelist = line1.split(" ")
         self.minlong = float(linelist[0])
         self.maxlong = float(linelist[1])
@@ -119,7 +117,8 @@ class GpsUtil(QtCore.QObject):
 
         self.lenx = int((self.maxlong - self.minlong) / self.paslong) + 1
         # self.leny = int((self.maxlat - self.minlat) / self.paslat)
-        self.lenline1 = len(line1) + 2
+
+        self.lenline1 = len(line1)  #! WARNING : +2 if crlf eof - file raf09.mnt must be LF eof
         self.raf09file.close()
 
     def setCRS(self, crs):
@@ -410,7 +409,7 @@ class GpsUtil(QtCore.QObject):
         yindex = abs(int((y - self.maxlat) / self.paslat))
         seekindex = self.lenline1 + (yindex * self.lenx + xindex) * 10
 
-        # print('seekindex',seekindex)
+        print("seekindex", seekindex)
 
         self.raf09file.seek(seekindex)
         # print('okokok', self.raf09file.read(7))
@@ -418,7 +417,7 @@ class GpsUtil(QtCore.QObject):
         raf1x = self.minlong + xindex * self.paslong
         raf1y = self.maxlat - yindex * self.paslat
 
-        # print('raf1', raf1,raf1x, raf1y )
+        print("raf1", raf1, raf1x, raf1y)
 
         # point2 (x suivant) - x2 y1
         self.raf09file.seek(3, 1)
@@ -430,6 +429,8 @@ class GpsUtil(QtCore.QObject):
         self.raf09file.seek(3, 1)
         raf4 = float(self.raf09file.read(7))
 
+        print(raf1, raf2, raf3, raf4)
+
         # resolution bilineaire
         Dfx = raf2 - raf1
         Dfy = raf3 - raf1
@@ -440,6 +441,9 @@ class GpsUtil(QtCore.QObject):
         Dy = self.paslat
 
         raf09convert = Dfx * dx / Dx + Dfy * dy / Dy + Dfxy * dx * dy / Dx / Dy + raf1
+
+        if raf09convert < 40 or raf09convert > 60:  # not possible in france
+            return None
 
         return raf09convert
 
