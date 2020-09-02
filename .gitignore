@@ -12,6 +12,7 @@ sandbox/*/
 frontend/
 
 arteliasite/node_modules
+arteliasite/lamiacarto/static/lamiacarto/dist
 arteliasitev2/node_modules
 arteliasitev2/qwc2
 arteliasitev3/node_modules

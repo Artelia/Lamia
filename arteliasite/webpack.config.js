@@ -2,7 +2,7 @@ const webpack = require('webpack');
 const path = require('path');
 const os = require('os');
 const BundleTracker = require('webpack-bundle-tracker');
-const styleConfig = require("./lamiacarto/static/lamiacarto/qwc2config/styleConfig");
+const styleConfig = require("./lamiacarto/static/qwc2config/styleConfig");
 
 const nodeEnv = process.env.NODE_ENV || 'development';
 const isProd = nodeEnv === 'production';
