@@ -10,13 +10,12 @@ test/testtempfiles/
 test/datas/lamia_*
 sandbox/*/
 frontend/
+
 arteliasite/node_modules
-
-
 arteliasitev2/node_modules
 arteliasitev2/qwc2
 arteliasitev3/node_modules
-arteliasitev2test/
+
 
 .vscode/
 **/*backup*

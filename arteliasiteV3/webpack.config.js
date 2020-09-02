@@ -1,80 +1,36 @@
-const webpack = require('webpack');
-const path = require('path');
-const os = require('os');
-const BundleTracker = require('webpack-bundle-tracker');
-const styleConfig = require("./lamiacarto/static/lamiacarto/qwc2config/styleConfig");
-
-const nodeEnv = process.env.NODE_ENV || 'development';
-const isProd = nodeEnv === 'production';
-
-
-let styleReplacements = Object.keys(styleConfig).map(key => ({ search: "@" + key + "@", replace: styleConfig[key], flags: "g" }));
-
-const plugins = [
-  new BundleTracker({ filename: './lamiacarto/webpack-stats.json' }),
-  new webpack.DefinePlugin({
-    'process.env': { NODE_ENV: JSON.stringify(nodeEnv) }
-  }),
-  new webpack.NamedModulesPlugin(),
-  new webpack.DefinePlugin({
-    "__DEVTOOLS__": !isProd
-  }),
-  new webpack.NormalModuleReplacementPlugin(/openlayers$/, path.join(__dirname, "qwc2", "libs", "openlayers")),
-  new webpack.NoEmitOnErrorsPlugin(),
-  new webpack.LoaderOptionsPlugin({
-    debug: !isProd,
-    minimize: isProd
-  })
-];
-
-if (!isProd) {
-  plugins.push(new webpack.HotModuleReplacementPlugin());
-}
+var path = require("path");
+var webpack = require('webpack');
+var BundleTracker = require('webpack-bundle-tracker');
 
 module.exports = {
   context: __dirname,
 
-  devtool: isProd ? 'source-map' : 'eval',
-  mode: nodeEnv === "production" ? "production" : "development",
-  entry: {
-    'webpack-dev-server': 'webpack-dev-server/client?http://0.0.0.0:3233',
-    'webpack': 'webpack/hot/only-dev-server',
-    'QWC2App': path.join(__dirname, "lamiacarto", "static", "lamiacarto", "js", "app")
-  },
+  entry: './lamiacarto/static/lamiacarto/js/index',
+
   output: {
-    path: path.join(__dirname, "lamiacarto", "static", "lamiacarto", 'dist'),
-    // publicPath: "/dist/",
-    // publicPath: "/static/lamiacarto/dist/",
-    filename: '[name].js'
+    path: path.resolve('./lamiacarto/static/lamiacarto/bundles/'),
+    filename: "[name]-[hash].js",
   },
-  plugins,
-  resolve: {
-    extensions: [".mjs", ".js", ".jsx"],
-    symlinks: false,
-    alias: {
-      qwc2: path.resolve(__dirname, 'qwc2'),
-    }
-  },
+  
+
+  plugins: [
+    new BundleTracker({ filename: './lamiacarto/webpack-stats.json' }),
+  ],
   module: {
     rules: [
       {
-        test: /\.(woff|woff2)(\?\w+)?$/,
-        use: {
-          loader: "url-loader",
-          options: {
-            limit: 50000,
-            mimetype: "application/font-woff",
-            name: "fonts/[name].[ext]",
-          }
-        }
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: ['babel-loader']
+      },
+      {
+        test: /\.jsx$/,
+        exclude: /node_modules/,
+        use: ['babel-loader']
       },
       {
         test: /\.css$/,
-        use: [
-          { loader: 'style-loader' },
-          { loader: 'css-loader' },
-          { loader: 'string-replace-loader', options: { multiple: styleReplacements } }
-        ]
+        use: ['style-loader', 'css-loader']
       },
       {
         test: /\.(ttf|eot|svg)(\?v=[0-9].[0-9].[0-9])?$/, use: {
@@ -86,32 +42,16 @@ module.exports = {
         }
       },
       {
-        test: /\.(png|jpg|gif)$/, use: {
-          loader: 'url-loader',
-          options: {
-            name: '[path][name].[ext]',
-            limit: 8192,
-            esModule: false
-          }
-        }
+        test: /\.ui$/i,
+        use: 'raw-loader',
       },
-      {
-        test: /\.jsx?$/,
-        exclude: os.platform() === 'win32' ? /node_modules\\(?!(qwc2)\\).*/ : /node_modules\/(?!(qwc2)\/).*/,
-        use: {
-          loader: 'babel-loader',
-          options: { babelrcRoots: ['.', path.resolve(__dirname, 'node_modules', 'qwc2')] }
-        }
-      },
-      {
-        test: /\.mjs$/,
-        type: 'javascript/auto',
-      }
     ]
   },
-  devServer: {
-    hot: true,
-    contentBase: './',
-    writeToDisk: true,
+  resolve: {
+    extensions: ['*', '.js', '.jsx'],
+    //alias: {
+    //  forms: path.resolve(__dirname, '..', 'Lamia/worktypeconf/'),
+    //},
   }
+
 };

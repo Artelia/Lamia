@@ -1,16 +1,25 @@
 from django.shortcuts import render, redirect
-import json
+import json, os, sys
+
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
+import arteliasitev3.qwc2.scripts.themesConfig as themesConfig
+
 from rest_framework import views
 from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
 from django.views.generic import View, TemplateView
 from django.contrib.auth import authenticate, login, logout
-from .serializers import PostSerializer
 
-from .models import User, Project
+# from .serializers import PostSerializer
+
+from artelialogin.models import User, Project
+from artelialogin.views import BaseView
 from .lamiaforsession import LamiaSession
 import logging
 import qgis.core
+
+import threading
+
 
 # Create your views here.
 
@@ -18,19 +27,18 @@ import qgis.core
 # * ************************** API ***********************************
 
 
-class APIFactory:
+class APIFactory_:
 
     renderer_classes = [JSONRenderer]
 
-    def getresult(**kwargs):
+    def getresult(request, **kwargs):
         print("APIFactory", kwargs)
-        projectid = kwargs.get("project_id")
 
+        projectid = kwargs.get("project_id")
+        tablename = kwargs.get("tablename", None)
         lamiaparser = LamiaSession.getInstance(projectid).lamiaparser
 
-        tablename = kwargs.get("tablename", None)
-
-        if tablename is None:
+        if tablename is None:  # request on project
             queryset = Project.objects.filter(id_project=projectid)
             # id_projet = queryset.values("id_projet")[0]
             # print(queryset.values_list())
@@ -44,105 +52,82 @@ class APIFactory:
             dbasetables = lamiaparser.dbasetables
             return dbasetables
 
+        elif tablename == "themes":
+            conffile = os.path.join(
+                os.path.dirname(os.path.realpath(__file__)),
+                "lamiacarto",
+                "static",
+                "qwc2config",
+                "themesConfig_lamia.json",
+            )
+            datab = json.dumps(themesConfig.genThemes(conffile))
+            return Response(dbasetables)
 
-class PostViewSet(views.APIView):
+
+class LamiaApiView(views.APIView):
     def get(self, request, **kwargs):
         print("kwargs", kwargs)
-        jsonresult = APIFactory.getresult(**kwargs)
+        jsonresult = APIFactory.getresult(request, **kwargs)
         # yourdata = [{"likes": 10, "comments": 0}, {"likes": 4, "comments": 23}]
         # results = PostSerializer(yourdata, many=True).data
         return Response(jsonresult)
         # return JsonResponse(jsonresult)
 
     def post(self, request, **kwargs):
-        print("***", kwargs)
-        print(request.POST)
-        # print(request.headers)
-        print(request.data)
-        yourdata = [{"likes": 10, "comments": 0}, {"likes": 4, "comments": 23}]
-        results = PostSerializer(yourdata, many=True).data
-        return Response(results)
-
-
-class LamiaFuncAPI(views.APIView):
-    def get(self, request, **kwargs):
         projectid = kwargs.get("project_id")
-        lamiassession = LamiaSession.getInstance(projectid)
-        return Response(None)
+        tablename = kwargs.get("tablename", None)
+        lamiasession = LamiaSession.getInstance(projectid)
+        lamiaparser = lamiasession.lamiaparser
+        # threading.current_thread().name
+        # if threading.current_thread().name in lamiasession.cursors.keys()
+        # lamiaparser.PGiscursor = None  # force thread safe cursor
+        func = request.data["function"]
 
-    def post(self, request, **kwargs):
-        """ 
-        in kwargs : get url arguments : ex kwargs.get("project_id")
-        in request.POST : get values sent b html formular
-            ex         id = request.POST.get("id")  (where id is id of html form)
-                        pw = request.POST.get("pw")
-        IN request.data : get data sent with post from client
-        in   request.session : you can set or get values
-            ex :   request.session["idproject"] = idproject
-            print(request.session.items())
-        """
-        projectid = kwargs.get("project_id")
+        if tablename is None:  # request on project
+            if func == "dbasetables":
+                dbasetables = lamiaparser.dbasetables
+                return Response(dbasetables)
 
-        if request.data["func"] == "nearest":
-            lamiassession = LamiaSession.getInstance(projectid)
-            nearestpk, dist = lamiassession.getNearestPk(
-                request.data["layer"], request.data["coords"]
-            )
+        else:
 
-            geom = lamiassession.qgscanvas.getQgsGeomFromPk(
-                lamiassession.lamiaparser, request.data["layer"], nearestpk
-            )
-            geomson = geom.asJson()
-            result = json.dumps({"nearestpk": nearestpk, "dist": dist, "geom": geomson})
-            # logging.getLogger().debug(f"nearest {result}")
-            return Response(result)
+            if func == "dbasetables":
+                qgistables = [tablename] + lamiaparser.getParentTable(tablename)
+                dbtableresponse = {}
+                for table in qgistables:
+                    # res = {**dict1, **dict2}
+                    dbtableresponse = {
+                        **dbtableresponse,
+                        **lamiaparser.dbasetables[table]["fields"],
+                    }
+                # dbasetables = lamiaparser.dbasetables[tablename]
+                return Response(dbtableresponse)
 
-        return Response(None)
+            elif func == "nearest":
+                nearestpk = LamiaSession.getInstance(projectid).getNearestPk(
+                    tablename, request.data["coords"]
+                )
+                result = json.dumps({"nearestpk": nearestpk})
+                return Response(result)
+
+            elif func == "getids":
+                confobject = type("confobject", (object,), {})
+                confobject.DBASETABLENAME = tablename
+                confobject.PARENTJOIN = request.data["parentjoin"]
+                if "tablefilterfield" in request.data.keys():
+                    confobject.TABLEFILTERFIELD = request.data["tablefilterfield"]
+                if "choosertreewdgspec" in request.data.keys():
+                    confobject.CHOOSERTREEWDGSPEC = request.data["choosertreewdgspec"]
+
+                confobject.parentWidget = type("confobject", (object,), {})
+                confobject.parentWidget.DBASETABLENAME = request.data["parenttablename"]
+                confobject.parentWidget.currentFeaturePK = request.data["parentpk"]
+
+                ids = LamiaSession.getInstance(projectid).getIds(confobject)
+                return Response(ids)
 
 
 # * ******************************************************************************
 # * ************************** Views ***********************************
-
-
-class BaseView(View):
-    mytemplate = "base.html"
-
-    def get(self, request):
-        logging.getLogger().debug("BaseView")
-
-        if request.user.is_authenticated:
-            return self.loggedUser(request)
-        else:
-            return self.notloggedUser(request)
-
-    def post(self, request, **kwargs):
-
-        id = request.POST.get("id")
-        pw = request.POST.get("pw")
-        user = authenticate(username=id, password=pw)
-
-        if user is not None and user.is_active:
-            # Correct password, and the user is marked "active"
-            login(request, user)
-            return self.loggedUser(request)
-
-        else:
-            logout(request)
-            return redirect("home")
-
-    def loggedUser(self, request):
-        queryset = Project.objects.filter(users__username=request.user)
-        return render(request, self.mytemplate, {"projects": queryset})
-
-    def notloggedUser(self, request):
-        request.session["idproject"] = 1
-        context = {"mytext": "popo"}
-        queryset = Project.objects.filter(id_project=1)
-        return render(
-            request,
-            BaseView.mytemplate,
-            {"context": json.dumps(context), "projects": queryset},
-        )
 
 
 class LamiaProjectView(BaseView):
@@ -151,12 +136,19 @@ class LamiaProjectView(BaseView):
     def get(self, request, **kwargs):
         logging.getLogger().debug("LamiaProjectView")
 
+        print("*", kwargs)
+
+        if kwargs.get("conffile", None) == "config.json":
+            return redirect("lamiaapi", project_id=request.session["idproject"])
+
         queryset = Project.objects.filter(id_project=kwargs.get("project_id"))
         idproject = queryset.values("id_project")[0]["id_project"]
 
-        # LamiaSession.getInstance(idproject)
-
-        context = json.dumps(list(queryset.values("id_project", "qgisserverurl"))[0])
+        context = json.dumps(
+            list(
+                queryset.values("id_project", "qgisserverurl", "pgdbname", "pgschema")
+            )[0]
+        )
 
         request.session["idproject"] = idproject
         if idproject > 1 and not request.user.is_authenticated:
