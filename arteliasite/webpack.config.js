@@ -42,7 +42,7 @@ module.exports = {
     'QWC2App': path.join(__dirname, "lamiacarto", "static", "lamiacarto", "js", "app")
   },
   output: {
-    path: path.join(__dirname, "lamiacarto", "static", "lamiacarto", 'dist'),
+    path: path.join(__dirname, "lamiacarto", "static", "lamiacarto", 'dev'),
     // publicPath: "/dist/",
     // publicPath: "/static/lamiacarto/dist/",
     filename: '[name].js'

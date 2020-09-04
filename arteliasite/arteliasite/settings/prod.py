@@ -27,10 +27,10 @@ DEBUG = False
 
 WEBPACK_LOADER = {
     "DEFAULT": {
-        "BUNDLE_DIR_NAME": "lamiacarto/dist/",
+        "BUNDLE_DIR_NAME": "lamiacarto/prod/",
         # "BUNDLE_DIR_NAME": "dist/",
         # 'STATS_FILE': os.path.join(BASE_DIR, 'pvr', 'static','bundles', 'webpack-stats.json'),
-        "STATS_FILE": os.path.join(BASE_DIR, "lamiacarto", "webpack-stats.json"),
+        "STATS_FILE": os.path.join(BASE_DIR, "lamiacarto", "webpack-stats-prod.json"),
     }
 }
 

@@ -11,13 +11,43 @@ WORKDIR /usr/src/app
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-# # general dependancies
-# RUN apt-get update && apt-get install apt-utils sudo dialog dos2unix wget -y
-# # skipping prompt for keyboard conf
-# RUN DEBIAN_FRONTEND=noninteractive apt-get install keyboard-configuration -y
+# general dependancies
+RUN apt-get update && apt-get install apt-utils sudo dialog dos2unix wget -y
+# skipping prompt for keyboard conf
+RUN DEBIAN_FRONTEND=noninteractive apt-get install keyboard-configuration -y
 # # needed for adding web repo in ubuntu
-# RUN apt-get install gnupg software-properties-common -y
+RUN apt-get install gnupg software-properties-common -y
+
+# ## install qgis - software-properties-common needed
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-key 51F523511C7028C3
+RUN add-apt-repository "deb https://qgis.org/ubuntu-ltr `lsb_release -c -s` main"
+RUN apt-get update
+RUN apt-get install qgis=1:3.* python3-qgis=1:3.* -y
 
 COPY arteliasite ./arteliasite
 COPY Lamia ./Lamia
 COPY requirements.txt ./requirements.txt
+
+
+# ##Requirements
+# RUN apt-get install python3-pip -y
+# RUN pip3 install -r ./requirements.txt
+
+##node and yarn install
+RUN apt-get install nodejs yarnpkg -y
+RUN cd arteliasite && yarnpkg install
+RUN cd arteliasite && yarnpkg prodd
+
+##django operations
+RUN export DJANGO_SETTINGS_MODULE=arteliasite.settings.prod
+RUN cd arteliasite && python3 manage.py collectstatic
+
+
+
+
+CMD ["bash"]
+
+
+
+
+
