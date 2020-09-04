@@ -1,0 +1,16 @@
+xlrd==1.1.0
+networkx==2.2
+pandas
+pylint
+django
+black
+sphinx
+sphinx-rtd-theme
+autopep8
+pycodestyle
+#psycopg2
+#sqlite3
+django-webpack-loader
+gunicorn
+djangorestframework
+django-cors-headers

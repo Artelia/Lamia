@@ -95,6 +95,8 @@ STATICFILES_DIRS = [
     ("qwc2config", os.path.join(BASE_DIR, "lamiacarto", "qwc2config")),
 ]
 
+STATIC_ROOT = '/static'
+
 MEDIA_ROOT = os.path.join("C:/", "media")
 MEDIA_URL = "/media/"
 

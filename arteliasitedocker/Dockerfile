@@ -19,19 +19,26 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install keyboard-configuration -y
 RUN apt-get install gnupg software-properties-common -y
 
 # ## install qgis - software-properties-common needed
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-key 51F523511C7028C3
+# RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-key 51F523511C7028C3
+# RUN add-apt-repository "deb https://qgis.org/ubuntu-ltr `lsb_release -c -s` main"
+# RUN apt-get update
+# RUN apt-get install qgis=1:3.* python3-qgis=1:3.* -y
+
+RUN wget -qO - https://qgis.org/downloads/qgis-2020.gpg.key | sudo gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/qgis-archive.gpg --import
+RUN chmod a+r /etc/apt/trusted.gpg.d/qgis-archive.gpg
+# RUN add-apt-repository "deb https://qgis.org/debian-ltr `lsb_release -c -s` main"
 RUN add-apt-repository "deb https://qgis.org/ubuntu-ltr `lsb_release -c -s` main"
 RUN apt-get update
-RUN apt-get install qgis=1:3.* python3-qgis=1:3.* -y
+RUN apt-get install qgis=1:3.10.* python3-qgis=1:3.10.* -y
 
 COPY arteliasite ./arteliasite
 COPY Lamia ./Lamia
-COPY requirements.txt ./requirements.txt
+COPY arteliasitedocker/requirements.txt ./requirements.txt
 
 
-# ##Requirements
-# RUN apt-get install python3-pip -y
-# RUN pip3 install -r ./requirements.txt
+##Requirements
+RUN apt-get install python3-pip -y
+RUN pip3 install -r ./requirements.txt
 
 ##node and yarn install
 RUN apt-get install nodejs yarnpkg -y
@@ -39,13 +46,15 @@ RUN cd arteliasite && yarnpkg install
 RUN cd arteliasite && yarnpkg prodd
 
 ##django operations
-RUN export DJANGO_SETTINGS_MODULE=arteliasite.settings.prod
-RUN cd arteliasite && python3 manage.py collectstatic
+ENV  DJANGO_SETTINGS_MODULE arteliasite.settings.prod
+# RUN cd arteliasite && python3 manage.py collectstatic
 
+EXPOSE 8085
+WORKDIR /usr/src/app/arteliasite
+# CMD ["bash"]
+CMD ["gunicorn", "-b", "0.0.0.0:8085", "-w", "2", "arteliasite.wsgi"]
+# gunicorn -b 0.0.0.0 -w 2 arteliasite.arteliasite.wsgi
 
-
-
-CMD ["bash"]
 
 
 

@@ -14,7 +14,7 @@ import os
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
 # Quick-start development settings - unsuitable for production
@@ -145,12 +145,10 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [
     os.path.abspath(os.path.join(BASE_DIR, "node_modules")),  # for bootstrap
     ("forms", os.path.abspath(os.path.join(BASE_DIR, "..", "Lamia", "worktypeconf"))),
-    ("assets", os.path.join(BASE_DIR, "lamiacarto", "static","qwc2assets")),
+    ("assets", os.path.join(BASE_DIR, "lamiacarto", "static", "qwc2assets")),
     ("qwc2config", os.path.join(BASE_DIR, "lamiacarto", "qwc2config")),
 ]
 
 MEDIA_ROOT = os.path.join("C:/", "media")
 MEDIA_URL = "/media/"
-
-
 

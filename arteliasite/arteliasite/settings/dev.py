@@ -83,18 +83,25 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = "/static/"
 
 STATICFILES_DIRS = [
-    os.path.abspath(os.path.join(BASE_DIR, "node_modules")),  # for bootstrap
-    ("forms", os.path.abspath(os.path.join(BASE_DIR, "..", "Lamia", "worktypeconf"))),
-    ("assets", os.path.join(BASE_DIR, "lamiacarto", "static","qwc2assets")),
-    ("qwc2config", os.path.join(BASE_DIR, "lamiacarto", "qwc2config")),
+    # os.path.abspath(os.path.join(BASE_DIR, "node_modules")),  # for bootstrap
+    ("forms", os.path.join(os.path.dirname(BASE_DIR), "Lamia", "worktypeconf")),
+    # (
+    #     "assets",
+    #     os.path.normpath(os.path.join(BASE_DIR, "lamiacarto", "static", "qwc2assets")),
+    # ),
+    # (
+    #     "qwc2config",
+    #     os.path.normpath(os.path.join(BASE_DIR, "lamiacarto", "static", "qwc2config")),
+    # ),
 ]
+
+STATIC_ROOT = os.path.normpath(os.path.join(BASE_DIR, "static"))
 
 MEDIA_ROOT = os.path.join("C:/", "media")
 MEDIA_URL = "/media/"
