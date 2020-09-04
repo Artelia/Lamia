@@ -1,15 +1,11 @@
-// import EditingFormReact from '../editingformwidget'
-// const EditingFormReact = require('../editingformwidget')
-const EditingFormReact = require('../editingformwidget')
+const EditingFormReact = require('lamiacarto/static/lamiacarto//editingformwidget/js/plugins/forms/editingformwidget')
 const $ = require('jquery')
-// import ReactDOM from "react-dom";
 const ReactDOM = require('react-dom')
 
 const axios = require('axios');
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
 axios.defaults.xsrfCookieName = "csrftoken"
 
-// import fileDownload from 'js-file-download';
 const fileDownload = require('js-file-download')
 
 
@@ -27,7 +23,7 @@ class ReportEditingFormReact extends EditingFormReact {
         this.state = {
             'currentlayer': '',
             'currentfeatprop': {},
-            'formui': ':/forms/base3/qgswidgets/lamia_form_report_ui.ui',
+            'formui': ':/static/forms/base3/qgswidgets/lamia_form_report_ui.ui',
             ...this.state
         }
 

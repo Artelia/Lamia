@@ -1,4 +1,12 @@
 {
+  "proxy": {
+    "host": "10.15.102.50",
+    "port": 3128,
+    "auth": {
+      "username": "",
+      "password": ""
+    }
+  },
   "themes": {
     "items": [
       {

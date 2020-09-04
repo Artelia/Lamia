@@ -1,6 +1,4 @@
-// import EditingFormReact from '../editingformwidget'
-const EditingFormReact = require('../editingformwidget')
-//
+const EditingFormReact = require('lamiacarto/static/lamiacarto//editingformwidget/js/plugins/forms/editingformwidget')
 
 class ObservationEditingFormReact extends EditingFormReact {
 
@@ -14,7 +12,7 @@ class ObservationEditingFormReact extends EditingFormReact {
         this.state = {
             'currentlayer': '',
             'currentfeatprop': {},
-            'formui': ':/forms/base3_urbandrainage/qgswidgets/lamia_form_observation_ui.ui',
+            'formui': ':/static/forms/base3_urbandrainage/qgswidgets/lamia_form_observation_ui.ui',
             ...this.state
         }
 

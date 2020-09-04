@@ -1,3 +1,4 @@
+lamiaunittest.importgpmb@localhost:5432;pvr;pvr
 C:\01_WORKINGDIR\GPMB\c_merge_ass\mergeddbase.sqlite
 C:\01_WORKINGDIR\cons\cons.sqlite
 C:\01_WORKINGDIR\orange\toto.sqlite
@@ -8,4 +9,3 @@ lamiaunittest.base3_urbandrainage_CD41@localhost:5432;pvr;pvr
 c:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_urbandrainage_CD41\test01.sqlite
 lamiaunittest.base3_urbandrainage_Lamia@localhost:5432;pvr;pvr
 c:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_urbandrainage_Lamia\test01.sqlite
-lamiaunittest.importgpmb@localhost:5432;pvr;pvr

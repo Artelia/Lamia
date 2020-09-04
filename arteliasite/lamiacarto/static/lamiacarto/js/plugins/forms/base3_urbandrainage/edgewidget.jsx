@@ -14,7 +14,7 @@ class EdgeEditingFormReact extends EditingFormReact {
         this.state = {
             'currentlayer': '',
             'currentfeatprop': {},
-            'formui': ':/static/forms/base3_urbandrainage/qgswidgets/lamia_form_edge_ui.ui',
+            'formui': ':/forms/base3_urbandrainage/qgswidgets/lamia_form_edge_ui.ui',
             ...this.state
         }
 

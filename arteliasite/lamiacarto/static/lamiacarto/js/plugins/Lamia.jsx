@@ -1,4 +1,3 @@
-
 const React = require('react');
 const { connect } = require('react-redux');
 const { SideBar } = require('qwc2/components/SideBar');
@@ -9,13 +8,10 @@ const axios = require('axios');
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
 axios.defaults.xsrfCookieName = "csrftoken"
 
-const EdgeEditingFormReact = require('./forms/base3_urbandrainage/edgewidget')
-const NodeEditingFormReact = require('./forms/base3_urbandrainage/nodewidget')
-const MediaEditingFormReact = require('./forms/base3_urbandrainage/mediawidget')
-const ReportEditingFormReact = require('./forms/base3_urbandrainage/reportwidget')
 const IdChooser = require('./idchooser')
 
 require('./qwc2/style/SideBar.css');
+const base3_urbandrainage = require('./forms/base3_urbandrainage/base3_urbandrainage')
 
 
 class Lamia extends React.Component {
@@ -26,23 +22,25 @@ class Lamia extends React.Component {
         minWidth: '30em'
     }
 
-    workclasses = [
-        EdgeEditingFormReact,
-        NodeEditingFormReact,
-        MediaEditingFormReact,
-        ReportEditingFormReact
-    ]
-
     projectdata = JSON.parse(JSON.parse(document.getElementById('context').textContent))
-    state = {}
 
     constructor(props) {
         super(props);
-        this.state = { 'visualmode': 1, 'mainwdg': null, 'values': null }
+        this.state = { 'visualmode': 1, 'mainwdg': null, 'values': null, 'widgetsclasses': [] }
         this.currentwdginstance = null
         this.currentref = React.createRef()
         this.mainwdgrefcreated = false
         this.idchooserref = React.createRef()
+        this.dbaseworktypeloaded = false
+        this.getDBaseWorktype()
+    }
+
+    async getDBaseWorktype() {
+        let temp = this.projectdata.qgisserverurl + 'qgisserver/wfs3/collections/database_qgis/items/1.json'
+        let feat = await axios.get(temp)
+        let worktype = feat.data.properties.businessline
+        this.dbaseworktypeloaded = true
+        eval('this.setState({widgetsclasses:' + worktype + '})')
     }
 
     componentDidMount() {
@@ -51,7 +49,6 @@ class Lamia extends React.Component {
     componentWillReceiveProps(nextProps) {
         if (nextProps.layers) {
             let found = nextProps.layers.find(layer => layer.title === "Lamiasel")
-            // console.log('found', !found, found)
             if (!found) {
                 let layer = {
                     title: "Lamiasel",
@@ -66,6 +63,9 @@ class Lamia extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         let returnvalue = false
 
+        if (!this.dbaseworktypeloaded) {
+            return false
+        }
 
         if (nextState !== this.state) {
             returnvalue = true
@@ -123,22 +123,6 @@ class Lamia extends React.Component {
         console.log('render Lamia', this.props.point)
 
         let layersdropdown = this.createLayerDrop.bind(this)()
-
-        let layersdrop = (
-            <div className="btn-group mr-2" role="group" aria-label="First group">
-                <div className="dropdown">
-                    <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Layers
-              </button>
-                    <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        {layersdropdown}
-                    </div>
-                </div>
-            </div>
-        )
-
-        // let idsdropdown = this.createIdDrop.bind(this)()
-
         let idsdrop = (
             <div className="btn-group mr-2" role="group" aria-label="First group">
                 <div className="dropdown">
@@ -151,24 +135,23 @@ class Lamia extends React.Component {
                 </div>
             </div>
         )
-
-
-
-        let butonmenu = (
-            <div className="btn-group mr-2" role="group" aria-label="First group">
-                <button type="button" className="btn btn-secondary" id="canvaspick" onClick={this.buttonmenuclick.bind(this)}>Pick</button>
-                <button type="button" className="btn btn-secondary" onClick={this.buttonmenuclick.bind(this)}>Middle</button>
-            </div>
-        )
+        ////
+        // let butonmenu = (
+        //     <div className="btn-group mr-2" role="group" aria-label="First group">
+        //         <button type="button" className="btn btn-secondary" id="canvaspick" onClick={this.buttonmenuclick.bind(this)}>Pick</button>
+        //         <button type="button" className="btn btn-secondary" onClick={this.buttonmenuclick.bind(this)}>Middle</button>
+        //     </div>
+        // )
+        //
 
         let extraTitlebarContent = (
             <div className="btn-toolbar " role="group" aria-label="Basic example" style={{ marginLeft: "1em" }}>
-                {layersdrop}
+                {layersdropdown}
                 {<IdChooser ref={this.idchooserref} mainiface={this} />}
-                {butonmenu}
+                {/* {butonmenu} */}
             </div>
         );
-
+        //
         return (
             <div>
                 <SideBar id="Lamia" width={this.state.sidebarwidth || this.props.width}
@@ -178,7 +161,6 @@ class Lamia extends React.Component {
                     extraTitlebarContent={extraTitlebarContent}
                 >
                     <div role="body" >
-                        {/* {tooltree} */}
                         {(this.state.mainwdg === null) ? < div></div> : <this.state.mainwdg
                             ref={this.currentref}
                             mainiface={this}
@@ -249,14 +231,12 @@ class Lamia extends React.Component {
 
         let dataraw = {}
 
-        this.workclasses.forEach(function (reactclass, idx) {
+        for (const reactclass of Object.values(this.state.widgetsclasses)) {
             if (!dataraw.hasOwnProperty(reactclass.firstdir)) {
                 dataraw[reactclass.firstdir] = {}
             }
             dataraw[reactclass.firstdir][reactclass.label] = reactclass
-        });
-
-
+        };
 
         let finaldatas = []
 
@@ -270,30 +250,39 @@ class Lamia extends React.Component {
                     {seconddir}
                 </a >
                 )
-                // finaldatas.push(<a className="dropdown-item" id={dataraw[firstdir][seconddir].label} >{seconddir}</a>)
             }
         };
 
-        return finaldatas
+        return (
+            <div className="btn-group mr-2" role="group" aria-label="First group">
+                <div className="dropdown">
+                    <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Layers
+              </button>
+                    <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        {finaldatas}
+                    </div>
+                </div>
+            </div>
+        )
     }
 
     handleLayerChanged = (evt) => {
         let goodclass = null
-        this.workclasses.forEach(function (reactclass, idx) {
+        for (const reactclass of Object.values(this.state.widgetsclasses)) {
             if (reactclass.label === evt.target.id) {
                 // if (reactclass.label === evt) {
                 goodclass = reactclass
+                break
             }
-        });
+        };
+
         this.mainwdgrefcreated = false
         this.setState({ mainwdg: goodclass })
-
-        // this.setState({ mainwdg: goodclass, currentwdginstance: this.currentref.current })
     }
 
     setCurrentWidgetInstance = (cwi) => {
         this.currentwdginstance = cwi
-        // this.setState({ ids: cwi.ids })
         this.idchooserref.current.setState({ ids: cwi.ids })
     }
 
@@ -310,6 +299,8 @@ const selector = (state) => ({
     // iface: iface,
     // editing: state.editing || {},
 })
+
+//
 
 module.exports = {
     LamiaPlugin: connect(selector,

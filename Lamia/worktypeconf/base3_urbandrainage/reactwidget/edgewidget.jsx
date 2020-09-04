@@ -1,18 +1,37 @@
-import EditingFormReact from './editingformwidget'
+const EditingFormReact = require('lamiacarto/static/lamiacarto//editingformwidget/js/plugins/forms/editingformwidget')
 
 class EdgeEditingFormReact extends EditingFormReact {
 
-    static firstdir = 'TOTO'
+    static firstdir = 'Assets'
     static label = 'Edges'
     table = 'edge'
 
     constructor(props) {
         super(props);
-        this.state = { 'currentlayer': '', 'currentfeatprop': {}, 'formui': ':/lamia_form_edge_ui.ui' }
-        // let olcanvas = new OLCanvasReact()
-        // console.log('ol', olcanvas)
+        this.state = {
+            'currentlayer': '',
+            'currentfeatprop': {},
+            'formui': ':/static/forms/base3_urbandrainage/qgswidgets/lamia_form_edge_ui.ui',
+            ...this.state
+        }
+
     }
+
+
+    domLoaded() {
+        console.log('okok edge')
+        console.log('***', $('[name="networktype"]'))
+
+        let comb = $('select[name="networktype"]')
+
+        comb.append($('<option>', {
+            value: 1,
+            text: 'My option'
+        }));
+
+    }
+
 
 }
 
-export default EdgeEditingFormReact;
+module.exports = EdgeEditingFormReact;

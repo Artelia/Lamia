@@ -5,7 +5,7 @@
   "mapInfoService": "http://localhost:8093/",
   "featureReportService": "http://localhost:5020/",
   "translationsPath": "translations",
-  "assetsPath": "/static/assets",
+  "assetsPath": "/static",
   "formsPath": "",
   "urlPositionFormat": "centerAndZoom",
   "urlPositionCrs": "",

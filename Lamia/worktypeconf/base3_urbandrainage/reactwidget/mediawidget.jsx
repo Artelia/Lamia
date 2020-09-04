@@ -1,7 +1,5 @@
-const EditingFormReact = require('../editingformwidget')
+const EditingFormReact = require('lamiacarto/static/lamiacarto//editingformwidget/js/plugins/forms/editingformwidget')
 const $ = require('jquery')
-
-//
 
 
 class MediaEditingFormReact extends EditingFormReact {
@@ -19,7 +17,7 @@ class MediaEditingFormReact extends EditingFormReact {
         this.state = {
             'currentlayer': '',
             'currentfeatprop': {},
-            'formui': ':/forms/base3/qgswidgets/lamia_form_camera_ui.ui',
+            'formui': ':/static/forms/base3/qgswidgets/lamia_form_camera_ui.ui',
         }
 
         let tempparentjoin = {}

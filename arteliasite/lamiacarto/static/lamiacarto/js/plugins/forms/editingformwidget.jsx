@@ -1,6 +1,7 @@
 const React = require('react');
 const { connect } = require('react-redux');
-const QtDesignerForm = require('qwc2/components/QtDesignerForm');
+// const QtDesignerForm = require('qwc2/components/QtDesignerForm');
+const LamiaQtDesignerForm = require('./../qwc2/LamiaQtDesignerForm');
 const VectorLayerUtils = require('qwc2/utils/VectorLayerUtils');
 
 const Message = require('qwc2/components/I18N/Message');
@@ -16,6 +17,8 @@ class EditingFormReact extends React.Component {
     childwdg = []
     projectdata = JSON.parse(JSON.parse(document.getElementById('context').textContent))
 
+    SKIPUI = false
+
     constructor(props) {
         super(props);
         // https://www.freecodecamp.org/news/react-changing-state-of-child-component-from-parent-8ab547436271/
@@ -24,6 +27,7 @@ class EditingFormReact extends React.Component {
         this.state = { isloading: true, ids: [] }
         this.childrefs = []
         this.ids = {}
+        this.maintabref = React.createRef()
 
         this.PARENTJOIN = null
         this.TABLEFILTERFIELD = null
@@ -31,34 +35,32 @@ class EditingFormReact extends React.Component {
 
     }
 
-    // static getDerivedStateFromProps(props, state) {
-    //     console.log('getDerivedStateFromProps')
-    //     if (props.parentwdg) {
-    //         console.log(props.parentwdg.table)
-    //         console.log(props.parentproperties)
-    //     }
-    //     return null
-
-    // }
-
     render() {
         console.log('render', this.constructor.name)
 
-        if (this.state.isloading) {
-            return (<p>Loading ... </p>)
-        }
+        // if (this.state.isloading) {
+        //     return (<p>Loading ... </p>)
+        // }
 
-        let qtform = <QtDesignerForm domLoaded={this.domLoaded} ref={this.currentform}
+        // console.log(this.state.keyvalues)
+        // if (this.state.formui) {
+        //     this.state.formui.state.keyvalues = this.state.keyvalues
+        // }
+
+        let qtform = <LamiaQtDesignerForm domLoaded={this.domLoaded} ref={this.currentform}
             updateField={this.updateField} form={this.state.formui} values={this.state.currentfeatprop}
-            keyvalues={this.state.keyvalues} domLoaded={this.domLoaded.bind(this)} />
+            getKeyvalues={this.getKeyvalues.bind(this)} domLoaded={this.domLoaded.bind(this)} />
 
 
         let childdom = []
         this.childwdg.forEach((childwd, idx) => {
             // console.log(childwd)
             // console.log('***', childwd.table, childwd.label)
-            childdom.push(<input value={idx + 1} type="radio" id={'maintab' + childwd.label} key={'maintab' + childwd.label + idx * 3} name={this.table} onChange={this.handleTabChange} />)
-            childdom.push(<label htmlFor={'maintab' + childwd.label} key={'maintab' + childwd.label + idx * 3 + 1}><Message msgId={'qtdesigner.' + childwd.label} /></label>)
+            // if (!childwd.SKIPUI) {
+            if (true) {
+                childdom.push(<input value={idx + 1} type="radio" id={'maintab' + childwd.label} key={'maintab' + childwd.label + idx * 3} name={this.table} onChange={this.handleTabChange} />)
+                childdom.push(<label htmlFor={'maintab' + childwd.label} key={'maintab' + childwd.label + idx * 3 + 1}><Message msgId={'qtdesigner.' + childwd.label} /></label>)
+            }
             let Childwd = childwd
             childdom.push(
                 <div className="qt-designer-tab" key={'maintab' + childwd.label + idx * 3 + 2}>
@@ -72,8 +74,9 @@ class EditingFormReact extends React.Component {
             )
         })
 
+
         return (
-            <div className="qt-designer-tabs" name={this.table}>
+            <div className="qt-designer-tabs" ref={this.maintabref} name={this.table}>
                 <input type="radio" value={0} id={'maintab' + this.table} name={this.table} defaultChecked={true} onChange={this.handleTabChange} />
                 <label htmlFor={'maintab' + this.table}><Message msgId={'qtdesigner.Properties'} /></label>
                 <div className="qt-designer-tab"  >
@@ -91,7 +94,7 @@ class EditingFormReact extends React.Component {
         this.childwdg.forEach((childwd, idx) => {
             this.childrefs.push(React.createRef())
         })
-        this.getKeyvalues()
+        // this.getKeyvalues()
     }
 
     componentDidUpdate() {
@@ -210,8 +213,6 @@ class EditingFormReact extends React.Component {
     }
 
     async getKeyvalues() {
-        // keyvalues = { 'comboBox_typeReseau': [{ key: 'popo', value: 'tete' }] }
-
         let url = 'http://' + window.location.host + '/lamiaapi/' + this.projectdata.id_project + '/' + this.table
         let res = await axios.post(url, {
             function: 'dbasetables',
@@ -226,8 +227,7 @@ class EditingFormReact extends React.Component {
                 }
             }
         }
-        this.setState({ isloading: false, keyvalues: keyvalues })
-
+        return keyvalues
     }
 
 

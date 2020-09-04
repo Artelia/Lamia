@@ -1,10 +1,7 @@
-// import EditingFormReact from '../editingformwidget'
-const EditingFormReact = require('../editingformwidget')
+const EditingFormReact = require('lamiacarto/static/lamiacarto//editingformwidget/js/plugins/forms/editingformwidget')
 const MediaEditingFormReact = require('./mediawidget')
 const DeficiencyEditingFormReact = require('./deficiencywidget')
 const { collectGroupLayers } = require('qwc2/utils/LayerUtils')
-const { timers } = require('jquery')
-//
 
 class NodeEditingFormReact extends EditingFormReact {
 
@@ -30,10 +27,9 @@ class NodeEditingFormReact extends EditingFormReact {
         this.state = {
             'currentlayer': '',
             'currentfeatprop': {},
-            'formui': ':/forms/base3_urbandrainage/qgswidgets/lamia_form_node_ui.ui',
+            'formui': ':/static/forms/base3_urbandrainage/qgswidgets/lamia_form_node_ui.ui',
             ...this.state
         }
-        this.childwdg[1].SKIPUI = true
         // this.props = { childwdg: [MediaEditingFormReact], ...this.props }
 
     }
@@ -48,7 +44,6 @@ class NodeEditingFormReact extends EditingFormReact {
 
 
     buttonClicked = (e) => {
-        console.log('cl')
         this.combostacked[e.target.name].val = e.target.options[e.target.selectedIndex].value
     }
 
@@ -87,7 +82,7 @@ class NodeEditingFormReact extends EditingFormReact {
 
 
 
-    //
+
 
 }
 

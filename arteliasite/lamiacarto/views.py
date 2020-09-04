@@ -66,7 +66,7 @@ class APIFactory:
         elif tablename.split("/")[0] == "translations":
             translationfile = os.path.join(settings.BASE_DIR, tablename)
             print(translationfile)
-            with open(translationfile) as f:
+            with open(translationfile, encoding="utf8") as f:
                 data = json.load(f)
             return data
 
@@ -151,9 +151,38 @@ class LamiaProjectView(BaseView):
     def get(self, request, **kwargs):
         # logging.getLogger().debug("LamiaProjectView")
 
-        # print("*", kwargs)
+        print("*", kwargs)
+        print("session", request.session["idproject"])
 
-        url1 = kwargs.get("conffile", "")
+        url1 = kwargs.get("conffile", None)
+        # if url1 and request.session["idproject"]:
+        if url1:
+            redirection = self.redirect(url1, request)
+            if redirection:
+                return redirection
+
+        queryset = Project.objects.filter(id_project=kwargs.get("project_id"))
+        print("****", kwargs.get("project_id"), queryset.values("id_project"))
+        idproject = queryset.values("id_project")[0]["id_project"]
+
+        context = json.dumps(
+            list(
+                queryset.values("id_project", "qgisserverurl", "pgdbname", "pgschema")
+            )[0]
+        )
+
+        idproject = request.session["idproject"]
+        if not idproject:
+            request.session["idproject"] = idproject
+        if idproject > 1 and not request.user.is_authenticated:
+            return redirect("home")
+
+        return render(request, self.mytemplate, {"context": context})
+
+    def post(self, request, **kwargs):
+        return BaseView.post(self, request, **kwargs)
+
+    def redirect(self, url1, request):
         if url1 == "config.json":
             return redirect(
                 "lamiaapi", project_id=request.session["idproject"], tablename=url1
@@ -166,21 +195,10 @@ class LamiaProjectView(BaseView):
             return redirect(
                 "lamiaapi", project_id=request.session["idproject"], tablename=url1
             )
+        elif url1.split("/")[0] == "assets":
+            return redirect("/static/" + url1)
 
-        queryset = Project.objects.filter(id_project=kwargs.get("project_id"))
-        idproject = queryset.values("id_project")[0]["id_project"]
+        else:
+            print("*", url1)
+            return redirect("lamiaproject")
 
-        context = json.dumps(
-            list(
-                queryset.values("id_project", "qgisserverurl", "pgdbname", "pgschema")
-            )[0]
-        )
-
-        request.session["idproject"] = idproject
-        if idproject > 1 and not request.user.is_authenticated:
-            return redirect("home")
-
-        return render(request, self.mytemplate, {"context": context})
-
-    def post(self, request, **kwargs):
-        return BaseView.post(self, request, **kwargs)

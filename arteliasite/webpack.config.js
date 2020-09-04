@@ -53,6 +53,7 @@ module.exports = {
     symlinks: false,
     alias: {
       qwc2: path.resolve(__dirname, 'qwc2'),
+      lamiacarto: path.resolve(__dirname, 'lamiacarto'),
     }
   },
   module: {
