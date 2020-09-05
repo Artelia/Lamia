@@ -16,8 +16,7 @@
         "Redlining": "Çizim",
         "Editing": "Düzenleme",
         "Login": "Giriş",
-        "Logout": "Çıkış",
-        "ExternalLink": ""
+        "Logout": "Çıkış"
       },
       "menulabel": "Harita & Araçlar"
     },
@@ -186,8 +185,7 @@
       "themes": "Temalar",
       "invisiblelayer": "Sonuç, görünmeyen bir katmanda bulunuyor.",
       "enablelayer": "Geçerli katman",
-      "existinglayer": "Katman zaten haritada mevcut",
-      "coordinates": ""
+      "existinglayer": "Katman zaten haritada mevcut"
     },
     "searchbox": {
       "coordinates": "Koordinatlar",

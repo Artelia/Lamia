@@ -6,16 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-////
-
 const React = require('react');
 const ReactDOM = require('react-dom');
 
 const appConfig = require('./appConfig');
 const StandardApp = require('qwc2/components/StandardApp');
 require('../icons/build/qwc2-icons.css');
-const bootstrap = require('bootstrap')
-require('bootstrap/dist/css/bootstrap.min.css')
 
 ReactDOM.render(
     <StandardApp appConfig={appConfig} style={{ position: "relative", top: "50px" }} />,

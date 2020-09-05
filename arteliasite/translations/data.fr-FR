@@ -1,7 +1,6 @@
 {
   "locale": "fr-FR",
   "messages": {
-     "Lamia": "Lamia",
     "appmenu": {
       "items": {
         "DxfExport": "Export DXF",
@@ -17,8 +16,7 @@
         "Redlining": "Dessiner",
         "Editing": "Editer",
         "Login": "Connexion",
-        "Logout": "Déconnexion",
-        "ExternalLink": ""
+        "Logout": "Déconnexion"
       },
       "menulabel": "Cartes et outils"
     },
@@ -187,8 +185,7 @@
       "themes": "Cartes",
       "invisiblelayer": "Le résultat est sur un calque désactivé",
       "enablelayer": "Activer le calque",
-      "existinglayer": "",
-      "coordinates": "Coordonnées"
+      "existinglayer": ""
     },
     "searchbox": {
       "coordinates": "",

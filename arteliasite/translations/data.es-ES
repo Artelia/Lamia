@@ -16,8 +16,7 @@
         "Redlining": "Línea de demarcación",
         "Editing": "Editando",
         "Login": "Inicio de sesión",
-        "Logout": "Cierre de sesión",
-        "ExternalLink": ""
+        "Logout": "Cierre de sesión"
       },
       "menulabel": "Mapa & Herramientas"
     },
@@ -186,8 +185,7 @@
       "themes": "Temas",
       "invisiblelayer": "",
       "enablelayer": "",
-      "existinglayer": "",
-      "coordinates": ""
+      "existinglayer": ""
     },
     "searchbox": {
       "coordinates": "",

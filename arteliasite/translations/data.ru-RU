@@ -16,8 +16,7 @@
         "Redlining": "Обводка",
         "Editing": "Правка",
         "Login": "",
-        "Logout": "",
-        "ExternalLink": ""
+        "Logout": ""
       },
       "menulabel": "Карта и инструменты"
     },
@@ -186,8 +185,7 @@
       "themes": "",
       "invisiblelayer": "",
       "enablelayer": "",
-      "existinglayer": "",
-      "coordinates": ""
+      "existinglayer": ""
     },
     "searchbox": {
       "coordinates": "",

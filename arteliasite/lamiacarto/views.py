@@ -56,11 +56,15 @@ class APIFactory:
         elif tablename == "themes.json":
             conffile = os.path.join(
                 os.path.dirname(os.path.realpath(__file__)),
-                "static",
                 "qwc2config",
                 "themesConfig_lamia.json",
             )
+
             datab = themesConfig.genThemes(conffile)
+
+            queryset = Project.objects.filter(id_project=projectid)
+            qgisserverurl = queryset.values("qgisserverurl")[0]["qgisserverurl"]
+            datab["themes"]["items"][0]["url"] = "test"
             return datab
 
         elif tablename.split("/")[0] == "translations":
@@ -72,7 +76,7 @@ class APIFactory:
 
         elif tablename == "config.json":
             configpath = fn = os.path.join(
-                os.path.dirname(__file__), "static", "qwc2config", "config.json"
+                os.path.dirname(__file__), "qwc2config", "config.json"
             )
             with open(configpath) as f:
                 data = json.load(f)
@@ -152,7 +156,7 @@ class LamiaProjectView(BaseView):
         # logging.getLogger().debug("LamiaProjectView")
 
         print("*", kwargs)
-        print("session", request.session["idproject"])
+        # print("session", request.session["idproject"])
 
         url1 = kwargs.get("conffile", None)
         # if url1 and request.session["idproject"]:
@@ -171,9 +175,7 @@ class LamiaProjectView(BaseView):
             )[0]
         )
 
-        idproject = request.session["idproject"]
-        if not idproject:
-            request.session["idproject"] = idproject
+        request.session["idproject"] = idproject
         if idproject > 1 and not request.user.is_authenticated:
             return redirect("home")
 

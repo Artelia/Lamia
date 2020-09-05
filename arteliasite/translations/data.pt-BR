@@ -16,8 +16,7 @@
         "Redlining": "Desenhar",
         "Editing": "Editando",
         "Login": "",
-        "Logout": "",
-        "ExternalLink": ""
+        "Logout": ""
       },
       "menulabel": "Mapa & Ferramentas"
     },
@@ -28,7 +27,7 @@
       "mousepos_label": "Coordenadas",
       "scale_label": "Escala",
       "terms_label": "Termos de uso",
-      "viewertitle_label": "QWC2 Demo"
+      "viewertitle_label": ""
     },
     "copybtn": {
       "click_to_copy": "Clique para copiar",
@@ -186,8 +185,7 @@
       "themes": "",
       "invisiblelayer": "",
       "enablelayer": "",
-      "existinglayer": "",
-      "coordinates": ""
+      "existinglayer": ""
     },
     "searchbox": {
       "coordinates": "",

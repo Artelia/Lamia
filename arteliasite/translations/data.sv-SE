@@ -16,8 +16,7 @@
         "Redlining": "Rita",
         "Editing": "Redigera",
         "Login": "Logga in",
-        "Logout": "Logga ut",
-        "ExternalLink": ""
+        "Logout": "Logga ut"
       },
       "menulabel": "Karta & Verktyg"
     },
@@ -28,7 +27,7 @@
       "mousepos_label": "Koordinater",
       "scale_label": "Skala",
       "terms_label": "Villkor",
-      "viewertitle_label": "QWC2 Demo"
+      "viewertitle_label": ""
     },
     "copybtn": {
       "click_to_copy": "Klicka för att kopiera",
@@ -186,8 +185,7 @@
       "themes": "",
       "invisiblelayer": "",
       "enablelayer": "",
-      "existinglayer": "",
-      "coordinates": "Koordinater"
+      "existinglayer": ""
     },
     "searchbox": {
       "coordinates": "",

@@ -3,106 +3,105 @@
   "messages": {
     "appmenu": {
       "items": {
-        "DxfExport": "",
-        "Help": "",
-        "LayerTree": "",
-        "Measure": "",
-        "Print": "",
-        "RasterExport": "",
-        "Share": "",
-        "ThemeSwitcher": "",
-        "Tools": "",
-        "IdentifyRegion": "",
-        "Redlining": "",
-        "Editing": "",
-        "Login": "",
-        "Logout": "",
-        "ExternalLink": ""
+        "DxfExport": "DXF Export",
+        "Help": "Nápověda",
+        "LayerTree": "Vrstvy & Legenda",
+        "Measure": "Měření",
+        "Print": "Tisk",
+        "RasterExport": "Rastr Export",
+        "Share": "Nasdílet Odkaz",
+        "ThemeSwitcher": "Téma",
+        "Tools": "Nástroje Mapy",
+        "IdentifyRegion": "Určit oblast",
+        "Redlining": "Připomínkování",
+        "Editing": "Úpravy",
+        "Login": "Přihlášení",
+        "Logout": "Odhlášení"
       },
-      "menulabel": ""
+      "menulabel": "Mapa & Nástroje"
     },
     "bgswitcher": {
-      "nobg": ""
+      "nobg": "Bez podkladu"
     },
     "bottombar": {
-      "mousepos_label": "",
-      "scale_label": "",
-      "terms_label": "",
+      "mousepos_label": "Souřadnice",
+      "scale_label": "Měřítko",
+      "terms_label": "Podmínky použití",
       "viewertitle_label": ""
     },
     "copybtn": {
-      "click_to_copy": "",
-      "copied": ""
+      "click_to_copy": "Klikněte pro kopírování",
+      "copied": "Zkopírováno"
     },
     "dxfexport": {
-      "selectinfo": "",
-      "symbologyscale": ""
+      "selectinfo": "Vyberte obdélníkem oblast pro export...",
+      "symbologyscale": "Meřítko symbolů:"
     },
     "editing": {
       "maximize": "Maximální",
       "minimize": "Minimální",
-      "canceldelete": "",
-      "commit": "",
-      "delete": "",
-      "discard": "",
-      "draw": "",
+      "canceldelete": "Neodstraňovat",
+      "commit": "Potvrdit",
+      "delete": "Odstranit",
+      "discard": "Vyřadit",
+      "draw": "Kreslit",
       "feature": "",
-      "fields": "",
-      "layer": "",
-      "noeditablelayers": "",
-      "pick": "",
-      "reallydelete": "",
-      "select": ""
+      "fields": "Pole",
+      "layer": "Vrstva",
+      "noeditablelayers": "Needitovatelná vrstva.",
+      "pick": "Výběr",
+      "reallydelete": "Odstranit",
+      "select": "Vybrat"
     },
     "fileselector": {
-      "placeholder": ""
+      "placeholder": "Vybrat soubor..."
     },
     "heightprofile": {
-      "asl": "",
-      "distance": "",
-      "height": "",
-      "loading": ""
+      "asl": "a.s.l.",
+      "distance": "Vzdálenost",
+      "height": "Výška",
+      "loading": "Výpočet výškového profilu..."
     },
     "identify": {
-      "querying": "",
-      "noresults": "",
-      "export": "",
+      "querying": "Dotazování...",
+      "noresults": "Pro vybraný bod nejsou k dispozici žádné informace",
+      "export": "Export",
       "exportformat": "",
-      "featureReport": "",
-      "noattributes": "",
-      "title": "",
-      "link": ""
+      "featureReport": "Report prvku",
+      "noattributes": "Bez atributů",
+      "title": "Informace o prvku",
+      "link": "Odkaz"
     },
     "identifyregion": {
-      "info": ""
+      "info": "Nakreslete polygon pro identifikaci..."
     },
     "importlayer": {
-      "addlayer": "",
-      "connect": "",
-      "filter": "",
+      "addlayer": "Přidat vrstvu",
+      "connect": "Připojit",
+      "filter": "Filtr...",
       "localfile": "",
-      "nofeatures": "",
-      "noresults": "",
+      "nofeatures": "Žádné prvku nebyly importovány.",
+      "noresults": "Bez výsledku nebo nevalidní URL",
       "loading": "",
       "url": "",
-      "urlplaceholder": ""
+      "urlplaceholder": "Vložit URL pro WMS, WFS..."
     },
     "layerinfo": {
-      "title": "",
-      "abstract": "",
-      "attribution": "",
-      "keywords": "",
-      "dataUrl": "",
-      "metadataUrl": "",
-      "legend": "",
+      "title": "Informace o vrstvě",
+      "abstract": "Abstraktní",
+      "attribution": "Atributy",
+      "keywords": "Klíčová slova",
+      "dataUrl": "Data URL",
+      "metadataUrl": "Metadata URL",
+      "legend": "Legenda",
       "maxscale": "",
       "minscale": ""
     },
     "layertree": {
-      "compare": "",
-      "importlayer": "",
-      "maptip": "",
-      "printlegend": "",
+      "compare": "Porovnat vrchní vrstvy",
+      "importlayer": "Importovat vrstvu",
+      "maptip": "Zobrazovat bubliny nad mapou",
+      "printlegend": "Tisk legendy",
       "deletealllayers": "",
       "visiblefilter": "",
       "separator": "",
@@ -110,52 +109,52 @@
       "zoomtolayer": ""
     },
     "locate": {
-      "metersUnit": "",
-      "feetUnit": "",
-      "popup": "",
+      "metersUnit": "metry",
+      "feetUnit": "stopy",
+      "popup": "Jste uvnitř {distance} {unit} z tohoto bodu",
       "statustooltip": {
-        "DISABLED": "",
-        "LOCATING": "",
-        "ENABLED": "",
-        "FOLLOWING": "",
-        "PERMISSION_DENIED": ""
+        "DISABLED": "Poloha: vypnuta",
+        "LOCATING": "Poloha: načítá se...",
+        "ENABLED": "Poloha: zapnuta",
+        "FOLLOWING": "Poloha: následující",
+        "PERMISSION_DENIED": "Poloha: přístup odepřen"
       }
     },
     "map": {
-      "loading": ""
+      "loading": "Načítání..."
     },
     "mapinfotooltip": {
-      "elevation": "",
-      "title": ""
+      "elevation": "Nadmořská výška",
+      "title": "Poloha"
     },
     "measureComponent": {
-      "areaLabel": "",
-      "bearingLabel": "",
-      "lengthLabel": "",
-      "pointLabel": ""
+      "areaLabel": "Plocha",
+      "bearingLabel": "Ložisko",
+      "lengthLabel": "Délka",
+      "pointLabel": "Poloha"
     },
     "print": {
-      "layout": "",
-      "grid": "",
-      "maximize": "",
-      "minimize": "",
-      "nolayouts": "",
-      "notheme": "",
-      "resolution": "",
-      "rotation": "",
-      "scale": "",
-      "submit": "",
+      "layout": "Rovržení:",
+      "grid": "Mřížka:",
+      "maximize": "Maximální",
+      "minimize": "Minimální",
+      "nolayouts": "Vybrané téma nepodporuje tisk",
+      "notheme": "Není vybráno téma",
+      "resolution": "Rozlišení:",
+      "rotation": "Rotace:",
+      "scale": "Měřítko:",
+      "submit": "Tisk",
       "output": "",
       "wait": ""
     },
     "rasterexport": {
-      "format": "",
-      "resolution": "",
-      "selectinfo": ""
+      "format": "Formát:",
+      "resolution": "Rozlišení:",
+      "selectinfo": "Vyberte obdélníkem oblast pro export..."
     },
     "redlining": {
-      "add": "",
-      "border": "",
+      "add": "Přidat",
+      "border": "Okraj",
       "buffer": "",
       "bufferlayername": "",
       "bufferdistance": "",
@@ -165,29 +164,28 @@
       "delete": "",
       "draw": "",
       "edit": "",
-      "fill": "",
+      "fill": "Výplň",
       "freehand": "",
-      "label": "",
-      "layer": "",
-      "line": "",
-      "outline": "",
-      "pick": "",
-      "point": "",
-      "polygon": "",
-      "size": "",
-      "text": "",
-      "width": ""
+      "label": "Popisek",
+      "layer": "Vrstva",
+      "line": "Linie",
+      "outline": "Obrys",
+      "pick": "Výběr",
+      "point": "Bod",
+      "polygon": "Polygon",
+      "size": "Velikost",
+      "text": "Text",
+      "width": "Šířka"
     },
     "search": {
-      "more": "",
-      "search": "",
-      "searchall": "",
-      "all": "",
-      "themes": "",
+      "more": "Více...",
+      "search": "Hledat",
+      "searchall": "Najít místo nebo přidat mapu...",
+      "all": "Vše",
+      "themes": "Témata",
       "invisiblelayer": "",
       "enablelayer": "",
-      "existinglayer": "",
-      "coordinates": ""
+      "existinglayer": ""
     },
     "searchbox": {
       "coordinates": "",
@@ -201,16 +199,16 @@
       "recent": ""
     },
     "share": {
-      "directLinkTitle": "",
-      "generatingpermalink": "",
-      "QRCodeLinkTitle": "",
-      "socialIntro": ""
+      "directLinkTitle": "Přes přímé spojení",
+      "generatingpermalink": "Generovat permalink...",
+      "QRCodeLinkTitle": "qr kód",
+      "socialIntro": "Ve vaší oblíbené sociální síti"
     },
     "tooltip": {
-      "home": "",
-      "zoomin": "",
-      "zoomout": "",
-      "background": ""
+      "home": "Zobrazit celou mapu",
+      "zoomin": "Přiblížit",
+      "zoomout": "Oddálit",
+      "background": "Přepnout podkladovou mapu"
     },
     "themelayerslist": {
       "addlayer": "",
@@ -218,8 +216,8 @@
       "addselectedlayers": ""
     },
     "themeswitcher": {
-      "filter": "",
-      "addtotheme": "",
+      "filter": "Filtr...",
+      "addtotheme": "Přidat k aktuálnímu tématu",
       "addlayerstotheme": "",
       "match": {
         "title": "",

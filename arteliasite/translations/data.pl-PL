@@ -1,193 +1,191 @@
 {
-  "locale": "pl-PL",
+  "locale": "en-US",
   "messages": {
     "appmenu": {
       "items": {
-        "DxfExport": "",
-        "Help": "",
-        "LayerTree": "",
-        "Measure": "",
-        "Print": "",
-        "RasterExport": "",
-        "Share": "",
-        "ThemeSwitcher": "",
-        "Tools": "",
-        "IdentifyRegion": "",
-        "Redlining": "",
-        "Editing": "",
-        "Login": "",
-        "Logout": "",
-        "ExternalLink": ""
+        "DxfExport": "Eksport DXF",
+        "Help": "Pomoc",
+        "LayerTree": "Warstwy i ich legendy",
+        "Measure": "Pomiary",
+        "Print": "Drukuj",
+        "RasterExport": "Eksport Rastra",
+        "Share": "Udostępnij Link",
+        "ThemeSwitcher": "Motyw",
+        "Tools": "Narzędzia Mapy",
+        "IdentifyRegion": "Identifikuj Obszar",
+        "Redlining": "Redlining",
+        "Editing": "Edycja",
+        "Login": "Zaloguj",
+        "Logout": "Wyloguj"
       },
-      "menulabel": ""
+      "menulabel": "Zawartość mapy i narzędzia"
     },
     "bgswitcher": {
-      "nobg": ""
+      "nobg": "Bez tła"
     },
     "bottombar": {
-      "mousepos_label": "",
-      "scale_label": "",
-      "terms_label": "",
+      "mousepos_label": "Współrzędne",
+      "scale_label": "Skala",
+      "terms_label": "Warunki korzystania",
       "viewertitle_label": ""
     },
     "copybtn": {
-      "click_to_copy": "",
-      "copied": ""
+      "click_to_copy": "Kliknij, aby skopiować",
+      "copied": "Skopiowano"
     },
     "dxfexport": {
-      "selectinfo": "",
-      "symbologyscale": ""
+      "selectinfo": "Narysuj prostokąt, określając obszar do eksportu...",
+      "symbologyscale": "Skala symbolizacji:"
     },
     "editing": {
       "maximize": "Maksymalizuj",
       "minimize": "Minimalizuj",
-      "canceldelete": "",
-      "commit": "",
-      "delete": "",
-      "discard": "",
-      "draw": "",
+      "canceldelete": "Nie usuwaj",
+      "commit": "Zatwierdź",
+      "delete": "Usuń",
+      "discard": "Odrzuć",
+      "draw": "Rysuj",
       "feature": "",
-      "fields": "",
-      "layer": "",
-      "noeditablelayers": "",
-      "pick": "",
-      "reallydelete": "",
-      "select": ""
+      "fields": "Pola",
+      "layer": "Warstwa",
+      "noeditablelayers": "Brak edytowalnych warstw.",
+      "pick": "Wybierz",
+      "reallydelete": "Usuń",
+      "select": "Zaznacz"
     },
     "fileselector": {
-      "placeholder": ""
+      "placeholder": "Wybierz plik..."
     },
     "heightprofile": {
-      "asl": "",
-      "distance": "",
-      "height": "",
-      "loading": ""
+      "asl": "a.s.l.",
+      "distance": "Odległość",
+      "height": "Wysokość",
+      "loading": "Obliczanie profilu wysokości..."
     },
     "identify": {
-      "querying": "",
-      "noresults": "",
-      "export": "",
+      "querying": "Przetwarzam zapytanie...",
+      "noresults": "Brak dostępnych danych dla wybranego punktu",
+      "export": "Eksport",
       "exportformat": "",
-      "featureReport": "",
-      "noattributes": "",
-      "title": "",
-      "link": ""
+      "featureReport": "Feature report",
+      "noattributes": "Brak atrybutów",
+      "title": "Feature Info",
+      "link": "Link"
     },
     "identifyregion": {
-      "info": ""
+      "info": "Narysuj poligon wokół obiektów, aby zidentyfikować..."
     },
     "importlayer": {
-      "addlayer": "",
-      "connect": "",
-      "filter": "",
-      "localfile": "",
-      "nofeatures": "",
-      "noresults": "",
+      "addlayer": "Dodaj warstwę",
+      "connect": "Połącz",
+      "filter": "Filtruj...",
+      "localfile": "Plik lokalny",
+      "nofeatures": "Elementy nie mogły zostać zaimportowane",
+      "noresults": "Brak wyników lub błędny adres URL",
       "loading": "",
-      "url": "",
-      "urlplaceholder": ""
+      "url": "URL",
+      "urlplaceholder": "Podaj URL do WMS, WFS..."
     },
     "layerinfo": {
-      "title": "",
-      "abstract": "",
-      "attribution": "",
-      "keywords": "",
-      "dataUrl": "",
-      "metadataUrl": "",
-      "legend": "",
+      "title": "Informacja o warstwie",
+      "abstract": "Abstrakt",
+      "attribution": "Właściwości",
+      "keywords": "Słowa kluczowe",
+      "dataUrl": "URL danych",
+      "metadataUrl": "URL metadanych",
+      "legend": "Legenda",
       "maxscale": "",
       "minscale": ""
     },
     "layertree": {
-      "compare": "",
-      "importlayer": "",
-      "maptip": "",
-      "printlegend": "",
-      "deletealllayers": "",
+      "compare": "Porównaj najwyższą warstwę",
+      "importlayer": "Importuj warstwę",
+      "maptip": "Pokaż wskazówki dla warstwy",
+      "printlegend": "Drukuj legendę",
+      "deletealllayers": "Usuń wszystkie warstwy",
       "visiblefilter": "",
       "separator": "",
       "separatortooltip": "",
       "zoomtolayer": ""
     },
     "locate": {
-      "metersUnit": "",
-      "feetUnit": "",
-      "popup": "",
+      "metersUnit": "metry",
+      "feetUnit": "stopy",
+      "popup": "Jesteś w odległości {distance} {unit} od tego punktu",
       "statustooltip": {
-        "DISABLED": "",
-        "LOCATING": "",
-        "ENABLED": "",
-        "FOLLOWING": "",
-        "PERMISSION_DENIED": ""
+        "DISABLED": "Pozycja: wyłączona",
+        "LOCATING": "Pozycja: lokalizowanie...",
+        "ENABLED": "Pozycja: włączona",
+        "FOLLOWING": "Pozycja: following",
+        "PERMISSION_DENIED": "Pozycja: dostęp zabroniony"
       }
     },
     "map": {
-      "loading": ""
+      "loading": "Ładowanie..."
     },
     "mapinfotooltip": {
-      "elevation": "",
-      "title": ""
+      "elevation": "Wysokość",
+      "title": "Pozycja"
     },
     "measureComponent": {
-      "areaLabel": "",
-      "bearingLabel": "",
-      "lengthLabel": "",
-      "pointLabel": ""
+      "areaLabel": "Obszar",
+      "bearingLabel": "Bearing",
+      "lengthLabel": "Odległość",
+      "pointLabel": "Pozycja"
     },
     "print": {
-      "layout": "",
-      "grid": "",
-      "maximize": "",
-      "minimize": "",
-      "nolayouts": "",
-      "notheme": "",
-      "resolution": "",
-      "rotation": "",
-      "scale": "",
-      "submit": "",
-      "output": "",
-      "wait": ""
+      "layout": "Layout:",
+      "grid": "Siatka:",
+      "maximize": "Maksymalizuj",
+      "minimize": "Minimalizuj",
+      "nolayouts": "Wybrany motyw nie umożliwia drukowania",
+      "notheme": "Brak wybranego motywu",
+      "resolution": "Rozdzielczość:",
+      "rotation": "Obrót:",
+      "scale": "Skala:",
+      "submit": "Drukuj",
+      "output": "Drukuj output",
+      "wait": "Proszę czekać..."
     },
     "rasterexport": {
-      "format": "",
-      "resolution": "",
-      "selectinfo": ""
+      "format": "Format:",
+      "resolution": "Rozdzielczość:",
+      "selectinfo": "Narysuj prostokąt, określając obszar do eksportu..."
     },
     "redlining": {
-      "add": "",
-      "border": "",
-      "buffer": "",
-      "bufferlayername": "",
-      "bufferdistance": "",
-      "bufferlayer": "",
-      "buffercompute": "",
-      "bufferselectfeature": "",
-      "delete": "",
-      "draw": "",
-      "edit": "",
-      "fill": "",
+      "add": "Dodaj",
+      "border": "Obramowanie",
+      "buffer": "Buforuj",
+      "bufferlayername": "Buforuj",
+      "bufferdistance": "Odległość",
+      "bufferlayer": "Destynacja",
+      "buffercompute": "Oblicz",
+      "bufferselectfeature": "Wybierz element do buforowania",
+      "delete": "Usuń",
+      "draw": "Rysuj",
+      "edit": "Edytuj",
+      "fill": "Wypełnij",
       "freehand": "",
-      "label": "",
-      "layer": "",
-      "line": "",
-      "outline": "",
-      "pick": "",
-      "point": "",
-      "polygon": "",
-      "size": "",
-      "text": "",
-      "width": ""
+      "label": "Etykieta",
+      "layer": "Warstwa",
+      "line": "Linia",
+      "outline": "Szkic",
+      "pick": "Wybierz",
+      "point": "Punkt",
+      "polygon": "Poligon",
+      "size": "Rozmiar",
+      "text": "Tekst",
+      "width": "Szerokość"
     },
     "search": {
-      "more": "",
-      "search": "",
-      "searchall": "",
-      "all": "",
-      "themes": "",
-      "invisiblelayer": "",
-      "enablelayer": "",
-      "existinglayer": "",
-      "coordinates": ""
+      "more": "Więcej...",
+      "search": "Szukaj",
+      "searchall": "Szukaj miejsc lub dodaj mapy...",
+      "all": "Wszystko",
+      "themes": "Motywy",
+      "invisiblelayer": "Wynik znajduje się na warstwie, która nie jest widoczna.",
+      "enablelayer": "Włącz warstwę",
+      "existinglayer": ""
     },
     "searchbox": {
       "coordinates": "",
@@ -201,16 +199,16 @@
       "recent": ""
     },
     "share": {
-      "directLinkTitle": "",
-      "generatingpermalink": "",
-      "QRCodeLinkTitle": "",
-      "socialIntro": ""
+      "directLinkTitle": "Poprzez link bezpośredni",
+      "generatingpermalink": "Generowanie permalinku...",
+      "QRCodeLinkTitle": "qr code",
+      "socialIntro": "W twoich ulubionych mediach społecznościowych"
     },
     "tooltip": {
-      "home": "",
-      "zoomin": "",
-      "zoomout": "",
-      "background": ""
+      "home": "Pokaż całą mapę",
+      "zoomin": "Przybliż",
+      "zoomout": "Oddal",
+      "background": "Zmień podkład map"
     },
     "themelayerslist": {
       "addlayer": "",
@@ -218,8 +216,8 @@
       "addselectedlayers": ""
     },
     "themeswitcher": {
-      "filter": "",
-      "addtotheme": "",
+      "filter": "Filtruj...",
+      "addtotheme": "Dodaj do obecnego motywu",
       "addlayerstotheme": "",
       "match": {
         "title": "",

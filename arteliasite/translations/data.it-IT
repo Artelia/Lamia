@@ -16,8 +16,7 @@
         "Redlining": "Strumenti di disegno",
         "Editing": "Strumenti di modifica",
         "Login": "Accedi",
-        "Logout": "Disconnetti",
-        "ExternalLink": "Collegamento esterno"
+        "Logout": "Disconnetti"
       },
       "menulabel": "Mappa e strumenti"
     },
@@ -28,7 +27,7 @@
       "mousepos_label": "Coordinate",
       "scale_label": "Scala",
       "terms_label": "Condizioni di uso",
-      "viewertitle_label": "QWC2 Demo"
+      "viewertitle_label": ""
     },
     "copybtn": {
       "click_to_copy": "Clicca per copiare",
@@ -186,8 +185,7 @@
       "themes": "Temi",
       "invisiblelayer": "Il risultato si trova su un livello che non è visibile.",
       "enablelayer": "Attivare il livello",
-      "existinglayer": "Il livello esiste già nella mappa",
-      "coordinates": "Coordinate"
+      "existinglayer": "Il livello esiste già nella mappa"
     },
     "searchbox": {
       "coordinates": "Coordinate",

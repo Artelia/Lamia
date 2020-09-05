@@ -16,8 +16,7 @@
         "Redlining": "Evidențiere",
         "Editing": "Editare",
         "Login": "Conectează-te",
-        "Logout": "Deconectează-te",
-        "ExternalLink": "Link extern"
+        "Logout": "Deconectează-te"
       },
       "menulabel": "Hărți & Unelte"
     },
@@ -186,8 +185,7 @@
       "themes": "Hărți tematice",
       "invisiblelayer": "Rezultatul este într-un strat invizibil",
       "enablelayer": "Activare strat",
-      "existinglayer": "Strat existent",
-      "coordinates": "Coordonate"
+      "existinglayer": "Strat existent"
     },
     "searchbox": {
       "coordinates": "Coordonate",

@@ -1,7 +1,6 @@
 {
   "locale": "fr-FR",
   "messages": {
-    "Lamia": "Lamia",
     "qtdesigner": {
       "1": "1",
       "GPS not connected": "GPS non connecté",

@@ -16,8 +16,7 @@
         "Redlining": "Redlining",
         "Editing": "Editing",
         "Login": "Login",
-        "Logout": "Logout",
-        "ExternalLink": "External Link"
+        "Logout": "Logout"
       },
       "menulabel": "Map & Tools"
     },
@@ -28,7 +27,7 @@
       "mousepos_label": "Coordinates",
       "scale_label": "Scale",
       "terms_label": "Terms of use",
-      "viewertitle_label": "QWC2 Demo"
+      "viewertitle_label": ""
     },
     "copybtn": {
       "click_to_copy": "Click to copy",
@@ -186,8 +185,7 @@
       "themes": "Themes",
       "invisiblelayer": "The result lies on a layer which is not visible.",
       "enablelayer": "Enable layer",
-      "existinglayer": "The layer already exists in the map",
-      "coordinates": "Coordinates"
+      "existinglayer": "The layer already exists in the map"
     },
     "searchbox": {
       "coordinates": "Coordinates",
