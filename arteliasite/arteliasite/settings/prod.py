@@ -25,22 +25,20 @@ DEBUG = False
 
 # Application definition
 
-WEBPACK_LOADER = {
-    "DEFAULT": {
-        "BUNDLE_DIR_NAME": "lamiacarto/prod/",
-        # "BUNDLE_DIR_NAME": "dist/",
-        # 'STATS_FILE': os.path.join(BASE_DIR, 'pvr', 'static','bundles', 'webpack-stats.json'),
-        "STATS_FILE": os.path.join(BASE_DIR, "lamiacarto", "webpack-stats-prod.json"),
-    }
-}
+# WEBPACK_LOADER = {
+#     "DEFAULT": {
+#         "BUNDLE_DIR_NAME": "lamiacarto/prod/",
+#         # "BUNDLE_DIR_NAME": "dist/",
+#         # 'STATS_FILE': os.path.join(BASE_DIR, 'pvr', 'static','bundles', 'webpack-stats.json'),
+#         "STATS_FILE": os.path.join(BASE_DIR, "lamiacarto", "webpack-stats-prod.json"),
+#     }
+# }
 
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
-CORS_ORIGIN_WHITELIST = [
-    "http://127.0.0.1:8000",
-]
+CORS_ORIGIN_WHITELIST = ["http://127.0.0.1:8000", "localhost"]
 
 ROOT_URLCONF = "arteliasite.urls"
-
 
 
 WSGI_APPLICATION = "arteliasite.wsgi.application"
@@ -62,7 +60,8 @@ DATABASES = {
         "NAME": "lamiaunittest",
         "USER": "pvr",
         "PASSWORD": "pvr",
-        "HOST": "localhost",
+        "HOST": "docker.for.win.localhost",
+        # "HOST": "host.docker.internal",
         "PORT": "5432",
     }
 }
@@ -81,24 +80,18 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = "/static/"
 
 STATICFILES_DIRS = [
-    os.path.abspath(os.path.join(BASE_DIR, "node_modules")),  # for bootstrap
+    # os.path.abspath(os.path.join(BASE_DIR, "node_modules")),  # for bootstrap
     ("forms", os.path.abspath(os.path.join(BASE_DIR, "..", "Lamia", "worktypeconf"))),
-    ("assets", os.path.join(BASE_DIR, "lamiacarto", "static","qwc2assets")),
-    ("qwc2config", os.path.join(BASE_DIR, "lamiacarto", "qwc2config")),
 ]
 
-STATIC_ROOT = '/static'
+STATIC_ROOT = "/static/"
 
 MEDIA_ROOT = os.path.join("C:/", "media")
 MEDIA_URL = "/media/"
-
-
 

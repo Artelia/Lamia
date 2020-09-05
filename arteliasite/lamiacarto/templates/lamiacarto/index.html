@@ -1,6 +1,5 @@
 {% extends "artelialogin/artelialogin.html" %}
 {% load static %}
-{% load render_bundle from webpack_loader %}
 
 {% block head %}
 <meta charset="UTF-8" />
@@ -23,6 +22,6 @@
 <div id="container"></div>
 {{ context|json_script:"context" }}
 {{ themes|json_script:"themes" }}
-{% render_bundle 'QWC2App' %}
+<script src="{% static 'lamiacarto/bundle/QWC2App.js' %}"></script>
 {% endblock %}
 {% block footer %}{% endblock %}

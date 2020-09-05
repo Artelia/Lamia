@@ -12,7 +12,7 @@ sandbox/*/
 frontend/
 
 arteliasite/node_modules
-arteliasite/lamiacarto/static/lamiacarto/dist
+arteliasite/lamiacarto/static/lamiacarto/bundle
 arteliasite/static
 arteliasitev2/node_modules
 arteliasitev2/qwc2

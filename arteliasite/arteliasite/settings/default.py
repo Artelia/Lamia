@@ -35,20 +35,20 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "artelialogin",
     "lamiacarto",
-    "webpack_loader",
+    # "webpack_loader",
     "rest_framework",
     # "corsheaders",
 ]
 
 
-WEBPACK_LOADER = {
-    "DEFAULT": {
-        "BUNDLE_DIR_NAME": "lamiacarto/dist/",
-        # "BUNDLE_DIR_NAME": "dist/",
-        # 'STATS_FILE': os.path.join(BASE_DIR, 'pvr', 'static','bundles', 'webpack-stats.json'),
-        "STATS_FILE": os.path.join(BASE_DIR, "lamiacarto", "webpack-stats.json"),
-    }
-}
+# WEBPACK_LOADER = {
+#     "DEFAULT": {
+#         "BUNDLE_DIR_NAME": "lamiacarto/dist/",
+#         # "BUNDLE_DIR_NAME": "dist/",
+#         # 'STATS_FILE': os.path.join(BASE_DIR, 'pvr', 'static','bundles', 'webpack-stats.json'),
+#         "STATS_FILE": os.path.join(BASE_DIR, "lamiacarto", "webpack-stats.json"),
+#     }
+# }
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

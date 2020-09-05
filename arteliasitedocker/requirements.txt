@@ -8,7 +8,7 @@ sphinx
 sphinx-rtd-theme
 autopep8
 pycodestyle
-#psycopg2
+psycopg2
 #sqlite3
 django-webpack-loader
 gunicorn

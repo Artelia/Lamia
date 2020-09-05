@@ -1,0 +1,1 @@
+docker run --name lamia_webservice -p 8085:8085 lamia_webservice

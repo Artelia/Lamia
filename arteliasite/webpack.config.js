@@ -1,7 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const os = require('os');
-const BundleTracker = require('webpack-bundle-tracker');
+// const BundleTracker = require('webpack-bundle-tracker');
 const styleConfig = require("./lamiacarto/static/qwc2config/styleConfig");
 
 const nodeEnv = process.env.NODE_ENV || 'development';
@@ -11,7 +11,7 @@ const isProd = nodeEnv === 'production';
 let styleReplacements = Object.keys(styleConfig).map(key => ({ search: "@" + key + "@", replace: styleConfig[key], flags: "g" }));
 
 const plugins = [
-  new BundleTracker({ filename: './lamiacarto/webpack-stats.json' }),
+  // new BundleTracker({ filename: './lamiacarto/webpack-stats.json' }),
   new webpack.DefinePlugin({
     'process.env': { NODE_ENV: JSON.stringify(nodeEnv) }
   }),
@@ -42,7 +42,7 @@ module.exports = {
     'QWC2App': path.join(__dirname, "lamiacarto", "static", "lamiacarto", "js", "app")
   },
   output: {
-    path: path.join(__dirname, "lamiacarto", "static", "lamiacarto", 'dev'),
+    path: path.join(__dirname, "lamiacarto", "static", "lamiacarto", 'bundle'),
     // publicPath: "/dist/",
     // publicPath: "/static/lamiacarto/dist/",
     filename: '[name].js'

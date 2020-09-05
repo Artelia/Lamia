@@ -1,0 +1,3 @@
+remove non iamges :
+
+docker rmi $(docker images -f “dangling=true” -q)

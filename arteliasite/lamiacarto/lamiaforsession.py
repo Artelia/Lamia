@@ -1,13 +1,16 @@
 import os, sys, logging
 from threading import Thread
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
+lamiapath = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+sys.path.append(lamiapath)
+print("lamiapath : ", lamiapath)
 import Lamia
 from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
 from Lamia.iface.qgscanvas.ifaceqgiscanvas import QgisCanvas
 from Lamia.libslamia.dbaseutils.chooserid import IDChooser
 from artelialogin.models import Project
-from test.test_utils import *
+
+# from ...test.test_utils import *
 import pprint
 
 

@@ -28,14 +28,14 @@ DEBUG = True
 # Application definition
 
 
-WEBPACK_LOADER = {
-    "DEFAULT": {
-        "BUNDLE_DIR_NAME": "lamiacarto/dev/",
-        # "BUNDLE_DIR_NAME": "dist/",
-        # 'STATS_FILE': os.path.join(BASE_DIR, 'pvr', 'static','bundles', 'webpack-stats.json'),
-        "STATS_FILE": os.path.join(BASE_DIR, "lamiacarto", "webpack-stats.json"),
-    }
-}
+# WEBPACK_LOADER = {
+#     "DEFAULT": {
+#         "BUNDLE_DIR_NAME": "lamiacarto/dev/",
+#         # "BUNDLE_DIR_NAME": "dist/",
+#         # 'STATS_FILE': os.path.join(BASE_DIR, 'pvr', 'static','bundles', 'webpack-stats.json'),
+#         "STATS_FILE": os.path.join(BASE_DIR, "lamiacarto", "webpack-stats.json"),
+#     }
+# }
 
 
 CORS_ORIGIN_WHITELIST = [
@@ -89,16 +89,8 @@ AUTH_PASSWORD_VALIDATORS = [
 STATIC_URL = "/static/"
 
 STATICFILES_DIRS = [
-    # os.path.abspath(os.path.join(BASE_DIR, "node_modules")),  # for bootstrap
+    os.path.abspath(os.path.join(BASE_DIR, "node_modules")),  # for bootstrap
     ("forms", os.path.join(os.path.dirname(BASE_DIR), "Lamia", "worktypeconf")),
-    # (
-    #     "assets",
-    #     os.path.normpath(os.path.join(BASE_DIR, "lamiacarto", "static", "qwc2assets")),
-    # ),
-    # (
-    #     "qwc2config",
-    #     os.path.normpath(os.path.join(BASE_DIR, "lamiacarto", "static", "qwc2config")),
-    # ),
 ]
 
 STATIC_ROOT = os.path.normpath(os.path.join(BASE_DIR, "static"))

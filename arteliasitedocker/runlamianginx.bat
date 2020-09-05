@@ -1,0 +1,1 @@
+docker run --name lamia_nginx -p 8080:80 lamia_nginx

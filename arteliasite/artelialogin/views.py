@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import View
 from artelialogin.models import User, Project
+from django.contrib.auth import authenticate, login, logout
 import logging, json
 
 # Create your views here.
