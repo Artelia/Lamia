@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import View
 from artelialogin.models import User, Project
 from django.contrib.auth import authenticate, login, logout
