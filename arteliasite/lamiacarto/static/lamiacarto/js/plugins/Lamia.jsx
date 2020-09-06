@@ -44,6 +44,7 @@ class Lamia extends React.Component {
     }
 
     componentDidMount() {
+
     }
 
     componentWillReceiveProps(nextProps) {

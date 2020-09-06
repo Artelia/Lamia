@@ -216,6 +216,7 @@ class EditingFormReact extends React.Component {
         let url = 'http://' + window.location.host + '/lamiaapi/' + this.projectdata.id_project + '/' + this.table
         let res = await axios.post(url, {
             function: 'dbasetables',
+            locale: (navigator ? navigator.language || navigator.browserLanguage : "en"),
         })
         let dictfields = res.data
         let keyvalues = {}

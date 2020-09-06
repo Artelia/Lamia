@@ -89,7 +89,6 @@ class APIFactory:
 
         elif tablename.split("/")[0] == "translations":
             translationfile = os.path.join(settings.BASE_DIR, tablename)
-            print(translationfile)
             with open(translationfile, encoding="utf8") as f:
                 data = json.load(f)
             return data
@@ -129,8 +128,9 @@ class LamiaApiView(views.APIView):
                 return Response(dbasetables)
 
         else:
-
             if func == "dbasetables":
+                locale = request.data["locale"]
+                lamiasession.updateLocale(locale)
                 qgistables = [tablename] + lamiaparser.getParentTable(tablename)
                 dbtableresponse = {}
                 for table in qgistables:

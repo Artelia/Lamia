@@ -29,6 +29,7 @@ class LamiaSession:
         # logging.getLogger().debug(f"Init lamia session project n {idproject}")
         print(threading.current_thread().name)
         self.idproject = idproject
+        self.locale = None
 
         # * var1 : load entire widget
         if False:
@@ -172,4 +173,13 @@ class LamiaSession:
             print("getIds error", e)
             ids = json.dumps({})
         return ids
+
+    def updateLocale(self, locale):
+        if locale != self.locale:
+            self.lamiaparser.locale = locale.split("_")[0]
+            self.lamiaparser.dbconfigreader.createDBDictionary(
+                self.lamiaparser.worktype
+            )
+            self.lamiaparser.dbasetables = self.lamiaparser.dbconfigreader.dbasetables
+            self.locale = locale
 
