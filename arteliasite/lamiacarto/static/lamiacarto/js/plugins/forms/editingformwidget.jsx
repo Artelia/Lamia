@@ -196,8 +196,15 @@ class EditingFormReact extends React.Component {
     }
 
     async getPropertiesFromPk(pk) {
-        let temp = this.projectdata.qgisserverurl + 'qgisserver/wfs3/collections/' + this.table + '_qgis/items/' + pk + '.json'
-        let feat = await axios.get(temp)
+
+        let qgisserverurl = this.projectdata.qgisserverurl.split('?')[0]
+        let qgisserverquery
+        this.projectdata.qgisserverurl.split('?').length > 1 ? qgisserverquery = this.projectdata.qgisserverurl.split('?')[1] : qgisserverquery = null
+        let databaseurl = qgisserverurl + '/wfs3/collections/' + this.table + '_qgis/items/' + pk + '.json'
+        qgisserverquery ? databaseurl = databaseurl + '?' + qgisserverquery : null
+
+        // let temp = this.projectdata.qgisserverurl + 'qgisserver/wfs3/collections/' + this.table + '_qgis/items/' + pk + '.json'
+        let feat = await axios.get(databaseurl)
         console.log('feat', this.constructor.name, feat.data)
         return feat.data
     }

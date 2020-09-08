@@ -37,6 +37,9 @@ COPY arteliasitedocker/qgisserver/fcgid.conf ./mods-available/fcgid.conf
 RUN echo 'ServerName localhost' >> /etc/apache2/apache2.conf
 RUN a2enmod cgi
 
+RUN echo 'Header set Access-Control-Allow-Origin "*"' >> /etc/apache2/apache2.conf
+RUN a2enmod headers
+
 EXPOSE 80
 
 # CMD ["service", "apache2", "start"]

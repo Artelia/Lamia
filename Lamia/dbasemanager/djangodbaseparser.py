@@ -26,7 +26,7 @@ This file is part of LAMIA.
   * License-Filename: LICENSING.md
  """
 
-import os, sys, shutil, datetime
+import os, sys, shutil, datetime, time
 
 from .postgisdbaseparser import *
 
@@ -85,7 +85,7 @@ class DjangoDBaseParser(PostGisDBaseParser):
             port=port,
             database=dbname,
             options="-c search_path=" + schema + ",public",
-            application_name='lamiawebservice'
+            application_name="lamiawebservice",
         )
 
         # connpgis = psycopg2.connect(connectstr)
@@ -109,6 +109,11 @@ class DjangoDBaseParser(PostGisDBaseParser):
 
     def query(self, sql, arguments=[], docommit=True):
         ps_connection = self.threaded_postgreSQL_pool.getconn()
+        compt = 0
+        while not ps_connection and compt < 100:
+            ps_connection = self.threaded_postgreSQL_pool.getconn()
+            compt += 1
+            time.sleept(10)
         # with self.connPGis.cursor() as cursor:
         with ps_connection.cursor() as cursor:
             try:

@@ -36,8 +36,14 @@ class Lamia extends React.Component {
     }
 
     async getDBaseWorktype() {
-        let temp = this.projectdata.qgisserverurl + 'qgisserver/wfs3/collections/database_qgis/items/1.json'
-        let feat = await axios.get(temp)
+        // console.log(this.projectdata.qgisserverurl)
+        let qgisserverurl = this.projectdata.qgisserverurl.split('?')[0]
+        let qgisserverquery
+        this.projectdata.qgisserverurl.split('?').length > 1 ? qgisserverquery = this.projectdata.qgisserverurl.split('?')[1] : qgisserverquery = null
+        let databaseurl = qgisserverurl + '/wfs3/collections/database_qgis/items/1.json'
+        qgisserverquery ? databaseurl = databaseurl + '?' + qgisserverquery : null
+
+        let feat = await axios.get(databaseurl)
         let worktype = feat.data.properties.businessline
         this.dbaseworktypeloaded = true
         eval('this.setState({widgetsclasses:' + worktype + '})')
