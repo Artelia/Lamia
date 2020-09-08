@@ -70,6 +70,10 @@ Tips:
   GRANT SELECT ON ALL TABLES IN SCHEMA public TO xxx;    for applying to existing tables
   
   NB : REVOKE SELECT ON ALL TABLES IN SCHEMA public FROM user;     to revoke
+  
+  postgres connections
+  
+  SELECT * FROM pg_stat_activity
  
  
  

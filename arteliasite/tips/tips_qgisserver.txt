@@ -17,6 +17,16 @@ access API :
     http://localhost:8380/qgisserver/wfs3/collections?
     http://localhost:8380/qgisserver/wfs3/collections?MAP=/etc/qgisserver/projectgpmb.qgs
 
+http://localhost:8380/wfs3/collections/MAP=/etc/qgisserver/qgisproject.qgis
+
+http://localhost:8380/qgisserver/cgi-bin/qgis_mapserv.fcgi?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities&MAP=/etc/qgisserver/projectbm.qgs
+
+http://localhost:8380/cgi-bin/qgis_mapserv.fcgi?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities&map=/projects/projectbm.qgs
+http://localhost:8381/cgi-bin/qgis_mapserv.fcgi?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities
+
+http://localhost:8381/qgisserver/wfs3/collections?Map=/projects/project.qgs
 
 openlayers nearest
 https://gis.stackexchange.com/questions/61479/how-to-get-a-feature-that-lies-closest-to-a-point-in-openlayers
+
+

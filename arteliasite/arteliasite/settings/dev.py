@@ -66,6 +66,7 @@ DATABASES = {
         "PASSWORD": "pvr",
         "HOST": "localhost",
         "PORT": "5432",
+        "OPTIONS": {"application_name": "lamiadjango"},
     }
 }
 

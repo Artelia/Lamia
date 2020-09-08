@@ -3,7 +3,6 @@ from threading import Thread
 
 lamiapath = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 sys.path.append(lamiapath)
-print("lamiapath : ", lamiapath)
 import Lamia
 from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
 from Lamia.iface.qgscanvas.ifaceqgiscanvas import QgisCanvas
@@ -12,7 +11,7 @@ from artelialogin.models import Project
 
 # from ...test.test_utils import *
 import pprint
-
+import json
 
 import threading
 
@@ -158,7 +157,7 @@ class LamiaSession:
         """
         try:
             res = self.lamiaparser.query(sql)
-            self.lamiaparser.commitTransaction()
+            # self.lamiaparser.commitTransaction()
         except Exception as e:
             print("getNearestPk error", e)
         # print(res)
