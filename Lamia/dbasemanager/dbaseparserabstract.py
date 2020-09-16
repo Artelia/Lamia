@@ -27,7 +27,7 @@ This file is part of LAMIA.
  """
 
 import datetime
-import os, sys, re, logging, shutil
+import os, sys, re, logging, shutil, io
 
 try:
     import PIL
@@ -53,10 +53,13 @@ PGTYPE_TO_SLTYPE = {
     "REAL": "REAL",
     "NUMERIC": "REAL",
     "BOOLEAN": "INTEGER",
+    "BLOB": "BLOB",
+    "BYTEA": "BLOB",
 }
 
 PROJECTCONFIGDIRS = ["dbase", "rapporttools", "styles", "importtools"]
 # PROJECTCONFIGDIRS = ["dbase", "qgswidgets", "qgsstyles", "lamiacost", "lamiaexportshp"]
+THUMBNAIL_SIZE = 256
 
 
 class AbstractDBaseParser:
@@ -170,7 +173,7 @@ class AbstractDBaseParser:
         worktype=None,
         dbaseressourcesdirectory=None,
         variante=None,
-        **kwargs
+        **kwargs,
     ):
         """
         kwargs for postgis :
@@ -953,7 +956,7 @@ class AbstractDBaseParser:
                 sql = self.createSetValueSentence(
                     "UPDATE", "object", ["lpk_revision_end"], [self.maxrevision]
                 )
-                sql += " WHERE pk_objet = " + str(pkobjet)
+                sql += " WHERE pk_object = " + str(pkobjet)
                 self.query(sql)
             else:
                 sql = self.createSetValueSentence(
@@ -1081,9 +1084,11 @@ class AbstractDBaseParser:
                     self.copyRessourceFile(
                         fromfile=file,
                         tofile=destinationfile,
-                        withthumbnail=0,
+                        withthumbnail=2,
                         copywholedirforraster=False,
                     )
+
+                    self.createBlobThumbnail(pkressource, destinationfile)
 
                     finalname = os.path.join(
                         ".", os.path.relpath(destinationfile, dbaseressourcesdirectory)
@@ -1274,10 +1279,11 @@ class AbstractDBaseParser:
                                     possibletbnailfile, tofilebase + "_thumbnail.png"
                                 )
                         else:
-                            size = 256, 256
+                            size = THUMBNAIL_SIZE, THUMBNAIL_SIZE
                             im = PIL.Image.open(fromfile)
                             im.thumbnail(size)
                             im.save(tofilebase + "_thumbnail.png", "PNG")
 
                     if withthumbnail in [0, 2]:
                         shutil.copy(fromfile, destinationfile)
+

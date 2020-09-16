@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>641</width>
-    <height>323</height>
+    <width>400</width>
+    <height>300</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -63,43 +63,10 @@
           <property name="spacing">
            <number>3</number>
           </property>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_11">
-            <property name="text">
-             <string>Lateral</string>
-            </property>
-            <property name="wordWrap">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="label_12">
-            <property name="text">
-             <string>Flow type</string>
-            </property>
-            <property name="wordWrap">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
           <item row="3" column="1">
-           <widget class="QComboBox" name="flowtype"/>
-          </item>
-          <item row="6" column="1">
-           <widget class="QDateEdit" name="dateoperationalcreation">
-            <property name="calendarPopup">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QComboBox" name="pipeshape"/>
-          </item>
-          <item row="2" column="1">
            <widget class="QComboBox" name="laterals"/>
           </item>
-          <item row="0" column="0">
+          <item row="1" column="0">
            <widget class="QLabel" name="label_4">
             <property name="text">
              <string>Network type</string>
@@ -109,7 +76,7 @@
             </property>
            </widget>
           </item>
-          <item row="4" column="0">
+          <item row="5" column="0">
            <widget class="QLabel" name="label_13">
             <property name="text">
              <string>Pipe shape</string>
@@ -119,7 +86,7 @@
             </property>
            </widget>
           </item>
-          <item row="6" column="0">
+          <item row="7" column="0">
            <widget class="QLabel" name="label_16">
             <property name="text">
              <string>Creation year</string>
@@ -129,10 +96,20 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
+          <item row="1" column="1">
            <widget class="QComboBox" name="networktype"/>
           </item>
-          <item row="1" column="0">
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_11">
+            <property name="text">
+             <string>Lateral</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
            <widget class="QLabel" name="label_6">
             <property name="text">
              <string>Pipe type</string>
@@ -142,23 +119,33 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
-           <widget class="QComboBox" name="pipetype"/>
-          </item>
-          <item row="1" column="2">
-           <widget class="QLabel" name="label_10">
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_12">
             <property name="text">
-             <string>Pipe subtype</string>
+             <string>Flow type</string>
             </property>
             <property name="wordWrap">
              <bool>true</bool>
             </property>
            </widget>
           </item>
-          <item row="1" column="3">
+          <item row="4" column="1">
+           <widget class="QComboBox" name="flowtype"/>
+          </item>
+          <item row="7" column="1">
+           <widget class="QDateEdit" name="dateoperationalcreation">
+            <property name="calendarPopup">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QComboBox" name="pipeshape"/>
+          </item>
+          <item row="2" column="3">
            <widget class="QComboBox" name="pipesubtype"/>
           </item>
-          <item row="4" column="2">
+          <item row="5" column="2">
            <widget class="QLabel" name="label">
             <property name="text">
              <string>material</string>
@@ -168,12 +155,38 @@
             </property>
            </widget>
           </item>
-          <item row="4" column="3">
+          <item row="2" column="1">
+           <widget class="QComboBox" name="pipetype"/>
+          </item>
+          <item row="2" column="2">
+           <widget class="QLabel" name="label_10">
+            <property name="text">
+             <string>Pipe subtype</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="3">
            <widget class="QComboBox" name="material">
             <property name="maxVisibleItems">
              <number>50</number>
             </property>
            </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_9">
+            <property name="text">
+             <string>Name</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1" colspan="3">
+           <widget class="QLineEdit" name="name"/>
           </item>
          </layout>
         </widget>
@@ -252,6 +265,28 @@
           </item>
           <item row="1" column="1">
            <widget class="QComboBox" name="systemfunction"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_2">
+         <property name="title">
+          <string> Simplified structural state</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_8">
+          <item>
+           <widget class="QTextBrowser" name="structuralstate">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>60</height>
+             </size>
+            </property>
+            <property name="readOnly">
+             <bool>false</bool>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -484,15 +519,29 @@
       <attribute name="title">
        <string>Management</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_2">
-       <item row="0" column="0">
+      <layout class="QGridLayout" name="gridLayout_2" columnstretch="1,10" columnminimumwidth="1,10">
+       <item row="2" column="0">
         <widget class="QLabel" name="label_14">
          <property name="text">
           <string>Owner</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
+       <item row="3" column="0">
+        <widget class="QLabel" name="label_17">
+         <property name="text">
+          <string>Operator</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_19">
+         <property name="text">
+          <string>City</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
         <widget class="QFrame" name="frame_owner">
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
@@ -503,14 +552,7 @@
          <layout class="QVBoxLayout" name="verticalLayout_6"/>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label_17">
-         <property name="text">
-          <string>Operator</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
+       <item row="3" column="1">
         <widget class="QFrame" name="frame_operator">
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
@@ -521,7 +563,20 @@
          <layout class="QVBoxLayout" name="verticalLayout_7"/>
         </widget>
        </item>
-       <item row="2" column="0">
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_20">
+         <property name="text">
+          <string>Adress</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="city"/>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="streetname"/>
+       </item>
+       <item row="4" column="0" colspan="2">
         <spacer name="verticalSpacer_3">
          <property name="orientation">
           <enum>Qt::Vertical</enum>

@@ -182,3 +182,25 @@ class LamiaSession:
             self.lamiaparser.dbasetables = self.lamiaparser.dbconfigreader.dbasetables
             self.locale = locale
 
+    def getThumbnail(self, pkres):
+        sql = f"SELECT thumbnail FROM resource WHERE pk_resource = {pkres}"
+        bindata = self.lamiaparser.query(sql)[0][0]
+        return bindata
+
+    def getStyles(self):
+        sql = "SELECT businessline FROM database"
+        worktype = self.lamiaparser.query(sql)[0][0]
+        styledirectory = os.path.join(
+            os.path.dirname(Lamia.__file__), "worktypeconf", worktype, "qgsstyles",
+        )
+        stylesdir = [
+            os.path.basename(f.path) for f in os.scandir(styledirectory) if f.is_dir()
+        ]
+
+        returnstyle = {}
+        for styledir in stylesdir:
+            files = [x[2] for x in os.walk(os.path.join(styledirectory, styledir))][0]
+            returnstyle[styledir] = [f.split(".")[0] for f in files]
+
+        return returnstyle
+

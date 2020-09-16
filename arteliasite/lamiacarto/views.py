@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-import json, os, sys
+import json, os, sys, base64
 from django.conf import settings
 
 sys.path.append(settings.BASE_DIR)
@@ -58,12 +58,7 @@ class APIFactory:
 
         if tablename is None:  # request on project
             queryset = Project.objects.filter(id_project=projectid)
-            # id_projet = queryset.values("id_projet")[0]
-            # print(queryset.values_list())
-            # print(queryset.values())
             result = json.dumps(list(queryset.values())[0])
-            # json.dumps(list(queryset.values("id_projet", "qgisserverurl"))[0])
-            # print(type(result), result)
             return result
 
         if tablename == "dbasetables":
@@ -84,7 +79,6 @@ class APIFactory:
             themesdata["themes"]["items"][0]["url"] = qgisserverurl
 
             datab = themesConfig.genThemes(themesdata)
-
             return datab
 
         elif tablename.split("/")[0] == "translations":
@@ -101,16 +95,17 @@ class APIFactory:
                 data = json.load(f)
             return data
 
+        elif tablename == "styles":
+            stylesconf = LamiaSession.getInstance(projectid).getStyles()
+            return stylesconf
+
 
 @method_decorator(userCanAccessProject, name="dispatch")
 class LamiaApiView(views.APIView):
     def get(self, request, **kwargs):
         # print("kwargs", kwargs)
         jsonresult = APIFactory.getresult(request, **kwargs)
-        # yourdata = [{"likes": 10, "comments": 0}, {"likes": 4, "comments": 23}]
-        # results = PostSerializer(yourdata, many=True).data
         return Response(jsonresult)
-        # return JsonResponse(jsonresult)
 
     def post(self, request, **kwargs):
         projectid = kwargs.get("project_id")
@@ -126,6 +121,12 @@ class LamiaApiView(views.APIView):
             if func == "dbasetables":
                 dbasetables = lamiaparser.dbasetables
                 return Response(dbasetables)
+
+            elif func == "thumbnail":
+                pkres = request.data["pkresource"]
+                bindata = LamiaSession.getInstance(projectid).getThumbnail(pkres)
+                bindata = base64.b64encode(bindata)
+                return Response({"base64thumbnail": bindata})
 
         else:
             if func == "dbasetables":

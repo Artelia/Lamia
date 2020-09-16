@@ -119,7 +119,7 @@ class DjangoDBaseParser(PostGisDBaseParser):
             try:
                 if self.printsql:
                     logging.getLogger("Lamia_unittest").debug("%s", sql)
-                cursor.execute(sql)
+                cursor.execute(sql, arguments)
                 # print(self.PGiscursor.statusmessage )
                 if cursor.statusmessage.split(" ")[0] not in [
                     "INSERT",

@@ -62,9 +62,15 @@ class BaseUrbandrainageSurfaceTool(BaseSurfaceTool):
                     "flowconditionupstream": self.toolwidgetmain.comboBox_inletflowcondition,
                     "flowconditiondownstream": self.toolwidgetmain.comboBox_outletflowcondition,
                     "systemfunction": self.toolwidgetmain.comboBox_systemfunction,
+                    "city": self.toolwidgetmain.city,
+                    "streetname": self.toolwidgetmain.streetname,
+                    "structuralstate": self.toolwidgetmain.structuralstate,
                 },
             },
-            "object": {"linkfield": "id_object", "widgets": {}},
+            "object": {
+                "linkfield": "id_object",
+                "widgets": {"name": self.toolwidgetmain.name,},
+            },
         }
         # self.toolwidgetmain.pushButton_currentPrestation.clicked.connect(self.defineCurrentPrestation)
         # self.toolwidgetmain.pushButton_defineinter.clicked.connect(self.manageLinkage)

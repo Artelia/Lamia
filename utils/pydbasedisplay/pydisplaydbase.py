@@ -96,20 +96,21 @@ def launchIface():
     SLFILE = r"C:\01_WORKINGDIR\GPMB\c_merge_ass\mergeddbase.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\cons\cons.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\orange\toto.sqlite"
+    SLFILE = r"C:\111_GitProjects\Lamia\testtempfiles\c_creation\sl_base3_urbandrainage_Lamia\test01.sqlite"
 
     print(TGREEN, f"Opening {os.path.abspath(SLFILE)}", ENDC)
 
-    # lamiawidget.loadDBase(dbtype="Spatialite", slfile=SLFILE)
-    lamiawidget.loadDBase(
-        dbtype="Postgis",
-        host="localhost",
-        # host="localhost",
-        port=5432,
-        dbname="lamiaunittest",
-        schema="importgpmb",
-        user="pvr",
-        password="pvr",
-    )
+    lamiawidget.loadDBase(dbtype="Spatialite", slfile=SLFILE)
+    # lamiawidget.loadDBase(
+    #     dbtype="Postgis",
+    #     host="localhost",
+    #     # host="localhost",
+    #     port=5432,
+    #     dbname="lamiaunittest",
+    #     schema="base3_urbandrainage_lamia",
+    #     user="pvr",
+    #     password="pvr",
+    # )
 
     lamiawidget.setVisualMode(visualmode=INTERFACEINDEX)
     lamiawidget.dbase.raiseexceptions = True  # False True

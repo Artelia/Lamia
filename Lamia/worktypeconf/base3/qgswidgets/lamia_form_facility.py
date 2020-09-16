@@ -75,7 +75,10 @@ class BaseFacilityTool(AbstractLamiaFormTool):
         self.formtoolwidgetconfdictmain = {
             "facility": {
                 "linkfield": "id_facility",
-                "widgets": {"facilitytype": self.toolwidgetmain.comboBox_type},
+                "widgets": {
+                    "facilitytype": self.toolwidgetmain.comboBox_type,
+                    "facilityfunction": self.toolwidgetmain.facilityfunction,
+                },
             },
             "object": {
                 "linkfield": "id_object",
@@ -84,7 +87,13 @@ class BaseFacilityTool(AbstractLamiaFormTool):
                     "comment": self.toolwidgetmain.textBrowser_comm,
                 },
             },
-            "descriptionsystem": {"linkfield": "id_descriptionsystem", "widgets": {}},
+            "descriptionsystem": {
+                "linkfield": "id_descriptionsystem",
+                "widgets": {
+                    "city": self.toolwidgetmain.city,
+                    "streetname": self.toolwidgetmain.streetname,
+                },
+            },
         }
 
         # ****************************************************************************************

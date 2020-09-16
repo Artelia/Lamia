@@ -165,6 +165,10 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         projectcrs.createFromString("EPSG:" + str(dbaseparser.crsnumber))
         project.setCrs(projectcrs)
 
+        print(project.dataDefinedServerProperties().referencedFields())
+
+        return
+
         for rawtablename, rawdict in dbaseparser.dbasetables.items():
             # if 'geom' not in rawdict:
             #     continue
@@ -233,26 +237,41 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
         for tablename in layers:
             if (
-                "layerqgis" in layers[tablename].keys()
+                "layerqgis"
+                in layers[tablename].keys()
                 # and layers[tablename]["layerqgis"].geometryType()
                 != qgis.core.QgsWkbTypes.NullGeometry
             ):
-                stylepath = os.path.normpath(
-                    os.path.join(defaultstyledirectory, tablename + ".qml")
-                )
-                if os.path.isfile(stylepath):
-                    print(
-                        "stylepath",
-                        tablename,
-                        stylepath,
-                        layers[tablename][
-                            "layerqgis"
-                        ].wkbType(),  # wkbType()  geometryType()
+                stylesdir = [
+                    os.path.basename(f.path)
+                    for f in os.scandir(styledirectory)
+                    if f.is_dir()
+                ]
+
+                for styledir in stylesdir:
+
+                    stylepath = os.path.normpath(
+                        os.path.join(styledirectory, styledir, tablename + ".qml")
                     )
-                    txt, res = layers[tablename]["layerqgis"].loadNamedStyle(
-                        stylepath, qgis.core.QgsMapLayer.Symbology
-                    )
-                    print(txt, res)
+                    if os.path.isfile(stylepath):
+                        print(
+                            "stylepath",
+                            tablename,
+                            stylepath,
+                            layers[tablename][
+                                "layerqgis"
+                            ].wkbType(),  # wkbType()  geometryType()
+                        )
+                        stylemng = layers[tablename]["layerqgis"].styleManager()
+                        xmldata = None
+                        with open(stylepath, "r", encoding="utf8") as xmlfile:
+                            xmldata = xmlfile.read()
+                        stylemng.addStyle(styledir, qgis.core.QgsMapLayerStyle(xmldata))
+                        # txt, res = layers[tablename]["layerqgis"].loadNamedStyle(
+                        #     stylepath, qgis.core.QgsMapLayer.Symbology
+                        # )
+                        # stylemng.
+                        # print(txt, res)
                 project.addMapLayer(layers[tablename]["layerqgis"], True)
                 # root.addLayer(layers[tablename]["layerqgis"])
                 # root.addLayer(layers[tablename]['layerqgis'])
@@ -676,7 +695,6 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         """
 
         if self.dbaseqgiscrs is not None and self.canvas is not None:
-            print("**", qgis.core.QgsProject.instance())
             self.xform = qgis.core.QgsCoordinateTransform(
                 self.dbaseqgiscrs,
                 self.canvas.mapSettings().destinationCrs(),

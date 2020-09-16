@@ -186,7 +186,10 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
             },
             "object": {
                 "linkfield": "id_object",
-                "widgets": {"comment": self.toolwidgetmain.comment},
+                "widgets": {
+                    "name": self.toolwidgetmain.name,
+                    "comment": self.toolwidgetmain.comment,
+                },
             },
             "descriptionsystem": {
                 "linkfield": "id_descriptionsystem",
@@ -195,6 +198,9 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
                     "flowconditionupstream": self.toolwidgetmain.flowconditionupstream,
                     "flowconditiondownstream": self.toolwidgetmain.flowconditiondownstream,
                     "systemfunction": self.toolwidgetmain.systemfunction,
+                    "city": self.toolwidgetmain.city,
+                    "streetname": self.toolwidgetmain.streetname,
+                    "structuralstate": self.toolwidgetmain.structuralstate,
                 },
             },
         }

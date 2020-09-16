@@ -329,7 +329,7 @@ class PostGisDBaseParser(AbstractDBaseParser):
         try:
             if self.printsql:
                 logging.getLogger("Lamia_unittest").debug("%s", sql)
-            self.PGiscursor.execute(sql)
+            self.PGiscursor.execute(sql, arguments)
             # print(self.PGiscursor.statusmessage )
             if self.PGiscursor.statusmessage.split(" ")[0] not in [
                 "INSERT",
@@ -447,3 +447,17 @@ class PostGisDBaseParser(AbstractDBaseParser):
         sqlin += " ELSE TRUE END "
 
         return sqlin
+
+    def createBlobThumbnail(self, pkresource, filepath):
+        filebase, fileext = os.path.splitext(filepath)
+        if PILexists and fileext.lower() in [".jpg", ".jpeg", ".png"]:
+            size = THUMBNAIL_SIZE, THUMBNAIL_SIZE
+            im = PIL.Image.open(filepath)
+            im.thumbnail(size)
+            imgByteArr = io.BytesIO()
+            im.save(imgByteArr, format="PNG")
+            biteval = imgByteArr.getvalue()
+            self.query(
+                "UPDATE resource SET thumbnail = %s WHERE pk_resource = %s",
+                [biteval, pkresource],
+            )

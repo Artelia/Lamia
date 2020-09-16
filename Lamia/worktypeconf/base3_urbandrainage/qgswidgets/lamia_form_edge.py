@@ -95,7 +95,10 @@ class BaseUrbandrainageEdgeTool(BaseEdgeTool):
             },
             "object": {
                 "linkfield": "id_object",
-                "widgets": {"comment": self.toolwidgetmain.comment},
+                "widgets": {
+                    "name": self.toolwidgetmain.name,
+                    "comment": self.toolwidgetmain.comment,
+                },
             },
             "descriptionsystem": {
                 "linkfield": "id_descriptionsystem",
@@ -105,6 +108,9 @@ class BaseUrbandrainageEdgeTool(BaseEdgeTool):
                     "flowconditiondownstream": self.toolwidgetmain.flowconditiondownstream,
                     "systemfunction": self.toolwidgetmain.systemfunction,
                     "dateoperationalcreation": self.toolwidgetmain.dateoperationalcreation,
+                    "city": self.toolwidgetmain.city,
+                    "streetname": self.toolwidgetmain.streetname,
+                    "structuralstate": self.toolwidgetmain.structuralstate,
                 },
             },
         }

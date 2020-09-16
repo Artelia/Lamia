@@ -1,14 +1,17 @@
 const React = require('react');
 const { connect } = require('react-redux');
 const { SideBar } = require('qwc2/components/SideBar');
-const { addLayer, addLayerFeatures } = require('qwc2/actions/layers')
+const { addLayer, addLayerFeatures, changeLayerProperty } = require('qwc2/actions/layers')
 const { changeSelectionState } = require('qwc2/actions/selection');
+
+
 
 const axios = require('axios');
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
 axios.defaults.xsrfCookieName = "csrftoken"
 
 const IdChooser = require('./idchooser')
+const StyleChooser = require('./stylechooser')
 
 require('./qwc2/style/SideBar.css');
 const base3_urbandrainage = require('./forms/base3_urbandrainage/base3_urbandrainage')
@@ -31,7 +34,9 @@ class Lamia extends React.Component {
         this.currentref = React.createRef()
         this.mainwdgrefcreated = false
         this.idchooserref = React.createRef()
+        this.stylechooserref = React.createRef()
         this.dbaseworktypeloaded = false
+        this.lookforstyle = true
         this.getDBaseWorktype()
     }
 
@@ -42,7 +47,7 @@ class Lamia extends React.Component {
         this.projectdata.qgisserverurl.split('?').length > 1 ? qgisserverquery = this.projectdata.qgisserverurl.split('?')[1] : qgisserverquery = null
         let databaseurl = qgisserverurl + '/wfs3/collections/database_qgis/items/1.json'
         qgisserverquery ? databaseurl = databaseurl + '?' + qgisserverquery : null
-
+        console.log(databaseurl)
         let feat = await axios.get(databaseurl)
         let worktype = feat.data.properties.businessline
         this.dbaseworktypeloaded = true
@@ -69,6 +74,7 @@ class Lamia extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         let returnvalue = false
+
 
         if (!this.dbaseworktypeloaded) {
             return false
@@ -130,32 +136,47 @@ class Lamia extends React.Component {
         console.log('render Lamia', this.props.point)
 
         let layersdropdown = this.createLayerDrop.bind(this)()
-        let idsdrop = (
-            <div className="btn-group mr-2" role="group" aria-label="First group">
-                <div className="dropdown">
-                    <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Ids
-              </button>
-                    <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        {<IdChooser ref={this.idchooserref} mainiface={this} />}
-                    </div>
-                </div>
-            </div>
-        )
-        ////
-        // let butonmenu = (
+        // let idsdrop = (
         //     <div className="btn-group mr-2" role="group" aria-label="First group">
-        //         <button type="button" className="btn btn-secondary" id="canvaspick" onClick={this.buttonmenuclick.bind(this)}>Pick</button>
-        //         <button type="button" className="btn btn-secondary" onClick={this.buttonmenuclick.bind(this)}>Middle</button>
+        //         <div className="dropdown">
+        //             <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        //                 Ids
+        //             </button>
+        //             <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        //                 {<IdChooser ref={this.idchooserref} mainiface={this} />}
+        //             </div>
+        //         </div>
         //     </div>
         // )
-        //
+        // let stylesdrop = (
+        //     <div className="btn-group mr-2" role="group" aria-label="First group">
+        //         <div className="dropdown">
+        //             <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        //                 Styles
+        //             </button>
+        //             <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        //                 {<StyleChooser ref={this.stylechooserref} mainiface={this} />}
+        //             </div>
+        //         </div>
+        //     </div>
+        // )
+
+
+        ////
+        let butonmenu = (
+            <div className="btn-group mr-2" role="group" aria-label="First group">
+                <button type="button" className="btn btn-secondary" id="canvaspick" onClick={this.buttonmenuclick.bind(this)}>Pick</button>
+                <button type="button" className="btn btn-secondary" onClick={this.buttonmenuclick.bind(this)}>Middle</button>
+            </div>
+        )
+
 
         let extraTitlebarContent = (
             <div className="btn-toolbar " role="group" aria-label="Basic example" style={{ marginLeft: "1em" }}>
                 {layersdropdown}
                 {<IdChooser ref={this.idchooserref} mainiface={this} />}
-                {/* {butonmenu} */}
+                {<StyleChooser ref={this.stylechooserref} mainiface={this} />}
+                {butonmenu}
             </div>
         );
         //
@@ -203,7 +224,10 @@ class Lamia extends React.Component {
 
     buttonmenuclick(evt) {
         console.log('buttonmenuclick')
-        console.log(this.props)
+        // console.log(this.props)
+
+
+
     }
 
 
@@ -314,7 +338,8 @@ module.exports = {
         {
             addLayer: addLayer,
             addLayerFeatures: addLayerFeatures,
-            changeSelectionState: changeSelectionState
+            changeSelectionState: changeSelectionState,
+            changeLayerProperty: changeLayerProperty,
         })(Lamia),
     reducers: {
     }

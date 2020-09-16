@@ -27,6 +27,7 @@ DBTYPE = [
 
 
 # VARIANTES = ['Lamia','Orange']
+VARIANTES = ["Lamia"]
 
 # * Connexion conf
 # postgis
@@ -37,17 +38,17 @@ if platform.system() == "Windows":
     PGhost = "localhost"
 elif platform.system() == "Linux":
     try:  # docker env in win host
-        socket.gethostbyname("docker.for.win.localhost")
-        PGhost = "docker.for.win.localhost"
+        socket.gethostbyname("host.docker.internal")
+        PGhost = "host.docker.internal"
     except socket.error as e:  # else
         PGhost = "localhost"
 PGport = 5432
 
 # * Test conf
 SPATIALITE = True
-POSTGIS = False
+POSTGIS = True
 
-TESTDIR = os.path.join(os.path.join(os.path.dirname(__file__)), "testtempfiles")
+TESTDIR = os.path.join(os.path.join(os.path.dirname(__file__)), "..", "testtempfiles")
 
 # * test onparticularfile - uncomment to apply
 if False:

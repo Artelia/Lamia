@@ -29,6 +29,7 @@ import os
 import datetime, platform
 import subprocess
 import glob
+import tempfile
 
 import qgis, qgis.core
 from qgis.PyQt import uic, QtCore, QtGui
@@ -115,7 +116,10 @@ class BaseCameraTool(AbstractLamiaFormTool):
         self.toolwidgetmain = UserUI()
         self.formtoolwidgetconfdictmain = {
             "media": {"linkfield": "id_media", "widgets": {}},
-            "object": {"linkfield": "id_object", "widgets": {}},
+            "object": {
+                "linkfield": "id_object",
+                "widgets": {"comment": self.toolwidgetmain.comment,},
+            },
             "resource": {
                 "linkfield": "id_resource",
                 "widgets": {
@@ -216,6 +220,7 @@ class BaseCameraTool(AbstractLamiaFormTool):
                 pass
 
     def openPhoto(self):
+
         filepath = self.dbase.completePathOfFile(
             self.toolwidgetmain.lineEdit_file.text()
         )
@@ -223,9 +228,22 @@ class BaseCameraTool(AbstractLamiaFormTool):
         if os.path.isfile(filepath):
             os.startfile(filepath)
         else:
-            possiblethumbnail, ext = os.path.splitext(filepath)
-            if os.path.isfile(possiblethumbnail + "_thumbnail.png"):
-                os.startfile(possiblethumbnail + "_thumbnail.png")
+            if self.currentFeaturePK and "thumbnail" in self.dbase.getColumns(
+                "resource"
+            ):
+                sql = "SELECT thumbnail FROM media_qgis  WHERE pk_media = " + str(
+                    self.currentFeaturePK
+                )
+                binimg = self.dbase.query(sql)[0][0]
+                thumbpath = os.path.join(tempfile.gettempdir(), "lamiathumbnail.png")
+                f = open(thumbpath, "wb")
+                f.write(binimg)
+                f.close()
+                os.startfile(thumbpath)
+            else:
+                possiblethumbnail, ext = os.path.splitext(filepath)
+                if os.path.isfile(possiblethumbnail + "_thumbnail.png"):
+                    os.startfile(possiblethumbnail + "_thumbnail.png")
 
     # def postInitFeatureProperties(self, feat):
     def postSelectFeature(self):
@@ -257,11 +275,21 @@ class BaseCameraTool(AbstractLamiaFormTool):
             self.photowdg.clear()
 
         else:
-            sql = "SELECT file FROM media_qgis  WHERE pk_media = " + str(
-                self.currentFeaturePK
-            )
-            file = self.dbase.query(sql)[0][0]
-            if file is not None and file != "":
+            if "thumbnail" in self.dbase.getColumns("resource"):
+                sql = "SELECT file, thumbnail FROM media_qgis  WHERE pk_media = " + str(
+                    self.currentFeaturePK
+                )
+                file, thumbnail = self.dbase.query(sql)[0]
+            else:
+                sql = "SELECT file FROM media_qgis  WHERE pk_media = " + str(
+                    self.currentFeaturePK
+                )
+                file, thumbnail = self.dbase.query(sql)[0][0], None
+
+            if thumbnail:
+                self.formutils.showImageinLabelWidget(self.photowdg, thumbnail)
+
+            elif file is not None and file != "":
                 self.formutils.showImageinLabelWidget(
                     self.photowdg, self.toolwidgetmain.lineEdit_file.text()
                 )

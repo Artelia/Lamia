@@ -61,6 +61,7 @@ def importInPostGis():
 
 
 def createProject():
+    pgdbase = DBaseParserFactory("postgis").getDbaseParser()
     pgdbase.loadDBase(
         host="localhost",
         port="5432",
@@ -87,7 +88,7 @@ def main():
     logging.getLogger("Lamia_unittest").setLevel(logging.DEBUG)
 
     # import in postgis
-    importInPostGis()
+    # importInPostGis()
 
     # create project for qgisserver
     createProject()

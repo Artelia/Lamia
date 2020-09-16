@@ -260,3 +260,17 @@ class SpatialiteDBaseParser(AbstractDBaseParser):
         sqlin += " ELSE 1 END"
 
         return sqlin
+
+    def createBlobThumbnail(self, pkresource, filepath):
+        filebase, fileext = os.path.splitext(filepath)
+        if PILexists and fileext.lower() in [".jpg", ".jpeg", ".png"]:
+            size = THUMBNAIL_SIZE, THUMBNAIL_SIZE
+            im = PIL.Image.open(filepath)
+            im.thumbnail(size)
+            imgByteArr = io.BytesIO()
+            im.save(imgByteArr, format="PNG")
+            biteval = imgByteArr.getvalue()
+            self.connSLITE.cursor().execute(
+                "UPDATE resource SET thumbnail = (?) WHERE pk_resource = (?)",
+                [biteval, pkresource],
+            )

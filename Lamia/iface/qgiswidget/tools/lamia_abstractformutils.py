@@ -525,16 +525,28 @@ class FormToolUtils(QtCore.QObject):
         :param savedfile: the image file
 
         """
-        filetoshow = self.formtoolwidget.dbase.completePathOfFile(savedfile)
-        possiblethumbnail, ext = os.path.splitext(filetoshow)
-        if os.path.isfile(possiblethumbnail + "_thumbnail.png"):
-            filetoshow = possiblethumbnail + "_thumbnail.png"
+        notfound = True
+        wdg.clear()
 
-        if os.path.isfile(filetoshow):
-            wdg.clear()
-            wdg.setPixmap(filetoshow)
-        else:
-            wdg.clear()
+        if isinstance(savedfile, str):
+            filetoshow = self.formtoolwidget.dbase.completePathOfFile(savedfile)
+            possiblethumbnail, ext = os.path.splitext(filetoshow)
+            if os.path.isfile(possiblethumbnail + "_thumbnail.png"):
+                filetoshow = possiblethumbnail + "_thumbnail.png"
+
+            if os.path.isfile(filetoshow):
+                # wdg.clear()
+                notfound = False
+                wdg.setPixmap(filetoshow)
+        elif isinstance(savedfile, bytes):  # from sptialite
+            # wdg.clear()
+            notfound = False
+            wdg.setPixmap(savedfile)
+        elif isinstance(savedfile, memoryview):  # from postgis
+            notfound = False
+            wdg.setPixmap(savedfile.tobytes())
+
+        if notfound:
             wdg.setText("Image non trouvee")
 
     def ___________________actionsOnFeatureSave(self):
