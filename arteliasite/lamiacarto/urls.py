@@ -4,26 +4,16 @@ from rest_framework import routers
 from django.conf import settings
 from django.conf.urls.static import static
 
-router = routers.SimpleRouter()
-# router.register(r"posts", views.PostViewSet)
 
 urlpatterns = [
+    path("", views.LamiaProjectView.as_view(), name="lamiaprojectgis",),
+    path("<int:project_id>", views.LamiaProjectView.as_view(), name="lamiaprojectgis",),
     path(
-        "lamiaproject/<int:project_id>",
-        views.LamiaProjectView.as_view(),
-        name="lamiaproject",
+        "<int:project_id>/<path:tablename>",
+        views.LamiaCartoAPIView.as_view(),
+        name="lamiacartoapi",
     ),
-    path(
-        "lamiaproject/<path:conffile>",
-        views.LamiaProjectView.as_view(),
-        name="lamiaproject",
-    ),
-    path("lamiaapi/<int:project_id>", views.LamiaApiView.as_view(), name="lamiaapi",),
-    path(
-        "lamiaapi/<int:project_id>/<path:tablename>",
-        views.LamiaApiView.as_view(),
-        name="lamiaapi",
-    ),
+    path("<path:conffile>", views.LamiaProjectView.as_view(), name="lamiaprojectgis",),
 ]
 
 if settings.DEBUG:

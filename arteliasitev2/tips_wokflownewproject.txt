@@ -1,7 +1,0 @@
-1 Create project on postgis (with lamia - new project then import project)
-
-2 run utils/01_importdbinpostis for creating the project .qgs and the pg_service.conf
-
-3 put .qgs on the mount of docker 
-
-4 then request the qgs project with url like this :

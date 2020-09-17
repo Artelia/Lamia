@@ -123,9 +123,12 @@ class BaseCameraTool(AbstractLamiaFormTool):
             "resource": {
                 "linkfield": "id_resource",
                 "widgets": {
-                    "file": self.toolwidgetmain.lineEdit_file,
-                    "resourceindex": self.toolwidgetmain.spinBox_numphoto,
-                    "datetimeresource": self.toolwidgetmain.dateTimeEdit_date,
+                    # "file": self.toolwidgetmain.lineEdit_file,
+                    # "resourceindex": self.toolwidgetmain.spinBox_numphoto,
+                    # "datetimeresource": self.toolwidgetmain.dateTimeEdit_date,
+                    "file": self.toolwidgetmain.file,
+                    "resourceindex": self.toolwidgetmain.resourceindex,
+                    "datetimeresource": self.toolwidgetmain.datetimeresource,
                 },
             },
         }
@@ -140,7 +143,7 @@ class BaseCameraTool(AbstractLamiaFormTool):
         self.toolwidgetmain.toolButton_photoplus.clicked.connect(self.changeNumPhoto)
         self.toolwidgetmain.toolButton_photomoins.clicked.connect(self.changeNumPhoto)
         self.toolwidgetmain.toolButton_calc.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.spinBox_numphoto)
+            lambda: self.showNumPad(self.toolwidgetmain.resourceindex)
         )
 
     def changeNumPhoto(self):
@@ -151,7 +154,7 @@ class BaseCameraTool(AbstractLamiaFormTool):
             numphoto += 1
         elif self.sender() == self.toolwidgetmain.toolButton_photomoins:
             numphoto = numphoto - 1
-        self.toolwidgetmain.spinBox_numphoto.setValue(numphoto)
+        self.toolwidgetmain.resourceindex.setValue(numphoto)
 
     # def magicFunction(self):
     #     self.featureSelected()
@@ -195,9 +198,9 @@ class BaseCameraTool(AbstractLamiaFormTool):
             "",
         )
         if file:
-            self.toolwidgetmain.lineEdit_file.setText(os.path.normpath(file))
+            self.toolwidgetmain.file.setText(os.path.normpath(file))
             self.formutils.showImageinLabelWidget(
-                self.photowdg, self.toolwidgetmain.lineEdit_file.text()
+                self.photowdg, self.toolwidgetmain.file.text()
             )
 
     def lastPhoto(self):
@@ -205,14 +208,14 @@ class BaseCameraTool(AbstractLamiaFormTool):
             list_of_files = glob.glob(self.mainifacewidget.imagedirectory + "//*.jpg")
             try:
                 latest_file = max(list_of_files, key=os.path.getctime)
-                self.toolwidgetmain.lineEdit_file.setText(os.path.normpath(latest_file))
+                self.toolwidgetmain.file.setText(os.path.normpath(latest_file))
                 self.showImageinLabelWidget(
-                    self.photowdg, self.toolwidgetmain.lineEdit_file.text()
+                    self.photowdg, self.toolwidgetmain.file.text()
                 )
                 datecreation = str(
                     datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 )
-                self.toolwidgetmain.dateTimeEdit_date.setDateTime(
+                self.toolwidgetmain.datetimeresource.setDateTime(
                     QtCore.QDateTime.fromString(datecreation, "yyyy-MM-dd hh:mm:ss")
                 )
 
@@ -221,9 +224,7 @@ class BaseCameraTool(AbstractLamiaFormTool):
 
     def openPhoto(self):
 
-        filepath = self.dbase.completePathOfFile(
-            self.toolwidgetmain.lineEdit_file.text()
-        )
+        filepath = self.dbase.completePathOfFile(self.toolwidgetmain.file.text())
 
         if os.path.isfile(filepath):
             os.startfile(filepath)
@@ -256,7 +257,7 @@ class BaseCameraTool(AbstractLamiaFormTool):
             )
 
             if numphoto is not None:
-                self.toolwidgetmain.spinBox_numphoto.setValue(numphoto)
+                self.toolwidgetmain.resourceindex.setValue(numphoto)
 
             # geom if parent is node
             if (
@@ -291,7 +292,7 @@ class BaseCameraTool(AbstractLamiaFormTool):
 
             elif file is not None and file != "":
                 self.formutils.showImageinLabelWidget(
-                    self.photowdg, self.toolwidgetmain.lineEdit_file.text()
+                    self.photowdg, self.toolwidgetmain.file.text()
                 )
             else:
                 self.photowdg.clear()
@@ -300,12 +301,12 @@ class BaseCameraTool(AbstractLamiaFormTool):
 
         global numphoto
         if self.currentFeaturePK is None:
-            if self.toolwidgetmain.spinBox_numphoto.value() == -1:
+            if self.toolwidgetmain.resourceindex.value() == -1:
                 numphoto = None
-            elif numphoto == self.toolwidgetmain.spinBox_numphoto.value():
+            elif numphoto == self.toolwidgetmain.resourceindex.value():
                 numphoto += 1
             else:
-                numphoto = self.toolwidgetmain.spinBox_numphoto.value() + 1
+                numphoto = self.toolwidgetmain.resourceindex.value() + 1
 
     """
     def createParentFeature(self):

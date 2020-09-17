@@ -51,50 +51,36 @@ class MediaEditingFormReact extends EditingFormReact {
 
     }
 
+    shouldComponentUpdate() {
+        console.log('should')
+        if ($("#lamiamedia")) {
+            $("#lamiamedia").remove();
+        }
+        return true
+    }
+
 
     render() {
+        console.log('rend')
         let res = super.render()
         return res
-
     }
 
     componentDidUpdate() {
-        $("#lamiamedia").remove();
+        console.log('did')
+
         this.updateImage()
     }
 
 
     async updateImage() {
-        $("#lamiamedia").remove();
-        // console.log(this.state.currentfeatprop)
-        // console.log('updateImage', this.state.currentfeatprop.thumbnail)
-        // if ((this.state.currentfeatprop.thumbnail) && (this.state.currentfeatprop.thumbnail !== undefined)) {
-        //     console.log(btoa(unescape(encodeURIComponent(this.state.currentfeatprop.thumbnail))))
-        //     let imgsrc = 'data:image/png;base64,' + btoa(unescape(encodeURIComponent(this.state.currentfeatprop.thumbnail)));
-        //     // let imgsrc = 'data:image/png;base64,' + this.state.currentfeatprop.thumbnail;
-        //     $('div[name="frame_ph"]').prepend($('<img>', { id: 'lamiamedia', src: imgsrc, width: 200 }))
-        // }
-
-        // if ((this.state.currentfeatprop.file) && (this.state.currentfeatprop.file !== undefined)) {
-        //     let url = ("http://" + window.location.host + '/media/'
-        //         + this.projectdata.pgdbname + '/' + this.projectdata.pgschema + '/'
-        //         + this.state.currentfeatprop.file)
-        //     $("#lamiamedia").remove();
-        //     $('div[name="frame_ph"]').prepend($('<img>', { id: 'lamiamedia', src: url, width: 200 }))
-        // } else {
-        //     $("#lamiamedia").remove();
-        // }
-
         let url = 'http://' + window.location.host + '/lamiaapi/' + this.projectdata.id_project
         let res = await axios.post(url, {
             function: 'thumbnail',
             pkresource: this.state.currentfeatprop.pk_resource,
         })
-        // console.log(res.data.base64thumbnail)
-        // let imgsrc = 'data:image/png;base64,' + btoa(unescape(encodeURIComponent(res)));
         let imgsrc = 'data:image/png;base64,' + res.data.base64thumbnail;
         $('div[name="frame_ph"]').prepend($('<img>', { id: 'lamiamedia', src: imgsrc, width: 200 }))
-
 
     }
 

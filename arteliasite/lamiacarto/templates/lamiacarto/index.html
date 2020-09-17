@@ -1,7 +1,7 @@
-{% extends "artelialogin/artelialogin.html" %}
+{% extends "artelialogin/arteliaproject.html" %}
 {% load static %}
 
-{% block head %}
+{% block subhead %}
 <meta charset="UTF-8" />
 <meta name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui" />
@@ -10,6 +10,7 @@
 <title>QGIS Web Client 2</title>
 <!-- <link rel="stylesheet" type="text/css" href="static/assets/css/qwc2.css" /> -->
 <link rel="stylesheet" type="text/css" href="{% static 'assets/css/qwc2.css' %}" />
+
 <link rel="apple-touch-icon" href="assets/img/app_icon.png" />
 <link rel="apple-touch-icon" sizes="72x72" href="assets/img/app_icon_72.png" />
 <link rel="apple-touch-icon" sizes="114x114" href="assets/img/app_icon_114.png" />
@@ -18,9 +19,10 @@
 {% endblock %}
 
 
-{% block content %}
+{% block subcontent %}
 <div id="container"></div>
 {{ context|json_script:"context" }}
 <script src="{% static 'lamiacarto/bundle/QWC2App.js' %}"></script>
 {% endblock %}
+
 {% block footer %}{% endblock %}

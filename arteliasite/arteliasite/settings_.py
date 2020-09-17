@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "artelialogin",
     "lamiacarto",
+    "lamiareport",
+    "lamiaapi",
     "webpack_loader",
     "rest_framework",
     # "corsheaders",
@@ -149,7 +151,7 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [
     os.path.abspath(os.path.join(BASE_DIR, "node_modules")),  # for bootstrap
     ("forms", os.path.abspath(os.path.join(BASE_DIR, "..", "Lamia", "worktypeconf"))),
-    ("assets", os.path.join(BASE_DIR, "lamiacarto", "static","qwc2assets")),
+    ("assets", os.path.join(BASE_DIR, "lamiacarto", "static", "qwc2assets")),
     ("qwc2config", os.path.join(BASE_DIR, "lamiacarto", "qwc2config")),
 ]
 

@@ -39,8 +39,10 @@ class StyleChooser extends React.Component {
     async loadStyles() {
         let stylesurl = 'http://' + window.location.host + '/lamiaapi/' + this.props.mainiface.projectdata.id_project + '/styles'
         let styles = await axios.get(stylesurl)
-        console.log(styles)
+        // console.log(styles)
         this.setState({ styles: styles.data })
+        // console.log('des', Object.keys(this.state.styles)[0])
+        this.changeStyle("_default")
 
     }
 
@@ -64,10 +66,16 @@ class StyleChooser extends React.Component {
     handleStyleChanged = (e) => {
         // console.log('cl', e.target.id)
         const desttyle = e.target.id
+        this.changeStyle.bind(this)(desttyle)
+    }
+
+    changeStyle(deststyle) {
+        // console.log('cl', e.target.id)
+        // const deststyle = e.target.id
 
         //searchSubLayer
         let layers = this.props.mainiface.props.layers
-        console.log(layers)
+        // console.log(layers)
         let lamialayer = null
         for (let layerid in Object.values(layers)) {
             // console.log(layerid)
@@ -79,7 +87,7 @@ class StyleChooser extends React.Component {
             }
         }
 
-        console.log('lamialayer', lamialayer)
+        // console.log('lamialayer', lamialayer)
 
         if (!lamialayer) { return }
 
@@ -91,9 +99,9 @@ class StyleChooser extends React.Component {
 
         lamiasublayers.forEach((sublay, idx) => {
 
-            if (this.state.styles[desttyle].includes(sublay.name.split('_')[0])) {
-                lamiasubstyle.push(desttyle)
-                lamialayer.sublayers[idx].style = desttyle
+            if (this.state.styles[deststyle].includes(sublay.name.split('_')[0])) {
+                lamiasubstyle.push(deststyle)
+                lamialayer.sublayers[idx].style = deststyle
             } else {
                 lamiasubstyle.push('default')
                 lamialayer.sublayers[idx].visibility = false
@@ -101,11 +109,11 @@ class StyleChooser extends React.Component {
             }
         })
 
-        console.log(lamiasubstyle)
+        // console.log(lamiasubstyle)
 
         // lamialayer.params.STYLES = lamiasubstyle.join(',')
         this.props.mainiface.props.changeLayerProperty(lamialayer.uuid, "params.styles", lamiasubstyle.join(','), [], null);
-        console.log('layer', this.props.mainiface.props.layers)
+        // console.log('layer', this.props.mainiface.props.layers)
 
 
 

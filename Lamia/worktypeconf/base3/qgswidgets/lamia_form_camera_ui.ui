@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>515</width>
-    <height>223</height>
+    <height>248</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -121,10 +121,10 @@
               </widget>
              </item>
              <item row="1" column="1">
-              <widget class="QLineEdit" name="lineEdit_file"/>
+              <widget class="QLineEdit" name="file"/>
              </item>
              <item row="3" column="1" colspan="2">
-              <widget class="QDateTimeEdit" name="dateTimeEdit_date">
+              <widget class="QDateTimeEdit" name="datetimeresource">
                <property name="specialValueText">
                 <string/>
                </property>
@@ -175,7 +175,7 @@
               </widget>
              </item>
              <item row="0" column="1">
-              <widget class="QSpinBox" name="spinBox_numphoto">
+              <widget class="QSpinBox" name="resourceindex">
                <property name="minimum">
                 <number>-1</number>
                </property>

@@ -19,5 +19,7 @@ from django.urls import path, include
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("artelialogin.urls")),
-    path("", include("lamiacarto.urls")),
+    path("lamiaproject/gis/", include("lamiacarto.urls")),
+    path("", include("lamiaapi.urls")),
+    path("lamiaproject/report/", include("lamiareport.urls")),
 ]

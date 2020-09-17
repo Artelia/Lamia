@@ -29,7 +29,7 @@ class IdChooser extends React.Component {
 
     createIdDrop() {
 
-        console.log('createIdDrop', this.state.ids)
+        // console.log('createIdDrop', this.state.ids)
 
         if (!this.state.ids.pk) {
             return []
@@ -42,7 +42,7 @@ class IdChooser extends React.Component {
         // Object.keys(driversCounter)
 
         for (var key in Object.keys(this.state.ids.pk)) {
-            console.log(key)
+            // console.log(key)
             finaldatas.push(<a className="dropdown-item" id={this.state.ids.pk[key]} key={key}
                 onClick={this.handleLayerChanged.bind(this)}
             // onClick={() => this.handleLayerChanged.bind(this)}

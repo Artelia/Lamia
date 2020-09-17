@@ -12,16 +12,9 @@ from django.views.generic import View, TemplateView
 from django.contrib.auth import authenticate, login, logout
 from django.utils.decorators import method_decorator
 
-# from .serializers import PostSerializer
-
 from artelialogin.models import User, Project
 from artelialogin.views import BaseView
-from .lamiaforsession import LamiaSession
 import logging
-import qgis.core
-
-import threading
-from functools import wraps
 
 
 # Create your views here.
@@ -45,25 +38,19 @@ def userCanAccessProject(view_func):
 # * ************************** API ***********************************
 
 
-class APIFactory:
-
-    renderer_classes = [JSONRenderer]
-
-    def getresult(request, **kwargs):
-        # print("APIFactory", kwargs)
-
+@method_decorator(userCanAccessProject, name="dispatch")
+class LamiaCartoAPIView(views.APIView):
+    def get(self, request, **kwargs):
         projectid = kwargs.get("project_id")
         tablename = kwargs.get("tablename", None)
-        lamiaparser = LamiaSession.getInstance(projectid).lamiaparser
 
-        if tablename is None:  # request on project
-            queryset = Project.objects.filter(id_project=projectid)
-            result = json.dumps(list(queryset.values())[0])
-            return result
-
-        if tablename == "dbasetables":
-            dbasetables = lamiaparser.dbasetables
-            return dbasetables
+        if tablename == "config.json":
+            configpath = fn = os.path.join(
+                os.path.dirname(__file__), "qwc2config", "config.json"
+            )
+            with open(configpath) as f:
+                data = json.load(f)
+            return Response(data)
 
         elif tablename == "themes.json":
             conffile = os.path.join(
@@ -79,96 +66,20 @@ class APIFactory:
             themesdata["themes"]["items"][0]["url"] = qgisserverurl
 
             datab = themesConfig.genThemes(themesdata)
-            return datab
+            return Response(datab)
 
         elif tablename.split("/")[0] == "translations":
             translationfile = os.path.join(settings.BASE_DIR, tablename)
             with open(translationfile, encoding="utf8") as f:
                 data = json.load(f)
-            return data
-
-        elif tablename == "config.json":
-            configpath = fn = os.path.join(
-                os.path.dirname(__file__), "qwc2config", "config.json"
-            )
-            with open(configpath) as f:
-                data = json.load(f)
-            return data
-
-        elif tablename == "styles":
-            stylesconf = LamiaSession.getInstance(projectid).getStyles()
-            return stylesconf
-
-
-@method_decorator(userCanAccessProject, name="dispatch")
-class LamiaApiView(views.APIView):
-    def get(self, request, **kwargs):
-        # print("kwargs", kwargs)
-        jsonresult = APIFactory.getresult(request, **kwargs)
-        return Response(jsonresult)
+            return Response(data)
 
     def post(self, request, **kwargs):
-        projectid = kwargs.get("project_id")
-        tablename = kwargs.get("tablename", None)
-        lamiasession = LamiaSession.getInstance(projectid)
-        lamiaparser = lamiasession.lamiaparser
-        # threading.current_thread().name
-        # if threading.current_thread().name in lamiasession.cursors.keys()
-        # lamiaparser.PGiscursor = None  # force thread safe cursor
-        func = request.data["function"]
-
-        if tablename is None:  # request on project
-            if func == "dbasetables":
-                dbasetables = lamiaparser.dbasetables
-                return Response(dbasetables)
-
-            elif func == "thumbnail":
-                pkres = request.data["pkresource"]
-                bindata = LamiaSession.getInstance(projectid).getThumbnail(pkres)
-                bindata = base64.b64encode(bindata)
-                return Response({"base64thumbnail": bindata})
-
-        else:
-            if func == "dbasetables":
-                locale = request.data["locale"]
-                lamiasession.updateLocale(locale)
-                qgistables = [tablename] + lamiaparser.getParentTable(tablename)
-                dbtableresponse = {}
-                for table in qgistables:
-                    # res = {**dict1, **dict2}
-                    dbtableresponse = {
-                        **dbtableresponse,
-                        **lamiaparser.dbasetables[table]["fields"],
-                    }
-                # dbasetables = lamiaparser.dbasetables[tablename]
-                return Response(dbtableresponse)
-
-            elif func == "nearest":
-                nearestpk = LamiaSession.getInstance(projectid).getNearestPk(
-                    tablename, request.data["coords"]
-                )
-                result = json.dumps({"nearestpk": nearestpk})
-                return Response(result)
-
-            elif func == "getids":
-                confobject = type("confobject", (object,), {})
-                confobject.DBASETABLENAME = tablename
-                confobject.PARENTJOIN = request.data["parentjoin"]
-                if "tablefilterfield" in request.data.keys():
-                    confobject.TABLEFILTERFIELD = request.data["tablefilterfield"]
-                if "choosertreewdgspec" in request.data.keys():
-                    confobject.CHOOSERTREEWDGSPEC = request.data["choosertreewdgspec"]
-
-                confobject.parentWidget = type("confobject", (object,), {})
-                confobject.parentWidget.DBASETABLENAME = request.data["parenttablename"]
-                confobject.parentWidget.currentFeaturePK = request.data["parentpk"]
-
-                ids = LamiaSession.getInstance(projectid).getIds(confobject)
-                return Response(ids)
+        pass
 
 
 # * ******************************************************************************
-# * ************************** Views ***********************************
+# * ************************** View ***********************************
 
 
 @method_decorator(userCanAccessProject, name="dispatch")
@@ -177,13 +88,16 @@ class LamiaProjectView(BaseView):
 
     def get(self, request, **kwargs):
         print("*", kwargs)
-        id_project = kwargs.get("project_id")
+        id_project = kwargs.get("project_id", None)
 
         url1 = kwargs.get("conffile", None)
         if url1:
             redirection = self.redirect(url1, request)
             if redirection:
                 return redirection
+
+        if id_project is None:
+            return redirect("lamiaprojectgis", project_id=request.session["idproject"])
 
         request.session["idproject"] = id_project
         queryset = Project.objects.filter(id_project=id_project)
@@ -196,7 +110,7 @@ class LamiaProjectView(BaseView):
         queryset = Project.objects.filter(users__username=request.user)
 
         return render(
-            request, self.mytemplate, {"context": context, "projects": queryset}
+            request, self.mytemplate, {"context": context, "projects": queryset},
         )
 
     def post(self, request, **kwargs):
@@ -205,20 +119,20 @@ class LamiaProjectView(BaseView):
     def redirect(self, url1, request):
         if url1 == "config.json":
             return redirect(
-                "lamiaapi", project_id=request.session["idproject"], tablename=url1
+                "lamiacartoapi", project_id=request.session["idproject"], tablename=url1
             )
         elif url1 == "themes.json":
             return redirect(
-                "lamiaapi", project_id=request.session["idproject"], tablename=url1
+                "lamiacartoapi", project_id=request.session["idproject"], tablename=url1
             )
         elif url1.split("/")[0] == "translations":
             return redirect(
-                "lamiaapi", project_id=request.session["idproject"], tablename=url1
+                "lamiacartoapi", project_id=request.session["idproject"], tablename=url1
             )
         elif url1.split("/")[0] == "assets":
             return redirect("/static/" + url1)
 
         else:
             print("*", url1)
-            return redirect("lamiaproject")
+            return redirect("lamiaprojectgis")
 

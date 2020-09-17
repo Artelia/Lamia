@@ -35,6 +35,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "artelialogin",
     "lamiacarto",
+    "lamiaapi",
+    "lamiareport",
     # "webpack_loader",
     "rest_framework",
     # "corsheaders",

@@ -176,7 +176,7 @@ class Lamia extends React.Component {
                 {layersdropdown}
                 {<IdChooser ref={this.idchooserref} mainiface={this} />}
                 {<StyleChooser ref={this.stylechooserref} mainiface={this} />}
-                {butonmenu}
+                {/* {butonmenu} */}
             </div>
         );
         //
@@ -207,6 +207,7 @@ class Lamia extends React.Component {
             this.mainwdgrefcreated = true
             this.currentwdginstance = this.currentref.current
         }
+
     }
 
 

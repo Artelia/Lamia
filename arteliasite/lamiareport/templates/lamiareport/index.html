@@ -1,0 +1,19 @@
+{% extends "artelialogin/arteliaproject.html" %}
+{% load static %}
+
+{% block subhead %}
+<meta charset="UTF-8" />
+<meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui" />
+<meta name="HandheldFriendly" content="true" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+
+{% endblock %}
+
+
+{% block subcontent %}
+<div id="container"></div>
+{{ context|json_script:"context" }}
+{% endblock %}
+
+{% block footer %}{% endblock %}
