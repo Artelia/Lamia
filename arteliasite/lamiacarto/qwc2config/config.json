@@ -6,7 +6,6 @@
   "featureReportService": "http://localhost:5020/",
   "translationsPath": "translations",
   "assetsPath": "/static",
-  "formsPath": "",
   "urlPositionFormat": "centerAndZoom",
   "urlPositionCrs": "",
   "omitUrlParameterUpdates": false,

@@ -39,11 +39,11 @@ module.exports = {
   entry: {
     'webpack-dev-server': 'webpack-dev-server/client?http://0.0.0.0:3233',
     'webpack': 'webpack/hot/only-dev-server',
-    'QWC2App': path.join(__dirname, "lamiacarto", "static", "lamiacarto", "js", "app_carto"),
-    'LamiaReport': path.join(__dirname, "lamiareport", "static", "lamiareport", "js", "app_report")
+    'QWC2App': path.join(__dirname, "lamiacarto", "static", "lamiacarto", "js", "app")
+    'LamiaReport': path.join(__dirname, "lamiareport", "static", "lamiareport", "js", "app")
   },
   output: {
-    path: path.join(__dirname, "staticbundles", 'bundles'),
+    path: path.join(__dirname, "lamiacarto", "static", "lamiacarto", 'bundle'),
     // publicPath: "/dist/",
     // publicPath: "/static/lamiacarto/dist/",
     filename: '[name].js'

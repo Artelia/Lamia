@@ -14,7 +14,7 @@ from django.utils.decorators import method_decorator
 
 from artelialogin.models import User, Project
 from artelialogin.views import BaseView
-import logging
+import logging, pprint
 
 
 # Create your views here.
@@ -64,8 +64,9 @@ class LamiaCartoAPIView(views.APIView):
             queryset = Project.objects.filter(id_project=projectid)
             qgisserverurl = queryset.values("qgisserverurl")[0]["qgisserverurl"]
             themesdata["themes"]["items"][0]["url"] = qgisserverurl
-
+            themesConfig.qwc2_path = "./lamiacarto/static"
             datab = themesConfig.genThemes(themesdata)
+            # pprint.pprint(datab)
             return Response(datab)
 
         elif tablename.split("/")[0] == "translations":

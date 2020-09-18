@@ -12,8 +12,9 @@
 
 
 {% block subcontent %}
-<div id="container"></div>
+<div id="container" style="width: 100%"></div>
 {{ context|json_script:"context" }}
+<script src="{% static 'bundles/LamiaReport.js' %}"></script>
 {% endblock %}
 
 {% block footer %}{% endblock %}

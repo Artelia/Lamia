@@ -28,7 +28,7 @@ class Lamia extends React.Component {
     projectdata = JSON.parse(JSON.parse(document.getElementById('context').textContent))
 
     constructor(props) {
-        super(props);
+        super();
         this.state = { 'visualmode': 1, 'mainwdg': null, 'values': null, 'widgetsclasses': [] }
         this.currentwdginstance = null
         this.currentref = React.createRef()

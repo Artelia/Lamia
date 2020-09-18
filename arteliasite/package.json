@@ -68,7 +68,9 @@
         "bootstrap": "^4.5.2",
         "jquery": "^3.5.1",
         "js-file-download": "^0.4.12",
+        "leaflet": "^1.7.1",
         "popper.js": "^1.16.1",
+        "react-leaflet": "^2.7.0",
         "webpack-bundle-tracker": "0.4.3",
         "webpack-merge": "^5.1.3"
     }
