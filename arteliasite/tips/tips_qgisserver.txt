@@ -26,6 +26,12 @@ http://localhost:8381/cgi-bin/qgis_mapserv.fcgi?SERVICE=WMS&VERSION=1.3.0&REQUES
 
 http://localhost:8381/qgisserver/wfs3/collections?Map=/projects/project.qgs
 
+http://localhost:8381/qgisserver/wfs?request=GetFeature&service=WFS&version=1.0.0&typeName=geosolutions:WorldCountries&outputFormat=application/json&CQL_FILTER=NAME=%27Monaco%27
+
+http://localhost:8381/qgisserver/wfs?request=GetFeature&service=WFS&version=1.0.0&outputFormat=application/json
+http://localhost:8380/qgisserver/wfs?request=GetFeature&service=WFS&version=1.0.0&outputFormat=application/json&typeName=report_qgis
+
+
 openlayers nearest
 https://gis.stackexchange.com/questions/61479/how-to-get-a-feature-that-lies-closest-to-a-point-in-openlayers
 

@@ -485,7 +485,10 @@ class printPDFBaseWorker(QtCore.QObject):
             self.qgiscanvas = QgisCanvas(canvas=self.canvas)
             self.qgiscanvas.createLayers(self.dbase)
             if self.dbase.base3version:
-                self.qgiscanvas.applyStyle(self.dbase.worktype, "0_default")
+                try:
+                    self.qgiscanvas.applyStyle(self.dbase.worktype, "0_default")
+                except:
+                    self.qgiscanvas.applyStyle(self.dbase.worktype, "_default")
             else:
                 self.qgiscanvas.applyStyle(self.dbase.worktype, "0_Defaut")
             # self.networkcore = NetWorkCore(self.dbase, self.messageinstance, self.qgiscanvas)
@@ -653,7 +656,7 @@ class printPDFBaseWorker(QtCore.QObject):
         else:
             debug = True  # True False
             debugscale = False
-            stop10 = None
+            stop10 = 3
 
         # *********************************************************************
         # ********************* begin printing  *****************************

@@ -55,7 +55,15 @@ class LamiaReportView(BaseView):
                 "lamiaprojectreport", project_id=request.session["idproject"]
             )
 
-        return render(request, self.mytemplate)
+        request.session["idproject"] = id_project
+        queryset = Project.objects.filter(id_project=id_project)
+        context = json.dumps(
+            list(
+                queryset.values("id_project", "qgisserverurl", "pgdbname", "pgschema")
+            )[0]
+        )
+
+        return render(request, self.mytemplate, {"context": context})
 
     def post(self, request, **kwargs):
         return BaseView.post(self, request, **kwargs)

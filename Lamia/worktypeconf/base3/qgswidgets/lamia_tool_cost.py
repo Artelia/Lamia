@@ -103,7 +103,7 @@ class CostTool(AbstractLamiaTool):
         self.toolwidgetmain.toolButton_selected.clicked.connect(self.goToSelectedId)
         self.toolwidgetmain.toolButton_selected.setEnabled(False)
 
-        self.choosertreewidget = self.mainifacewidget.toolwidgets["toolprepro"][
+        self.choosertreewidget = self.mainifacewidget.toolwidgets[
             "geoarea"
         ].choosertreewidget
 

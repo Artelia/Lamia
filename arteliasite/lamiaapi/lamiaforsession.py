@@ -204,3 +204,18 @@ class LamiaSession:
 
         return returnstyle
 
+    def getPksFromBBox(self, table, bbox):
+        if len(bbox) == 4:
+            sql = f"""
+            SELECT pk_{table} FROM {table}_qgis 
+            WHERE geom && ST_Transform(ST_MakeEnvelope (
+                        {bbox[0]}, {bbox[1]},
+                        {bbox[2]}, {bbox[3]}, 4326),
+                        {self.lamiaparser.crsnumber})
+            """
+            # print(sql)
+            res = self.lamiaparser.query(sql)
+            res = [elem[0] for elem in res]
+        else:
+            res = []
+        return res

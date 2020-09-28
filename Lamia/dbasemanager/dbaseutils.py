@@ -1,54 +1,56 @@
 import re
 import math
 import datetime
+
 try:
     from qgis.PyQt import QtCore
+
     TRY_QT = True
 except ImportError:
     TRY_QT = False
 
 
 def splitSQLSelectFromWhereOrderby(sqlin):
-    sqltemp = sqlin.split(' ')
+    sqltemp = sqlin.split(" ")
     indexparenthesis = 0
 
-    specwords = ['WITH', 'SELECT', 'FROM', 'WHERE', 'GROUP', 'ORDER', 'LIMIT']
+    specwords = ["WITH", "SELECT", "FROM", "WHERE", "GROUP", "ORDER", "LIMIT"]
     listres = {}
     actualsqlword = None
     for sqlword in sqltemp:
-        if '(' in sqlword or ')' in sqlword:
-            indexparenthesis += sqlword.count('(')
-            indexparenthesis += - sqlword.count(')')
-            listres[actualsqlword] += ' ' + sqlword
+        if "(" in sqlword or ")" in sqlword:
+            indexparenthesis += sqlword.count("(")
+            indexparenthesis += -sqlword.count(")")
+            listres[actualsqlword] += " " + sqlword
         elif sqlword.strip() in specwords and indexparenthesis == 0:
             actualsqlword = sqlword.strip()
-            listres[actualsqlword] = ''
+            listres[actualsqlword] = ""
         else:
             if actualsqlword:
-                listres[actualsqlword] += ' ' + sqlword
+                listres[actualsqlword] += " " + sqlword
 
-    if 'GROUP' in listres.keys():
-        listres['GROUP'] = ' '.join(listres['GROUP'].strip().split(' ')[1:])
+    if "GROUP" in listres.keys():
+        listres["GROUP"] = " ".join(listres["GROUP"].strip().split(" ")[1:])
 
     return listres
 
 
 def rebuildSplittedQuery(sqlin):
-    sqlout = ''
-    if 'WITH' in sqlin.keys():
-        sqlout += ' WITH ' + sqlin['WITH']
-    if 'SELECT' in sqlin.keys():
-        sqlout += ' SELECT ' + sqlin['SELECT']
-    if 'FROM' in sqlin.keys():
-        sqlout += ' FROM ' + sqlin['FROM']
-    if 'WHERE' in sqlin.keys():
-        sqlout += ' WHERE ' + sqlin['WHERE']
-    if 'GROUP' in sqlin.keys():
-        sqlout += ' GROUP ' + sqlin['GROUP']
-    if 'ORDER' in sqlin.keys():
-        sqlout += ' ORDER  ' + sqlin['ORDER']
-    if 'LIMIT' in sqlin.keys():
-        sqlout += ' LIMIT ' + sqlin['LIMIT']
+    sqlout = ""
+    if "WITH" in sqlin.keys():
+        sqlout += " WITH " + sqlin["WITH"]
+    if "SELECT" in sqlin.keys():
+        sqlout += " SELECT " + sqlin["SELECT"]
+    if "FROM" in sqlin.keys():
+        sqlout += " FROM " + sqlin["FROM"]
+    if "WHERE" in sqlin.keys():
+        sqlout += " WHERE " + sqlin["WHERE"]
+    if "GROUP" in sqlin.keys():
+        sqlout += " GROUP BY " + sqlin["GROUP"]
+    if "ORDER" in sqlin.keys():
+        sqlout += " ORDER  " + sqlin["ORDER"]
+    if "LIMIT" in sqlin.keys():
+        sqlout += " LIMIT " + sqlin["LIMIT"]
     return sqlout
 
 
@@ -68,8 +70,9 @@ def isAttributeNull(attr):
 
     if TRY_QT and isinstance(attr, QtCore.QVariant) and attr.isNull():
         return True
-    elif ((isinstance(attr, bytes) or isinstance(attr, str))
-            and (attr == 'NULL' or attr == '' or attr == 'None')):
+    elif (isinstance(attr, bytes) or isinstance(attr, str)) and (
+        attr == "NULL" or attr == "" or attr == "None"
+    ):
         return True
     elif attr is None:
         return True
@@ -86,7 +89,7 @@ def areNodesEquals(node1, node2):
     :param node2: point2 (list 2x1)
     :return: Boolean, en fonction de l'égalité geographique des points
     """
-    dist = math.sqrt((node2[0] - node1[0])**2 + (node2[1]-node1[1])**2)
+    dist = math.sqrt((node2[0] - node1[0]) ** 2 + (node2[1] - node1[1]) ** 2)
     if dist < 0.01:
         return True
     else:

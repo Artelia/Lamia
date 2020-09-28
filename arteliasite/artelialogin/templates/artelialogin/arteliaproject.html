@@ -16,7 +16,7 @@
 {{ context|json_script:"context" }}
 
 <div class="wrapper d-flex align-items-stretch">
-    <nav id="sidebar" class="active" style="z-index: 1">
+    <nav id="sitesidebar" class="active" style="z-index: 1">
         <div class="custom-menu">
             <button type="button" id="sidebarCollapse" class="btn btn-primary">
                 <i class="fa fa-bars"></i>
@@ -61,7 +61,7 @@
         fullHeight();
 
         $('#sidebarCollapse').on('click', function () {
-            $('#sidebar').toggleClass('active');
+            $('#sitesidebar').toggleClass('active');
         });
 
     })(jQuery);

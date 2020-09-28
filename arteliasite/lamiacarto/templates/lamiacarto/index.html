@@ -20,7 +20,7 @@
 
 
 {% block subcontent %}
-<div id="container"></div>
+<div id="container" style="position:absolute"></div>
 {{ context|json_script:"context" }}
 <script src="{% static 'bundles/QWC2App.js' %}"></script>
 {% endblock %}

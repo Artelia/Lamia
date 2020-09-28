@@ -91,13 +91,16 @@ def launchIface():
     # SLFILE = r"M:\FR\BOR\VT\FLUVIAL\4352024_33_Conformite_digues_BM\6_Reglementaire\61_Calculs\Basedonnees\BD_totale_ind12_tempPVR.sqlite"
     # SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue_base3\test01.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\cier\AEP Cieux.sqlite"
-    # SLFILE = r"M:\FR\BOR\VT\FLUVIAL\4352789_33_BM_surveillance_digues_PI_Ambes\05_ETUDES\052_Calculs\Basedonnees\VTA_Ambes_ind2_PVR.sqlite"
+    SLFILE = r"M:\FR\BOR\VT\FLUVIAL\4352789_33_BM_surveillance_digues_PI_Ambes\05_ETUDES\052_Calculs\Basedonnees\VTA_Ambes_ind2_PVR.sqlite"
     # SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_constructionsite_Orange\test01.sqlite"
     SLFILE = r"C:\01_WORKINGDIR\GPMB\c_merge_ass\mergeddbase.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\cons\cons.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\orange\toto.sqlite"
-    SLFILE = r"C:\111_GitProjects\Lamia\testtempfiles\c_creation\sl_base3_urbandrainage_Lamia\test01.sqlite"
-
+    # SLFILE = r"C:\111_GitProjects\Lamia\testtempfiles\c_creation\sl_base3_urbandrainage_Lamia\test01.sqlite"
+    # SLFILE = r"C:\111_GitProjects\Lamia\testtempfiles\digue\VTA_Ambes_ind2.sqlite"
+    # SLFILE = r"C:\111_GitProjects\Lamia\testtempfiles\c_creation\sl_base3_levee_Lamia\test01.sqlite"
+    # SLFILE = r"M:\FR\BOR\VT\FLUVIAL\4352789_33_BM_surveillance_digues_PI_Ambes\05_ETUDES\052_Calculs\temps2\VTA_Ambes_ind2.sqlite"
+    SLFILE = r"C:\01_WORKINGDIR\cons\SPATIALITE_2747.sqlite"
     print(TGREEN, f"Opening {os.path.abspath(SLFILE)}", ENDC)
 
     lamiawidget.loadDBase(dbtype="Spatialite", slfile=SLFILE)

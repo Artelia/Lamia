@@ -24,6 +24,9 @@
           },
           {
             "name": "opentopomap"
+          },
+          {
+            "name": "bluemarble"
           }
         ],
         "searchProviders": ["coordinates", "uster", "nominatim"],
@@ -112,6 +115,18 @@
         "srs": "EPSG:25832",
         "params": {
           "LAYERS": "osm",
+          "STYLES": "",
+          "VERSION": "1.1.1"
+        },
+        "thumbnail": "img/mapthumbs/default2.jpg"
+      },
+      {
+        "type": "google",
+        "title": "google",
+        "name": "google",
+        "srs": "EPSG:3857",
+        "params": {
+          "LAYERS": "google",
           "STYLES": "",
           "VERSION": "1.1.1"
         },

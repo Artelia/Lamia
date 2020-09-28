@@ -647,7 +647,7 @@ class AbstractDBaseParser:
                 )
             return txt
 
-    def getConstraintTextFromRawValue(self, table, field, rawvalue):
+    def getConstraintTextFromRawValue(self, tablename, field, rawvalue):
         """
         Convertie le trigramme rawvalue de la table lamia "table" vers sa valeur textuelle
         :param table: la table lamia considérée
@@ -655,44 +655,61 @@ class AbstractDBaseParser:
         :param rawvalue: le trigramme ou valeur stockée considérée
         :return: la valeur textuelle
         """
-        # print('_getConstraintTextFromRawValue',table, self.dbasetables[table]['fields'][field], rawvalue,field)
+        # print(
+        #     "_getConstraintTextFromRawValue",
+        #     tablename,
+        #     self.dbasetables[tablename]["fields"][field],
+        #     rawvalue,
+        #     field,
+        # )
         # print('_getConstraintTextFromRawValue',table, field, rawvalue )
+        if not tablename in self.dbasetables.keys():
+            return rawvalue
 
-        if (
-            table in self.dbasetables.keys()
-            and field in self.dbasetables[table]["fields"].keys()
-            and "Cst" in self.dbasetables[table]["fields"][field].keys()
-        ):
+        parenttables = [tablename] + self.getParentTable(tablename)
 
-            dbasetable = self.dbasetables[table]
-            # if field in dbasetable['fields'].keys() and 'Cst' in dbasetable['fields'][field].keys():
-            if not dbaseutils.isAttributeNull(rawvalue):
-                # if isinstance(rawvalue, int) or isinstance(rawvalue, long):
-                if isinstance(rawvalue, int):
-                    rawvalue = str(rawvalue)
-                try:
-                    index = [
-                        value[1] for value in dbasetable["fields"][field]["Cst"]
-                    ].index(rawvalue)
-                    return dbasetable["fields"][field]["Cst"][index][0]
-                except ValueError as e:
-                    logging.getLogger("Lamia_unittest").debug(
-                        "error : %s %s %s %s",
-                        table,
-                        field,
-                        e,
-                        str([value[1] for value in dbasetable["fields"][field]["Cst"]]),
-                    )
-                    return str(rawvalue)
+        for table in parenttables:
 
-            else:
-                return ""
+            if (
+                table in self.dbasetables.keys()
+                and field in self.dbasetables[table]["fields"].keys()
+                and "Cst" in self.dbasetables[table]["fields"][field].keys()
+            ):
+
+                dbasetable = self.dbasetables[table]
+                # if field in dbasetable['fields'].keys() and 'Cst' in dbasetable['fields'][field].keys():
+                if not dbaseutils.isAttributeNull(rawvalue):
+                    # if isinstance(rawvalue, int) or isinstance(rawvalue, long):
+                    if isinstance(rawvalue, int):
+                        rawvalue = str(rawvalue)
+                    try:
+                        index = [
+                            value[1] for value in dbasetable["fields"][field]["Cst"]
+                        ].index(rawvalue)
+                        return dbasetable["fields"][field]["Cst"][index][0]
+                    except ValueError as e:
+                        logging.getLogger("Lamia_unittest").debug(
+                            "error : %s %s %s %s",
+                            table,
+                            field,
+                            e,
+                            str(
+                                [
+                                    value[1]
+                                    for value in dbasetable["fields"][field]["Cst"]
+                                ]
+                            ),
+                        )
+                        return str(rawvalue)
+
+                else:
+                    return ""
+
+        if not dbaseutils.isAttributeNull(rawvalue):
+            # print(table, field, rawvalue, type(rawvalue))
+            return rawvalue
         else:
-            if not dbaseutils.isAttributeNull(rawvalue):
-                # print(table, field, rawvalue, type(rawvalue))
-                return rawvalue
-            else:
-                return ""
+            return ""
 
     def getValuesFromPk(self, dbasename, fields, pk):
         # if isinstance(fields, str) or isinstance(fields, unicode):

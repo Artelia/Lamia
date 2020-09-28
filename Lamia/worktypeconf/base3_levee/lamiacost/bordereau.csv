@@ -1,0 +1,22 @@
+SELECT *, MIN(ST_Distance(ST_MakeValid(edge_now.geom), ST_MakeValid(deficiency_now.geom))) AS Distance  FROM deficiency_now INNER JOIN observation_now ON observation_now.lid_deficiency = deficiency_now.id_deficiency   AND observation_now.datetimeobservation = (SELECT MAX(A.datetimeobservation) FROM observation_now AS A WHERE A.lid_deficiency = deficiency_now.id_deficiency ) INNER JOIN edge_now JOIN geoarea_now ON ST_WITHIN(ST_MakeValid(deficiency_now.geom),ST_MakeValid(geoarea_now.geom)) LEFT JOIN equipment_now ON deficiency_now.lid_descriptionsystem = equipment_now.id_descriptionsystem LEFT JOIN equipment_now as Collecteur_now ON equipment_now.lid_descriptionsystem_1 = Collecteur_now.id_descriptionsystem WHERE pk_edge IN ( SELECT ROWID FROM SpatialIndex WHERE f_table_name = 'edge' AND search_frame = ST_Buffer(deficiency_now.geom, 50)) GROUP BY deficiency_now.id_deficiency ;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;0;1;2;3;4;5;6;7;8;9;10;11;12;13;;14;15;16;17;18;19;20;21
+Prix;Prix ,*field[8];Prix ,*field[6];deficiency_now.id_deficiency;deficiency_now.deficiencycategory;deficiency_now.side;deficiency_now.position;deficiency_now.deficiencytype;deficiency_now.deficiencysubtype;ST_Length(deficiency_now.geom);observation_now.datetimeobservation;observation_now.number;observation_now.gravity;edge_now.edgetype;edge_now.edgesubtype;equipment_now.id_equipment;equipment_now.equipmenttype;equipment_now.safety;equipment_now.height;equipment_now.width;Collecteur_now.height;Collecteur_now.width;observation_now.oh_etatvantellerie;observation_now.eqconditioncivilwork;observation_now.oh_etatvantellerie;geoarea_now.name
+700;;350;;INF;;;ERX;ERF;;;;;DIG;;;;;;;;;;;;
+700;;350;;INF;;;ERX;ERD;;;;;DIG;;;;;;;;;;;;
+500;500;;;INF;;;ERX;ARR;;;;;DIG;;;;;;;;;;;;
+1200;40;400;;INF;;;ERI;TER;;;;;DIG;;;;;;;;;;;;
+400;;100;;INF;;;ENT;VEG;;;;;DIG;;;;;;;;;;;;
+300;;150;;INF;;;DAF;MVT;;;;;DIG;;;;;;;;;;;;
+300;;150;;INF;;;DAF;FIS;;;;;DIG;TER;;;;;;;;;;;
+100;100;100;;INF;;;DAF;FIS;;;;;DIG;GCI;;;;;;;;;;;
+1000;1000;;;INF;;;DAF;DEJ;;;;;DIG;;;;;;;;;;;;
+1000;1000;;;INF;;;DAF;ALT;;;;;DIG;GCI;;;;;;;;;;;
+1000;1000;;;INF;;;DAF;DES;;;;;DIG;GCI;;;;;;;;;;;
+1000;1000;;;INF;;;DAF;DEC;;;;;DIG;GCI;;;;;;;;;;;
+300;;150;;INF;;;ERX;PIE;;;;;DIG;;;;;;;;;;;;
+300;;150;;INF;;;ENT;PAS;;;;;DIG;;;;;;;;;;;;
+1000;1000;;;INF;;;ENT;DSA;;;;;DIG;;;;;;;;;;;;
+5000;;;;EQP;;;;;;;;;;;;;0;;;;;;;;
+5000;;;;EQP;;;;;;;;;;;;;1;;;<=1;;<=1;;;
+5000;;;;EQP;;;;;;;;;;;;;1;;;<=1;;;<=1;;

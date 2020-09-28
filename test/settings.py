@@ -19,10 +19,10 @@ CRS = 2154
 # ]
 DBTYPE = [
     "base3_urbandrainage",
-    # "base3_waterdistribution",
-    # "base3_constructionsite",
-    # "base3_faunaflora",
-    # "base3_levee",
+    "base3_waterdistribution",
+    "base3_constructionsite",
+    "base3_faunaflora",
+    "base3_levee",
 ]
 
 
@@ -46,7 +46,7 @@ PGport = 5432
 
 # * Test conf
 SPATIALITE = True
-POSTGIS = True
+POSTGIS = False
 
 TESTDIR = os.path.join(os.path.join(os.path.dirname(__file__)), "..", "testtempfiles")
 

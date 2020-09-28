@@ -136,3 +136,12 @@ class LamiaApiView(views.APIView):
                 ids = LamiaSession.getInstance(projectid).getIds(confobject)
                 return Response(ids)
 
+            elif func == "bboxfilter":
+                # table = request.data["tablename"]
+                bbox = request.data["bbox"]
+                res = LamiaSession.getInstance(projectid).getPksFromBBox(
+                    tablename, bbox
+                )
+                print("**", res)
+                return Response(res)
+

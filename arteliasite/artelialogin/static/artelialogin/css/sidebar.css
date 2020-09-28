@@ -1,5 +1,5 @@
 
-#sidebar {
+#sitesidebar {
   min-width: 270px;
   max-width: 270px;
   background: rgb(0,55,90);
@@ -8,44 +8,44 @@
   -o-transition: all 0.3s;
   transition: all 0.3s;
   position: relative; }
-  #sidebar .h6 {
+  #sitesidebar .h6 {
     color: #fff; }
-  #sidebar.active {
+  #sitesidebar.active {
     margin-left: -270px; }
-    #sidebar.active .custom-menu {
+    #sitesidebar.active .custom-menu {
       margin-right: -50px; }
-  #sidebar h1 {
+  #sitesidebar h1 {
     margin-bottom: 20px;
     font-weight: 700; }
-    #sidebar h1 .logo {
+    #sitesidebar h1 .logo {
       color: #fff; }
-  #sidebar ul.components {
+  #sitesidebar ul.components {
     padding: 0; }
-  #sidebar ul li {
+  #sitesidebar ul li {
     font-size: 16px; }
-    #sidebar ul li > ul {
+    #sitesidebar ul li > ul {
       margin-left: 10px; }
-      #sidebar ul li > ul li {
+      #sitesidebar ul li > ul li {
         font-size: 14px; }
-    #sidebar ul li a {
+    #sitesidebar ul li a {
       padding: 10px 0;
       display: block;
       color: rgba(255, 255, 255, 0.6);
       border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
-      #sidebar ul li a:hover {
+      #sitesidebar ul li a:hover {
         color: #fff; }
-    #sidebar ul li.active > a {
+    #sitesidebar ul li.active > a {
       background: transparent;
       color: #fff; }
   @media (max-width: 991.98px) {
-    #sidebar {
+    #sitesidebar {
       margin-left: -270px; }
-      #sidebar.active {
+      #sitesidebar.active {
         margin-left: 0; }
-      #sidebar .custom-menu {
+      #sitesidebar .custom-menu {
         margin-right: -60px !important;
         top: 10px !important; } }
-  #sidebar .custom-menu {
+  #sitesidebar .custom-menu {
     display: inline-block;
     position: absolute;
     top: 20px;
@@ -55,17 +55,17 @@
     -o-transition: 0.3s;
     transition: 0.3s; }
     @media (prefers-reduced-motion: reduce) {
-      #sidebar .custom-menu {
+      #sitesidebar .custom-menu {
         -webkit-transition: none;
         -o-transition: none;
         transition: none; } }
-    #sidebar .custom-menu .btn {
+    #sitesidebar .custom-menu .btn {
       width: 40px;
       height: 40px;
       border-radius: 50%; }
-      #sidebar .custom-menu .btn.btn-primary {
+      #sitesidebar .custom-menu .btn.btn-primary {
         background: #393c7f;
         border-color: #393c7f; }
-        #sidebar .custom-menu .btn.btn-primary:hover, #sidebar .custom-menu .btn.btn-primary:focus {
+        #sitesidebar .custom-menu .btn.btn-primary:hover, #sitesidebar .custom-menu .btn.btn-primary:focus {
           background: #393c7f !important;
           border-color: #393c7f !important; }
