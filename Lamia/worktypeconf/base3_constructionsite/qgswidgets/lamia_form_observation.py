@@ -65,7 +65,10 @@ class BaseConstructionsiteObservationTool(BaseObservationTool):
         self.formtoolwidgetconfdictmain["observation"]["widgets"].update(
             {
                 "ncbagreement": self.toolwidgetmain.comboBox_acceptation,
-                "ncbtargetdate": self.toolwidgetmain.dateEdit_datecible,
+                "ncbtargetdate": [
+                    self.toolwidgetmain.dateEdit_datecible,
+                    self.toolwidgetmain.dateTimeEdit_pva,
+                ],
                 # 'ncb_observation': self.toolwidgetmain.textBrowser_ncbobs,
                 "ncccheckstate": self.toolwidgetmain.comboBox_etatverif,
                 # 'ncc_obs': self.toolwidgetmain.textBrowser_etatverif,
@@ -168,7 +171,7 @@ class BaseConstructionsiteObservationTool(BaseObservationTool):
         if "observationcategory" in self.TABLEFILTERFIELD.keys():
             observationcategory = self.TABLEFILTERFIELD["observationcategory"]
             # Signature
-            if observationcategory in ["NCA", "NCB", "NCC", "NCD"]:
+            if observationcategory in ["NCA", "NCB", "NCC", "NCD", "PVA"]:
                 signatureWidget = SignatureWidget(
                     self,
                     "lid_actor_1",
@@ -193,24 +196,6 @@ class BaseConstructionsiteObservationTool(BaseObservationTool):
                 # self.toolwidgetmain.tabWidget_formvisa.removeTab(1)
             # mise dispo
             elif observationcategory == "PVA":
-                # entreprise preneuse
-                lidchooser = LidChooserWidget(
-                    parentwdg=self,
-                    parentlidfield="lid_delivery_1",
-                    parentframe=self.toolwidgetmain.frame_entpren_marche,
-                    searchdbase="delivery",
-                    searchfieldtoshow=["name"],
-                )
-                self.lamiawidgets.append(lidchooser)
-
-                signatureWidgetPreneuse = SignatureWidget(
-                    self,
-                    "lid_actor_1",
-                    "lid_resource_1",
-                    "datetimesignature_1",
-                    parentframe=self.toolwidgetmain.groupBox_entpren_sign,
-                )
-                self.lamiawidgets.append(signatureWidgetPreneuse)
 
                 # entreprise occupante
                 lidchooser = LidChooserWidget(
@@ -230,7 +215,26 @@ class BaseConstructionsiteObservationTool(BaseObservationTool):
                 )
                 self.lamiawidgets.append(signatureWidgetOccupante)
 
-                self.toolwidgetmain.tabWidget_formvisa.removeTab(1)
+                # entreprise preneuse
+                lidchooser = LidChooserWidget(
+                    parentwdg=self,
+                    parentlidfield="lid_delivery_3",
+                    parentframe=self.toolwidgetmain.frame_entpren_marche,
+                    searchdbase="delivery",
+                    searchfieldtoshow=["name"],
+                )
+                self.lamiawidgets.append(lidchooser)
+
+                signatureWidgetPreneuse = SignatureWidget(
+                    self,
+                    "lid_actor_3",
+                    "lid_resource_3",
+                    "datetimesignature_3",
+                    parentframe=self.toolwidgetmain.groupBox_entpren_sign,
+                )
+                self.lamiawidgets.append(signatureWidgetPreneuse)
+
+                # self.toolwidgetmain.tabWidget_formvisa.removeTab(1)
 
     def _initMainToolWidgetOrange(self):
         # userui

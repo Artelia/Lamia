@@ -156,6 +156,20 @@ class FormToolUtils(QtCore.QObject):
                                         wdg.valueChanged.connect(
                                             self.manageMultipleWidgetField
                                         )
+                                elif isinstance(wdgs[0], QTextBrowser) or isinstance(
+                                    wdgs[0], QLineEdit
+                                ):
+                                    for wdg in wdgs:
+                                        wdg.textChanged.connect(
+                                            self.manageMultipleWidgetField
+                                        )
+                                elif isinstance(wdgs[0], QDateEdit) or isinstance(
+                                    wdgs[0], QDateTimeEdit
+                                ):
+                                    for wdg in wdgs:
+                                        wdg.dateChanged.connect(
+                                            self.manageMultipleWidgetField
+                                        )
 
                             # case TABLEFILTERFIELD : set field unselectionnable
                             if field in self.formtoolwidget.TABLEFILTERFIELD.keys():
@@ -257,6 +271,14 @@ class FormToolUtils(QtCore.QObject):
                                         wdg.valueChanged.connect(
                                             self.manageMultipleWidgetField
                                         )
+                                elif isinstance(wdgs[0], QTextBrowser) or isinstance(
+                                    wdgs[0], QLineEdit
+                                ):
+                                    prin("conn", wdgs)
+                                    for wdg in wdgs:
+                                        wdg.textChanged.connect(
+                                            self.manageMultipleWidgetField
+                                        )
 
     def manageMultipleWidgetField(self):
         """
@@ -302,6 +324,49 @@ class FormToolUtils(QtCore.QObject):
                                     pass
                                 wdg.setValue(senderwdg.value())
                                 wdg.valueChanged.connect(self.manageMultipleWidgetField)
+                        break
+
+                    elif isinstance(senderwdg, QTextBrowser) or isinstance(
+                        senderwdg, QLineEdit
+                    ):
+
+                        texttocopy = ""
+                        if isinstance(senderwdg, QTextBrowser):
+                            texttocopy = senderwdg.toPlainText()
+                        else:
+                            texttocopy = senderwdg.text()
+                        for wdg in wdgs:
+                            if wdg != senderwdg:
+                                try:
+                                    wdg.textChanged.disconnect(
+                                        self.manageMultipleWidgetField
+                                    )
+                                except:
+                                    pass
+
+                                if isinstance(wdg, QTextBrowser):
+                                    wdg.setPlainText(texttocopy)
+                                else:
+                                    wdg.setText(texttocopy)
+                                wdg.textChanged.connect(self.manageMultipleWidgetField)
+                        break
+
+                    elif isinstance(senderwdg, QDateEdit) or isinstance(
+                        senderwdg, QDateTimeEdit
+                    ):
+
+                        datetocopy = senderwdg.dateTime()
+
+                        for wdg in wdgs:
+                            if wdg != senderwdg:
+                                try:
+                                    wdg.dateChanged.disconnect(
+                                        self.manageMultipleWidgetField
+                                    )
+                                except:
+                                    pass
+                                wdg.setDateTime(datetocopy)
+                                wdg.dateChanged.connect(self.manageMultipleWidgetField)
                         break
 
     def comboparentValueChanged(
@@ -852,6 +917,7 @@ class FormToolUtils(QtCore.QObject):
                 sql = sql[:-1]  # remove last ,
 
                 sql += " WHERE pk_" + str(tablename) + " = " + str(tablepk)
+                print(sql)
                 self.formtoolwidget.dbase.query(sql)
 
     def setValueInWidget(self, wdg, valuetoset, table, field):

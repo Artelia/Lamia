@@ -73,7 +73,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         self.xformreverse = None
 
         # behaviour
-        self.editingrawlayer = False
+        self.editingrawlayer = None
         self.currentmaptool = None  # the maptool in use
 
     def setCanvas(self, qgscanvas):
@@ -113,6 +113,9 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
         self.canvas.destinationCrsChanged.connect(self.updateQgsCoordinateTransform)
         self.canvas.mapToolSet.connect(self.toolsetChanged)
+
+        self.currentmaptool = self.mtoolPan
+        self.mtooltorestore = self.currentmaptool
 
     def ____________layersManagement(self):
         pass
@@ -706,13 +709,18 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                 qgis.core.QgsProject.instance(),
             )
 
-    def addRawLayerInCanvasForEditing(self, layername):
+    def addRawLayerInCanvasForEditing(self, dbaseparser, layername):
 
-        if self.editingrawlayer == True:
+        if self.editingrawlayer:
             return
 
-        self.editingrawlayer = False
+        self.editingrawlayer = None
         self.editlayer = self.layers[layername]["layerqgisjoined"].clone()
+
+        subsetstring = self._getSubsetStringForWorkingDate(dbaseparser)
+        self.layers["object"]["layer"].setSubsetString(subsetstring)
+        # self.editlayer.setSubsetString(subsetstring)
+        self.editlayer.triggerRepaint()
 
         qgis.core.QgsProject.instance().addMapLayer(self.editlayer, False)
         if self.qgislegendnode is None:  # outsideqgis case
@@ -721,21 +729,29 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         if qgis.utils.iface is not None:
             qgis.utils.iface.setActiveLayer(self.editlayer)
             self.editlayer.startEditing()
+            for parentable in dbaseparser.getParentTable(layername):
+                self.layers[parentable]["layer"].startEditing()
             qgis.utils.iface.actionVertexTool().trigger()
 
-        self.editingrawlayer = True
+        self.editingrawlayer = layername
 
-    def saveRawLayerInCanvasForEditing(self, savechanges=False):
+    def saveRawLayerInCanvasForEditing(self, dbaseparser, savechanges=False):
 
         if self.editingrawlayer:
-            self.editingrawlayer = False
+
             if isinstance(savechanges, bool) and savechanges:
+                for parentable in dbaseparser.getParentTable(self.editingrawlayer):
+                    self.layers[parentable]["layer"].commitChanges()
                 self.editlayer.commitChanges()
             else:
+                for parentable in dbaseparser.getParentTable(self.editingrawlayer):
+                    self.layers[parentable]["layer"].rollBack()
                 self.editlayer.rollBack()
 
             # self.qgislegendnode.removeLayer(self.editlayer)
             self.qgislegendnode.removeLayer(self.editlayer)
+            self.layers["object"]["layer"].setSubsetString("")
+            self.editingrawlayer = None
 
     def updateWorkingDate(self, dbaseparser, datetimearg=None, revision=None):
         """
@@ -744,6 +760,22 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         Change les filtres de toutes les tables qgis en fonction
         """
 
+        subsetstring = self._getSubsetStringForWorkingDate(
+            dbaseparser, datetimearg, revision
+        )
+
+        for tablename, tabledict in self.layers.items():
+            if "layerqgis" in tabledict.keys():
+                fieldnames = [
+                    field.name().lower() for field in tabledict["layerqgis"].fields()
+                ]
+                if "datecreation" in fieldnames or "datetimecreation" in fieldnames:
+                    tabledict["layerqgis"].setSubsetString(subsetstring)
+                    tabledict["layerqgis"].triggerRepaint()
+
+    def _getSubsetStringForWorkingDate(
+        self, dbaseparser, datetimearg=None, revision=None
+    ):
         if datetimearg:
             workingdatemodif = datetimearg
         else:
@@ -752,6 +784,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             revision = revision
         else:
             revision = dbaseparser.currentrevision
+
         if dbaseparser.__class__.__name__ == "SpatialiteDBaseParser":
             parsertruevalue = "1"
         elif dbaseparser.__class__.__name__ == "PostGisDBaseParser":
@@ -771,31 +804,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             currentrevision=str(revision),
         )
 
-        #
-        # if self.dbasetype == 'spatialite':
-        #    subsetstring = '"datetimecreation" <= ' + "'" + workingdatemodif + "'"
-        #    subsetstring += ' AND CASE WHEN "datetimedestruction" IS NOT NULL  THEN "datetimedestruction" > ' + "'" + workingdatemodif + "'" + ' ELSE 1 END'
-        #    if self.revisionwork:
-        #        subsetstring += ' AND "lpk_revision_begin" <= ' + str(self.currentrevision)
-        #        subsetstring += ' AND CASE WHEN "lpk_revision_end" IS NOT NULL  THEN "lpk_revision_end" > ' + str(
-        #            self.currentrevision) + ' ELSE 1 END'
-        #
-        # elif self.dbasetype == 'postgis':
-        #    subsetstring = '"datetimecreation" <= ' + "'" + workingdatemodif + "'"
-        #    subsetstring += ' AND CASE WHEN "datetimedestruction" IS NOT NULL  THEN "datetimedestruction" > ' + "'" + workingdatemodif + "'" + ' ELSE TRUE END'
-        #    if self.revisionwork:
-        #        subsetstring += ' AND "lpk_revision_begin" <= ' + str(self.currentrevision)
-        #        subsetstring += ' AND CASE WHEN "lpk_revision_end" IS NOT NULL  THEN "lpk_revision_end" > ' + str(
-        #            self.currentrevision) + ' ELSE TRUE END'
-        # for tablename in self.dbasetables:
-        for tablename, tabledict in self.layers.items():
-            if "layerqgis" in tabledict.keys():
-                fieldnames = [
-                    field.name().lower() for field in tabledict["layerqgis"].fields()
-                ]
-                if "datecreation" in fieldnames or "datetimecreation" in fieldnames:
-                    tabledict["layerqgis"].setSubsetString(subsetstring)
-                    tabledict["layerqgis"].triggerRepaint()
+        return subsetstring
 
     def _____________________________maptoolsManagement(self):
         pass

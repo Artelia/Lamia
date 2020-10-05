@@ -1487,13 +1487,13 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
 
     def addRawLayerInCanvasForEditing(self):
         currentdbasetablename = self.currenttoolwidget.DBASETABLENAME
-        self.qgiscanvas.addRawLayerInCanvasForEditing(currentdbasetablename)
+        self.qgiscanvas.addRawLayerInCanvasForEditing(self.dbase, currentdbasetablename)
         for child in self.findChildren((QFrame, QToolBar)):
             child.setEnabled(False)
         self.lamiatoolbareditlayer.setEnabled(True)
 
     def saveRawLayerInCanvasForEditing(self, savechanges=True):
-        self.qgiscanvas.saveRawLayerInCanvasForEditing(savechanges)
+        self.qgiscanvas.saveRawLayerInCanvasForEditing(self.dbase, savechanges)
         for child in self.findChildren((QFrame, QToolBar)):
             child.setEnabled(True)
 

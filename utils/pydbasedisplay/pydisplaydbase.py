@@ -101,6 +101,8 @@ def launchIface():
     # SLFILE = r"C:\111_GitProjects\Lamia\testtempfiles\c_creation\sl_base3_levee_Lamia\test01.sqlite"
     # SLFILE = r"M:\FR\BOR\VT\FLUVIAL\4352789_33_BM_surveillance_digues_PI_Ambes\05_ETUDES\052_Calculs\temps2\VTA_Ambes_ind2.sqlite"
     SLFILE = r"C:\01_WORKINGDIR\cons\SPATIALITE_2747.sqlite"
+    SLFILE = r"C:\Users\patrice.verchere\OneDrive - ARTELIA\Documents\lamia\tpo\test01.sqlite"
+
     print(TGREEN, f"Opening {os.path.abspath(SLFILE)}", ENDC)
 
     lamiawidget.loadDBase(dbtype="Spatialite", slfile=SLFILE)
