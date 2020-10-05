@@ -64,7 +64,7 @@ import webbrowser
 import glob, importlib, inspect
 from pprint import pprint
 
-from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
+from lamiaapi.dbasemanager.dbaseparserfactory import DBaseParserFactory
 
 from ..ifaceabstractwidget import LamiaIFaceAbstractWidget
 from ..qgsconnector.ifaceqgisconnector import QgisConnector
@@ -81,8 +81,8 @@ from .tools.subwidgets.lamia_numpad import NumPadDialog
 
 # version 01
 
-import Lamia, time
-from Lamia.libslamia.gps.GPSutil import GpsUtil
+import lamiaapi, lamiaqgisiface, lamiaconf, time
+from lamiaapi.libslamia.gps.GPSutil import GpsUtil
 
 debugtime = False
 
@@ -528,7 +528,7 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         Lit le fichier des bases de données recentes et rempli le  menu//Fichier//base de données recentes
         """
         pathrecentproject = os.path.join(
-            os.path.dirname(Lamia.__file__), "config", "recentprojects.txt"
+            os.path.dirname(lamiaqgisiface.__file__), "config", "recentprojects.txt"
         )
         try:
             file = open(pathrecentproject, "r")
@@ -580,7 +580,7 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         menu//Fichier//base de données recentes
         """
         pathrecentproject = os.path.join(
-            os.path.dirname(Lamia.__file__), "config", "recentprojects.txt"
+            os.path.dirname(lamiaqgisiface.__file__), "config", "recentprojects.txt"
         )
         file = open(pathrecentproject, "w")
         for i, path in enumerate(self.recentsdbase):
@@ -822,14 +822,14 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         # tooltypestoload = ["toolprepro", "toolpostpro"]
 
         modulelistpath = [
-            "Lamia",
-            "worktypeconf",
+            # "Lamia",
+            # "worktypeconf",
             self.dbase.worktype.lower(),
             "qgswidgets",
         ]
 
         path = os.path.join(
-            os.path.dirname(Lamia.__file__), "..", "//".join(modulelistpath)
+            os.path.dirname(lamiaconf.__file__), "//".join(modulelistpath)
         )
 
         pyfilespath = glob.glob(path + "/*.py")
@@ -837,7 +837,7 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         for x in pyfiles:
             if debug:
                 logging.getLogger("Lamia_unittest").debug("x %s", x)
-            classlistpath = modulelistpath + [x]
+            classlistpath = ["lamiaconf"] + modulelistpath + [x]
             modulename = ".".join(classlistpath)
             moduletemp = importlib.import_module(modulename)
 
@@ -1338,7 +1338,7 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
             pass
         elif platform.system() == "Windows":
             subprocess.Popen(
-                f'explorer "{os.path.realpath(os.path.dirname(Lamia.__file__))}"'
+                f'explorer "{os.path.realpath(os.path.dirname(lamiaqgisiface.__file__))}"'
             )
 
     def showHideQgisToolbars(self):
@@ -1392,9 +1392,8 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         pass
 
     def openHelp(self):
-        path = os.path.join(os.path.dirname(Lamia.__file__), "doc_html", "index.html")
         if platform.system() == "Linux":
-            r = subprocess.call(("xdg-open", path))
+            pass
         elif platform.system() == "Windows":
             httphelp = "https://artelia.github.io/Lamia/index.html"
             os.startfile(httphelp)

@@ -1,13 +1,13 @@
 import os, sys
 import cProfile, logging
 
-lamiapath = os.path.join(os.path.join(os.path.dirname(__file__)), "..", "..")
+lamiapath = os.path.join(os.path.dirname(__file__), "..", "..")
 sys.path.append(lamiapath)
 from test.test_utils import *
-import Lamia
+import lamiaapi
 
-from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
-from Lamia.iface.ifaceabstractconnector import LamiaIFaceAbstractConnectors
+from lamiaapi.dbasemanager.dbaseparserfactory import DBaseParserFactory
+from lamiaqgisiface.iface.ifaceabstractconnector import LamiaIFaceAbstractConnectors
 import warnings
 
 # warnings.filterwarnings("ignore")
@@ -30,7 +30,7 @@ import networkx
 
 warnings.filterwarnings("ignore", category=DeprecationWarning, module="networkx")
 
-import Lamia.libs.pyqtgraph
+import lamiaapi.libs.pyqtgraph
 
 warnings.filterwarnings(
     "ignore", category=DeprecationWarning, module="Lamia.libs.pyqtgraph"
@@ -50,7 +50,7 @@ warnings.filterwarnings("ignore", message="numpy.ufunc size changed")
 
 numpy.seterr(all="ignore")
 
-from Lamia.iface.qgsconnector.ifaceloggingconnector import LoggingConnector
+from lamiaqgisiface.iface.qgsconnector.ifaceloggingconnector import LoggingConnector
 
 INTERFACEINDEX = 0
 PROFILING = False
@@ -72,7 +72,7 @@ def launchIface():
     # lamiawidget.dbase.messageinstance = lamiawidget.connector
 
     testdir = os.path.join(
-        os.path.dirname(Lamia.__file__), "../test/testtempfiles/c_creation"
+        os.path.dirname(utils.__file__), "../test/testtempfiles/c_creation"
     )
     #  sl_base3_urbandrainage_Lamia   sl_base3_waterdistribution_Lamia
     # sl_base3_constructionsite_Lamia   sl_base3_constructionsite_Orange

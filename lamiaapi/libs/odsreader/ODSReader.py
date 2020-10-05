@@ -14,9 +14,10 @@
 
 # Thanks to grt for the fixes
 import os, sys
-import Lamia
-lamiapath = os.path.join(os.path.dirname(Lamia.__file__))
-libspath = os.path.join(lamiapath,'libs')
+import lamiaapi
+
+lamiaapipath = os.path.join(os.path.dirname(lamiaapi.__file__))
+libspath = os.path.join(lamiaapipath, "libs")
 sys.path.append(libspath)
 
 import odf.opendocument
@@ -27,15 +28,16 @@ from odf.text import P
 class GrowingList(list):
     def __setitem__(self, index, value):
         if index >= len(self):
-            self.extend([None]*(index + 1 - len(self)))
+            self.extend([None] * (index + 1 - len(self)))
         list.__setitem__(self, index, value)
+
 
 class ODSReader:
 
     # loads the file
-    def __init__(self, file, clonespannedcolumns=None,ignorecomment=False):
+    def __init__(self, file, clonespannedcolumns=None, ignorecomment=False):
         self.clonespannedcolumns = clonespannedcolumns
-        self.ignorecomment =ignorecomment
+        self.ignorecomment = ignorecomment
         self.doc = odf.opendocument.load(file)
         self.SHEETS = {}
         for sheet in self.doc.spreadsheet.getElementsByType(Table):
@@ -59,9 +61,9 @@ class ODSReader:
             for cell in cells:
                 # repeated value?
                 repeat = cell.getAttribute("numbercolumnsrepeated")
-                if(not repeat):
+                if not repeat:
                     repeat = 1
-                    spanned = int(cell.getAttribute('numbercolumnsspanned') or 0)
+                    spanned = int(cell.getAttribute("numbercolumnsspanned") or 0)
                     # clone spanned cells
                     if self.clonespannedcolumns is not None and spanned > 1:
                         repeat = spanned
@@ -72,34 +74,37 @@ class ODSReader:
                 # for each text/text:span node
                 for p in ps:
                     for n in p.childNodes:
-                        if (n.nodeType == 1 and n.tagName == "text:span"):
+                        if n.nodeType == 1 and n.tagName == "text:span":
                             for c in n.childNodes:
-                                if (c.nodeType == 3):
-                                    if hasattr(n, 'data'):
-                                        textContent = u'{}{}'.format(textContent, n.data)
+                                if c.nodeType == 3:
+                                    if hasattr(n, "data"):
+                                        textContent = u"{}{}".format(
+                                            textContent, n.data
+                                        )
                                     else:
-                                        textContent = u'{}{}'.format(textContent, n)
+                                        textContent = u"{}{}".format(textContent, n)
 
+                        if n.nodeType == 3:
+                            textContent = u"{}{}".format(textContent, n.data)
 
-                        if (n.nodeType == 3):
-                            textContent = u'{}{}'.format(textContent, n.data)
-
-                if(textContent):
-                    if(textContent[0] != "#" or not self.ignorecomment):  # ignore comments cells
+                if textContent:
+                    if (
+                        textContent[0] != "#" or not self.ignorecomment
+                    ):  # ignore comments cells
                         for rr in range(int(repeat)):  # repeated?
-                            arrCells[count]=textContent
-                            count+=1
+                            arrCells[count] = textContent
+                            count += 1
                     else:
                         row_comment = row_comment + textContent + " "
                 else:
                     for rr in range(int(repeat)):
-                        count+=1
+                        count += 1
 
             # if row contained something
-            if(len(arrCells)):
+            if len(arrCells):
                 arrRows.append(arrCells)
 
-            #else:
+            # else:
             #    print ("Empty or commented row (", row_comment, ")")
 
         self.SHEETS[name] = arrRows
