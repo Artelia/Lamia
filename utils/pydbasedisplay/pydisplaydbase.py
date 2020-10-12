@@ -3,7 +3,7 @@ import cProfile, logging
 
 lamiapath = os.path.join(os.path.dirname(__file__), "..", "..")
 sys.path.append(lamiapath)
-from test.test_utils import *
+from lamiatest.test_utils import *
 import lamiaapi
 
 from lamiaapi.dbasemanager.dbaseparserfactory import DBaseParserFactory

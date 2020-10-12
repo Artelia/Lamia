@@ -8,7 +8,7 @@ from qgis.PyQt import QtCore, uic
 lamiapath = os.path.join(os.path.dirname(__file__), "..")
 sys.path.append(lamiapath)
 import utils, lamiaqgisiface
-from test.settings import *
+from lamiatest.settings import *
 
 qgissettingpath = os.path.join(os.path.dirname(utils.__file__), "qgisconfig.txt")
 qgissettingpath = os.path.abspath(qgissettingpath)
