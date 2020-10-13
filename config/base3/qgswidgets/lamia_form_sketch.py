@@ -34,7 +34,7 @@ from PIL.ImageQt import ImageQt
 from qgis.PyQt import uic, QtCore, QtGui
 from qgis.PyQt.QtWidgets import QWidget, QMainWindow, QSpinBox, QAction, QDialog, QFrame
 
-from lamiaqgisiface.iface.qgiswidget.tools.lamia_abstractformtool import (
+from Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool import (
     AbstractLamiaFormTool,
 )
 from .lamia_form_pictureviewer import PictureViewer

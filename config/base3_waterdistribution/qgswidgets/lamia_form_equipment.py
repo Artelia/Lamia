@@ -40,10 +40,10 @@ from .lamia_form_camera import BaseWaterdistributionCameraTool
 from .lamia_form_sketch import BaseWaterdistributionSketchTool
 from .lamia_form_deficiency import BaseWaterdistributionDeficiencyTool
 
-from lamiaqgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_gpsvalues import (
+from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_gpsvalues import (
     GpsValuesWidget,
 )
-from lamiaqgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_createsubfeature import (
+from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_createsubfeature import (
     CreateSubFeatureWidget,
 )
 

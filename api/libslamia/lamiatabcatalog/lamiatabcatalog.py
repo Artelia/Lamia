@@ -32,7 +32,7 @@ import pandas as pd
 import zipfile
 
 import Lamia
-from lamiaapi.libs.odsreader.ODSReader import ODSReader
+from Lamia.api.libs.odsreader.ODSReader import ODSReader
 
 
 class TabCatalog:

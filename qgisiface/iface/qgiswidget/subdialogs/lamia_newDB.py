@@ -27,12 +27,12 @@ This file is part of LAMIA.
   * License-Filename: LICENSING.md
  """
 import os
-import lamiaapi, lamiaconf
+import Lamia.api, Lamia.config
 
 from qgis.PyQt import uic, QtCore, QtGui
 from qgis.PyQt.QtWidgets import QDialog
 
-from lamiaapi.dbasemanager.dbaseparserabstract import AbstractDBaseParser
+from Lamia.api.dbasemanager.dbaseparserabstract import AbstractDBaseParser
 
 
 class newDBDialog(QDialog):
@@ -54,7 +54,7 @@ class newDBDialog(QDialog):
         self.finished.connect(self.dialogIsFinished)
 
     def searchDBases(self):
-        wrktypedir = os.path.dirname(lamiaconf.__file__)
+        wrktypedir = os.path.dirname(Lamia.config.__file__)
         worktypes = os.listdir(wrktypedir)
         finalworktype = []
         for worktype in worktypes:

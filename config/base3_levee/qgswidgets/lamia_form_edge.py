@@ -41,7 +41,7 @@ from ...base3.qgswidgets.lamia_form_pictureviewer import PictureViewer
 from .lamia_form_graph import BaseLeveeGraphTool
 from .lamia_form_profile import BaseLeveeProfileTool
 
-from lamiaqgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_tcmanytomany import (
+from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_tcmanytomany import (
     TcmanytomanyChooserWidget,
 )
 

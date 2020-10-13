@@ -27,7 +27,7 @@ This file is part of LAMIA.
 import os, sys, io, logging, datetime, re, json, platform
 import qgis, qgis.core, qgis.utils, qgis.gui
 from qgis.PyQt import QtGui, QtCore
-import lamiaconf
+import Lamia.config
 from ..ifaceabstractcanvas import LamiaAbstractIFaceCanvas
 from .maptool.mapTools import mapToolCapture, mapToolEdit
 
@@ -1184,7 +1184,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
     def _getStyleDirectory(self, worktype):
         styledirectory = os.path.join(
-            os.path.dirname(lamiaconf.__file__), worktype, "qgsstyles",
+            os.path.dirname(Lamia.config.__file__), worktype, "qgsstyles",
         )
 
         return styledirectory

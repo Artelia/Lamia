@@ -34,7 +34,7 @@ from qgis.PyQt.QtWidgets import QWidget, QLabel, QFrame
 from ...base3.qgswidgets.lamia_form_edge import BaseEdgeTool
 from .lamia_form_camera import BaseWaterdistributionCameraTool
 from .lamia_form_sketch import BaseWaterdistributionSketchTool
-from lamiaqgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_edgetonode import (
+from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_edgetonode import (
     EdgeToNodeWidget,
 )
 

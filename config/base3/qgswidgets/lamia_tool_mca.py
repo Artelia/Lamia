@@ -43,9 +43,9 @@ import numpy as np
 from collections import OrderedDict
 import glob, sys, logging, inspect
 
-from lamiaqgisiface.iface.qgiswidget.tools.lamia_abstracttool import AbstractLamiaTool
+from Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstracttool import AbstractLamiaTool
 from .amctools.amcwindow import AMCWindow
-from lamiaqgisiface.iface.qgiswidget.tools.general_subwidgets.abstractfilemanager import (
+from Lamia.qgisiface.iface.qgiswidget.tools.general_subwidgets.abstractfilemanager import (
     AbstractFileManager,
 )
 

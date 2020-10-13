@@ -34,10 +34,10 @@ from qgis.PyQt import uic, QtCore
 from ...base3.qgswidgets.lamia_form_edge import BaseEdgeTool
 from .lamia_form_graph import BaseUrbandrainageGraphTool
 from .lamia_form_camera import BaseUrbandrainageCameraTool
-from lamiaqgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_lidchooser import (
+from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_lidchooser import (
     LidChooserWidget,
 )
-from lamiaqgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_edgetonode import (
+from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_edgetonode import (
     EdgeToNodeWidget,
 )
 

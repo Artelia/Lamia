@@ -31,10 +31,10 @@ from qgis.PyQt import QtGui, QtCore, QtXml
 from qgis.PyQt.QtPrintSupport import QPrinter
 
 from ..lamianetworkx.lamianetworkx import NetWorkCore
-import lamiaconf
-from lamiaqgisiface.iface.qgscanvas.ifaceqgiscanvas import QgisCanvas
-from lamiaapi.dbasemanager.dbaseparserfactory import DBaseParserFactory
-from lamiaqgisiface.iface.qgsconnector.ifaceqgisconnector import QgisConnector
+import Lamia.config
+from Lamia.qgisiface.iface.qgscanvas.ifaceqgiscanvas import QgisCanvas
+from Lamia.api.dbasemanager.dbaseparserfactory import DBaseParserFactory
+from Lamia.qgisiface.iface.qgsconnector.ifaceqgisconnector import QgisConnector
 
 
 class ReportCore:
@@ -51,7 +51,7 @@ class ReportCore:
         self.messageinstance = messageinstance
         if self.dbase.base3version:
             self.tooldir = os.path.join(
-                os.path.dirname(lamiaconf.__file__),
+                os.path.dirname(Lamia.config.__file__),
                 self.dbase.worktype.lower(),
                 "lamiareport",
             )
@@ -503,7 +503,7 @@ class printPDFBaseWorker(QtCore.QObject):
                 self.reportconffilename
             )
             if self.dbase.base3version:
-                strtoexec = f"lamiaconf.{self.dbase.worktype.lower()}.lamiareport.lamiareportworktypefunc"
+                strtoexec = f"Lamia.config.{self.dbase.worktype.lower()}.lamiareport.lamiareportworktypefunc"
             else:
                 strtoexec = f"..{self.dbase.worktype.lower()}.lamiareportworktypefunc"
             self.addonimagesmodule = importlib.import_module(
@@ -1405,7 +1405,7 @@ class printPDFBaseWorker(QtCore.QObject):
                         results = [row[0] for row in query]
                         filelayer = None
                         if len(results) > 0:
-                            filelayer = self.dbase.completePathOfFile(result)
+                            filelayer = self.dbase.completePathOfFile(results[0])
                             if os.path.isfile(filelayer):
                                 rlayer = qgis.core.QgsVectorLayer(
                                     filelayer,

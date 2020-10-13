@@ -37,14 +37,14 @@ from qgis.PyQt.QtWidgets import (
     QGridLayout,
 )
 
-from lamiaapi.libs import pyqtgraph
-from lamiaapi.libs.pyqtgraph.flowchart import Flowchart, Node
-from lamiaapi.libs.pyqtgraph.flowchart.library.common import CtrlNode
-from lamiaapi.libs.pyqtgraph.flowchart import library as fclib
-from lamiaapi.libs.pyqtgraph.flowchart.library.Data import EvalNode
-from lamiaapi.libs.pyqtgraph import configfile as configfile
+from Lamia.api.libs import pyqtgraph
+from Lamia.api.libs.pyqtgraph.flowchart import Flowchart, Node
+from Lamia.api.libs.pyqtgraph.flowchart.library.common import CtrlNode
+from Lamia.api.libs.pyqtgraph.flowchart import library as fclib
+from Lamia.api.libs.pyqtgraph.flowchart.library.Data import EvalNode
+from Lamia.api.libs.pyqtgraph import configfile as configfile
 
-from lamiaapi.libslamia.lamiaimport.lamiaimport import ImportCore
+from Lamia.api.libslamia.lamiaimport.lamiaimport import ImportCore
 
 pyqtgraph.setConfigOption("background", "w")
 pyqtgraph.setConfigOption("foreground", (0, 44, 83))

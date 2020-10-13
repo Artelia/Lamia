@@ -146,7 +146,7 @@ STATIC_URL = "/static/"
 
 STATICFILES_DIRS = [
     os.path.abspath(os.path.join(BASE_DIR, "node_modules")),  # for bootstrap
-    ("forms", os.path.abspath(os.path.join(BASE_DIR, "..", "Lamia", "worktypeconf"))),
+    ("forms", os.path.abspath(os.path.join(BASE_DIR, "..", "config"))),
     ("assets", os.path.join(BASE_DIR, "lamiacarto", "static", "qwc2assets")),
     ("qwc2config", os.path.join(BASE_DIR, "lamiacarto", "qwc2config")),
 ]

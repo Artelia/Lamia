@@ -1,7 +1,7 @@
 import os
 import qgis, qgis.core
 
-from lamiaqgisiface.iface.qgiswidget.tools.toolprepro.base2.lamiabase_graphique_tool import (
+from Lamia.qgisiface.iface.qgiswidget.tools.toolprepro.base2.lamiabase_graphique_tool import (
     BaseGraphiqueTool,
 )
 

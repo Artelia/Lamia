@@ -36,7 +36,7 @@ from .lamia_form_camera import BaseLeveeCameraTool
 from .lamia_form_sketch import BaseLeveeSketchTool
 from .lamia_form_deficiency import BaseLeveeDeficiencyTool
 
-from lamiaqgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_createsubfeature import (
+from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_createsubfeature import (
     CreateSubFeatureWidget,
 )
 

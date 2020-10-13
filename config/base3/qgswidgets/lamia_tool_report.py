@@ -48,11 +48,11 @@ from qgis.PyQt.QtWidgets import (
 
 
 # from ...Lamia_abstract_tool import AbstractLamiaTool
-from lamiaqgisiface.iface.qgiswidget.tools.lamia_abstracttool import AbstractLamiaTool
-from lamiaqgisiface.iface.qgiswidget.tools.general_subwidgets.abstractfilemanager import (
+from Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstracttool import AbstractLamiaTool
+from Lamia.qgisiface.iface.qgiswidget.tools.general_subwidgets.abstractfilemanager import (
     AbstractFileManager,
 )
-from lamiaapi.libslamia.lamiareport.lamiareport import ReportCore
+from Lamia.api.libslamia.lamiareport.lamiareport import ReportCore
 
 
 class ReportTool(AbstractLamiaTool):

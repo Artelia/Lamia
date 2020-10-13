@@ -1,11 +1,11 @@
 import os, sys, shutil
 
-lamiapath = os.path.join(os.path.join(os.path.dirname(__file__)), "..", "..")
+lamiapath = os.path.join(os.path.join(os.path.dirname(__file__)), "..", "..", "..")
 sys.path.append(lamiapath)
 
 import Lamia
-from Lamia.libs.odsreader.ODSReader import ODSReader
-from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
+from Lamia.api.libs.odsreader.ODSReader import ODSReader
+from Lamia.api.dbasemanager.dbaseparserfactory import DBaseParserFactory
 
 
 def readingConf(conffilename, confdict={}):
@@ -72,7 +72,7 @@ def attachDB(dbasedest, dbasesourcefile):
 
 def concertScript(dbasedest, sqllist):
     for sql in sqllist:
-        print(sql)
+        # print(sql)
         dbasedest.query(sql)
 
 
@@ -85,14 +85,22 @@ def doPostScript(sqlitedbasedest):
                  WHERE sourceinfra.lpk_descriptionsystem = descriptionsystem.pk_descriptionsystem) \
                 WHERE (SELECT sourceinfra.typeReseau FROM dbasesource.Infralineaire as sourceinfra\
                  WHERE sourceinfra.lpk_descriptionsystem = descriptionsystem.pk_descriptionsystem) IS NOT NULL"
-        print(sql)
+        # print(sql)
         sqlitedbasedest.query(sql)
         sql = "UPDATE descriptionsystem SET networktype = \
                 (SELECT sourcenoeud.typeReseau FROM dbasesource.Noeud as sourcenoeud\
                  WHERE sourcenoeud.lpk_descriptionsystem = descriptionsystem.pk_descriptionsystem)\
                 WHERE (SELECT sourcenoeud.typeReseau FROM dbasesource.Noeud as sourcenoeud\
                  WHERE sourcenoeud.lpk_descriptionsystem = descriptionsystem.pk_descriptionsystem) IS NOT NULL"
-        print(sql)
+        # print(sql)
+        sqlitedbasedest.query(sql)
+
+        sql = "UPDATE descriptionsystem SET networktype = \
+        (SELECT sourceequipement.typeReseau FROM dbasesource.Equipement as sourceequipement\
+            WHERE sourceequipement.lpk_descriptionsystem = descriptionsystem.pk_descriptionsystem)\
+        WHERE (SELECT sourceequipement.typeReseau FROM dbasesource.Noeud as sourceequipement\
+            WHERE sourceequipement.lpk_descriptionsystem = descriptionsystem.pk_descriptionsystem) IS NOT NULL"
+        # print(sql)
         sqlitedbasedest.query(sql)
 
         sql = "UPDATE edge SET pipetype = (CASE WHEN pipesubtype IN ('CIR', 'AQU', 'OVO') THEN 'COL' \
@@ -100,7 +108,13 @@ def doPostScript(sqlitedbasedest):
                                                 WHEN pipesubtype IN ('FOB') THEN 'CAN' \
                                                 ELSE NULL \
                                             END)"
-        print(sql)
+        # print(sql)
+        sqlitedbasedest.query(sql)
+
+        sql = """UPDATE descriptionsystem SET systemfunction = 
+        (SELECT sourceedge.fonctionCannAss FROM dbasesource.Infralineaire as sourceedge
+        WHERE sourceedge.lpk_descriptionsystem = descriptionsystem.pk_descriptionsystem)
+        """
         sqlitedbasedest.query(sql)
 
     elif worktype == "base3_waterdistribution":

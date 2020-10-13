@@ -1,10 +1,9 @@
+U:\FR\BOR\VT\PVR\sncf2\LANDY-09-2020.sqlite
+C:\01_WORKINGDIR\sncf\new\LANDY-09-2020.sqlite
+C:\01_WORKINGDIR\sncf\old\LANDY-09-2020.sqlite
 C:\Users\patrice.verchere\OneDrive - ARTELIA\Documents\lamia\tpo\test01.sqlite
 C:\01_WORKINGDIR\GPMB\c_merge_ass\mergeddbase.sqlite
 C:\01_WORKINGDIR\cons\SPATIALITE_2747.sqlite
-C:\111_GitProjects\Lamia\testtempfiles\toto\VTA_Ambes_ind2.sqlite
-C:\111_GitProjects\Lamia\testtempfiles\c_creation\sl_base3_levee_Lamia\test01.sqlite
-C:\111_GitProjects\Lamia\testtempfiles\digue\VTA_Ambes_ind2.sqlite
-C:\111_GitProjects\Lamia\testtempfiles\c_creation\sl_base3_urbandrainage_Lamia\test01.sqlite
 lamiaunittest.base3_urbandrainage_lamia@localhost:5432;pvr;pvr
 C:/01_WORKINGDIR/templamia/toto.sqlite
 C:/01_WORKINGDIR/templamia/test.sqlite

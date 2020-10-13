@@ -37,10 +37,10 @@ try:
 except ImportError:
     PILexists = False
 
-from lamiaapi.libslamia.lamiareg.updatereg import updateWinReg
+from Lamia.api.libslamia.lamiareg.updatereg import updateWinReg
 from .dbconfigreader import DBconfigReader
 from .dbaseofflinemanager import DBaseOfflineManager
-from lamiaqgisiface.iface.ifaceabstractconnector import LamiaIFaceAbstractConnectors
+from Lamia.qgisiface.iface.ifaceabstractconnector import LamiaIFaceAbstractConnectors
 from . import dbaseutils
 
 PGTYPE_TO_SLTYPE = {

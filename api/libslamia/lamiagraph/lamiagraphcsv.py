@@ -55,7 +55,7 @@ class GraphMakerCsv(GraphMaker):
 
         if self.dbase.base3version:
             strtoexec = (
-                f"lamiaconf.{self.dbase.worktype.lower()}.lamiagraph.lamiagraphfunc"
+                f"Lamia.config.{self.dbase.worktype.lower()}.lamiagraph.lamiagraphfunc"
             )
         else:
             strtoexec = f"..{self.dbase.worktype.lower()}.lamiagraphfunc"

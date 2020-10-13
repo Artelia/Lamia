@@ -33,10 +33,10 @@ from .lamia_form_camera import BaseUrbandrainageCameraTool
 from .lamia_form_sketch import BaseUrbandrainageSketchTool
 from .lamia_form_graph import BaseUrbandrainageGraphTool
 
-from lamiaqgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_tcmanytomany import (
+from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_tcmanytomany import (
     TcmanytomanyChooserWidget,
 )
-from lamiaqgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_lidchooser import (
+from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_lidchooser import (
     LidChooserWidget,
 )
 

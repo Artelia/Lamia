@@ -92,7 +92,7 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [
     os.path.abspath(os.path.join(BASE_DIR, "node_modules")),  # for bootstrap
     os.path.abspath(os.path.join(BASE_DIR, "staticbundles")),  # for bootstrap
-    ("forms", os.path.join(os.path.dirname(BASE_DIR), "Lamia", "worktypeconf")),
+    ("forms", os.path.abspath(os.path.join(BASE_DIR, "..", "config"))),
     ("img", os.path.join(BASE_DIR, "lamiacarto", "static", "assets", "img")),
 ]
 

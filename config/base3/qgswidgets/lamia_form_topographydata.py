@@ -31,10 +31,10 @@ import qgis
 from qgis.PyQt import uic, QtGui, QtCore
 from qgis.PyQt.QtWidgets import QWidget
 
-from lamiaqgisiface.iface.qgiswidget.tools.lamia_abstractformtool import (
+from Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool import (
     AbstractLamiaFormTool,
 )
-from lamiaqgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_gpsvalues import (
+from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_gpsvalues import (
     GpsValuesWidget,
 )
 

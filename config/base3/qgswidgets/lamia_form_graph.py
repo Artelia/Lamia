@@ -54,10 +54,10 @@ from qgis.PyQt.QtWidgets import (
     QTableWidgetItem,
 )
 
-from lamiaqgisiface.iface.qgiswidget.tools.lamia_abstractformtool import (
+from Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool import (
     AbstractLamiaFormTool,
 )
-from lamiaapi.libslamia.lamiagraph.lamiagraph import GraphMaker
+from Lamia.api.libslamia.lamiagraph.lamiagraph import GraphMaker
 
 
 class BaseGraphTool(AbstractLamiaFormTool):

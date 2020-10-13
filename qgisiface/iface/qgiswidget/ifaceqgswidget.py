@@ -64,7 +64,7 @@ import webbrowser
 import glob, importlib, inspect
 from pprint import pprint
 
-from lamiaapi.dbasemanager.dbaseparserfactory import DBaseParserFactory
+from Lamia.api.dbasemanager.dbaseparserfactory import DBaseParserFactory
 
 from ..ifaceabstractwidget import LamiaIFaceAbstractWidget
 from ..qgsconnector.ifaceqgisconnector import QgisConnector
@@ -81,8 +81,8 @@ from .tools.subwidgets.lamia_numpad import NumPadDialog
 
 # version 01
 
-import lamiaapi, lamiaqgisiface, lamiaconf, time
-from lamiaapi.libslamia.gps.GPSutil import GpsUtil
+import Lamia.api, Lamia.qgisiface, Lamia.config, time
+from Lamia.api.libslamia.gps.GPSutil import GpsUtil
 
 debugtime = False
 
@@ -528,7 +528,7 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         Lit le fichier des bases de données recentes et rempli le  menu//Fichier//base de données recentes
         """
         pathrecentproject = os.path.join(
-            os.path.dirname(lamiaqgisiface.__file__), "config", "recentprojects.txt"
+            os.path.dirname(Lamia.qgisiface.__file__), "config", "recentprojects.txt"
         )
         try:
             file = open(pathrecentproject, "r")
@@ -580,7 +580,7 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         menu//Fichier//base de données recentes
         """
         pathrecentproject = os.path.join(
-            os.path.dirname(lamiaqgisiface.__file__), "config", "recentprojects.txt"
+            os.path.dirname(Lamia.qgisiface.__file__), "config", "recentprojects.txt"
         )
         file = open(pathrecentproject, "w")
         for i, path in enumerate(self.recentsdbase):
@@ -829,7 +829,7 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         ]
 
         path = os.path.join(
-            os.path.dirname(lamiaconf.__file__), "//".join(modulelistpath)
+            os.path.dirname(Lamia.config.__file__), "//".join(modulelistpath)
         )
 
         pyfilespath = glob.glob(path + "/*.py")
@@ -837,7 +837,7 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         for x in pyfiles:
             if debug:
                 logging.getLogger("Lamia_unittest").debug("x %s", x)
-            classlistpath = ["lamiaconf"] + modulelistpath + [x]
+            classlistpath = ["Lamia.config"] + modulelistpath + [x]
             modulename = ".".join(classlistpath)
             moduletemp = importlib.import_module(modulename)
 
@@ -1338,7 +1338,7 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
             pass
         elif platform.system() == "Windows":
             subprocess.Popen(
-                f'explorer "{os.path.realpath(os.path.dirname(lamiaqgisiface.__file__))}"'
+                f'explorer "{os.path.realpath(os.path.dirname(Lamia.qgisiface.__file__))}"'
             )
 
     def showHideQgisToolbars(self):

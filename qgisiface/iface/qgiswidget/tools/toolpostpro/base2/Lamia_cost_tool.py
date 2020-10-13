@@ -24,10 +24,14 @@ This file is part of LAMIA.
   * License-Filename: LICENSING.md
  """
 
-from matplotlib.backends.backend_qt5agg import (FigureCanvasQTAgg as FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
+from matplotlib.backends.backend_qt5agg import (
+    FigureCanvasQTAgg as FigureCanvas,
+    NavigationToolbar2QT as NavigationToolbar,
+)
 
 import matplotlib
-matplotlib.use('Agg')
+
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import networkx
 import numpy as np
@@ -39,38 +43,49 @@ import sys
 
 import qgis
 from qgis.PyQt import uic, QtGui, QtCore
-from qgis.PyQt.QtWidgets import (QWidget, QLabel, QFrame, QTreeWidgetItem, QHeaderView, QComboBox, QAbstractItemView,
-                                     QTableWidgetItem,QApplication,QTableWidget)
+from qgis.PyQt.QtWidgets import (
+    QWidget,
+    QLabel,
+    QFrame,
+    QTreeWidgetItem,
+    QHeaderView,
+    QComboBox,
+    QAbstractItemView,
+    QTableWidgetItem,
+    QApplication,
+    QTableWidget,
+)
 
 
-#from ...Lamia_abstract_tool import AbstractLamiaTool
+# from ...Lamia_abstract_tool import AbstractLamiaTool
 
 from ...lamia_abstracttool import AbstractLamiaTool
 from ...subwidgets.abstractfilemanager import AbstractFileManager
-from Lamia.libslamia.lamiacost.lamiacost import CostCore
-
+from Lamia.api.libslamia.lamiacost.lamiacost import CostCore
 
 
 class CostTool(AbstractLamiaTool):
 
-    DBASES = ['digue','base_digue']
-    TOOLNAME = 'COUT'
+    DBASES = ["digue", "base_digue"]
+    TOOLNAME = "COUT"
 
     POSTPROTOOLNAME = CostCore.POSTPROTOOLNAME
 
-    tooltreewidgetCAT = 'Synthese'
-    tooltreewidgetSUBCAT = 'Couts'
-    tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'Lamia_cost_tool_icon.png')
+    tooltreewidgetCAT = "Synthese"
+    tooltreewidgetSUBCAT = "Couts"
+    tooltreewidgetICONPATH = os.path.join(
+        os.path.dirname(__file__), "Lamia_cost_tool_icon.png"
+    )
 
     choosertreewidgetMUTIPLESELECTION = True
 
     def __init__(self, **kwargs):
         super(CostTool, self).__init__(**kwargs)
-        self.costtool = CostCore(dbaseparser=self.dbase,
-                                              messageinstance=self.mainifacewidget.connector)
-        self.filemanager = CostfileManager(self.mainifacewidget, self.costtool , '.csv')
-    
-    
+        self.costtool = CostCore(
+            dbaseparser=self.dbase, messageinstance=self.mainifacewidget.connector
+        )
+        self.filemanager = CostfileManager(self.mainifacewidget, self.costtool, ".csv")
+
     def initMainToolWidget(self):
 
         self.toolwidgetmain = UserUI()
@@ -89,8 +104,9 @@ class CostTool(AbstractLamiaTool):
         self.toolwidgetmain.toolButton_selected.clicked.connect(self.goToSelectedId)
         self.toolwidgetmain.toolButton_selected.setEnabled(False)
 
-        self.choosertreewidget = self.mainifacewidget.toolwidgets['toolprepro']['Zonegeo'].choosertreewidget
-
+        self.choosertreewidget = self.mainifacewidget.toolwidgets["toolprepro"][
+            "Zonegeo"
+        ].choosertreewidget
 
     def launchCostCalculus(self):
         filename = self.filemanager.getCurrentText()
@@ -98,67 +114,80 @@ class CostTool(AbstractLamiaTool):
         selectedzonegeoitems = self.choosertreewidget.treewidget.selectedItems()
         ids = [int(item.text(0)) for item in selectedzonegeoitems]
         pdids = self.choosertreewidget.ids
-        pks = [pdids.loc[pdids['id'] == id]['pk'].values[0] for id in ids]
+        pks = [pdids.loc[pdids["id"] == id]["pk"].values[0] for id in ids]
 
-        bordereau, sqlresult, pricelist = self.costtool.runCost(costfilepath = filename,pkzonegeos=pks)
+        bordereau, sqlresult, pricelist = self.costtool.runCost(
+            costfilepath=filename, pkzonegeos=pks
+        )
 
         self.writeResultsInTable(bordereau, sqlresult, pricelist)
-
 
     def postToolTreeWidgetCurrentItemChanged(self):
         self.filemanager.reset()
 
+    def writeResultsInTable(self, bordereau, sqlresult, pricelist):
 
-    def writeResultsInTable(self,bordereau, sqlresult, pricelist):
+        self.toolwidgetmain.tableWidget.clear()
+        columnlenght = len(bordereau["fields"]) + 1
+        self.toolwidgetmain.tableWidget.setColumnCount(columnlenght)
+        header = bordereau["fields"] + ["Prix"]
+        self.toolwidgetmain.tableWidget.setHorizontalHeaderLabels(header)
 
-            self.toolwidgetmain.tableWidget.clear()
-            columnlenght = len(bordereau['fields']) + 1
-            self.toolwidgetmain.tableWidget.setColumnCount(columnlenght)
-            header = bordereau['fields'] + ['Prix']
-            self.toolwidgetmain.tableWidget.setHorizontalHeaderLabels(header)
+        self.toolwidgetmain.tableWidget.setRowCount(0)
 
-            self.toolwidgetmain.tableWidget.setRowCount(0)
+        for i, resfin in enumerate(sqlresult):
+            lastrow = self.toolwidgetmain.tableWidget.rowCount()
+            self.toolwidgetmain.tableWidget.insertRow(lastrow)
 
-            for i, resfin in enumerate(sqlresult):
-                lastrow = self.toolwidgetmain.tableWidget.rowCount()
-                self.toolwidgetmain.tableWidget.insertRow(lastrow)
-
-                for j, field in enumerate(bordereau['fields']):
-                    tablename = None
-                    fieldname = None
-                    valuetoinsert=''
-                    try:
-                        tablename = field.split('.')[0].split('_')[0]
-                        fieldname = field.split('.')[1]
-                    except:
-                        pass
-                    if tablename is not None :
-                        #print(tablename, fieldname, resfin[j])
-                        if sys.version_info.major == 2:
-                            if not isinstance(resfin[j], unicode):
-                                valuetoinsert = str(self.dbase.getConstraintTextFromRawValue(tablename, fieldname, resfin[j]))
-                            else:
-                                valuetoinsert = self.dbase.getConstraintTextFromRawValue(tablename, fieldname, resfin[j])
+            for j, field in enumerate(bordereau["fields"]):
+                tablename = None
+                fieldname = None
+                valuetoinsert = ""
+                try:
+                    tablename = field.split(".")[0].split("_")[0]
+                    fieldname = field.split(".")[1]
+                except:
+                    pass
+                if tablename is not None:
+                    # print(tablename, fieldname, resfin[j])
+                    if sys.version_info.major == 2:
+                        if not isinstance(resfin[j], unicode):
+                            valuetoinsert = str(
+                                self.dbase.getConstraintTextFromRawValue(
+                                    tablename, fieldname, resfin[j]
+                                )
+                            )
                         else:
-                            valuetoinsert = str( self.dbase.getConstraintTextFromRawValue(tablename, fieldname, resfin[j]))
-
-
+                            valuetoinsert = self.dbase.getConstraintTextFromRawValue(
+                                tablename, fieldname, resfin[j]
+                            )
                     else:
-                        valuetoinsert = resfin[j]
+                        valuetoinsert = str(
+                            self.dbase.getConstraintTextFromRawValue(
+                                tablename, fieldname, resfin[j]
+                            )
+                        )
 
-                    self.toolwidgetmain.tableWidget.setItem(lastrow, j, QTableWidgetItem(valuetoinsert))
+                else:
+                    valuetoinsert = resfin[j]
 
-                #price
-                self.toolwidgetmain.tableWidget.setItem(lastrow, columnlenght -1,  QTableWidgetItem(str(pricelist[i])))
+                self.toolwidgetmain.tableWidget.setItem(
+                    lastrow, j, QTableWidgetItem(valuetoinsert)
+                )
+
+            # price
+            self.toolwidgetmain.tableWidget.setItem(
+                lastrow, columnlenght - 1, QTableWidgetItem(str(pricelist[i]))
+            )
 
     def eventFilter(self, source, event):
 
-
-        if (event.type() == QtCore.QEvent.KeyPress and
-                event.matches(QtGui.QKeySequence.Copy)):
+        if event.type() == QtCore.QEvent.KeyPress and event.matches(
+            QtGui.QKeySequence.Copy
+        ):
             self.copier()
             return True
-        #return True
+        # return True
         return super(CostTool, self).eventFilter(source, event)
 
     def copier(self, var=None):
@@ -171,19 +200,19 @@ class CostTool(AbstractLamiaTool):
         # copy header
         lenheader = self.toolwidgetmain.tableWidget.columnCount()
         for i in range(lenheader):
-            texte += self.toolwidgetmain.tableWidget.horizontalHeaderItem(i).text() + "\t"
+            texte += (
+                self.toolwidgetmain.tableWidget.horizontalHeaderItem(i).text() + "\t"
+            )
         texte = texte[:-1] + "\n"
-
-
 
         selected = self.toolwidgetmain.tableWidget.selectedRanges()
 
-        beginrow=0
+        beginrow = 0
         endrow = 0
-        begincolumn=0
-        encolumn=0
+        begincolumn = 0
+        encolumn = 0
 
-        if len(selected)>0:
+        if len(selected) > 0:
             beginrow = selected[0].topRow()
             endrow = selected[0].bottomRow() + 1
             begincolumn = selected[0].leftColumn()
@@ -196,10 +225,10 @@ class CostTool(AbstractLamiaTool):
 
         # construction du texte à copier, ligne par ligne et colonne par colonne
 
-        #for i in range(selected[0].topRow(), selected[0].bottomRow() + 1):
-        for i in range(beginrow, endrow ):
-            #for j in range(selected[0].leftColumn(), selected[0].rightColumn() + 1):
-            for j in range(begincolumn, encolumn ):
+        # for i in range(selected[0].topRow(), selected[0].bottomRow() + 1):
+        for i in range(beginrow, endrow):
+            # for j in range(selected[0].leftColumn(), selected[0].rightColumn() + 1):
+            for j in range(begincolumn, encolumn):
                 try:
                     texte += self.toolwidgetmain.tableWidget.item(i, j).text() + "\t"
                 except AttributeError:
@@ -210,26 +239,19 @@ class CostTool(AbstractLamiaTool):
         # enregistrement dans le clipboard
         QApplication.clipboard().setText(texte)
 
-
     def goToSelectedId(self):
         pass
-
-
-
 
 
 class UserUI(QWidget):
     def __init__(self, parent=None):
         super(UserUI, self).__init__(parent=parent)
         # self.setupUi(self)
-        uipath = os.path.join(os.path.dirname(__file__), 'Lamia_cost_tool.ui')
+        uipath = os.path.join(os.path.dirname(__file__), "Lamia_cost_tool.ui")
         uic.loadUi(uipath, self)
 
 
 class CostfileManager(AbstractFileManager):
-
-    def __init__(self,  mainwindows=None, parentwdg=None, fileext=None):
+    def __init__(self, mainwindows=None, parentwdg=None, fileext=None):
         super(CostfileManager, self).__init__(mainwindows, parentwdg, fileext)
-
-
 

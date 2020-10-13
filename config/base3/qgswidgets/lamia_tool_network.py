@@ -40,8 +40,8 @@ from qgis.PyQt.QtWidgets import (
     QTableWidgetItem,
 )
 
-from lamiaqgisiface.iface.qgiswidget.tools.lamia_abstracttool import AbstractLamiaTool
-from lamiaapi.libslamia.lamianetworkx.lamianetworkx import NetWorkCore
+from Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstracttool import AbstractLamiaTool
+from Lamia.api.libslamia.lamianetworkx.lamianetworkx import NetWorkCore
 
 from matplotlib.backends.backend_qt5agg import (
     FigureCanvasQTAgg as FigureCanvas,

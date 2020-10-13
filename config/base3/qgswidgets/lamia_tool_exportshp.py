@@ -32,11 +32,11 @@ import qgis
 from qgis.PyQt import QtGui, uic, QtCore, QtXml
 from qgis.PyQt.QtWidgets import QAction, QWidget
 
-from lamiaqgisiface.iface.qgiswidget.tools.lamia_abstracttool import AbstractLamiaTool
-from lamiaqgisiface.iface.qgiswidget.tools.general_subwidgets.abstractfilemanager import (
+from Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstracttool import AbstractLamiaTool
+from Lamia.qgisiface.iface.qgiswidget.tools.general_subwidgets.abstractfilemanager import (
     AbstractFileManager,
 )
-from lamiaapi.libslamia.lamiaexportshp.lamiaexportshp import ExportShapefileCore
+from Lamia.api.libslamia.lamiaexportshp.lamiaexportshp import ExportShapefileCore
 
 
 class ExportShapefileTool(AbstractLamiaTool):

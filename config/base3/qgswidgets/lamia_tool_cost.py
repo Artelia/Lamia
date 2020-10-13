@@ -59,11 +59,11 @@ from qgis.PyQt.QtWidgets import (
 
 # from ...Lamia_abstract_tool import AbstractLamiaTool
 
-from lamiaqgisiface.iface.qgiswidget.tools.lamia_abstracttool import AbstractLamiaTool
-from lamiaqgisiface.iface.qgiswidget.tools.general_subwidgets.abstractfilemanager import (
+from Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstracttool import AbstractLamiaTool
+from Lamia.qgisiface.iface.qgiswidget.tools.general_subwidgets.abstractfilemanager import (
     AbstractFileManager,
 )
-from lamiaapi.libslamia.lamiacost.lamiacost import CostCore
+from Lamia.api.libslamia.lamiacost.lamiacost import CostCore
 
 
 class CostTool(AbstractLamiaTool):

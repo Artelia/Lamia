@@ -31,9 +31,9 @@ from qgis.PyQt import QtGui, QtCore, QtXml
 from qgis.PyQt.QtPrintSupport import QPrinter
 
 from ..lamianetworkx.lamianetworkx import NetWorkCore
-from lamiaqgisiface.iface.qgscanvas.ifaceqgiscanvas import QgisCanvas
-from lamiaapi.dbasemanager.dbaseparserfactory import DBaseParserFactory
-from lamiaqgisiface.iface.qgsconnector.ifaceqgisconnector import QgisConnector
+from Lamia.qgisiface.iface.qgscanvas.ifaceqgiscanvas import QgisCanvas
+from Lamia.api.dbasemanager.dbaseparserfactory import DBaseParserFactory
+from Lamia.qgisiface.iface.qgsconnector.ifaceqgisconnector import QgisConnector
 
 
 class ReportCore:

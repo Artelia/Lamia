@@ -26,7 +26,7 @@ This file is part of LAMIA.
 
 
 import os
-from lamiaapi.libs.dxfwrite import DXFEngine as dxf
+from Lamia.api.libs.dxfwrite import DXFEngine as dxf
 
 
 class ExporDxfCore:

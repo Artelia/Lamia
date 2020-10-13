@@ -1547,7 +1547,7 @@ class CreateDataframe(QtCore.QObject):
                 self.createTable()
             #another test
             self.virtuallayerdbase.connectToDBase(slfile=self.filename)
-            sql = "SELECT updatestatus FROM  lamiaconf"
+            sql = "SELECT updatestatus FROM  Lamia.config"
             res = self.virtuallayerdbase.query(sql)
             if res is None:
                 self.createTable()
@@ -1606,9 +1606,9 @@ class CreateDataframe(QtCore.QObject):
         shutil.copyfile(originalfile, self.filename)
 
         self.virtuallayerdbase.connectToDBase(slfile=self.filename)
-        sql = "CREATE TABLE lamiaconf (updatestatus TEXT)"
+        sql = "CREATE TABLE Lamia.config (updatestatus TEXT)"
         res = self.virtuallayerdbase.query(sql)
-        sql = "INSERT INTO  lamiaconf (updatestatus) VALUES ('False')"
+        sql = "INSERT INTO  Lamia.config (updatestatus) VALUES ('False')"
         self.virtuallayerdbase.query(sql)
 
         self.emitMessage('.sqlite créé')
@@ -1617,7 +1617,7 @@ class CreateDataframe(QtCore.QObject):
     def setStatus(self, newstatus):
 
         self.virtuallayerdbase.connectToDBase(slfile=self.filename)
-        sql = "UPDATE lamiaconf SET updatestatus = '" + str(newstatus) + "'"
+        sql = "UPDATE Lamia.config SET updatestatus = '" + str(newstatus) + "'"
         self.virtuallayerdbase.query(sql)
         if newstatus == 'True':
             self.dbasestatus.emit('DBase updated')
@@ -1628,7 +1628,7 @@ class CreateDataframe(QtCore.QObject):
     def getVirtualLayerUpdateStatus(self):
         if os.path.isfile(self.filename):
             self.virtuallayerdbase.connectToDBase(self.filename)
-            sql = "SELECT updatestatus FROM lamiaconf"
+            sql = "SELECT updatestatus FROM Lamia.config"
             res = self.virtuallayerdbase.query(sql, docommit=False)
             if res is not None:
                 if res[0][0] == 'True':
@@ -1717,15 +1717,15 @@ class CreateDataframe2(QtCore.QObject):
     def createStatusTable(self):
 
         self.virtuallayerdbase.connectToDBase(slfile=self.filename)
-        sql = "CREATE TABLE lamiaconf (updatestatus TEXT)"
+        sql = "CREATE TABLE Lamia.config (updatestatus TEXT)"
         res = self.virtuallayerdbase.query(sql)
-        sql = "INSERT INTO  lamiaconf (updatestatus) VALUES ('False')"
+        sql = "INSERT INTO  Lamia.config (updatestatus) VALUES ('False')"
         self.virtuallayerdbase.query(sql)
 
     def setStatus(self, newstatus):
 
         self.virtuallayerdbase.connectToDBase(slfile=self.filename)
-        sql = "UPDATE lamiaconf SET updatestatus = '" + str(newstatus) + "'"
+        sql = "UPDATE Lamia.config SET updatestatus = '" + str(newstatus) + "'"
         self.virtuallayerdbase.query(sql)
         if newstatus == 'True':
             self.dbasestatus.emit('DBase updated')
@@ -1736,7 +1736,7 @@ class CreateDataframe2(QtCore.QObject):
     def getVirtualLayerUpdateStatus(self):
         if os.path.isfile(self.filename):
             self.virtuallayerdbase.connectToDBase(self.filename)
-            sql = "SELECT updatestatus FROM lamiaconf"
+            sql = "SELECT updatestatus FROM Lamia.config"
             res = self.virtuallayerdbase.query(sql, docommit=False)
             if res is not None:
                 if res[0][0] == 'True':

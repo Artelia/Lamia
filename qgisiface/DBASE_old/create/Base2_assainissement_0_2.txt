@@ -1,0 +1,21 @@
+#Move en service from infralinaire to descriptionsystem
+
+sql = "SELECT pk_descriptionsystem, enService, anPoseSup, anPoseInf FROM Infralineaire_qgis"
+results = self.query(sql)
+
+for pk_descriptionsystem, enService in results:
+    if enService is not None:
+        sql="UPDATE Descriptionsystem SET enservice = " + str(enService)
+        sql += " WHERE pk_descriptionsystem = " + str(pk_descriptionsystem)
+        self.query(sql)
+        
+    if anPoseSup is not None:
+        sql="UPDATE Descriptionsystem SET annee_fin_pose = " + str(anPoseSup)
+        sql += " WHERE pk_descriptionsystem = " + str(pk_descriptionsystem)
+        self.query(sql)
+        
+    if anPoseInf is not None:
+        sql="UPDATE Descriptionsystem SET annee_debut_pose = " + str(anPoseInf)
+        sql += " WHERE pk_descriptionsystem = " + str(pk_descriptionsystem)
+        self.query(sql)
+    

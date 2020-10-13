@@ -27,17 +27,17 @@ import os, inspect, datetime
 from qgis.PyQt import uic, QtCore, QtGui
 from qgis.PyQt.QtWidgets import QWidget
 
-from lamiaapi.libslamia.lamiareport.lamiareport import ReportCore
+from Lamia.api.libslamia.lamiareport.lamiareport import ReportCore
 
 from ...base3.qgswidgets.lamia_form_deficiency import BaseDeficiencyTool
 from .lamia_form_observation import BaseConstructionsiteObservationTool
 from .lamia_form_delivery import BaseConstructionsiteDeliveryTool
 
 # from .lamiabasechantier_lidchooser import LidChooserWidget
-from lamiaqgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_lidchooser import (
+from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_lidchooser import (
     LidChooserWidget,
 )
-from lamiaqgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_tcmanytomany import (
+from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_tcmanytomany import (
     TcmanytomanyChooserWidget,
 )
 

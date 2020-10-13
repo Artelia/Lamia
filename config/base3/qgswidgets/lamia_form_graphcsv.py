@@ -55,11 +55,11 @@ from qgis.PyQt.QtWidgets import (
     QTableWidgetItem,
 )
 
-from lamiaqgisiface.iface.qgiswidget.tools.lamia_abstractformtool import (
+from Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool import (
     AbstractLamiaFormTool,
 )
 from .lamia_form_graph import BaseGraphTool
-from lamiaapi.libslamia.lamiagraph.lamiagraphcsv import GraphMakerCsv
+from Lamia.api.libslamia.lamiagraph.lamiagraphcsv import GraphMakerCsv
 
 base3 = QtCore.QObject()
 

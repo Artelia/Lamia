@@ -31,7 +31,9 @@ import datetime
 from qgis.PyQt import uic, QtCore
 from qgis.PyQt.QtWidgets import QWidget, QInputDialog
 
-from lamiaqgisiface.iface.qgiswidget.tools.lamia_abstractformtool import AbstractLamiaFormTool
+from Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool import (
+    AbstractLamiaFormTool,
+)
 
 base3 = QtCore.QObject()
 

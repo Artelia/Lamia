@@ -52,7 +52,7 @@ from ...base3.qgswidgets.lamia_form_topography import BaseTopographyTool
 from qgis.PyQt.QtWidgets import QWidget
 from qgis.PyQt import uic, QtCore
 from .lamia_form_topographydata import BaseConstructionsiteTopographydataTool
-from lamiaqgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_gpsvalues import (
+from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_gpsvalues import (
     GpsValuesWidget,
 )
 

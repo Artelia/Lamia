@@ -54,10 +54,10 @@ from qgis.PyQt.QtWidgets import (
 
 
 # from .importtools.InspectionDigue_Import import ImportObjetDialog
-from lamiaqgisiface.iface.qgiswidget.tools.lamia_abstracttool import AbstractLamiaTool
+from Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstracttool import AbstractLamiaTool
 
-# from lamiaqgisiface.iface.qgiswidget.tools.lamia_abstracttool  import AbstractLamiaTool
-from lamiaapi.libslamia.lamiaimport.lamiaimport import ImportCore
+# from Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstracttool  import AbstractLamiaTool
+from Lamia.api.libslamia.lamiaimport.lamiaimport import ImportCore
 
 # from Lamia.main.DBaseParser import DBaseParser
 
@@ -179,7 +179,7 @@ class ImportTool(AbstractLamiaTool):
                 return
         else:  # debug outside qgis
             if self.currentlayer is None:
-                import lamiatest
+                import Lamia.test
 
                 lamiapath = os.path.normpath(os.path.dirname(lamiatest.__file__))
                 layerdirpath = os.path.join(lamiapath, "datas", "shpforimporttest")

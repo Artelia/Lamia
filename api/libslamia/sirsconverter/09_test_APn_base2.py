@@ -7,10 +7,10 @@ from datetime import datetime
 
 from qgis.core import QgsGeometry
 
-from Lamia.lamiaapi.libs.cloudant.client import Cloudant
-from Lamia.lamiaapi.libs.cloudant.error import CloudantException
-from Lamia.lamiaapi.libs.cloudant.result import Result, ResultByKey, QueryResult
-from Lamia.lamiaapi.libs.cloudant.query import Query
+from Lamia.Lamia.api.libs.cloudant.client import Cloudant
+from Lamia.Lamia.api.libs.cloudant.error import CloudantException
+from Lamia.Lamia.api.libs.cloudant.result import Result, ResultByKey, QueryResult
+from Lamia.Lamia.api.libs.cloudant.query import Query
 from Lamia.Lamia.main.DBaseParser import DBaseParser
 
 try:

@@ -44,6 +44,8 @@ from qgis.PyQt.QtWidgets import (
     QLabel,
     QTabWidget,
     QTabBar,
+    QStackedWidget,
+    QToolButton,
 )
 from qgis.PyQt import QtCore
 import qgis, logging, datetime, os
@@ -1335,9 +1337,45 @@ class FormToolUtils(QtCore.QObject):
         pass
 
     def getQgsGeomFromPk(self, pk):
+        """Return a QgsGeometry from pk using formwidget table defined in DBASETABLENAME
+
+        :param pk: primary key
+        :type pk: int
+        :return: The QgsGeometry 
+        :rtype: QgsGeometry
+        """
         wkt = self.formtoolwidget.dbase.getWktGeomFromPk(
             self.formtoolwidget.DBASETABLENAME, pk
         )
         geom = qgis.core.QgsGeometry.fromWkt(wkt)
         return geom
+
+    def mergeQtWidgets(self, wdg1, wdg2):
+        """Enable merging of widget - wd2.xxx can be reached with wdg1.xxx
+
+        :param wdg1: parent widget to merge
+        :type wdg1: QtWidget
+        :param wdg2: childwidget to merge
+        :type wdg2: QtWidget
+        """
+        finaldict = {}
+        for key, val in wdg2.__dict__.items():
+            if type(val) in [
+                QComboBox,
+                QTextEdit,
+                QLineEdit,
+                QSpinBox,
+                QDoubleSpinBox,
+                QDateEdit,
+                QDateTimeEdit,
+                QTextBrowser,
+                QCheckBox,
+                # QLabel,
+                # QTabWidget,
+                # QTabBar,
+                QStackedWidget,
+                QToolButton,
+            ]:
+                finaldict[key] = val
+        wdg1.__dict__ = {**wdg1.__dict__, **finaldict}
 

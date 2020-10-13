@@ -59,7 +59,7 @@ from qgis.PyQt.QtWidgets import (
 )
 
 
-from lamiaqgisiface.iface.qgiswidget.tools.lamia_abstracttool import AbstractLamiaTool
+from Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstracttool import AbstractLamiaTool
 
 
 class StatTool(AbstractLamiaTool):

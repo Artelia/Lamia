@@ -33,7 +33,7 @@ from qgis.PyQt import uic, QtCore
 from .subwidget_abstract import AbstractSubWidget
 
 # from .lamiabasechantier_croquis_tool import BaseChantierCroquisTool as BaseCroquisTool
-from lamiaconf.base3.qgswidgets.lamia_form_sketch import BaseSketchTool
+from Lamia.config.base3.qgswidgets.lamia_form_sketch import BaseSketchTool
 
 # from ..base3.lamiabase_sketch_tool import BaseSketchTool
 # from .lamiabasechantier_intervenant_tool import BaseChantierIntervenantTool as BaseIntervenantTool

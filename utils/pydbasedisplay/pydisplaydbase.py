@@ -1,13 +1,14 @@
 import os, sys
 import cProfile, logging
 
-lamiapath = os.path.join(os.path.dirname(__file__), "..", "..")
+lamiapath = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+print(lamiapath)
 sys.path.append(lamiapath)
-from lamiatest.test_utils import *
-import lamiaapi
+from Lamia.test.test_utils import *
+import Lamia.api
 
-from lamiaapi.dbasemanager.dbaseparserfactory import DBaseParserFactory
-from lamiaqgisiface.iface.ifaceabstractconnector import LamiaIFaceAbstractConnectors
+from Lamia.api.dbasemanager.dbaseparserfactory import DBaseParserFactory
+from Lamia.qgisiface.iface.ifaceabstractconnector import LamiaIFaceAbstractConnectors
 import warnings
 
 # warnings.filterwarnings("ignore")
@@ -30,10 +31,10 @@ import networkx
 
 warnings.filterwarnings("ignore", category=DeprecationWarning, module="networkx")
 
-import lamiaapi.libs.pyqtgraph
+import Lamia.api.libs.pyqtgraph
 
 warnings.filterwarnings(
-    "ignore", category=DeprecationWarning, module="Lamia.libs.pyqtgraph"
+    "ignore", category=DeprecationWarning, module="Lamia.api.libs.pyqtgraph"
 )
 
 import numpy
@@ -50,7 +51,7 @@ warnings.filterwarnings("ignore", message="numpy.ufunc size changed")
 
 numpy.seterr(all="ignore")
 
-from lamiaqgisiface.iface.qgsconnector.ifaceloggingconnector import LoggingConnector
+from Lamia.qgisiface.iface.qgsconnector.ifaceloggingconnector import LoggingConnector
 
 INTERFACEINDEX = 0
 PROFILING = False
@@ -72,7 +73,7 @@ def launchIface():
     # lamiawidget.dbase.messageinstance = lamiawidget.connector
 
     testdir = os.path.join(
-        os.path.dirname(utils.__file__), "../test/testtempfiles/c_creation"
+        os.path.dirname(Lamia.utils.__file__), "../test/testtempfiles/c_creation"
     )
     #  sl_base3_urbandrainage_Lamia   sl_base3_waterdistribution_Lamia
     # sl_base3_constructionsite_Lamia   sl_base3_constructionsite_Orange
@@ -101,7 +102,8 @@ def launchIface():
     # SLFILE = r"C:\111_GitProjects\Lamia\testtempfiles\c_creation\sl_base3_levee_Lamia\test01.sqlite"
     # SLFILE = r"M:\FR\BOR\VT\FLUVIAL\4352789_33_BM_surveillance_digues_PI_Ambes\05_ETUDES\052_Calculs\temps2\VTA_Ambes_ind2.sqlite"
     SLFILE = r"C:\01_WORKINGDIR\cons\SPATIALITE_2747.sqlite"
-    SLFILE = r"C:\Users\patrice.verchere\OneDrive - ARTELIA\Documents\lamia\tpo\test01.sqlite"
+    SLFILE = r"C:\01_WORKINGDIR\sncf\new\LANDY-09-2020.sqlite"
+    SLFILE = r"U:\FR\BOR\VT\PVR\sncf2\LANDY-09-2020.sqlite"
 
     print(TGREEN, f"Opening {os.path.abspath(SLFILE)}", ENDC)
 

@@ -28,8 +28,8 @@ import os, sys
 from qgis.PyQt import QtGui, uic, QtCore
 from qgis.PyQt.QtWidgets import QWidget
 
-from lamiaqgisiface.iface.qgiswidget.tools.lamia_abstracttool import AbstractLamiaTool
-from lamiaapi.libslamia.sirsconverter.sirsconverter import SirsConverter
+from Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstracttool import AbstractLamiaTool
+from Lamia.api.libslamia.sirsconverter.sirsconverter import SirsConverter
 
 
 class LeveeSIRSTool(AbstractLamiaTool):

@@ -36,7 +36,7 @@ from qgis.PyQt.QtWidgets import (
     QTableWidgetItem,
 )
 
-from lamiaqgisiface.iface.qgiswidget.tools.lamia_abstractformtool import (
+from Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool import (
     AbstractLamiaFormTool,
 )
 

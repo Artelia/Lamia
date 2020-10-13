@@ -33,13 +33,13 @@ import subprocess
 from qgis.PyQt import uic, QtCore
 from qgis.PyQt.QtWidgets import QWidget
 
-from lamiaapi.libslamia.lamiadxfexport.lamiadxfexport import ExporDxfCore
+from Lamia.api.libslamia.lamiadxfexport.lamiadxfexport import ExporDxfCore
 
-from lamiaqgisiface.iface.qgiswidget.tools.lamia_abstractformtool import (
+from Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool import (
     AbstractLamiaFormTool,
 )
 from .lamia_form_topographydata import BaseTopographydataTool
-from lamiaqgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_gpsvalues import (
+from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_gpsvalues import (
     GpsValuesWidget,
 )
 

@@ -2,18 +2,19 @@ import os, sys, logging
 
 import qgis, qgis.core
 
-lamiapath = os.path.join(os.path.join(os.path.dirname(__file__)), "..", "..")
+lamiapath = os.path.join(os.path.join(os.path.dirname(__file__)), "..", "..", "..")
 sys.path.append(lamiapath)
-
-from test.test_utils import *
 import Lamia
 
-from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
+from Lamia.test.test_utils import *
+
+
+from Lamia.api.dbasemanager.dbaseparserfactory import DBaseParserFactory
 
 # from Lamia.iface.qgsconnector.ifaceqgisconnector import QgisConnector
-from Lamia.libslamia.lamianetworkx.lamianetworkx import NetWorkCore
-from Lamia.libslamia.lamiareport.lamiareport import ReportCore
-from Lamia.iface.qgscanvas.ifaceqgiscanvas import QgisCanvas
+from Lamia.api.libslamia.lamianetworkx.lamianetworkx import NetWorkCore
+from Lamia.api.libslamia.lamiareport.lamiareport import ReportCore
+from Lamia.qgisiface.iface.qgscanvas.ifaceqgiscanvas import QgisCanvas
 import numpy as np
 import cProfile
 
@@ -29,6 +30,7 @@ def main(argv):
     SLFILE = r"C:\01_WORKINGDIR\orange\toto.sqlite"
     SLFILE = r"C:\01_WORKINGDIR\GPMB\c_merge_ass\mergeddbase.sqlite"
     SLFILE = r"C:\Users\patrice.verchere\OneDrive - ARTELIA\Documents\lamia\tpo\test01.sqlite"
+    SLFILE = r"C:\01_WORKINGDIR\sncf\new\LANDY-09-2020.sqlite"
 
     tempparser = DBaseParserFactory("spatialite").getDbaseParser()
     tempparser.loadDBase(dbtype="Spatialite", slfile=SLFILE)
@@ -48,10 +50,7 @@ def main(argv):
 
     # Infralineaire Equipementhydraulique Desordres
     reportcore.runReport(
-        r"C:\000_testdigue\des.pdf",
-        "TRAMprocesverbalmiseadisposition",
-        pkzonegeos=[],
-        pklist=None,
+        r"C:\000_testdigue\des.pdf", "SNCFNODgrille", pkzonegeos=[], pklist=None,
     )
     # except Exception as e:
     #     print(e)

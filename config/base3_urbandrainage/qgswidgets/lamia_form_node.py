@@ -33,27 +33,22 @@ from qgis.PyQt import uic, QtCore
 from qgis.PyQt.QtWidgets import QWidget, QPushButton
 from ...base3.qgswidgets.lamia_form_node import BaseNodeTool
 
-# from .lamiabaseassainissement_photo_tool import BaseAssainissementPhotoTool as BasePhotoTool
-# from .lamiabaseassainissement_croquis_tool import BaseAssainissementCroquisTool as BaseCroquisTool
-# from .lamiabaseassainissement_desordre_tool import BaseAssainissementDesordreTool
-# from .lamiabaseassainissement_equipement_tool import BaseAssainissementEquipementTool
-
 from .lamia_form_camera import BaseUrbandrainageCameraTool
 from .lamia_form_sketch import BaseUrbandrainageSketchTool
 from .lamia_form_deficiency import BaseUrbandrainageDeficiencyTool
 from .lamia_form_equipment import BaseUrbandrainageEquipmentTool
 from .lamia_form_graph import BaseUrbandrainageGraphTool
 
-from lamiaqgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_lidchooser import (
+from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_lidchooser import (
     LidChooserWidget,
 )
-from lamiaqgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_topologicnode import (
+from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_topologicnode import (
     TopologicNodeWidget,
 )
-from lamiaqgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_createsubfeature import (
+from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_createsubfeature import (
     CreateSubFeatureWidget,
 )
-from lamiaqgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_gpsvalues import (
+from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_gpsvalues import (
     GpsValuesWidget,
 )
 
@@ -123,7 +118,6 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
             "node": {
                 "linkfield": "id_node",
                 "widgets": {
-                    # 'sewertype': self.toolwidgetmain.comboBox_typeReseau,
                     "location": self.toolwidgetmain.location,
                     "nodetype": self.toolwidgetmain.nodetype,
                     "nodesubtype": self.toolwidgetmain.nodesubtype,
@@ -244,14 +238,31 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
         self.lamiawidgets.append(self.operatorwdg)
 
     def _initMainToolWidgetSNCF(self):
-        self.toolwidgetmain = UserUI_2()
+        """Same as default, but :
+            * secondary properties come from specific widget (lamia_form_node_ui_2018SNCF_secondarypropertiestab.ui)
+            * remove manage tab
+        """
+        self.toolwidgetmain = UserUI()
+
+        # changing secondary properties tab
+        secondarypropertiestab = UserUI_2()
+        self.toolwidgetmain.tabWidget_2.removeTab(1)
+        self.toolwidgetmain.tabWidget_2.insertTab(
+            1, secondarypropertiestab, r"Secondary\nproperties"
+        )
+        self.formutils.mergeQtWidgets(self.toolwidgetmain, secondarypropertiestab)
+
+        # remove manage tab
+        self.toolwidgetmain.tabWidget_2.removeTab(4)
+
+        # conf
         self.formtoolwidgetconfdictmain = {
             "node": {
                 "linkfield": "id_node",
                 "widgets": {
-                    # "sewertype": self.toolwidgetmain.comboBox_typeReseau,
                     "location": self.toolwidgetmain.location,
                     "nodetype": self.toolwidgetmain.nodetype,
+                    "nodesubtype": self.toolwidgetmain.nodesubtype,
                     "manholecovershape": self.toolwidgetmain.manholecovershape,
                     "accessibility": self.toolwidgetmain.accessibility,
                     # regard
@@ -314,7 +325,15 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
             },
             "descriptionsystem": {
                 "linkfield": "id_descriptionsystem",
-                "widgets": {"networktype": self.toolwidgetmain.networktype,},
+                "widgets": {
+                    "networktype": self.toolwidgetmain.networktype,
+                    "flowconditionupstream": self.toolwidgetmain.flowconditionupstream,
+                    "flowconditiondownstream": self.toolwidgetmain.flowconditiondownstream,
+                    "systemfunction": self.toolwidgetmain.systemfunction,
+                    # "city": self.toolwidgetmain.city,
+                    # "streetname": self.toolwidgetmain.streetname,
+                    "structuralstate": self.toolwidgetmain.structuralstate,
+                },
             },
         }
 
@@ -335,7 +354,7 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
         )
 
         self.toolwidgetmain.nodetype.currentIndexChanged.connect(
-            self.fieldui2TypeOhChanged
+            self.fielduiTypeOhChanged
         )
 
     def _initMainToolWidgetCD41(self):
@@ -422,47 +441,26 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
     def fielduiTypeOhChanged(self, comboindex):
         # print(self.toolwidgetmain.nodetype.currentText())
         currenttext = self.toolwidgetmain.nodetype.currentText()
+        currentvalue = self.dbase.getConstraintRawValueFromText(
+            "node", "nodetype", currenttext
+        )
 
-        if currenttext in ["Regard", "Regard mixte EP EU"]:
+        if currentvalue in ["60", "62"]:  # Manhole simple or mixt
             self.toolwidgetmain.stackedWidget_node.setCurrentIndex(0)
-        elif currenttext in ["Branchement"]:
+        elif currentvalue in ["61"]:  # lateral
             self.toolwidgetmain.stackedWidget_node.setCurrentIndex(1)
-        elif currenttext in ["Poste de refoulement"]:
+        elif currentvalue in ["10"]:  # pumping station
             self.toolwidgetmain.stackedWidget_node.setCurrentIndex(2)
-            """
-            elif sys.version_info < (3, 0) and currenttext in ['Débourbeur/déshuileur'.decode('utf8')]:
-                self.toolwidgetmain.stackedWidget_node.setCurrentIndex(3)
-            elif sys.version_info > (3, 0) and currenttext in ['Débourbeur/déshuileur']:
-                self.toolwidgetmain.stackedWidget_node.setCurrentIndex(3)
-            """
-        elif currenttext in ["Débourbeur/déshuileur"]:
+        elif currentvalue in ["21"]:  # deshuileur
             self.toolwidgetmain.stackedWidget_node.setCurrentIndex(3)
-        elif currenttext in ["Avaloir", "Grille", "Grille avaloir"]:
+        elif currentvalue in [
+            "70",
+            "71",
+            "72",
+        ]:  # "Avaloir", "Grille", "Grille avaloir"
             self.toolwidgetmain.stackedWidget_node.setCurrentIndex(4)
         else:
             self.toolwidgetmain.stackedWidget_node.setCurrentIndex(5)
-        # self.propertieswdgDesordre.propertieswdgOBSERVATION2.updateObservationackedWidget_obs()
-        self.propertieswdgDesordre.propertieswdgOBSERVATION.updateObservationStackedWidget()
-
-    def fieldui2TypeOhChanged(self, comboindex):
-        # print(self.toolwidgetmain_2.nodetype.currentText())
-        currenttext = self.toolwidgetmain.nodetype.currentText()
-        if currenttext in ["Regard", "Avaloir", "Grille"]:
-            self.toolwidgetmain.stackedWidget_node.setCurrentIndex(0)
-        elif currenttext in ["Poste de refoulement"]:
-            self.toolwidgetmain.stackedWidget_node.setCurrentIndex(1)
-            """
-            elif sys.version_info < (3, 0) and currenttext in ['Débourbeur/déshuileur'.decode('utf8')]:
-                self.toolwidgetmain.stackedWidget_node.setCurrentIndex(2)
-            elif sys.version_info > (3, 0) and currenttext in ['Débourbeur/déshuileur']:
-                self.toolwidgetmain.stackedWidget_node.setCurrentIndex(2)
-        """
-        elif currenttext in ["Débourbeur/déshuileur"]:
-            self.toolwidgetmain.stackedWidget_node.setCurrentIndex(2)
-        else:
-            self.toolwidgetmain.stackedWidget_node.setCurrentIndex(3)
-
-        # self.propertieswdgDesordre.propertieswdgOBSERVATION2.updateObservationStackedWidget()
         self.propertieswdgDesordre.propertieswdgOBSERVATION.updateObservationStackedWidget()
 
     def fieldui3TypeOhChanged(self, comboindex):
@@ -492,10 +490,7 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
 
     def magicFunction(self):
         self.featureSelected()
-        # self.lastPhoto()
-        # self.addGPSPoint()
         self.toolbarGeomAddGPS()
-        # self.saveFeature()
         self.toolbarSave()
 
     def getGPSValue(self):
@@ -583,7 +578,8 @@ class UserUI_2(QWidget):
     def __init__(self, parent=None):
         super(UserUI_2, self).__init__(parent=parent)
         uipath = os.path.join(
-            os.path.dirname(__file__), "lamia_form_node_ui_2018SNCF.ui"
+            os.path.dirname(__file__),
+            "lamia_form_node_ui_2018SNCF_secondarypropertiestab.ui",
         )
         uic.loadUi(uipath, self)
 

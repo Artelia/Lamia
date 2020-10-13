@@ -37,10 +37,10 @@ from .lamia_form_camera import BaseConstructionsiteCameraTool
 from .lamia_form_report import BaseConstructionsiteReportTool
 from .lamia_form_subobservation import BaseConstructionsiteSubObservationTool
 
-from lamiaqgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_signature import (
+from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_signature import (
     SignatureWidget,
 )
-from lamiaqgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_lidchooser import (
+from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_lidchooser import (
     LidChooserWidget,
 )
 

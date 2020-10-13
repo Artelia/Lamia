@@ -29,7 +29,7 @@ from qgis.PyQt.QtWidgets import QWidget, QVBoxLayout, QAbstractItemView, QHeader
 from qgis.PyQt import uic, QtCore, QtGui
 
 from .subwidget_abstract import AbstractSubWidget
-from Lamia.libslamia.lamiatabcatalog.lamiatabcatalog import TabCatalog
+from Lamia.api.libslamia.lamiatabcatalog.lamiatabcatalog import TabCatalog
 
 
 class CatalogWidget(AbstractSubWidget):

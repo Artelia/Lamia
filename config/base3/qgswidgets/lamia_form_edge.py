@@ -31,7 +31,7 @@ import time
 from qgis.PyQt import uic, QtCore, QtGui
 from qgis.PyQt.QtWidgets import QWidget, QLabel, QFrame
 
-from lamiaqgisiface.iface.qgiswidget.tools.lamia_abstractformtool import (
+from Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool import (
     AbstractLamiaFormTool,
 )
 

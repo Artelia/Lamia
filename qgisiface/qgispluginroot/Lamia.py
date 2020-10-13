@@ -34,7 +34,7 @@ import qgis
 sys.path.append(os.path.dirname(__file__))
 
 
-from .lamiaqgisiface.iface.qgiswidget.lamia_dockwidget import InspectiondigueDockWidget
+from Lamia.qgisiface.iface.qgiswidget.lamia_dockwidget import InspectiondigueDockWidget
 
 
 from qgis.PyQt.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, Qt
@@ -43,7 +43,7 @@ from qgis.PyQt.QtWidgets import QAction, QDockWidget, QToolBar
 
 
 # Initialize Qt resources from file resources.py
-from .lamiaqgisiface.iface import resources_rc
+from Lamia.qgisiface.iface import resources_rc
 
 
 """
@@ -75,7 +75,7 @@ class Lamia:
         # initialize locale
         locale = QSettings().value("locale/userLocale")[0:2]
         locale_path = os.path.join(
-            self.plugin_dir, "i18n", "Lamia_{}.qm".format(locale)
+            self.plugin_dir, "qgisiface", "i18n", "Lamia_{}.qm".format(locale)
         )
 
         if os.path.exists(locale_path):

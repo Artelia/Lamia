@@ -24,29 +24,35 @@ This file is part of LAMIA.
   * License-Filename: LICENSING.md
  """
 
-import os ,logging, sys, re
+import os, logging, sys, re
 import numpy as np
 import qgis, qgis.utils
 from qgis.PyQt import QtGui, uic, QtCore, QtXml
-from qgis.PyQt.QtWidgets import (QDialog, QVBoxLayout, QLabel, QSplitter, QFrame, QGridLayout)
+from qgis.PyQt.QtWidgets import (
+    QDialog,
+    QVBoxLayout,
+    QLabel,
+    QSplitter,
+    QFrame,
+    QGridLayout,
+)
 
-from Lamia.libs import pyqtgraph
-from Lamia.libs.pyqtgraph.flowchart import Flowchart, Node
-from Lamia.libs.pyqtgraph.flowchart.library.common import CtrlNode
-from Lamia.libs.pyqtgraph.flowchart import library as fclib
-from Lamia.libs.pyqtgraph.flowchart.library.Data import EvalNode
-from Lamia.libs.pyqtgraph import configfile as configfile
+from Lamia.api.libs import pyqtgraph
+from Lamia.api.libs.pyqtgraph.flowchart import Flowchart, Node
+from Lamia.api.libs.pyqtgraph.flowchart.library.common import CtrlNode
+from Lamia.api.libs.pyqtgraph.flowchart import library as fclib
+from Lamia.api.libs.pyqtgraph.flowchart.library.Data import EvalNode
+from Lamia.api.libs.pyqtgraph import configfile as configfile
 
-from Lamia.libslamia.lamiaimport.lamiaimport import ImportCore
+from Lamia.api.libslamia.lamiaimport.lamiaimport import ImportCore
 
-pyqtgraph.setConfigOption('background', 'w')
-pyqtgraph.setConfigOption('foreground', (0, 44, 83))
+pyqtgraph.setConfigOption("background", "w")
+pyqtgraph.setConfigOption("foreground", (0, 44, 83))
 pyqtgraph.setConfigOptions(antialias=True)
 
 
 class FlowChartWidget(QDialog):
-
-    def __init__(self, dbase=None,messageinstance=None,mainifacewidget=None):
+    def __init__(self, dbase=None, messageinstance=None, mainifacewidget=None):
         super(FlowChartWidget, self).__init__()
 
         layout = QGridLayout()
@@ -56,9 +62,10 @@ class FlowChartWidget(QDialog):
         if mainifacewidget:
             self.qfiledlg = mainifacewidget.qfiledlg
         self.messageinstance = messageinstance
-        #self.importool = parentoolwdg
-        self.importtool = ImportCore(dbaseparser=self.dbase,
-                                    messageinstance=messageinstance)
+        # self.importool = parentoolwdg
+        self.importtool = ImportCore(
+            dbaseparser=self.dbase, messageinstance=messageinstance
+        )
 
         self.fromlayer = None
         self.lendatafromlayer = None
@@ -69,7 +76,7 @@ class FlowChartWidget(QDialog):
         self.library.addNodeType(EvalNode, [()])
         self.library.addNodeType(AttributeReaderNode, [()])
         self.terminalindict = {}
-        self.fc = Flowchart(terminals=self.terminalindict )
+        self.fc = Flowchart(terminals=self.terminalindict)
         self.fc.setLibrary(self.library)
 
         self.initUI()
@@ -78,9 +85,9 @@ class FlowChartWidget(QDialog):
         pass
 
     def initUI(self):
-        for butname in ['loadBtn', 'saveBtn','saveAsBtn',  'reloadBtn', 'showChartBtn']:
+        for butname in ["loadBtn", "saveBtn", "saveAsBtn", "reloadBtn", "showChartBtn"]:
             try:
-                eval('self.fc.widget().ui.' + butname + '.clicked.disconnect()')
+                eval("self.fc.widget().ui." + butname + ".clicked.disconnect()")
             except:
                 pass
 
@@ -105,70 +112,88 @@ class FlowChartWidget(QDialog):
 
         splitwdg.addWidget(wdg1)
         splitwdg.addWidget(wdg2)
-        self.layout().addWidget(splitwdg,0,0,1,1)
+        self.layout().addWidget(splitwdg, 0, 0, 1, 1)
 
-    def initFromandToLayers(self,fromqgslayer, tolayername):
+    def initFromandToLayers(self, fromqgslayer, tolayername):
         debug = True
         self.fromlayer = fromqgslayer
         self.tolayername = tolayername
         self.fc.clear()
         fromfields = self._getFromFieldsfromQgsVectorLayer(fromqgslayer)
         tofields = self._getToFieldsFromLamiaTableName(tolayername)
-        if debug: logging.getLogger('Lamia_unittest').debug('fromfields %s', str(fromfields))
-        if debug: logging.getLogger('Lamia_unittest').debug('tofields %s', str(tofields))
-        #get from valuues
+        if debug:
+            logging.getLogger("Lamia_unittest").debug("fromfields %s", str(fromfields))
+        if debug:
+            logging.getLogger("Lamia_unittest").debug("tofields %s", str(tofields))
+        # get from valuues
         fromattributes = []
         for fet in fromqgslayer.getFeatures():
-            fromattributes.append( np.array(fet.attributes()))
+            fromattributes.append(np.array(fet.attributes()))
         fromattributesnp = np.array(fromattributes)
-        if debug: logging.getLogger('Lamia_unittest').debug('npaatributes %s', str(fromattributesnp))
+        if debug:
+            logging.getLogger("Lamia_unittest").debug(
+                "npaatributes %s", str(fromattributesnp)
+            )
 
         # initflowchart
         for field in tofields:
-            self.terminalindict[field] = {'io': 'out'}
+            self.terminalindict[field] = {"io": "out"}
         for field in fromfields:
-            self.terminalindict[field] = {'io': 'in'}
+            self.terminalindict[field] = {"io": "in"}
         for name, opts in self.terminalindict.items():
             self.fc.addTerminal(name, **opts)
 
         for i, field in enumerate(fromfields):
-            if field != '':
+            if field != "":
                 fieldstandard = field
-                stringtoeval = 'self.fc.setInput(' + fieldstandard + '=list(fromattributesnp[:,' + str(i) + ']))'
+                stringtoeval = (
+                    "self.fc.setInput("
+                    + fieldstandard
+                    + "=list(fromattributesnp[:,"
+                    + str(i)
+                    + "]))"
+                )
                 eval(stringtoeval)
 
-        self.fc.outputNode.graphicsItem().bounds = QtCore.QRectF(0, 0, 200, len(tofields)*15)
-        self.fc.outputNode .graphicsItem().updateTerminals()
-        self.fc.outputNode .graphicsItem().update()
+        self.fc.outputNode.graphicsItem().bounds = QtCore.QRectF(
+            0, 0, 200, len(tofields) * 15
+        )
+        self.fc.outputNode.graphicsItem().updateTerminals()
+        self.fc.outputNode.graphicsItem().update()
 
-        self.fc.inputNode  .graphicsItem().bounds = QtCore.QRectF(0, 0, 200, len(fromfields)*15)
-        self.fc.inputNode  .graphicsItem().updateTerminals()
-        self.fc.inputNode  .graphicsItem().update()
+        self.fc.inputNode.graphicsItem().bounds = QtCore.QRectF(
+            0, 0, 200, len(fromfields) * 15
+        )
+        self.fc.inputNode.graphicsItem().updateTerminals()
+        self.fc.inputNode.graphicsItem().update()
 
         self.fc.sigChartChanged.connect(self.fcNodeAdded)
 
         if qgis.utils.iface is None:
-            fNode = self.fc.createNode('AttributeReaderNode', pos=(0, 10))
-            fNode2 = self.fc.createNode('AttributeReaderNode', pos=(0, 20))
-            fNode3 = self.fc.createNode('PythonEval', pos=(0, 30))
-
+            fNode = self.fc.createNode("AttributeReaderNode", pos=(0, 10))
+            fNode2 = self.fc.createNode("AttributeReaderNode", pos=(0, 20))
+            fNode3 = self.fc.createNode("PythonEval", pos=(0, 30))
 
     def _getToFieldsFromLamiaTableName(self, simpletablename):
         parentstable = [simpletablename] + self.dbase.getParentTable(simpletablename)
-        result=[]
+        result = []
         for tablename in parentstable:
             if tablename in self.dbase.dbasetables.keys():
                 dbasetable = self.dbase.dbasetables[tablename]
-                for field in dbasetable['fields'].keys():
-                    if (field[0:3] not in ["pk_", "id_"]
-                            and field[0:4] not in ["lpk_", "lid_"]
-                            and field not in ['datetimecreation', 'datetimemodification']):
-                        result.append(tablename + '.' + field)
+                for field in dbasetable["fields"].keys():
+                    if (
+                        field[0:3] not in ["pk_", "id_"]
+                        and field[0:4] not in ["lpk_", "lid_"]
+                        and field not in ["datetimecreation", "datetimemodification"]
+                    ):
+                        result.append(tablename + "." + field)
         return result
 
     def _getFromFieldsfromQgsVectorLayer(self, qgslayer):
         currentlayerfields = qgslayer.fields()
-        currentlayerfieldsname = ['_'.join(field.name().split(' ')) for field in currentlayerfields]
+        currentlayerfieldsname = [
+            "_".join(field.name().split(" ")) for field in currentlayerfields
+        ]
         self.lendatafromlayer = qgslayer.featureCount()
         return currentlayerfieldsname
 
@@ -178,11 +203,12 @@ class FlowChartWidget(QDialog):
     def fcSaveAs(self):
         if self.fc.widget().currentFileName is None:
 
-            startdir = os.path.join(self.dbase.dbaseressourcesdirectory, 'config', 'importtools')
-            conffile, fileext = self.qfiledlg.getSaveFileName(self,
-                                                    'Lamia - import conf',
-                                                    startdir,
-                                                    'PDF (*.fc)')
+            startdir = os.path.join(
+                self.dbase.dbaseressourcesdirectory, "config", "importtools"
+            )
+            conffile, fileext = self.qfiledlg.getSaveFileName(
+                self, "Lamia - import conf", startdir, "PDF (*.fc)"
+            )
 
         else:
             conffile = self.fc.widget().currentFileName
@@ -193,11 +219,12 @@ class FlowChartWidget(QDialog):
 
     def fcLoad(self, fileName=None):
         if not fileName:
-            startdir = os.path.join(self.dbase.dbaseressourcesdirectory, 'config', 'importtools')
-            fileName, extension = self.qfiledlg.getOpenFileName(None,
-                                                                'Choose the file',
-                                                                startdir,
-                                                                'flowChart (*.fc)', '')
+            startdir = os.path.join(
+                self.dbase.dbaseressourcesdirectory, "config", "importtools"
+            )
+            fileName, extension = self.qfiledlg.getOpenFileName(
+                None, "Choose the file", startdir, "flowChart (*.fc)", ""
+            )
         if fileName:
             try:
                 fileName = unicode(fileName)
@@ -209,44 +236,47 @@ class FlowChartWidget(QDialog):
                 # self.emit(QtCore.SIGNAL('fileLoaded'), fileName)
                 self.fc.sigFileLoaded.emit(fileName)
             except Exception as e:
-                print('err', e)
-
+                print("err", e)
 
     def _restoreState(self, state, clear=False):
-        #self.blockSignals(True)
+        # self.blockSignals(True)
         try:
             if clear:
                 self.fc.clear()
             Node.restoreState(self.fc, state)
-            nodes = state['nodes']
-            nodes.sort(key=lambda a: a['pos'][0])
+            nodes = state["nodes"]
+            nodes.sort(key=lambda a: a["pos"][0])
             for n in nodes:
-                if n['name'] in self.fc._nodes:
+                if n["name"] in self.fc._nodes:
                     # self._nodes[n['name']].graphicsItem().moveBy(*n['pos'])
-                    self.fc._nodes[n['name']].restoreState(n['state'])
+                    self.fc._nodes[n["name"]].restoreState(n["state"])
                     continue
                 try:
-                    node = self.fc.createNode(n['class'], name=n['name'])
-                    node.restoreState(n['state'])
+                    node = self.fc.createNode(n["class"], name=n["name"])
+                    node.restoreState(n["state"])
                 except:
                     pass
-                    #printExc("Error creating node %s: (continuing anyway)" % n['name'])
+                    # printExc("Error creating node %s: (continuing anyway)" % n['name'])
                 # node.graphicsItem().moveBy(*n['pos'])
 
-            self.fc.inputNode.restoreState(state.get('inputNode', {}))
-            self.fc.outputNode.restoreState(state.get('outputNode', {}))
+            self.fc.inputNode.restoreState(state.get("inputNode", {}))
+            self.fc.outputNode.restoreState(state.get("outputNode", {}))
 
             # self.restoreTerminals(state['terminals'])
             connectionstoloadafter = []
-            for n1, t1, n2, t2 in state['connects']:
-                if n1 in ['Output', 'Input'] or n2 in ['Output', 'Input'] :
-                    self.fc.connectTerminals(self.fc._nodes[n1][t1], self.fc._nodes[n2][t2])
+            for n1, t1, n2, t2 in state["connects"]:
+                if n1 in ["Output", "Input"] or n2 in ["Output", "Input"]:
+                    self.fc.connectTerminals(
+                        self.fc._nodes[n1][t1], self.fc._nodes[n2][t2]
+                    )
                 else:
-                    connectionstoloadafter.append([n1, t1, n2, t2 ])
+                    connectionstoloadafter.append([n1, t1, n2, t2])
 
             for n1, t1, n2, t2 in connectionstoloadafter:
                 try:
-                    self.fc.connectTerminals(self.fc._nodes[n1][t1], self.fc._nodes[n2][t2])
+                    self.fc.connectTerminals(
+                        self.fc._nodes[n1][t1], self.fc._nodes[n2][t2]
+                    )
                 except:
                     pass
 
@@ -263,7 +293,7 @@ class FlowChartWidget(QDialog):
 
         finally:
             pass
-            #self.fc.blockSignals(False)
+            # self.fc.blockSignals(False)
 
         self.fc.sigChartLoaded.emit()
         self.fc.outputChanged()
@@ -274,29 +304,32 @@ class FlowChartWidget(QDialog):
         table_field_list, array = self._getDatasOfOutputTerminal()
         geoms = self._getReprojectedGeoms()
 
-        self.importtool.importCleanedDatas(self.tolayername, table_field_list, array, geoms)
-
+        self.importtool.importCleanedDatas(
+            self.tolayername, table_field_list, array, geoms
+        )
 
     def _getDatasOfOutputTerminal(self):
         outputflowchart = self.fc.output()
-        totallinecount = self.lendatafromlayer 
+        totallinecount = self.lendatafromlayer
 
-        #build datas
-        table_field_list=[]
+        # build datas
+        table_field_list = []
         results = []
         for outputkey in outputflowchart.keys():
             table_field_list.append(outputkey)
             outputres = outputflowchart[outputkey]
             if outputres is not None:
-                if isinstance(outputres, list) and  len(outputres) == 1:
-                    outputres = outputres*totallinecount
+                if isinstance(outputres, list) and len(outputres) == 1:
+                    outputres = outputres * totallinecount
                 elif isinstance(outputres, float) or isinstance(outputres, int):
-                    outputres = [outputres]*totallinecount
+                    outputres = [outputres] * totallinecount
             elif outputres is None:
-                outputres = ['NULL'] * totallinecount
+                outputres = ["NULL"] * totallinecount
 
             if len(outputres) != totallinecount:
-                self.flowqlabelmessage.setText("Message d'erreur : problème avec " + str(outputkey))
+                self.flowqlabelmessage.setText(
+                    "Message d'erreur : problème avec " + str(outputkey)
+                )
                 return
             results.append(outputres)
 
@@ -305,9 +338,11 @@ class FlowChartWidget(QDialog):
 
     def _getReprojectedGeoms(self):
         dbaseqgiscrs = qgis.core.QgsCoordinateReferenceSystem()
-        dbaseqgiscrs.createFromString('EPSG:' + str(self.dbase.crsnumber))
-        self.xform = qgis.core.QgsCoordinateTransform(self.fromlayer.crs(), dbaseqgiscrs, qgis.core.QgsProject.instance())
-        geoms=[]
+        dbaseqgiscrs.createFromString("EPSG:" + str(self.dbase.crsnumber))
+        self.xform = qgis.core.QgsCoordinateTransform(
+            self.fromlayer.crs(), dbaseqgiscrs, qgis.core.QgsProject.instance()
+        )
+        geoms = []
         for layerfeat in self.fromlayer.getFeatures():
             featgeom = layerfeat.geometry()
             success = featgeom.transform(self.xform)
@@ -315,15 +350,15 @@ class FlowChartWidget(QDialog):
             geoms.append(featgeomwkt)
         return geoms
 
-    def fcNodeAdded(self,flowchart, action, node):
-        if node.nodeName == 'AttributeReaderNode':
+    def fcNodeAdded(self, flowchart, action, node):
+        if node.nodeName == "AttributeReaderNode":
             node.setLayers(self.fromlayer)
             node.setDbase(self.dbase)
 
 
-
 class AttributeReaderNode(CtrlNode):
     """Return the input data passed through an unsharp mask."""
+
     nodeName = "AttributeReaderNode"
     uiTemplate = []
     """
@@ -335,10 +370,10 @@ class AttributeReaderNode(CtrlNode):
 
     def __init__(self, name):
         ## Define the input / output terminals available on this node
-        #self.someQWidget = None
+        # self.someQWidget = None
         terminals = {
-            'dataIn': dict(io='in'),  # each terminal needs at least a name and
-            'dataOut': dict(io='out'),  # to specify whether it is input or output
+            "dataIn": dict(io="in"),  # each terminal needs at least a name and
+            "dataOut": dict(io="out"),  # to specify whether it is input or output
         }  # other more advanced options are available
         # as well..
 
@@ -348,41 +383,44 @@ class AttributeReaderNode(CtrlNode):
         self.currentlayerindex = None
         self.uniquevalues = None
 
-
     def process(self, display=True, **args):
         # CtrlNode has created self.ctrls, which is a dict containing {ctrlName: widget}
         debug = False
-        results={}
+        results = {}
 
-        if debug: logging.getLogger("Lamia").debug('***  process ***')
-        if debug: logging.getLogger("Lamia").debug( 'nodename : %s', self.name())
-        if debug: logging.getLogger("Lamia").debug('args : %s', str(args))
-        if debug: logging.getLogger("Lamia").debug('inputs : %s', str(self.inputs().keys()))
-        if debug: logging.getLogger("Lamia").debug('outputs : %s', str(self.outputs().keys()))
+        if debug:
+            logging.getLogger("Lamia").debug("***  process ***")
+        if debug:
+            logging.getLogger("Lamia").debug("nodename : %s", self.name())
+        if debug:
+            logging.getLogger("Lamia").debug("args : %s", str(args))
+        if debug:
+            logging.getLogger("Lamia").debug("inputs : %s", str(self.inputs().keys()))
+        if debug:
+            logging.getLogger("Lamia").debug("outputs : %s", str(self.outputs().keys()))
 
+        if list(self.inputs().keys())[0] == "dataIn":
 
-        if list(self.inputs().keys())[0] == 'dataIn':
-
-            if debug: logging.getLogger("Lamia").debug('dataIn type')
+            if debug:
+                logging.getLogger("Lamia").debug("dataIn type")
             for termname in self.outputs().keys():
                 results[termname] = []
-                if args['dataIn'] is not None:
-                    for data in args['dataIn']:
+                if args["dataIn"] is not None:
+                    for data in args["dataIn"]:
                         if data == termname:
                             results[termname].append(data)
                         else:
                             results[termname].append(None)
 
+            # return results
 
-
-            #return results
-
-        #elif list(self.outputs().keys())[0] == 'dataOut' and len(list(self.inputs().keys())) > 0:
-        elif list(self.outputs().keys())[0] == 'dataOut':
-            if debug: logging.getLogger("Lamia").debug('dataOut type')
-            results['dataOut'] = []
+        # elif list(self.outputs().keys())[0] == 'dataOut' and len(list(self.inputs().keys())) > 0:
+        elif list(self.outputs().keys())[0] == "dataOut":
+            if debug:
+                logging.getLogger("Lamia").debug("dataOut type")
+            results["dataOut"] = []
             datainput = {}
-            #print('***datain', dataIn)
+            # print('***datain', dataIn)
             leninput = None
             for termname in self.inputs().keys():
                 if args[termname] is not None:
@@ -391,32 +429,30 @@ class AttributeReaderNode(CtrlNode):
 
             if leninput is not None:
                 for i in range(leninput):
-                    tempres=None
+                    tempres = None
                     for termname in datainput.keys():
                         if datainput[termname][i] is not None:
-                            #tempres = datainput[termname][i]
+                            # tempres = datainput[termname][i]
                             tempres = termname
                             break
-                    results['dataOut'].append(tempres)
-                
+                    results["dataOut"].append(tempres)
 
-        if debug: logging.getLogger("Lamia").debug('Results : %s', str(results))
+        if debug:
+            logging.getLogger("Lamia").debug("Results : %s", str(results))
         return results
 
-
-
         if False:
-            print(self.someQWidget.comboBox_type.currentText() )
-            if self.someQWidget.comboBox_type.currentText() == 'popo':
-                output = [datai*10 for datai in dataIn]
-            elif self.someQWidget.comboBox_type.currentText() == 'tet':
-                output = [datai*1000 for datai in dataIn]
+            print(self.someQWidget.comboBox_type.currentText())
+            if self.someQWidget.comboBox_type.currentText() == "popo":
+                output = [datai * 10 for datai in dataIn]
+            elif self.someQWidget.comboBox_type.currentText() == "tet":
+                output = [datai * 1000 for datai in dataIn]
 
             if False:
-                sigma = self.ctrls['sigma'].value()
-                strength = self.ctrls['strength'].value()
+                sigma = self.ctrls["sigma"].value()
+                strength = self.ctrls["strength"].value()
                 output = dataIn - (strength * pg.gaussianFilter(dataIn, (sigma, sigma)))
-        #return {'dataOut': output}
+        # return {'dataOut': output}
 
     def setLayers(self, currentlayer):
         self.currentlayer = currentlayer
@@ -424,18 +460,19 @@ class AttributeReaderNode(CtrlNode):
     def setDbase(self, dbase):
         self.dbase = dbase
 
-
-
-
-    def connected(self,localTerm, remoteTerm ):
+    def connected(self, localTerm, remoteTerm):
         debug = False
 
-        if debug : logging.getLogger("Lamia").debug('***  connected ***' )
-        if debug: logging.getLogger("Lamia").debug('%s, %s, %s',self.name(), str(localTerm), str(remoteTerm))
+        if debug:
+            logging.getLogger("Lamia").debug("***  connected ***")
+        if debug:
+            logging.getLogger("Lamia").debug(
+                "%s, %s, %s", self.name(), str(localTerm), str(remoteTerm)
+            )
 
         remotetermname = remoteTerm.node().name()
-        #localtermname = remoteTerm.node().name()
-        if remotetermname in  ['Input', 'Output']:
+        # localtermname = remoteTerm.node().name()
+        if remotetermname in ["Input", "Output"]:
             if not self.stopconnect:
                 self.clearTerminals()
                 self.stopconnect = True
@@ -444,54 +481,61 @@ class AttributeReaderNode(CtrlNode):
                 self.update()
                 return
         else:
-            if debug: logging.getLogger("Lamia").debug('update')
+            if debug:
+                logging.getLogger("Lamia").debug("update")
             self.update()
 
-        if remoteTerm.node().name() == 'Output':
-            if debug: logging.getLogger("Lamia").debug('connecttype : Output')
+        if remoteTerm.node().name() == "Output":
+            if debug:
+                logging.getLogger("Lamia").debug("connecttype : Output")
             self.clearTerminals()
 
-            #print(self.outputs().keys())
+            # print(self.outputs().keys())
             termname = remoteTerm.name()
-            table, field = termname.split('.')
+            table, field = termname.split(".")
             # print(table, field)
-            fullcst = self.dbase.dbasetables[table]['fields'][field]['Cst']
+            fullcst = self.dbase.dbasetables[table]["fields"][field]["Cst"]
             values = [elem[0] for elem in fullcst]
             for value in values:
                 self.addInput(name=str(value))
             self.graphicsItem().bounds = QtCore.QRectF(0, 0, 200, len(values) * 15)
             self.graphicsItem().update()
 
-            self.addOutput(name='dataOut')
-            output = self.outputs()['dataOut']
+            self.addOutput(name="dataOut")
+            output = self.outputs()["dataOut"]
             output.connectTo(remoteTerm)
-            #self.update()
+            # self.update()
 
-
-        elif remoteTerm.node().name() == 'Input':
-            if debug: logging.getLogger("Lamia").debug('connecttype : Input')
+        elif remoteTerm.node().name() == "Input":
+            if debug:
+                logging.getLogger("Lamia").debug("connecttype : Input")
             self.clearTerminals()
             termfieldname = remoteTerm.name()
-            #uniquevalues
-            self.uniquevalues=None
-            for i, fieldname in enumerate([field.name() for field in self.currentlayer.fields()]):
+            # uniquevalues
+            self.uniquevalues = None
+            for i, fieldname in enumerate(
+                [field.name() for field in self.currentlayer.fields()]
+            ):
                 if fieldname == termfieldname:
                     self.uniquevalues = self.currentlayer.uniqueValues(i)
                     self.currentlayerindex = i
                     break
-            if len(self.uniquevalues)<20:
+            if len(self.uniquevalues) < 20:
                 for uniquevalue in self.uniquevalues:
                     self.addOutput(name=str(uniquevalue))
-                self.graphicsItem().bounds = QtCore.QRectF(0, 0, 200, len(self.uniquevalues) * 15)
+                self.graphicsItem().bounds = QtCore.QRectF(
+                    0, 0, 200, len(self.uniquevalues) * 15
+                )
                 self.graphicsItem().update()
-                #fc.outputNode.graphicsItem().updateTerminals()
-                #fc.outputNode.graphicsItem().update()
-                #self.addOutput(name='test')
-                #self.addOutput(name='test1')
+                # fc.outputNode.graphicsItem().updateTerminals()
+                # fc.outputNode.graphicsItem().update()
+                # self.addOutput(name='test')
+                # self.addOutput(name='test1')
 
-            self.addInput(name='dataIn')
+            self.addInput(name="dataIn")
 
-            input = self.inputs()['dataIn']
+            input = self.inputs()["dataIn"]
             input.connectTo(remoteTerm)
 
-            #self.update()
+            # self.update()
+

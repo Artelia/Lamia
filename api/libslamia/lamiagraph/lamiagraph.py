@@ -26,7 +26,7 @@ This file is part of LAMIA.
 import os, importlib
 import numpy as np
 import pandas as pd
-import lamiaconf
+import Lamia.config
 import matplotlib
 
 matplotlib.use("agg")
@@ -51,7 +51,7 @@ class GraphMaker:
 
         if self.dbase.base3version:
             strtoexec = (
-                f"lamiaconf.{self.dbase.worktype.lower()}.lamiagraph.lamiagraphfunc"
+                f"Lamia.config.{self.dbase.worktype.lower()}.lamiagraph.lamiagraphfunc"
             )
         else:
             strtoexec = f"..{self.dbase.worktype.lower()}.lamiagraphfunc"

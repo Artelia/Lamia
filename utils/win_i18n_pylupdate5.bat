@@ -1,4 +1,4 @@
-SET LAMIADIR=%~dp0\..\Lamia\i18n
+SET LAMIADIR=%~dp0\..\qgisiface\i18n
 
 
 call %~dp0/win_setqgisenv.bat

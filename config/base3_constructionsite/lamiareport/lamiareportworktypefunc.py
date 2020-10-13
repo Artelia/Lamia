@@ -1,6 +1,6 @@
 import os
 import qgis, qgis.core
-from lamiaapi.libslamia.constructionsitesubobservation.cssubobservationparser import (
+from Lamia.api.libslamia.constructionsitesubobservation.cssubobservationparser import (
     SubObservationParser,
 )
 

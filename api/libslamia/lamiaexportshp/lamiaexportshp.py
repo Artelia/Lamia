@@ -94,10 +94,10 @@ class ExportShapefileCore:
         self.result = [list(row) for row in query]
         if debug:
             logging.getLogger("Lamia").debug("result %s", str(self.result))
-        # lamiaapi.libslamia.lamiaexportshp
+        # Lamia.api.libslamia.lamiaexportshp
 
         if self.dbase.base3version:
-            strtoexec = f"lamiaconf.{self.dbase.worktype.lower()}.lamiaexportshp.lamiaexportshpworktypefunc"
+            strtoexec = f"Lamia.config.{self.dbase.worktype.lower()}.lamiaexportshp.lamiaexportshpworktypefunc"
         else:
             strtoexec = f"..{self.dbase.worktype.lower()}.lamiaexportshpworktypefunc"
 

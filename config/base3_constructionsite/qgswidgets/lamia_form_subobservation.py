@@ -38,7 +38,7 @@ from qgis.PyQt.QtWidgets import (
 )
 
 from ...base3.qgswidgets.lamia_form_observation import BaseObservationTool
-from lamiaapi.libslamia.constructionsitesubobservation.cssubobservationparser import (
+from Lamia.api.libslamia.constructionsitesubobservation.cssubobservationparser import (
     SubObservationParser,
 )
 

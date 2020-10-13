@@ -8,10 +8,10 @@ import requests, urllib3
 
 from qgis.core import QgsGeometry
 
-from lamiaapi.libs.cloudant.client import Cloudant
-from lamiaapi.libs.cloudant.error import CloudantException
-from lamiaapi.libs.cloudant.result import Result, ResultByKey, QueryResult
-from lamiaapi.libs.cloudant.query import Query
+from Lamia.api.libs.cloudant.client import Cloudant
+from Lamia.api.libs.cloudant.error import CloudantException
+from Lamia.api.libs.cloudant.result import Result, ResultByKey, QueryResult
+from Lamia.api.libs.cloudant.query import Query
 
 # from Lamia.main.DBaseParser import DBaseParser
 

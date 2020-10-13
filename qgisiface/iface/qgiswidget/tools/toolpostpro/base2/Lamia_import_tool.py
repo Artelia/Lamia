@@ -35,14 +35,30 @@ from pprint import pprint
 
 import qgis, qgis.utils
 from qgis.PyQt import QtGui, uic, QtCore, QtXml
-from qgis.PyQt.QtWidgets import (QInputDialog,QTableWidgetItem,QComboBox,QAction,QProgressBar,QApplication,QWidget,QToolButton,
-                                     QDialog, QGridLayout, QSplitter, QLabel, QFrame, QVBoxLayout)
+from qgis.PyQt.QtWidgets import (
+    QInputDialog,
+    QTableWidgetItem,
+    QComboBox,
+    QAction,
+    QProgressBar,
+    QApplication,
+    QWidget,
+    QToolButton,
+    QDialog,
+    QGridLayout,
+    QSplitter,
+    QLabel,
+    QFrame,
+    QVBoxLayout,
+)
 
 
-#from .importtools.InspectionDigue_Import import ImportObjetDialog
+# from .importtools.InspectionDigue_Import import ImportObjetDialog
 from ...lamia_abstracttool import AbstractLamiaTool
-#from Lamia.iface.qgiswidget.tools.lamia_abstracttool  import AbstractLamiaTool 
-from Lamia.libslamia.lamiaimport.lamiaimport import ImportCore
+
+# from Lamia.iface.qgiswidget.tools.lamia_abstracttool  import AbstractLamiaTool
+from Lamia.api.libslamia.lamiaimport.lamiaimport import ImportCore
+
 # from Lamia.main.DBaseParser import DBaseParser
 
 from .Lamia_import_tool_flowchart import FlowChartWidget
@@ -50,12 +66,13 @@ from .Lamia_import_tool_flowchart import FlowChartWidget
 
 class ImportTool(AbstractLamiaTool):
 
-
     POSTPROTOOLNAME = ImportCore.POSTPROTOOLNAME
 
-    tooltreewidgetCAT = 'Import/export'
-    tooltreewidgetSUBCAT = 'Import'
-    tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'Lamia_import_tool_icon.png')
+    tooltreewidgetCAT = "Import/export"
+    tooltreewidgetSUBCAT = "Import"
+    tooltreewidgetICONPATH = os.path.join(
+        os.path.dirname(__file__), "Lamia_import_tool_icon.png"
+    )
 
     choosertreewidgetMUTIPLESELECTION = True
 
@@ -65,11 +82,13 @@ class ImportTool(AbstractLamiaTool):
         # self.importtool = ImportCore(dbaseparser=self.dbase,
         #                             messageinstance=self.mainifacewidget.connector)
         self.qfiledlg = self.mainifacewidget.qfiledlg
-        self.flowchartdlg = FlowChartWidget(dbase=self.dbase, 
-                                            messageinstance=self.mainifacewidget.connector,
-                                            mainifacewidget=self.mainifacewidget)
+        self.flowchartdlg = FlowChartWidget(
+            dbase=self.dbase,
+            messageinstance=self.mainifacewidget.connector,
+            mainifacewidget=self.mainifacewidget,
+        )
 
-        #self.postInit()
+        # self.postInit()
 
         # self.dialog = QDialog()
         # layout = QGridLayout()
@@ -78,40 +97,41 @@ class ImportTool(AbstractLamiaTool):
         self.flowqlabelmessage = None
         self.currentlayer = None
 
-
     def initMainToolWidget(self):
 
-
         self.toolwidgetmain = UserUI()
-        #self.toolwidgetmain.toolButton_update.clicked.connect(self.updateShowedTable)
+        # self.toolwidgetmain.toolButton_update.clicked.connect(self.updateShowedTable)
 
-        items = [ "Infralineaire", 'Noeud', 'Equipement', 'Photo']
+        items = ["Infralineaire", "Noeud", "Equipement", "Photo"]
         self.toolwidgetmain.comboBox_typeimport.addItems(items)
 
         # methode 1
-        #self.toolwidgetmain.pushButton_import.clicked.connect(self.showTable)
-        #self.toolwidgetmain.pushButton_importer.clicked.connect(self.work)
-        #self.toolwidgetmain.pushButton_validimport.clicked.connect(self.validImport)
-        #self.toolwidgetmain.pushButton_rollback.clicked.connect(self.rollbackImport)
+        # self.toolwidgetmain.pushButton_import.clicked.connect(self.showTable)
+        # self.toolwidgetmain.pushButton_importer.clicked.connect(self.work)
+        # self.toolwidgetmain.pushButton_validimport.clicked.connect(self.validImport)
+        # self.toolwidgetmain.pushButton_rollback.clicked.connect(self.rollbackImport)
 
-        #flowchart
+        # flowchart
         self.toolwidgetmain.pushButton_flowchart.clicked.connect(self.showFlowChart)
-        #self.dialogui = DialogUI()
+        # self.dialogui = DialogUI()
 
     def postToolTreeWidgetCurrentItemChanged(self):
         self._updateFromTables()
-
-
 
     def _updateFromTables(self):
 
         self.toolwidgetmain.comboBox_tableimport.clear()
         if qgis.utils.iface is not None:
-            layers = [tree_layer.layer() for tree_layer in qgis.core.QgsProject.instance().layerTreeRoot().findLayers()]
-            layqgis=[]
+            layers = [
+                tree_layer.layer()
+                for tree_layer in qgis.core.QgsProject.instance()
+                .layerTreeRoot()
+                .findLayers()
+            ]
+            layqgis = []
             for tablename in self.dbase.dbasetables.keys():
-                if 'layerqgis' in self.dbase.dbasetables[tablename].keys():
-                    layqgis.append(self.dbase.dbasetables[tablename]['layerqgis'])
+                if "layerqgis" in self.dbase.dbasetables[tablename].keys():
+                    layqgis.append(self.dbase.dbasetables[tablename]["layerqgis"])
 
             for lay in layers:
                 if not lay in layqgis:
@@ -120,10 +140,6 @@ class ImportTool(AbstractLamiaTool):
     def ___________________________________flowchartpart(self):
         pass
 
-
-
-
-
     def showFlowChart(self, qgslayer=None):
         self._defineCurrentLayer()
 
@@ -131,47 +147,42 @@ class ImportTool(AbstractLamiaTool):
         fromqgslayer = self.currentlayer
         self.flowchartdlg.initFromandToLayers(fromqgslayer, tolayername)
 
-
         if qgis.utils.iface is not None:
             self.flowchartdlg.setWindowModality(QtCore.Qt.NonModal)
             self.flowchartdlg.show()
         else:
             self.flowchartdlg.exec_()
 
-
     def _defineCurrentLayer(self):
         item = self.toolwidgetmain.comboBox_typeimport.currentText()
 
         if qgis.utils.iface is not None:
             self.currentlayer = None
-            layers = [tree_layer.layer() for tree_layer in qgis.core.QgsProject.instance().layerTreeRoot().findLayers()]
+            layers = [
+                tree_layer.layer()
+                for tree_layer in qgis.core.QgsProject.instance()
+                .layerTreeRoot()
+                .findLayers()
+            ]
             for lay in layers:
                 if self.toolwidgetmain.comboBox_tableimport.currentText() == lay.name():
                     self.currentlayer = lay
                     break
 
-            if self.currentlayer  is None:
+            if self.currentlayer is None:
                 return
         else:  # debug outside qgis
             if self.currentlayer is None:
                 import Lamia
+
                 lamiapath = os.path.dirname(Lamia.__file__)
-                layerpath = os.path.join(lamiapath,'..', 'test','shpforimporttest', 'TRONCONS_TEST.shp' )
-                print('*********layerpath', layerpath)
-                #layerpath = os.path.join(os.path.dirname(__file__), '..','..','..','test','99_import_test_files','reseau_L93.shp.shp')
-                self.currentlayer = qgis.core.QgsVectorLayer(layerpath, 'test', 'ogr')
+                layerpath = os.path.join(
+                    lamiapath, "..", "test", "shpforimporttest", "TRONCONS_TEST.shp"
+                )
+                print("*********layerpath", layerpath)
+                # layerpath = os.path.join(os.path.dirname(__file__), '..','..','..','test','99_import_test_files','reseau_L93.shp.shp')
+                self.currentlayer = qgis.core.QgsVectorLayer(layerpath, "test", "ogr")
                 print(self.currentlayer.featureCount())
-
-
-
-
-
-
-
-
-
-
-
 
     """
     def ___________________________________simpletablepart(self):
@@ -335,27 +346,29 @@ class ImportTool(AbstractLamiaTool):
 
     """
 
-
-
-
-    
     def initProgressBar(self, lenprogress):
         """
         Initialise la progress bar d'avancement de la generation du rapport
         :param idsforreportdict:
         :return:
         """
-        if qgis.utils.iface is not None :
-            progressMessageBar = qgis.utils.iface.messageBar().createMessage("import ...")
+        if qgis.utils.iface is not None:
+            progressMessageBar = qgis.utils.iface.messageBar().createMessage(
+                "import ..."
+            )
             progress = QProgressBar()
 
             progress.setMaximum(lenprogress)
             progress.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
             progressMessageBar.layout().addWidget(progress)
             if int(str(self.dbase.qgisversion_int)[0:3]) < 220:
-                qgis.utils.iface.messageBar().pushWidget(progressMessageBar, qgis.utils.iface.messageBar().INFO)
+                qgis.utils.iface.messageBar().pushWidget(
+                    progressMessageBar, qgis.utils.iface.messageBar().INFO
+                )
             else:
-                qgis.utils.iface.messageBar().pushWidget(progressMessageBar, qgis.core.Qgis.Info)
+                qgis.utils.iface.messageBar().pushWidget(
+                    progressMessageBar, qgis.core.Qgis.Info
+                )
         else:
             progress = None
 
@@ -366,45 +379,42 @@ class ImportTool(AbstractLamiaTool):
             progressbar.setValue(val)
         else:
             if qgis.utils.iface is None:
-                if val%100 == 0:
-                    logging.getLogger('Lamia').info('Import de l item %d', val )
+                if val % 100 == 0:
+                    logging.getLogger("Lamia").info("Import de l item %d", val)
         QApplication.processEvents()
-
 
     def validImport(self):
         self.dbase.forcenocommit = False
         sql = "COMMIT"
         self.dbase.query(sql)
 
-
     def rollbackImport(self):
         self.dbase.forcenocommit = False
         sql = "ROLLBACK"
         self.dbase.query(sql)
 
+        if list(self.inputs().keys())[0] == "dataIn":
 
-        if list(self.inputs().keys())[0] == 'dataIn':
-
-            if debug: logging.getLogger("Lamia").debug('dataIn type')
+            if debug:
+                logging.getLogger("Lamia").debug("dataIn type")
             for termname in self.outputs().keys():
                 results[termname] = []
-                if args['dataIn'] is not None:
-                    for data in args['dataIn']:
+                if args["dataIn"] is not None:
+                    for data in args["dataIn"]:
                         if data == termname:
                             results[termname].append(data)
                         else:
                             results[termname].append(None)
 
+            # return results
 
-
-            #return results
-
-        #elif list(self.outputs().keys())[0] == 'dataOut' and len(list(self.inputs().keys())) > 0:
-        elif list(self.outputs().keys())[0] == 'dataOut':
-            if debug: logging.getLogger("Lamia").debug('dataOut type')
-            results['dataOut'] = []
+        # elif list(self.outputs().keys())[0] == 'dataOut' and len(list(self.inputs().keys())) > 0:
+        elif list(self.outputs().keys())[0] == "dataOut":
+            if debug:
+                logging.getLogger("Lamia").debug("dataOut type")
+            results["dataOut"] = []
             datainput = {}
-            #print('***datain', dataIn)
+            # print('***datain', dataIn)
             leninput = None
             for termname in self.inputs().keys():
                 if args[termname] is not None:
@@ -413,40 +423,36 @@ class ImportTool(AbstractLamiaTool):
 
             if leninput is not None:
                 for i in range(leninput):
-                    tempres=None
+                    tempres = None
                     for termname in datainput.keys():
                         if datainput[termname][i] is not None:
-                            #tempres = datainput[termname][i]
+                            # tempres = datainput[termname][i]
                             tempres = termname
                             break
-                    results['dataOut'].append(tempres)
-                
+                    results["dataOut"].append(tempres)
 
-        if debug: logging.getLogger("Lamia").debug('Results : %s', str(results))
+        if debug:
+            logging.getLogger("Lamia").debug("Results : %s", str(results))
         return results
 
-
-
         if False:
-            print(self.someQWidget.comboBox_type.currentText() )
-            if self.someQWidget.comboBox_type.currentText() == 'popo':
-                output = [datai*10 for datai in dataIn]
-            elif self.someQWidget.comboBox_type.currentText() == 'tet':
-                output = [datai*1000 for datai in dataIn]
+            print(self.someQWidget.comboBox_type.currentText())
+            if self.someQWidget.comboBox_type.currentText() == "popo":
+                output = [datai * 10 for datai in dataIn]
+            elif self.someQWidget.comboBox_type.currentText() == "tet":
+                output = [datai * 1000 for datai in dataIn]
 
             if False:
-                sigma = self.ctrls['sigma'].value()
-                strength = self.ctrls['strength'].value()
+                sigma = self.ctrls["sigma"].value()
+                strength = self.ctrls["strength"].value()
                 output = dataIn - (strength * pg.gaussianFilter(dataIn, (sigma, sigma)))
-        #return {'dataOut': output}
+        # return {'dataOut': output}
 
     def setLayers(self, currentlayer):
         self.currentlayer = currentlayer
 
     def setDbase(self, dbase):
         self.dbase = dbase
-
-
 
     """
     def connected(self,localTerm, remoteTerm ):
@@ -520,13 +526,10 @@ class ImportTool(AbstractLamiaTool):
     """
 
 
-
 class UserUI(QWidget):
     def __init__(self, parent=None):
         super(UserUI, self).__init__(parent=parent)
         # self.setupUi(self)
-        uipath = os.path.join(os.path.dirname(__file__), 'Lamia_import_tool.ui')
+        uipath = os.path.join(os.path.dirname(__file__), "Lamia_import_tool.ui")
         uic.loadUi(uipath, self)
-
-
 

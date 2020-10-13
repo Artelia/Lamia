@@ -158,7 +158,7 @@ class SpatialiteDBaseParser(AbstractDBaseParser):
             raise ValueError("Init DBase : No file path given")
 
         originalfile = os.path.join(
-            os.path.dirname(__file__), "..", "DBASE", "sqlite_base", "DBase_ind0.sqlite"
+            os.path.dirname(__file__), "..", "assets", "DBase_ind0.sqlite"
         )
         shutil.copyfile(originalfile, slfile)
 
@@ -263,14 +263,18 @@ class SpatialiteDBaseParser(AbstractDBaseParser):
 
     def createBlobThumbnail(self, pkresource, filepath):
         filebase, fileext = os.path.splitext(filepath)
+
         if PILexists and fileext.lower() in [".jpg", ".jpeg", ".png"]:
-            size = THUMBNAIL_SIZE, THUMBNAIL_SIZE
-            im = PIL.Image.open(filepath)
-            im.thumbnail(size)
-            imgByteArr = io.BytesIO()
-            im.save(imgByteArr, format="PNG")
-            biteval = imgByteArr.getvalue()
-            self.connSLITE.cursor().execute(
-                "UPDATE resource SET thumbnail = (?) WHERE pk_resource = (?)",
-                [biteval, pkresource],
-            )
+            try:
+                size = THUMBNAIL_SIZE, THUMBNAIL_SIZE
+                im = PIL.Image.open(filepath)
+                im.thumbnail(size)
+                imgByteArr = io.BytesIO()
+                im.save(imgByteArr, format="PNG")
+                biteval = imgByteArr.getvalue()
+                self.connSLITE.cursor().execute(
+                    "UPDATE resource SET thumbnail = (?) WHERE pk_resource = (?)",
+                    [biteval, pkresource],
+                )
+            except OSError:
+                pass

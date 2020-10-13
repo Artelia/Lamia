@@ -30,7 +30,7 @@ import datetime, os
 from qgis.PyQt import uic, QtCore
 from qgis.PyQt.QtWidgets import QWidget
 
-from lamiaqgisiface.iface.qgiswidget.tools.lamia_abstractformtool import (
+from Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool import (
     AbstractLamiaFormTool,
 )
 from .lamia_form_report import BaseReportTool
@@ -39,7 +39,7 @@ from .lamia_form_sketch import BaseSketchTool
 from .lamia_form_topography import BaseTopographyTool
 from .lamia_form_actor import BaseActorTool
 
-from lamiaqgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_tcmanytomany import (
+from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_tcmanytomany import (
     TcmanytomanyChooserWidget,
 )
 

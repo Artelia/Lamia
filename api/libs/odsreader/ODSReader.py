@@ -14,9 +14,9 @@
 
 # Thanks to grt for the fixes
 import os, sys
-import lamiaapi
+import Lamia.api
 
-lamiaapipath = os.path.join(os.path.dirname(lamiaapi.__file__))
+lamiaapipath = os.path.join(os.path.dirname(Lamia.api.__file__))
 libspath = os.path.join(lamiaapipath, "libs")
 sys.path.append(libspath)
 

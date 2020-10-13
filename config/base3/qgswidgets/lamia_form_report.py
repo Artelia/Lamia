@@ -29,7 +29,7 @@ import os, sys, datetime
 from qgis.PyQt import uic, QtCore, QtGui
 from qgis.PyQt.QtWidgets import QWidget
 
-from lamiaqgisiface.iface.qgiswidget.tools.lamia_abstractformtool import (
+from Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool import (
     AbstractLamiaFormTool,
 )
 

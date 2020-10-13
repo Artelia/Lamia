@@ -37,7 +37,7 @@ from ...base3.qgswidgets.lamia_form_surface import BaseSurfaceTool
 from .lamia_form_camera import BaseFaunafloraCameraTool
 from .lamia_form_sketch import BaseFaunafloraSketchTool
 
-from lamiaqgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_getfromcatalog import (
+from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_getfromcatalog import (
     CatalogWidget,
 )
 

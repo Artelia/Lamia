@@ -36,23 +36,32 @@ import qgis
 import qgis.core
 from qgis.PyQt import QtGui, uic, QtCore, QtXml
 from qgis.PyQt.QtPrintSupport import QPrinter
-from qgis.PyQt.QtWidgets import  (QProgressBar, QApplication,QAction, QWidget, QAbstractItemView)
+from qgis.PyQt.QtWidgets import (
+    QProgressBar,
+    QApplication,
+    QAction,
+    QWidget,
+    QAbstractItemView,
+)
+
 # from ...libs import pyqtgraph as pg
 
 
-#from ...Lamia_abstract_tool import AbstractLamiaTool
+# from ...Lamia_abstract_tool import AbstractLamiaTool
 from ...lamia_abstracttool import AbstractLamiaTool
 from ...subwidgets.abstractfilemanager import AbstractFileManager
-from Lamia.libslamia.lamiareport.lamiareport import ReportCore
+from Lamia.api.libslamia.lamiareport.lamiareport import ReportCore
 
 
 class RapportTool(AbstractLamiaTool):
 
     POSTPROTOOLNAME = ReportCore.POSTPROTOOLNAME
 
-    tooltreewidgetCAT = 'Import/export'
-    tooltreewidgetSUBCAT = 'Impression rapport'
-    tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), 'Lamia_rapport_tool_icon.png')
+    tooltreewidgetCAT = "Import/export"
+    tooltreewidgetSUBCAT = "Impression rapport"
+    tooltreewidgetICONPATH = os.path.join(
+        os.path.dirname(__file__), "Lamia_rapport_tool_icon.png"
+    )
 
     choosertreewidgetMUTIPLESELECTION = True
 
@@ -60,13 +69,20 @@ class RapportTool(AbstractLamiaTool):
         super(RapportTool, self).__init__(**kwargs)
         # self.postInit()
         self.qfiledlg = self.mainifacewidget.qfiledlg
-        self.confdatamain = os.path.join(os.path.dirname(inspect.getsourcefile(self.__class__)), self.POSTPROTOOLNAME)
-        self.confdataproject = os.path.join(self.dbase.dbaseressourcesdirectory, 'config',self.POSTPROTOOLNAME)
+        self.confdatamain = os.path.join(
+            os.path.dirname(inspect.getsourcefile(self.__class__)), self.POSTPROTOOLNAME
+        )
+        self.confdataproject = os.path.join(
+            self.dbase.dbaseressourcesdirectory, "config", self.POSTPROTOOLNAME
+        )
 
-        self.reporttool = ReportCore(dbaseparser=self.dbase,
-                                     messageinstance=self.mainifacewidget.connector)
+        self.reporttool = ReportCore(
+            dbaseparser=self.dbase, messageinstance=self.mainifacewidget.connector
+        )
 
-        self.filemanager = ExportRapportFileManager(self.mainifacewidget, self.reporttool , '.txt')
+        self.filemanager = ExportRapportFileManager(
+            self.mainifacewidget, self.reporttool, ".txt"
+        )
 
     """
     def initTool(self):
@@ -108,43 +124,41 @@ class RapportTool(AbstractLamiaTool):
             print(self.impressionpdfworker.NAME )
     """
 
-
     def initMainToolWidget(self):
 
-        self.toolwidgetmain  = UserUI()
-        self.toolwidgetmain .toolButton_filechooser.clicked.connect(self.chooseFile)
+        self.toolwidgetmain = UserUI()
+        self.toolwidgetmain.toolButton_filechooser.clicked.connect(self.chooseFile)
 
-        self.toolwidgetmain .groupBox_filemanager.layout().addWidget(self.filemanager)
+        self.toolwidgetmain.groupBox_filemanager.layout().addWidget(self.filemanager)
 
-        self.toolwidgetmain .pushButton_export.clicked.connect(self.launchRapport)
+        self.toolwidgetmain.pushButton_export.clicked.connect(self.launchRapport)
 
         if qgis.utils.iface is None:
-            self.toolwidgetmain .lineEdit_nom.setText('c://000_testdigue//test_rapport.pdf')
+            self.toolwidgetmain.lineEdit_nom.setText(
+                "c://000_testdigue//test_rapport.pdf"
+            )
 
-        self.choosertreewidget = self.mainifacewidget.toolwidgets['toolprepro']['Zonegeo'].choosertreewidget
-
+        self.choosertreewidget = self.mainifacewidget.toolwidgets["toolprepro"][
+            "Zonegeo"
+        ].choosertreewidget
 
     def chooseFile(self):
-        reportfile = self.qfiledlg.getSaveFileName(self,
-                                                   'Lamia - impression rapport',
-                                                   '',
-                                                   'PDF (*.pdf)')
+        reportfile = self.qfiledlg.getSaveFileName(
+            self, "Lamia - impression rapport", "", "PDF (*.pdf)"
+        )
         if reportfile:
-            if isinstance(reportfile, tuple):    # qt5
+            if isinstance(reportfile, tuple):  # qt5
                 reportfile = reportfile[0]
-            self.toolwidgetmain .lineEdit_nom.setText(reportfile)
-
+            self.toolwidgetmain.lineEdit_nom.setText(reportfile)
 
     def postToolTreeWidgetCurrentItemChanged(self):
-        #self.toolwidgetmain.setEnabled(True)
+        # self.toolwidgetmain.setEnabled(True)
         self.filemanager.reset()
 
-        #self.createconfData()
+        # self.createconfData()
 
-        #self.linkedtreewidget.setSelectionMode(QAbstractItemView.ExtendedSelection)
-        #self.linkedtreewidget.itemSelectionChanged.connect(self.itemChanged)
-
-
+        # self.linkedtreewidget.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        # self.linkedtreewidget.itemSelectionChanged.connect(self.itemChanged)
 
     def launchRapport(self):
         pdffile = self.toolwidgetmain.lineEdit_nom.text()
@@ -153,7 +167,7 @@ class RapportTool(AbstractLamiaTool):
         # print(self.confData.keys())
 
         reporttype = self.filemanager.getCurrentText()
-        #tabletypepath = self.filemanager.getCurrentPath()
+        # tabletypepath = self.filemanager.getCurrentPath()
 
         # selectedzonegeoitems = self.choosertreewidget.treewidget.selectedItems()
         # ids = [int(item.text(0)) for item in selectedzonegeoitems]
@@ -161,10 +175,10 @@ class RapportTool(AbstractLamiaTool):
         # pks = [pdids.loc[pdids['id'] == id]['pk'].values[0] for id in ids]
         pks = self.choosertreewidget.getSelectedPks()
 
-        self.reporttool.runReport(destinationfile=pdffile, 
-                                    reportconffilename=reporttype, 
-                                    pkzonegeos=pks)
-        
+        self.reporttool.runReport(
+            destinationfile=pdffile, reportconffilename=reporttype, pkzonegeos=pks
+        )
+
         """
         if reporttype[0] == self.filemanager.projectcharacter:
             createfilesdir = self.confdataproject
@@ -214,26 +228,25 @@ class RapportTool(AbstractLamiaTool):
 
 
 class ExportRapportFileManager(AbstractFileManager):
-
     def __init__(self, mainwindows=None, parentwdg=None, fileext=None):
         super(ExportRapportFileManager, self).__init__(mainwindows, parentwdg, fileext)
 
-
     def new(self):
 
-        #if not os.path.exists(self.confdataproject):
+        # if not os.path.exists(self.confdataproject):
         #    os.mkdir(self.confdataproject)
 
-        confpath, confext = self.qfiledialog.getSaveFileName(None, 'Choose the file', self.confdataproject,
-                                                                'txt (*.txt)', '')
+        confpath, confext = self.qfiledialog.getSaveFileName(
+            None, "Choose the file", self.confdataproject, "txt (*.txt)", ""
+        )
 
         if confpath:
             self.parentwdg.new(confpath)
-            
+
             if False:
                 if confpath:
-                    conf_file = open(confpath, 'w', encoding="utf-8")
-                    conftxt =   """
+                    conf_file = open(confpath, "w", encoding="utf-8")
+                    conftxt = """
                                 ###atlaslayersql
                                 # requete sql pour définir la table utilisée pour l'atlas
                                 SELECT Desordre_now.* 
@@ -276,10 +289,11 @@ class ExportRapportFileManager(AbstractFileManager):
 
             self.reset()
 
-            txttofind = self.projectcharacter+ os.path.splitext(os.path.basename(confpath))[0]
+            txttofind = (
+                self.projectcharacter + os.path.splitext(os.path.basename(confpath))[0]
+            )
             indexcombo = self.comboBox_files.findText(txttofind)
             self.comboBox_files.setCurrentIndex(indexcombo)
-
 
 
 """
@@ -401,14 +415,10 @@ class ExportRapportFileManager(AbstractFileManager):
 """
 
 
-
 class UserUI(QWidget):
     def __init__(self, parent=None):
         super(UserUI, self).__init__(parent=parent)
         # self.setupUi(self)
-        uipath = os.path.join(os.path.dirname(__file__), 'Lamia_rapport_tool.ui')
+        uipath = os.path.join(os.path.dirname(__file__), "Lamia_rapport_tool.ui")
         uic.loadUi(uipath, self)
-
-
-
 

@@ -28,8 +28,8 @@ along with Foobar.  If not, see <https://www.gnu.org/licenses/>.
 
 import os, sys, locale
 import xlrd
-import lamiaconf
-from lamiaapi.libs.odsreader.ODSReader import ODSReader
+import Lamia.config
+from Lamia.api.libs.odsreader.ODSReader import ODSReader
 
 
 class DBconfigReader:
@@ -946,12 +946,16 @@ class DBconfigReader:
 
         if worktype.split("_")[0] == "base3":
             createfilesdir = os.path.join(
-                os.path.dirname(lamiaconf.__file__), worktype, "dbase"
+                os.path.dirname(Lamia.config.__file__), worktype, "dbase"
             )
         else:
+            # createfilesdir = os.path.join(
+            #     os.path.dirname(__file__), "..", "DBASE_old", "create"
+            # )
             createfilesdir = os.path.join(
-                os.path.dirname(__file__), "..", "DBASE", "create"
+                os.path.dirname(Lamia.qgisiface.__file__), "DBASE_old", "create"
             )
+
         if debug:
             logging.getLogger("Lamia").debug("dbase dir : %s", str(createfilesdir))
 

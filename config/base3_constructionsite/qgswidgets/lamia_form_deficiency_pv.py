@@ -29,12 +29,12 @@ from qgis.PyQt.QtWidgets import QWidget
 
 from ...base3.qgswidgets.lamia_form_deficiency import BaseDeficiencyTool
 from .lamia_form_observation import BaseConstructionsiteObservationTool
-from lamiaapi.libslamia.lamiareport.lamiareport import ReportCore
+from Lamia.api.libslamia.lamiareport.lamiareport import ReportCore
 
-from lamiaqgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_lidchooser import (
+from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_lidchooser import (
     LidChooserWidget,
 )
-from lamiaqgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_createsubfeature import (
+from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_createsubfeature import (
     CreateSubFeatureWidget,
 )
 

@@ -31,7 +31,7 @@ from qgis.PyQt import QtGui, QtCore, QtXml
 from qgis.PyQt.QtPrintSupport import QPrinter
 
 from ..lamianetworkx.lamianetworkx import NetWorkCore
-from lamiaqgisiface.iface.qgscanvas.ifaceqgiscanvas import QgisCanvas
+from Lamia.qgisiface.iface.qgscanvas.ifaceqgiscanvas import QgisCanvas
 
 
 class ReportCore:

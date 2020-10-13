@@ -1,10 +1,10 @@
 rmdir %UserProfile%\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\Lamia /s /q
 mkdir %UserProfile%\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\Lamia
-xcopy %~dp0\..\lamiaqgisiface %UserProfile%\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\Lamia\lamiaqgisiface\  /E /I
-xcopy %~dp0\..\lamiaapi %UserProfile%\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\Lamia\lamiaapi\  /E /I
-xcopy %~dp0\..\lamiaconf %UserProfile%\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\Lamia\lamiaconf\  /E /I
+xcopy %~dp0\..\qgisiface %UserProfile%\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\Lamia\qgisiface\  /E /I
+xcopy %~dp0\..\api %UserProfile%\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\Lamia\api\  /E /I
+xcopy %~dp0\..\config %UserProfile%\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\Lamia\config\  /E /I
 
-move %UserProfile%\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\Lamia\lamiaqgisiface\qgispluginroot\*.*  %UserProfile%\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\Lamia
+move %UserProfile%\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\Lamia\qgisiface\qgispluginroot\*.*  %UserProfile%\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\Lamia
 
 
 
