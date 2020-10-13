@@ -1105,7 +1105,8 @@ class AbstractDBaseParser:
                         copywholedirforraster=False,
                     )
 
-                    self.createBlobThumbnail(pkressource, destinationfile)
+                    # not used : sqlite too big dbase size...
+                    # self.createBlobThumbnail(pkressource, destinationfile)
 
                     finalname = os.path.join(
                         ".", os.path.relpath(destinationfile, dbaseressourcesdirectory)

@@ -191,7 +191,7 @@ class LamiaSession:
         sql = "SELECT businessline FROM database"
         worktype = self.lamiaparser.query(sql)[0][0]
         styledirectory = os.path.join(
-            os.path.dirname(Lamia.__file__), "worktypeconf", worktype, "qgsstyles",
+            os.path.dirname(Lamia.__file__), "config", worktype, "qgsstyles",
         )
         stylesdir = [
             os.path.basename(f.path) for f in os.scandir(styledirectory) if f.is_dir()
