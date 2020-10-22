@@ -84,6 +84,18 @@
         }
       },
       {
+        "name": "Lamia",
+        "cfg": {}
+      },
+      {
+        "name": "TaskButton",
+        "cfg": {
+          "position": 3,
+          "task": "Lamia",
+          "icon": "list-alt"
+        }
+      },
+      {
         "name": "HomeButton",
         "cfg": {
           "position": 2

@@ -46,6 +46,7 @@ from qgis.PyQt.QtWidgets import (
     QTabBar,
     QStackedWidget,
     QToolButton,
+    QPushButton,
 )
 from qgis.PyQt import QtCore
 import qgis, logging, datetime, os
@@ -1375,6 +1376,7 @@ class FormToolUtils(QtCore.QObject):
                 # QTabBar,
                 QStackedWidget,
                 QToolButton,
+                QPushButton,
             ]:
                 finaldict[key] = val
         wdg1.__dict__ = {**wdg1.__dict__, **finaldict}

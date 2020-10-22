@@ -39,7 +39,7 @@ from Lamia.qgisiface.iface.qgsconnector.ifaceqgisconnector import QgisConnector
 
 class ReportCore:
 
-    POSTPROTOOLNAME = "reporttools"
+    POSTPROTOOLNAME = "lamiareport"
     if qgis.utils.iface is None:
         LAUNCHINQTHREAD = False
     else:
@@ -948,14 +948,18 @@ class printPDFBaseWorker(QtCore.QObject):
                 imageresult = self.getNumberedResource(atlasfeat, table, ressourcenum)
 
             elif self.atlasconfData["images"][imageitemname][0:4] == "logo":
-                imagepath = os.path.join(
-                    os.path.dirname(__file__),
-                    "..",
-                    "..",
-                    "DBASE",
-                    "utils",
-                    self.atlasconfData["images"][imageitemname] + ".png",
+                imagepath = self.dbase.configresourcefinder.findResource(
+                    "assets", self.atlasconfData["images"][imageitemname] + ".png"
                 )
+
+                # imagepath = os.path.join(
+                #     os.path.dirname(__file__),
+                #     "..",
+                #     "..",
+                #     "DBASE",
+                #     "utils",
+                #     self.atlasconfData["images"][imageitemname] + ".png",
+                # )
                 imageresult = os.path.join(imagepath)
 
             else:
@@ -1413,7 +1417,10 @@ class printPDFBaseWorker(QtCore.QObject):
                                     "ogr",
                                 )
                                 if qgis.utils.iface is not None:
-                                    rlayer.renderer().setOpacity(0.5)
+                                    try:  # if raster layer
+                                        rlayer.renderer().setOpacity(0.5)
+                                    except:
+                                        pass
                                 # qgis.core.QgsProject.instance().addMapLayer(
                                 self.project.addMapLayer(rlayer, False)
                                 layersformapcomposer.append(rlayer)
@@ -1486,7 +1493,8 @@ class printPDFBaseWorker(QtCore.QObject):
             orderedpks = self.orderPksAlongPath(coveragelayer, self.pkzonegeolist)
         else:
             # orderedpks[0] = [feat[self.atlasconfData['atlaslayerid']] for feat in coveragelayer.getFeatures()]
-            orderedpks[0] = [feat.id() for feat in coveragelayer.getFeatures()]
+            # orderedpks[0] = [feat.id() for feat in coveragelayer.getFeatures()]
+            orderedpks = self.getPksByzoneGeo(coveragelayer, self.pkzonegeolist)
 
         if len(orderedpks) == 0:
             orderedpks[0] = [feat.id() for feat in coveragelayer.getFeatures()]
@@ -1629,6 +1637,27 @@ class printPDFBaseWorker(QtCore.QObject):
 
         if debug:
             self.logger.debug("orderedpks %s", str(orderedpks))
+        return orderedpks
+
+    def getPksByzoneGeo(self, coveragelayer, zonegeopks=[]):
+        if len(zonegeopks) == 0:
+            sql = "SELECT pk_geoarea, ST_AsText(geom) FROM geoarea "
+            query = self.dbase.query(sql)
+            zonegeopks = [row[0] for row in query]
+            # zonegeogeoms = [row[1] for row in query]
+
+        zonegeopksstr = [str(elem) for elem in zonegeopks]
+        sql = f"SELECT pk_geoarea, ST_AsText(geom) FROM geoarea WHERE pk_geoarea in ({','.join(zonegeopksstr)})"
+        query = self.dbase.query(sql)
+
+        orderedpks = {}
+        for zonegeopk, zonegeogeom in query:
+            orderedpks[zonegeopk] = []
+            for feat in coveragelayer.getFeatures():
+                if feat.geometry().intersects(
+                    qgis.core.QgsGeometry.fromWkt(zonegeogeom)
+                ):
+                    orderedpks[zonegeopk].append(feat.id())
         return orderedpks
 
     def initPrinterAndPainter(self, newComposition):

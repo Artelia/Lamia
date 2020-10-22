@@ -14,10 +14,8 @@
 
 # Thanks to grt for the fixes
 import os, sys
-import Lamia.api
 
-lamiaapipath = os.path.join(os.path.dirname(Lamia.api.__file__))
-libspath = os.path.join(lamiaapipath, "libs")
+libspath = os.path.normpath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.append(libspath)
 
 import odf.opendocument

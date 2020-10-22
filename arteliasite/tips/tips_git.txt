@@ -1,3 +1,0 @@
-to update submodules (here qwc2)
-
-git submodule update --init --recursive

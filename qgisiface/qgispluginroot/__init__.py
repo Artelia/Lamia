@@ -29,6 +29,8 @@ MainModule core
 """
 
 #from .Lamia import *
+import sys
+sys.path.append(os.path.dirname(__file__))
 
 
 # noinspection PyPep8Naming

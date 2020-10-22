@@ -4,7 +4,7 @@ INNER JOIN deficiency_now ON deficiency_now.lid_descriptionsystem = node_now.id_
 LEFT JOIN observation_now ON observation_now.lid_deficiency = deficiency_now.id_deficiency
 WHERE node_now.nodetype = '10'
 ###atlaslayerid
-id_noeud
+id_node
 ###spatial
 True
 #ordering
@@ -14,15 +14,19 @@ SNCFNoeud.qml
 ###atlasdrivemap
 #itemname;   minscale;   typescale;      layers
 map0;       250;       Predefined      ;['atlaslayer', 'node', 'equipment', 'edge', 'bati','Voie','Route', 'scan25']
-#map1;       2500;       Predefined      ;['atlaslayer', 'Equipement', 'Infralineaire', 'scan25']
+#map1;       2500;       Predefined      ;['atlaslayer', 'equipment', 'edge', 'scan25']
 ###generalmap
 #itemname;   minscale;   typescale; layers
 #map0    ;           ;             ; ['edge', 'ortho']
 #map0    ;           ;             ; []
 ###images
 #itemname   ; type
-photo1;node_now.photo1
-photo2;node_now.photo2
+ressource1;node_now.photo1
+ressource2;node_now.photo2
+ressource3;node_now.photo3
+ressource4;node_now.photo4
+ressource5;node_now.photo5
+ressource6;node_now.photo6
 ###childprint
 #confname;                linkcolumn;             optionsql
 

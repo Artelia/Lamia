@@ -10,12 +10,12 @@ class StyleChooser extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { styles: {} }
+        // this.state = { styles: {} }
         // this.styles = null
     }
 
     render() {
-        console.log('stylerend')
+        console.log('stylerend', this.props.styles)
         return (
             <div className="btn-group mr-2" role="group" aria-label="toto group">
                 <div className="dropdown">
@@ -32,27 +32,19 @@ class StyleChooser extends React.Component {
 
     }
 
-    componentDidMount() {
-        this.loadStyles()
-    }
-
-    async loadStyles() {
-        let stylesurl = 'http://' + window.location.host + '/lamiaapi/' + this.props.mainiface.projectdata.id_project + '/styles'
-        let styles = await axios.get(stylesurl)
-        // console.log(styles)
-        this.setState({ styles: styles.data })
-        // console.log('des', Object.keys(this.state.styles)[0])
-        this.changeStyle("_default")
-
-    }
+    // componentDidMount() {
+    //     this.props.mainiface.loadStyles()
+    //     // console.log('style mounted')
+    //     // this.props.mainiface.changeStyle('_default')
+    // }
 
     createStyleDrop() {
 
-        if (!this.state.styles) {
+        if (!this.props.styles) {
             return []
         }
         let finaldatas = []
-        for (var item in this.state.styles) {
+        for (var item in this.props.styles) {
             finaldatas.push(<a className="dropdown-item" id={item} key={item}
                 onClick={this.handleStyleChanged.bind(this)}
             >
@@ -66,82 +58,10 @@ class StyleChooser extends React.Component {
     handleStyleChanged = (e) => {
         // console.log('cl', e.target.id)
         const desttyle = e.target.id
-        this.changeStyle.bind(this)(desttyle)
+        this.props.mainiface.changeStyle.bind(this)(desttyle)
     }
 
-    changeStyle(deststyle) {
-        // console.log('cl', e.target.id)
-        // const deststyle = e.target.id
 
-        //searchSubLayer
-        let layers = this.props.mainiface.props.layers
-        // console.log(layers)
-        let lamialayer = null
-        for (let layerid in Object.values(layers)) {
-            // console.log(layerid)
-            let layer = layers[layerid]
-            // console.log(layer)
-            if (layer.title.toLowerCase() === 'lamia') {
-                lamialayer = layer
-                break
-            }
-        }
-
-        // console.log('lamialayer', lamialayer)
-
-        if (!lamialayer) { return }
-
-        // const lamiasublayers = lamialayer.params.LAYERS.split(',')
-        const lamiasublayers = lamialayer.sublayers
-
-
-        let lamiasubstyle = []
-
-        lamiasublayers.forEach((sublay, idx) => {
-
-            if (this.state.styles[deststyle].includes(sublay.name.split('_')[0])) {
-                lamiasubstyle.push(deststyle)
-                lamialayer.sublayers[idx].style = deststyle
-            } else {
-                lamiasubstyle.push('default')
-                lamialayer.sublayers[idx].visibility = false
-                lamialayer.sublayers[idx].style = 'default'
-            }
-        })
-
-        // console.log(lamiasubstyle)
-
-        // lamialayer.params.STYLES = lamiasubstyle.join(',')
-        this.props.mainiface.props.changeLayerProperty(lamialayer.uuid, "params.styles", lamiasubstyle.join(','), [], null);
-        // console.log('layer', this.props.mainiface.props.layers)
-
-
-
-
-
-        return
-
-
-        // this.props.mainiface.currentwdginstance.displayProperties(e.target.id)
-        if (this.props.layers[0] && this.props.layers[0].params) {
-            console.log('*', this.props.layers[0].state)
-            const lay = this.props.layers[0].params.LAYERS.split(',')
-            // console.log(lay)
-            let style = Array(lay.length).fill('default')
-            style[3] = 'test1'
-
-            // this.props.layers[0].params.STYLES = style.join(',')
-            let uuid = this.props.layers[0].uuid
-            // layer.uuid, "visibility", !oldvisibility, grouppath,
-            this.props.layers[0].params.STYLES = style.join(',')
-            this.props.changeLayerProperty(uuid, "params.styles", style.join(','), [], null);
-            // this.props.changeLayerProperty(uuid, "styles", style[8], [8], null);
-
-            console.log('layer', this.props.layers)
-
-        }
-
-    }
 
 }
 

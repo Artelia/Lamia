@@ -40,6 +40,7 @@ except ImportError:
 from Lamia.api.libslamia.lamiareg.updatereg import updateWinReg
 from .dbconfigreader import DBconfigReader
 from .dbaseofflinemanager import DBaseOfflineManager
+from .configresourcefinder import ConfigResourcefinder
 from Lamia.qgisiface.iface.ifaceabstractconnector import LamiaIFaceAbstractConnectors
 from . import dbaseutils
 
@@ -57,7 +58,14 @@ PGTYPE_TO_SLTYPE = {
     "BYTEA": "BLOB",
 }
 
-PROJECTCONFIGDIRS = ["dbase", "rapporttools", "styles", "importtools"]
+PROJECTCONFIGDIRS = [
+    "dbase",
+    "lamiareport",
+    "qgsstyles",
+    "lamiaimport",
+    "assets",
+    "lamiaexportshp",
+]
 # PROJECTCONFIGDIRS = ["dbase", "qgswidgets", "qgsstyles", "lamiacost", "lamiaexportshp"]
 THUMBNAIL_SIZE = 256
 
@@ -101,6 +109,9 @@ class AbstractDBaseParser:
         self.dbconfigreader = DBconfigReader(self)
         #:the offline manager instance
         self.dbaseofflinemanager = DBaseOfflineManager(self)
+
+        # config resourcefinder
+        self.configresourcefinder = ConfigResourcefinder(self)
 
         #:for debug purpose
         self.printsql = False
@@ -307,6 +318,7 @@ class AbstractDBaseParser:
         else:
             sql = "SELECT metier, repertoireressources,crs, version, workversion, variante   FROM Basedonnees"
         query = self.query(sql)
+
         worktype, resdir, crs, version, workversion, variante = [
             row[0:6] for row in query
         ][0]

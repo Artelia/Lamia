@@ -64,6 +64,8 @@ import webbrowser
 import glob, importlib, inspect
 from pprint import pprint
 
+import Lamia, Lamia.api, Lamia.qgisiface, Lamia.config, time
+from Lamia.api.libslamia.gps.GPSutil import GpsUtil
 from Lamia.api.dbasemanager.dbaseparserfactory import DBaseParserFactory
 
 from ..ifaceabstractwidget import LamiaIFaceAbstractWidget
@@ -81,8 +83,6 @@ from .tools.subwidgets.lamia_numpad import NumPadDialog
 
 # version 01
 
-import Lamia.api, Lamia.qgisiface, Lamia.config, time
-from Lamia.api.libslamia.gps.GPSutil import GpsUtil
 
 debugtime = False
 

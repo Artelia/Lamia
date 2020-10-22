@@ -269,7 +269,7 @@
                <number>3</number>
               </property>
               <item row="0" column="0">
-               <widget class="QPushButton" name="pushButton_defaultphoto_2">
+               <widget class="QPushButton" name="pushButton_defaultphoto">
                 <property name="text">
                  <string>Define as default picture</string>
                 </property>
@@ -287,6 +287,13 @@
                  </size>
                 </property>
                </spacer>
+              </item>
+              <item row="0" column="1">
+               <widget class="QPushButton" name="pushButton_pictureparent">
+                <property name="text">
+                 <string>Picture for parent</string>
+                </property>
+               </widget>
               </item>
              </layout>
             </widget>

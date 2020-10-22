@@ -29,19 +29,18 @@ class Lamia extends React.Component {
 
     constructor(props) {
         super();
-        this.state = { 'visualmode': 1, 'mainwdg': null, 'values': null, 'widgetsclasses': [] }
+        this.state = { 'visualmode': 1, 'mainwdg': null, 'values': null, 'widgetsclasses': [], 'styles': {} }
         this.currentwdginstance = null
         this.currentref = React.createRef()
         this.mainwdgrefcreated = false
         this.idchooserref = React.createRef()
         this.stylechooserref = React.createRef()
         this.dbaseworktypeloaded = false
-        this.lookforstyle = true
+        this.defaultstyleloaded = false
         this.getDBaseWorktype()
     }
 
     async getDBaseWorktype() {
-        // console.log(this.projectdata.qgisserverurl)
         let qgisserverurl = this.projectdata.qgisserverurl.split('?')[0]
         let qgisserverquery
         this.projectdata.qgisserverurl.split('?').length > 1 ? qgisserverquery = this.projectdata.qgisserverurl.split('?')[1] : qgisserverquery = null
@@ -54,9 +53,6 @@ class Lamia extends React.Component {
         eval('this.setState({widgetsclasses:' + worktype + '})')
     }
 
-    componentDidMount() {
-
-    }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.layers) {
@@ -73,7 +69,15 @@ class Lamia extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
+
         let returnvalue = false
+
+        if (!this.defaultstyleloaded) {
+            if (this.getLamiaLayer() !== null) {
+                this.changeStyle("_default")
+                this.defaultstyleloaded = true
+            }
+        }
 
 
         if (!this.dbaseworktypeloaded) {
@@ -97,18 +101,10 @@ class Lamia extends React.Component {
     }
 
     componentWillReceiveProps_(nextProps) {
-        console.log('componentWillReceiveProps')
-
-        console.log('mapchange', nextProps.map !== this.props.map)
+        // console.log('mapchange', nextProps.map !== this.props.map)
         if (nextProps.map !== this.props.map) {
             return false
         }
-        // console.log('shouldComponentUpdate', nextProps)
-        // console.log(this.props)
-        // console.log('shouldComponentUpdate', nextState)
-
-        // console.log('pp', nextProps === this.props)
-        // console.log('pp', nextState === this.state)
 
         let found = this.props.layers.find(layer => layer.title === "Lamiasel")
         console.log('found', !found, found)
@@ -125,44 +121,14 @@ class Lamia extends React.Component {
             this.handleMapClick()
             return false
         }
-
-
-
-        // console.log('shouldComponentUpdate', this.props)
         return false
     }
 
     render() {
-        console.log('render Lamia', this.props.point)
+        // console.log('render Lamia', this.props.point)
 
         let layersdropdown = this.createLayerDrop.bind(this)()
-        // let idsdrop = (
-        //     <div className="btn-group mr-2" role="group" aria-label="First group">
-        //         <div className="dropdown">
-        //             <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        //                 Ids
-        //             </button>
-        //             <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        //                 {<IdChooser ref={this.idchooserref} mainiface={this} />}
-        //             </div>
-        //         </div>
-        //     </div>
-        // )
-        // let stylesdrop = (
-        //     <div className="btn-group mr-2" role="group" aria-label="First group">
-        //         <div className="dropdown">
-        //             <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        //                 Styles
-        //             </button>
-        //             <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        //                 {<StyleChooser ref={this.stylechooserref} mainiface={this} />}
-        //             </div>
-        //         </div>
-        //     </div>
-        // )
 
-
-        ////
         let butonmenu = (
             <div className="btn-group mr-2" role="group" aria-label="First group">
                 <button type="button" className="btn btn-secondary" id="canvaspick" onClick={this.buttonmenuclick.bind(this)}>Pick</button>
@@ -170,16 +136,15 @@ class Lamia extends React.Component {
             </div>
         )
 
-
         let extraTitlebarContent = (
             <div className="btn-toolbar " role="group" aria-label="Basic example" style={{ marginLeft: "1em" }}>
                 {layersdropdown}
                 {<IdChooser ref={this.idchooserref} mainiface={this} />}
-                {<StyleChooser ref={this.stylechooserref} mainiface={this} />}
+                {<StyleChooser ref={this.stylechooserref} mainiface={this} styles={this.state.styles} />}
                 {/* {butonmenu} */}
             </div>
         );
-        //
+
         return (
             <div>
                 <SideBar id="Lamia" width={this.state.sidebarwidth || this.props.width}
@@ -202,12 +167,16 @@ class Lamia extends React.Component {
     }
 
 
+    componentDidMount() {
+        this.loadStyles()
+    }
+
+
     componentDidUpdate() {
         if (!this.mainwdgrefcreated) {
             this.mainwdgrefcreated = true
             this.currentwdginstance = this.currentref.current
         }
-
     }
 
 
@@ -225,44 +194,27 @@ class Lamia extends React.Component {
 
     buttonmenuclick(evt) {
         console.log('buttonmenuclick')
-        // console.log(this.props)
-
-
-
     }
 
 
     createIdDrop() {
-
-
         if (!this.currentwdginstance) { return }
-
-        console.log('createIdDrop', this.currentwdginstance.ids)
-
         let finaldatas = []
-
-
-        // for (var id in this.currentwdginstance.ids) {
         for (var id in this.state.ids) {
             console.log(id)
             finaldatas.push(<a className="dropdown-item" id={id} key={id}
                 onClick={this.handleLayerChanged.bind(this)}
-            // onClick={() => this.handleLayerChanged.bind(this)}
             >
                 {id}
             </a >
             )
-            // finaldatas.push(<a className="dropdown-item" id={dataraw[firstdir][seconddir].label} >{seconddir}</a>)
         }
-
-
         return finaldatas
     }
 
     createLayerDrop() {
 
         let dataraw = {}
-
         for (const reactclass of Object.values(this.state.widgetsclasses)) {
             if (!dataraw.hasOwnProperty(reactclass.firstdir)) {
                 dataraw[reactclass.firstdir] = {}
@@ -271,13 +223,11 @@ class Lamia extends React.Component {
         };
 
         let finaldatas = []
-
         for (var firstdir in dataraw) {
             finaldatas.push(<h6 className="dropdown-header" key={firstdir}>{firstdir}</h6>)
             for (var seconddir in dataraw[firstdir]) {
                 finaldatas.push(<a className="dropdown-item" id={dataraw[firstdir][seconddir].label} key={seconddir}
                     onClick={this.handleLayerChanged.bind(this)}
-                // onClick={() => this.handleLayerChanged.bind(this)}
                 >
                     {seconddir}
                 </a >
@@ -303,7 +253,6 @@ class Lamia extends React.Component {
         let goodclass = null
         for (const reactclass of Object.values(this.state.widgetsclasses)) {
             if (reactclass.label === evt.target.id) {
-                // if (reactclass.label === evt) {
                 goodclass = reactclass
                 break
             }
@@ -318,6 +267,49 @@ class Lamia extends React.Component {
         this.idchooserref.current.setState({ ids: cwi.ids })
     }
 
+
+    //* Style func
+
+    async loadStyles() {
+        let stylesurl = 'http://' + window.location.host + '/lamiaapi/' + this.projectdata.id_project + '/styles'
+        let styles = await axios.get(stylesurl)
+        this.setState({ styles: styles.data })
+    }
+
+
+    changeStyle = (deststyle) => {
+        let lamialayer = this.getLamiaLayer()
+        if (!lamialayer) { return }
+
+        const lamiasublayers = lamialayer.sublayers
+        let lamiasubstyle = []
+
+        lamiasublayers.forEach((sublay, idx) => {
+            if (this.state.styles[deststyle].includes(sublay.name.split('_')[0])) {
+                lamiasubstyle.push(deststyle)
+                lamialayer.sublayers[idx].style = deststyle
+            } else {
+                lamiasubstyle.push('default')
+                lamialayer.sublayers[idx].visibility = false
+                lamialayer.sublayers[idx].style = 'default'
+            }
+        })
+        this.props.changeLayerProperty(lamialayer.uuid, "params.styles", lamiasubstyle.join(','), [], null);
+        // return
+    }
+
+    getLamiaLayer() {
+        let layers = this.props.layers
+        let lamialayer = null
+        for (let layerid in Object.values(layers)) {
+            let layer = layers[layerid]
+            if (layer.title.toLowerCase() === 'lamia') {
+                lamialayer = layer
+                break
+            }
+        }
+        return lamialayer
+    }
 }
 
 

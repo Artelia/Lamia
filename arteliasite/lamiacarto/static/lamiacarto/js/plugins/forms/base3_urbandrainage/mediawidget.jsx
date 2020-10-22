@@ -69,11 +69,11 @@ class MediaEditingFormReact extends EditingFormReact {
     componentDidUpdate() {
         console.log('did')
 
-        this.updateImage()
+        this.updateImageFromAWS()
     }
 
 
-    async updateImage() {
+    async updateImageFromThumbnail() {
         let url = 'http://' + window.location.host + '/lamiaapi/' + this.projectdata.id_project
         let res = await axios.post(url, {
             function: 'thumbnail',
@@ -81,6 +81,21 @@ class MediaEditingFormReact extends EditingFormReact {
         })
         let imgsrc = 'data:image/png;base64,' + res.data.base64thumbnail;
         $('div[name="frame_ph"]').prepend($('<img>', { id: 'lamiamedia', src: imgsrc, width: 200 }))
+
+    }
+
+    async updateImageFromAWS() {
+        let filename = $('input[name="file"]').val()
+
+
+        let url = ("http://" + window.location.host + '/media/'
+            + this.projectdata.pgdbname + '/' + this.projectdata.pgschema + '/'
+            + filename)
+
+        console.log(url)
+        // let res = await axios.post(url)
+        // let imgsrc = 'data:image/png;base64,' + res.data.base64thumbnail;
+        $('div[name="frame_ph"]').prepend($('<img>', { id: 'lamiamedia', src: url, width: 200 }))
 
     }
 

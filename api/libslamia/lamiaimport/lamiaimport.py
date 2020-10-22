@@ -30,22 +30,33 @@ import numpy as np
 from pprint import pprint
 
 
-class ImportCore():
+class ImportCore:
 
-    POSTPROTOOLNAME = 'importtools'
+    POSTPROTOOLNAME = "lamiaimport"
 
-
-    def __init__(self, dbaseparser,messageinstance=None):
-        #super(ExportShapefileTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil, parentwidget, parent=parent)
+    def __init__(self, dbaseparser, messageinstance=None):
+        # super(ExportShapefileTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil, parentwidget, parent=parent)
         self.dbase = dbaseparser
         self.messageinstance = messageinstance
-        self.tooldir = os.path.join(os.path.dirname(__file__), self.dbase.worktype.lower())
+        self.tooldir = os.path.join(
+            os.path.dirname(__file__), self.dbase.worktype.lower()
+        )
 
-        self.confdataplugin = os.path.join(os.path.dirname(__file__), self.dbase.worktype.lower())
-        self.confdataproject = os.path.join(self.dbase.dbaseressourcesdirectory, 'config', self.POSTPROTOOLNAME)
+        self.confdataplugin = os.path.join(
+            os.path.dirname(__file__), self.dbase.worktype.lower()
+        )
+        self.confdataproject = os.path.join(
+            self.dbase.dbaseressourcesdirectory, "config", self.POSTPROTOOLNAME
+        )
 
-
-    def importCleanedDatas(self, rawtablename=None, table_field_list=None, values=None, geoms=None, returnfield=None):
+    def importCleanedDatas(
+        self,
+        rawtablename=None,
+        table_field_list=None,
+        values=None,
+        geoms=None,
+        returnfield=None,
+    ):
 
         """
 
@@ -59,84 +70,84 @@ class ImportCore():
 
         debug = False
 
-        tablesnames = np.array([result.split('.')[0] for result in table_field_list])
-        fieldsnames = np.array([result.split('.')[1] for result in table_field_list])
+        tablesnames = np.array([result.split(".")[0] for result in table_field_list])
+        fieldsnames = np.array([result.split(".")[1] for result in table_field_list])
 
         parenttables = [rawtablename] + self.dbase.getParentTable(rawtablename)
-        self.messageinstance.createProgressBar(inittext="import ...", maxvalue=len(values))
+        self.messageinstance.createProgressBar(
+            inittext="import ...", maxvalue=len(values)
+        )
 
         self.dbase.beginTransaction()
 
         # cas des couches enfant de descriptionsystem
         for i, valueline in enumerate(values):
             valueline = np.array(valueline)
-            #self.setLoadingProgressBar(progress, i)
-            if i%50 == 0:
+            # self.setLoadingProgressBar(progress, i)
+            if i % 50 == 0:
                 self.messageinstance.updateProgressBar(i)
 
             pktablename = self.dbase.createNewFeature(rawtablename)
 
             for tablename in parenttables:
-                pktable = self.dbase.getValuesFromPk(rawtablename + '_qgis',
-                                                        'pk_' + tablename.lower(),
-                                                        pktablename )
+                pktable = self.dbase.getValuesFromPk(
+                    rawtablename + "_qgis", "pk_" + tablename.lower(), pktablename
+                )
                 indexobjectvalues = np.where(np.array(tablesnames) == tablename)
                 lisfield = fieldsnames[indexobjectvalues]
                 listvalues = valueline[indexobjectvalues]
-                self.updateTable( tablename, lisfield, listvalues, pktable)
+                self.updateTable(tablename, lisfield, listvalues, pktable)
 
-                if 'geom' in self.dbase.dbasetables[tablename].keys():
-                    if self.dbase.__class__.TYPE == 'spatialite':
+                if "geom" in self.dbase.dbasetables[tablename].keys():
+                    if self.dbase.__class__.TYPE == "spatialite":
                         geomsql = "CastToSingle(CastToXY(ST_GeomFromText('"
                         geomsql += geoms[i]
                         geomsql += "', " + str(self.dbase.crsnumber) + ")))"
-                    elif self.dbase.__class__.TYPE == 'postgis':
+                    elif self.dbase.__class__.TYPE == "postgis":
                         geomsql = "ST_GeometryN(ST_Force2D(ST_GeomFromText('"
                         geomsql += geoms[i]
                         geomsql += "', " + str(self.dbase.crsnumber) + ")),0)"
 
-                    self.updateTable( tablename, ['geom'], [geomsql], pktable)
-
-        
+                    self.updateTable(tablename, ["geom"], [geomsql], pktable)
 
         self.dbase.commitTransaction()
 
         self.messageinstance.closeProgressBar()
 
-    def updateTable(self,  tablename, listfield, listvalues, pkvalue):
+    def updateTable(self, tablename, listfield, listvalues, pkvalue):
 
         sql = "UPDATE " + tablename + " SET "
         for i, fieldname in enumerate(listfield):
-            if listvalues[i] != '':
+            if listvalues[i] != "":
                 sql += fieldname + " = "
-                sql += self.convertDataType(tablename, fieldname, listvalues[i]) + ', '
+                sql += self.convertDataType(tablename, fieldname, listvalues[i]) + ", "
 
-        if sql[-2:] == ', ':
+        if sql[-2:] == ", ":
             sql = sql[:-2]
-        sql += " WHERE pk_" + tablename.lower()  +" = " + str(pkvalue)
+        sql += " WHERE pk_" + tablename.lower() + " = " + str(pkvalue)
         query = self.dbase.query(sql, docommit=False)
 
-    def convertDataType(self, table,field, value):
-        if field == 'geom':
+    def convertDataType(self, table, field, value):
+        if field == "geom":
             return str(value)
 
         if self.dbase.utils.isAttributeNull(value):
-            return 'NULL'
+            return "NULL"
 
-        typevalue = self.dbase.dbasetables[table]['fields'][field]['PGtype']
-        #getConstraintRawValueFromText(self, table, field, txt):
+        typevalue = self.dbase.dbasetables[table]["fields"][field]["PGtype"]
+        # getConstraintRawValueFromText(self, table, field, txt):
         rawvalue = self.dbase.getConstraintRawValueFromText(table, field, value)
 
-        if 'VARCHAR' in typevalue:
+        if "VARCHAR" in typevalue:
             returnvalue = "'" + str(rawvalue) + "'"
-        elif 'TIMESTAMP' in typevalue:
+        elif "TIMESTAMP" in typevalue:
             returnvalue = "'" + str(rawvalue) + "'"
-        elif 'TEXT' in typevalue:
+        elif "TEXT" in typevalue:
             returnvalue = "'" + str(rawvalue) + "'"
         else:
             returnvalue = str(rawvalue)
 
         return returnvalue
 
-    def postImport(self,layerfeat, pkobjet=None, pkdessys=None, pksubdessys=None):
+    def postImport(self, layerfeat, pkobjet=None, pkdessys=None, pksubdessys=None):
         pass

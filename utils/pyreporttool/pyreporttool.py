@@ -31,6 +31,10 @@ def main(argv):
     SLFILE = r"C:\01_WORKINGDIR\GPMB\c_merge_ass\mergeddbase.sqlite"
     SLFILE = r"C:\Users\patrice.verchere\OneDrive - ARTELIA\Documents\lamia\tpo\test01.sqlite"
     SLFILE = r"C:\01_WORKINGDIR\sncf\new\LANDY-09-2020.sqlite"
+    SLFILE = r"U:\FR\BOR\VT\PVR\sncf2\LANDY-09-2020.sqlite"
+    SLFILE = (
+        r"U:\FR\BOR\VT\PVR\sebastien\Noailles\20200917_sbn\VTA_2020_Noailles.sqlite"
+    )
 
     tempparser = DBaseParserFactory("spatialite").getDbaseParser()
     tempparser.loadDBase(dbtype="Spatialite", slfile=SLFILE)
@@ -50,7 +54,10 @@ def main(argv):
 
     # Infralineaire Equipementhydraulique Desordres
     reportcore.runReport(
-        r"C:\000_testdigue\des.pdf", "SNCFNODgrille", pkzonegeos=[], pklist=None,
+        r"C:\000_testdigue\des.pdf",
+        "Infralineaire_PT_PL_2",
+        pkzonegeos=[],
+        pklist=None,
     )
     # except Exception as e:
     #     print(e)

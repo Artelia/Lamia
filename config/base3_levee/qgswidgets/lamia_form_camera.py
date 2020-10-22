@@ -54,11 +54,14 @@ class BaseLeveeCameraTool(BaseCameraTool):
         )
         self.toolwidgetmain.stackedWidget_2.insertWidget(1, defaultbuttons)
 
-        self.toolwidgetmain.pushButton_vueensemble.clicked.connect(self.setDefaultPhoto)
-        self.toolwidgetmain.pushButton_cuve.clicked.connect(self.setDefaultPhoto)
-        self.toolwidgetmain.pushButton_poires.clicked.connect(self.setDefaultPhoto)
-        self.toolwidgetmain.pushButton_vanne.clicked.connect(self.setDefaultPhoto)
-        self.toolwidgetmain.pushButton_armoire.clicked.connect(self.setDefaultPhoto)
+        self.toolwidgetmain.pushButton_defaultphoto.clicked.connect(
+            self.setDefaultPhoto
+        )
+        self.formutils.mergeQtWidgets(self.toolwidgetmain, defaultbuttons)
+
+        self.toolwidgetmain.pushButton_water.clicked.connect(self.setDefaultPhoto)
+        self.toolwidgetmain.pushButton_crest.clicked.connect(self.setDefaultPhoto)
+        self.toolwidgetmain.pushButton_land.clicked.connect(self.setDefaultPhoto)
 
     def setDefaultPhoto(self):
 
@@ -66,6 +69,7 @@ class BaseLeveeCameraTool(BaseCameraTool):
             self.mainifacewidget.errorMessage("Enregistrer d'abord la photo")
             return
         sendername = self.sender().objectName()
+
         if (
             self.parentWidget is not None
             and self.parentWidget.currentFeaturePK is not None
@@ -76,16 +80,12 @@ class BaseLeveeCameraTool(BaseCameraTool):
             idressource = self.dbase.query(sql)[0][0]
             pkparentfeature = self.parentWidget.currentFeaturePK
 
-            if sendername == "pushButton_vueensemble":
+            if sendername in ["pushButton_water", "pushButton_defaultphoto"]:
                 field = "lid_resource_1"
-            elif sendername == "pushButton_cuve":
+            elif sendername == "pushButton_crest":
                 field = "lid_resource_2"
-            elif sendername == "pushButton_poires":
-                field = "lid_resource_4"
-            elif sendername == "pushButton_vanne":
-                field = "lid_resource_5"
-            elif sendername == "pushButton_armoire":
-                field = "lid_resource_6"
+            elif sendername == "pushButton_land":
+                field = "lid_resource_3"
 
             sql = (
                 "UPDATE "
@@ -113,16 +113,10 @@ class BaseLeveeCameraTool(BaseCameraTool):
             self.parentWidget is not None
             and self.parentWidget.currentFeaturePK is not None
         ):
-            if self.parentWidget.DBASETABLENAME == "node":
-                typeouvrageass = self.dbase.getValuesFromPk(
-                    self.parentWidget.DBASETABLENAME + "_qgis",
-                    "nodetype",
-                    self.parentWidget.currentFeaturePK,
-                )
-                if typeouvrageass == "10":
-                    self.toolwidgetmain.stackedWidget_2.setCurrentIndex(1)
-                else:
-                    self.toolwidgetmain.stackedWidget_2.setCurrentIndex(2)
+            if self.parentWidget.DBASETABLENAME == "equipment":
+                self.toolwidgetmain.stackedWidget_2.setCurrentIndex(1)
+            else:
+                self.toolwidgetmain.stackedWidget_2.setCurrentIndex(0)
 
     def toolbarMagic(self):
         self.mainifacewidget.toolbarNew()

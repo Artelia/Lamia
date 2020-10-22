@@ -1,1 +1,1 @@
-docker run -d  --name lamia_qgisserver  -p 8381:80    -e PGSERVICEFILE=/projects/pg_service_docker.conf  lamia_qgisserver
+docker run -d  --name lamia_qgisserver  -p 8381:80    -e PGSERVICEFILE=/secrets/pg_service_aws.conf  710412343115.dkr.ecr.eu-west-3.amazonaws.com/lamia-qgisserver:latest

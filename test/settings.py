@@ -48,7 +48,7 @@ PGport = 5432
 SPATIALITE = True
 POSTGIS = False
 
-TESTDIR = os.path.join(os.path.join(os.path.dirname(__file__)), "..", "testtempfiles")
+TESTDIR = os.path.join(os.path.join(os.path.dirname(__file__)), "..", "testfiles")
 
 # * test onparticularfile - uncomment to apply
 if False:

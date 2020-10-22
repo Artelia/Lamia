@@ -7,11 +7,11 @@ from datetime import datetime
 
 from qgis.core import QgsGeometry
 
-from Lamia.Lamia.api.libs.cloudant.client import Cloudant
-from Lamia.Lamia.api.libs.cloudant.error import CloudantException
-from Lamia.Lamia.api.libs.cloudant.result import Result, ResultByKey, QueryResult
-from Lamia.Lamia.api.libs.cloudant.query import Query
-from Lamia.Lamia.main.DBaseParser import DBaseParser
+from Lamia.api.libs.cloudant.client import Cloudant
+from Lamia.api.libs.cloudant.error import CloudantException
+from Lamia.api.libs.cloudant.result import Result, ResultByKey, QueryResult
+from Lamia.api.libs.cloudant.query import Query
+from Lamia.main.DBaseParser import DBaseParser
 
 try:
     from pyspatialite import dbapi2 as db

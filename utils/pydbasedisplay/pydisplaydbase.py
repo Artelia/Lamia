@@ -10,6 +10,10 @@ import Lamia.api
 from Lamia.api.dbasemanager.dbaseparserfactory import DBaseParserFactory
 from Lamia.qgisiface.iface.ifaceabstractconnector import LamiaIFaceAbstractConnectors
 import warnings
+import colorama
+from colorama import Fore, Back, Style
+
+colorama.init()
 
 # warnings.filterwarnings("ignore")
 # os.environ["PYTHONWARNINGS"] = "ignore"
@@ -57,9 +61,16 @@ INTERFACEINDEX = 0
 PROFILING = False
 
 
-TGREEN = "\033[32m"
-TRED = "\033[31m"
-ENDC = "\033[m"
+class bcolors:
+    HEADER = "\033[95m"
+    OKBLUE = "\033[94m"
+    OKCYAN = "\033[96m"
+    OKGREEN = "\033[92m"
+    WARNING = "\033[93m"
+    FAIL = "\033[91m"
+    ENDC = "\033[0m"
+    BOLD = "\033[1m"
+    UNDERLINE = "\033[4m"
 
 
 def launchIface():
@@ -91,21 +102,30 @@ def launchIface():
     # )
     # SLFILE = r"M:\FR\BOR\VT\FLUVIAL\4352024_33_Conformite_digues_BM\6_Reglementaire\61_Calculs\Basedonnees\BD_totale_ind12_tempPVR.sqlite"
     # SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue_base3\test01.sqlite"
-    # SLFILE = r"C:\01_WORKINGDIR\cier\AEP Cieux.sqlite"
-    SLFILE = r"M:\FR\BOR\VT\FLUVIAL\4352789_33_BM_surveillance_digues_PI_Ambes\05_ETUDES\052_Calculs\Basedonnees\VTA_Ambes_ind2_PVR.sqlite"
+    SLFILE = r"C:\01_WORKINGDIR\cier\AEP Cieux.sqlite"
+    # SLFILE = r"M:\FR\BOR\VT\FLUVIAL\4352789_33_BM_surveillance_digues_PI_Ambes\05_ETUDES\052_Calculs\Basedonnees\VTA_Ambes_ind2_PVR.sqlite"
     # SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_constructionsite_Orange\test01.sqlite"
-    SLFILE = r"C:\01_WORKINGDIR\GPMB\c_merge_ass\mergeddbase.sqlite"
+    # SLFILE = r"C:\01_WORKINGDIR\GPMB\c_merge_ass\mergeddbase.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\cons\cons.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\orange\toto.sqlite"
     # SLFILE = r"C:\111_GitProjects\Lamia\testtempfiles\c_creation\sl_base3_urbandrainage_Lamia\test01.sqlite"
     # SLFILE = r"C:\111_GitProjects\Lamia\testtempfiles\digue\VTA_Ambes_ind2.sqlite"
     # SLFILE = r"C:\111_GitProjects\Lamia\testtempfiles\c_creation\sl_base3_levee_Lamia\test01.sqlite"
     # SLFILE = r"M:\FR\BOR\VT\FLUVIAL\4352789_33_BM_surveillance_digues_PI_Ambes\05_ETUDES\052_Calculs\temps2\VTA_Ambes_ind2.sqlite"
-    SLFILE = r"C:\01_WORKINGDIR\cons\SPATIALITE_2747.sqlite"
-    SLFILE = r"C:\01_WORKINGDIR\sncf\new\LANDY-09-2020.sqlite"
-    SLFILE = r"U:\FR\BOR\VT\PVR\sncf2\LANDY-09-2020.sqlite"
+    # SLFILE = r"C:\01_WORKINGDIR\cons\SPATIALITE_2747.sqlite"
+    # SLFILE = r"C:\01_WORKINGDIR\sncf\new\LANDY-09-2020.sqlite"
+    # SLFILE = r"U:\FR\BOR\VT\PVR\sncf\LANDY-09-2020.sqlite"
+    # SLFILE = r"M:\FR\BOR\VT\FLUVIAL\4352907_33_CDC_SaintLoubes_VTA\05_ETUDES\05_1_TERRAIN\BD_PVR\dor\VTA_StLoubes_ind1_FJE_Dordogne.sqlite"
+    SLFILE = r"C:\01_WORKINGDIR\VTA_2020_Noailles.sqlite"
+    SLFILE = (
+        r"U:\FR\BOR\VT\PVR\sebastien\Noailles\20200917_sbn\VTA_2020_Noailles.sqlite"
+    )
 
-    print(TGREEN, f"Opening {os.path.abspath(SLFILE)}", ENDC)
+    # print(TGREEN, f"Opening {os.path.abspath(SLFILE)}", ENDC)
+
+    print(f"{bcolors.OKGREEN}Opening: {os.path.abspath(SLFILE)} {bcolors.ENDC}")
+
+    return
 
     lamiawidget.loadDBase(dbtype="Spatialite", slfile=SLFILE)
     # lamiawidget.loadDBase(

@@ -65,7 +65,7 @@ class BaseCameraTool(AbstractLamiaFormTool):
     linkdict = {
         "colparent": "id_object",
         "colthistable": "id_resource",
-        "tctable": "Tcobjectresource",
+        "tctable": "tcobjectresource",
         "tctablecolparent": "lid_object",
         "tctablecolthistable": "lid_resource",
     }
@@ -148,6 +148,10 @@ class BaseCameraTool(AbstractLamiaFormTool):
             lambda: self.showNumPad(self.toolwidgetmain.resourceindex)
         )
 
+        self.toolwidgetmain.pushButton_pictureparent.clicked.connect(
+            self.setPictureForParent
+        )
+
     def changeNumPhoto(self):
         global numphoto
         if numphoto is None:
@@ -189,6 +193,34 @@ class BaseCameraTool(AbstractLamiaFormTool):
             + ";"
         )
         query = self.dbase.query(sql)
+
+    def setPictureForParent(self):
+
+        if not self.parentWidget and not self.parentWidget.parentWidget:
+            return
+
+        parentWidget = self.parentWidget.parentWidget
+        while parentWidget and parentWidget.SKIP_LOADING_UI:
+            parentWidget = parentWidget.parentWidget
+
+        if (
+            parentWidget is not None
+            and parentWidget.currentFeaturePK is not None
+            and self.currentFeaturePK is not None
+        ):
+            parentidobj = self.dbase.getValuesFromPk(
+                parentWidget.DBASETABLENAME + "_qgis",
+                "id_object",
+                parentWidget.currentFeaturePK,
+            )
+            photores = self.dbase.getValuesFromPk(
+                "media_qgis", "id_resource", self.currentFeaturePK
+            )
+
+            sql = f"""INSERT INTO tcobjectresource(lpk_revision_begin, lid_resource, lid_object) 
+                VALUES ({self.dbase.maxrevision}, {photores}, {parentidobj})"""
+            print(sql)
+            self.dbase.query(sql)
 
     def choosePhoto(self):
         file = None
@@ -251,6 +283,7 @@ class BaseCameraTool(AbstractLamiaFormTool):
     # def postInitFeatureProperties(self, feat):
     def postSelectFeature(self):
         global numphoto
+        self.photowdg.clear()
 
         if self.currentFeaturePK is None:  # first creation
             datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
