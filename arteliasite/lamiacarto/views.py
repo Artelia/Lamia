@@ -53,8 +53,8 @@ class LamiaCartoAPIView(views.APIView):
             return Response(data)
 
         elif tablename == "themes.json":
-            os.environ["HTTP_PROXY"] = ""
-            os.environ["HTTPS_PROXY"] = ""
+            # os.environ["HTTP_PROXY"] = ""
+            # os.environ["HTTPS_PROXY"] = ""
             conffile = os.path.join(
                 os.path.dirname(os.path.realpath(__file__)),
                 "qwc2config",

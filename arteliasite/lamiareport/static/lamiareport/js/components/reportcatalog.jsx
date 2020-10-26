@@ -1,10 +1,13 @@
 const React = require('react');
-
+const path = require('path');
+const url = require('url');
+const fileDownload = require('js-file-download')
 const axios = require('axios');
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
 axios.defaults.xsrfCookieName = "csrftoken"
 
 class ReportCatalog extends React.Component {
+
     constructor(props) {
         super()
         this.state = { bboxids: [], jsonfiltered: [] }
@@ -29,6 +32,7 @@ class ReportCatalog extends React.Component {
         const locale = navigator ? navigator.language || navigator.browserLanguage : "en"
         for (const idx in this.state.jsonfiltered) {
             let filteredfeat = this.state.jsonfiltered[idx]
+            // console.log(filteredfeat)
             arreturn.push(
                 <div className="col-md-4"
                     id={filteredfeat.id}
@@ -47,7 +51,7 @@ class ReportCatalog extends React.Component {
                             <span style={{ fontSize: '14px' }} >{filteredfeat.properties.name}</span>
                         </div>
                         <div className="cart-button mt-3 px-2 d-flex justify-content-between align-items-center">
-                            <button style={{ fontSize: '12px' }} className="btn btn-primary text-uppercase">View</button>
+                            <button style={{ fontSize: '12px' }} filename={filteredfeat.properties.file} className="btn btn-primary text-uppercase" onClick={this.reportButtonclicked.bind(this)}>View</button>
                         </div>
                     </div>
                 </div>
@@ -150,6 +154,18 @@ class ReportCatalog extends React.Component {
         this.setState({ jsonfiltered: jsonfiltered })
 
     }
+
+    async reportButtonclicked(evt) {
+        const destfilename = evt.target.getAttribute('filename')
+        let baseurl = ("http://" + window.location.host + '/media/'
+            + this.props.mainiface.projectdata.pgdbname + '/' + this.props.mainiface.projectdata.pgschema + '/')
+        let urljoined = url.resolve(baseurl, destfilename);
+        let awsreporturl = await axios.post(urljoined)
+        window.open(awsreporturl.data)
+
+
+    }
+
 }
 
 module.exports = ReportCatalog

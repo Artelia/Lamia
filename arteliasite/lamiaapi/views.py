@@ -22,7 +22,7 @@ import qgis.core
 
 import threading
 from functools import wraps
-
+import boto3
 
 # Create your views here.
 
@@ -144,4 +144,35 @@ class LamiaApiView(views.APIView):
                 )
                 print("**", res)
                 return Response(res)
+
+
+@method_decorator(userCanAccessProject, name="dispatch")
+class LamiaMedia(views.APIView):
+
+    s3 = boto3.client(
+        "s3",
+        # endpoint_url="lamia-dev",
+        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+    )
+
+    def get(self, request, **kwargs):
+        mediafile = kwargs.get("mediafile", None)
+
+        url = self.s3.generate_presigned_url(
+            ClientMethod="get_object",
+            Params={"Bucket": "lamia-dev", "Key": mediafile,},
+        )
+
+        return redirect(url)
+
+    def post(self, request, **kwargs):
+        mediafile = kwargs.get("mediafile", None)
+
+        url = self.s3.generate_presigned_url(
+            ClientMethod="get_object",
+            Params={"Bucket": "lamia-dev", "Key": mediafile,},
+        )
+
+        return Response(url)
 

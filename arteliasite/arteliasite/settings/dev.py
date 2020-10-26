@@ -21,7 +21,7 @@ lamiapath = os.path.normpath(
 sys.path.append(lamiapath)
 from Lamia.secrets import postgis_aws as pgsecret, djangosecrets, aws_secrets
 
-USE_S3 = True
+USE_S3 = False
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -107,10 +107,11 @@ STATICFILES_DIRS = [
 
 STATIC_ROOT = os.path.normpath(os.path.join(BASE_DIR, "static"))
 
+AWS_ACCESS_KEY_ID = aws_secrets.AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY = aws_secrets.AWS_SECRET_ACCESS_KEY
 
 if USE_S3:
-    AWS_ACCESS_KEY_ID = aws_secrets.AWS_ACCESS_KEY_ID
-    AWS_SECRET_ACCESS_KEY = aws_secrets.AWS_SECRET_ACCESS_KEY
+
     AWS_STORAGE_BUCKET_NAME = aws_secrets.AWS_STORAGE_BUCKET_NAME
     AWS_S3_REGION_NAME = aws_secrets.AWS_S3_REGION_NAME
 
