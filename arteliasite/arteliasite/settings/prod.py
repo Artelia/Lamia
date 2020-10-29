@@ -97,7 +97,7 @@ STATICFILES_DIRS = [
     ("forms", os.path.abspath(os.path.join(BASE_DIR, "..", "config"))),
     ("img", os.path.join(BASE_DIR, "lamiacarto", "static", "assets", "img")),
 ]
-STATIC_ROOT = "/static/"
+STATIC_ROOT = "/usr/src/Lamia/static/"
 
 AWS_ACCESS_KEY_ID = aws_secrets.AWS_ACCESS_KEY_ID
 AWS_SECRET_ACCESS_KEY = aws_secrets.AWS_SECRET_ACCESS_KEY

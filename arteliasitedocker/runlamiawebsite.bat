@@ -1,1 +1,1 @@
-docker run --name lamia_website -p 8085:8085 710412343115.dkr.ecr.eu-west-3.amazonaws.com/lamia-website
+docker run --name lamia_website -p 8082:80 710412343115.dkr.ecr.eu-west-3.amazonaws.com/lamia-website
