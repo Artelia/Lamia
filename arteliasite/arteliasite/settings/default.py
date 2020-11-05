@@ -160,3 +160,5 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = os.path.join("C:/", "media")
 MEDIA_URL = "/media/"
 
+PROXY_ARTELIA = False
+

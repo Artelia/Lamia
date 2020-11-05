@@ -25,83 +25,66 @@ This file is part of LAMIA.
  """
 
 try:
-    from qgis.PyQt.QtGui import ( QFileDialog , QWidget)
+    from qgis.PyQt.QtGui import QFileDialog, QWidget
 except ImportError:
-    from qgis.PyQt.QtWidgets import ( QFileDialog, QWidget )
+    from qgis.PyQt.QtWidgets import QFileDialog, QWidget
 import os, inspect, glob, textwrap
 from qgis.PyQt import uic, QtGui, QtCore
 
 
 class AbstractFileManager(QWidget):
+    """QWidget for interacting with  AbstractLibsLamia inherited classes :
+        * a combobox with all the conf names
+        * edit/new buttons
+    """
 
-    projectcharacter = '_'
-
-    def __init__(self,  mainwindows=None, toolclass=None, fileext=None):
+    def __init__(self, mainwindows=None, toolclass=None):
+        """Constructor
+        :param mainwindows: the qt mainwindows, essentially used for accessing to filedialog
+        :param toolclass: the toolclass (inheriting AbstractLibsLamia) linked with this file manager
+        """
         super(AbstractFileManager, self).__init__()
 
-        uipath = os.path.join(os.path.dirname(__file__), 'abstractfilemanager.ui')
+        uipath = os.path.join(os.path.dirname(__file__), "abstractfilemanager.ui")
         uic.loadUi(uipath, self)
 
         self.toolclass = toolclass
         self.mainwindows = mainwindows
-        self.fileext = fileext
+
         self.dbase = mainwindows.dbase
         self.qfiledialog = self.mainwindows.qfiledlg
-
-        if hasattr(self.toolclass, 'confdataplugin'):
-            self.confdataplugin = self.toolclass.confdataplugin
-        else:
-            self.confdataplugin = os.path.join(os.path.dirname(inspect.getsourcefile(self.toolclass.__class__)), self.dbase.worktype)
-        
-        if hasattr(self.toolclass, 'confdataproject'):
-            self.confdataproject = self.toolclass.confdataproject
-        else:
-            self.confdataproject = os.path.join(self.dbase.dbaseressourcesdirectory, 'config', self.toolclass.POSTPROTOOLNAME)
 
         self.comboBox_files.currentIndexChanged.connect(self.comboChanged)
         self.toolButton_new.clicked.connect(self.new)
         self.toolButton_edit.clicked.connect(self.edit)
         self.toolButton_delete.clicked.connect(self.delete)
 
-
     def reset(self):
+        self.toolclass.getNamePathFiles()
         self.comboBox_files.clear()
-        for workdir in [self.confdataplugin, self.confdataproject]:
-            for filename in glob.glob(os.path.join(workdir, '*' + self.fileext)):
-                basename = os.path.basename(filename).split('.')[0]
-                if basename != 'README':
-                    #self.exportshapefiledialog.comboBox_type.addItems([basename])
-                    if workdir == self.confdataproject:
-                        basename = self.projectcharacter + basename
-                    self.comboBox_files.addItems([basename])
-
+        for filename in self.toolclass.names_files:
+            self.comboBox_files.addItems([filename])
 
     def edit(self):
         currentfile = self.comboBox_files.currentText()
-        currentfilepath = self.getCompletPath(currentfile)
-
-        if currentfilepath != '':
+        currentfilepath = self.toolclass.names_files[currentfile]
+        if currentfilepath != "":
             os.startfile(currentfilepath)
-
-
 
     def new(self):
         pass
 
     def delete(self):
         currentxt = self.getCurrentText()
-        if currentxt[0] == self.projectcharacter:
-            os.remove(self.getCurrentPath())
+        if currentxt[0] == self.toolclass.projectcharacter:
+            currentfilepath = self.toolclass.names_files[currentxt]
+            os.remove(currentfilepath)
             self.reset()
-
-
 
     def comboChanged(self, comboindex):
         filename = self.comboBox_files.itemText(comboindex)
-        filepath = self.getCompletPath(filename)
-
         if filename and len(filename) > 0:
-            if filename[0] == self.projectcharacter:
+            if filename[0] == self.toolclass.projectcharacter:
                 boolenabled = True
             else:
                 boolenabled = False
@@ -109,25 +92,25 @@ class AbstractFileManager(QWidget):
             self.toolButton_edit.setEnabled(boolenabled)
             self.toolButton_delete.setEnabled(boolenabled)
 
-
     def getCurrentText(self):
         return self.comboBox_files.currentText()
 
-    def getCurrentPath(self):
-        comboext = self.comboBox_files.currentText()
-        combopath = self.getCompletPath(comboext)
-        return combopath
+    # def getCurrentPath(self):
+    #     comboext = self.comboBox_files.currentText()
+    #     combopath = self.getCompletPath(comboext)
+    #     return combopath
 
+    # def getCompletPath(self, filename):
+    #     currentfilepath = None
+    #     if filename is not None and len(filename) > 0:
+    #         if filename[0] == self.toolclass.projectcharacter:
+    #             currentfilepath = os.path.join(
+    #                 self.confdataproject, filename[1:] + self.toolclass.fileext
+    #             )
+    #         else:
+    #             currentfilepath = os.path.join(
+    #                 self.confdataplugin, filename + self.toolclass.fileext
+    #             )
 
-
-    def getCompletPath(self, filename):
-        currentfilepath = None
-        if filename is not None and len(filename) > 0 :
-            if filename[0] == self.projectcharacter:
-                currentfilepath = os.path.join(self.confdataproject,filename[1:] +  self.fileext)
-            else:
-                currentfilepath = os.path.join(self.confdataplugin, filename + self.fileext )
-
-        return currentfilepath
-
+    #     return currentfilepath
 

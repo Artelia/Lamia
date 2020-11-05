@@ -178,6 +178,11 @@ class FormToolUtils(QtCore.QObject):
                             if field in self.formtoolwidget.TABLEFILTERFIELD.keys():
                                 wdg.setEnabled(False)
 
+                            if not isinstance(wdgs, list):
+                                wdgs = [wdgs]
+                            for wdg in wdgs:
+                                wdg.setToolTip(f"{tablename}.{field}")
+
     def connectSubWidgetModifications(self):
         for table, tabledict in self.formtoolwidget.formtoolwidgetconfdict.items():
             for field, wdg in tabledict["widgets"].items():

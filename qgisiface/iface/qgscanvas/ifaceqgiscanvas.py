@@ -608,6 +608,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                 qgis.core.QgsWkbTypes.PointGeometry,
                 qgis.core.QgsWkbTypes.LineGeometry,
                 qgis.core.QgsWkbTypes.PolygonGeometry,
+                qgis.core.QgsWkbTypes.NullGeometry,
             ]
             for geomtype in ordergeomtypes:
                 for tablename in self.layers:

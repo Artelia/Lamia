@@ -26,9 +26,6 @@ __doc__="""Use OpenDocument to generate your documents."""
 
 import zipfile, time, uuid, sys, mimetypes, copy, os.path
 
-# to allow Python3 to access modules in the same path
-sys.path.append(os.path.dirname(__file__))
-sys.path.append(os.path.join(os.path.dirname(__file__),'..'))
 
 # using BytesIO provides a cleaner interface than StringIO
 # with both Python2 and Python3: the programmer must care to

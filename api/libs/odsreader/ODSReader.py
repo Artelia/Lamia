@@ -13,10 +13,6 @@
 # limitations under the License.
 
 # Thanks to grt for the fixes
-import os, sys
-
-libspath = os.path.normpath(os.path.join(os.path.dirname(__file__), ".."))
-sys.path.append(libspath)
 
 import odf.opendocument
 from odf.table import Table, TableRow, TableCell

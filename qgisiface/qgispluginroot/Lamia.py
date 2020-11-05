@@ -23,33 +23,16 @@ This file is part of LAMIA.
   * License-Filename: LICENSING.md
  """
 
-
-"""
-Class
-"""
-
 import os.path, sys
 import qgis
-
-sys.path.append(os.path.dirname(__file__))
-
-
-from Lamia.qgisiface.iface.qgiswidget.lamia_dockwidget import InspectiondigueDockWidget
-
 
 from qgis.PyQt.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, Qt
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction, QDockWidget, QToolBar
 
-
 # Initialize Qt resources from file resources.py
-from Lamia.qgisiface.iface import resources_rc
-
-
-"""
-Created on 29 July 2012
-@author: Lisa Simpson
-"""
+# from Lamia.qgisiface.iface.qgiswidget.lamia_dockwidget import InspectiondigueDockWidget
+from Lamia import resources_rc
 
 
 class Lamia:
@@ -65,7 +48,7 @@ class Lamia:
         :param iface <String> : An interface instance that will be passed to this class
         :return Bool Return somethong
         """
-
+        print("ini")
         ## Save reference to the QGIS interface
         self.iface = iface
 
@@ -77,6 +60,7 @@ class Lamia:
         locale_path = os.path.join(
             self.plugin_dir, "qgisiface", "i18n", "Lamia_{}.qm".format(locale)
         )
+        localpath = ""
 
         if os.path.exists(locale_path):
             self.translator = QTranslator()
@@ -194,6 +178,9 @@ class Lamia:
         """
         Run method that loads and starts the plugin
         """
+        from Lamia.qgisiface.iface.qgiswidget.lamia_dockwidget import (
+            InspectiondigueDockWidget,
+        )
 
         dockindex = len(self.lamiadocks)
         self.lamiadocks[dockindex] = {}

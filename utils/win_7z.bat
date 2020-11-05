@@ -4,12 +4,14 @@ for /f "delims== tokens=1,2" %%G in (%LAMIAMETADATA%) do set %%G=%%H
 
 SET version=%version:.=_%
 
-"C:\Program Files\7-Zip\7z" a -xr!__pycache__ Lamia_%version%.zip ../qgisiface/  ../config/ ../api/
+"C:\Program Files\7-Zip\7z" a -xr!__pycache__ Lamia_%version%.zip ../qgisiface/  ../config/ ../api/ ../doc/schemas/
 
 "C:\Program Files\7-Zip\7z" rn Lamia_%version%.zip  qgisiface/qgispluginroot/ Lamia/  ^
                                                     qgisiface/ Lamia/qgisiface/  ^
                                                     config/ Lamia/config/  ^
-                                                    api/ Lamia/api/
+                                                    api/ Lamia/api/  ^
+                                                    schemas/ Lamia/doc/schemas/
+                                                    
 
 
 REM "C:\Program Files\7-Zip\7z" a -xr!__pycache__ Lamia_%version%.zip ../config/

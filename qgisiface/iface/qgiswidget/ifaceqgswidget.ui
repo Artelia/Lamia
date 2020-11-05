@@ -615,7 +615,7 @@ background-color: rgb(255, 255, 255);</string>
      <x>0</x>
      <y>0</y>
      <width>799</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -693,9 +693,17 @@ background-color: rgb(255, 255, 255);</string>
     <property name="title">
      <string>Help</string>
     </property>
+    <widget class="QMenu" name="menuTable_and_fields">
+     <property name="title">
+      <string>Table and fields</string>
+     </property>
+     <addaction name="actionConceptual_model"/>
+     <addaction name="actionViews"/>
+     <addaction name="actionTables_and_fields"/>
+    </widget>
     <addaction name="actionAide"/>
     <addaction name="actionA_propos"/>
-    <addaction name="actionTables_et_champs"/>
+    <addaction name="menuTable_and_fields"/>
     <addaction name="actionReport_bug"/>
    </widget>
    <addaction name="menuFichiers"/>
@@ -956,11 +964,6 @@ background-color: rgb(255, 255, 255);</string>
     <string>Push local DB </string>
    </property>
   </action>
-  <action name="actionTables_et_champs">
-   <property name="text">
-    <string>Table and fields</string>
-   </property>
-  </action>
   <action name="actiontoolbarsave">
    <property name="icon">
     <iconset resource="../resources.qrc">
@@ -1126,6 +1129,21 @@ background-color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
     <string>toolbartoolscamera</string>
+   </property>
+  </action>
+  <action name="actionConceptual_model">
+   <property name="text">
+    <string>Conceptual model</string>
+   </property>
+  </action>
+  <action name="actionViews">
+   <property name="text">
+    <string>Views</string>
+   </property>
+  </action>
+  <action name="actionTables_and_fields">
+   <property name="text">
+    <string>Tables and fields</string>
    </property>
   </action>
  </widget>

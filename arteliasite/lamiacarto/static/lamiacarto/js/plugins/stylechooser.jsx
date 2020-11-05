@@ -15,7 +15,6 @@ class StyleChooser extends React.Component {
     }
 
     render() {
-        console.log('stylerend', this.props.styles)
         return (
             <div className="btn-group mr-2" role="group" aria-label="toto group">
                 <div className="dropdown">
@@ -32,11 +31,6 @@ class StyleChooser extends React.Component {
 
     }
 
-    // componentDidMount() {
-    //     this.props.mainiface.loadStyles()
-    //     // console.log('style mounted')
-    //     // this.props.mainiface.changeStyle('_default')
-    // }
 
     createStyleDrop() {
 
@@ -56,7 +50,6 @@ class StyleChooser extends React.Component {
     }
 
     handleStyleChanged = (e) => {
-        // console.log('cl', e.target.id)
         const desttyle = e.target.id
         this.props.mainiface.changeStyle.bind(this)(desttyle)
     }

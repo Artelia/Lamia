@@ -280,6 +280,11 @@ class BaseSketchTool(AbstractLamiaFormTool):
                 self.dbase.commit()
     """
 
+    def widgetClicked(self, **kwargs):
+        super().widgetClicked(**kwargs)
+        if self.currentFeaturePK is None:
+            self.photowdg.clear()
+
     def postSaveFeature(self, savedfeaturepk=None):
 
         if self.currentFeaturePK is None:  # first creation

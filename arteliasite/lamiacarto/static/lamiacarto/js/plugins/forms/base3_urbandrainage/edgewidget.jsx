@@ -22,11 +22,7 @@ class EdgeEditingFormReact extends EditingFormReact {
 
 
     domLoaded() {
-        console.log('okok edge')
-        console.log('***', $('[name="networktype"]'))
-
         let comb = $('select[name="networktype"]')
-
         comb.append($('<option>', {
             value: 1,
             text: 'My option'

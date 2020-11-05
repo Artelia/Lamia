@@ -418,6 +418,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             else:
                 self.currentFeaturePK = None
                 self.updateFormTitle(pk=None, disabletitle=True)
+                # self.selectFeature(pk=None)
                 self.frametoolwidg.setEnabled(False)
 
     def _widgetClicked_manageToolBar(self):

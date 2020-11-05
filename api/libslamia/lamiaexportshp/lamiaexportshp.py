@@ -29,56 +29,44 @@ import os, importlib
 from collections import OrderedDict
 import sys, glob, inspect, logging, textwrap
 import Lamia
+from ..abstractlibslamia import AbstractLibsLamia
 
 import qgis
 from qgis.PyQt import QtGui, uic, QtCore, QtXml
 
 
-class ExportShapefileCore:
+class ExportShapefileCore(AbstractLibsLamia):
 
-    POSTPROTOOLNAME = "exporttools"
+    POSTPROTOOLNAME = "lamiaexportshp"
     SHOWSQL = False
+    fileext = ".txt"
 
     def __init__(self, dbaseparser, messageinstance=None):
+        super(ExportShapefileCore, self).__init__(dbaseparser, messageinstance)
         # super(ExportShapefileTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil, parentwidget, parent=parent)
-        self.dbase = dbaseparser
-        self.messageinstance = messageinstance
-        if self.dbase.base3version:
-            self.tooldir = os.path.join(
-                os.path.dirname(Lamia.__file__),
-                "worktypeconf",
-                self.dbase.worktype.lower(),
-                "lamiaexportshp",
-            )
-        else:
-            self.tooldir = os.path.join(
-                os.path.dirname(__file__), self.dbase.worktype.lower()
-            )
+        # self.dbase = dbaseparser
+        # self.messageinstance = messageinstance
+        # if self.dbase.base3version:
+        #     self.tooldir = os.path.join(
+        #         os.path.dirname(Lamia.__file__),
+        #         "worktypeconf",
+        #         self.dbase.worktype.lower(),
+        #         "lamiaexportshp",
+        #     )
+        # else:
+        #     self.tooldir = os.path.join(
+        #         os.path.dirname(__file__), self.dbase.worktype.lower()
+        #     )
 
-        self.confdataplugin = self.tooldir
-        self.confdataproject = os.path.join(
-            self.dbase.dbaseressourcesdirectory, "config", self.POSTPROTOOLNAME
-        )
+        # self.confdataplugin = self.tooldir
+        # self.confdataproject = os.path.join(
+        #     self.dbase.dbaseressourcesdirectory, "config", self.POSTPROTOOLNAME
+        # )
 
     def runExport(self, destinationshapefile, exportconffilepath, pkzonegeos=[]):
 
         debug = False
-        # shpfile = self.userwdgfield.lineEdit_nom.text()
-        # shpfile = destinationshapefile
-        # tabletype = self.userwdgfield.comboBox_type.currentText()
-        if False:
-            tabletype = self.filemanager.getCurrentText()
-            tabletypepath = self.filemanager.getCurrentPath()
-        if os.path.isfile(
-            exportconffilepath
-        ):  # complete path is given in exportconffilepath
-            tabletypepath = exportconffilepath
-        else:  # just filename is given in exportconffilepath
-            tabletypepath = os.path.join(self.tooldir, exportconffilepath + ".txt")
-
-        # tabletype = os.path.basename(tabletypepath)
-
-        # self.pdffile = destinationshapefile
+        tabletypepath = self.getConfFilePath(exportconffilepath)
         self.champs = self.readChamp(tabletypepath)
 
         self.fieldsforshp = self.buildQgsFields(self.champs)
@@ -94,7 +82,6 @@ class ExportShapefileCore:
         self.result = [list(row) for row in query]
         if debug:
             logging.getLogger("Lamia").debug("result %s", str(self.result))
-        # Lamia.api.libslamia.lamiaexportshp
 
         if self.dbase.base3version:
             strtoexec = f"Lamia.config.{self.dbase.worktype.lower()}.lamiaexportshp.lamiaexportshpworktypefunc"
@@ -103,8 +90,6 @@ class ExportShapefileCore:
 
         mymodule = importlib.import_module(strtoexec, package=self.__module__)
         mymodule.exportMethod(self)
-
-        # self.postprepareData(tabletype)
 
         if debug:
             logging.getLogger("Lamia").debug("result post : %s", str(self.result))
@@ -118,7 +103,6 @@ class ExportShapefileCore:
                 sqlgeom = table["fields"]["geom"]["value"]
                 if "ST_AsText(" in sqlgeom:
                     geomval = sqlgeom.split("ST_AsText(")[1][:-1]
-                    # print(geomval)
                 else:
                     geomval = "geom"
 
@@ -435,6 +419,21 @@ class ExportShapefileCore:
             success = writer.addFeature(feat)
 
         del writer
+
+        self.cleanShapefile(filename)
+
         if self.messageinstance is not None:
             self.messageinstance.showNormalMessage("Export termine")
+
+    def cleanShapefile(self, filename):
+        vl = qgis.core.QgsVectorLayer(filename, "cleaning", "ogr")
+        coltoremove = []
+        for i, field in enumerate(vl.fields()):
+            uniquevalues = vl.uniqueValues(i)
+            if self.dbase.utils.isAttributeNull(list(uniquevalues)[0]):
+                coltoremove.append(i)
+        vl.startEditing()
+        res = vl.dataProvider().deleteAttributes(coltoremove)
+        vl.updateFields()
+        vl.commitChanges()
 

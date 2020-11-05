@@ -69,21 +69,14 @@ class ReportTool(AbstractLamiaTool):
 
     def __init__(self, **kwargs):
         super(ReportTool, self).__init__(**kwargs)
-        # self.postInit()
         self.qfiledlg = self.mainifacewidget.qfiledlg
-        self.confdatamain = os.path.join(
-            os.path.dirname(inspect.getsourcefile(self.__class__)), self.POSTPROTOOLNAME
-        )
-        self.confdataproject = os.path.join(
-            self.dbase.dbaseressourcesdirectory, "config", self.POSTPROTOOLNAME
-        )
 
         self.reporttool = ReportCore(
             dbaseparser=self.dbase, messageinstance=self.mainifacewidget.connector
         )
 
         self.filemanager = ExportRapportFileManager(
-            self.mainifacewidget, self.reporttool, ".txt"
+            self.mainifacewidget, self.reporttool
         )
 
     def initMainToolWidget(self):
@@ -114,27 +107,11 @@ class ReportTool(AbstractLamiaTool):
             self.toolwidgetmain.lineEdit_nom.setText(reportfile)
 
     def postToolTreeWidgetCurrentItemChanged(self):
-        # self.toolwidgetmain.setEnabled(True)
         self.filemanager.reset()
-
-        # self.createconfData()
-
-        # self.linkedtreewidget.setSelectionMode(QAbstractItemView.ExtendedSelection)
-        # self.linkedtreewidget.itemSelectionChanged.connect(self.itemChanged)
 
     def launchRapport(self):
         pdffile = self.toolwidgetmain.lineEdit_nom.text()
-        # reporttype = self.toolwidgetmain .comboBox_type.currentText()
-
-        # print(self.confData.keys())
-
         reporttype = self.filemanager.getCurrentText()
-        # tabletypepath = self.filemanager.getCurrentPath()
-
-        # selectedzonegeoitems = self.choosertreewidget.treewidget.selectedItems()
-        # ids = [int(item.text(0)) for item in selectedzonegeoitems]
-        # pdids = self.choosertreewidget.ids
-        # pks = [pdids.loc[pdids['id'] == id]['pk'].values[0] for id in ids]
         pks = self.choosertreewidget.getSelectedPks()
 
         self.reporttool.runReport(
@@ -143,16 +120,16 @@ class ReportTool(AbstractLamiaTool):
 
 
 class ExportRapportFileManager(AbstractFileManager):
-    def __init__(self, mainwindows=None, parentwdg=None, fileext=None):
-        super(ExportRapportFileManager, self).__init__(mainwindows, parentwdg, fileext)
+    def __init__(self, mainwindows=None, parentwdg=None):
+        super(ExportRapportFileManager, self).__init__(mainwindows, parentwdg)
 
     def new(self):
-
-        # if not os.path.exists(self.confdataproject):
-        #    os.mkdir(self.confdataproject)
-
         confpath, confext = self.qfiledialog.getSaveFileName(
-            None, "Choose the file", self.confdataproject, "txt (*.txt)", ""
+            None,
+            "Choose the file",
+            self.reporttool.confdatadirproject,
+            "txt (*.txt)",
+            "",
         )
 
         if confpath:
@@ -214,6 +191,5 @@ class ExportRapportFileManager(AbstractFileManager):
 class UserUI(QWidget):
     def __init__(self, parent=None):
         super(UserUI, self).__init__(parent=parent)
-        # self.setupUi(self)
         uipath = os.path.join(os.path.dirname(__file__), "lamia_tool_report_ui.ui")
         uic.loadUi(uipath, self)

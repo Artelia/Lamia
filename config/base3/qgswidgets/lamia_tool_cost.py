@@ -83,7 +83,7 @@ class CostTool(AbstractLamiaTool):
         self.costtool = CostCore(
             dbaseparser=self.dbase, messageinstance=self.mainifacewidget.connector
         )
-        self.filemanager = CostfileManager(self.mainifacewidget, self.costtool, ".csv")
+        self.filemanager = CostfileManager(self.mainifacewidget, self.costtool)
 
     def initMainToolWidget(self):
 
@@ -251,5 +251,5 @@ class UserUI(QWidget):
 
 
 class CostfileManager(AbstractFileManager):
-    def __init__(self, mainwindows=None, parentwdg=None, fileext=None):
-        super(CostfileManager, self).__init__(mainwindows, parentwdg, fileext)
+    def __init__(self, mainwindows=None, parentwdg=None):
+        super(CostfileManager, self).__init__(mainwindows, parentwdg)

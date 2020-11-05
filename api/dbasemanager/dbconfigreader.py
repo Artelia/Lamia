@@ -29,6 +29,7 @@ along with Foobar.  If not, see <https://www.gnu.org/licenses/>.
 import os, sys, locale
 import xlrd
 import Lamia.config
+import Lamia.api.libs.odf
 from Lamia.api.libs.odsreader.ODSReader import ODSReader
 
 

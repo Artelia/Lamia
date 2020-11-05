@@ -31,41 +31,21 @@ import sys
 import numpy as np
 import logging
 import Lamia
+from ..abstractlibslamia import AbstractLibsLamia
 
 
-class CostCore:
+class CostCore(AbstractLibsLamia):
 
-    POSTPROTOOLNAME = "costtools"
+    POSTPROTOOLNAME = "lamiacost"
+    fileext = ".csv"
 
     def __init__(self, dbaseparser, messageinstance=None):
-
-        self.dbase = dbaseparser
-        self.messageinstance = messageinstance
-
-        if self.dbase.base3version:
-            self.tooldir = os.path.join(
-                os.path.dirname(Lamia.__file__),
-                "worktypeconf",
-                self.dbase.worktype.lower(),
-                "lamiacost",
-            )
-        else:
-            self.tooldir = os.path.join(
-                os.path.dirname(__file__), self.dbase.worktype.lower()
-            )
-
-        self.confdataplugin = self.tooldir
-        self.confdataproject = os.path.join(
-            self.dbase.dbaseressourcesdirectory, "config", self.POSTPROTOOLNAME
-        )
+        super(CostCore, self).__init__(dbaseparser, messageinstance)
         self.logger = logging.getLogger("Lamia_unittest")
 
     def runCost(self, costfilepath, pkzonegeos=[]):
-        debug = True
-        if os.path.isfile(costfilepath):  # complete path is given in exportconffilepath
-            tabletypepath = costfilepath
-        else:  # just filename is given in exportconffilepath
-            tabletypepath = os.path.join(self.confdataplugin, costfilepath + ".csv")
+        debug = False
+        tabletypepath = self.getConfFilePath(costfilepath)
 
         bordereau = self.readBordereau(tabletypepath)
         if debug:

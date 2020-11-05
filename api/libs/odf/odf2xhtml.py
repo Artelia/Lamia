@@ -21,8 +21,6 @@
 #import pdb
 #pdb.set_trace()
 
-import sys, os.path
-sys.path.append(os.path.dirname(__file__))
 from xml.sax import handler
 from xml.sax.saxutils import escape, quoteattr
 from xml.dom import Node

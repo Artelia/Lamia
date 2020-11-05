@@ -46,7 +46,6 @@ class Lamia extends React.Component {
         this.projectdata.qgisserverurl.split('?').length > 1 ? qgisserverquery = this.projectdata.qgisserverurl.split('?')[1] : qgisserverquery = null
         let databaseurl = qgisserverurl + '/wfs3/collections/database_qgis/items/1.json'
         qgisserverquery ? databaseurl = databaseurl + '?' + qgisserverquery : null
-        console.log(databaseurl)
         let feat = await axios.get(databaseurl)
         let worktype = feat.data.properties.businessline
         this.dbaseworktypeloaded = true
@@ -72,7 +71,7 @@ class Lamia extends React.Component {
 
         let returnvalue = false
 
-        if (!this.defaultstyleloaded) {
+        if (!this.defaultstyleloaded && this.state.styles) {
             if (this.getLamiaLayer() !== null) {
                 this.changeStyle("_default")
                 this.defaultstyleloaded = true
@@ -101,13 +100,11 @@ class Lamia extends React.Component {
     }
 
     componentWillReceiveProps_(nextProps) {
-        // console.log('mapchange', nextProps.map !== this.props.map)
         if (nextProps.map !== this.props.map) {
             return false
         }
 
         let found = this.props.layers.find(layer => layer.title === "Lamiasel")
-        console.log('found', !found, found)
         if (!found) {
             let layer = {
                 title: "Lamiasel",
@@ -116,7 +113,6 @@ class Lamia extends React.Component {
             this.props.addLayer(layer);
             return false
         }
-        console.log('point diff', nextProps.point !== this.props.point)
         if (nextProps.point !== this.props.point) {
             this.handleMapClick()
             return false
@@ -125,8 +121,6 @@ class Lamia extends React.Component {
     }
 
     render() {
-        // console.log('render Lamia', this.props.point)
-
         let layersdropdown = this.createLayerDrop.bind(this)()
 
         let butonmenu = (
@@ -186,7 +180,6 @@ class Lamia extends React.Component {
         let wdg = this.currentwdginstance
         while (wdg.props.parentwdg) {
             wdg = wdg.props.parentwdg
-            console.log('click*', wdg.constructor.name)
         }
         wdg.pointClicked(coords)
     }
@@ -201,7 +194,6 @@ class Lamia extends React.Component {
         if (!this.currentwdginstance) { return }
         let finaldatas = []
         for (var id in this.state.ids) {
-            console.log(id)
             finaldatas.push(<a className="dropdown-item" id={id} key={id}
                 onClick={this.handleLayerChanged.bind(this)}
             >

@@ -55,52 +55,12 @@ class ExportShapefileTool(AbstractLamiaTool):
         super(ExportShapefileTool, self).__init__(**kwargs)
 
         self.qfiledlg = self.mainifacewidget.qfiledlg
-        # self.confdatamain = os.path.join(os.path.dirname(inspect.getsourcefile(self.__class__)), self.POSTPROTOOLNAME)
-        # self.confdataproject = os.path.join(self.dbase.dbaseressourcesdirectory, 'config',self.POSTPROTOOLNAME)
-
         self.exporttool = ExportShapefileCore(
             dbaseparser=self.dbase, messageinstance=self.mainifacewidget.connector
         )
-        self.filemanager = ExportShpfileManager(
-            self.mainifacewidget, self.exporttool, ".txt"
-        )
-
-    """
-    def initTool(self):
-        # ****************************************************************************************
-        # Main spec
-        self.CAT = 'Import/export'
-        self.NAME = 'Export shp'
-        self.visualmode = [4]
-        # self.PointENABLED = True
-        # self.LineENABLED = True
-        # self.PolygonEnabled = True
-        # self.magicfunctionENABLED = True
-        # self.linkagespec = None
-        # self.pickTable = None
-        # print(self.dbase.recentsdbase)
-
-        self.iconpath = os.path.join(os.path.dirname(__file__), 'Lamia_exportshp_tool_icon.png')
-        #self.qtreewidgetfields = ['libelle']
-
-        # ****************************************************************************************
-        # properties ui
-        self.groupBox_elements.setParent(None)
-        self.frame_editing.setParent(None)
-
-        self.filemanager = ExportShpfileManager(self.windowdialog, self, '.txt')
-
-
-
-
-        self.qfiledlg = self.windowdialog.qfiledlg
-
-        self.confdatamain = os.path.join(os.path.dirname(inspect.getsourcefile(self.__class__)), self.TOOLNAME)
-        self.confdataproject = os.path.join(self.dbase.dbaseressourcesdirectory, 'config',self.TOOLNAME)
-    """
+        self.filemanager = ExportShpfileManager(self.mainifacewidget, self.exporttool)
 
     def initMainToolWidget(self):
-
         self.toolwidgetmain = UserUI()
         self.toolwidgetmain.toolButton_filechooser.clicked.connect(self.chooseFile)
 
@@ -131,7 +91,7 @@ class ExportShapefileTool(AbstractLamiaTool):
 
         debug = False
         shpfile = self.toolwidgetmain.lineEdit_nom.text()
-        tabletypepath = self.filemanager.getCurrentPath()
+        tabletypepath = self.filemanager.getCurrentText()
 
         # selectedzonegeoitems = self.choosertreewidget.treewidget.selectedItems()
         # ids = [int(item.text(0)) for item in selectedzonegeoitems]
@@ -145,8 +105,6 @@ class ExportShapefileTool(AbstractLamiaTool):
             pkzonegeos=pks,
         )
 
-        # prepareData(destinationshapefile, tablepath, postfunc = None):
-
 
 class UserUI(QWidget):
     def __init__(self, parent=None):
@@ -158,8 +116,8 @@ class UserUI(QWidget):
 class ExportShpfileManager(AbstractFileManager):
 
     # def __init__(self,  mainwindows=None, parentwdg=None, fileext=None):
-    def __init__(self, mainwindows=None, toolclass=None, fileext=None):
-        super(ExportShpfileManager, self).__init__(mainwindows, toolclass, fileext)
+    def __init__(self, mainwindows=None, toolclass=None):
+        super(ExportShpfileManager, self).__init__(mainwindows, toolclass)
 
     def new(self):
 
@@ -231,7 +189,8 @@ class ExportShpfileManager(AbstractFileManager):
 
     def comboChanged(self, comboindex):
         super().comboChanged(comboindex)
-        tabletypepath = self.getCurrentPath()
+        confname = self.comboBox_files.itemText(comboindex)
+        tabletypepath = self.toolclass.getConfFilePath(confname)
         if tabletypepath:
             boolzonegeo = self.toolclass.testIfZonegeoPk(champsfile=tabletypepath)
             self.mainwindows.ElemtreeWidget.clearSelection()

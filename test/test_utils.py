@@ -38,6 +38,7 @@ def exitQGis():
 
 def getDisplayWidget():
     from Lamia.qgisiface.iface.qgiswidget.ifaceqgswidget import LamiaWindowWidget
+    from Lamia.qgisiface.qgispluginroot import resources_rc
 
     # create canvas and LamiaWindowWidget
     canvas = qgis.gui.QgsMapCanvas()

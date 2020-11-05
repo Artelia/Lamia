@@ -28,17 +28,19 @@ This file is part of LAMIA.
 
 from qgis.PyQt import QtGui, uic, QtCore
 import os
-try:
-    from qgis.PyQt.QtGui import (QDialog, QTableWidget, QVBoxLayout, QHeaderView, QTableWidgetItem)
-except ImportError:
-    from qgis.PyQt.QtWidgets import (QDialog, QTableWidget, QVBoxLayout, QHeaderView, QTableWidgetItem)
+from qgis.PyQt.QtWidgets import (
+    QDialog,
+    QTableWidget,
+    QVBoxLayout,
+    QHeaderView,
+    QTableWidgetItem,
+)
 
 
 class LamiaTableFieldDialog(QDialog):
     """
     the main window widget
     """
-
 
     def __init__(self, dbase=None, parent=None):
         """
@@ -50,18 +52,33 @@ class LamiaTableFieldDialog(QDialog):
         debug = False
         self.dbase = dbase
 
-        path = os.path.join(os.path.dirname(__file__), 'lamia_tablefielddialog.ui')
+        path = os.path.join(os.path.dirname(__file__), "lamia_tablefielddialog.ui")
         uic.loadUi(path, self)
 
-        self.tablelist = ['Infralineaire', 'Equipement', 'Noeud', 'Desordre', 'Observation']
+        self.tablelist = [
+            "node",
+            "edge",
+            "surface",
+            "facility",
+            "equipment",
+            "deficiency",
+            "observation",
+        ]
 
     def update(self):
         if self.dbase is None:
             return
         # ordercount = 0
-        for tablename in  self.tablelist :
+        self.tabWidget_main.clear()
+        for tablename in self.tablelist:
             contents = QTableWidget(self.tabWidget_main)
-            headernames = ['Nom', 'Type', 'Description', 'Valeur de champ textuelle', 'Valeur de champ stocké']
+            headernames = [
+                "Nom",
+                "Type",
+                "Description",
+                "Valeur de champ textuelle",
+                "Valeur de champ stocké",
+            ]
             contents.setColumnCount(len(headernames))
             contents.setHorizontalHeaderLabels(headernames)
             header = contents.horizontalHeader()
@@ -70,28 +87,29 @@ class LamiaTableFieldDialog(QDialog):
             layout = QVBoxLayout(contents)
             # add other widgets to the contents layout here
             # i.e. layout.addWidget(widget), etc
+
             self.tabWidget_main.addTab(contents, tablename)
 
             tableparent = [tablename] + self.dbase.getParentTable(tablename)
             tableparent.reverse()
             for tablename2 in tableparent:
                 dbasedict = self.dbase.dbasetables[tablename]
-                for field in dbasedict['fields'].keys():
+                for field in dbasedict["fields"].keys():
                     rownumber = contents.rowCount()
-                    contents.insertRow(rownumber )
-                    #name row 0
+                    contents.insertRow(rownumber)
+                    # name row 0
                     item = QTableWidgetItem(field)
                     contents.setItem(rownumber, 0, item)
                     # type row 1
-                    item = QTableWidgetItem(dbasedict['fields'][field]['PGtype'])
+                    item = QTableWidgetItem(dbasedict["fields"][field]["PGtype"])
                     contents.setItem(rownumber, 1, item)
                     # description row 2
                     # todo
-                    #values
-                    compteurvalue=0
-                    if 'Cst' in  dbasedict['fields'][field].keys():
-                        for elem in dbasedict['fields'][field]['Cst']:
-                            if compteurvalue>0:
+                    # values
+                    compteurvalue = 0
+                    if "Cst" in dbasedict["fields"][field].keys():
+                        for elem in dbasedict["fields"][field]["Cst"]:
+                            if compteurvalue > 0:
                                 contents.insertRow(rownumber + compteurvalue)
                             item = QTableWidgetItem(elem[0])
                             contents.setItem(rownumber + compteurvalue, 3, item)

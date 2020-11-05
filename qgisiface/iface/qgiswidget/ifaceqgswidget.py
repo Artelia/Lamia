@@ -64,7 +64,7 @@ import webbrowser
 import glob, importlib, inspect
 from pprint import pprint
 
-import Lamia, Lamia.api, Lamia.qgisiface, Lamia.config, time
+import Lamia, Lamia.qgisiface, Lamia.config, time
 from Lamia.api.libslamia.gps.GPSutil import GpsUtil
 from Lamia.api.dbasemanager.dbaseparserfactory import DBaseParserFactory
 
@@ -168,6 +168,7 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         self.crsselector = qgis.gui.QgsProjectionSelectionDialog()
         self.qfiledlg = QFileDialog()
         self.connPGDialog = ConnexionPGDialog()
+        self.tablefielddialog = LamiaTableFieldDialog()
 
         # camera path
         if QtCore.QSettings().value("Lamia/picturepath") is not None:
@@ -1398,6 +1399,37 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
             httphelp = "https://artelia.github.io/Lamia/index.html"
             os.startfile(httphelp)
 
+    def openSchema(self):
+        if platform.system() == "Linux":
+            pass
+        elif platform.system() == "Windows":
+            sender = f"{self.sender().objectName()}"
+            if sender == "actionConceptual_model":
+                filepath = os.path.join(
+                    os.path.dirname(Lamia.__file__),
+                    "doc",
+                    "schemas",
+                    "DBstructure-Relations.png",
+                )
+                os.startfile(filepath)
+            elif sender == "actionViews":
+                filepath = os.path.join(
+                    os.path.dirname(Lamia.__file__),
+                    "doc",
+                    "schemas",
+                    "DBstructure-Views.png",
+                )
+                os.startfile(filepath)
+
+    def openTablesAndFields(self):
+        # self.tablefielddialog.run()
+        # self.tablefielddialog.exec_()
+        # self.tablefielddialog.setWindowModality(QtCore.Qt.Modal)  # NonModal
+        self.tablefielddialog.dbase = self.dbase
+        self.tablefielddialog.update()
+        self.tablefielddialog.setModal(False)
+        self.tablefielddialog.show()
+
     def reportBug(self):
         webbrowser.open("mailto:lamia@arteliagroup.com&subject=Lamia bug report", new=1)
 
@@ -1539,6 +1571,9 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
 
         # about menu
         self.actionAide.triggered.connect(self.openHelp)
+        self.actionConceptual_model.triggered.connect(self.openSchema)
+        self.actionViews.triggered.connect(self.openSchema)
+        self.actionTables_and_fields.triggered.connect(self.openTablesAndFields)
         self.actionReport_bug.triggered.connect(self.reportBug)
 
         # others

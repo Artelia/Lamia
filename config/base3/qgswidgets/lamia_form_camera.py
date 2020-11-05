@@ -280,6 +280,11 @@ class BaseCameraTool(AbstractLamiaFormTool):
                 if os.path.isfile(possiblethumbnail + "_thumbnail.png"):
                     os.startfile(possiblethumbnail + "_thumbnail.png")
 
+    def widgetClicked(self, **kwargs):
+        super().widgetClicked(**kwargs)
+        if self.currentFeaturePK is None:
+            self.photowdg.clear()
+
     # def postInitFeatureProperties(self, feat):
     def postSelectFeature(self):
         global numphoto

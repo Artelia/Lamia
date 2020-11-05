@@ -15,11 +15,7 @@ class ReportCatalog extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        // console.log('sould*', this.state === nextState)
-        // console.log('sould* bbox', this.props.bbox === nextProps.bbox)
-        // if (this.state === nextState) {
         if (this.props.bbox !== nextProps.bbox) {
-            // this.getPksWithinBbox()
             this.getJsonfeaturesWithinBBox()
             return false
         }

@@ -1,0 +1,86 @@
+{
+  "proxy": {
+    "host": "10.15.102.50",
+    "port": 3128,
+    "auth": {
+      "username": "",
+      "password": ""
+    }
+  },
+  "themes": {
+    "items": [
+      {
+        "title": "Lamia",
+        "url": "http://localhost:8380",
+        "attribution": "Artelia Lamia",
+        "attributionUrl": "https://arteliagroup.com/",
+        "scales": [          
+          5000000,
+          1000000,
+          500000,
+          250000,
+          100000,
+          50000,
+          25000,
+          10000,
+          5000,
+          2500,
+          1000,
+          500,
+          250,
+          100
+        ],
+        "printScales": [80000, 40000, 20000, 10000, 8000, 6000, 4000, 2000, 1000, 500, 250, 100],
+        "printResolutions": [150, 300, 600],
+        "backgroundLayers": [
+          {
+            "name": "mapnik",
+            "visibility": true
+          },
+          {
+            "name": "opentopomap"
+          },
+          {
+            "name": "AerialWithLabelsOnDemand"
+          }
+        ],
+        "searchProviders": ["coordinates", "uster", "nominatim"],
+        "mapCrs": "EPSG:3857",
+        "additionalMouseCrs": ["EPSG:2154"]
+      }
+    ],
+    "groups": [ ],
+    "backgroundLayers": [
+      {
+        "name": "mapnik",
+        "title": "Open Street Map",
+        "type": "osm",
+        "source": "osm",
+        "thumbnail": "mapnik.jpg",
+        "attribution": "OpenStreetMap contributors",
+        "attributionUrl": "https://www.openstreetmap.org/copyright"
+      },
+      {
+        "type": "tileprovider",
+        "provider": "OpenTopoMap",
+        "title": "OpenTopoMap",
+        "name": "opentopomap",
+        "thumbnail": "img/mapthumbs/default.jpg",
+        "attribution": "Map data: &copy; <a href=\"https://openstreetmap.org/copyright\" target=\"_blank\">OpenStreetMap</a> contributors, SRTM | Map style: &copy; <a href=\"https://opentopomap.org\" target=\"_blank\">OpenTopoMap</a> (<a href=\"https://creativecommons.org/licenses/by-sa/3.0/\" target=\"_blank\">CC-BY-SA</a>)"
+      },
+      {
+        "type": "bing",
+        "provider": "bing",
+        "title": "Bing aerial",
+        "name": "AerialWithLabelsOnDemand",
+        "thumbnail": "img/mapthumbs/default.jpg",
+        "attribution": "Map data: Bing map aerial",
+        "apiKey": "AiHd3lKU8o1PHL3aSjZwkzQcTRwt5ReVqehuy3YbSoDRww298TA8ugeVvykGEGpF",
+        "opacity": 180
+      }
+    ]
+  },
+  "defaultScales": [4000000, 2000000, 1000000, 400000, 200000, 80000, 40000, 20000, 10000, 8000, 6000, 4000, 2000, 1000, 500, 250, 100],
+  "defaultPrintGrid": [{"s": 10000, "x": 1000, "y": 1000}, {"s": 1000, "x": 100, "y": 100}, {"s": 100, "x": 10, "y": 10}],
+  "defaultWMSVersion":"1.3.0"
+}

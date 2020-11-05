@@ -36,17 +36,6 @@ class EditingFormReact extends React.Component {
     }
 
     render() {
-        console.log('render', this.constructor.name)
-
-        // if (this.state.isloading) {
-        //     return (<p>Loading ... </p>)
-        // }
-
-        // console.log(this.state.keyvalues)
-        // if (this.state.formui) {
-        //     this.state.formui.state.keyvalues = this.state.keyvalues
-        // }
-
         let qtform = <LamiaQtDesignerForm domLoaded={this.domLoaded} ref={this.currentform}
             updateField={this.updateField} form={this.state.formui} values={this.state.currentfeatprop}
             getKeyvalues={this.getKeyvalues.bind(this)} domLoaded={this.domLoaded.bind(this)} />
@@ -54,9 +43,6 @@ class EditingFormReact extends React.Component {
 
         let childdom = []
         this.childwdg.forEach((childwd, idx) => {
-            // console.log(childwd)
-            // console.log('***', childwd.table, childwd.label)
-            // if (!childwd.SKIPUI) {
             if (true) {
                 childdom.push(<input value={idx + 1} type="radio" id={'maintab' + childwd.label} key={'maintab' + childwd.label + idx * 3} name={this.table} onChange={this.handleTabChange} />)
                 childdom.push(<label htmlFor={'maintab' + childwd.label} key={'maintab' + childwd.label + idx * 3 + 1}><Message msgId={'qtdesigner.' + childwd.label} /></label>)
@@ -103,14 +89,6 @@ class EditingFormReact extends React.Component {
                 childref.current.updateProperties()
             })
         }
-        // console.log('*', this.constructor.name)
-        // console.log(this.props.mainiface.currentwdginstance === this, this.props.mainiface.state.ids !== this.ids)
-        // console.log(this.ids, this.props.mainiface.state.ids)
-
-        // if ((this.props.mainiface.currentwdginstance === this) && (this.props.mainiface.state.ids !== this.ids)) {
-        //     console.log('stating id', this.constructor.name)
-        //     this.props.mainiface.setState({ ids: this.ids })
-        // }
     }
 
 
@@ -119,12 +97,9 @@ class EditingFormReact extends React.Component {
 
     async updateProperties() {
         if (this.props.parentproperties) {
-            // console.log('up', this.constructor.name)
             let parentpk = this.props.parentproperties['pk_' + this.props.parentwdg.table]
-            console.log('*', this.props.parentwdg.table, this.props.parentproperties['pk_' + this.props.parentwdg.table])
 
             if (!parentpk) { return }
-
 
             let url = 'http://' + window.location.host + '/lamiaapi/' + this.projectdata.id_project + '/' + this.table
 
@@ -144,14 +119,10 @@ class EditingFormReact extends React.Component {
                 this.setState({ currentfeatprop: {} })
                 return
             } else {
-                // console.log('***', this.table, this.ids)
-                // let featdata = await this.getPropertiesFromPk(this.ids.pk[0])
-                // this.setState({ currentfeatprop: featdata.properties })
                 this.displayProperties(this.ids.pk[0])
             }
 
             if (this.props.mainiface.currentwdginstance === this) {
-                console.log('idrend up', this.constructor.name)
                 this.props.mainiface.idchooserref.current.setState({ ids: this.ids })
             }
 
@@ -205,7 +176,6 @@ class EditingFormReact extends React.Component {
 
         // let temp = this.projectdata.qgisserverurl + 'qgisserver/wfs3/collections/' + this.table + '_qgis/items/' + pk + '.json'
         let feat = await axios.get(databaseurl)
-        console.log('feat', this.constructor.name, feat.data)
         return feat.data
     }
 
@@ -240,8 +210,6 @@ class EditingFormReact extends React.Component {
 
 
     handleTabChange = (evt) => {
-        // console.log('change', evt.target.value, this.constructor.name)
-        // console.log(this.childrefs)
         let currentinstance = null
         if (evt.target.value == 0) {
             currentinstance = this

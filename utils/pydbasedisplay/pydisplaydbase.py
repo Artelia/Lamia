@@ -120,12 +120,13 @@ def launchIface():
     SLFILE = (
         r"U:\FR\BOR\VT\PVR\sebastien\Noailles\20200917_sbn\VTA_2020_Noailles.sqlite"
     )
+    SLFILE = r"C:\01_WORKINGDIR\bm\BD_totale_ind15.sqlite"
+    SLFILE = r"C:\01_WORKINGDIR\canejean2\Canejan.sqlite"
+    # SLFILE = r"C:\01_WORKINGDIR\testphoto\teet.sqlite"
 
     # print(TGREEN, f"Opening {os.path.abspath(SLFILE)}", ENDC)
 
     print(f"{bcolors.OKGREEN}Opening: {os.path.abspath(SLFILE)} {bcolors.ENDC}")
-
-    return
 
     lamiawidget.loadDBase(dbtype="Spatialite", slfile=SLFILE)
     # lamiawidget.loadDBase(
@@ -134,7 +135,8 @@ def launchIface():
     #     # host="localhost",
     #     port=5432,
     #     dbname="lamiaunittest",
-    #     schema="base3_urbandrainage_lamia",
+    #     # schema="base3_urbandrainage_lamia",
+    #     schema="importgpmb",
     #     user="pvr",
     #     password="pvr",
     # )

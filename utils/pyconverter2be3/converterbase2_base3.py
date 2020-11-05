@@ -4,6 +4,7 @@ lamiapath = os.path.join(os.path.join(os.path.dirname(__file__)), "..", "..", ".
 sys.path.append(lamiapath)
 
 import Lamia
+import Lamia.api.libs.odf
 from Lamia.api.libs.odsreader.ODSReader import ODSReader
 from Lamia.api.dbasemanager.dbaseparserfactory import DBaseParserFactory
 
@@ -98,7 +99,7 @@ def doPostScript(sqlitedbasedest):
         sql = "UPDATE descriptionsystem SET networktype = \
         (SELECT sourceequipement.typeReseau FROM dbasesource.Equipement as sourceequipement\
             WHERE sourceequipement.lpk_descriptionsystem = descriptionsystem.pk_descriptionsystem)\
-        WHERE (SELECT sourceequipement.typeReseau FROM dbasesource.Noeud as sourceequipement\
+        WHERE (SELECT sourceequipement.typeReseau FROM dbasesource.Equipement as sourceequipement\
             WHERE sourceequipement.lpk_descriptionsystem = descriptionsystem.pk_descriptionsystem) IS NOT NULL"
         # print(sql)
         sqlitedbasedest.query(sql)
@@ -109,6 +110,9 @@ def doPostScript(sqlitedbasedest):
                                                 ELSE NULL \
                                             END)"
         # print(sql)
+        sqlitedbasedest.query(sql)
+
+        sql = "UPDATE edge SET pipesubtype = 'ENH' WHERE pipetype='FOS'"
         sqlitedbasedest.query(sql)
 
         sql = """UPDATE descriptionsystem SET systemfunction = 

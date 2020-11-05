@@ -22,23 +22,12 @@ This file is part of LAMIA.
   * License-Filename: LICENSING.md
  """
 
- 
-# -*- coding: utf-8 -*-
-"""
-MainModule core
-"""
-
-#from .Lamia import *
-import sys, os
-sys.path.append(os.path.dirname(__file__))
+import Lamia.api
 
 
-# noinspection PyPep8Naming
-def classFactory(iface):  # pylint: disable=invalid-name
-    """Load InspectionDigue class from file InspectionDigue.
-
-    :param iface: A QGIS interface instance.
-    :type iface: QgsInterface
-    """
+def classFactory(iface):
     from .Lamia import Lamia
+
+    print("ok")
+
     return Lamia(iface)

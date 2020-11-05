@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 
 """
@@ -24,36 +23,77 @@ This file is part of LAMIA.
   * SPDX-License-Identifier: GPL-3.0-or-later
   * License-Filename: LICENSING.md
  """
-import os, sys
-from ..iface.ifaceabstractconnector import LamiaIFaceAbstractConnectors
+import os, sys, glob
+from pathlib import Path
+import Lamia
+from Lamia.qgisiface.iface.ifaceabstractconnector import LamiaIFaceAbstractConnectors
 
 
 class AbstractLibsLamia:
+    """Base class for postpro modules with conf files
+    manage conf datas :
+        * POSTPROTOOLNAME : the name of the tools, also the directory within the conf datas are
+        * fileext : the files extentions to read, eg ".txt"
+        * projectcharacter : spacial caracter to recogize if file is general plugin fle or project spicific file
+    and methods to retrieve the conf data files
+    """
 
-    libname = "reporttools"
+    POSTPROTOOLNAME = "reporttools"
+    fileext = ".txt"
+    projectcharacter = "_"
 
     def __init__(self, dbaseparser, messageinstance=None):
+        """Constructor
+        :param dbaseparser: the dbaseparser
+        :param messageinstance: an output instance, defaults to None
+        """
         self.dbase = dbaseparser
         if messageinstance is None:
             self.messageinstance = LamiaIFaceAbstractConnectors()
         else:
             self.messageinstance = messageinstance
 
-
         self.confdatadirplugin = os.path.join(
-                os.path.dirname(__file__), self.dbase.worktype.lower()
-            )
+            os.path.dirname(Lamia.__file__),
+            "config",
+            self.dbase.worktype.lower(),
+            self.POSTPROTOOLNAME,
+        )
 
         self.confdatadirproject = os.path.join(
-                self.dbase.dbaseressourcesdirectory, "config", self.libname
-            )
-
+            self.dbase.dbaseressourcesdirectory, "config", self.POSTPROTOOLNAME
+        )
         if not os.path.isdir(self.confdatadirproject):
-            os.mkdir(self.confdatadirproject)
+            # os.mkdir(self.confdatadirproject)
+            Path(self.confdatadirproject).mkdir(parents=True, exist_ok=True)
 
-    def getNamePathFiles(self, extension):
-        
+        self.names_files = {}
+        self.getNamePathFiles()
 
+    def getNamePathFiles(self):
+        """Create a dict with {key: conf filename, value: conf file complete path}
+        """
+        self.names_files = {}
+        for workdir in [self.confdatadirplugin, self.confdatadirproject]:
+            for filename in glob.glob(os.path.join(workdir, "*" + self.fileext)):
+                basename = os.path.basename(filename).split(".")[0]
+                if basename != "README":
+                    if workdir == self.confdatadirproject:
+                        basename = self.projectcharacter + basename
+                self.names_files[basename] = os.path.normpath(
+                    os.path.join(workdir, filename)
+                )
 
-        
+    def getConfFilePath(self, confname):
+        """Get the complete path of a conf name
 
+        :param confname: the conffile, either just a name or complete path
+        :return: the complete path of file
+        """
+        if os.path.isfile(confname):
+            return confname
+        else:
+            for namekey in self.names_files.keys():
+                if confname == namekey.lstrip("_"):
+                    return self.names_files[namekey]
+        return None

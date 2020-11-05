@@ -48,7 +48,6 @@ class NodeEditingFormReact extends EditingFormReact {
 
 
     buttonClicked = (e) => {
-        console.log('cl')
         this.combostacked[e.target.name].val = e.target.options[e.target.selectedIndex].value
     }
 

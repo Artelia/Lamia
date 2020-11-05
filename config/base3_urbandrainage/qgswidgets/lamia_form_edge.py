@@ -34,6 +34,7 @@ from qgis.PyQt import uic, QtCore
 from ...base3.qgswidgets.lamia_form_edge import BaseEdgeTool
 from .lamia_form_graph import BaseUrbandrainageGraphTool
 from .lamia_form_camera import BaseUrbandrainageCameraTool
+from .lamia_form_sketch import BaseUrbandrainageSketchTool
 from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_lidchooser import (
     LidChooserWidget,
 )
@@ -54,6 +55,12 @@ class BaseUrbandrainageEdgeTool(BaseEdgeTool):
             self._initMainToolWidgetCD41()
 
         if self.dbase.variante in [None, "Lamia"]:
+
+            self.propertieswdgCROQUIS = BaseUrbandrainageSketchTool(
+                **self.instancekwargsforchildwdg
+            )
+            self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
+
             self.propertieswdgGRAPH = BaseUrbandrainageGraphTool(
                 **self.instancekwargsforchildwdg
             )
