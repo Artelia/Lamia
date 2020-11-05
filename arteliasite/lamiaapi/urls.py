@@ -14,6 +14,7 @@ urlpatterns = [
         views.LamiaApiView.as_view(),
         name="lamiaapi",
     ),
+    path("media/<path:mediafile>", views.LamiaMedia.as_view(), name="lamiamedia",),
 ]
 
 if settings.DEBUG:

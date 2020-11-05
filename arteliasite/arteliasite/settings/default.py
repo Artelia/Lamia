@@ -10,8 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
-import os
+import os, sys
 
+lamiapath = os.path.normpath(
+    os.path.join(os.path.dirname(__file__), "..", "..", "..", "..")
+)
+sys.path.append(lamiapath)
+from Lamia.secrets import postgis_localhost as pgsecret, djangosecrets
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -21,7 +26,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "el#4!%-fd*sm(sliyq+p_x+ym+=xovjq+9pl!oizcg1(z6%s29"
+SECRET_KEY = djangosecrets.SECRET_KEY
 
 
 # Application definition
@@ -40,6 +45,7 @@ INSTALLED_APPS = [
     # "webpack_loader",
     "rest_framework",
     # "corsheaders",
+    "storages",
 ]
 
 
@@ -146,11 +152,13 @@ STATIC_URL = "/static/"
 
 STATICFILES_DIRS = [
     os.path.abspath(os.path.join(BASE_DIR, "node_modules")),  # for bootstrap
-    ("forms", os.path.abspath(os.path.join(BASE_DIR, "..", "Lamia", "worktypeconf"))),
+    ("forms", os.path.abspath(os.path.join(BASE_DIR, "..", "config"))),
     ("assets", os.path.join(BASE_DIR, "lamiacarto", "static", "qwc2assets")),
     ("qwc2config", os.path.join(BASE_DIR, "lamiacarto", "qwc2config")),
 ]
 
 MEDIA_ROOT = os.path.join("C:/", "media")
 MEDIA_URL = "/media/"
+
+PROXY_ARTELIA = False
 

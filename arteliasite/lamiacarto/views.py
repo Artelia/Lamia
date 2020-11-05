@@ -53,11 +53,21 @@ class LamiaCartoAPIView(views.APIView):
             return Response(data)
 
         elif tablename == "themes.json":
-            conffile = os.path.join(
-                os.path.dirname(os.path.realpath(__file__)),
-                "qwc2config",
-                "themesConfig_lamia.json",
-            )
+            if settings.PROXY_ARTELIA:
+                conffile = os.path.join(
+                    os.path.dirname(os.path.realpath(__file__)),
+                    "qwc2config",
+                    "themesConfig_lamia_proxy.json",
+                )
+            else:
+                os.environ["HTTP_PROXY"] = ""
+                os.environ["HTTPS_PROXY"] = ""
+                conffile = os.path.join(
+                    os.path.dirname(os.path.realpath(__file__)),
+                    "qwc2config",
+                    "themesConfig_lamia.json",
+                )
+
             with open(conffile) as f:
                 themesdata = json.load(f)
 
@@ -88,7 +98,7 @@ class LamiaProjectView(BaseView):
     mytemplate = "lamiacarto/index.html"
 
     def get(self, request, **kwargs):
-        print("*", kwargs)
+        # print("*", kwargs)
         id_project = kwargs.get("project_id", None)
 
         url1 = kwargs.get("conffile", None)

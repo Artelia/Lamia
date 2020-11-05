@@ -4,12 +4,13 @@ lamiapath = os.path.join(os.path.join(os.path.dirname(__file__)), "..", "..")
 sys.path.append(lamiapath)
 from test.test_utils import *
 import Lamia
+from Lamia.secrets import postgis_aws
 
 import qgis, qgis.core, qgis.gui
 
 
-from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
-from Lamia.iface.qgscanvas.ifaceqgiscanvas import QgisCanvas
+from Lamia.api.dbasemanager.dbaseparserfactory import DBaseParserFactory
+from Lamia.qgisiface.iface.qgscanvas.ifaceqgiscanvas import QgisCanvas
 
 
 def importInPostGis():
@@ -17,13 +18,22 @@ def importInPostGis():
     pgdbase = DBaseParserFactory("postgis").getDbaseParser()
     sldbase = DBaseParserFactory("spatialite").getDbaseParser()
     # destdb
-    host = "localhost"
-    port = 5432
-    dbname = "lamiaunittest"
+    # host = "localhost"
+    # port = 5432
+    # dbname = "lamiaunittest"
+    # schema = "importgpmbb"
+    # user = "pvr"
+    # pwd = "pvr"
+    # postgisresourcedir = os.path.join(os.path.dirname(__file__), dbname + "_" + schema)
+
+    host = postgis_aws.host
+    port = postgis_aws.port
+    dbname = postgis_aws.dbname
     schema = "importgpmb"
-    user = "pvr"
-    pwd = "pvr"
+    user = postgis_aws.user
+    pwd = postgis_aws.password
     postgisresourcedir = os.path.join(os.path.dirname(__file__), dbname + "_" + schema)
+
     # sqlite from db
     slfile = r"C:\01_WORKINGDIR\GPMB\final_ass\mergeddbase.sqlite"
 
@@ -88,10 +98,10 @@ def main():
     logging.getLogger("Lamia_unittest").setLevel(logging.DEBUG)
 
     # import in postgis
-    # importInPostGis()
+    importInPostGis()
 
     # create project for qgisserver
-    createProject()
+    # createProject()
 
     exitQGis()
 

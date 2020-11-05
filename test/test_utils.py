@@ -5,14 +5,12 @@ from qgis.PyQt.QtCore import QCoreApplication, QSettings, QTranslator, qVersion
 from qgis.PyQt import QtCore, uic
 
 
-lamiapath = os.path.join(os.path.join(os.path.dirname(__file__)), "..")
+lamiapath = os.path.join(os.path.dirname(__file__), "..", "..")
 sys.path.append(lamiapath)
-import Lamia
-from test.settings import *
+import Lamia.utils, Lamia.qgisiface
+from Lamia.test.settings import *
 
-qgissettingpath = os.path.join(
-    os.path.dirname(Lamia.__file__), "..", "utils/qgisconfig.txt"
-)
+qgissettingpath = os.path.join(os.path.dirname(Lamia.utils.__file__), "qgisconfig.txt")
 qgissettingpath = os.path.abspath(qgissettingpath)
 QGISSETTINGS = {}
 with open(qgissettingpath) as f:
@@ -39,7 +37,8 @@ def exitQGis():
 
 
 def getDisplayWidget():
-    from Lamia.iface.qgiswidget.ifaceqgswidget import LamiaWindowWidget
+    from Lamia.qgisiface.iface.qgiswidget.ifaceqgswidget import LamiaWindowWidget
+    from Lamia.qgisiface.qgispluginroot import resources_rc
 
     # create canvas and LamiaWindowWidget
     canvas = qgis.gui.QgsMapCanvas()
@@ -77,7 +76,7 @@ def loadLocale():
     locale = LOCALE
     QtCore.QSettings().setValue("locale/userLocale", LOCALE)
 
-    plugin_dir = os.path.join(os.path.dirname(Lamia.__file__))
+    plugin_dir = os.path.join(os.path.dirname(Lamia.qgisiface.__file__))
     locale_path = os.path.join(plugin_dir, "i18n", "Lamia_{}.qm".format(locale))
 
     if os.path.exists(locale_path):

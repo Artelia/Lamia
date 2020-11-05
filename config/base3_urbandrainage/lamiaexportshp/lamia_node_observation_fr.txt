@@ -1,0 +1,197 @@
+###object
+#name               type                 cst                  value                
+pk_object           ;String              ;                    ;node_now.pk_object
+id_object           ;Int                 ;                    ;node_now.id_object
+lpk_revision_begin  ;Int                 ;                    ;node_now.lpk_revision_begin
+lpk_revision_end    ;Int                 ;                    ;node_now.lpk_revision_end
+datetimecreation    ;String              ;                    ;node_now.datetimecreation
+datetimemodification;String              ;                    ;node_now.datetimemodification
+datetimedestruction ;String              ;                    ;node_now.datetimedestruction
+commentaire             ;String              ;                    ;node_now.comment
+name                ;String              ;                    ;node_now.name
+importid            ;Int                 ;                    ;node_now.importid
+importtable         ;String              ;                    ;node_now.importtable
+lid_actor_creator   ;Int                 ;                    ;node_now.lid_actor_creator
+
+###descriptionsystem
+#name               type                 cst                  value                
+pk_descriptionsystem;String              ;                    ;node_now.pk_descriptionsystem
+id_descriptionsystem;Int                 ;                    ;node_now.id_descriptionsystem
+lpk_object          ;Int                 ;                    ;node_now.lpk_object
+strategicvalue      ;String              ;                    ;node_now.strategicvalue
+operational         ;Int                 ;operational         ;node_now.operational
+operationalstate    ;String              ;                    ;node_now.operationalstate
+dateoperationalcreation;String              ;                    ;node_now.dateoperationalcreation
+dateoperationalcreationupper;String              ;                    ;node_now.dateoperationalcreationupper
+operationaldatecreationaccuracy;String              ;operationaldatecreationaccuracy;node_now.operationaldatecreationaccuracy
+datetimeoperationaldestruction;String              ;                    ;node_now.datetimeoperationaldestruction
+geotrackingxyquality;Int                 ;geotrackingxyquality;node_now.geotrackingxyquality
+geotrackingzquality ;Int                 ;geotrackingzquality ;node_now.geotrackingzquality
+geotrackingdate     ;String              ;                    ;node_now.geotrackingdate
+geotrackingsource   ;String              ;                    ;node_now.geotrackingsource
+parameters          ;String              ;                    ;node_now.parameters
+parameterslist      ;String              ;                    ;node_now.parameterslist
+streetname          ;String              ;                    ;node_now.streetname
+streetupname        ;String              ;                    ;node_now.streetupname
+streetdownname      ;String              ;                    ;node_now.streetdownname
+streetcomment       ;String              ;                    ;node_now.streetcomment
+lid_actor_1         ;Int                 ;                    ;node_now.lid_actor_1
+lid_actor_2         ;Int                 ;                    ;node_now.lid_actor_2
+lid_actor_3         ;Int                 ;                    ;node_now.lid_actor_3
+lid_facility        ;Int                 ;                    ;node_now.lid_facility
+typereseau         ;String              ;networktype         ;node_now.networktype
+flowconditionupstream;String              ;flowconditionupstream;node_now.flowconditionupstream
+flowconditiondownstream;String              ;flowconditiondownstream;node_now.flowconditiondownstream
+systemfunction      ;String              ;systemfunction      ;node_now.systemfunction
+
+###node
+#name               type                 cst                  value                
+pk_node             ;String              ;                    ;node_now.pk_node
+id_node             ;Int                 ;                    ;node_now.id_node
+lpk_descriptionsystem;Int                 ;                    ;node_now.lpk_descriptionsystem
+lid_descriptionsystem_1;Int                 ;                    ;node_now.lid_descriptionsystem_1
+Zradier            ;Double              ;                    ;node_now.elevationinvert
+Ztampon            ;Double              ;                    ;node_now.elevationcover
+profondeur         ;Double              ;                    ;node_now.depthinvert
+altitude1           ;Double              ;                    ;node_now.altitude1
+depth1              ;Double              ;                    ;node_now.depth1
+nodetype            ;String              ;nodetype            ;node_now.nodetype
+nodesubtype         ;String              ;nodesubtype         ;node_now.nodesubtype
+accessibility       ;String              ;accessibility       ;node_now.accessibility
+domain              ;String              ;                    ;node_now.domain
+location            ;String              ;location            ;node_now.location
+width               ;Double              ;                    ;node_now.width
+lenght              ;Double              ;                    ;node_now.lenght
+lid_resource_1      ;Int                 ;                    ;node_now.lid_resource_1
+lid_resource_2      ;Int                 ;                    ;node_now.lid_resource_2
+lid_resource_3      ;Int                 ;                    ;node_now.lid_resource_3
+lid_resource_4      ;Int                 ;                    ;node_now.lid_resource_4
+lid_resource_5      ;Int                 ;                    ;node_now.lid_resource_5
+lid_resource_6      ;Int                 ;                    ;node_now.lid_resource_6
+manholecovershape   ;String              ;manholecovershape   ;node_now.manholecovershape
+manholecovertype    ;String              ;                    ;node_now.manholecovertype
+manholecoverdiameter;Double              ;                    ;node_now.manholecoverdiameter
+manholematerial     ;String              ;                    ;node_now.manholematerial
+manholeshape        ;String              ;manholeshape        ;node_now.manholeshape
+N_echelons         ;String              ;presencesteps       ;node_now.presencesteps
+N_crosse          ;String              ;presencehandle      ;node_now.presencehandle
+N_cunette          ;String              ;presencelowflowchannel;node_now.presencelowflowchannel
+N_cloisonsiphoid  ;String              ;presencesiphoidpartition;node_now.presencesiphoidpartition
+presencelid         ;String              ;presencelid         ;node_now.presencelid
+psnominalcapacity   ;Double              ;                    ;node_now.psnominalcapacity
+psfence             ;String              ;psfence             ;node_now.psfence
+psstormwaterinlet   ;String              ;psstormwaterinlet   ;node_now.psstormwaterinlet
+pslocked            ;String              ;pslocked            ;node_now.pslocked
+psh2streatment      ;String              ;psh2streatment      ;node_now.psh2streatment
+pseleccabinet       ;String              ;pseleccabinet       ;node_now.pseleccabinet
+pseleccabinetlocked ;String              ;pseleccabinetlocked ;node_now.pseleccabinetlocked
+psremotemonitoring  ;String              ;psremotemonitoring  ;node_now.psremotemonitoring
+psremotemonitoringcomment;String              ;                    ;node_now.psremotemonitoringcomment
+pspumpswitchingcontroller;String              ;pspumpswitchingcontroller;node_now.pspumpswitchingcontroller
+pspumpswitchingcontrollertype;String              ;pspumpswitchingcontrollertype;node_now.pspumpswitchingcontrollertype
+psfloatnumber       ;Int                 ;                    ;node_now.psfloatnumber
+psfailurecontrollertype;String              ;psfailurecontrollertype;node_now.psfailurecontrollertype
+psmaterial          ;String              ;psmaterial          ;node_now.psmaterial
+psfallprotectiongratings;String              ;psfallprotectiongratings;node_now.psfallprotectiongratings
+psoverflow          ;String              ;psoverflow          ;node_now.psoverflow
+psinletscreen       ;String              ;psinletscreen       ;node_now.psinletscreen
+pspumpnumber        ;Int                 ;                    ;node_now.pspumpnumber
+psguiderail         ;String              ;psguiderail         ;node_now.psguiderail
+pspumpliftingchain  ;String              ;pspumpliftingchain  ;node_now.pspumpliftingchain
+pscheckvalve        ;String              ;pscheckvalve        ;node_now.pscheckvalve
+psgatevalve         ;String              ;psgatevalve         ;node_now.psgatevalve
+pspressureport      ;String              ;pspressureport      ;node_now.pspressureport
+DSHroleouvrage      ;String              ;                    ;node_now.DSHroleouvrage
+lateralusercategory ;String              ;lateralusercategory ;node_now.lateralusercategory
+presencealarm       ;String              ;presencealarm       ;node_now.presencealarm
+presencecontroller  ;String              ;presencecontroller  ;node_now.presencecontroller
+sedimenttrap        ;String              ;sedimenttrap        ;node_now.sedimenttrap
+X                   ;Double              ;                    ;node_now.X
+dX                  ;Double              ;                    ;node_now.dX
+Y                   ;Double              ;                    ;node_now.Y
+dY                  ;Double              ;                    ;node_now.dY
+Z                   ;Double              ;                    ;node_now.Z
+dZ                  ;Double              ;                    ;node_now.dZ
+
+
+
+###deficiency
+#name               type                 cst                  value                
+pk_deficiency       ;String              ;                    ;deficiency_now.pk_deficiency
+id_deficiency       ;Int                 ;                    ;deficiency_now.id_deficiency
+lpk_object          ;Int                 ;                    ;deficiency_now.lpk_object
+deficiencycategory  ;String              ;deficiencycategory  ;deficiency_now.deficiencycategory
+impact              ;String              ;                    ;deficiency_now.impact
+priority            ;String              ;                    ;deficiency_now.priority
+risks               ;String              ;                    ;deficiency_now.risks
+sector1             ;String              ;                    ;deficiency_now.sector1
+sector2             ;String              ;                    ;deficiency_now.sector2
+sector3             ;String              ;                    ;deficiency_now.sector3
+lid_descriptionsystem;Int                 ;                    ;deficiency_now.lid_descriptionsystem
+
+
+
+###observation
+#name               type                 cst                  value                
+pk_observation      ;String              ;                    ;observation_now.pk_observation
+id_observation      ;Int                 ;                    ;observation_now.id_observation
+lpk_object          ;Int                 ;                    ;observation_now.lpk_object
+datetimeobservation ;String              ;                    ;observation_now.datetimeobservation
+source              ;String              ;                    ;observation_now.source
+number              ;Int                 ;                    ;observation_now.number
+conditionglobal     ;String              ;conditionglobal     ;observation_now.conditionglobal
+gravity             ;String              ;gravity             ;observation_now.gravity
+progression         ;String              ;                    ;observation_now.progression
+nextactiontype      ;String              ;nextactiontype      ;observation_now.nextactiontype
+nextactioncomment   ;String              ;                    ;observation_now.nextactioncomment
+nextactiontypecomment;String              ;                    ;observation_now.nextactiontypecomment
+lid_delivery        ;Int                 ;                    ;observation_now.lid_delivery
+lid_deficiency      ;Int                 ;                    ;observation_now.lid_deficiency
+nextactionsubtype   ;String              ;nextactionsubtype   ;observation_now.nextactionsubtype
+etattampon      ;String              ;conditioncover      ;observation_now.conditioncover
+etatechelon       ;String              ;conditionstep       ;observation_now.conditionstep
+etatregard    ;String              ;conditionmanhole    ;observation_now.conditionmanhole
+etatradier    ;String              ;conditionculvert    ;observation_now.conditionculvert
+conditioncontroller ;String              ;conditioncontroller ;observation_now.conditioncontroller
+pres_h2s         ;String              ;presenceh2s         ;observation_now.presenceh2s
+pres_charge;String              ;presencepressurizedflow;observation_now.presencepressurizedflow
+pres_sediments   ;String              ;presencesediments   ;observation_now.presencesediments
+pres_ECPP;String              ;presenceinfiltrationtosewer;observation_now.presenceinfiltrationtosewer
+pres_infiltration;String              ;presenceinfiltration;observation_now.presenceinfiltration
+pres_racine       ;String              ;presenceroots       ;observation_now.presenceroots
+etat_maintenance  ;String              ;maintenanceopinion  ;observation_now.maintenanceopinion
+equipmentopenclose  ;String              ;equipmentopenclose  ;observation_now.equipmentopenclose
+
+
+
+
+###resource
+#name               type                 cst                  value                
+pk_resource         ;String              ;                    ;media_now.pk_resource
+id_resource         ;Int                 ;                    ;media_now.id_resource
+lpk_object          ;Int                 ;                    ;media_now.lpk_object
+productor           ;String              ;                    ;media_now.productor
+datetimeresource    ;String              ;                    ;media_now.datetimeresource
+produceradress      ;String              ;                    ;media_now.produceradress
+producername        ;String              ;                    ;media_now.producername
+producermail        ;String              ;                    ;media_now.producermail
+producerphone1      ;String              ;                    ;media_now.producerphone1
+producerphone2      ;String              ;                    ;media_now.producerphone2
+file                ;String              ;                    ;media_now.file
+description         ;String              ;                    ;media_now.description
+resourceindex       ;Int                 ;                    ;media_now.resourceindex
+lid_delivery        ;Int                 ;                    ;media_now.lid_delivery
+
+###media
+#name               type                 cst                  value                
+pk_media            ;String              ;                    ;media_now.pk_media
+id_media            ;Int                 ;                    ;media_now.id_media
+lpk_resource        ;Int                 ;                    ;media_now.lpk_resource
+typemedia           ;String              ;typemedia           ;media_now.typemedia
+
+
+###geom
+geom                ;String              ;                    ;ST_AsText(node_now.geom)
+
+###main
+FROM node_now LEFT JOIN deficiency_now ON deficiency_now.pk_deficiency = (SELECT def.pk_deficiency FROM deficiency_now AS def  WHERE  def.lid_descriptionsystem=node_now.id_descriptionsystem  LIMIT 1) LEFT JOIN observation_now ON observation_now.lid_deficiency = deficiency_now.id_deficiency LEFT JOIN media_now ON media_now.id_resource = (SELECT tcobjectresource.lid_resource FROM tcobjectresource WHERE tcobjectresource.lid_object = node_now.id_object LIMIT 1)  AND media_now.typemedia='PHO'

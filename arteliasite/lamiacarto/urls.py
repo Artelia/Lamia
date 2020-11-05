@@ -16,6 +16,5 @@ urlpatterns = [
     path("<path:conffile>", views.LamiaProjectView.as_view(), name="lamiaprojectgis",),
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 

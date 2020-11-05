@@ -2,5 +2,5 @@
   "languages": [
     "fr-FR"
   ],
-  "qtlinguist": "../Lamia/i18n/Lamia"
+  "qtlinguist": "../qgisiface/i18n/Lamia"
 }

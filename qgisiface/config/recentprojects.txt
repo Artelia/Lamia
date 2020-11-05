@@ -1,0 +1,11 @@
+C:\01_WORKINGDIR\canejean2\Canejan.sqlite
+C:\01_WORKINGDIR\testphoto\teet.sqlite
+C:\01_WORKINGDIR\canejean\Canejan.sqlite
+C:\01_WORKINGDIR\bm\BD_totale_ind15.sqlite
+lamiaunittest.importgpmb@localhost:5432;pvr;pvr
+lamiaunittest.base3_urbandrainage_lamia@localhost:5432;pvr;pvr
+C:\01_WORKINGDIR\VTA_2020_Noailles.sqlite
+C:\000_testdigue\temp_base2_digue\test01.sqlite
+C:\01_WORKINGDIR\cier\AEP Cieux.sqlite
+C:\01_WORKINGDIR\dig\tete.sqlite
+C:\01_WORKINGDIR\cons\cons.sqlite

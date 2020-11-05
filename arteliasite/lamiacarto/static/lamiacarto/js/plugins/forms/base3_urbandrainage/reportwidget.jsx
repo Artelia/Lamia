@@ -4,6 +4,7 @@ const EditingFormReact = require('../editingformwidget')
 const $ = require('jquery')
 // import ReactDOM from "react-dom";
 const ReactDOM = require('react-dom')
+const url = require('url');
 
 const axios = require('axios');
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
@@ -35,53 +36,17 @@ class ReportEditingFormReact extends EditingFormReact {
 
 
     domLoaded() {
-        console.log('okok report')
-
-        // let comb = $('button[name="pushButton_openph"]')
-
         $('button[name="pushButton_openph"]').click(this.buttonClicked.bind(this))
-
-
-
-
     }
 
-    buttonClicked() {
-        console.log('lklk')
-        console.log($('input[name="file"]'))
-        console.log($('input[name="file"]').value)
-        console.log($('input[name="file"]').val())
-
-        // this.projectdata.id_project pgdbname pgschema
-        console.log('***', this.projectdata)
-
-
-        let url = ("http://" + window.location.host + '/media/'
-            + this.projectdata.pgdbname + '/' + this.projectdata.pgschema + '/'
-            + $('input[name="file"]').val())
-        console.log(url)
-        let filename = $('input[name="name"]').val() + '.' + $('input[name="file"]').val().split('.').pop()
-        console.log(filename)
-        // axios.request({ url, responseType: 'blob' })
-        //     .then(({ data }) => {
-        //         const downloadUrl = window.URL.createObjectURL(new Blob([data]));
-        //         const link = document.createElement('a');
-        //         link.href = downloadUrl;
-        //         link.setAttribute('download', filename); //any other extension
-        //         document.body.appendChild(link);
-        //         link.click();
-        //         link.remove();
-        //     })
-
-        axios.get(url, {
-            responseType: 'blob',
-        }).then(res => {
-            fileDownload(res.data, filename);
-        });
-
+    async buttonClicked() {
+        const destfilename = $('input[name="file"]').val()
+        let baseurl = ("http://" + window.location.host + '/media/'
+            + this.props.mainiface.projectdata.pgdbname + '/' + this.props.mainiface.projectdata.pgschema + '/')
+        let urljoined = url.resolve(baseurl, destfilename);
+        let awsreporturl = await axios.post(urljoined)
+        window.open(awsreporturl.data)
     }
-
-
 }
 
 module.exports = ReportEditingFormReact;

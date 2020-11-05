@@ -1,12 +1,12 @@
 import os, sys, logging
 from threading import Thread
 
-lamiapath = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-sys.path.append(lamiapath)
+# lamiapath = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+# sys.path.append(lamiapath)
 import Lamia
-from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
-from Lamia.iface.qgscanvas.ifaceqgiscanvas import QgisCanvas
-from Lamia.libslamia.dbaseutils.chooserid import IDChooser
+from Lamia.api.dbasemanager.dbaseparserfactory import DBaseParserFactory
+from Lamia.qgisiface.iface.qgscanvas.ifaceqgiscanvas import QgisCanvas
+from Lamia.api.libslamia.dbaseutils.chooserid import IDChooser
 from artelialogin.models import Project
 
 # from ...test.test_utils import *
@@ -190,9 +190,12 @@ class LamiaSession:
     def getStyles(self):
         sql = "SELECT businessline FROM database"
         worktype = self.lamiaparser.query(sql)[0][0]
-        styledirectory = os.path.join(
-            os.path.dirname(Lamia.__file__), "worktypeconf", worktype, "qgsstyles",
+        styledirectory = os.path.normpath(
+            os.path.join(
+                os.path.dirname(Lamia.__file__), "config", worktype, "qgsstyles"
+            )
         )
+        print("styledirectory", styledirectory)
         stylesdir = [
             os.path.basename(f.path) for f in os.scandir(styledirectory) if f.is_dir()
         ]

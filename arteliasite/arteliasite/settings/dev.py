@@ -10,16 +10,24 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
-import os, logging
+import os, sys, logging
 import logging.config
+from django.conf.urls.static import static
 from .default import *
 
+lamiapath = os.path.normpath(
+    os.path.join(os.path.dirname(__file__), "..", "..", "..", "..")
+)
+sys.path.append(lamiapath)
+from Lamia.secrets import postgis_aws as pgsecret, djangosecrets, aws_secrets
+
+USE_S3 = False
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "el#4!%-fd*sm(sliyq+p_x+ym+=xovjq+9pl!oizcg1(z6%s29"
+SECRET_KEY = djangosecrets.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,6 +45,7 @@ DEBUG = True
 #     }
 # }
 
+ALLOWED_HOSTS = djangosecrets.ALLOWED_HOSTS
 
 CORS_ORIGIN_WHITELIST = [
     "http://127.0.0.1:8000",
@@ -61,11 +70,11 @@ WSGI_APPLICATION = "arteliasite.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "lamiaunittest",
-        "USER": "pvr",
-        "PASSWORD": "pvr",
-        "HOST": "localhost",
-        "PORT": "5432",
+        "NAME": pgsecret.dbname,
+        "USER": pgsecret.user,
+        "PASSWORD": pgsecret.password,
+        "HOST": pgsecret.host,
+        "PORT": pgsecret.port,
         "OPTIONS": {"application_name": "lamiadjango"},
     }
 }
@@ -92,15 +101,44 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [
     os.path.abspath(os.path.join(BASE_DIR, "node_modules")),  # for bootstrap
     os.path.abspath(os.path.join(BASE_DIR, "staticbundles")),  # for bootstrap
-    ("forms", os.path.join(os.path.dirname(BASE_DIR), "Lamia", "worktypeconf")),
+    ("forms", os.path.abspath(os.path.join(BASE_DIR, "..", "config"))),
     ("img", os.path.join(BASE_DIR, "lamiacarto", "static", "assets", "img")),
 ]
 
 STATIC_ROOT = os.path.normpath(os.path.join(BASE_DIR, "static"))
 
-MEDIA_ROOT = os.path.join("C:/", "media")
-MEDIA_URL = "/media/"
+AWS_ACCESS_KEY_ID = aws_secrets.AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY = aws_secrets.AWS_SECRET_ACCESS_KEY
 
+if USE_S3:
+
+    AWS_STORAGE_BUCKET_NAME = aws_secrets.AWS_STORAGE_BUCKET_NAME
+    AWS_S3_REGION_NAME = aws_secrets.AWS_S3_REGION_NAME
+
+    # AWS_S3_OBJECT_PARAMETERS = aws_secrets.AWS_S3_OBJECT_PARAMETERS
+
+    AWS_S3_HOST = f"{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}"
+    AWS_S3_URL = (
+        f"https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com/"
+    )
+    # print("*", AWS_S3_URL)
+    # PUBLIC_MEDIA_LOCATION = ""
+    # MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{PUBLIC_MEDIA_LOCATION}/"
+    # MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
+    # AWS_MEDIA_DIR = ""
+    # MEDIA_URL = AWS_S3_URL + AWS_MEDIA_DIR + '/'
+    # MEDIA_ROOT = AWS_S3_URL
+    MEDIA_URL = AWS_S3_URL
+    # MEDIA_URL = "/media/"
+
+    DEFAULT_FILE_STORAGE = "arteliasite.storage_backends.PublicMediaStorage"
+
+else:
+    MEDIA_ROOT = os.path.join("C:/", "media")
+    MEDIA_URL = "/media/"
+
+
+PROXY_ARTELIA = False
 
 LOGGING = {
     "version": 1,

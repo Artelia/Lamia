@@ -3,6 +3,7 @@ const $ = require('jquery')
 const axios = require('axios');
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
 axios.defaults.xsrfCookieName = "csrftoken"
+const url = require('url');
 //
 
 
@@ -52,7 +53,6 @@ class MediaEditingFormReact extends EditingFormReact {
     }
 
     shouldComponentUpdate() {
-        console.log('should')
         if ($("#lamiamedia")) {
             $("#lamiamedia").remove();
         }
@@ -61,19 +61,20 @@ class MediaEditingFormReact extends EditingFormReact {
 
 
     render() {
-        console.log('rend')
         let res = super.render()
         return res
     }
 
     componentDidUpdate() {
-        console.log('did')
+        this.updateImageFromAWS()
+    }
 
-        this.updateImage()
+    domLoaded() {
+        $('button[name="pushButton_openph"]').click(this.buttonClicked.bind(this))
     }
 
 
-    async updateImage() {
+    async updateImageFromThumbnail() {
         let url = 'http://' + window.location.host + '/lamiaapi/' + this.projectdata.id_project
         let res = await axios.post(url, {
             function: 'thumbnail',
@@ -84,7 +85,24 @@ class MediaEditingFormReact extends EditingFormReact {
 
     }
 
+    async updateImageFromAWS() {
+        let filename = $('input[name="file"]').val()
+        let url = ("http://" + window.location.host + '/media/'
+            + this.projectdata.pgdbname + '/' + this.projectdata.pgschema + '/'
+            + filename)
+        $('div[name="frame_ph"]').prepend($('<img>', { id: 'lamiamedia', src: url, width: 200 }))
 
+    }
+
+    async buttonClicked() {
+        const destfilename = $('input[name="file"]').val()
+        let baseurl = ("http://" + window.location.host + '/media/'
+            + this.props.mainiface.projectdata.pgdbname + '/' + this.props.mainiface.projectdata.pgschema + '/')
+        let urljoined = url.resolve(baseurl, destfilename);
+        let awsreporturl = await axios.post(urljoined)
+        window.open(awsreporturl.data)
+
+    }
 
 }
 

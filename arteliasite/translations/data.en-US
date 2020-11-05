@@ -106,7 +106,8 @@
       "visiblefilter": "Filter invisible layers",
       "separator": "Separator",
       "separatortooltip": "Add separator",
-      "zoomtolayer": "Zoom to layer"
+      "zoomtolayer": "Zoom to layer",
+      "transparency": "Trasparency"
     },
     "locate": {
       "metersUnit": "meters",
@@ -198,6 +199,17 @@
       "places": "Places",
       "recent": "Recent searches"
     },
+    "serviceinfo": {
+      "title": "Theme Information",
+      "abstract": "Abstract",
+      "keywords": "Keywords",
+      "onlineResource": "Online resource",
+      "contactPerson": "Contact person",
+      "contactOrganization": "Organization",
+      "contactPosition": "Position",
+      "contactPhone": "Phone",
+      "contactEmail": "Email"
+    },
     "share": {
       "directLinkTitle": "Via a direct link",
       "generatingpermalink": "Generating permalink...",
@@ -225,6 +237,9 @@
         "abstract": "Abstract"
       },
       "openintab": "Open in Tab"
+    },
+    "vectorlayerpicker": {
+      "prompt": "Enter layer name"
     },
     "window": {
       "close": "Close",
