@@ -307,11 +307,14 @@ class BaseCameraTool(AbstractLamiaFormTool):
                 if self.parentWidget.DBASETABLENAME == "node":
                     # get geom
                     noeudfetwkt = self.dbase.getValuesFromPk(
-                        "node", "ST_AsText(geom)", self.parentWidget.currentFeaturePK
+                        "node", "ST_AsText(geom)", self.parentWidget.currentFeaturePK,
                     )
-                    neudfetgeom = qgis.core.QgsGeometry.fromWkt(noeudfetwkt).asPoint()
-                    # self.mainifacewidget.qgiscanvas.createorresetRubberband(1)
-                    self.setTempGeometry([neudfetgeom], False, False)
+                    neudfetgeom = qgis.core.QgsGeometry.fromWkt(noeudfetwkt)
+                    print(neudfetgeom)
+                    if not neudfetgeom.isNull():
+                        # self.mainifacewidget.qgiscanvas.createorresetRubberband(1)
+                        geompoint = [neudfetgeom.asPoint()]
+                        self.setTempGeometry(geompoint, False, False)
 
             self.photowdg.clear()
 

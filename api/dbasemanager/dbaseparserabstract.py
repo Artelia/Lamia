@@ -27,7 +27,7 @@ This file is part of LAMIA.
  """
 
 import datetime
-import os, sys, re, logging, shutil, io
+import os, sys, re, logging, shutil, io, importlib
 
 try:
     import PIL
@@ -109,6 +109,8 @@ class AbstractDBaseParser:
         self.dbconfigreader = DBconfigReader(self)
         #:the offline manager instance
         self.dbaseofflinemanager = DBaseOfflineManager(self)
+        # the crud instance
+        self.lamiaorm = None
 
         # config resourcefinder
         self.configresourcefinder = ConfigResourcefinder(self)
@@ -166,7 +168,7 @@ class AbstractDBaseParser:
         # raise exceptions for debug
         self.raiseexceptions = False
 
-    def __________________________DBase_handing(self):
+    def __________________________DBase_handling(self):
         pass
 
     def connectToDBase(self):
@@ -358,6 +360,11 @@ class AbstractDBaseParser:
         self.currentrevision = int(self.maxrevision)
 
         updateWinReg(worktype=worktype)
+
+        trigermodule = importlib.import_module(
+            f"Lamia.config.{self.worktype}.dbase.{self.worktype}_crud_{self.workversion}"
+        )
+        self.lamiaorm = trigermodule.LamiaORM(self)
 
     def initDBase(self):
         raise NotImplementedError
@@ -866,183 +873,183 @@ class AbstractDBaseParser:
     def __________________________Feature_creation_saving(self):
         pass
 
-    def createNewObjet(self, docommit=True):
-        datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-        # lastobjetid = self.getLastId('Objet') + 1
-        if self.base3version:
-            lastobjetid = self.getmaxColumnValue("object", "id_object")
-            sql = "INSERT INTO object (id_object, lpk_revision_begin, datetimecreation, datetimemodification ) "
-            sql += (
-                "VALUES("
-                + str(lastobjetid + 1)
-                + ","
-                + str(self.maxrevision)
-                + ",'"
-                + datecreation
-                + "','"
-                + datecreation
-                + "' )"
-            )
-            self.query(sql, docommit=docommit)
-            pkobjet = self.getLastPK("object")
-        else:
-            lastobjetid = self.getmaxColumnValue("Objet", "id_objet")
-            sql = "INSERT INTO Objet (id_objet, lpk_revision_begin, datetimecreation, datetimemodification ) "
-            sql += (
-                "VALUES("
-                + str(lastobjetid + 1)
-                + ","
-                + str(self.maxrevision)
-                + ",'"
-                + datecreation
-                + "','"
-                + datecreation
-                + "' )"
-            )
-            self.query(sql, docommit=docommit)
-            pkobjet = self.getLastPK("Objet")
-        return pkobjet
+    # def createNewObjet(self, docommit=True):
+    #     datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    #     # lastobjetid = self.getLastId('Objet') + 1
+    #     if self.base3version:
+    #         lastobjetid = self.getmaxColumnValue("object", "id_object")
+    #         sql = "INSERT INTO object (id_object, lpk_revision_begin, datetimecreation, datetimemodification ) "
+    #         sql += (
+    #             "VALUES("
+    #             + str(lastobjetid + 1)
+    #             + ","
+    #             + str(self.maxrevision)
+    #             + ",'"
+    #             + datecreation
+    #             + "','"
+    #             + datecreation
+    #             + "' )"
+    #         )
+    #         self.query(sql, docommit=docommit)
+    #         pkobjet = self.getLastPK("object")
+    #     else:
+    #         lastobjetid = self.getmaxColumnValue("Objet", "id_objet")
+    #         sql = "INSERT INTO Objet (id_objet, lpk_revision_begin, datetimecreation, datetimemodification ) "
+    #         sql += (
+    #             "VALUES("
+    #             + str(lastobjetid + 1)
+    #             + ","
+    #             + str(self.maxrevision)
+    #             + ",'"
+    #             + datecreation
+    #             + "','"
+    #             + datecreation
+    #             + "' )"
+    #         )
+    #         self.query(sql, docommit=docommit)
+    #         pkobjet = self.getLastPK("Objet")
+    #     return pkobjet
 
-    def createNewFeature(self, tablename):
-        parenttables = [tablename] + self.getParentTable(tablename)
-        parenttablename = None
-        for itertablename in parenttables[::-1]:
-            if itertablename in ["Objet", "object"]:
-                parenttablepk = self.createNewObjet()
-                parenttablename = itertablename
-            else:
-                tablepk = self.getLastPK(itertablename) + 1
+    # def createNewFeature(self, tablename):
+    #     parenttables = [tablename] + self.getParentTable(tablename)
+    #     parenttablename = None
+    #     for itertablename in parenttables[::-1]:
+    #         if itertablename in ["Objet", "object"]:
+    #             parenttablepk = self.createNewObjet()
+    #             parenttablename = itertablename
+    #         else:
+    #             tablepk = self.getLastPK(itertablename) + 1
 
-                if parenttablename is not None:
-                    # if not 'onlyoneparenttable' in self.dbasetables[itertablename].keys():
-                    if not itertablename[-4:] == "data":
-                        maxid = (
-                            self.getmaxColumnValue(
-                                itertablename, "id_" + itertablename.lower()
-                            )
-                            + 1
-                        )
-                        listofields = [
-                            "id_" + itertablename.lower(),
-                            "lpk_" + parenttablename.lower(),
-                        ]
-                        listofrawvalues = [maxid, parenttablepk]
-                    else:
-                        listofields = ["lpk_" + parenttablename.lower()]
-                        listofrawvalues = [parenttablepk]
-                    sql = self.createSetValueSentence(
-                        type="INSERT",
-                        tablename=itertablename,
-                        listoffields=listofields,
-                        listofrawvalues=listofrawvalues,
-                    )
-                    self.query(sql)
-                parenttablename = itertablename
-                parenttablepk = self.getLastPK(itertablename)
+    #             if parenttablename is not None:
+    #                 # if not 'onlyoneparenttable' in self.dbasetables[itertablename].keys():
+    #                 if not itertablename[-4:] == "data":
+    #                     maxid = (
+    #                         self.getmaxColumnValue(
+    #                             itertablename, "id_" + itertablename.lower()
+    #                         )
+    #                         + 1
+    #                     )
+    #                     listofields = [
+    #                         "id_" + itertablename.lower(),
+    #                         "lpk_" + parenttablename.lower(),
+    #                     ]
+    #                     listofrawvalues = [maxid, parenttablepk]
+    #                 else:
+    #                     listofields = ["lpk_" + parenttablename.lower()]
+    #                     listofrawvalues = [parenttablepk]
+    #                 sql = self.createSetValueSentence(
+    #                     type="INSERT",
+    #                     tablename=itertablename,
+    #                     listoffields=listofields,
+    #                     listofrawvalues=listofrawvalues,
+    #                 )
+    #                 self.query(sql)
+    #             parenttablename = itertablename
+    #             parenttablepk = self.getLastPK(itertablename)
 
-        return self.getLastPK(tablename)
+    #     return self.getLastPK(tablename)
 
-    def manageFeatureCreationOrUpdate(self, tablename, featurepk=None):
-        """
-        Called by saveFeature - Manage versioning
-        return pk of object
-        """
+    # def manageFeatureCreationOrUpdate(self, tablename, featurepk=None):
+    #     """
+    #     Called by saveFeature - Manage versioning
+    #     return pk of object
+    #     """
 
-        if featurepk is not None:  # existing feature saved
-            if "lpk_revision_begin" in self.getColumns(tablename + "_qgis"):
-                featlastrevision = self.getValuesFromPk(
-                    tablename + "_qgis", "lpk_revision_begin", featurepk
-                )
+    #     if featurepk is not None:  # existing feature saved
+    #         if "lpk_revision_begin" in self.getColumns(tablename + "_qgis"):
+    #             featlastrevision = self.getValuesFromPk(
+    #                 tablename + "_qgis", "lpk_revision_begin", featurepk
+    #             )
 
-                if featlastrevision != self.maxrevision:  # new version feature
-                    print("*********** new feat vers")
-                    self.createNewFeatureVersion(tablename, featurepk)
-                    pktoreturn = self.getLastPK(tablename)
-                else:  # simple feature update
-                    pktoreturn = featurepk
-            else:
-                pktoreturn = featurepk
+    #             if featlastrevision != self.maxrevision:  # new version feature
+    #                 # print("*********** new feat vers")
+    #                 self.createNewFeatureVersion(tablename, featurepk)
+    #                 pktoreturn = self.getLastPK(tablename)
+    #             else:  # simple feature update
+    #                 pktoreturn = featurepk
+    #         else:
+    #             pktoreturn = featurepk
 
-        else:  # feature creation
-            pktoreturn = self.createNewFeature(tablename)
+    #     else:  # feature creation
+    #         pktoreturn = self.createNewFeature(tablename)
 
-        return pktoreturn
+    #     return pktoreturn
 
-    def createNewFeatureVersion(self, dbname, rawpk):
+    # def createNewFeatureVersion(self, dbname, rawpk):
 
-        # first be sure
-        if self.base3version:
-            pkobjet, revbegin = self.getValuesFromPk(
-                dbname + "_qgis", ["pk_object", "lpk_revision_begin"], rawpk
-            )
-        else:
-            pkobjet, revbegin = self.getValuesFromPk(
-                dbname + "_qgis", ["pk_objet", "lpk_revision_begin"], rawpk
-            )
-        if revbegin < self.maxrevision:
-            # first close object
-            if self.base3version:
-                sql = self.createSetValueSentence(
-                    "UPDATE", "object", ["lpk_revision_end"], [self.maxrevision]
-                )
-                sql += " WHERE pk_object = " + str(pkobjet)
-                self.query(sql)
-            else:
-                sql = self.createSetValueSentence(
-                    "UPDATE", "Objet", ["lpk_revision_end"], [self.maxrevision]
-                )
-                sql += " WHERE pk_object = " + str(pkobjet)
-                self.query(sql)
+    #     # first be sure
+    #     if self.base3version:
+    #         pkobjet, revbegin = self.getValuesFromPk(
+    #             dbname + "_qgis", ["pk_object", "lpk_revision_begin"], rawpk
+    #         )
+    #     else:
+    #         pkobjet, revbegin = self.getValuesFromPk(
+    #             dbname + "_qgis", ["pk_objet", "lpk_revision_begin"], rawpk
+    #         )
+    #     if revbegin < self.maxrevision:
+    #         # first close object
+    #         if self.base3version:
+    #             sql = self.createSetValueSentence(
+    #                 "UPDATE", "object", ["lpk_revision_end"], [self.maxrevision]
+    #             )
+    #             sql += " WHERE pk_object = " + str(pkobjet)
+    #             self.query(sql)
+    #         else:
+    #             sql = self.createSetValueSentence(
+    #                 "UPDATE", "Objet", ["lpk_revision_end"], [self.maxrevision]
+    #             )
+    #             sql += " WHERE pk_object = " + str(pkobjet)
+    #             self.query(sql)
 
-            # then clone parents
-            parenttables = self.getParentTable(dbname)[::-1] + [dbname]
-            # get pkparents
-            pknames = [
-                "pk_" + parenttablename.lower() for parenttablename in parenttables
-            ]
-            parentspk = self.getValuesFromPk(dbname.lower() + "_qgis", pknames, rawpk)
+    #         # then clone parents
+    #         parenttables = self.getParentTable(dbname)[::-1] + [dbname]
+    #         # get pkparents
+    #         pknames = [
+    #             "pk_" + parenttablename.lower() for parenttablename in parenttables
+    #         ]
+    #         parentspk = self.getValuesFromPk(dbname.lower() + "_qgis", pknames, rawpk)
 
-            lastpk = []
-            for i, tablename in enumerate(parenttables):
-                pkfields = []
-                nonpkfields = []
-                for fields in self.getColumns(tablename):
-                    if fields[0:3] == "pk_" or fields[0:4] == "lpk_":
-                        pkfields.append(fields)
-                    elif fields == "geom":
-                        nonpkfields.append("ST_AsText(geom)")
-                    else:
-                        nonpkfields.append(fields)
-                values = self.getValuesFromPk(tablename, nonpkfields, parentspk[i])
+    #         lastpk = []
+    #         for i, tablename in enumerate(parenttables):
+    #             pkfields = []
+    #             nonpkfields = []
+    #             for fields in self.getColumns(tablename):
+    #                 if fields[0:3] == "pk_" or fields[0:4] == "lpk_":
+    #                     pkfields.append(fields)
+    #                 elif fields == "geom":
+    #                     nonpkfields.append("ST_AsText(geom)")
+    #                 else:
+    #                     nonpkfields.append(fields)
+    #             values = self.getValuesFromPk(tablename, nonpkfields, parentspk[i])
 
-                nonpkfields = [
-                    "geom" if x == "ST_AsText(geom)" else x for x in nonpkfields
-                ]
-                sql = self.createSetValueSentence(
-                    "INSERT", tablename, nonpkfields, list(values)
-                )
-                self.query(sql)
-                lastpk.append(self.getLastPK(tablename))
-                fieldstoupdate = []
-                valuestoupdate = []
-                if "lpk_revision_begin" in pkfields:
-                    fieldstoupdate += ["lpk_revision_begin", "lpk_revision_end"]
-                    valuestoupdate += [self.maxrevision, None]
-                if "datetimemodification" in nonpkfields:
-                    datemodif = str(
-                        datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                    )
-                    fieldstoupdate += ["datetimemodification"]
-                    valuestoupdate += [datemodif]
-                if i > 0 and "lpk_" + parenttables[i - 1].lower() in pkfields:
-                    fieldstoupdate += ["lpk_" + parenttables[i - 1].lower()]
-                    valuestoupdate += [lastpk[i - 1]]
+    #             nonpkfields = [
+    #                 "geom" if x == "ST_AsText(geom)" else x for x in nonpkfields
+    #             ]
+    #             sql = self.createSetValueSentence(
+    #                 "INSERT", tablename, nonpkfields, list(values)
+    #             )
+    #             self.query(sql)
+    #             lastpk.append(self.getLastPK(tablename))
+    #             fieldstoupdate = []
+    #             valuestoupdate = []
+    #             if "lpk_revision_begin" in pkfields:
+    #                 fieldstoupdate += ["lpk_revision_begin", "lpk_revision_end"]
+    #                 valuestoupdate += [self.maxrevision, None]
+    #             if "datetimemodification" in nonpkfields:
+    #                 datemodif = str(
+    #                     datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    #                 )
+    #                 fieldstoupdate += ["datetimemodification"]
+    #                 valuestoupdate += [datemodif]
+    #             if i > 0 and "lpk_" + parenttables[i - 1].lower() in pkfields:
+    #                 fieldstoupdate += ["lpk_" + parenttables[i - 1].lower()]
+    #                 valuestoupdate += [lastpk[i - 1]]
 
-                sql = self.createSetValueSentence(
-                    "UPDATE", tablename, fieldstoupdate, valuestoupdate
-                )
-                sql += " WHERE pk_" + tablename.lower() + " = " + str(lastpk[i])
-                self.query(sql)
+    #             sql = self.createSetValueSentence(
+    #                 "UPDATE", tablename, fieldstoupdate, valuestoupdate
+    #             )
+    #             sql += " WHERE pk_" + tablename.lower() + " = " + str(lastpk[i])
+    #             self.query(sql)
 
     def saveRessourceFile(
         self,

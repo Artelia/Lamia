@@ -626,7 +626,6 @@ class FormToolUtils(QtCore.QObject):
         pass
 
     def saveFeature(self, featurepk=None):
-        # self.currentFeature, self.currentFeaturePK = self.manageFeatureCreationOrUpdate()
 
         dbasetablehasgeomfield = self.formtoolwidget.dbase.dbasetables[
             self.formtoolwidget.DBASETABLENAME
@@ -679,35 +678,6 @@ class FormToolUtils(QtCore.QObject):
         self._reinitAfterSaving()
 
         self.formtoolwidget.selectFeature(pk=savedfeaturepk)
-
-    """
-    def manageFeatureCreationOrUpdate(self, featurepk=None):
-
-
-        currentFeature = None
-        dbase = self.formtoolwidget.mainifacewidget.dbase
-
-        #if self.currentFeaturePK is not None :
-        if featurepk is not None :
-            if 'lpk_revision_begin' in dbase.getColumns(self.formtoolwidget.DBASETABLENAME + '_qgis'):
-                featlastrevision = dbase.getValuesFromPk(self.formtoolwidget.DBASETABLENAME + '_qgis',
-                                                        'lpk_revision_begin',
-                                                            featurepk)
-
-                if featlastrevision != dbase.maxrevision:   #new version feature
-                    self.formtoolwidget.dbase.createNewFeatureVersion(self.formtoolwidget.DBASETABLENAME,
-                                                                            featurepk)
-                    pktoreturn= self.formtoolwidget.dbase.getLastPK(self.formtoolwidget.DBASETABLENAME)
-                else:       #simple feature update
-                    pktoreturn = featurepk
-            else:
-                pktoreturn = featurepk
-
-        else:           # feature creation
-            pktoreturn = self.formtoolwidget.dbase.createNewFeature(self.formtoolwidget.DBASETABLENAME)
-
-        return pktoreturn
-    """
 
     def setGeometryToFeature(self, featurepk=None):
 
@@ -925,7 +895,6 @@ class FormToolUtils(QtCore.QObject):
                 sql = sql[:-1]  # remove last ,
 
                 sql += " WHERE pk_" + str(tablename) + " = " + str(tablepk)
-                print(sql)
                 self.formtoolwidget.dbase.query(sql)
 
     def setValueInWidget(self, wdg, valuetoset, table, field):
@@ -1259,7 +1228,8 @@ class FormToolUtils(QtCore.QObject):
         layer = self.formtoolwidget.mainifacewidget.qgiscanvas.layers[
             self.formtoolwidget.DBASETABLENAME
         ]["layerqgis"]
-        layer.dataProvider().forceReload()
+        # layer.dataProvider().forceReload()
+        layer.dataProvider().reloadData()
         layer.repaintRequested.emit()
 
         # self.mainifacewidget.qgiscanvas.canvas.refresh()

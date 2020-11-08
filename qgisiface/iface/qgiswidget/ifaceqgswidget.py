@@ -79,8 +79,6 @@ from .subdialogs.lamia_newDB import newDBDialog
 from .subdialogs.lamia_getDate import getDateDialog
 from .subdialogs.lamia_tablefield_dialog import LamiaTableFieldDialog
 
-from .tools.subwidgets.lamia_numpad import NumPadDialog
-
 # version 01
 
 

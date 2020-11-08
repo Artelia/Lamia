@@ -1,4 +1,4 @@
-import os, sys, qgis, qgis.core, platform
+import os, sys, qgis, qgis.core, platform, logging
 
 from qgis.PyQt.QtWidgets import QDialog
 from qgis.PyQt.QtCore import QCoreApplication, QSettings, QTranslator, qVersion

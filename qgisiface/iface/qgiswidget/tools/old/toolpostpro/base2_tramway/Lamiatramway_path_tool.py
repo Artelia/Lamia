@@ -1,0 +1,41 @@
+# -*- coding: utf-8 -*-
+
+"""
+This file is part of LAMIA.
+
+    LAMIA is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    LAMIA is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Foobar.  If not, see <https://www.gnu.org/licenses/>.
+
+"""
+"""
+  * Copyright (c) 2017-2020 ARTELIA Commit <lamia@arteliagroup.com>
+  * 
+  * SPDX-License-Identifier: GPL-3.0-or-later
+  * License-Filename: LICENSING.md
+ """
+ 
+
+from ..base2.Lamia_path_tool import PathTool
+
+# ********************************************************************************************************************
+# ********************************* Main Widget                *******************************************************
+# ********************************************************************************************************************
+
+class TramwayPathTool(PathTool):
+
+    DBASES = ['digue','base_digue','base2_digue']
+
+    def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):
+        super(TramwayPathTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)
+
+        

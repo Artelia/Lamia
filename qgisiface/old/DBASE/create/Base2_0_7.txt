@@ -1,0 +1,22 @@
+# copy Pointtopo in Topographiedata
+
+
+sql = "INSERT INTO Topographiedata(pk_topographiedata, lpk_topographie, typepointtopo, x, y, zgps, zwgs84, raf09, zmngf, precision, dx, dy, dz, hauteurperche, valeur1, valeur2, geom)"
+sql += " SELECT pk_pointtopo, lpk_topographie, typepointtopo, x, y, zgps, zwgs84, raf09, zmngf, precision, dx, dy, dz, hauteurperche, valeur1, valeur2, geom FROM Pointtopo"
+
+self.query(sql)
+
+sql = "UPDATE Graphique SET maintypegraphique='TAB'"
+self.query(sql)
+
+#drop ressourceview and recreate it
+sql = "DROP VIEW Ressource_qgis"
+self.query(sql)
+sql = "DROP VIEW Ressource_django"
+self.query(sql)
+
+sql = "CREATE VIEW Ressource_qgis AS SELECT Ressource.*, Objet.*  FROM Ressource INNER JOIN Objet ON Ressource.lpk_objet = Objet.pk_objet"
+self.query(sql)
+sql = "CREATE VIEW Ressource_django AS SELECT  Ressource.*, Objet.* FROM Ressource INNER JOIN Objet ON Ressource.lpk_objet = Objet.pk_objet   WHERE Objet.lpk_revision_end IS NULL  AND Objet.datetimedestruction IS NULL"
+self.query(sql)
+

@@ -1,0 +1,21 @@
+###Graphtype    stackedbar
+###Graphcumulatif   True
+###Graphoption  shadow=True, startangle=90
+###Title Observations par campagnes - Barres
+
+###Graphsql
+
+WITH Infralineairetemp as (SELECT pk_infralineaire, id_descriptionsystem FROM Infralineaire_qgis) 
+SELECT  Observation_now.lid_desordre, COUNT(Observation_now.lid_desordre) 
+FROM Desordre_now  
+INNER JOIN Observation_now ON Observation_now.lid_desordre = Desordre_now.id_desordre  
+INNER JOIN Infralineairetemp ON Infralineairetemp.id_descriptionsystem = Desordre_now.lid_descriptionsystem 
+WHERE   Infralineairetemp.pk_infralineaire = Infralineaire.pk_infralineaire 
+GROUP BY Desordre_now.id_desordre
+
+
+
+###Cst
+
+
+

@@ -1,4 +1,0 @@
-#Remove bug with spatial index
-sql = " SELECT DisableSpatialIndex('Infralineaire', 'geom') "
-self.query(sql)
-

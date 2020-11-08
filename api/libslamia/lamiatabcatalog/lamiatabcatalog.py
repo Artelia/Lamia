@@ -63,10 +63,7 @@ class TabCatalog:
         # mypath = os.path.join(os.path.dirname(__file__), self.worktype)
 
         mypath = os.path.join(
-            os.path.dirname(Lamia.__file__),
-            "worktypeconf",
-            self.worktype,
-            "lamiatabcatalog",
+            os.path.dirname(Lamia.__file__), "config", self.worktype, "lamiatabcatalog",
         )
 
         for (dirpath, dirnames, filenames) in os.walk(mypath):

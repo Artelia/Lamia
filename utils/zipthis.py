@@ -53,10 +53,9 @@ def get_all_file_paths(conf, zipf):
 
 
 def main():
+    print("zipping...")
     version = readVersion()
     version = version.replace(".", "_")
-
-    print("*", MAINDIR)
 
     FILENAME = os.path.join(
         MAINDIR, "Lamia", "utils", "Lamia_" + version.strip() + ".zip"
@@ -66,6 +65,7 @@ def main():
     for conf in CONF:
         file_paths = get_all_file_paths(conf, zipf)
     zipf.close()
+    print("zipping done")
 
 
 if __name__ == "__main__":

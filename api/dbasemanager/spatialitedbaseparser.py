@@ -183,10 +183,11 @@ class SpatialiteDBaseParser(AbstractDBaseParser):
             # self.errorquerymessage.emit(str(e))
             # if self.qgsiface is None:
 
-            print(sql)
-            print("error query", e)
             if self.raiseexceptions:
                 raise TypeError("error query", e)
+            else:
+                print(sql)
+                print("error query", e)
 
             return None
 

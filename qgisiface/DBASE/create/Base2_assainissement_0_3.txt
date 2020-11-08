@@ -1,8 +1,0 @@
-#change valeur to valeur1 
-
-sql = "UPDATE Noeud SET tampon_forme = formetampon"
-self.query(sql)
-
-sql = "UPDATE Noeud SET regard_forme = formeregard"
-self.query(sql)
-    

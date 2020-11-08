@@ -53,7 +53,7 @@ def main(argv):
 
     lamiashpexport.runExport(
         destinationshapefile=r"C:\01_WORKINGDIR\toto\infraline.shp",
-        exportconffilepath="lamia_edge_z_sketch",  # lamia_edge_z_sketch  lamia_node_observation_fr
+        exportconffilepath="lamia_edge_z_sketch_photo",  # lamia_edge_z_sketch  lamia_node_observation_fr
         pkzonegeos=[],
     )
 

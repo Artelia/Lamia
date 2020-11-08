@@ -10,9 +10,9 @@ with warnings.catch_warnings():
 import qgis, qgis.core
 from qgis.PyQt.QtWidgets import QApplication
 
-from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
-from Lamia.libslamia.lamiareport.lamiareport import ReportCore
-from Lamia.iface.qgsconnector.ifaceqgisconnector import QgisConnector
+from Lamia.api.dbasemanager.dbaseparserfactory import DBaseParserFactory
+from Lamia.api.libslamia.lamiareport.lamiareport import ReportCore
+from Lamia.qgisiface.iface.qgsconnector.ifaceqgisconnector import QgisConnector
 
 from settings import *
 
@@ -159,7 +159,9 @@ class DBaseTest(unittest.TestCase):
 
         conftotest = []
 
-        for filename in glob.glob(os.path.join(exporterreport.confdataplugin, "*.txt")):
+        for filename in glob.glob(
+            os.path.join(exporterreport.confdatadirplugin, "*.txt")
+        ):
             basename = os.path.basename(filename).split(".")[0]
             if basename == "README":
                 continue

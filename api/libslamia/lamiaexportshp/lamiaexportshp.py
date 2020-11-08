@@ -214,7 +214,7 @@ class ExportShapefileCore(AbstractLibsLamia):
                 actualtable = line
                 champs.append({})
                 champs[-1]["table"] = actualtable
-                champs[-1]["sql"] = None
+                champs[-1]["sql"] = ""
                 champs[-1]["fields"] = OrderedDict()
             elif line[0:2] == "##":  # parent field constraint name
                 champs[-1]["sql"] = [ssline.strip() for ssline in line[2:].split(";")]
@@ -250,7 +250,7 @@ class ExportShapefileCore(AbstractLibsLamia):
                     else:
                         champs[-1]["fields"][linesplit[0].strip()]["as"] = None
                 else:
-                    champs[-1]["sql"] = line.strip()
+                    champs[-1]["sql"] += line.strip() + " "
             compt += 1
 
         file.close()
@@ -289,7 +289,8 @@ class ExportShapefileCore(AbstractLibsLamia):
                     if attr["value"] is None:
                         sql += "NULL, "
                     else:
-                        if table["sql"] is None:
+                        # if table["sql"] is None:
+                        if not table["sql"]:
                             sql += attr["value"] + ", "
                         else:
                             sql += "( SELECT "

@@ -9,16 +9,16 @@ with warnings.catch_warnings():
 from settings import *
 from test_utils import *
 
-# import test_a_dbase_simple
+import test_a_dbase_simple
 
 # import test_a_autoupdatedbase
-# import test_b_qgisqt
+import test_b_qgisqt
 
 # import test_b_qtimporttool
 # import test_b_qtofflinemode
 # import test_c_exporttool
 
-import test_c_reporttool
+# import test_c_reporttool
 
 # import test_c_costtool
 
