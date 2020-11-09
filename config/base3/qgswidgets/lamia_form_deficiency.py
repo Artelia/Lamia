@@ -134,69 +134,7 @@ class BaseDeficiencyTool(AbstractLamiaFormTool):
     def changeGroupe(self, intcat):
         self.toolwidget.stackedWidget.setCurrentIndex(intcat)
 
-    """
-    def createParentFeature(self):
-        pkobjet = self.dbase.createNewObjet()
-
-        if False:
-            datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-            lastobjetid = self.dbase.getLastId('Objet') + 1
-            sql = "INSERT INTO Objet (id_objet, lpk_revision_begin, datetimecreation ) "
-            sql += "VALUES(" + str(lastobjetid) + "," + str(self.dbase.maxrevision) + ",'" + datecreation + "');"
-            query = self.dbase.query(sql)
-            self.dbase.commit()
-            pkobjet = self.dbase.getLastRowId('Objet')
-
-
-        # idnoeud = self.currentFeature.id()
-        pkdesordre = self.currentFeaturePK
-        lastiddes = self.dbase.getLastId('Desordre') + 1
-        sql = "UPDATE Desordre SET id_desordre = " + str(lastiddes) + ","
-        sql += "lpk_objet = " + str(pkobjet)
-        sql += " WHERE pk_desordre = " + str(pkdesordre) + ";"
-        query = self.dbase.query(sql)
-        self.dbase.commit()
-
-
-
-        if self.parentWidget is not None and self.parentWidget.currentFeature is not None:
-            #currentparentlinkfield = self.parentWidget.currentFeature['id_descriptionsystem']
-
-            #parent id_descriptionsystem
-            sqltemp = "SELECT id_descriptionsystem FROM " + self.parentWidget.dbasetablename.lower() + "_qgis"
-            sqltemp += " WHERE pk_"+ self.parentWidget.dbasetablename.lower() + " = " + str(self.parentWidget.currentFeaturePK)
-            result = self.dbase.query(sqltemp)
-
-            if result is not None:
-                currentparentlinkfield = result[0][0]
-
-                sql = "UPDATE Desordre SET lid_descriptionsystem = " + str(currentparentlinkfield)
-
-                if self.parentWidget.dbasetablename in ['Infralineaire']:
-                    sql += ",groupedesordre = 'INF'"
-                elif self.parentWidget.dbasetablename in ['node']:
-                    sql += ",groupedesordre = 'NOD'"
-                elif self.parentWidget.dbasetablename in ['equipment']:
-                    sql += ",groupedesordre = 'EQP'"
-                else:
-                    sql += ",groupedesordre = 'INF'"
-                sql += " WHERE pk_desordre = " + str(pkdesordre)
-                self.dbase.query(sql)
-                self.dbase.commit()
-
-            else:
-                sql = "UPDATE Desordre SET groupedesordre = 'INF'  WHERE pk_desordre = " + str(pkdesordre)
-                self.dbase.query(sql)
-                self.dbase.commit()
-
-        else:
-            sql = "UPDATE Desordre SET groupedesordre = 'INF'  WHERE pk_desordre = " + str(pkdesordre)
-            self.dbase.query(sql)
-            self.dbase.commit()
-    """
-
     def postSaveFeature(self, savedfeaturepk=None):
-
         pass
 
 

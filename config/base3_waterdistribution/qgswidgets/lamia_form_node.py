@@ -39,15 +39,16 @@ from .lamia_form_camera import BaseWaterdistributionCameraTool
 from .lamia_form_sketch import BaseWaterdistributionSketchTool
 from .lamia_form_deficiency import BaseWaterdistributionDeficiencyTool
 
-from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_topologicnode import (
-    TopologicNodeWidget,
-)
+# from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_topologicnode import (
+#     TopologicNodeWidget,
+# )
 from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_gpsvalues import (
     GpsValuesWidget,
 )
-from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_createsubfeature import (
-    CreateSubFeatureWidget,
-)
+
+# from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_createsubfeature import (
+#     CreateSubFeatureWidget,
+# )
 
 
 class BaseWaterdistributionNodeTool(BaseNodeTool):
@@ -219,12 +220,12 @@ class BaseWaterdistributionNodeTool(BaseNodeTool):
         )
         self.dbasechildwdgfield.append(self.propertieswdgCROQUIS)
 
-        self.topologicnode = TopologicNodeWidget(self)
-        self.lamiawidgets.append(self.topologicnode)
-        self.createdeficiencywdg = CreateSubFeatureWidget(
-            self, self.propertieswdgDesordre
-        )
-        self.lamiawidgets.append(self.createdeficiencywdg)
+        # self.topologicnode = TopologicNodeWidget(self)
+        # self.lamiawidgets.append(self.topologicnode)
+        # self.createdeficiencywdg = CreateSubFeatureWidget(
+        #     self, self.propertieswdgDesordre
+        # )
+        # self.lamiawidgets.append(self.createdeficiencywdg)
         # * gpswidget
         self.gpswidget = GpsValuesWidget(
             parentwdg=self, parentframe=self.toolwidgetmain.frame_gps

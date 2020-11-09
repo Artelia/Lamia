@@ -23,35 +23,51 @@ This file is part of LAMIA.
  """
 
 # from Lamia.api.dbasemanager.dbaseparserabstract import AbstractDBaseParser
-from Lamia.config.base3.dbase.base3_crud import LamiaORM as BaseLamiaORM
+from Lamia.config.base3.dbase.base3_crud_topologic import TopologicLamiaORM
+import qgis.core
 
 
-class LamiaORM(BaseLamiaORM):
+class LamiaORM(TopologicLamiaORM):
     def __init__(self, dbase):
         super().__init__(dbase)
 
     # *********** ASSETS ********************
 
-    class Node(BaseLamiaORM.AbstractTableOrm):
-        def create(self, pk=None):
-            savedfeaturepk = super().create(pk)
-            # deficiency creation
-            pkdef = self.orm.deficiency.create()
-            nodegeom = self.read(savedfeaturepk)["geom"]
-            self.orm.deficiency.update(
-                pkdef, {"lid_descriptionsystem": 2, "geom": nodegeom}
-            )
-            return savedfeaturepk
-
+    class Node(TopologicLamiaORM.Node):
         def update(self, pk, valuesdict):
             super().update(pk, valuesdict)
-            nodeval = self.trigger.node.read(pk)
-            nodedessys, nodegeom = nodeval["id_descriptionsystem"], nodeval["geom"]
-            sql = f"SELECT pk_deficiency FROM deficiency_qgis WHERE lid_descriptionsystem = {nodedessys}\
-                    AND lpk_revision_end IS NULL"
-            defpks = self.dbase.query(sql)
-            for defpk in defpks:
-                self.trigger.deficiency.update(defpk, {"geom": nodegeom})
+            self._manageLinkedDeficiency(pk, valuesdict)
+
+        def _manageLinkedDeficiency(self, pk, valuesdict):
+            valsnode = self.orm.node.read(pk)
+            res = self.orm.deficiency[
+                f"lid_descriptionsystem = {valsnode['id_descriptionsystem']} AND lpk_revision_end IS NULL"
+            ]
+            if not res:
+                self._createNewNodeDeficiency(valsnode)
+            else:
+                newgeom = self._wktPointToLine(valsnode["geom"])
+                pkdef = res[0]["pk_deficiency"]
+                self.orm.deficiency.update(pkdef, {"geom": newgeom})
+
+        def _createNewNodeDeficiency(self, nodevals):
+            pkdef = self.orm.deficiency.create()
+            newgeom = self._wktPointToLine(nodevals["geom"])
+            self.orm.deficiency.update(
+                pkdef,
+                {
+                    "deficiencycategory": "NOD",
+                    "lid_descriptionsystem": nodevals["id_descriptionsystem"],
+                    "geom": newgeom,
+                },
+            )
+
+        def _wktPointToLine(self, wktstr):
+            qgisgeompoint = qgis.core.QgsGeometry.fromWkt(wktstr).asPoint()
+            finalgeom = qgis.core.QgsGeometry.fromPolylineXY(
+                [qgisgeompoint, qgisgeompoint]
+            ).asWkt()
+            return finalgeom
 
     # ********* RESOURCES***********
 

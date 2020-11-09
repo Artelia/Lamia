@@ -42,35 +42,6 @@ class BaseLeveeDeficiencyTool(BaseDeficiencyTool):
     def __init__(self, **kwargs):
         super(BaseLeveeDeficiencyTool, self).__init__(**kwargs)
 
-    """
-    def initTool(self):
-        # ****************************************************************************************
-        # Main spec
-        self.CAT = 'Desordre'
-        self.NAME = 'Desordre'
-        self.dbasetablename = 'Desordre'
-        #self.visualmode = [1, 2]
-        self.PointENABLED = True
-        self.LineENABLED = True
-        # self.PolygonEnabled = True
-        self.magicfunctionENABLED = True
-
-        self.linkagespec = {'Descriptionsystem' : {'tabletc' : None,
-                                              'idsource' : 'lk_descriptionsystem',
-                                            'idtcsource' : None,
-                                           'iddest' : 'id_descriptionsystem',
-                                           'idtcdest' : None,
-                                           'desttable' : ['Infralineaire','Equipement','Noeud']}}
-
-
-        self.pickTable = {'LkDesSys': {'TRONCON': 'IdSys'}}
-        self.iconpath = os.path.join(os.path.dirname(__file__), 'lamiadefault_desordre_tool_icon.png')
-
-        # ****************************************************************************************
-        #properties ui
-        pass
-    """
-
     def initMainToolWidget(self):
 
         self.toolwidgetmain = UserUI()
@@ -103,7 +74,6 @@ class BaseLeveeDeficiencyTool(BaseDeficiencyTool):
         self.dbasechildwdgfield = []
         self.instancekwargs["parentwidget"] = self
 
-        # if self.parentWidget is None :
         self.propertieswdgOBSERVATION = BaseLeveeObservationTool(**self.instancekwargs)
         self.propertieswdgOBSERVATION.tooltreewidgetSUBCAT = "Observation"
         self.dbasechildwdgfield.append(self.propertieswdgOBSERVATION)
@@ -111,74 +81,14 @@ class BaseLeveeDeficiencyTool(BaseDeficiencyTool):
         if self.dbase.variante in ["SIRS"]:
             self.toolwidgetmain.comboBox_sstypedes.setEnabled(False)
 
-        # self.propertieswdgOBSERVATION2 = BaseDigueObservationTool(dbase=self.dbase, gpsutil=self.gpsutil, parentwidget=self)
-        # self.propertieswdgOBSERVATION2.NAME = None
-        # self.toolwidgetmain.tabWidget.widget(0).layout().addWidget(self.propertieswdgOBSERVATION2)
-        # self.dbasechildwdgfield.append(self.propertieswdgOBSERVATION2)
-
-        # self.toolwidgetmain.tabWidget.widget(1).layout().addWidget(self.propertieswdgOBSERVATION2.propertieswdgPHOTOGRAPHIE)
-        # self.toolwidgetmain.tabWidget.widget(2).layout().addWidget(self.propertieswdgOBSERVATION2.propertieswdgCROQUIS)
-
-    # def postInitFeatureProperties(self, feat):
     def postSelectFeature(self):
         super().postSelectFeature()
 
-        if False:
-            if self.currentFeaturePK is None:
-                if (
-                    self.parentWidget is not None
-                    and self.parentWidget.DBASETABLENAME == "Equipement"
-                ):
-                    combocrtindex = self.toolwidgetmain.comboBox_groupedes.findText(
-                        "Equipement"
-                    )
-                    self.toolwidgetmain.comboBox_groupedes.setCurrentIndex(
-                        combocrtindex
-                    )
-
-            if (
-                self.parentWidget is not None
-                and self.parentWidget.DBASETABLENAME == "Equipement"
-            ):
-                pass
-                # categorie
-                """ TODO
-                if self.parentWidget.currentFeaturePK is not None :
-                    sql = "SELECT Categorie FROM Equipement WHERE pk_equipement = " + str(self.parentWidget.currentFeaturePK)
-                    categ = self.dbase.query(sql)[0][0]
-                    if (categ == 'OUH' and self.comboBox_featurelist.count() == 0):
-                        self.pushButton_addFeature.setEnabled(True)
-                        pass
-                    else:
-                        self.pushButton_addFeature.setEnabled(False)
-                        pass
-                else:
-                    self.pushButton_addFeature.setEnabled(False)
-                    pass
-                """
+    def _checkSameGeomAsParentNode(self):
+        pass
 
     def postSaveFeature(self, savedfeaturepk=None):
-        # if self.savingnewfeature:
-        if self.currentFeaturePK is None:
-            if (
-                self.parentWidget is not None
-                and self.parentWidget.DBASETABLENAME == "Equipement"
-            ):
-                pass
-                ## categorie
-                # if self.parentWidget.currentFeaturePK is not None:
-                #    sql = "SELECT Categorie FROM Equipement WHERE pk_equipement = " + str(self.parentWidget.currentFeaturePK)
-                #    categ = self.dbase.query(sql)[0][0]
-                #    if (categ == 'OUH'):
-                #        #geomparent
-                #        sql = " SELECT ST_AsText(geom) FROM Equipement WHERE pk_equipement = " + str()
-                #        geomtxt = self.dbase.getValuesFromPk('Equipement', 'ST_AsText(geom)', str(self.parentWidget.currentFeaturePK))
-                #        sql = self.dbase.createSetValueSentence('UPDATE',
-                #                                              'Desordre',
-                #                                              ['geom'],
-                #                                              [geomtxt])
-                #        sql += " WHERE pk_desordre = " + str(self.currentFeaturePK)
-                #        self.dbase.query(sql)
+        super().postSaveFeature(savedfeaturepk)
 
 
 class UserUI(QWidget):

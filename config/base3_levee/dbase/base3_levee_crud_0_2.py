@@ -31,6 +31,32 @@ class LamiaORM(BaseLamiaORM):
         super().__init__(dbase)
 
     # *********** ASSETS ********************
+    class Equipment(BaseLamiaORM.AbstractTableOrm):
+        def update(self, pk, valuesdict):
+            super().update(pk, valuesdict)
+
+            valseqp = self.orm.equipment.read(pk)
+            res = self.orm.deficiency[
+                f"lid_descriptionsystem = {valseqp['id_descriptionsystem']} AND lpk_revision_end IS NULL"
+            ]
+            if not valseqp["equipmentcategory"] in ["OUH"]:
+                return
+            if not res:
+                self._createNewEquipmentDeficiency(valseqp)
+            else:
+                pkdef = res[0]["pk_deficiency"]
+                self.orm.deficiency.update(pkdef, {"geom": valseqp["geom"]})
+
+        def _createNewEquipmentDeficiency(self, eqpvals):
+            pkdef = self.orm.deficiency.create()
+            self.orm.deficiency.update(
+                pkdef,
+                {
+                    "deficiencycategory": "EQP",
+                    "lid_descriptionsystem": eqpvals["id_descriptionsystem"],
+                    "geom": eqpvals["geom"],
+                },
+            )
 
     # ********* RESOURCES***********
 

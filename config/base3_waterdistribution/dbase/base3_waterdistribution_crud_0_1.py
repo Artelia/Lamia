@@ -23,7 +23,8 @@ This file is part of LAMIA.
  """
 
 # from Lamia.api.dbasemanager.dbaseparserabstract import AbstractDBaseParser
-from Lamia.config.base3.dbase.base3_crud import LamiaORM as BaseLamiaORM
+from Lamia.config.base3.dbase.base3_crud_topologic import TopologicLamiaORM
+import qgis.core
 
 
 class LamiaORM(BaseLamiaORM):
@@ -31,6 +32,66 @@ class LamiaORM(BaseLamiaORM):
         super().__init__(dbase)
 
     # *********** ASSETS ********************
+    class Node(TopologicLamiaORM.Node):
+        def update(self, pk, valuesdict):
+            super().update(pk, valuesdict)
+
+            valsnode = self.orm.node.read(pk)
+            res = self.orm.deficiency[
+                f"lid_descriptionsystem = {valsnode['id_descriptionsystem']} AND lpk_revision_end IS NULL"
+            ]
+
+            if not res:
+                self._createNewNodeDeficiency(valsnode)
+            else:
+                newgeom = self._wktPointToLine(valsnode["geom"])
+                pkdef = res[0]["pk_deficiency"]
+                self.orm.deficiency.update(pkdef, {"geom": newgeom})
+
+        def _createNewNodeDeficiency(self, nodevals):
+            pkdef = self.orm.deficiency.create()
+            newgeom = self._wktPointToLine(nodevals["geom"])
+            self.orm.deficiency.update(
+                pkdef,
+                {
+                    "deficiencycategory": "NOD",
+                    "lid_descriptionsystem": nodevals["id_descriptionsystem"],
+                    "geom": newgeom,
+                },
+            )
+
+        def _wktPointToLine(self, wktstr):
+            qgisgeompoint = qgis.core.QgsGeometry.fromWkt(wktstr).asPoint()
+            finalgeom = qgis.core.QgsGeometry.fromPolylineXY(
+                [qgisgeompoint, qgisgeompoint]
+            ).asWkt()
+            return finalgeom
+
+    class Equipment(TopologicLamiaORM.AbstractTableOrm):
+        def update(self, pk, valuesdict):
+            super().update(pk, valuesdict)
+
+            valseqp = self.orm.equipment.read(pk)
+            res = self.orm.deficiency[
+                f"lid_descriptionsystem = {valseqp['id_descriptionsystem']} AND lpk_revision_end IS NULL"
+            ]
+
+            if not res:
+                self._createNewEquipmentDeficiency(valseqp)
+            else:
+                pkdef = res[0]["pk_deficiency"]
+                self.orm.deficiency.update(pkdef, {"geom": valseqp["geom"]})
+
+        def _createNewEquipmentDeficiency(self, eqpvals):
+            pkdef = self.orm.deficiency.create()
+            self.orm.deficiency.update(
+                pkdef,
+                {
+                    # "deficiencycategory": "EQP",
+                    "lid_descriptionsystem": eqpvals["id_descriptionsystem"],
+                    "geom": eqpvals["geom"],
+                },
+            )
 
     # ********* RESOURCES***********
 

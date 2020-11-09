@@ -108,54 +108,6 @@ class BaseEquipmentTool(AbstractLamiaFormTool):
     def postSelectFeature(self):
         pass
 
-    """
-    def createParentFeature(self):
-        pkobjet = self.dbase.createNewObjet()
-
-        if False:
-
-            # lastrevision = self.dbase.maxrevision
-            # datecreation = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
-            datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-            lastobjetid = self.dbase.getLastId('Objet') + 1
-            sql = "INSERT INTO Objet (id_objet, lpk_revision_begin, datetimecreation ) "
-            sql += "VALUES(" + str(lastobjetid) + "," + str(self.dbase.maxrevision) + ",'" + datecreation + "');"
-            query = self.dbase.query(sql)
-            self.dbase.commit()
-            pkobjet = self.dbase.getLastRowId('Objet')
-
-        # sql = "INSERT INTO Descriptionsystem (id_objet) VALUES(" + str(idobjet) + ");"
-        lastdescriptionsystemid = self.dbase.getLastId('Descriptionsystem') + 1
-        sql = "INSERT INTO Descriptionsystem (id_descriptionsystem, lpk_objet) "
-        sql += "VALUES(" + str(lastdescriptionsystemid) + "," + str(pkobjet) + ");"
-        query = self.dbase.query(sql)
-        self.dbase.commit()
-        pksys = self.dbase.getLastRowId('Descriptionsystem')
-
-        # idnoeud = self.currentFeature.id()
-        pkequip = self.currentFeaturePK
-        lastidequip = self.dbase.getLastId('Equipement') + 1
-        sql = "UPDATE Equipement SET id_equipement = " + str(lastidequip) + ","
-        sql += "lpk_descriptionsystem = " + str(pksys)
-        sql += " WHERE pk_equipement = " + str(pkequip) + ";"
-        query = self.dbase.query(sql)
-        self.dbase.commit()
-
-        if  self.parentWidget is not None and self.parentWidget.currentFeature is not None:
-            # if "lid_descriptionsystem" in self.dbase.dbasetables[self.parentWidget.dbasetablename]['fields'].keys():
-            if 'Descriptionsystem' in self.dbase.getParentTable(self.parentWidget.dbasetablename):
-
-                #parentid
-                sql = "SELECT id_descriptionsystem FROM " + self.parentWidget.dbasetablename.lower() + "_qgis"
-                sql += " WHERE pk_" + self.parentWidget.dbasetablename.lower() + " = " + str(self.parentWidget.currentFeaturePK)
-                parentid = self.dbase.query(sql)[0][0]
-                #currentparentlinkfield = self.parentWidget.currentFeature['id_descriptionsystem']
-                sql = "UPDATE Equipement SET lid_descriptionsystem_1 = " + str(parentid)
-                sql += " WHERE pk_equipement = " + str(pkequip)
-                self.dbase.query(sql)
-                self.dbase.commit()
-    """
-
     def postSaveFeature(self, savedfeaturepk=None):
         pass
 

@@ -24,11 +24,16 @@ This file is part of LAMIA.
 
 import datetime
 import inspect
+import qgis.core
 
 
 class LamiaORM(object):
     def __init__(self, dbase):
+        super()
         self.dbase = dbase
+
+    def __getitem__(self, key):
+        return getattr(self, key)
 
     def __getattr__(self, name):
         if name.title() in dir(self):
@@ -51,6 +56,29 @@ class LamiaORM(object):
                 self.__class__.__name__.lower()
             ] + self.dbase.getParentTable(self.__class__.__name__.lower())
 
+        def __getitem__(self, key):
+            "Enable SELECT action on class dict"
+            if not isinstance(key, str):
+                return AttributeError
+            formertable = ""
+            sql = f"WITH {self.linkedtables[0]}_temp AS (SELECT * FROM "
+            columns = []
+            for table in self.linkedtables:
+                columns += self.dbase.getColumns(table)
+                if formertable:
+                    sql += f" INNER JOIN {table} ON {formertable}.lpk_{table} = {table}.pk_{table} "
+                else:
+                    sql += f" {table} "
+                formertable = table
+            sql += ")"
+            sql += f" SELECT * FROM {self.linkedtables[0]}_temp"
+            sql += f" WHERE {key}"
+            allres = self.dbase.query(sql)
+            finalres = []
+            for res in allres:
+                finalres += [dict(zip(columns, res))]
+            return finalres
+
         def create(self, featurepk=None):
             savedfeaturepk = self.orm._manageFeatureCreationOrUpdate(
                 self.__class__.__name__.lower(), featurepk
@@ -58,9 +86,9 @@ class LamiaORM(object):
             return savedfeaturepk
 
         def update(self, pk, valuesdict):
-            for key in set(valuesdict.keys()):
-                if key.startswith(("pk_", "lpk_")):
-                    valuesdict.pop(key)
+            for k in set(valuesdict.keys()):
+                if k.startswith(("pk_", "lpk_")):
+                    valuesdict.pop(k)
             curpk = pk
             actualvalues = self.read(pk)  # get lpk values
             for table in self.linkedtables:
@@ -77,6 +105,7 @@ class LamiaORM(object):
                 setstring = ", ".join([k + " = " + v for k, v in filtereddict.items()])
                 if setstring:
                     sql = f"UPDATE {table} SET {setstring} WHERE pk_{table} = {curpk}"
+                    # print("***", sql)
                     self.dbase.query(sql)
                 curpk = None
 
@@ -95,16 +124,23 @@ class LamiaORM(object):
                 if not curpk:
                     curpk = valuesdict[f"lpk_{table}"]
                 columns = self.dbase.getColumns(table)
-                sql = f"SELECT * FROM {table} WHERE pk_{table} = {curpk}"
+                readvalues = list(columns)
+                if "geom" in readvalues:
+                    idx = readvalues.index("geom")
+                    readvalues[idx] = "ST_AsText(geom)"
+                sql = f"SELECT {', '.join(readvalues)} FROM {table} WHERE pk_{table} = {curpk}"
                 res = self.dbase.query(sql)
-                valuesdict = {**valuesdict, **dict(zip(columns, res[0]))}
+                if res:
+                    valuesdict = {**valuesdict, **dict(zip(columns, res[0]))}
+                else:
+                    return None
                 curpk = None
             return valuesdict
 
         def _cleanValues(self, valdict):
             for k, val in valdict.items():
                 # if isinstance(val, str) or isinstance(val, unicode):
-                if isinstance(val, str):
+                if isinstance(val, str) and k != "geom":
                     if val != "":
                         if val == "NULL":
                             resulttemp = val
@@ -115,6 +151,8 @@ class LamiaORM(object):
                             resulttemp = "'" + resultstring + "'"
                     else:
                         resulttemp = "NULL"
+                elif k == "geom":
+                    resulttemp = f"ST_GeomFromText('{val}',{self.dbase.crsnumber})"
                 elif val is None:
                     resulttemp = "NULL"
                 else:
@@ -123,28 +161,6 @@ class LamiaORM(object):
                 valdict[k] = resulttemp
 
     # *********** ASSETS ********************
-
-    class Node(AbstractTableOrm):
-        def create(self, pk=None):
-            savedfeaturepk = super().create(pk)
-            print("created")
-            # deficiency creation
-            pkdef = self.orm.deficiency.create()
-            nodegeom = self.read(savedfeaturepk)["geom"]
-            self.orm.deficiency.update(
-                pkdef, {"lid_descriptionsystem": 2, "geom": nodegeom}
-            )
-            return savedfeaturepk
-
-        def update(self, pk, valuesdict):
-            super().update(pk, valuesdict)
-            nodeval = self.orm.node.read(pk)
-            nodedessys, nodegeom = nodeval["id_descriptionsystem"], nodeval["geom"]
-            sql = f"SELECT pk_deficiency FROM deficiency_qgis WHERE lid_descriptionsystem = {nodedessys}\
-                    AND lpk_revision_end IS NULL"
-            defpks = self.dbase.query(sql)
-            for defpk in defpks:
-                self.orm.deficiency.update(defpk, {"geom": nodegeom})
 
     # class Surface(abstracttrigger):
     #     pass
@@ -200,7 +216,7 @@ class LamiaORM(object):
                     "lpk_revision_begin"
                 ]
 
-                if featlastrevision != self.maxrevision:  # new version feature
+                if featlastrevision != self.dbase.maxrevision:  # new version feature
                     # print("*********** new feat vers")
                     self._createNewFeatureVersion(tablename, featurepk)
                     pktoreturn = self.dbase.getLastPK(tablename)
@@ -265,7 +281,7 @@ class LamiaORM(object):
             pkobjet, revbegin = self.dbase.getValuesFromPk(
                 dbname + "_qgis", ["pk_objet", "lpk_revision_begin"], rawpk
             )
-        if revbegin < self.maxrevision:
+        if revbegin < self.dbase.maxrevision:
             # first close object
             if self.dbase.base3version:
                 sql = self.dbase.createSetValueSentence(

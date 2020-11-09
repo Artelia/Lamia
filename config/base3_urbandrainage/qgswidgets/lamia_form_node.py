@@ -42,12 +42,14 @@ from .lamia_form_graph import BaseUrbandrainageGraphTool
 from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_lidchooser import (
     LidChooserWidget,
 )
-from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_topologicnode import (
-    TopologicNodeWidget,
-)
-from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_createsubfeature import (
-    CreateSubFeatureWidget,
-)
+
+# from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_topologicnode import (
+#     TopologicNodeWidget,
+# )
+
+# from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_createsubfeature import (
+#     CreateSubFeatureWidget,
+# )
 from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_gpsvalues import (
     GpsValuesWidget,
 )
@@ -74,9 +76,10 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
         )
         self.propertieswdgDesordre.SKIP_LOADING_UI = True
         self.propertieswdgDesordre.initMainToolWidget()
-        self.propertieswdgDesordre.formtoolwidgetconfdictmain["deficiency"]["widgets"][
-            "deficiencycategory"
-        ] = "NOD"
+        # self.propertieswdgDesordre.formtoolwidgetconfdictmain["deficiency"]["widgets"][
+        #     "deficiencycategory"
+        # ] = "NOD"
+        self.propertieswdgDesordre.TABLEFILTERFIELD = {"deficiencycategory": "NOD"}
         self.dbasechildwdgfield.append(self.propertieswdgDesordre)
 
         self.propertieswdgEquipement = BaseUrbandrainageEquipmentTool(
@@ -100,12 +103,12 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
             self.dbasechildwdgfield.append(self.propertieswdgGRAPH)
 
         # * lamiawdg
-        self.topologicnode = TopologicNodeWidget(self)
-        self.lamiawidgets.append(self.topologicnode)
-        self.createdeficiencywdg = CreateSubFeatureWidget(
-            self, self.propertieswdgDesordre
-        )
-        self.lamiawidgets.append(self.createdeficiencywdg)
+        # self.topologicnode = TopologicNodeWidget(self)
+        # self.lamiawidgets.append(self.topologicnode)
+        # self.createdeficiencywdg = CreateSubFeatureWidget(
+        #     self, self.propertieswdgDesordre
+        # )
+        # self.lamiawidgets.append(self.createdeficiencywdg)
         # * gpswidget
         self.gpswidget = GpsValuesWidget(
             parentwdg=self, parentframe=self.toolwidgetmain.frame_gps

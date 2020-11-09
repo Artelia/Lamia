@@ -8,6 +8,10 @@ sys.path.append(lamiapath)
 from Lamia.api.dbasemanager.dbaseparserfactory import DBaseParserFactory
 
 SLFILE = r"C:\01_WORKINGDIR\canejean2\Canejan.sqlite"
+SLFILE = (
+    r"C:\111_GitProjects\Lamia\testfiles\c_creation\sl_base3_levee_Lamia\test01.sqlite"
+)
+
 tempparser = DBaseParserFactory("spatialite").getDbaseParser()
 tempparser.loadDBase(dbtype="Spatialite", slfile=SLFILE)
 
@@ -23,12 +27,24 @@ tempparser.loadDBase(dbtype="Spatialite", slfile=SLFILE)
 
 tt = tempparser.lamiaorm
 
-# print(inspect.getmembers(tt))
+# tt.node.create()
 
+pk = tt.node.create()
+tt.node.update(pk, {"id_node": 13, "geom": "Point(1.  1.)"})
+
+
+# pk = tt.equipment.create()
+# print(pk)
+# tt.equipment.update(pk, {"equipmentcategory": "OUH"})
+# print(tt.equipment["id_equipment =9999"])
+# print(tt.equipment.)
+# print(inspect.getmembers(tt))
+# print(tt["node"].read(99999)["geom"])
 # print(dir(tt))
-tt.node.read(2)
-tt.node.create()
-print(dir(tt))
+# tt.node.read(2)
+# tt.get("node")
+# tt.node.create()
+# print(dir(tt))
 
 # print(tt.edge)
 # print(tt.edge.read(3))

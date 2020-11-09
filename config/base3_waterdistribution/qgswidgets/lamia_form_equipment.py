@@ -43,9 +43,10 @@ from .lamia_form_deficiency import BaseWaterdistributionDeficiencyTool
 from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_gpsvalues import (
     GpsValuesWidget,
 )
-from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_createsubfeature import (
-    CreateSubFeatureWidget,
-)
+
+# from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_createsubfeature import (
+#     CreateSubFeatureWidget,
+# )
 
 
 class BaseWaterdistributionEquipmentTool(BaseEquipmentTool):
@@ -172,10 +173,10 @@ class BaseWaterdistributionEquipmentTool(BaseEquipmentTool):
             parentwdg=self, parentframe=self.toolwidgetmain.frame_gps
         )
         self.lamiawidgets.append(self.gpswidget)
-        self.createdeficiencywdg = CreateSubFeatureWidget(
-            self, self.propertieswdgDesordre
-        )
-        self.lamiawidgets.append(self.createdeficiencywdg)
+        # self.createdeficiencywdg = CreateSubFeatureWidget(
+        #     self, self.propertieswdgDesordre
+        # )
+        # self.lamiawidgets.append(self.createdeficiencywdg)
 
     def fielduiTypeOhChanged(self, comboindex):
         currenttext = self.toolwidgetmain.comboBox_typeouvrage.currentText()
