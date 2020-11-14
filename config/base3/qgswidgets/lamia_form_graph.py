@@ -76,7 +76,7 @@ class BaseGraphTool(AbstractLamiaFormTool):
     linkdict = {
         "colparent": "id_object",
         "colthistable": "id_resource",
-        "tctable": "Tcobjectresource",
+        "tctable": "tcobjectresource",
         "tctablecolparent": "lid_object",
         "tctablecolthistable": "lid_resource",
     }

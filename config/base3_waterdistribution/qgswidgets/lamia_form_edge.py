@@ -53,32 +53,32 @@ class BaseWaterdistributionEdgeTool(BaseEdgeTool):
                 "edge": {
                     "linkfield": "id_edge",
                     "widgets": {
-                        "laterals": self.toolwidgetmain.comboBox_branchement,
-                        "domain": self.toolwidgetmain.comboBox_domaine,
-                        "diameterext": self.toolwidgetmain.doubleSpinBox_diametre,
-                        "depthtoppipe": self.toolwidgetmain.doubleSpinBox_gene,
-                        "material": self.toolwidgetmain.comboBox_materiau,
-                        "joint": self.toolwidgetmain.comboBox_joint,
-                        "cathodicprotection": self.toolwidgetmain.comboBox_protectioncatho,
-                        "flowtype": self.toolwidgetmain.comboBox_modecircu,
-                        "pipefunction": self.toolwidgetmain.comboBox_fonctioncan,
+                        "laterals": self.toolwidgetmain.laterals,
+                        "domain": self.toolwidgetmain.domain,
+                        "diameterext": self.toolwidgetmain.diameterext,
+                        "depthtoppipe": self.toolwidgetmain.depthtoppipe,
+                        "material": self.toolwidgetmain.material,
+                        "joint": self.toolwidgetmain.joint,
+                        "cathodicprotection": self.toolwidgetmain.cathodicprotection,
+                        "flowtype": self.toolwidgetmain.flowtype,
+                        "pipefunction": self.toolwidgetmain.pipefunction,
                     },
                 },
                 "object": {
                     "linkfield": "id_object",
-                    "widgets": {"comment": self.toolwidgetmain.textBrowser_commentaire},
+                    "widgets": {"comment": self.toolwidgetmain.comment},
                 },
                 "descriptionsystem": {
                     "linkfield": "id_descriptionsystem",
-                    "widgets": {"networktype": self.toolwidgetmain.comboBox_typeeau},
+                    "widgets": {"networktype": self.toolwidgetmain.networktype},
                 },
             }
 
             self.toolwidgetmain.toolButton_diametre.clicked.connect(
-                lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_diametre)
+                lambda: self.showNumPad(self.toolwidgetmain.diameterext)
             )
             self.toolwidgetmain.toolButton_gene.clicked.connect(
-                lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_gene)
+                lambda: self.showNumPad(self.toolwidgetmain.depthtoppipe)
             )
 
             self.dbasechildwdgfield = []
@@ -108,28 +108,28 @@ class BaseWaterdistributionEdgeTool(BaseEdgeTool):
                 "edge": {
                     "linkfield": "id_edge",
                     "widgets": {
-                        "laterals": self.toolwidgetmain.comboBox_branchement,
-                        "domain": self.toolwidgetmain.comboBox_domaine,
-                        "diameterext": self.toolwidgetmain.doubleSpinBox_diametre,
-                        "diameterint": self.toolwidgetmain.doubleSpinBox_diamint,
-                        "depthtoppipe": self.toolwidgetmain.doubleSpinBox_gene,
-                        "material": self.toolwidgetmain.comboBox_materiau,
-                        "joint": self.toolwidgetmain.comboBox_joint,
-                        "insulation": self.toolwidgetmain.comboBox_calor,
-                        "insulationtype": self.toolwidgetmain.comboBox_calortype,
-                        "insulationthickness": self.toolwidgetmain.spinBox_calorep,
-                        "cathodicprotection": self.toolwidgetmain.comboBox_protectioncatho,
-                        "flowtype": self.toolwidgetmain.comboBox_modecircu,
-                        "pipefunction": self.toolwidgetmain.comboBox_fonctioncan,
+                        "laterals": self.toolwidgetmain.laterals,
+                        "domain": self.toolwidgetmain.domain,
+                        "diameterext": self.toolwidgetmain.diameterext,
+                        "diameterint": self.toolwidgetmain.diameterint,
+                        "depthtoppipe": self.toolwidgetmain.depthtoppipe,
+                        "material": self.toolwidgetmain.material,
+                        "joint": self.toolwidgetmain.joint,
+                        "insulation": self.toolwidgetmain.insulation,
+                        "insulationtype": self.toolwidgetmain.insulationtype,
+                        "insulationthickness": self.toolwidgetmain.insulationthickness,
+                        "cathodicprotection": self.toolwidgetmain.cathodicprotection,
+                        "flowtype": self.toolwidgetmain.flowtype,
+                        "pipefunction": self.toolwidgetmain.pipefunction,
                     },
                 },
                 "object": {
                     "linkfield": "id_object",
-                    "widgets": {"comment": self.toolwidgetmain.textBrowser_commentaire},
+                    "widgets": {"comment": self.toolwidgetmain.comment},
                 },
                 "descriptionsystem": {
                     "linkfield": "id_descriptionsystem",
-                    "widgets": {"networktype": self.toolwidgetmain.comboBox_typeeau},
+                    "widgets": {"networktype": self.toolwidgetmain.networktype},
                 },
             }
 
@@ -137,13 +137,13 @@ class BaseWaterdistributionEdgeTool(BaseEdgeTool):
                 lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_diametre)
             )
             self.toolwidgetmain.toolButton_diamint.clicked.connect(
-                lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_diamint)
+                lambda: self.showNumPad(self.toolwidgetmain.diameterint)
             )
             self.toolwidgetmain.toolButton_gene.clicked.connect(
-                lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_gene)
+                lambda: self.showNumPad(self.toolwidgetmain.depthtoppipe)
             )
             self.toolwidgetmain.toolButton_calorep.clicked.connect(
-                lambda: self.showNumPad(self.toolwidgetmain.spinBox_calorep)
+                lambda: self.showNumPad(self.toolwidgetmain.insulationthickness)
             )
 
             self.dbasechildwdgfield = []

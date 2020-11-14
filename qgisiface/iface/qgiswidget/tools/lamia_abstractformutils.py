@@ -741,6 +741,8 @@ class FormToolUtils(QtCore.QObject):
                     )
                     if fieldvaluetosave is not None:
                         resdict[fieldname] = fieldvaluetosave
+                    else:
+                        resdict[fieldname] = "NULL"
             self.formtoolwidget.dbase.lamiaorm[
                 self.formtoolwidget.DBASETABLENAME
             ].update(featurepk, resdict)
@@ -793,6 +795,7 @@ class FormToolUtils(QtCore.QObject):
                 fieldnames = tabledict["widgets"].keys()
                 sql = "UPDATE " + str(tablename).lower() + " SET "
                 for i, field in enumerate(fieldnames):
+                    print(field, result[i])
                     if isinstance(result[i], str) or isinstance(result[i], unicode):
                         if result[i] != "":
                             resultstring = result[i]
@@ -814,7 +817,7 @@ class FormToolUtils(QtCore.QObject):
                 sql += " WHERE pk_" + str(tablename) + " = " + str(tablepk)
                 self.formtoolwidget.dbase.query(sql)
 
-            print("**", resdict)
+            # print("**", resdict)
 
     def setValueInWidget(self, wdg, valuetoset, table, field):
         """
@@ -1076,14 +1079,19 @@ class FormToolUtils(QtCore.QObject):
                                 "pk_" + tablename.lower(),
                                 featurepk,
                             )
-                            sql = "UPDATE {} SET {} = {} WHERE pk_{} = {}".format(
-                                tablename,
-                                joindict["colthistable"],
-                                parentcolval,
-                                tablename.lower(),
-                                pktable,
+                            # sql = "UPDATE {} SET {} = {} WHERE pk_{} = {}".format(
+                            #     tablename,
+                            #     joindict["colthistable"],
+                            #     parentcolval,
+                            #     tablename.lower(),
+                            #     pktable,
+                            # )
+                            # self.formtoolwidget.dbase.query(sql)
+
+                            self.formtoolwidget.dbase.lamiaorm[tablename].update(
+                                pktable, {joindict["colthistable"]: parentcolval}
                             )
-                            self.formtoolwidget.dbase.query(sql)
+
                             break
 
                 else:
@@ -1095,18 +1103,30 @@ class FormToolUtils(QtCore.QObject):
                         joindict["colparent"],
                         self.formtoolwidget.parentWidget.currentFeaturePK,
                     )
-                    sql = (
-                        "INSERT INTO {}(lpk_revision_begin,{},{}) "
-                        "VALUES({},{},{})".format(
-                            joindict["tctable"],
-                            joindict["tctablecolparent"],
-                            joindict["tctablecolthistable"],
-                            self.formtoolwidget.dbase.maxrevision,
-                            fieldtcparent,
-                            fieldtcthis,
-                        )
+                    # sql = (
+                    #     "INSERT INTO {}(lpk_revision_begin,{},{}) "
+                    #     "VALUES({},{},{})".format(
+                    #         joindict["tctable"],
+                    #         joindict["tctablecolparent"],
+                    #         joindict["tctablecolthistable"],
+                    #         self.formtoolwidget.dbase.maxrevision,
+                    #         fieldtcparent,
+                    #         fieldtcthis,
+                    #     )
+                    # )
+                    # self.formtoolwidget.dbase.query(sql)
+                    valdict = {
+                        "lpk_revision_begin": self.formtoolwidget.dbase.maxrevision,
+                        joindict["tctablecolparent"]: fieldtcparent,
+                        joindict["tctablecolthistable"]: fieldtcthis,
+                    }
+                    pk = self.formtoolwidget.dbase.lamiaorm[
+                        joindict["tctable"]
+                    ].create()
+                    self.formtoolwidget.dbase.lamiaorm[joindict["tctable"]].update(
+                        pk, valdict
                     )
-                    self.formtoolwidget.dbase.query(sql)
+
         if debug:
             self.formtoolwidget.dbase.printsql = False
         # self.dbase.commit()

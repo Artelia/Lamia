@@ -51,6 +51,7 @@ def get_all_file_paths(conf, zipf):
                 relpath = os.path.relpath(filepath, MAINDIR)
             zipf.write(filepath, relpath)
 
+    
 
 def main():
     print("zipping...")
@@ -64,6 +65,10 @@ def main():
     zipf = zipfile.ZipFile(FILENAME, "w", zipfile.ZIP_DEFLATED)
     for conf in CONF:
         file_paths = get_all_file_paths(conf, zipf)
+    #otherfiles
+    initpath = os.path.join(MAINDIR,"Lamia","qgisiface","__init__.py")
+    zipf.write(initpath, os.path.relpath(initpath, MAINDIR))
+    
     zipf.close()
     print("zipping done")
 

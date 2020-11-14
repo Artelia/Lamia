@@ -9,34 +9,19 @@ import logging
 # from ..toolabstract.inspectiondigue_abstractworker import AbstractWorker
 from qgis.PyQt import QtGui, uic, QtCore, QtXml
 
-try:
-    from qgis.PyQt.QtGui import QPrinter
-    from qgis.PyQt.QtGui import (
-        QProgressBar,
-        QApplication,
-        QAction,
-        QWidget,
-        QAbstractItemView,
-        QTableWidgetItem,
-        QHeaderView,
-        QToolButton,
-        QMessageBox,
-    )
+from qgis.PyQt.QtPrintSupport import QPrinter
+from qgis.PyQt.QtWidgets import (
+    QProgressBar,
+    QApplication,
+    QAction,
+    QWidget,
+    QAbstractItemView,
+    QTableWidgetItem,
+    QHeaderView,
+    QToolButton,
+    QMessageBox,
+)
 
-    # except ImportError:
-except ImportError as e:
-    from qgis.PyQt.QtPrintSupport import QPrinter
-    from qgis.PyQt.QtWidgets import (
-        QProgressBar,
-        QApplication,
-        QAction,
-        QWidget,
-        QAbstractItemView,
-        QTableWidgetItem,
-        QHeaderView,
-        QToolButton,
-        QMessageBox,
-    )
 # from ...libs import pyqtgraph as pg
 import networkx
 import numpy as np
@@ -44,34 +29,45 @@ from collections import OrderedDict
 import glob, sys, logging, inspect
 
 from Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstracttool import AbstractLamiaTool
-from .amctools.amcwindow import AMCWindow
+from .mcawidgets.amcwindow import AMCWindow
 from Lamia.qgisiface.iface.qgiswidget.tools.general_subwidgets.abstractfilemanager import (
     AbstractFileManager,
 )
-
-import pandas as pd
-
-# test gitignore
-# test gitignore
+from Lamia.api.libslamia.lamiamca.lamiamca import McaCore
 
 
 class McaTool(AbstractLamiaTool):
-    TOOLNAME = "amctools"
 
-    def __init__(
-        self,
-        dbase,
-        dialog=None,
-        linkedtreewidget=None,
-        gpsutil=None,
-        parentwidget=None,
-        parent=None,
-    ):
-        super(McaTool, self).__init__(
-            dbase, dialog, linkedtreewidget, gpsutil, parentwidget, parent=parent
+    POSTPROTOOLNAME = "lamiamca"
+
+    tooltreewidgetCAT = QtCore.QCoreApplication.translate("base3", "Analytics")
+    tooltreewidgetSUBCAT = QtCore.QCoreApplication.translate("base3", "MCA")
+
+    def __init__(self, **kwargs):
+        super(McaTool, self).__init__(**kwargs)
+        self.mcacore = McaCore(
+            dbaseparser=self.dbase,
+            messageinstance=self.mainifacewidget.connector,
+            qgiscanvas=self.mainifacewidget.qgiscanvas,
         )
+        self.filemanager = AMCFileManager(self.mainifacewidget, self.mcacore)
         self.amcwindow = None
 
+    # def __init__(
+    #     self,
+    #     dbase,
+    #     dialog=None,
+    #     linkedtreewidget=None,
+    #     gpsutil=None,
+    #     parentwidget=None,
+    #     parent=None,
+    # ):
+    #     super(McaTool, self).__init__(
+    #         dbase, dialog, linkedtreewidget, gpsutil, parentwidget, parent=parent
+    #     )
+    #     self.amcwindow = None
+
+    """
     def initTool(self):
         # ****************************************************************************************
         # Main spec
@@ -100,30 +96,28 @@ class McaTool(AbstractLamiaTool):
 
         self.filemanager = AMCFileManager(self.windowdialog, self, ".json")
 
-        """ SUPPRIME 20190812 JRO
-        currentJson = self.userwdgfield.comboBox_typeamc.currentText()
-        self.amcwindow = AMCWindow(dbase=self.dbase, json=currentJson)
-        self.amcwindow.setWindowModality(QtCore.Qt.ApplicationModal)"""
+        #  SUPPRIME 20190812 JRO
+        # currentJson = self.toolwidgetmain.comboBox_typeamc.currentText()
+        # self.amcwindow = AMCWindow(dbase=self.dbase, json=currentJson)
+        # self.amcwindow.setWindowModality(QtCore.Qt.ApplicationModal)
 
-    def initFieldUI(self):
-        if self.userwdgfield is None:
+        """
 
-            # ****************************************************************************************
-            # userui
+    # def initFieldUI(self):
+    def initMainToolWidget(self):
+        self.toolwidgetmain = UserUI()
+        # self.toolwidgetmain.toolButton_editamc.clicked.connect(self.editAMC)
+        self.toolwidgetmain.pushButton_calcul.clicked.connect(self.launchCalcul)
 
-            self.userwdgfield = UserUI()
-            # self.userwdgfield.toolButton_editamc.clicked.connect(self.editAMC)
-            self.userwdgfield.pushButton_calcul.clicked.connect(self.launchCalcul)
+        self.toolwidgetmain.groupBox_filemanager.layout().addWidget(self.filemanager)
+        try:
+            self.filemanager.toolButton_edit.clicked.disconnect()
+        except:
+            pass
+        self.filemanager.toolButton_edit.clicked.connect(self.editAMC)
 
-            self.userwdgfield.groupBox_filemanager.layout().addWidget(self.filemanager)
-            try:
-                self.filemanager.toolButton_edit.clicked.disconnect()
-            except:
-                pass
-            self.filemanager.toolButton_edit.clicked.connect(self.editAMC)
-
-            # Load JSON files to comboBox
-            # self.loadFiles()
+        # Load JSON files to comboBox
+        # self.loadFiles()
 
     if False:
 
@@ -136,44 +130,58 @@ class McaTool(AbstractLamiaTool):
             files = self.listFiles(
                 self.dbase.dbaseressourcesdirectory + "/config/amcTools"
             )
-            self.userwdgfield.comboBox_typeamc.addItems(files)
+            self.toolwidgetmain.comboBox_typeamc.addItems(files)
 
             print("| Exit {fct}".format(fct=inspect.stack()[0][3]))
 
-    def listFiles(self, myPath):
-        """
-        Fetches all files within a specified directory
-        :param myPath: str, path within which files should be saved
-        :return: list, files within path
-        """
+        def listFiles(self, myPath):
+            """
+            Fetches all files within a specified directory
+            :param myPath: str, path within which files should be saved
+            :return: list, files within path
+            """
 
-        return [
-            f for f in os.listdir(myPath) if os.path.isfile(os.path.join(myPath, f))
-        ]
+            return [
+                f for f in os.listdir(myPath) if os.path.isfile(os.path.join(myPath, f))
+            ]
 
     # ---------- FILE MANAGEMENT ----------
 
-    def postOnActivation(self):
+    # def postOnActivation(self):
+    #     self.filemanager.reset()
+
+    def postToolTreeWidgetCurrentItemChanged(self):
         self.filemanager.reset()
 
     def postInitFeatureProperties(self, feat):
         pass
 
     def editAMC(self):
-        # currentJson = self.userwdgfield.comboBox_typeamc.currentText()
-        currentJsonPath = self.filemanager.getCurrentPath()
+        # currentJson = self.toolwidgetmain.comboBox_typeamc.currentText()
+        # currentJsonPath = self.filemanager.getCurrentPath()
+        # tabletypepath = self.filemanager.getCurrentText()
+
+        # currentJsonPath = self.mcacore.getConfFilePath(
+        #     self.filemanager.getCurrentText()
+        # )
+        tabletypepath = self.filemanager.getCurrentText()
 
         # self.amcwindow = AMCWindow(dbase=self.dbase, jsonpath=currentJson)
-        self.amcwindow = AMCWindow(dbase=self.dbase, jsonpath=currentJsonPath)
+        self.amcwindow = AMCWindow(
+            dbase=self.dbase,
+            confname=tabletypepath,
+            mcacore=self.mcacore,
+            qgiscanvas=self.mainifacewidget.qgiscanvas,
+        )
 
-        if self.dbase.qgsiface is not None:
+        if qgis.utils.iface is not None:
             self.amcwindow.setWindowModality(QtCore.Qt.NonModal)
             self.amcwindow.show()
         else:
             self.amcwindow.exec_()
 
     def launchCalcul(self):
-        # currentJson = self.userwdgfield.comboBox_typeamc.currentText()
+        # currentJson = self.toolwidgetmain.comboBox_typeamc.currentText()
         currentJsonPath = self.filemanager.getCurrentPath()
         self.amcwindow = AMCWindow(dbase=self.dbase, jsonpath=currentJsonPath)
         self.amcwindow.createdataframe.finished.connect(self.showCalculResults)
@@ -193,21 +201,23 @@ class McaTool(AbstractLamiaTool):
         """
 
         # Reset table widget
-        self.userwdgfield.twResult.setRowCount(0)
-        header = self.userwdgfield.twResult.horizontalHeader()
+        self.toolwidgetmain.twResult.setRowCount(0)
+        header = self.toolwidgetmain.twResult.horizontalHeader()
 
         # Columns and rows names
         rowNr = len(df.values)
 
         # Set column's number to len(colNames) + 1 (ID) and row's number to len(rowNames)
-        self.userwdgfield.twResult.setColumnCount(1)
-        self.userwdgfield.twResult.setRowCount(rowNr)
+        self.toolwidgetmain.twResult.setColumnCount(1)
+        self.toolwidgetmain.twResult.setRowCount(rowNr)
 
         # Fill tableWidget with elements from self.dataFrame
         for row in range(rowNr):
             valueTmp = df[row]
             # Insert value
-            self.userwdgfield.twResult.setItem(row, 0, QTableWidgetItem(str(valueTmp)))
+            self.toolwidgetmain.twResult.setItem(
+                row, 0, QTableWidgetItem(str(valueTmp))
+            )
             # Resize column
             header.setSectionResizeMode(0, QHeaderView.Stretch)
 
@@ -221,30 +231,26 @@ class UserUI(QWidget):
 
 
 class AMCFileManager(AbstractFileManager):
-    def __init__(self, mainwindows=None, parentwdg=None, fileext=None):
-        super(AMCFileManager, self).__init__(mainwindows, parentwdg, fileext)
+    def __init__(self, mainwindows=None, toolclass=None):
+        super(AMCFileManager, self).__init__(mainwindows, toolclass)
 
     def new(self):
 
-        if not os.path.exists(self.confdataproject):
-            os.mkdir(self.confdataproject)
-
-        if sys.version_info.major == 2:
-            confpath, confext = self.qfiledialog.getSaveFileName(
-                None, "Choose the file", self.confdataproject, "json (*.json)", ""
-            )
-        elif sys.version_info.major == 3:
-            confpath, confext = self.qfiledialog.getSaveFileName(
-                None, "Choose the file", self.confdataproject, "json (*.json)", ""
-            )
+        confpath, confext = self.qfiledialog.getSaveFileName(
+            None,
+            "Choose the file",
+            self.toolclass.confdatadirproject,
+            "json (*.json)",
+            "",
+        )
 
         if confpath:
-            conf_file = open(confpath, "w", encoding="utf-8")
-            conf_file.close()
-
+            self.toolclass.new(confpath)
             self.reset()
             txttofind = (
-                self.projectcharacter + os.path.splitext(os.path.basename(confpath))[0]
+                self.toolclass.projectcharacter
+                + os.path.splitext(os.path.basename(confpath))[0]
             )
             indexcombo = self.comboBox_files.findText(txttofind)
             self.comboBox_files.setCurrentIndex(indexcombo)
+

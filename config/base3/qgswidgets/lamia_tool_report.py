@@ -120,8 +120,8 @@ class ReportTool(AbstractLamiaTool):
 
 
 class ExportRapportFileManager(AbstractFileManager):
-    def __init__(self, mainwindows=None, parentwdg=None):
-        super(ExportRapportFileManager, self).__init__(mainwindows, parentwdg)
+    def __init__(self, mainwindows=None, toolclass=None):
+        super(ExportRapportFileManager, self).__init__(mainwindows, toolclass)
 
     def new(self):
         confpath, confext = self.qfiledialog.getSaveFileName(
@@ -133,7 +133,7 @@ class ExportRapportFileManager(AbstractFileManager):
         )
 
         if confpath:
-            self.parentwdg.new(confpath)
+            self.toolclass.new(confpath)
 
             if False:
                 if confpath:
@@ -182,7 +182,8 @@ class ExportRapportFileManager(AbstractFileManager):
             self.reset()
 
             txttofind = (
-                self.projectcharacter + os.path.splitext(os.path.basename(confpath))[0]
+                self.toolclass.projectcharacter
+                + os.path.splitext(os.path.basename(confpath))[0]
             )
             indexcombo = self.comboBox_files.findText(txttofind)
             self.comboBox_files.setCurrentIndex(indexcombo)

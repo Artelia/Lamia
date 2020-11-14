@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>552</width>
-    <height>262</height>
+    <width>530</width>
+    <height>279</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -25,7 +25,7 @@
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="5" column="1">
-        <widget class="QComboBox" name="comboBox_subtype"/>
+        <widget class="QComboBox" name="surfacesubtype"/>
        </item>
        <item row="5" column="0">
         <widget class="QLabel" name="label_3">
@@ -35,7 +35,7 @@
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QComboBox" name="comboBox_type"/>
+        <widget class="QComboBox" name="surfacetype"/>
        </item>
        <item row="2" column="0">
         <widget class="QLabel" name="label">
@@ -68,7 +68,7 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QComboBox" name="comboBox_typeReseau"/>
+        <widget class="QComboBox" name="networktype"/>
        </item>
        <item row="0" column="0">
         <widget class="QLabel" name="label_9">
@@ -82,6 +82,33 @@
        </item>
        <item row="0" column="1">
         <widget class="QLineEdit" name="name"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_5">
+      <attribute name="title">
+       <string>Secondary\nproperties</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_6">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_14">
+         <property name="text">
+          <string>Receiving environment</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="receivingenvironment"/>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_15">
+         <property name="text">
+          <string>Flow control</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="flowcontrol"/>
        </item>
       </layout>
      </widget>
@@ -104,7 +131,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QComboBox" name="comboBox_inletflowcondition"/>
+           <widget class="QComboBox" name="flowconditionupstream"/>
           </item>
           <item row="0" column="2">
            <widget class="QLabel" name="label_5">
@@ -114,7 +141,7 @@
            </widget>
           </item>
           <item row="0" column="3">
-           <widget class="QComboBox" name="comboBox_outletflowcondition"/>
+           <widget class="QComboBox" name="flowconditiondownstream"/>
           </item>
           <item row="1" column="0">
            <widget class="QLabel" name="label_18">
@@ -124,7 +151,7 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QComboBox" name="comboBox_systemfunction"/>
+           <widget class="QComboBox" name="systemfunction"/>
           </item>
          </layout>
         </widget>
@@ -171,14 +198,14 @@
        <string>Geometry\ntopology</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_4">
-       <item row="0" column="0">
+       <item row="1" column="0">
         <widget class="QLabel" name="label_2">
          <property name="text">
           <string>Node link</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
+       <item row="1" column="1">
         <widget class="QFrame" name="frame_node">
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
@@ -187,6 +214,114 @@
           <enum>QFrame::Raised</enum>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout"/>
+        </widget>
+       </item>
+       <item row="0" column="0" colspan="2">
+        <widget class="QFrame" name="frame">
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="0" column="3">
+           <widget class="QLabel" name="label_11">
+            <property name="text">
+             <string>Length</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QToolButton" name="toolButton_width">
+            <property name="text">
+             <string>...</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_10">
+            <property name="text">
+             <string>Width</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QDoubleSpinBox" name="width">
+            <property name="minimum">
+             <double>-1.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>999999.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="5">
+           <widget class="QToolButton" name="toolButton_lenght">
+            <property name="text">
+             <string>...</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="4">
+           <widget class="QDoubleSpinBox" name="lenght">
+            <property name="minimum">
+             <double>-1.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>999999.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_12">
+            <property name="text">
+             <string>Depth</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QDoubleSpinBox" name="depth">
+            <property name="minimum">
+             <double>-1.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>999999.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QToolButton" name="toolButton_depth">
+            <property name="text">
+             <string>...</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QLabel" name="label_13">
+            <property name="text">
+             <string>Volume</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="4">
+           <widget class="QDoubleSpinBox" name="volume">
+            <property name="minimum">
+             <double>-1.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>999999.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="5">
+           <widget class="QToolButton" name="toolButton_volume">
+            <property name="text">
+             <string>...</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
       </layout>

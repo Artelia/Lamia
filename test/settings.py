@@ -18,15 +18,17 @@ CRS = 2154
 #     "Base2_tramway",
 # ]
 DBTYPE = [
-    "base3_urbandrainage",
+    # "base3_urbandrainage",
     "base3_waterdistribution",
     # "base3_constructionsite",
-    "base3_faunaflora",
-    "base3_levee",
+    # "base3_faunaflora",
+    # "base3_levee",
+    # "base3_carpark",
 ]
 
 
 # VARIANTES = ['Lamia','Orange']
+# VARIANTES = ["Lamia", "2018_SNCF"]
 VARIANTES = ["Lamia"]
 
 # * Connexion conf
@@ -48,7 +50,7 @@ PGport = 5432
 SPATIALITE = True
 POSTGIS = False
 
-TESTDIR = os.path.join(os.path.join(os.path.dirname(__file__)), "..", "testfiles")
+TESTDIR = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "testfiles"))
 
 # * test onparticularfile - uncomment to apply
 if False:

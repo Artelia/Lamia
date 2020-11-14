@@ -7,7 +7,7 @@ sys.path.append(lamiapath)
 
 from test.test_utils import *
 import Lamia
-from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
+from Lamia.api.dbasemanager.dbaseparserfactory import DBaseParserFactory
 
 
 def createDefaultTxtExport(dbaseparser, tablename):
@@ -76,14 +76,14 @@ def main(argv):
         "base3_faunaflora",
         "base3_levee",
     """
-    dbaseparser.dbconfigreader.createDBDictionary("base3_urbandrainage")
-    createDefaultTxtExport(dbaseparser, "node")
-    createDefaultTxtExport(dbaseparser, "edge")
-    createDefaultTxtExport(dbaseparser, "surface")
+    dbaseparser.dbconfigreader.createDBDictionary("base3_levee")
+    # createDefaultTxtExport(dbaseparser, "node")
+    # createDefaultTxtExport(dbaseparser, "edge")
+    # createDefaultTxtExport(dbaseparser, "surface")
     createDefaultTxtExport(dbaseparser, "deficiency")
     createDefaultTxtExport(dbaseparser, "observation")
-    createDefaultTxtExport(dbaseparser, "media")
-    createDefaultTxtExport(dbaseparser, "equipment")
+    # createDefaultTxtExport(dbaseparser, "media")
+    # createDefaultTxtExport(dbaseparser, "equipment")
 
 
 if __name__ == "__main__":

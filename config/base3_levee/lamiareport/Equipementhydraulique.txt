@@ -15,7 +15,7 @@ True
 #type;               constraint (qgis typo)
 autoalongpath;      "lid_descriptionsystem_1" IS NULL
 ###atlaslayerstyle
-equipmenthydraulique_atlas.qml
+Equipementhydraulique_atlas.qml
 ###atlasdrivemap
 #itemname;   minscale;   typescale;      layers
 map1;       2500;       Predefined      ;['atlaslayer', 'edge', 'scan25']

@@ -12,6 +12,11 @@ sector1             ;String              ;                    ;deficiency_now.se
 sector2             ;String              ;                    ;deficiency_now.sector2
 sector3             ;String              ;                    ;deficiency_now.sector3
 lid_descriptionsystem;Int                 ;                    ;deficiency_now.lid_descriptionsystem
+side                ;String              ;side                ;deficiency_now.side
+position            ;String              ;position            ;deficiency_now.position
+deficiencytype      ;String              ;deficiencytype      ;deficiency_now.deficiencytype
+deficiencysubtype   ;String              ;deficiencysubtype   ;deficiency_now.deficiencysubtype
+deficiencysubsubtype;String              ;deficiencysubsubtype;deficiency_now.deficiencysubsubtype
 
 ###object
 #name               type                 cst                  value                
@@ -27,6 +32,7 @@ name                ;String              ;                    ;deficiency_now.na
 importid            ;Int                 ;                    ;deficiency_now.importid
 importtable         ;String              ;                    ;deficiency_now.importtable
 lid_actor_creator   ;Int                 ;                    ;deficiency_now.lid_actor_creator
+sirsid              ;String              ;                    ;deficiency_now.sirsid
 
 ###geom
 geom                ;String              ;                    ;ST_AsText(deficiency_now.geom)

@@ -1,9 +1,10 @@
 import os
 import qgis, qgis.core
 import Lamia
-from Lamia.qgisiface.iface.qgiswidget.tools.toolprepro.base2.lamiabase_graphique_tool import (
-    BaseGraphiqueTool,
-)
+
+# from Lamia.qgisiface.iface.qgiswidget.tools.toolprepro.base2.lamiabase_graphique_tool import (
+#     BaseGraphiqueTool,
+# )
 from Lamia.api.libslamia.lamiagraph.lamiagraph import GraphMaker
 
 

@@ -66,12 +66,16 @@ class BaseUrbandrainageObservationTool(BaseObservationTool):
                             self.toolwidgetmain.presencesediments_2,
                         ],
                         "presencepressurizedflow": self.toolwidgetmain.presencepressurizedflow,
-                        "maintenanceopinion": self.toolwidgetmain.maintenanceopinion,
+                        "maintenanceopinion": [
+                            self.toolwidgetmain.maintenanceopinion,
+                            self.toolwidgetmain.maintenanceopinion_2,
+                        ],
                         # DIV
                         "conditionglobal": [
                             self.toolwidgetmain.conditionglobal,
                             self.toolwidgetmain.conditionglobal_2,
                             self.toolwidgetmain.conditionglobal_3,
+                            self.toolwidgetmain.conditionglobal_4,
                         ],
                         # PR
                         "conditioncontroller": self.toolwidgetmain.conditioncontroller,
@@ -130,13 +134,17 @@ class BaseUrbandrainageObservationTool(BaseObservationTool):
                             self.toolwidgetmain.presencesediments_2,
                         ],
                         "presencepressurizedflow": self.toolwidgetmain.presencepressurizedflow,
-                        "maintenanceopinion": self.toolwidgetmain.maintenanceopinion,
+                        "maintenanceopinion": [
+                            self.toolwidgetmain.maintenanceopinion,
+                            self.toolwidgetmain.maintenanceopinion_2,
+                        ],
                         # PR
                         # 'etattampon': self.toolwidgetmain.comboBox_PRetattampon,
                         "conditionglobal": [
                             self.toolwidgetmain.conditionglobal,
                             self.toolwidgetmain.conditionglobal_2,
                             self.toolwidgetmain.conditionglobal_3,
+                            self.toolwidgetmain.conditionglobal_4,
                         ],
                         "conditioncontroller": self.toolwidgetmain.conditioncontroller,
                         # DSH
@@ -255,11 +263,11 @@ class BaseUrbandrainageObservationTool(BaseObservationTool):
                                 "node", "nodetype", currenttext
                             )
 
-                            if typenoeud in ["60", "70", "71"]:
+                            if typenoeud in ["60", "70", "71"]:  # manole
                                 self.toolwidgetmain.stackedWidget_2.setCurrentIndex(0)
-                            elif typenoeud == "10":
+                            elif typenoeud == "10":  # ps
                                 self.toolwidgetmain.stackedWidget_2.setCurrentIndex(1)
-                            else:
+                            else:  # other
                                 self.toolwidgetmain.stackedWidget_2.setCurrentIndex(3)
 
                 elif self.dbase.variante in ["2018_SNCF"]:
@@ -275,13 +283,13 @@ class BaseUrbandrainageObservationTool(BaseObservationTool):
                             typenoeud = self.dbase.getConstraintRawValueFromText(
                                 "node", "nodetype", currenttext
                             )
-                            if typenoeud in ["60", "70", "71"]:
+                            if typenoeud in ["60", "70", "71"]:  # manhole
                                 self.toolwidgetmain.stackedWidget_2.setCurrentIndex(0)
-                            elif typenoeud == "10":
+                            elif typenoeud == "10":  # Pumpin station
                                 self.toolwidgetmain.stackedWidget_2.setCurrentIndex(1)
-                            elif typenoeud == "21":
+                            elif typenoeud in ["21", "51"]:  # deshuil,puisard
                                 self.toolwidgetmain.stackedWidget_2.setCurrentIndex(2)
-                            else:
+                            else:  # toher
                                 self.toolwidgetmain.stackedWidget_2.setCurrentIndex(3)
 
                 elif self.dbase.variante in ["CD41"]:

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>370</width>
+    <width>474</width>
     <height>454</height>
    </rect>
   </property>
@@ -67,7 +67,7 @@
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="page">
+     <widget class="QWidget" name="edge">
       <layout class="QGridLayout" name="gridLayout" columnstretch="1,5,1">
        <item row="5" column="0">
         <widget class="QLabel" name="label_6">
@@ -142,7 +142,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="page_2">
+     <widget class="QWidget" name="node">
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="0">
         <widget class="QLabel" name="label_3">
@@ -166,7 +166,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="page_3">
+     <widget class="QWidget" name="equipment">
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
         <widget class="QLabel" name="label_9">
@@ -177,6 +177,7 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="surface"/>
     </widget>
    </item>
    <item>

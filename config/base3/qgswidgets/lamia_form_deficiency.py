@@ -60,7 +60,7 @@ class BaseDeficiencyTool(AbstractLamiaFormTool):
         "tctablecolparent": None,
         "tctablecolthistable": None,
     }
-    for tablename in ["node", "edge", "equipment"]:
+    for tablename in ["node", "edge", "equipment", "surface"]:
         tempparentjoin[tablename] = linkdict
     PARENTJOIN = dict(tempparentjoin)
 

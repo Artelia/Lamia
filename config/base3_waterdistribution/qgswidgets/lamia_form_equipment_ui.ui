@@ -83,13 +83,13 @@
            </widget>
           </item>
           <item row="3" column="1">
-           <widget class="QComboBox" name="comboBox_enservice"/>
+           <widget class="QComboBox" name="operational"/>
           </item>
           <item row="1" column="1" colspan="3">
-           <widget class="QComboBox" name="comboBox_sstype"/>
+           <widget class="QComboBox" name="equipmentsubtype"/>
           </item>
           <item row="0" column="1" colspan="3">
-           <widget class="QComboBox" name="comboBox_typeouvrage"/>
+           <widget class="QComboBox" name="equipmenttype"/>
           </item>
           <item row="3" column="2">
            <widget class="QLabel" name="label_29">
@@ -102,14 +102,14 @@
            </widget>
           </item>
           <item row="3" column="3">
-           <widget class="QDateEdit" name="dateEdit_anneepose">
+           <widget class="QDateEdit" name="dateoperationalcreation">
             <property name="displayFormat">
              <string>yyyy</string>
             </property>
            </widget>
           </item>
           <item row="2" column="1" colspan="2">
-           <widget class="QLineEdit" name="lineEdit_nom"/>
+           <widget class="QLineEdit" name="name"/>
           </item>
          </layout>
         </widget>
@@ -143,7 +143,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QTextBrowser" name="textBrowser_commentaire">
+           <widget class="QTextBrowser" name="comment">
             <property name="maximumSize">
              <size>
               <width>16777215</width>
@@ -168,7 +168,7 @@
        <item>
         <widget class="QStackedWidget" name="stackedWidget">
          <property name="currentIndex">
-          <number>3</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="Regard">
           <layout class="QGridLayout" name="gridLayout_2">
@@ -190,7 +190,7 @@
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_hmano">
+            <widget class="QDoubleSpinBox" name="totaldynamichead">
              <property name="minimum">
               <double>-1.000000000000000</double>
              </property>
@@ -237,7 +237,14 @@
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_volume"/>
+            <widget class="QDoubleSpinBox" name="volume">
+             <property name="minimum">
+              <double>-1.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>999999.000000000000000</double>
+             </property>
+            </widget>
            </item>
            <item row="0" column="2">
             <widget class="QToolButton" name="toolButton_volume">
@@ -267,7 +274,7 @@
             </widget>
            </item>
            <item row="0" column="4">
-            <widget class="QSpinBox" name="spinBox_nbrecuves"/>
+            <widget class="QSpinBox" name="tanknumber"/>
            </item>
            <item row="0" column="5">
             <widget class="QToolButton" name="toolButton_nbrecuve">
@@ -300,13 +307,34 @@
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_cotesql"/>
+            <widget class="QDoubleSpinBox" name="elevationsql">
+             <property name="minimum">
+              <double>-1.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>999999.000000000000000</double>
+             </property>
+            </widget>
            </item>
            <item row="1" column="4">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_coteradier"/>
+            <widget class="QDoubleSpinBox" name="elevationculvert">
+             <property name="minimum">
+              <double>-1.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>999999.000000000000000</double>
+             </property>
+            </widget>
            </item>
            <item row="2" column="1">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_cotetp"/>
+            <widget class="QDoubleSpinBox" name="elevationoverflow">
+             <property name="minimum">
+              <double>-1.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>999999.000000000000000</double>
+             </property>
+            </widget>
            </item>
            <item row="1" column="2">
             <widget class="QToolButton" name="toolButton_cotesql">
@@ -344,9 +372,15 @@
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_diam">
+            <widget class="QDoubleSpinBox" name="diameter">
              <property name="decimals">
               <number>3</number>
+             </property>
+             <property name="minimum">
+              <double>-1.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>999999.000000000000000</double>
              </property>
             </widget>
            </item>
@@ -391,7 +425,14 @@
             </spacer>
            </item>
            <item row="1" column="1">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_nbrecompteur"/>
+            <widget class="QDoubleSpinBox" name="meternumber">
+             <property name="minimum">
+              <double>-1.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>999999.000000000000000</double>
+             </property>
+            </widget>
            </item>
            <item row="1" column="2">
             <widget class="QToolButton" name="toolButton_nbrecompteur">
@@ -401,7 +442,7 @@
             </widget>
            </item>
            <item row="2" column="1" colspan="2">
-            <widget class="QComboBox" name="comboBox_fonct"/>
+            <widget class="QComboBox" name="metertype"/>
            </item>
           </layout>
          </widget>
@@ -435,7 +476,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_prof">
+           <widget class="QDoubleSpinBox" name="depthequipment">
             <property name="minimum">
              <double>-1.000000000000000</double>
             </property>
@@ -479,32 +520,32 @@
            <number>3</number>
           </property>
           <item row="2" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_Z">
+           <widget class="QDoubleSpinBox" name="Z">
             <property name="minimum">
              <double>-99.000000000000000</double>
             </property>
             <property name="maximum">
-             <double>99999999.000000000000000</double>
+             <double>9999.000000000000000</double>
             </property>
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_Y">
+           <widget class="QDoubleSpinBox" name="Y">
             <property name="minimum">
              <double>-99.000000000000000</double>
             </property>
             <property name="maximum">
-             <double>99999999.000000000000000</double>
+             <double>9999.000000000000000</double>
             </property>
            </widget>
           </item>
           <item row="2" column="3">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_dZ">
+           <widget class="QDoubleSpinBox" name="dZ">
             <property name="minimum">
              <double>-1.000000000000000</double>
             </property>
             <property name="maximum">
-             <double>999.000000000000000</double>
+             <double>9999.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -523,12 +564,12 @@
            </widget>
           </item>
           <item row="1" column="3">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_dY">
+           <widget class="QDoubleSpinBox" name="dY">
             <property name="minimum">
              <double>-1.000000000000000</double>
             </property>
             <property name="maximum">
-             <double>999.000000000000000</double>
+             <double>9999.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -540,22 +581,22 @@
            </widget>
           </item>
           <item row="0" column="3">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_dX">
+           <widget class="QDoubleSpinBox" name="dX">
             <property name="minimum">
              <double>-1.000000000000000</double>
             </property>
             <property name="maximum">
-             <double>999.000000000000000</double>
+             <double>9999.000000000000000</double>
             </property>
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_X">
+           <widget class="QDoubleSpinBox" name="X">
             <property name="minimum">
              <double>-99.000000000000000</double>
             </property>
             <property name="maximum">
-             <double>99999999.000000000000000</double>
+             <double>9999.000000000000000</double>
             </property>
            </widget>
           </item>

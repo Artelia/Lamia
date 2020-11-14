@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>552</width>
-    <height>306</height>
+    <width>607</width>
+    <height>334</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget_2">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab_6">
       <attribute name="title">
@@ -169,7 +169,7 @@
        <item>
         <widget class="QStackedWidget" name="stackedWidget_node">
          <property name="currentIndex">
-          <number>3</number>
+          <number>5</number>
          </property>
          <widget class="QWidget" name="Regard">
           <layout class="QGridLayout" name="gridLayout_2">
@@ -279,7 +279,7 @@
            <item>
             <widget class="QTabWidget" name="tabWidget">
              <property name="currentIndex">
-              <number>4</number>
+              <number>0</number>
              </property>
              <widget class="QWidget" name="tab_5">
               <attribute name="title">
@@ -411,33 +411,34 @@
                <string>Interior</string>
               </attribute>
               <layout class="QGridLayout" name="gridLayout_9">
-               <item row="5" column="0">
-                <widget class="QLabel" name="label_39">
+               <item row="6" column="6">
+                <widget class="QLabel" name="label_68">
                  <property name="text">
-                  <string>Overflow</string>
+                  <string>Outlet diameter</string>
                  </property>
                  <property name="wordWrap">
                   <bool>true</bool>
                  </property>
                 </widget>
                </item>
-               <item row="3" column="1" colspan="2">
-                <widget class="QComboBox" name="pspumpswitchingcontrollertype"/>
-               </item>
-               <item row="4" column="0">
-                <widget class="QLabel" name="label_33">
-                 <property name="text">
-                  <string>Float</string>
-                 </property>
-                 <property name="wordWrap">
-                  <bool>true</bool>
+               <item row="4" column="3" colspan="2">
+                <widget class="QSpinBox" name="psfloatnumber">
+                 <property name="minimum">
+                  <number>-1</number>
                  </property>
                 </widget>
                </item>
-               <item row="5" column="1" colspan="2">
-                <widget class="QComboBox" name="psoverflow"/>
+               <item row="6" column="8">
+                <widget class="QToolButton" name="toolButton_outletdiameter_3">
+                 <property name="text">
+                  <string>...</string>
+                 </property>
+                </widget>
                </item>
-               <item row="3" column="0">
+               <item row="1" column="3" colspan="3">
+                <widget class="QComboBox" name="psfallprotectiongratings"/>
+               </item>
+               <item row="3" column="0" colspan="3">
                 <widget class="QLabel" name="label_41">
                  <property name="text">
                   <string>Pump switching controller type</string>
@@ -447,24 +448,14 @@
                  </property>
                 </widget>
                </item>
-               <item row="4" column="1">
-                <widget class="QSpinBox" name="psfloatnumber">
-                 <property name="minimum">
-                  <number>-1</number>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1" colspan="2">
-                <widget class="QComboBox" name="psmaterial"/>
-               </item>
-               <item row="4" column="2">
+               <item row="4" column="5" colspan="4">
                 <widget class="QToolButton" name="toolButton_poires">
                  <property name="text">
                   <string>...</string>
                  </property>
                 </widget>
                </item>
-               <item row="0" column="0">
+               <item row="0" column="0" colspan="3">
                 <widget class="QLabel" name="label_31">
                  <property name="text">
                   <string>Material</string>
@@ -474,7 +465,20 @@
                  </property>
                 </widget>
                </item>
-               <item row="1" column="0">
+               <item row="6" column="0" colspan="3">
+                <widget class="QLabel" name="label_69">
+                 <property name="text">
+                  <string>Inlet diameter</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="3" colspan="3">
+                <widget class="QComboBox" name="pspumpswitchingcontrollertype"/>
+               </item>
+               <item row="1" column="0" colspan="3">
                 <widget class="QLabel" name="label_46">
                  <property name="text">
                   <string>Fall protection gratings presence</string>
@@ -484,10 +488,37 @@
                  </property>
                 </widget>
                </item>
-               <item row="1" column="1" colspan="2">
-                <widget class="QComboBox" name="psfallprotectiongratings"/>
+               <item row="1" column="7" colspan="2">
+                <widget class="QComboBox" name="psinletscreen"/>
                </item>
-               <item row="2" column="0">
+               <item row="6" column="7">
+                <widget class="QDoubleSpinBox" name="outletdiameter_3">
+                 <property name="minimum">
+                  <double>-1.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>999999.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="5">
+                <widget class="QToolButton" name="toolButton_inletdiameter_3">
+                 <property name="text">
+                  <string>...</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="3" colspan="2">
+                <widget class="QDoubleSpinBox" name="inletdiameter_3">
+                 <property name="minimum">
+                  <double>-1.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>999999.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="6">
                 <widget class="QLabel" name="label_47">
                  <property name="text">
                   <string>Inlet screen presence</string>
@@ -497,8 +528,85 @@
                  </property>
                 </widget>
                </item>
-               <item row="2" column="1" colspan="2">
-                <widget class="QComboBox" name="psinletscreen"/>
+               <item row="0" column="3" colspan="3">
+                <widget class="QComboBox" name="psmaterial"/>
+               </item>
+               <item row="3" column="6">
+                <widget class="QLabel" name="label_39">
+                 <property name="text">
+                  <string>Overflow</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="7" colspan="2">
+                <widget class="QComboBox" name="psoverflow"/>
+               </item>
+               <item row="4" column="0" colspan="3">
+                <widget class="QLabel" name="label_33">
+                 <property name="text">
+                  <string>Float</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="6">
+                <widget class="QLabel" name="label_73">
+                 <property name="text">
+                  <string>Drawdown volume</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="3" colspan="2">
+                <widget class="QDoubleSpinBox" name="psdrawdownheight">
+                 <property name="minimum">
+                  <double>-1.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>999999.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="5">
+                <widget class="QToolButton" name="toolButton_psdrawdownheight">
+                 <property name="text">
+                  <string>...</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="7">
+                <widget class="QDoubleSpinBox" name="psdrawdownvolume">
+                 <property name="minimum">
+                  <double>-1.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>999999.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="8">
+                <widget class="QToolButton" name="toolButton_psdrawdownvolume">
+                 <property name="text">
+                  <string>...</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="0" colspan="3">
+                <widget class="QLabel" name="label_72">
+                 <property name="text">
+                  <string>Drawdown height</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
                </item>
               </layout>
              </widget>
@@ -507,34 +615,10 @@
                <string>Pumps</string>
               </attribute>
               <layout class="QGridLayout" name="gridLayout_10">
-               <item row="2" column="1">
-                <widget class="QSpinBox" name="pspumpnumber">
-                 <property name="minimum">
-                  <number>-1</number>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="label_35">
-                 <property name="text">
-                  <string>Pumps number</string>
-                 </property>
-                 <property name="wordWrap">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="2">
-                <widget class="QToolButton" name="toolButton_pompes">
-                 <property name="text">
-                  <string>...</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1" colspan="2">
+               <item row="2" column="1" colspan="2">
                 <widget class="QComboBox" name="psguiderail"/>
                </item>
-               <item row="0" column="0">
+               <item row="2" column="0">
                 <widget class="QLabel" name="label_48">
                  <property name="text">
                   <string>Guide rail presence</string>
@@ -544,7 +628,61 @@
                  </property>
                 </widget>
                </item>
+               <item row="4" column="1">
+                <widget class="QSpinBox" name="pspumpnumber">
+                 <property name="minimum">
+                  <number>-1</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QLabel" name="label_35">
+                 <property name="text">
+                  <string>Pumps number</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="2">
+                <widget class="QToolButton" name="toolButton_pompes">
+                 <property name="text">
+                  <string>...</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QDoubleSpinBox" name="psnominalcapacity">
+                 <property name="minimum">
+                  <double>-1.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>999999.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
                <item row="1" column="0">
+                <widget class="QLabel" name="label_66">
+                 <property name="text">
+                  <string>Nominal capacity</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="2">
+                <widget class="QToolButton" name="toolbutton_psnominalcapacity">
+                 <property name="text">
+                  <string>...</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="4" colspan="2">
+                <widget class="QComboBox" name="pspumpliftingchain"/>
+               </item>
+               <item row="2" column="3">
                 <widget class="QLabel" name="label_50">
                  <property name="text">
                   <string>Pump lifting chain presence</string>
@@ -554,8 +692,52 @@
                  </property>
                 </widget>
                </item>
-               <item row="1" column="1" colspan="2">
-                <widget class="QComboBox" name="pspumpliftingchain"/>
+               <item row="1" column="3">
+                <widget class="QLabel" name="label_67">
+                 <property name="text">
+                  <string>Total Head</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="5">
+                <widget class="QToolButton" name="toolbutton_pspumphead">
+                 <property name="text">
+                  <string>...</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="4">
+                <widget class="QDoubleSpinBox" name="pspumphead">
+                 <property name="minimum">
+                  <double>-1.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>999999.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_70">
+                 <property name="text">
+                  <string>Brand name</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1" colspan="2">
+                <widget class="QLineEdit" name="brandname_2"/>
+               </item>
+               <item row="0" column="3">
+                <widget class="QLabel" name="label_71">
+                 <property name="text">
+                  <string>Brand ref</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="4" colspan="2">
+                <widget class="QLineEdit" name="brandref"/>
                </item>
               </layout>
              </widget>
@@ -611,35 +793,137 @@
          </widget>
          <widget class="QWidget" name="deshuileur">
           <layout class="QGridLayout" name="gridLayout_7">
-           <item row="2" column="1">
-            <widget class="QComboBox" name="presencecontroller"/>
-           </item>
-           <item row="1" column="1">
-            <widget class="QComboBox" name="psremotemonitoring_2"/>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_59">
+             <property name="text">
+              <string>Brand name</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
            </item>
            <item row="1" column="0">
-            <widget class="QLabel" name="label_37">
+            <widget class="QLabel" name="label_38">
              <property name="text">
-              <string>Alarm presence</string>
+              <string>Technical class</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
            <item row="2" column="0">
-            <widget class="QLabel" name="label_38">
+            <widget class="QLabel" name="label_61">
              <property name="text">
-              <string>Controller presence</string>
+              <string>Inlet diameter</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_53">
+           <item row="2" column="1">
+            <widget class="QDoubleSpinBox" name="inletdiameter">
+             <property name="minimum">
+              <double>-1.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>999999.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QToolButton" name="toolButton_inletdiameter">
+             <property name="text">
+              <string>...</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="3">
+            <widget class="QLabel" name="label_37">
+             <property name="text">
+              <string>Outlet diameter</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="4">
+            <widget class="QDoubleSpinBox" name="outletdiameter">
+             <property name="minimum">
+              <double>-1.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>999999.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="5">
+            <widget class="QToolButton" name="toolButton_outletdiameter">
+             <property name="text">
+              <string>...</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_63">
              <property name="text">
               <string>Material</string>
              </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
             </widget>
            </item>
-           <item row="0" column="1">
+           <item row="3" column="1" colspan="2">
             <widget class="QComboBox" name="psmaterial_2"/>
+           </item>
+           <item row="3" column="3">
+            <widget class="QLabel" name="label_62">
+             <property name="text">
+              <string>Airing</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="4" colspan="2">
+            <widget class="QComboBox" name="airing"/>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_53">
+             <property name="text">
+              <string>Alarm presence</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1" colspan="2">
+            <widget class="QComboBox" name="psremotemonitoring_2"/>
+           </item>
+           <item row="4" column="3">
+            <widget class="QLabel" name="label_60">
+             <property name="text">
+              <string>Controller presence</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="4" colspan="2">
+            <widget class="QComboBox" name="presencecontroller"/>
+           </item>
+           <item row="1" column="1" colspan="2">
+            <widget class="QComboBox" name="nodetechclass"/>
+           </item>
+           <item row="0" column="1" colspan="5">
+            <widget class="QLineEdit" name="brandname"/>
            </item>
           </layout>
          </widget>
@@ -654,6 +938,172 @@
            </item>
            <item row="0" column="1">
             <widget class="QComboBox" name="sedimenttrap"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="deversoirorage">
+          <layout class="QGridLayout" name="gridLayout_14">
+           <item row="1" column="1">
+            <widget class="QDoubleSpinBox" name="scoweirthickness">
+             <property name="minimum">
+              <double>-1.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>999999.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QToolButton" name="toolButton_scoweirlenght">
+             <property name="text">
+              <string>...</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QToolButton" name="toolButton_scoweirthickness">
+             <property name="text">
+              <string>...</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="5">
+            <widget class="QToolButton" name="toolButton_csoweirheight">
+             <property name="text">
+              <string>...</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_55">
+             <property name="text">
+              <string>Weir lenght</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QLabel" name="label_56">
+             <property name="text">
+              <string>Weir height</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="4">
+            <widget class="QDoubleSpinBox" name="csoweirheight">
+             <property name="minimum">
+              <double>-1.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>999999.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QDoubleSpinBox" name="scoweirlenght">
+             <property name="minimum">
+              <double>-1.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>999999.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_57">
+             <property name="text">
+              <string>Weir thickness</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_58">
+             <property name="text">
+              <string>Receiving environment</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1" colspan="4">
+            <widget class="QLineEdit" name="receivingenvironmentcomment"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="septictank">
+          <layout class="QGridLayout" name="gridLayout_15">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_65">
+             <property name="text">
+              <string>Inlet diameter</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QDoubleSpinBox" name="inletdiameter_2">
+             <property name="minimum">
+              <double>-1.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>999999.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="4">
+            <widget class="QDoubleSpinBox" name="outletdiameter_2">
+             <property name="minimum">
+              <double>-1.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>999999.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="5">
+            <widget class="QToolButton" name="toolButton_outletdiameter_2">
+             <property name="text">
+              <string>...</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QLabel" name="label_64">
+             <property name="text">
+              <string>Outlet diameter</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QToolButton" name="toolButton_inletdiameter_2">
+             <property name="text">
+              <string>...</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_74">
+             <property name="text">
+              <string>Receiving environment</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1" colspan="2">
+            <widget class="QComboBox" name="receivingenvironment"/>
            </item>
           </layout>
          </widget>

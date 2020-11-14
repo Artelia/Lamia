@@ -22,14 +22,7 @@ def main(argv):
     if PROFILING:
         pr = cProfile.Profile()
 
-    # SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue\test01.sqlite"
-    SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_constructionsite_Lamia\test01.sqlite"
-    SLFILE = r"C:\01_WORKINGDIR\cier\AEP Cieux.sqlite"
-    SLFILE = (
-        r"C:\111_GitProjects\Lamia\test\datas\lamia_assainissement_base3\test01.sqlite"
-    )
-    SLFILE = r"C:\01_WORKINGDIR\perigord\CC_Bastides_Dordogne_Perigord_finale.sqlite"
-    SLFILE = r"C:\01_WORKINGDIR\canejean2\Canejan.sqlite"
+    SLFILE = r"C:\01_WORKINGDIR\OO\VTA_L93_Lamia_SIRS_BDY_06-11-20.sqlite"
 
     tempparser = DBaseParserFactory("spatialite").getDbaseParser()
     tempparser.loadDBase(dbtype="Spatialite", slfile=SLFILE)
@@ -53,7 +46,8 @@ def main(argv):
 
     lamiashpexport.runExport(
         destinationshapefile=r"C:\01_WORKINGDIR\toto\infraline.shp",
-        exportconffilepath="lamia_edge_z_sketch_photo",  # lamia_edge_z_sketch  lamia_node_observation_fr
+        # deficiency_lastobservation_point  deficiency_lastobservation_line
+        exportconffilepath="deficiency_lastobservation_line",  # lamia_edge_z_sketch  lamia_node_observation_fr
         pkzonegeos=[],
     )
 

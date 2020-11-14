@@ -129,7 +129,7 @@ class ExportShpfileManager(AbstractFileManager):
         )
 
         if confpath:
-            self.parentwdg.new(confpath)
+            self.toolclass.new(confpath)
 
             if False:
                 if confpath:
@@ -182,7 +182,8 @@ class ExportShpfileManager(AbstractFileManager):
 
             self.reset()
             txttofind = (
-                self.projectcharacter + os.path.splitext(os.path.basename(confpath))[0]
+                self.toolclass.projectcharacter
+                + os.path.splitext(os.path.basename(confpath))[0]
             )
             indexcombo = self.comboBox_files.findText(txttofind)
             self.comboBox_files.setCurrentIndex(indexcombo)

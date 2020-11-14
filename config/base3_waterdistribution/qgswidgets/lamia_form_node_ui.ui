@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>617</width>
-    <height>294</height>
+    <height>323</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -69,7 +69,7 @@
            </widget>
           </item>
           <item row="2" column="3">
-           <widget class="QComboBox" name="comboBox_soustype"/>
+           <widget class="QComboBox" name="nodesubtype"/>
           </item>
           <item row="1" column="0">
            <widget class="QLabel" name="label_11">
@@ -82,10 +82,10 @@
            </widget>
           </item>
           <item row="1" column="1" colspan="3">
-           <widget class="QComboBox" name="comboBox_cat"/>
+           <widget class="QComboBox" name="nodetype"/>
           </item>
           <item row="2" column="1">
-           <widget class="QComboBox" name="comboBox_fonction"/>
+           <widget class="QComboBox" name="nodefunction"/>
           </item>
           <item row="2" column="0">
            <widget class="QLabel" name="label_49">
@@ -95,7 +95,7 @@
            </widget>
           </item>
           <item row="3" column="3">
-           <widget class="QComboBox" name="comboBox_enservice"/>
+           <widget class="QComboBox" name="operational"/>
           </item>
           <item row="3" column="2">
            <widget class="QLabel" name="label_28">
@@ -108,7 +108,7 @@
            </widget>
           </item>
           <item row="3" column="1">
-           <widget class="QComboBox" name="comboBox_nature_reseau"/>
+           <widget class="QComboBox" name="networktype"/>
           </item>
           <item row="4" column="0">
            <widget class="QLabel" name="label_29">
@@ -121,7 +121,7 @@
            </widget>
           </item>
           <item row="4" column="1">
-           <widget class="QDateEdit" name="dateEdit_anneepose">
+           <widget class="QDateEdit" name="dateoperationalcreation">
             <property name="displayFormat">
              <string>yyyy</string>
             </property>
@@ -138,7 +138,7 @@
            </widget>
           </item>
           <item row="5" column="1" colspan="3">
-           <widget class="QTextBrowser" name="textBrowser_comm">
+           <widget class="QTextBrowser" name="comment">
             <property name="maximumSize">
              <size>
               <width>16777215</width>
@@ -193,7 +193,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QComboBox" name="comboBox_acces"/>
+           <widget class="QComboBox" name="access"/>
           </item>
           <item row="1" column="0">
            <widget class="QLabel" name="label_50">
@@ -203,7 +203,7 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QComboBox" name="comboBox_formeaccess"/>
+           <widget class="QComboBox" name="accessshape"/>
           </item>
           <item row="2" column="0">
            <widget class="QLabel" name="label_47">
@@ -213,7 +213,7 @@
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QComboBox" name="comboBox_echelon"/>
+           <widget class="QComboBox" name="presencestep"/>
           </item>
          </layout>
         </widget>
@@ -221,7 +221,7 @@
        <item>
         <widget class="QStackedWidget" name="stackedWidget">
          <property name="currentIndex">
-          <number>1</number>
+          <number>5</number>
          </property>
          <widget class="QWidget" name="VEN">
           <layout class="QGridLayout" name="gridLayout">
@@ -252,7 +252,7 @@
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_altim">
+            <widget class="QDoubleSpinBox" name="nodeelevation">
              <property name="minimum">
               <double>-1.000000000000000</double>
              </property>
@@ -298,10 +298,10 @@
             <number>3</number>
            </property>
            <item row="2" column="3">
-            <widget class="QComboBox" name="comboBox_manipulable"/>
+            <widget class="QComboBox" name="manipulability"/>
            </item>
            <item row="4" column="1">
-            <widget class="QComboBox" name="comboBox_position"/>
+            <widget class="QComboBox" name="nodeposition"/>
            </item>
            <item row="2" column="0">
             <widget class="QLabel" name="label_10">
@@ -331,7 +331,7 @@
             </widget>
            </item>
            <item row="2" column="1">
-            <widget class="QComboBox" name="comboBox_accessibilite"/>
+            <widget class="QComboBox" name="accessibility"/>
            </item>
            <item row="2" column="2">
             <widget class="QLabel" name="label_12">
@@ -354,7 +354,7 @@
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QComboBox" name="comboBox_localisation"/>
+            <widget class="QComboBox" name="localisation"/>
            </item>
            <item row="5" column="1">
             <spacer name="verticalSpacer_3">
@@ -400,7 +400,7 @@
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QLineEdit" name="lineEdit_exutoire"/>
+            <widget class="QLineEdit" name="presenceoutlet"/>
            </item>
            <item row="2" column="1">
             <spacer name="verticalSpacer_4">
@@ -435,7 +435,7 @@
             <number>3</number>
            </property>
            <item row="2" column="1">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_cons_av">
+            <widget class="QDoubleSpinBox" name="valvedownstreamsetting">
              <property name="minimum">
               <double>-1.000000000000000</double>
              </property>
@@ -459,7 +459,7 @@
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_cons_am">
+            <widget class="QDoubleSpinBox" name="valveupstreamsetting">
              <property name="minimum">
               <double>-1.000000000000000</double>
              </property>
@@ -519,7 +519,7 @@
             <number>3</number>
            </property>
            <item row="1" column="1">
-            <widget class="QSpinBox" name="spinBox_idsdis">
+            <widget class="QSpinBox" name="hydrantfiredepartmentid">
              <property name="minimum">
               <number>-1</number>
              </property>
@@ -529,7 +529,7 @@
             </widget>
            </item>
            <item row="2" column="4">
-            <widget class="QLineEdit" name="lineEdit_type"/>
+            <widget class="QLineEdit" name="brandref"/>
            </item>
            <item row="2" column="3">
             <widget class="QLabel" name="label_22">
@@ -566,7 +566,7 @@
             </widget>
            </item>
            <item row="3" column="1" colspan="2">
-            <widget class="QComboBox" name="comboBox_conformite"/>
+            <widget class="QComboBox" name="hydrantconformity"/>
            </item>
            <item row="2" column="0">
             <widget class="QLabel" name="label_21">
@@ -579,7 +579,7 @@
             </widget>
            </item>
            <item row="2" column="1" colspan="2">
-            <widget class="QLineEdit" name="lineEdit_marque"/>
+            <widget class="QLineEdit" name="brandname"/>
            </item>
            <item row="3" column="0">
             <widget class="QLabel" name="label_23">
@@ -660,7 +660,7 @@
                 </widget>
                </item>
                <item row="2" column="1">
-                <widget class="QComboBox" name="comboBox_tete_emettrice"/>
+                <widget class="QComboBox" name="nodeemitter"/>
                </item>
                <item row="2" column="2">
                 <widget class="QLabel" name="label_30">
@@ -690,16 +690,16 @@
                 </widget>
                </item>
                <item row="3" column="1">
-                <widget class="QComboBox" name="comboBox_telerelevage"/>
+                <widget class="QComboBox" name="remotemonitoring_2"/>
                </item>
                <item row="2" column="3">
-                <widget class="QComboBox" name="comboBox_equipable"/>
+                <widget class="QComboBox" name="retrofitable"/>
                </item>
                <item row="0" column="3">
-                <widget class="QComboBox" name="comboBox_accessibilite2"/>
+                <widget class="QComboBox" name="accessibility_2"/>
                </item>
                <item row="0" column="1">
-                <widget class="QComboBox" name="comboBox_localisation2"/>
+                <widget class="QComboBox" name="localisation_2"/>
                </item>
               </layout>
              </widget>
@@ -721,7 +721,7 @@
                 <number>3</number>
                </property>
                <item row="0" column="4">
-                <widget class="QSpinBox" name="spinBox_numero">
+                <widget class="QSpinBox" name="nodecountervalue">
                  <property name="minimum">
                   <number>-1</number>
                  </property>
@@ -730,40 +730,13 @@
                  </property>
                 </widget>
                </item>
-               <item row="3" column="0">
+               <item row="4" column="0">
                 <widget class="QLabel" name="label_37">
                  <property name="text">
                   <string>Maintenance firm</string>
                  </property>
                  <property name="wordWrap">
                   <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QDoubleSpinBox" name="doubleSpinBox_dimensions">
-                 <property name="minimum">
-                  <double>-1.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>999999.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_25">
-                 <property name="text">
-                  <string>Dimension</string>
-                 </property>
-                 <property name="wordWrap">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="2">
-                <widget class="QToolButton" name="toolButton">
-                 <property name="text">
-                  <string>...</string>
                  </property>
                 </widget>
                </item>
@@ -777,20 +750,26 @@
                  </property>
                 </widget>
                </item>
-               <item row="0" column="3">
-                <widget class="QLabel" name="label_27">
+               <item row="4" column="3">
+                <widget class="QLabel" name="label_38">
                  <property name="text">
-                  <string>Number</string>
+                  <string>Linked equipments</string>
                  </property>
                  <property name="wordWrap">
                   <bool>true</bool>
                  </property>
                 </widget>
                </item>
-               <item row="0" column="5">
-                <widget class="QToolButton" name="toolButton_2">
+               <item row="4" column="4" colspan="2">
+                <widget class="QLineEdit" name="linkedfacilities"/>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_25">
                  <property name="text">
-                  <string>...</string>
+                  <string>Dimension</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -805,26 +784,57 @@
                 </widget>
                </item>
                <item row="2" column="4" colspan="2">
-                <widget class="QLineEdit" name="lineEdit_type2"/>
+                <widget class="QLineEdit" name="brandref_2"/>
                </item>
-               <item row="2" column="1" colspan="2">
-                <widget class="QLineEdit" name="lineEdit_marque2"/>
+               <item row="0" column="1">
+                <widget class="QDoubleSpinBox" name="nodesize">
+                 <property name="minimum">
+                  <double>-1.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>999999.000000000000000</double>
+                 </property>
+                </widget>
                </item>
-               <item row="3" column="3">
-                <widget class="QLabel" name="label_38">
+               <item row="0" column="2">
+                <widget class="QToolButton" name="toolButton_nodesize">
                  <property name="text">
-                  <string>Linked equipments</string>
+                  <string>...</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="3">
+                <widget class="QLabel" name="label_27">
+                 <property name="text">
+                  <string>Number</string>
                  </property>
                  <property name="wordWrap">
                   <bool>true</bool>
                  </property>
                 </widget>
                </item>
-               <item row="3" column="4" colspan="2">
-                <widget class="QLineEdit" name="lineEdit_organes_associes"/>
+               <item row="0" column="5">
+                <widget class="QToolButton" name="toolButton_nodecountervalue">
+                 <property name="text">
+                  <string>...</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="1" colspan="2">
+                <widget class="QLineEdit" name="maintenancefirm"/>
+               </item>
+               <item row="2" column="1" colspan="2">
+                <widget class="QLineEdit" name="brandname_2"/>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="label_24">
+                 <property name="text">
+                  <string>Serial number</string>
+                 </property>
+                </widget>
                </item>
                <item row="3" column="1" colspan="2">
-                <widget class="QLineEdit" name="lineEdit_entreprise"/>
+                <widget class="QLineEdit" name="serialnumber"/>
                </item>
               </layout>
              </widget>
@@ -897,10 +907,10 @@
             </widget>
            </item>
            <item row="2" column="1">
-            <widget class="QComboBox" name="comboBox_telerelevage2"/>
+            <widget class="QComboBox" name="remotemonitoring"/>
            </item>
            <item row="1" column="1">
-            <widget class="QLineEdit" name="lineEdit_entreprise2"/>
+            <widget class="QLineEdit" name="maintenancefirm_2"/>
            </item>
            <item row="0" column="0">
             <widget class="QLabel" name="label_39">
@@ -953,7 +963,7 @@
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QComboBox" name="comboBox_collier"/>
+            <widget class="QComboBox" name="clamp"/>
            </item>
            <item row="2" column="1">
             <spacer name="verticalSpacer_9">
@@ -1133,14 +1143,20 @@
            </widget>
           </item>
           <item row="2" column="4">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_diamsor">
+           <widget class="QDoubleSpinBox" name="diameteroutlet">
             <property name="decimals">
              <number>3</number>
+            </property>
+            <property name="minimum">
+             <double>-1.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>999999.000000000000000</double>
             </property>
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_diam">
+           <widget class="QDoubleSpinBox" name="diameterinlet">
             <property name="decimals">
              <number>3</number>
             </property>
@@ -1153,7 +1169,7 @@
            </widget>
           </item>
           <item row="3" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_prof">
+           <widget class="QDoubleSpinBox" name="nodedepth">
             <property name="minimum">
              <double>-1.000000000000000</double>
             </property>
@@ -1197,19 +1213,12 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_X">
+           <widget class="QDoubleSpinBox" name="X">
             <property name="minimum">
              <double>-99.000000000000000</double>
             </property>
             <property name="maximum">
              <double>99999999.000000000000000</double>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0" colspan="4">
-           <widget class="QPushButton" name="pushButton_getGPS">
-            <property name="text">
-             <string>GPS</string>
             </property>
            </widget>
           </item>
@@ -1221,7 +1230,7 @@
            </widget>
           </item>
           <item row="0" column="3">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_Y">
+           <widget class="QDoubleSpinBox" name="Y">
             <property name="minimum">
              <double>-99.000000000000000</double>
             </property>
@@ -1231,7 +1240,7 @@
            </widget>
           </item>
           <item row="1" column="3">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_dY">
+           <widget class="QDoubleSpinBox" name="dY">
             <property name="minimum">
              <double>-1.000000000000000</double>
             </property>
@@ -1241,7 +1250,7 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_dX">
+           <widget class="QDoubleSpinBox" name="dX">
             <property name="minimum">
              <double>-1.000000000000000</double>
             </property>
@@ -1272,7 +1281,7 @@
            </widget>
           </item>
           <item row="0" column="5">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_Z">
+           <widget class="QDoubleSpinBox" name="Z">
             <property name="minimum">
              <double>-99.000000000000000</double>
             </property>
@@ -1289,12 +1298,19 @@
            </widget>
           </item>
           <item row="1" column="5">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_dZ">
+           <widget class="QDoubleSpinBox" name="dZ">
             <property name="minimum">
              <double>-1.000000000000000</double>
             </property>
             <property name="maximum">
              <double>999.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0" colspan="6">
+           <widget class="QPushButton" name="pushButton_getGPS">
+            <property name="text">
+             <string>GPS</string>
             </property>
            </widget>
           </item>

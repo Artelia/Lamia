@@ -1,0 +1,1 @@
+{"mainsql": "FROM #lamia.node INNER JOIN #lamia.descriptionsystem ON descriptionsystem.pk_descriptionsystem = node.lpk_descriptionsystem ", "1": {"name": "New criteria", "select": "node.pk_node", "bareme": null, "type": "Ponderation", "value": 1.0}, "2": {"name": "New criteria", "select": "node.id_node", "bareme": null, "type": "Ponderation", "value": 1.0}}

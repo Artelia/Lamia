@@ -61,75 +61,75 @@ class BaseWaterdistributionEquipmentTool(BaseEquipmentTool):
             "equipment": {
                 "linkfield": "id_equipment",
                 "widgets": {
-                    "equipmenttype": self.toolwidgetmain.comboBox_typeouvrage,
-                    "equipmentsubtype": self.toolwidgetmain.comboBox_sstype,
-                    "totaldynamichead": self.toolwidgetmain.doubleSpinBox_hmano,
-                    "volume": self.toolwidgetmain.doubleSpinBox_volume,
-                    "tanknumber": self.toolwidgetmain.spinBox_nbrecuves,
-                    "elevationsql": self.toolwidgetmain.doubleSpinBox_cotesql,
-                    "elevationculvert": self.toolwidgetmain.doubleSpinBox_coteradier,
-                    "elevationoverflow": self.toolwidgetmain.doubleSpinBox_cotetp,
-                    "diameter": self.toolwidgetmain.doubleSpinBox_diam,
-                    "meternumber": self.toolwidgetmain.doubleSpinBox_nbrecompteur,
-                    "metertype": self.toolwidgetmain.comboBox_fonct,
-                    "depthequipment": self.toolwidgetmain.doubleSpinBox_prof,
-                    "X": self.toolwidgetmain.doubleSpinBox_X,
-                    "dX": self.toolwidgetmain.doubleSpinBox_dX,
-                    "Y": self.toolwidgetmain.doubleSpinBox_Y,
-                    "dY": self.toolwidgetmain.doubleSpinBox_dY,
-                    "Z": self.toolwidgetmain.doubleSpinBox_Z,
-                    "dZ": self.toolwidgetmain.doubleSpinBox_dZ,
+                    "equipmenttype": self.toolwidgetmain.equipmenttype,
+                    "equipmentsubtype": self.toolwidgetmain.equipmentsubtype,
+                    "totaldynamichead": self.toolwidgetmain.totaldynamichead,
+                    "volume": self.toolwidgetmain.volume,
+                    "tanknumber": self.toolwidgetmain.tanknumber,
+                    "elevationsql": self.toolwidgetmain.elevationsql,
+                    "elevationculvert": self.toolwidgetmain.elevationculvert,
+                    "elevationoverflow": self.toolwidgetmain.elevationoverflow,
+                    "diameter": self.toolwidgetmain.diameter,
+                    "meternumber": self.toolwidgetmain.meternumber,
+                    "metertype": self.toolwidgetmain.metertype,
+                    "depthequipment": self.toolwidgetmain.depthequipment,
+                    "X": self.toolwidgetmain.X,
+                    "dX": self.toolwidgetmain.dX,
+                    "Y": self.toolwidgetmain.Y,
+                    "dY": self.toolwidgetmain.dY,
+                    "Z": self.toolwidgetmain.Z,
+                    "dZ": self.toolwidgetmain.dZ,
                 },
             },
             "object": {
                 "linkfield": "id_object",
                 "widgets": {
-                    "comment": self.toolwidgetmain.textBrowser_commentaire,
-                    "name": self.toolwidgetmain.lineEdit_nom,
+                    "comment": self.toolwidgetmain.comment,
+                    "name": self.toolwidgetmain.name,
                 },
             },
             "descriptionsystem": {
                 "linkfield": "id_descriptionsystem",
                 "widgets": {
-                    "operational": self.toolwidgetmain.comboBox_enservice,
-                    "dateoperationalcreation": self.toolwidgetmain.dateEdit_anneepose,
+                    "operational": self.toolwidgetmain.operational,
+                    "dateoperationalcreation": self.toolwidgetmain.dateoperationalcreation,
                 },
             },
         }
 
         self.toolwidgetmain.toolButton_hmano.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_hmano)
+            lambda: self.showNumPad(self.toolwidgetmain.totaldynamichead)
         )
 
         self.toolwidgetmain.toolButton_volume.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_volume)
+            lambda: self.showNumPad(self.toolwidgetmain.volume)
         )
         self.toolwidgetmain.toolButton_nbrecuve.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.spinBox_nbrecuves)
+            lambda: self.showNumPad(self.toolwidgetmain.tanknumber)
         )
 
         self.toolwidgetmain.toolButton_cotesql.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_cotesql)
+            lambda: self.showNumPad(self.toolwidgetmain.elevationsql)
         )
         self.toolwidgetmain.toolButton_coteradier.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_coteradier)
+            lambda: self.showNumPad(self.toolwidgetmain.elevationculvert)
         )
         self.toolwidgetmain.toolButton_cotetp.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_cotetp)
+            lambda: self.showNumPad(self.toolwidgetmain.elevationoverflow)
         )
 
         self.toolwidgetmain.toolButton_diam.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_diam)
+            lambda: self.showNumPad(self.toolwidgetmain.diameter)
         )
         self.toolwidgetmain.toolButton_nbrecompteur.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_nbrecompteur)
+            lambda: self.showNumPad(self.toolwidgetmain.meternumber)
         )
 
         self.toolwidgetmain.toolButton_prof.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_prof)
+            lambda: self.showNumPad(self.toolwidgetmain.depthequipment)
         )
 
-        self.toolwidgetmain.comboBox_typeouvrage.currentIndexChanged.connect(
+        self.toolwidgetmain.equipmenttype.currentIndexChanged.connect(
             self.fielduiTypeOhChanged
         )
         self.toolwidgetmain.pushButton_getGPS.clicked.connect(self.getGPSValue)
@@ -179,7 +179,7 @@ class BaseWaterdistributionEquipmentTool(BaseEquipmentTool):
         # self.lamiawidgets.append(self.createdeficiencywdg)
 
     def fielduiTypeOhChanged(self, comboindex):
-        currenttext = self.toolwidgetmain.comboBox_typeouvrage.currentText()
+        currenttext = self.toolwidgetmain.equipmenttype.currentText()
         currentrawvalue = typeeqp = self.dbase.getConstraintRawValueFromText(
             "equipment", "equipmenttype", currenttext
         )
@@ -221,12 +221,12 @@ class BaseWaterdistributionEquipmentTool(BaseEquipmentTool):
         self.mainifacewidget.toolbarSave()
 
     def getGPSValue(self):
-        self.assignValue(self.gpswidget.label_X, self.toolwidgetmain.doubleSpinBox_X)
-        self.assignValue(self.gpswidget.label_dX, self.toolwidgetmain.doubleSpinBox_dX)
-        self.assignValue(self.gpswidget.label_Y, self.toolwidgetmain.doubleSpinBox_Y)
-        self.assignValue(self.gpswidget.label_dY, self.toolwidgetmain.doubleSpinBox_dY)
-        self.assignValue(self.gpswidget.label_Z, self.toolwidgetmain.doubleSpinBox_Z)
-        self.assignValue(self.gpswidget.label_dZ, self.toolwidgetmain.doubleSpinBox_dZ)
+        self.assignValue(self.gpswidget.label_X, self.toolwidgetmain.X)
+        self.assignValue(self.gpswidget.label_dX, self.toolwidgetmain.dX)
+        self.assignValue(self.gpswidget.label_Y, self.toolwidgetmain.Y)
+        self.assignValue(self.gpswidget.label_dY, self.toolwidgetmain.dY)
+        self.assignValue(self.gpswidget.label_Z, self.toolwidgetmain.Z)
+        self.assignValue(self.gpswidget.label_dZ, self.toolwidgetmain.dZ)
 
     def assignValue(self, wdgfrom, wdgto):
         if self.isfloat(wdgfrom.text()):

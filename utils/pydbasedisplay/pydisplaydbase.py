@@ -57,7 +57,7 @@ numpy.seterr(all="ignore")
 
 from Lamia.qgisiface.iface.qgsconnector.ifaceloggingconnector import LoggingConnector
 
-INTERFACEINDEX = 0
+INTERFACEINDEX = 4
 PROFILING = False
 
 
@@ -83,49 +83,13 @@ def launchIface():
     lamiawidget.connector = LoggingConnector()
     # lamiawidget.dbase.messageinstance = lamiawidget.connector
 
-    testdir = os.path.join(
-        os.path.dirname(Lamia.utils.__file__), "../test/testtempfiles/c_creation"
-    )
     #  sl_base3_urbandrainage_Lamia   sl_base3_waterdistribution_Lamia
     # sl_base3_constructionsite_Lamia   sl_base3_constructionsite_Orange
     # sl_base3_levee_Lamia   sl_base3_levee_SIRS   sl_base3_faunaflora_Lamia
-    worktype = "sl_base3_urbandrainage_Lamia"
-
-    SLFILE = os.path.join(testdir, worktype, "test01.sqlite")
-
-    # SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue\test01.sqlite"
-    # SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue_base3\test01.sqlite"
-    # SLFILE = r"C:\01_WORKINGDIR\GPMB\c_merge_ass\mergeddbase.sqlite"
-    # SLFILE = r"C:\111_GitProjects\Lamia\utils\pynetworktool\networktest_geographic\test01.sqlite"
-    # SLFILE = (
-    #     r"C:\111_GitProjects\Lamia\test\datas\lamia_assainissement_base3\test01.sqlite"
-    # )
-    # SLFILE = r"M:\FR\BOR\VT\FLUVIAL\4352024_33_Conformite_digues_BM\6_Reglementaire\61_Calculs\Basedonnees\BD_totale_ind12_tempPVR.sqlite"
-    # SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue_base3\test01.sqlite"
-    SLFILE = r"C:\01_WORKINGDIR\cier\AEP Cieux.sqlite"
-    # SLFILE = r"M:\FR\BOR\VT\FLUVIAL\4352789_33_BM_surveillance_digues_PI_Ambes\05_ETUDES\052_Calculs\Basedonnees\VTA_Ambes_ind2_PVR.sqlite"
-    # SLFILE = r"C:\111_GitProjects\Lamia\test\testtempfiles\c_creation\sl_base3_constructionsite_Orange\test01.sqlite"
-    # SLFILE = r"C:\01_WORKINGDIR\GPMB\c_merge_ass\mergeddbase.sqlite"
-    # SLFILE = r"C:\01_WORKINGDIR\cons\cons.sqlite"
-    # SLFILE = r"C:\01_WORKINGDIR\orange\toto.sqlite"
-    # SLFILE = r"C:\111_GitProjects\Lamia\testtempfiles\c_creation\sl_base3_urbandrainage_Lamia\test01.sqlite"
-    # SLFILE = r"C:\111_GitProjects\Lamia\testtempfiles\digue\VTA_Ambes_ind2.sqlite"
-    # SLFILE = r"C:\111_GitProjects\Lamia\testtempfiles\c_creation\sl_base3_levee_Lamia\test01.sqlite"
-    # SLFILE = r"M:\FR\BOR\VT\FLUVIAL\4352789_33_BM_surveillance_digues_PI_Ambes\05_ETUDES\052_Calculs\temps2\VTA_Ambes_ind2.sqlite"
-    # SLFILE = r"C:\01_WORKINGDIR\cons\SPATIALITE_2747.sqlite"
-    # SLFILE = r"C:\01_WORKINGDIR\sncf\new\LANDY-09-2020.sqlite"
-    # SLFILE = r"U:\FR\BOR\VT\PVR\sncf\LANDY-09-2020.sqlite"
-    # SLFILE = r"M:\FR\BOR\VT\FLUVIAL\4352907_33_CDC_SaintLoubes_VTA\05_ETUDES\05_1_TERRAIN\BD_PVR\dor\VTA_StLoubes_ind1_FJE_Dordogne.sqlite"
-    SLFILE = r"C:\01_WORKINGDIR\VTA_2020_Noailles.sqlite"
-    SLFILE = (
-        r"U:\FR\BOR\VT\PVR\sebastien\Noailles\20200917_sbn\VTA_2020_Noailles.sqlite"
-    )
-    SLFILE = r"C:\01_WORKINGDIR\bm\BD_totale_ind15.sqlite"
-    SLFILE = r"C:\01_WORKINGDIR\canejean2\Canejan.sqlite"
-    # SLFILE = r"C:\01_WORKINGDIR\testphoto\teet.sqlite"
-    SLFILE = r"C:\111_GitProjects\Lamia\testfiles\c_creation\sl_base3_urbandrainage_Lamia\test01.sqlite"
-
-    # print(TGREEN, f"Opening {os.path.abspath(SLFILE)}", ENDC)
+    worktype = "sl_base3_waterdistribution_Lamia"
+    # SLFILE = os.path.join(TESTDIR, "c_creation", worktype, "test01.sqlite")
+    # SLFILE = r"C:\01_WORKINGDIR\bm\BD_totale_ind15.sqlite"
+    SLFILE = r"C:\01_WORKINGDIR\reims\testast\BDD_REIMS_J1_AST.sqlite"
 
     print(f"{bcolors.OKGREEN}Opening: {os.path.abspath(SLFILE)} {bcolors.ENDC}")
 
@@ -143,17 +107,23 @@ def launchIface():
     # )
 
     lamiawidget.setVisualMode(visualmode=INTERFACEINDEX)
-    lamiawidget.dbase.raiseexceptions = True  # False True
+    lamiawidget.dbase.raiseexceptions = False  # False True
     lamiawidget.dbase.printsql = False  # False True
+    lamiawidget.dbase.printorm = True  # False True
 
     if PROFILING:
         pr.enable()
     #   toolpostpro     toolprepro
-    # wdg = lamiawidget.toolwidgets["networktool"]
-    # wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
+    wdg = lamiawidget.toolwidgets["lamiamca"]
+    wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
+    # wdg.editAMC()
     # wdg.analyseSubdomains()
+    # wdg.mcacore.mcavirtualayerFactory.setConfName("_test")
+    # wdg.mcacore.testDB("_test")
+    data, lay = wdg.mcacore.createMcaDB("_test")
+    print(data)
 
-    mainwin.exec_()
+    # mainwin.exec_()
 
     if PROFILING:
         pr.disable()
@@ -168,7 +138,7 @@ def main():
         format="%(asctime)s :: %(levelname)s :: %(module)s :: %(funcName)s :: %(message)s",
         datefmt="%H:%M:%S",
     )
-    logging.getLogger("Lamia_unittest").setLevel(logging.DEBUG)
+    logging.getLogger("Lamia").setLevel(logging.DEBUG)
     logging.getLogger("Lamia.iface.qgscanvas.ifaceqgiscanvas").setLevel(logging.DEBUG)
     # logging.getLogger("Lamia").setLevel(logging.DEBUG)
 

@@ -32,6 +32,7 @@ from ...base3.qgswidgets.lamia_form_surface import BaseSurfaceTool
 from .lamia_form_camera import BaseUrbandrainageCameraTool
 from .lamia_form_sketch import BaseUrbandrainageSketchTool
 from .lamia_form_graph import BaseUrbandrainageGraphTool
+from .lamia_form_deficiency import BaseUrbandrainageDeficiencyTool
 
 from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_tcmanytomany import (
     TcmanytomanyChooserWidget,
@@ -51,17 +52,23 @@ class BaseUrbandrainageSurfaceTool(BaseSurfaceTool):
             "surface": {
                 "linkfield": "id_surface",
                 "widgets": {
-                    "surfacetype": self.toolwidgetmain.comboBox_type,
-                    "surfacesubtype": self.toolwidgetmain.comboBox_subtype,
+                    "surfacetype": self.toolwidgetmain.surfacetype,
+                    "surfacesubtype": self.toolwidgetmain.surfacesubtype,
+                    "width": self.toolwidgetmain.width,
+                    "lenght": self.toolwidgetmain.lenght,
+                    "depth": self.toolwidgetmain.depth,
+                    "volume": self.toolwidgetmain.volume,
+                    "receivingenvironment": self.toolwidgetmain.receivingenvironment,
+                    "flowcontrol": self.toolwidgetmain.flowcontrol,
                 },
             },
             "descriptionsystem": {
                 "linkfield": "id_descriptionsystem",
                 "widgets": {
-                    "networktype": self.toolwidgetmain.comboBox_typeReseau,
-                    "flowconditionupstream": self.toolwidgetmain.comboBox_inletflowcondition,
-                    "flowconditiondownstream": self.toolwidgetmain.comboBox_outletflowcondition,
-                    "systemfunction": self.toolwidgetmain.comboBox_systemfunction,
+                    "networktype": self.toolwidgetmain.networktype,
+                    "flowconditionupstream": self.toolwidgetmain.flowconditionupstream,
+                    "flowconditiondownstream": self.toolwidgetmain.flowconditiondownstream,
+                    "systemfunction": self.toolwidgetmain.systemfunction,
                     "city": self.toolwidgetmain.city,
                     "streetname": self.toolwidgetmain.streetname,
                     "structuralstate": self.toolwidgetmain.structuralstate,
@@ -75,6 +82,19 @@ class BaseUrbandrainageSurfaceTool(BaseSurfaceTool):
         # self.toolwidgetmain.pushButton_currentPrestation.clicked.connect(self.defineCurrentPrestation)
         # self.toolwidgetmain.pushButton_defineinter.clicked.connect(self.manageLinkage)
 
+        self.toolwidgetmain.toolButton_width.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.width)
+        )
+        self.toolwidgetmain.toolButton_lenght.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.lenght)
+        )
+        self.toolwidgetmain.toolButton_depth.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.depth)
+        )
+        self.toolwidgetmain.toolButton_volume.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.volume)
+        )
+
         # ****************************************************************************************
         # child widgets
         self.dbasechildwdgfield = []
@@ -82,6 +102,17 @@ class BaseUrbandrainageSurfaceTool(BaseSurfaceTool):
 
         self.propertieswdgPHOTO = BaseUrbandrainageCameraTool(**self.instancekwargs)
         self.dbasechildwdgfield.append(self.propertieswdgPHOTO)
+
+        self.propertieswdgDesordre = BaseUrbandrainageDeficiencyTool(
+            **self.instancekwargsforchildwdg
+        )
+        self.propertieswdgDesordre.SKIP_LOADING_UI = True
+        self.propertieswdgDesordre.initMainToolWidget()
+        # self.propertieswdgDesordre.formtoolwidgetconfdictmain["deficiency"]["widgets"][
+        #     "deficiencycategory"
+        # ] = "NOD"
+        self.propertieswdgDesordre.TABLEFILTERFIELD = {"deficiencycategory": "SUR"}
+        self.dbasechildwdgfield.append(self.propertieswdgDesordre)
 
         if self.dbase.variante in [None, "Lamia"]:
             self.propertieswdgGRAPH = BaseUrbandrainageGraphTool(

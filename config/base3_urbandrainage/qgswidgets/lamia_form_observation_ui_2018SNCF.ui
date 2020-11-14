@@ -91,7 +91,7 @@
         <property name="currentIndex">
          <number>1</number>
         </property>
-        <widget class="QWidget" name="page">
+        <widget class="QWidget" name="edge">
          <layout class="QGridLayout" name="gridLayout" columnstretch="1,5,1">
           <item row="5" column="0">
            <widget class="QLabel" name="label_6">
@@ -143,14 +143,14 @@
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="page_2">
+        <widget class="QWidget" name="node">
          <layout class="QGridLayout" name="gridLayout_2">
           <item row="0" column="0">
            <widget class="QStackedWidget" name="stackedWidget_2">
             <property name="currentIndex">
              <number>3</number>
             </property>
-            <widget class="QWidget" name="page_6">
+            <widget class="QWidget" name="manhole">
              <layout class="QGridLayout" name="gridLayout_5">
               <item row="0" column="0">
                <widget class="QLabel" name="label_10">
@@ -234,7 +234,7 @@
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="page_7">
+            <widget class="QWidget" name="ps">
              <layout class="QGridLayout" name="gridLayout_4">
               <item row="1" column="0">
                <widget class="QLabel" name="label_4">
@@ -268,7 +268,7 @@
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="page_4">
+            <widget class="QWidget" name="deshuil">
              <layout class="QGridLayout" name="gridLayout_7">
               <item row="0" column="0">
                <widget class="QLabel" name="label_18">
@@ -292,7 +292,7 @@
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="page_5">
+            <widget class="QWidget" name="other">
              <layout class="QGridLayout" name="gridLayout_8">
               <item row="0" column="0">
                <widget class="QLabel" name="label_20">
@@ -304,13 +304,23 @@
               <item row="0" column="1">
                <widget class="QComboBox" name="conditionglobal_3"/>
               </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_21">
+                <property name="text">
+                 <string>Maintenance opinion</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QComboBox" name="maintenanceopinion_2"/>
+              </item>
              </layout>
             </widget>
            </widget>
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="page_3">
+        <widget class="QWidget" name="equip">
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
            <widget class="QLabel" name="label_9">
@@ -318,6 +328,20 @@
              <string>Equip</string>
             </property>
            </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="surfa">
+         <layout class="QGridLayout" name="gridLayout_9">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_22">
+            <property name="text">
+             <string>General condition</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QComboBox" name="conditionglobal_4"/>
           </item>
          </layout>
         </widget>

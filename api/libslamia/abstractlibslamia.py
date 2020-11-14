@@ -93,7 +93,9 @@ class AbstractLibsLamia:
         if os.path.isfile(confname):
             return confname
         else:
+            print(self.names_files)
             for namekey in self.names_files.keys():
-                if confname == namekey.lstrip("_"):
+                print(confname, namekey)
+                if confname == namekey.lstrip("_") or confname == namekey:
                     return self.names_files[namekey]
         return None

@@ -184,6 +184,7 @@ class SpatialiteDBaseParser(AbstractDBaseParser):
             # if self.qgsiface is None:
 
             if self.raiseexceptions:
+                print(sql, arguments)
                 raise TypeError("error query", e)
             else:
                 print(sql)

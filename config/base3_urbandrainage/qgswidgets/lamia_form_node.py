@@ -157,11 +157,15 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
                     "psfallprotectiongratings": self.toolwidgetmain.psfallprotectiongratings,
                     "psinletscreen": self.toolwidgetmain.psinletscreen,
                     "pspumpswitchingcontrollertype": self.toolwidgetmain.pspumpswitchingcontrollertype,
+                    "psnominalcapacity": self.toolwidgetmain.psnominalcapacity,
+                    "pspumphead": self.toolwidgetmain.pspumphead,
                     "psfloatnumber": self.toolwidgetmain.psfloatnumber,
                     "psoverflow": self.toolwidgetmain.psoverflow,
                     "psguiderail": self.toolwidgetmain.psguiderail,
                     "pspumpliftingchain": self.toolwidgetmain.pspumpliftingchain,
                     "pspumpnumber": self.toolwidgetmain.pspumpnumber,
+                    "psdrawdownheight": self.toolwidgetmain.psdrawdownheight,
+                    "psdrawdownvolume": self.toolwidgetmain.psdrawdownvolume,
                     "pscheckvalve": self.toolwidgetmain.pscheckvalve,
                     "psgatevalve": self.toolwidgetmain.psgatevalve,
                     "pspressureport": self.toolwidgetmain.pspressureport,
@@ -169,6 +173,30 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
                     # DSH materiau : self.toolwidgetmain_2.comboBox_DSH_materiau cf PR
                     #'DSHpresencealarme': self.toolwidgetmain_2.comboBox_DSHalarme,
                     "presencecontroller": self.toolwidgetmain.presencecontroller,
+                    "brandname": [
+                        self.toolwidgetmain.brandname,
+                        self.toolwidgetmain.brandname_2,
+                    ],
+                    "brandref": self.toolwidgetmain.brandref,
+                    "nodetechclass": self.toolwidgetmain.nodetechclass,
+                    "inletdiameter": [
+                        self.toolwidgetmain.inletdiameter,
+                        self.toolwidgetmain.inletdiameter_2,
+                        self.toolwidgetmain.inletdiameter_3,
+                    ],
+                    "outletdiameter": [
+                        self.toolwidgetmain.outletdiameter,
+                        self.toolwidgetmain.outletdiameter_2,
+                        self.toolwidgetmain.outletdiameter_3,
+                    ],
+                    "airing": self.toolwidgetmain.airing,
+                    # cso
+                    "csoweirheight": self.toolwidgetmain.csoweirheight,
+                    "scoweirlenght": self.toolwidgetmain.scoweirlenght,
+                    "scoweirthickness": self.toolwidgetmain.scoweirthickness,
+                    "receivingenvironmentcomment": self.toolwidgetmain.receivingenvironmentcomment,
+                    # septic tank
+                    "receivingenvironment": self.toolwidgetmain.receivingenvironment,
                     # autre
                     "depthinvert": self.toolwidgetmain.depthinvert,
                     "width": self.toolwidgetmain.width,
@@ -216,6 +244,48 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
         )
         self.toolwidgetmain.toolButton_pompes.clicked.connect(
             lambda: self.showNumPad(self.toolwidgetmain.pspumpnumber)
+        )
+
+        self.toolwidgetmain.toolButton_scoweirlenght.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.scoweirlenght)
+        )
+        self.toolwidgetmain.toolButton_csoweirheight.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.csoweirheight)
+        )
+        self.toolwidgetmain.toolButton_scoweirthickness.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.scoweirthickness)
+        )
+
+        self.toolwidgetmain.toolButton_inletdiameter.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.inletdiameter)
+        )
+        self.toolwidgetmain.toolButton_outletdiameter.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.outletdiameter)
+        )
+        self.toolwidgetmain.toolButton_inletdiameter_2.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.inletdiameter_2)
+        )
+        self.toolwidgetmain.toolButton_outletdiameter_2.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.outletdiameter_2)
+        )
+        self.toolwidgetmain.toolButton_inletdiameter_3.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.inletdiameter_3)
+        )
+        self.toolwidgetmain.toolButton_outletdiameter_3.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.outletdiameter_3)
+        )
+        self.toolwidgetmain.toolbutton_psnominalcapacity.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.psnominalcapacity)
+        )
+        self.toolwidgetmain.toolbutton_pspumphead.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.pspumphead)
+        )
+
+        self.toolwidgetmain.toolButton_psdrawdownheight.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.psdrawdownheight)
+        )
+        self.toolwidgetmain.toolButton_psdrawdownvolume.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.psdrawdownvolume)
         )
 
         self.toolwidgetmain.nodetype.currentIndexChanged.connect(
@@ -295,8 +365,12 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
                     # 'PRgrilleantichute': self.toolwidgetmain.comboBox_antichute,
                     # 'PRpanierdegrilleur': self.toolwidgetmain.comboBox_panierdegrileur,
                     "pspumpswitchingcontrollertype": self.toolwidgetmain.pspumpswitchingcontrollertype,
+                    "psnominalcapacity": self.toolwidgetmain.psnominalcapacity,
+                    "pspumphead": self.toolwidgetmain.pspumphead,
                     "psfloatnumber": self.toolwidgetmain.psfloatnumber,
                     "psoverflow": self.toolwidgetmain.psoverflow,
+                    "psdrawdownheight": self.toolwidgetmain.psdrawdownheight,
+                    "psdrawdownvolume": self.toolwidgetmain.psdrawdownvolume,
                     # 'PRpompebarreguidage': self.toolwidgetmain.comboBox_barrresguidage,
                     # 'PRpompechainerelevage': self.toolwidgetmain.comboBox_pompe_relevage,
                     "pspumpnumber": self.toolwidgetmain.pspumpnumber,
@@ -307,6 +381,30 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
                     # DSH materiau : self.toolwidgetmain.comboBox_DSH_materiau cf PR
                     # 'DSHpresencealarme': self.toolwidgetmain.comboBox_DSHalarme,
                     "presencecontroller": self.toolwidgetmain.presencecontroller,
+                    "brandname": [
+                        self.toolwidgetmain.brandname,
+                        self.toolwidgetmain.brandname_2,
+                    ],
+                    "brandref": self.toolwidgetmain.brandref,
+                    "nodetechclass": self.toolwidgetmain.nodetechclass,
+                    "inletdiameter": [
+                        self.toolwidgetmain.inletdiameter,
+                        self.toolwidgetmain.inletdiameter_2,
+                        self.toolwidgetmain.inletdiameter_3,
+                    ],
+                    "outletdiameter": [
+                        self.toolwidgetmain.outletdiameter,
+                        self.toolwidgetmain.outletdiameter_2,
+                        self.toolwidgetmain.outletdiameter_3,
+                    ],
+                    "airing": self.toolwidgetmain.airing,
+                    # septic tank
+                    "receivingenvironment": self.toolwidgetmain.receivingenvironment,
+                    # cso
+                    "csoweirheight": self.toolwidgetmain.csoweirheight,
+                    "scoweirlenght": self.toolwidgetmain.scoweirlenght,
+                    "scoweirthickness": self.toolwidgetmain.scoweirthickness,
+                    "receivingenvironmentcomment": self.toolwidgetmain.receivingenvironmentcomment,
                     # autre
                     "depthinvert": self.toolwidgetmain.depthinvert,
                     "width": self.toolwidgetmain.width,
@@ -356,6 +454,49 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
             lambda: self.showNumPad(self.toolwidgetmain.pspumpnumber)
         )
 
+        self.toolwidgetmain.toolButton_scoweirlenght.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.scoweirlenght)
+        )
+        self.toolwidgetmain.toolButton_csoweirheight.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.csoweirheight)
+        )
+        self.toolwidgetmain.toolButton_scoweirthickness.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.scoweirthickness)
+        )
+
+        self.toolwidgetmain.toolButton_inletdiameter.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.inletdiameter)
+        )
+        self.toolwidgetmain.toolButton_outletdiameter.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.outletdiameter)
+        )
+        self.toolwidgetmain.toolButton_inletdiameter_2.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.inletdiameter_2)
+        )
+        self.toolwidgetmain.toolButton_outletdiameter_2.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.outletdiameter_2)
+        )
+        self.toolwidgetmain.toolButton_inletdiameter_3.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.inletdiameter_3)
+        )
+        self.toolwidgetmain.toolButton_outletdiameter_3.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.outletdiameter_3)
+        )
+
+        self.toolwidgetmain.toolbutton_psnominalcapacity.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.psnominalcapacity)
+        )
+        self.toolwidgetmain.toolbutton_pspumphead.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.pspumphead)
+        )
+
+        self.toolwidgetmain.toolButton_psdrawdownheight.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.psdrawdownheight)
+        )
+        self.toolwidgetmain.toolButton_psdrawdownvolume.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.psdrawdownvolume)
+        )
+
         self.toolwidgetmain.nodetype.currentIndexChanged.connect(
             self.fielduiTypeOhChanged
         )
@@ -387,6 +528,7 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
                     "depth1": self.toolwidgetmain.depth1,
                     # PR
                     "psnominalcapacity": self.toolwidgetmain.psnominalcapacity,
+                    # "pspumphead": self.toolwidgetmain.pspumphead,
                     "pspumpnumber": self.toolwidgetmain.pspumpnumber,
                     "psh2streatment": self.toolwidgetmain.psh2streatment,
                     "psoverflow": self.toolwidgetmain.psoverflow,
@@ -462,8 +604,12 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
             "72",
         ]:  # "Avaloir", "Grille", "Grille avaloir"
             self.toolwidgetmain.stackedWidget_node.setCurrentIndex(4)
-        else:
+        elif currentvalue in ["40"]:  # deversoir orage
             self.toolwidgetmain.stackedWidget_node.setCurrentIndex(5)
+        elif currentvalue in ["24"]:  # septictank
+            self.toolwidgetmain.stackedWidget_node.setCurrentIndex(6)
+        else:
+            self.toolwidgetmain.stackedWidget_node.setCurrentIndex(7)
         self.propertieswdgDesordre.propertieswdgOBSERVATION.updateObservationStackedWidget()
 
     def fieldui3TypeOhChanged(self, comboindex):
@@ -535,18 +681,16 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
                     libelle += "U"
                 elif typereseau == "IND":
                     libelle += "I"
-
             elif typeouvrage in ["10"]:
                 libelle += "POR"
-
             elif typeouvrage in ["22"]:
                 libelle += "FOS"
             elif typeouvrage in ["51"]:
                 libelle += "PUI"
-
             elif typeouvrage in ["21"]:
                 libelle += "DSH"
-
+            elif typeouvrage in ["40"]:
+                libelle += "DOR"
             else:
                 libelle += "DIV"
 

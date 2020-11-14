@@ -15,20 +15,18 @@ nextactioncomment   ;String              ;                    ;observation_now.n
 nextactiontypecomment;String              ;                    ;observation_now.nextactiontypecomment
 lid_delivery        ;Int                 ;                    ;observation_now.lid_delivery
 lid_deficiency      ;Int                 ;                    ;observation_now.lid_deficiency
-nextactionsubtype   ;String              ;nextactionsubtype   ;observation_now.nextactionsubtype
-conditioncover      ;String              ;conditioncover      ;observation_now.conditioncover
-conditionstep       ;String              ;conditionstep       ;observation_now.conditionstep
-conditionmanhole    ;String              ;conditionmanhole    ;observation_now.conditionmanhole
-conditionculvert    ;String              ;conditionculvert    ;observation_now.conditionculvert
-conditioncontroller ;String              ;conditioncontroller ;observation_now.conditioncontroller
-presenceh2s         ;String              ;presenceh2s         ;observation_now.presenceh2s
-presencepressurizedflow;String              ;presencepressurizedflow;observation_now.presencepressurizedflow
-presencesediments   ;String              ;presencesediments   ;observation_now.presencesediments
-presenceinfiltrationtosewer;String              ;presenceinfiltrationtosewer;observation_now.presenceinfiltrationtosewer
-presenceinfiltration;String              ;presenceinfiltration;observation_now.presenceinfiltration
-presenceroots       ;String              ;presenceroots       ;observation_now.presenceroots
-maintenanceopinion  ;String              ;maintenanceopinion  ;observation_now.maintenanceopinion
-equipmentopenclose  ;String              ;equipmentopenclose  ;observation_now.equipmentopenclose
+oh_etatvantellerie  ;String              ;oh_etatvantellerie  ;observation_now.oh_etatvantellerie
+oh_etatvantelleriecom;String              ;                    ;observation_now.oh_etatvantelleriecom
+eqconditioncivilwork;String              ;eqconditioncivilwork;observation_now.eqconditioncivilwork
+eqconditioncivilworkcom;String              ;                    ;observation_now.eqconditioncivilworkcom
+eqhandlingtest      ;String              ;eqhandlingtest      ;observation_now.eqhandlingtest
+eqhandlingtestcom   ;String              ;                    ;observation_now.eqhandlingtestcom
+eqconditionsealing  ;Int                 ;                    ;observation_now.eqconditionsealing
+eqconditionsealingcom;String              ;                    ;observation_now.eqconditionsealingcom
+eqconditionsedimentation;String              ;eqconditionsedimentation;observation_now.eqconditionsedimentation
+eqconditionsedimentationcom;String              ;                    ;observation_now.eqconditionsedimentationcom
+conditionglobalcom  ;String              ;                    ;observation_now.conditionglobalcom
+specificlenght      ;String              ;                    ;observation_now.specificlenght
 
 ###object
 #name               type                 cst                  value                
@@ -44,6 +42,7 @@ name                ;String              ;                    ;observation_now.n
 importid            ;Int                 ;                    ;observation_now.importid
 importtable         ;String              ;                    ;observation_now.importtable
 lid_actor_creator   ;Int                 ;                    ;observation_now.lid_actor_creator
+sirsid              ;String              ;                    ;observation_now.sirsid
 
 ###main
 FROM observation_now

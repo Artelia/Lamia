@@ -20,7 +20,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget_2">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_3">
       <attribute name="title">
@@ -47,7 +47,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QComboBox" name="comboBox_typeeau"/>
+           <widget class="QComboBox" name="networktype"/>
           </item>
           <item row="2" column="0">
            <widget class="QLabel" name="label">
@@ -60,7 +60,7 @@
            </widget>
           </item>
           <item row="3" column="1">
-           <widget class="QComboBox" name="comboBox_fonctioncan"/>
+           <widget class="QComboBox" name="pipefunction"/>
           </item>
           <item row="3" column="0">
            <widget class="QLabel" name="label_7">
@@ -73,10 +73,10 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QComboBox" name="comboBox_branchement"/>
+           <widget class="QComboBox" name="laterals"/>
           </item>
           <item row="2" column="1">
-           <widget class="QComboBox" name="comboBox_domaine"/>
+           <widget class="QComboBox" name="domain"/>
           </item>
           <item row="1" column="0">
            <widget class="QLabel" name="label_9">
@@ -99,7 +99,7 @@
            </widget>
           </item>
           <item row="4" column="1">
-           <widget class="QTextBrowser" name="textBrowser_commentaire">
+           <widget class="QTextBrowser" name="comment">
             <property name="maximumSize">
              <size>
               <width>16777215</width>
@@ -141,10 +141,10 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QComboBox" name="comboBox_materiau"/>
+           <widget class="QComboBox" name="material"/>
           </item>
           <item row="1" column="1">
-           <widget class="QComboBox" name="comboBox_joint"/>
+           <widget class="QComboBox" name="joint"/>
           </item>
           <item row="1" column="0">
            <widget class="QLabel" name="label_6">
@@ -170,7 +170,7 @@
            </spacer>
           </item>
           <item row="3" column="1">
-           <widget class="QComboBox" name="comboBox_modecircu"/>
+           <widget class="QComboBox" name="flowtype"/>
           </item>
           <item row="2" column="0">
            <widget class="QLabel" name="label_4">
@@ -183,7 +183,7 @@
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QComboBox" name="comboBox_protectioncatho"/>
+           <widget class="QComboBox" name="cathodicprotection"/>
           </item>
           <item row="3" column="0">
            <widget class="QLabel" name="label_5">
@@ -226,7 +226,7 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QDoubleSpinBox" name="doubleSpinBox_diametre">
+        <widget class="QDoubleSpinBox" name="diameterext">
          <property name="decimals">
           <number>3</number>
          </property>
@@ -246,7 +246,7 @@
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QDoubleSpinBox" name="doubleSpinBox_gene">
+        <widget class="QDoubleSpinBox" name="depthtoppipe">
          <property name="minimum">
           <double>-1.000000000000000</double>
          </property>

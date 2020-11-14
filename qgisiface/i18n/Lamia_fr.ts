@@ -4,12 +4,12 @@
 <context>
     <name>AbstractLamiaFormTool</name>
     <message>
-        <location filename="../iface/qgiswidget/tools/lamia_abstractformtool.py" line="639"/>
+        <location filename="../iface/qgiswidget/tools/lamia_abstractformtool.py" line="640"/>
         <source>GPS not connected</source>
         <translation>GPS non connecté</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/tools/lamia_abstractformtool.py" line="719"/>
+        <location filename="../iface/qgiswidget/tools/lamia_abstractformtool.py" line="720"/>
         <source>Delete feature (yes) or archive (no) ? </source>
         <translation>Supprimer completement l&apos;element (yes) ou l&apos;archiver (no) ?</translation>
     </message>
@@ -388,7 +388,7 @@
         <translation>Vue générale</translation>
     </message>
     <message>
-        <location filename="../../config/base3/qgswidgets/lamia_form_camera_ui.ui" line="320"/>
+        <location filename="../../config/base3/qgswidgets/lamia_form_camera_ui.ui" line="327"/>
         <source>trap view</source>
         <translation>Vue de la cuve</translation>
     </message>
@@ -526,6 +526,139 @@
         <location filename="../../config/base3/qgswidgets/lamia_form_facility_ui.ui" line="169"/>
         <source>City</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../config/base3/qgswidgets/lamia_form_camera_ui.ui" line="294"/>
+        <source>Picture for parent</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Form_base3_cp</name>
+    <message>
+        <location filename="../../config/base3_carpark/qgswidgets/lamia_form_observation_ui.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../config/base3_carpark/qgswidgets/lamia_form_deficiency_ui.ui" line="56"/>
+        <source>TextLabel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../config/base3_carpark/qgswidgets/lamia_form_deficiency_ui.ui" line="73"/>
+        <source>Rotation number</source>
+        <translation>Numero de rotation</translation>
+    </message>
+    <message>
+        <location filename="../../config/base3_carpark/qgswidgets/lamia_form_deficiency_ui.ui" line="80"/>
+        <source>Investigation start time</source>
+        <translation>Début de campagne</translation>
+    </message>
+    <message>
+        <location filename="../../config/base3_carpark/qgswidgets/lamia_form_deficiency_ui.ui" line="87"/>
+        <source>Investigation end time</source>
+        <translation>Fin de campagne</translation>
+    </message>
+    <message>
+        <location filename="../../config/base3_carpark/qgswidgets/lamia_form_observation_ui.ui" line="55"/>
+        <source>...</source>
+        <translation>...</translation>
+    </message>
+    <message>
+        <location filename="../../config/base3_carpark/qgswidgets/lamia_form_deficiency_ui.ui" line="125"/>
+        <source>A remplir avec les spec desordre cat2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../config/base3_carpark/qgswidgets/lamia_form_edge_ui.ui" line="44"/>
+        <source>Name</source>
+        <translation>Nom</translation>
+    </message>
+    <message>
+        <location filename="../../config/base3_carpark/qgswidgets/lamia_form_edge_ui.ui" line="64"/>
+        <source>Parity</source>
+        <translation>Parité</translation>
+    </message>
+    <message>
+        <location filename="../../config/base3_carpark/qgswidgets/lamia_form_edge_ui.ui" line="71"/>
+        <source>Id Import</source>
+        <translation>Id import</translation>
+    </message>
+    <message>
+        <location filename="../../config/base3_carpark/qgswidgets/lamia_form_edge_ui.ui" line="81"/>
+        <source>id_seg</source>
+        <translation>id_seg</translation>
+    </message>
+    <message>
+        <location filename="../../config/base3_carpark/qgswidgets/lamia_form_edge_ui.ui" line="119"/>
+        <source>Parking</source>
+        <translation>Stationnement</translation>
+    </message>
+    <message>
+        <location filename="../../config/base3_carpark/qgswidgets/lamia_form_edge_ui.ui" line="125"/>
+        <source>Parking type</source>
+        <translation>Type de stationnement</translation>
+    </message>
+    <message>
+        <location filename="../../config/base3_carpark/qgswidgets/lamia_form_edge_ui.ui" line="135"/>
+        <source>Zoning</source>
+        <translation>Zonage</translation>
+    </message>
+    <message>
+        <location filename="../../config/base3_carpark/qgswidgets/lamia_form_edge_ui.ui" line="148"/>
+        <source>Parking places number</source>
+        <translation>Nbre de places</translation>
+    </message>
+    <message>
+        <location filename="../../config/base3_carpark/qgswidgets/lamia_form_edge_ui.ui" line="178"/>
+        <source>Zoning comment</source>
+        <translation>Commentaire zonage</translation>
+    </message>
+    <message>
+        <location filename="../../config/base3_carpark/qgswidgets/lamia_form_edge_ui.ui" line="205"/>
+        <source>Street</source>
+        <translation>Rue</translation>
+    </message>
+    <message>
+        <location filename="../../config/base3_carpark/qgswidgets/lamia_form_edge_ui.ui" line="214"/>
+        <source>Location</source>
+        <translation>Emplacement</translation>
+    </message>
+    <message>
+        <location filename="../../config/base3_carpark/qgswidgets/lamia_form_edge_ui.ui" line="224"/>
+        <source>Street name</source>
+        <translation>Nom de la rue</translation>
+    </message>
+    <message>
+        <location filename="../../config/base3_carpark/qgswidgets/lamia_form_edge_ui.ui" line="234"/>
+        <source>Street end</source>
+        <translation>Début de la rue</translation>
+    </message>
+    <message>
+        <location filename="../../config/base3_carpark/qgswidgets/lamia_form_edge_ui.ui" line="260"/>
+        <source>Street start</source>
+        <translation>Fin de la rue</translation>
+    </message>
+    <message>
+        <location filename="../../config/base3_carpark/qgswidgets/lamia_form_edge_ui.ui" line="273"/>
+        <source>Street comments</source>
+        <translation>Rue - commentaires</translation>
+    </message>
+    <message>
+        <location filename="../../config/base3_carpark/qgswidgets/lamia_form_observation_ui.ui" line="48"/>
+        <source>Date</source>
+        <translation type="unfinished">Date</translation>
+    </message>
+    <message>
+        <location filename="../../config/base3_carpark/qgswidgets/lamia_form_observation_ui.ui" line="79"/>
+        <source>Illicit</source>
+        <translation>Illicite</translation>
+    </message>
+    <message>
+        <location filename="../../config/base3_carpark/qgswidgets/lamia_form_observation_ui.ui" line="41"/>
+        <source>Registration number</source>
+        <translation>Immatriculation</translation>
     </message>
 </context>
 <context>
@@ -2337,37 +2470,37 @@
         <translation type="unfinished">Type de compteur</translation>
     </message>
     <message>
-        <location filename="../../config/base3_waterdistribution/qgswidgets/lamia_form_node_ui.ui" line="1270"/>
+        <location filename="../../config/base3_waterdistribution/qgswidgets/lamia_form_node_ui.ui" line="1276"/>
         <source>Y</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../config/base3_waterdistribution/qgswidgets/lamia_form_node_ui.ui" line="1263"/>
+        <location filename="../../config/base3_waterdistribution/qgswidgets/lamia_form_node_ui.ui" line="1269"/>
         <source>Z cover</source>
         <translation>Z tampon</translation>
     </message>
     <message>
-        <location filename="../../config/base3_waterdistribution/qgswidgets/lamia_form_node_ui.ui" line="1195"/>
+        <location filename="../../config/base3_waterdistribution/qgswidgets/lamia_form_node_ui.ui" line="1201"/>
         <source>X</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../config/base3_waterdistribution/qgswidgets/lamia_form_node_ui.ui" line="1256"/>
+        <location filename="../../config/base3_waterdistribution/qgswidgets/lamia_form_node_ui.ui" line="1262"/>
         <source>dY</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../config/base3_waterdistribution/qgswidgets/lamia_form_node_ui.ui" line="1219"/>
+        <location filename="../../config/base3_waterdistribution/qgswidgets/lamia_form_node_ui.ui" line="1225"/>
         <source>dX</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../config/base3_waterdistribution/qgswidgets/lamia_form_node_ui.ui" line="1287"/>
+        <location filename="../../config/base3_waterdistribution/qgswidgets/lamia_form_node_ui.ui" line="1293"/>
         <source>dZ</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../config/base3_waterdistribution/qgswidgets/lamia_form_node_ui.ui" line="1212"/>
+        <location filename="../../config/base3_waterdistribution/qgswidgets/lamia_form_node_ui.ui" line="1218"/>
         <source>GPS</source>
         <translation></translation>
     </message>
@@ -2706,12 +2839,12 @@
 <context>
     <name>Lamia</name>
     <message>
-        <location filename="../qgispluginroot/Lamia.py" line="185"/>
+        <location filename="../qgispluginroot/Lamia.py" line="170"/>
         <source>&amp;Lamia</source>
         <translation>Lamia</translation>
     </message>
     <message>
-        <location filename="../qgispluginroot/Lamia.py" line="159"/>
+        <location filename="../qgispluginroot/Lamia.py" line="144"/>
         <source>Lamia</source>
         <translation></translation>
     </message>
@@ -2719,82 +2852,82 @@
 <context>
     <name>LamiaWindowWidget</name>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="1256"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="1255"/>
         <source>GPS not connected</source>
         <translation>GPS non connecté</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="145"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="143"/>
         <source>GPS rod height : /</source>
         <translation>Hauteur de la perche GPS</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="147"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="145"/>
         <source>Accuracy</source>
         <translation>Précision</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="263"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="262"/>
         <source>Lamia new</source>
         <translation>Lamia nouveau</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="244"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="243"/>
         <source>Select resources directory</source>
         <translation>Selectionner le répertoire des resources</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="312"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="311"/>
         <source> Database creation...</source>
         <translation>Création de la base de données</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="364"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="363"/>
         <source>Loading Layers ...</source>
         <translation>Chargement des couches</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="485"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="484"/>
         <source>Choose the file</source>
         <translation>Choisir le fichier</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="1126"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="1125"/>
         <source>Loading widgets...</source>
         <translation>Chargement des extensions</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="1241"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="1240"/>
         <source>GPS connected</source>
         <translation>GPS connecté</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="1257"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="1256"/>
         <source>Rod height : {}</source>
         <translation>Hauteur de la perche GPS : {}</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="1249"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="1248"/>
         <source>Accuracy : error</source>
         <translation>Précision : erreur</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="1264"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="1263"/>
         <source>Accuracy : off</source>
         <translation>Précision : désactivé</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="1303"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="1302"/>
         <source>Rod height</source>
         <translation>Hauteur de la perche GPS</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="1303"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="1302"/>
         <source>Enter GPS rod height</source>
         <translation>Renseigner la hauteur de perche GPS</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="1315"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.py" line="1314"/>
         <source>Select Directory</source>
         <translation>Choisir le répertoire</translation>
     </message>
@@ -2822,318 +2955,333 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="516"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="519"/>
         <source>Proprietes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="536"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="539"/>
         <source>Tables enfants</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="630"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="633"/>
         <source>Recent DB</source>
         <translation>DB récentes</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="643"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="646"/>
         <source>Import / export</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="682"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="685"/>
         <source>Interface</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="765"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="776"/>
         <source>toolBar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="777"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="788"/>
         <source>tre</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="782"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="793"/>
         <source>temp</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="787"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="798"/>
         <source>RÃ©pertoire photo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="795"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="806"/>
         <source>Digue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="800"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="811"/>
         <source>Assainissement</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="813"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="824"/>
         <source>Utilisateur</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="829"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="840"/>
         <source>Expert</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="842"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="853"/>
         <source>postgis</source>
         <translation type="unfinished">postgis</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="847"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="858"/>
         <source>spatialite</source>
         <translation type="unfinished">spatialite</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="857"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="868"/>
         <source>Reinitialier prestation courante</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="862"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="873"/>
         <source>Connect to Qgis GPS</source>
         <translation>Se connecter au GPS QGis</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="880"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="891"/>
         <source>Taille icones</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="885"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="896"/>
         <source>GPS rod height</source>
         <translation>Hauteur de la perche GPS</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="893"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="904"/>
         <source>Post treatment</source>
         <translation>Post traitement</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="898"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="909"/>
         <source>Infralineaires</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="903"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="914"/>
         <source>Imprimer rapport</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="908"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="919"/>
         <source>RÃ©initialiser les noeuds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="913"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="924"/>
         <source>Export shapefile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="918"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="929"/>
         <source>Import</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="923"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="934"/>
         <source>Mode hors ligne/Reconnexion</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="928"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="939"/>
         <source>version</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="933"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="944"/>
         <source>Importer depuis SIRS Digues</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="938"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="949"/>
         <source>Exporter vers SIRS Digues</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="958"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="698"/>
         <source>Table and fields</source>
         <translation>Table et champs</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="967"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="973"/>
         <source>toolbarsave</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="976"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="982"/>
         <source>toolbarnew</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="985"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="991"/>
         <source>toobargeomnewpoint</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="994"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1000"/>
         <source>toobargeomnewline</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1003"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1009"/>
         <source>toobargeomanewpolygon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1012"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1018"/>
         <source>toolbardelete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1021"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1027"/>
         <source>toolbarundo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1030"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1036"/>
         <source>toobargeomaddpoint</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1039"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1045"/>
         <source>toobargeomaddGPSpoint</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1048"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1054"/>
         <source>toobargeomeditlayer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="626"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="629"/>
         <source>Files</source>
         <translation>Fichiers</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="636"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="639"/>
         <source>Load DB</source>
         <translation>Charger une base de données</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="658"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="661"/>
         <source>Settings</source>
         <translation>Préférences</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="867"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="878"/>
         <source>Help</source>
         <translation>Aide</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="821"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="832"/>
         <source>Field investigation</source>
         <translation>Terrain</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="837"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="848"/>
         <source>Office</source>
         <translation>Bureau</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="852"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="863"/>
         <source>New DB</source>
         <translation type="unfinished">Nouvelle base de données</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="948"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="959"/>
         <source>Add a DB to this DB</source>
         <translation>RAjouter une DB à la DB actuelle</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="953"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="964"/>
         <source>Push local DB </source>
         <translation>Reverser la base de données sur la base mère</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="805"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="816"/>
         <source>Camera directory</source>
         <translation>Répertoire des photos</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1057"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1063"/>
         <source>toolbarlayersave</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1066"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1072"/>
         <source>toolbarlayerundo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="875"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="886"/>
         <source>About...</source>
         <translation>A propos...</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="943"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="954"/>
         <source>Pull DB</source>
         <translation>Créer une copie locale</translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1075"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1081"/>
         <source>toolbartoolsprint</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1084"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1090"/>
         <source>toolbarmagic</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1089"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1095"/>
         <source>Report bug</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1094"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1100"/>
         <source>Open project directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1099"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1105"/>
         <source>Open Lamia directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1104"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1110"/>
         <source>Show/Hide QGis toolbars</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="662"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="665"/>
         <source>Connect to port</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1116"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1122"/>
         <source>toolbarzoomto</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1125"/>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1131"/>
         <source>toolbartoolscamera</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1136"/>
+        <source>Conceptual model</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1141"/>
+        <source>Views</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../iface/qgiswidget/ifaceqgswidget.ui" line="1146"/>
+        <source>Tables and fields</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3293,6 +3441,19 @@
         <location filename="../../config/base3_levee/qgswidgets/lamia_form_edge.py" line="51"/>
         <source>Section</source>
         <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>base3_cp</name>
+    <message>
+        <location filename="../../config/base3_carpark/qgswidgets/lamia_form_deficiency.py" line="47"/>
+        <source>Recognition campain</source>
+        <translation>Campagne de reconnaissance</translation>
+    </message>
+    <message>
+        <location filename="../../config/base3_carpark/qgswidgets/lamia_form_edge.py" line="62"/>
+        <source>Parking site</source>
+        <translation>Stationnement</translation>
     </message>
 </context>
 <context>

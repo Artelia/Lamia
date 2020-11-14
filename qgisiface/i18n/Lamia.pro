@@ -62,6 +62,9 @@ FORMS =     ../../qgisiface/iface/qgiswidget/ifaceqgswidget.ui\
             ../../config/base3_levee/qgswidgets/lamia_form_equipment_ui.ui\
             ../../config/base3_levee/qgswidgets/lamia_form_equipment_ui_SIRS.ui\
             ../../config/base3_levee/qgswidgets/lamia_form_observation_ui.ui\
+            ../../config/base3_carpark/qgswidgets/lamia_form_deficiency_ui.ui\
+            ../../config/base3_carpark/qgswidgets/lamia_form_edge_ui.ui\
+            ../../config/base3_carpark/qgswidgets/lamia_form_observation_ui.ui\
 
             
 
@@ -121,6 +124,9 @@ SOURCES =   ../../qgisiface/qgispluginroot/Lamia.py\
             ../../config/base3_levee/qgswidgets/lamia_form_report.py\
             ../../config/base3_levee/qgswidgets/lamia_form_sketch.py\
             ../../config/base3_levee/qgswidgets/lamia_form_topography.py\
+            ../../config/base3_carpark/qgswidgets/lamia_form_deficiency.py\
+            ../../config/base3_carpark/qgswidgets/lamia_form_edge.py\
+            ../../config/base3_carpark/qgswidgets/lamia_form_observation.py\
 
 
 TRANSLATIONS = Lamia_fr.ts

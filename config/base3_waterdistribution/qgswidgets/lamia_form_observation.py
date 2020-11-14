@@ -49,37 +49,39 @@ class BaseWaterdistributionObservationTool(BaseObservationTool):
                 "linkfield": "id_observation",
                 "widgets": {
                     # general
-                    "datetimeobservation": self.toolwidgetmain.dateTimeEdit,
-                    "gravity": self.toolwidgetmain.comboBox_urgence,
+                    "datetimeobservation": self.toolwidgetmain.datetimeobservation,
+                    "gravity": self.toolwidgetmain.gravity,
                     # infra
-                    "number": self.toolwidgetmain.spinBox_nombre,
-                    "progression": self.toolwidgetmain.textEdit_evolution,
+                    "number": self.toolwidgetmain.number,
+                    "progression": self.toolwidgetmain.progression,
                     # noeud
-                    "conditioncover": self.toolwidgetmain.comboBox_etattampon,
-                    "conditionmanhole": self.toolwidgetmain.comboBox_etatregard,
+                    "conditioncover": self.toolwidgetmain.conditioncover,
+                    "conditionmanhole": self.toolwidgetmain.conditionmanhole,
                     # equip
                     "conditionglobal": [
-                        self.toolwidgetmain.comboBox_etatgen,
-                        self.toolwidgetmain.comboBox_etatgen2,
+                        self.toolwidgetmain.conditionglobal,
+                        self.toolwidgetmain.conditionglobal_2,
+                        self.toolwidgetmain.conditionglobal_3,
                     ],
-                    "watercountervalue": self.toolwidgetmain.spinBox_indexcompteur,
+                    "watercountervalue": self.toolwidgetmain.watercountervalue,
+                    "handlingtest": self.toolwidgetmain.handlingtest,
                     # general
-                    "nextactiontype": self.toolwidgetmain.comboBox_typesuite,
-                    "nextactioncomment": self.toolwidgetmain.textEdit_suite,
+                    "nextactiontype": self.toolwidgetmain.nextactiontype,
+                    "nextactioncomment": self.toolwidgetmain.nextactioncomment,
                 },
             },
             "object": {
                 "linkfield": "id_object",
-                "widgets": {"comment": self.toolwidgetmain.textEdit_comm},
+                "widgets": {"comment": self.toolwidgetmain.comment},
             },
         }
 
         self.toolwidgetmain.toolButton_calc_nb.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.spinBox_nombre)
+            lambda: self.showNumPad(self.toolwidgetmain.number)
         )
 
         self.toolwidgetmain.toolButton_indexcompteur.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.spinBox_indexcompteur)
+            lambda: self.showNumPad(self.toolwidgetmain.watercountervalue)
         )
 
         # ****************************************************************************************
@@ -135,7 +137,7 @@ class BaseWaterdistributionObservationTool(BaseObservationTool):
                     # print('nodeobs')
                     if self.parentWidget.parentWidget.DBASETABLENAME == "node":
                         currenttext = (
-                            self.parentWidget.parentWidget.toolwidgetmain.comboBox_cat.currentText()
+                            self.parentWidget.parentWidget.toolwidgetmain.nodetype.currentText()
                         )
                         typeeqp = self.dbase.getConstraintRawValueFromText(
                             "node", "nodetype", currenttext
@@ -143,7 +145,6 @@ class BaseWaterdistributionObservationTool(BaseObservationTool):
 
                         if typeeqp in [
                             "VEN",
-                            "VAN",
                             "VID",
                             "REG",
                             "HYD",
@@ -156,8 +157,10 @@ class BaseWaterdistributionObservationTool(BaseObservationTool):
                             self.toolwidgetmain.stackedWidget_2.setCurrentIndex(0)
                         elif typeeqp in ["COM", "DEB"]:
                             self.toolwidgetmain.stackedWidget_2.setCurrentIndex(1)
-                        else:
+                        elif typeeqp in ["VAN"]:
                             self.toolwidgetmain.stackedWidget_2.setCurrentIndex(2)
+                        else:
+                            self.toolwidgetmain.stackedWidget_2.setCurrentIndex(3)
 
                 if (
                     grpdes == "EQP"
@@ -166,7 +169,7 @@ class BaseWaterdistributionObservationTool(BaseObservationTool):
                 ):
                     if self.parentWidget.parentWidget.DBASETABLENAME == "equipment":
                         currenttext = (
-                            self.parentWidget.parentWidget.toolwidgetmain.comboBox_typeouvrage.currentText()
+                            self.parentWidget.parentWidget.toolwidgetmain.equipmenttype.currentText()
                         )
                         typenoeud = self.dbase.getConstraintRawValueFromText(
                             "equipment", "equipmenttype", currenttext

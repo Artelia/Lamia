@@ -52,9 +52,12 @@ def main(argv):
 
     # try:
 
-    # Infralineaire Equipementhydraulique Desordres
+    # Infralineaire Equipementhydraulique Desordres EquipementhydrauliqueEtat
     reportcore.runReport(
-        r"C:\000_testdigue\des.pdf", "Desordres", pkzonegeos=[3], pklist=None,
+        r"C:\000_testdigue\des.pdf",
+        "EquipementhydrauliqueEtat",
+        pkzonegeos=[3],
+        pklist=None,
     )
     # except Exception as e:
     #     print(e)

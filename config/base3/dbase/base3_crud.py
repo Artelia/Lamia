@@ -65,13 +65,20 @@ class LamiaORM(object):
             columns = []
             for table in self.linkedtables:
                 columns += self.dbase.getColumns(table)
+
                 if formertable:
                     sql += f" INNER JOIN {table} ON {formertable}.lpk_{table} = {table}.pk_{table} "
                 else:
                     sql += f" {table} "
                 formertable = table
             sql += ")"
-            sql += f" SELECT * FROM {self.linkedtables[0]}_temp"
+
+            readvalues = list(columns)
+            if "geom" in readvalues:
+                idx = readvalues.index("geom")
+                readvalues[idx] = "ST_AsText(geom)"
+
+            sql += f" SELECT {', '.join(readvalues)} FROM {self.linkedtables[0]}_temp"
             sql += f" WHERE {key}"
             allres = self.dbase.query(sql)
             finalres = []
@@ -80,12 +87,18 @@ class LamiaORM(object):
             return finalres
 
         def create(self, featurepk=None):
+            if self.dbase.printorm:
+                print(f"ORM create {self.__class__.__name__}")
             savedfeaturepk = self.orm._manageFeatureCreationOrUpdate(
                 self.__class__.__name__.lower(), featurepk
             )
             return savedfeaturepk
 
         def update(self, pk, valuesdict):
+            if self.dbase.printorm:
+                print(
+                    f"ORM update {self.__class__.__name__} pk : {pk} -  : {valuesdict}"
+                )
             for k in set(valuesdict.keys()):
                 if k.startswith(("pk_", "lpk_")):
                     valuesdict.pop(k)
@@ -110,6 +123,8 @@ class LamiaORM(object):
                 curpk = None
 
         def delete(self, pk):
+            if self.dbase.printorm:
+                print(f"ORM delete {self.__class__.__name__} pk : {pk}")
             curpk = pk
             for table in self.linkedtables:
                 if not curpk:
@@ -240,10 +255,12 @@ class LamiaORM(object):
                 parenttablename = itertablename
             else:
                 tablepk = self.dbase.getLastPK(itertablename) + 1
+                if itertablename.startswith("tc"):
+                    parenttablename = itertablename
 
                 if parenttablename is not None:
-                    # if not 'onlyoneparenttable' in self.dbasetables[itertablename].keys():
-                    if not itertablename[-4:] == "data":
+
+                    if not (itertablename[-4:] == "data" or itertablename[0:2] == "tc"):
                         maxid = (
                             self.dbase.getmaxColumnValue(
                                 itertablename, "id_" + itertablename.lower()
@@ -255,9 +272,13 @@ class LamiaORM(object):
                             "lpk_" + parenttablename.lower(),
                         ]
                         listofrawvalues = [maxid, parenttablepk]
-                    else:
+                    elif itertablename[-4:] == "data":
                         listofields = ["lpk_" + parenttablename.lower()]
                         listofrawvalues = [parenttablepk]
+                    else:
+                        listofields = []
+                        listofrawvalues = []
+
                     sql = self.dbase.createSetValueSentence(
                         type="INSERT",
                         tablename=itertablename,

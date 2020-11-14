@@ -117,6 +117,7 @@ class AbstractDBaseParser:
 
         #:for debug purpose
         self.printsql = False
+        self.printorm = False
 
         self.base3version = False  # for transition beetween base2 and base3 model
 
@@ -642,7 +643,11 @@ class AbstractDBaseParser:
         :param txt: la valeur textuelle
         :return: le trigramme
         """
-        # print('_getConstraintRawValueFromText',[value[0] for value in self.dbasetables[table]['fields'][field]['Cst']], txt )
+        # print(
+        #     "_getConstraintRawValueFromText",
+        #     [value[0] for value in self.dbasetables[table]["fields"][field]["Cst"]],
+        #     txt,
+        # )
         dbasetable = self.dbasetables[table]
         try:
             index = [value[0] for value in dbasetable["fields"][field]["Cst"]].index(
@@ -807,8 +812,12 @@ class AbstractDBaseParser:
                     restemp.append(str(res))
 
         if type == "INSERT":
-            sql = "INSERT INTO " + tablename + "(" + ",".join(listoffields) + ")"
-            sql += " VALUES(" + ",".join(restemp) + ")"
+            sql = "INSERT INTO " + tablename
+            if listoffields:
+                sql += "(" + ",".join(listoffields) + ")"
+                sql += " VALUES(" + ",".join(restemp) + ")"
+            else:
+                sql += " DEFAULT VALUES "
 
         elif type == "UPDATE":
             sql = " UPDATE " + tablename.lower() + " SET "
@@ -1230,10 +1239,15 @@ class AbstractDBaseParser:
                     else:
                         parenttablename = field.split("_")[1]
                     parenttablenamelist.append(parenttablename)
+
                     if tablename[-4:] == "data":
                         continuesearchparent = False
-                    elif field[4:] in ["objet", "object"]:
+                    elif parenttablename in ["objet", "object"]:
                         continuesearchparent = False
+                    elif parenttablename in ["revision"]:
+                        del parenttablenamelist[-1]
+                        continuesearchparent = False
+                        break
                     else:
                         continuesearchparent = True
                     dbasetable = self.dbasetables[parenttablename]

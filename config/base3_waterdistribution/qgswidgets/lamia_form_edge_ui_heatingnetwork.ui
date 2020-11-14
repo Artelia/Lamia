@@ -47,7 +47,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QComboBox" name="comboBox_typeeau"/>
+           <widget class="QComboBox" name="networktype"/>
           </item>
           <item row="2" column="0">
            <widget class="QLabel" name="label">
@@ -60,7 +60,7 @@
            </widget>
           </item>
           <item row="3" column="1">
-           <widget class="QComboBox" name="comboBox_fonctioncan"/>
+           <widget class="QComboBox" name="pipefunction"/>
           </item>
           <item row="3" column="0">
            <widget class="QLabel" name="label_7">
@@ -73,10 +73,10 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QComboBox" name="comboBox_branchement"/>
+           <widget class="QComboBox" name="laterals"/>
           </item>
           <item row="2" column="1">
-           <widget class="QComboBox" name="comboBox_domaine"/>
+           <widget class="QComboBox" name="domain"/>
           </item>
           <item row="1" column="0">
            <widget class="QLabel" name="label_9">
@@ -99,7 +99,7 @@
            </widget>
           </item>
           <item row="4" column="1">
-           <widget class="QTextBrowser" name="textBrowser_commentaire">
+           <widget class="QTextBrowser" name="comment">
             <property name="maximumSize">
              <size>
               <width>16777215</width>
@@ -148,7 +148,7 @@
            </widget>
           </item>
           <item row="7" column="1">
-           <widget class="QSpinBox" name="spinBox_calorep">
+           <widget class="QSpinBox" name="insulationthickness">
             <property name="minimum">
              <number>-1</number>
             </property>
@@ -188,7 +188,7 @@
            </widget>
           </item>
           <item row="5" column="4">
-           <widget class="QComboBox" name="comboBox_calortype"/>
+           <widget class="QComboBox" name="insulationtype"/>
           </item>
           <item row="0" column="0">
            <widget class="QLabel" name="label_3">
@@ -234,19 +234,19 @@
            </widget>
           </item>
           <item row="0" column="4">
-           <widget class="QComboBox" name="comboBox_joint"/>
+           <widget class="QComboBox" name="joint"/>
           </item>
           <item row="5" column="1" colspan="2">
-           <widget class="QComboBox" name="comboBox_calor"/>
+           <widget class="QComboBox" name="insulation"/>
           </item>
           <item row="3" column="1" colspan="2">
-           <widget class="QComboBox" name="comboBox_modecircu"/>
+           <widget class="QComboBox" name="flowtype"/>
           </item>
           <item row="2" column="1" colspan="2">
-           <widget class="QComboBox" name="comboBox_protectioncatho"/>
+           <widget class="QComboBox" name="cathodicprotection"/>
           </item>
           <item row="0" column="1" colspan="2">
-           <widget class="QComboBox" name="comboBox_materiau"/>
+           <widget class="QComboBox" name="material"/>
           </item>
          </layout>
         </widget>
@@ -286,7 +286,7 @@
         </widget>
        </item>
        <item row="3" column="1">
-        <widget class="QDoubleSpinBox" name="doubleSpinBox_gene">
+        <widget class="QDoubleSpinBox" name="depthtoppipe">
          <property name="minimum">
           <double>-1.000000000000000</double>
          </property>
@@ -296,7 +296,7 @@
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QDoubleSpinBox" name="doubleSpinBox_diamint">
+        <widget class="QDoubleSpinBox" name="diameterint">
          <property name="minimum">
           <double>-1.000000000000000</double>
          </property>
@@ -320,7 +320,7 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QDoubleSpinBox" name="doubleSpinBox_diametre">
+        <widget class="QDoubleSpinBox" name="diameterext">
          <property name="decimals">
           <number>3</number>
          </property>

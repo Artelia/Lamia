@@ -72,114 +72,123 @@ class BaseWaterdistributionNodeTool(BaseNodeTool):
             "node": {
                 "linkfield": "id_node",
                 "widgets": {
-                    "nodetype": self.toolwidgetmain.comboBox_cat,
-                    "nodefunction": self.toolwidgetmain.comboBox_fonction,
-                    "nodesubtype": self.toolwidgetmain.comboBox_soustype,
-                    "access": self.toolwidgetmain.comboBox_acces,
-                    "accessshape": self.toolwidgetmain.comboBox_formeaccess,
-                    "diameterinlet": self.toolwidgetmain.doubleSpinBox_diam,
-                    "diameteroutlet": self.toolwidgetmain.doubleSpinBox_diamsor,
-                    "nodedepth": self.toolwidgetmain.doubleSpinBox_prof,
-                    "presencestep": self.toolwidgetmain.comboBox_echelon,
+                    "nodetype": self.toolwidgetmain.nodetype,
+                    "nodefunction": self.toolwidgetmain.nodefunction,
+                    "nodesubtype": self.toolwidgetmain.nodesubtype,
+                    "access": self.toolwidgetmain.access,
+                    "accessshape": self.toolwidgetmain.accessshape,
+                    "diameterinlet": self.toolwidgetmain.diameterinlet,
+                    "diameteroutlet": self.toolwidgetmain.diameteroutlet,
+                    "nodedepth": self.toolwidgetmain.nodedepth,
+                    "presencestep": self.toolwidgetmain.presencestep,
                     # ventouse
-                    "nodeelevation": self.toolwidgetmain.doubleSpinBox_altim,
+                    "nodeelevation": self.toolwidgetmain.nodeelevation,
                     # vanne
                     "localisation": [
-                        self.toolwidgetmain.comboBox_localisation,
-                        self.toolwidgetmain.comboBox_localisation2,
+                        self.toolwidgetmain.localisation,
+                        self.toolwidgetmain.localisation_2,
                     ],
                     "accessibility": [
-                        self.toolwidgetmain.comboBox_accessibilite,
-                        self.toolwidgetmain.comboBox_accessibilite2,
+                        self.toolwidgetmain.accessibility,
+                        self.toolwidgetmain.accessibility_2,
                     ],
-                    "manipulability": self.toolwidgetmain.comboBox_manipulable,
-                    "nodeposition": self.toolwidgetmain.comboBox_position,
+                    "manipulability": self.toolwidgetmain.manipulability,
+                    "nodeposition": self.toolwidgetmain.nodeposition,
                     # vidange
-                    "presenceoutlet": self.toolwidgetmain.lineEdit_exutoire,
+                    "presenceoutlet": self.toolwidgetmain.presenceoutlet,
                     # reg pression
-                    "valvedownstreamsetting": self.toolwidgetmain.doubleSpinBox_cons_av,
-                    "valveupstreamsetting": self.toolwidgetmain.doubleSpinBox_cons_am,
+                    "valvedownstreamsetting": self.toolwidgetmain.valvedownstreamsetting,
+                    "valveupstreamsetting": self.toolwidgetmain.valveupstreamsetting,
                     # hydrant
-                    "hydrantfiredepartmentid": self.toolwidgetmain.spinBox_idsdis,
+                    "hydrantfiredepartmentid": self.toolwidgetmain.hydrantfiredepartmentid,
                     "brandname": [
-                        self.toolwidgetmain.lineEdit_marque,
-                        self.toolwidgetmain.lineEdit_marque2,
+                        self.toolwidgetmain.brandname,
+                        self.toolwidgetmain.brandname_2,
                     ],
-                    "brandref": self.toolwidgetmain.lineEdit_type,
-                    "hydrantconformity": self.toolwidgetmain.comboBox_conformite,
+                    "brandref": [
+                        self.toolwidgetmain.brandref,
+                        self.toolwidgetmain.brandref_2,
+                    ],
+                    "hydrantconformity": self.toolwidgetmain.hydrantconformity,
                     # compteur"
-                    "nodesize": self.toolwidgetmain.doubleSpinBox_dimensions,
-                    "nodeemitter": self.toolwidgetmain.comboBox_tete_emettrice,
-                    "nodecountervalue": self.toolwidgetmain.spinBox_numero,
-                    "retrofitable": self.toolwidgetmain.comboBox_equipable,
+                    "nodesize": self.toolwidgetmain.nodesize,
+                    "nodeemitter": self.toolwidgetmain.nodeemitter,
+                    "nodecountervalue": self.toolwidgetmain.nodecountervalue,
+                    "retrofitable": self.toolwidgetmain.retrofitable,
+                    "serialnumber": self.toolwidgetmain.serialnumber,
                     #'localisation': self.toolwidgetmain.comboBox_localisation2,
                     #'accessibilite': self.toolwidgetmain.comboBox_accessibilite2,
                     # 'marque': self.toolwidgetmain.lineEdit_marque2,
                     # 'type': self.toolwidgetmain.lineEdit_type2,
                     "maintenancefirm": [
-                        self.toolwidgetmain.lineEdit_entreprise,
-                        self.toolwidgetmain.lineEdit_entreprise2,
+                        self.toolwidgetmain.maintenancefirm,
+                        self.toolwidgetmain.maintenancefirm_2,
                     ],
                     "remotemonitoring": [
-                        self.toolwidgetmain.comboBox_telerelevage,
-                        self.toolwidgetmain.comboBox_telerelevage2,
+                        self.toolwidgetmain.remotemonitoring,
+                        self.toolwidgetmain.remotemonitoring_2,
                     ],
-                    "linkedfacilities": self.toolwidgetmain.lineEdit_organes_associes,
+                    "linkedfacilities": self.toolwidgetmain.linkedfacilities,
                     # chloration
                     #'entreprise': self.toolwidgetmain.lineEdit_entreprise2,
                     #'telerelevage': self.toolwidgetmain.comboBox_telerelevage2,
                     # robinet de prise en charge
-                    "clamp": self.toolwidgetmain.comboBox_collier,
-                    "X": self.toolwidgetmain.doubleSpinBox_X,
-                    "dX": self.toolwidgetmain.doubleSpinBox_dX,
-                    "Y": self.toolwidgetmain.doubleSpinBox_Y,
-                    "dY": self.toolwidgetmain.doubleSpinBox_dY,
-                    "Z": self.toolwidgetmain.doubleSpinBox_Z,
-                    "dZ": self.toolwidgetmain.doubleSpinBox_dZ,
+                    "clamp": self.toolwidgetmain.clamp,
+                    "X": self.toolwidgetmain.X,
+                    "dX": self.toolwidgetmain.dX,
+                    "Y": self.toolwidgetmain.Y,
+                    "dY": self.toolwidgetmain.dY,
+                    "Z": self.toolwidgetmain.Z,
+                    "dZ": self.toolwidgetmain.dZ,
                 },
             },
             "object": {
                 "linkfield": "id_object",
-                "widgets": {"comment": self.toolwidgetmain.textBrowser_comm},
+                "widgets": {"comment": self.toolwidgetmain.comment},
             },
             "descriptionsystem": {
                 "linkfield": "id_descriptionsystem",
                 "widgets": {
-                    "operational": self.toolwidgetmain.comboBox_enservice,
-                    "dateoperationalcreation": self.toolwidgetmain.dateEdit_anneepose,
-                    "networktype": self.toolwidgetmain.comboBox_nature_reseau,
+                    "operational": self.toolwidgetmain.operational,
+                    "dateoperationalcreation": self.toolwidgetmain.dateoperationalcreation,
+                    "networktype": self.toolwidgetmain.networktype,
                 },
             },
         }
 
         self.toolwidgetmain.toolButton_diam.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_diam)
+            lambda: self.showNumPad(self.toolwidgetmain.diameterinlet)
         )
         self.toolwidgetmain.toolButton_diamsor.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_diamsor)
+            lambda: self.showNumPad(self.toolwidgetmain.diameteroutlet)
         )
         self.toolwidgetmain.toolButton_prof.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_prof)
+            lambda: self.showNumPad(self.toolwidgetmain.nodedepth)
         )
 
         self.toolwidgetmain.toolButton_idsdis.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.spinBox_idsdis)
+            lambda: self.showNumPad(self.toolwidgetmain.hydrantfiredepartmentid)
         )
 
         self.toolwidgetmain.toolButton_altim.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_altim)
+            lambda: self.showNumPad(self.toolwidgetmain.nodeelevation)
         )
 
         self.toolwidgetmain.toolButton_cons_am.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_cons_am)
+            lambda: self.showNumPad(self.toolwidgetmain.valveupstreamsetting)
         )
         self.toolwidgetmain.toolButton_cons_av.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_cons_av)
+            lambda: self.showNumPad(self.toolwidgetmain.valvedownstreamsetting)
         )
 
-        self.toolwidgetmain.comboBox_cat.currentIndexChanged.connect(
-            self.changeCategorie
+        self.toolwidgetmain.toolButton_nodesize.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.nodesize)
         )
+        self.toolwidgetmain.toolButton_nodecountervalue.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.nodecountervalue)
+        )
+
+        self.toolwidgetmain.nodetype.currentIndexChanged.connect(self.changeCategorie)
         self.toolwidgetmain.pushButton_getGPS.clicked.connect(self.getGPSValue)
 
         self.allaccessfields = OrderedDict(
@@ -240,11 +249,11 @@ class BaseWaterdistributionNodeTool(BaseNodeTool):
                 "node_qgis", ["lid_descriptionsystem_1"], self.currentFeaturePK
             )
             if lid_dessys is not None:
-                self.toolwidgetmain.comboBox_acces.setEnabled(False)
+                self.toolwidgetmain.access.setEnabled(False)
             else:
-                self.toolwidgetmain.comboBox_acces.setEnabled(True)
+                self.toolwidgetmain.access.setEnabled(True)
         else:
-            self.toolwidgetmain.comboBox_acces.setEnabled(True)
+            self.toolwidgetmain.access.setEnabled(True)
         if (
             self.parentWidget is not None
             and self.parentWidget.currentFeaturePK is not None
@@ -273,22 +282,22 @@ class BaseWaterdistributionNodeTool(BaseNodeTool):
                     "SPE",
                 ]
 
-                self.toolwidgetmain.comboBox_cat.currentIndexChanged.emit(
-                    self.toolwidgetmain.comboBox_cat.currentIndex()
+                self.toolwidgetmain.nodetype.currentIndexChanged.emit(
+                    self.toolwidgetmain.nodetype.currentIndex()
                 )
-                self.toolwidgetmain.comboBox_acces.setEnabled(False)
+                self.toolwidgetmain.access.setEnabled(False)
 
             else:
                 if dbasetable["fields"]["access"] != self.allaccessfields:
                     dbasetable["fields"]["access"] = self.allaccessfields
-                    self.toolwidgetmain.comboBox_cat.currentIndexChanged.emit(
-                        self.toolwidgetmain.comboBox_cat.currentIndex()
+                    self.toolwidgetmain.nodetype.currentIndexChanged.emit(
+                        self.toolwidgetmain.nodetype.currentIndex()
                     )
         else:
             if dbasetable["fields"]["access"] != self.allaccessfields:
                 dbasetable["fields"]["access"] = self.allaccessfields
-                self.toolwidgetmain.comboBox_cat.currentIndexChanged.emit(
-                    self.toolwidgetmain.comboBox_cat.currentIndex()
+                self.toolwidgetmain.nodetype.currentIndexChanged.emit(
+                    self.toolwidgetmain.nodetype.currentIndex()
                 )
 
     def postSaveFeature(self, savedfeaturepk=None):
@@ -313,7 +322,7 @@ class BaseWaterdistributionNodeTool(BaseNodeTool):
         """
 
     def changeCategorie(self, intcat):
-        typeeqt = self.toolwidgetmain.comboBox_cat.itemText(intcat)
+        typeeqt = self.toolwidgetmain.nodetype.itemText(intcat)
         rawtypeeqt = self.dbase.getConstraintRawValueFromText(
             "node", "nodetype", typeeqt
         )
@@ -351,12 +360,12 @@ class BaseWaterdistributionNodeTool(BaseNodeTool):
         self.getGPSValue()
 
     def getGPSValue(self):
-        self.assignValue(self.gpswidget.label_X, self.toolwidgetmain.doubleSpinBox_X)
-        self.assignValue(self.gpswidget.label_dX, self.toolwidgetmain.doubleSpinBox_dX)
-        self.assignValue(self.gpswidget.label_Y, self.toolwidgetmain.doubleSpinBox_Y)
-        self.assignValue(self.gpswidget.label_dY, self.toolwidgetmain.doubleSpinBox_dY)
-        self.assignValue(self.gpswidget.label_Z, self.toolwidgetmain.doubleSpinBox_Z)
-        self.assignValue(self.gpswidget.label_dZ, self.toolwidgetmain.doubleSpinBox_dZ)
+        self.assignValue(self.gpswidget.label_X, self.toolwidgetmain.X)
+        self.assignValue(self.gpswidget.label_dX, self.toolwidgetmain.dX)
+        self.assignValue(self.gpswidget.label_Y, self.toolwidgetmain.Y)
+        self.assignValue(self.gpswidget.label_dY, self.toolwidgetmain.dY)
+        self.assignValue(self.gpswidget.label_Z, self.toolwidgetmain.Z)
+        self.assignValue(self.gpswidget.label_dZ, self.toolwidgetmain.dZ)
 
     def assignValue(self, wdgfrom, wdgto):
         if self.isfloat(wdgfrom.text()):

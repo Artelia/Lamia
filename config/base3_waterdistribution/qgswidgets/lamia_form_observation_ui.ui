@@ -68,14 +68,14 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QDateTimeEdit" name="dateTimeEdit">
+       <widget class="QDateTimeEdit" name="datetimeobservation">
         <property name="calendarPopup">
          <bool>true</bool>
         </property>
        </widget>
       </item>
       <item row="0" column="3">
-       <widget class="QComboBox" name="comboBox_urgence"/>
+       <widget class="QComboBox" name="gravity"/>
       </item>
      </layout>
     </widget>
@@ -83,7 +83,7 @@
    <item>
     <widget class="QStackedWidget" name="stackedWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="page">
       <layout class="QGridLayout" name="gridLayout" columnstretch="1,5,1">
@@ -117,7 +117,7 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QSpinBox" name="spinBox_nombre">
+        <widget class="QSpinBox" name="number">
          <property name="minimum">
           <number>-1</number>
          </property>
@@ -145,7 +145,7 @@
         </widget>
        </item>
        <item row="3" column="1" colspan="2">
-        <widget class="QTextEdit" name="textEdit_comm">
+        <widget class="QTextEdit" name="comment">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
            <horstretch>0</horstretch>
@@ -161,7 +161,7 @@
         </widget>
        </item>
        <item row="5" column="1" colspan="2">
-        <widget class="QTextEdit" name="textEdit_evolution">
+        <widget class="QTextEdit" name="progression">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
            <horstretch>0</horstretch>
@@ -200,7 +200,7 @@
          <property name="currentIndex">
           <number>2</number>
          </property>
-         <widget class="QWidget" name="page_4">
+         <widget class="QWidget" name="all">
           <layout class="QGridLayout" name="gridLayout_2">
            <item row="0" column="0">
             <widget class="QLabel" name="label_3">
@@ -210,11 +210,11 @@
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QComboBox" name="comboBox_etatgen"/>
+            <widget class="QComboBox" name="conditionglobal"/>
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="page_5">
+         <widget class="QWidget" name="compteur">
           <layout class="QGridLayout" name="gridLayout_5">
            <item row="0" column="0">
             <widget class="QLabel" name="label_11">
@@ -237,7 +237,7 @@
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QSpinBox" name="spinBox_indexcompteur">
+            <widget class="QSpinBox" name="watercountervalue">
              <property name="minimum">
               <number>-1</number>
              </property>
@@ -254,7 +254,31 @@
             </widget>
            </item>
            <item row="0" column="1" colspan="2">
-            <widget class="QComboBox" name="comboBox_etatgen2"/>
+            <widget class="QComboBox" name="conditionglobal_2"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="vanne">
+          <layout class="QGridLayout" name="gridLayout_7">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_13">
+             <property name="text">
+              <string>Etat général</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QComboBox" name="conditionglobal_3"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_14">
+             <property name="text">
+              <string>Handling test</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QComboBox" name="handlingtest"/>
            </item>
           </layout>
          </widget>
@@ -280,7 +304,7 @@
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QComboBox" name="comboBox_etattampon"/>
+            <widget class="QComboBox" name="conditioncover"/>
            </item>
            <item row="1" column="0">
             <widget class="QLabel" name="label_10">
@@ -290,7 +314,7 @@
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QComboBox" name="comboBox_etatregard"/>
+            <widget class="QComboBox" name="conditionmanhole"/>
            </item>
           </layout>
          </widget>
@@ -330,10 +354,10 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QComboBox" name="comboBox_typesuite"/>
+       <widget class="QComboBox" name="nextactiontype"/>
       </item>
       <item row="1" column="1">
-       <widget class="QTextEdit" name="textEdit_suite">
+       <widget class="QTextEdit" name="nextactioncomment">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
           <horstretch>0</horstretch>
