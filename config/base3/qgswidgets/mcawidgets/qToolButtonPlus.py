@@ -1,17 +1,14 @@
 # -*- coding: utf-8 -*-
 
 
-try:
-    from qgis.PyQt.QtGui import (QPushButton, QTreeWidgetItem)
-except ImportError:
-    from qgis.PyQt.QtWidgets import (QPushButton, QTreeWidgetItem)
+from qgis.PyQt.QtWidgets import QPushButton, QTreeWidgetItem
+import qgis.utils
 
 # Import Bareme class
 from .widgetBareme import WidgetBareme
 
 
 class QPushButtonPlus(QPushButton):
-
     def __init__(self, simulationWidget, qtreewidgetitm):
         super(QPushButtonPlus, self).__init__()
 
@@ -36,7 +33,9 @@ class QPushButtonPlus(QPushButton):
 
         success = self.baremeWidget.initBareme()
         if not success:
-            self.simulationWidget.appendMessage('Dbase not updated - values not available')
+            self.simulationWidget.appendMessage(
+                "Dbase not updated - values not available"
+            )
             return
 
         # Save current treeWidget
@@ -49,7 +48,7 @@ class QPushButtonPlus(QPushButton):
         # self.tmpTreeWidget = root.clone()
 
         # Hide self.simulationWidget and open self.baremeWidget
-        if self.simulationWidget.dbase.qgsiface is None:
+        if qgis.utils.iface is None:
             self.baremeWidget.exec_()
         else:
             self.simulationWidget.hide()

@@ -355,7 +355,18 @@ class AMCWindow(QDialog):
         self.result = pd.DataFrame()
 
         # Evaluate all entries from selects
-        self.result = self.evaluate()
+        # self.result = self.evaluate()
+        # if node is None:
+        node = self.treeWidget.currentItem()
+        nodeid = self.getNodeId(node)
+
+        self.result = self.mcacore.computeNodeScore(
+            self.confname, self.getJsonDict(), nodeid
+        )
+
+        self.mcacore.joinResultToQgslayer(self.confname, self.result)
+
+        return
 
         if debug:
             logging.getLogger("Lamia").debug("sqlsict %s", str(self.result))
@@ -459,7 +470,18 @@ class AMCWindow(QDialog):
         qgislayer.setRenderer(myRenderer)
         qgislayer.repaintRequested.emit()
 
-    def evaluate(self, node=None):
+    def getNodeId(self, node):
+        nodeid = ""
+        while node.parent() is not None:
+            parent = node.parent()
+            childidx = parent.indexOfChild(node) + 1
+            nodeid = str(childidx) + nodeid
+            node = node.parent()
+
+        print("okok", nodeid)
+        return nodeid
+
+    def evaluate_old(self, node=None):
         print(
             "| Enter {fct}".format(fct=inspect.stack()[0][3])
         ) if self.isDebug else None
@@ -467,6 +489,11 @@ class AMCWindow(QDialog):
         # Fetch current node if requested
         if node is None:
             node = self.treeWidget.currentItem()
+        nodeid = self.getNodeId(node)
+
+        self.mcacore.computeNodeScore(self.confname, self.getJsonDict(), nodeid)
+
+        return
 
         if node is None:  # called from main amc gui
             node = self.maintreewdgitem
@@ -696,7 +723,7 @@ class AMCWindow(QDialog):
                 legitChildren.append(element)
         return legitChildren
 
-    def legitChildren2(self, dct):
+    def legitChildren2_old(self, dct):
         """
         Return dct's child that are dict
         :param dct: dict, current node values and children
@@ -758,303 +785,304 @@ class AMCWindow(QDialog):
 
     def testDB(self):
         jsondict = self.getJsonDict()
-        success, message = self.mcacore.testDB(self.confname,jsondict)
+        success, message = self.mcacore.testDB(self.confname, jsondict)
         if not success:
             self.toolButton_updatedb.setEnabled(False)
         else:
             self.toolButton_updatedb.setEnabled(True)
         self.appendMessage(message)
 
-        if False:
-            # Get selects
-            selects = self.mcacore.getSelects(self.getJsonDict())
-            # print("::", selects)
-            print("::", self.getSelects())
-            # selects = self.getSelects()
-            # print("::", selects)
-            if not selects:
-                self.appendMessage("sql not ok - do not find main table")
-                self.toolButton_updatedb.setEnabled(False)
-                return
+    #     if False:
+    #         # Get selects
+    #         selects = self.mcacore.getSelects(self.getJsonDict())
+    #         # print("::", selects)
+    #         print("::", self.getSelects())
+    #         # selects = self.getSelects()
+    #         # print("::", selects)
+    #         if not selects:
+    #             self.appendMessage("sql not ok - do not find main table")
+    #             self.toolButton_updatedb.setEnabled(False)
+    #             return
 
-            sql = {
-                # "final": self.lineEdit_sqlfinal.text(),
-                # "final": sqlfinal,
-                "final": self.textBrowser_sqlfinal.toPlainText() + " LIMIT 1",
-                "critere": selects,
-            }
+    #         sql = {
+    #             # "final": self.lineEdit_sqlfinal.text(),
+    #             # "final": sqlfinal,
+    #             "final": self.textBrowser_sqlfinal.toPlainText() + " LIMIT 1",
+    #             "critere": selects,
+    #         }
 
-            try:
-                qgsvectorlay, sqltxt = self.prepareVLayerScript(sql)
-            except Exception as e:
-                self.appendMessage("sql not ok")
-                self.toolButton_updatedb.setEnabled(False)
-                return
+    #         try:
+    #             qgsvectorlay, sqltxt = self.prepareVLayerScript(sql)
+    #         except Exception as e:
+    #             self.appendMessage("sql not ok")
+    #             self.toolButton_updatedb.setEnabled(False)
+    #             return
 
-            # restrict query to fist row of main table
-            # construct where clause
-            maintable, pkmaintable = self.getMainTable()
-            sql = "SELECT Min(" + pkmaintable + ") FROM " + maintable
-            sql = self.dbase.updateQueryTableNow(sql)
-            res = self.dbase.query(sql)
-            sentence = maintable + "." + pkmaintable + " = " + str(res[0][0])
-            # insert it in sql
-            sqlsplitted = self.dbase.utils.splitSQLSelectFromWhereOrderby(sqltxt)
-            if "WHERE" in sqlsplitted.keys():
-                sqlsplitted["WHERE"] += " AND " + sentence
-            else:
-                sqlsplitted["WHERE"] = sentence
-            sqlfinal = self.dbase.utils.rebuildSplittedQuery(sqlsplitted)
+    #         # restrict query to fist row of main table
+    #         # construct where clause
+    #         maintable, pkmaintable = self.getMainTable()
+    #         sql = "SELECT Min(" + pkmaintable + ") FROM " + maintable
+    #         sql = self.dbase.updateQueryTableNow(sql)
+    #         res = self.dbase.query(sql)
+    #         sentence = maintable + "." + pkmaintable + " = " + str(res[0][0])
+    #         # insert it in sql
+    #         sqlsplitted = self.dbase.utils.splitSQLSelectFromWhereOrderby(sqltxt)
+    #         if "WHERE" in sqlsplitted.keys():
+    #             sqlsplitted["WHERE"] += " AND " + sentence
+    #         else:
+    #             sqlsplitted["WHERE"] = sentence
+    #         sqlfinal = self.dbase.utils.rebuildSplittedQuery(sqlsplitted)
 
-            # print("***", sqlfinal)
+    #         # print("***", sqlfinal)
 
-            self.starttime = time.time()
-            self.createdataframe.testsql = True  # before prepareVLayerScript
-            self.createdataframe.scriptvl = sqlfinal
-            self.createdataframe.qgsvectorlay = qgsvectorlay
-            # self.createdataframe.filename = self.filevirtuallayer
-            self.thread.start()
+    #         self.starttime = time.time()
+    #         self.createdataframe.testsql = True  # before prepareVLayerScript
+    #         self.createdataframe.scriptvl = sqlfinal
+    #         self.createdataframe.qgsvectorlay = qgsvectorlay
+    #         # self.createdataframe.filename = self.filevirtuallayer
+    #         self.thread.start()
 
-    def testDB2(self):
-        # Get selects
-        selects = self.mcacore.getSelects(self.getJsonDict())
-        if selects is None:
-            self.appendMessage("sql not ok - do not find main table")
-            self.toolButton_updatedb.setEnabled(False)
-            return
+    # def testDB2(self):
+    #     # Get selects
+    #     selects = self.mcacore.getSelects(self.getJsonDict())
+    #     if selects is None:
+    #         self.appendMessage("sql not ok - do not find main table")
+    #         self.toolButton_updatedb.setEnabled(False)
+    #         return
 
-        # Fetch raw data from DB
-        sql = {
-            # "final": self.lineEdit_sqlfinal.text(),
-            "final": self.textBrowser_sqlfinal.toPlainText() + " LIMIT 1",
-            "critere": selects,
-        }
-        try:
-            scriptvl, sqltxt = self.prepareVLayerScript2(sql)
-        except Exception as e:
-            self.appendMessage("sql not ok")
-            self.toolButton_updatedb.setEnabled(False)
-            return
+    #     # Fetch raw data from DB
+    #     sql = {
+    #         # "final": self.lineEdit_sqlfinal.text(),
+    #         "final": self.textBrowser_sqlfinal.toPlainText() + " LIMIT 1",
+    #         "critere": selects,
+    #     }
+    #     try:
+    #         scriptvl, sqltxt = self.prepareVLayerScript2(sql)
+    #     except Exception as e:
+    #         self.appendMessage("sql not ok")
+    #         self.toolButton_updatedb.setEnabled(False)
+    #         return
 
-        self.createdataframe2.testsql = True
-        self.createdataframe2.scriptvl = scriptvl
-        # self.createdataframe2.filename = self.filevirtuallayer
-        self.thread2.start()
+    #     self.createdataframe2.testsql = True
+    #     self.createdataframe2.scriptvl = scriptvl
+    #     # self.createdataframe2.filename = self.filevirtuallayer
+    #     self.thread2.start()
 
     def createDataFrame(self):
-        res,lay = self.mcacore.createMcaDB(self.confname,jsondict)
-        print(res)
+        res, lay = self.mcacore.createMcaDB(self.confname, self.getJsonDict())
+        self.df = res
+        # print(self.df)
 
-        # if self.thread.isRunning():
-        #     # self.label_errormessage.setText('thread runs !!')
-        #     self.appendMessage("thread runs !!")
-        #     return
+    #     # if self.thread.isRunning():
+    #     #     # self.label_errormessage.setText('thread runs !!')
+    #     #     self.appendMessage("thread runs !!")
+    #     #     return
 
-        # if self.sender() == self.toolButton_updatedb:
-        #     self.createdataframe.setStatus("False")  # force to update
+    #     # if self.sender() == self.toolButton_updatedb:
+    #     #     self.createdataframe.setStatus("False")  # force to update
 
-        # # Clear dataFrame
-        # self.df = None
-        # # Get selects
-        # selects = self.mcacore.getSelects(self.getJsonDict())
+    #     # # Clear dataFrame
+    #     # self.df = None
+    #     # # Get selects
+    #     # selects = self.mcacore.getSelects(self.getJsonDict())
 
-        # # Fetch raw data from DB
-        # sql = {
-        #     # "final": self.lineEdit_sqlfinal.text(),
-        #     "final": self.textBrowser_sqlfinal.toPlainText(),
-        #     "critere": selects,
-        # }
+    #     # # Fetch raw data from DB
+    #     # sql = {
+    #     #     # "final": self.lineEdit_sqlfinal.text(),
+    #     #     "final": self.textBrowser_sqlfinal.toPlainText(),
+    #     #     "critere": selects,
+    #     # }
 
-        # layersql, sqltxt = self.prepareVLayerScript(sql)
-        # self.createdataframe.testsql = False
-        # self.createdataframe.scriptvl = sqltxt
-        # self.createdataframe.qgsvectorlay = layersql
-        # # self.createdataframe.filename = self.filevirtuallayer
-        # self.starttime = time.time()
-        # self.appendMessage("begin update  ")
-        # self.appendMessage(" SQL request :  ")
-        # self.appendMessage(sqltxt)
+    #     # layersql, sqltxt = self.prepareVLayerScript(sql)
+    #     # self.createdataframe.testsql = False
+    #     # self.createdataframe.scriptvl = sqltxt
+    #     # self.createdataframe.qgsvectorlay = layersql
+    #     # # self.createdataframe.filename = self.filevirtuallayer
+    #     # self.starttime = time.time()
+    #     # self.appendMessage("begin update  ")
+    #     # self.appendMessage(" SQL request :  ")
+    #     # self.appendMessage(sqltxt)
 
-        # self.thread.start()
+    #     # self.thread.start()
 
-    def createDataFrame2(self):
-        """
-        Fetch data from DB
-        :return:
-        """
-        if self.thread2.isRunning():
-            # self.label_errormessage.setText('thread runs !!')
-            self.appendMessage("thread runs !!")
-            return
+    # def createDataFrame2(self):
+    #     """
+    #     Fetch data from DB
+    #     :return:
+    #     """
+    #     if self.thread2.isRunning():
+    #         # self.label_errormessage.setText('thread runs !!')
+    #         self.appendMessage("thread runs !!")
+    #         return
 
-        # Clear dataFrame
-        self.df = None
-        # Get selects
-        selects = self.mcacore.getSelects(self.getJsonDict())
+    #     # Clear dataFrame
+    #     self.df = None
+    #     # Get selects
+    #     selects = self.mcacore.getSelects(self.getJsonDict())
 
-        # Fetch raw data from DB
-        sql = {
-            # "final": self.lineEdit_sqlfinal.text(),
-            "final": self.textBrowser_sqlfinal.toPlainText(),
-            "critere": selects,
-        }
-        scriptvl, sqltxt = self.prepareVLayerScript2(sql)
-        self.createdataframe2.testsql = False
-        self.createdataframe2.scriptvl = scriptvl
-        # self.createdataframe2.filename = self.filevirtuallayer
-        self.starttime = time.time()
-        self.appendMessage("begin update  ")
+    #     # Fetch raw data from DB
+    #     sql = {
+    #         # "final": self.lineEdit_sqlfinal.text(),
+    #         "final": self.textBrowser_sqlfinal.toPlainText(),
+    #         "critere": selects,
+    #     }
+    #     scriptvl, sqltxt = self.prepareVLayerScript2(sql)
+    #     self.createdataframe2.testsql = False
+    #     self.createdataframe2.scriptvl = scriptvl
+    #     # self.createdataframe2.filename = self.filevirtuallayer
+    #     self.starttime = time.time()
+    #     self.appendMessage("begin update  ")
 
-        self.thread2.start()
+    #     self.thread2.start()
 
-    def postVLayerProcessed(self, rawdata):
-        """
-         Called when the creation of virtual layer is done
-         :param rawdata: list of results of sql request
-         """
+    # def postVLayerProcessed(self, rawdata):
+    #     """
+    #      Called when the creation of virtual layer is done
+    #      :param rawdata: list of results of sql request
+    #      """
 
-        selects = self.mcacore.getSelects(self.getJsonDict())
+    #     selects = self.mcacore.getSelects(self.getJsonDict())
 
-        if self.createdataframe.testsql:
-            self.createdataframe.testsql = False
-            self.appendMessage(" : " + "results : ")
-            if len(rawdata) > 0:
-                tempdf = pd.DataFrame(rawdata)
-                tempdf.columns = selects
-                txttoshow = str(tempdf)
-                self.appendMessage(txttoshow)
-                self.toolButton_updatedb.setEnabled(True)
-            else:
-                txttoshow = "Requete mal construite"
-                self.toolButton_updatedb.setEnabled(False)
-                self.appendMessage(txttoshow)
-                sql = {
-                    # "final": self.lineEdit_sqlfinal.text(),
-                    "final": self.textBrowser_sqlfinal.toPlainText(),
-                    "critere": selects,
-                }
-                scriptvl, sqltxt = self.prepareVLayerScript(sql)
-                # self.appendMessage(scriptvl)
-                self.appendMessage(sqltxt)
+    #     if self.createdataframe.testsql:
+    #         self.createdataframe.testsql = False
+    #         self.appendMessage(" : " + "results : ")
+    #         if len(rawdata) > 0:
+    #             tempdf = pd.DataFrame(rawdata)
+    #             tempdf.columns = selects
+    #             txttoshow = str(tempdf)
+    #             self.appendMessage(txttoshow)
+    #             self.toolButton_updatedb.setEnabled(True)
+    #         else:
+    #             txttoshow = "Requete mal construite"
+    #             self.toolButton_updatedb.setEnabled(False)
+    #             self.appendMessage(txttoshow)
+    #             sql = {
+    #                 # "final": self.lineEdit_sqlfinal.text(),
+    #                 "final": self.textBrowser_sqlfinal.toPlainText(),
+    #                 "critere": selects,
+    #             }
+    #             scriptvl, sqltxt = self.prepareVLayerScript(sql)
+    #             # self.appendMessage(scriptvl)
+    #             self.appendMessage(sqltxt)
 
-        else:
-            self.cleanData(rawdata, selects)
-            # pprint(self.df)
-            self.createdataframe.setStatus("True")
+    #     else:
+    #         self.cleanData(rawdata, selects)
+    #         # pprint(self.df)
+    #         self.createdataframe.setStatus("True")
 
-        if self.starttime is not None:
-            self.appendMessage(
-                "end update  "
-                + str(round(time.time() - self.starttime, 2))
-                + " seconds"
-            )
-            self.starttime = None
+    #     if self.starttime is not None:
+    #         self.appendMessage(
+    #             "end update  "
+    #             + str(round(time.time() - self.starttime, 2))
+    #             + " seconds"
+    #         )
+    #         self.starttime = None
 
-    def postVLayerProcessed2(self, rawdata):
-        """
-        Called when the creation of virtual layer is done
-        :param rawdata: list of results of sql request
-        """
-        selects = self.mcacore.getSelects(self.getJsonDict())
+    # def postVLayerProcessed2(self, rawdata):
+    #     """
+    #     Called when the creation of virtual layer is done
+    #     :param rawdata: list of results of sql request
+    #     """
+    #     selects = self.mcacore.getSelects(self.getJsonDict())
 
-        if self.createdataframe2.testsql:
-            self.createdataframe2.testsql = False
-            self.appendMessage(" : " + "results : ")
-            if len(rawdata) > 0:
-                tempdf = pd.DataFrame(rawdata)
-                tempdf.columns = selects
-                txttoshow = str(tempdf)
-                self.appendMessage(txttoshow)
-                self.toolButton_updatedb.setEnabled(True)
-            else:
-                txttoshow = "Requete mal construite"
-                self.toolButton_updatedb.setEnabled(False)
-                self.appendMessage(txttoshow)
-                sql = {
-                    # "final": self.lineEdit_sqlfinal.text(),
-                    "final": self.textBrowser_sqlfinal.toPlainText(),
-                    "critere": selects,
-                }
-                scriptvl, sqltxt = self.prepareVLayerScript2(sql)
-                self.appendMessage(scriptvl)
-                self.appendMessage(sqltxt)
+    #     if self.createdataframe2.testsql:
+    #         self.createdataframe2.testsql = False
+    #         self.appendMessage(" : " + "results : ")
+    #         if len(rawdata) > 0:
+    #             tempdf = pd.DataFrame(rawdata)
+    #             tempdf.columns = selects
+    #             txttoshow = str(tempdf)
+    #             self.appendMessage(txttoshow)
+    #             self.toolButton_updatedb.setEnabled(True)
+    #         else:
+    #             txttoshow = "Requete mal construite"
+    #             self.toolButton_updatedb.setEnabled(False)
+    #             self.appendMessage(txttoshow)
+    #             sql = {
+    #                 # "final": self.lineEdit_sqlfinal.text(),
+    #                 "final": self.textBrowser_sqlfinal.toPlainText(),
+    #                 "critere": selects,
+    #             }
+    #             scriptvl, sqltxt = self.prepareVLayerScript2(sql)
+    #             self.appendMessage(scriptvl)
+    #             self.appendMessage(sqltxt)
 
-        else:
-            self.cleanData(rawdata, selects)
-            # pprint(self.df)
-            self.createdataframe2.setStatus("True")
-            self.appendMessage(
-                "end update  "
-                + str(round(time.time() - self.starttime, 2))
-                + " seconds"
-            )
+    #     else:
+    #         self.cleanData(rawdata, selects)
+    #         # pprint(self.df)
+    #         self.createdataframe2.setStatus("True")
+    #         self.appendMessage(
+    #             "end update  "
+    #             + str(round(time.time() - self.starttime, 2))
+    #             + " seconds"
+    #         )
 
-    def getSelects(self):
-        """
-        Loop through all criterias and get selects
-        :return: list, unique selects
-        """
+    # def getSelects(self):
+    #     """
+    #     Loop through all criterias and get selects
+    #     :return: list, unique selects
+    #     """
 
-        maintable, pkmaintable = self.getMainTable()
-        if maintable is None:
-            return None
+    #     maintable, pkmaintable = self.getMainTable()
+    #     if maintable is None:
+    #         return None
 
-        selects = [maintable + "." + pkmaintable]
+    #     selects = [maintable + "." + pkmaintable]
 
-        # Create iteraotr
-        iterator = QTreeWidgetItemIterator(self.treeWidget, QTreeWidgetItemIterator.All)
-        # Iterate through QTreeWidget
-        while iterator.value():
-            item = iterator.value()
-            lineeditselect = self.treeWidget.itemWidget(item, 1)
+    #     # Create iteraotr
+    #     iterator = QTreeWidgetItemIterator(self.treeWidget, QTreeWidgetItemIterator.All)
+    #     # Iterate through QTreeWidget
+    #     while iterator.value():
+    #         item = iterator.value()
+    #         lineeditselect = self.treeWidget.itemWidget(item, 1)
 
-            # Append selects if is QLineEdit and not empty
-            if isinstance(lineeditselect, QLineEdit) and lineeditselect.text() != "":
-                selects.extend(lineeditselect.text().split(", "))
-            iterator += 1
-        # Return unique values from selects
-        finalselects = []
-        for sel in selects:
-            if sel not in finalselects:
-                finalselects.append(sel)
+    #         # Append selects if is QLineEdit and not empty
+    #         if isinstance(lineeditselect, QLineEdit) and lineeditselect.text() != "":
+    #             selects.extend(lineeditselect.text().split(", "))
+    #         iterator += 1
+    #     # Return unique values from selects
+    #     finalselects = []
+    #     for sel in selects:
+    #         if sel not in finalselects:
+    #             finalselects.append(sel)
 
-        return finalselects
+    #     return finalselects
 
-    def queryDB(self, selects):
-        """
-        Fetch data from DB
-        :param selects: list, unique selects
-        :return: 2D array,
-        """
-        if selects is False or selects is None or len(selects) == 0:
-            selects = self.mcacore.getSelects(self.getJsonDict())
-        sql = {
-            # "final": self.lineEdit_sqlfinal.text(),
-            "final": self.textBrowser_sqlfinal.toPlainText(),
-            "critere": selects,
-        }
+    # def queryDB(self, selects):
+    #     """
+    #     Fetch data from DB
+    #     :param selects: list, unique selects
+    #     :return: 2D array,
+    #     """
+    #     if selects is False or selects is None or len(selects) == 0:
+    #         selects = self.mcacore.getSelects(self.getJsonDict())
+    #     sql = {
+    #         # "final": self.lineEdit_sqlfinal.text(),
+    #         "final": self.textBrowser_sqlfinal.toPlainText(),
+    #         "critere": selects,
+    #     }
 
-        sqlvlayer, sqltxt = self.prepareVLayerScript2(sql)
-        rawdata = self.processVLayer(sqlvlayer)
-        return rawdata
+    #     sqlvlayer, sqltxt = self.prepareVLayerScript2(sql)
+    #     rawdata = self.processVLayer(sqlvlayer)
+    #     return rawdata
 
-    def cleanData(self, rawdata, selects):
-        """
-        Clean data, dataFrame and rename headers
-        :param rawdata: 2D array,
-        :param selects: list, selects (columns name)
-        """
-        self.df = pd.DataFrame(rawdata)
-        nbrecolumn1 = len(self.df.columns)
-        nbrecolumn2 = len(selects)
-        # Rename self.df headers
-        if nbrecolumn1 == nbrecolumn2:
-            self.df.columns = selects
-        else:
-            print("Error cleaing datas")
-            pprint(self.df)
-            print(selects)
-        # pprint(self.df)
+    # def cleanData(self, rawdata, selects):
+    #     """
+    #     Clean data, dataFrame and rename headers
+    #     :param rawdata: 2D array,
+    #     :param selects: list, selects (columns name)
+    #     """
+    #     self.df = pd.DataFrame(rawdata)
+    #     nbrecolumn1 = len(self.df.columns)
+    #     nbrecolumn2 = len(selects)
+    #     # Rename self.df headers
+    #     if nbrecolumn1 == nbrecolumn2:
+    #         self.df.columns = selects
+    #     else:
+    #         print("Error cleaing datas")
+    #         pprint(self.df)
+    #         print(selects)
+    #     # pprint(self.df)
 
     # def prepareVLayerScript(self, sqlsict):
     #     """
@@ -1087,56 +1115,56 @@ class AMCWindow(QDialog):
 
     #     return layersql, sqlfinal
 
-    def prepareVLayerScript2(self, sqlsict):
-        """
-        Construct virtual layer of raw sql script
-        :param sqlsict:
-        :return: the script used in virtual layer creation
-        """
-        debug = False
+    # def prepareVLayerScript2(self, sqlsict):
+    #     """
+    #     Construct virtual layer of raw sql script
+    #     :param sqlsict:
+    #     :return: the script used in virtual layer creation
+    #     """
+    #     debug = False
 
-        if debug:
-            logging.getLogger("Lamia").debug("sqlsict %s", str(sqlsict))
+    #     if debug:
+    #         logging.getLogger("Lamia").debug("sqlsict %s", str(sqlsict))
 
-        layers = {}
-        # build sql
-        sqlfinal = " SELECT "
-        for sql in sqlsict["critere"]:
-            layersql, sentencesql = self.analyseRawSQL2(sql)
-            for vlayername, vlayersql in layersql:
-                if vlayername not in layers.keys():
-                    layers[vlayername] = vlayersql
-            sqlfinal += sentencesql + ", "
-        sqlfinal = sqlfinal[:-2]
-        layersql, sentencesql = self.analyseRawSQL2(sqlsict["final"])
+    #     layers = {}
+    #     # build sql
+    #     sqlfinal = " SELECT "
+    #     for sql in sqlsict["critere"]:
+    #         layersql, sentencesql = self.analyseRawSQL2(sql)
+    #         for vlayername, vlayersql in layersql:
+    #             if vlayername not in layers.keys():
+    #                 layers[vlayername] = vlayersql
+    #         sqlfinal += sentencesql + ", "
+    #     sqlfinal = sqlfinal[:-2]
+    #     layersql, sentencesql = self.analyseRawSQL2(sqlsict["final"])
 
-        for vlayername, vlayersql in layersql:
-            if vlayername not in layers.keys():
-                layers[vlayername] = vlayersql
+    #     for vlayername, vlayersql in layersql:
+    #         if vlayername not in layers.keys():
+    #             layers[vlayername] = vlayersql
 
-        sqlfinal += sentencesql
+    #     sqlfinal += sentencesql
 
-        sqlfinal = self.dbase.updateQueryTableNow(sqlfinal)
+    #     sqlfinal = self.dbase.updateQueryTableNow(sqlfinal)
 
-        if debug:
-            logging.getLogger("Lamia").debug("********************* ")
-            logging.getLogger("Lamia").debug("layers %s", str(layers))
-            logging.getLogger("Lamia").debug("sqlfinal %s", str(sqlfinal))
+    #     if debug:
+    #         logging.getLogger("Lamia").debug("********************* ")
+    #         logging.getLogger("Lamia").debug("layers %s", str(layers))
+    #         logging.getLogger("Lamia").debug("sqlfinal %s", str(sqlfinal))
 
-        # Build final script for virtual layer
-        scriptvl = "?" + "&".join([layers[key] for key in layers.keys()])
+    #     # Build final script for virtual layer
+    #     scriptvl = "?" + "&".join([layers[key] for key in layers.keys()])
 
-        if sys.version_info.major == 2:
-            scriptvl += "&query=" + str(QtCore.QUrl.toPercentEncoding(sqlfinal))
-        elif sys.version_info.major == 3:
-            scriptvl += "&query=" + QtCore.QUrl.toPercentEncoding(
-                sqlfinal
-            ).data().decode("utf-8")
+    #     if sys.version_info.major == 2:
+    #         scriptvl += "&query=" + str(QtCore.QUrl.toPercentEncoding(sqlfinal))
+    #     elif sys.version_info.major == 3:
+    #         scriptvl += "&query=" + QtCore.QUrl.toPercentEncoding(
+    #             sqlfinal
+    #         ).data().decode("utf-8")
 
-        if debug:
-            logging.getLogger("Lamia").debug("scriptvl %s", str(scriptvl))
+    #     if debug:
+    #         logging.getLogger("Lamia").debug("scriptvl %s", str(scriptvl))
 
-        return scriptvl, sqlfinal
+    #     return scriptvl, sqlfinal
 
     # def analyseRawSQL(self, sql):
     #     """
@@ -1225,7 +1253,7 @@ class AMCWindow(QDialog):
 
     #     return layersql, sentencesql
 
-    def analyseRawSQL2(self, sql):
+    def analyseRawSQL2_old(self, sql):
         """
         Preparing data to be inserted in a virtual layer - process the FROM part of sql sentence
 
@@ -1362,7 +1390,7 @@ class AMCWindow(QDialog):
 
     # |---------- GET BAREME ----------|
 
-    def getBareme(self, node):
+    def getBareme_old(self, node):
         """
         Retrieve route to bareme from current node
         :return: dict, bareme
@@ -1434,12 +1462,19 @@ class AMCWindow(QDialog):
 
     # |---------- CALCULUS ----------|
 
-    def calculus(self, node):
+    def calculus_old(self, node):
         # Get data
         # if hasattr(self, "createdataframe"):
-        if not self.createdataframe.getVirtualLayerUpdateStatus:
-            self.createDataFrame()
-            return None
+        fromup, selectup = self.mcacore.checkVLayerUpdate(
+            self.confname, self.getJsonDict()
+        )
+        if not fromup or not selectup or self.df is None:
+            print("update DB first")
+            return
+
+        # if not self.createdataframe.getVirtualLayerUpdateStatus:
+        #     self.createDataFrame()
+        #     return None
         # else:
         #     if not self.createdataframe2.getVirtualLayerUpdateStatus:
         #         self.createDataFrame2()
@@ -1462,6 +1497,7 @@ class AMCWindow(QDialog):
             defaultValue = 0
 
         # Create df with only selects from current line
+        print("*", selects, self.df.columns)
         for select in selects:
             dummyDF[select] = self.df[select]
 
@@ -1480,7 +1516,7 @@ class AMCWindow(QDialog):
 
         return res
 
-    def someFct(self, value, dct, typelist, defaultValue=0):
+    def someFct_old(self, value, dct, typelist, defaultValue=0):
         """
         :param value: int, str, value to test
         :param dct: dict, bareme
@@ -1533,17 +1569,17 @@ class AMCWindow(QDialog):
         except KeyError:
             return 0
 
-    def getTypeList(self, df):
+    def getTypeList_old(self, df):
         typevalues = []
         dfT = df.transpose()
         for col in dfT:
             for elem in col:
-                if not self.dbase.isAttributeNull(elem):
+                if not self.mcacore.dbase.utils.isAttributeNull(elem):
                     typevalues.append(type(elem))
                     break
         return typevalues
 
-    def getMainTable(self):
+    def getMainTable_old(self):
         # sqlfrom = self.lineEdit_sqlfinal.text()
         sqlfrom = self.textBrowser_sqlfinal.toPlainText()
 
@@ -1607,268 +1643,3 @@ class AMCWindow(QDialog):
             self.thread.terminate()
             self.thread.wait()
 
-
-# class MCAVirtualLayer(QtCore.QObject):
-
-#     finished = QtCore.pyqtSignal(list)
-#     dbasestatus = QtCore.pyqtSignal(str)
-#     message = QtCore.pyqtSignal(str)
-
-#     # def __init__(self, mcacore=None, confname=None, scriptvl=None, filename=None):
-#     def __init__(self, mcacore=None, confname=None, scriptvl=None):
-#         super(MCAVirtualLayer, self).__init__()
-#         self.mcacore = mcacore
-#         self.confname = confname
-#         self.scriptvl = scriptvl
-#         self.filename = self.mcacore.getSqliteFileFromConf(confname)
-#         # self.virtuallayerdbase = DBaseParser()
-#         self.virtuallayerdbase = DBaseParserFactory("spatialite").getDbaseParser()
-#         self.testsql = False
-#         self.qgsvectorlay = None
-#         self.projectcrs = None
-
-#         self.createTable()
-
-#     def processVLayer(self):
-#         rawData = []
-#         if not self.testsql:
-#             self.dbasestatus.emit("DBase updating...")
-#             if os.path.isfile(self.filename):
-#                 # get update
-#                 self.virtuallayerdbase.connectToDBase(slfile=self.filename)
-#                 updated = self.getVirtualLayerUpdateStatus()
-
-#                 if updated:
-#                     pass
-#                 else:
-#                     self.createTempSpatialite()
-#                     sql = "DROP TABLE results"
-#                     self.virtuallayerdbase.query(sql)
-#                     sql = "CREATE TABLE results AS  "
-#                     sql += self.scriptvl
-#                     self.virtuallayerdbase.query(sql)
-#             else:
-#                 self.createTable()
-
-#             # get resultts
-#             uri = qgis.core.QgsDataSourceUri()
-#             uri.setDatabase(self.filename)
-#             schema = ""
-#             table = "results"
-#             geom_column = ""
-#             uri.setDataSource(schema, table, geom_column)
-
-#             resultlayer = qgis.core.QgsVectorLayer(uri.uri(), "temp", "spatialite")
-#             resultlayer.setProviderEncoding("UTF-8")
-
-#             for fet in resultlayer.getFeatures():
-#                 # self.textBrowser_res.append(str(fet.attributes()))
-#                 rawData.append(fet.attributes())
-
-#         else:
-#             if not os.path.isfile(self.filename):
-#                 self.createTable()
-#             # another test
-#             self.virtuallayerdbase.connectToDBase(slfile=self.filename)
-#             sql = "SELECT updatestatus FROM  'Lamia.config'"
-#             res = self.virtuallayerdbase.query(sql)
-#             if res is None:
-#                 self.createTable()
-#             self.createTempSpatialite()
-#             self.virtuallayerdbase.connectToDBase(slfile=self.filename)
-#             # self.virtuallayerdbase.errorquerymessage.connect(self.emitMessage)
-#             # self.virtuallayerdbase.messageinstance.showErrorMessage()
-#             # self.emitMessage("Debut de la requete ... ")
-#             sql = self.scriptvl
-#             res = self.virtuallayerdbase.query(sql)
-#             if res is not None:
-#                 rawData = list(res)
-#             # self.virtuallayerdbase.errorquerymessage.disconnect(self.emitMessage)
-
-#         self.finished.emit(rawData)
-
-#     def emitMessage(self, message):
-#         self.message.emit(message)
-
-#     def createTempSpatialite(self):
-
-#         self.virtuallayerdbase.connectToDBase(slfile=self.filename)
-
-#         for layname, lay in self.qgsvectorlay:
-#             # saveresults
-#             options = qgis.core.QgsVectorFileWriter.SaveVectorOptions()
-#             if os.path.isfile(self.filename):
-#                 options.actionOnExistingFile = (
-#                     qgis.core.QgsVectorFileWriter.CreateOrOverwriteLayer
-#                 )
-#             options.layerName = layname
-#             options.driverName = "sqlite"
-#             options.fileEncoding = "UTF-8"
-#             writer = qgis.core.QgsVectorFileWriter.writeAsVectorFormat(
-#                 lay, self.filename, options
-#             )
-
-#         self.emitMessage("Tables importées")
-
-#     def writeResults(self, vlayer, filename):
-#         # saveresults
-#         options = qgis.core.QgsVectorFileWriter.SaveVectorOptions()
-#         options.actionOnExistingFile = (
-#             qgis.core.QgsVectorFileWriter.CreateOrOverwriteLayer
-#         )
-#         options.layerName = "results"
-#         options.driverName = "sqlite"
-#         options.fileEncoding = "UTF-8"
-#         writer = qgis.core.QgsVectorFileWriter.writeAsVectorFormat(
-#             vlayer, filename, options
-#         )
-
-#     def createTable(self):
-
-#         if not os.path.isfile(self.filename):
-
-#             originalfile = os.path.join(
-#                 os.path.dirname(Lamia.api.__file__), "assets", "DBase_ind0.sqlite"
-#             )
-#             shutil.copyfile(originalfile, self.filename)
-
-#             self.virtuallayerdbase.connectToDBase(slfile=self.filename)
-#             sql = "CREATE TABLE 'Lamia.config' (updatestatus TEXT)"
-#             res = self.virtuallayerdbase.query(sql)
-#             sql = "INSERT INTO  'Lamia.config' (updatestatus) VALUES ('False')"
-#             self.virtuallayerdbase.query(sql)
-
-#         self.emitMessage(".sqlite créé")
-
-#     def setStatus(self, newstatus):
-#         # print("**", self.filename)
-
-#         self.virtuallayerdbase.connectToDBase(slfile=self.filename)
-#         sql = "UPDATE 'Lamia.config' SET updatestatus = '" + str(newstatus) + "'"
-#         self.virtuallayerdbase.query(sql)
-#         if newstatus == "True":
-#             self.dbasestatus.emit("DBase updated")
-#         else:
-#             self.dbasestatus.emit("DBase modified - needs an update")
-
-#     def getVirtualLayerUpdateStatus(self):
-#         if os.path.isfile(self.filename):
-#             self.virtuallayerdbase.connectToDBase(self.filename)
-#             sql = "SELECT updatestatus FROM 'Lamia.config'"
-#             res = self.virtuallayerdbase.query(sql, docommit=False)
-#             if res is not None:
-#                 if res[0][0] == "True":
-#                     return True
-#                 else:
-#                     return False
-#             else:
-#                 return False
-#         else:
-#             return False
-
-
-# class CreateDataframe2(QtCore.QObject):
-
-#     finished = QtCore.pyqtSignal(list)
-#     dbasestatus = QtCore.pyqtSignal(str)
-
-#     def __init__(self, scriptvl=None, filename=None):
-#         super(CreateDataframe2, self).__init__()
-#         self.scriptvl = scriptvl
-#         self.filename = filename
-#         self.virtuallayerdbase = DBaseParser()
-#         self.testsql = False
-
-#     def processVLayer(self):
-
-#         rawData = []
-#         if not self.testsql:
-#             self.dbasestatus.emit("DBase updating...")
-#             if os.path.isfile(self.filename):
-#                 # get update
-#                 updated = self.getVirtualLayerUpdateStatus()
-
-#                 if updated:
-#                     pass
-#                 else:
-#                     sqlitefilename = "file:///" + self.filename
-#                     vlayer = qgis.core.QgsVectorLayer(
-#                         sqlitefilename + self.scriptvl, "vlayer", "virtual"
-#                     )
-#                     self.writeResults(vlayer, self.filename)
-#                     self.createStatusTable()
-
-#             else:
-#                 sqlitefilename = "file:///" + self.filename
-#                 vlayer = qgis.core.QgsVectorLayer(
-#                     sqlitefilename + self.scriptvl, "vlayer", "virtual"
-#                 )
-#                 self.writeResults(vlayer, self.filename)
-#                 self.createStatusTable()
-
-#             # get resultts
-#             uri = qgis.core.QgsDataSourceUri()
-#             uri.setDatabase(self.filename)
-#             schema = ""
-#             table = "results"
-#             geom_column = ""
-#             uri.setDataSource(schema, table, geom_column)
-
-#             resultlayer = qgis.core.QgsVectorLayer(uri.uri(), "temp", "spatialite")
-#             for fet in resultlayer.getFeatures():
-#                 # self.textBrowser_res.append(str(fet.attributes()))
-#                 rawData.append(fet.attributes()[1:-1])  # 1 is a pk and -1 geometry
-
-#         else:
-#             vlayer = qgis.core.QgsVectorLayer(self.scriptvl, "vlayer", "virtual")
-#             for fet in vlayer.getFeatures():
-#                 # self.textBrowser_res.append(str(fet.attributes()))
-#                 rawData.append(fet.attributes())
-
-#         self.finished.emit(rawData)
-
-#     def writeResults(self, vlayer, filename):
-#         # saveresults
-#         options = qgis.core.QgsVectorFileWriter.SaveVectorOptions()
-#         options.actionOnExistingFile = (
-#             qgis.core.QgsVectorFileWriter.CreateOrOverwriteLayer
-#         )
-#         options.layerName = "results"
-#         options.driverName = "sqlite"
-#         options.fileEncoding = "UTF-8"
-#         writer = qgis.core.QgsVectorFileWriter.writeAsVectorFormat(
-#             vlayer, filename, options
-#         )
-
-#     def createStatusTable(self):
-
-#         self.virtuallayerdbase.connectToDBase(slfile=self.filename)
-#         sql = "CREATE TABLE Lamia.config (updatestatus TEXT)"
-#         res = self.virtuallayerdbase.query(sql)
-#         sql = "INSERT INTO  Lamia.config (updatestatus) VALUES ('False')"
-#         self.virtuallayerdbase.query(sql)
-
-#     def setStatus(self, newstatus):
-
-#         self.virtuallayerdbase.connectToDBase(slfile=self.filename)
-#         sql = "UPDATE Lamia.config SET updatestatus = '" + str(newstatus) + "'"
-#         self.virtuallayerdbase.query(sql)
-#         if newstatus == "True":
-#             self.dbasestatus.emit("DBase updated")
-#         else:
-#             self.dbasestatus.emit("DBase modified - needs an update")
-
-#     def getVirtualLayerUpdateStatus(self):
-#         if os.path.isfile(self.filename):
-#             self.virtuallayerdbase.connectToDBase(self.filename)
-#             sql = "SELECT updatestatus FROM Lamia.config"
-#             res = self.virtuallayerdbase.query(sql, docommit=False)
-#             if res is not None:
-#                 if res[0][0] == "True":
-#                     return True
-#                 else:
-#                     return False
-#             else:
-#                 return False
-#         else:
-#             return False

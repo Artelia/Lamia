@@ -2,19 +2,34 @@
 
 
 from qgis.PyQt import uic, QtCore, QtGui
+import qgis.utils
 import os, re
 import sys
 import qgis.core
 import logging
 
-try:
-    from qgis.PyQt.QtGui import (QApplication, QComboBox, QDialog, QDoubleSpinBox, QHeaderView, QInputDialog, QLabel,
-                                 QLineEdit, QMainWindow, QMenu, QMessageBox, QSpinBox, QTextBrowser, QToolButton, QTreeWidgetItem,
-                                 QTreeWidgetItemIterator, QWidget, UserRole, QComboBox)
-except ImportError:
-    from qgis.PyQt.QtWidgets import (QApplication, QComboBox, QDialog, QDoubleSpinBox, QHeaderView, QInputDialog,
-                                     QLabel, QLineEdit, QMainWindow, QMenu, QMessageBox, QSpinBox, QTextBrowser, QToolButton,
-                                     QTreeWidgetItem, QTreeWidgetItemIterator, QWidget, QComboBox)
+
+from qgis.PyQt.QtWidgets import (
+    QApplication,
+    QComboBox,
+    QDialog,
+    QDoubleSpinBox,
+    QHeaderView,
+    QInputDialog,
+    QLabel,
+    QLineEdit,
+    QMainWindow,
+    QMenu,
+    QMessageBox,
+    QSpinBox,
+    QTextBrowser,
+    QToolButton,
+    QTreeWidgetItem,
+    QTreeWidgetItemIterator,
+    QWidget,
+    QComboBox,
+)
+
 # Import custom comboBox
 from .qComboCheckBox import CheckableComboBox
 
@@ -26,10 +41,9 @@ import inspect
 
 
 class WidgetBareme(QDialog):
-
     def __init__(self, qPushButttonPlus, parent=None):
         super(WidgetBareme, self).__init__(parent=parent)
-        uipath = os.path.join(os.path.dirname(__file__), 'widgetBareme.ui')
+        uipath = os.path.join(os.path.dirname(__file__), "widgetBareme.ui")
         uic.loadUi(uipath, self)
 
         # Debug
@@ -50,7 +64,7 @@ class WidgetBareme(QDialog):
         self.df = None
         self.numpyy = None
         self.tablesinsql = []
-        self.uniqueListRaw=[]
+        self.uniqueListRaw = []
         self.uniqueListCst = []
 
         # Init dict
@@ -58,7 +72,9 @@ class WidgetBareme(QDialog):
 
         # Init qTreeWidget
         self.menuitem = None
-        self.maintreewdgitem = QTreeWidgetItem(self.twBareme.invisibleRootItem(), ["Bareme"])
+        self.maintreewdgitem = QTreeWidgetItem(
+            self.twBareme.invisibleRootItem(), ["Bareme"]
+        )
         self.twBareme.customContextMenuRequested.connect(self.openMenu)
 
         # Right click on criteria
@@ -88,7 +104,7 @@ class WidgetBareme(QDialog):
         # self.df = pd.DataFrame(self.result)
         # self.getBoundaries()
 
-        #self.numpyy = np.array(self.result)
+        # self.numpyy = np.array(self.result)
         self.numpyy = self.df.values
 
         # Find all types
@@ -108,10 +124,7 @@ class WidgetBareme(QDialog):
 
         self.twBareme.expandAll()
 
-
         return True
-
-
 
     def getBoundaries(self):
         bounds = ""
@@ -122,75 +135,87 @@ class WidgetBareme(QDialog):
             self.uniqueListRaw.append([])
             self.uniqueListCst.append([])
 
-            if self.getVarType(self.types[i]) == 'float' :
+            if self.getVarType(self.types[i]) == "float":
                 bounds += str(self.df.iloc[:, i].min()) + ", "
                 bounds += str(self.df.iloc[:, i].max()) + ", "
             else:
                 uniqueList = np.unique(self.numpyy[:, i]).tolist()
                 for item in uniqueList:
-                    if self.dbase.isAttributeNull(item) :
-                        if (len(self.uniqueListRaw[i])>0 and self.uniqueListRaw[i][0] != None):
-                            self.uniqueListRaw[i].insert(0, 'None')
-                            self.uniqueListCst[i].insert(0, 'None')
+                    if self.dbase.utils.isAttributeNull(item):
+                        if (
+                            len(self.uniqueListRaw[i]) > 0
+                            and self.uniqueListRaw[i][0] != None
+                        ):
+                            self.uniqueListRaw[i].insert(0, "None")
+                            self.uniqueListCst[i].insert(0, "None")
                         continue
 
                     self.uniqueListRaw[i].append(item)
-                    self.uniqueListCst[i].append(self.getConstraintTextFromRawValue(item))
+                    self.uniqueListCst[i].append(
+                        self.getConstraintTextFromRawValue(item)
+                    )
 
-                    if not self.dbase.isAttributeNull(item):
+                    if not self.dbase.utils.isAttributeNull(item):
                         bounds += str(item) + ", "
 
         boundsList = set(bounds[:-2].split())
 
         self.lBornes.setText(", ".join(boundsList))
 
-
     def getVarType(self, typevar):
         if typevar in [np.int8, np.int16, np.int32, np.int64, np.float32, np.float64]:
-            return 'float'
+            return "float"
         else:
-            return 'text'
+            return "text"
 
     def getSelects(self):
         """
         Retrieve select from current node
         Retrieve table in request
         """
-        print("|__ Enter {fct}".format(fct=inspect.stack()[0][3])) if self.isDebug else None
+        print(
+            "|__ Enter {fct}".format(fct=inspect.stack()[0][3])
+        ) if self.isDebug else None
 
-        #get vars
-        lineEditSelect = self.simulationWidget.treeWidget.itemWidget(self.qtreewidgetitm, 1)
+        # get vars
+        lineEditSelect = self.simulationWidget.treeWidget.itemWidget(
+            self.qtreewidgetitm, 1
+        )
         self.vars = lineEditSelect.text().split(", ")
-        lineedittextsplitted = re.split('[ ._()]', lineEditSelect.text())
+        lineedittextsplitted = re.split("[ ._()]", lineEditSelect.text())
 
-        #get tables
+        # get tables
         for table in lineedittextsplitted:
             if table in self.dbase.dbasetables.keys():
                 for field in lineedittextsplitted:
-                    if field in self.dbase.dbasetables[table]['fields'].keys():
-                        self.tablesinsql.append(table + '.' + field)
+                    if field in self.dbase.dbasetables[table]["fields"].keys():
+                        self.tablesinsql.append(table + "." + field)
 
-        print("|__ Exit {fct}".format(fct=inspect.stack()[0][3])) if self.isDebug else None
-
-
+        print(
+            "|__ Exit {fct}".format(fct=inspect.stack()[0][3])
+        ) if self.isDebug else None
 
     def updateSelectLabel(self):
         """
         Update self.lVariables label with current select value
         """
-        print("| Enter {fct}".format(fct=inspect.stack()[0][3])) if self.isDebug else None
+        print(
+            "| Enter {fct}".format(fct=inspect.stack()[0][3])
+        ) if self.isDebug else None
 
         variables = ", ".join(self.vars)
         self.lVariables.setText(variables)
 
-        print("| Exit {fct}".format(fct=inspect.stack()[0][3])) if self.isDebug else None
+        print(
+            "| Exit {fct}".format(fct=inspect.stack()[0][3])
+        ) if self.isDebug else None
 
     def findTypes(self):
         """
         Find data type from dataFrame
         """
         columns = list(self.df)
-        self.types=[]
+        self.types = []
         for col in columns:
             self.types.append(type(self.df[col][0]))
 
@@ -209,14 +234,15 @@ class WidgetBareme(QDialog):
             try:
                 self.df = self.simulationWidget.df[self.vars]
                 return True
-            except Exception as e :
-                self.simulationWidget.appendMessage('Erreur : la variable ne se trouve pas dans la base de données')
-                self.simulationWidget.appendMessage('Mettre à jour la base de données')
-                print('error', e)
+            except Exception as e:
+                self.simulationWidget.appendMessage(
+                    "Erreur : la variable ne se trouve pas dans la base de données"
+                )
+                self.simulationWidget.appendMessage("Mettre à jour la base de données")
+                print("error", e)
                 return False
 
         return False
-
 
     # +--------------------------------+
     # |---------- TREEWIDGET ----------|
@@ -226,9 +252,11 @@ class WidgetBareme(QDialog):
         """
         Clear self.twBareme, create correct number of columns
         """
-        print("|__ Enter {fct}".format(fct=inspect.stack()[0][3])) if self.isDebug else None
+        print(
+            "|__ Enter {fct}".format(fct=inspect.stack()[0][3])
+        ) if self.isDebug else None
 
-        #clear all
+        # clear all
         for i in reversed(range(self.maintreewdgitem.childCount())):
             self.maintreewdgitem.removeChild(self.maintreewdgitem.child(i))
 
@@ -245,7 +273,9 @@ class WidgetBareme(QDialog):
         self.twBareme.header().resizeSection(1, 100)
         self.twBareme.header().resizeSection(2, 100)
 
-        print("|__ Exit {fct}".format(fct=inspect.stack()[0][3])) if self.isDebug else None
+        print(
+            "|__ Exit {fct}".format(fct=inspect.stack()[0][3])
+        ) if self.isDebug else None
 
     def openMenu(self, position):
         self.menuitem = self.twBareme.currentItem()
@@ -257,17 +287,18 @@ class WidgetBareme(QDialog):
         :param actionname: ?????????????
         :return: qTreeWidgetItem, ?????????????
         """
-        print("| Enter {fct}".format(fct=inspect.stack()[0][3])) if self.isDebug else None
+        print(
+            "| Enter {fct}".format(fct=inspect.stack()[0][3])
+        ) if self.isDebug else None
 
         # Add new item
         if actionname.text() == self.tr("Add line"):
             levelitem = self.getItemLevel(self.menuitem)
-            if levelitem >= len(self.vars) -1:
+            if levelitem >= len(self.vars) - 1:
                 return
 
             # Create empty item from parent item
             qtreewidgetitm = QTreeWidgetItem(self.menuitem, [""])
-
 
             # Add widgets to new item
             self.widgetsToNewItem(qtreewidgetitm)
@@ -275,21 +306,24 @@ class WidgetBareme(QDialog):
             if isinstance(self.twBareme.itemWidget(qtreewidgetitm, 1), QDoubleSpinBox):
                 self.twBareme.itemWidget(qtreewidgetitm, 1).valueChanged.emit(0.0)
 
-
             return qtreewidgetitm
 
         # Delete current row
         elif actionname.text() == self.tr("Remove line"):
             self.menuitem.parent().removeChild(self.menuitem)
 
-        print("| Exit {fct}".format(fct=inspect.stack()[0][3])) if self.isDebug else None
+        print(
+            "| Exit {fct}".format(fct=inspect.stack()[0][3])
+        ) if self.isDebug else None
 
     def widgetsToNewItem(self, qtreewidgetitm):
         """
         Add widgets to new item
         :param qtreewidgetitm: qTreeWidgetItem, row where to insert new widgets
         """
-        print("|__ Enter {fct}".format(fct=inspect.stack()[0][3])) if self.isDebug else None
+        print(
+            "|__ Enter {fct}".format(fct=inspect.stack()[0][3])
+        ) if self.isDebug else None
 
         # Get level
         levelitem = self.getItemLevel(qtreewidgetitm)
@@ -298,7 +332,14 @@ class WidgetBareme(QDialog):
         qtreewidgetitm.setText(0, self.vars[levelitem])
 
         # Create QDoubleSpinBox if numeric, QComboBox otherwise
-        if self.types[levelitem] in [np.int8, np.int16, np.int32, np.int64, np.float32, np.float64]:
+        if self.types[levelitem] in [
+            np.int8,
+            np.int16,
+            np.int32,
+            np.int64,
+            np.float32,
+            np.float64,
+        ]:
             valueWidget = QDoubleSpinBox()
             valueWidget.setMaximum(999999.0)
             valueWidget.setKeyboardTracking(False)
@@ -310,9 +351,9 @@ class WidgetBareme(QDialog):
             # combomodel = QStandardItemModel(3, 1)
 
         # Fill CheckableComboBox if necessary
-        if  isinstance(valueWidget, CheckableComboBox):
+        if isinstance(valueWidget, CheckableComboBox):
             #        self.uniqueListRaw=[]
-            #self.uniqueListCst = []
+            # self.uniqueListCst = []
             for item in self.uniqueListCst[levelitem]:
                 valueWidget.addItem(item)
 
@@ -325,21 +366,23 @@ class WidgetBareme(QDialog):
         # Open tree
         self.maintreewdgitem.setExpanded(True)
 
-        print("|__ Exit {fct}".format(fct=inspect.stack()[0][3])) if self.isDebug else None
+        print(
+            "|__ Exit {fct}".format(fct=inspect.stack()[0][3])
+        ) if self.isDebug else None
 
     def getConstraintTextFromRawValue(self, value):
         valueprocessed = value
 
         for tablefield in self.tablesinsql:
-            table, field = tablefield.split('.')
-            if 'Cst' in self.dbase.dbasetables[table]['fields'][field]:
-                valueprocessed = self.dbase.getConstraintTextFromRawValue(table, field, value)
+            table, field = tablefield.split(".")
+            if "Cst" in self.dbase.dbasetables[table]["fields"][field]:
+                valueprocessed = self.dbase.getConstraintTextFromRawValue(
+                    table, field, value
+                )
                 if value != valueprocessed:
                     return valueprocessed
 
         return valueprocessed
-
-
 
     def getItemLevel(self, qtreewdgitem):
 
@@ -350,7 +393,7 @@ class WidgetBareme(QDialog):
             return -1
 
         compt = 0
-        while  qtreewdgitem.parent() != self.maintreewdgitem:
+        while qtreewdgitem.parent() != self.maintreewdgitem:
             compt += 1
             qtreewdgitem = qtreewdgitem.parent()
 
@@ -407,8 +450,9 @@ class WidgetBareme(QDialog):
 
         if len(set(selectedItems)) != len(selectedItems):
             titleErr = "Error at {node}".format(node=node.text(0))
-            msgErr = "Expected: [{expected}] \nGot: [{got}]".format(expected=", ".join(set(selectedItems)),
-                                                                   got=", ".join(selectedItems))
+            msgErr = "Expected: [{expected}] \nGot: [{got}]".format(
+                expected=", ".join(set(selectedItems)), got=", ".join(selectedItems)
+            )
             QMessageBox.warning(None, titleErr, msgErr)
             return False
         return True
@@ -428,7 +472,7 @@ class WidgetBareme(QDialog):
         """
         Close current window and open/show AMC window
         """
-        if self.dbase.qgsiface is None:
+        if qgis.utils.iface is None:
             pass
         else:
             self.close()
@@ -441,8 +485,11 @@ class WidgetBareme(QDialog):
         :param dct: dict, contain elements from current node
         :param parentKey: str, current looped key. Init at "" for root
         """
-        print("|__ Enter {fct}, node: {node}".format(fct=inspect.stack()[0][3], node=node.text(0))) if self.isDebug \
-            else None
+        print(
+            "|__ Enter {fct}, node: {node}".format(
+                fct=inspect.stack()[0][3], node=node.text(0)
+            )
+        ) if self.isDebug else None
 
         if node.parent():
 
@@ -458,11 +505,12 @@ class WidgetBareme(QDialog):
             elif isinstance(secondColumn, CheckableComboBox):
                 value = secondColumn.getChecked()
                 level = self.getItemLevel(node)
-                tosavevalues=[]
+                tosavevalues = []
                 for elem in value:
-                    tosavevalues.append(self.uniqueListRaw[level][self.uniqueListCst[level].index(elem)])
+                    tosavevalues.append(
+                        self.uniqueListRaw[level][self.uniqueListCst[level].index(elem)]
+                    )
                 value = tosavevalues
-
 
             # Get weighting
             spinboxValueWeighting = self.twBareme.itemWidget(node, 2)
@@ -475,7 +523,7 @@ class WidgetBareme(QDialog):
         # Get number of child
         childNr = node.childCount()
 
-        if childNr > 0: # TODO: <----- Confirm necessity
+        if childNr > 0:  # TODO: <----- Confirm necessity
             print("|____", node.text(0), "has child") if self.isDebug else None
 
             # Loop through children and add them to dct
@@ -491,8 +539,11 @@ class WidgetBareme(QDialog):
                 # Loop through children recursively
                 self.visitTree(child, dct[currentKey], currentKey)
 
-        print("|__ Exit {fct}, node: {node}".format(fct=inspect.stack()[0][3], node=node.text(0))) if self.isDebug \
-            else None
+        print(
+            "|__ Exit {fct}, node: {node}".format(
+                fct=inspect.stack()[0][3], node=node.text(0)
+            )
+        ) if self.isDebug else None
 
     # +-------------------------------+
     # |---------- LOAD JSON ----------|
@@ -504,13 +555,17 @@ class WidgetBareme(QDialog):
         :param node: qTreeWidgetItem, current "row"
         :param dct: dict, current "row" data containing values and children
         """
-        print("|__ Enter {fct}".format(fct=inspect.stack()[0][3])) if self.isDebug else None
+        print(
+            "|__ Enter {fct}".format(fct=inspect.stack()[0][3])
+        ) if self.isDebug else None
 
         pprint(dct) if self.isDebug else None
 
         # dct's legit children
         realChildren = self.legitChildren(dct)
-        print("|____ realChildren {realChildren}".format(realChildren=realChildren)) if self.isDebug else None
+        print(
+            "|____ realChildren {realChildren}".format(realChildren=realChildren)
+        ) if self.isDebug else None
 
         # Loop through legit children
         for child in realChildren:
@@ -518,18 +573,24 @@ class WidgetBareme(QDialog):
             qtreewidgetitm = QTreeWidgetItem(node, [dct[child]["name"]])
 
             print("|____ child {child}".format(child=child)) if self.isDebug else None
-            print("|____ self.types {types}".format(types=self.types)) if self.isDebug else None
+            print(
+                "|____ self.types {types}".format(types=self.types)
+            ) if self.isDebug else None
 
             # Add widgets to item
             self.widgetsToNewItem(qtreewidgetitm)
 
             # Load widgets' properties
-            self.loadWidgetProperties(qtreewidgetitm, dct[child]["value"], dct[child]["weighting"])
+            self.loadWidgetProperties(
+                qtreewidgetitm, dct[child]["value"], dct[child]["weighting"]
+            )
 
             # Recursive call
             self.loadFromJson(qtreewidgetitm, dct[child])
 
-        print("|__ Exit {fct}".format(fct=inspect.stack()[0][3])) if self.isDebug else None
+        print(
+            "|__ Exit {fct}".format(fct=inspect.stack()[0][3])
+        ) if self.isDebug else None
 
     @staticmethod
     def legitChildren(dct):
@@ -549,7 +610,9 @@ class WidgetBareme(QDialog):
         """
         Load widget properties for each row
         """
-        print("|____ Enter {fct}".format(fct=inspect.stack()[0][3])) if self.isDebug else None
+        print(
+            "|____ Enter {fct}".format(fct=inspect.stack()[0][3])
+        ) if self.isDebug else None
 
         # Set value
         # Get second column type
@@ -563,34 +626,40 @@ class WidgetBareme(QDialog):
             cstvalues = []
             for elem in value:
                 try:
-                    cstvalues.append(self.uniqueListCst[level][self.uniqueListRaw[level].index(elem)])
+                    cstvalues.append(
+                        self.uniqueListCst[level][self.uniqueListRaw[level].index(elem)]
+                    )
                 except ValueError:
                     pass
 
             secondColumn.setChecked(cstvalues)
         else:
-            print("NOPOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOPOPOPOPPOPOOOOOOOOOOOOOOOOOOOOOOOOOOP")
+            print(
+                "NOPOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOPOPOPOPPOPOOOOOOOOOOOOOOOOOOOOOOOOOOP"
+            )
             return
 
         # Set weighting
         weightingSpinBox = self.twBareme.itemWidget(qtreewidgetitm, 2)
-        if weightingSpinBox :
+        if weightingSpinBox:
             weightingSpinBox.setValue(weighting)
 
-        print("|____ Exit {fct}".format(fct=inspect.stack()[0][3])) if self.isDebug else None
-
-
+        print(
+            "|____ Exit {fct}".format(fct=inspect.stack()[0][3])
+        ) if self.isDebug else None
 
     def reorderSpin(self, spinsignal):
 
         sender = self.sender()
-        iterator = QTreeWidgetItemIterator(self.maintreewdgitem, QTreeWidgetItemIterator.All)
+        iterator = QTreeWidgetItemIterator(
+            self.maintreewdgitem, QTreeWidgetItemIterator.All
+        )
         while iterator.value():
             item = iterator.value()
             wdg = self.twBareme.itemWidget(item, 1)
             if True and wdg == sender:
-                tempdict={}
-                self.visitTree(item, tempdict, '1')
+                tempdict = {}
+                self.visitTree(item, tempdict, "1")
                 currentitem = item
                 currentitemparent = item.parent()
                 currentitemindex = currentitemparent.indexOfChild(item)
@@ -598,7 +667,10 @@ class WidgetBareme(QDialog):
 
                 if True:
                     currentitem = item
-                    currentitemvalues = (self.twBareme.itemWidget(currentitem, 1).value(), self.twBareme.itemWidget(currentitem, 2).value())
+                    currentitemvalues = (
+                        self.twBareme.itemWidget(currentitem, 1).value(),
+                        self.twBareme.itemWidget(currentitem, 2).value(),
+                    )
                     currentitemparent = item.parent()
                     currentitemindex = currentitemparent.indexOfChild(item)
                     currentspinboxvalue = sender.value()
@@ -607,41 +679,53 @@ class WidgetBareme(QDialog):
             iterator += 1
 
         if True:
-            if currentitemparent.childCount() > 1 :
+            if currentitemparent.childCount() > 1:
 
                 child = currentitemparent.takeChild(currentitemindex)
                 child.takeChildren()
 
-                for childindex in range(currentitemparent.childCount() ):
+                for childindex in range(currentitemparent.childCount()):
 
-                    childspinboxvalue = self.twBareme.itemWidget(currentitemparent.child(childindex), 1).value()
+                    childspinboxvalue = self.twBareme.itemWidget(
+                        currentitemparent.child(childindex), 1
+                    ).value()
                     if childspinboxvalue > currentspinboxvalue:
                         currentitemparent.insertChild(childindex, child)
-
 
                         if True:
                             self.widgetsToNewItem(child)
                             self.twBareme.itemWidget(child, 1).disconnect()
-                            self.twBareme.itemWidget(child, 1).setValue(currentitemvalues[0])
-                            self.twBareme.itemWidget(child, 2).setValue(currentitemvalues[1])
+                            self.twBareme.itemWidget(child, 1).setValue(
+                                currentitemvalues[0]
+                            )
+                            self.twBareme.itemWidget(child, 2).setValue(
+                                currentitemvalues[1]
+                            )
                             self.twBareme.itemWidget(child, 1).setFocus()
-                            self.twBareme.itemWidget(child, 1).valueChanged.connect(self.reorderSpin)
+                            self.twBareme.itemWidget(child, 1).valueChanged.connect(
+                                self.reorderSpin
+                            )
 
                         self.loadFromJson(child, tempdict)
 
                         break
 
-
-                    if childindex == currentitemparent.childCount() -1:
-                        currentitemparent.insertChild(childindex +1, child)
+                    if childindex == currentitemparent.childCount() - 1:
+                        currentitemparent.insertChild(childindex + 1, child)
 
                         if True:
                             self.widgetsToNewItem(child)
                             self.twBareme.itemWidget(child, 1).disconnect()
-                            self.twBareme.itemWidget(child, 1).setValue(currentitemvalues[0])
-                            self.twBareme.itemWidget(child, 2).setValue(currentitemvalues[1])
+                            self.twBareme.itemWidget(child, 1).setValue(
+                                currentitemvalues[0]
+                            )
+                            self.twBareme.itemWidget(child, 2).setValue(
+                                currentitemvalues[1]
+                            )
                             self.twBareme.itemWidget(child, 1).setFocus()
-                            self.twBareme.itemWidget(child, 1).valueChanged.connect(self.reorderSpin)
+                            self.twBareme.itemWidget(child, 1).valueChanged.connect(
+                                self.reorderSpin
+                            )
 
                         self.loadFromJson(child, tempdict)
 

@@ -29,6 +29,7 @@ import os, importlib
 from collections import OrderedDict
 import sys, glob, inspect, logging, textwrap, re, time, json, shutil
 import pandas as pd
+import numpy as np
 import Lamia
 from ..abstractlibslamia import AbstractLibsLamia
 
@@ -57,6 +58,14 @@ class McaCore(AbstractLibsLamia):
         # self.processlayerthread.started.connect(
         #     self.mcavirtualayerFactory.buildResultLayer
         # )
+        self.resultlayer = qgis.core.QgsVectorLayer("None", "result", "memory")
+        # self.qgiscanvas.layers["mcaresultlayer"] = {}
+        # self.qgiscanvas.layers["mcaresultlayer"]["qgislayer"] = resultlayer
+        # project = qgis.core.QgsProject.instance()
+        # if project:
+        #     project.addMapLayer(
+        #         self.qgiscanvas.layers["mcaresultlayer"]["qgislayer"], False
+        #     )
 
     def new(self, confpath):
 
@@ -99,8 +108,7 @@ class McaCore(AbstractLibsLamia):
         if "select" in jsondict.keys() and jsondict["select"]:
             result.append(jsondict["select"])
         for idx, subdict in jsondict.items():
-            if isinstance(subdict, dict):
-                print("*", subdict)
+            if isinstance(subdict, dict) and idx.isdigit():
                 self._recursiveselect(subdict, result)
 
     def getMainTable(self, jsonthing):
@@ -121,6 +129,14 @@ class McaCore(AbstractLibsLamia):
 
         return maintable, pkmaintable
 
+    def checkVLayerUpdate(self, confname, jsondict=None):
+        if not jsondict:
+            jsondict = self.getJsonDict(confname)
+        fromupdate, selectupdate = self.mcavirtualayerFactory.checkVLayerUpdate(
+            jsondict
+        )
+        return fromupdate, selectupdate
+
     def testDB(self, confname, jsondict=None):
         if not jsondict:
             jsondict = self.getJsonDict(confname)
@@ -134,6 +150,262 @@ class McaCore(AbstractLibsLamia):
         self.mcavirtualayerFactory.setConfName(confname)
         data, resultqgslayer = self.mcavirtualayerFactory.createMcaDB(jsondict)
         return data, resultqgslayer
+
+    def computeNodeScore(self, confname, jsondict=None, nodeid=None):
+        self.mcavirtualayerFactory.setConfName(confname)
+        fromup, selectup = self.checkVLayerUpdate(confname, jsondict)
+        if not fromup or not selectup:
+            print("update first")
+            return None
+        if not jsondict:
+            jsondict = self.getJsonDict(confname)
+        subdict = jsondict
+        if nodeid:
+            for i in range(1, len(nodeid) + 1):
+                subdict = subdict[nodeid[0:i]]
+
+        data, resultqgslayer = self.mcavirtualayerFactory.createMcaDB(jsondict)
+
+        dfresult = McaScoreCalculation(self).computeScore(data, subdict)
+        return dfresult
+
+    def getJsonSubJson(self, jsondict):
+        res = {}
+        for idx, subdict in jsondict.items():
+            # if isinstance(subdict, dict) and idx.isdigit():
+            if isinstance(subdict, dict) and idx != "bareme":
+                res[idx] = subdict
+        return res
+
+    def joinResultToQgslayer(self, confname, results):
+        self.mcavirtualayerFactory.setConfName(confname)
+        # datas, resultqgslayer = self.mcavirtualayerFactory.createMcaDB(jsondict)
+        self.resultlayer = self.mcavirtualayerFactory.createResultQgsLayer(results)
+
+        maintablename = results.columns[0]
+        maintablename = maintablename.split(".")[0].split("_")[0]
+        qgislayer = self.qgiscanvas.layers[maintablename]["layerqgis"]
+
+        for join in qgislayer.vectorJoins():
+            qgislayer.removeJoin(join.joinLayerId())
+
+        joinObject = qgis.core.QgsVectorLayerJoinInfo()
+        joinObject.setJoinFieldName("amc_pk")
+        joinObject.setTargetFieldName("pk_" + maintablename)
+        joinObject.setJoinLayerId(self.resultlayer.id())
+        joinObject.setUsingMemoryCache(True)
+        joinObject.setJoinLayer(self.resultlayer)
+
+        qgislayer.addJoin(joinObject)
+
+        target_field = "result_amc_val"
+        myRangeList = []
+
+        myRenderer = qgis.core.QgsGraduatedSymbolRenderer()
+        # symbol
+        if qgislayer.geometryType() == qgis.core.QgsWkbTypes.PointGeometry:
+            symbol = qgis.core.QgsMarkerSymbol()
+            symbol.setSize(3.0)
+            symbol.setSizeUnit(qgis.core.QgsUnitTypes.RenderMillimeters)
+        elif qgislayer.geometryType() == qgis.core.QgsWkbTypes.LineGeometry:
+            symbol = qgis.core.QgsLineSymbol()
+            symbol.setWidth(2.0)
+            symbol.setSizeUnit(qgis.core.QgsUnitTypes.RenderMillimeters)
+        elif qgislayer.geometryType() == qgis.core.QgsWkbTypes.PolygonGeometry:
+            symbol = qgis.core.QgsFillSymbol()
+
+        myRenderer.setSourceSymbol(symbol.clone())
+
+        myStyle = qgis.core.QgsStyle().defaultStyle()
+        defaultColorRampNames = myStyle.colorRampNames()
+        ramp = myStyle.colorRamp("Spectral")
+        ramp.invert()
+
+        myRenderer.updateColorRamp(ramp)
+        myRenderer.setClassAttribute("result_amc_val")
+        myRenderer.setClassificationMethod(qgis.core.QgsClassificationEqualInterval())
+        myRenderer.updateClasses(qgislayer, 5)
+
+        qgislayer.setRenderer(myRenderer)
+        qgislayer.repaintRequested.emit()
+
+
+class McaScoreCalculation:
+    def __init__(self, mcacore):
+        self.mcacore = mcacore
+
+    def computeScore(self, data, jsondict):
+        scoredata = self._computeScoreRecursive(data, jsondict)
+        finaldata = pd.DataFrame(data.iloc[:, 0])
+        finaldata["result"] = scoredata
+        return finaldata
+
+    def _computeScoreRecursive(self, data, jsondict):
+        subdicts = self.mcacore.getJsonSubJson(jsondict)
+        if len(subdicts) > 0:  # node
+            stockChildValue = pd.DataFrame()
+            for ids, subdict in subdicts.items():
+                weighting = subdict["weighting"] if "weighting" in subdict.keys() else 1
+                if subdict["name"] in stockChildValue.columns:  # for no duplicate
+                    columnname = subdict["name"] + "-" + str(ids)
+                else:
+                    columnname = subdict["name"]
+
+                stockChildValue[columnname] = self._computeScoreRecursive(data, subdict)
+                stockChildValue[columnname] = stockChildValue[columnname] * weighting
+
+            stockChildValue["total"] = stockChildValue.sum(axis=1)
+            return stockChildValue["total"]
+
+        else:  # leaf
+            return self._leafscorecalculation(data, jsondict)
+
+    def _leafscorecalculation(self, data, subdict):
+        dummyDF = pd.DataFrame()
+
+        selects = subdict["select"].split(", ")
+        bareme = subdict["bareme"]
+        try:
+            defaultValue = bareme["default"]
+        except KeyError:
+            defaultValue = 0
+        except TypeError:
+            defaultValue = 0
+
+        for select in selects:
+            dummyDF[select] = data[select]
+        dftonumpy = dummyDF.values
+
+        # Get type of columns of dftonumpy
+        typelist = self.getTypeList(dftonumpy)
+        res = []
+        for line in dftonumpy:
+            # on s'en tirera à coup de boucle for .... il y a peut etre mieux mais ca marche
+            result = self.someFct(line, bareme, typelist, defaultValue)
+            res.append(result)
+        return pd.DataFrame(res).iloc[:, 0]
+
+        # return dummyDF
+
+    def calculus(self, node):
+        # Get data
+        # if hasattr(self, "createdataframe"):
+        fromup, selectup = self.mcacore.checkVLayerUpdate(
+            self.confname, self.getJsonDict()
+        )
+        if not fromup or not selectup or self.df is None:
+            print("update DB first")
+            return
+
+        # if not self.createdataframe.getVirtualLayerUpdateStatus:
+        #     self.createDataFrame()
+        #     return None
+        # else:
+        #     if not self.createdataframe2.getVirtualLayerUpdateStatus:
+        #         self.createDataFrame2()
+        #         return None
+
+        dummyDF = pd.DataFrame()
+
+        # Get current selects
+        selectsAsStr = self.treeWidget.itemWidget(node, 1)
+        selects = selectsAsStr.text().split(", ")
+
+        # Get bareme as dict
+        bareme = self.getBareme(node)
+
+        try:
+            defaultValue = bareme["default"]
+        except KeyError:
+            defaultValue = 0
+        except TypeError:
+            defaultValue = 0
+
+        # Create df with only selects from current line
+        for select in selects:
+            dummyDF[select] = self.df[select]
+
+        dftonumpy = dummyDF.values
+
+        # Get type of columns of dftonumpy
+        typelist = self.getTypeList(dftonumpy)
+        res = []
+        for (
+            line
+        ) in (
+            dftonumpy
+        ):  # on s'en tirera à coup de boucle for .... il y a peut etre mieux mais ca marche
+            result = self.someFct(line, bareme, typelist, defaultValue)
+            res.append(result)
+
+        return res
+
+    def someFct(self, value, dct, typelist, defaultValue=0):
+        """
+        :param value: int, str, value to test
+        :param dct: dict, bareme
+        :return: int, evaluation of value in regards of dict
+        """
+
+        if len(typelist) > 0 and typelist[0] in [
+            int,
+            float,
+            np.int8,
+            np.int16,
+            np.int32,
+            np.int64,
+            np.float32,
+            np.float64,
+        ]:
+            for key in dct.keys():
+                if (
+                    isinstance(dct[key], dict) and value[0] <= dct[key]["value"]
+                ):  # "value" in dct.keys() and
+                    # if self.legitChildren(dct[key]):
+                    if self.mcacore.getJsonSubJson(dct[key]):
+                        return self.someFct(
+                            value[1:],
+                            # self.legitChildren2(dct[key]),
+                            self.mcacore.getJsonSubJson(dct[key]),
+                            typelist[1:],
+                            defaultValue,
+                        )
+                    else:
+                        return dct[key]["weighting"]
+
+        elif len(typelist) > 0 and typelist[0] == str:
+            for key in dct.keys():
+                if self.mcacore.dbase.utils.isAttributeNull(value[0]):
+                    value[0] = "None"
+                if isinstance(dct[key], dict) and value[0] in dct[key]["value"]:
+                    # if self.legitChildren(dct[key]):
+                    if self.mcacore.getJsonSubJson(dct[key]):
+                        return self.someFct(
+                            value[1:],
+                            # self.legitChildren2(dct[key]),
+                            self.mcacore.getJsonSubJson(dct[key]),
+                            typelist[1:],
+                            defaultValue,
+                        )
+                    else:
+                        return dct[key]["weighting"]
+
+        try:
+            return int(defaultValue)
+        except ValueError:
+            return 0
+        except KeyError:
+            return 0
+
+    def getTypeList(self, df):
+        typevalues = []
+        dfT = df.transpose()
+        for col in dfT:
+            for elem in col:
+                if not self.mcacore.dbase.utils.isAttributeNull(elem):
+                    typevalues.append(type(elem))
+                    break
+        return typevalues
 
 
 class MCAVirtualLayerFactory(QtCore.QObject):
@@ -163,6 +435,33 @@ class MCAVirtualLayerFactory(QtCore.QObject):
             self.filename = self.mcacore.getSqliteFileFromConf(confname)
             self.createTable()
 
+    def createResultQgsLayer(self, results):
+        resultlayer = qgis.core.QgsVectorLayer("None", "result", "memory")
+        resultlayer.startEditing()
+        provider = resultlayer.dataProvider()
+        provider.addAttributes(
+            [
+                qgis.core.QgsField("amc_pk", QtCore.QVariant.Int),
+                qgis.core.QgsField("amc_val", QtCore.QVariant.Double),
+            ]
+        )
+        resultlayer.updateFields()
+
+        # maintable, pkmaintable = self.getMainTable()
+        # maintablepks = self.df[maintable + "." + pkmaintable]
+        featstosave = []
+        # for i, pk in enumerate(maintablepks):
+        for idx, row in results.iterrows():
+            pk = row[0]
+            score = row[1]
+            feat = qgis.core.QgsFeature(resultlayer.fields())
+            feat.setAttributes([int(pk), float(score)])
+            featstosave.append(feat)
+        resultlayer.addFeatures(featstosave)
+        resultlayer.commitChanges()
+
+        return resultlayer
+
     def createTable(self):
         if not os.path.isfile(self.filename):
             originalfile = os.path.join(
@@ -171,19 +470,18 @@ class MCAVirtualLayerFactory(QtCore.QObject):
             shutil.copyfile(originalfile, self.filename)
 
             self.virtuallayerdbase.connectToDBase(slfile=self.filename)
-            sql = "CREATE TABLE 'Lamia.config' (updatestatus TEXT)"
+            sql = "CREATE TABLE lamiaconfig (fromsql TEXT, selectsql TEXT)"
             res = self.virtuallayerdbase.query(sql)
-            sql = "INSERT INTO  'Lamia.config' (updatestatus) VALUES ('False')"
+            sql = "INSERT INTO  lamiaconfig (fromsql, selectsql) VALUES ('', '')"
             self.virtuallayerdbase.query(sql)
         else:
             self.virtuallayerdbase.connectToDBase(slfile=self.filename)
         self.emitMessage(".sqlite créé")
 
     def setStatus(self, newstatus):
-        # print("**", self.filename)
 
         self.virtuallayerdbase.connectToDBase(slfile=self.filename)
-        sql = "UPDATE 'Lamia.config' SET updatestatus = '" + str(newstatus) + "'"
+        sql = "UPDATE 'lamiaconfig' SET updatestatus = '" + str(newstatus) + "'"
         self.virtuallayerdbase.query(sql)
         if newstatus == "True":
             self.dbasestatus.emit("DBase updated")
@@ -193,23 +491,6 @@ class MCAVirtualLayerFactory(QtCore.QObject):
     def testDB(self, jsondict=None):
         if not jsondict:
             jsondict = self.mcacore.getJsonDict(self.confname)
-
-        # selects = self.mcacore.getSelects(jsondict)
-        # print("::", selects)
-        # # selects = self.getSelects()
-        # # print("::", selects)
-        # if not selects:
-        #     # self.appendMessage("sql not ok - do not find main table")
-        #     # self.toolButton_updatedb.setEnabled(False)
-        #     return False, "sql not ok - do not find main table"
-
-        # sql = {
-        #     # "final": self.lineEdit_sqlfinal.text(),
-        #     # "final": sqlfinal,
-        #     # "final": self.textBrowser_sqlfinal.toPlainText() + " LIMIT 1",
-        #     "final": jsondict["mainsql"],
-        #     "critere": selects,
-        # }
 
         try:
             qgsvectorlay, sqltxt = self._getQgslayerSqlFromDict(jsondict)
@@ -222,14 +503,11 @@ class MCAVirtualLayerFactory(QtCore.QObject):
             # self.appendMessage("sql not ok - do not find main table")
             # self.toolButton_updatedb.setEnabled(False)
             return False, "sql not ok - do not find main table"
-        print("sqltxt", sqltxt)
 
         # restrict query to fist row of main table
         # construct where clause
 
         sqlfinal = self._makeTestSql(jsondict, sqltxt)
-
-        print("sqlfinal", sqlfinal)
 
         # self.starttime = time.time()
         # self.testsql = True  # before prepareVLayerScript
@@ -238,13 +516,17 @@ class MCAVirtualLayerFactory(QtCore.QObject):
         # self.createdataframe.filename = self.filevirtuallayer
         # self.thread.start()
         # self.buildResultLayer()
-
-        self._importFromLayer(qgsvectorlay)
+        sqlsplitted = self.mcacore.dbase.utils.splitSQLSelectFromWhereOrderby(sqlfinal)
+        fromsql, selsql = self.getVirtualLayerUpdateStatus()
+        if sqlsplitted["FROM"] != fromsql:
+            self._importFromLayer(qgsvectorlay)
+            self.virtuallayerdbase.query(
+                f"UPDATE lamiaconfig SET fromsql='{sqlsplitted['FROM']}' "
+            )
 
         res = self.virtuallayerdbase.query(sqlfinal)
         if res is not None:
             rawData = list(res)
-        print("rawData", rawData)
 
         return True, "sql ok"
 
@@ -288,11 +570,9 @@ class MCAVirtualLayerFactory(QtCore.QObject):
                     layers[vlayername] = vlayersql
             sqlfinal += sentencesql + ", "
         sqlfinal = sqlfinal[:-2]
-        print("analyseRawSQL", sqlfinal)
         # build FROM part and get qgsvectorlayers needed
         # layersql, sentencesql = self._getSqlQgislayerFromTxt(sqlsict["final"])
         layersql, sentencesql = self._getSqlQgislayerFromTxt(jsondict["mainsql"])
-        print(layersql, sentencesql)
 
         sqlfinal += sentencesql
         sqlfinal = self.mcacore.dbase.updateQueryTableNow(sqlfinal)
@@ -317,11 +597,7 @@ class MCAVirtualLayerFactory(QtCore.QObject):
             sqlssplitspace = sql.split(" ")
             for sqlsplitspace in sqlssplitspace:
                 if "#" in sqlsplitspace:
-                    print("*", sqlsplitspace)
-                    # tabletype, tablename = sqlsplitspace.split(".")
                     tabletype, tablename = sqlsplitspace.split(".")[0:2]
-                    # print(tabletype, tablename)
-                    # print(self.qgiscanvas.layers)
                     vlayerlayer = ""
                     if tabletype == "#lamia":
                         if "_now" in tablename:
@@ -337,12 +613,6 @@ class MCAVirtualLayerFactory(QtCore.QObject):
                         else:
                             rawtablename = tablename
                             tablenamevlayer = tablename
-                        # print(
-                        #     self.qgiscanvas.layers[rawtablename]["layerqgis"]
-                        #     .dataProvider()
-                        #     .uri()
-                        #     .uri()
-                        # )
                         vectorlayer = qgis.core.QgsVectorLayer(
                             self.mcacore.qgiscanvas.layers[rawtablename]["layerqgis"]
                             .dataProvider()
@@ -351,7 +621,6 @@ class MCAVirtualLayerFactory(QtCore.QObject):
                             tablenamevlayer,
                             "spatialite",
                         )
-                        # print(vectorlayer, vectorlayer.isValid())
                         vectorlayer.setSubsetString("")
 
                     elif tabletype == "#lamiashp":
@@ -384,19 +653,43 @@ class MCAVirtualLayerFactory(QtCore.QObject):
         else:
             sentencesql = sql
 
-        print("**", layersql, sentencesql)
         return layersql, sentencesql
+
+    def checkVLayerUpdate(self, jsondict):
+        lay, jsonsql = self._getQgslayerSqlFromDict(jsondict)
+        fromsql, selsql = self.getVirtualLayerUpdateStatus()
+        sqlsplitted = self.mcacore.dbase.utils.splitSQLSelectFromWhereOrderby(jsonsql)
+        fromupdate, selectupdate = True, True
+
+        if sqlsplitted["FROM"] != fromsql:
+            fromupdate = False
+
+        if sqlsplitted["SELECT"] != selsql:
+            selectupdate = False
+
+        return fromupdate, selectupdate
 
     # def buildResultLayer(self):
     def createMcaDB(self, jsondict):
         lay, jsonsql = self._getQgslayerSqlFromDict(jsondict)
-        self._importFromLayer(lay)
+        fromsql, selsql = self.getVirtualLayerUpdateStatus()
+        sqlsplitted = self.mcacore.dbase.utils.splitSQLSelectFromWhereOrderby(jsonsql)
+        if sqlsplitted["FROM"] != fromsql:
+            self._importFromLayer(lay)
+            self.virtuallayerdbase.query(
+                f"UPDATE lamiaconfig SET fromsql='{sqlsplitted['FROM']}' "
+            )
 
-        sql = "DROP TABLE results"
-        self.virtuallayerdbase.query(sql)
-        sql = "CREATE TABLE results AS  "
-        sql += jsonsql
-        self.virtuallayerdbase.query(sql)
+        if sqlsplitted["SELECT"] != selsql:
+            sql = "DROP TABLE results"
+            self.virtuallayerdbase.query(sql)
+            sql = "CREATE TABLE results AS  "
+            sql += jsonsql
+            self.virtuallayerdbase.query(sql)
+
+            self.virtuallayerdbase.query(
+                f"UPDATE lamiaconfig SET selectsql='{sqlsplitted['SELECT']}' "
+            )
 
         sql = "SELECT * FROM results"
         rawData = self.virtuallayerdbase.query(sql)
@@ -478,51 +771,6 @@ class MCAVirtualLayerFactory(QtCore.QObject):
 
             # self.finished.emit(rawData)
 
-    def postVLayerProcessed_old(self, rawdata):
-        """
-         Called when the creation of virtual layer is done
-         :param rawdata: list of results of sql request
-         """
-
-        selects = self.mcacore.getSelects(self.getJsonDict())
-        rawdatadf = None
-        if self.createdataframe.testsql:
-            self.createdataframe.testsql = False
-            self.appendMessage(" : " + "results : ")
-            if len(rawdata) > 0:
-                tempdf = pd.DataFrame(rawdata)
-                tempdf.columns = selects
-                txttoshow = str(tempdf)
-                self.appendMessage(txttoshow)
-                self.toolButton_updatedb.setEnabled(True)
-            else:
-                txttoshow = "Requete mal construite"
-                self.toolButton_updatedb.setEnabled(False)
-                self.appendMessage(txttoshow)
-                sql = {
-                    # "final": self.lineEdit_sqlfinal.text(),
-                    "final": self.textBrowser_sqlfinal.toPlainText(),
-                    "critere": selects,
-                }
-                scriptvl, sqltxt = self.prepareVLayerScript(sql)
-                # self.appendMessage(scriptvl)
-                self.appendMessage(sqltxt)
-
-        else:
-            rawdatadf = self.cleanData(rawdata, selects)
-
-        return rawdatadf
-        # pprint(self.df)
-        # self.createdataframe.setStatus("True")
-
-        # if self.starttime is not None:
-        #     self.appendMessage(
-        #         "end update  "
-        #         + str(round(time.time() - self.starttime, 2))
-        #         + " seconds"
-        #     )
-        #     self.starttime = None
-
     def cleanData(self, rawdata, selects):
         """
         Clean data, dataFrame and rename headers
@@ -537,8 +785,6 @@ class MCAVirtualLayerFactory(QtCore.QObject):
             df.columns = selects
         else:
             print("Error cleaing datas")
-            pprint(df)
-            print(selects)
         return df
 
     def emitMessage(self, message):
@@ -566,7 +812,7 @@ class MCAVirtualLayerFactory(QtCore.QObject):
                 print("error import in vlayer", e)
 
         self.emitMessage("Tables importées")
-        print("Tables importées")
+        # print("Tables importées")
 
     def writeResults(self, vlayer, filename):
         # saveresults
@@ -582,16 +828,19 @@ class MCAVirtualLayerFactory(QtCore.QObject):
         )
 
     def getVirtualLayerUpdateStatus(self):
-        if os.path.isfile(self.filename):
-            self.virtuallayerdbase.connectToDBase(self.filename)
-            sql = "SELECT updatestatus FROM 'Lamia.config'"
-            res = self.virtuallayerdbase.query(sql, docommit=False)
-            if res is not None:
-                if res[0][0] == "True":
-                    return True
-                else:
-                    return False
-            else:
-                return False
-        else:
-            return False
+        sql = "SELECT * FROM lamiaconfig"
+        fromsql, selectsql = self.virtuallayerdbase.query(sql, docommit=False)[0]
+        return fromsql, selectsql
+        # if os.path.isfile(self.filename):
+        #     self.virtuallayerdbase.connectToDBase(self.filename)
+        #     sql = "SELECT updatestatus FROM 'Lamia.config'"
+        #     res = self.virtuallayerdbase.query(sql, docommit=False)
+        #     if res is not None:
+        #         if res[0][0] == "True":
+        #             return True
+        #         else:
+        #             return False
+        #     else:
+        #         return False
+        # else:
+        #     return False

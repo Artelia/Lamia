@@ -116,12 +116,15 @@ def launchIface():
     #   toolpostpro     toolprepro
     wdg = lamiawidget.toolwidgets["lamiamca"]
     wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
-    # wdg.editAMC()
+    wdg.editAMC()
     # wdg.analyseSubdomains()
     # wdg.mcacore.mcavirtualayerFactory.setConfName("_test")
-    # wdg.mcacore.testDB("_test")
-    data, lay = wdg.mcacore.createMcaDB("_test")
-    print(data)
+    # wdg.mcacore.createMcaDB("_test")
+    # res = wdg.mcacore.computeNodeScore("_test", nodeid="1")
+    # print("*", res)
+    # lay = wdg.mcacore.joinResultToQgslayer("_test", res)
+    # data, lay = wdg.mcacore.createMcaDB("_test")
+    # print(data)
 
     # mainwin.exec_()
 
