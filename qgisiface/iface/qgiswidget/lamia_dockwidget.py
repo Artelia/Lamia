@@ -90,13 +90,13 @@ class InspectiondigueDockWidget(QDockWidget):
         self.setWidget(self.windowwidget)
         self.setWindowTitle("Lamia")
 
-
     def closeEvent(self, event):
         # self.windowwidget._reloadQgisToolbar()
         # if self.windowwidget.qgiscanvas.rubberBand is not None:
         self.windowwidget.qgiscanvas.createorresetRubberband(rubtype="all")
         self.windowwidget.qgiscanvas.unloadLayersInCanvas()
 
+        self.windowwidget.dbase.disconnect()
         self.windowwidget.gpsutil.closeConnection()
         self.closingPlugin.emit(self.dockorder)
         event.accept()

@@ -75,6 +75,8 @@ class FlowChartWidget(QDialog):
         self.library.nodeTree = {}
         self.library.addNodeType(EvalNode, [()])
         self.library.addNodeType(AttributeReaderNode, [()])
+        self.library.addNodeType(ConstantNode, [()])
+        self.library.addNodeType(MultiplierNode, [()])
         self.terminalindict = {}
         self.fc = Flowchart(terminals=self.terminalindict)
         self.fc.setLibrary(self.library)
@@ -101,7 +103,7 @@ class FlowChartWidget(QDialog):
         wdgflowcontrol = self.fc.widget()
         wdg1lay.addWidget(wdgflowcontrol)
         self.flowqlabelmessage = QLabel(
-            QtCore.QCoreApplication.translate("base3", "Error message : /")
+            QtCore.QCoreApplication.translate("base3", "Status : /")
         )
         wdg1lay.addWidget(self.flowqlabelmessage)
         wdg1 = QFrame()
@@ -124,11 +126,9 @@ class FlowChartWidget(QDialog):
         self.fc.clear()
         curoutput = dict(self.fc.inputNode.outputs())
         for outterm in curoutput:
-            print(outterm)
             self.fc.inputNode.removeTerminal(outterm)
         curinput = dict(self.fc.outputNode.inputs())
         for interm in curinput:
-            print(outterm)
             self.fc.outputNode.removeTerminal(interm)
 
         self.fc.setLibrary(self.library)
@@ -220,11 +220,14 @@ class FlowChartWidget(QDialog):
     def fcSaveAs(self):
         if self.fc.widget().currentFileName is None:
 
-            startdir = os.path.join(
-                self.dbase.dbaseressourcesdirectory, "config", "importtools"
-            )
+            # startdir = os.path.join(
+            #     self.dbase.dbaseressourcesdirectory, "config", "importtools"
+            # )
+
+            startdir = self.importtool.confdatadirproject
+
             conffile, fileext = self.qfiledlg.getSaveFileName(
-                self, "Lamia - import conf", startdir, "PDF (*.fc)"
+                self, "Lamia - import conf", startdir, "flowfile (*.fc)"
             )
 
         else:
@@ -236,12 +239,15 @@ class FlowChartWidget(QDialog):
 
     def fcLoad(self, fileName=None):
         if not fileName:
-            startdir = os.path.join(
-                self.dbase.dbaseressourcesdirectory, "config", "importtools"
-            )
+            # startdir = os.path.join(
+            #     self.dbase.dbaseressourcesdirectory, "config", "importtools"
+            # )
+            startdir = self.importtool.confdatadirproject
             fileName, extension = self.qfiledlg.getOpenFileName(
                 None, "Choose the file", startdir, "flowChart (*.fc)", ""
             )
+        else:
+            fileName = self.importtool.getConfFilePath(fileName)
         if fileName:
             try:
                 fileName = unicode(fileName)
@@ -307,11 +313,17 @@ class FlowChartWidget(QDialog):
         # self.fc.sigOutputChanged.emit()
 
     def runImport(self):
+        self.flowqlabelmessage.setText(
+            QtCore.QCoreApplication.translate("base3", "Importing ...")
+        )
         table_field_list, array = self._getDatasOfOutputTerminal()
         geoms = self._getReprojectedGeoms()
 
         self.importtool.importCleanedDatas(
             self.tolayername, table_field_list, array, geoms
+        )
+        self.flowqlabelmessage.setText(
+            QtCore.QCoreApplication.translate("base3", "Imported")
         )
 
     def _getDatasOfOutputTerminal(self):
@@ -362,6 +374,54 @@ class FlowChartWidget(QDialog):
         if node.nodeName == "AttributeReaderNode":
             node.setLayers(self.fromlayer)
             node.setDbase(self.dbase)
+
+
+class MultiplierNode(CtrlNode):
+    nodeName = "MultiplierNode"
+    uiTemplate = [
+        ("coefficient", "spin", {"value": 1.0, "step": 1.0, "bounds": [0.0, None]}),
+    ]
+
+    def __init__(self, name):
+        terminals = {
+            "dataIn": dict(io="in"),  # each terminal needs at least a name and
+            "dataOut": dict(io="out"),  # to specify whether it is input or output
+        }  # other more advanced options are available
+        # as well..
+        CtrlNode.__init__(self, name, terminals=terminals)
+
+    def process(self, display=True, **args):
+        results = {}
+        results["dataOut"] = None
+        coef = self.ctrls["coefficient"].value()
+        try:
+            results["dataOut"] = (
+                np.array(args["dataIn"]).astype(np.float) * coef
+            ).tolist()
+        except:
+            pass
+        return results
+
+
+class ConstantNode(CtrlNode):
+    nodeName = "ConstantNode"
+    uiTemplate = []
+
+    def __init__(self, name):
+        terminals = {
+            # "dataIn": dict(io="in"),  # each terminal needs at least a name and
+            "dataOut": dict(io="out"),  # to specify whether it is input or output
+        }  # other more advanced options are available
+        # as well..
+        CtrlNode.__init__(self, name, terminals=terminals)
+
+    def process(self, display=True, **args):
+        results = {}
+        results["dataOut"] = [1]
+        return results
+
+    def connected(self, localTerm, remoteTerm):
+        self.update()
 
 
 class AttributeReaderNode(CtrlNode):
@@ -428,21 +488,63 @@ class AttributeReaderNode(CtrlNode):
                 logging.getLogger("Lamia").debug("dataOut type")
             results["dataOut"] = []
             datainput = {}
-            # print('***datain', dataIn)
             leninput = None
             for termname in self.inputs().keys():
-                if args[termname] is not None:
-                    leninput = len(args[termname])
-                    datainput[termname] = args[termname]
+                if args[termname] is not None and args[termname] != {}:
+                    if isinstance(args[termname], dict):
+                        leninput = len(
+                            args[termname][list(args[termname].keys())[0]]
+                        )  # list(test_dict.keys())[0]
+                        tempval = None
+                        for k, v in args[termname].items():
+                            if "ConstantNode" in k.node().name():
+                                tempval = np.array(["lamiaconstant"])
+                            elif tempval is None:
+                                tempval = np.array(args[termname][k])
+                                tempval = np.array(
+                                    [x if x else "" for x in args[termname][k]]
+                                )
+                            else:
+                                tempval = np.core.defchararray.add(
+                                    tempval, [x if x else "" for x in args[termname][k]]
+                                )
+
+                        datainput[termname] = (
+                            [x if x else None for x in tempval.tolist()]
+                            if tempval is not None
+                            else None
+                        )
+
+                    else:
+                        leninput = len(args[termname])
+                        datainput[termname] = args[termname]
 
             if leninput is not None:
                 for i in range(leninput):
                     tempres = None
+                    lamiaconstant = None
                     for termname in datainput.keys():
-                        if datainput[termname][i] is not None:
+                        # if isinstance(datainput[termname], dict):
+                        #     for k, v in datainput[termname].items():
+                        #         if len(v) == 1 and v[0] == "lamiaconstant":
+                        #             lamiaconstant = termname
+
+                        #         elif v[i] is not None:
+                        #             tempres = termname
+                        #             break
+                        if (
+                            len(datainput[termname]) == 1
+                            and datainput[termname][0] == "lamiaconstant"
+                        ):
+                            lamiaconstant = termname
+                        elif datainput[termname][i] is not None:
                             # tempres = datainput[termname][i]
                             tempres = termname
                             break
+
+                    if tempres is None and lamiaconstant is not None:
+                        tempres = lamiaconstant
+
                     results["dataOut"].append(tempres)
 
         if debug:
@@ -498,14 +600,12 @@ class AttributeReaderNode(CtrlNode):
                 logging.getLogger("Lamia").debug("connecttype : Output")
             self.clearTerminals()
 
-            # print(self.outputs().keys())
             termname = remoteTerm.name()
             table, field = termname.split(".")
-            # print(table, field)
             fullcst = self.dbase.dbasetables[table]["fields"][field]["Cst"]
             values = [elem[0] for elem in fullcst]
             for value in values:
-                self.addInput(name=str(value))
+                self.addInput(name=str(value), multi=True)
             self.graphicsItem().bounds = QtCore.QRectF(0, 0, 200, len(values) * 15)
             self.graphicsItem().update()
 
@@ -530,6 +630,7 @@ class AttributeReaderNode(CtrlNode):
                     break
             if len(self.uniquevalues) < 20:
                 for uniquevalue in self.uniquevalues:
+                    # self.addOutput(name=str(uniquevalue), multi=True)
                     self.addOutput(name=str(uniquevalue))
                 self.graphicsItem().bounds = QtCore.QRectF(
                     0, 0, 200, len(self.uniquevalues) * 15

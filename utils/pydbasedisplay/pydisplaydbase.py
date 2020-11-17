@@ -90,6 +90,7 @@ def launchIface():
     # SLFILE = os.path.join(TESTDIR, "c_creation", worktype, "test01.sqlite")
     # SLFILE = r"C:\01_WORKINGDIR\bm\BD_totale_ind15.sqlite"
     SLFILE = r"C:\01_WORKINGDIR\reims\testast\BDD_REIMS_J1_AST.sqlite"
+    SLFILE = r"C:\01_WORKINGDIR\alban\lamia\test_alban.sqlite"
 
     print(f"{bcolors.OKGREEN}Opening: {os.path.abspath(SLFILE)} {bcolors.ENDC}")
 
@@ -116,7 +117,7 @@ def launchIface():
     #   toolpostpro     toolprepro
     wdg = lamiawidget.toolwidgets["lamiamca"]
     wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
-    wdg.editAMC()
+    # wdg.editAMC()
     # wdg.analyseSubdomains()
     # wdg.mcacore.mcavirtualayerFactory.setConfName("_test")
     # wdg.mcacore.createMcaDB("_test")
@@ -126,7 +127,7 @@ def launchIface():
     # data, lay = wdg.mcacore.createMcaDB("_test")
     # print(data)
 
-    # mainwin.exec_()
+    mainwin.exec_()
 
     if PROFILING:
         pr.disable()

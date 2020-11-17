@@ -88,8 +88,11 @@ class PostGisDBaseParser(AbstractDBaseParser):
         self.commit()
 
     def disconnect(self):
-        self.PGiscursor.close()
-        self.connPGis.close()
+        try:
+            self.PGiscursor.close()
+            self.connPGis.close()
+        except:
+            pass
 
     def getDBName(self):
         return self.pgschema

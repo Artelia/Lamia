@@ -287,7 +287,7 @@ class McaScoreCalculation:
 
         # return dummyDF
 
-    def calculus(self, node):
+    def calculus_old(self, node):
         # Get data
         # if hasattr(self, "createdataframe"):
         fromup, selectup = self.mcacore.checkVLayerUpdate(
@@ -784,7 +784,7 @@ class MCAVirtualLayerFactory(QtCore.QObject):
         if nbrecolumn1 == nbrecolumn2:
             df.columns = selects
         else:
-            print("Error cleaing datas")
+            print("Error cleaning datas")
         return df
 
     def emitMessage(self, message):

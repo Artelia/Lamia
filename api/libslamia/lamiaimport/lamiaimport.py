@@ -28,26 +28,29 @@ This file is part of LAMIA.
 import logging, sys, re, os
 import numpy as np
 from pprint import pprint
+from ..abstractlibslamia import AbstractLibsLamia
 
 
-class ImportCore:
+class ImportCore(AbstractLibsLamia):
 
     POSTPROTOOLNAME = "lamiaimport"
+    fileext = ".json"
 
     def __init__(self, dbaseparser, messageinstance=None):
+        super(ImportCore, self).__init__(dbaseparser, messageinstance)
         # super(ExportShapefileTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil, parentwidget, parent=parent)
-        self.dbase = dbaseparser
-        self.messageinstance = messageinstance
-        self.tooldir = os.path.join(
-            os.path.dirname(__file__), self.dbase.worktype.lower()
-        )
+        # self.dbase = dbaseparser
+        # self.messageinstance = messageinstance
+        # self.tooldir = os.path.join(
+        #     os.path.dirname(__file__), self.dbase.worktype.lower()
+        # )
 
-        self.confdataplugin = os.path.join(
-            os.path.dirname(__file__), self.dbase.worktype.lower()
-        )
-        self.confdataproject = os.path.join(
-            self.dbase.dbaseressourcesdirectory, "config", self.POSTPROTOOLNAME
-        )
+        # self.confdataplugin = os.path.join(
+        #     os.path.dirname(__file__), self.dbase.worktype.lower()
+        # )
+        # self.confdataproject = os.path.join(
+        #     self.dbase.dbaseressourcesdirectory, "config", self.POSTPROTOOLNAME
+        # )
 
     def importCleanedDatas(
         self,
@@ -70,6 +73,10 @@ class ImportCore:
 
         debug = False
 
+        print(table_field_list)
+        print(values)
+        # print(geoms)
+
         tablesnames = np.array([result.split(".")[0] for result in table_field_list])
         fieldsnames = np.array([result.split(".")[1] for result in table_field_list])
 
@@ -83,36 +90,58 @@ class ImportCore:
         # cas des couches enfant de descriptionsystem
         for i, valueline in enumerate(values):
             valueline = np.array(valueline)
+            # print("**", valueline)
+            zipdict = dict(zip(fieldsnames.tolist(), valueline.tolist()))
+            if "geom" in self.dbase.dbasetables[rawtablename].keys():
+                zipdict["geom"] = self._getCleanedWktGeom(geoms[i])
+            # print(zipdict)
             # self.setLoadingProgressBar(progress, i)
             if i % 50 == 0:
+                # return
                 self.messageinstance.updateProgressBar(i)
 
-            pktablename = self.dbase.createNewFeature(rawtablename)
+            # pktablename = self.dbase.createNewFeature(rawtablename)
+            pktablename = self.dbase.lamiaorm[rawtablename].create()
+            self.dbase.lamiaorm[rawtablename].update(pktablename, zipdict)
 
-            for tablename in parenttables:
-                pktable = self.dbase.getValuesFromPk(
-                    rawtablename + "_qgis", "pk_" + tablename.lower(), pktablename
-                )
-                indexobjectvalues = np.where(np.array(tablesnames) == tablename)
-                lisfield = fieldsnames[indexobjectvalues]
-                listvalues = valueline[indexobjectvalues]
-                self.updateTable(tablename, lisfield, listvalues, pktable)
+            # for tablename in parenttables:
+            #     pktable = self.dbase.getValuesFromPk(
+            #         rawtablename + "_qgis", "pk_" + tablename.lower(), pktablename
+            #     )
+            #     indexobjectvalues = np.where(np.array(tablesnames) == tablename)
+            #     lisfield = fieldsnames[indexobjectvalues]
+            #     listvalues = valueline[indexobjectvalues]
+            #     self.updateTable(tablename, lisfield, listvalues, pktable)
 
-                if "geom" in self.dbase.dbasetables[tablename].keys():
-                    if self.dbase.__class__.TYPE == "spatialite":
-                        geomsql = "CastToSingle(CastToXY(ST_GeomFromText('"
-                        geomsql += geoms[i]
-                        geomsql += "', " + str(self.dbase.crsnumber) + ")))"
-                    elif self.dbase.__class__.TYPE == "postgis":
-                        geomsql = "ST_GeometryN(ST_Force2D(ST_GeomFromText('"
-                        geomsql += geoms[i]
-                        geomsql += "', " + str(self.dbase.crsnumber) + ")),0)"
+            #     if "geom" in self.dbase.dbasetables[tablename].keys():
+            #         if self.dbase.__class__.TYPE == "spatialite":
+            #             geomsql = "CastToSingle(CastToXY(ST_GeomFromText('"
+            #             geomsql += geoms[i]
+            #             geomsql += "', " + str(self.dbase.crsnumber) + ")))"
+            #         elif self.dbase.__class__.TYPE == "postgis":
+            #             geomsql = "ST_GeometryN(ST_Force2D(ST_GeomFromText('"
+            #             geomsql += geoms[i]
+            #             geomsql += "', " + str(self.dbase.crsnumber) + ")),0)"
 
-                    self.updateTable(tablename, ["geom"], [geomsql], pktable)
+            #         self.updateTable(tablename, ["geom"], [geomsql], pktable)
 
         self.dbase.commitTransaction()
 
         self.messageinstance.closeProgressBar()
+
+    def _getCleanedWktGeom(self, wktgeom):
+
+        if self.dbase.__class__.TYPE == "spatialite":
+            geomsql = "SELECT ST_AsText(CastToSingle(CastToXY(ST_GeomFromText('"
+            geomsql += wktgeom
+            geomsql += "', " + str(self.dbase.crsnumber) + "))))"
+        elif self.dbase.__class__.TYPE == "postgis":
+            geomsql = "SELECT ST_AsText(ST_GeometryN(ST_Force2D(ST_GeomFromText('"
+            geomsql += wktgeom
+            geomsql += "', " + str(self.dbase.crsnumber) + ")),0))"
+        geomwkt = self.dbase.query(geomsql)
+        # print("*", geomwkt)
+        return geomwkt[0][0]
 
     def updateTable(self, tablename, listfield, listvalues, pkvalue):
 

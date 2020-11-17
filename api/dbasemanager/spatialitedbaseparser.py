@@ -52,7 +52,10 @@ class SpatialiteDBaseParser(AbstractDBaseParser):
         self.SLITEcursor = self.connSLITE.cursor()
 
     def disconnect(self):
-        self.connSLITE.close()
+        try:
+            self.connSLITE.close()
+        except:
+            pass
 
     def getDBName(self):
         name, ext = os.path.splitext(os.path.basename(self.spatialitefile))

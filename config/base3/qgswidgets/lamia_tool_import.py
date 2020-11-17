@@ -146,11 +146,14 @@ class ImportTool(AbstractLamiaTool):
     def ___________________________________flowchartpart(self):
         pass
 
-    def showFlowChart(self, qgslayer=None):
-        self._defineCurrentLayer()
+    def showFlowChart(self, fromqgslayer=None, tolayername=None):
 
-        tolayername = self.toolwidgetmain.comboBox_typeimport.currentText()
-        fromqgslayer = self.currentlayer
+        if not fromqgslayer:
+            self._defineCurrentLayer()
+            fromqgslayer = self.currentlayer
+        if not tolayername:
+            tolayername = self.toolwidgetmain.comboBox_typeimport.currentText()
+
         self.flowchartdlg.initFromandToLayers(fromqgslayer, tolayername)
 
         if qgis.utils.iface is not None:
