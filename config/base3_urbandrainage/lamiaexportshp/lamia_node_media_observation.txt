@@ -167,27 +167,26 @@ equipmentopenclose  ;String              ;equipmentopenclose  ;observation_now.e
 
 ###resource
 #name               type                 cst                  value                
-pk_resource         ;String              ;                    ;media_now.pk_resource
-id_resource         ;Int                 ;                    ;media_now.id_resource
-lpk_object          ;Int                 ;                    ;media_now.lpk_object
-productor           ;String              ;                    ;media_now.productor
-datetimeresource    ;String              ;                    ;media_now.datetimeresource
-produceradress      ;String              ;                    ;media_now.produceradress
-producername        ;String              ;                    ;media_now.producername
-producermail        ;String              ;                    ;media_now.producermail
-producerphone1      ;String              ;                    ;media_now.producerphone1
-producerphone2      ;String              ;                    ;media_now.producerphone2
-file                ;String              ;                    ;media_now.file
-description         ;String              ;                    ;media_now.description
-resourceindex       ;Int                 ;                    ;media_now.resourceindex
-lid_delivery        ;Int                 ;                    ;media_now.lid_delivery
+pk_resource         ;String              ;                    ;photonode.pk_resource
+id_resource         ;Int                 ;                    ;photonode.id_resource
+lpk_object          ;Int                 ;                    ;photonode.lpk_object
+productor           ;String              ;                    ;photonode.productor
+datetimeresource    ;String              ;                    ;photonode.datetimeresource
+produceradress      ;String              ;                    ;photonode.produceradress
+producername        ;String              ;                    ;photonode.producername
+producermail        ;String              ;                    ;photonode.producermail
+producerphone1      ;String              ;                    ;photonode.producerphone1
+producerphone2      ;String              ;                    ;photonode.producerphone2
+file                ;String              ;                    ;photonode.file
+description         ;String              ;                    ;photonode.description
+resourceindex       ;Int                 ;                    ;photonode.resourceindex
+lid_delivery        ;Int                 ;                    ;photonode.lid_delivery
 
-###media
-#name               type                 cst                  value                
-pk_media            ;String              ;                    ;media_now.pk_media
-id_media            ;Int                 ;                    ;media_now.id_media
-lpk_resource        ;Int                 ;                    ;media_now.lpk_resource
-typemedia           ;String              ;typemedia           ;media_now.typemedia
+fileobs               ;String              ;                    ;photoobs.file
+descrobs        ;String              ;                    ;photoobs.description
+rscidxobs       ;Int                 ;                    ;photoobs.resourceindex
+
+
 
 
 ###geom
@@ -197,4 +196,5 @@ geom                ;String              ;                    ;ST_AsText(node_no
 FROM node_now 
 LEFT JOIN deficiency_now ON deficiency_now.pk_deficiency = (SELECT def.pk_deficiency FROM deficiency_now AS def  WHERE  def.lid_descriptionsystem=node_now.id_descriptionsystem  LIMIT 1) 
 LEFT JOIN observation_now ON observation_now.lid_deficiency = deficiency_now.id_deficiency 
-LEFT JOIN media_now ON media_now.id_resource = (SELECT tcobjectresource.lid_resource FROM tcobjectresource WHERE tcobjectresource.lid_object = node_now.id_object LIMIT 1)  AND media_now.typemedia='PHO'
+LEFT JOIN media_now as photonode ON photonode.id_resource = (SELECT tcobjectresource.lid_resource FROM tcobjectresource WHERE tcobjectresource.lid_object = node_now.id_object LIMIT 1)  AND photonode.typemedia='PHO'
+LEFT JOIN media_now as photoobs ON photoobs.id_resource = (SELECT tcobjectresource.lid_resource FROM tcobjectresource WHERE tcobjectresource.lid_object = observation_now.id_object LIMIT 1)  AND photoobs.typemedia='PHO'

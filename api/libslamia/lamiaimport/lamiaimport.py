@@ -89,7 +89,8 @@ class ImportCore(AbstractLibsLamia):
 
         # cas des couches enfant de descriptionsystem
         for i, valueline in enumerate(values):
-            valueline = np.array(valueline)
+
+            valueline = np.array(self.cleanvalue(rawtablename, fieldsnames, valueline))
             # print("**", valueline)
             zipdict = dict(zip(fieldsnames.tolist(), valueline.tolist()))
             if "geom" in self.dbase.dbasetables[rawtablename].keys():
@@ -143,6 +144,16 @@ class ImportCore(AbstractLibsLamia):
         # print("*", geomwkt)
         return geomwkt[0][0]
 
+    def cleanvalue(self, tablename, listfield, listvalues):
+        finallistvalues = []
+        for i, fieldname in enumerate(listfield):
+            if listvalues[i] != "":
+                # sql += fieldname + " = "
+                finallistvalues.append(
+                    self.convertDataType(tablename, fieldname, listvalues[i])
+                )
+        return finallistvalues
+
     def updateTable(self, tablename, listfield, listvalues, pkvalue):
 
         sql = "UPDATE " + tablename + " SET "
@@ -156,27 +167,32 @@ class ImportCore(AbstractLibsLamia):
         sql += " WHERE pk_" + tablename.lower() + " = " + str(pkvalue)
         query = self.dbase.query(sql, docommit=False)
 
-    def convertDataType(self, table, field, value):
+    def convertDataType(self, rawtable, field, value):
         if field == "geom":
             return str(value)
 
         if self.dbase.utils.isAttributeNull(value):
             return "NULL"
 
-        typevalue = self.dbase.dbasetables[table]["fields"][field]["PGtype"]
-        # getConstraintRawValueFromText(self, table, field, txt):
-        rawvalue = self.dbase.getConstraintRawValueFromText(table, field, value)
+        for temptable in [rawtable] + self.dbase.getParentTable(rawtable):
+            if field in self.dbase.dbasetables[temptable]["fields"].keys():
+                # typevalue = self.dbase.dbasetables[temptable]["fields"][field]["PGtype"]
+                # getConstraintRawValueFromText(self, table, field, txt):
+                rawvalue = self.dbase.getConstraintRawValueFromText(
+                    temptable, field, value
+                )
+                break
 
-        if "VARCHAR" in typevalue:
-            returnvalue = "'" + str(rawvalue) + "'"
-        elif "TIMESTAMP" in typevalue:
-            returnvalue = "'" + str(rawvalue) + "'"
-        elif "TEXT" in typevalue:
-            returnvalue = "'" + str(rawvalue) + "'"
-        else:
-            returnvalue = str(rawvalue)
+        # if "VARCHAR" in typevalue:
+        #     returnvalue = "'" + str(rawvalue) + "'"
+        # elif "TIMESTAMP" in typevalue:
+        #     returnvalue = "'" + str(rawvalue) + "'"
+        # elif "TEXT" in typevalue:
+        #     returnvalue = "'" + str(rawvalue) + "'"
+        # else:
+        #     returnvalue = str(rawvalue)
 
-        return returnvalue
+        return str(rawvalue)
 
     def postImport(self, layerfeat, pkobjet=None, pkdessys=None, pksubdessys=None):
         pass
