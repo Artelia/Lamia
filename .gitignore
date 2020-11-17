@@ -8,7 +8,7 @@
 /doc/build/
 test/testtempfiles/
 test/datas/lamia_*
-
+testfiles/
 
 sandbox/*/
 frontend/
