@@ -1,0 +1,85 @@
+
+###equipment
+#name               type                 cst                  value                
+pk_equipment        ;String              ;                    ;equipment_now.pk_equipment
+id_equipment        ;Int                 ;                    ;equipment_now.id_equipment
+lpk_descriptionsystem;Int                 ;                    ;equipment_now.lpk_descriptionsystem
+equipmentcategory   ;String              ;equipmentcategory   ;equipment_now.equipmentcategory
+lid_resource_1      ;Int                 ;                    ;equipment_now.lid_resource_1
+lid_descriptionsystem_1;Int                 ;                    ;equipment_now.lid_descriptionsystem_1
+domain              ;String              ;domain              ;equipment_now.domain
+location            ;String              ;location            ;equipment_now.location
+equipmenttype       ;String              ;equipmenttype       ;equipment_now.equipmenttype
+accessibility       ;String              ;                    ;equipment_now.accessibility
+
+###descriptionsystem
+#name               type                 cst                  value                
+pk_descriptionsystem;String              ;                    ;equipment_now.pk_descriptionsystem
+id_descriptionsystem;Int                 ;                    ;equipment_now.id_descriptionsystem
+lpk_object          ;Int                 ;                    ;equipment_now.lpk_object
+strategicvalue      ;String              ;                    ;equipment_now.strategicvalue
+operational         ;String              ;operational         ;equipment_now.operational
+operationalstate    ;String              ;                    ;equipment_now.operationalstate
+dateoperationalcreation;String              ;                    ;equipment_now.dateoperationalcreation
+dateoperationalcreationupper;String              ;                    ;equipment_now.dateoperationalcreationupper
+operationaldatecreationaccuracy;String              ;operationaldatecreationaccuracy;equipment_now.operationaldatecreationaccuracy
+datetimeoperationaldestruction;String              ;                    ;equipment_now.datetimeoperationaldestruction
+geotrackingxyquality;String              ;geotrackingxyquality;equipment_now.geotrackingxyquality
+geotrackingzquality ;String              ;geotrackingzquality ;equipment_now.geotrackingzquality
+geotrackingdate     ;String              ;                    ;equipment_now.geotrackingdate
+geotrackingsource   ;String              ;                    ;equipment_now.geotrackingsource
+parameters          ;String              ;                    ;equipment_now.parameters
+parameterslist      ;String              ;                    ;equipment_now.parameterslist
+streetname          ;String              ;                    ;equipment_now.streetname
+streetupname        ;String              ;                    ;equipment_now.streetupname
+streetdownname      ;String              ;                    ;equipment_now.streetdownname
+streetcomment       ;String              ;                    ;equipment_now.streetcomment
+lid_actor_1         ;Int                 ;                    ;equipment_now.lid_actor_1
+lid_actor_2         ;Int                 ;                    ;equipment_now.lid_actor_2
+lid_actor_3         ;Int                 ;                    ;equipment_now.lid_actor_3
+lid_facility        ;Int                 ;                    ;equipment_now.lid_facility
+float_1             ;Double              ;                    ;equipment_now.float_1
+float_2             ;Double              ;                    ;equipment_now.float_2
+float_3             ;Double              ;                    ;equipment_now.float_3
+float_4             ;Double              ;                    ;equipment_now.float_4
+float_5             ;Double              ;                    ;equipment_now.float_5
+float_6             ;Double              ;                    ;equipment_now.float_6
+float_7             ;Double              ;                    ;equipment_now.float_7
+float_8             ;Double              ;                    ;equipment_now.float_8
+float_9             ;Double              ;                    ;equipment_now.float_9
+float_10            ;Double              ;                    ;equipment_now.float_10
+string_1            ;String              ;                    ;equipment_now.string_1
+string_2            ;String              ;                    ;equipment_now.string_2
+string_3            ;String              ;                    ;equipment_now.string_3
+string_4            ;String              ;                    ;equipment_now.string_4
+string_5            ;String              ;                    ;equipment_now.string_5
+string_6            ;String              ;                    ;equipment_now.string_6
+string_7            ;String              ;                    ;equipment_now.string_7
+string_8            ;String              ;                    ;equipment_now.string_8
+string_9            ;String              ;                    ;equipment_now.string_9
+string_10           ;String              ;                    ;equipment_now.string_10
+networktype         ;String              ;networktype         ;equipment_now.networktype
+flowconditionupstream;String              ;flowconditionupstream;equipment_now.flowconditionupstream
+flowconditiondownstream;String              ;flowconditiondownstream;equipment_now.flowconditiondownstream
+systemfunction      ;String              ;systemfunction      ;equipment_now.systemfunction
+
+###object
+#name               type                 cst                  value                
+pk_object           ;String              ;                    ;equipment_now.pk_object
+id_object           ;Int                 ;                    ;equipment_now.id_object
+lpk_revision_begin  ;Int                 ;                    ;equipment_now.lpk_revision_begin
+lpk_revision_end    ;Int                 ;                    ;equipment_now.lpk_revision_end
+datetimecreation    ;String              ;                    ;equipment_now.datetimecreation
+datetimemodification;String              ;                    ;equipment_now.datetimemodification
+datetimedestruction ;String              ;                    ;equipment_now.datetimedestruction
+comment             ;String              ;                    ;equipment_now.comment
+name                ;String              ;                    ;equipment_now.name
+importid            ;Int                 ;                    ;equipment_now.importid
+importtable         ;String              ;                    ;equipment_now.importtable
+lid_actor_creator   ;Int                 ;                    ;equipment_now.lid_actor_creator
+
+###geom
+geom                ;String              ;                    ;ST_AsText(equipment_now.geom)
+
+###main
+FROM equipment_now

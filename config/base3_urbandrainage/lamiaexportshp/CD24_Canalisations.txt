@@ -1,0 +1,52 @@
+###edge
+#nom              type               cst               valeur                    
+id_cana;         Int;                  ;     id_edge
+code_insee;         Int;                  ;               NULL
+code_voie;         String;                  ;     NULL
+rue;         String;                  ;     NULL
+id_nd_ini;         String;                  ;     upstream_node.id_node
+id_nd_term;         String;                  ;     downstream_node.id_node
+
+
+
+Z_AMONT;        Double;                             ; CASE WHEN edge_now.depthup is NULL THEN (upstream_node.z - upstream_node.depthinvert) ELSE (upstream_node.z - edge_now.depthup) END 
+Z_AVAL;        Double;                             ; CASE WHEN edge_now.depthdown is NULL THEN (downstream_node.z - downstream_node.depthinvert) ELSE (downstream_node.z - edge_now.depthdown) END
+
+PROF_AMONT;        Double;                             ; CASE WHEN edge_now.depthup is NULL THEN upstream_node.depthinvert ELSE edge_now.depthup END 
+PROF_AVAL;        Double;                             ; CASE WHEN edge_now.depthdown is NULL THEN  downstream_node.depthinvert ELSE  edge_now.depthdown END
+
+PENTE;        Double;                             ;(( CASE WHEN edge_now.depthup is NULL THEN (upstream_node.z - upstream_node.depthinvert) ELSE (upstream_node.z - edge_now.depthup) END  ) - CASE WHEN edge_now.depthdown is NULL THEN (downstream_node.z - downstream_node.depthinvert) ELSE (downstream_node.z - edge_now.depthdown) END ) / ST_Length(edge_now.geom) * 100
+
+
+DIAMETRE;         Int;                  ;     edge_now.nominaldiameter * 1000
+annee_pose;         String;                  ;               edge_now.dateoperationalcreationupper
+periode_serv;         String;                  ;               edge_now.operationaldatecreationaccuracy
+#categorie;         String;                  ;     edge_now.systemfunction
+
+
+gest_exp;         Int;                  ;               NULL
+m_ouv;         Int;                  ;               NULL
+longueur;         Int;                  ;               ST_Length(edge_now.geom)
+#type_res;         Int;         typeReseau         ;               edge_now.typeReseau
+
+###descriptionsystem
+categorie;         String;      systemfunction            ;     edge_now.systemfunction
+type_res;         Int;         networktype         ;               edge_now.networktype
+
+
+#Autre
+date_geo;         String;                  ; edge_now.datetimecreation
+srce_geo;         String;                  ; NULL
+qlt_geo;         String;                  ; NULL
+date_maj;         String;                  ; NULL
+srce_maj;         String;                  ; NULL
+
+
+
+
+
+###geom
+geom;         Int;               ;                  ST_AsText(edge_now.geom)
+
+###main
+FROM edge_now LEFT JOIN node_now AS upstream_node ON edge_now.lid_descriptionsystem_1 = upstream_node.id_descriptionsystem LEFT JOIN node_now AS downstream_node ON edge_now.lid_descriptionsystem_2 = downstream_node.id_descriptionsystem WHERE edge_now.laterals = 0

@@ -1,0 +1,26 @@
+###edge
+#nom              type               cst               valeur   
+id_edge;         Int;                  ;     edge_now.id_edge      
+name;      String;                ;                  edge_now.name
+situation;      String;                ;                  edge_now.location
+typestationnement;      String;             parkingtype  ;                  parkingtype
+zoning;      String;             zoning  ;                  zoning
+zonageautre;      String;               ;                  zoningother
+nbredeplaces;         Int;                  ;     parkingplacenumber 
+
+###deficiency
+id_deficiency;         Int;                  ;     id_deficiency 
+numrotation;         Int;                  ;     rotationnumber 
+
+###observation
+id_observation;         Int;                  ;     id_observation 
+datetimeobservation;      String;               ;                  datetimeobservation
+immatriculation;         Int;                  ;     registrationnumber 
+illicite;         Int;                  ;     illicit 
+
+
+###geom
+geom;         Int;               ;                  ST_AsText(edge_now.geom)
+
+###main
+FROM edge_now INNER JOIN deficiency_now ON deficiency_now.lid_descriptionsystem = edge_now.id_descriptionsystem INNER JOIN observation_now ON   deficiency_now.id_deficiency = observation_now.lid_deficiency

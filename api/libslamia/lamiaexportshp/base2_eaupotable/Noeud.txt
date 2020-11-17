@@ -1,0 +1,89 @@
+###Noeud
+#nom              type               cst               valeur                    
+id_noeud;         Int;                  ;               id_noeud
+categorie;      String;   categorie   ;                  Noeud_now.categorie
+diametre_entree;      Double;               ;                  Noeud_now.diametre_entree
+diametre_sortie;      Double;               ;                  Noeud_now.diametre_sortie
+profondeur;      Double;               ;                  Noeud_now.profondeur
+fonction;      String;    fonction    ;                  Noeud_now.fonction
+ss_type_equipement;      String;   ss_type_equipement    ;                  Noeud_now.ss_type_equipement
+nature_reseau;      String;     nature_reseau   ;                  Noeud_now.nature_reseau
+acces;      String;     acces  ;                  Noeud_now.acces
+forme_acces;      String;  forme_acces     ;                  Noeud_now.forme_acces
+
+id_cana_sig_sdis;      Int;               ;                  Noeud_now.id_cana_sig_sdis
+id_eap;      String;               ;                  Noeud_now.id_eap
+date_essai;      String;               ;                  Noeud_now.date_essai
+conformite;      Int;     conformite      ;                  Noeud_now.conformite
+debit;      Double;               ;                  Noeud_now.debit
+pese;      Double;               ;                  Noeud_now.pese
+date_pese;      String;               ;                  Noeud_now.date_pese
+
+consigne_aval;      Double;               ;                  Noeud_now.consigne_aval
+altimetrie;      Double;               ;                  Noeud_now.altimetrie
+consigne_amont;      Double;               ;                  Noeud_now.consigne_amont
+
+position;      Int;     position       ;                  Noeud_now.position
+
+exutoire;      String;               ;                  Noeud_now.exutoire
+
+dimensions;      Double;               ;                  Noeud_now.dimensions
+tete_emettrice;      Int;     tete_emettrice    ;                  Noeud_now.tete_emettrice
+numero;      Int;               ;                  Noeud_now.numero
+equipable;      Int;   equipable    ;                  Noeud_now.equipable
+
+collier;      Int;               ;                  Noeud_now.collier
+
+localisation;      String;   localisation       ;                  Noeud_now.exutoire
+pres_echelon;      Int;    pres_echelon     ;                  Noeud_now.pres_echelon
+accessibilite;      Int;    accessibilite     ;                  Noeud_now.accessibilite
+manipulable;      Int;    manipulable     ;                  Noeud_now.manipulable
+
+marque;      String;               ;                  Noeud_now.marque
+type;      String;               ;                  Noeud_now.type
+
+entreprise;      String;               ;                  Noeud_now.entreprise
+telerelevage;      String;    telerelevage    ;                  Noeud_now.telerelevage
+
+organes_associes;      String;               ;                  Noeud_now.organes_associes
+
+
+X;               Double;                               ;     X
+Y;               Double;                               ;     Y
+Z;               Double;                               ;     Z
+
+id_objet;         Int;               ;                  Noeud_now.id_objet
+commentaire;      String;               ;                  Noeud_now.commentaire
+
+
+
+###Photo1
+##FROM Photo_now  INNER JOIN Tcobjetressource ON Tcobjetressource.lid_ressource = Photo_now.id_ressource WHERE Noeud_now.id_objet = Tcobjetressource.lid_objet; LIMIT 1 OFFSET 0
+fichier;         String;               ;                  file
+
+###Zonegeo
+##FROM Zonegeo_qgis  WHERE  ST_WITHIN(ST_MakeValid(Noeud_now.geom), ST_MakeValid(Zonegeo_qgis.geom)) AND Zonegeo_qgis.typezonegeo = 'COL'
+#nom              type               cst               valeur                    
+id_zonegeo;       Int;               ;                  id_zonegeo
+libelle;       String;               ;                  libelle
+
+###Observation
+##FROM Observation_now INNER JOIN Desordre_now ON Desordre_now.id_desordre = Observation_now.lid_desordre  WHERE Desordre_now.lid_descriptionsystem = Noeud_now.id_descriptionsystem
+#nom              type               cst               valeur                    
+etatgeneral;         String;             etatgeneral;             etatgeneral
+etattampon;         String;             etattampon;             etattampon
+etatechelon;         String;             etatechelon;             etatechelon
+etatregard;         String;             etatregard;             etatregard
+indexcompteur;         Int;             ;             indexcompteur
+
+evolution;         String;              ;             evolution
+
+
+
+###geom
+#FROM Noeud AS Noeudtemp INNER JOIN Objet ON Objet.id_objet = Noeudtemp.id_objet AND Noeudtemp.pk_noeud = Noeud.pk_noeud
+geom;         Int;               ;                  ST_AsText(Noeud_now.geom)
+
+
+###main
+FROM Noeud_now

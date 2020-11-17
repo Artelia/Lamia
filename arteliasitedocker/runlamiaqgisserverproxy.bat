@@ -1,0 +1,1 @@
+docker run -it  --name lamia_qgisserver  -p 8381:80   -e http_proxy=http://10.15.102.50:3128   -e https_proxy=http://10.15.102.50:3128 -e PGSERVICEFILE=/projects/pg_service_docker.conf  lamia_qgisserver

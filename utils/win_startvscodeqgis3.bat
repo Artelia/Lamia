@@ -1,11 +1,19 @@
 call %~dp0/win_setqgisenv.bat
 
-path %PATH%;C:\Program Files\Git\cmd;C:\Program Files\Docker\Docker\resources\bin;C:\Users\patrice.verchere\AppData\Local\Programs\Git\cmd;C:\ProgramData\DockerDesktop\version-bin
+REM specific vscode libs/path
+
+path C:\Program Files\Git\cmd;%UserProfile%\AppData\Local\Programs\Git\cmd;%PATH%
+path C:\Program Files\Docker\Docker\resources\bin;C:\ProgramData\DockerDesktop\version-bin;%PATH%
 
 REM pip --user for vscode : black, sphinx, sphonx rtd theme
 path %UserProfile%\AppData\Roaming\Python\Python37\Scripts;%PATH%
+path C:\Program Files\nodejs\;%PATH%
+path C:\Program Files (x86)\Yarn\bin\;%PATH%
+path %SYSTEMROOT%\System32\OpenSSH\;%PATH%
 set PYTHONPATH=%UserProfile%\AppData\Roaming\python\Python37\site-packages;%PYTHONPATH%
 
+
+SET PGSERVICEFILE=C:\PGSERVICEFILE\pg_service.conf
 REM save my life !!!
 SET QGIS_DISABLE_MESSAGE_HOOKS=1
 SET QGIS_NO_OVERRIDE_IMPORT=1

@@ -1,23 +1,24 @@
-import os, sys
+import os, sys, logging
 
 import qgis, qgis.core
 
-lamiapath = os.path.join(os.path.join(os.path.dirname(__file__)), "..", "..")
+lamiapath = os.path.join(os.path.join(os.path.dirname(__file__)), "..", "..", "..")
 sys.path.append(lamiapath)
-
-from test.test_utils import *
 import Lamia
 
-from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
+from Lamia.test.test_utils import *
+
+
+from Lamia.api.dbasemanager.dbaseparserfactory import DBaseParserFactory
 
 # from Lamia.iface.qgsconnector.ifaceqgisconnector import QgisConnector
-from Lamia.libslamia.lamianetworkx.lamianetworkx import NetWorkCore
-from Lamia.libslamia.lamiareport.lamiareport import ReportCore
-from Lamia.iface.qgscanvas.ifaceqgiscanvas import QgisCanvas
+from Lamia.api.libslamia.lamianetworkx.lamianetworkx import NetWorkCore
+from Lamia.api.libslamia.lamiareport.lamiareport import ReportCore
+from Lamia.qgisiface.iface.qgscanvas.ifaceqgiscanvas import QgisCanvas
 import numpy as np
 import cProfile
 
-PROFILING = True
+PROFILING = False
 
 
 def main(argv):
@@ -25,7 +26,16 @@ def main(argv):
         pr = cProfile.Profile()
 
     SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue\test01.sqlite"
-
+    SLFILE = r"M:\FR\BOR\VT\FLUVIAL\4352789_33_BM_surveillance_digues_PI_Ambes\05_ETUDES\052_Calculs\Basedonnees\VTA_Ambes_ind2_PVR.sqlite"
+    SLFILE = r"C:\01_WORKINGDIR\orange\toto.sqlite"
+    SLFILE = r"C:\01_WORKINGDIR\GPMB\c_merge_ass\mergeddbase.sqlite"
+    SLFILE = r"C:\Users\patrice.verchere\OneDrive - ARTELIA\Documents\lamia\tpo\test01.sqlite"
+    SLFILE = r"C:\01_WORKINGDIR\sncf\new\LANDY-09-2020.sqlite"
+    SLFILE = r"U:\FR\BOR\VT\PVR\sncf2\LANDY-09-2020.sqlite"
+    SLFILE = (
+        r"U:\FR\BOR\VT\PVR\sebastien\Noailles\20200917_sbn\VTA_2020_Noailles.sqlite"
+    )
+    SLFILE = r"C:\01_WORKINGDIR\bm\BD_totale_ind15.sqlite"
     tempparser = DBaseParserFactory("spatialite").getDbaseParser()
     tempparser.loadDBase(dbtype="Spatialite", slfile=SLFILE)
 
@@ -39,15 +49,18 @@ def main(argv):
     reportcore = ReportCore(tempparser, messageinstance=tempparser.messageinstance)
     if PROFILING:
         pr.enable()
-    try:
-        reportcore.runReport(
-            r"C:\000_testdigue\test_rapport.pdf",
-            "Desordres",
-            pkzonegeos=[2],
-            pklist=None,
-        )
-    except:
-        pass
+
+    # try:
+
+    # Infralineaire Equipementhydraulique Desordres EquipementhydrauliqueEtat
+    reportcore.runReport(
+        r"C:\000_testdigue\des.pdf",
+        "EquipementhydrauliqueEtat",
+        pkzonegeos=[3],
+        pklist=None,
+    )
+    # except Exception as e:
+    #     print(e)
 
     if PROFILING:
         pr.disable()
@@ -60,5 +73,7 @@ def main(argv):
 
 
 if __name__ == "__main__":
+    logging.basicConfig(stream=sys.stderr)
+    logging.getLogger("Lamia_unittest").setLevel(logging.DEBUG)
     main(sys.argv[1:])
 

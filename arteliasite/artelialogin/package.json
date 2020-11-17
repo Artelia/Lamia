@@ -1,0 +1,12 @@
+{
+  "name": "artelialogin",
+  "version": "1.0.0",
+  "description": "login",
+  "author": "pvr",
+  "license": "MIT",
+  "dependencies": {
+    "jquery": "^3.5.1",
+    "bootstrap": "^4.5.2",
+    "popper.js": "^1.16.1"
+  }
+}

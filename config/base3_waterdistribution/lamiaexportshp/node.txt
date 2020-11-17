@@ -1,0 +1,116 @@
+
+###node
+#name               type                 cst                  value                
+pk_node             ;String              ;                    ;node_now.pk_node
+id_node             ;Int                 ;                    ;node_now.id_node
+lpk_descriptionsystem;Int                 ;                    ;node_now.lpk_descriptionsystem
+lid_descriptionsystem_1;Int                 ;                    ;node_now.lid_descriptionsystem_1
+nodetype            ;String              ;nodetype            ;node_now.nodetype
+diameterinlet       ;String              ;                    ;node_now.diameterinlet
+diameteroutlet      ;String              ;                    ;node_now.diameteroutlet
+nodedepth           ;String              ;                    ;node_now.nodedepth
+nodeelevation       ;String              ;                    ;node_now.nodeelevation
+nodefunction        ;String              ;nodefunction        ;node_now.nodefunction
+nodesubtype         ;String              ;nodesubtype         ;node_now.nodesubtype
+access              ;String              ;access              ;node_now.access
+accessshape         ;String              ;accessshape         ;node_now.accessshape
+hydrantfiredepartmentid;Int                 ;                    ;node_now.hydrantfiredepartmentid
+hydrantoperatorid   ;Int                 ;                    ;node_now.hydrantoperatorid
+datetimehydranttest ;String              ;                    ;node_now.datetimehydranttest
+hydrantconformity   ;Int                 ;hydrantconformity   ;node_now.hydrantconformity
+hydrantflow         ;String              ;                    ;node_now.hydrantflow
+hydrantpressuretest ;String              ;                    ;node_now.hydrantpressuretest
+datetimehydrantpressuretest;String              ;                    ;node_now.datetimehydrantpressuretest
+valveupstreamsetting;String              ;                    ;node_now.valveupstreamsetting
+valvedownstreamsetting;String              ;                    ;node_now.valvedownstreamsetting
+nodeposition        ;Int                 ;nodeposition        ;node_now.nodeposition
+presenceoutlet      ;String              ;                    ;node_now.presenceoutlet
+nodesize            ;String              ;                    ;node_now.nodesize
+nodeemitter         ;Int                 ;nodeemitter         ;node_now.nodeemitter
+nodecountervalue    ;Int                 ;                    ;node_now.nodecountervalue
+retrofitable        ;Int                 ;retrofitable        ;node_now.retrofitable
+clamp               ;Int                 ;clamp               ;node_now.clamp
+localisation        ;String              ;localisation        ;node_now.localisation
+presencestep        ;Int                 ;presencestep        ;node_now.presencestep
+accessibility       ;Int                 ;accessibility       ;node_now.accessibility
+manipulability      ;Int                 ;manipulability      ;node_now.manipulability
+brandname           ;String              ;                    ;node_now.brandname
+brandref            ;String              ;                    ;node_now.brandref
+maintenancefirm     ;String              ;                    ;node_now.maintenancefirm
+remotemonitoring    ;Int                 ;remotemonitoring    ;node_now.remotemonitoring
+linkedfacilities    ;String              ;                    ;node_now.linkedfacilities
+X                   ;String              ;                    ;node_now.X
+dX                  ;String              ;                    ;node_now.dX
+Y                   ;String              ;                    ;node_now.Y
+dY                  ;String              ;                    ;node_now.dY
+Z                   ;String              ;                    ;node_now.Z
+dZ                  ;String              ;                    ;node_now.dZ
+
+###descriptionsystem
+#name               type                 cst                  value                
+pk_descriptionsystem;String              ;                    ;node_now.pk_descriptionsystem
+id_descriptionsystem;Int                 ;                    ;node_now.id_descriptionsystem
+lpk_object          ;Int                 ;                    ;node_now.lpk_object
+strategicvalue      ;String              ;                    ;node_now.strategicvalue
+operational         ;Int                 ;operational         ;node_now.operational
+operationalstate    ;String              ;                    ;node_now.operationalstate
+dateoperationalcreation;String              ;                    ;node_now.dateoperationalcreation
+dateoperationalcreationupper;String              ;                    ;node_now.dateoperationalcreationupper
+operationaldatecreationaccuracy;String              ;operationaldatecreationaccuracy;node_now.operationaldatecreationaccuracy
+datetimeoperationaldestruction;String              ;                    ;node_now.datetimeoperationaldestruction
+geotrackingxyquality;Int                 ;geotrackingxyquality;node_now.geotrackingxyquality
+geotrackingzquality ;Int                 ;geotrackingzquality ;node_now.geotrackingzquality
+geotrackingdate     ;String              ;                    ;node_now.geotrackingdate
+geotrackingsource   ;String              ;                    ;node_now.geotrackingsource
+parameters          ;String              ;                    ;node_now.parameters
+parameterslist      ;String              ;                    ;node_now.parameterslist
+streetname          ;String              ;                    ;node_now.streetname
+streetupname        ;String              ;                    ;node_now.streetupname
+streetdownname      ;String              ;                    ;node_now.streetdownname
+streetcomment       ;String              ;                    ;node_now.streetcomment
+lid_actor_1         ;Int                 ;                    ;node_now.lid_actor_1
+lid_actor_2         ;Int                 ;                    ;node_now.lid_actor_2
+lid_actor_3         ;Int                 ;                    ;node_now.lid_actor_3
+lid_facility        ;Int                 ;                    ;node_now.lid_facility
+float_1             ;String              ;                    ;node_now.float_1
+float_2             ;String              ;                    ;node_now.float_2
+float_3             ;String              ;                    ;node_now.float_3
+float_4             ;String              ;                    ;node_now.float_4
+float_5             ;String              ;                    ;node_now.float_5
+float_6             ;String              ;                    ;node_now.float_6
+float_7             ;String              ;                    ;node_now.float_7
+float_8             ;String              ;                    ;node_now.float_8
+float_9             ;String              ;                    ;node_now.float_9
+float_10            ;String              ;                    ;node_now.float_10
+string_1            ;String              ;                    ;node_now.string_1
+string_2            ;String              ;                    ;node_now.string_2
+string_3            ;String              ;                    ;node_now.string_3
+string_4            ;String              ;                    ;node_now.string_4
+string_5            ;String              ;                    ;node_now.string_5
+string_6            ;String              ;                    ;node_now.string_6
+string_7            ;String              ;                    ;node_now.string_7
+string_8            ;String              ;                    ;node_now.string_8
+string_9            ;String              ;                    ;node_now.string_9
+string_10           ;String              ;                    ;node_now.string_10
+networktype         ;String              ;networktype         ;node_now.networktype
+
+###object
+#name               type                 cst                  value                
+pk_object           ;String              ;                    ;node_now.pk_object
+id_object           ;Int                 ;                    ;node_now.id_object
+lpk_revision_begin  ;Int                 ;                    ;node_now.lpk_revision_begin
+lpk_revision_end    ;Int                 ;                    ;node_now.lpk_revision_end
+datetimecreation    ;String              ;                    ;node_now.datetimecreation
+datetimemodification;String              ;                    ;node_now.datetimemodification
+datetimedestruction ;String              ;                    ;node_now.datetimedestruction
+comment             ;String              ;                    ;node_now.comment
+name                ;String              ;                    ;node_now.name
+importid            ;Int                 ;                    ;node_now.importid
+importtable         ;String              ;                    ;node_now.importtable
+lid_actor_creator   ;Int                 ;                    ;node_now.lid_actor_creator
+
+###geom
+geom                ;String              ;                    ;ST_AsText(node_now.geom)
+
+###main
+FROM node_now

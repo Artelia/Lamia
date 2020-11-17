@@ -1,0 +1,100 @@
+
+###edge
+#name               type                 cst                  value                
+pk_edge             ;String              ;                    ;edge_now.pk_edge
+id_edge             ;Int                 ;                    ;edge_now.id_edge
+lpk_descriptionsystem;Int                 ;                    ;edge_now.lpk_descriptionsystem
+lid_resource_1      ;Int                 ;                    ;edge_now.lid_resource_1
+lid_descriptionsystem_1;Int                 ;                    ;edge_now.lid_descriptionsystem_1
+lid_descriptionsystem_2;Int                 ;                    ;edge_now.lid_descriptionsystem_2
+diameterext         ;String              ;                    ;edge_now.diameterext
+diameterint         ;String              ;                    ;edge_now.diameterint
+depthtoppipe        ;String              ;                    ;edge_now.depthtoppipe
+domain              ;String              ;domain              ;edge_now.domain
+laterals            ;Int                 ;laterals            ;edge_now.laterals
+cathodicprotection  ;Int                 ;cathodicprotection  ;edge_now.cathodicprotection
+flowtype            ;String              ;flowtype            ;edge_now.flowtype
+pipefunction        ;String              ;pipefunction        ;edge_now.pipefunction
+insulation          ;Int                 ;insulation          ;edge_now.insulation
+insulationtype      ;String              ;insulationtype      ;edge_now.insulationtype
+insulationthickness ;Int                 ;                    ;edge_now.insulationthickness
+beddingtype         ;String              ;beddingtype         ;edge_now.beddingtype
+valeur_neuf         ;String              ;                    ;edge_now.valeur_neuf
+metersnumber        ;Int                 ;                    ;edge_now.metersnumber
+lateralnumber       ;Int                 ;                    ;edge_now.lateralnumber
+material            ;String              ;material            ;edge_now.material
+joint               ;String              ;joint               ;edge_now.joint
+pressure_min        ;String              ;                    ;edge_now.pressure_min
+pressure_max        ;String              ;                    ;edge_now.pressure_max
+diameteraccuracy    ;String              ;diameteraccuracy    ;edge_now.diameteraccuracy
+materialaccuracy    ;String              ;materialaccuracy    ;edge_now.materialaccuracy
+pipepressurecategory;String              ;pipepressurecategory;edge_now.pipepressurecategory
+
+###descriptionsystem
+#name               type                 cst                  value                
+pk_descriptionsystem;String              ;                    ;edge_now.pk_descriptionsystem
+id_descriptionsystem;Int                 ;                    ;edge_now.id_descriptionsystem
+lpk_object          ;Int                 ;                    ;edge_now.lpk_object
+strategicvalue      ;String              ;                    ;edge_now.strategicvalue
+operational         ;Int                 ;operational         ;edge_now.operational
+operationalstate    ;String              ;                    ;edge_now.operationalstate
+dateoperationalcreation;String              ;                    ;edge_now.dateoperationalcreation
+dateoperationalcreationupper;String              ;                    ;edge_now.dateoperationalcreationupper
+operationaldatecreationaccuracy;String              ;operationaldatecreationaccuracy;edge_now.operationaldatecreationaccuracy
+datetimeoperationaldestruction;String              ;                    ;edge_now.datetimeoperationaldestruction
+geotrackingxyquality;Int                 ;geotrackingxyquality;edge_now.geotrackingxyquality
+geotrackingzquality ;Int                 ;geotrackingzquality ;edge_now.geotrackingzquality
+geotrackingdate     ;String              ;                    ;edge_now.geotrackingdate
+geotrackingsource   ;String              ;                    ;edge_now.geotrackingsource
+parameters          ;String              ;                    ;edge_now.parameters
+parameterslist      ;String              ;                    ;edge_now.parameterslist
+streetname          ;String              ;                    ;edge_now.streetname
+streetupname        ;String              ;                    ;edge_now.streetupname
+streetdownname      ;String              ;                    ;edge_now.streetdownname
+streetcomment       ;String              ;                    ;edge_now.streetcomment
+lid_actor_1         ;Int                 ;                    ;edge_now.lid_actor_1
+lid_actor_2         ;Int                 ;                    ;edge_now.lid_actor_2
+lid_actor_3         ;Int                 ;                    ;edge_now.lid_actor_3
+lid_facility        ;Int                 ;                    ;edge_now.lid_facility
+float_1             ;String              ;                    ;edge_now.float_1
+float_2             ;String              ;                    ;edge_now.float_2
+float_3             ;String              ;                    ;edge_now.float_3
+float_4             ;String              ;                    ;edge_now.float_4
+float_5             ;String              ;                    ;edge_now.float_5
+float_6             ;String              ;                    ;edge_now.float_6
+float_7             ;String              ;                    ;edge_now.float_7
+float_8             ;String              ;                    ;edge_now.float_8
+float_9             ;String              ;                    ;edge_now.float_9
+float_10            ;String              ;                    ;edge_now.float_10
+string_1            ;String              ;                    ;edge_now.string_1
+string_2            ;String              ;                    ;edge_now.string_2
+string_3            ;String              ;                    ;edge_now.string_3
+string_4            ;String              ;                    ;edge_now.string_4
+string_5            ;String              ;                    ;edge_now.string_5
+string_6            ;String              ;                    ;edge_now.string_6
+string_7            ;String              ;                    ;edge_now.string_7
+string_8            ;String              ;                    ;edge_now.string_8
+string_9            ;String              ;                    ;edge_now.string_9
+string_10           ;String              ;                    ;edge_now.string_10
+networktype         ;String              ;networktype         ;edge_now.networktype
+
+###object
+#name               type                 cst                  value                
+pk_object           ;String              ;                    ;edge_now.pk_object
+id_object           ;Int                 ;                    ;edge_now.id_object
+lpk_revision_begin  ;Int                 ;                    ;edge_now.lpk_revision_begin
+lpk_revision_end    ;Int                 ;                    ;edge_now.lpk_revision_end
+datetimecreation    ;String              ;                    ;edge_now.datetimecreation
+datetimemodification;String              ;                    ;edge_now.datetimemodification
+datetimedestruction ;String              ;                    ;edge_now.datetimedestruction
+comment             ;String              ;                    ;edge_now.comment
+name                ;String              ;                    ;edge_now.name
+importid            ;Int                 ;                    ;edge_now.importid
+importtable         ;String              ;                    ;edge_now.importtable
+lid_actor_creator   ;Int                 ;                    ;edge_now.lid_actor_creator
+
+###geom
+geom                ;String              ;                    ;ST_AsText(edge_now.geom)
+
+###main
+FROM edge_now

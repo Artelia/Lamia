@@ -1,0 +1,71 @@
+
+#sitesidebar {
+  min-width: 270px;
+  max-width: 270px;
+  background: rgb(0,55,90);
+  color: #fff;
+  -webkit-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
+  position: relative; }
+  #sitesidebar .h6 {
+    color: #fff; }
+  #sitesidebar.active {
+    margin-left: -270px; }
+    #sitesidebar.active .custom-menu {
+      margin-right: -50px; }
+  #sitesidebar h1 {
+    margin-bottom: 20px;
+    font-weight: 700; }
+    #sitesidebar h1 .logo {
+      color: #fff; }
+  #sitesidebar ul.components {
+    padding: 0; }
+  #sitesidebar ul li {
+    font-size: 16px; }
+    #sitesidebar ul li > ul {
+      margin-left: 10px; }
+      #sitesidebar ul li > ul li {
+        font-size: 14px; }
+    #sitesidebar ul li a {
+      padding: 10px 0;
+      display: block;
+      color: rgba(255, 255, 255, 0.6);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+      #sitesidebar ul li a:hover {
+        color: #fff; }
+    #sitesidebar ul li.active > a {
+      background: transparent;
+      color: #fff; }
+  @media (max-width: 991.98px) {
+    #sitesidebar {
+      margin-left: -270px; }
+      #sitesidebar.active {
+        margin-left: 0; }
+      #sitesidebar .custom-menu {
+        margin-right: -60px !important;
+        top: 10px !important; } }
+  #sitesidebar .custom-menu {
+    display: inline-block;
+    position: absolute;
+    top: 20px;
+    right: 0;
+    margin-right: -20px;
+    -webkit-transition: 0.3s;
+    -o-transition: 0.3s;
+    transition: 0.3s; }
+    @media (prefers-reduced-motion: reduce) {
+      #sitesidebar .custom-menu {
+        -webkit-transition: none;
+        -o-transition: none;
+        transition: none; } }
+    #sitesidebar .custom-menu .btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%; }
+      #sitesidebar .custom-menu .btn.btn-primary {
+        background: #393c7f;
+        border-color: #393c7f; }
+        #sitesidebar .custom-menu .btn.btn-primary:hover, #sitesidebar .custom-menu .btn.btn-primary:focus {
+          background: #393c7f !important;
+          border-color: #393c7f !important; }

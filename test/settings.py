@@ -9,24 +9,27 @@ LOCALE = "fr"
 CRS = 2154
 # * DBase conf
 
+# DBTYPE = [
+#     "Base2_digue",
+#     "Base2_assainissement",
+#     "Base2_eaupotable",
+#     "Base2_eclairagepublic",
+#     "Base2_chantier",
+#     "Base2_tramway",
+# ]
 DBTYPE = [
-    "Base2_digue",
-    "Base2_assainissement",
-    "Base2_eaupotable",
-    "Base2_eclairagepublic",
-    "Base2_chantier",
-    "Base2_tramway",
-]
-DBTYPE = [
-    "base3_urbandrainage",
+    # "base3_urbandrainage",
     "base3_waterdistribution",
-    "base3_constructionsite",
-    "base3_faunaflora",
-    "base3_levee",
+    # "base3_constructionsite",
+    # "base3_faunaflora",
+    # "base3_levee",
+    # "base3_carpark",
 ]
 
 
 # VARIANTES = ['Lamia','Orange']
+# VARIANTES = ["Lamia", "2018_SNCF"]
+VARIANTES = ["Lamia"]
 
 # * Connexion conf
 # postgis
@@ -37,8 +40,8 @@ if platform.system() == "Windows":
     PGhost = "localhost"
 elif platform.system() == "Linux":
     try:  # docker env in win host
-        socket.gethostbyname("docker.for.win.localhost")
-        PGhost = "docker.for.win.localhost"
+        socket.gethostbyname("host.docker.internal")
+        PGhost = "host.docker.internal"
     except socket.error as e:  # else
         PGhost = "localhost"
 PGport = 5432
@@ -47,7 +50,7 @@ PGport = 5432
 SPATIALITE = True
 POSTGIS = False
 
-TESTDIR = os.path.join(os.path.join(os.path.dirname(__file__)), "testtempfiles")
+TESTDIR = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "testfiles"))
 
 # * test onparticularfile - uncomment to apply
 if False:

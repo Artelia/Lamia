@@ -1,0 +1,68 @@
+###deficiency
+#name               type                 cst                  value                
+pk_deficiency       ;String              ;                    ;deficiency_now.pk_deficiency
+id_deficiency       ;Int                 ;                    ;deficiency_now.id_deficiency
+lpk_object          ;Int                 ;                    ;deficiency_now.lpk_object
+deficiencycategory  ;String              ;deficiencycategory  ;deficiency_now.deficiencycategory
+priority            ;String              ;                    ;deficiency_now.priority
+lid_descriptionsystem;Int                 ;                    ;deficiency_now.lid_descriptionsystem
+side                ;String              ;side                ;deficiency_now.side
+position            ;String              ;position            ;deficiency_now.position
+deficiencytype      ;String              ;deficiencytype      ;deficiency_now.deficiencytype
+deficiencysubtype   ;String              ;deficiencysubtype   ;deficiency_now.deficiencysubtype
+deficiencysubsubtype;String              ;deficiencysubsubtype;deficiency_now.deficiencysubsubtype
+   
+
+###observation
+#name               type                 cst                  value                
+pk_observation      ;String              ;                    ;observation_now.pk_observation
+id_observation      ;Int                 ;                    ;observation_now.id_observation
+lpk_object          ;Int                 ;                    ;observation_now.lpk_object
+datetimeobservation ;String              ;                    ;observation_now.datetimeobservation
+source              ;String              ;                    ;observation_now.source
+number              ;Int                 ;                    ;observation_now.number
+conditionglobal     ;String              ;conditionglobal     ;observation_now.conditionglobal
+gravity             ;String              ;gravity             ;observation_now.gravity
+progression         ;String              ;                    ;observation_now.progression
+nextactiontype      ;String              ;nextactiontype      ;observation_now.nextactiontype
+nextactioncomment   ;String              ;                    ;observation_now.nextactioncomment
+nextactiontypecomment;String              ;                    ;observation_now.nextactiontypecomment
+lid_delivery        ;Int                 ;                    ;observation_now.lid_delivery
+lid_deficiency      ;Int                 ;                    ;observation_now.lid_deficiency
+oh_etatvantellerie  ;String              ;oh_etatvantellerie  ;observation_now.oh_etatvantellerie
+oh_etatvantelleriecom;String              ;                    ;observation_now.oh_etatvantelleriecom
+eqconditioncivilwork;String              ;eqconditioncivilwork;observation_now.eqconditioncivilwork
+eqconditioncivilworkcom;String              ;                    ;observation_now.eqconditioncivilworkcom
+eqhandlingtest      ;String              ;eqhandlingtest      ;observation_now.eqhandlingtest
+eqhandlingtestcom   ;String              ;                    ;observation_now.eqhandlingtestcom
+eqconditionsealing  ;Int                 ;                    ;observation_now.eqconditionsealing
+eqconditionsealingcom;String              ;                    ;observation_now.eqconditionsealingcom
+eqconditionsedimentation;String              ;eqconditionsedimentation;observation_now.eqconditionsedimentation
+eqconditionsedimentationcom;String              ;                    ;observation_now.eqconditionsedimentationcom
+conditionglobalcom  ;String              ;                    ;observation_now.conditionglobalcom
+specificlenght      ;String              ;                    ;observation_now.specificlenght
+comment             ;String              ;                    ;observation_now.comment
+
+
+###geoarea
+## FROM geoarea_qgis WHERE ST_WITHIN(ST_MakeValid(deficiency_now.geom),ST_MakeValid(geoarea_qgis.geom))
+pk_geoarea;     Int;            ;        pk_geoarea ;  pk_geoarea
+sssecteur;     String;            ;        geoarea_qgis.name
+
+###media
+#name               type                 cst                  value                
+pk_sketch            ;String              ;                    ;croquis.pk_media
+id_sketch           ;Int                 ;                    ;croquis.id_media
+lpk_r_sketc        ;Int                 ;                    ;croquis.lpk_resource
+filesketch        ;String                 ;                    ;croquis.file
+
+
+###geom
+geom;         Int;               ;                  ST_AsText(deficiency_now.geom)
+
+###main
+FROM deficiency_now 
+INNER JOIN observation_now ON  deficiency_now.id_deficiency = observation_now.lid_deficiency AND observation_now.datetimeobservation = (SELECT datetimeobservation FROM observation as observationtemp WHERE observationtemp.lid_deficiency=deficiency_now.id_deficiency ORDER BY datetimeobservation DESC LIMIT 1)
+LEFT JOIN media_now as croquis ON croquis.id_resource = (SELECT tcobjectresource.lid_resource FROM tcobjectresource INNER JOIN media_now as tempmedia ON tcobjectresource.lid_resource = tempmedia.id_resource WHERE tcobjectresource.lid_object = observation_now.id_object AND tempmedia.typemedia='PHO' LIMIT 1)
+WHERE   ST_Length(deficiency_now.geom)> 0.1
+

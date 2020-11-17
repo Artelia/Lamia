@@ -1,14 +1,19 @@
 import os, sys
 import cProfile, logging
 
-lamiapath = os.path.join(os.path.join(os.path.dirname(__file__)), "..", "..")
+lamiapath = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+print(lamiapath)
 sys.path.append(lamiapath)
-from test.test_utils import *
-import Lamia
+from Lamia.test.test_utils import *
+import Lamia.api
 
-from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
-from Lamia.iface.ifaceabstractconnector import LamiaIFaceAbstractConnectors
+from Lamia.api.dbasemanager.dbaseparserfactory import DBaseParserFactory
+from Lamia.qgisiface.iface.ifaceabstractconnector import LamiaIFaceAbstractConnectors
 import warnings
+import colorama
+from colorama import Fore, Back, Style
+
+colorama.init()
 
 # warnings.filterwarnings("ignore")
 # os.environ["PYTHONWARNINGS"] = "ignore"
@@ -30,10 +35,10 @@ import networkx
 
 warnings.filterwarnings("ignore", category=DeprecationWarning, module="networkx")
 
-import Lamia.libs.pyqtgraph
+import Lamia.api.libs.pyqtgraph
 
 warnings.filterwarnings(
-    "ignore", category=DeprecationWarning, module="Lamia.libs.pyqtgraph"
+    "ignore", category=DeprecationWarning, module="Lamia.api.libs.pyqtgraph"
 )
 
 import numpy
@@ -50,10 +55,22 @@ warnings.filterwarnings("ignore", message="numpy.ufunc size changed")
 
 numpy.seterr(all="ignore")
 
-from Lamia.iface.qgsconnector.ifaceloggingconnector import LoggingConnector
+from Lamia.qgisiface.iface.qgsconnector.ifaceloggingconnector import LoggingConnector
 
-INTERFACEINDEX = 0
+INTERFACEINDEX = 4
 PROFILING = False
+
+
+class bcolors:
+    HEADER = "\033[95m"
+    OKBLUE = "\033[94m"
+    OKCYAN = "\033[96m"
+    OKGREEN = "\033[92m"
+    WARNING = "\033[93m"
+    FAIL = "\033[91m"
+    ENDC = "\033[0m"
+    BOLD = "\033[1m"
+    UNDERLINE = "\033[4m"
 
 
 def launchIface():
@@ -66,38 +83,49 @@ def launchIface():
     lamiawidget.connector = LoggingConnector()
     # lamiawidget.dbase.messageinstance = lamiawidget.connector
 
-    testdir = os.path.join(
-        os.path.dirname(Lamia.__file__), "../test/testtempfiles/c_creation"
-    )
     #  sl_base3_urbandrainage_Lamia   sl_base3_waterdistribution_Lamia
     # sl_base3_constructionsite_Lamia   sl_base3_constructionsite_Orange
     # sl_base3_levee_Lamia   sl_base3_levee_SIRS   sl_base3_faunaflora_Lamia
-    worktype = "sl_base3_urbandrainage_Lamia"
+    worktype = "sl_base3_waterdistribution_Lamia"
+    # SLFILE = os.path.join(TESTDIR, "c_creation", worktype, "test01.sqlite")
+    # SLFILE = r"C:\01_WORKINGDIR\bm\BD_totale_ind15.sqlite"
+    SLFILE = r"C:\01_WORKINGDIR\reims\testast\BDD_REIMS_J1_AST.sqlite"
+    SLFILE = r"C:\01_WORKINGDIR\alban\lamia\test_alban.sqlite"
 
-    SLFILE = os.path.join(testdir, worktype, "test01.sqlite")
-
-    # SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue\test01.sqlite"
-    # SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue_base3\test01.sqlite"
-    # SLFILE = r"C:\01_WORKINGDIR\GPMB\c_merge_ass\mergeddbase.sqlite"
-    # SLFILE = r"C:\111_GitProjects\Lamia\utils\pynetworktool\networktest_geographic\test01.sqlite"
-    # SLFILE = (
-    #     r"C:\111_GitProjects\Lamia\test\datas\lamia_assainissement_base3\test01.sqlite"
-    # )
-    # SLFILE = r"M:\FR\BOR\VT\FLUVIAL\4352024_33_Conformite_digues_BM\6_Reglementaire\61_Calculs\Basedonnees\BD_totale_ind12_tempPVR.sqlite"
-    # SLFILE = r"C:\111_GitProjects\Lamia\test\datas\lamia_digue_base3\test01.sqlite"
+    print(f"{bcolors.OKGREEN}Opening: {os.path.abspath(SLFILE)} {bcolors.ENDC}")
 
     lamiawidget.loadDBase(dbtype="Spatialite", slfile=SLFILE)
+    # lamiawidget.loadDBase(
+    #     dbtype="Postgis",
+    #     host="localhost",
+    #     # host="localhost",
+    #     port=5432,
+    #     dbname="lamiaunittest",
+    #     # schema="base3_urbandrainage_lamia",
+    #     schema="importgpmb",
+    #     user="pvr",
+    #     password="pvr",
+    # )
 
     lamiawidget.setVisualMode(visualmode=INTERFACEINDEX)
-    lamiawidget.dbase.raiseexceptions = True  # False True
+    lamiawidget.dbase.raiseexceptions = False  # False True
     lamiawidget.dbase.printsql = False  # False True
+    lamiawidget.dbase.printorm = True  # False True
 
     if PROFILING:
         pr.enable()
     #   toolpostpro     toolprepro
-    # wdg = lamiawidget.toolwidgets["networktool"]
-    # wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
+    wdg = lamiawidget.toolwidgets["lamiamca"]
+    wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
+    # wdg.editAMC()
     # wdg.analyseSubdomains()
+    # wdg.mcacore.mcavirtualayerFactory.setConfName("_test")
+    # wdg.mcacore.createMcaDB("_test")
+    # res = wdg.mcacore.computeNodeScore("_test", nodeid="1")
+    # print("*", res)
+    # lay = wdg.mcacore.joinResultToQgslayer("_test", res)
+    # data, lay = wdg.mcacore.createMcaDB("_test")
+    # print(data)
 
     mainwin.exec_()
 
@@ -114,7 +142,8 @@ def main():
         format="%(asctime)s :: %(levelname)s :: %(module)s :: %(funcName)s :: %(message)s",
         datefmt="%H:%M:%S",
     )
-    logging.getLogger("Lamia_unittest").setLevel(logging.DEBUG)
+    logging.getLogger("Lamia").setLevel(logging.DEBUG)
+    logging.getLogger("Lamia.iface.qgscanvas.ifaceqgiscanvas").setLevel(logging.DEBUG)
     # logging.getLogger("Lamia").setLevel(logging.DEBUG)
 
     app = initQGis()

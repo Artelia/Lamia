@@ -1,0 +1,1 @@
+docker run --name "qgis-server" -v C:\000_Docker_rep\qgis\:/project  -p 8080:80 -d -t kartoza/qgis-server

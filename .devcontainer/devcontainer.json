@@ -2,15 +2,12 @@
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.101.1/containers/docker-existing-dockerfile
 {
 	"name": "Lamia",
-
 	// Sets the run context to one level up instead of the .devcontainer folder.
 	"context": "..",
-
 	// Update the 'dockerFile' property if you aren't using the standard 'Dockerfile' filename.
 	"dockerFile": "Dockerfile",
-
 	// Set *default* container specific settings.json values on container create.
-	"settings": { 
+	"settings": {
 		//"http.proxy": "http://10.1.3.48:3128",
 		"terminal.integrated.shell.linux": "/bin/bash",
 		"python.pythonPath": "/usr/src/dev_env/venv/bin/python3",
@@ -19,42 +16,41 @@
 		"python.linting.pylintEnabled": true,
 		"python.linting.pylintPath": "/usr/src/dev_env//venv/bin/pylint"
 	},
-
 	"remoteEnv": {
 		"PATH": "${containerEnv:PATH}:/usr/src/Lamia",
-		"PYTHONPATH": "${containerEnv:PYTHONPATH}:/usr/src/Lamia:/usr/share/qgis/python:/usr/share/qgis/python/plugins:/usr/lib/python36.zip:/usr/lib/python3.6",
+		"PYTHONPATH": "${containerEnv:PYTHONPATH}:/usr/src/Lamia:/usr/share/qgis/python:/usr/share/qgis/python/plugins:/usr/lib/python38.zip:/usr/lib/python3.8",
 		//"DISPLAY": "10.20.75.139:0.0",
 		"DISPLAY": "192.168.1.17:0.0",
-		"LANG" : "C.UTF-8",
-		"LIBGL_ALWAYS_INDIRECT" : "1",
-		//"http_proxy": "http://proxy-a.arteliagroup.com:3128",
-		//"https_proxy": "http://proxy-a.arteliagroup.com:3128",
+		"LANG": "C.UTF-8",
+		"LIBGL_ALWAYS_INDIRECT": "1",
+		"QGIS_DISABLE_MESSAGE_HOOKS": "1",
+		"QGIS_NO_OVERRIDE_IMPORT": "1",
+		"QT_LOGGING_RULES": "*.debug=false;*.warning=false",
+		"http_proxy": "http://proxy-a.arteliagroup.com:3128",
+		"https_proxy": "http://proxy-a.arteliagroup.com:3128",
 	},
-
 	"workspaceMount": "source=${localWorkspaceFolder},target=/usr/src/Lamia/,type=bind,consistency=delegated",
 	"workspaceFolder": "/usr/src/Lamia/",
-
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
 		"ms-python.python",
 		"donjayamanne.githistory",
 		"njpwerner.autodocstring",
 	],
-
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	//"forwardPorts": [5432],
-
 	// Uncomment the next line to run commands after the container is created - for example installing git.
 	// "postCreateCommand": "apt-get update && apt-get install -y git",
+	// Only work if software-properties-common is installed
 	"postCreateCommand": "sudo apt-get install git git-flow tree nano -y",
-
 	// Uncomment when using a ptrace-based debugger like C++, Go, and Rust
 	// "runArgs": [ "--cap-add=SYS_PTRACE", "--security-opt", "seccomp=unconfined" ],
-	"runArgs": [ "--name", "Lamia" ],
-
+	"runArgs": [
+		"--name",
+		"Lamia"
+	],
 	// Uncomment to use the Docker CLI from inside the container. See https://aka.ms/vscode-remote/samples/docker-in-docker.
 	//"mounts": [ "source=C:\\000_Lamia_DBase,target=/home/docker,type=bind" ],
-
 	// Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
 	// "remoteUser": "vscode"
 }

@@ -1,0 +1,45 @@
+
+###media
+#name               type                 cst                  value                
+pk_media            ;String              ;                    ;media_now.pk_media
+id_media            ;Int                 ;                    ;media_now.id_media
+lpk_resource        ;Int                 ;                    ;media_now.lpk_resource
+typemedia           ;String              ;typemedia           ;media_now.typemedia
+
+###resource
+#name               type                 cst                  value                
+pk_resource         ;String              ;                    ;media_now.pk_resource
+id_resource         ;Int                 ;                    ;media_now.id_resource
+lpk_object          ;Int                 ;                    ;media_now.lpk_object
+productor           ;String              ;                    ;media_now.productor
+datetimeresource    ;String              ;                    ;media_now.datetimeresource
+produceradress      ;String              ;                    ;media_now.produceradress
+producername        ;String              ;                    ;media_now.producername
+producermail        ;String              ;                    ;media_now.producermail
+producerphone1      ;String              ;                    ;media_now.producerphone1
+producerphone2      ;String              ;                    ;media_now.producerphone2
+file                ;String              ;                    ;media_now.file
+description         ;String              ;                    ;media_now.description
+resourceindex       ;Int                 ;                    ;media_now.resourceindex
+lid_delivery        ;Int                 ;                    ;media_now.lid_delivery
+
+###object
+#name               type                 cst                  value                
+pk_object           ;String              ;                    ;media_now.pk_object
+id_object           ;Int                 ;                    ;media_now.id_object
+lpk_revision_begin  ;Int                 ;                    ;media_now.lpk_revision_begin
+lpk_revision_end    ;Int                 ;                    ;media_now.lpk_revision_end
+datetimecreation    ;String              ;                    ;media_now.datetimecreation
+datetimemodification;String              ;                    ;media_now.datetimemodification
+datetimedestruction ;String              ;                    ;media_now.datetimedestruction
+comment             ;String              ;                    ;media_now.comment
+name                ;String              ;                    ;media_now.name
+importid            ;Int                 ;                    ;media_now.importid
+importtable         ;String              ;                    ;media_now.importtable
+lid_actor_creator   ;Int                 ;                    ;media_now.lid_actor_creator
+
+###geom
+geom                ;String              ;                    ;ST_AsText(media_now.geom)
+
+###main
+FROM media_now

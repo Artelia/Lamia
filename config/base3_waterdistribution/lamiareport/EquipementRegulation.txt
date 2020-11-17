@@ -1,0 +1,31 @@
+###atlaslayersql
+SELECT node_now.* , deficiency_now.*, observation_now.* FROM node_now 
+INNER JOIN deficiency_now ON deficiency_now.lid_descriptionsystem = node_now.id_descriptionsystem
+LEFT JOIN observation_now ON observation_now.lid_deficiency = deficiency_now.id_deficiency
+LEFT JOIN equipment_now ON node_now.lid_descriptionsystem_1 = equipment_now.id_descriptionsystem
+WHERE node_now.nodetype = 'REG'
+###atlaslayerid
+id_equipment
+###spatial
+True
+#ordering
+#autopath
+###atlaslayerstyle
+Equipment.qml
+###atlasdrivemap
+#itemname;   minscale;   typescale;      layers
+map0;       500;       Predefined      ;['atlaslayer', 'equipment', 'edge', 'scan25']
+map1;       50;       Predefined      ;['atlaslayer', 'equipment', 'edge', 'scan25']
+###generalmap
+#itemname;   minscale;   typescale; layers
+#map0    ;           ;             ; ['edge', 'ortho']
+#map0    ;           ;             ; []
+###images
+#itemname   ; type
+ressource1;node_now.photo1
+ressource2;node_now.photo2
+###childprint
+#confname;                linkcolumn;             optionsql
+
+
+

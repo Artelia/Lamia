@@ -1,0 +1,70 @@
+###node
+#nom              type               cst               valeur                    
+ID_SAISIE;         Int;                  ;               id_node
+code_insee;         Int;                  ;               NULL
+lieu_dit;         String;                  ;               NULL
+adresse;         String;                  ;               node_now.streetname
+date_mes;         String;                  ;               node_now.dateoperationalcreationupper
+periode_serv;         String;                  ;               node_now.operationaldatecreationaccuracy
+gest_exp;         String;                  ;               NULL
+id_c_ppale;         String;                  ;               NULL
+etat;         String;                  ;               NULL
+
+type_res;         String;                  ;               CASE WHEN node_now.networktype = 'PLU' THEN 'Pluvial' WHEN node_now.networktype = 'USE' THEN 'Eaux usées' WHEN node_now.networktype = 'UNI' THEN 'Unitaire' ELSE 'Autre' END
+typ_nd;         String;                  ; CASE WHEN node_now.nodetype IN ('50', '60', '70') THEN 'Ouvrage' WHEN node_now.nodetype IN ('61') THEN 'Appareillage' END
+fct_nd;         String;                  ; CASE WHEN node_now.nodetype ='50' THEN 'O4.Rejets' WHEN node_now.nodetype ='60' THEN 'O5.Regards' WHEN node_now.nodetype ='61' THEN 'A4.Branchement' WHEN node_now.nodetype ='70' THEN 'O6.Avaloirs' END
+typ_fct_nd;         String;                  ; node_now.nodesubtype
+typ_alt_nd;         String;                  ; NULL
+marque;         String;                  ; NULL
+modele;         String;                  ; NULL
+
+nom;         String;                  ; CASE WHEN node_now.nodetype ='50' THEN 'O4' WHEN node_now.nodetype ='60' THEN 'O5' WHEN node_now.nodetype ='61' THEN 'A4' WHEN node_now.nodetype ='70' THEN 'O6' END
+
+id_sandre;         String;                  ; NULL
+id_ouvrage;         String;                  ; NULL
+
+diametre;         String;                  ; NULL
+acces;         String;       accessibility           ; node_now.accessibility
+implant;         String;      location            ; node_now.location
+
+prof_rad;               Double;                               ;     node_now.depthinvert
+cote_rad;               Double;                               ;     node_now.z - node_now.depthinvert
+cote_tn;               Double;                               ;     node_now.z
+
+#Pompage
+trait_h2s;         String;          psh2streatment        ; node_now.psh2streatment
+trop_plein;         String;          psoverflow        ; node_now.psoverflow
+
+#rejet
+nom_recept;         String;                  ; NULL
+
+#regards
+tampon;         String;                  ; NULL
+accessibil;         String;      accessibility            ; node_now.accessibility
+materiaux;         String;      manholematerial            ; node_now.manholematerial
+
+#avaloirs
+decant;         String;                  ; NULL
+dim_grille;         String;                  ; node_now.sedimenttrap
+
+#branchement
+mat_branch;         String;                  ; NULL
+type_usager;         String;                  ; node_now.lateralusercategory
+
+
+#Autre
+date_geo;         String;                  ; node_now.datetimecreation
+srce_geo;         String;                  ; NULL
+qlt_geo;         String;                  ; NULL
+date_maj;         String;                  ; NULL
+srce_maj;         String;                  ; NULL
+
+
+
+
+###geom
+geom;         Int;               ;                  ST_AsText(node_now.geom)
+
+
+###main
+FROM node_now INNER JOIN deficiency_now ON deficiency_now.lid_descriptionsystem = node_now.id_descriptionsystem LEFT JOIN observation_now ON observation_now.lid_deficiency = deficiency_now.id_deficiency WHERE node_now.nodetype = '60'

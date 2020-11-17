@@ -1,0 +1,3 @@
+Get-Childitem -path env:
+
+Get-Childitem env:Path |  out-string -Width 1000

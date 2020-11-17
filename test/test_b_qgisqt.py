@@ -11,7 +11,7 @@ if not sys.warnoptions:
     warnings.simplefilter("ignore")
 """
 import networkx
-import Lamia.libs.pyqtgraph
+import Lamia.api.libs.pyqtgraph
 
 
 from pprint import pprint
@@ -26,8 +26,8 @@ import warnings, os
 # os.environ["PYTHONWARNINGS"] = "ignore" # Also affect subprocesses
 warnings.filterwarnings("default", category=DeprecationWarning, module="networkx")
 
-from Lamia.iface.qgiswidget.ifaceqgswidget import LamiaWindowWidget
-from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
+from Lamia.qgisiface.iface.qgiswidget.ifaceqgswidget import LamiaWindowWidget
+from Lamia.api.dbasemanager.dbaseparserfactory import DBaseParserFactory
 from test_utils import *
 from settings import *
 
@@ -44,7 +44,6 @@ class DBaseTest(unittest.TestCase):
         # TESTDIR = os.path.join(os.path.join(os.path.dirname(__file__)), 'temp')
 
     def test_a_testSaveFeature(self):
-
         testcdir = os.path.join(TESTDIR, "c_creation")
 
         self.mainwin, self.canvas, self.lamiawidget = getDisplayWidget()
@@ -81,14 +80,12 @@ class DBaseTest(unittest.TestCase):
                     # self._createMainWin()
 
                     if SPATIALITE:
-                        self.mainwin, self.canvas, self.lamiawidget = getDisplayWidget()
-                        # self._createWin()
-                        # self._createMainWin()
+                        mainwin, canvas, lamiawidget = getDisplayWidget()
                         slfile = os.path.join(
                             testcdir, "sl_" + work + "_" + variante, "test01.sqlite"
                         )
-                        self.lamiawidget.loadDBase(dbtype="Spatialite", slfile=slfile)
-                        self.launchTest()
+                        lamiawidget.loadDBase(dbtype="Spatialite", slfile=slfile)
+                        self.launchTest(lamiawidget, mainwin)
                     if POSTGIS:
                         self.mainwin, self.canvas, self.lamiawidget = getDisplayWidget()
                         # self._createWin()
@@ -105,56 +102,40 @@ class DBaseTest(unittest.TestCase):
                         )
                         self.launchTest()
 
-    def launchTest(self):
+    def launchTest(self, lamiawidget, mainwin):
         if TEST_WITH_FEATURE_CREATION:
-            self.featurecreation()
+            self.featurecreation(lamiawidget)
         if SHOWIFACE:
-            self.showIFace()
+            self.showIFace(lamiawidget, mainwin)
 
-    def showIFace(self):
-        self.lamiawidget.setVisualMode(visualmode=4)
-        if (
-            self.lamiawidget.qgiscanvas.layers["Infralineaire"]["layer"].featureCount()
-            > 0
-        ):
+    def showIFace(self, lamiawidget, mainwin):
+        lamiawidget.setVisualMode(visualmode=1)
+        if lamiawidget.qgiscanvas.layers["edge"]["layer"].featureCount() > 0:
             extent = (
-                self.lamiawidget.qgiscanvas.layers["Infralineaire"]["layer"]
-                .extent()
-                .buffered(10.0)
+                lamiawidget.qgiscanvas.layers["edge"]["layer"].extent().buffered(10.0)
             )
         else:
             extent = qgis.core.QgsRectangle(
                 X_BEGIN, Y_BEGIN, X_BEGIN + 10, Y_BEGIN + 10
             )
-        # logging.getLogger("Lamia_unittest").debug('Extent : %s', extent)
-        self.lamiawidget.qgiscanvas.canvas.setExtent(extent)
-        # display good widget
-        # wdg = self.lamiawidget.toolwidgets['toolprepro']['Graphique_csv'][0]
-        # wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
-        # wdg = self.lamiawidget.toolwidgets['toolpostpro']['Import'][0]
-        # wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
-        # self.lamiawidget.dbase.printsql = True
-        wdg = self.lamiawidget.toolwidgets["toolprepro"]["Troncon"][0]
-        wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
 
-        # res = self.lamiawidget.connector.inputMessage(['nom','mdp'])
-        # print(res)
+        lamiawidget.qgiscanvas.canvas.setExtent(extent)
+        mainwin.exec_()
 
-        self.mainwin.exec_()
-
-    def featurecreation(self):
-        # toolpreprolist = self.lamiawidget.toolwidgets["toolprepro"]
+    def featurecreation(self, lamiawidget):
         global i
         i = 0
-        # for toolpreproname, toolpreprovalue in self.lamiawidget.toolwidgets['toolprepro'].items():
-        for toolname, toolinstance in self.lamiawidget.toolwidgets.items():
+        for toolname, toolinstance in lamiawidget.toolwidgets.items():
             if hasattr(toolinstance, "PREPROTOOLNAME"):
-                self.recursive_creation(toolinstance)
+                self.recursive_creation(toolinstance, lamiawidget)
 
-    def recursive_creation(self, tt):
+    def recursive_creation(self, tt, lamiawidget):
         global i
         i += 1
         name = [tt.tooltreewidgetSUBCAT]
+
+        lamiawidget.dbase.printsql = False
+        lamiawidget.dbase.raiseexceptions = True
 
         parentwdg = tt
         while parentwdg.parentWidget is not None:
@@ -165,22 +146,28 @@ class DBaseTest(unittest.TestCase):
         except TypeError as e:
             print(e, name)
             assert TypeError
-        # logging.getLogger("Lamia_unittest").debug('******* Testing %s', name)
-        # self.lamiawidget.MaintreeWidget.setCurrentItem(tt.qtreewidgetitem)
+
         tt.widgetClicked()
         if len(tt.choosertreewidget.ids) == 0:
-            self.lamiawidget.toolbarNew()
-            dbasetable = self.lamiawidget.dbase.dbasetables[tt.DBASETABLENAME]
-            # logging.getLogger("Lamia_unittest").debug('fieldgeom : %s , tempgeom : %s',
-            #                                            'geom' in dbasetable.keys(),
-            #                                            tt.tempgeometry)
-            if "geom" in dbasetable.keys() and tt.tempgeometry is None:
+
+            dbasetable = lamiawidget.dbase.dbasetables[tt.DBASETABLENAME]
+            if "geom" in dbasetable.keys():
                 typegeom = dbasetable["geom"]
+            else:
+                typegeom = None
+
+            logging.getLogger("Lamia_unittest").debug(
+                str(name) + " - typegeom : " + str(typegeom)
+            )
+
+            lamiawidget.toolbarNew()
+
+            if typegeom and tt.tempgeometry is None:
                 """
                 X_BEGIN = 100000.0
                 Y_BEGIN = 6000000.0
                 """
-                if tt.DBASETABLENAME != "Zonegeo":
+                if tt.DBASETABLENAME != "geoarea":
                     if "POINT" in typegeom:
                         tt.setTempGeometry(
                             [qgis.core.QgsPointXY(X_BEGIN + i, Y_BEGIN + 0)]
@@ -210,7 +197,8 @@ class DBaseTest(unittest.TestCase):
                             qgis.core.QgsPointXY(X_BEGIN - 1, Y_BEGIN + 50),
                         ]
                     )
-            self.lamiawidget.toolbarSave()
+
+            lamiawidget.toolbarSave()
             # logging.getLogger("Lamia_unittest").debug('%s - pk created : %s', tt.DBASETABLENAME,tt.currentFeaturePK)
             self.assertIsNotNone(tt.currentFeaturePK)
         else:
@@ -227,7 +215,7 @@ class DBaseTest(unittest.TestCase):
                 )
                 raise Exception("This is broken")
             else:
-                self.recursive_creation(childwdg)
+                self.recursive_creation(childwdg, lamiawidget)
 
 
 def main():

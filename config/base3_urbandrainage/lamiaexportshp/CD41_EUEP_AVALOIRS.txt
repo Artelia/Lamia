@@ -1,0 +1,48 @@
+###node
+#nom              type               cst               valeur                    
+ID_SAISIE;         Int;                  ;               id_node
+ADRESSE;         String;                  ;               node_now.streetname
+INSEE;         String;                  ;     NULL
+domain;         String;      domain            ;     node_now.domain
+
+#IMPLANT;         String;                  ;     node_now.location
+
+
+NOM;         String;                  ;     NULL
+TYPE;         String;     nodesubtype             ;     node_now.nodesubtype
+
+DECANT;         String;    sedimenttrap              ;     node_now.sedimenttrap
+DIM_GRILLE;         Int;                  ;               NULL
+MARQUE;         String;                  ;     NULL
+MODELE;         String;                  ;     NULL
+
+ENTREPRISE;         String;                  ;     NULL
+DATE_MES;         String;                  ;     NULL
+PERIOD_MES;         String;                  ;     NULL
+
+
+PROF_RAD;               Double;                               ;     node_now.depthinvert
+COTE_RAD;               Double;                               ;     node_now.z - node_now.depthinvert
+COTE_TN;               Double;                               ;     node_now.z
+
+
+M_OUVR;         String;                  ;     NULL
+DAT_GEOLOC;         String;                  ;     node_now.datetimecreation
+AUT_ GEOLOC;         String;                  ;     'ARTELIA'
+MOD_GEOLOC;         String;                  ;     '01'
+CLASSE_PRE;         String;                  ;     '01'
+REMARQUES;         String;                  ;     node_now.comment
+
+
+###descriptionsystem
+TYPE_RES;         String;     networktype             ;     node_now.networktype
+
+###observation
+ETAT;         String;          conditionglobal        ;     observation_now.conditionglobal
+
+###geom
+geom;         Int;               ;                  ST_AsText(node_now.geom)
+
+
+###main
+FROM node_now INNER JOIN deficiency_now ON deficiency_now.lid_descriptionsystem = node_now.id_descriptionsystem LEFT JOIN observation_now ON observation_now.lid_deficiency = deficiency_now.id_deficiency WHERE node_now.nodetype = '70'

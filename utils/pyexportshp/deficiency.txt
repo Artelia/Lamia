@@ -1,0 +1,41 @@
+
+###deficiency
+#name               type                 cst                  value                
+pk_deficiency       ;String              ;                    ;deficiency_now.pk_deficiency
+id_deficiency       ;Int                 ;                    ;deficiency_now.id_deficiency
+lpk_object          ;Int                 ;                    ;deficiency_now.lpk_object
+deficiencycategory  ;String              ;deficiencycategory  ;deficiency_now.deficiencycategory
+impact              ;String              ;                    ;deficiency_now.impact
+priority            ;String              ;                    ;deficiency_now.priority
+risks               ;String              ;                    ;deficiency_now.risks
+sector1             ;String              ;                    ;deficiency_now.sector1
+sector2             ;String              ;                    ;deficiency_now.sector2
+sector3             ;String              ;                    ;deficiency_now.sector3
+lid_descriptionsystem;Int                 ;                    ;deficiency_now.lid_descriptionsystem
+side                ;String              ;side                ;deficiency_now.side
+position            ;String              ;position            ;deficiency_now.position
+deficiencytype      ;String              ;deficiencytype      ;deficiency_now.deficiencytype
+deficiencysubtype   ;String              ;deficiencysubtype   ;deficiency_now.deficiencysubtype
+deficiencysubsubtype;String              ;deficiencysubsubtype;deficiency_now.deficiencysubsubtype
+
+###object
+#name               type                 cst                  value                
+pk_object           ;String              ;                    ;deficiency_now.pk_object
+id_object           ;Int                 ;                    ;deficiency_now.id_object
+lpk_revision_begin  ;Int                 ;                    ;deficiency_now.lpk_revision_begin
+lpk_revision_end    ;Int                 ;                    ;deficiency_now.lpk_revision_end
+datetimecreation    ;String              ;                    ;deficiency_now.datetimecreation
+datetimemodification;String              ;                    ;deficiency_now.datetimemodification
+datetimedestruction ;String              ;                    ;deficiency_now.datetimedestruction
+comment             ;String              ;                    ;deficiency_now.comment
+name                ;String              ;                    ;deficiency_now.name
+importid            ;Int                 ;                    ;deficiency_now.importid
+importtable         ;String              ;                    ;deficiency_now.importtable
+lid_actor_creator   ;Int                 ;                    ;deficiency_now.lid_actor_creator
+sirsid              ;String              ;                    ;deficiency_now.sirsid
+
+###geom
+geom                ;String              ;                    ;ST_AsText(deficiency_now.geom)
+
+###main
+FROM deficiency_now

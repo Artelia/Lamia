@@ -1,26 +1,25 @@
-import os, sys
+import os
+import sys
 
 lamiapath = os.path.join(os.path.join(os.path.dirname(__file__)), "..", "..")
-# print(os.path.abspath(lamiapath))
 sys.path.append(lamiapath)
 
-import logging
-import platform
-import unittest
-import warnings
-from pprint import pprint
 
-import networkx
-
-import Lamia.libs.pyqtgraph
-import qgis
-import qgis.core
-import qgis.gui
-from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
-from Lamia.iface.qgiswidget.ifaceqgswidget import LamiaWindowWidget
-from qgis.PyQt import QtCore, uic
-from qgis.PyQt.QtCore import QCoreApplication, QSettings, Qt, QTranslator, qVersion
 from qgis.PyQt.QtWidgets import QDialog, QMainWindow, QWidget
+from qgis.PyQt.QtCore import QCoreApplication, QSettings, Qt, QTranslator, qVersion
+from qgis.PyQt import QtCore, uic
+from Lamia.iface.qgiswidget.ifaceqgswidget import LamiaWindowWidget
+from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
+import qgis.gui
+import qgis.core
+import qgis
+import Lamia.libs.pyqtgraph
+import networkx
+from pprint import pprint
+import warnings
+import unittest
+import platform
+import logging
 
 
 # warnings.simplefilter("ignore")
@@ -50,7 +49,7 @@ class DBaseViewer:
             #  sl_base3_urbandrainage_Lamia   sl_base3_waterdistribution_Lamia
             # sl_base3_constructionsite_Lamia   sl_base3_constructionsite_Orange
             # sl_base3_levee_Lamia      sl_base3_faunaflora_Lamia
-            worktype = "sl_base3_levee_Lamia"
+            worktype = "sl_base3_constructionsite_Lamia"
             SLFILE = os.path.join(self.testdir, worktype, "test01.sqlite")
 
             # SLFILE = r"C:\01_WORKINGDIR\GPMB\c_merge_ass\mergeddbase.sqlite"
@@ -107,7 +106,8 @@ class DBaseViewer:
                 # print(self.wind.toolwidgets['toolpostpro'].keys())
                 wdg = self.wind.toolwidgets["toolpostpro"]["reporttools"]
             if True:
-                wdg = self.wind.toolwidgets["toolprepro"]["graphdb"]  # deficiency
+                # deficiency
+                wdg = self.wind.toolwidgets["toolprepro"]["graphdb"]
             wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
 
         self.mainwin.exec_()

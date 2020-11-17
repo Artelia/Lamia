@@ -1,0 +1,34 @@
+###node
+#nom              type               cst               valeur                    
+ID_SAISIE;         Int;                  ;               id_equipment
+ADRESSE;         String;                  ;               equipment_now.streetname
+INSEE;         String;                  ;     NULL
+domain;         String;                  ;     equipment_now.domain
+IMPLANT;         String;                  ;     equipment_now.location
+TYPE_RES;         String;                  ;     equipment_now.networktype
+NOM;         String;                  ;     NULL
+TYPE;         String;                  ;     CASE WHEN equipment_now.equipmenttype <10 THEN '0'|| equipment_now.equipmenttype ELSE cast(equipment_now.equipmenttype as text) END
+MARQUE;         String;                  ;     NULL
+MODELE;         String;                  ;     NULL
+DIAMETRE;         Int;                  ;     NULL
+ACCESS;         String;                  ;     equipment_now.accessibility
+ETAT_OUV;         String;                  ;     NULL
+ENTREPRISE;         String;                  ;     NULL
+DATE_MES;         String;                  ;     NULL
+PERIOD_MES;         String;                  ;     NULL
+
+ETAT;         String;                  ;     observation_now.conditionglobal
+M_OUVR;         String;                  ;     NULL
+DAT_GEOLOC;         String;                  ;     equipment_now.datetimecreation
+AUT_ GEOLOC;         String;                  ;     'ARTELIA'
+MOD_GEOLOC;         String;                  ;     '01'
+CLASSE_PRE;         String;                  ;     '01'
+REMARQUES;         String;                  ;     equipment_now.comment
+
+
+###geom
+geom;         Int;               ;                  ST_AsText(ST_MakeValid(equipment_now.geom))
+
+
+###main
+FROM equipment_now INNER JOIN deficiency_now ON deficiency_now.lid_descriptionsystem = equipment_now.id_descriptionsystem LEFT JOIN observation_now ON observation_now.lid_deficiency = deficiency_now.id_deficiency

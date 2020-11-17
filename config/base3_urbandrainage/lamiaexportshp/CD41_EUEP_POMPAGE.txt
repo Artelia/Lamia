@@ -1,0 +1,40 @@
+###node
+#nom              type               cst               valeur                    
+ID_SAISIE;         Int;                  ;               id_node
+ADRESSE;         String;                  ;               node_now.streetname
+INSEE;         String;                  ;     NULL
+domain;         String;                  ;     node_now.domain
+
+#IMPLANT;         String;                  ;     node_now.location
+
+TYPE_RES;         String;                  ;     node_now.networktype
+NOM;         String;                  ;     NULL
+
+CAP_NOMI;         Int;                  ;               node_now.psnominalcapacity
+TYPE;         String;                  ;     node_now.nodesubtype
+TRAIT_H2S;         String;                  ;     '0' || node_now.psh2streatment
+TROP_PLEIN;         String;                  ;     '0' || node_now.psoverflow
+
+ENTREPRISE;         String;                  ;     NULL
+DATE_MES;         String;                  ;     NULL
+PERIOD_MES;         String;                  ;     NULL
+
+
+PROF_RAD;               Double;                               ;     node_now.depthinvert
+COTE_RAD;               Double;                               ;     node_now.Z - node_now.depthinvert
+COTE_TN;               Double;                               ;     node_now.Z
+ETAT;         String;                  ;     observation_now.conditionglobal
+M_OUVR;         String;                  ;     NULL
+DAT_GEOLOC;         String;                  ;     node_now.datetimecreation
+AUT_ GEOLOC;         String;                  ;     'ARTELIA'
+MOD_GEOLOC;         String;                  ;     '01'
+CLASSE_PRE;         String;                  ;     '01'
+REMARQUES;         String;                  ;     node_now.comment
+
+
+###geom
+geom;         Int;               ;                  ST_AsText(node_now.geom)
+
+
+###main
+FROM node_now INNER JOIN deficiency_now ON deficiency_now.lid_descriptionsystem = node_now.id_descriptionsystem LEFT JOIN observation_now ON observation_now.lid_deficiency = deficiency_now.id_deficiency WHERE node_now.nodetype = '10'

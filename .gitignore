@@ -8,16 +8,25 @@
 # /doc/build/
 test/testtempfiles/
 test/datas/lamia_*
-sandbox/*/
-arteliasite/node_modules
-frontend/
+testfiles/
 
+sandbox/*/
+frontend/
+secrets/
+
+arteliasite/node_modules
+arteliasite/lamiacarto/static/lamiacarto/bundle
+arteliasite/static
+arteliasite/staticbundles
+arteliasitev2/node_modules
+arteliasitev2/qwc2
+arteliasitev3/node_modules
 
 
 .vscode/
 **/*backup*
 **/*caduc*
-**/_build
+**/_build/
 
 *.wav
 *.cprof

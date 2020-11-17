@@ -1,0 +1,96 @@
+
+###surface
+#name               type                 cst                  value                
+pk_surface          ;String              ;                    ;surface_now.pk_surface
+id_surface          ;Int                 ;                    ;surface_now.id_surface
+surfacetype         ;String              ;                    ;surface_now.surfacetype
+lpk_descriptionsystem;Int                 ;                    ;surface_now.lpk_descriptionsystem
+lid_descriptionsystem_1;Int                 ;                    ;surface_now.lid_descriptionsystem_1
+lid_descriptionsystem_2;Int                 ;                    ;surface_now.lid_descriptionsystem_2
+lid_descriptionsystem_3;Int                 ;                    ;surface_now.lid_descriptionsystem_3
+lid_descriptionsystem_4;Int                 ;                    ;surface_now.lid_descriptionsystem_4
+lid_descriptionsystem_5;Int                 ;                    ;surface_now.lid_descriptionsystem_5
+lid_descriptionsystem_6;Int                 ;                    ;surface_now.lid_descriptionsystem_6
+lid_descriptionsystem_7;Int                 ;                    ;surface_now.lid_descriptionsystem_7
+lid_descriptionsystem_8;Int                 ;                    ;surface_now.lid_descriptionsystem_8
+lid_descriptionsystem_9;Int                 ;                    ;surface_now.lid_descriptionsystem_9
+lid_descriptionsystem_10;Int                 ;                    ;surface_now.lid_descriptionsystem_10
+surfacecategory     ;String              ;surfacecategory     ;surface_now.surfacecategory
+number              ;Int                 ;                    ;surface_now.number
+florainvasive       ;Int                 ;                    ;surface_now.florainvasive
+floraprotected      ;Int                 ;                    ;surface_now.floraprotected
+habitatwetland      ;Int                 ;                    ;surface_now.habitatwetland
+habitatrepository   ;String              ;                    ;surface_now.habitatrepository
+habitatname         ;String              ;                    ;surface_now.habitatname
+habitatcode         ;String              ;                    ;surface_now.habitatcode
+
+###descriptionsystem
+#name               type                 cst                  value                
+pk_descriptionsystem;String              ;                    ;surface_now.pk_descriptionsystem
+id_descriptionsystem;Int                 ;                    ;surface_now.id_descriptionsystem
+lpk_object          ;Int                 ;                    ;surface_now.lpk_object
+strategicvalue      ;String              ;                    ;surface_now.strategicvalue
+operational         ;Int                 ;operational         ;surface_now.operational
+operationalstate    ;String              ;                    ;surface_now.operationalstate
+dateoperationalcreation;String              ;                    ;surface_now.dateoperationalcreation
+dateoperationalcreationupper;String              ;                    ;surface_now.dateoperationalcreationupper
+operationaldatecreationaccuracy;String              ;operationaldatecreationaccuracy;surface_now.operationaldatecreationaccuracy
+datetimeoperationaldestruction;String              ;                    ;surface_now.datetimeoperationaldestruction
+geotrackingxyquality;Int                 ;geotrackingxyquality;surface_now.geotrackingxyquality
+geotrackingzquality ;Int                 ;geotrackingzquality ;surface_now.geotrackingzquality
+geotrackingdate     ;String              ;                    ;surface_now.geotrackingdate
+geotrackingsource   ;String              ;                    ;surface_now.geotrackingsource
+parameters          ;String              ;                    ;surface_now.parameters
+parameterslist      ;String              ;                    ;surface_now.parameterslist
+streetname          ;String              ;                    ;surface_now.streetname
+streetupname        ;String              ;                    ;surface_now.streetupname
+streetdownname      ;String              ;                    ;surface_now.streetdownname
+streetcomment       ;String              ;                    ;surface_now.streetcomment
+lid_actor_1         ;Int                 ;                    ;surface_now.lid_actor_1
+lid_actor_2         ;Int                 ;                    ;surface_now.lid_actor_2
+lid_actor_3         ;Int                 ;                    ;surface_now.lid_actor_3
+lid_facility        ;Int                 ;                    ;surface_now.lid_facility
+float_1             ;String              ;                    ;surface_now.float_1
+float_2             ;String              ;                    ;surface_now.float_2
+float_3             ;String              ;                    ;surface_now.float_3
+float_4             ;String              ;                    ;surface_now.float_4
+float_5             ;String              ;                    ;surface_now.float_5
+float_6             ;String              ;                    ;surface_now.float_6
+float_7             ;String              ;                    ;surface_now.float_7
+float_8             ;String              ;                    ;surface_now.float_8
+float_9             ;String              ;                    ;surface_now.float_9
+float_10            ;String              ;                    ;surface_now.float_10
+string_1            ;String              ;                    ;surface_now.string_1
+string_2            ;String              ;                    ;surface_now.string_2
+string_3            ;String              ;                    ;surface_now.string_3
+string_4            ;String              ;                    ;surface_now.string_4
+string_5            ;String              ;                    ;surface_now.string_5
+string_6            ;String              ;                    ;surface_now.string_6
+string_7            ;String              ;                    ;surface_now.string_7
+string_8            ;String              ;                    ;surface_now.string_8
+string_9            ;String              ;                    ;surface_now.string_9
+string_10           ;String              ;                    ;surface_now.string_10
+commonname          ;String              ;                    ;surface_now.commonname
+scientificname      ;String              ;                    ;surface_now.scientificname
+orderclass          ;String              ;                    ;surface_now.orderclass
+
+###object
+#name               type                 cst                  value                
+pk_object           ;String              ;                    ;surface_now.pk_object
+id_object           ;Int                 ;                    ;surface_now.id_object
+lpk_revision_begin  ;Int                 ;                    ;surface_now.lpk_revision_begin
+lpk_revision_end    ;Int                 ;                    ;surface_now.lpk_revision_end
+datetimecreation    ;String              ;                    ;surface_now.datetimecreation
+datetimemodification;String              ;                    ;surface_now.datetimemodification
+datetimedestruction ;String              ;                    ;surface_now.datetimedestruction
+comment             ;String              ;                    ;surface_now.comment
+name                ;String              ;                    ;surface_now.name
+importid            ;Int                 ;                    ;surface_now.importid
+importtable         ;String              ;                    ;surface_now.importtable
+lid_actor_creator   ;Int                 ;                    ;surface_now.lid_actor_creator
+
+###geom
+geom                ;String              ;                    ;ST_AsText(surface_now.geom)
+
+###main
+FROM surface_now

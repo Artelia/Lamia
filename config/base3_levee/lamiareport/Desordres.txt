@@ -1,0 +1,31 @@
+###atlaslayersql
+SELECT deficiency_now.* 
+FROM deficiency_now
+WHERE deficiencycategory = 'INF'
+###atlaslayerid
+id_deficiency
+###spatial
+True
+###ordering
+#type; constraint (qgis typo)
+autoalongpath;
+###atlaslayerstyle
+Desordres_atlas.qml
+###atlasdrivemap
+#itemname;   minscale;   typescale;      layers
+map1;       2500;       Predefined      ;['atlaslayer','edge', 'ortho']
+#map1;       2500;       Predefined      ;[]
+###generalmap
+#itemname;   minscale;   typescale; layers
+map0    ;           ;             ; ['edge','equipment', 'scan25']
+#map0    ;           ;             ; ['scan25','edge','equipment' ]
+#map0    ;           ;             ; []
+###images
+#itemname   ; type
+logo;logo_artelia
+###childprint
+#confname;                linkcolumn;             optionsql
+Desordres_observation;    observation_now.lid_deficiency ; ORDER BY observation_now.datetimeobservation DESC
+
+
+
