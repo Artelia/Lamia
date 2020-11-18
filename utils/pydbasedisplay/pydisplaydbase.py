@@ -92,6 +92,7 @@ def launchIface():
     SLFILE = r"C:\01_WORKINGDIR\reims\testast\BDD_REIMS_J1_AST.sqlite"
     SLFILE = r"C:\01_WORKINGDIR\alban\lamia\test_alban.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\sebastien\VTA_2020_Noailles.sqlite"
+    SLFILE = r"C:\01_WORKINGDIR\bm\BD_totale_ind15.sqlite"
 
     print(f"{bcolors.OKGREEN}Opening: {os.path.abspath(SLFILE)} {bcolors.ENDC}")
 
@@ -116,8 +117,8 @@ def launchIface():
     if PROFILING:
         pr.enable()
     #   toolpostpro     toolprepro
-    wdg = lamiawidget.toolwidgets["lamiamca"]
-    wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
+    # wdg = lamiawidget.toolwidgets["lamiamca"]
+    # wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
     # wdg.editAMC()
     # wdg.analyseSubdomains()
     # wdg.mcacore.mcavirtualayerFactory.setConfName("_test")

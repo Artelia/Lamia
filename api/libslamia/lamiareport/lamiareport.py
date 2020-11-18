@@ -1013,11 +1013,13 @@ class printPDFBaseWorker(QtCore.QObject):
 
         print(self.reportconffilename)
 
-
         confpath = self.reportcore.getConfFilePath(self.reportconffilename)
-        templatepath = confpath.split('.')[0] + ".qpt"
-        print(confpath, templatepath)
-
+        templatepath = os.path.join(
+            os.path.dirname(confpath),
+            os.path.splitext(os.path.basename(confpath))[0] + ".qpt",
+        )
+        # templatepath = confpath.split('.')[0] + ".qpt"
+        # print(confpath, templatepath)
 
         # templatepath = os.path.abspath(os.path.join(self.createfilesdir, templatefile))
         # templatepath = os.path.abspath(os.path.join(self.templatedir, templatefile))
