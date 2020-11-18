@@ -57,6 +57,7 @@ class ReportCore(AbstractLibsLamia):
     def runReport(
         self, destinationfile, reportconffilename, pkzonegeos=[], pklist=None
     ):
+
         self.printingthread.launchThread(
             reportcore=self,
             parentprintPDFworker=None,
@@ -1008,9 +1009,18 @@ class printPDFBaseWorker(QtCore.QObject):
 
         # newComposition = qgis.core.QgsMasterLayoutInterface(self.project)
 
-        templatefile = self.reportconffilename + ".qpt"
+        # templatefile = self.reportconffilename + ".qpt"
+
+        print(self.reportconffilename)
+
+
+        confpath = self.reportcore.getConfFilePath(self.reportconffilename)
+        templatepath = confpath.split('.')[0] + ".qpt"
+        print(confpath, templatepath)
+
+
         # templatepath = os.path.abspath(os.path.join(self.createfilesdir, templatefile))
-        templatepath = os.path.abspath(os.path.join(self.templatedir, templatefile))
+        # templatepath = os.path.abspath(os.path.join(self.templatedir, templatefile))
 
         template_file = QtCore.QFile(templatepath)
         template_file.open(QtCore.QIODevice.ReadOnly | QtCore.QIODevice.Text)

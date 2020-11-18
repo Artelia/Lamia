@@ -25,7 +25,7 @@ import sys
 pathsrc = os.path.abspath('../../')
 print(pathsrc)
 sys.path.insert(0, pathsrc)
-path = os.path.abspath('C://OSGeo4W64//apps//qgis//python')
+path = os.path.abspath(r'C:\Program Files\QGIS.3.10.6\apps\qgis-ltr\python')
 print(path)
 sys.path.insert(0, path)
 

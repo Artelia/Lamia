@@ -374,6 +374,8 @@ class FlowChartWidget(QDialog):
         if node.nodeName == "AttributeReaderNode":
             node.setLayers(self.fromlayer)
             node.setDbase(self.dbase)
+        elif node.nodeName == "MultiplierNode":
+            node.setDbase(self.dbase)
 
 
 class MultiplierNode(CtrlNode):
@@ -394,13 +396,21 @@ class MultiplierNode(CtrlNode):
         results = {}
         results["dataOut"] = None
         coef = self.ctrls["coefficient"].value()
-        try:
-            results["dataOut"] = (
-                np.array(args["dataIn"]).astype(np.float) * coef
-            ).tolist()
-        except:
-            pass
+        if args["dataIn"]:
+            datain = [
+                float(x) if not self.dbase.utils.isAttributeNull(x) else None
+                for x in args["dataIn"]
+            ]
+
+            try:
+                results["dataOut"] = (np.array(datain).astype(np.float) * coef).tolist()
+            except Exception as e:
+                print(e)
+                pass
         return results
+
+    def setDbase(self, dbase):
+        self.dbase = dbase
 
 
 class ConstantNode(CtrlNode):
