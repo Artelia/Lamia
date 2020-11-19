@@ -362,10 +362,11 @@ class AbstractDBaseParser:
 
         updateWinReg(worktype=worktype)
 
-        trigermodule = importlib.import_module(
-            f"Lamia.config.{self.worktype}.dbase.{self.worktype}_crud_{self.workversion}"
-        )
-        self.lamiaorm = trigermodule.LamiaORM(self)
+        if self.base3version:
+            trigermodule = importlib.import_module(
+                f"Lamia.config.{self.worktype}.dbase.{self.worktype}_crud_{self.workversion}"
+            )
+            self.lamiaorm = trigermodule.LamiaORM(self)
 
     def initDBase(self):
         raise NotImplementedError
@@ -1086,9 +1087,10 @@ class AbstractDBaseParser:
                 return
 
         DBASETABLENAMElower = dbname.lower()
-        result = self.getValuesFromPk(
-            DBASETABLENAMElower + "_qgis", "datetimecreation", featurepk
-        )
+        result = self.lamiaorm[DBASETABLENAMElower].read(featurepk)["datetimecreation"]
+        # result = self.getValuesFromPk(
+        #     DBASETABLENAMElower + "_qgis", "datetimecreation", featurepk
+        # )
 
         if result is not None:
             datevalue = datetime.datetime.strptime(
@@ -1108,93 +1110,95 @@ class AbstractDBaseParser:
         result = self.getValuesFromPk(
             DBASETABLENAMElower + "_qgis", fieldrequested, featurepk
         )
+        # result = self.lamiaorm[DBASETABLENAMElower].read(featurepk)[fieldrequested]
         if len(result) > 0:
             pkressource, idressource, file = result
         else:
             return
 
         dbaseressourcesdirectory = self.dbaseressourcesdirectory
-        if file is not None and len(file) > 0:
-            if file[0] == ".":
-                file = os.path.join(dbaseressourcesdirectory, file)
+        if (
+            file is not None
+            and len(file) > 0
+            and not file[0] == "."
+            and os.path.isfile(file)
+        ):
+            # if file[0] == ".":
+            #     file = os.path.join(dbaseressourcesdirectory, file)
+            # if not file[0] == "." and os.path.isfile(file):
+            # if os.path.isfile(file):
+            filename = os.path.basename(file)
+            # filename = str(idressource) + "_" + filename
+            # filename = str(idressource) + "_" + filename
+            destinationdir = os.path.join(dbaseressourcesdirectory, dbname, date)
+            destinationfile = os.path.join(destinationdir, filename)
+
+            self.copyRessourceFile(
+                filetype=dbname,
+                fromfile=file,
+                tofile=destinationfile,
+                withthumbnail=2,
+                copywholedirforraster=False,
+            )
+
+            # not used : sqlite too big dbase size...
+            # self.createBlobThumbnail(pkressource, destinationfile)
+
+            finalname = os.path.join(
+                ".", os.path.relpath(destinationfile, dbaseressourcesdirectory)
+            )
+            if self.base3version:
+                # sql = (
+                #     "UPDATE resource SET file = '"
+                #     + finalname
+                #     + "' WHERE pk_resource = "
+                #     + str(pkressource)
+                #     + ";"
+                # )
+                # query = self.query(sql)
+                self.lamiaorm["resource"].update(pkressource, {"file": finalname})
+
+                if previousfeaturepk is not None:  # case updating existing feature
+                    # sql = (
+                    #     "SELECT file FROM resource  WHERE pk_resource = "
+                    #     + str(pkressource)
+                    #     + ";"
+                    # )
+                    # query = self.query(sql)
+                    # result = [row[0] for row in query]
+                    result = self.lamiaorm["resource"].read(pkressource)["file"]
+                    oldfile = result[0]
+                else:
+                    oldfile = ""
             else:
-                if os.path.isfile(file):
-                    filename = os.path.basename(file)
-                    filename = str(idressource) + "_" + filename
-                    destinationdir = os.path.join(
-                        dbaseressourcesdirectory, dbname, date
+                # sql = (
+                #     "UPDATE Ressource SET file = '"
+                #     + finalname
+                #     + "' WHERE pk_ressource = "
+                #     + str(pkressource)
+                #     + ";"
+                # )
+                # query = self.query(sql)
+                self.lamiaorm["resource"].update(pkressource, {"file": finalname})
+
+                if previousfeaturepk is not None:  # case updating existing feature
+                    sql = (
+                        "SELECT file FROM Ressource  WHERE pk_ressource = "
+                        + str(pkressource)
+                        + ";"
                     )
-                    destinationfile = os.path.join(destinationdir, filename)
+                    query = self.query(sql)
+                    result = [row[0] for row in query]
+                    oldfile = result[0]
+                else:
+                    oldfile = ""
 
-                    self.copyRessourceFile(
-                        fromfile=file,
-                        tofile=destinationfile,
-                        withthumbnail=2,
-                        copywholedirforraster=False,
-                    )
+            newfile = finalname
 
-                    # not used : sqlite too big dbase size...
-                    # self.createBlobThumbnail(pkressource, destinationfile)
-
-                    finalname = os.path.join(
-                        ".", os.path.relpath(destinationfile, dbaseressourcesdirectory)
-                    )
-                    if self.base3version:
-                        sql = (
-                            "UPDATE resource SET file = '"
-                            + finalname
-                            + "' WHERE pk_resource = "
-                            + str(pkressource)
-                            + ";"
-                        )
-                        query = self.query(sql)
-
-                        if (
-                            previousfeaturepk is not None
-                        ):  # case updating existing feature
-                            sql = (
-                                "SELECT file FROM resource  WHERE pk_resource = "
-                                + str(pkressource)
-                                + ";"
-                            )
-                            query = self.query(sql)
-                            result = [row[0] for row in query]
-                            oldfile = result[0]
-                        else:
-                            oldfile = ""
-                    else:
-                        sql = (
-                            "UPDATE Ressource SET file = '"
-                            + finalname
-                            + "' WHERE pk_ressource = "
-                            + str(pkressource)
-                            + ";"
-                        )
-                        query = self.query(sql)
-
-                        if (
-                            previousfeaturepk is not None
-                        ):  # case updating existing feature
-                            sql = (
-                                "SELECT file FROM Ressource  WHERE pk_ressource = "
-                                + str(pkressource)
-                                + ";"
-                            )
-                            query = self.query(sql)
-                            result = [row[0] for row in query]
-                            oldfile = result[0]
-                        else:
-                            oldfile = ""
-
-                    newfile = finalname
-
-                    if (
-                        os.path.isfile(self.completePathOfFile(oldfile))
-                        and oldfile != newfile
-                    ):
-                        os.remove(self.completePathOfFile(oldfile))
-                    else:
-                        pass
+            if os.path.isfile(self.completePathOfFile(oldfile)) and oldfile != newfile:
+                os.remove(self.completePathOfFile(oldfile))
+            else:
+                pass
 
     def completePathOfFile(self, filetoprocess):
         """
@@ -1256,10 +1260,10 @@ class AbstractDBaseParser:
         return parenttablenamelist
 
     def copyRessourceFile(
-        self, fromfile, tofile, withthumbnail=0, copywholedirforraster=False
+        self, filetype, fromfile, tofile, withthumbnail=0, copywholedirforraster=False
     ):
         """
-
+        :param fromrep: media, rasters, report
         :param fromrep:
         :param fromfile:
         :param torep:
@@ -1273,6 +1277,9 @@ class AbstractDBaseParser:
         if debug:
             logging.getLogger("Lamia").debug("Copy %s %s", str(fromfile), str(tofile))
 
+        if not os.path.isfile(fromfile):
+            return
+
         fromfile = fromfile
         fromdir = os.path.dirname(fromfile)
         fromfilename, fromfileext = os.path.splitext(os.path.basename(fromfile))
@@ -1282,39 +1289,24 @@ class AbstractDBaseParser:
             os.path.basename(destinationfile)
         )
 
-        if os.path.isfile(fromfile):
+        # if os.path.isfile(fromfile):
 
-            if copywholedirforraster and "Rasters" in fromfile:
-                if not os.path.exists(destinationdir):
-                    shutil.copytree(fromdir, destinationdir)
-            else:
-                if not os.path.exists(destinationdir):
-                    os.makedirs(destinationdir)
+        if copywholedirforraster and "Rasters" in fromfile:
+            if not os.path.exists(destinationdir):
+                shutil.copytree(fromdir, destinationdir)
+        else:
+            if not os.path.exists(destinationdir):
+                os.makedirs(destinationdir)
 
-                fromfilebase, fromext = os.path.splitext(fromfile)
-                tofilebase, toext = os.path.splitext(destinationfile)
+            fromfilebase, fromext = os.path.splitext(fromfile)
+            tofilebase, toext = os.path.splitext(destinationfile)
+
+            if filetype in ["media", "report"]:
                 if (
                     len(fromfilebase.split("_")) > 1
                     and fromfilebase.split("_")[1] == "croquis"
                 ):
                     shutil.copy(fromfile, destinationfile)
-
-                elif fromext in [".shp"]:
-                    dirfiles = [
-                        f
-                        for f in os.listdir(fromdir)
-                        if os.path.isfile(os.path.join(fromdir, f))
-                    ]
-                    for dirfile in dirfiles:
-                        dirfilebase, dirfileext = os.path.splitext(dirfile)
-                        if dirfilebase == fromfilename:
-                            fromshpfile = os.path.join(
-                                fromdir, dirfilebase + dirfileext
-                            )
-                            toshpfile = os.path.join(
-                                destinationdir, destinationfilename + dirfileext
-                            )
-                            shutil.copy(fromshpfile, toshpfile)
 
                 else:
                     if (
@@ -1337,4 +1329,64 @@ class AbstractDBaseParser:
 
                     if withthumbnail in [0, 2]:
                         shutil.copy(fromfile, destinationfile)
+
+            elif filetype in ["rasters"]:
+                dirfiles = [
+                    f
+                    for f in os.listdir(fromdir)
+                    if os.path.isfile(os.path.join(fromdir, f))
+                ]
+                for dirfile in dirfiles:
+                    dirfilebase, dirfileext = os.path.splitext(dirfile)
+                    if dirfilebase == fromfilename:
+                        fromshpfile = os.path.join(fromdir, dirfilebase + dirfileext)
+                        toshpfile = os.path.join(
+                            destinationdir, destinationfilename + dirfileext
+                        )
+                        shutil.copy(fromshpfile, toshpfile)
+
+            # **
+
+            # if (
+            #     len(fromfilebase.split("_")) > 1
+            #     and fromfilebase.split("_")[1] == "croquis"
+            # ):
+            #     shutil.copy(fromfile, destinationfile)
+
+            # elif fromext in [".shp"]:
+            #     dirfiles = [
+            #         f
+            #         for f in os.listdir(fromdir)
+            #         if os.path.isfile(os.path.join(fromdir, f))
+            #     ]
+            #     for dirfile in dirfiles:
+            #         dirfilebase, dirfileext = os.path.splitext(dirfile)
+            #         if dirfilebase == fromfilename:
+            #             fromshpfile = os.path.join(fromdir, dirfilebase + dirfileext)
+            #             toshpfile = os.path.join(
+            #                 destinationdir, destinationfilename + dirfileext
+            #             )
+            #             shutil.copy(fromshpfile, toshpfile)
+
+            # else:
+            #     if (
+            #         withthumbnail in [0, 1]
+            #         and PILexists
+            #         and fromext.lower() in [".jpg", ".jpeg", ".png"]
+            #     ):
+
+            #         possibletbnailfile = fromfilebase + "_thumbnail.png"
+            #         if os.path.isfile(possibletbnailfile):
+            #             if possibletbnailfile != tofilebase + "_thumbnail.png":
+            #                 shutil.copy(
+            #                     possibletbnailfile, tofilebase + "_thumbnail.png"
+            #                 )
+            #         else:
+            #             size = THUMBNAIL_SIZE, THUMBNAIL_SIZE
+            #             im = PIL.Image.open(fromfile)
+            #             im.thumbnail(size)
+            #             im.save(tofilebase + "_thumbnail.png", "PNG")
+
+            #     if withthumbnail in [0, 2]:
+            #         shutil.copy(fromfile, destinationfile)
 

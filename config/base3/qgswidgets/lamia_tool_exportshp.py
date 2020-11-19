@@ -103,7 +103,21 @@ class ExportShapefileTool(AbstractLamiaTool):
             destinationshapefile=shpfile,
             exportconffilepath=tabletypepath,
             pkzonegeos=pks,
+            removeemptycolumns=bool(self.toolwidgetmain.checkBox_remove.checkState()),
         )
+
+        filepathwithoutext = os.path.join(
+            os.path.dirname(shpfile), os.path.splitext(os.path.basename(shpfile))[0]
+        )
+
+        if os.path.isfile(filepathwithoutext + ".shp"):
+            filetoload = shpfile
+        elif os.path.isfile(filepathwithoutext + ".dbf"):
+            filetoload = filepathwithoutext + ".dbf"
+        vectorlay = qgis.core.QgsVectorLayer(
+            filetoload, os.path.basename(shpfile), "ogr"
+        )
+        qgis.core.QgsProject.instance().addMapLayer(vectorlay)
 
 
 class UserUI(QWidget):

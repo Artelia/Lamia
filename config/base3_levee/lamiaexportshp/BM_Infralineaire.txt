@@ -1,0 +1,54 @@
+###edge
+#nom              type               cst               valeur                    
+id_infralineaire;         Int;                  ;     id_edge
+id_descriptionsystem;     Int;               ;                  id_descriptionsystem
+id_objet;         Int;               ;                  edge_now.id_object
+
+#nom              type               cst               valeur                    
+datecreati;      String;               ;                  datetimecreation
+datedestru;      String;               ;                  datetimedestruction
+commentaire;      String;               ;                  comment
+libelle;      String;               ;                  name
+
+
+#nom              type               cst               valeur                    
+descriptio;     String;            edgetype;        edgetype
+typologie;     String;            edgesubtype;        edgesubtype
+photo;        String;                          ;        (SELECT file FROM media_now WHERE media_now.id_resource = edge_now.lid_resource_2)
+classement;     String;              regulatorycategory;         regulatorycategory
+aubaredela;     String;            setbackwidth;        setbackwidth
+auba_herb;     String;            setbackvegetationherbaceous;        setbackvegetationherbaceous
+auba_arbu;     String;            setbackvegetationshrub;        setbackvegetationshrub
+auba_arbo;     String;            setbackvegetationtree;        setbackvegetationtree
+auba_com;     String;                               ;        setbackcomment
+
+###geoarea
+## FROM geoarea_now WHERE ST_WITHIN(ST_MakeValid(edge_now.geom),ST_MakeValid(geoarea_now.geom))
+pk_zonegeo;     Int;            ;        pk_geoarea ;  pk_geoarea
+secteur;     String;            ;        city
+sssecteur;     String;            ;        name
+
+
+###Gestionnaire
+##FROM actor INNER JOIN tcobjectactor ON tcobjectactor.lid_actor = actor.id_actor  WHERE edge_now.id_object = tcobjectactor.lid_object; LIMIT 1 OFFSET 0
+gestionnai;     String;            ;        actorname || ' - ' || society
+
+###Graphiquedata
+##FROM graphdata_now  INNER JOIN graph_now ON graph_now.pk_graph = graphdata_now.lpk_graph WHERE edge_now.lid_resource_4 = graph_now.id_resource AND graphdata_now.graphchar4 = 'CRE' GROUP BY graphdata_now.pk_graphdata ORDER BY pk_graphdata 
+#nom              type               cst               valeur                    
+largeur;        Double;                 ;               SUM(graphdata_now.graphnum1)
+
+###Graphiquedata1
+##FROM graphdata_now  INNER JOIN graph_now ON graph_now.pk_graph = graphdata_now.lpk_graph WHERE edge_now.lid_resource_4 = graph_now.id_resource AND graphdata_now.graphchar4 = 'TER' GROUP BY graphdata_now.pk_graphdata  ORDER BY pk_graphdata
+#nom              type               cst               valeur                    
+hauteur;        Double;                 ;               SUM(graphdata_now.graphnum2)
+
+
+
+###geom
+geom;         Int;               ;                  ST_AsText(geom)
+
+
+###main
+FROM edge_now
+

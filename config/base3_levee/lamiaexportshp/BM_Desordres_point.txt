@@ -1,0 +1,27 @@
+###deficiency
+#nom              type               cst               valeur     
+id_desordre;         Int;                  ;     id_deficiency     
+id_objet;         Int;               ;                  id_object
+grp_des;      String  ;      deficiencycategory;                  deficiencycategory
+commentaire;      String;               ;                  comment
+cote;      String;             side  ;                  side
+position;      String;             position  ;                  position
+catdes;      String;             deficiencytype  ;                  deficiencytype
+typedes;      String;             deficiencysubtype  ;                  deficiencysubtype
+
+
+
+###geoarea
+## FROM geoarea_now WHERE ST_WITHIN(ST_MakeValid(deficiency_now.geom),ST_MakeValid(geoarea_now.geom))
+pk_zonegeo;     Int;            ;        pk_geoarea ;  pk_geoarea
+secteur;     String;            ;        geoarea_now.city
+sssecteur;     String;            ;        geoarea_now.name
+
+###Desordre2
+lid_descriptionsystem;         Int;               ;                  lid_descriptionsystem
+
+###geom
+geom;         Int;               ;                  ST_AsText(ST_MakeValid(geom))
+
+###main
+FROM deficiency_now   WHERE ST_GeometryType(ST_MakeValid(deficiency_now.geom)) = 'POINT'

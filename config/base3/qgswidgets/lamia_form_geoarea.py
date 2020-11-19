@@ -65,11 +65,14 @@ class BaseGeoareaTool(AbstractLamiaFormTool):
         self.formtoolwidgetconfdictmain = {
             "geoarea": {
                 "linkfield": "id_geoarea",
-                "widgets": {"geoareatype": self.toolwidgetmain.comboBox_type},
+                "widgets": {
+                    "geoareatype": self.toolwidgetmain.geoareatype,
+                    "city": self.toolwidgetmain.city,
+                },
             },
             "object": {
                 "linkfield": "id_object",
-                "widgets": {"name": self.toolwidgetmain.lineEdit_nom},
+                "widgets": {"name": self.toolwidgetmain.name},
             },
         }
 

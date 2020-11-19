@@ -1,0 +1,21 @@
+###media
+#nom              type               cst               valeur                    
+id_photo;         Int;                  ;               id_media
+id_objet;         Int;                  ;               id_object
+
+
+#nom              type               cst               valeur                    
+id_ressource;         Int;                  ;               id_resource
+source;         String;                  ;               'Artelia'
+datephoto;         String;                  ;               datetimeresource
+fichier;         String;                  ;               file
+descriptio;         String;                  ;               comment
+
+
+
+###geom
+geom;         Int;               ;                  ST_AsText(geom)
+
+
+###main
+FROM media_now

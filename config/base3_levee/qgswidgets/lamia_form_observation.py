@@ -84,50 +84,50 @@ class BaseLeveeObservationTool(BaseObservationTool):
             "observation": {
                 "linkfield": "id_observation",
                 "widgets": {
-                    "datetimeobservation": self.toolwidgetmain.dateTimeEdit,
-                    "number": self.toolwidgetmain.spinBox_nombre,
-                    "specificlenght": self.toolwidgetmain.doubleSpinBox_longueur,
-                    "gravity": self.toolwidgetmain.comboBox_urgence,
-                    "conditionglobal": self.toolwidgetmain.comboBox_etatgen,
-                    "conditionglobalcom": self.toolwidgetmain.textBrowser_etatgencom,
-                    "oh_etatvantellerie": self.toolwidgetmain.comboBox_etatvantellerie,
-                    "oh_etatvantelleriecom": self.toolwidgetmain.textBrowser_vanteleriecom,
+                    "datetimeobservation": self.toolwidgetmain.datetimeobservation,
+                    "number": self.toolwidgetmain.number,
+                    "specificlenght": self.toolwidgetmain.specificlenght,
+                    "gravity": self.toolwidgetmain.gravity,
+                    "conditionglobal": self.toolwidgetmain.conditionglobal,
+                    "conditionglobalcom": self.toolwidgetmain.conditionglobalcom,
+                    "oh_etatvantellerie": self.toolwidgetmain.oh_etatvantellerie,
+                    "oh_etatvantelleriecom": self.toolwidgetmain.oh_etatvantelleriecom,
                     "eqconditioncivilwork": [
-                        self.toolwidgetmain.comboBox_etatGC,
-                        self.toolwidgetmain.comboBox_etatGC_2,
+                        self.toolwidgetmain.eqconditioncivilwork,
+                        self.toolwidgetmain.eqconditioncivilwork_2,
                     ],
                     "eqconditioncivilworkcom": [
-                        self.toolwidgetmain.textBrowser_etatGC,
-                        self.toolwidgetmain.textBrowser_etatGC_2,
+                        self.toolwidgetmain.eqconditioncivilworkcom,
+                        self.toolwidgetmain.eqconditioncivilworkcom_2,
                     ],
-                    "eqhandlingtest": self.toolwidgetmain.comboBox_manoeuvre,
-                    "eqhandlingtestcom": self.toolwidgetmain.textBrowser_manoeuvre,
-                    "eqconditionsealing": self.toolwidgetmain.checkBox_etancheite,
-                    "eqconditionsealingcom": self.toolwidgetmain.textBrowser__etancheite,
+                    "eqhandlingtest": self.toolwidgetmain.eqhandlingtest,
+                    "eqhandlingtestcom": self.toolwidgetmain.eqhandlingtestcom,
+                    "eqconditionsealing": self.toolwidgetmain.eqconditionsealing,
+                    "eqconditionsealingcom": self.toolwidgetmain.eqconditionsealingcom,
                     "eqconditionsedimentation": [
-                        self.toolwidgetmain.comboBox_envas,
-                        self.toolwidgetmain.comboBox_envas2,
+                        self.toolwidgetmain.eqconditionsedimentation,
+                        self.toolwidgetmain.eqconditionsedimentation_2,
                     ],
                     "eqconditionsedimentationcom": [
-                        self.toolwidgetmain.textBrowser_envascom,
-                        self.toolwidgetmain.textBrowser_envascom2,
+                        self.toolwidgetmain.eqconditionsedimentationcom,
+                        self.toolwidgetmain.eqconditionsedimentationcom_2,
                     ],
-                    "progression": self.toolwidgetmain.textEdit_evolution,
-                    "nextactiontype": self.toolwidgetmain.comboBox_typesuite,
-                    "nextactioncomment": self.toolwidgetmain.textEdit_suite,
+                    "progression": self.toolwidgetmain.progression,
+                    "nextactiontype": self.toolwidgetmain.nextactiontype,
+                    "nextactioncomment": self.toolwidgetmain.nextactioncomment,
                 },
             },
             "object": {
                 "linkfield": "id_object",
-                "widgets": {"comment": self.toolwidgetmain.textEdit_comm},
+                "widgets": {"comment": self.toolwidgetmain.comment},
             },
         }
 
         self.toolwidgetmain.toolButton_calc_nb.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.spinBox_nombre)
+            lambda: self.showNumPad(self.toolwidgetmain.number)
         )
         self.toolwidgetmain.toolButton_longueur.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_longueur)
+            lambda: self.showNumPad(self.toolwidgetmain.specificlenght)
         )
 
         # ****************************************************************************************
@@ -143,9 +143,9 @@ class BaseLeveeObservationTool(BaseObservationTool):
 
         if self.dbase.variante in ["SIRS"]:
             self.toolwidgetmain.toolButton_longueur.setEnabled(False)
-            self.toolwidgetmain.doubleSpinBox_longueur.setEnabled(False)
-            self.toolwidgetmain.comboBox_typesuite.setEnabled(False)
-            self.toolwidgetmain.textEdit_comm.setEnabled(False)
+            self.toolwidgetmain.specificlenght.setEnabled(False)
+            self.toolwidgetmain.nextactiontype.setEnabled(False)
+            self.toolwidgetmain.comment.setEnabled(False)
 
             """
             self.toolwidgetmain = UserUISirs()
@@ -196,12 +196,15 @@ class BaseLeveeObservationTool(BaseObservationTool):
         if self.toolwidgetmain is None:
             return
         currenttext = (
-            self.parentWidget.parentWidget.toolwidgetmain.comboBox_type.currentText()
+            self.parentWidget.parentWidget.toolwidgetmain.equipmenttype.currentText()
+        )
+        currentval = self.dbase.getConstraintRawValueFromText(
+            "equipment", "equipmenttype", currenttext
         )
 
-        if currenttext in ["Vanne", "Clapet"]:
+        if currentval in ["VAN", "CLA"]:
             self.toolwidgetmain.stackedWidget_2.setCurrentIndex(1)
-        elif currenttext in ["Exutoire"]:
+        elif currentval in ["EXU"]:
             self.toolwidgetmain.stackedWidget_2.setCurrentIndex(2)
         else:
             self.toolwidgetmain.stackedWidget_2.setCurrentIndex(0)

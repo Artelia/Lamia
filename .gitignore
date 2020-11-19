@@ -27,6 +27,7 @@ arteliasitev3/node_modules
 **/*backup*
 **/*caduc*
 **/_build/
+*/old/
 
 *.wav
 *.cprof

@@ -111,7 +111,7 @@ class BaseReportTool(AbstractLamiaFormTool):
         )
 
         if file:
-            self.toolwidget.lineEdit_file.setText(os.path.normpath(file))
+            self.toolwidget.file.setText(os.path.normpath(file))
 
     # def postInitFeatureProperties(self, feat):
     def postSelectFeature(self):

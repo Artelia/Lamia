@@ -140,33 +140,34 @@ def doPostScript(sqlitedbasedest):
 
 
 def DoPostResources(sqlitedbasedest, sourcefile, destfile):
-    srcdir = os.path.join(os.path.dirname(sourcefile), "DBspatialite", "Photos")
-    if os.path.isdir(srcdir):
-        destdir = os.path.join(os.path.dirname(destfile), "DBspatialite", "media")
-        if os.path.exists(destdir):
-            shutil.rmtree(destdir)
-        destination = shutil.copytree(srcdir, destdir)
+    if False:
+        srcdir = os.path.join(os.path.dirname(sourcefile), "DBspatialite", "Photos")
+        if os.path.isdir(srcdir):
+            destdir = os.path.join(os.path.dirname(destfile), "DBspatialite", "media")
+            if os.path.exists(destdir):
+                shutil.rmtree(destdir)
+            destination = shutil.copytree(srcdir, destdir)
 
-    srcdir = os.path.join(os.path.dirname(sourcefile), "DBspatialite", "Photo")
-    if os.path.isdir(srcdir):
-        destdir = os.path.join(os.path.dirname(destfile), "DBspatialite", "media")
-        if os.path.exists(destdir):
-            shutil.rmtree(destdir)
-        destination = shutil.copytree(srcdir, destdir)
+        srcdir = os.path.join(os.path.dirname(sourcefile), "DBspatialite", "Photo")
+        if os.path.isdir(srcdir):
+            destdir = os.path.join(os.path.dirname(destfile), "DBspatialite", "media")
+            if os.path.exists(destdir):
+                shutil.rmtree(destdir)
+            destination = shutil.copytree(srcdir, destdir)
 
-    srcdir = os.path.join(os.path.dirname(sourcefile), "DBspatialite", "Rapport")
-    if os.path.isdir(srcdir):
-        destdir = os.path.join(os.path.dirname(destfile), "DBspatialite", "report")
-        if os.path.exists(destdir):
-            shutil.rmtree(destdir)
-        destination = shutil.copytree(srcdir, destdir)
+        srcdir = os.path.join(os.path.dirname(sourcefile), "DBspatialite", "Rapport")
+        if os.path.isdir(srcdir):
+            destdir = os.path.join(os.path.dirname(destfile), "DBspatialite", "report")
+            if os.path.exists(destdir):
+                shutil.rmtree(destdir)
+            destination = shutil.copytree(srcdir, destdir)
 
-    srcdir = os.path.join(os.path.dirname(sourcefile), "DBspatialite", "Rasters")
-    if os.path.isdir(srcdir):
-        destdir = os.path.join(os.path.dirname(destfile), "DBspatialite", "rasters")
-        if os.path.exists(destdir):
-            shutil.rmtree(destdir)
-        destination = shutil.copytree(srcdir, destdir)
+        srcdir = os.path.join(os.path.dirname(sourcefile), "DBspatialite", "Rasters")
+        if os.path.isdir(srcdir):
+            destdir = os.path.join(os.path.dirname(destfile), "DBspatialite", "rasters")
+            if os.path.exists(destdir):
+                shutil.rmtree(destdir)
+            destination = shutil.copytree(srcdir, destdir)
 
     sql = "SELECT pk_resource, file FROM resource"
     result = sqlitedbasedest.query(sql)

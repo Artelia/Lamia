@@ -63,7 +63,13 @@ class ExportShapefileCore(AbstractLibsLamia):
         #     self.dbase.dbaseressourcesdirectory, "config", self.POSTPROTOOLNAME
         # )
 
-    def runExport(self, destinationshapefile, exportconffilepath, pkzonegeos=[]):
+    def runExport(
+        self,
+        destinationshapefile,
+        exportconffilepath,
+        pkzonegeos=[],
+        removeemptycolumns=True,
+    ):
 
         debug = False
         tabletypepath = self.getConfFilePath(exportconffilepath)
@@ -129,7 +135,12 @@ class ExportShapefileCore(AbstractLibsLamia):
                     geomtype = qgis.core.QgsWkbTypes.Point
 
         self.fillShapefile(
-            destinationshapefile, geomtype, self.fieldsforshp, self.champs, self.result
+            destinationshapefile,
+            geomtype,
+            self.fieldsforshp,
+            self.champs,
+            self.result,
+            removeemptycolumns,
         )
 
     def new(self, confpath):
@@ -360,7 +371,9 @@ class ExportShapefileCore(AbstractLibsLamia):
 
         return fields
 
-    def fillShapefile(self, filename, typegeom, fields, champs, result):
+    def fillShapefile(
+        self, filename, typegeom, fields, champs, result, removeemptycolumns
+    ):
 
         debug = False
 
@@ -421,7 +434,8 @@ class ExportShapefileCore(AbstractLibsLamia):
 
         del writer
 
-        self.cleanShapefile(filename)
+        if removeemptycolumns:
+            self.cleanShapefile(filename)
 
         if self.messageinstance is not None:
             self.messageinstance.showNormalMessage("Export termine")

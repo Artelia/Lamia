@@ -1,0 +1,41 @@
+###equipment
+#nom              type               cst               valeur                    
+id_equipement;         Int;                  ;               id_equipment
+id_descriptionsystem;     Int;               ;                  id_descriptionsystem
+id_objet;         Int;               ;                  id_object
+
+#nom              type               cst               valeur                    
+datecreati;      String;               ;                  datetimecreation
+datedestru;      String;               ;                  datetimedestruction
+commentaire;      String;               ;                  comment
+libelle;      String;               ;                  name
+
+#nom              type               cst               valeur                    
+cote;      String;             side  ;                  side
+position;      String;             position  ;                  position
+categorie;      String;             equipmentcategory  ;                  equipmentcategory
+typeequipement;      String;             equipmenttype  ;                  equipmenttype
+implantation;      String;             location  ;                  location
+utilisatio;      String;             usage  ;                  usage
+ecoulement;      String;             flowtype  ;                  flowtype
+dimverti;      Double;               ;                  CASE WHEN height > 0 THEN height ELSE NULL END
+dimhori;      Double;               ;                  CASE WHEN width > 0 THEN width ELSE NULL END
+securite;      String;             safety  ;                  safety
+lid_descriptionsystem;     Int;               ;                  lid_descriptionsystem_1
+
+
+
+
+###geoarea
+## FROM geoarea_now WHERE ST_WITHIN(ST_MakeValid(equipment_now.geom),ST_MakeValid(geoarea_now.geom))
+pk_zonegeo;     Int;            ;        pk_geoarea 
+secteur;     String;            ;        geoarea_now.city
+sssecteur;     String;            ;        geoarea_now.name
+
+
+
+###geom
+geom;         Int;               ;                  ST_AsText(geom)
+
+###main
+FROM equipment_now WHERE ST_GeometryType(ST_MakeValid(geom)) = 'LINESTRING'

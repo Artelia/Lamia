@@ -1,9 +1,0 @@
-#change valeur to valeur1 
-
-# bug affectation chasse a la valeur 8 alors que c etat un siphon...
-
-if self.variante in ['Lamia'] or self.variante is None :
-    sql = "UPDATE Equipement SET typeAppAss = 5 WHERE typeAppAss = 8"
-    self.query(sql)
-
-    

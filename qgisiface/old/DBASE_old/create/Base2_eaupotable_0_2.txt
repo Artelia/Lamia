@@ -1,6 +1,0 @@
-#change valeur to valeur1 
-
-sql = "UPDATE Infralineaire SET diametre_ext = diametre"
-self.query(sql)
-
-    

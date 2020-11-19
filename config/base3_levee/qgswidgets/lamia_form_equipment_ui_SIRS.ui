@@ -57,7 +57,7 @@
         </property>
         <layout class="QGridLayout" name="gridLayout">
          <item row="0" column="1">
-          <widget class="QComboBox" name="comboBox_cat"/>
+          <widget class="QComboBox" name="equipmentcategory"/>
          </item>
          <item row="0" column="0">
           <widget class="QLabel" name="label_11">
@@ -88,13 +88,13 @@
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QComboBox" name="comboBox_type"/>
+          <widget class="QComboBox" name="equipmenttype"/>
          </item>
          <item row="2" column="1">
-          <widget class="QComboBox" name="comboBox_cote"/>
+          <widget class="QComboBox" name="side"/>
          </item>
          <item row="3" column="1">
-          <widget class="QComboBox" name="comboBox_position"/>
+          <widget class="QComboBox" name="position"/>
          </item>
         </layout>
        </widget>
@@ -102,7 +102,7 @@
       <item>
        <widget class="QStackedWidget" name="stackedWidget">
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="page">
          <layout class="QGridLayout" name="gridLayout_4">
@@ -132,7 +132,7 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QComboBox" name="comboBox_ecoulement"/>
+           <widget class="QComboBox" name="flowtype"/>
           </item>
           <item row="0" column="0">
            <widget class="QLabel" name="label_5">
@@ -142,7 +142,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QComboBox" name="comboBox_implantation"/>
+           <widget class="QComboBox" name="location"/>
           </item>
           <item row="1" column="0">
            <widget class="QLabel" name="label_6">
@@ -152,10 +152,10 @@
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QComboBox" name="comboBox_utilisation"/>
+           <widget class="QComboBox" name="usage"/>
           </item>
           <item row="3" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_dimvert">
+           <widget class="QDoubleSpinBox" name="height">
             <property name="minimum">
              <double>-1.000000000000000</double>
             </property>
@@ -169,7 +169,7 @@
            </widget>
           </item>
           <item row="4" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_dimhoriz">
+           <widget class="QDoubleSpinBox" name="width">
             <property name="minimum">
              <double>-1.000000000000000</double>
             </property>
@@ -191,7 +191,7 @@
         <widget class="QWidget" name="page_2">
          <layout class="QGridLayout" name="gridLayout_5">
           <item row="1" column="1">
-           <widget class="QComboBox" name="comboBox_securite"/>
+           <widget class="QComboBox" name="safety"/>
           </item>
           <item row="1" column="0">
            <widget class="QLabel" name="label_14">
@@ -227,7 +227,7 @@
         </property>
         <layout class="QGridLayout" name="gridLayout_2">
          <item row="0" column="1">
-          <widget class="QTextBrowser" name="textBrowser_comm">
+          <widget class="QTextBrowser" name="comment">
            <property name="readOnly">
             <bool>false</bool>
            </property>

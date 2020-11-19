@@ -1,0 +1,18 @@
+###graphdata
+
+#nom              type               cst               valeur                    
+id_graphiquedata;         Int;                  ;               pk_graphdata
+typedata;           String;typedata;                    'Profil en travers'
+x;           Double;;                    graphnum1
+y;           Double;;                    graphnum2
+z;           Double;;                    graphnum2
+partie;           String;graphchar1;                    graphchar1
+type_prp;           String;graphchar2;                    graphchar2
+type_sec;           String;graphchar3;                    graphchar3
+cote;           String;graphchar4;                    graphchar4
+
+###edge
+lid_infral;         Int;                  ;               edge_now.id_edge
+
+###main
+FROM graphdata INNER JOIN graph ON graphdata.lpk_graph = graph.pk_graph INNER JOIN resource ON graph.lpk_resource = resource.pk_resource INNER JOIN edge_now ON resource.id_resource = edge_now.lid_resource_4

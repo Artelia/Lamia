@@ -61,7 +61,7 @@ class BaseLeveeEquipmentTool(BaseEquipmentTool):
             self.propertieswdgDesordre.SKIP_LOADING_UI = True
             self.propertieswdgDesordre.TABLEFILTERFIELD = {"deficiencycategory": "EQP"}
             self.propertieswdgDesordre.initMainToolWidget()
-            self.toolwidgetmain.comboBox_type.currentIndexChanged.connect(
+            self.toolwidgetmain.equipmenttype.currentIndexChanged.connect(
                 self.propertieswdgDesordre.propertieswdgOBSERVATION.equipementTypeChanged
             )
             self.dbasechildwdgfield.append(self.propertieswdgDesordre)
@@ -87,61 +87,61 @@ class BaseLeveeEquipmentTool(BaseEquipmentTool):
             "equipment": {
                 "linkfield": "id_equipement",
                 "widgets": {
-                    "equipmentcategory": self.toolwidgetmain.comboBox_cat,
-                    "side": self.toolwidgetmain.comboBox_cote,
-                    "position": self.toolwidgetmain.comboBox_position,
-                    "equipmenttype": self.toolwidgetmain.comboBox_type,
-                    "location": self.toolwidgetmain.comboBox_implantation,
-                    "flowtype": self.toolwidgetmain.comboBox_ecoulement,
-                    "usage": self.toolwidgetmain.comboBox_utilisation,
+                    "equipmentcategory": self.toolwidgetmain.equipmentcategory,
+                    "side": self.toolwidgetmain.side,
+                    "position": self.toolwidgetmain.position,
+                    "equipmenttype": self.toolwidgetmain.equipmenttype,
+                    "location": self.toolwidgetmain.location,
+                    "flowtype": self.toolwidgetmain.flowtype,
+                    "usage": self.toolwidgetmain.usage,
                     "height": [
-                        self.toolwidgetmain.doubleSpinBox_dimvert,
-                        self.toolwidgetmain.doubleSpinBox_dimvert_2,
+                        self.toolwidgetmain.height,
+                        self.toolwidgetmain.height_2,
                     ],
-                    "width": [
-                        self.toolwidgetmain.doubleSpinBox_dimhoriz,
-                        self.toolwidgetmain.doubleSpinBox_dimhoriz2,
-                    ],
-                    "equipmentsubtype": self.toolwidgetmain.comboBox_soustype,
-                    "invert": self.toolwidgetmain.doubleSpinBox_fildeau,
-                    "safety": self.toolwidgetmain.comboBox_securite,
+                    "width": [self.toolwidgetmain.width, self.toolwidgetmain.width_2,],
+                    "equipmentsubtype": self.toolwidgetmain.equipmentsubtype,
+                    "invert": self.toolwidgetmain.invert,
+                    "safety": self.toolwidgetmain.safety,
                 },
             },
             "object": {
                 "linkfield": "id_object",
-                "widgets": {"comment": self.toolwidgetmain.textBrowser_comm},
+                "widgets": {
+                    "comment": self.toolwidgetmain.comment,
+                    "name": self.toolwidgetmain.name,
+                },
             },
             "descriptionsystem": {"linkfield": "id_descriptionsystem", "widgets": {}},
         }
 
-        self.toolwidgetmain.comboBox_cat.currentIndexChanged.connect(
+        self.toolwidgetmain.equipmentcategory.currentIndexChanged.connect(
             self.changeCategorie
         )
 
         self.toolwidgetmain.toolButton_calch.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_dimvert)
+            lambda: self.showNumPad(self.toolwidgetmain.height)
         )
         self.toolwidgetmain.toolButton__calcv.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_dimhoriz)
+            lambda: self.showNumPad(self.toolwidgetmain.width)
         )
         self.toolwidgetmain.toolButton_calch_2.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_dimvert_2)
+            lambda: self.showNumPad(self.toolwidgetmain.height_2)
         )
         self.toolwidgetmain.toolButton_dimhoriz2.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_dimhoriz2)
+            lambda: self.showNumPad(self.toolwidgetmain.width_2)
         )
         self.toolwidgetmain.toolButton_fildeau.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_fildeau)
+            lambda: self.showNumPad(self.toolwidgetmain.invert)
         )
 
-        self.toolwidgetmain.comboBox_type.currentIndexChanged.connect(
+        self.toolwidgetmain.equipmenttype.currentIndexChanged.connect(
             self.typeponctuelChanged
         )
 
     def initMainToolWidgetSirs(self):
-        self.toolwidgetmain.comboBox_securite.setEnabled(False)
+        self.toolwidgetmain.safety.setEnabled(False)
         try:
-            self.toolwidgetmain.comboBox_type.currentIndexChanged.disconnect(
+            self.toolwidgetmain.equipmenttype.currentIndexChanged.disconnect(
                 self.typeponctuelChanged
             )
         except:
@@ -154,51 +154,53 @@ class BaseLeveeEquipmentTool(BaseEquipmentTool):
             "equipment": {
                 "linkfield": "id_equipment",
                 "widgets": {
-                    "equipmentcategory": self.toolwidgetmain.comboBox_cat,
-                    "side": self.toolwidgetmain.comboBox_cote,
-                    "position": self.toolwidgetmain.comboBox_position,
-                    "equipmenttype": self.toolwidgetmain.comboBox_type,
-                    "location": self.toolwidgetmain.comboBox_implantation,
-                    "flowtype": self.toolwidgetmain.comboBox_ecoulement,
-                    "usage": self.toolwidgetmain.comboBox_utilisation,
-                    "height": self.toolwidgetmain.doubleSpinBox_dimvert,
-                    "width": self.toolwidgetmain.doubleSpinBox_dimhoriz,
-                    "safety": self.toolwidgetmain.comboBox_securite,
+                    "equipmentcategory": self.toolwidgetmain.equipmentcategory,
+                    "side": self.toolwidgetmain.side,
+                    "position": self.toolwidgetmain.position,
+                    "equipmenttype": self.toolwidgetmain.equipmenttype,
+                    "location": self.toolwidgetmain.location,
+                    "flowtype": self.toolwidgetmain.flowtype,
+                    "usage": self.toolwidgetmain.usage,
+                    "height": self.toolwidgetmain.height,
+                    "width": self.toolwidgetmain.width,
+                    "safety": self.toolwidgetmain.safety,
                 },
             },
             "object": {
                 "linkfield": "id_object",
-                "widgets": {"comment": self.toolwidgetmain.textBrowser_comm},
+                "widgets": {"comment": self.toolwidgetmain.comment},
             },
             "descriptionsystem": {"linkfield": "id_descriptionsystem", "widgets": {}},
         }
 
-        self.toolwidgetmain.comboBox_cat.currentIndexChanged.connect(
+        self.toolwidgetmain.equipmentcategory.currentIndexChanged.connect(
             self.changeCategorie
         )
 
         self.toolwidgetmain.toolButton_calch.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_dimvert)
+            lambda: self.showNumPad(self.toolwidgetmain.height)
         )
         self.toolwidgetmain.toolButton__calcv.clicked.connect(
-            lambda: self.showNumPad(self.toolwidgetmain.doubleSpinBox_dimhoriz)
+            lambda: self.showNumPad(self.toolwidgetmain.width)
         )
 
     def postSaveFeature(self, savedfeaturepk=None):
         pass
 
     def typeponctuelChanged(self, comboindex):
-        if self.toolwidgetmain.comboBox_type.currentText() in [
-            "Clapet",
-            "Vanne",
-            "Exutoire",
-        ]:
+
+        currenttext = self.toolwidgetmain.equipmenttype.currentText()
+        currentval = self.dbase.getConstraintRawValueFromText(
+            "equipment", "equipmenttype", currenttext
+        )
+
+        if currentval in ["CLA", "VAN", "EXU"]:
             self.toolwidgetmain.stackedWidget_2.setCurrentIndex(0)
         else:
             self.toolwidgetmain.stackedWidget_2.setCurrentIndex(1)
 
     def changeCategorie(self, intcat=None):
-        combotxt = self.toolwidget.comboBox_cat.currentText()
+        combotxt = self.toolwidget.equipmentcategory.currentText()
         catval = self.dbase.getConstraintRawValueFromText(
             "equipment", "equipmentcategory", combotxt
         )

@@ -74,10 +74,10 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QComboBox" name="comboBox_urgence"/>
+       <widget class="QComboBox" name="gravity"/>
       </item>
       <item row="0" column="1">
-       <widget class="QDateTimeEdit" name="dateTimeEdit">
+       <widget class="QDateTimeEdit" name="datetimeobservation">
         <property name="calendarPopup">
          <bool>true</bool>
         </property>
@@ -119,7 +119,7 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QSpinBox" name="spinBox_nombre">
+        <widget class="QSpinBox" name="number">
          <property name="minimum">
           <number>-1</number>
          </property>
@@ -170,7 +170,7 @@
         </widget>
        </item>
        <item row="1" column="4">
-        <widget class="QDoubleSpinBox" name="doubleSpinBox_longueur">
+        <widget class="QDoubleSpinBox" name="specificlenght">
          <property name="minimum">
           <double>-1.000000000000000</double>
          </property>
@@ -187,7 +187,7 @@
         </widget>
        </item>
        <item row="3" column="1" colspan="5">
-        <widget class="QTextEdit" name="textEdit_comm">
+        <widget class="QTextEdit" name="comment">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
            <horstretch>0</horstretch>
@@ -203,7 +203,7 @@
         </widget>
        </item>
        <item row="5" column="1" colspan="5">
-        <widget class="QTextEdit" name="textEdit_evolution">
+        <widget class="QTextEdit" name="progression">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
            <horstretch>0</horstretch>
@@ -240,7 +240,7 @@
        <item>
         <widget class="QStackedWidget" name="stackedWidget_2">
          <property name="currentIndex">
-          <number>1</number>
+          <number>2</number>
          </property>
          <widget class="QWidget" name="page">
           <layout class="QGridLayout" name="gridLayout_2">
@@ -264,7 +264,7 @@
             </spacer>
            </item>
            <item row="0" column="1">
-            <widget class="QComboBox" name="comboBox_etatgen"/>
+            <widget class="QComboBox" name="conditionglobal"/>
            </item>
            <item row="0" column="0">
             <widget class="QLabel" name="label_3">
@@ -287,7 +287,7 @@
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QTextBrowser" name="textBrowser_etatgencom">
+            <widget class="QTextBrowser" name="conditionglobalcom">
              <property name="maximumSize">
               <size>
                <width>16777215</width>
@@ -317,10 +317,10 @@
               </attribute>
               <layout class="QVBoxLayout" name="verticalLayout_4">
                <item>
-                <widget class="QComboBox" name="comboBox_etatvantellerie"/>
+                <widget class="QComboBox" name="oh_etatvantellerie"/>
                </item>
                <item>
-                <widget class="QTextBrowser" name="textBrowser_vanteleriecom">
+                <widget class="QTextBrowser" name="oh_etatvantelleriecom">
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
@@ -340,10 +340,10 @@
               </attribute>
               <layout class="QVBoxLayout" name="verticalLayout_5">
                <item>
-                <widget class="QComboBox" name="comboBox_etatGC"/>
+                <widget class="QComboBox" name="eqconditioncivilwork"/>
                </item>
                <item>
-                <widget class="QTextBrowser" name="textBrowser_etatGC">
+                <widget class="QTextBrowser" name="eqconditioncivilworkcom">
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
@@ -363,10 +363,10 @@
               </attribute>
               <layout class="QVBoxLayout" name="verticalLayout_6">
                <item>
-                <widget class="QComboBox" name="comboBox_manoeuvre"/>
+                <widget class="QComboBox" name="eqhandlingtest"/>
                </item>
                <item>
-                <widget class="QTextBrowser" name="textBrowser_manoeuvre">
+                <widget class="QTextBrowser" name="eqhandlingtestcom">
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
@@ -386,14 +386,14 @@
               </attribute>
               <layout class="QVBoxLayout" name="verticalLayout_7">
                <item>
-                <widget class="QCheckBox" name="checkBox_etancheite">
+                <widget class="QCheckBox" name="eqconditionsealing">
                  <property name="text">
                   <string>Sealed facility</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QTextBrowser" name="textBrowser__etancheite">
+                <widget class="QTextBrowser" name="eqconditionsealingcom">
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
@@ -413,10 +413,10 @@
               </attribute>
               <layout class="QVBoxLayout" name="verticalLayout_8">
                <item>
-                <widget class="QComboBox" name="comboBox_envas"/>
+                <widget class="QComboBox" name="eqconditionsedimentation"/>
                </item>
                <item>
-                <widget class="QTextBrowser" name="textBrowser_envascom">
+                <widget class="QTextBrowser" name="eqconditionsedimentationcom">
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
@@ -445,7 +445,7 @@
            <item>
             <widget class="QTabWidget" name="tabWidget_2">
              <property name="currentIndex">
-              <number>1</number>
+              <number>0</number>
              </property>
              <widget class="QWidget" name="tab_6">
               <attribute name="title">
@@ -453,10 +453,10 @@
               </attribute>
               <layout class="QVBoxLayout" name="verticalLayout_9">
                <item>
-                <widget class="QComboBox" name="comboBox_etatGC_2"/>
+                <widget class="QComboBox" name="eqconditioncivilwork_2"/>
                </item>
                <item>
-                <widget class="QTextBrowser" name="textBrowser_etatGC_2">
+                <widget class="QTextBrowser" name="eqconditioncivilworkcom_2">
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
@@ -476,10 +476,10 @@
               </attribute>
               <layout class="QVBoxLayout" name="verticalLayout_10">
                <item>
-                <widget class="QComboBox" name="comboBox_envas2"/>
+                <widget class="QComboBox" name="eqconditionsedimentation_2"/>
                </item>
                <item>
-                <widget class="QTextBrowser" name="textBrowser_envascom2">
+                <widget class="QTextBrowser" name="eqconditionsedimentationcom_2">
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
@@ -552,10 +552,10 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QComboBox" name="comboBox_typesuite"/>
+       <widget class="QComboBox" name="nextactiontype"/>
       </item>
       <item row="1" column="1">
-       <widget class="QTextEdit" name="textEdit_suite">
+       <widget class="QTextEdit" name="nextactioncomment">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
           <horstretch>0</horstretch>

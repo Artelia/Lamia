@@ -1,0 +1,8 @@
+###tcobjectresource
+#nom              type               cst               valeur                    
+lid_ressource;         Int;                  ;               lid_resource
+lid_objet;         Int;                  ;               lid_object
+
+
+###main
+FROM tcobjectresource WHERE lpk_revision_end IS NULL
