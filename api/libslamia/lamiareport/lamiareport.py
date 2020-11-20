@@ -970,7 +970,7 @@ class printPDFBaseWorker(QtCore.QObject):
                     result = [row for row in query]
                     if len(result) > 0:
                         txtresult = [
-                            res if res is not None else "/" for res in result[0]
+                            str(res) if res is not None else "/" for res in result[0]
                         ]
                         finaltxt.append(" - ".join(txtresult))
                     else:

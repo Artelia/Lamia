@@ -57,7 +57,7 @@ numpy.seterr(all="ignore")
 
 from Lamia.qgisiface.iface.qgsconnector.ifaceloggingconnector import LoggingConnector
 
-INTERFACEINDEX = 4
+INTERFACEINDEX = 0
 PROFILING = False
 
 
@@ -90,9 +90,10 @@ def launchIface():
     # SLFILE = os.path.join(TESTDIR, "c_creation", worktype, "test01.sqlite")
     # SLFILE = r"C:\01_WORKINGDIR\bm\BD_totale_ind15.sqlite"
     SLFILE = r"C:\01_WORKINGDIR\reims\testast\BDD_REIMS_J1_AST.sqlite"
-    SLFILE = r"C:\01_WORKINGDIR\alban\lamia\test_alban.sqlite"
+    # SLFILE = r"C:\01_WORKINGDIR\alban\lamia\test_alban.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\sebastien\VTA_2020_Noailles.sqlite"
     SLFILE = r"C:\01_WORKINGDIR\bm\BD_totale_ind15.sqlite"
+    # SLFILE = r"C:\01_WORKINGDIR\sebastien\VTA_2020_Noailles.sqlite"
 
     print(f"{bcolors.OKGREEN}Opening: {os.path.abspath(SLFILE)} {bcolors.ENDC}")
 

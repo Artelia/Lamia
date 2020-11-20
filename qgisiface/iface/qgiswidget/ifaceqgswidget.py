@@ -79,6 +79,8 @@ from .subdialogs.lamia_newDB import newDBDialog
 from .subdialogs.lamia_getDate import getDateDialog
 from .subdialogs.lamia_tablefield_dialog import LamiaTableFieldDialog
 
+
+
 # version 01
 
 
@@ -1444,6 +1446,8 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         self.actiontoolbarundo.triggered.connect(self.toolbarUndo)
         self.actiontoolbardelete.triggered.connect(self.toolbarDelete)
         self.actiontoolbarzoomto.triggered.connect(self.toolbarZoomTo)
+        self.actiontoolbarzoomto.triggered.connect(self.toolbarZoomTo)
+        self.actiontoolbarlinkeditor.triggered.connect(self.toolbarEditLink)
         self.actiontoolbarsave.triggered.connect(self.toolbarSave)
 
         self.actiontoobargeomnewpoint.triggered.connect(self.toolbarGeom)
@@ -1494,6 +1498,10 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
     def toolbarZoomTo(self):
         if self.currenttoolwidget and hasattr(self.currenttoolwidget, "toolbarZoomTo"):
             self.currenttoolwidget.toolbarZoomTo()
+
+    def toolbarEditLink(self):
+        if self.currenttoolwidget and hasattr(self.currenttoolwidget, "toolbarZoomTo"):
+            self.currenttoolwidget.toolbarEditLink()
 
     def toolbarSave(self):
         logging.getLogger("Lamia_unittest").info("called")

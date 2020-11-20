@@ -82,8 +82,9 @@ class LamiaORM(object):
             sql += f" WHERE {key}"
             allres = self.dbase.query(sql)
             finalres = []
-            for res in allres:
-                finalres += [dict(zip(columns, res))]
+            if allres:
+                for res in allres:
+                    finalres += [dict(zip(columns, res))]
             return finalres
 
         def create(self, featurepk=None):

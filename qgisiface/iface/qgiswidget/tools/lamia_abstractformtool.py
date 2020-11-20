@@ -75,7 +75,7 @@ from ..subdialogs.lamia_linkage import LinkageDialog
 from .lamia_abstracttool import AbstractLamiaTool
 from .lamia_abstractformutils import FormToolUtils
 from .choosertreewidget.fullidchoosertreewidget import FullIDChooserTreeWidget
-
+from .general_subwidgets.lamia_linkeditor import LamiaLinkEditor
 
 debugconnector = False
 
@@ -593,6 +593,14 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             qgiscanvas.zoomToFeature(self.DBASETABLENAME, self.currentFeaturePK)
             qgslayer = qgiscanvas.layers[self.DBASETABLENAME]["layerqgis"]
             qgiscanvas.canvas.flashFeatureIds(qgslayer, [self.currentFeaturePK])
+
+    def toolbarEditLink(self):
+        self.linkeditor = LamiaLinkEditor(self, self.currentFeaturePK)
+        if qgis.utils.iface is not None:
+            self.linkeditor.setWindowModality(QtCore.Qt.NonModal)
+            self.linkeditor.show()
+        else:
+            self.mainifacewidget.parent().layout().addWidget(self.linkeditor)
 
     def toolbarUndo(self):
         if self.currentFeaturePK is not None:
