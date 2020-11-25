@@ -35,6 +35,7 @@ def main(argv):
     SLFILE = r"C:\01_WORKINGDIR\sebastien\VTA_2020_Noailles.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\bm\BD_totale_ind15.sqlite"
     SLFILE = r"C:\01_WORKINGDIR\aaa\testd.sqlite"
+    SLFILE = r"C:\01_WORKINGDIR\aaaa\sgu20200916.sqlite"
 
     tempparser = DBaseParserFactory("spatialite").getDbaseParser()
     tempparser.loadDBase(dbtype="Spatialite", slfile=SLFILE)

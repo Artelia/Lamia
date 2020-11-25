@@ -352,10 +352,7 @@ class NetWorkCore:
         for i in range(len(nxpathedges) - 1):
             singlepath = [nxpathedges[i], nxpathedges[i + 1]]
 
-            # print(singlepath)
-            # print('infra', infralinfaces)
-            # print()
-            edgesnodeindex = np.array(self.nxgraph.edges())
+            edgesnodeindex = np.array([e for e in self.nxgraph.edges()])
             edgesreversenodeindex = np.flip(edgesnodeindex, 1)
             edgespks = np.array(
                 list(networkx.get_edge_attributes(self.nxgraph, "pk").values())

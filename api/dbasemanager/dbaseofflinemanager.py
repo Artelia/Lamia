@@ -90,6 +90,10 @@ class DBaseOfflineManager:
         else:
             lamiafilepath = pulledpath
 
+        self.dbase.messageinstance.showNormalMessage(
+            f"Creation de la copie locale : {os.path.normpath(lamiafilepath)}"
+        )
+
         # create dbase
         dbaseparserfact = self.dbase.parserfactory.__class__
         exportparser = dbaseparserfact(
@@ -137,6 +141,10 @@ class DBaseOfflineManager:
         with open(tempconffilepath, "w", encoding="utf-8") as outfile:
             json.dump(self.dbase.connectconf, outfile, ensure_ascii=False, indent=4)
 
+        self.dbase.messageinstance.showNormalMessage(
+            f"Creation de la copie locale terminée: {os.path.normpath(lamiafilepath)}"
+        )
+
         return lamiafilepath
 
     def pushDBase(self):
@@ -151,6 +159,10 @@ class DBaseOfflineManager:
 
         with open(tempconffilepath) as outfile:
             connectconf = json.load(outfile)
+
+        self.dbase.messageinstance.showNormalMessage(
+            f"Synchronisation avec la base mère : {connectconf}"
+        )
 
         dbaseparserfact = self.dbase.parserfactory.__class__
         if "slfile" in connectconf.keys():
@@ -168,7 +180,7 @@ class DBaseOfflineManager:
         os.remove(tempconffilepath)
 
         self.dbase.messageinstance.showErrorMessage(
-            "Attention : il faut recréer une copie locale pour prendre en compte les changements à venir"
+            "Synchronisation terminée - Attention : il faut recréer une copie locale pour prendre en compte les changements à venir"
         )
 
     def importDBase(
@@ -534,12 +546,15 @@ class DBaseOfflineManager:
 
         if typeimport in ["append", "update"]:
             self.updateLidField(
-                fromparser=dbaseparserfrom, toparser=self.dbase, confdatas=confdatas
+                fromparser=dbaseparserfrom,
+                toparser=self.dbase,
+                confdatas=confdatas,
+                typeimport=typeimport,
             )
 
         self.dbase.messageinstance.closeProgressBar()
 
-    def updateLidField(self, fromparser, toparser, confdatas):
+    def updateLidField(self, fromparser, toparser, confdatas, typeimport):
         counter = 0
         for order in range(1, 10):
             for tablename in self.dbase.dbasetables:
@@ -569,13 +584,22 @@ class DBaseOfflineManager:
                     frompkvals = fromparser.lamiaorm[tablename].read(frompk)
                     lidvals = [frompkvals[fld] for fld in lidfields]
                     tablelidvals = dict()
-                    newlidsvals = [
-                        confdatas[lidtables[i]]["importdictid"][lidvals[i]]
-                        if lidvals[i]
-                        in list(confdatas[lidtables[i]]["importdictid"].keys())
-                        else None
-                        for i in range(len(lidtables))
-                    ]
+                    if typeimport == "append":
+                        newlidsvals = [
+                            confdatas[lidtables[i]]["importdictid"][lidvals[i]]
+                            if lidvals[i]
+                            in list(confdatas[lidtables[i]]["importdictid"].keys())
+                            else None
+                            for i in range(len(lidtables))
+                        ]
+                    elif typeimport == "update":
+                        newlidsvals = [
+                            confdatas[lidtables[i]]["importdictid"][lidvals[i]]
+                            if lidvals[i]
+                            in list(confdatas[lidtables[i]]["importdictid"].keys())
+                            else lidvals[i]
+                            for i in range(len(lidtables))
+                        ]
                     # importdictid
                     valtoup = dict(zip(lidfields, newlidsvals))
                     toparser.lamiaorm[tablename].update(topk, valtoup)
