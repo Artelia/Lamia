@@ -29,6 +29,7 @@ from Lamia.config.base3.dbase.base3_crud import LamiaORM as BaseLamiaORM
 class LamiaORM(BaseLamiaORM):
     def __init__(self, dbase):
         super().__init__(dbase)
+        
 
     # *********** ASSETS ********************
 
@@ -37,4 +38,28 @@ class LamiaORM(BaseLamiaORM):
     # ********* MANAGEMENT***********
 
     # ************* STATE *************
+    class Deficiency(BaseLamiaORM.AbstractTableOrm):
+        def update(self, pk, valuesdict):
+            super().update(pk, valuesdict)
+            self.orm._manageLinkedObservation(pk, valuesdict)
+            
+            
+    def _manageLinkedObservation(self, pk, valuesdict):
 
+        valsdef = self.deficiency.read(pk)
+        res = self.observation[
+            f"lid_deficiency = {valsdef['id_deficiency']} AND lpk_revision_end IS NULL"
+        ]
+        if not res:
+            # self._createNewNodeDeficiency(valsnode)
+            pkdef = self.observation.create()
+            # newgeom = self._wktPointToLine(nodevals["geom"])
+            self.observation.update(
+                pkdef,
+                {
+                    "observationcategory": "PVA",
+                    "lid_deficiency": valsdef["id_deficiency"],
+                },
+            )
+            
+            

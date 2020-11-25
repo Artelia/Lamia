@@ -163,7 +163,6 @@ class IDChooser:
                 )
 
             query = self.dbase.query(sql)
-            print(query)
             self.ids = pd.DataFrame(query, columns=pandascolumns)
         else:
             self.ids = pd.DataFrame(columns=pandascolumns)

@@ -725,15 +725,18 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
     def toolbarDelete(self):
 
         # message = self.tr("Supprimer completement l'element (yes) ou l'archiver (no) ? ")
-        message = self.tr("Delete feature (yes) or archive (no) ? ")
-        reply = QMessageBox.question(
-            self, "Su", message, QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel
-        )
-        if reply == QMessageBox.Yes:
-            self.formutils.deleteFeature()
-
-        elif reply == QMessageBox.No:
+        if self.dbase.offlinemode : 
             self.formutils.archiveFeature()
+        else:
+            message = self.tr("Delete feature (yes) or archive (no) ? ")
+            reply = QMessageBox.question(
+                self, "Su", message, QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel
+            )
+            if reply == QMessageBox.Yes:
+                self.formutils.deleteFeature()
+
+            elif reply == QMessageBox.No:
+                self.formutils.archiveFeature()
 
         if self.DBASETABLENAME in self.mainifacewidget.qgiscanvas.layers.keys():
             self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME][

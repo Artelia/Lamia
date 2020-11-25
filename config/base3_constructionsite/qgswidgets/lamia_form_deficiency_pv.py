@@ -34,9 +34,10 @@ from Lamia.api.libslamia.lamiareport.lamiareport import ReportCore
 from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_lidchooser import (
     LidChooserWidget,
 )
-from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_createsubfeature import (
-    CreateSubFeatureWidget,
-)
+
+# from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_createsubfeature import (
+#     CreateSubFeatureWidget,
+# )
 
 
 class BaseConstructionsiteDeficiencyTool(BaseDeficiencyTool):
@@ -88,11 +89,11 @@ class BaseConstructionsiteDeficiencyTool(BaseDeficiencyTool):
             # exec('self.dbasechildwdgfield.append(self.propertieswdgOBSERVATION{} )'.format(observationcategory))
             self.dbasechildwdgfield.append(self.temppropertieswdgOBSERVATION)
 
-            # * lamiawdg
-            self.createobswdg = CreateSubFeatureWidget(
-                self, self.temppropertieswdgOBSERVATION
-            )
-            self.lamiawidgets.append(self.createobswdg)
+            # # * lamiawdg
+            # self.createobswdg = CreateSubFeatureWidget(
+            #     self, self.temppropertieswdgOBSERVATION
+            # )
+            # self.lamiawidgets.append(self.createobswdg)
 
         else:
             self.unloadWidgetinToolTree()

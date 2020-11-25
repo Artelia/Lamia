@@ -18,12 +18,12 @@ CRS = 2154
 #     "Base2_tramway",
 # ]
 DBTYPE = [
-    # "base3_urbandrainage",
+    "base3_urbandrainage",
     "base3_waterdistribution",
-    # "base3_constructionsite",
-    # "base3_faunaflora",
-    # "base3_levee",
-    # "base3_carpark",
+    "base3_constructionsite",
+    "base3_faunaflora",
+    "base3_levee",
+    "base3_carpark",
 ]
 
 

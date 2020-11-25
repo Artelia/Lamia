@@ -15,12 +15,12 @@ import test_a_dbase_simple
 import test_b_qgisqt
 
 # import test_b_qtimporttool
-# import test_b_qtofflinemode
-# import test_c_exporttool
+import test_b_qtofflinemode
+import test_c_exporttool
 
-# import test_c_reporttool
+import test_c_reporttool
 
-# import test_c_costtool
+import test_c_costtool
 
 
 def suite():

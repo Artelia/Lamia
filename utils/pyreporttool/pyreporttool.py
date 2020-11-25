@@ -34,6 +34,7 @@ def main(argv):
     SLFILE = r"U:\FR\BOR\VT\PVR\sncf2\LANDY-09-2020.sqlite"
     SLFILE = r"C:\01_WORKINGDIR\sebastien\VTA_2020_Noailles.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\bm\BD_totale_ind15.sqlite"
+    SLFILE = r"C:\01_WORKINGDIR\aaa\testd.sqlite"
 
     tempparser = DBaseParserFactory("spatialite").getDbaseParser()
     tempparser.loadDBase(dbtype="Spatialite", slfile=SLFILE)
@@ -53,10 +54,7 @@ def main(argv):
 
     # Infralineaire Equipementhydraulique Desordres EquipementhydrauliqueEtat
     reportcore.runReport(
-        r"C:\000_testdigue\des.pdf",
-        "EquipementhydrauliqueEtat",
-        pkzonegeos=[],
-        pklist=None,
+        r"C:\000_testdigue\des.pdf", "Desordres", pkzonegeos=[], pklist=None,
     )
     # except Exception as e:
     #     print(e)

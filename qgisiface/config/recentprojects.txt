@@ -1,5 +1,11 @@
+c:\111_GitProjects\Lamia\testfiles\offlinemodedbase\parentdb\parenttestoffline.sqlite
+c:\111_GitProjects\Lamia\testfiles\offlinemodedbase\childdb\childtestoffline.sqlite
+c:\111_GitProjects\Lamia\testfiles\c_creation\sl_base3_constructionsite_Lamia\test01.sqlite
+c:\111_GitProjects\Lamia\testfiles\c_creation\sl_base3_waterdistribution_Lamia\test01.sqlite
+c:\111_GitProjects\Lamia\testfiles\c_creation\sl_base3_urbandrainage_Lamia\test01.sqlite
+C:\Users\Public\Documents\lamia\GPMB Bacalan\GPMB Bacalan.sqlite
+C://Users//Public//Documents\lamia\GPMB Bacalan\GPMB Bacalan.sqlite
+C:\01_WORKINGDIR\BACALAN\GPMB Bacalan.sqlite
 C:\01_WORKINGDIR\bm\BD_totale_ind15.sqlite
-C:\01_WORKINGDIR\reims\testast\BDD_REIMS_J1_AST.sqlite
-C:\01_WORKINGDIR\sebastien\VTA_2020_Noailles.sqlite
-C:\01_WORKINGDIR\alban\lamia\test_alban.sqlite
-C:\01_WORKINGDIR\sncf\tete\testpo.sqlite
+C:\Users\Public\Documents\lamia\BD_totale_ind15\BD_totale_ind15.sqlite
+C://Users//Public//Documents\lamia\BD_totale_ind15\BD_totale_ind15.sqlite

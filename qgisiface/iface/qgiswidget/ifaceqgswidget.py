@@ -80,7 +80,6 @@ from .subdialogs.lamia_getDate import getDateDialog
 from .subdialogs.lamia_tablefield_dialog import LamiaTableFieldDialog
 
 
-
 # version 01
 
 
@@ -201,9 +200,14 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
 
     def _dialogForDbaseConf(self, dbtype="spatialite"):
         if dbtype == "spatialite":
-            spatialitefile, fileext = self.qfiledlg.getSaveFileName(
-                self, self.tr("Lamia new"), "", "*.sqlite"
+            # spatialitefile, fileext = self.qfiledlg.getSaveFileName(
+            #     self, self.tr("Lamia new"), "", "*.sqlite"
+            # )
+
+            spatialitefile, fileext = self.qfiledlg.getOpenFileName(
+                None, self.tr("Lamia new"), "", "Spatialite (*.sqlite)", "",
             )
+
             return {"slfile": spatialitefile}
         elif dbtype == "postgis":
             self.connDialog.exec_()
@@ -418,7 +422,7 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
 
     def pullDBase(self, exportfilepath=None):  # for offline mode
 
-        self.dbase.dbaseofflinemanager.pullDBase(exportfilepath)
+        exportfilepath = self.dbase.dbaseofflinemanager.pullDBase(exportfilepath)
         self.loadDBase(dbtype="Spatialite", slfile=exportfilepath)
 
     def pushDBase(self):  # for offline mode

@@ -530,6 +530,10 @@ class FormToolUtils(QtCore.QObject):
         if isinstance(savedfile, str):
             filetoshow = self.formtoolwidget.dbase.completePathOfFile(savedfile)
             possiblethumbnail, ext = os.path.splitext(filetoshow)
+            # print(
+            #     possiblethumbnail + "_thumbnail.png",
+            #     len(possiblethumbnail + "_thumbnail.png"),
+            # )
             if os.path.isfile(possiblethumbnail + "_thumbnail.png"):
                 filetoshow = possiblethumbnail + "_thumbnail.png"
 
@@ -603,7 +607,7 @@ class FormToolUtils(QtCore.QObject):
         )
         self._saveParentWidgetRelation(savedfeaturepk)
 
-        self.updateDateModification(savedfeaturepk)
+        # self.updateDateModification(savedfeaturepk)
         self._reinitAfterSaving()
 
         self.formtoolwidget.selectFeature(pk=savedfeaturepk)
@@ -690,7 +694,7 @@ class FormToolUtils(QtCore.QObject):
             featurepk, {"geom": sqlqgsgeom},
         )
 
-    def updateDateModification(self, featurepk):
+    def updateDateModification_old(self, featurepk):
         if "Objet" in self.formtoolwidget.dbase.getParentTable(
             self.formtoolwidget.DBASETABLENAME
         ):
@@ -739,10 +743,15 @@ class FormToolUtils(QtCore.QObject):
                     fieldvaluetosave = self.getValueFromWidget(
                         fieldwdg, tablename, fieldname
                     )
-                    if fieldvaluetosave is not None:
-                        resdict[fieldname] = fieldvaluetosave
+                    # if fieldvaluetosave is not None:
+                    if self.formtoolwidget.dbase.utils.isAttributeNull(
+                        fieldvaluetosave
+                    ):
+                        resdict[fieldname] = None
+                        # resdict[fieldname] = "NULL"
                     else:
-                        resdict[fieldname] = "NULL"
+                        resdict[fieldname] = fieldvaluetosave
+
             self.formtoolwidget.dbase.lamiaorm[
                 self.formtoolwidget.DBASETABLENAME
             ].update(featurepk, resdict)
@@ -828,6 +837,10 @@ class FormToolUtils(QtCore.QObject):
         :param table:       the table of the value
         :param field:       the field of the value
         """
+
+        # logging.getLogger("Lamia_unittest").debug(
+        #     "init  %s %s %s %s", wdg.objectName(), str(valuetoset), table, field
+        # )
 
         if isinstance(wdg, list):
             for subwdg in wdg:
@@ -1115,17 +1128,21 @@ class FormToolUtils(QtCore.QObject):
                     #     )
                     # )
                     # self.formtoolwidget.dbase.query(sql)
-                    valdict = {
-                        "lpk_revision_begin": self.formtoolwidget.dbase.maxrevision,
-                        joindict["tctablecolparent"]: fieldtcparent,
-                        joindict["tctablecolthistable"]: fieldtcthis,
-                    }
-                    pk = self.formtoolwidget.dbase.lamiaorm[
-                        joindict["tctable"]
-                    ].create()
-                    self.formtoolwidget.dbase.lamiaorm[joindict["tctable"]].update(
-                        pk, valdict
-                    )
+                    res = self.formtoolwidget.dbase.lamiaorm[joindict["tctable"]][
+                        f"{joindict['tctablecolparent']} = {fieldtcparent} AND {joindict['tctablecolthistable']} = {fieldtcthis} AND lpk_revision_end IS NULL"
+                    ]
+                    if not res:
+                        valdict = {
+                            "lpk_revision_begin": self.formtoolwidget.dbase.maxrevision,
+                            joindict["tctablecolparent"]: fieldtcparent,
+                            joindict["tctablecolthistable"]: fieldtcthis,
+                        }
+                        pk = self.formtoolwidget.dbase.lamiaorm[
+                            joindict["tctable"]
+                        ].create()
+                        self.formtoolwidget.dbase.lamiaorm[joindict["tctable"]].update(
+                            pk, valdict
+                        )
 
         if debug:
             self.formtoolwidget.dbase.printsql = False
@@ -1191,24 +1208,28 @@ class FormToolUtils(QtCore.QObject):
             )
         # if revobjet == self.formtoolwidget.dbase.maxrevision:
 
-        tablestodel = [self.formtoolwidget.DBASETABLENAME]
-        tablestodel += self.formtoolwidget.dbase.getParentTable(
-            self.formtoolwidget.DBASETABLENAME
+        self.formtoolwidget.dbase.lamiaorm[self.formtoolwidget.DBASETABLENAME].delete(
+            self.formtoolwidget.currentFeaturePK
         )
-        pkfields = ["pk_" + tablename.lower() for tablename in tablestodel]
 
-        for tablename in tablestodel:
-            pkvalues = self.formtoolwidget.dbase.getValuesFromPk(
-                self.formtoolwidget.DBASETABLENAME + "_qgis",
-                pkfields,
-                self.formtoolwidget.currentFeaturePK,
-            )
-        dictdelete = dict(zip(tablestodel, pkvalues))  # dict : {tablename : pkvalue}
-        for tablename, pkvalue in dictdelete.items():
-            sql = "DELETE FROM {} WHERE pk_{} = {}".format(
-                tablename, tablename.lower(), str(pkvalue)
-            )
-            self.formtoolwidget.dbase.query(sql)
+        # tablestodel = [self.formtoolwidget.DBASETABLENAME]
+        # tablestodel += self.formtoolwidget.dbase.getParentTable(
+        #     self.formtoolwidget.DBASETABLENAME
+        # )
+        # pkfields = ["pk_" + tablename.lower() for tablename in tablestodel]
+
+        # for tablename in tablestodel:
+        #     pkvalues = self.formtoolwidget.dbase.getValuesFromPk(
+        #         self.formtoolwidget.DBASETABLENAME + "_qgis",
+        #         pkfields,
+        #         self.formtoolwidget.currentFeaturePK,
+        #     )
+        # dictdelete = dict(zip(tablestodel, pkvalues))  # dict : {tablename : pkvalue}
+        # for tablename, pkvalue in dictdelete.items():
+        #     sql = "DELETE FROM {} WHERE pk_{} = {}".format(
+        #         tablename, tablename.lower(), str(pkvalue)
+        #     )
+        #     self.formtoolwidget.dbase.query(sql)
         self.formtoolwidget.postDeleteFeature()
         """
         else:
@@ -1221,23 +1242,27 @@ class FormToolUtils(QtCore.QObject):
         """
 
     def archiveFeature(self):
-        pkobjet, revobjet = self.formtoolwidget.dbase.getValuesFromPk(
-            self.formtoolwidget.DBASETABLENAME + "_qgis",
-            ["pk_objet", "lpk_revision_begin"],
-            self.formtoolwidget.currentFeaturePK,
-        )
-        # if revobjet == self.formtoolwidget.dbase.maxrevision:
-        # idobjet = self.currentFeature['id_objet']
-        # datesuppr = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
         datesuppr = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-        sql = (
-            "UPDATE Objet SET datetimedestruction = '"
-            + datesuppr
-            + "'  WHERE pk_objet = "
-            + str(pkobjet)
-            + ";"
+        self.formtoolwidget.dbase.lamiaorm[self.formtoolwidget.DBASETABLENAME].update(
+            self.formtoolwidget.currentFeaturePK, {"datetimedestruction": datesuppr}
         )
-        self.formtoolwidget.dbase.query(sql)
+        # pkobjet, revobjet = self.formtoolwidget.dbase.getValuesFromPk(
+        #     self.formtoolwidget.DBASETABLENAME + "_qgis",
+        #     ["pk_object", "lpk_revision_begin"],
+        #     self.formtoolwidget.currentFeaturePK,
+        # )
+        # # if revobjet == self.formtoolwidget.dbase.maxrevision:
+        # # idobjet = self.currentFeature['id_objet']
+        # # datesuppr = QtCore.QDate.fromString(str(datetime.date.today()), 'yyyy-MM-dd').toString('yyyy-MM-dd')
+        # datesuppr = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        # sql = (
+        #     "UPDATE object SET datetimedestruction = '"
+        #     + datesuppr
+        #     + "'  WHERE pk_object = "
+        #     + str(pkobjet)
+        #     + ";"
+        # )
+        # self.formtoolwidget.dbase.query(sql)
         """
         else:
             datesuppr = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))

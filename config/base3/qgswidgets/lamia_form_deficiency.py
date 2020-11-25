@@ -109,7 +109,7 @@ class BaseDeficiencyTool(AbstractLamiaFormTool):
         else:
             self.toolwidgetmain.comboBox_groupedes.setEnabled(True)
 
-        self._checkSameGeomAsParentNode()
+        # self._checkSameGeomAsParentNode()
 
     def _checkSameGeomAsParentNode(self):
         if self.currentFeaturePK is not None and self.parentWidget is not None:

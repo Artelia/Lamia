@@ -67,7 +67,7 @@ PROJECTCONFIGDIRS = [
     "lamiaexportshp",
 ]
 # PROJECTCONFIGDIRS = ["dbase", "qgswidgets", "qgsstyles", "lamiacost", "lamiaexportshp"]
-THUMBNAIL_SIZE = 256
+THUMBNAIL_SIZE = 256  # 128 256
 
 
 class AbstractDBaseParser:
@@ -147,6 +147,8 @@ class AbstractDBaseParser:
         self.revisionwork = False
         self.currentrevision = None
         self.maxrevision = 0
+
+        self.offlinemode = False
 
         self.forcenocommit = False  # force query to no commit
 
@@ -346,6 +348,13 @@ class AbstractDBaseParser:
             or self.workversion < self.dbconfigreader.maxworkversion
         ):
             self.updateDBaseVersion()
+
+        if self.TYPE == "spatialite" and os.path.isfile(
+            os.path.join(self.dbaseressourcesdirectory, "config", ".offlinemode")
+        ):
+            self.offlinemode = True
+        else:
+            self.offlinemode = False
 
         """
         sql = "SELECT MAX(pk_revision) FROM Revision;"
@@ -604,8 +613,11 @@ class AbstractDBaseParser:
         self.forcenocommit = True
 
     def commitTransaction(self):
-        sql = "COMMIT"
-        self.query(sql)
+        try:
+            sql = "COMMIT"
+            self.query(sql)
+        except:
+            pass
         self.forcenocommit = False
 
     def reInitDBase(self):
@@ -1138,11 +1150,13 @@ class AbstractDBaseParser:
                 fromfile=file,
                 tofile=destinationfile,
                 withthumbnail=2,
+                # withthumbnail=1,
                 copywholedirforraster=False,
             )
 
             # not used : sqlite too big dbase size...
-            # self.createBlobThumbnail(pkressource, destinationfile)
+            if DBASETABLENAMElower == "media":
+                self.createBlobThumbnail(pkressource, destinationfile)
 
             finalname = os.path.join(
                 ".", os.path.relpath(destinationfile, dbaseressourcesdirectory)
@@ -1291,7 +1305,7 @@ class AbstractDBaseParser:
 
         # if os.path.isfile(fromfile):
 
-        if copywholedirforraster and "Rasters" in fromfile:
+        if copywholedirforraster and ("Rasters" in fromfile or "rasters" in fromfile):
             if not os.path.exists(destinationdir):
                 shutil.copytree(fromdir, destinationdir)
         else:
@@ -1309,23 +1323,23 @@ class AbstractDBaseParser:
                     shutil.copy(fromfile, destinationfile)
 
                 else:
-                    if (
-                        withthumbnail in [0, 1]
-                        and PILexists
-                        and fromext.lower() in [".jpg", ".jpeg", ".png"]
-                    ):
+                    # if (
+                    #     withthumbnail in [0, 1]
+                    #     and PILexists
+                    #     and fromext.lower() in [".jpg", ".jpeg", ".png"]
+                    # ):
 
-                        possibletbnailfile = fromfilebase + "_thumbnail.png"
-                        if os.path.isfile(possibletbnailfile):
-                            if possibletbnailfile != tofilebase + "_thumbnail.png":
-                                shutil.copy(
-                                    possibletbnailfile, tofilebase + "_thumbnail.png"
-                                )
-                        else:
-                            size = THUMBNAIL_SIZE, THUMBNAIL_SIZE
-                            im = PIL.Image.open(fromfile)
-                            im.thumbnail(size)
-                            im.save(tofilebase + "_thumbnail.png", "PNG")
+                    #     possibletbnailfile = fromfilebase + "_thumbnail.png"
+                    #     if os.path.isfile(possibletbnailfile):
+                    #         if possibletbnailfile != tofilebase + "_thumbnail.png":
+                    #             shutil.copy(
+                    #                 possibletbnailfile, tofilebase + "_thumbnail.png"
+                    #             )
+                    #     else:
+                    #         size = THUMBNAIL_SIZE, THUMBNAIL_SIZE
+                    #         im = PIL.Image.open(fromfile)
+                    #         im.thumbnail(size)
+                    #         im.save(tofilebase + "_thumbnail.png", "PNG")
 
                     if withthumbnail in [0, 2]:
                         shutil.copy(fromfile, destinationfile)
@@ -1390,3 +1404,5 @@ class AbstractDBaseParser:
             #     if withthumbnail in [0, 2]:
             #         shutil.copy(fromfile, destinationfile)
 
+    def valToBinary(self, val):
+        pass

@@ -93,7 +93,17 @@ def launchIface():
     # SLFILE = r"C:\01_WORKINGDIR\alban\lamia\test_alban.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\sebastien\VTA_2020_Noailles.sqlite"
     SLFILE = r"C:\01_WORKINGDIR\bm\BD_totale_ind15.sqlite"
+    # SLFILE = r"C:\Users\Public\Documents\lamia\BD_totale_ind15\BD_totale_ind15.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\sebastien\VTA_2020_Noailles.sqlite"
+    # SLFILE = r"C:\01_WORKINGDIR\herve\fusion\mergeddbase.sqlite"
+    # SLFILE = r"C:\01_WORKINGDIR\aaa\testconstruction.sqlite"
+    SLFILE = r"C:\01_WORKINGDIR\BACALAN\GPMB Bacalan.sqlite"
+    SLFILE = r"C:\Users\Public\Documents\lamia\GPMB Bacalan\GPMB Bacalan.sqlite"
+
+    SLFILE = r"C:\111_GitProjects\Lamia\testfiles\offlinemodedbase\parentdb\parenttestoffline.sqlite"
+    # SLFILE = r"C:\111_GitProjects\Lamia\testfiles\offlinemodedbase\childdb\childtestoffline.sqlite"
+    # SLFILE = r"C:\111_GitProjects\Lamia\testfiles\offlinemodedbase\parentdb\parenttestoffline_initialbackup.sqlite"
+    # SLFILE = r"C:\111_GitProjects\Lamia\testfiles\offlinemodedbase\parentdb\parenttestoffline_backup.sqlite"
 
     print(f"{bcolors.OKGREEN}Opening: {os.path.abspath(SLFILE)} {bcolors.ENDC}")
 
@@ -109,6 +119,11 @@ def launchIface():
     #     user="pvr",
     #     password="pvr",
     # )
+    # binval = b"\x89PNG\r\n\x1a\n\x00\x00"
+    # binval2 = str(binval)
+    # sql = f"INSERT INTO resource(thumbnail) VALUES({binval})"
+    # print(sql)
+    # lamiawidget.dbase.query(sql)
 
     lamiawidget.setVisualMode(visualmode=INTERFACEINDEX)
     lamiawidget.dbase.raiseexceptions = False  # False True
@@ -129,6 +144,9 @@ def launchIface():
     # lay = wdg.mcacore.joinResultToQgslayer("_test", res)
     # data, lay = wdg.mcacore.createMcaDB("_test")
     # print(data)
+
+    # lamiawidget.pullDBase()
+    # lamiawidget.pushDBase()
 
     mainwin.exec_()
 

@@ -310,7 +310,7 @@ class BaseCameraTool(AbstractLamiaFormTool):
                         "node", "ST_AsText(geom)", self.parentWidget.currentFeaturePK,
                     )
                     neudfetgeom = qgis.core.QgsGeometry.fromWkt(noeudfetwkt)
-                    print(neudfetgeom)
+                    # print(neudfetgeom)
                     if not neudfetgeom.isNull():
                         # self.mainifacewidget.qgiscanvas.createorresetRubberband(1)
                         geompoint = [neudfetgeom.asPoint()]

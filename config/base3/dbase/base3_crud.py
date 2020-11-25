@@ -100,8 +100,18 @@ class LamiaORM(object):
                 print(
                     f"ORM update {self.__class__.__name__} pk : {pk} -  : {valuesdict}"
                 )
+
+            pk = self.orm._manageFeatureCreationOrUpdate(
+                self.__class__.__name__.lower(), pk
+            )
+
+            if "datetimemodification" in list(self.read(pk).keys()):
+                valuesdict[
+                    "datetimemodification"
+                ] = self.dbase.utils.getCurrentDateTime()
+
             for k in set(valuesdict.keys()):
-                if k.startswith(("pk_", "lpk_")):
+                if k.startswith(("pk_", "lpk_")) and not k.startswith("lpk_revision_"):
                     valuesdict.pop(k)
             curpk = pk
             actualvalues = self.read(pk)  # get lpk values
@@ -116,22 +126,37 @@ class LamiaORM(object):
 
                 self._cleanValues(filtereddict)
 
-                setstring = ", ".join([k + " = " + v for k, v in filtereddict.items()])
-                if setstring:
+                # setstring = ", ".join([k + " = " + v for k, v in filtereddict.items()])
+                # if setstring:
+                #     sql = f"UPDATE {table} SET {setstring} WHERE pk_{table} = {curpk}"
+                #     # print("***", sql)
+                #     self.dbase.query(sql)
+                if filtereddict:
+                    setstring = ", ".join(
+                        [
+                            k + " = ?" if k != "geom" else k + " =" + v
+                            for k, v in filtereddict.items()
+                        ]
+                    )
                     sql = f"UPDATE {table} SET {setstring} WHERE pk_{table} = {curpk}"
-                    # print("***", sql)
-                    self.dbase.query(sql)
+                    argus = [v for k, v in filtereddict.items() if k != "geom"]
+                    self.dbase.query(sql, arguments=argus)
+
                 curpk = None
+            return pk
 
         def delete(self, pk):
             if self.dbase.printorm:
                 print(f"ORM delete {self.__class__.__name__} pk : {pk}")
             curpk = pk
+            valuesdict = {}
+            prevval = self.read(curpk)
             for table in self.linkedtables:
                 if not curpk:
-                    curpk = valuesdict[f"lpk_{table}"]
+                    curpk = prevval[f"lpk_{table}"]
                 sql = f"DELETE FROM {table} WHERE pk_{table} = {curpk}"
                 self.dbase.query(sql)
+                curpk = None
 
         def read(self, pk):
             curpk = pk
@@ -155,26 +180,31 @@ class LamiaORM(object):
 
         def _cleanValues(self, valdict):
             for k, val in valdict.items():
+                # resulttemp = None
                 # if isinstance(val, str) or isinstance(val, unicode):
-                if isinstance(val, str) and k != "geom":
-                    if val != "":
-                        if val == "NULL":
-                            resulttemp = val
-                        else:
-                            resultstring = val
-                            if "'" in resultstring:
-                                resultstring = "''".join(resultstring.split("'"))
-                            resulttemp = "'" + resultstring + "'"
-                    else:
-                        resulttemp = "NULL"
-                elif k == "geom":
+                # if isinstance(val, str) and k != "geom":
+                #     if val != "":
+                #         if val == "NULL":
+                #             resulttemp = val
+                #         else:
+                #             resultstring = val
+                #             if "'" in resultstring:
+                #                 resultstring = "''".join(resultstring.split("'"))
+                #             resulttemp = "'" + resultstring + "'"
+                #     else:
+                #         resulttemp = "NULL"
+                if k == "geom":
                     resulttemp = f"ST_GeomFromText('{val}',{self.dbase.crsnumber})"
-                elif val is None:
-                    resulttemp = "NULL"
-                else:
-                    resulttemp = str(val)
+                    valdict[k] = resulttemp
 
-                valdict[k] = resulttemp
+                if self.dbase.utils.isAttributeNull(val):
+                    valdict[k] = None
+                # elif val is None:
+                #     resulttemp = "NULL"
+                # else:
+                #     resulttemp = str(val)
+
+                # valdict[k] = resulttemp
 
     # *********** ASSETS ********************
 
@@ -214,8 +244,12 @@ class LamiaORM(object):
     # class Deficiency(abstracttrigger):
     #     pass
 
-    # class Observation(abstracttrigger):
-    #     pass
+    class Observation(AbstractTableOrm):
+        def create(self, featurepk=None):
+            pkobs = super().create(featurepk)
+            datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            self.update(pkobs, {"datetimeobservation": datecreation})
+            return pkobs
 
     def _manageFeatureCreationOrUpdate(self, tablename, featurepk=None):
         """
@@ -234,8 +268,8 @@ class LamiaORM(object):
 
                 if featlastrevision != self.dbase.maxrevision:  # new version feature
                     # print("*********** new feat vers")
-                    self._createNewFeatureVersion(tablename, featurepk)
-                    pktoreturn = self.dbase.getLastPK(tablename)
+                    pktoreturn = self._createNewFeatureVersion(tablename, featurepk)
+                    # pktoreturn = self.dbase.getLastPK(tablename)
                 else:  # simple feature update
                     pktoreturn = featurepk
             else:
@@ -277,8 +311,8 @@ class LamiaORM(object):
                         listofields = ["lpk_" + parenttablename.lower()]
                         listofrawvalues = [parenttablepk]
                     else:
-                        listofields = []
-                        listofrawvalues = []
+                        listofields = ["lpk_revision_begin"]
+                        listofrawvalues = [self.dbase.maxrevision]
 
                     sql = self.dbase.createSetValueSentence(
                         type="INSERT",
@@ -293,84 +327,95 @@ class LamiaORM(object):
         return self.dbase.getLastPK(tablename)
 
     def _createNewFeatureVersion(self, dbname, rawpk):
-
+        formerval = None
         # first be sure
-        if self.dbase.base3version:
-            pkobjet, revbegin = self.dbase.getValuesFromPk(
-                dbname + "_qgis", ["pk_object", "lpk_revision_begin"], rawpk
-            )
-        else:
-            pkobjet, revbegin = self.dbase.getValuesFromPk(
-                dbname + "_qgis", ["pk_objet", "lpk_revision_begin"], rawpk
-            )
-        if revbegin < self.dbase.maxrevision:
-            # first close object
-            if self.dbase.base3version:
-                sql = self.dbase.createSetValueSentence(
-                    "UPDATE", "object", ["lpk_revision_end"], [self.maxrevision]
-                )
-                sql += " WHERE pk_object = " + str(pkobjet)
-                self.dbase.query(sql)
-            else:
-                sql = self.dbase.createSetValueSentence(
-                    "UPDATE", "Objet", ["lpk_revision_end"], [self.maxrevision]
-                )
-                sql += " WHERE pk_object = " + str(pkobjet)
-                self.dbase.query(sql)
 
-            # then clone parents
-            parenttables = self.dbase.getParentTable(dbname)[::-1] + [dbname]
-            # get pkparents
-            pknames = [
-                "pk_" + parenttablename.lower() for parenttablename in parenttables
-            ]
-            parentspk = self.dbase.getValuesFromPk(
-                dbname.lower() + "_qgis", pknames, rawpk
-            )
+        formerval = self[dbname].read(rawpk)
+        pkobjet = None
+        revbegin = None
+        if "pk_object" in list(formerval.keys()):
+            pkobjet = formerval["pk_object"]
+        if "lpk_revision_begin" in list(formerval.keys()):
+            revbegin = formerval["lpk_revision_begin"]
 
-            lastpk = []
-            for i, tablename in enumerate(parenttables):
-                pkfields = []
-                nonpkfields = []
-                for fields in self.dbase.getColumns(tablename):
-                    if fields[0:3] == "pk_" or fields[0:4] == "lpk_":
-                        pkfields.append(fields)
-                    elif fields == "geom":
-                        nonpkfields.append("ST_AsText(geom)")
-                    else:
-                        nonpkfields.append(fields)
-                values = self.dbase.getValuesFromPk(
-                    tablename, nonpkfields, parentspk[i]
-                )
+        # pkobjet, revbegin = formerval["pk_object"], formerval["lpk_revision_begin"]
+        # pkobjet, revbegin = self.dbase.getValuesFromPk(
+        #     dbname + "_qgis", ["pk_object", "lpk_revision_begin"], rawpk
+        # )
 
-                nonpkfields = [
-                    "geom" if x == "ST_AsText(geom)" else x for x in nonpkfields
-                ]
-                sql = self.dbase.createSetValueSentence(
-                    "INSERT", tablename, nonpkfields, list(values)
-                )
-                self.dbase.query(sql)
-                lastpk.append(self.dbase.getLastPK(tablename))
-                fieldstoupdate = []
-                valuestoupdate = []
-                if "lpk_revision_begin" in pkfields:
-                    fieldstoupdate += ["lpk_revision_begin", "lpk_revision_end"]
-                    valuestoupdate += [self.maxrevision, None]
-                if "datetimemodification" in nonpkfields:
-                    datemodif = str(
-                        datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                    )
-                    fieldstoupdate += ["datetimemodification"]
-                    valuestoupdate += [datemodif]
-                if i > 0 and "lpk_" + parenttables[i - 1].lower() in pkfields:
-                    fieldstoupdate += ["lpk_" + parenttables[i - 1].lower()]
-                    valuestoupdate += [lastpk[i - 1]]
+        if revbegin == self.dbase.maxrevision:
+            return
 
-                sql = self.dbase.createSetValueSentence(
-                    "UPDATE", tablename, fieldstoupdate, valuestoupdate
-                )
-                sql += " WHERE pk_" + tablename.lower() + " = " + str(lastpk[i])
-                self.dbase.query(sql)
+        # if revbegin < self.dbase.maxrevision:
+        # first close object
+        # if self.dbase.base3version:
+        # sql = self.dbase.createSetValueSentence(
+        #     "UPDATE", "object", ["lpk_revision_end"], [self.dbase.maxrevision]
+        # )
+        # sql += " WHERE pk_object = " + str(pkobjet)
+        # self.dbase.query(sql)
+        # self["object"].update(pkobjet, {"lpk_revision_end": self.dbase.maxrevision})
+        if pkobjet:
+            sql = f"UPDATE object SET lpk_revision_end = {self.dbase.maxrevision} WHERE pk_object = {pkobjet}"
+            self.dbase.query(sql)
+        else:  # tc table
+            sql = f"UPDATE {dbname} SET lpk_revision_end = {self.dbase.maxrevision} WHERE pk_{dbname} = {rawpk}"
+            self.dbase.query(sql)
+        # then clone parents
+
+        newpk = self[dbname].create()
+        newval = dict(formerval)
+        newval["lpk_revision_begin"], newval["lpk_revision_end"] = (
+            self.dbase.maxrevision,
+            None,
+        )
+        self[dbname].update(newpk, newval)
+
+        return newpk
+
+        # ***
+        # parenttables = self.dbase.getParentTable(dbname)[::-1] + [dbname]
+        # # get pkparents
+        # pknames = ["pk_" + parenttablename.lower() for parenttablename in parenttables]
+        # parentspk = self.dbase.getValuesFromPk(dbname.lower() + "_qgis", pknames, rawpk)
+
+        # lastpk = []
+        # for i, tablename in enumerate(parenttables):
+        #     pkfields = []
+        #     nonpkfields = []
+        #     for fields in self.dbase.getColumns(tablename):
+        #         if fields[0:3] == "pk_" or fields[0:4] == "lpk_":
+        #             pkfields.append(fields)
+        #         elif fields == "geom":
+        #             nonpkfields.append("ST_AsText(geom)")
+        #         else:
+        #             nonpkfields.append(fields)
+        #     values = self.dbase.getValuesFromPk(tablename, nonpkfields, parentspk[i])
+
+        #     nonpkfields = ["geom" if x == "ST_AsText(geom)" else x for x in nonpkfields]
+        #     sql = self.dbase.createSetValueSentence(
+        #         "INSERT", tablename, nonpkfields, list(values)
+        #     )
+        #     self.dbase.query(sql)
+        #     lastpk.append(self.dbase.getLastPK(tablename))
+        #     fieldstoupdate = []
+        #     valuestoupdate = []
+        #     if "lpk_revision_begin" in pkfields:
+        #         fieldstoupdate += ["lpk_revision_begin", "lpk_revision_end"]
+        #         valuestoupdate += [self.dbase.maxrevision, None]
+        #     if "datetimemodification" in nonpkfields:
+        #         datemodif = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        #         fieldstoupdate += ["datetimemodification"]
+        #         valuestoupdate += [datemodif]
+        #     if i > 0 and "lpk_" + parenttables[i - 1].lower() in pkfields:
+        #         fieldstoupdate += ["lpk_" + parenttables[i - 1].lower()]
+        #         valuestoupdate += [lastpk[i - 1]]
+
+        #     sql = self.dbase.createSetValueSentence(
+        #         "UPDATE", tablename, fieldstoupdate, valuestoupdate
+        #     )
+        #     sql += " WHERE pk_" + tablename.lower() + " = " + str(lastpk[i])
+        #     self.dbase.query(sql)
 
     def _createNewObjet(self, docommit=True):
         datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
@@ -398,7 +443,7 @@ class LamiaORM(object):
                 "VALUES("
                 + str(lastobjetid + 1)
                 + ","
-                + str(self.maxrevision)
+                + str(self.dbase.maxrevision)
                 + ",'"
                 + datecreation
                 + "','"

@@ -1401,6 +1401,11 @@ class printPDFBaseWorker(QtCore.QObject):
         if len(dictedgesordered) > 0:
             for zonegeopk in dictedgesordered.keys():
                 orderedpks[zonegeopk] = []
+
+                # if len(dictedgesordered[zonegeopk]) <= 1:
+                #     orderedpks[zonegeopk] = dictedgesordered[zonegeopk]
+                #     continue
+
                 self.networkcore.computeNXGraph(dictedgesordered[zonegeopk])
                 # get subgraphs within nxgraph
                 subgraphs = self.networkcore.getSubGraphs()

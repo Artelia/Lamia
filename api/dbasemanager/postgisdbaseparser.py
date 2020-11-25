@@ -452,6 +452,8 @@ class PostGisDBaseParser(AbstractDBaseParser):
         return sqlin
 
     def createBlobThumbnail(self, pkresource, filepath):
+        if not os.path.isfile(self.completePathOfFile(filepath)):
+            return
         filebase, fileext = os.path.splitext(filepath)
         if PILexists and fileext.lower() in [".jpg", ".jpeg", ".png"]:
             size = THUMBNAIL_SIZE, THUMBNAIL_SIZE
@@ -459,6 +461,7 @@ class PostGisDBaseParser(AbstractDBaseParser):
             im.thumbnail(size)
             imgByteArr = io.BytesIO()
             im.save(imgByteArr, format="PNG")
+            im.close()
             biteval = imgByteArr.getvalue()
             self.query(
                 "UPDATE resource SET thumbnail = %s WHERE pk_resource = %s",
