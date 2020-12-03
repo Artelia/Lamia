@@ -79,6 +79,10 @@ class BaseDeliveryTool(AbstractLamiaFormTool):
         tempparentjoin[tablename] = linkdict
     PARENTJOIN = dict(tempparentjoin)
 
+    CHOOSERTREEWDGSPEC = {
+        "colshow": ["name"],
+    }
+
     def __init__(self, **kwargs):
         super(BaseDeliveryTool, self).__init__(**kwargs)
         self.instancekwargs = kwargs

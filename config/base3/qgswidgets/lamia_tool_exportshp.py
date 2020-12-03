@@ -139,7 +139,11 @@ class ExportShpfileManager(AbstractFileManager):
         #    os.mkdir(self.confdataproject)
 
         confpath, confext = self.qfiledialog.getSaveFileName(
-            None, "Choose the file", self.confdataproject, "txt (*.txt)", ""
+            None,
+            "Choose the file",
+            self.toolclass.confdatadirproject,
+            "txt (*.txt)",
+            "",
         )
 
         if confpath:

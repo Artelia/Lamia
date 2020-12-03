@@ -236,6 +236,11 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                             "layerqgis"
                         ]
                     )
+            else:
+                if self.DBASETABLENAME in self.mainifacewidget.qgiscanvas.layers.keys():
+                    self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME][
+                        "layerqgis"
+                    ].removeSelection()
 
     def manageWidgetToLoadInMainLayout(self):
         if self.mainifacewidget.interfacemode in [0, 4]:
@@ -375,6 +380,15 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             logging.getLogger("Lamia_unittest").debug(
                 "tablename : %s, kwargs : %s", self.DBASETABLENAME, kwargs
             )
+
+        if (
+            self.mainifacewidget.currenttoolwidget.DBASETABLENAME
+            in self.mainifacewidget.qgiscanvas.layers.keys()
+        ):
+            self.mainifacewidget.qgiscanvas.layers[
+                self.mainifacewidget.currenttoolwidget.DBASETABLENAME
+            ]["layerqgis"].removeSelection()
+
         self.mainifacewidget.currenttoolwidget = self
 
         parentwidget = self
@@ -725,12 +739,15 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
     def toolbarDelete(self):
 
         # message = self.tr("Supprimer completement l'element (yes) ou l'archiver (no) ? ")
-        if self.dbase.offlinemode : 
+        if self.dbase.offlinemode:
             self.formutils.archiveFeature()
         else:
             message = self.tr("Delete feature (yes) or archive (no) ? ")
             reply = QMessageBox.question(
-                self, "Su", message, QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel
+                self,
+                "Su",
+                message,
+                QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel,
             )
             if reply == QMessageBox.Yes:
                 self.formutils.deleteFeature()
@@ -817,6 +834,17 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
     def _manageRubberbandOnSelectFeature(self, pkfeature=None):
 
         self.mainifacewidget.qgiscanvas.createorresetRubberband(rubtype="capture")
+        if pkfeature:
+            self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME][
+                "layerqgis"
+            ].removeSelection()
+            self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME][
+                "layerqgis"
+            ].select(pkfeature)
+        else:
+            self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME][
+                "layerqgis"
+            ].removeSelection()
 
         if self.parentWidget is None:
             if (

@@ -1,0 +1,37 @@
+!table
+!version 300
+!charset WindowsLatin1
+
+Definition Table
+  Type NATIVE Charset "WindowsLatin1"
+  Fields 24
+    CLEF Char (20) ;
+    COMMUNE Char (20) ;
+    RUE Char (120) ;
+    EMPLAC Char (20) ;
+    AS_RESEAU Char (64) ;
+    TYPE Char (20) Index 1 ;
+    ANNEE Char (20) ;
+    DIAMETRE Char (20) ;
+    DIMSEC Char (20) ;
+    FORME Char (20) ;
+    LONGMES Char (20) ;
+    LONGSYS Float ;
+    MATERIAU Char (20) ;
+    PENTE Char (20) ;
+    RAD_AMONT Char (20) ;
+    RAD_AVAL Char (20) ;
+    REGAMONT Char (20) ;
+    REGAVAL Char (20) ;
+    SOURCE Char (20) ;
+    ETAT Char (10) ;
+    DATE_MAJ Char (8) ;
+    TYPE_2 Char (2) Index 2 ;
+    REG_AMT_ITV Char (20) ;
+    REG_AVL_ITV Char (20) ;
+begin_metadata
+"\MapInfo" = ""
+"\MapInfo\TableID" = "6b59f6ab-b24b-47f0-b256-0d24021f1e40"
+"\MapInfo\ParentTableID" = "a7dcff9f-3ffd-4035-a60e-b554d6b61436"
+"\IsReadOnly" = "FALSE"
+end_metadata

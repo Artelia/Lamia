@@ -677,6 +677,7 @@ background-color: rgb(255, 255, 255);</string>
     <addaction name="separator"/>
     <addaction name="actionOpen_project_directory"/>
     <addaction name="actionOpen_Lamia_directory"/>
+    <addaction name="actionOpen_offline_project_directory"/>
     <addaction name="separator"/>
     <addaction name="actionShow_Hide_QGis_toolbars"/>
    </widget>
@@ -1154,6 +1155,11 @@ background-color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
     <string>toolbarlinkeditor</string>
+   </property>
+  </action>
+  <action name="actionOpen_offline_project_directory">
+   <property name="text">
+    <string>Open offline project directory</string>
    </property>
   </action>
  </widget>

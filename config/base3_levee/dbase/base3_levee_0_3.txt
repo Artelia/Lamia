@@ -1,0 +1,48 @@
+#drop lastobs and recreate it
+sql = "DROP VIEW lastobservation_qgis"
+self.query(sql)
+
+
+sql = "CREATE VIEW lastobservation_qgis AS \
+WITH deficiencynow AS (SELECT  deficiency.*, object.datetimedestruction AS defdatetimedestruction  \
+            FROM deficiency INNER JOIN object ON deficiency.lpk_object = object.pk_object   \
+            WHERE object.lpk_revision_end IS NULL and deficiency.lid_delivery IS NULL) , \
+     observationnow AS (SELECT  observation.*, \
+          ( SELECT MIN(observationnowp.datetimeobservation) As datecreationtemp  \
+               FROM observation as observationnowp  \
+               WHERE observation.lid_deficiency =  observationnowp.lid_deficiency AND observationnowp.datetimeobservation > observation.datetimeobservation  \
+          ) AS datetimedestructiontemp \
+           FROM observation INNER JOIN object ON object.pk_object = observation.lpk_object  \
+           WHERE lpk_revision_end IS NULL) , \
+     revisionmax As (SELECT MAX(pk_revision) as revisionmm FROM revision)    , \
+     equipmenttemp AS (SELECT * FROM equipment  \
+        INNER JOIN descriptionsystem ON equipment.lpk_descriptionsystem = descriptionsystem.pk_descriptionsystem \
+        INNER JOIN object ON object.pk_object = descriptionsystem.lpk_object \
+        WHERE lpk_revision_end IS NULL) \
+SELECT  \
+          observationnow.*,    \
+          deficiencynow.* , \
+         (SELECT revisionmax.revisionmm FROM revisionmax) as lpk_revision_begin,  \
+          NULL AS lpk_revision_end, \
+         observationnow.datetimeobservation AS datetimecreation , \
+         (CASE WHEN observationnow.datetimedestructiontemp IS NULL THEN deficiencynow.defdatetimedestruction  ELSE observationnow.datetimedestructiontemp END) AS datetimedestruction , \
+           object.comment, \
+        equipmenttemp.id_equipment \
+ FROM  observationnow   \
+ INNER JOIN deficiencynow ON observationnow.lid_deficiency = deficiencynow.id_deficiency  \
+ INNER JOIN deficiency ON deficiency.pk_deficiency = deficiencynow.pk_deficiency \
+ INNER JOIN object ON observationnow.lpk_object = object.pk_object \
+LEFT JOIN equipmenttemp ON deficiencynow.lid_descriptionsystem = equipmenttemp.id_descriptionsystem" 
+self.query(sql)
+
+
+
+sql = "SELECT UpdateLayerStatistics()"
+self.query(sql)
+
+
+
+
+
+
+

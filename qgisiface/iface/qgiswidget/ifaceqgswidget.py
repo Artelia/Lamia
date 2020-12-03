@@ -1346,6 +1346,14 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
                 f'explorer "{os.path.realpath(os.path.dirname(Lamia.qgisiface.__file__))}"'
             )
 
+    def openOfflineDir(self):
+        if platform.system() == "Linux":
+            pass
+        elif platform.system() == "Windows":
+            subprocess.Popen(
+                f'explorer "{os.path.realpath(self.dbase.dbaseofflinemanager.WINOFFLINEDIR)}"'
+            )
+
     def showHideQgisToolbars(self):
         if not len(self.toolbarsvisibility):
             self._unloadQgisToolbar()
@@ -1577,6 +1585,7 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         self.action_Repertoire_photo.triggered.connect(self.setImageDir)
         self.actionOpen_project_directory.triggered.connect(self.openProjectDir)
         self.actionOpen_Lamia_directory.triggered.connect(self.openLamiaDir)
+        self.actionOpen_offline_project_directory.triggered.connect(self.openOfflineDir)
         self.actionShow_Hide_QGis_toolbars.triggered.connect(self.showHideQgisToolbars)
 
         # about menu

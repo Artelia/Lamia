@@ -74,8 +74,7 @@ class ExportShapefileCore(AbstractLibsLamia):
         debug = False
         tabletypepath = self.getConfFilePath(exportconffilepath)
         self.champs = self.readChamp(tabletypepath)
-
-        self.fieldsforshp = self.buildQgsFields(self.champs)
+        self.fieldsforshp, correspondancefields = self.buildQgsFields(self.champs)
         sql = self.buildSql(self.champs, pkzonegeos)
 
         if debug or self.SHOWSQL:
@@ -356,20 +355,36 @@ class ExportShapefileCore(AbstractLibsLamia):
 
     def buildQgsFields(self, champs):
         fields = qgis.core.QgsFields()
+        correspondancefields = []
         for i, table in enumerate(champs):
             if table["table"] not in ["geom", "main", "with"]:
                 for j, name in enumerate(table["fields"].keys()):
                     typefield = eval("QtCore.QVariant." + table["fields"][name]["type"])
-                    if name in [field.name() for field in fields]:
+                    shapefilename = (
+                        name if len(name) < 10 else name[0:2] + "_" + name[-6:]
+                    )
+                    if shapefilename in [field.name() for field in fields]:
                         self.messageinstance.showErrorMessage(
                             "ATTENTION Champ " + name + " deja utilise"
                         )
-                        fields.append(qgis.core.QgsField(name + str(i), typefield))
+                        fields.append(
+                            qgis.core.QgsField(shapefilename[:-1] + str(i), typefield)
+                        )
+                        correspondancefields.append(
+                            [
+                                table["fields"][name]["value"],
+                                shapefilename[:-1] + str(i),
+                            ]
+                        )
                     else:
                         # typefield = eval("QtCore.QVariant." + table["fields"][name]["type"])
-                        fields.append(qgis.core.QgsField(name, typefield))
+                        fields.append(qgis.core.QgsField(shapefilename, typefield))
 
-        return fields
+                        correspondancefields.append(
+                            [table["fields"][name]["value"], shapefilename]
+                        )
+
+        return fields, correspondancefields
 
     def fillShapefile(
         self, filename, typegeom, fields, champs, result, removeemptycolumns
@@ -445,7 +460,9 @@ class ExportShapefileCore(AbstractLibsLamia):
         coltoremove = []
         for i, field in enumerate(vl.fields()):
             uniquevalues = vl.uniqueValues(i)
-            if self.dbase.utils.isAttributeNull(list(uniquevalues)[0]):
+            if list(uniquevalues) and self.dbase.utils.isAttributeNull(
+                list(uniquevalues)[0]
+            ):
                 coltoremove.append(i)
         vl.startEditing()
         res = vl.dataProvider().deleteAttributes(coltoremove)

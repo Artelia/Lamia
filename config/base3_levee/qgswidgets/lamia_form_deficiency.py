@@ -36,9 +36,24 @@ from qgis.PyQt.QtWidgets import QWidget
 
 from ...base3.qgswidgets.lamia_form_deficiency import BaseDeficiencyTool
 from .lamia_form_observation import BaseLeveeObservationTool
+from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_lidchooser import (
+    LidChooserWidget,
+)
+
+# from .lamia_form_delivery import BaseLeveeDeliveryTool
 
 
 class BaseLeveeDeficiencyTool(BaseDeficiencyTool):
+
+    PARENTJOIN = BaseDeficiencyTool.PARENTJOIN
+    PARENTJOIN["delivery"] = {
+        "colparent": "id_delivery",
+        "colthistable": "lid_delivery",
+        "tctable": None,
+        "tctablecolparent": None,
+        "tctablecolthistable": None,
+    }
+
     def __init__(self, **kwargs):
         super(BaseLeveeDeficiencyTool, self).__init__(**kwargs)
 
@@ -77,6 +92,20 @@ class BaseLeveeDeficiencyTool(BaseDeficiencyTool):
         self.propertieswdgOBSERVATION = BaseLeveeObservationTool(**self.instancekwargs)
         self.propertieswdgOBSERVATION.tooltreewidgetSUBCAT = "Observation"
         self.dbasechildwdgfield.append(self.propertieswdgOBSERVATION)
+
+        # if self.dbase.variante in ["Lamia", None]:
+        #     self.propertieswdgDELIVERY = BaseLeveeDeliveryTool(**self.instancekwargs)
+        #     self.propertieswdgDELIVERY.tooltreewidgetSUBCAT = "Travaux"
+        #     self.dbasechildwdgfield.append(self.propertieswdgDELIVERY)
+
+        self.ownerwdg = LidChooserWidget(
+            parentwdg=self,
+            parentlidfield="lid_delivery",
+            parentframe=self.toolwidgetmain.frame_delivery,
+            searchdbase="delivery",
+            searchfieldtoshow=["name"],
+        )
+        self.lamiawidgets.append(self.ownerwdg)
 
         if self.dbase.variante in ["SIRS"]:
             self.toolwidgetmain.comboBox_sstypedes.setEnabled(False)

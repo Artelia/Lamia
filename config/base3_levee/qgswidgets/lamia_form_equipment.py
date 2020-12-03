@@ -194,7 +194,7 @@ class BaseLeveeEquipmentTool(BaseEquipmentTool):
             "equipment", "equipmenttype", currenttext
         )
 
-        if currentval in ["CLA", "VAN", "EXU"]:
+        if currentval in ["CLA", "VAN", "EXU", "FLO"]:
             self.toolwidgetmain.stackedWidget_2.setCurrentIndex(0)
         else:
             self.toolwidgetmain.stackedWidget_2.setCurrentIndex(1)

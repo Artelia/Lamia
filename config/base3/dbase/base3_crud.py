@@ -56,6 +56,8 @@ class LamiaORM(object):
                 self.__class__.__name__.lower()
             ] + self.dbase.getParentTable(self.__class__.__name__.lower())
 
+            self.columns = self._getAllColumns()
+
         def __getitem__(self, key):
             "Enable SELECT action on class dict"
             if not isinstance(key, str):
@@ -205,6 +207,12 @@ class LamiaORM(object):
                 #     resulttemp = str(val)
 
                 # valdict[k] = resulttemp
+
+        def _getAllColumns(self):
+            columns=[]
+            for table in self.linkedtables:
+                columns += self.dbase.getColumns(table)
+            return columns
 
     # *********** ASSETS ********************
 

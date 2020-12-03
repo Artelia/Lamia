@@ -27,72 +27,80 @@ This file is part of LAMIA.
 
 import logging, sys
 import qgis.utils, qgis.core
-from qgis.PyQt.QtWidgets import (QDialogButtonBox ,QMessageBox ,QDialog, QApplication, QProgressBar,QFormLayout,QLabel,QLineEdit)
+from qgis.PyQt.QtWidgets import (
+    QDialogButtonBox,
+    QMessageBox,
+    QDialog,
+    QApplication,
+    QProgressBar,
+    QFormLayout,
+    QLabel,
+    QLineEdit,
+)
 from qgis.PyQt import QtCore
 
 from ..ifaceabstractconnector import LamiaIFaceAbstractConnectors
 
 
 class QgisConnector(LamiaIFaceAbstractConnectors):
-
     def __init__(self):
         LamiaIFaceAbstractConnectors.__init__(self)
         self.widget = None
         self.canvas = None
 
-        self.progressbar=None
-
-
+        self.progressbar = None
 
     def showNormalMessage(self, text):
         if qgis.utils.iface is not None:
-            qgis.utils.iface.messageBar().pushMessage("Lamia " ,text, qgis.core.Qgis.Info)
-            # QApplication.processEvents()
+            qgis.utils.iface.messageBar().pushMessage(
+                "Lamia ", text, qgis.core.Qgis.Info
+            )
+            QApplication.processEvents()
 
-        
-
-
-    def showErrorMessage(self,text):
+    def showErrorMessage(self, text):
         if qgis.utils.iface is not None:
-            qgis.utils.iface.messageBar().pushMessage("Lamia " ,text, qgis.core.Qgis.Critical )
+            qgis.utils.iface.messageBar().pushMessage(
+                "Lamia ", text, qgis.core.Qgis.Critical
+            )
+            QApplication.processEvents()
 
-
-    def createProgressBar(self, inittext='', maxvalue=99):
+    def createProgressBar(self, inittext="", maxvalue=99):
         self.progressbarinittext = inittext
         if qgis.utils.iface is not None:
-            progressMessageBar = qgis.utils.iface .messageBar().createMessage(inittext)
+            progressMessageBar = qgis.utils.iface.messageBar().createMessage(inittext)
             self.progressbar = QProgressBar()
             self.progressbar.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
             progressMessageBar.layout().addWidget(self.progressbar)
-            qgis.utils.iface.messageBar().pushWidget(progressMessageBar, qgis.core.Qgis.Info)
+            qgis.utils.iface.messageBar().pushWidget(
+                progressMessageBar, qgis.core.Qgis.Info
+            )
             self.progressbar.setMaximum(maxvalue)
 
-
-    def updateProgressBar(self,val):
+    def updateProgressBar(self, val):
         if qgis.utils.iface is not None and self.progressbar is not None:
             self.progressbar.setValue(val)
-
-        
+            QApplication.processEvents()
 
     def closeProgressBar(self):
-        if qgis.utils.iface is not None: 
+        if qgis.utils.iface is not None:
             qgis.utils.iface.messageBar().clearWidgets()
+            QApplication.processEvents()
 
         self.progressbar = None
 
-    def inputMessage(self,listtext, title='Lamia input', withinput=True, parent = None):
-       
+    def inputMessage(self, listtext, title="Lamia input", withinput=True, parent=None):
+
         inputdlg = InputdialogLamia(listtext, title, withinput, parent)
         inputdlg.exec_()
         return inputdlg.dialogIsFinished()
 
-        
-class InputdialogLamia(QDialog ):
+
+class InputdialogLamia(QDialog):
     def __init__(self, listtext, title, withinput, parent):
         super(InputdialogLamia, self).__init__(parent)
         self.setWindowTitle(title)
         layout = QFormLayout()
-        self.lineedits=[]
+        self.lineedits = []
 
         if not withinput:
             lbl = QLabel(title)
@@ -104,11 +112,11 @@ class InputdialogLamia(QDialog ):
             if withinput:
                 le = QLineEdit()
                 self.lineedits.append(le)
-                layout.addRow(lbl,le)
+                layout.addRow(lbl, le)
             else:
                 layout.addRow(lbl)
 
-        butdlg = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel) 
+        butdlg = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         butdlg.accepted.connect(self.accept)
         butdlg.rejected.connect(self.reject)
         if withinput:
@@ -118,7 +126,6 @@ class InputdialogLamia(QDialog ):
             butdlg.button(QDialogButtonBox.Ok).setText("YES")
             butdlg.button(QDialogButtonBox.Cancel).setText("NO")
 
-
         layout.addRow(butdlg)
         self.setLayout(layout)
         self.setWindowTitle("Lamia input")
@@ -127,7 +134,7 @@ class InputdialogLamia(QDialog ):
 
     def dialogIsFinished(self):
 
-        if (self.result() == 1):
+        if self.result() == 1:
             if self.lineedits:
                 return [lineedit.text() for lineedit in self.lineedits]
             else:

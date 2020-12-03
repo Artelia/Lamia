@@ -23,6 +23,7 @@ def main(argv):
         pr = cProfile.Profile()
 
     SLFILE = r"C:\01_WORKINGDIR\OO\VTA_L93_Lamia_SIRS_BDY_06-11-20.sqlite"
+    SLFILE = r"C:\01_WORKINGDIR\BACALAN\GPMB Bacalan.sqlite"
 
     tempparser = DBaseParserFactory("spatialite").getDbaseParser()
     tempparser.loadDBase(dbtype="Spatialite", slfile=SLFILE)
@@ -45,9 +46,9 @@ def main(argv):
         pr.enable()
 
     lamiashpexport.runExport(
-        destinationshapefile=r"C:\01_WORKINGDIR\toto\infraline.shp",
-        # deficiency_lastobservation_point  deficiency_lastobservation_line
-        exportconffilepath="deficiency_lastobservation_line",  # lamia_edge_z_sketch  lamia_node_observation_fr
+        destinationshapefile=r"C:\01_WORKINGDIR\aaa\infraline.shp",
+        # deficiency_lastobservation_point  deficiency_lastobservation_line     lamia_node_observation
+        exportconffilepath="lamia_node_observation",  # lamia_edge_z_sketch  lamia_node_observation_fr
         pkzonegeos=[],
     )
 

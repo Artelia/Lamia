@@ -87,21 +87,25 @@ class BaseLeveeCameraTool(BaseCameraTool):
             elif sendername == "pushButton_land":
                 field = "lid_resource_3"
 
-            sql = (
-                "UPDATE "
-                + str(self.parentWidget.dbasetablename)
-                + " SET "
-                + field
-                + " = "
-                + str(idressource)
+            # sql = (
+            #     "UPDATE "
+            #     + str(self.parentWidget.DBASETABLENAME)
+            #     + " SET "
+            #     + field
+            #     + " = "
+            #     + str(idressource)
+            # )
+            # sql += (
+            #     " WHERE pk_"
+            #     + self.parentWidget.DBASETABLENAME.lower()
+            #     + " = "
+            #     + str(pkparentfeature)
+            # )
+            # query = self.dbase.query(sql)
+
+            self.dbase.lamiaorm[self.parentWidget.DBASETABLENAME].update(
+                pkparentfeature, {field: idressource}
             )
-            sql += (
-                " WHERE pk_"
-                + self.parentWidget.dbasetablename.lower()
-                + " = "
-                + str(pkparentfeature)
-            )
-            query = self.dbase.query(sql)
 
     # def postInitFeatureProperties(self, feat):
     def postSelectFeature(self):
@@ -113,7 +117,7 @@ class BaseLeveeCameraTool(BaseCameraTool):
             self.parentWidget is not None
             and self.parentWidget.currentFeaturePK is not None
         ):
-            if self.parentWidget.DBASETABLENAME == "equipment":
+            if self.parentWidget.DBASETABLENAME == "edge":
                 self.toolwidgetmain.stackedWidget_2.setCurrentIndex(1)
             else:
                 self.toolwidgetmain.stackedWidget_2.setCurrentIndex(0)

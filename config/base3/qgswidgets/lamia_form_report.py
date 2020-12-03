@@ -56,7 +56,7 @@ class BaseReportTool(AbstractLamiaFormTool):
         "tctablecolparent": "lid_object",
         "tctablecolthistable": "lid_resource",
     }
-    for tablename in ["observation", "node", "edge", "equipment"]:
+    for tablename in ["observation", "node", "edge", "equipment", "delivery"]:
         tempparentjoin[tablename] = linkdict
     PARENTJOIN = tempparentjoin
 

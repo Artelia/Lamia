@@ -8,7 +8,7 @@ lid_resource_1      ;Int                 ;                    ;edge_now.lid_reso
 lid_descriptionsystem_1;Int                 ;                    ;edge_now.lid_descriptionsystem_1
 lid_descriptionsystem_2;Int                 ;                    ;edge_now.lid_descriptionsystem_2
 material            ;String              ;material            ;edge_now.material
-nominaldiameter     ;Int                 ;                    ;edge_now.nominaldiameter
+nominaldiameter     ;Double                 ;                    ;edge_now.nominaldiameter
 pipetype            ;String              ;pipetype            ;edge_now.pipetype
 pipesubtype         ;String              ;pipesubtype         ;edge_now.pipesubtype
 pipeshape           ;String              ;                    ;edge_now.pipeshape

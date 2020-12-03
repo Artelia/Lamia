@@ -723,9 +723,20 @@ class FullIDChooserTreeWidget(AbstractChooserTreeWidget):
                 self.ids.loc[len(self.ids)] = res
             else:
                 try:
-                    self.ids.loc[self.ids["pk"] == self.toolwidget.currentFeaturePK] = [
-                        res
-                    ]
+                    if len(
+                        self.ids.loc[self.ids["pk"] == self.toolwidget.currentFeaturePK]
+                    ):
+                        self.ids.loc[
+                            self.ids["pk"] == self.toolwidget.currentFeaturePK
+                        ] = [res]
+                    else:
+                        currentFeatureid = self.toolwidget.dbase.lamiaorm[
+                            self.toolwidget.DBASETABLENAME
+                        ].read(self.toolwidget.currentFeaturePK)[
+                            f"id_{self.toolwidget.DBASETABLENAME}"
+                        ]
+                        self.ids.loc[self.ids["id"] == currentFeatureid] = [res]
+
                 except ValueError as e:
                     print(e)
                     print(self.ids)

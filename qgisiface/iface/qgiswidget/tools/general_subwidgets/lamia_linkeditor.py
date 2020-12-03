@@ -330,8 +330,8 @@ class LamiaLinkEditor(QDialog):
     def _childChooser(self):
         if not self.isspatial:
             sql = f"SELECT {',' .join(self.childdisplayfields)} FROM {self.childtablename}_now"
-            sql = self.parentwdg.dbase.sqlNow(sql)
-            res = self.parentwdg.dbase.query(sql)
+            sql = self.wdg.dbase.sqlNow(sql)
+            res = self.wdg.dbase.query(sql)
             itemsforinputdialog = []
             for row in res:
                 itemsforinputdialog.append(", ".join([str(elem) for elem in row]))
@@ -340,8 +340,10 @@ class LamiaLinkEditor(QDialog):
             )
             if ok and item:
                 pkchild = int(item.split(", ")[0])
-                self.parentwdg.updateFormTitleBackground(subwidgethaschanged=True)
-                return pkchild
+                self.wdg.updateFormTitleBackground(subwidgethaschanged=True)
+                # return pkchild
+                self.addChild(pkchild)
+
             else:
                 return None
         else:

@@ -43,6 +43,8 @@ class DBaseOfflineManager:
     RESOLVECONFLICTTYPE = "manual"  # manual auto
     RESOLVECONFLICTCHOICE = "import"  # import main
 
+    WINOFFLINEDIR = os.path.normpath("C://Users//Public//Documents//lamia")
+
     def __init__(self, dbase):
         self.dbase = dbase
 
@@ -72,8 +74,8 @@ class DBaseOfflineManager:
             if platform.system() == "Linux":
                 pass
             elif platform.system() == "Windows":
-                importdir = "C://Users//Public//Documents"
-            lamiadir = os.path.join(importdir, "lamia")
+                lamiadir = self.WINOFFLINEDIR
+            # lamiadir = os.path.join(importdir, "lamia")
             if not os.path.isdir(lamiadir):
                 os.mkdir(lamiadir)
             dbname = self.dbase.getDBName()
@@ -1403,6 +1405,10 @@ class DBaseOfflineManager:
                                 + "))"
                             )
                         ] = "geom"
+
+                    if not results:
+                        print("no res", dbname)
+                        continue
 
                     for i, result in enumerate(results):
                         if dbname.lower() == "revision" and i == 0:
