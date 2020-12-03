@@ -26,7 +26,7 @@ le menu Lamia/préférences/Open project directory. Au sein de ce répertoire, a
 "media" : les photos y sont stockées par répertoire contenant la date d'acquisition.
 
 Le lien vers la photo est stocké dans la table "media_qgis", et dans le champ "file". Le nom du lien doit 
-être relatif au répertoire des ressources. Ainsi, le champ file doit être du type ".\media\[datedelaphoto]\[nomdelaphoto]".
+être relatif au répertoire des ressources. Ainsi, le champ file doit être du type ".\\\\media\\\\\[datedelaphoto]\\\\\[nomdelaphoto]".
 Dans la table "media_qgis", le champ "typemedia" doit être égal à 'PHO' pour que Lamia reconnaisse qu'il s'agit d'une photo.
 
 Lorque les photos n'ont pas été prises directement avec Lamia, il faut donc :
