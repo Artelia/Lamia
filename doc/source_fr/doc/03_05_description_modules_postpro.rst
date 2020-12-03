@@ -8,4 +8,6 @@ Contents:
 
     ./src_lamia_postpro/01_impression_rapport
     ./src_lamia_postpro/02_import
+    ./src_lamia_postpro/02_import_photos.rst
+    ./src_lamia_postpro/02_import_ITV
     ./src_lamia_postpro/03_export

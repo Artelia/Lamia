@@ -1,0 +1,419 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Imports des photos &mdash; Documentation LAMIA 1.0</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script src="../../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../search.html" />
+    <link rel="next" title="Import d’inspections ITV (Valable uniquement pour Lamia assainissement)" href="02_import_ITV.html" />
+    <link rel="prev" title="Import de données dans Lamia" href="02_import.html" />
+
+<link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+<!-- help for aos : https://michalsnik.github.io/aos/  -->
+
+<script>
+
+	window.onload = function () {
+		var url = window.location.toString()
+		selectorvalue = $('#languageselector').val()
+
+		if (url.includes('/fr/')) {
+			if (selectorvalue != 'fr') {
+				$('#languageselector').val("fr")
+			}
+		} else if (url.includes('/en/')) {
+			if (selectorvalue != 'en') {
+				$('#languageselector').val("en")
+			}
+		} else if (url.includes('/dev/')) {
+			if (selectorvalue != 'dev') {
+				$('#languageselector').val("dev")
+			}
+		}
+
+	};
+
+	function testSelectOK() {
+		var url = window.location.toString()
+		selectorvalue = $('#languageselector').val()
+
+		if (url.includes('/fr/')) {
+			if (selectorvalue != 'fr') {
+				return false
+			}
+		} else if (url.includes('/en/')) {
+			if (selectorvalue != 'en') {
+				return false
+			}
+		} else if (url.includes('/dev/')) {
+			if (selectorvalue != 'dev') {
+				return false
+			}
+		}
+
+		return true
+
+	}
+
+
+	function languageSelector() {
+
+		if (testSelectOK()) {
+			return
+		}
+		var value = $('#languageselector').val();
+		var url = window.location.toString()
+		var n = url.indexOf("build")
+		finalurl = url.substring(0, n) + 'build/' + value + '/html/index.html'
+		console.log(finalurl)
+		window.location = finalurl
+
+	}
+</script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #004F83" >
+          
+
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> LAMIA
+          
+
+          
+            
+            <img src="../../_static/icon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+
+<select id='languageselector' style="width: 100% ;border-radius: 20px 20px 20px 20px;" onchange=languageSelector()>
+	<option value="fr">Documentation utilisateur français</option>
+	<option value="en">English user documentation</option>
+	<option value="dev">Documentation for developpers</option>
+</select>
+
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Documentation utilisateur en français</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../00_index.html">Documentation en français</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../01_introduction.html">Introduction</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../03_00_tutoriel.html">Tutoriel</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../03_01_installation.html">Installation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../03_01_installation.html#librairies-necessaires-en-supplement-de-l-installation-de-qgis">Librairies nécessaires en supplément de l’installation de QGis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_01_installation.html#installation-de-qgis-et-des-librairies-sous-windows">Installation de QGis et des librairies sous windows</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_01_installation.html#installation-de-qgis-et-des-librairies-sous-linux">Installation de QGis et des librairies sous Linux</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_01_installation.html#installation-de-lamia">Installation de Lamia</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../03_02_la_base_de_donnees.html">La base de données</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../03_02_la_base_de_donnees.html#l-organisation-generale">L’organisation générale</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_02_la_base_de_donnees.html#la-table-objet">La table Objet</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../03_03_prise_en_main_rapide.html">Prise en main rapide - premiere utilisation « au bureau »</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../03_03_prise_en_main_rapide.html#creer-sa-premiere-base-de-donnees">Créer sa première base de données</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_03_prise_en_main_rapide.html#decouverte-de-linterface">Découverte de l’interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_03_prise_en_main_rapide.html#cest-parti-premiere-saisie">C’est parti : première saisie</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_03_prise_en_main_rapide.html#j-ai-un-bug">J’ai un bug !!</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../03_03a_configurationterrain.html">Prise en main rapide - premiere utilisation « sur le terrain »</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../03_03a_configurationterrain.html#definition-du-repertoire-de-photo-par-defaut">Définition du répertoire de photo par défaut</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_03a_configurationterrain.html#utilisation-dun-gps">Utilisation d’un GPS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_03a_configurationterrain.html#utilisation-des-fonctions-gps-dans-lamia">Utilisation des fonctions GPS dans Lamia</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_03a_configurationterrain.html#ajouter-une-photo">Ajouter une photo</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../03_04_presentation_complete.html">Présentation Complète</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../03_04_presentation_complete.html#le-menu">Le menu</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_04_presentation_complete.html#la-barre-d-outils">La barre d’outils:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../03_04_presentation_complete.html#elements-de-configuration">Elements de configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../03_05_description_modules_postpro.html">Description des modules de Post Traitement</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="01_impression_rapport.html">Impression de rapports</a></li>
+<li class="toctree-l4"><a class="reference internal" href="02_import.html">Import de données dans Lamia</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Imports des photos</a></li>
+<li class="toctree-l4"><a class="reference internal" href="02_import_ITV.html">Import d’inspections ITV (Valable uniquement pour Lamia assainissement)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="03_export.html">Export de données dans Lamia</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">LAMIA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../00_index.html">Documentation en français</a> &raquo;</li>
+        
+          <li><a href="../03_00_tutoriel.html">Tutoriel</a> &raquo;</li>
+        
+          <li><a href="../03_05_description_modules_postpro.html">Description des modules de Post Traitement</a> &raquo;</li>
+        
+      <li>Imports des photos</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+           <div itemprop="articleBody">
+            
+  <div class="toctree-wrapper compound">
+</div>
+<div class="section" id="imports-des-photos">
+<h1>Imports des photos<a class="headerlink" href="#imports-des-photos" title="Lien permanent vers ce titre">¶</a></h1>
+<p>Il s’agit du cas où les photos n’ont pas été prises directement avec Lamia mais avec un appareil photo numérique autre.</p>
+<p>Deux cas de figure sont possibles :</p>
+<ul class="simple">
+<li><p>Les photos ont quand même été créées dans Lamia en remplissant la champ « index » de la photo</p></li>
+<li><p>les photos ont été prises complètement séparement (en utilisant la fonction « geolocalisation » de l’appareil).</p></li>
+</ul>
+<p>Ces cas sont expliquées par la suite. Mais auparavant, il est important de comprendre comment ces photos sont stockées dans Lamia.</p>
+<div class="section" id="fonctionnement-de-la-base-de-donnees-photos-de-lamia">
+<h2>Fonctionnement de la base de données photos de Lamia<a class="headerlink" href="#fonctionnement-de-la-base-de-donnees-photos-de-lamia" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Les photos sont stockées dans le répertoire de ressource définis au début de projet et accessible via
+le menu Lamia/préférences/Open project directory. Au sein de ce répertoire, aller dans le répertoire
+« media » : les photos y sont stockées par répertoire contenant la date d’acquisition.</p>
+<p>Le lien vers la photo est stocké dans la table « media_qgis », et dans le champ « file ». Le nom du lien doit
+être relatif au répertoire des ressources. Ainsi, le champ file doit être du type « .media[datedelaphoto][nomdelaphoto] ».
+Dans la table « media_qgis », le champ « typemedia » doit être égal à “PHO” pour que Lamia reconnaisse qu’il s’agit d’une photo.</p>
+<p>Lorque les photos n’ont pas été prises directement avec Lamia, il faut donc :</p>
+<ul class="simple">
+<li><p>Mettre les photos dans un sous répertoire du répertoire media</p></li>
+<li><p>Créer et/ou actualiser le champ file de la table « media_qgis » pour que le chemin pointe bien vers le bon fichier.</p></li>
+</ul>
+</div>
+<div class="section" id="cas-des-photos-prises-totalement-separemment">
+<h2>Cas des photos prises totalement séparemment<a class="headerlink" href="#cas-des-photos-prises-totalement-separemment" title="Lien permanent vers ce titre">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Tout d’abord mettre les photos dans un sous-répertoire du répertoire media.</p></li>
+<li><p>Importer les photos dans Lamia</p></li>
+</ol>
+<p>Il faut tout d’abord utiliser un utilitaire qui converti les photos en fichier .shp (par exemple l’utilitaire « ImportPhoto » de QGis).</p>
+<p>Ceci produit un fichier .shp contenant notamment le nom du fichier.</p>
+<p>Utiliser ensuite l’outil d’import de Lamia pour importer ce fichier shp (voir doc à ce sujet). Il faut que le champ contenant le nom de la photo
+soit dirigé vers le champ « file » de « media_qgis ». Il faut aussi que le champ « typemedia » soit égal à “PHO”.</p>
+<p>Pour ce faire, l’outil d’import doit ressembler à ça :</p>
+<a class="reference internal image-reference" href="../../_images/importshp.png"><img alt="../../_images/importshp.png" class="align-center" src="../../_images/importshp.png" style="width: 600px;" /></a>
+<p>Noter que le champ file est transformé via un noeud « python » dont le code est ci dessous. Remplacer le texte entre guillemets à la 4° ligne pour avoir le chemin relatif voulu.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">outputkey</span> <span class="o">=</span> <span class="s1">&#39;output&#39;</span>
+<span class="n">outputvals</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;input&#39;</span><span class="p">]:</span>
+    <span class="n">outputvals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;./media/repertoirephoto/&#39;</span> <span class="o">+</span> <span class="n">element</span><span class="p">)</span>
+<span class="k">return</span> <span class="p">{</span><span class="n">outputkey</span><span class="p">:</span> <span class="n">outputvals</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Lancer ensuite l’import et les photos sont bien rensignées dans Lamia !</p>
+</div>
+<div class="section" id="cas-des-photos-prises-referencees-avec-lamia-en-utilisant-l-index-mais-enregistrees-ailleurs">
+<h2>Cas des photos prises référencées avec Lamia en utilisant l’index mais enregistrées ailleurs<a class="headerlink" href="#cas-des-photos-prises-referencees-avec-lamia-en-utilisant-l-index-mais-enregistrees-ailleurs" title="Lien permanent vers ce titre">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Tout d’abord mettre les photos dans un sous-répertoire du répertoire media.</p></li>
+<li><p>Ensuite, activer le menu « Interface/Bureau » et aller sur l’onglet « Photos ».</p></li>
+</ol>
+<p>Clicker sur l’icone d’édition de table.</p>
+<a class="reference internal image-reference" href="../../_images/phototableedit.png"><img alt="../../_images/phototableedit.png" class="align-center" src="../../_images/phototableedit.png" style="width: 400px;" /></a>
+<p>La table modifiable « media » apparait dans le panneau des couches.</p>
+<p>Cliquer alors sur l’icone QGis « Calculatrice de champs » (le boulier), et choisir « mise à jour d’un champ existant » et choisir le champ « file ».</p>
+<a class="reference internal image-reference" href="../../_images/mediatableedit.png"><img alt="../../_images/mediatableedit.png" class="align-center" src="../../_images/mediatableedit.png" style="width: 400px;" /></a>
+<p>Rentrer la formule voulue. Le champ de l’index de la ressource est le champ « ressourceindex ».</p>
+<p>Attention :</p>
+<ul class="simple">
+<li><p>il faut rentrer deux fois “\\” si l’on veut que la valeur ecrite dans la table soit “\”</p></li>
+<li><p>Dans le cas de l’existence de photos déjà bien renseignées dans Lamia, si on n’utilise pas les éléments conditionnels dans l’éditeur d’expression, cela écrasera les champs « file » déjà bien renseignés.</p></li>
+</ul>
+<p>Cliquer enfin sur OK, revenir dans la fenêtre Lamia et cliquer sur l’enregistrement des modifications de la table</p>
+<a class="reference internal image-reference" href="../../_images/media_save_table.png"><img alt="../../_images/media_save_table.png" class="align-center" src="../../_images/media_save_table.png" style="width: 400px;" /></a>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+<a href="https://github.com/Artelia/Lamia">
+	<img style="position: absolute; top: 0; right: 0; border: 0;"
+		src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
+</a>
+<script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script>
+	AOS.init();
+</script>
+
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="02_import_ITV.html" class="btn btn-neutral float-right" title="Import d’inspections ITV (Valable uniquement pour Lamia assainissement)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="02_import.html" class="btn btn-neutral float-left" title="Import de données dans Lamia" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Artelia
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
