@@ -1,0 +1,1357 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool &mdash; Documentation LAMIA 1.0</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../../_static/theme_overrides.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../../" src="../../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../../_static/jquery.js"></script>
+        <script src="../../../../../../_static/underscore.js"></script>
+        <script src="../../../../../../_static/doctools.js"></script>
+        <script src="../../../../../../_static/language_data.js"></script>
+        <script src="../../../../../../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../../../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../../../../search.html" />
+
+<link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+<!-- help for aos : https://michalsnik.github.io/aos/  -->
+
+<script>
+
+	window.onload = function () {
+		var url = window.location.toString()
+		selectorvalue = $('#languageselector').val()
+
+		if (url.includes('/fr/')) {
+			if (selectorvalue != 'fr') {
+				$('#languageselector').val("fr")
+			}
+		} else if (url.includes('/en/')) {
+			if (selectorvalue != 'en') {
+				$('#languageselector').val("en")
+			}
+		} else if (url.includes('/dev/')) {
+			if (selectorvalue != 'dev') {
+				$('#languageselector').val("dev")
+			}
+		}
+
+	};
+
+	function testSelectOK() {
+		var url = window.location.toString()
+		selectorvalue = $('#languageselector').val()
+
+		if (url.includes('/fr/')) {
+			if (selectorvalue != 'fr') {
+				return false
+			}
+		} else if (url.includes('/en/')) {
+			if (selectorvalue != 'en') {
+				return false
+			}
+		} else if (url.includes('/dev/')) {
+			if (selectorvalue != 'dev') {
+				return false
+			}
+		}
+
+		return true
+
+	}
+
+
+	function languageSelector() {
+
+		if (testSelectOK()) {
+			return
+		}
+		var value = $('#languageselector').val();
+		var url = window.location.toString()
+		var n = url.indexOf("build")
+		finalurl = url.substring(0, n) + 'build/' + value + '/html/index.html'
+		console.log(finalurl)
+		window.location = finalurl
+
+	}
+</script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #004F83" >
+          
+
+
+          
+            <a href="../../../../../../index.html" class="icon icon-home" alt="Documentation Home"> LAMIA
+          
+
+          
+            
+            <img src="../../../../../../_static/icon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+
+<select id='languageselector' style="width: 100% ;border-radius: 20px 20px 20px 20px;" onchange=languageSelector()>
+	<option value="fr">Documentation utilisateur français</option>
+	<option value="en">English user documentation</option>
+	<option value="dev">Documentation for developpers</option>
+</select>
+
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../00_introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../01_globalpresentation.html">Organization of Lamia modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../01_globalpresentation.html#lamia-api">Lamia.api</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../01_globalpresentation.html#lamia-api-dbasemanager">Lamia.api.dbasemanager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../01_globalpresentation.html#lamia-api-libs">Lamia.api.libs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../01_globalpresentation.html#lamia-api-libslamia">Lamia.api.libslamia</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../01_globalpresentation.html#lamia-arteliasite">Lamia.arteliasite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../01_globalpresentation.html#lamia-config">Lamia.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../01_globalpresentation.html#lamia-doc">Lamia.doc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../01_globalpresentation.html#lamia-qgisiface">Lamia.qgisiface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../01_globalpresentation.html#lamia-test">Lamia.test</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../01_dev_env_install.html">Development environment install</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../01_dev_env_install.html#prerequites">Prerequites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../01_dev_env_install.html#download-lamia-repo">Download lamia repo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../01_dev_env_install.html#configure-visual-studio-code">Configure Visual Studio Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../01_dev_env_install.html#modify-the-files-within-lamia-devcontainer-repository">Modify the files within Lamia/.devcontainer repository</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../01_dev_env_install.html#dockerfile">Dockerfile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../01_dev_env_install.html#devcontainer-json">devcontainer.json</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../01_dev_env_install.html#launch-vcxsrv">Launch vcxsrv</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../01_dev_env_install.html#launch-docker">Launch Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../01_dev_env_install.html#open-the-lamia-folder-with-visual-studio-code">Open the Lamia folder with Visual Studio Code</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../02_creatingdbase.html">Creating a database</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../02_creatingdbase.html#understanding-global-logic">Understanding global logic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../02_creatingdbase.html#the-ods-file">The .ods file</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../02_creatingdbase.html#reserved-tablename">Reserved tablename</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../02_creatingdbase.html#reserved-column-name">Reserved column name</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../02_creatingdbase.html#the-crud-py-file">The _crud.py file</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../03_creatingnewform.html">Creating a new form</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../03_creatingnewform.html#the-minimal-form-abstracclass">The minimal form abstracclass</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../03_creatingnewform.html#the-class-variables">The class variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../03_creatingnewform.html#inserting-child-form">Inserting child form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../03_creatingnewform.html#coding-particular-behaviours">Coding particular behaviours</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../05_00_API.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../src_api/05_01_dbasemanager.html">dbasemanager Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../src_api/05_01_dbasemanager_dbaseparserabstract.html">AbstractDBaseParser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../src_api/05_01_dbasemanager_dbaseutils.html">dbaseutils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../src_api/05_01_dbasemanager_dbconfigreader.html">DBconfigReader</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../src_api/05_02_iface.html">QGis interface widgets</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../src_api/05_02_iface_ifaceqgswidget.html">LamiaWindowWidget</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../src_api/05_02_iface_lamia_abstracttool.html">AbstractLamiaTool</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../src_api/05_02_iface_lamia_abstractformtool.html">AbstractLamiaFormTool</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">LAMIA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../../../index.html">Code du module</a> &raquo;</li>
+        
+      <li>Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+           <div itemprop="articleBody">
+            
+  <h1>Code source de Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This file is part of LAMIA.</span>
+
+<span class="sd">    LAMIA is free software: you can redistribute it and/or modify</span>
+<span class="sd">    it under the terms of the GNU General Public License as published by</span>
+<span class="sd">    the Free Software Foundation, either version 3 of the License, or</span>
+<span class="sd">    (at your option) any later version.</span>
+
+<span class="sd">    LAMIA is distributed in the hope that it will be useful,</span>
+<span class="sd">    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="sd">    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="sd">    GNU General Public License for more details.</span>
+
+<span class="sd">    You should have received a copy of the GNU General Public License</span>
+<span class="sd">    along with Foobar.  If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  * Copyright (c) 2017-2020 ARTELIA Commit &lt;lamia@arteliagroup.com&gt;</span>
+<span class="sd">  * </span>
+<span class="sd">  * SPDX-License-Identifier: GPL-3.0-or-later</span>
+<span class="sd">  * License-Filename: LICENSING.md</span>
+<span class="sd"> &quot;&quot;&quot;</span>
+
+
+<span class="kn">import</span> <span class="nn">qgis</span>
+<span class="kn">import</span> <span class="nn">qgis.utils</span>
+<span class="kn">from</span> <span class="nn">qgis.PyQt</span> <span class="kn">import</span> <span class="n">uic</span><span class="p">,</span> <span class="n">QtCore</span><span class="p">,</span> <span class="n">QtGui</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">try:</span>
+<span class="sd">    from qgis.PyQt.QtGui import (QWidget, QTreeWidgetItem, QMessageBox, QFileDialog, QTableWidget,</span>
+<span class="sd">                                 QHeaderView, QComboBox, QSpinBox, QCheckBox, QPushButton, QDateEdit,QDateTimeEdit, QTextEdit,</span>
+<span class="sd">                                 QDoubleSpinBox, QDialog, QVBoxLayout, QTreeWidget, QLineEdit, QCheckBox,</span>
+<span class="sd">                                 QLabel, QMessageBox, QTextBrowser, QTableWidgetItem,QApplication,QToolButton, QAbstractItemView)</span>
+<span class="sd">except ImportError:</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">qgis.PyQt.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">QWidget</span><span class="p">,</span>
+    <span class="n">QTreeWidgetItem</span><span class="p">,</span>
+    <span class="n">QMessageBox</span><span class="p">,</span>
+    <span class="n">QFileDialog</span><span class="p">,</span>
+    <span class="n">QTableWidget</span><span class="p">,</span>
+    <span class="n">QHeaderView</span><span class="p">,</span>
+    <span class="n">QComboBox</span><span class="p">,</span>
+    <span class="n">QSpinBox</span><span class="p">,</span>
+    <span class="n">QCheckBox</span><span class="p">,</span>
+    <span class="n">QPushButton</span><span class="p">,</span>
+    <span class="n">QDateEdit</span><span class="p">,</span>
+    <span class="n">QDateTimeEdit</span><span class="p">,</span>
+    <span class="n">QTextEdit</span><span class="p">,</span>
+    <span class="n">QDoubleSpinBox</span><span class="p">,</span>
+    <span class="n">QDialog</span><span class="p">,</span>
+    <span class="n">QVBoxLayout</span><span class="p">,</span>
+    <span class="n">QTreeWidget</span><span class="p">,</span>
+    <span class="n">QLineEdit</span><span class="p">,</span>
+    <span class="n">QCheckBox</span><span class="p">,</span>
+    <span class="n">QFrame</span><span class="p">,</span>
+    <span class="n">QLabel</span><span class="p">,</span>
+    <span class="n">QMessageBox</span><span class="p">,</span>
+    <span class="n">QTextBrowser</span><span class="p">,</span>
+    <span class="n">QTableWidgetItem</span><span class="p">,</span>
+    <span class="n">QApplication</span><span class="p">,</span>
+    <span class="n">QToolButton</span><span class="p">,</span>
+    <span class="n">QAbstractItemView</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">logging</span><span class="o">,</span> <span class="nn">pprint</span><span class="o">,</span> <span class="nn">shutil</span><span class="o">,</span> <span class="nn">datetime</span><span class="o">,</span> <span class="nn">time</span>
+
+<span class="kn">from</span> <span class="nn">..subdialogs.lamia_linkage</span> <span class="kn">import</span> <span class="n">LinkageDialog</span>
+
+<span class="c1"># from ..maptool.mapTools import mapToolCapture TODO</span>
+<span class="kn">from</span> <span class="nn">.lamia_abstracttool</span> <span class="kn">import</span> <span class="n">AbstractLamiaTool</span>
+<span class="kn">from</span> <span class="nn">.lamia_abstractformutils</span> <span class="kn">import</span> <span class="n">FormToolUtils</span>
+<span class="kn">from</span> <span class="nn">.choosertreewidget.fullidchoosertreewidget</span> <span class="kn">import</span> <span class="n">FullIDChooserTreeWidget</span>
+<span class="kn">from</span> <span class="nn">.general_subwidgets.lamia_linkeditor</span> <span class="kn">import</span> <span class="n">LamiaLinkEditor</span>
+
+<span class="n">debugconnector</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+<div class="viewcode-block" id="AbstractLamiaFormTool"><a class="viewcode-back" href="../../../../../../src_api/05_02_iface_lamia_abstractformtool.html#Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool.AbstractLamiaFormTool">[docs]</a><span class="k">class</span> <span class="nc">AbstractLamiaFormTool</span><span class="p">(</span><span class="n">AbstractLamiaTool</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class is the abstract class for every widget loaded in the right part of te dockwidget.</span>
+<span class="sd">    If you want another widget, you have :</span>
+
+<span class="sd">    - create a file in Lamia.toolpostpro.[the_job]</span>
+
+<span class="sd">    - Fill it with the following code :</span>
+
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        class ExampleTool(AbstractLamiaTool):</span>
+<span class="sd">            TOOLNAME = &#39;test_module&#39;          #is TOOLNAME exists, lamia recognize it as postpro tool</span>
+
+<span class="sd">            def __init__(self, dbase, dialog=None, linkedtreewidget=None, gpsutil=None,parentwidget=None, parent=None):</span>
+<span class="sd">                super(ExampleTool, self).__init__(dbase, dialog, linkedtreewidget, gpsutil,parentwidget, parent=parent)</span>
+
+<span class="sd">            def initTool(self):     # it s inside this function that we configure the minimal behaviour</span>
+<span class="sd">                self.CAT = &#39;Synthese&#39;       #The first col tree widget in the left side of lamia dock</span>
+<span class="sd">                self.NAME = &#39;Couts&#39;        #The second col tree widget in the left side of lamia dock</span>
+<span class="sd">                self.visualmode = [4]       # put in list in which visual mode you want to see the widget (4 for post pro)</span>
+
+<span class="sd">                self.groupBox_elements.setParent(None)      # disable managing part of he widget</span>
+<span class="sd">                self.frame_editing.setParent(None)          # disable editing part of he widget</span>
+
+<span class="sd">            def initFieldUI(self):      # load the widget to appear</span>
+<span class="sd">                if self.userwdgfield is None:</span>
+<span class="sd">                    self.userwdgfield = UserUI()</span>
+
+<span class="sd">        class UserUI(QWidget):                  #load the ui made with QT Designer</span>
+<span class="sd">            def __init__(self, parent=None):</span>
+<span class="sd">                super(UserUI, self).__init__(parent=parent)</span>
+<span class="sd">                uipath = os.path.join(os.path.dirname(__file__), &#39;test_module.ui&#39;)</span>
+<span class="sd">                uic.loadUi(uipath, self)</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">saveFeatureSignal</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">pyqtSignal</span><span class="p">()</span>
+    <span class="n">currentFeatureChanged</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">pyqtSignal</span><span class="p">()</span>
+    <span class="n">lamiageomChanged</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">pyqtSignal</span><span class="p">()</span>
+    <span class="n">postInitFeaturePropertiesActivated</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">pyqtSignal</span><span class="p">()</span>
+
+    <span class="n">specialfieldui</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">PARENTJOIN</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">TABLEFILTERFIELD</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">SKIP_LOADING_UI</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="c1"># GEOMETRYSKIP = True</span>
+    <span class="n">CASCADEFEATURESELECTION</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="kc">False</span>  <span class="c1"># select child feature when parent feature is selected - slower</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">dbaseparser</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">mainifacewidget</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">choosertreewidget</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">parentwidget</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialisation of AbstractLamiaTool</span>
+
+<span class="sd">        :param dbase:              The DBaseParser class</span>
+<span class="sd">        :param dialog:             The LamiaWindowWidget class</span>
+<span class="sd">        :param linkedtreewidget:   The QTreeWidget Wwhee the ids appears</span>
+<span class="sd">        :param gpsutil:            the GpsUtil class for maning GPS connexion</span>
+<span class="sd">        :param parentwidget:       the parentWidget class, in case of use in prepro</span>
+<span class="sd">        :param parent:             the Qt parent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">AbstractLamiaFormTool</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">dbaseparser</span><span class="o">=</span><span class="n">dbaseparser</span><span class="p">,</span>
+            <span class="n">mainifacewidget</span><span class="o">=</span><span class="n">mainifacewidget</span><span class="p">,</span>
+            <span class="n">choosertreewidget</span><span class="o">=</span><span class="n">choosertreewidget</span><span class="p">,</span>
+            <span class="n">parentwidget</span><span class="o">=</span><span class="n">parentwidget</span><span class="p">,</span>
+            <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">installEventFilter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="c1"># utils class</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">formutils</span> <span class="o">=</span> <span class="n">FormToolUtils</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="c1"># choosertreewdg</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">choosertreewidget</span> <span class="o">=</span> <span class="n">FullIDChooserTreeWidget</span><span class="p">(</span>
+                <span class="n">toolwidget</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                <span class="n">dbaseparser</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="p">,</span>
+                <span class="n">mainifacewidget</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gpsutil</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">gpsutil</span>
+
+        <span class="c1"># var for widgets loaded in self.toolwidgetmainlayout</span>
+
+        <span class="c1"># layoutconf</span>
+        <span class="c1"># self.toolwidgetmainlayout = QVBoxLayout()</span>
+        <span class="c1"># self.toolwidgetmainlayout.setMargin(0)</span>
+        <span class="c1"># self.setLayout(self.toolwidgetmainlayout)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">toolwidget</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the widget loaded in self.toolwidgetmainlayout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">toolwidgetmain</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the widget defined in inherited class - become self.toolwidget when loaded in layout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">toolwidgetadvanced</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the widget defined in inherited class - become self.toolwidget when loaded in layout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">formtoolwidgetconfdict</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="kc">None</span>  <span class="c1"># dict used to link dbase column name to qtwidget objectname</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">formtoolwidgetconfdictmain</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># dict for toolwidgetmain</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">formtoolwidgetconfdictadvanced</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># dict for toolwidgetadvanced</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dbasechildwdg</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dbasechildwdgfield</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dbasechildwdgdesktop</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lamiawidgets</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># subwidgets defined in lamia</span>
+
+        <span class="c1"># behaviour var</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentFeaturePK</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the pk of selected feature</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tempgeometry</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the geometry edited while defining new geom</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activatesubwidgetchangelistener</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lastselectedpk</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tabWidgetbaralreadyconnected</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">_________________widgetinitialization</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">_loadUI</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+        <span class="n">uipath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s2">&quot;lamia_abstractformtool.ui&quot;</span><span class="p">)</span>
+        <span class="n">uic</span><span class="o">.</span><span class="n">loadUi</span><span class="p">(</span><span class="n">uipath</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+        <span class="c1"># self.titlelabel = QLabel(&#39;temp&#39;)</span>
+        <span class="c1">##self.titlelabel.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)</span>
+        <span class="c1"># self.titlelabel.setAlignment(QtCore.Qt.AlignVCenter)</span>
+        <span class="c1"># self.titlelabel.setFrameShape(QFrame.Panel)</span>
+        <span class="c1">##self.titlelabel.setFrameShadow(QFrame.Sunken)</span>
+        <span class="c1"># self.titlelabel.setLineWidth(2)</span>
+        <span class="c1"># self.frametoolwidgindicator.layout().addWidget(self.titlelabel)</span>
+        <span class="c1"># self.frametoolwidgindicator.layout().update()</span>
+
+<div class="viewcode-block" id="AbstractLamiaFormTool.toolTreeWidgetCurrentItemChanged"><a class="viewcode-back" href="../../../../../../src_api/05_02_iface_lamia_abstractformtool.html#Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool.AbstractLamiaFormTool.toolTreeWidgetCurrentItemChanged">[docs]</a>    <span class="k">def</span> <span class="nf">toolTreeWidgetCurrentItemChanged</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param1</span><span class="p">,</span> <span class="n">param2</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">toolTreeWidgetCurrentItemChanged</span><span class="p">(</span><span class="n">param1</span><span class="p">,</span> <span class="n">param2</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param1</span><span class="p">,</span> <span class="n">QTreeWidgetItem</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">param2</span><span class="p">,</span> <span class="n">QTreeWidgetItem</span><span class="p">)</span> <span class="ow">or</span> <span class="n">param2</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="p">):</span>
+            <span class="k">if</span> <span class="n">param1</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">qtreewidgetitem</span><span class="p">:</span>  <span class="c1"># the openend qtreewidgetitem</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">qgis</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">iface</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                    <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span>
+                    <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+                    <span class="ow">and</span> <span class="s2">&quot;layerqgis&quot;</span>
+                    <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span><span class="p">]</span>
+                <span class="p">):</span>
+                    <span class="n">qgis</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">iface</span><span class="o">.</span><span class="n">setActiveLayer</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span><span class="p">][</span>
+                            <span class="s2">&quot;layerqgis&quot;</span>
+                        <span class="p">]</span>
+                    <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span><span class="p">][</span>
+                        <span class="s2">&quot;layerqgis&quot;</span>
+                    <span class="p">]</span><span class="o">.</span><span class="n">removeSelection</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">manageWidgetToLoadInMainLayout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">interfacemode</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolwidgetmain</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># first loading</span>
+                <span class="c1"># former initFieldUI</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">initMainToolWidget</span><span class="p">()</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolwidgetmain</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">toolwidget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolwidgetmain</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">formtoolwidgetconfdict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">formtoolwidgetconfdictmain</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">formutils</span><span class="o">.</span><span class="n">initWidgetBehaviour</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">formutils</span><span class="o">.</span><span class="n">connectSubWidgetModifications</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolwidgetmain</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># non first loading</span>
+                <span class="c1"># former self.userwdg = self.userwdgfield</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">toolwidget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolwidgetmain</span>
+                <span class="c1"># former self.linkuserwdg = self.linkuserwdgfield</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">formtoolwidgetconfdict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">formtoolwidgetconfdictmain</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dbasechildwdg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasechildwdgfield</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">interfacemode</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolwidgetadvanced</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># first loading</span>
+                <span class="c1"># former self.initDesktopUI()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">initAdvancedToolWidget</span><span class="p">()</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolwidgetadvanced</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">toolwidget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolwidgetadvanced</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">formtoolwidgetconfdict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">formtoolwidgetconfdictadvanced</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">formutils</span><span class="o">.</span><span class="n">initWidgetBehaviour</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">toolwidgetadvanced</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolwidgetmain</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">formtoolwidgetconfdictadvanced</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">formtoolwidgetconfdictmain</span>
+                    <span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">dbasechildwdgdesktop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasechildwdgfield</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolwidgetadvanced</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># non first loading</span>
+                <span class="c1"># former self.userwdg = self.userwdgdesktop</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">toolwidget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolwidgetadvanced</span>
+                <span class="c1"># former self.linkuserwdg = self.linkuserwdgdesktop</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">formtoolwidgetconfdict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">formtoolwidgetconfdictadvanced</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dbasechildwdg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasechildwdgdesktop</span>
+            <span class="c1"># else:</span>
+            <span class="c1">#    self.toolwidget = self.toolwidgetmain</span>
+            <span class="c1">#    self.formtoolwidgetconfdict = self.formtoolwidgetconfdictmain</span>
+            <span class="c1">#    self.dbasechildwdg = self.dbasechildwdgfield</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">frametoolwidg</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># self.frametoolwidg.layout().itemAt(0).widget().setVisible(False)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">frametoolwidg</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">itemAt</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">widget</span><span class="p">()</span><span class="o">.</span><span class="n">setParent</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+        <span class="c1"># if not self.toolwidget.isVisible():</span>
+        <span class="c1">#    self.toolwidget.setVisible(True)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolwidget</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># case toolwidget deactivated for variante</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">frametoolwidg</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">toolwidget</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;SKIP_LOADING_UI&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">SKIP_LOADING_UI</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_defineQTabWidgetTabBehaviour</span><span class="p">()</span>
+            <span class="c1"># self.toolwidget.mouseReleaseEvent=self.widgetClicked</span>
+
+        <span class="c1"># propagate to childwidgets</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">currentFeatureChanged</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="k">pass</span>
+            <span class="c1"># print(&#39;error disconnect currentFeatureChanged&#39;)</span>
+
+        <span class="k">for</span> <span class="n">childwdg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbasechildwdg</span><span class="p">:</span>
+            <span class="c1"># if hasattr(childwdg,&#39;SKIP_LOADING_UI&#39;) and childwdg.SKIP_LOADING_UI:</span>
+            <span class="c1">#    childwdg.manageWidgetToLoadInMainLayout()</span>
+            <span class="c1"># else:</span>
+            <span class="n">childwdg</span><span class="o">.</span><span class="n">manageWidgetToLoadInMainLayout</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">currentFeatureChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">childwdg</span><span class="o">.</span><span class="n">loadChildFeatureinWidget</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_defineQTabWidgetTabBehaviour</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tabWidgetmain</span><span class="o">.</span><span class="n">tabBar</span><span class="p">()</span><span class="o">.</span><span class="n">setObjectName</span><span class="p">(</span><span class="s2">&quot;lamia_tabbar&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tabWidget</span><span class="o">.</span><span class="n">tabBar</span><span class="p">()</span><span class="o">.</span><span class="n">setObjectName</span><span class="p">(</span><span class="s2">&quot;lamia_tabbar&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tabWidgetmain</span><span class="o">.</span><span class="n">setTabText</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tooltreewidgetSUBCAT</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tabWidgetmain</span><span class="o">.</span><span class="n">setTabIcon</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">QtGui</span><span class="o">.</span><span class="n">QIcon</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tooltreewidgetICONPATH</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tabWidget</span><span class="o">.</span><span class="n">setTabIcon</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">QtGui</span><span class="o">.</span><span class="n">QIcon</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tooltreewidgetICONPATH</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parentWidget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># parentwdg=self</span>
+            <span class="c1"># parentlist=[]</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parentWidget</span><span class="p">,</span> <span class="s2">&quot;SKIP_LOADING_UI&quot;</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">parentWidget</span><span class="o">.</span><span class="n">SKIP_LOADING_UI</span>
+            <span class="p">):</span>
+                <span class="n">parenttab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parentWidget</span><span class="o">.</span><span class="n">parentWidget</span><span class="o">.</span><span class="n">tabWidget</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">parenttab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parentWidget</span><span class="o">.</span><span class="n">tabWidget</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tabWidget</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tabWidgetmain</span><span class="o">.</span><span class="n">widget</span><span class="p">(</span><span class="mi">0</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">tabWidgetmain</span><span class="o">.</span><span class="n">widget</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">setObjectName</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">tooltreewidgetSUBCAT</span>
+                    <span class="p">)</span>
+                <span class="n">indexinserted</span> <span class="o">=</span> <span class="n">parenttab</span><span class="o">.</span><span class="n">addTab</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">tabWidgetmain</span><span class="o">.</span><span class="n">widget</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+                    <span class="n">QtGui</span><span class="o">.</span><span class="n">QIcon</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tooltreewidgetICONPATH</span><span class="p">),</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">tooltreewidgetSUBCAT</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span>
+
+            <span class="k">def</span> <span class="nf">selectFirstTab</span><span class="p">(</span><span class="n">idx</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="n">indexinserted</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">tabWidget</span><span class="o">.</span><span class="n">setCurrentIndex</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">widgetClicked</span><span class="p">(</span><span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+            <span class="n">parenttab</span><span class="o">.</span><span class="n">tabBarClicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="k">lambda</span> <span class="n">idx</span><span class="p">:</span> <span class="n">selectFirstTab</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tabWidgetmain</span><span class="o">.</span><span class="n">tabBarClicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">idx</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">tabWidget</span><span class="o">.</span><span class="n">setCurrentIndex</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tabWidgetmain</span><span class="o">.</span><span class="n">tabBarClicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="k">lambda</span> <span class="n">idx</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">widgetClicked</span><span class="p">())</span>
+
+        <span class="k">def</span> <span class="nf">onlyFirstTabClicked</span><span class="p">(</span><span class="n">idx</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">widgetClicked</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">tabWidgetbaralreadyconnected</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tabWidget</span><span class="o">.</span><span class="n">tabBarClicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="k">lambda</span> <span class="n">idx</span><span class="p">:</span> <span class="n">onlyFirstTabClicked</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tabWidgetbaralreadyconnected</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">eventFilter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>  <span class="c1"># to work also on disabled widget</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span><span class="p">()</span> <span class="o">==</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">QEvent</span><span class="o">.</span><span class="n">MouseButtonRelease</span> <span class="ow">and</span> <span class="n">event</span><span class="o">.</span><span class="n">button</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># print(&#39;eventFilter&#39;)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">toolwidget</span><span class="o">.</span><span class="n">mouseReleaseEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+            <span class="c1"># self._click.emit(self)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="n">QWidget</span><span class="o">.</span><span class="n">eventFilter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">event</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">widgetClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">debug</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia_unittest&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s2">&quot;tablename : </span><span class="si">%s</span><span class="s2">, kwargs : </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span><span class="p">,</span> <span class="n">kwargs</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">currenttoolwidget</span><span class="o">.</span><span class="n">DBASETABLENAME</span>
+            <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">currenttoolwidget</span><span class="o">.</span><span class="n">DBASETABLENAME</span>
+            <span class="p">][</span><span class="s2">&quot;layerqgis&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">removeSelection</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">currenttoolwidget</span> <span class="o">=</span> <span class="bp">self</span>
+
+        <span class="n">parentwidget</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="n">lastparentwdgpk</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">while</span> <span class="n">parentwidget</span><span class="o">.</span><span class="n">parentWidget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lastparentwdgpk</span> <span class="o">=</span> <span class="n">parentwidget</span><span class="o">.</span><span class="n">parentWidget</span><span class="o">.</span><span class="n">currentFeaturePK</span>
+            <span class="n">parentwidget</span> <span class="o">=</span> <span class="n">parentwidget</span><span class="o">.</span><span class="n">parentWidget</span>
+
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parentWidget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">lastparentwdgpk</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">parentWidget</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">activateChooserTreeWidget</span><span class="p">(</span><span class="n">initfeatureselection</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia_unittest&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> - last sel pk : </span><span class="si">%s</span><span class="s2"> - lenids : </span><span class="si">%i</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">lastselectedpk</span><span class="p">,</span>
+                <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">choosertreewidget</span><span class="o">.</span><span class="n">ids</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_widgetClicked_manageFeatureSelectionAndChooserWidget</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="c1"># select feature and update choosertreewidget</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_widgetClicked_manageToolBar</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_widgetClicked_manageFeatureSelectionAndChooserWidget</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lastselectedpk</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">choosertreewidget</span><span class="o">.</span><span class="n">ids</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">lastselectedpk</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">choosertreewidget</span><span class="o">.</span><span class="n">ids</span><span class="o">.</span><span class="n">pk</span><span class="o">.</span><span class="n">values</span>
+        <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">selectFeature</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lastselectedpk</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">choosertreewidget</span><span class="o">.</span><span class="n">selectItemfromPK</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lastselectedpk</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">choosertreewidget</span><span class="o">.</span><span class="n">ids</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">pk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">choosertreewidget</span><span class="o">.</span><span class="n">ids</span><span class="p">[</span><span class="s2">&quot;pk&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">selectFeature</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">pk</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">choosertreewidget</span><span class="o">.</span><span class="n">selectItemfromPK</span><span class="p">(</span><span class="n">pk</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">currentFeaturePK</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">updateFormTitle</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">disabletitle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="c1"># self.selectFeature(pk=None)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">frametoolwidg</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_widgetClicked_manageToolBar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="c1"># toolbar geom part</span>
+        <span class="k">if</span> <span class="s2">&quot;geom&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">lamiatoolBarFormGeom</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+            <span class="n">toolbaractions</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">actiontoobargeomnewpoint</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">actiontoobargeomnewline</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">actiontoobargeomnewpolygon</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">actiontoobargeomaddpoint</span><span class="p">,</span>
+                <span class="c1"># self.mainifacewidget.actiontoobargeomaddGPSpoint,</span>
+                <span class="c1"># self.mainifacewidget.actiontoobargeomeditlayer</span>
+            <span class="p">]</span>
+            <span class="n">dbaselayertype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span><span class="p">][</span><span class="s2">&quot;geom&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s2">&quot;POINT&quot;</span> <span class="ow">in</span> <span class="n">dbaselayertype</span><span class="p">:</span>
+                <span class="n">conf</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="s2">&quot;LINESTRING&quot;</span> <span class="ow">in</span> <span class="n">dbaselayertype</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span> <span class="ow">in</span> <span class="p">[</span>
+                    <span class="s2">&quot;Equipement&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Desordre&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;equipment&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;deficiency&quot;</span><span class="p">,</span>
+                <span class="p">]:</span>
+                    <span class="n">conf</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">conf</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="s2">&quot;POLYGON&quot;</span> <span class="ow">in</span> <span class="n">dbaselayertype</span><span class="p">:</span>
+                <span class="n">conf</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">]</span>
+            <span class="n">dictwhattodo</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">toolbaractions</span><span class="p">,</span> <span class="n">conf</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">action</span><span class="p">,</span> <span class="n">boolenabled</span> <span class="ow">in</span> <span class="n">dictwhattodo</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">action</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="n">boolenabled</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">lamiatoolBarFormGeom</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># lamiatoolBarFormCreation part</span>
+        <span class="c1"># toolbar form creation</span>
+        <span class="k">if</span> <span class="s2">&quot;toolbarMagic&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>  <span class="c1"># implemented</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">actiontoolbarmagic</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">actiontoolbarmagic</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parentWidget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">parentWidget</span><span class="o">.</span><span class="n">currentFeaturePK</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">lamiatoolBarFormCreation</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">lamiatoolBarFormCreation</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># lamiatoolBarTools part</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentFeaturePK</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">lamiatoolBartools</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;printWidget&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>  <span class="c1"># implemented</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">actiontoolbartoolsprint</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">actiontoolbartoolsprint</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">lamiatoolBartools</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">loadChildFeatureinWidget</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">debug</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># print(&#39;loadChildFeatureinWidget&#39;, self.DBASETABLENAME)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">choosertreewidget</span><span class="o">.</span><span class="n">loadIds</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia_unittest&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> - pk:</span><span class="si">%s</span><span class="s2"> / </span><span class="si">%s</span><span class="s2"> </span><span class="se">\n</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">parentWidget</span><span class="o">.</span><span class="n">DBASETABLENAME</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">parentWidget</span><span class="o">.</span><span class="n">currentFeaturePK</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">choosertreewidget</span><span class="o">.</span><span class="n">ids</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">CASCADEFEATURESELECTION</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">SKIP_LOADING_UI</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">choosertreewidget</span><span class="o">.</span><span class="n">ids</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">selectFeature</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">disabletitle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">selectFeature</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">choosertreewidget</span><span class="o">.</span><span class="n">ids</span><span class="p">[</span><span class="s2">&quot;pk&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">initMainToolWidget</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">initAdvancedToolWidget</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">postToolTreeWidgetCurrentItemChanged</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tabWidget</span><span class="o">.</span><span class="n">setCurrentIndex</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">widgetClicked</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        if self.lastselectedpk is not None:</span>
+<span class="sd">            self.setEnabled(True)</span>
+<span class="sd">            self.selectFeature(pk=self.lastselectedpk)</span>
+<span class="sd">        elif len(self.choosertreewidget.ids)&gt;0:</span>
+<span class="sd">            self.setEnabled(True)</span>
+<span class="sd">            self.selectFeature(pk=self.choosertreewidget.ids[&#39;pk&#39;].values[0])</span>
+<span class="sd">        else:</span>
+<span class="sd">            self.setEnabled(False)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">updateToolbarOnToolFrameLoading</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">lamiatoolBarFormCreation</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">lamiatoolBarFormGeom</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">subwidgetChanged</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">activatesubwidgetchangelistener</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">updateFormTitleBackground</span><span class="p">(</span><span class="n">subwidgethaschanged</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># *************************************************************</span>
+    <span class="c1"># toolbar</span>
+    <span class="c1"># *************************************************************</span>
+
+    <span class="k">def</span> <span class="nf">____________________ToolBarActions</span><span class="p">():</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">selectFeature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># print(&#39;selectFeature&#39;,self.DBASETABLENAME, kwargs)</span>
+        <span class="n">debug</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">activatesubwidgetchangelistener</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tempgeometry</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia_unittest&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;kwargs </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">kwargs</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentFeaturePK</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;pk&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="c1"># rubberband actions</span>
+        <span class="c1"># if self.parentWidget is None:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_manageRubberbandOnSelectFeature</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">currentFeaturePK</span><span class="p">)</span>
+
+        <span class="c1"># remember feature pk</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentFeaturePK</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lastselectedpk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentFeaturePK</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">actiontoolbarnew</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># layer action</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parentWidget</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span><span class="p">][</span>
+                    <span class="s2">&quot;layer&quot;</span>
+                <span class="p">]</span><span class="o">.</span><span class="n">removeSelection</span><span class="p">()</span>
+            <span class="c1"># self.dbasetable[&#39;layer&#39;].removeSelection()</span>
+        <span class="c1"># form title action</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">updateFormTitle</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="c1"># load values in form</span>
+        <span class="n">resultdict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">formutils</span><span class="o">.</span><span class="n">getDictValuesForWidget</span><span class="p">(</span>
+            <span class="n">featurepk</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">currentFeaturePK</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia_unittest&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;resultdict </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">resultdict</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">formutils</span><span class="o">.</span><span class="n">applyResultDict</span><span class="p">(</span><span class="n">resultdict</span><span class="p">)</span>
+        <span class="c1"># end actions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">postSelectFeature</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">lidchooser</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lamiawidgets</span><span class="p">:</span>
+            <span class="n">lidchooser</span><span class="o">.</span><span class="n">postSelectFeature</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">currentFeaturePK</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">):</span>  <span class="c1"># activate listener only with existing feat</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">activatesubwidgetchangelistener</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentFeatureChanged</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">toolbarNew</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">actiontoolbarnew</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_manageRubberbandOnSelectFeature</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">selectFeature</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">toolbarMagic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">toolbarZoomTo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentFeaturePK</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">qgiscanvas</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span>
+            <span class="n">qgiscanvas</span><span class="o">.</span><span class="n">zoomToFeature</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentFeaturePK</span><span class="p">)</span>
+            <span class="n">qgslayer</span> <span class="o">=</span> <span class="n">qgiscanvas</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span><span class="p">][</span><span class="s2">&quot;layerqgis&quot;</span><span class="p">]</span>
+            <span class="n">qgiscanvas</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">flashFeatureIds</span><span class="p">(</span><span class="n">qgslayer</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">currentFeaturePK</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">toolbarEditLink</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linkeditor</span> <span class="o">=</span> <span class="n">LamiaLinkEditor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentFeaturePK</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">qgis</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">iface</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">linkeditor</span><span class="o">.</span><span class="n">setWindowModality</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">NonModal</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">linkeditor</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">parent</span><span class="p">()</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">linkeditor</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">toolbarUndo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentFeaturePK</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">selectFeature</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">currentFeaturePK</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">lastselectedpk</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">selectFeature</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lastselectedpk</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">toolbarSave</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">formutils</span><span class="o">.</span><span class="n">saveFeature</span><span class="p">(</span><span class="n">featurepk</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">currentFeaturePK</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">toolbarGeom</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">sender</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">sender</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">sender</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia_unittest&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s2">&quot;toolbarGeom </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">sender</span><span class="o">.</span><span class="n">objectName</span><span class="p">())</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">sender</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s2">&quot;addpoint&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sender</span><span class="o">.</span><span class="n">objectName</span><span class="p">():</span>
+            <span class="n">listpointinitialgeometry</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">listpointinitialgeometry</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getCurrentGeomasList</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="s2">&quot;point&quot;</span> <span class="ow">in</span> <span class="n">sender</span><span class="o">.</span><span class="n">objectName</span><span class="p">():</span>
+            <span class="n">capturetype</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">elif</span> <span class="s2">&quot;line&quot;</span> <span class="ow">in</span> <span class="n">sender</span><span class="o">.</span><span class="n">objectName</span><span class="p">():</span>
+            <span class="n">capturetype</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="s2">&quot;polygon&quot;</span> <span class="ow">in</span> <span class="n">sender</span><span class="o">.</span><span class="n">objectName</span><span class="p">():</span>
+            <span class="n">capturetype</span> <span class="o">=</span> <span class="mi">2</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">captureGeometry</span><span class="p">(</span>
+            <span class="n">capturetype</span><span class="o">=</span><span class="n">capturetype</span><span class="p">,</span>
+            <span class="n">listpointinitialgeometry</span><span class="o">=</span><span class="n">listpointinitialgeometry</span><span class="p">,</span>
+            <span class="n">fctonstopcapture</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">setTempGeometry</span><span class="p">,</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="AbstractLamiaFormTool.toolbarGeomAddGPS"><a class="viewcode-back" href="../../../../../../src_api/05_02_iface_lamia_abstractformtool.html#Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool.AbstractLamiaFormTool.toolbarGeomAddGPS">[docs]</a>    <span class="k">def</span> <span class="nf">toolbarGeomAddGPS</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method called by add GPS Point Button</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gpsutil</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">gpsutil</span><span class="o">.</span><span class="n">currentpoint</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">connector</span><span class="o">.</span><span class="n">showErrorMessage</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tr</span><span class="p">(</span><span class="s2">&quot;GPS not connected&quot;</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">geomtype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span><span class="p">][</span>
+            <span class="s2">&quot;layer&quot;</span>
+        <span class="p">]</span><span class="o">.</span><span class="n">geometryType</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">createorresetRubberband</span><span class="p">(</span>
+            <span class="n">geomtype</span><span class="p">,</span> <span class="n">rubtype</span><span class="o">=</span><span class="s2">&quot;capture&quot;</span>
+        <span class="p">)</span>
+        <span class="n">layerpoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gpsutil</span><span class="o">.</span><span class="n">currentpoint</span>
+
+        <span class="k">if</span> <span class="n">geomtype</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># POINT</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setTempGeometry</span><span class="p">([</span><span class="n">layerpoint</span><span class="p">],</span> <span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">geomtype</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># LINE</span>
+            <span class="n">geom</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">geompoly</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getCurrentGeomasList</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">geompoly</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">setTempGeometry</span><span class="p">([</span><span class="n">layerpoint</span><span class="p">,</span> <span class="n">layerpoint</span><span class="p">],</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># geompoly = self.tempgeometry.asMultiPolyline()[0]</span>
+                <span class="k">if</span> <span class="n">geompoly</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">geompoly</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                    <span class="k">del</span> <span class="n">geompoly</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">geompoly</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">layerpoint</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">setTempGeometry</span><span class="p">(</span><span class="n">geompoly</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            if self.currentFeaturePK is not None and self.currentFeature.geometry() is not None:</span>
+<span class="sd">                # geom = self.currentFeature.geometry()</span>
+<span class="sd">                # geompoly = geom.asPolyline()</span>
+<span class="sd">                geompoly = self._getCurrentGeomasList()</span>
+<span class="sd">                geompoly.append(layerpoint)</span>
+<span class="sd">                self.setTempGeometry(geompoly,False)</span>
+<span class="sd">            else:</span>
+<span class="sd">                if self.tempgeometry is None:</span>
+<span class="sd">                    self.setTempGeometry([layerpoint,layerpoint],False)</span>
+<span class="sd">                else:</span>
+<span class="sd">                    geompoly = self.tempgeometry.asMultiPolyline()[0]</span>
+<span class="sd">                    if geompoly[0] == geompoly[1]:</span>
+<span class="sd">                        del geompoly[0]</span>
+<span class="sd">                    geompoly.append(layerpoint)</span>
+<span class="sd">                    self.setTempGeometry(geompoly,False)</span>
+<span class="sd">            &quot;&quot;&quot;</span></div>
+
+    <span class="k">def</span> <span class="nf">_getCurrentGeomasList</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">geomtype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span><span class="p">][</span>
+            <span class="s2">&quot;layer&quot;</span>
+        <span class="p">]</span><span class="o">.</span><span class="n">geometryType</span><span class="p">()</span>
+        <span class="c1"># self.createorresetRubberband(type)</span>
+        <span class="n">initialgeom</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">geomtype</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tempgeometry</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">initialgeom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tempgeometry</span><span class="o">.</span><span class="n">asPoint</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">initialgeomwkt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">getValuesFromPk</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span><span class="p">,</span> <span class="s2">&quot;ST_AsText(geom)&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentFeaturePK</span>
+                <span class="p">)</span>
+                <span class="n">initialgeom</span> <span class="o">=</span> <span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsGeometry</span><span class="o">.</span><span class="n">fromWkt</span><span class="p">(</span><span class="n">initialgeomwkt</span><span class="p">)</span><span class="o">.</span><span class="n">asPoint</span><span class="p">()</span>
+
+        <span class="k">elif</span> <span class="n">geomtype</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># LINE</span>
+            <span class="c1"># get the geometry before editing</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tempgeometry</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">tempgeometry</span><span class="o">.</span><span class="n">isMultipart</span><span class="p">():</span>
+                    <span class="n">initialgeom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tempgeometry</span><span class="o">.</span><span class="n">asPolyline</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">initialgeom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tempgeometry</span><span class="o">.</span><span class="n">asMultiPolyline</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentFeaturePK</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">tempgeometry</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+                <span class="c1"># initialgeom = self.currentFeature.geometry().asPolyline()</span>
+                <span class="n">initialgeomwkt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">getValuesFromPk</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span><span class="p">,</span> <span class="s2">&quot;ST_AsText(geom)&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentFeaturePK</span>
+                <span class="p">)</span>
+                <span class="n">initialgeom</span> <span class="o">=</span> <span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsGeometry</span><span class="o">.</span><span class="n">fromWkt</span><span class="p">(</span><span class="n">initialgeomwkt</span><span class="p">)</span><span class="o">.</span><span class="n">asPolyline</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">initialgeom</span>
+
+    <span class="k">def</span> <span class="nf">toolbarDelete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="c1"># message = self.tr(&quot;Supprimer completement l&#39;element (yes) ou l&#39;archiver (no) ? &quot;)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">offlinemode</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">formutils</span><span class="o">.</span><span class="n">archiveFeature</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tr</span><span class="p">(</span><span class="s2">&quot;Delete feature (yes) or archive (no) ? &quot;</span><span class="p">)</span>
+            <span class="n">reply</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">question</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span>
+                <span class="s2">&quot;Su&quot;</span><span class="p">,</span>
+                <span class="n">message</span><span class="p">,</span>
+                <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Yes</span> <span class="o">|</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">No</span> <span class="o">|</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Cancel</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">reply</span> <span class="o">==</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Yes</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">formutils</span><span class="o">.</span><span class="n">deleteFeature</span><span class="p">()</span>
+
+            <span class="k">elif</span> <span class="n">reply</span> <span class="o">==</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">No</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">formutils</span><span class="o">.</span><span class="n">archiveFeature</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span><span class="p">][</span>
+                <span class="s2">&quot;layerqgis&quot;</span>
+            <span class="p">]</span><span class="o">.</span><span class="n">triggerRepaint</span><span class="p">()</span>
+        <span class="c1"># self.canvas.refresh()</span>
+        <span class="c1"># self.loadChildFeatureinWidget()</span>
+
+    <span class="k">def</span> <span class="nf">printWidget</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">____________________________________ToolBarActionsFunctions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">updateFormTitle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># self.toolBoxmain</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentFeaturePK</span><span class="p">:</span>
+            <span class="c1"># featureid = self.dbase.getValuesFromPk(self.DBASETABLENAME,</span>
+            <span class="c1">#                                     &#39;id_&#39; + self.DBASETABLENAME.lower(),</span>
+            <span class="c1">#                                         self.currentFeaturePK)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tabWidget</span><span class="o">.</span><span class="n">count</span><span class="p">()):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tabWidget</span><span class="o">.</span><span class="n">setTabEnabled</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># featureid = &#39;New&#39;</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tabWidget</span><span class="o">.</span><span class="n">count</span><span class="p">()):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tabWidget</span><span class="o">.</span><span class="n">setTabEnabled</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">parentwidget</span> <span class="o">=</span> <span class="bp">self</span>
+            <span class="k">while</span> <span class="n">parentwidget</span><span class="o">.</span><span class="n">parentWidget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">parentwidget</span> <span class="o">=</span> <span class="n">parentwidget</span><span class="o">.</span><span class="n">parentWidget</span>
+
+            <span class="n">toolbox</span> <span class="o">=</span> <span class="n">parentwidget</span><span class="o">.</span><span class="n">toolBoxmain</span>
+            <span class="n">finalpageindex</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">pageindex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">toolbox</span><span class="o">.</span><span class="n">count</span><span class="p">()):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;po&quot;</span><span class="p">,</span> <span class="n">pageindex</span><span class="p">,</span> <span class="n">toolbox</span><span class="o">.</span><span class="n">widget</span><span class="p">(</span><span class="n">pageindex</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="p">()</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">toolbox</span><span class="o">.</span><span class="n">widget</span><span class="p">(</span><span class="n">pageindex</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">frametoolwidg</span><span class="p">:</span>
+                    <span class="n">finalpageindex</span> <span class="o">==</span> <span class="n">pageindex</span>
+                    <span class="k">break</span>
+            <span class="n">toolbox</span><span class="o">.</span><span class="n">setItemText</span><span class="p">(</span>
+                <span class="n">finalpageindex</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">(</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span><span class="p">,</span> <span class="n">featureid</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="c1"># self.toolBoxmain.setItemText(0,&#39;{}({})&#39;.format(self.DBASETABLENAME,</span>
+            <span class="c1">#                                              featureid) )</span>
+            <span class="c1"># self.titlelabel.setText(&#39;{}({})&#39;.format(self.DBASETABLENAME,</span>
+            <span class="c1">#                                              featureid) )</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">updateFormTitleBackground</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">updateFormTitleBackground</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">subwidgethaschanged</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">disabletitle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+        <span class="c1"># print(&#39;updateFormTitleBackground&#39;, self.DBASETABLENAME, subwidgethaschanged,disabletitle)</span>
+        <span class="c1"># styling = &#39;.QTabBar::tab:selected , QTabBar * {border-color: rgb(0, 0, 0);&#39;</span>
+        <span class="c1"># tabbarname = self.tabWidget.tabBar().objectName()</span>
+        <span class="n">tabbarname</span> <span class="o">=</span> <span class="s2">&quot;lamia_tabbar&quot;</span>
+        <span class="n">styling</span> <span class="o">=</span> <span class="s2">&quot;.QTabBar::tab:selected#</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tabbarname</span><span class="p">)</span>
+        <span class="n">styling</span> <span class="o">+=</span> <span class="s2">&quot; {border-color: rgb(0, 0, 0);&quot;</span>
+        <span class="n">tabwidgetlist</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">tabWidget</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">subwidgethaschanged</span> <span class="ow">or</span> <span class="n">disabletitle</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">subwidgethaschanged</span><span class="p">:</span>
+                <span class="n">styling</span> <span class="o">+=</span> <span class="s2">&quot; background-color : rgb(0, 0, 255) }&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">activatesubwidgetchangelistener</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">disabletitle</span><span class="p">:</span>
+                <span class="n">styling</span> <span class="o">+=</span> <span class="s2">&quot; background-color : rgb(150, 150, 150) }&quot;</span>
+            <span class="k">for</span> <span class="n">wdg</span> <span class="ow">in</span> <span class="n">tabwidgetlist</span><span class="p">:</span>
+                <span class="n">wdg</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="n">styling</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentFeaturePK</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">styling</span> <span class="o">+=</span> <span class="s2">&quot; background-color : rgb(0, 255, 0) }&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">styling</span> <span class="o">+=</span> <span class="s2">&quot; background-color : rgb(255, 0, 0) }&quot;</span>
+            <span class="k">for</span> <span class="n">wdg</span> <span class="ow">in</span> <span class="n">tabwidgetlist</span><span class="p">:</span>
+                <span class="n">wdg</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="n">styling</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_manageRubberbandOnSelectFeature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pkfeature</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">createorresetRubberband</span><span class="p">(</span><span class="n">rubtype</span><span class="o">=</span><span class="s2">&quot;capture&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">pkfeature</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span><span class="p">][</span>
+                <span class="s2">&quot;layerqgis&quot;</span>
+            <span class="p">]</span><span class="o">.</span><span class="n">removeSelection</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span><span class="p">][</span>
+                <span class="s2">&quot;layerqgis&quot;</span>
+            <span class="p">]</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pkfeature</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span><span class="p">][</span>
+                <span class="s2">&quot;layerqgis&quot;</span>
+            <span class="p">]</span><span class="o">.</span><span class="n">removeSelection</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parentWidget</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="s2">&quot;geom&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+                <span class="ow">and</span> <span class="n">pkfeature</span>
+            <span class="p">):</span>
+                <span class="n">currentgeom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">formutils</span><span class="o">.</span><span class="n">getQgsGeomFromPk</span><span class="p">(</span><span class="n">pkfeature</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">createRubberBandForSelection</span><span class="p">(</span>
+                    <span class="n">currentgeom</span><span class="p">,</span> <span class="n">rubtype</span><span class="o">=</span><span class="s2">&quot;main&quot;</span>
+                <span class="p">)</span>
+                <span class="c1"># self.mainifacewidget.qgiscanvas.rubberBand.show()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">createorresetRubberband</span><span class="p">(</span><span class="n">rubtype</span><span class="o">=</span><span class="s2">&quot;main&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">createorresetRubberband</span><span class="p">(</span><span class="n">rubtype</span><span class="o">=</span><span class="s2">&quot;child&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">crtwdg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">currenttoolwidget</span>
+            <span class="k">if</span> <span class="n">crtwdg</span> <span class="ow">and</span> <span class="n">crtwdg</span> <span class="o">==</span> <span class="bp">self</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="s2">&quot;geom&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+                    <span class="ow">and</span> <span class="n">pkfeature</span>
+                <span class="p">):</span>
+                    <span class="n">currentgeom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">formutils</span><span class="o">.</span><span class="n">getQgsGeomFromPk</span><span class="p">(</span><span class="n">pkfeature</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">createRubberBandForSelection</span><span class="p">(</span>
+                        <span class="n">currentgeom</span><span class="p">,</span> <span class="n">distpixel</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">rubtype</span><span class="o">=</span><span class="s2">&quot;child&quot;</span>
+                    <span class="p">)</span>
+                    <span class="c1"># self.rubberBand.show()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">createorresetRubberband</span><span class="p">(</span>
+                        <span class="n">rubtype</span><span class="o">=</span><span class="s2">&quot;child&quot;</span>
+                    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">postSelectFeature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">postSaveFeature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pkfeature</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">postDeleteFeature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="AbstractLamiaFormTool.setTempGeometry"><a class="viewcode-back" href="../../../../../../src_api/05_02_iface_lamia_abstractformtool.html#Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool.AbstractLamiaFormTool.setTempGeometry">[docs]</a>    <span class="k">def</span> <span class="nf">setTempGeometry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">comefromcanvas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">showinrubberband</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Called when self.currentmaptool has finished capturing</span>
+
+<span class="sd">        Assign the geometry to self.tempgeometry</span>
+
+<span class="sd">        :param points: the list of points coming from the currentmaptool</span>
+<span class="sd">        :param comefromcanvas: True if come from canvas (need od reprojection)</span>
+<span class="sd">        :param showinrubberband: True if the temp geometry will be visible with the rubberband</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">debug</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia_unittest&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s2">&quot;start points : </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span><span class="p">,</span> <span class="n">points</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">stopCapture</span><span class="p">()</span>
+
+        <span class="n">pointsmapcanvas</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">pointslayer</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        if self.capturetype is None:</span>
+<span class="sd">            type = self.dbasetable[&#39;layer&#39;].geometryType()</span>
+<span class="sd">        else:</span>
+<span class="sd">            type = self.capturetype</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># capturetype = self.dbasetable[&#39;layer&#39;].geometryType()</span>
+        <span class="n">capturetype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span><span class="p">][</span>
+            <span class="s2">&quot;layer&quot;</span>
+        <span class="p">]</span><span class="o">.</span><span class="n">geometryType</span><span class="p">()</span>
+
+        <span class="c1"># case point in line layer</span>
+        <span class="n">dbasetable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">points</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="c1"># self.rubberBand.reset(0)</span>
+            <span class="c1"># self.mainifacewidget.qgiscanvas.createorresetRubberband(0)</span>
+            <span class="n">capturetype</span> <span class="o">=</span> <span class="mf">0.5</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">dbasetable</span><span class="p">[</span><span class="s2">&quot;geom&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;LINESTRING&quot;</span><span class="p">:</span>
+            <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="c1"># self.mainifacewidget.qgiscanvas.createorresetRubberband(0)</span>
+            <span class="n">capturetype</span> <span class="o">=</span> <span class="mf">0.5</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">dbasetable</span><span class="p">[</span><span class="s2">&quot;geom&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;POLYGON&quot;</span><span class="p">:</span>
+            <span class="c1"># qgsgeompoint = qgis.core.QgsGeometry.fromPointXY(points[0])</span>
+            <span class="n">points</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsPointXY</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">x</span><span class="p">()</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">y</span><span class="p">()</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">),</span>
+                <span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsPointXY</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">x</span><span class="p">()</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">y</span><span class="p">()</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">),</span>
+                <span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsPointXY</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">x</span><span class="p">()</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">y</span><span class="p">()</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">),</span>
+                <span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsPointXY</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">x</span><span class="p">()</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">y</span><span class="p">()</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">),</span>
+            <span class="p">]</span>
+
+            <span class="n">capturetype</span> <span class="o">=</span> <span class="mf">1.5</span>
+        <span class="c1"># else:</span>
+        <span class="c1">#    self.mainifacewidget.qgiscanvas.createorresetRubberband(capturetype)</span>
+
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia_unittest&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s2">&quot;type/point : </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">capturetype</span><span class="p">),</span> <span class="n">points</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">comefromcanvas</span><span class="p">:</span>
+            <span class="n">pointsmapcanvas</span> <span class="o">=</span> <span class="n">points</span>
+            <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">:</span>
+                <span class="n">pointslayer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">xformreverse</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pointslayer</span> <span class="o">=</span> <span class="n">points</span>
+            <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">:</span>
+                <span class="n">pointsmapcanvas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">xform</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
+                <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">capturetype</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">geometryformap</span> <span class="o">=</span> <span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsGeometry</span><span class="o">.</span><span class="n">fromPointXY</span><span class="p">(</span><span class="n">pointsmapcanvas</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">geometryforlayer</span> <span class="o">=</span> <span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsGeometry</span><span class="o">.</span><span class="n">fromPointXY</span><span class="p">(</span><span class="n">pointslayer</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">capturetype</span> <span class="o">==</span> <span class="mf">0.5</span><span class="p">:</span>
+            <span class="n">geometryformap</span> <span class="o">=</span> <span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsGeometry</span><span class="o">.</span><span class="n">fromPointXY</span><span class="p">(</span><span class="n">pointsmapcanvas</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">geometryforlayer</span> <span class="o">=</span> <span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsGeometry</span><span class="o">.</span><span class="n">fromMultiPolylineXY</span><span class="p">([</span><span class="n">pointslayer</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">capturetype</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">geometryformap</span> <span class="o">=</span> <span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsGeometry</span><span class="o">.</span><span class="n">fromMultiPolylineXY</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">pointsmapcanvas</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="n">geometryforlayer</span> <span class="o">=</span> <span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsGeometry</span><span class="o">.</span><span class="n">fromMultiPolylineXY</span><span class="p">([</span><span class="n">pointslayer</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">capturetype</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
+            <span class="n">geometryformap</span> <span class="o">=</span> <span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsGeometry</span><span class="o">.</span><span class="n">fromPolygonXY</span><span class="p">([</span><span class="n">pointsmapcanvas</span><span class="p">])</span>
+            <span class="n">geometryforlayer</span> <span class="o">=</span> <span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsGeometry</span><span class="o">.</span><span class="n">fromPolygonXY</span><span class="p">([</span><span class="n">pointslayer</span><span class="p">])</span>
+
+        <span class="c1"># outside qgis bug</span>
+        <span class="k">if</span> <span class="n">showinrubberband</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">capturetype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">createorresetRubberband</span><span class="p">(</span>
+                    <span class="n">capturetype</span><span class="p">,</span> <span class="n">rubtype</span><span class="o">=</span><span class="s2">&quot;capture&quot;</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">capturetype</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">1.5</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">createorresetRubberband</span><span class="p">(</span>
+                    <span class="mi">2</span><span class="p">,</span> <span class="n">rubtype</span><span class="o">=</span><span class="s2">&quot;capture&quot;</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">createorresetRubberband</span><span class="p">(</span>
+                    <span class="mi">0</span><span class="p">,</span> <span class="n">rubtype</span><span class="o">=</span><span class="s2">&quot;capture&quot;</span>
+                <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">rubberbands</span><span class="p">[</span><span class="s2">&quot;capture&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">addGeometry</span><span class="p">(</span>
+                <span class="n">geometryformap</span><span class="p">,</span> <span class="kc">None</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">rubberbands</span><span class="p">[</span><span class="s2">&quot;capture&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tempgeometry</span> <span class="o">=</span> <span class="n">geometryforlayer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lamiageomChanged</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia_unittest&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s2">&quot;end layer points : </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">pointslayer</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia_unittest&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s2">&quot;end canvas points : </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">pointsmapcanvas</span>
+            <span class="p">)</span></div></div>
+        <span class="c1"># if debug: logging.getLogger(&quot;Lamia_unittest&quot;).debug(&#39;end tempgeom : %s&#39;, self.toWKT(self.tempgeometry))</span>
+
+        <span class="c1"># self.mtool = None</span>
+
+</pre></div>
+
+           </div>
+           
+          </div>
+<a href="https://github.com/Artelia/Lamia">
+	<img style="position: absolute; top: 0; right: 0; border: 0;"
+		src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
+</a>
+<script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script>
+	AOS.init();
+</script>
+
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Artelia
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

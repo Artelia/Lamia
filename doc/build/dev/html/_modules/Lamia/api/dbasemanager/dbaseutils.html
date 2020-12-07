@@ -1,0 +1,448 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Lamia.api.dbasemanager.dbaseutils &mdash; Documentation LAMIA 1.0</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/theme_overrides.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+        <script src="../../../../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../../search.html" />
+
+<link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+<!-- help for aos : https://michalsnik.github.io/aos/  -->
+
+<script>
+
+	window.onload = function () {
+		var url = window.location.toString()
+		selectorvalue = $('#languageselector').val()
+
+		if (url.includes('/fr/')) {
+			if (selectorvalue != 'fr') {
+				$('#languageselector').val("fr")
+			}
+		} else if (url.includes('/en/')) {
+			if (selectorvalue != 'en') {
+				$('#languageselector').val("en")
+			}
+		} else if (url.includes('/dev/')) {
+			if (selectorvalue != 'dev') {
+				$('#languageselector').val("dev")
+			}
+		}
+
+	};
+
+	function testSelectOK() {
+		var url = window.location.toString()
+		selectorvalue = $('#languageselector').val()
+
+		if (url.includes('/fr/')) {
+			if (selectorvalue != 'fr') {
+				return false
+			}
+		} else if (url.includes('/en/')) {
+			if (selectorvalue != 'en') {
+				return false
+			}
+		} else if (url.includes('/dev/')) {
+			if (selectorvalue != 'dev') {
+				return false
+			}
+		}
+
+		return true
+
+	}
+
+
+	function languageSelector() {
+
+		if (testSelectOK()) {
+			return
+		}
+		var value = $('#languageselector').val();
+		var url = window.location.toString()
+		var n = url.indexOf("build")
+		finalurl = url.substring(0, n) + 'build/' + value + '/html/index.html'
+		console.log(finalurl)
+		window.location = finalurl
+
+	}
+</script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #004F83" >
+          
+
+
+          
+            <a href="../../../../index.html" class="icon icon-home" alt="Documentation Home"> LAMIA
+          
+
+          
+            
+            <img src="../../../../_static/icon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+
+<select id='languageselector' style="width: 100% ;border-radius: 20px 20px 20px 20px;" onchange=languageSelector()>
+	<option value="fr">Documentation utilisateur français</option>
+	<option value="en">English user documentation</option>
+	<option value="dev">Documentation for developpers</option>
+</select>
+
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../00_introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../01_globalpresentation.html">Organization of Lamia modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../01_globalpresentation.html#lamia-api">Lamia.api</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../01_globalpresentation.html#lamia-api-dbasemanager">Lamia.api.dbasemanager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../01_globalpresentation.html#lamia-api-libs">Lamia.api.libs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../01_globalpresentation.html#lamia-api-libslamia">Lamia.api.libslamia</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../01_globalpresentation.html#lamia-arteliasite">Lamia.arteliasite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../01_globalpresentation.html#lamia-config">Lamia.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../01_globalpresentation.html#lamia-doc">Lamia.doc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../01_globalpresentation.html#lamia-qgisiface">Lamia.qgisiface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../01_globalpresentation.html#lamia-test">Lamia.test</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../01_dev_env_install.html">Development environment install</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../01_dev_env_install.html#prerequites">Prerequites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../01_dev_env_install.html#download-lamia-repo">Download lamia repo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../01_dev_env_install.html#configure-visual-studio-code">Configure Visual Studio Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../01_dev_env_install.html#modify-the-files-within-lamia-devcontainer-repository">Modify the files within Lamia/.devcontainer repository</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../01_dev_env_install.html#dockerfile">Dockerfile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../01_dev_env_install.html#devcontainer-json">devcontainer.json</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../01_dev_env_install.html#launch-vcxsrv">Launch vcxsrv</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../01_dev_env_install.html#launch-docker">Launch Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../01_dev_env_install.html#open-the-lamia-folder-with-visual-studio-code">Open the Lamia folder with Visual Studio Code</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../02_creatingdbase.html">Creating a database</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../02_creatingdbase.html#understanding-global-logic">Understanding global logic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../02_creatingdbase.html#the-ods-file">The .ods file</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../02_creatingdbase.html#reserved-tablename">Reserved tablename</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../02_creatingdbase.html#reserved-column-name">Reserved column name</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../02_creatingdbase.html#the-crud-py-file">The _crud.py file</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../03_creatingnewform.html">Creating a new form</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../03_creatingnewform.html#the-minimal-form-abstracclass">The minimal form abstracclass</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../03_creatingnewform.html#the-class-variables">The class variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../03_creatingnewform.html#inserting-child-form">Inserting child form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../03_creatingnewform.html#coding-particular-behaviours">Coding particular behaviours</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../05_00_API.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../src_api/05_01_dbasemanager.html">dbasemanager Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../src_api/05_01_dbasemanager_dbaseparserabstract.html">AbstractDBaseParser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../src_api/05_01_dbasemanager_dbaseutils.html">dbaseutils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../src_api/05_01_dbasemanager_dbconfigreader.html">DBconfigReader</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../src_api/05_02_iface.html">QGis interface widgets</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../src_api/05_02_iface_ifaceqgswidget.html">LamiaWindowWidget</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../src_api/05_02_iface_lamia_abstracttool.html">AbstractLamiaTool</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../src_api/05_02_iface_lamia_abstractformtool.html">AbstractLamiaFormTool</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">LAMIA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Code du module</a> &raquo;</li>
+        
+      <li>Lamia.api.dbasemanager.dbaseutils</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+           <div itemprop="articleBody">
+            
+  <h1>Code source de Lamia.api.dbasemanager.dbaseutils</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">qgis.PyQt</span> <span class="kn">import</span> <span class="n">QtCore</span>
+
+    <span class="n">TRY_QT</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">TRY_QT</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+<span class="k">def</span> <span class="nf">splitSQLSelectFromWhereOrderby</span><span class="p">(</span><span class="n">sqlin</span><span class="p">):</span>
+    <span class="n">sqltemp</span> <span class="o">=</span> <span class="n">sqlin</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+    <span class="n">indexparenthesis</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">specwords</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;WITH&quot;</span><span class="p">,</span> <span class="s2">&quot;SELECT&quot;</span><span class="p">,</span> <span class="s2">&quot;FROM&quot;</span><span class="p">,</span> <span class="s2">&quot;WHERE&quot;</span><span class="p">,</span> <span class="s2">&quot;GROUP&quot;</span><span class="p">,</span> <span class="s2">&quot;ORDER&quot;</span><span class="p">,</span> <span class="s2">&quot;LIMIT&quot;</span><span class="p">]</span>
+    <span class="n">listres</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">actualsqlword</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">sqlword</span> <span class="ow">in</span> <span class="n">sqltemp</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;(&quot;</span> <span class="ow">in</span> <span class="n">sqlword</span> <span class="ow">or</span> <span class="s2">&quot;)&quot;</span> <span class="ow">in</span> <span class="n">sqlword</span><span class="p">:</span>
+            <span class="n">indexparenthesis</span> <span class="o">+=</span> <span class="n">sqlword</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;(&quot;</span><span class="p">)</span>
+            <span class="n">indexparenthesis</span> <span class="o">+=</span> <span class="o">-</span><span class="n">sqlword</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;)&quot;</span><span class="p">)</span>
+            <span class="n">listres</span><span class="p">[</span><span class="n">actualsqlword</span><span class="p">]</span> <span class="o">+=</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">sqlword</span>
+        <span class="k">elif</span> <span class="n">sqlword</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">in</span> <span class="n">specwords</span> <span class="ow">and</span> <span class="n">indexparenthesis</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">actualsqlword</span> <span class="o">=</span> <span class="n">sqlword</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">listres</span><span class="p">[</span><span class="n">actualsqlword</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">actualsqlword</span><span class="p">:</span>
+                <span class="n">listres</span><span class="p">[</span><span class="n">actualsqlword</span><span class="p">]</span> <span class="o">+=</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">sqlword</span>
+
+    <span class="k">if</span> <span class="s2">&quot;GROUP&quot;</span> <span class="ow">in</span> <span class="n">listres</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">listres</span><span class="p">[</span><span class="s2">&quot;GROUP&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">listres</span><span class="p">[</span><span class="s2">&quot;GROUP&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">:])</span>
+
+    <span class="k">return</span> <span class="n">listres</span>
+
+
+<span class="k">def</span> <span class="nf">rebuildSplittedQuery</span><span class="p">(</span><span class="n">sqlin</span><span class="p">):</span>
+    <span class="n">sqlout</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;WITH&quot;</span> <span class="ow">in</span> <span class="n">sqlin</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">sqlout</span> <span class="o">+=</span> <span class="s2">&quot; WITH &quot;</span> <span class="o">+</span> <span class="n">sqlin</span><span class="p">[</span><span class="s2">&quot;WITH&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">&quot;SELECT&quot;</span> <span class="ow">in</span> <span class="n">sqlin</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">sqlout</span> <span class="o">+=</span> <span class="s2">&quot; SELECT &quot;</span> <span class="o">+</span> <span class="n">sqlin</span><span class="p">[</span><span class="s2">&quot;SELECT&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">&quot;FROM&quot;</span> <span class="ow">in</span> <span class="n">sqlin</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">sqlout</span> <span class="o">+=</span> <span class="s2">&quot; FROM &quot;</span> <span class="o">+</span> <span class="n">sqlin</span><span class="p">[</span><span class="s2">&quot;FROM&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">&quot;WHERE&quot;</span> <span class="ow">in</span> <span class="n">sqlin</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">sqlout</span> <span class="o">+=</span> <span class="s2">&quot; WHERE &quot;</span> <span class="o">+</span> <span class="n">sqlin</span><span class="p">[</span><span class="s2">&quot;WHERE&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">&quot;GROUP&quot;</span> <span class="ow">in</span> <span class="n">sqlin</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">sqlout</span> <span class="o">+=</span> <span class="s2">&quot; GROUP BY &quot;</span> <span class="o">+</span> <span class="n">sqlin</span><span class="p">[</span><span class="s2">&quot;GROUP&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">&quot;ORDER&quot;</span> <span class="ow">in</span> <span class="n">sqlin</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">sqlout</span> <span class="o">+=</span> <span class="s2">&quot; ORDER  &quot;</span> <span class="o">+</span> <span class="n">sqlin</span><span class="p">[</span><span class="s2">&quot;ORDER&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">&quot;LIMIT&quot;</span> <span class="ow">in</span> <span class="n">sqlin</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">sqlout</span> <span class="o">+=</span> <span class="s2">&quot; LIMIT &quot;</span> <span class="o">+</span> <span class="n">sqlin</span><span class="p">[</span><span class="s2">&quot;LIMIT&quot;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">sqlout</span>
+
+
+<div class="viewcode-block" id="isAttributeNull"><a class="viewcode-back" href="../../../../src_api/05_01_dbasemanager_dbaseutils.html#Lamia.api.dbasemanager.dbaseutils.isAttributeNull">[docs]</a><span class="k">def</span> <span class="nf">isAttributeNull</span><span class="p">(</span><span class="n">attr</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Vérifie si un qgisfeature attribute est NULL - piégeux car le NULL peu prendre plusieurs formes</span>
+<span class="sd">    :param attr: get an qgisfeature attribute</span>
+<span class="sd">    :return: True if NULL, else False</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    if int(str(self.qgisversion_int)[0:3]) &lt; 220 and isinstance(attr, QtCore.QPyNullVariant):</span>
+<span class="sd">        return True</span>
+<span class="sd">    elif int(str(self.qgisversion_int)[0:3]) &gt; 220 and isinstance(attr, QtCore.QVariant) and attr.isNull():</span>
+<span class="sd">        return True</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">TRY_QT</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">QVariant</span><span class="p">)</span> <span class="ow">and</span> <span class="n">attr</span><span class="o">.</span><span class="n">isNull</span><span class="p">():</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span>
+        <span class="n">attr</span> <span class="o">==</span> <span class="s2">&quot;NULL&quot;</span> <span class="ow">or</span> <span class="n">attr</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">or</span> <span class="n">attr</span> <span class="o">==</span> <span class="s2">&quot;None&quot;</span>
+    <span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">elif</span> <span class="n">attr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="areNodesEquals"><a class="viewcode-back" href="../../../../src_api/05_01_dbasemanager_dbaseutils.html#Lamia.api.dbasemanager.dbaseutils.areNodesEquals">[docs]</a><span class="k">def</span> <span class="nf">areNodesEquals</span><span class="p">(</span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fonction pour examiner l&#39;égalité géographique de deux points.</span>
+<span class="sd">    Nécessaire car parfois les arrondis des coordonnées géographiques font que deux points égaux ont une</span>
+<span class="sd">    différence de qques micromètres</span>
+<span class="sd">    :param node1: point1 (list 2x1)</span>
+<span class="sd">    :param node2: point2 (list 2x1)</span>
+<span class="sd">    :return: Boolean, en fonction de l&#39;égalité geographique des points</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dist</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">node2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">node1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">node2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">node1</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dist</span> <span class="o">&lt;</span> <span class="mf">0.01</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<span class="k">def</span> <span class="nf">getCurrentDateTime</span><span class="p">():</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">))</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+<a href="https://github.com/Artelia/Lamia">
+	<img style="position: absolute; top: 0; right: 0; border: 0;"
+		src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
+</a>
+<script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script>
+	AOS.init();
+</script>
+
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Artelia
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

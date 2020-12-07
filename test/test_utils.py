@@ -20,14 +20,16 @@ with open(qgissettingpath) as f:
 
 def initQGis():
 
-    # if platform.system() == "Windows":
-    #     qgis_path = "C://OSGeo4W64//apps//qgis-ltr"
-    # elif platform.system() == "Linux":
-    #     qgis_path = "/usr"
-    qgis_path = QGISSETTINGS["QGISPATH"]
+    if platform.system() == "Windows":
+        qgis_path = QGISSETTINGS["QGISPATH"]
+    elif platform.system() == "Linux":
+        qgis_path = "/usr"
+    print("qgis_path", qgis_path)
+    # qgis_path = QGISSETTINGS["QGISPATH"]
+
+    qgis.core.QgsApplication.setPrefixPath(qgis_path, True)
 
     app = qgis.core.QgsApplication([], True)
-    qgis.core.QgsApplication.setPrefixPath(qgis_path, True)
     qgis.core.QgsApplication.initQgis()
     return app
 

@@ -1,0 +1,401 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Organization of Lamia modules &mdash; Documentation LAMIA 1.0</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script src="_static/translations.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="next" title="Development environment install" href="01_dev_env_install.html" />
+    <link rel="prev" title="Introduction" href="00_introduction.html" />
+
+<link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+<!-- help for aos : https://michalsnik.github.io/aos/  -->
+
+<script>
+
+	window.onload = function () {
+		var url = window.location.toString()
+		selectorvalue = $('#languageselector').val()
+
+		if (url.includes('/fr/')) {
+			if (selectorvalue != 'fr') {
+				$('#languageselector').val("fr")
+			}
+		} else if (url.includes('/en/')) {
+			if (selectorvalue != 'en') {
+				$('#languageselector').val("en")
+			}
+		} else if (url.includes('/dev/')) {
+			if (selectorvalue != 'dev') {
+				$('#languageselector').val("dev")
+			}
+		}
+
+	};
+
+	function testSelectOK() {
+		var url = window.location.toString()
+		selectorvalue = $('#languageselector').val()
+
+		if (url.includes('/fr/')) {
+			if (selectorvalue != 'fr') {
+				return false
+			}
+		} else if (url.includes('/en/')) {
+			if (selectorvalue != 'en') {
+				return false
+			}
+		} else if (url.includes('/dev/')) {
+			if (selectorvalue != 'dev') {
+				return false
+			}
+		}
+
+		return true
+
+	}
+
+
+	function languageSelector() {
+
+		if (testSelectOK()) {
+			return
+		}
+		var value = $('#languageselector').val();
+		var url = window.location.toString()
+		var n = url.indexOf("build")
+		finalurl = url.substring(0, n) + 'build/' + value + '/html/index.html'
+		console.log(finalurl)
+		window.location = finalurl
+
+	}
+</script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #004F83" >
+          
+
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> LAMIA
+          
+
+          
+            
+            <img src="_static/icon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+
+<select id='languageselector' style="width: 100% ;border-radius: 20px 20px 20px 20px;" onchange=languageSelector()>
+	<option value="fr">Documentation utilisateur français</option>
+	<option value="en">English user documentation</option>
+	<option value="dev">Documentation for developpers</option>
+</select>
+
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="00_introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Organization of Lamia modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#lamia-api">Lamia.api</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lamia-api-dbasemanager">Lamia.api.dbasemanager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lamia-api-libs">Lamia.api.libs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lamia-api-libslamia">Lamia.api.libslamia</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#lamia-arteliasite">Lamia.arteliasite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lamia-config">Lamia.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lamia-doc">Lamia.doc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lamia-qgisiface">Lamia.qgisiface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lamia-test">Lamia.test</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="01_dev_env_install.html">Development environment install</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="01_dev_env_install.html#prerequites">Prerequites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="01_dev_env_install.html#download-lamia-repo">Download lamia repo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="01_dev_env_install.html#configure-visual-studio-code">Configure Visual Studio Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="01_dev_env_install.html#modify-the-files-within-lamia-devcontainer-repository">Modify the files within Lamia/.devcontainer repository</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="01_dev_env_install.html#dockerfile">Dockerfile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="01_dev_env_install.html#devcontainer-json">devcontainer.json</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="01_dev_env_install.html#launch-vcxsrv">Launch vcxsrv</a></li>
+<li class="toctree-l2"><a class="reference internal" href="01_dev_env_install.html#launch-docker">Launch Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="01_dev_env_install.html#open-the-lamia-folder-with-visual-studio-code">Open the Lamia folder with Visual Studio Code</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="02_creatingdbase.html">Creating a database</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="02_creatingdbase.html#understanding-global-logic">Understanding global logic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_creatingdbase.html#the-ods-file">The .ods file</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="02_creatingdbase.html#reserved-tablename">Reserved tablename</a></li>
+<li class="toctree-l3"><a class="reference internal" href="02_creatingdbase.html#reserved-column-name">Reserved column name</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="02_creatingdbase.html#the-crud-py-file">The _crud.py file</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="03_creatingnewform.html">Creating a new form</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="03_creatingnewform.html#the-minimal-form-abstracclass">The minimal form abstracclass</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03_creatingnewform.html#the-class-variables">The class variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03_creatingnewform.html#inserting-child-form">Inserting child form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03_creatingnewform.html#coding-particular-behaviours">Coding particular behaviours</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="05_00_API.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src_api/05_01_dbasemanager.html">dbasemanager Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src_api/05_01_dbasemanager_dbaseparserabstract.html">AbstractDBaseParser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="src_api/05_01_dbasemanager_dbaseutils.html">dbaseutils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="src_api/05_01_dbasemanager_dbconfigreader.html">DBconfigReader</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="src_api/05_02_iface.html">QGis interface widgets</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src_api/05_02_iface_ifaceqgswidget.html">LamiaWindowWidget</a></li>
+<li class="toctree-l3"><a class="reference internal" href="src_api/05_02_iface_lamia_abstracttool.html">AbstractLamiaTool</a></li>
+<li class="toctree-l3"><a class="reference internal" href="src_api/05_02_iface_lamia_abstractformtool.html">AbstractLamiaFormTool</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">LAMIA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Organization of Lamia modules</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+           <div itemprop="articleBody">
+            
+  <div class="toctree-wrapper compound">
+</div>
+<div class="section" id="organization-of-lamia-modules">
+<h1>Organization of Lamia modules<a class="headerlink" href="#organization-of-lamia-modules" title="Lien permanent vers ce titre">¶</a></h1>
+<p>The purpose of this page is to understand the global organization of the code.</p>
+<span class="target" id="module-Lamia.api"></span><div class="section" id="lamia-api">
+<h2>Lamia.api<a class="headerlink" href="#lamia-api" title="Lien permanent vers ce titre">¶</a></h2>
+<p>This module contains all modules to interact with the Lamia database.</p>
+<p>Submodules are :</p>
+<div class="section" id="lamia-api-dbasemanager">
+<h3>Lamia.api.dbasemanager<a class="headerlink" href="#lamia-api-dbasemanager" title="Lien permanent vers ce titre">¶</a></h3>
+<p>This module manage interactions with database (creation, reading, offlinemode…)</p>
+</div>
+<div class="section" id="lamia-api-libs">
+<h3>Lamia.api.libs<a class="headerlink" href="#lamia-api-libs" title="Lien permanent vers ce titre">¶</a></h3>
+<p>This module contains all external libs needed by Lamia.</p>
+</div>
+<div class="section" id="lamia-api-libslamia">
+<h3>Lamia.api.libslamia<a class="headerlink" href="#lamia-api-libslamia" title="Lien permanent vers ce titre">¶</a></h3>
+<p>This module contains all lamia libs for processing the data</p>
+</div>
+</div>
+<span class="target" id="module-Lamia.arteliasite"></span><div class="section" id="lamia-arteliasite">
+<h2>Lamia.arteliasite<a class="headerlink" href="#lamia-arteliasite" title="Lien permanent vers ce titre">¶</a></h2>
+<p>This module contains the django lamia web site</p>
+</div>
+<span class="target" id="module-Lamia.config"></span><div class="section" id="lamia-config">
+<h2>Lamia.config<a class="headerlink" href="#lamia-config" title="Lien permanent vers ce titre">¶</a></h2>
+<p>This module contains all the settings to adapt Lamia to a particular thematic (levee, urbandrainage…)</p>
+</div>
+<span class="target" id="module-Lamia.doc"></span><div class="section" id="lamia-doc">
+<h2>Lamia.doc<a class="headerlink" href="#lamia-doc" title="Lien permanent vers ce titre">¶</a></h2>
+<p>This module contains the sphinx documentation</p>
+</div>
+<span class="target" id="module-Lamia.qgisiface"></span><div class="section" id="lamia-qgisiface">
+<h2>Lamia.qgisiface<a class="headerlink" href="#lamia-qgisiface" title="Lien permanent vers ce titre">¶</a></h2>
+<p>This module contains all the modules for the Qgis software User Interface</p>
+</div>
+<span class="target" id="module-Lamia.test"></span><div class="section" id="lamia-test">
+<h2>Lamia.test<a class="headerlink" href="#lamia-test" title="Lien permanent vers ce titre">¶</a></h2>
+<p>All unit tests</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+<a href="https://github.com/Artelia/Lamia">
+	<img style="position: absolute; top: 0; right: 0; border: 0;"
+		src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
+</a>
+<script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script>
+	AOS.init();
+</script>
+
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="01_dev_env_install.html" class="btn btn-neutral float-right" title="Development environment install" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="00_introduction.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Artelia
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

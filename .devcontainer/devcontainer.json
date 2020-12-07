@@ -26,8 +26,8 @@
 		"QGIS_DISABLE_MESSAGE_HOOKS": "1",
 		"QGIS_NO_OVERRIDE_IMPORT": "1",
 		"QT_LOGGING_RULES": "*.debug=false;*.warning=false",
-		"http_proxy": "http://proxy-a.arteliagroup.com:3128",
-		"https_proxy": "http://proxy-a.arteliagroup.com:3128",
+		// "http_proxy": "http://proxy-a.arteliagroup.com:3128",
+		// "https_proxy": "http://proxy-a.arteliagroup.com:3128",
 	},
 	"workspaceMount": "source=${localWorkspaceFolder},target=/usr/src/Lamia/,type=bind,consistency=delegated",
 	"workspaceFolder": "/usr/src/Lamia/",
@@ -36,6 +36,7 @@
 		"ms-python.python",
 		"donjayamanne.githistory",
 		"njpwerner.autodocstring",
+		"lextudio.restructuredtext",
 	],
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	//"forwardPorts": [5432],
@@ -47,7 +48,7 @@
 	// "runArgs": [ "--cap-add=SYS_PTRACE", "--security-opt", "seccomp=unconfined" ],
 	"runArgs": [
 		"--name",
-		"Lamia"
+		"Lamia_dev"
 	],
 	// Uncomment to use the Docker CLI from inside the container. See https://aka.ms/vscode-remote/samples/docker-in-docker.
 	//"mounts": [ "source=C:\\000_Lamia_DBase,target=/home/docker,type=bind" ],

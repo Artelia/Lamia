@@ -110,6 +110,8 @@ def launchIface():
 
     # SLFILE = r"C:\01_WORKINGDIR\aaa\VTA_2020_Baie-Aiguillon.sqlite"
 
+    # SLFILE = "/usr/src/Lamia/testfiles/BACALAN/GPMB Bacalan.sqlite"
+
     print(f"{bcolors.OKGREEN}Opening: {os.path.abspath(SLFILE)} {bcolors.ENDC}")
 
     lamiawidget.loadDBase(dbtype="Spatialite", slfile=SLFILE)

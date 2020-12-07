@@ -8,5 +8,6 @@ sphinx
 sphinx-rtd-theme
 autopep8
 pycodestyle
+colorama
 #psycopg2
 #sqlite3

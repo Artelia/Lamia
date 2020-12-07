@@ -164,22 +164,50 @@
             
             
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../04_developpement.html">Developpement</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../04_developpement.html#fonctionnement-general">Fonctionnement général</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../04_developpement.html#installation-de-lenvironnement-de-developpement-windows">Installation de l’environnement de développement - windows</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../04_developpement.html#install-de-qgis">Install de QGis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../04_developpement.html#install-de-pycharm">Install de Pycharm</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../04_developpement.html#script-pour-demarrer-pycharm">Script pour démarrer PyCharm</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../04_developpement.html#configuration-de-pycharm">Configuration de PyCharm</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../04_developpement.html#installation-sans-gihub-intere-a-pycharm">Installation sans gihub intéré à pycharm</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../04_developpement.html#installation-avec-gihub-integre-a-pycharm-derriere-un-proxy">Installation avec gihub intégré à pycharm, derrière un proxy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../00_introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../01_globalpresentation.html">Organization of Lamia modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../01_globalpresentation.html#lamia-api">Lamia.api</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../01_globalpresentation.html#lamia-api-dbasemanager">Lamia.api.dbasemanager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../01_globalpresentation.html#lamia-api-libs">Lamia.api.libs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../01_globalpresentation.html#lamia-api-libslamia">Lamia.api.libslamia</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../04_developpement.html#test-de-la-configuration">Test de la configuration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../04_developpement.html#faire-fonctionner-pip">faire fonctionner pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../01_globalpresentation.html#lamia-arteliasite">Lamia.arteliasite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../01_globalpresentation.html#lamia-config">Lamia.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../01_globalpresentation.html#lamia-doc">Lamia.doc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../01_globalpresentation.html#lamia-qgisiface">Lamia.qgisiface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../01_globalpresentation.html#lamia-test">Lamia.test</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../04_developpement.html#cas-pratique-creation-dun-nouveau-module-de-post-traitement">Cas pratique : création d’un nouveau module de post-traitement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../01_dev_env_install.html">Development environment install</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../01_dev_env_install.html#prerequites">Prerequites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../01_dev_env_install.html#download-lamia-repo">Download lamia repo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../01_dev_env_install.html#configure-visual-studio-code">Configure Visual Studio Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../01_dev_env_install.html#modify-the-files-within-lamia-devcontainer-repository">Modify the files within Lamia/.devcontainer repository</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../01_dev_env_install.html#dockerfile">Dockerfile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../01_dev_env_install.html#devcontainer-json">devcontainer.json</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../01_dev_env_install.html#launch-vcxsrv">Launch vcxsrv</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../01_dev_env_install.html#launch-docker">Launch Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../01_dev_env_install.html#open-the-lamia-folder-with-visual-studio-code">Open the Lamia folder with Visual Studio Code</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../02_creatingdbase.html">Creating a database</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../02_creatingdbase.html#understanding-global-logic">Understanding global logic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../02_creatingdbase.html#the-ods-file">The .ods file</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../02_creatingdbase.html#reserved-tablename">Reserved tablename</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../02_creatingdbase.html#reserved-column-name">Reserved column name</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../02_creatingdbase.html#the-crud-py-file">The _crud.py file</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../03_creatingnewform.html">Creating a new form</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../03_creatingnewform.html#the-minimal-form-abstracclass">The minimal form abstracclass</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03_creatingnewform.html#the-class-variables">The class variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03_creatingnewform.html#inserting-child-form">Inserting child form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03_creatingnewform.html#coding-particular-behaviours">Coding particular behaviours</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../05_00_API.html">API Documentation</a><ul class="current">
@@ -265,8 +293,27 @@
 
            <div itemprop="articleBody">
             
-  <div class="section" id="dbaseutils">
-<h1>dbaseutils<a class="headerlink" href="#dbaseutils" title="Lien permanent vers ce titre">¶</a></h1>
+  <div class="section" id="module-Lamia.api.dbasemanager.dbaseutils">
+<span id="dbaseutils"></span><h1>dbaseutils<a class="headerlink" href="#module-Lamia.api.dbasemanager.dbaseutils" title="Lien permanent vers ce titre">¶</a></h1>
+<dl class="py function">
+<dt id="Lamia.api.dbasemanager.dbaseutils.isAttributeNull">
+<code class="sig-prename descclassname">Lamia.api.dbasemanager.dbaseutils.</code><code class="sig-name descname">isAttributeNull</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">attr</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Lamia/api/dbasemanager/dbaseutils.html#isAttributeNull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.api.dbasemanager.dbaseutils.isAttributeNull" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Vérifie si un qgisfeature attribute est NULL - piégeux car le NULL peu prendre plusieurs formes
+:param attr: get an qgisfeature attribute
+:return: True if NULL, else False</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="Lamia.api.dbasemanager.dbaseutils.areNodesEquals">
+<code class="sig-prename descclassname">Lamia.api.dbasemanager.dbaseutils.</code><code class="sig-name descname">areNodesEquals</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node1</span></em>, <em class="sig-param"><span class="n">node2</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Lamia/api/dbasemanager/dbaseutils.html#areNodesEquals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.api.dbasemanager.dbaseutils.areNodesEquals" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Fonction pour examiner l’égalité géographique de deux points.
+Nécessaire car parfois les arrondis des coordonnées géographiques font que deux points égaux ont une
+différence de qques micromètres
+:param node1: point1 (list 2x1)
+:param node2: point2 (list 2x1)
+:return: Boolean, en fonction de l’égalité geographique des points</p>
+</dd></dl>
+
 </div>
 
 

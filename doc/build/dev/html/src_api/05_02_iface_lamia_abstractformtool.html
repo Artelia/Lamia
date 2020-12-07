@@ -163,22 +163,50 @@
             
             
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../04_developpement.html">Developpement</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../04_developpement.html#fonctionnement-general">Fonctionnement général</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../04_developpement.html#installation-de-lenvironnement-de-developpement-windows">Installation de l’environnement de développement - windows</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../04_developpement.html#install-de-qgis">Install de QGis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../04_developpement.html#install-de-pycharm">Install de Pycharm</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../04_developpement.html#script-pour-demarrer-pycharm">Script pour démarrer PyCharm</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../04_developpement.html#configuration-de-pycharm">Configuration de PyCharm</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../04_developpement.html#installation-sans-gihub-intere-a-pycharm">Installation sans gihub intéré à pycharm</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../04_developpement.html#installation-avec-gihub-integre-a-pycharm-derriere-un-proxy">Installation avec gihub intégré à pycharm, derrière un proxy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../00_introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../01_globalpresentation.html">Organization of Lamia modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../01_globalpresentation.html#lamia-api">Lamia.api</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../01_globalpresentation.html#lamia-api-dbasemanager">Lamia.api.dbasemanager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../01_globalpresentation.html#lamia-api-libs">Lamia.api.libs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../01_globalpresentation.html#lamia-api-libslamia">Lamia.api.libslamia</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../04_developpement.html#test-de-la-configuration">Test de la configuration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../04_developpement.html#faire-fonctionner-pip">faire fonctionner pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../01_globalpresentation.html#lamia-arteliasite">Lamia.arteliasite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../01_globalpresentation.html#lamia-config">Lamia.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../01_globalpresentation.html#lamia-doc">Lamia.doc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../01_globalpresentation.html#lamia-qgisiface">Lamia.qgisiface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../01_globalpresentation.html#lamia-test">Lamia.test</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../04_developpement.html#cas-pratique-creation-dun-nouveau-module-de-post-traitement">Cas pratique : création d’un nouveau module de post-traitement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../01_dev_env_install.html">Development environment install</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../01_dev_env_install.html#prerequites">Prerequites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../01_dev_env_install.html#download-lamia-repo">Download lamia repo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../01_dev_env_install.html#configure-visual-studio-code">Configure Visual Studio Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../01_dev_env_install.html#modify-the-files-within-lamia-devcontainer-repository">Modify the files within Lamia/.devcontainer repository</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../01_dev_env_install.html#dockerfile">Dockerfile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../01_dev_env_install.html#devcontainer-json">devcontainer.json</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../01_dev_env_install.html#launch-vcxsrv">Launch vcxsrv</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../01_dev_env_install.html#launch-docker">Launch Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../01_dev_env_install.html#open-the-lamia-folder-with-visual-studio-code">Open the Lamia folder with Visual Studio Code</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../02_creatingdbase.html">Creating a database</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../02_creatingdbase.html#understanding-global-logic">Understanding global logic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../02_creatingdbase.html#the-ods-file">The .ods file</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../02_creatingdbase.html#reserved-tablename">Reserved tablename</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../02_creatingdbase.html#reserved-column-name">Reserved column name</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../02_creatingdbase.html#the-crud-py-file">The _crud.py file</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../03_creatingnewform.html">Creating a new form</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../03_creatingnewform.html#the-minimal-form-abstracclass">The minimal form abstracclass</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03_creatingnewform.html#the-class-variables">The class variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03_creatingnewform.html#inserting-child-form">Inserting child form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03_creatingnewform.html#coding-particular-behaviours">Coding particular behaviours</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../05_00_API.html">API Documentation</a><ul class="current">
@@ -266,6 +294,86 @@
             
   <div class="section" id="abstractlamiaformtool">
 <h1>AbstractLamiaFormTool<a class="headerlink" href="#abstractlamiaformtool" title="Lien permanent vers ce titre">¶</a></h1>
+<dl class="py class">
+<dt id="Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool.AbstractLamiaFormTool">
+<em class="property">class </em><code class="sig-prename descclassname">Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool.</code><code class="sig-name descname">AbstractLamiaFormTool</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Lamia/qgisiface/iface/qgiswidget/tools/lamia_abstractformtool.html#AbstractLamiaFormTool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool.AbstractLamiaFormTool" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>This class is the abstract class for every widget loaded in the right part of te dockwidget.
+If you want another widget, you have :</p>
+<ul class="simple">
+<li><p>create a file in Lamia.toolpostpro.[the_job]</p></li>
+<li><p>Fill it with the following code :</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ExampleTool</span><span class="p">(</span><span class="n">AbstractLamiaTool</span><span class="p">):</span>
+    <span class="n">TOOLNAME</span> <span class="o">=</span> <span class="s1">&#39;test_module&#39;</span>          <span class="c1">#is TOOLNAME exists, lamia recognize it as postpro tool</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dbase</span><span class="p">,</span> <span class="n">dialog</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">linkedtreewidget</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gpsutil</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">parentwidget</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ExampleTool</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dbase</span><span class="p">,</span> <span class="n">dialog</span><span class="p">,</span> <span class="n">linkedtreewidget</span><span class="p">,</span> <span class="n">gpsutil</span><span class="p">,</span><span class="n">parentwidget</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">initTool</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>     <span class="c1"># it s inside this function that we configure the minimal behaviour</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">CAT</span> <span class="o">=</span> <span class="s1">&#39;Synthese&#39;</span>       <span class="c1">#The first col tree widget in the left side of lamia dock</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;Couts&#39;</span>        <span class="c1">#The second col tree widget in the left side of lamia dock</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">visualmode</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span>       <span class="c1"># put in list in which visual mode you want to see the widget (4 for post pro)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">groupBox_elements</span><span class="o">.</span><span class="n">setParent</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>      <span class="c1"># disable managing part of he widget</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_editing</span><span class="o">.</span><span class="n">setParent</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>          <span class="c1"># disable editing part of he widget</span>
+
+    <span class="k">def</span> <span class="nf">initFieldUI</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>      <span class="c1"># load the widget to appear</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">userwdgfield</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">userwdgfield</span> <span class="o">=</span> <span class="n">UserUI</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">UserUI</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>                  <span class="c1">#load the ui made with QT Designer</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">UserUI</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
+        <span class="n">uipath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;test_module.ui&#39;</span><span class="p">)</span>
+        <span class="n">uic</span><span class="o">.</span><span class="n">loadUi</span><span class="p">(</span><span class="n">uipath</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt id="Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool.AbstractLamiaFormTool.toolTreeWidgetCurrentItemChanged">
+<code class="sig-name descname">toolTreeWidgetCurrentItemChanged</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">param1</span></em>, <em class="sig-param"><span class="n">param2</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Lamia/qgisiface/iface/qgiswidget/tools/lamia_abstractformtool.html#AbstractLamiaFormTool.toolTreeWidgetCurrentItemChanged"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool.AbstractLamiaFormTool.toolTreeWidgetCurrentItemChanged" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Manage the activation of widget when tool’s icon is clicked on main QTreeWidget</p>
+<p>Do:</p>
+<ul class="simple">
+<li><p>display tool widget</p></li>
+<li><p>load features in ElemtreeWidget</p></li>
+<li><p>connect ElemtreeWidget click to featureSelected</p></li>
+<li><p>Finaly, call postOnActivation method, which is a function to be overloaded</p></li>
+</ul>
+<p>TODO : display or not the layer</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>param1</strong> – a QTreeWidgetItem (the one activated in main QTreeWidget)</p></li>
+<li><p><strong>param2</strong> – a QTreeWidgetItem (the one desactivated in main QTreeWidget)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool.AbstractLamiaFormTool.toolbarGeomAddGPS">
+<code class="sig-name descname">toolbarGeomAddGPS</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Lamia/qgisiface/iface/qgiswidget/tools/lamia_abstractformtool.html#AbstractLamiaFormTool.toolbarGeomAddGPS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool.AbstractLamiaFormTool.toolbarGeomAddGPS" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Method called by add GPS Point Button</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool.AbstractLamiaFormTool.setTempGeometry">
+<code class="sig-name descname">setTempGeometry</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">points</span></em>, <em class="sig-param"><span class="n">comefromcanvas</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">showinrubberband</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Lamia/qgisiface/iface/qgiswidget/tools/lamia_abstractformtool.html#AbstractLamiaFormTool.setTempGeometry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool.AbstractLamiaFormTool.setTempGeometry" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Called when self.currentmaptool has finished capturing</p>
+<p>Assign the geometry to self.tempgeometry</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>points</strong> – the list of points coming from the currentmaptool</p></li>
+<li><p><strong>comefromcanvas</strong> – True if come from canvas (need od reprojection)</p></li>
+<li><p><strong>showinrubberband</strong> – True if the temp geometry will be visible with the rubberband</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 

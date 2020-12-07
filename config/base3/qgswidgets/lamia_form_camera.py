@@ -119,11 +119,11 @@ class BaseCameraTool(AbstractLamiaFormTool):
         self.formtoolwidgetconfdictmain = {
             "media": {"linkfield": "id_media", "widgets": {}},
             "object": {
-                "linkfield": "id_object",
+                # "linkfield": "id_object",
                 "widgets": {"comment": self.toolwidgetmain.comment,},
             },
             "resource": {
-                "linkfield": "id_resource",
+                # "linkfield": "id_resource",
                 "widgets": {
                     # "file": self.toolwidgetmain.lineEdit_file,
                     # "resourceindex": self.toolwidgetmain.spinBox_numphoto,

@@ -1,7 +1,7 @@
 dbaseutils
 =============
 
-.. automodule:: Lamia.dbasemanager.dbaseutils
+.. automodule:: Lamia.api.dbasemanager.dbaseutils
     :members:
 
 

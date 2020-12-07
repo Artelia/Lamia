@@ -1,9 +1,9 @@
 AbstractDBaseParser
 =========================
 
-.. autoclass:: Lamia.dbasemanager.dbaseparserabstract.AbstractDBaseParser
+.. autoclass:: Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser
     :members:
 
-    .. :automethod:: Lamia.dbasemanager.dbaseparserabstract.AbstractDBaseParser.__init__
+    .. :automethod:: Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser.__init__
 
 

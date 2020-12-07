@@ -162,22 +162,50 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="04_developpement.html">Developpement</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="04_developpement.html#fonctionnement-general">Fonctionnement général</a></li>
-<li class="toctree-l2"><a class="reference internal" href="04_developpement.html#installation-de-lenvironnement-de-developpement-windows">Installation de l’environnement de développement - windows</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="04_developpement.html#install-de-qgis">Install de QGis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="04_developpement.html#install-de-pycharm">Install de Pycharm</a></li>
-<li class="toctree-l3"><a class="reference internal" href="04_developpement.html#script-pour-demarrer-pycharm">Script pour démarrer PyCharm</a></li>
-<li class="toctree-l3"><a class="reference internal" href="04_developpement.html#configuration-de-pycharm">Configuration de PyCharm</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="04_developpement.html#installation-sans-gihub-intere-a-pycharm">Installation sans gihub intéré à pycharm</a></li>
-<li class="toctree-l4"><a class="reference internal" href="04_developpement.html#installation-avec-gihub-integre-a-pycharm-derriere-un-proxy">Installation avec gihub intégré à pycharm, derrière un proxy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="00_introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_globalpresentation.html">Organization of Lamia modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="01_globalpresentation.html#lamia-api">Lamia.api</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="01_globalpresentation.html#lamia-api-dbasemanager">Lamia.api.dbasemanager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="01_globalpresentation.html#lamia-api-libs">Lamia.api.libs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="01_globalpresentation.html#lamia-api-libslamia">Lamia.api.libslamia</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="04_developpement.html#test-de-la-configuration">Test de la configuration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="04_developpement.html#faire-fonctionner-pip">faire fonctionner pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="01_globalpresentation.html#lamia-arteliasite">Lamia.arteliasite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="01_globalpresentation.html#lamia-config">Lamia.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="01_globalpresentation.html#lamia-doc">Lamia.doc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="01_globalpresentation.html#lamia-qgisiface">Lamia.qgisiface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="01_globalpresentation.html#lamia-test">Lamia.test</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="04_developpement.html#cas-pratique-creation-dun-nouveau-module-de-post-traitement">Cas pratique : création d’un nouveau module de post-traitement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_dev_env_install.html">Development environment install</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="01_dev_env_install.html#prerequites">Prerequites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="01_dev_env_install.html#download-lamia-repo">Download lamia repo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="01_dev_env_install.html#configure-visual-studio-code">Configure Visual Studio Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="01_dev_env_install.html#modify-the-files-within-lamia-devcontainer-repository">Modify the files within Lamia/.devcontainer repository</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="01_dev_env_install.html#dockerfile">Dockerfile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="01_dev_env_install.html#devcontainer-json">devcontainer.json</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="01_dev_env_install.html#launch-vcxsrv">Launch vcxsrv</a></li>
+<li class="toctree-l2"><a class="reference internal" href="01_dev_env_install.html#launch-docker">Launch Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="01_dev_env_install.html#open-the-lamia-folder-with-visual-studio-code">Open the Lamia folder with Visual Studio Code</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="02_creatingdbase.html">Creating a database</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="02_creatingdbase.html#understanding-global-logic">Understanding global logic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_creatingdbase.html#the-ods-file">The .ods file</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="02_creatingdbase.html#reserved-tablename">Reserved tablename</a></li>
+<li class="toctree-l3"><a class="reference internal" href="02_creatingdbase.html#reserved-column-name">Reserved column name</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="02_creatingdbase.html#the-crud-py-file">The _crud.py file</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="03_creatingnewform.html">Creating a new form</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="03_creatingnewform.html#the-minimal-form-abstracclass">The minimal form abstracclass</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03_creatingnewform.html#the-class-variables">The class variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03_creatingnewform.html#inserting-child-form">Inserting child form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03_creatingnewform.html#coding-particular-behaviours">Coding particular behaviours</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="05_00_API.html">API Documentation</a><ul>
@@ -263,8 +291,274 @@
 <h1 id="index">Index</h1>
 
 <div class="genindex-jumpbox">
+ <a href="#A"><strong>A</strong></a>
+ | <a href="#C"><strong>C</strong></a>
+ | <a href="#D"><strong>D</strong></a>
+ | <a href="#G"><strong>G</strong></a>
+ | <a href="#I"><strong>I</strong></a>
+ | <a href="#L"><strong>L</strong></a>
+ | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
+ | <a href="#P"><strong>P</strong></a>
+ | <a href="#S"><strong>S</strong></a>
+ | <a href="#T"><strong>T</strong></a>
+ | <a href="#U"><strong>U</strong></a>
+ | <a href="#V"><strong>V</strong></a>
+ | <a href="#W"><strong>W</strong></a>
  
 </div>
+<h2 id="A">A</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src_api/05_01_dbasemanager_dbaseparserabstract.html#Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser">AbstractDBaseParser (classe dans Lamia.api.dbasemanager.dbaseparserabstract)</a>
+</li>
+      <li><a href="src_api/05_02_iface_lamia_abstractformtool.html#Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool.AbstractLamiaFormTool">AbstractLamiaFormTool (classe dans Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src_api/05_02_iface_lamia_abstracttool.html#Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstracttool.AbstractLamiaTool">AbstractLamiaTool (classe dans Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstracttool)</a>
+</li>
+      <li><a href="src_api/05_01_dbasemanager_dbaseutils.html#Lamia.api.dbasemanager.dbaseutils.areNodesEquals">areNodesEquals() (dans le module Lamia.api.dbasemanager.dbaseutils)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src_api/05_02_iface_ifaceqgswidget.html#Lamia.qgisiface.iface.qgiswidget.ifaceqgswidget.LamiaWindowWidget.comboStyleChanged">comboStyleChanged() (méthode Lamia.qgisiface.iface.qgiswidget.ifaceqgswidget.LamiaWindowWidget)</a>
+</li>
+      <li><a href="src_api/05_01_dbasemanager_dbaseparserabstract.html#Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser.completePathOfFile">completePathOfFile() (méthode Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src_api/05_01_dbasemanager_dbaseparserabstract.html#Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser.copyRessourceFile">copyRessourceFile() (méthode Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser)</a>
+</li>
+      <li><a href="src_api/05_01_dbasemanager_dbaseparserabstract.html#Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser.createDBase">createDBase() (méthode Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser)</a>
+</li>
+      <li><a href="src_api/05_01_dbasemanager_dbaseparserabstract.html#Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser.crsnumber">crsnumber (attribut Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="D">D</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src_api/05_01_dbasemanager_dbaseparserabstract.html#Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser.dbaseofflinemanager">dbaseofflinemanager (attribut Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser)</a>
+</li>
+      <li><a href="src_api/05_01_dbasemanager_dbaseparserabstract.html#Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser.dbaseressourcesdirectory">dbaseressourcesdirectory (attribut Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src_api/05_01_dbasemanager_dbaseparserabstract.html#Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser.dbasetables">dbasetables (attribut Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser)</a>
+</li>
+      <li><a href="src_api/05_01_dbasemanager_dbaseparserabstract.html#Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser.dbconfigreader">dbconfigreader (attribut Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src_api/05_01_dbasemanager_dbaseparserabstract.html#Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser.getConstraintRawValueFromText">getConstraintRawValueFromText() (méthode Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser)</a>
+</li>
+      <li><a href="src_api/05_01_dbasemanager_dbaseparserabstract.html#Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser.getConstraintTextFromRawValue">getConstraintTextFromRawValue() (méthode Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src_api/05_01_dbasemanager_dbaseparserabstract.html#Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser.getLastPK">getLastPK() (méthode Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser)</a>
+</li>
+      <li><a href="src_api/05_01_dbasemanager_dbaseparserabstract.html#Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser.getParentTable">getParentTable() (méthode Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="I">I</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src_api/05_01_dbasemanager_dbaseutils.html#Lamia.api.dbasemanager.dbaseutils.isAttributeNull">isAttributeNull() (dans le module Lamia.api.dbasemanager.dbaseutils)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="L">L</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    Lamia.api
+
+      <ul>
+        <li><a href="01_globalpresentation.html#module-Lamia.api">module</a>
+</li>
+      </ul></li>
+      <li>
+    Lamia.api.dbasemanager.dbaseutils
+
+      <ul>
+        <li><a href="src_api/05_01_dbasemanager_dbaseutils.html#module-Lamia.api.dbasemanager.dbaseutils">module</a>
+</li>
+      </ul></li>
+      <li>
+    Lamia.arteliasite
+
+      <ul>
+        <li><a href="01_globalpresentation.html#module-Lamia.arteliasite">module</a>
+</li>
+      </ul></li>
+      <li>
+    Lamia.config
+
+      <ul>
+        <li><a href="01_globalpresentation.html#module-Lamia.config">module</a>
+</li>
+      </ul></li>
+      <li>
+    Lamia.doc
+
+      <ul>
+        <li><a href="01_globalpresentation.html#module-Lamia.doc">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    Lamia.qgisiface
+
+      <ul>
+        <li><a href="01_globalpresentation.html#module-Lamia.qgisiface">module</a>
+</li>
+      </ul></li>
+      <li>
+    Lamia.test
+
+      <ul>
+        <li><a href="01_globalpresentation.html#module-Lamia.test">module</a>
+</li>
+      </ul></li>
+      <li><a href="src_api/05_02_iface_ifaceqgswidget.html#Lamia.qgisiface.iface.qgiswidget.ifaceqgswidget.LamiaWindowWidget">LamiaWindowWidget (classe dans Lamia.qgisiface.iface.qgiswidget.ifaceqgswidget)</a>
+</li>
+      <li><a href="src_api/05_01_dbasemanager_dbaseparserabstract.html#Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser.loadDBase">loadDBase() (méthode Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser)</a>
+
+      <ul>
+        <li><a href="src_api/05_02_iface_ifaceqgswidget.html#Lamia.qgisiface.iface.qgiswidget.ifaceqgswidget.LamiaWindowWidget.loadDBase">(méthode Lamia.qgisiface.iface.qgiswidget.ifaceqgswidget.LamiaWindowWidget)</a>
+</li>
+      </ul></li>
+      <li><a href="src_api/05_02_iface_ifaceqgswidget.html#Lamia.qgisiface.iface.qgiswidget.ifaceqgswidget.LamiaWindowWidget.loadToolsClassesBase2">loadToolsClassesBase2() (méthode Lamia.qgisiface.iface.qgiswidget.ifaceqgswidget.LamiaWindowWidget)</a>
+</li>
+      <li><a href="src_api/05_02_iface_ifaceqgswidget.html#Lamia.qgisiface.iface.qgiswidget.ifaceqgswidget.LamiaWindowWidget.loadToolsClassesBase3">loadToolsClassesBase3() (méthode Lamia.qgisiface.iface.qgiswidget.ifaceqgswidget.LamiaWindowWidget)</a>
+</li>
+      <li><a href="src_api/05_02_iface_lamia_abstracttool.html#Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstracttool.AbstractLamiaTool.loadWidgetinToolTree">loadWidgetinToolTree() (méthode Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstracttool.AbstractLamiaTool)</a>
+</li>
+      <li><a href="src_api/05_01_dbasemanager_dbaseparserabstract.html#Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser.locale">locale (attribut Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="M">M</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    module
+
+      <ul>
+        <li><a href="01_globalpresentation.html#module-Lamia.api">Lamia.api</a>
+</li>
+        <li><a href="src_api/05_01_dbasemanager_dbaseutils.html#module-Lamia.api.dbasemanager.dbaseutils">Lamia.api.dbasemanager.dbaseutils</a>
+</li>
+        <li><a href="01_globalpresentation.html#module-Lamia.arteliasite">Lamia.arteliasite</a>
+</li>
+        <li><a href="01_globalpresentation.html#module-Lamia.config">Lamia.config</a>
+</li>
+        <li><a href="01_globalpresentation.html#module-Lamia.doc">Lamia.doc</a>
+</li>
+        <li><a href="01_globalpresentation.html#module-Lamia.qgisiface">Lamia.qgisiface</a>
+</li>
+        <li><a href="01_globalpresentation.html#module-Lamia.test">Lamia.test</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src_api/05_02_iface_ifaceqgswidget.html#Lamia.qgisiface.iface.qgiswidget.ifaceqgswidget.LamiaWindowWidget.newDBase">newDBase() (méthode Lamia.qgisiface.iface.qgiswidget.ifaceqgswidget.LamiaWindowWidget)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="P">P</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src_api/05_01_dbasemanager_dbaseparserabstract.html#Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser.parserfactory">parserfactory (attribut Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src_api/05_01_dbasemanager_dbaseparserabstract.html#Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser.printsql">printsql (attribut Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src_api/05_01_dbasemanager_dbaseparserabstract.html#Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser.saveRessourceFile">saveRessourceFile() (méthode Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser)</a>
+</li>
+      <li><a href="src_api/05_02_iface_lamia_abstractformtool.html#Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool.AbstractLamiaFormTool.setTempGeometry">setTempGeometry() (méthode Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool.AbstractLamiaFormTool)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src_api/05_02_iface_ifaceqgswidget.html#Lamia.qgisiface.iface.qgiswidget.ifaceqgswidget.LamiaWindowWidget.setVisualMode">setVisualMode() (méthode Lamia.qgisiface.iface.qgiswidget.ifaceqgswidget.LamiaWindowWidget)</a>
+</li>
+      <li><a href="src_api/05_02_iface_lamia_abstracttool.html#Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstracttool.AbstractLamiaTool.showImageinLabelWidget">showImageinLabelWidget() (méthode Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstracttool.AbstractLamiaTool)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="T">T</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src_api/05_02_iface_lamia_abstractformtool.html#Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool.AbstractLamiaFormTool.toolbarGeomAddGPS">toolbarGeomAddGPS() (méthode Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool.AbstractLamiaFormTool)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src_api/05_02_iface_lamia_abstractformtool.html#Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool.AbstractLamiaFormTool.toolTreeWidgetCurrentItemChanged">toolTreeWidgetCurrentItemChanged() (méthode Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool.AbstractLamiaFormTool)</a>
+
+      <ul>
+        <li><a href="src_api/05_02_iface_lamia_abstracttool.html#Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstracttool.AbstractLamiaTool.toolTreeWidgetCurrentItemChanged">(méthode Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstracttool.AbstractLamiaTool)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="U">U</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src_api/05_02_iface_lamia_abstracttool.html#Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstracttool.AbstractLamiaTool.unloadWidgetinToolTree">unloadWidgetinToolTree() (méthode Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstracttool.AbstractLamiaTool)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="V">V</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src_api/05_01_dbasemanager_dbaseparserabstract.html#Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser.variante">variante (attribut Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src_api/05_01_dbasemanager_dbaseparserabstract.html#Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser.visualmode">visualmode (attribut Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="W">W</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src_api/05_01_dbasemanager_dbaseparserabstract.html#Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser.worktype">worktype (attribut Lamia.api.dbasemanager.dbaseparserabstract.AbstractDBaseParser)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 
 
            </div>

@@ -2,7 +2,7 @@ LamiaWindowWidget
 ======================
 
 
-.. autoclass:: Lamia.iface.qgiswidget.ifaceqgswidget.LamiaWindowWidget
+.. autoclass:: Lamia.qgisiface.iface.qgiswidget.ifaceqgswidget.LamiaWindowWidget
     :members:
 
-    .. :automethod:: Lamia.iface.qgiswidget.ifaceqgswidget.LamiaWindowWidget.__init__
+    .. :automethod:: Lamia.qgisiface.iface.qgiswidget.ifaceqgswidget.LamiaWindowWidget.__init__
