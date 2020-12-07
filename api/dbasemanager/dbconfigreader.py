@@ -26,7 +26,7 @@ along with Foobar.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 
-import os, sys, locale
+import os, sys, locale, shutil
 import xlrd
 import Lamia.config
 import Lamia.api.libs.odf
@@ -349,6 +349,9 @@ class DBconfigReader:
             else:
                 order = tablename[0]
                 tablename = "_".join(tablename[1:])
+
+            if not order.isdigit():
+                continue
 
             if tablename not in self.dbasetables.keys():
                 self.dbasetables[tablename] = {}
@@ -986,3 +989,13 @@ class DBconfigReader:
             logging.getLogger("Lamia").debug("results: %s", str(results))
 
         return results
+
+    def createProjectOds(self, projectresourcedir, wortype):
+        toodspath = os.path.join(
+            projectresourcedir, "config", "dbase", wortype + ".ods",
+        )
+        fromodspath = os.path.join(
+            os.path.dirname(Lamia.__file__), "api", "assets", "emptyform.ods"
+        )
+        shutil.copy(fromodspath, toodspath)
+

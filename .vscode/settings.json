@@ -4,5 +4,5 @@
     "gitlab.instanceUrl": "http://gitlab.arteliagroup.com/",
     "git.ignoreLimitWarning": true,
     "http.proxyStrictSSL": false,
-    "restructuredtext.confPath": "${workspaceFolder}\\doc\\source_dev",
+    "restructuredtext.confPath": "${workspaceFolder}\\doc\\source_fr",
 }

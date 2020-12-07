@@ -1343,7 +1343,7 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
             pass
         elif platform.system() == "Windows":
             subprocess.Popen(
-                f'explorer "{os.path.realpath(os.path.dirname(Lamia.qgisiface.__file__))}"'
+                f'explorer "{os.path.realpath(os.path.dirname(Lamia.config.__file__))}"'
             )
 
     def openOfflineDir(self):

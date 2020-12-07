@@ -350,11 +350,11 @@
 
 <span class="n">PROJECTCONFIGDIRS</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s2">&quot;dbase&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;lamiareport&quot;</span><span class="p">,</span>
+    <span class="c1"># &quot;lamiareport&quot;,</span>
     <span class="s2">&quot;qgsstyles&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;lamiaimport&quot;</span><span class="p">,</span>
+    <span class="c1"># &quot;lamiaimport&quot;,</span>
     <span class="s2">&quot;assets&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;lamiaexportshp&quot;</span><span class="p">,</span>
+    <span class="c1"># &quot;lamiaexportshp&quot;,</span>
 <span class="p">]</span>
 <span class="c1"># PROJECTCONFIGDIRS = [&quot;dbase&quot;, &quot;qgswidgets&quot;, &quot;qgsstyles&quot;, &quot;lamiacost&quot;, &quot;lamiaexportshp&quot;]</span>
 <span class="n">THUMBNAIL_SIZE</span> <span class="o">=</span> <span class="mi">256</span>  <span class="c1"># 128 256</span>
@@ -584,7 +584,10 @@
                 <span class="n">openedsqlfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">sql</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
 
-        <span class="n">openedsqlfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+        <span class="n">openedsqlfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="c1"># conf ods create</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">createProjectOds</span><span class="p">(</span><span class="n">finaldbaseressourcesdirectory</span><span class="p">,</span> <span class="n">worktype</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">generateSQLTableCreationFromDBConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
@@ -1628,7 +1631,7 @@
                         <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">fromshpfile</span><span class="p">,</span> <span class="n">toshpfile</span><span class="p">)</span>
 
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">fromfile</span><span class="p">,</span> <span class="n">destinationfile</span><span class="p">)</span></div>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">fromfile</span><span class="p">,</span> <span class="n">destinationfile</span><span class="p">)</span></div></div>
                 <span class="c1"># if (</span>
                 <span class="c1">#     len(fromfilebase.split(&quot;_&quot;)) &gt; 1</span>
                 <span class="c1">#     and fromfilebase.split(&quot;_&quot;)[1] == &quot;croquis&quot;</span>
@@ -1702,8 +1705,6 @@
             <span class="c1">#     if withthumbnail in [0, 2]:</span>
             <span class="c1">#         shutil.copy(fromfile, destinationfile)</span>
 
-    <span class="k">def</span> <span class="nf">valToBinary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
-        <span class="k">pass</span></div>
 </pre></div>
 
            </div>

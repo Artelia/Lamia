@@ -60,11 +60,11 @@ PGTYPE_TO_SLTYPE = {
 
 PROJECTCONFIGDIRS = [
     "dbase",
-    "lamiareport",
+    # "lamiareport",
     "qgsstyles",
-    "lamiaimport",
+    # "lamiaimport",
     "assets",
-    "lamiaexportshp",
+    # "lamiaexportshp",
 ]
 # PROJECTCONFIGDIRS = ["dbase", "qgswidgets", "qgsstyles", "lamiacost", "lamiaexportshp"]
 THUMBNAIL_SIZE = 256  # 128 256
@@ -295,6 +295,9 @@ class AbstractDBaseParser:
                 self.query(sql)
 
         openedsqlfile.close()
+
+        # conf ods create
+        self.dbconfigreader.createProjectOds(finaldbaseressourcesdirectory, worktype)
 
     def generateSQLTableCreationFromDBConfig(self):
         raise NotImplementedError
@@ -1412,5 +1415,3 @@ class AbstractDBaseParser:
             #     if withthumbnail in [0, 2]:
             #         shutil.copy(fromfile, destinationfile)
 
-    def valToBinary(self, val):
-        pass
