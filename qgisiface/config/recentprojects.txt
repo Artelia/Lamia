@@ -1,1 +1,3 @@
-/usr/src/Lamia/testfiles/BACALAN/GPMB Bacalan.sqlite
+C:\01_WORKINGDIR\BACALAN\GPMB_Bacalan.sqlite
+C:\01_WORKINGDIR\aaa\base\vide.sqlite
+C:\01_WORKINGDIR\aaa\base2\vide.sqlite

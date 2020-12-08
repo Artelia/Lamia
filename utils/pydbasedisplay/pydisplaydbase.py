@@ -57,7 +57,7 @@ numpy.seterr(all="ignore")
 
 from Lamia.qgisiface.iface.qgsconnector.ifaceloggingconnector import LoggingConnector
 
-INTERFACEINDEX = 4
+INTERFACEINDEX = 1
 PROFILING = False
 
 
@@ -98,7 +98,7 @@ def launchIface():
     # SLFILE = r"C:\01_WORKINGDIR\sebastien\VTA_2020_Noailles.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\herve\fusion\mergeddbase.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\aaa\testconstruction.sqlite"
-    # SLFILE = r"C:\01_WORKINGDIR\BACALAN\GPMB Bacalan.sqlite"
+    SLFILE = r"C:\01_WORKINGDIR\BACALAN\GPMB_Bacalan.sqlite"
     # SLFILE = r"C:\Users\Public\Documents\lamia\GPMB Bacalan\GPMB Bacalan.sqlite"
 
     # SLFILE = r"C:\111_GitProjects\Lamia\testfiles\offlinemodedbase\parentdb\parenttestoffline.sqlite"
@@ -110,8 +110,9 @@ def launchIface():
 
     # SLFILE = r"C:\01_WORKINGDIR\aaa\VTA_2020_Baie-Aiguillon.sqlite"
 
-    SLFILE = "/usr/src/Lamia/testfiles/BACALAN/GPMB Bacalan.sqlite"
+    # SLFILE = "/usr/src/Lamia/testfiles/BACALAN/GPMB Bacalan.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\aaaa\tete\toto.sqlite"
+    # SLFILE = r"C:\01_WORKINGDIR\aaa\base\vide.sqlite"
 
     print(f"{bcolors.OKGREEN}Opening: {os.path.abspath(SLFILE)} {bcolors.ENDC}")
 

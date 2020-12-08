@@ -142,6 +142,9 @@ class ExportShapefileCore(AbstractLibsLamia):
             removeemptycolumns,
         )
 
+    def exportFromForm(self, formwidget):
+        pass
+
     def new(self, confpath):
 
         if not os.path.exists(self.confdataproject):

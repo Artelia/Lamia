@@ -725,6 +725,7 @@ class ITVImportCore(AbstractLibsLamia):
 
     def getITVCsvFile(self, itvfiles):
         dataframeres = self.readITVs(itvfiles)
+        print(type(dataframeres))
         return self.getCsvFile(dataframeres)
 
     def getCsvFile(self, dataframeres, destdir=None):
