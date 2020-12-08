@@ -24,8 +24,6 @@ def initQGis():
         qgis_path = QGISSETTINGS["QGISPATH"]
     elif platform.system() == "Linux":
         qgis_path = "/usr"
-    print("qgis_path", qgis_path)
-    # qgis_path = QGISSETTINGS["QGISPATH"]
 
     qgis.core.QgsApplication.setPrefixPath(qgis_path, True)
 

@@ -2,17 +2,17 @@ import os, sys
 
 import qgis, qgis.core
 
-lamiapath = os.path.join(os.path.join(os.path.dirname(__file__)), "..", "..")
+lamiapath = os.path.join(os.path.join(os.path.dirname(__file__)), "..", "..", "..")
 sys.path.append(lamiapath)
 
 from test.test_utils import *
 import Lamia
 
-from Lamia.dbasemanager.dbaseparserfactory import DBaseParserFactory
+from Lamia.api.dbasemanager.dbaseparserfactory import DBaseParserFactory
 
 # from Lamia.iface.qgsconnector.ifaceqgisconnector import QgisConnector
-from Lamia.libslamia.lamianetworkx.lamianetworkx import NetWorkCore
-from Lamia.iface.qgscanvas.ifaceqgiscanvas import QgisCanvas
+from Lamia.api.libslamia.lamianetworkx.lamianetworkx import NetWorkCore
+from Lamia.qgisiface.iface.qgscanvas.ifaceqgiscanvas import QgisCanvas
 import numpy as np
 
 """
@@ -118,6 +118,7 @@ def main(argv):
     SLFILE = (
         r"C:\111_GitProjects\Lamia\test\datas\lamia_assainissement_base3\test01.sqlite"
     )
+    SLFILE = "/usr/src/Lamia/testfiles/BACALAN/GPMB_Bacalan.sqlite"
     tempparser = DBaseParserFactory("spatialite").getDbaseParser()
     tempparser.loadDBase(dbtype="Spatialite", slfile=SLFILE)
 
@@ -128,19 +129,25 @@ def main(argv):
 
     print("start networkx")
     networkcore = NetWorkCore(
-        tempparser, messageinstance=tempparser.messageinstance, qgiscanvas=qgiscanvas,
+        tempparser,
+        messageinstance=tempparser.messageinstance,
+        qgiscanvas=qgiscanvas,
     )
 
-    networkcore.computeNXGraph(graphtype="geographic", tolerance=1.0)
+    # networkcore.computeNXGraph(graphtype="geographic", tolerance=1.0)
     # indexnode, geomnode = networkcore.nearestNode([0.0, 0.0])
     # print(indexnode, geomnode)
     # print(networkcore.nxgraph.node[indexnode])
 
     # 606684.5652478811,6686971.11283365 606714.9569556911,6687093.518868188
-    qgisgeom, shortestpks = networkcore.getQgisgeomBetweenPoints(
-        [606684.5652478811, 6686971.11283365], [606714.9569556911, 6687093.518868188]
+    # qgisgeom, shortestpks = networkcore.getQgisgeomBetweenPoints(
+    #     [606684.5652478811, 6686971.11283365], [606714.9569556911, 6687093.518868188]
+    # )
+    # print(shortestpks)
+
+    networkcore.automaticNodeEdgeConnexion(
+        tolerance=1.0, onlynullvalues=False, createmissingnode=True
     )
-    print(shortestpks)
 
     # edgelist = networkcore.getSubGraphsEdgePks()
     # print(edgelist)
@@ -150,4 +157,3 @@ def main(argv):
 
 if __name__ == "__main__":
     main(sys.argv[1:])
-

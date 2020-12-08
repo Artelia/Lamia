@@ -27,7 +27,7 @@ This file is part of LAMIA.
 
 import os
 import io
-import sys
+import sys, math
 
 from matplotlib.backends.backend_qt5agg import (
     FigureCanvasQTAgg as FigureCanvas,
@@ -50,6 +50,17 @@ from qgis.PyQt.QtWidgets import QWidget, QLabel, QFrame, QTreeWidgetItem, QHeade
 
 
 class NetWorkCore:
+    """Class for network analysis of Lamia node and edges
+
+    You must first create a graph with computeNXGraph method. The networkx graph is store in self.nxgraph instance
+    variable.
+    Accessing nodes attributes :
+    self.nxgraph.nodes.data()  : dict of {...pk_node : {'xy': [xnode, ynode]}...}
+    self.nxgraph.edges.data()  : list of [ ... (pk_node1, pk_node2, {'pk' : pk_edge, 'startnode': nxnodeid, 'endnode':nxnodeid})]
+
+
+
+    """
 
     POSTPROTOOLNAME = "Networktool"
 
@@ -132,7 +143,7 @@ class NetWorkCore:
             list(networkx.get_node_attributes(self.nxgraph, "xy").values())
         )
 
-    def computeNXGraphGeographic(self, listpks=[], tolerance=0.0):
+    def computeNXGraphGeographic(self, listpks=[], tolerance=0.1):
         """
         compute networkx graph for all infralineaire or for listids if specified
         Calcul le networkx graph pour toutes les infralineaires ou seulement pour les infralineaires dont
@@ -237,7 +248,14 @@ class NetWorkCore:
 
             lstedgepk = np.insert(listedgenodedefined, 2, edgepks, axis=1)
             for edge1, edge2, edgepk in lstedgepk:
-                nxgraph.add_edge(edge1, edge2, pk=edgepk)
+                # if edgepk == 343:
+                #     print(edge1, edge2, edgepk)
+                #     print(nodegeombyindex[edge1].tolist())
+                #     print(nodegeombyindex[edge2].tolist())
+                #     # sys.exit()
+                nxgraph.add_edge(
+                    edge1, edge2, pk=edgepk, startnode=edge1, endnode=edge2
+                )
 
             for nodeindex in nxgraph.nodes():
                 nxgraph.node[nodeindex]["xy"] = nodegeombyindex[nodeindex].tolist()
@@ -250,6 +268,21 @@ class NetWorkCore:
             self.nodegeom = nodegeombyindex
             self.edgesnodeindex = npedges
             self.edgesreversenodeindex = npreverseedges
+
+            self.searchGeographicalyPkForNxGraphNodes(tolerance=tolerance)
+
+    def searchGeographicalyPkForNxGraphNodes(self, tolerance=0.01):
+        sql = "SELECT pk_node, ST_X(geom), ST_Y(geom) FROM node_now"
+        sql = self.dbase.sqlNow(sql)
+        query = self.dbase.query(sql)
+
+        for pk_node, nodex, nodey in query:
+            nxnearestnodeindex, nxgeom, nxdist = self.nearestNode([nodex, nodey])
+            if nxdist < tolerance:
+                self.nxgraph.nodes[nxnearestnodeindex]["pk"] = pk_node
+
+        # for nxnodindex, data in nxgraph.nodes.data():
+        #     xy = data['xy']
 
     def getSubGraphs(self):
         # return networkx.connected_component_subgraphs(self.nxgraph)
@@ -309,8 +342,8 @@ class NetWorkCore:
         if self.nxgraph is None:
             return
 
-        node1index, node1geom = self.nearestNode(point1)
-        node2index, node2geom = self.nearestNode(point2)
+        node1index, node1geom, dist1 = self.nearestNode(point1)
+        node2index, node2geom, dist2 = self.nearestNode(point2)
 
         try:
             shortestpathedges = networkx.shortest_path(
@@ -461,6 +494,99 @@ class NetWorkCore:
             layertoproject.setSubsetString("")
 
         return datas
+
+    def automaticNodeEdgeConnexion(
+        self, listpks=[], tolerance=0.0, onlynullvalues=True, createmissingnode=False
+    ):
+        self.computeNXGraphGeographic(listpks, tolerance)
+        # print("**", self.nxgraph.nodes.data())
+
+        self.dbase.beginTransaction()
+
+        for nxidxstartnode, nxidxendnode, edgedict in self.nxgraph.edges.data():
+            edgepk = edgedict["pk"]
+            nxidxstartnode = edgedict["startnode"]
+            nxidxendnode = edgedict["endnode"]
+            edgeval = self.dbase.lamiaorm["edge"].read(edgepk)
+            lid_des1, lid_des2, edgegeom = (
+                edgeval["lid_descriptionsystem_1"],
+                edgeval["lid_descriptionsystem_2"],
+                edgeval["geom"],
+            )
+            qgsedgegeompoly = qgis.core.QgsGeometry.fromWkt(edgegeom).asPolyline()
+
+            # print(edgeval["id_edge"], nxidxstartnode, nxidxendnode, lid_des1, lid_des2)
+
+            pkstartnode, pkendnode = None, None
+            if "pk" in self.nxgraph.nodes[nxidxstartnode].keys():
+                pkstartnode = self.nxgraph.nodes[nxidxstartnode]["pk"]
+            if "pk" in self.nxgraph.nodes[nxidxendnode].keys():
+                pkendnode = self.nxgraph.nodes[nxidxendnode]["pk"]
+
+            edgeupdatedict = {}
+            edgegeomdict = {}
+            if (
+                not onlynullvalues or (onlynullvalues and lid_des1 is None)
+            ) and pkstartnode:
+                startnodeval = self.dbase.lamiaorm["node"].read(pkstartnode)
+                startnodedessys, startnodegeom = (
+                    startnodeval["id_descriptionsystem"],
+                    qgis.core.QgsGeometry.fromWkt(startnodeval["geom"]).asPoint(),
+                )
+                edgeupdatedict["lid_descriptionsystem_1"] = startnodedessys
+                edgegeomdict["start"] = startnodegeom
+            elif pkstartnode is None and createmissingnode and not edgeval["laterals"]:
+                pknode = self.dbase.lamiaorm["node"].create()
+                self.nxgraph.nodes[nxidxstartnode]["pk"] = pknode
+                nodegeom = qgis.core.QgsGeometry.fromPointXY(
+                    qgis.core.QgsPointXY(
+                        self.nxgraph.nodes[nxidxstartnode]["xy"][0],
+                        self.nxgraph.nodes[nxidxstartnode]["xy"][1],
+                    )
+                ).asWkt()
+                self.dbase.lamiaorm["node"].update(pknode, {"geom": nodegeom})
+                startnodedessys = self.dbase.lamiaorm["node"].read(pknode)[
+                    "id_descriptionsystem"
+                ]
+                edgeupdatedict["lid_descriptionsystem_1"] = startnodedessys
+
+            if (
+                not onlynullvalues or (onlynullvalues and lid_des1 is None)
+            ) and pkendnode:
+                endnodeval = self.dbase.lamiaorm["node"].read(pkendnode)
+                endnodedessys, endnodegeom = (
+                    endnodeval["id_descriptionsystem"],
+                    qgis.core.QgsGeometry.fromWkt(endnodeval["geom"]).asPoint(),
+                )
+
+                edgeupdatedict["lid_descriptionsystem_2"] = endnodedessys
+                edgegeomdict["end"] = endnodegeom
+            elif pkendnode is None and createmissingnode and not edgeval["laterals"]:
+                pknode = self.dbase.lamiaorm["node"].create()
+                self.nxgraph.nodes[nxidxendnode]["pk"] = pknode
+                nodegeom = qgis.core.QgsGeometry.fromPointXY(
+                    qgis.core.QgsPointXY(
+                        self.nxgraph.nodes[nxidxendnode]["xy"][0],
+                        self.nxgraph.nodes[nxidxendnode]["xy"][1],
+                    )
+                ).asWkt()
+                self.dbase.lamiaorm["node"].update(pknode, {"geom": nodegeom})
+                endnodedessys = self.dbase.lamiaorm["node"].read(pknode)[
+                    "id_descriptionsystem"
+                ]
+                edgeupdatedict["lid_descriptionsystem_2"] = endnodedessys
+
+            if edgegeomdict:
+                if "start" in edgegeomdict.keys():
+                    qgsedgegeompoly[0] = edgegeomdict["start"]
+                if "end" in edgegeomdict.keys():
+                    qgsedgegeompoly[-1] = edgegeomdict["end"]
+                wktgeom = qgis.core.QgsGeometry.fromPolylineXY(qgsedgegeompoly).asWkt()
+                edgeupdatedict["geom"] = wktgeom
+
+            self.dbase.lamiaorm["edge"].update(edgepk, edgeupdatedict)
+
+        self.dbase.commitTransaction()
 
     def __________________VizFunctions():
         pass
@@ -1048,4 +1174,4 @@ class NetWorkCore:
         npindex = np.argmin(dist_2)
         indexnode = nxindexes[npindex]
         geomnode = nodesgeom[npindex]
-        return indexnode, geomnode
+        return (indexnode, geomnode, math.sqrt(dist_2[npindex]))

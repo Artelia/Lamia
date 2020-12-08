@@ -89,7 +89,7 @@ def launchIface():
     worktype = "sl_base3_waterdistribution_Lamia"
     # SLFILE = os.path.join(TESTDIR, "c_creation", worktype, "test01.sqlite")
     # SLFILE = r"C:\01_WORKINGDIR\bm\BD_totale_ind15.sqlite"
-    SLFILE = r"C:\01_WORKINGDIR\reims\testast\BDD_REIMS_J1_AST.sqlite"
+    # SLFILE = r"C:\01_WORKINGDIR\reims\testast\BDD_REIMS_J1_AST.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\reims\testast\mergeddbase.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\alban\lamia\test_alban.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\sebastien\VTA_2020_Noailles.sqlite"
@@ -98,7 +98,7 @@ def launchIface():
     # SLFILE = r"C:\01_WORKINGDIR\sebastien\VTA_2020_Noailles.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\herve\fusion\mergeddbase.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\aaa\testconstruction.sqlite"
-    SLFILE = r"C:\01_WORKINGDIR\BACALAN\GPMB Bacalan.sqlite"
+    # SLFILE = r"C:\01_WORKINGDIR\BACALAN\GPMB Bacalan.sqlite"
     # SLFILE = r"C:\Users\Public\Documents\lamia\GPMB Bacalan\GPMB Bacalan.sqlite"
 
     # SLFILE = r"C:\111_GitProjects\Lamia\testfiles\offlinemodedbase\parentdb\parenttestoffline.sqlite"
@@ -110,8 +110,8 @@ def launchIface():
 
     # SLFILE = r"C:\01_WORKINGDIR\aaa\VTA_2020_Baie-Aiguillon.sqlite"
 
-    # SLFILE = "/usr/src/Lamia/testfiles/BACALAN/GPMB Bacalan.sqlite"
-    SLFILE = r"C:\01_WORKINGDIR\aaaa\tete\toto.sqlite"
+    SLFILE = "/usr/src/Lamia/testfiles/BACALAN/GPMB Bacalan.sqlite"
+    # SLFILE = r"C:\01_WORKINGDIR\aaaa\tete\toto.sqlite"
 
     print(f"{bcolors.OKGREEN}Opening: {os.path.abspath(SLFILE)} {bcolors.ENDC}")
 

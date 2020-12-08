@@ -230,6 +230,12 @@ class NetworkTool(AbstractLamiaTool):
             self.analyseSubdomains
         )
 
+        # correct topology
+
+        self.toolwidgetmain.pushButton_correcttopology.clicked.connect(
+            self.correctTopology
+        )
+
         """
         # plot
         if False:
@@ -498,6 +504,26 @@ class NetworkTool(AbstractLamiaTool):
             export_area.resize(w, h)
             export_area.setVisible(True)
             export_area.setVisible(False)
+
+    def TopologyCorrection__________________(self):
+        pass
+
+    def correctTopology(self):
+        analysistype, tolerance = self._getAnalysisSpec()
+        if analysistype == "topologic":
+            self.networkcore.messageinstance.showErrorMessage(
+                "Ne faire qu'avec un traitement géographique"
+            )
+        missinglinkchecked = bool(
+            self.toolwidgetmain.checkBox_correctmissing.checkState()
+        )
+        createnodechecked = bool(self.toolwidgetmain.checkBox_createnode.checkState())
+        self.networkcore.automaticNodeEdgeConnexion(
+            tolerance=tolerance,
+            onlynullvalues=missinglinkchecked,
+            createmissingnode=createnodechecked,
+        )
+        self.networkcore.messageinstance.showNormalMessage("Topology correction : Done")
 
 
 class UserUI(QWidget):
