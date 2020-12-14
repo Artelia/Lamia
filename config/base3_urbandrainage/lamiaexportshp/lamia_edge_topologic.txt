@@ -1,0 +1,18 @@
+
+###edge
+#name               type                 cst                  value                
+pk_edge             ;String              ;                    ;edge_now.pk_edge
+id_edge             ;Int                 ;                    ;edge_now.id_edge
+
+###node
+pk_node_up             ;Int                 ;                    ;upstream_node.pk_node
+id_node_up             ;Int                 ;                    ;upstream_node.id_node
+pk_node_do             ;Int                 ;                    ;downstream_node.pk_node
+id_node_do            ;Int                 ;                    ;downstream_node.id_node
+
+
+###geom
+geom                ;String              ;                    ;ST_AsText(edge_now.geom)
+
+###main
+FROM edge_now LEFT JOIN node_now AS upstream_node ON edge_now.lid_descriptionsystem_1 = upstream_node.id_descriptionsystem LEFT JOIN node_now AS downstream_node ON edge_now.lid_descriptionsystem_2 = downstream_node.id_descriptionsystem

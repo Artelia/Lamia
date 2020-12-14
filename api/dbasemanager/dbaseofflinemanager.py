@@ -25,7 +25,7 @@ This file is part of LAMIA.
   * License-Filename: LICENSING.md
  """
 
-import datetime, os, sys, platform
+import datetime, os, sys, platform, time
 import logging, json
 
 # from Lamia.api.dbasemanager.dbaseparserfactory import DBaseParserFactory
@@ -67,28 +67,76 @@ class DBaseOfflineManager:
             ressourcesimport="Full",
         )
 
-    def pullDBase(self, pulledpath):
+    def SynchronizeDB(self, mainifacewidget=None):
+        if not self._checkIfLocalDB():
+            self.dbase.messageinstance.showErrorMessage(
+                "La base ne provient pas d'une version locale \nou a déjà été reversée"
+            )
+            return
+
+        initialofflinedbpath = self._getFilepathLocalDb()
+        connectconf = self._getConnectConf()
+        self.pushDBase()
+
+        currentdatetime = self.dbase.utils.getCurrentDateTimeWithoutSpaces()
+
+        if mainifacewidget:
+            mainifacewidget.reinitWidgetbeforeloading()
+        else:
+            self.dbase.disconnect()
+ 
+        print(
+            "rename",
+            os.path.dirname(initialofflinedbpath),
+            os.path.dirname(initialofflinedbpath) + "_" + currentdatetime,
+        )
+        success = False
+        while not success:
+            try:
+                os.rename(
+                    os.path.dirname(initialofflinedbpath),
+                    os.path.dirname(initialofflinedbpath) + "_" + currentdatetime,
+                )
+                success = True
+            except PermissionError:
+
+                print("oups",self.dbase.getDBName())
+                self.dbase.disconnect()
+                time.sleep(5)
+
+                success = False
+        self.dbase = self._loadDBaseFromConnectconf(connectconf)
+        self.pullDBase()
+
+    def pullDBase(self, pulledpath=None):
 
         # create pull dir
         if pulledpath is None:
-            if platform.system() == "Linux":
-                pass
-            elif platform.system() == "Windows":
-                lamiadir = self.WINOFFLINEDIR
-            # lamiadir = os.path.join(importdir, "lamia")
-            if not os.path.isdir(lamiadir):
-                os.mkdir(lamiadir)
-            dbname = self.dbase.getDBName()
-            dbdir = os.path.join(lamiadir, dbname)
-            if not os.path.isdir(dbdir):
-                os.mkdir(dbdir)
-            else:
+            lamiafilepath = self._createFilepathLocalDb()
+            if os.path.isfile(lamiafilepath):
                 self.dbase.messageinstance.showErrorMessage(
-                    f"Il y a déjà une copie locale de la base - Supprimez la : {dbdir}"
+                    f"Il y a déjà une copie locale de la base - Supprimez la : {lamiafilepath}"
                 )
                 return
 
-            lamiafilepath = os.path.join(dbdir, dbname + ".sqlite")
+            # if platform.system() == "Linux":
+            #     pass
+            # elif platform.system() == "Windows":
+            #     lamiadir = self.WINOFFLINEDIR
+            # # lamiadir = os.path.join(importdir, "lamia")
+            # if not os.path.isdir(lamiadir):
+            #     os.mkdir(lamiadir)
+            # dbname = self.dbase.getDBName()
+            # dbdir = os.path.join(lamiadir, dbname)
+            # if not os.path.isdir(dbdir):
+            #     os.mkdir(dbdir)
+            # else:
+            #     self.dbase.messageinstance.showErrorMessage(
+            #         f"Il y a déjà une copie locale de la base - Supprimez la : {dbdir}"
+            #     )
+            #     return
+
+            # lamiafilepath = os.path.join(dbdir, dbname + ".sqlite")
         else:
             lamiafilepath = pulledpath
 
@@ -150,33 +198,43 @@ class DBaseOfflineManager:
         return lamiafilepath
 
     def pushDBase(self):
-        tempconffilepath = os.path.join(
-            self.dbase.dbaseressourcesdirectory, "config", ".offlinemode"
-        )
-        if not os.path.isfile(tempconffilepath):
+        # tempconffilepath = os.path.join(
+        #     self.dbase.dbaseressourcesdirectory, "config", ".offlinemode"
+        # )
+        # if not os.path.isfile(tempconffilepath):
+        #     self.dbase.messageinstance.showErrorMessage(
+        #         "La base ne provient pas d'une version locale \nou a déjà été reversée"
+        #     )
+        #     return
+
+        # with open(tempconffilepath) as outfile:
+        #     connectconf = json.load(outfile)
+        tempconffilepath = self._getConnectConfPath()
+        connectconf = self._getConnectConf()
+        if connectconf is None:
             self.dbase.messageinstance.showErrorMessage(
                 "La base ne provient pas d'une version locale \nou a déjà été reversée"
             )
             return
 
-        with open(tempconffilepath) as outfile:
-            connectconf = json.load(outfile)
-
         self.dbase.messageinstance.showNormalMessage(
             f"Synchronisation avec la base mère : {connectconf}"
         )
 
-        dbaseparserfact = self.dbase.parserfactory.__class__
-        if "slfile" in connectconf.keys():
-            parentdbase = dbaseparserfact(
-                "spatialite", self.dbase.messageinstance
-            ).getDbaseParser()
-        elif "pgschema" in connectconf.keys():
-            parentdbase = dbaseparserfact(
-                "postgis", self.dbase.messageinstance
-            ).getDbaseParser()
+        # dbaseparserfact = self.dbase.parserfactory.__class__
+        # if "slfile" in connectconf.keys():
+        #     parentdbase = dbaseparserfact(
+        #         "spatialite", self.dbase.messageinstance
+        #     ).getDbaseParser()
+        # elif "pgschema" in connectconf.keys():
+        #     parentdbase = dbaseparserfact(
+        #         "postgis", self.dbase.messageinstance
+        #     ).getDbaseParser()
 
-        parentdbase.loadDBase(**connectconf)
+        # parentdbase.loadDBase(**connectconf)
+
+        parentdbase = self._loadDBaseFromConnectconf(connectconf)
+
         parentdbase.dbaseofflinemanager.importDBase(self.dbase, typeimport="update")
 
         os.remove(tempconffilepath)
@@ -1531,3 +1589,72 @@ class DBaseOfflineManager:
                             break
 
         return currentdbname, currentpk
+
+    def _checkIfLocalDB(self):
+        tempconffilepath = self._getConnectConfPath()
+        return os.path.isfile(tempconffilepath)
+
+    def _createFilepathLocalDb(self):
+        if platform.system() == "Linux":
+            pass
+        elif platform.system() == "Windows":
+            lamiadir = self.WINOFFLINEDIR
+        # lamiadir = os.path.join(importdir, "lamia")
+        if not os.path.isdir(lamiadir):
+            os.mkdir(lamiadir)
+        dbname = self.dbase.getDBName()
+        dbdir = os.path.join(lamiadir, dbname + "_offline")
+        if not os.path.isdir(dbdir):
+            os.mkdir(dbdir)
+        # else:
+        #     self.dbase.messageinstance.showErrorMessage(
+        #         f"Il y a déjà une copie locale de la base - Supprimez la : {dbdir}"
+        #     )
+        #     return
+
+        lamiafilepath = os.path.join(dbdir, dbname + "_offline.sqlite")
+        return lamiafilepath
+
+    def _getFilepathLocalDb(self):
+        if platform.system() == "Linux":
+            pass
+        elif platform.system() == "Windows":
+            lamiadir = self.WINOFFLINEDIR
+        # lamiadir = os.path.join(importdir, "lamia")
+
+        dbname = self.dbase.getDBName()
+        dbdir = os.path.join(lamiadir, dbname)
+
+        lamiafilepath = os.path.join(dbdir, dbname + ".sqlite")
+        return lamiafilepath
+
+    def _getConnectConfPath(self):
+        tempconffilepath = os.path.join(
+            self.dbase.dbaseressourcesdirectory, "config", ".offlinemode"
+        )
+        return tempconffilepath
+
+    def _getConnectConf(self):
+        tempconffilepath = self._getConnectConfPath()
+        if not os.path.isfile(tempconffilepath):
+            return None
+
+        with open(tempconffilepath) as outfile:
+            connectconf = json.load(outfile)
+
+        return connectconf
+
+    def _loadDBaseFromConnectconf(self, connectconf):
+        dbaseparserfact = self.dbase.parserfactory.__class__
+        if "slfile" in connectconf.keys():
+            parentdbase = dbaseparserfact(
+                "spatialite", self.dbase.messageinstance
+            ).getDbaseParser()
+        elif "pgschema" in connectconf.keys():
+            parentdbase = dbaseparserfact(
+                "postgis", self.dbase.messageinstance
+            ).getDbaseParser()
+
+        parentdbase.loadDBase(**connectconf)
+
+        return parentdbase

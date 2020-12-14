@@ -615,7 +615,7 @@ background-color: rgb(255, 255, 255);</string>
      <x>0</x>
      <y>0</y>
      <width>799</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -646,7 +646,7 @@ background-color: rgb(255, 255, 255);</string>
       <string>Import / export</string>
      </property>
      <addaction name="action_pulldb"/>
-     <addaction name="action_pushdb"/>
+     <addaction name="actionSynchronize_DB"/>
      <addaction name="separator"/>
      <addaction name="actionImporter_et_ajouter_la_base"/>
     </widget>
@@ -1160,6 +1160,11 @@ background-color: rgb(255, 255, 255);</string>
   <action name="actionOpen_offline_project_directory">
    <property name="text">
     <string>Open offline project directory</string>
+   </property>
+  </action>
+  <action name="actionSynchronize_DB">
+   <property name="text">
+    <string>Synchronize DB</string>
    </property>
   </action>
  </widget>

@@ -1,3 +1,1 @@
-C:\01_WORKINGDIR\BACALAN\GPMB_Bacalan.sqlite
-C:\01_WORKINGDIR\aaa\base\vide.sqlite
-C:\01_WORKINGDIR\aaa\base2\vide.sqlite
+C:\Users\Public\Documents\lamia\GPMB_Bacalan_offline\GPMB_Bacalan_offline.sqlite

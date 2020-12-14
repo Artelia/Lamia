@@ -317,6 +317,9 @@ class AbstractDBaseParser:
         kwargs for spatialite : 
             slfile
         """
+
+        self.disconnect()
+
         self.connectconf = kwargs
         self.connectToDBase(**kwargs)
         # init variables

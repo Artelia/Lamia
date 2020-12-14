@@ -54,8 +54,9 @@ class SpatialiteDBaseParser(AbstractDBaseParser):
     def disconnect(self):
         try:
             self.connSLITE.close()
-        except:
-            pass
+            print("disconn")
+        except Exception as e:
+            print("error on closing connection : ", e)
 
     def getDBName(self):
         name, ext = os.path.splitext(os.path.basename(self.spatialitefile))

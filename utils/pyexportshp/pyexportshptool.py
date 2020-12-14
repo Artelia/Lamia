@@ -24,6 +24,7 @@ def main(argv):
 
     SLFILE = r"C:\01_WORKINGDIR\OO\VTA_L93_Lamia_SIRS_BDY_06-11-20.sqlite"
     SLFILE = r"C:\01_WORKINGDIR\BACALAN\GPMB Bacalan.sqlite"
+    SLFILE = r"C:\Users\Public\Documents\lamia\GPMB_Bacalan_offline\GPMB_Bacalan_offline.sqlite"
 
     tempparser = DBaseParserFactory("spatialite").getDbaseParser()
     tempparser.loadDBase(dbtype="Spatialite", slfile=SLFILE)

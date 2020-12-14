@@ -19,8 +19,8 @@
 	"remoteEnv": {
 		"PATH": "${containerEnv:PATH}:/usr/src/Lamia",
 		"PYTHONPATH": "${containerEnv:PYTHONPATH}:/usr/src/Lamia:/usr/share/qgis/python:/usr/share/qgis/python/plugins:/usr/lib/python38.zip:/usr/lib/python3.8",
-		//"DISPLAY": "10.20.75.139:0.0",
-		"DISPLAY": "192.168.1.17:0.0",
+		"DISPLAY": "10.20.75.139:0.0",
+		//"DISPLAY": "192.168.1.17:0.0",
 		"LANG": "C.UTF-8",
 		"LIBGL_ALWAYS_INDIRECT": "1",
 		"QGIS_DISABLE_MESSAGE_HOOKS": "1",

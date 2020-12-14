@@ -57,14 +57,33 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
         self.mtoolPan = None
 
+        self.currentmaptool = None  # the maptool in use
+
+        self.maptools = {
+            "mtooltorestore": self.mtooltorestore,
+            "mtoolpoint": self.mtoolpoint,
+            "mtoolline": self.mtoolline,
+            "mtoolpolygon": self.mtoolpolygon,
+            "mtoolPan": self.mtoolPan,
+            "currentmaptool": self.currentmaptool,
+        }
+
         self.rubberbands = {"main": None, "child": None, "capture": None}
 
         # self.rubberBand = None          #the main parent ruberband
         # self.rubberbandchild = None     #the child rubberband
         # self.rubberbandcapture = None   #the capture rubberband
         self.dbaseqgiscrs = None
+
         if canvas is None and qgis.utils.iface is not None:
             self.setCanvas(qgis.utils.iface.mapCanvas())
+        elif canvas is None and qgis.utils.iface is None:
+            canvas = qgis.gui.QgsMapCanvas()
+            canvas.enableAntiAliasing(True)
+            canvascrs = qgis.core.QgsCoordinateReferenceSystem()
+            canvascrs.createFromString("EPSG:2154")
+            canvas.setDestinationCrs(canvascrs)
+            self.setCanvas(canvas)
 
         self.layers = {}
         self.qgislegendnode = None
@@ -74,7 +93,6 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
         # behaviour
         self.editingrawlayer = None
-        self.currentmaptool = None  # the maptool in use
 
     def setCanvas(self, qgscanvas):
         """Init method when a canvas is assigned to this class
@@ -645,13 +663,28 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                 self.qgislegendnode.removeAllChildren()
                 root = qgis.core.QgsProject.instance().layerTreeRoot()
                 root.removeChildNode(self.qgislegendnode)
+
+                if self.layers:
+                    lamiaqgislay = [lay["layerqgis"] for lay in self.layers.values()]
+                    print(lamiaqgislay)
+                    for layname, lay in qgis.core.QgsProject.instance().mapLayers().items():
+                        print(lay)
+                        if lay in lamiaqgislay:
+                            qgis.core.QgsProject.instance().removeMapLayer(lay)
+
             except RuntimeError:
                 self.qgislegendnode = None
         elif qgis.utils.iface is None:
+            print("***", qgis.core.QgsProject.instance().mapLayers().values())
+            if self.layers:
+                lamiaqgislay = [lay["layerqgis"] for lay in self.layers.values()]
+                print(lamiaqgislay)
             self.canvas.setLayers([])
             self.canvas.refresh()
 
+        del self.layers
         self.layers = {}
+        self.canvas.refreshAllLayers()
 
     def applyStyle(self, worktype, styledir):
 

@@ -56,8 +56,9 @@ warnings.filterwarnings("ignore", message="numpy.ufunc size changed")
 numpy.seterr(all="ignore")
 
 from Lamia.qgisiface.iface.qgsconnector.ifaceloggingconnector import LoggingConnector
+from Lamia.qgisiface.iface.qgscanvas.ifaceqgiscanvas import QgisCanvas
 
-INTERFACEINDEX = 1
+INTERFACEINDEX = 0
 PROFILING = False
 
 
@@ -110,9 +111,10 @@ def launchIface():
 
     # SLFILE = r"C:\01_WORKINGDIR\aaa\VTA_2020_Baie-Aiguillon.sqlite"
 
-    # SLFILE = "/usr/src/Lamia/testfiles/BACALAN/GPMB Bacalan.sqlite"
+    SLFILE = "/usr/src/Lamia/testfiles/BACALAN/GPMB_Bacalan.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\aaaa\tete\toto.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\aaa\base\vide.sqlite"
+    SLFILE = r"C:\Users\Public\Documents\lamia\GPMB_Bacalan_offline\GPMB_Bacalan_offline.sqlite"
 
     print(f"{bcolors.OKGREEN}Opening: {os.path.abspath(SLFILE)} {bcolors.ENDC}")
 
@@ -128,11 +130,32 @@ def launchIface():
     #     user="pvr",
     #     password="pvr",
     # )
-    # binval = b"\x89PNG\r\n\x1a\n\x00\x00"
-    # binval2 = str(binval)
-    # sql = f"INSERT INTO resource(thumbnail) VALUES({binval})"
-    # print(sql)
-    # lamiawidget.dbase.query(sql)
+
+    lamiawidget.qgiscanvas.unloadLayersInCanvas()
+
+    if False:
+        # lamiawidget.qgiscanvas.unloadLayersInCanvas()
+        # lamiawidget.qgiscanvas = QgisCanvas()
+        # lamiawidget.dbase.disconnect()
+        lamiawidget.reinitWidgetbeforeloading()
+        # lamiawidget.qgiscanvas.canvas = canvas
+        print(lamiawidget.qgiscanvas.canvas.layers())
+        print(lamiawidget.qgiscanvas.layers)
+
+        # lamiawidget.qgiscanvas = QgisCanvas()
+
+        currentdatetime = lamiawidget.dbase.utils.getCurrentDateTimeWithoutSpaces()
+        # lamiawidget.dbase = None
+        print(os.path.dirname(SLFILE))
+        try:
+            os.rename(
+                os.path.dirname(SLFILE),
+                os.path.dirname(SLFILE) + "_" + currentdatetime,
+            )
+        except PermissionError as e:
+            print(e)
+
+        sys.exit()
 
     lamiawidget.setVisualMode(visualmode=INTERFACEINDEX)
     lamiawidget.dbase.raiseexceptions = False  # False True
@@ -166,6 +189,8 @@ def launchIface():
     #     for fl in wdg.toolwidgetmain.file.text().split(";")
     # ]
     # wdg.itvcore.getUniquesValuesbyEdge(itvfiles)
+    # lamiawidget.pullDBase()
+    # lamiawidget.SynchronizeDB()
 
     mainwin.exec_()
 

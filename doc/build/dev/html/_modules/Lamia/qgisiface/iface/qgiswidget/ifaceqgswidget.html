@@ -191,6 +191,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../../01_dev_env_install.html#open-the-lamia-folder-with-visual-studio-code">Open the Lamia folder with Visual Studio Code</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../01_firststeps.html">Warming up with Lamia API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../01_firststeps.html#define-qgis-path-settings">Define QGIS path settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../01_firststeps.html#creating-and-loading-a-new-dbase">Creating and loading a new DBASE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../01_firststeps.html#display-the-lamia-gui-outside-qgis">Display the lamia gui outside qgis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../01_firststeps.html#get-a-particular-form-of-lamia-ouside-qgis-gui">Get a particular form of  Lamia ouside qgis gui</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../01_firststeps.html#play-with-api-in-lamia-lamialibs">Play with API in Lamia.lamialibs</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../02_creatingdbase.html">Creating a database</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../02_creatingdbase.html#understanding-global-logic">Understanding global logic</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../02_creatingdbase.html#the-ods-file">The .ods file</a><ul>
@@ -670,6 +678,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">setVisualMode</span><span class="p">(</span><span class="n">visualmode</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">updateWorkingDate</span><span class="p">(</span><span class="n">dbaseparser</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="p">)</span>
         <span class="c1"># self.connector.closeProgressBar()</span>
+        <span class="c1"># offline behaviour</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">actionSynchronize_DB</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">dbaseofflinemanager</span><span class="o">.</span><span class="n">_checkIfLocalDB</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_pulldb</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span>
+            <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">dbaseofflinemanager</span><span class="o">.</span><span class="n">_checkIfLocalDB</span><span class="p">()</span>
+        <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">connector</span><span class="o">.</span><span class="n">showNormalMessage</span><span class="p">(</span><span class="s2">&quot;Lamia loaded&quot;</span><span class="p">)</span></div>
 
@@ -701,14 +716,67 @@
         <span class="c1"># if self.qgiscanvas.rubberBand is not None:</span>
         <span class="c1">#     self.qgiscanvas.rubberBand.reset(0)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">createorresetRubberband</span><span class="p">(</span><span class="n">rubtype</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">unloadLayersInCanvas</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
+
+            <span class="c1"># for k, mtool in self.qgiscanvas.mtools.items():</span>
+            <span class="c1">#     print(k)</span>
+            <span class="c1">#     mtool = None</span>
+            <span class="c1">#     print(getattr(self.qgiscanvas, k))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">mtooltorestore</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">mtoolpoint</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">mtoolline</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">mtoolpolygon</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">mtoolPan</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">currentmaptool</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the maptool in use</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">qgislegendnode</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">xform</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">xformreverse</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="c1"># behaviour</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">editingrawlayer</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="c1"># self.qgiscanvas.canvas.disconnect()</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">destinationCrsChanged</span><span class="o">.</span><span class="n">disconnect</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">updateQgsCoordinateTransform</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+            <span class="c1"># if qgis.utils.iface is None and self.qgiscanvas.canvas is not None:</span>
+            <span class="c1">#     oldcanvas = self.qgiscanvas.canvas</span>
+            <span class="c1">#     self.qgiscanvas = QgisCanvas(oldcanvas)</span>
+            <span class="c1">#     # self.qgiscanvas.setCanvas(oldcanvas)</span>
+            <span class="c1"># else:</span>
+            <span class="c1">#     self.qgiscanvas = QgisCanvas()</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">mapToolSet</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                <span class="k">pass</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">gpsutil</span><span class="o">.</span><span class="n">closeConnection</span><span class="p">()</span>
-        <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
-        <span class="k">except</span><span class="p">:</span>
-            <span class="k">pass</span>
+
         <span class="c1"># QApplication.processEvents()</span>
+
+    <span class="k">def</span> <span class="nf">SynchronizeDB</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">offlineslpath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">connectconf</span><span class="p">[</span><span class="s2">&quot;slfile&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">dbaseofflinemanager</span><span class="o">.</span><span class="n">SynchronizeDB</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loadDBase</span><span class="p">(</span><span class="n">dbtype</span><span class="o">=</span><span class="s2">&quot;Spatialite&quot;</span><span class="p">,</span> <span class="n">slfile</span><span class="o">=</span><span class="n">offlineslpath</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">pullDBase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exportfilepath</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># for offline mode</span>
 
@@ -1859,8 +1927,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">actionSpatialite</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loadDBase</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">actionPostgis</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loadDBase</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">actionImporter_et_ajouter_la_base</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">addDBase</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">action_pushdb</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pushDBase</span><span class="p">)</span>
+        <span class="c1"># self.action_pushdb.triggered.connect(self.pushDBase)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">action_pulldb</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pullDBase</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">actionSynchronize_DB</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SynchronizeDB</span><span class="p">)</span>
 
         <span class="c1"># visual mode menu</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">actionModeExpert</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">setVisualMode</span><span class="p">)</span>

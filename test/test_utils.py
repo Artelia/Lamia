@@ -41,14 +41,15 @@ def getDisplayWidget():
     from Lamia.qgisiface.qgispluginroot import resources_rc
 
     # create canvas and LamiaWindowWidget
-    canvas = qgis.gui.QgsMapCanvas()
-    canvas.enableAntiAliasing(True)
-    canvascrs = qgis.core.QgsCoordinateReferenceSystem()
-    canvascrs.createFromString("EPSG:2154")
-    canvas.setDestinationCrs(canvascrs)
+    # canvas = qgis.gui.QgsMapCanvas()
+    # canvas.enableAntiAliasing(True)
+    # canvascrs = qgis.core.QgsCoordinateReferenceSystem()
+    # canvascrs.createFromString("EPSG:2154")
+    # canvas.setDestinationCrs(canvascrs)
 
     lamiawidget = LamiaWindowWidget()
-    lamiawidget.qgiscanvas.setCanvas(canvas)
+    # lamiawidget.qgiscanvas.setCanvas(canvas)
+    canvas = lamiawidget.qgiscanvas.canvas
 
     stylesheet = """
                 QMainWindow{

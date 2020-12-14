@@ -12,6 +12,7 @@ Content :
     00_introduction
     01_globalpresentation
     01_dev_env_install
+    01_firststeps
     02_creatingdbase.rst
     03_creatingnewform.rst
     05_00_API

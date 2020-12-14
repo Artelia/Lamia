@@ -98,3 +98,7 @@ def areNodesEquals(node1, node2):
 
 def getCurrentDateTime():
     return str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+
+
+def getCurrentDateTimeWithoutSpaces():
+    return str(datetime.datetime.now().strftime("%Y%m%d%H%M%S"))
