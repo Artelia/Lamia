@@ -96,7 +96,8 @@ class InspectiondigueDockWidget(QDockWidget):
         self.windowwidget.qgiscanvas.createorresetRubberband(rubtype="all")
         self.windowwidget.qgiscanvas.unloadLayersInCanvas()
 
-        self.windowwidget.dbase.disconnect()
+        if self.windowwidget.dbase:
+            self.windowwidget.dbase.disconnect()
         self.windowwidget.gpsutil.closeConnection()
         self.closingPlugin.emit(self.dockorder)
         event.accept()

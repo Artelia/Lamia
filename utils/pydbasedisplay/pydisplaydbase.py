@@ -111,10 +111,10 @@ def launchIface():
 
     # SLFILE = r"C:\01_WORKINGDIR\aaa\VTA_2020_Baie-Aiguillon.sqlite"
 
-    SLFILE = "/usr/src/Lamia/testfiles/BACALAN/GPMB_Bacalan.sqlite"
+    # SLFILE = "/usr/src/Lamia/testfiles/BACALAN/GPMB_Bacalan.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\aaaa\tete\toto.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\aaa\base\vide.sqlite"
-    SLFILE = r"C:\Users\Public\Documents\lamia\GPMB_Bacalan_offline\GPMB_Bacalan_offline.sqlite"
+    # SLFILE = r"C:\Users\Public\Documents\lamia\GPMB_Bacalan_offline\GPMB_Bacalan_offline.sqlite"
 
     print(f"{bcolors.OKGREEN}Opening: {os.path.abspath(SLFILE)} {bcolors.ENDC}")
 
@@ -131,7 +131,7 @@ def launchIface():
     #     password="pvr",
     # )
 
-    lamiawidget.qgiscanvas.unloadLayersInCanvas()
+    # lamiawidget.qgiscanvas.unloadLayersInCanvas()
 
     if False:
         # lamiawidget.qgiscanvas.unloadLayersInCanvas()
@@ -141,8 +141,9 @@ def launchIface():
         # lamiawidget.qgiscanvas.canvas = canvas
         print(lamiawidget.qgiscanvas.canvas.layers())
         print(lamiawidget.qgiscanvas.layers)
+        print("***", qgis.core.QgsProject.instance().mapLayers())
 
-        # lamiawidget.qgiscanvas = QgisCanvas()
+        # lamiawidget.qgiscanvas = None
 
         currentdatetime = lamiawidget.dbase.utils.getCurrentDateTimeWithoutSpaces()
         # lamiawidget.dbase = None

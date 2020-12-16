@@ -27,6 +27,7 @@ This file is part of LAMIA.
 import os, sys, io, logging, datetime, re, json, platform
 import qgis, qgis.core, qgis.utils, qgis.gui
 from qgis.PyQt import QtGui, QtCore
+from qgis.PyQt.QtWidgets import QApplication
 import Lamia.config
 from ..ifaceabstractcanvas import LamiaAbstractIFaceCanvas
 from .maptool.mapTools import mapToolCapture, mapToolEdit
@@ -75,15 +76,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         # self.rubberbandcapture = None   #the capture rubberband
         self.dbaseqgiscrs = None
 
-        if canvas is None and qgis.utils.iface is not None:
-            self.setCanvas(qgis.utils.iface.mapCanvas())
-        elif canvas is None and qgis.utils.iface is None:
-            canvas = qgis.gui.QgsMapCanvas()
-            canvas.enableAntiAliasing(True)
-            canvascrs = qgis.core.QgsCoordinateReferenceSystem()
-            canvascrs.createFromString("EPSG:2154")
-            canvas.setDestinationCrs(canvascrs)
-            self.setCanvas(canvas)
+        self.setCanvas(canvas)
 
         self.layers = {}
         self.qgislegendnode = None
@@ -94,7 +87,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         # behaviour
         self.editingrawlayer = None
 
-    def setCanvas(self, qgscanvas):
+    def setCanvas(self, qgscanvas=None):
         """Init method when a canvas is assigned to this class
 
         :param qgscanvas: The qgismapcanvas used 
@@ -108,7 +101,21 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             except TypeError:
                 pass
 
-        self.canvas = qgscanvas
+        if qgscanvas is None and qgis.utils.iface is not None:
+            self.canvas = qgis.utils.iface.mapCanvas()
+            # self.setCanvas(qgis.utils.iface.mapCanvas())
+        elif qgscanvas is None and qgis.utils.iface is None:
+            canvas = qgis.gui.QgsMapCanvas()
+            canvas.enableAntiAliasing(True)
+            canvascrs = qgis.core.QgsCoordinateReferenceSystem()
+            canvascrs.createFromString("EPSG:2154")
+            canvas.setDestinationCrs(canvascrs)
+            # self.setCanvas(canvas)
+            self.canvas = canvas
+        else:
+            self.canvas = qgscanvas
+
+        # self.canvas = qgscanvas
 
         # init maptools
         self.cadwdg = qgis.gui.QgsAdvancedDigitizingDockWidget(self.canvas)
@@ -186,7 +193,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         projectcrs.createFromString("EPSG:" + str(dbaseparser.crsnumber))
         project.setCrs(projectcrs)
 
-        print(project.dataDefinedServerProperties().referencedFields())
+        # print(project.dataDefinedServerProperties().referencedFields())
 
         return
 
@@ -275,14 +282,14 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                         os.path.join(styledirectory, styledir, tablename + ".qml")
                     )
                     if os.path.isfile(stylepath):
-                        print(
-                            "stylepath",
-                            tablename,
-                            stylepath,
-                            layers[tablename][
-                                "layerqgis"
-                            ].wkbType(),  # wkbType()  geometryType()
-                        )
+                        # print(
+                        #     "stylepath",
+                        #     tablename,
+                        #     stylepath,
+                        #     layers[tablename][
+                        #         "layerqgis"
+                        #     ].wkbType(),  # wkbType()  geometryType()
+                        # )
                         stylemng = layers[tablename]["layerqgis"].styleManager()
                         xmldata = None
                         with open(stylepath, "r", encoding="utf8") as xmlfile:
@@ -337,7 +344,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
         propro = qgis.core.QgsProject.instance()
         propro.read(projectfile)
-        print(propro.fileName())
+        # print(propro.fileName())
 
         # layers = QgsProject.instance().mapLayers()
         for layid in propro.mapLayers():
@@ -345,8 +352,8 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
             lay = propro.mapLayer(layid)
             db = lay.dataProvider()
-            print(lay.featureCount())
-            print(db.uri().wkbType(), lay.wkbType())
+            # print(lay.featureCount())
+            # print(db.uri().wkbType(), lay.wkbType())
 
             # print("la", lay.name(), lay.wkbType())
             stylepath = os.path.normpath(
@@ -666,25 +673,28 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
                 if self.layers:
                     lamiaqgislay = [lay["layerqgis"] for lay in self.layers.values()]
-                    print(lamiaqgislay)
-                    for layname, lay in qgis.core.QgsProject.instance().mapLayers().items():
-                        print(lay)
+                    # print(lamiaqgislay)
+                    for layname, lay in (
+                        qgis.core.QgsProject.instance().mapLayers().items()
+                    ):
+                        # print(lay)
                         if lay in lamiaqgislay:
                             qgis.core.QgsProject.instance().removeMapLayer(lay)
 
             except RuntimeError:
                 self.qgislegendnode = None
         elif qgis.utils.iface is None:
-            print("***", qgis.core.QgsProject.instance().mapLayers().values())
-            if self.layers:
-                lamiaqgislay = [lay["layerqgis"] for lay in self.layers.values()]
-                print(lamiaqgislay)
+            # print("***", qgis.core.QgsProject.instance().mapLayers().values())
+            # if self.layers:
+            #     lamiaqgislay = [lay["layerqgis"] for lay in self.layers.values()]
+            #     print(lamiaqgislay)
             self.canvas.setLayers([])
             self.canvas.refresh()
 
         del self.layers
         self.layers = {}
         self.canvas.refreshAllLayers()
+        QApplication.processEvents()
 
     def applyStyle(self, worktype, styledir):
 

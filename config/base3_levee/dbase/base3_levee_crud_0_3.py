@@ -35,7 +35,7 @@ class LamiaORM(BaseLamiaORM):
         def update(self, pk, valuesdict):
             super().update(pk, valuesdict)
 
-            valseqp = self.orm.equipment.read(pk)
+            valseqp = self.orm['equipment'].read(pk)
             res = self.orm.deficiency[
                 f"lid_descriptionsystem = {valseqp['id_descriptionsystem']} AND lpk_revision_end IS NULL"
             ]

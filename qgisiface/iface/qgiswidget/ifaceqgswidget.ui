@@ -655,6 +655,7 @@ background-color: rgb(255, 255, 255);</string>
     <addaction name="menuImport_export"/>
     <addaction name="separator"/>
     <addaction name="menuBases_recentes"/>
+    <addaction name="actionClose_project"/>
    </widget>
    <widget class="QMenu" name="menuPreferences">
     <property name="title">
@@ -1165,6 +1166,11 @@ background-color: rgb(255, 255, 255);</string>
   <action name="actionSynchronize_DB">
    <property name="text">
     <string>Synchronize DB</string>
+   </property>
+  </action>
+  <action name="actionClose_project">
+   <property name="text">
+    <string>Close project</string>
    </property>
   </action>
  </widget>

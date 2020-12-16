@@ -27,10 +27,7 @@ This file is part of LAMIA.
 
 import datetime, os, sys, platform, time
 import logging, json
-
-# from Lamia.api.dbasemanager.dbaseparserfactory import DBaseParserFactory
-
-# from . import dbaseutils
+from qgis.PyQt.QtWidgets import QApplication
 
 
 class DBaseOfflineManager:
@@ -38,6 +35,7 @@ class DBaseOfflineManager:
     # typeimport : append : "simply" append to self.dbase the datas of dbaseparserfrom
     # typeimport : update : dbaseparserfrom was created for offline use, now reimport modified data in self.dbase
     # typeimport : copy : copy dbase, keeping id values - used when pull of offline mode
+
     TYPEIMPORT = {"append": 0, "update": 1, "copy": -1}
 
     RESOLVECONFLICTTYPE = "manual"  # manual auto
@@ -74,39 +72,33 @@ class DBaseOfflineManager:
             )
             return
 
+        self.dbase.messageinstance.showNormalMessage(f"Pushing datas  ...")
+
         initialofflinedbpath = self._getFilepathLocalDb()
         connectconf = self._getConnectConf()
-        self.pushDBase()
+        success = self.pushDBase()
+
+        if not success:
+            return
 
         currentdatetime = self.dbase.utils.getCurrentDateTimeWithoutSpaces()
 
         if mainifacewidget:
+            self.dbase.disconnect()
             mainifacewidget.reinitWidgetbeforeloading()
         else:
             self.dbase.disconnect()
- 
-        print(
-            "rename",
+
+        os.rename(
             os.path.dirname(initialofflinedbpath),
             os.path.dirname(initialofflinedbpath) + "_" + currentdatetime,
         )
-        success = False
-        while not success:
-            try:
-                os.rename(
-                    os.path.dirname(initialofflinedbpath),
-                    os.path.dirname(initialofflinedbpath) + "_" + currentdatetime,
-                )
-                success = True
-            except PermissionError:
 
-                print("oups",self.dbase.getDBName())
-                self.dbase.disconnect()
-                time.sleep(5)
-
-                success = False
+        self.dbase.messageinstance.showNormalMessage(f"Pulling datas  ...")
+        self.dbase.messageinstance.stopdisplaymessage = True
         self.dbase = self._loadDBaseFromConnectconf(connectconf)
-        self.pullDBase()
+        self.dbase.messageinstance.stopdisplaymessage = False
+        success = self.pullDBase()
 
     def pullDBase(self, pulledpath=None):
 
@@ -117,28 +109,16 @@ class DBaseOfflineManager:
                 self.dbase.messageinstance.showErrorMessage(
                     f"Il y a déjà une copie locale de la base - Supprimez la : {lamiafilepath}"
                 )
-                return
-
-            # if platform.system() == "Linux":
-            #     pass
-            # elif platform.system() == "Windows":
-            #     lamiadir = self.WINOFFLINEDIR
-            # # lamiadir = os.path.join(importdir, "lamia")
-            # if not os.path.isdir(lamiadir):
-            #     os.mkdir(lamiadir)
-            # dbname = self.dbase.getDBName()
-            # dbdir = os.path.join(lamiadir, dbname)
-            # if not os.path.isdir(dbdir):
-            #     os.mkdir(dbdir)
-            # else:
-            #     self.dbase.messageinstance.showErrorMessage(
-            #         f"Il y a déjà une copie locale de la base - Supprimez la : {dbdir}"
-            #     )
-            #     return
-
-            # lamiafilepath = os.path.join(dbdir, dbname + ".sqlite")
+                return False
         else:
             lamiafilepath = pulledpath
+
+        if self._isDbaseSynchronizing(self.dbase):
+            self.dbase.messageinstance.showNormalMessage(
+                f"La base mère est en cours de synchronisation par un autre utilisateur - essayer plus tard"
+            )
+            return False
+        self._setDbaseSynchronizingState(self.dbase, 1)
 
         self.dbase.messageinstance.showNormalMessage(
             f"Creation de la copie locale : {os.path.normpath(lamiafilepath)}"
@@ -149,9 +129,6 @@ class DBaseOfflineManager:
         exportparser = dbaseparserfact(
             "spatialite", self.dbase.messageinstance
         ).getDbaseParser()
-        # exportparser = DBaseParserFactory(
-        #     "spatialite", connector=self.dbase.messageinstance
-        # ).getDbaseParser()
 
         exportparser.createDBase(
             crs=self.dbase.crsnumber,
@@ -173,7 +150,6 @@ class DBaseOfflineManager:
             ressourcesimport="thumbnails",
         )
 
-        # datecreation = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         datecreation = self.dbase.utils.getCurrentDateTime()
         if self.dbase.base3version:
             sql = "INSERT INTO revision(datetimerevision, comment)  "
@@ -195,53 +171,37 @@ class DBaseOfflineManager:
             f"Creation de la copie locale terminée: {os.path.normpath(lamiafilepath)}"
         )
 
+        self._setDbaseSynchronizingState(self.dbase, 0)
         return lamiafilepath
 
     def pushDBase(self):
-        # tempconffilepath = os.path.join(
-        #     self.dbase.dbaseressourcesdirectory, "config", ".offlinemode"
-        # )
-        # if not os.path.isfile(tempconffilepath):
-        #     self.dbase.messageinstance.showErrorMessage(
-        #         "La base ne provient pas d'une version locale \nou a déjà été reversée"
-        #     )
-        #     return
 
-        # with open(tempconffilepath) as outfile:
-        #     connectconf = json.load(outfile)
         tempconffilepath = self._getConnectConfPath()
         connectconf = self._getConnectConf()
         if connectconf is None:
             self.dbase.messageinstance.showErrorMessage(
                 "La base ne provient pas d'une version locale \nou a déjà été reversée"
             )
-            return
+            return False
 
         self.dbase.messageinstance.showNormalMessage(
             f"Synchronisation avec la base mère : {connectconf}"
         )
 
-        # dbaseparserfact = self.dbase.parserfactory.__class__
-        # if "slfile" in connectconf.keys():
-        #     parentdbase = dbaseparserfact(
-        #         "spatialite", self.dbase.messageinstance
-        #     ).getDbaseParser()
-        # elif "pgschema" in connectconf.keys():
-        #     parentdbase = dbaseparserfact(
-        #         "postgis", self.dbase.messageinstance
-        #     ).getDbaseParser()
-
-        # parentdbase.loadDBase(**connectconf)
-
         parentdbase = self._loadDBaseFromConnectconf(connectconf)
 
+        if self._isDbaseSynchronizing(parentdbase):
+            self.dbase.messageinstance.showNormalMessage(
+                f"La base mère est en cours de synchronisation par un autre utilisateur - essayer plus tard"
+            )
+            return False
+
+        self._setDbaseSynchronizingState(parentdbase, 1)
         parentdbase.dbaseofflinemanager.importDBase(self.dbase, typeimport="update")
-
         os.remove(tempconffilepath)
-
-        self.dbase.messageinstance.showErrorMessage(
-            "Synchronisation terminée - Attention : il faut recréer une copie locale pour prendre en compte les changements à venir"
-        )
+        self._setDbaseSynchronizingState(parentdbase, 0)
+        parentdbase.disconnect()
+        return True
 
     def importDBase(
         self,
@@ -839,8 +799,8 @@ class DBaseOfflineManager:
         confdatas={},
         pkidresult=[],
         noncriticalresult=[],
-        ressourcesimport="Full",
-    ):  # Full / thumbnails / None
+        ressourcesimport="Full",  # Full / thumbnails / None
+    ):
 
         debug = False
         if False and debug:
@@ -874,39 +834,14 @@ class DBaseOfflineManager:
         # restemp = []
         finalnoncriticalvalues = []
         if noncriticalfields != ["*"]:
-            # for l, res in enumerate(result):
-            if False:
-                for l, field in enumerate(noncriticalfields):
-                    res = noncriticalresult[l]
-                    # if noncriticalfields[l] == 'lpk_revision_begin':
-                    #     restemp.append(str(1))
-                    #     # elif isinstance(res, str) or  ( isinstance(res, unicode) and noncriticalfield[l] != 'geom') :
-                    if (
-                        isinstance(res, str) or isinstance(res, bytes)
-                    ) and field != "geom":
-                        finalnoncriticalvalues.append(
-                            "'" + str(res).replace("'", "''") + "'"
-                        )
-                    elif "datetime" in field and res is not None and res != "None":
-                        finalnoncriticalvalues.append("'" + str(res) + "'")
-                    elif field == "geom" and res is not None:
-                        finalnoncriticalvalues.append(
-                            "ST_GeomFromText('"
-                            + res
-                            + "', "
-                            + str(self.dbase.crsnumber)
-                            + ")"
-                        )
-                    elif res is None or res == "":
-                        finalnoncriticalvalues.append("NULL")
-                    else:
-                        finalnoncriticalvalues.append(str(res))
-
             finalnoncriticalvalues = noncriticalresult
-            # ressource
+
+            # * manage resource file
+
             if tablename in ["Ressource", "resource"] and ressourcesimport not in [
                 "None"
-            ]:  # Full / thumbnails / None
+            ]:
+                # ressourcesimport : Full / thumbnails / None
                 fileindex = noncriticalfields.index("file")
                 filepath = noncriticalresult[fileindex]
                 withthumbnail = None
@@ -929,21 +864,18 @@ class DBaseOfflineManager:
                 )
 
                 if childdbname.lower() == "rasters":
-                    # sql = " SELECT typeraster FROM Rasters_qgis WHERE pk_rasters = " + str(childpk)
-                    if self.dbase.base3version:
-                        typeraster = self.dbase.getValuesFromPk(
-                            "rasters", "rastertype", childpk
-                        )
-                    else:
-                        typeraster = self.dbase.getValuesFromPk(
-                            "Rasters", "typeraster", childpk
-                        )
-                    # typeraster = self.dbase.query(sql,docommit=False)[0][0]
+                    typeraster = self.dbase.lamiaorm["rasters"].read(childpk)[
+                        "rastertype"
+                    ]
                     if typeraster not in ["ORF", "IRF"]:
                         filepath = None
                         withthumbnail = 2
 
-                if not self.dbase.utils.isAttributeNull(filepath):
+                if (
+                    not self.dbase.utils.isAttributeNull(filepath)
+                    and not childdbname.lower()
+                    == "media"  # media file are thumbnailed in dbase - no need to copy
+                ):
                     fromfile = os.path.join(
                         fromparser.dbaseressourcesdirectory, filepath
                     )
@@ -961,29 +893,16 @@ class DBaseOfflineManager:
                         copywholedirforraster=True,
                     )
 
-            # copy les valeurs
-            if False:
-                sql = (
-                    "INSERT INTO " + tablename + "(" + ",".join(noncriticalfields) + ")"
-                )
-                sql += " VALUES(" + ",".join(finalnoncriticalvalues) + ")"
-                if debug:
-                    logging.getLogger("Lamiaoffline").debug(
-                        "non critical insert %s", sql
-                    )
-                toparser.query(sql, docommit=False)
-            if True:
-                sql = f"INSERT INTO {tablename} ( {', '.join(noncriticalfields)} ) "
-                inter = ["?"] * len(finalnoncriticalvalues)
-                sql += f" VALUES({', '.join(inter)})"
-                argts = finalnoncriticalvalues
-                toparser.query(sql, arguments=argts, docommit=False)
+            # copy values
+            sql = f"INSERT INTO {tablename} ( {', '.join(noncriticalfields)} ) "
+            inter = ["?"] * len(finalnoncriticalvalues)
+            sql += f" VALUES({', '.join(inter)})"
+            argts = finalnoncriticalvalues
+            toparser.query(sql, arguments=argts, docommit=False)
 
         else:
             sql = "INSERT INTO " + tablename + " DEFAULT VALUES"
             toparser.query(sql, docommit=False)
-
-        # exportparser.commit()
 
         # then updating
         finalpkidfields = []  # former fields
@@ -996,17 +915,14 @@ class DBaseOfflineManager:
                 pktoinsert = toparser.getLastPK(
                     tablename
                 )  # get the pk of noncritical data inserted
-                # print(pktable)
-                # pkoldtable = listofrawvalues[k]
+
                 pkoldtable = pkidresult[k]
                 importdictpk[pkoldtable] = pktoinsert
 
             elif "id_" == field[0:3]:
 
                 finalpkidfields.append(field)
-                # if changeID :
                 if mode in ["append"]:  # copy append update
-                    # idtable = self.dbase.getLastPK(tablename) + 1
                     idtoinsert = (
                         toparser.getmaxColumnValue(tablename, "id_" + tablename.lower())
                         + 1
@@ -1032,11 +948,9 @@ class DBaseOfflineManager:
                         finalpkidsvalues.append(str(joinedidsdict[pkidresult[k]]))
                     else:
                         finalpkidfields.append(field)
-                        # finalpkidsvalues.append(str(pkidresult[k]))
                         finalpkidsvalues.append("NULL")
 
                         print("error lid_")
-                        # print(dictid[field.split('_')[1]].keys())
                         print(
                             "base : ",
                             tablename,
@@ -1051,7 +965,6 @@ class DBaseOfflineManager:
                     finalpkidsvalues.append(str(pkidresult[k]))
 
             elif "lpk_" == field[0:4]:
-                # if "lpk_revision_begin" in self.dbase.dbasetables[tablename]['fields'].keys():
                 jointablename = field.split("_")[1]
                 if field == "lpk_revision_begin":
                     if mode in ["append"]:  # export append update
@@ -1658,3 +1571,19 @@ class DBaseOfflineManager:
         parentdbase.loadDBase(**connectconf)
 
         return parentdbase
+
+    def _isDbaseSynchronizing(self, dbase):
+        syncstate = dbase.lamiaorm["database"]["synchronizing"]
+        if syncstate:
+            return True
+        else:
+            return False
+
+    def _setDbaseSynchronizingState(self, dbase, syncstate):
+        """
+        :param dbase: dbaseparser
+        :type dbase: [type]
+        :param syncstate: integer : 0 : not synchronizing; 1 : synchronizing
+        """
+        dbase.lamiaorm["database"].update(1, {"synchronizing": syncstate})
+

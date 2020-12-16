@@ -25,7 +25,7 @@ This file is part of LAMIA.
  """
 
 
-import logging, sys, re, os
+import logging, sys, re, os, qgis
 import numpy as np
 from pprint import pprint
 from ..abstractlibslamia import AbstractLibsLamia
@@ -95,6 +95,12 @@ class ImportCore(AbstractLibsLamia):
             zipdict = dict(zip(fieldsnames.tolist(), valueline.tolist()))
             if "geom" in self.dbase.dbasetables[rawtablename].keys():
                 zipdict["geom"] = self._getCleanedWktGeom(geoms[i])
+
+            if "geom" in self.dbase.dbasetables[rawtablename].keys():
+                zipdict["geom"] = self._convertGeomTypeIfNecessary(
+                    rawtablename, geoms[i]
+                )
+
             # print(zipdict)
             # self.setLoadingProgressBar(progress, i)
             if i % 50 == 0:
@@ -143,6 +149,21 @@ class ImportCore(AbstractLibsLamia):
         geomwkt = self.dbase.query(geomsql)
         # print("*", geomwkt)
         return geomwkt[0][0]
+
+    def _convertGeomTypeIfNecessary(self, rawtablename, wktgeom):
+        tablegeomtype = self.dbase.dbasetables[rawtablename]["geom"]
+        wkttype = wktgeom.split("(")[0].strip()
+
+        if tablegeomtype == "LINESTRING" and wkttype == "Point":
+            qgsgeom = qgis.core.QgsGeometry.fromWkt(wktgeom).asPoint()
+            linegeom = qgis.core.QgsGeometry.fromPolylineXY([qgsgeom, qgsgeom])
+            wktgeom = linegeom.asWkt()
+        elif tablegeomtype == "LINESTRING" and wkttype == "MultiPoint":
+            qgsgeom = qgis.core.QgsGeometry.fromWkt(wktgeom).asMultiPoint()[0]
+            linegeom = qgis.core.QgsGeometry.fromPolylineXY([qgsgeom, qgsgeom])
+            wktgeom = linegeom.asWkt()
+
+        return wktgeom
 
     def cleanvalue(self, tablename, listfield, listvalues):
         finallistvalues = []

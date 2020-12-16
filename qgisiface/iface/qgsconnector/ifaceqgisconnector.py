@@ -50,7 +50,11 @@ class QgisConnector(LamiaIFaceAbstractConnectors):
 
         self.progressbar = None
 
+        self.stopdisplaymessage = False
+
     def showNormalMessage(self, text):
+        if self.stopdisplaymessage:
+            return
         if qgis.utils.iface is not None:
             qgis.utils.iface.messageBar().pushMessage(
                 "Lamia ", text, qgis.core.Qgis.Info
@@ -58,6 +62,8 @@ class QgisConnector(LamiaIFaceAbstractConnectors):
             QApplication.processEvents()
 
     def showErrorMessage(self, text):
+        if self.stopdisplaymessage:
+            return
         if qgis.utils.iface is not None:
             qgis.utils.iface.messageBar().pushMessage(
                 "Lamia ", text, qgis.core.Qgis.Critical
@@ -65,6 +71,8 @@ class QgisConnector(LamiaIFaceAbstractConnectors):
             QApplication.processEvents()
 
     def createProgressBar(self, inittext="", maxvalue=99):
+        if self.stopdisplaymessage:
+            return
         self.progressbarinittext = inittext
         if qgis.utils.iface is not None:
             progressMessageBar = qgis.utils.iface.messageBar().createMessage(inittext)
@@ -77,6 +85,8 @@ class QgisConnector(LamiaIFaceAbstractConnectors):
             self.progressbar.setMaximum(maxvalue)
 
     def updateProgressBar(self, val):
+        if self.stopdisplaymessage:
+            return
         if qgis.utils.iface is not None and self.progressbar is not None:
             self.progressbar.setValue(val)
             QApplication.processEvents()

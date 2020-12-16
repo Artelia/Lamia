@@ -91,64 +91,6 @@ class RereauTool(AbstractLamiaTool):
 
         self.toolwidgetmain.pushButton_analysis.clicked.connect(self.computeRereau)
 
-        # self.analysistypedict = {
-        #     QtCore.QCoreApplication.translate("base3", "Geographic"): "geographic",
-        #     QtCore.QCoreApplication.translate("base3", "Topologic"): "topologic",
-        # }
-
-        # self.toolwidgetmain.comboBox_analysistype.addItems(
-        #     list(self.analysistypedict.keys())
-        # )
-
-        # """
-        # self.linkuserwdgfield = [
-        #     self.userwdgfield.lineEdit_nom,
-        #     self.userwdgfield.lineEdit_start,
-        #     self.userwdgfield.lineEdit_end,
-        # ]
-
-        # self.linkuserwdgfield = {
-        #     self.dbasetablename: [
-        #         self.userwdgfield.lineEdit_nom,
-        #         self.userwdgfield.lineEdit_start,
-        #         self.userwdgfield.lineEdit_end,
-        #     ]
-        # }
-
-        # """
-        # # * compute graph
-        # self.toolwidgetmain.pushButton_computegraph.clicked.connect(self.computeNxGraph)
-        # self.toolwidgetmain.comboBox_analysistype.currentIndexChanged.connect(
-        #     self.comboTypeChanged
-        # )
-        # self.toolwidgetmain.doubleSpinBox_analysisaccuracy.valueChanged.connect(
-        #     self.comboTypeChanged
-        # )
-
-        # # * Shortest Path
-        # self.toolwidgetmain.pushButton_pickstart.clicked.connect(self.getPickResult)
-        # self.toolwidgetmain.pushButton_pickend.clicked.connect(self.getPickResult)
-
-        # # * subdomains
-
-        # self.headerfields = ["Graph index", "Edges pk"]
-        # self.toolwidgetmain.tableWidget_subdomains.setRowCount(0)
-        # self.toolwidgetmain.tableWidget_subdomains.setColumnCount(
-        #     len(self.headerfields)
-        # )
-        # self.toolwidgetmain.tableWidget_subdomains.setHorizontalHeaderLabels(
-        #     self.headerfields
-        # )
-
-        # self.toolwidgetmain.tableWidget_subdomains.setSelectionBehavior(
-        #     QAbstractItemView.SelectRows
-        # )
-        # self.toolwidgetmain.tableWidget_subdomains.itemSelectionChanged.connect(
-        #     self._subDomainsCellChanged
-        # )
-        # self.toolwidgetmain.pushButton_analysesubdomains.clicked.connect(
-        #     self.analyseSubdomains
-        # )
 
     def computeRereau(self):
         tabletypepath = self.filemanager.getCurrentText()

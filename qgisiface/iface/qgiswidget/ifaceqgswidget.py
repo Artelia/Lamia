@@ -370,13 +370,15 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         self._loadVectorLayers()
         self._loadStyles()
         QApplication.processEvents()
+
         self.connector.closeProgressBar()
+
         self._AddDbaseInRecentsDBase(self.dbase)
 
         self.loadToolsClasses()
         self.loadToolsWidgets()
 
-        # self.connector.createProgressBar(self.tr('Loading Layers ...'), 0 )
+        self.connector.showNormalMessage("Lamia UI loading ...")
         self.setVisualMode(visualmode=0)
         self.qgiscanvas.updateWorkingDate(dbaseparser=self.dbase)
         # self.connector.closeProgressBar()
@@ -387,6 +389,10 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         self.action_pulldb.setEnabled(
             not self.dbase.dbaseofflinemanager._checkIfLocalDB()
         )
+
+        if self.parent():
+            wintitle = f" Lamia : {self.dbase.getDBName()} - type : {self.dbase.TYPE}"
+            self.parent().setWindowTitle(wintitle)
 
         self.connector.showNormalMessage("Lamia loaded")
 
@@ -409,81 +415,50 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         self.MaintreeWidget.clear()
         self.ElemtreeWidget.clear()
         # behaviour var
+        if self.currentchoosertreewidget is not None:
+            self.currentchoosertreewidget.disconnectTreewidget()
         if self.currenttoolwidget:
+            if self.currenttoolwidget.choosertreewidget:
+                self.currenttoolwidget.choosertreewidget.disconnectTreewidget()
             self.currenttoolwidget.setParent(None)
+
         self.currenttoolwidget = None
-        # self.imagedirectory = None
         self.currentchoosertreewidget = None
-
-        # if self.qgiscanvas.rubberBand is not None:
-        #     self.qgiscanvas.rubberBand.reset(0)
-        self.qgiscanvas.createorresetRubberband(rubtype="all")
-        self.qgiscanvas.unloadLayersInCanvas()
-
-        if False:
-
-            # for k, mtool in self.qgiscanvas.mtools.items():
-            #     print(k)
-            #     mtool = None
-            #     print(getattr(self.qgiscanvas, k))
-
-            self.qgiscanvas.mtooltorestore = None
-            self.qgiscanvas.mtoolpoint = None
-            self.qgiscanvas.mtoolline = None
-            self.qgiscanvas.mtoolpolygon = None
-
-            self.qgiscanvas.mtoolPan = None
-
-            self.qgiscanvas.currentmaptool = None  # the maptool in use
-
-            self.qgiscanvas.qgislegendnode = None
-
-            self.qgiscanvas.xform = None
-            self.qgiscanvas.xformreverse = None
-
-            # behaviour
-            self.qgiscanvas.editingrawlayer = None
-
-            # self.qgiscanvas.canvas.disconnect()
-
-            try:
-                self.qgiscanvas.canvas.destinationCrsChanged.disconnect(
-                    self.qgiscanvas.updateQgsCoordinateTransform
-                )
-            except TypeError:
-                pass
-
-            # if qgis.utils.iface is None and self.qgiscanvas.canvas is not None:
-            #     oldcanvas = self.qgiscanvas.canvas
-            #     self.qgiscanvas = QgisCanvas(oldcanvas)
-            #     # self.qgiscanvas.setCanvas(oldcanvas)
-            # else:
-            #     self.qgiscanvas = QgisCanvas()
-
-            try:
-                self.qgiscanvas.canvas.mapToolSet.disconnect()
-            except TypeError:
-                pass
-            try:
-                self.qgiscanvas.canvas.disconnect()
-            except TypeError:
-                pass
 
         self.gpsutil.closeConnection()
         if self.dbase:
             self.dbase.disconnect()
 
-        # QApplication.processEvents()
+        self.qgiscanvas.createorresetRubberband(rubtype="all")
+        self.qgiscanvas.unloadLayersInCanvas()
+
+        if self.parent():
+            self.parent().setWindowTitle(f"Lamia")
+
+        QApplication.processEvents()
 
     def SynchronizeDB(self):
         offlineslpath = self.dbase.connectconf["slfile"]
         self.dbase.dbaseofflinemanager.SynchronizeDB(self)
+        self.dbase.messageinstance.showNormalMessage(f"Opening offline synchronized dbase ... ")
+        self.dbase.messageinstance.stopdisplaymessage = True
         self.loadDBase(dbtype="Spatialite", slfile=offlineslpath)
+        self.dbase.messageinstance.stopdisplaymessage = False
+        self.dbase.messageinstance.showNormalMessage(f"Offline dbase synchronized")
+
+    def closeProject(self):
+        self.reinitWidgetbeforeloading()
 
     def pullDBase(self, exportfilepath=None):  # for offline mode
 
         exportfilepath = self.dbase.dbaseofflinemanager.pullDBase(exportfilepath)
+        if not exportfilepath:
+            return
+        self.dbase.messageinstance.showNormalMessage(f"Opening offline copy ... ")
+        self.dbase.messageinstance.stopdisplaymessage = True
         self.loadDBase(dbtype="Spatialite", slfile=exportfilepath)
+        self.dbase.messageinstance.stopdisplaymessage = False
+        self.dbase.messageinstance.showNormalMessage(f"Offline copy loaded")
 
     def pushDBase(self):  # for offline mode
         self.dbase.dbaseofflinemanager.pushDBase()
@@ -1632,6 +1607,7 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         # self.action_pushdb.triggered.connect(self.pushDBase)
         self.action_pulldb.triggered.connect(lambda: self.pullDBase())
         self.actionSynchronize_DB.triggered.connect(self.SynchronizeDB)
+        self.actionClose_project.triggered.connect(self.closeProject)
 
         # visual mode menu
         self.actionModeExpert.triggered.connect(self.setVisualMode)

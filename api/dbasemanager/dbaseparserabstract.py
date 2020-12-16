@@ -1090,13 +1090,7 @@ class AbstractDBaseParser:
         If ressource file is not in the dbase directory, save it in the dbase directory
 
         """
-        # get date
-        """
-        sql = "SELECT datetimecreation FROM " + self.dbasetablename.lower() + "_qgis"
-        sql += " WHERE pk_"+ self.dbasetablename.lower() + " = " + str(self.currentFeaturePK)
-        query = self.dbase.query(sql)
-        result = [row[0] for row in query]
-        """
+
         if self.base3version:
             if not "resource" in self.getParentTable(dbname):
                 return
@@ -1106,9 +1100,6 @@ class AbstractDBaseParser:
 
         DBASETABLENAMElower = dbname.lower()
         result = self.lamiaorm[DBASETABLENAMElower].read(featurepk)["datetimecreation"]
-        # result = self.getValuesFromPk(
-        #     DBASETABLENAMElower + "_qgis", "datetimecreation", featurepk
-        # )
 
         if result is not None:
             datevalue = datetime.datetime.strptime(
@@ -1136,20 +1127,13 @@ class AbstractDBaseParser:
 
         dbaseressourcesdirectory = self.dbaseressourcesdirectory
 
-        print("popo", file)
-
         if file is not None and len(file) > 0 and not file[0] == ".":
             previousfinalname = []
             for singlefile in file.split(";"):
                 if not os.path.isfile(singlefile):
                     continue
-                # if file[0] == ".":
-                #     file = os.path.join(dbaseressourcesdirectory, file)
-                # if not file[0] == "." and os.path.isfile(file):
-                # if os.path.isfile(file):
+
                 filename = os.path.basename(singlefile)
-                # filename = str(idressource) + "_" + filename
-                # filename = str(idressource) + "_" + filename
                 destinationdir = os.path.join(dbaseressourcesdirectory, dbname, date)
                 destinationfile = os.path.join(destinationdir, filename)
 
@@ -1170,26 +1154,11 @@ class AbstractDBaseParser:
                     ".", os.path.relpath(destinationfile, dbaseressourcesdirectory)
                 )
                 if self.base3version:
-                    # sql = (
-                    #     "UPDATE resource SET file = '"
-                    #     + finalname
-                    #     + "' WHERE pk_resource = "
-                    #     + str(pkressource)
-                    #     + ";"
-                    # )
-                    # query = self.query(sql)
                     previousfinalname.append(finalname)
                     self.lamiaorm["resource"].update(
                         pkressource, {"file": "; ".join(previousfinalname)}
                     )
                     if previousfeaturepk is not None:  # case updating existing feature
-                        # sql = (
-                        #     "SELECT file FROM resource  WHERE pk_resource = "
-                        #     + str(pkressource)
-                        #     + ";"
-                        # )
-                        # query = self.query(sql)
-                        # result = [row[0] for row in query]
                         result = self.lamiaorm["resource"].read(pkressource)["file"]
                         oldfile = result[0]
                     else:

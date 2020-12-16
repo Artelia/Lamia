@@ -27,63 +27,74 @@ This file is part of LAMIA.
 
 import logging, sys
 import qgis.utils, qgis.core
-from qgis.PyQt.QtWidgets import (QDialogButtonBox ,QMessageBox ,QDialog, QApplication, QProgressBar,QFormLayout,QLabel,QLineEdit)
+from qgis.PyQt.QtWidgets import (
+    QDialogButtonBox,
+    QMessageBox,
+    QDialog,
+    QApplication,
+    QProgressBar,
+    QFormLayout,
+    QLabel,
+    QLineEdit,
+)
 from qgis.PyQt import QtCore
 
 from ..ifaceabstractconnector import LamiaIFaceAbstractConnectors
 
 
 class LoggingConnector(LamiaIFaceAbstractConnectors):
-
     def __init__(self):
         LamiaIFaceAbstractConnectors.__init__(self)
         self.widget = None
         self.canvas = None
 
-        self.progressbar=None
-
-        logging.basicConfig( stream=sys.stderr )
-        logging.getLogger("Lamia_connector").setLevel( logging.INFO )
-
-
-    def showNormalMessage(self, text):
-        logging.getLogger( "Lamia_connector" ).info('normalMessage : %s', text)
-        
-
-
-    def showErrorMessage(self,text):
-        logging.getLogger( "Lamia_connector" ).info('ErrorMessage : %s', text)
-
-    def createProgressBar(self, inittext='', maxvalue=99):
-        self.progressbarinittext = inittext
-        logging.getLogger( "Lamia_connector" ).info('Creating progress bar : %s', inittext)
-
-    def updateProgressBar(self,val):
-        logging.getLogger( "Lamia_connector" ).info('%s : %d', self.progressbarinittext, val)
-        
-
-    def closeProgressBar(self):
-        logging.getLogger( "Lamia_connector" ).info('%s : %s', self.progressbarinittext, 'closing')
         self.progressbar = None
 
-    def inputMessage(self,listtext, title='Lamia input', withinput=True, parent = None):
-       
-        res=[]
-        print('*** ' + title + (' ***'))
+        self.stopdisplaymessage = False
+
+        logging.basicConfig(stream=sys.stderr)
+        logging.getLogger("Lamia_connector").setLevel(logging.INFO)
+
+    def showNormalMessage(self, text):
+        logging.getLogger("Lamia_connector").info("normalMessage : %s", text)
+
+    def showErrorMessage(self, text):
+        logging.getLogger("Lamia_connector").info("ErrorMessage : %s", text)
+
+    def createProgressBar(self, inittext="", maxvalue=99):
+        self.progressbarinittext = inittext
+        logging.getLogger("Lamia_connector").info(
+            "Creating progress bar : %s", inittext
+        )
+
+    def updateProgressBar(self, val):
+        logging.getLogger("Lamia_connector").info(
+            "%s : %d", self.progressbarinittext, val
+        )
+
+    def closeProgressBar(self):
+        logging.getLogger("Lamia_connector").info(
+            "%s : %s", self.progressbarinittext, "closing"
+        )
+        self.progressbar = None
+
+    def inputMessage(self, listtext, title="Lamia input", withinput=True, parent=None):
+
+        res = []
+        print("*** " + title + (" ***"))
         if withinput:
             for text in listtext:
-                restemp = input(text + '? : ') 
+                restemp = input(text + "? : ")
                 if restemp:
                     res.append(restemp)
         else:
             for txt in listtext:
                 print(txt)
-            restemp = input('Yes (y) or No (n) ?') 
-            if restemp == 'y':
+            restemp = input("Yes (y) or No (n) ?")
+            if restemp == "y":
                 res = True
             else:
                 res = False
-        
+
         return res
 
-        

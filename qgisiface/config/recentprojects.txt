@@ -1,1 +1,3 @@
 C:\Users\Public\Documents\lamia\GPMB_Bacalan_offline\GPMB_Bacalan_offline.sqlite
+C:\01_WORKINGDIR\BACALAN\GPMB_Bacalan.sqlite
+C:\01_WORKINGDIR\bm\BD_totale_ind15.sqlite
