@@ -30,19 +30,31 @@ Import/export
 Permet de transferer une base de données en local (sur l'ordinateur ou la tablette), de travailler sur cette
 base de données en local, et ensuite de reverser les modifications sur la base de données "mère".
 
+**Cas des utilisateurs Artelia - connexion au réseau Artelia lors de l'utilisation de la tablette**
+Il faut au préalable des opération de création de copie locale et de synchronisation se connecter au réseau Artelia.
+Pour cela, s'assurer déjà d'avoir une connexion internet (soit via wifi soit via connexion au smartphone).
+Ensuite se connecter au réseau Artelia avec l'application Pulse.
+
+
 * Créer une copie locale
 
 Après avoir ouvert la base de données "mère", cette fonction permet de créer une copie locale pour travailler dessus
 hors connexion
 
-* Reverser la base de données dans la base de données mère
+* Synchroniser les données
 
-Ceci permet de transférer les modifications faites sur la copie locale de la base mère (la base "enfant") vers
-la base mère.
+Ceci permet de synchroniser la base de données principale et la base de données locale.
+
 
 * Rajouter une DB à la DB actuelle
 
 Permet d'ajouter une base de données de même type à la base de données ouverte.
+
+
+**Cas des utilisateurs Artelia**
+
+
+
 
 
 Interface :

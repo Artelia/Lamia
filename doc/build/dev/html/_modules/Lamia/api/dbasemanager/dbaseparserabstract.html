@@ -1388,13 +1388,7 @@
 <span class="sd">        If ressource file is not in the dbase directory, save it in the dbase directory</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># get date</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        sql = &quot;SELECT datetimecreation FROM &quot; + self.dbasetablename.lower() + &quot;_qgis&quot;</span>
-<span class="sd">        sql += &quot; WHERE pk_&quot;+ self.dbasetablename.lower() + &quot; = &quot; + str(self.currentFeaturePK)</span>
-<span class="sd">        query = self.dbase.query(sql)</span>
-<span class="sd">        result = [row[0] for row in query]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">base3version</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="s2">&quot;resource&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">getParentTable</span><span class="p">(</span><span class="n">dbname</span><span class="p">):</span>
                 <span class="k">return</span>
@@ -1404,9 +1398,6 @@
 
         <span class="n">DBASETABLENAMElower</span> <span class="o">=</span> <span class="n">dbname</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lamiaorm</span><span class="p">[</span><span class="n">DBASETABLENAMElower</span><span class="p">]</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">featurepk</span><span class="p">)[</span><span class="s2">&quot;datetimecreation&quot;</span><span class="p">]</span>
-        <span class="c1"># result = self.getValuesFromPk(</span>
-        <span class="c1">#     DBASETABLENAMElower + &quot;_qgis&quot;, &quot;datetimecreation&quot;, featurepk</span>
-        <span class="c1"># )</span>
 
         <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">datevalue</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span>
@@ -1434,20 +1425,13 @@
 
         <span class="n">dbaseressourcesdirectory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbaseressourcesdirectory</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;popo&quot;</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
-
         <span class="k">if</span> <span class="n">file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">file</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">file</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;.&quot;</span><span class="p">:</span>
             <span class="n">previousfinalname</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">singlefile</span> <span class="ow">in</span> <span class="n">file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">):</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">singlefile</span><span class="p">):</span>
                     <span class="k">continue</span>
-                <span class="c1"># if file[0] == &quot;.&quot;:</span>
-                <span class="c1">#     file = os.path.join(dbaseressourcesdirectory, file)</span>
-                <span class="c1"># if not file[0] == &quot;.&quot; and os.path.isfile(file):</span>
-                <span class="c1"># if os.path.isfile(file):</span>
+
                 <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">singlefile</span><span class="p">)</span>
-                <span class="c1"># filename = str(idressource) + &quot;_&quot; + filename</span>
-                <span class="c1"># filename = str(idressource) + &quot;_&quot; + filename</span>
                 <span class="n">destinationdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dbaseressourcesdirectory</span><span class="p">,</span> <span class="n">dbname</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
                 <span class="n">destinationfile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">destinationdir</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
 
@@ -1468,26 +1452,11 @@
                     <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">destinationfile</span><span class="p">,</span> <span class="n">dbaseressourcesdirectory</span><span class="p">)</span>
                 <span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">base3version</span><span class="p">:</span>
-                    <span class="c1"># sql = (</span>
-                    <span class="c1">#     &quot;UPDATE resource SET file = &#39;&quot;</span>
-                    <span class="c1">#     + finalname</span>
-                    <span class="c1">#     + &quot;&#39; WHERE pk_resource = &quot;</span>
-                    <span class="c1">#     + str(pkressource)</span>
-                    <span class="c1">#     + &quot;;&quot;</span>
-                    <span class="c1"># )</span>
-                    <span class="c1"># query = self.query(sql)</span>
                     <span class="n">previousfinalname</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">finalname</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">lamiaorm</span><span class="p">[</span><span class="s2">&quot;resource&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
                         <span class="n">pkressource</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="s2">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">previousfinalname</span><span class="p">)}</span>
                     <span class="p">)</span>
                     <span class="k">if</span> <span class="n">previousfeaturepk</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># case updating existing feature</span>
-                        <span class="c1"># sql = (</span>
-                        <span class="c1">#     &quot;SELECT file FROM resource  WHERE pk_resource = &quot;</span>
-                        <span class="c1">#     + str(pkressource)</span>
-                        <span class="c1">#     + &quot;;&quot;</span>
-                        <span class="c1"># )</span>
-                        <span class="c1"># query = self.query(sql)</span>
-                        <span class="c1"># result = [row[0] for row in query]</span>
                         <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lamiaorm</span><span class="p">[</span><span class="s2">&quot;resource&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">pkressource</span><span class="p">)[</span><span class="s2">&quot;file&quot;</span><span class="p">]</span>
                         <span class="n">oldfile</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                     <span class="k">else</span><span class="p">:</span>
