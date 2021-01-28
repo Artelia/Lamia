@@ -111,10 +111,7 @@ class CostTool(AbstractLamiaTool):
         filename = self.filemanager.getCurrentText()
 
         selectedzonegeoitems = self.choosertreewidget.treewidget.selectedItems()
-        ids = [int(item.text(0)) for item in selectedzonegeoitems]
-        pdids = self.choosertreewidget.ids
-        pks = [pdids.loc[pdids["id"] == id]["pk"].values[0] for id in ids]
-
+        pks = [int(item.text(0)) for item in selectedzonegeoitems]
         bordereau, sqlresult, pricelist = self.costtool.runCost(
             costfilepath=filename, pkzonegeos=pks
         )

@@ -39,7 +39,7 @@ from .lamia_form_surface_flo import BaseFaunafloraFLOSurfaceTool
 from .lamia_form_node_fau import BaseFaunafloraFaunaNodeTool
 
 
-class BaseFaunafloraEdgeTool(BaseEdgeTool):
+class BaseFaunafloraEdgePROTool(BaseEdgeTool):
 
     PREPROTOOLNAME = "edge_protocol"
     tooltreewidgetCAT = QtCore.QCoreApplication.translate("base3", "Inventory")
@@ -48,7 +48,7 @@ class BaseFaunafloraEdgeTool(BaseEdgeTool):
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), "protocol.png")
 
     def __init__(self, **kwargs):
-        super(BaseFaunafloraEdgeTool, self).__init__(**kwargs)
+        super(BaseFaunafloraEdgePROTool, self).__init__(**kwargs)
 
     def initMainToolWidget(self):
         self.toolwidgetmain = UserUI()
@@ -56,21 +56,27 @@ class BaseFaunafloraEdgeTool(BaseEdgeTool):
             "edge": {
                 "linkfield": "id_surface",
                 "widgets": {
-                    "edgecategory": self.toolwidgetmain.comboBox_category,
-                    "edgetype": self.toolwidgetmain.comboBox_edgetype,
+                    "edgecategory": self.toolwidgetmain.edgecategory,
+                    "edgetype": self.toolwidgetmain.edgetype,
+                    "edgesubtype": self.toolwidgetmain.edgesubtype,
+                    "edgenumber": self.toolwidgetmain.edgenumber,
                 },
             },
             "object": {
                 "linkfield": "id_object",
-                "widgets": {"comment": self.toolwidgetmain.textBrowser_comment,},
+                "widgets": {"comment": self.toolwidgetmain.comment,},
             },
             "descriptionsystem": {"linkfield": "id_descriptionsystem", "widgets": {}},
         }
-        self.toolwidgetmain.comboBox_category.currentIndexChanged.connect(
+        self.toolwidgetmain.edgecategory.currentIndexChanged.connect(
             self.changeCategory
         )
-        # self.toolwidgetmain.toolButton_number.clicked.connect(
-        #     lambda: self.showNumPad(self.toolwidgetmain.spinBox_number))
+        self.toolwidgetmain.edgetype.currentIndexChanged.connect(
+            self.changeSubType
+        )
+        self.toolwidgetmain.toolButton_edgenumber.clicked.connect(
+            lambda: self.showNumPad(self.toolwidgetmain.edgenumber)
+        )
 
         self.dbasechildwdgfield = []
         self.instancekwargs["parentwidget"] = self
@@ -91,6 +97,16 @@ class BaseFaunafloraEdgeTool(BaseEdgeTool):
     def _widgetClicked_manageToolBar(self):
         super()._widgetClicked_manageToolBar()
         self.mainifacewidget.actiontoobargeomnewpoint.setEnabled(True)
+
+    def changeSubType(self):
+        currenttxt = self.toolwidgetmain.edgetype.currentText()
+        curvalue = self.dbase.getConstraintRawValueFromText('edge', 'edgetype', currenttxt)
+        if curvalue in ['PED']:
+            self.toolwidgetmain.stackedWidget_edgetype.setCurrentIndex(0)
+        else:
+            self.toolwidgetmain.stackedWidget_edgetype.setCurrentIndex(1)       
+
+
 
 
 class UserUI(QWidget):

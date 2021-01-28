@@ -1,7 +1,7 @@
 call %~dp0/../win_setqgisenv.bat
 cd %~dp0
 
-SET SOURCEFILE="M:\FR\BOR\VT\CD17-2016\03-BDC\4352758-BDC19241-16568-ST-TROJAN Visite technique\05_ETUDES\052_Dessins\BD_terrain\VTA_St_Trojan_FJE.sqlite"
+SET SOURCEFILE="M:\FR\BOR\VT\FLUVIAL\4352586_33_CC_Sud_Gironde_reco_syst._endiguement\05_ETUDES\05_4_TERRAIN\05_4_1_BD_TERRAIN\CONVERGENCE_GARONNE\Terrain_preignac_lamia0.sqlite"
 REM ***** ASS ***********
 REM \BACALAN\GPMB Bacalan.sqlite       BASSENS\EU\Bassens EU EP.sqlite  BLAYE\GPMB Blaye.sqlite
 REM Pauillac\GPMB Pauillac.sqlite   POLE NAVAL\EU\Pole naval.sqlite Verdon port bloc\GPMB Port Bloc.sqlite
@@ -10,7 +10,7 @@ REM ***** AEP ***********
 REM POLE NAVAL\AEP\Pole Naval_AEP.sqlite    BASSENS\AEP\Bassens-AEP.sqlite
 
  
-SET DESTDIR="M:\FR\BOR\VT\CD17-2016\03-BDC\4352758-BDC19241-16568-ST-TROJAN Visite technique\05_ETUDES\052_Dessins\BD_terrainV3"
+SET DESTDIR="M:\FR\BOR\VT\FLUVIAL\4352586_33_CC_Sud_Gironde_reco_syst._endiguement\05_ETUDES\05_4_TERRAIN\05_4_1_BD_TERRAIN\convV2"
 REM Base2_eaupotable_base2_0_4_to_base3_0_1.ods Base_assainissement_base2_0_6_to_base3_0_1.ods
 REM base_digue_base2_0_5_base3_0_1
 SET ODSFILES="Base2_0_8to3_0_1.ods base_digue_base2_0_5_base3_0_1.ods"

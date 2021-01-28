@@ -99,7 +99,7 @@ def launchIface():
     # SLFILE = r"C:\01_WORKINGDIR\sebastien\VTA_2020_Noailles.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\herve\fusion\mergeddbase.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\aaa\testconstruction.sqlite"
-    SLFILE = r"C:\01_WORKINGDIR\BACALAN\GPMB_Bacalan.sqlite"
+    # SLFILE = r"C:\01_WORKINGDIR\BACALAN\GPMB_Bacalan.sqlite"
     # SLFILE = r"C:\Users\Public\Documents\lamia\GPMB Bacalan\GPMB Bacalan.sqlite"
 
     # SLFILE = r"C:\111_GitProjects\Lamia\testfiles\offlinemodedbase\parentdb\parenttestoffline.sqlite"
@@ -115,6 +115,8 @@ def launchIface():
     # SLFILE = r"C:\01_WORKINGDIR\aaaa\tete\toto.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\aaa\base\vide.sqlite"
     # SLFILE = r"C:\Users\Public\Documents\lamia\GPMB_Bacalan_offline\GPMB_Bacalan_offline.sqlite"
+    # SLFILE = r"C:\01_WORKINGDIR\fauna\test.sqlite"
+    SLFILE = r"C:\01_WORKINGDIR\aaaa\test6.sqlite"
 
     print(f"{bcolors.OKGREEN}Opening: {os.path.abspath(SLFILE)} {bcolors.ENDC}")
 

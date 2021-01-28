@@ -906,46 +906,33 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
 
         pointsmapcanvas = []
         pointslayer = []
-        """
-        if self.capturetype is None:
-            type = self.dbasetable['layer'].geometryType()
-        else:
-            type = self.capturetype
-        """
-        # capturetype = self.dbasetable['layer'].geometryType()
+
+        #* Define maptoolcapturetype : the geomtypecaptured & capturetype : geomtype of layer
+        maptoolcapturetype = int(self.sender().mode())     #1 point 2 line 3 polygon
         capturetype = self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME][
             "layer"
-        ].geometryType()
+        ].geometryType()        # 0 point 1 line 2 polygone 3 unknow 4 null geom
 
-        # case point in line layer
-        dbasetable = self.dbase.dbasetables[self.DBASETABLENAME]
 
-        if len(points) == 2 and points[0] == points[1]:
-            # self.rubberBand.reset(0)
-            # self.mainifacewidget.qgiscanvas.createorresetRubberband(0)
-            capturetype = 0.5
-        elif len(points) == 1 and dbasetable["geom"] == "LINESTRING":
+        #* Modify captured geom to fit the layer geom
+        if maptoolcapturetype == 1 and capturetype == 1:
             points.append(points[0])
-            # self.mainifacewidget.qgiscanvas.createorresetRubberband(0)
-            capturetype = 0.5
-        elif len(points) == 1 and dbasetable["geom"] == "POLYGON":
-            # qgsgeompoint = qgis.core.QgsGeometry.fromPointXY(points[0])
-            points = [
-                qgis.core.QgsPointXY(points[0].x() - 1.0, points[0].y() - 1.0),
-                qgis.core.QgsPointXY(points[0].x() - 1.0, points[0].y() + 1.0),
-                qgis.core.QgsPointXY(points[0].x() + 1.0, points[0].y() + 1.0),
-                qgis.core.QgsPointXY(points[0].x() + 1.0, points[0].y() - 1.0),
-            ]
+        elif maptoolcapturetype == 1 and capturetype == 2:
+                points = [
+                    qgis.core.QgsPointXY(points[0].x() - 1.0, points[0].y() - 1.0),
+                    qgis.core.QgsPointXY(points[0].x() - 1.0, points[0].y() + 1.0),
+                    qgis.core.QgsPointXY(points[0].x() + 1.0, points[0].y() + 1.0),
+                    qgis.core.QgsPointXY(points[0].x() + 1.0, points[0].y() - 1.0),
+                ]
+        elif maptoolcapturetype == 3 and capturetype == 1:
+            points.append(points[0])
 
-            capturetype = 1.5
-        # else:
-        #    self.mainifacewidget.qgiscanvas.createorresetRubberband(capturetype)
 
         if debug:
             logging.getLogger("Lamia_unittest").debug(
                 "type/point : %s %s", str(capturetype), points
             )
-
+        #* crs transformation
         if comefromcanvas:
             pointsmapcanvas = points
             for point in points:
@@ -959,10 +946,11 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                     self.mainifacewidget.qgiscanvas.xform.transform(point)
                 )
 
+        #* process geom depending use : for rubberband or for layer storage
         if capturetype == 0:
             geometryformap = qgis.core.QgsGeometry.fromPointXY(pointsmapcanvas[0])
             geometryforlayer = qgis.core.QgsGeometry.fromPointXY(pointslayer[0])
-        elif capturetype == 0.5:
+        elif capturetype == 1 and maptoolcapturetype == 1:   
             geometryformap = qgis.core.QgsGeometry.fromPointXY(pointsmapcanvas[0])
             geometryforlayer = qgis.core.QgsGeometry.fromMultiPolylineXY([pointslayer])
         elif capturetype == 1:
@@ -970,28 +958,32 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                 [pointsmapcanvas]
             )
             geometryforlayer = qgis.core.QgsGeometry.fromMultiPolylineXY([pointslayer])
-        elif capturetype in [1.5, 2]:
+        elif capturetype == 2 and maptoolcapturetype in [1,3]:     
             geometryformap = qgis.core.QgsGeometry.fromPolygonXY([pointsmapcanvas])
             geometryforlayer = qgis.core.QgsGeometry.fromPolygonXY([pointslayer])
 
-        # outside qgis bug
+        #* show geom in rubberband
         if showinrubberband:
-            if capturetype not in [0.5, 1.5]:
+            if capturetype == 1 and maptoolcapturetype == 1:   
+                self.mainifacewidget.qgiscanvas.createorresetRubberband(
+                    0, rubtype="capture"
+                )
+            elif capturetype  in [1,2,3]:
                 self.mainifacewidget.qgiscanvas.createorresetRubberband(
                     capturetype, rubtype="capture"
                 )
-            elif capturetype in [1.5]:
-                self.mainifacewidget.qgiscanvas.createorresetRubberband(
-                    2, rubtype="capture"
-                )
+
             else:
                 self.mainifacewidget.qgiscanvas.createorresetRubberband(
                     0, rubtype="capture"
                 )
+
             self.mainifacewidget.qgiscanvas.rubberbands["capture"].addGeometry(
                 geometryformap, None
             )
             self.mainifacewidget.qgiscanvas.rubberbands["capture"].show()
+
+        #* final : set self.tempgeometry
         self.tempgeometry = geometryforlayer
         self.lamiageomChanged.emit()
 
@@ -1003,7 +995,3 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             logging.getLogger("Lamia_unittest").debug(
                 "end canvas points : %s", pointsmapcanvas
             )
-        # if debug: logging.getLogger("Lamia_unittest").debug('end tempgeom : %s', self.toWKT(self.tempgeometry))
-
-        # self.mtool = None
-

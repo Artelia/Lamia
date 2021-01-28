@@ -1,22 +1,23 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis version="3.10.6-A Coruña" styleCategories="AllStyleCategories" simplifyDrawingTol="1" simplifyMaxScale="1" simplifyLocal="1" labelsEnabled="0" readOnly="0" hasScaleBasedVisibilityFlag="0" maxScale="0" minScale="1e+08" simplifyDrawingHints="1" simplifyAlgorithm="0">
+<qgis maxScale="0" simplifyAlgorithm="0" hasScaleBasedVisibilityFlag="0" readOnly="0" styleCategories="AllStyleCategories" simplifyDrawingHints="1" minScale="1e+08" version="3.10.6-A Coruña" labelsEnabled="0" simplifyMaxScale="1" simplifyDrawingTol="1" simplifyLocal="1">
   <flags>
     <Identifiable>1</Identifiable>
     <Removable>1</Removable>
     <Searchable>1</Searchable>
   </flags>
-  <renderer-v2 symbollevels="0" enableorderby="0" forceraster="0" type="categorizedSymbol" attr="equipmentcategory">
+  <renderer-v2 symbollevels="0" forceraster="0" attr="equipmentcategory" type="categorizedSymbol" enableorderby="0">
     <categories>
-      <category value="RTE" label="Lineaire - Telecom/Energie" symbol="0" render="true"/>
-      <category value="OUH" label="Ponctuel - Hydraulique" symbol="1" render="true"/>
-      <category value="OUP" label="Ponctuel - Particulier" symbol="2" render="true"/>
-      <category value="RHF" label="Lineaire - Hydrau enterre" symbol="3" render="true"/>
-      <category value="RHO" label="Lineaire - Hydrau ciel ouvert" symbol="4" render="true"/>
-      <category value="OUT" label="Ponctuel - Telecom/Energie" symbol="5" render="true"/>
+      <category render="true" value="RTE" label="Lineaire - Telecom/Energie" symbol="0"/>
+      <category render="true" value="OUH" label="Ponctuel - Hydraulique" symbol="1"/>
+      <category render="true" value="OUP" label="Ponctuel - Particulier" symbol="2"/>
+      <category render="true" value="RHF" label="Lineaire - Hydrau enterre" symbol="3"/>
+      <category render="true" value="RHO" label="Lineaire - Hydrau ciel ouvert" symbol="4"/>
+      <category render="true" value="OUT" label="Ponctuel - Telecom/Energie" symbol="5"/>
+      <category render="true" value="" label="" symbol="6"/>
     </categories>
     <symbols>
-      <symbol name="0" clip_to_extent="1" force_rhr="0" type="line" alpha="1">
-        <layer pass="0" locked="1" enabled="1" class="SimpleLine">
+      <symbol force_rhr="0" clip_to_extent="1" type="line" alpha="1" name="0">
+        <layer pass="0" locked="1" class="SimpleLine" enabled="1">
           <prop k="capstyle" v="square"/>
           <prop k="customdash" v="5;2"/>
           <prop k="customdash_map_unit_scale" v="3x:0,0,0,0,0,0"/>
@@ -35,13 +36,13 @@
           <prop k="width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option name="name" value="" type="QString"/>
+              <Option type="QString" value="" name="name"/>
               <Option name="properties"/>
-              <Option name="type" value="collection" type="QString"/>
+              <Option type="QString" value="collection" name="type"/>
             </Option>
           </data_defined_properties>
         </layer>
-        <layer pass="0" locked="0" enabled="1" class="SimpleLine">
+        <layer pass="0" locked="0" class="SimpleLine" enabled="1">
           <prop k="capstyle" v="square"/>
           <prop k="customdash" v="5;2"/>
           <prop k="customdash_map_unit_scale" v="3x:0,0,0,0,0,0"/>
@@ -60,15 +61,15 @@
           <prop k="width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option name="name" value="" type="QString"/>
+              <Option type="QString" value="" name="name"/>
               <Option name="properties"/>
-              <Option name="type" value="collection" type="QString"/>
+              <Option type="QString" value="collection" name="type"/>
             </Option>
           </data_defined_properties>
         </layer>
       </symbol>
-      <symbol name="1" clip_to_extent="1" force_rhr="0" type="line" alpha="1">
-        <layer pass="0" locked="0" enabled="1" class="MarkerLine">
+      <symbol force_rhr="0" clip_to_extent="1" type="line" alpha="1" name="1">
+        <layer pass="0" locked="0" class="MarkerLine" enabled="1">
           <prop k="average_angle_length" v="4"/>
           <prop k="average_angle_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <prop k="average_angle_unit" v="MM"/>
@@ -86,13 +87,13 @@
           <prop k="rotate" v="1"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option name="name" value="" type="QString"/>
+              <Option type="QString" value="" name="name"/>
               <Option name="properties"/>
-              <Option name="type" value="collection" type="QString"/>
+              <Option type="QString" value="collection" name="type"/>
             </Option>
           </data_defined_properties>
-          <symbol name="@1@0" clip_to_extent="1" force_rhr="0" type="marker" alpha="1">
-            <layer pass="0" locked="0" enabled="1" class="SimpleMarker">
+          <symbol force_rhr="0" clip_to_extent="1" type="marker" alpha="1" name="@1@0">
+            <layer pass="0" locked="0" class="SimpleMarker" enabled="1">
               <prop k="angle" v="0"/>
               <prop k="color" v="0,95,255,255"/>
               <prop k="horizontal_anchor_point" v="1"/>
@@ -113,17 +114,17 @@
               <prop k="vertical_anchor_point" v="1"/>
               <data_defined_properties>
                 <Option type="Map">
-                  <Option name="name" value="" type="QString"/>
+                  <Option type="QString" value="" name="name"/>
                   <Option name="properties"/>
-                  <Option name="type" value="collection" type="QString"/>
+                  <Option type="QString" value="collection" name="type"/>
                 </Option>
               </data_defined_properties>
             </layer>
           </symbol>
         </layer>
       </symbol>
-      <symbol name="2" clip_to_extent="1" force_rhr="0" type="line" alpha="1">
-        <layer pass="0" locked="0" enabled="1" class="MarkerLine">
+      <symbol force_rhr="0" clip_to_extent="1" type="line" alpha="1" name="2">
+        <layer pass="0" locked="0" class="MarkerLine" enabled="1">
           <prop k="average_angle_length" v="4"/>
           <prop k="average_angle_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <prop k="average_angle_unit" v="MM"/>
@@ -141,13 +142,13 @@
           <prop k="rotate" v="1"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option name="name" value="" type="QString"/>
+              <Option type="QString" value="" name="name"/>
               <Option name="properties"/>
-              <Option name="type" value="collection" type="QString"/>
+              <Option type="QString" value="collection" name="type"/>
             </Option>
           </data_defined_properties>
-          <symbol name="@2@0" clip_to_extent="1" force_rhr="0" type="marker" alpha="1">
-            <layer pass="0" locked="0" enabled="1" class="SimpleMarker">
+          <symbol force_rhr="0" clip_to_extent="1" type="marker" alpha="1" name="@2@0">
+            <layer pass="0" locked="0" class="SimpleMarker" enabled="1">
               <prop k="angle" v="0"/>
               <prop k="color" v="0,0,0,255"/>
               <prop k="horizontal_anchor_point" v="1"/>
@@ -168,17 +169,17 @@
               <prop k="vertical_anchor_point" v="1"/>
               <data_defined_properties>
                 <Option type="Map">
-                  <Option name="name" value="" type="QString"/>
+                  <Option type="QString" value="" name="name"/>
                   <Option name="properties"/>
-                  <Option name="type" value="collection" type="QString"/>
+                  <Option type="QString" value="collection" name="type"/>
                 </Option>
               </data_defined_properties>
             </layer>
           </symbol>
         </layer>
       </symbol>
-      <symbol name="3" clip_to_extent="1" force_rhr="0" type="line" alpha="1">
-        <layer pass="0" locked="1" enabled="1" class="SimpleLine">
+      <symbol force_rhr="0" clip_to_extent="1" type="line" alpha="1" name="3">
+        <layer pass="0" locked="1" class="SimpleLine" enabled="1">
           <prop k="capstyle" v="square"/>
           <prop k="customdash" v="5;2"/>
           <prop k="customdash_map_unit_scale" v="3x:0,0,0,0,0,0"/>
@@ -197,13 +198,13 @@
           <prop k="width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option name="name" value="" type="QString"/>
+              <Option type="QString" value="" name="name"/>
               <Option name="properties"/>
-              <Option name="type" value="collection" type="QString"/>
+              <Option type="QString" value="collection" name="type"/>
             </Option>
           </data_defined_properties>
         </layer>
-        <layer pass="0" locked="0" enabled="1" class="SimpleLine">
+        <layer pass="0" locked="0" class="SimpleLine" enabled="1">
           <prop k="capstyle" v="square"/>
           <prop k="customdash" v="5;2"/>
           <prop k="customdash_map_unit_scale" v="3x:0,0,0,0,0,0"/>
@@ -222,15 +223,15 @@
           <prop k="width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option name="name" value="" type="QString"/>
+              <Option type="QString" value="" name="name"/>
               <Option name="properties"/>
-              <Option name="type" value="collection" type="QString"/>
+              <Option type="QString" value="collection" name="type"/>
             </Option>
           </data_defined_properties>
         </layer>
       </symbol>
-      <symbol name="4" clip_to_extent="1" force_rhr="0" type="line" alpha="1">
-        <layer pass="0" locked="1" enabled="1" class="SimpleLine">
+      <symbol force_rhr="0" clip_to_extent="1" type="line" alpha="1" name="4">
+        <layer pass="0" locked="1" class="SimpleLine" enabled="1">
           <prop k="capstyle" v="square"/>
           <prop k="customdash" v="5;2"/>
           <prop k="customdash_map_unit_scale" v="3x:0,0,0,0,0,0"/>
@@ -249,13 +250,13 @@
           <prop k="width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option name="name" value="" type="QString"/>
+              <Option type="QString" value="" name="name"/>
               <Option name="properties"/>
-              <Option name="type" value="collection" type="QString"/>
+              <Option type="QString" value="collection" name="type"/>
             </Option>
           </data_defined_properties>
         </layer>
-        <layer pass="0" locked="0" enabled="1" class="SimpleLine">
+        <layer pass="0" locked="0" class="SimpleLine" enabled="1">
           <prop k="capstyle" v="square"/>
           <prop k="customdash" v="5;2"/>
           <prop k="customdash_map_unit_scale" v="3x:0,0,0,0,0,0"/>
@@ -274,15 +275,15 @@
           <prop k="width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option name="name" value="" type="QString"/>
+              <Option type="QString" value="" name="name"/>
               <Option name="properties"/>
-              <Option name="type" value="collection" type="QString"/>
+              <Option type="QString" value="collection" name="type"/>
             </Option>
           </data_defined_properties>
         </layer>
       </symbol>
-      <symbol name="5" clip_to_extent="1" force_rhr="0" type="line" alpha="1">
-        <layer pass="0" locked="0" enabled="1" class="MarkerLine">
+      <symbol force_rhr="0" clip_to_extent="1" type="line" alpha="1" name="5">
+        <layer pass="0" locked="0" class="MarkerLine" enabled="1">
           <prop k="average_angle_length" v="4"/>
           <prop k="average_angle_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <prop k="average_angle_unit" v="MM"/>
@@ -300,13 +301,13 @@
           <prop k="rotate" v="1"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option name="name" value="" type="QString"/>
+              <Option type="QString" value="" name="name"/>
               <Option name="properties"/>
-              <Option name="type" value="collection" type="QString"/>
+              <Option type="QString" value="collection" name="type"/>
             </Option>
           </data_defined_properties>
-          <symbol name="@5@0" clip_to_extent="1" force_rhr="0" type="marker" alpha="1">
-            <layer pass="0" locked="0" enabled="1" class="SimpleMarker">
+          <symbol force_rhr="0" clip_to_extent="1" type="marker" alpha="1" name="@5@0">
+            <layer pass="0" locked="0" class="SimpleMarker" enabled="1">
               <prop k="angle" v="0"/>
               <prop k="color" v="245,5,0,255"/>
               <prop k="horizontal_anchor_point" v="1"/>
@@ -327,9 +328,89 @@
               <prop k="vertical_anchor_point" v="1"/>
               <data_defined_properties>
                 <Option type="Map">
-                  <Option name="name" value="" type="QString"/>
+                  <Option type="QString" value="" name="name"/>
                   <Option name="properties"/>
-                  <Option name="type" value="collection" type="QString"/>
+                  <Option type="QString" value="collection" name="type"/>
+                </Option>
+              </data_defined_properties>
+            </layer>
+          </symbol>
+        </layer>
+      </symbol>
+      <symbol force_rhr="0" clip_to_extent="1" type="line" alpha="1" name="6">
+        <layer pass="0" locked="0" class="SimpleLine" enabled="1">
+          <prop k="capstyle" v="square"/>
+          <prop k="customdash" v="5;2"/>
+          <prop k="customdash_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <prop k="customdash_unit" v="MM"/>
+          <prop k="draw_inside_polygon" v="0"/>
+          <prop k="joinstyle" v="bevel"/>
+          <prop k="line_color" v="31,120,180,255"/>
+          <prop k="line_style" v="solid"/>
+          <prop k="line_width" v="0.46"/>
+          <prop k="line_width_unit" v="MM"/>
+          <prop k="offset" v="0"/>
+          <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="ring_filter" v="0"/>
+          <prop k="use_custom_dash" v="0"/>
+          <prop k="width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <data_defined_properties>
+            <Option type="Map">
+              <Option type="QString" value="" name="name"/>
+              <Option name="properties"/>
+              <Option type="QString" value="collection" name="type"/>
+            </Option>
+          </data_defined_properties>
+        </layer>
+        <layer pass="0" locked="0" class="MarkerLine" enabled="1">
+          <prop k="average_angle_length" v="4"/>
+          <prop k="average_angle_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <prop k="average_angle_unit" v="MM"/>
+          <prop k="interval" v="3"/>
+          <prop k="interval_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <prop k="interval_unit" v="MM"/>
+          <prop k="offset" v="0"/>
+          <prop k="offset_along_line" v="0"/>
+          <prop k="offset_along_line_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <prop k="offset_along_line_unit" v="MM"/>
+          <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="placement" v="firstvertex"/>
+          <prop k="ring_filter" v="0"/>
+          <prop k="rotate" v="1"/>
+          <data_defined_properties>
+            <Option type="Map">
+              <Option type="QString" value="" name="name"/>
+              <Option name="properties"/>
+              <Option type="QString" value="collection" name="type"/>
+            </Option>
+          </data_defined_properties>
+          <symbol force_rhr="0" clip_to_extent="1" type="marker" alpha="1" name="@6@1">
+            <layer pass="0" locked="0" class="SimpleMarker" enabled="1">
+              <prop k="angle" v="0"/>
+              <prop k="color" v="31,120,180,255"/>
+              <prop k="horizontal_anchor_point" v="1"/>
+              <prop k="joinstyle" v="bevel"/>
+              <prop k="name" v="circle"/>
+              <prop k="offset" v="0,0"/>
+              <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+              <prop k="offset_unit" v="MM"/>
+              <prop k="outline_color" v="31,120,180,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0"/>
+              <prop k="outline_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+              <prop k="outline_width_unit" v="MM"/>
+              <prop k="scale_method" v="diameter"/>
+              <prop k="size" v="2"/>
+              <prop k="size_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+              <prop k="size_unit" v="MM"/>
+              <prop k="vertical_anchor_point" v="1"/>
+              <data_defined_properties>
+                <Option type="Map">
+                  <Option type="QString" value="" name="name"/>
+                  <Option name="properties"/>
+                  <Option type="QString" value="collection" name="type"/>
                 </Option>
               </data_defined_properties>
             </layer>
@@ -338,8 +419,8 @@
       </symbol>
     </symbols>
     <source-symbol>
-      <symbol name="0" clip_to_extent="1" force_rhr="0" type="line" alpha="1">
-        <layer pass="0" locked="0" enabled="1" class="SimpleLine">
+      <symbol force_rhr="0" clip_to_extent="1" type="line" alpha="1" name="0">
+        <layer pass="0" locked="0" class="SimpleLine" enabled="1">
           <prop k="capstyle" v="square"/>
           <prop k="customdash" v="5;2"/>
           <prop k="customdash_map_unit_scale" v="3x:0,0,0,0,0,0"/>
@@ -358,9 +439,9 @@
           <prop k="width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option name="name" value="" type="QString"/>
+              <Option type="QString" value="" name="name"/>
               <Option name="properties"/>
-              <Option name="type" value="collection" type="QString"/>
+              <Option type="QString" value="collection" name="type"/>
             </Option>
           </data_defined_properties>
         </layer>
@@ -378,20 +459,21 @@
   <featureBlendMode>0</featureBlendMode>
   <layerOpacity>1</layerOpacity>
   <SingleCategoryDiagramRenderer diagramType="Histogram" attributeLegend="1">
-    <DiagramCategory labelPlacementMethod="XHeight" enabled="0" lineSizeScale="3x:0,0,0,0,0,0" lineSizeType="MM" scaleDependency="Area" penColor="#000000" sizeScale="3x:0,0,0,0,0,0" height="15" minScaleDenominator="0" sizeType="MM" penAlpha="255" scaleBasedVisibility="0" backgroundColor="#ffffff" minimumSize="0" width="15" opacity="1" barWidth="5" backgroundAlpha="255" diagramOrientation="Up" penWidth="0" rotationOffset="270" maxScaleDenominator="1e+08">
-      <fontProperties style="" description="MS Shell Dlg 2,7.8,-1,5,50,0,0,0,0,0"/>
+    <DiagramCategory penAlpha="255" maxScaleDenominator="1e+08" opacity="1" labelPlacementMethod="XHeight" scaleBasedVisibility="0" sizeScale="3x:0,0,0,0,0,0" lineSizeType="MM" sizeType="MM" backgroundColor="#ffffff" lineSizeScale="3x:0,0,0,0,0,0" minimumSize="0" width="15" minScaleDenominator="0" height="15" scaleDependency="Area" diagramOrientation="Up" barWidth="5" backgroundAlpha="255" rotationOffset="270" penWidth="0" enabled="0" penColor="#000000">
+      <fontProperties description="MS Shell Dlg 2,7.8,-1,5,50,0,0,0,0,0" style=""/>
+      <attribute field="" color="#000000" label=""/>
     </DiagramCategory>
   </SingleCategoryDiagramRenderer>
-  <DiagramLayerSettings obstacle="0" zIndex="0" showAll="1" linePlacementFlags="18" priority="0" placement="2" dist="0">
+  <DiagramLayerSettings obstacle="0" placement="2" priority="0" dist="0" showAll="1" linePlacementFlags="18" zIndex="0">
     <properties>
       <Option type="Map">
-        <Option name="name" value="" type="QString"/>
+        <Option type="QString" value="" name="name"/>
         <Option name="properties"/>
-        <Option name="type" value="collection" type="QString"/>
+        <Option type="QString" value="collection" name="type"/>
       </Option>
     </properties>
   </DiagramLayerSettings>
-  <geometryOptions geometryPrecision="0" removeDuplicateNodes="0">
+  <geometryOptions removeDuplicateNodes="0" geometryPrecision="0">
     <activeChecks/>
     <checkConfiguration/>
   </geometryOptions>
@@ -421,24 +503,24 @@
       <editWidget type="ValueMap">
         <config>
           <Option type="Map">
-            <Option name="map" type="List">
+            <Option type="List" name="map">
               <Option type="Map">
-                <Option name="Lineaire - Hydrau enterre" value="RHF" type="QString"/>
+                <Option type="QString" value="RHF" name="Lineaire - Hydrau enterre"/>
               </Option>
               <Option type="Map">
-                <Option name="Lineaire - Hydrau ciel ouvert" value="RHO" type="QString"/>
+                <Option type="QString" value="RHO" name="Lineaire - Hydrau ciel ouvert"/>
               </Option>
               <Option type="Map">
-                <Option name="Lineaire - Telecom/Energie" value="RTE" type="QString"/>
+                <Option type="QString" value="RTE" name="Lineaire - Telecom/Energie"/>
               </Option>
               <Option type="Map">
-                <Option name="Ponctuel - Hydraulique" value="OUH" type="QString"/>
+                <Option type="QString" value="OUH" name="Ponctuel - Hydraulique"/>
               </Option>
               <Option type="Map">
-                <Option name="Ponctuel - Telecom/Energie" value="OUT" type="QString"/>
+                <Option type="QString" value="OUT" name="Ponctuel - Telecom/Energie"/>
               </Option>
               <Option type="Map">
-                <Option name="Ponctuel - Particulier" value="OUP" type="QString"/>
+                <Option type="QString" value="OUP" name="Ponctuel - Particulier"/>
               </Option>
             </Option>
           </Option>
@@ -463,150 +545,150 @@
       <editWidget type="ValueMap">
         <config>
           <Option type="Map">
-            <Option name="map" type="List">
+            <Option type="List" name="map">
               <Option type="Map">
-                <Option name="/" value="" type="QString"/>
+                <Option type="QString" value="" name="/"/>
               </Option>
               <Option type="Map">
-                <Option name="Clapet" value="CLA" type="QString"/>
+                <Option type="QString" value="CLA" name="Clapet"/>
               </Option>
               <Option type="Map">
-                <Option name="Vanne" value="VAN" type="QString"/>
+                <Option type="QString" value="VAN" name="Vanne"/>
               </Option>
               <Option type="Map">
-                <Option name="Exutoire" value="EXU" type="QString"/>
+                <Option type="QString" value="EXU" name="Exutoire"/>
               </Option>
               <Option type="Map">
-                <Option name="Borne incendie" value="BIN" type="QString"/>
+                <Option type="QString" value="BIN" name="Borne incendie"/>
               </Option>
               <Option type="Map">
-                <Option name="Porte à flot" value="FLO" type="QString"/>
+                <Option type="QString" value="FLO" name="Porte à flot"/>
               </Option>
               <Option type="Map">
-                <Option name="Fosse de decantation" value="FOD" type="QString"/>
+                <Option type="QString" value="FOD" name="Fosse de decantation"/>
               </Option>
               <Option type="Map">
-                <Option name="Poste de refoulement, pompage" value="POS" type="QString"/>
+                <Option type="QString" value="POS" name="Poste de refoulement, pompage"/>
               </Option>
               <Option type="Map">
-                <Option name="Regard, bouche a clef" value="REG" type="QString"/>
+                <Option type="QString" value="REG" name="Regard, bouche a clef"/>
               </Option>
               <Option type="Map">
-                <Option name="Reservoir, chateau d eau" value="RES" type="QString"/>
+                <Option type="QString" value="RES" name="Reservoir, chateau d eau"/>
               </Option>
               <Option type="Map">
-                <Option name="Station d epuration" value="RES" type="QString"/>
+                <Option type="QString" value="RES" name="Station d epuration"/>
               </Option>
               <Option type="Map">
-                <Option name="Grille, degrillage" value="GRI" type="QString"/>
+                <Option type="QString" value="GRI" name="Grille, degrillage"/>
               </Option>
               <Option type="Map">
-                <Option name="Borne (Gaz...)" value="BOR" type="QString"/>
+                <Option type="QString" value="BOR" name="Borne (Gaz...)"/>
               </Option>
               <Option type="Map">
-                <Option name="Coffret de branchement" value="CDB" type="QString"/>
+                <Option type="QString" value="CDB" name="Coffret de branchement"/>
               </Option>
               <Option type="Map">
-                <Option name="Chambre Telecom" value="CHT" type="QString"/>
+                <Option type="QString" value="CHT" name="Chambre Telecom"/>
               </Option>
               <Option type="Map">
-                <Option name="Poteau (EDF,PTT)" value="POT" type="QString"/>
+                <Option type="QString" value="POT" name="Poteau (EDF,PTT)"/>
               </Option>
               <Option type="Map">
-                <Option name="Transformateur" value="TRA" type="QString"/>
+                <Option type="QString" value="TRA" name="Transformateur"/>
               </Option>
               <Option type="Map">
-                <Option name="Batiment encastre" value="BAT" type="QString"/>
+                <Option type="QString" value="BAT" name="Batiment encastre"/>
               </Option>
               <Option type="Map">
-                <Option name="Borne PK" value="BOK" type="QString"/>
+                <Option type="QString" value="BOK" name="Borne PK"/>
               </Option>
               <Option type="Map">
-                <Option name="Borne reseau d eau" value="BRE" type="QString"/>
+                <Option type="QString" value="BRE" name="Borne reseau d eau"/>
               </Option>
               <Option type="Map">
-                <Option name="Cave encastree" value="CAV" type="QString"/>
+                <Option type="QString" value="CAV" name="Cave encastree"/>
               </Option>
               <Option type="Map">
-                <Option name="Cloture encastree" value="CLO" type="QString"/>
+                <Option type="QString" value="CLO" name="Cloture encastree"/>
               </Option>
               <Option type="Map">
-                <Option name="Echelle Limnimetrique" value="ECH" type="QString"/>
+                <Option type="QString" value="ECH" name="Echelle Limnimetrique"/>
               </Option>
               <Option type="Map">
-                <Option name="Escalier" value="ESC" type="QString"/>
+                <Option type="QString" value="ESC" name="Escalier"/>
               </Option>
               <Option type="Map">
-                <Option name="Monument" value="MOU" type="QString"/>
+                <Option type="QString" value="MOU" name="Monument"/>
               </Option>
               <Option type="Map">
-                <Option name="Ouvrage alimentant champs inond." value="OUA" type="QString"/>
+                <Option type="QString" value="OUA" name="Ouvrage alimentant champs inond."/>
               </Option>
               <Option type="Map">
-                <Option name="Panneau d'information divers" value="PAN" type="QString"/>
+                <Option type="QString" value="PAN" name="Panneau d'information divers"/>
               </Option>
               <Option type="Map">
-                <Option name="Passe a poissons" value="PAS" type="QString"/>
+                <Option type="QString" value="PAS" name="Passe a poissons"/>
               </Option>
               <Option type="Map">
-                <Option name="Piezometre" value="PIE" type="QString"/>
+                <Option type="QString" value="PIE" name="Piezometre"/>
               </Option>
               <Option type="Map">
-                <Option name="Ponton" value="PON" type="QString"/>
+                <Option type="QString" value="PON" name="Ponton"/>
               </Option>
               <Option type="Map">
-                <Option name="Repere de nivellement" value="RDN" type="QString"/>
+                <Option type="QString" value="RDN" name="Repere de nivellement"/>
               </Option>
               <Option type="Map">
-                <Option name="Socle beton" value="SOB" type="QString"/>
+                <Option type="QString" value="SOB" name="Socle beton"/>
               </Option>
               <Option type="Map">
-                <Option name="Station de mesure" value="STA" type="QString"/>
+                <Option type="QString" value="STA" name="Station de mesure"/>
               </Option>
               <Option type="Map">
-                <Option name="Pompage, prise d eau" value="CAN" type="QString"/>
+                <Option type="QString" value="CAN" name="Pompage, prise d eau"/>
               </Option>
               <Option type="Map">
-                <Option name="Canalisation (AEP,EU...)" value="CON" type="QString"/>
+                <Option type="QString" value="CON" name="Canalisation (AEP,EU...)"/>
               </Option>
               <Option type="Map">
-                <Option name="Affluent" value="AFL" type="QString"/>
+                <Option type="QString" value="AFL" name="Affluent"/>
               </Option>
               <Option type="Map">
-                <Option name="Caniveau beton" value="CAI" type="QString"/>
+                <Option type="QString" value="CAI" name="Caniveau beton"/>
               </Option>
               <Option type="Map">
-                <Option name="Canal" value="CAN" type="QString"/>
+                <Option type="QString" value="CAN" name="Canal"/>
               </Option>
               <Option type="Map">
-                <Option name="Chantourne" value="CHAN" type="QString"/>
+                <Option type="QString" value="CHAN" name="Chantourne"/>
               </Option>
               <Option type="Map">
-                <Option name="Porteaux" value="PRO" type="QString"/>
+                <Option type="QString" value="PRO" name="Porteaux"/>
               </Option>
               <Option type="Map">
-                <Option name="Chauffage urbain" value="CCU" type="QString"/>
+                <Option type="QString" value="CCU" name="Chauffage urbain"/>
               </Option>
               <Option type="Map">
-                <Option name="EDF ou PTT" value="EFT" type="QString"/>
+                <Option type="QString" value="EFT" name="EDF ou PTT"/>
               </Option>
               <Option type="Map">
-                <Option name="EDF ou PTT" value="EFT" type="QString"/>
+                <Option type="QString" value="EFT" name="EDF ou PTT"/>
               </Option>
               <Option type="Map">
-                <Option name="Fibre optique" value="FIB" type="QString"/>
+                <Option type="QString" value="FIB" name="Fibre optique"/>
               </Option>
               <Option type="Map">
-                <Option name="Gaz" value="GDF" type="QString"/>
+                <Option type="QString" value="GDF" name="Gaz"/>
               </Option>
               <Option type="Map">
-                <Option name="Hydrocarbure" value="HYD" type="QString"/>
+                <Option type="QString" value="HYD" name="Hydrocarbure"/>
               </Option>
               <Option type="Map">
-                <Option name="Saumure" value="SAU" type="QString"/>
+                <Option type="QString" value="SAU" name="Saumure"/>
               </Option>
               <Option type="Map">
-                <Option name="Indefini" value="IND" type="QString"/>
+                <Option type="QString" value="IND" name="Indefini"/>
               </Option>
             </Option>
           </Option>
@@ -617,27 +699,27 @@
       <editWidget type="ValueMap">
         <config>
           <Option type="Map">
-            <Option name="map" type="List">
+            <Option type="List" name="map">
               <Option type="Map">
-                <Option name="/" value="" type="QString"/>
+                <Option type="QString" value="" name="/"/>
               </Option>
               <Option type="Map">
-                <Option name="Buse" value="BUS" type="QString"/>
+                <Option type="QString" value="BUS" name="Buse"/>
               </Option>
               <Option type="Map">
-                <Option name="Buse avec encadrement béton" value="BUB" type="QString"/>
+                <Option type="QString" value="BUB" name="Buse avec encadrement béton"/>
               </Option>
               <Option type="Map">
-                <Option name="Grille Avaloir" value="GRA" type="QString"/>
+                <Option type="QString" value="GRA" name="Grille Avaloir"/>
               </Option>
               <Option type="Map">
-                <Option name="Sur Muret" value="MUR" type="QString"/>
+                <Option type="QString" value="MUR" name="Sur Muret"/>
               </Option>
               <Option type="Map">
-                <Option name="Maçonné" value="MAC" type="QString"/>
+                <Option type="QString" value="MAC" name="Maçonné"/>
               </Option>
               <Option type="Map">
-                <Option name="Non observé" value="NOB" type="QString"/>
+                <Option type="QString" value="NOB" name="Non observé"/>
               </Option>
             </Option>
           </Option>
@@ -648,21 +730,21 @@
       <editWidget type="ValueMap">
         <config>
           <Option type="Map">
-            <Option name="map" type="List">
+            <Option type="List" name="map">
               <Option type="Map">
-                <Option name="/" value="" type="QString"/>
+                <Option type="QString" value="" name="/"/>
               </Option>
               <Option type="Map">
-                <Option name="Aerien" value="AER" type="QString"/>
+                <Option type="QString" value="AER" name="Aerien"/>
               </Option>
               <Option type="Map">
-                <Option name="Enterre" value="ENT" type="QString"/>
+                <Option type="QString" value="ENT" name="Enterre"/>
               </Option>
               <Option type="Map">
-                <Option name="Superficiel" value="ENT" type="QString"/>
+                <Option type="QString" value="ENT" name="Superficiel"/>
               </Option>
               <Option type="Map">
-                <Option name="Indefini" value="IND" type="QString"/>
+                <Option type="QString" value="IND" name="Indefini"/>
               </Option>
             </Option>
           </Option>
@@ -673,15 +755,15 @@
       <editWidget type="ValueMap">
         <config>
           <Option type="Map">
-            <Option name="map" type="List">
+            <Option type="List" name="map">
               <Option type="Map">
-                <Option name="/" value="" type="QString"/>
+                <Option type="QString" value="" name="/"/>
               </Option>
               <Option type="Map">
-                <Option name="Gravitaire" value="GRA" type="QString"/>
+                <Option type="QString" value="GRA" name="Gravitaire"/>
               </Option>
               <Option type="Map">
-                <Option name="Sous pression" value="PRE" type="QString"/>
+                <Option type="QString" value="PRE" name="Sous pression"/>
               </Option>
             </Option>
           </Option>
@@ -692,33 +774,33 @@
       <editWidget type="ValueMap">
         <config>
           <Option type="Map">
-            <Option name="map" type="List">
+            <Option type="List" name="map">
               <Option type="Map">
-                <Option name="/" value="" type="QString"/>
+                <Option type="QString" value="" name="/"/>
               </Option>
               <Option type="Map">
-                <Option name="Drainage" value="DRA" type="QString"/>
+                <Option type="QString" value="DRA" name="Drainage"/>
               </Option>
               <Option type="Map">
-                <Option name="AEP" value="EDI" type="QString"/>
+                <Option type="QString" value="EDI" name="AEP"/>
               </Option>
               <Option type="Map">
-                <Option name="Eaux pluviales" value="EPL" type="QString"/>
+                <Option type="QString" value="EPL" name="Eaux pluviales"/>
               </Option>
               <Option type="Map">
-                <Option name="Eaux usees" value="EUS" type="QString"/>
+                <Option type="QString" value="EUS" name="Eaux usees"/>
               </Option>
               <Option type="Map">
-                <Option name="Irrigation" value="IRR" type="QString"/>
+                <Option type="QString" value="IRR" name="Irrigation"/>
               </Option>
               <Option type="Map">
-                <Option name="Eaux residuaires indus." value="ERI" type="QString"/>
+                <Option type="QString" value="ERI" name="Eaux residuaires indus."/>
               </Option>
               <Option type="Map">
-                <Option name="Alimentation champ d inonation" value="ACIC" type="QString"/>
+                <Option type="QString" value="ACIC" name="Alimentation champ d inonation"/>
               </Option>
               <Option type="Map">
-                <Option name="Indefini" value="IND" type="QString"/>
+                <Option type="QString" value="IND" name="Indefini"/>
               </Option>
             </Option>
           </Option>
@@ -750,18 +832,18 @@
       <editWidget type="ValueMap">
         <config>
           <Option type="Map">
-            <Option name="map" type="List">
+            <Option type="List" name="map">
               <Option type="Map">
-                <Option name="/" value="" type="QString"/>
+                <Option type="QString" value="" name="/"/>
               </Option>
               <Option type="Map">
-                <Option name="Visitable en securite" value="2" type="QString"/>
+                <Option type="QString" value="2" name="Visitable en securite"/>
               </Option>
               <Option type="Map">
-                <Option name="Non visitable - cadenassé" value="1" type="QString"/>
+                <Option type="QString" value="1" name="Non visitable - cadenassé"/>
               </Option>
               <Option type="Map">
-                <Option name="Non visitable en securite" value="0" type="QString"/>
+                <Option type="QString" value="0" name="Non visitable en securite"/>
               </Option>
             </Option>
           </Option>
@@ -772,30 +854,30 @@
       <editWidget type="ValueMap">
         <config>
           <Option type="Map">
-            <Option name="map" type="List">
+            <Option type="List" name="map">
               <Option type="Map">
-                <Option name="/" value="" type="QString"/>
+                <Option type="QString" value="" name="/"/>
               </Option>
               <Option type="Map">
-                <Option name="Eau" value="RIV" type="QString"/>
+                <Option type="QString" value="RIV" name="Eau"/>
               </Option>
               <Option type="Map">
-                <Option name="Terre" value="TER" type="QString"/>
+                <Option type="QString" value="TER" name="Terre"/>
               </Option>
               <Option type="Map">
-                <Option name="Etang" value="ETG" type="QString"/>
+                <Option type="QString" value="ETG" name="Etang"/>
               </Option>
               <Option type="Map">
-                <Option name="Ocean" value="MER" type="QString"/>
+                <Option type="QString" value="MER" name="Ocean"/>
               </Option>
               <Option type="Map">
-                <Option name="Deux cotes" value="DEU" type="QString"/>
+                <Option type="QString" value="DEU" name="Deux cotes"/>
               </Option>
               <Option type="Map">
-                <Option name="Crete" value="CRE" type="QString"/>
+                <Option type="QString" value="CRE" name="Crete"/>
               </Option>
               <Option type="Map">
-                <Option name="Indefini" value="IND" type="QString"/>
+                <Option type="QString" value="IND" name="Indefini"/>
               </Option>
             </Option>
           </Option>
@@ -806,42 +888,42 @@
       <editWidget type="ValueMap">
         <config>
           <Option type="Map">
-            <Option name="map" type="List">
+            <Option type="List" name="map">
               <Option type="Map">
-                <Option name="/" value="" type="QString"/>
+                <Option type="QString" value="" name="/"/>
               </Option>
               <Option type="Map">
-                <Option name="Crete" value="CRE" type="QString"/>
+                <Option type="QString" value="CRE" name="Crete"/>
               </Option>
               <Option type="Map">
-                <Option name="Talus digue" value="TAD" type="QString"/>
+                <Option type="QString" value="TAD" name="Talus digue"/>
               </Option>
               <Option type="Map">
-                <Option name="Sommet risberme" value="SOR" type="QString"/>
+                <Option type="QString" value="SOR" name="Sommet risberme"/>
               </Option>
               <Option type="Map">
-                <Option name="Talus risberme" value="TAR" type="QString"/>
+                <Option type="QString" value="TAR" name="Talus risberme"/>
               </Option>
               <Option type="Map">
-                <Option name="Talus risberme - pied de digue" value="TRP" type="QString"/>
+                <Option type="QString" value="TRP" name="Talus risberme - pied de digue"/>
               </Option>
               <Option type="Map">
-                <Option name="Pied de digue" value="PDI" type="QString"/>
+                <Option type="QString" value="PDI" name="Pied de digue"/>
               </Option>
               <Option type="Map">
-                <Option name="Franc-bord" value="FRB" type="QString"/>
+                <Option type="QString" value="FRB" name="Franc-bord"/>
               </Option>
               <Option type="Map">
-                <Option name="Berge" value="BER" type="QString"/>
+                <Option type="QString" value="BER" name="Berge"/>
               </Option>
               <Option type="Map">
-                <Option name="Hors digue" value="HOR" type="QString"/>
+                <Option type="QString" value="HOR" name="Hors digue"/>
               </Option>
               <Option type="Map">
-                <Option name="Plusieurs parties" value="PLU" type="QString"/>
+                <Option type="QString" value="PLU" name="Plusieurs parties"/>
               </Option>
               <Option type="Map">
-                <Option name="Indefini" value="IND" type="QString"/>
+                <Option type="QString" value="IND" name="Indefini"/>
               </Option>
             </Option>
           </Option>
@@ -880,15 +962,15 @@
       <editWidget type="ValueMap">
         <config>
           <Option type="Map">
-            <Option name="map" type="List">
+            <Option type="List" name="map">
               <Option type="Map">
-                <Option name="/" value="" type="QString"/>
+                <Option type="QString" value="" name="/"/>
               </Option>
               <Option type="Map">
-                <Option name="Oui" value="1" type="QString"/>
+                <Option type="QString" value="1" name="Oui"/>
               </Option>
               <Option type="Map">
-                <Option name="Non" value="0" type="QString"/>
+                <Option type="QString" value="0" name="Non"/>
               </Option>
             </Option>
           </Option>
@@ -927,21 +1009,21 @@
       <editWidget type="ValueMap">
         <config>
           <Option type="Map">
-            <Option name="map" type="List">
+            <Option type="List" name="map">
               <Option type="Map">
-                <Option name="/" value="" type="QString"/>
+                <Option type="QString" value="" name="/"/>
               </Option>
               <Option type="Map">
-                <Option name="A" value="A" type="QString"/>
+                <Option type="QString" value="A" name="A"/>
               </Option>
               <Option type="Map">
-                <Option name="B" value="B" type="QString"/>
+                <Option type="QString" value="B" name="B"/>
               </Option>
               <Option type="Map">
-                <Option name="C" value="C" type="QString"/>
+                <Option type="QString" value="C" name="C"/>
               </Option>
               <Option type="Map">
-                <Option name="NC" value="NC" type="QString"/>
+                <Option type="QString" value="NC" name="NC"/>
               </Option>
             </Option>
           </Option>
@@ -959,18 +1041,18 @@
       <editWidget type="ValueMap">
         <config>
           <Option type="Map">
-            <Option name="map" type="List">
+            <Option type="List" name="map">
               <Option type="Map">
-                <Option name="/" value="" type="QString"/>
+                <Option type="QString" value="" name="/"/>
               </Option>
               <Option type="Map">
-                <Option name="Classe A" value="1" type="QString"/>
+                <Option type="QString" value="1" name="Classe A"/>
               </Option>
               <Option type="Map">
-                <Option name="Classe B" value="2" type="QString"/>
+                <Option type="QString" value="2" name="Classe B"/>
               </Option>
               <Option type="Map">
-                <Option name="Classe C" value="3" type="QString"/>
+                <Option type="QString" value="3" name="Classe C"/>
               </Option>
             </Option>
           </Option>
@@ -981,18 +1063,18 @@
       <editWidget type="ValueMap">
         <config>
           <Option type="Map">
-            <Option name="map" type="List">
+            <Option type="List" name="map">
               <Option type="Map">
-                <Option name="/" value="" type="QString"/>
+                <Option type="QString" value="" name="/"/>
               </Option>
               <Option type="Map">
-                <Option name="Classe A" value="1" type="QString"/>
+                <Option type="QString" value="1" name="Classe A"/>
               </Option>
               <Option type="Map">
-                <Option name="Classe B" value="2" type="QString"/>
+                <Option type="QString" value="2" name="Classe B"/>
               </Option>
               <Option type="Map">
-                <Option name="Classe C" value="3" type="QString"/>
+                <Option type="QString" value="3" name="Classe C"/>
               </Option>
             </Option>
           </Option>
@@ -1234,24 +1316,24 @@
       <editWidget type="ValueMap">
         <config>
           <Option type="Map">
-            <Option name="map" type="List">
+            <Option type="List" name="map">
               <Option type="Map">
-                <Option name="/" value="" type="QString"/>
+                <Option type="QString" value="" name="/"/>
               </Option>
               <Option type="Map">
-                <Option name="Hors service" value="0" type="QString"/>
+                <Option type="QString" value="0" name="Hors service"/>
               </Option>
               <Option type="Map">
-                <Option name="Mauvais" value="1" type="QString"/>
+                <Option type="QString" value="1" name="Mauvais"/>
               </Option>
               <Option type="Map">
-                <Option name="Moyen" value="2" type="QString"/>
+                <Option type="QString" value="2" name="Moyen"/>
               </Option>
               <Option type="Map">
-                <Option name="Bon" value="3" type="QString"/>
+                <Option type="QString" value="3" name="Bon"/>
               </Option>
               <Option type="Map">
-                <Option name="Excellent" value="4" type="QString"/>
+                <Option type="QString" value="4" name="Excellent"/>
               </Option>
             </Option>
           </Option>
@@ -1342,404 +1424,416 @@
         </config>
       </editWidget>
     </field>
+    <field name="sirsid">
+      <editWidget type="TextEdit">
+        <config>
+          <Option/>
+        </config>
+      </editWidget>
+    </field>
   </fieldConfiguration>
   <aliases>
-    <alias name="" index="0" field="pk_equipment"/>
-    <alias name="" index="1" field="id_equipment"/>
-    <alias name="" index="2" field="lpk_descriptionsystem"/>
-    <alias name="" index="3" field="equipmentcategory"/>
-    <alias name="" index="4" field="lid_resource_1"/>
-    <alias name="" index="5" field="lid_descriptionsystem_1"/>
-    <alias name="" index="6" field="equipmenttype"/>
-    <alias name="" index="7" field="equipmentsubtype"/>
-    <alias name="" index="8" field="location"/>
-    <alias name="" index="9" field="flowtype"/>
-    <alias name="" index="10" field="usage"/>
-    <alias name="" index="11" field="height"/>
-    <alias name="" index="12" field="width"/>
-    <alias name="" index="13" field="invert"/>
-    <alias name="" index="14" field="safety"/>
-    <alias name="" index="15" field="side"/>
-    <alias name="" index="16" field="position"/>
-    <alias name="" index="17" field="pk_descriptionsystem"/>
-    <alias name="" index="18" field="id_descriptionsystem"/>
-    <alias name="" index="19" field="lpk_object"/>
-    <alias name="" index="20" field="strategicvalue"/>
-    <alias name="" index="21" field="operational"/>
-    <alias name="" index="22" field="structuralstate"/>
-    <alias name="" index="23" field="operationalstate"/>
-    <alias name="" index="24" field="dateoperationalcreation"/>
-    <alias name="" index="25" field="dateoperationalcreationupper"/>
-    <alias name="" index="26" field="operationaldatecreationaccuracy"/>
-    <alias name="" index="27" field="datetimeoperationaldestruction"/>
-    <alias name="" index="28" field="geotrackingxyquality"/>
-    <alias name="" index="29" field="geotrackingzquality"/>
-    <alias name="" index="30" field="geotrackingdate"/>
-    <alias name="" index="31" field="geotrackingsource"/>
-    <alias name="" index="32" field="parameters"/>
-    <alias name="" index="33" field="parameterslist"/>
-    <alias name="" index="34" field="city"/>
-    <alias name="" index="35" field="streetname"/>
-    <alias name="" index="36" field="streetupname"/>
-    <alias name="" index="37" field="streetdownname"/>
-    <alias name="" index="38" field="streetcomment"/>
-    <alias name="" index="39" field="lid_actor_1"/>
-    <alias name="" index="40" field="lid_actor_2"/>
-    <alias name="" index="41" field="lid_actor_3"/>
-    <alias name="" index="42" field="lid_facility"/>
-    <alias name="" index="43" field="float_1"/>
-    <alias name="" index="44" field="float_2"/>
-    <alias name="" index="45" field="float_3"/>
-    <alias name="" index="46" field="float_4"/>
-    <alias name="" index="47" field="float_5"/>
-    <alias name="" index="48" field="float_6"/>
-    <alias name="" index="49" field="float_7"/>
-    <alias name="" index="50" field="float_8"/>
-    <alias name="" index="51" field="float_9"/>
-    <alias name="" index="52" field="float_10"/>
-    <alias name="" index="53" field="string_1"/>
-    <alias name="" index="54" field="string_2"/>
-    <alias name="" index="55" field="string_3"/>
-    <alias name="" index="56" field="string_4"/>
-    <alias name="" index="57" field="string_5"/>
-    <alias name="" index="58" field="string_6"/>
-    <alias name="" index="59" field="string_7"/>
-    <alias name="" index="60" field="string_8"/>
-    <alias name="" index="61" field="string_9"/>
-    <alias name="" index="62" field="string_10"/>
-    <alias name="" index="63" field="fonctionnalcondition"/>
-    <alias name="" index="64" field="pk_object"/>
-    <alias name="" index="65" field="id_object"/>
-    <alias name="" index="66" field="lpk_revision_begin"/>
-    <alias name="" index="67" field="lpk_revision_end"/>
-    <alias name="" index="68" field="datetimecreation"/>
-    <alias name="" index="69" field="datetimemodification"/>
-    <alias name="" index="70" field="datetimedestruction"/>
-    <alias name="" index="71" field="comment"/>
-    <alias name="" index="72" field="name"/>
-    <alias name="" index="73" field="importid"/>
-    <alias name="" index="74" field="importtable"/>
-    <alias name="" index="75" field="lid_actor_creator"/>
+    <alias index="0" field="pk_equipment" name=""/>
+    <alias index="1" field="id_equipment" name=""/>
+    <alias index="2" field="lpk_descriptionsystem" name=""/>
+    <alias index="3" field="equipmentcategory" name=""/>
+    <alias index="4" field="lid_resource_1" name=""/>
+    <alias index="5" field="lid_descriptionsystem_1" name=""/>
+    <alias index="6" field="equipmenttype" name=""/>
+    <alias index="7" field="equipmentsubtype" name=""/>
+    <alias index="8" field="location" name=""/>
+    <alias index="9" field="flowtype" name=""/>
+    <alias index="10" field="usage" name=""/>
+    <alias index="11" field="height" name=""/>
+    <alias index="12" field="width" name=""/>
+    <alias index="13" field="invert" name=""/>
+    <alias index="14" field="safety" name=""/>
+    <alias index="15" field="side" name=""/>
+    <alias index="16" field="position" name=""/>
+    <alias index="17" field="pk_descriptionsystem" name=""/>
+    <alias index="18" field="id_descriptionsystem" name=""/>
+    <alias index="19" field="lpk_object" name=""/>
+    <alias index="20" field="strategicvalue" name=""/>
+    <alias index="21" field="operational" name=""/>
+    <alias index="22" field="structuralstate" name=""/>
+    <alias index="23" field="operationalstate" name=""/>
+    <alias index="24" field="dateoperationalcreation" name=""/>
+    <alias index="25" field="dateoperationalcreationupper" name=""/>
+    <alias index="26" field="operationaldatecreationaccuracy" name=""/>
+    <alias index="27" field="datetimeoperationaldestruction" name=""/>
+    <alias index="28" field="geotrackingxyquality" name=""/>
+    <alias index="29" field="geotrackingzquality" name=""/>
+    <alias index="30" field="geotrackingdate" name=""/>
+    <alias index="31" field="geotrackingsource" name=""/>
+    <alias index="32" field="parameters" name=""/>
+    <alias index="33" field="parameterslist" name=""/>
+    <alias index="34" field="city" name=""/>
+    <alias index="35" field="streetname" name=""/>
+    <alias index="36" field="streetupname" name=""/>
+    <alias index="37" field="streetdownname" name=""/>
+    <alias index="38" field="streetcomment" name=""/>
+    <alias index="39" field="lid_actor_1" name=""/>
+    <alias index="40" field="lid_actor_2" name=""/>
+    <alias index="41" field="lid_actor_3" name=""/>
+    <alias index="42" field="lid_facility" name=""/>
+    <alias index="43" field="float_1" name=""/>
+    <alias index="44" field="float_2" name=""/>
+    <alias index="45" field="float_3" name=""/>
+    <alias index="46" field="float_4" name=""/>
+    <alias index="47" field="float_5" name=""/>
+    <alias index="48" field="float_6" name=""/>
+    <alias index="49" field="float_7" name=""/>
+    <alias index="50" field="float_8" name=""/>
+    <alias index="51" field="float_9" name=""/>
+    <alias index="52" field="float_10" name=""/>
+    <alias index="53" field="string_1" name=""/>
+    <alias index="54" field="string_2" name=""/>
+    <alias index="55" field="string_3" name=""/>
+    <alias index="56" field="string_4" name=""/>
+    <alias index="57" field="string_5" name=""/>
+    <alias index="58" field="string_6" name=""/>
+    <alias index="59" field="string_7" name=""/>
+    <alias index="60" field="string_8" name=""/>
+    <alias index="61" field="string_9" name=""/>
+    <alias index="62" field="string_10" name=""/>
+    <alias index="63" field="fonctionnalcondition" name=""/>
+    <alias index="64" field="pk_object" name=""/>
+    <alias index="65" field="id_object" name=""/>
+    <alias index="66" field="lpk_revision_begin" name=""/>
+    <alias index="67" field="lpk_revision_end" name=""/>
+    <alias index="68" field="datetimecreation" name=""/>
+    <alias index="69" field="datetimemodification" name=""/>
+    <alias index="70" field="datetimedestruction" name=""/>
+    <alias index="71" field="comment" name=""/>
+    <alias index="72" field="name" name=""/>
+    <alias index="73" field="importid" name=""/>
+    <alias index="74" field="importtable" name=""/>
+    <alias index="75" field="lid_actor_creator" name=""/>
+    <alias index="76" field="sirsid" name=""/>
   </aliases>
   <excludeAttributesWMS/>
   <excludeAttributesWFS/>
   <defaults>
-    <default field="pk_equipment" expression="" applyOnUpdate="0"/>
-    <default field="id_equipment" expression="" applyOnUpdate="0"/>
-    <default field="lpk_descriptionsystem" expression="" applyOnUpdate="0"/>
-    <default field="equipmentcategory" expression="" applyOnUpdate="0"/>
-    <default field="lid_resource_1" expression="" applyOnUpdate="0"/>
-    <default field="lid_descriptionsystem_1" expression="" applyOnUpdate="0"/>
-    <default field="equipmenttype" expression="" applyOnUpdate="0"/>
-    <default field="equipmentsubtype" expression="" applyOnUpdate="0"/>
-    <default field="location" expression="" applyOnUpdate="0"/>
-    <default field="flowtype" expression="" applyOnUpdate="0"/>
-    <default field="usage" expression="" applyOnUpdate="0"/>
-    <default field="height" expression="" applyOnUpdate="0"/>
-    <default field="width" expression="" applyOnUpdate="0"/>
-    <default field="invert" expression="" applyOnUpdate="0"/>
-    <default field="safety" expression="" applyOnUpdate="0"/>
-    <default field="side" expression="" applyOnUpdate="0"/>
-    <default field="position" expression="" applyOnUpdate="0"/>
-    <default field="pk_descriptionsystem" expression="" applyOnUpdate="0"/>
-    <default field="id_descriptionsystem" expression="" applyOnUpdate="0"/>
-    <default field="lpk_object" expression="" applyOnUpdate="0"/>
-    <default field="strategicvalue" expression="" applyOnUpdate="0"/>
-    <default field="operational" expression="" applyOnUpdate="0"/>
-    <default field="structuralstate" expression="" applyOnUpdate="0"/>
-    <default field="operationalstate" expression="" applyOnUpdate="0"/>
-    <default field="dateoperationalcreation" expression="" applyOnUpdate="0"/>
-    <default field="dateoperationalcreationupper" expression="" applyOnUpdate="0"/>
-    <default field="operationaldatecreationaccuracy" expression="" applyOnUpdate="0"/>
-    <default field="datetimeoperationaldestruction" expression="" applyOnUpdate="0"/>
-    <default field="geotrackingxyquality" expression="" applyOnUpdate="0"/>
-    <default field="geotrackingzquality" expression="" applyOnUpdate="0"/>
-    <default field="geotrackingdate" expression="" applyOnUpdate="0"/>
-    <default field="geotrackingsource" expression="" applyOnUpdate="0"/>
-    <default field="parameters" expression="" applyOnUpdate="0"/>
-    <default field="parameterslist" expression="" applyOnUpdate="0"/>
-    <default field="city" expression="" applyOnUpdate="0"/>
-    <default field="streetname" expression="" applyOnUpdate="0"/>
-    <default field="streetupname" expression="" applyOnUpdate="0"/>
-    <default field="streetdownname" expression="" applyOnUpdate="0"/>
-    <default field="streetcomment" expression="" applyOnUpdate="0"/>
-    <default field="lid_actor_1" expression="" applyOnUpdate="0"/>
-    <default field="lid_actor_2" expression="" applyOnUpdate="0"/>
-    <default field="lid_actor_3" expression="" applyOnUpdate="0"/>
-    <default field="lid_facility" expression="" applyOnUpdate="0"/>
-    <default field="float_1" expression="" applyOnUpdate="0"/>
-    <default field="float_2" expression="" applyOnUpdate="0"/>
-    <default field="float_3" expression="" applyOnUpdate="0"/>
-    <default field="float_4" expression="" applyOnUpdate="0"/>
-    <default field="float_5" expression="" applyOnUpdate="0"/>
-    <default field="float_6" expression="" applyOnUpdate="0"/>
-    <default field="float_7" expression="" applyOnUpdate="0"/>
-    <default field="float_8" expression="" applyOnUpdate="0"/>
-    <default field="float_9" expression="" applyOnUpdate="0"/>
-    <default field="float_10" expression="" applyOnUpdate="0"/>
-    <default field="string_1" expression="" applyOnUpdate="0"/>
-    <default field="string_2" expression="" applyOnUpdate="0"/>
-    <default field="string_3" expression="" applyOnUpdate="0"/>
-    <default field="string_4" expression="" applyOnUpdate="0"/>
-    <default field="string_5" expression="" applyOnUpdate="0"/>
-    <default field="string_6" expression="" applyOnUpdate="0"/>
-    <default field="string_7" expression="" applyOnUpdate="0"/>
-    <default field="string_8" expression="" applyOnUpdate="0"/>
-    <default field="string_9" expression="" applyOnUpdate="0"/>
-    <default field="string_10" expression="" applyOnUpdate="0"/>
-    <default field="fonctionnalcondition" expression="" applyOnUpdate="0"/>
-    <default field="pk_object" expression="" applyOnUpdate="0"/>
-    <default field="id_object" expression="" applyOnUpdate="0"/>
-    <default field="lpk_revision_begin" expression="" applyOnUpdate="0"/>
-    <default field="lpk_revision_end" expression="" applyOnUpdate="0"/>
-    <default field="datetimecreation" expression="" applyOnUpdate="0"/>
-    <default field="datetimemodification" expression="" applyOnUpdate="0"/>
-    <default field="datetimedestruction" expression="" applyOnUpdate="0"/>
-    <default field="comment" expression="" applyOnUpdate="0"/>
-    <default field="name" expression="" applyOnUpdate="0"/>
-    <default field="importid" expression="" applyOnUpdate="0"/>
-    <default field="importtable" expression="" applyOnUpdate="0"/>
-    <default field="lid_actor_creator" expression="" applyOnUpdate="0"/>
+    <default expression="" field="pk_equipment" applyOnUpdate="0"/>
+    <default expression="" field="id_equipment" applyOnUpdate="0"/>
+    <default expression="" field="lpk_descriptionsystem" applyOnUpdate="0"/>
+    <default expression="" field="equipmentcategory" applyOnUpdate="0"/>
+    <default expression="" field="lid_resource_1" applyOnUpdate="0"/>
+    <default expression="" field="lid_descriptionsystem_1" applyOnUpdate="0"/>
+    <default expression="" field="equipmenttype" applyOnUpdate="0"/>
+    <default expression="" field="equipmentsubtype" applyOnUpdate="0"/>
+    <default expression="" field="location" applyOnUpdate="0"/>
+    <default expression="" field="flowtype" applyOnUpdate="0"/>
+    <default expression="" field="usage" applyOnUpdate="0"/>
+    <default expression="" field="height" applyOnUpdate="0"/>
+    <default expression="" field="width" applyOnUpdate="0"/>
+    <default expression="" field="invert" applyOnUpdate="0"/>
+    <default expression="" field="safety" applyOnUpdate="0"/>
+    <default expression="" field="side" applyOnUpdate="0"/>
+    <default expression="" field="position" applyOnUpdate="0"/>
+    <default expression="" field="pk_descriptionsystem" applyOnUpdate="0"/>
+    <default expression="" field="id_descriptionsystem" applyOnUpdate="0"/>
+    <default expression="" field="lpk_object" applyOnUpdate="0"/>
+    <default expression="" field="strategicvalue" applyOnUpdate="0"/>
+    <default expression="" field="operational" applyOnUpdate="0"/>
+    <default expression="" field="structuralstate" applyOnUpdate="0"/>
+    <default expression="" field="operationalstate" applyOnUpdate="0"/>
+    <default expression="" field="dateoperationalcreation" applyOnUpdate="0"/>
+    <default expression="" field="dateoperationalcreationupper" applyOnUpdate="0"/>
+    <default expression="" field="operationaldatecreationaccuracy" applyOnUpdate="0"/>
+    <default expression="" field="datetimeoperationaldestruction" applyOnUpdate="0"/>
+    <default expression="" field="geotrackingxyquality" applyOnUpdate="0"/>
+    <default expression="" field="geotrackingzquality" applyOnUpdate="0"/>
+    <default expression="" field="geotrackingdate" applyOnUpdate="0"/>
+    <default expression="" field="geotrackingsource" applyOnUpdate="0"/>
+    <default expression="" field="parameters" applyOnUpdate="0"/>
+    <default expression="" field="parameterslist" applyOnUpdate="0"/>
+    <default expression="" field="city" applyOnUpdate="0"/>
+    <default expression="" field="streetname" applyOnUpdate="0"/>
+    <default expression="" field="streetupname" applyOnUpdate="0"/>
+    <default expression="" field="streetdownname" applyOnUpdate="0"/>
+    <default expression="" field="streetcomment" applyOnUpdate="0"/>
+    <default expression="" field="lid_actor_1" applyOnUpdate="0"/>
+    <default expression="" field="lid_actor_2" applyOnUpdate="0"/>
+    <default expression="" field="lid_actor_3" applyOnUpdate="0"/>
+    <default expression="" field="lid_facility" applyOnUpdate="0"/>
+    <default expression="" field="float_1" applyOnUpdate="0"/>
+    <default expression="" field="float_2" applyOnUpdate="0"/>
+    <default expression="" field="float_3" applyOnUpdate="0"/>
+    <default expression="" field="float_4" applyOnUpdate="0"/>
+    <default expression="" field="float_5" applyOnUpdate="0"/>
+    <default expression="" field="float_6" applyOnUpdate="0"/>
+    <default expression="" field="float_7" applyOnUpdate="0"/>
+    <default expression="" field="float_8" applyOnUpdate="0"/>
+    <default expression="" field="float_9" applyOnUpdate="0"/>
+    <default expression="" field="float_10" applyOnUpdate="0"/>
+    <default expression="" field="string_1" applyOnUpdate="0"/>
+    <default expression="" field="string_2" applyOnUpdate="0"/>
+    <default expression="" field="string_3" applyOnUpdate="0"/>
+    <default expression="" field="string_4" applyOnUpdate="0"/>
+    <default expression="" field="string_5" applyOnUpdate="0"/>
+    <default expression="" field="string_6" applyOnUpdate="0"/>
+    <default expression="" field="string_7" applyOnUpdate="0"/>
+    <default expression="" field="string_8" applyOnUpdate="0"/>
+    <default expression="" field="string_9" applyOnUpdate="0"/>
+    <default expression="" field="string_10" applyOnUpdate="0"/>
+    <default expression="" field="fonctionnalcondition" applyOnUpdate="0"/>
+    <default expression="" field="pk_object" applyOnUpdate="0"/>
+    <default expression="" field="id_object" applyOnUpdate="0"/>
+    <default expression="" field="lpk_revision_begin" applyOnUpdate="0"/>
+    <default expression="" field="lpk_revision_end" applyOnUpdate="0"/>
+    <default expression="" field="datetimecreation" applyOnUpdate="0"/>
+    <default expression="" field="datetimemodification" applyOnUpdate="0"/>
+    <default expression="" field="datetimedestruction" applyOnUpdate="0"/>
+    <default expression="" field="comment" applyOnUpdate="0"/>
+    <default expression="" field="name" applyOnUpdate="0"/>
+    <default expression="" field="importid" applyOnUpdate="0"/>
+    <default expression="" field="importtable" applyOnUpdate="0"/>
+    <default expression="" field="lid_actor_creator" applyOnUpdate="0"/>
+    <default expression="" field="sirsid" applyOnUpdate="0"/>
   </defaults>
   <constraints>
-    <constraint notnull_strength="0" constraints="0" field="pk_equipment" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="id_equipment" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="lpk_descriptionsystem" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="equipmentcategory" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="lid_resource_1" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="lid_descriptionsystem_1" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="equipmenttype" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="equipmentsubtype" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="location" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="flowtype" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="usage" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="height" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="width" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="invert" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="safety" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="side" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="position" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="pk_descriptionsystem" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="id_descriptionsystem" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="lpk_object" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="strategicvalue" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="operational" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="structuralstate" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="operationalstate" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="dateoperationalcreation" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="dateoperationalcreationupper" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="operationaldatecreationaccuracy" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="datetimeoperationaldestruction" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="geotrackingxyquality" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="geotrackingzquality" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="geotrackingdate" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="geotrackingsource" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="parameters" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="parameterslist" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="city" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="streetname" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="streetupname" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="streetdownname" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="streetcomment" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="lid_actor_1" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="lid_actor_2" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="lid_actor_3" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="lid_facility" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="float_1" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="float_2" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="float_3" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="float_4" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="float_5" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="float_6" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="float_7" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="float_8" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="float_9" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="float_10" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="string_1" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="string_2" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="string_3" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="string_4" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="string_5" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="string_6" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="string_7" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="string_8" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="string_9" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="string_10" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="fonctionnalcondition" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="pk_object" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="id_object" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="lpk_revision_begin" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="lpk_revision_end" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="datetimecreation" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="datetimemodification" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="datetimedestruction" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="comment" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="name" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="importid" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="importtable" unique_strength="0" exp_strength="0"/>
-    <constraint notnull_strength="0" constraints="0" field="lid_actor_creator" unique_strength="0" exp_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="pk_equipment" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="id_equipment" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="lpk_descriptionsystem" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="equipmentcategory" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="lid_resource_1" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="lid_descriptionsystem_1" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="equipmenttype" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="equipmentsubtype" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="location" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="flowtype" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="usage" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="height" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="width" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="invert" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="safety" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="side" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="position" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="pk_descriptionsystem" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="id_descriptionsystem" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="lpk_object" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="strategicvalue" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="operational" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="structuralstate" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="operationalstate" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="dateoperationalcreation" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="dateoperationalcreationupper" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="operationaldatecreationaccuracy" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="datetimeoperationaldestruction" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="geotrackingxyquality" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="geotrackingzquality" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="geotrackingdate" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="geotrackingsource" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="parameters" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="parameterslist" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="city" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="streetname" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="streetupname" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="streetdownname" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="streetcomment" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="lid_actor_1" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="lid_actor_2" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="lid_actor_3" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="lid_facility" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="float_1" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="float_2" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="float_3" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="float_4" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="float_5" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="float_6" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="float_7" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="float_8" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="float_9" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="float_10" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="string_1" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="string_2" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="string_3" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="string_4" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="string_5" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="string_6" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="string_7" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="string_8" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="string_9" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="string_10" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="fonctionnalcondition" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="pk_object" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="id_object" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="lpk_revision_begin" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="lpk_revision_end" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="datetimecreation" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="datetimemodification" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="datetimedestruction" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="comment" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="name" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="importid" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="importtable" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="lid_actor_creator" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="sirsid" exp_strength="0" notnull_strength="0"/>
   </constraints>
   <constraintExpressions>
-    <constraint field="pk_equipment" exp="" desc=""/>
-    <constraint field="id_equipment" exp="" desc=""/>
-    <constraint field="lpk_descriptionsystem" exp="" desc=""/>
-    <constraint field="equipmentcategory" exp="" desc=""/>
-    <constraint field="lid_resource_1" exp="" desc=""/>
-    <constraint field="lid_descriptionsystem_1" exp="" desc=""/>
-    <constraint field="equipmenttype" exp="" desc=""/>
-    <constraint field="equipmentsubtype" exp="" desc=""/>
-    <constraint field="location" exp="" desc=""/>
-    <constraint field="flowtype" exp="" desc=""/>
-    <constraint field="usage" exp="" desc=""/>
-    <constraint field="height" exp="" desc=""/>
-    <constraint field="width" exp="" desc=""/>
-    <constraint field="invert" exp="" desc=""/>
-    <constraint field="safety" exp="" desc=""/>
-    <constraint field="side" exp="" desc=""/>
-    <constraint field="position" exp="" desc=""/>
-    <constraint field="pk_descriptionsystem" exp="" desc=""/>
-    <constraint field="id_descriptionsystem" exp="" desc=""/>
-    <constraint field="lpk_object" exp="" desc=""/>
-    <constraint field="strategicvalue" exp="" desc=""/>
-    <constraint field="operational" exp="" desc=""/>
-    <constraint field="structuralstate" exp="" desc=""/>
-    <constraint field="operationalstate" exp="" desc=""/>
-    <constraint field="dateoperationalcreation" exp="" desc=""/>
-    <constraint field="dateoperationalcreationupper" exp="" desc=""/>
-    <constraint field="operationaldatecreationaccuracy" exp="" desc=""/>
-    <constraint field="datetimeoperationaldestruction" exp="" desc=""/>
-    <constraint field="geotrackingxyquality" exp="" desc=""/>
-    <constraint field="geotrackingzquality" exp="" desc=""/>
-    <constraint field="geotrackingdate" exp="" desc=""/>
-    <constraint field="geotrackingsource" exp="" desc=""/>
-    <constraint field="parameters" exp="" desc=""/>
-    <constraint field="parameterslist" exp="" desc=""/>
-    <constraint field="city" exp="" desc=""/>
-    <constraint field="streetname" exp="" desc=""/>
-    <constraint field="streetupname" exp="" desc=""/>
-    <constraint field="streetdownname" exp="" desc=""/>
-    <constraint field="streetcomment" exp="" desc=""/>
-    <constraint field="lid_actor_1" exp="" desc=""/>
-    <constraint field="lid_actor_2" exp="" desc=""/>
-    <constraint field="lid_actor_3" exp="" desc=""/>
-    <constraint field="lid_facility" exp="" desc=""/>
-    <constraint field="float_1" exp="" desc=""/>
-    <constraint field="float_2" exp="" desc=""/>
-    <constraint field="float_3" exp="" desc=""/>
-    <constraint field="float_4" exp="" desc=""/>
-    <constraint field="float_5" exp="" desc=""/>
-    <constraint field="float_6" exp="" desc=""/>
-    <constraint field="float_7" exp="" desc=""/>
-    <constraint field="float_8" exp="" desc=""/>
-    <constraint field="float_9" exp="" desc=""/>
-    <constraint field="float_10" exp="" desc=""/>
-    <constraint field="string_1" exp="" desc=""/>
-    <constraint field="string_2" exp="" desc=""/>
-    <constraint field="string_3" exp="" desc=""/>
-    <constraint field="string_4" exp="" desc=""/>
-    <constraint field="string_5" exp="" desc=""/>
-    <constraint field="string_6" exp="" desc=""/>
-    <constraint field="string_7" exp="" desc=""/>
-    <constraint field="string_8" exp="" desc=""/>
-    <constraint field="string_9" exp="" desc=""/>
-    <constraint field="string_10" exp="" desc=""/>
-    <constraint field="fonctionnalcondition" exp="" desc=""/>
-    <constraint field="pk_object" exp="" desc=""/>
-    <constraint field="id_object" exp="" desc=""/>
-    <constraint field="lpk_revision_begin" exp="" desc=""/>
-    <constraint field="lpk_revision_end" exp="" desc=""/>
-    <constraint field="datetimecreation" exp="" desc=""/>
-    <constraint field="datetimemodification" exp="" desc=""/>
-    <constraint field="datetimedestruction" exp="" desc=""/>
-    <constraint field="comment" exp="" desc=""/>
-    <constraint field="name" exp="" desc=""/>
-    <constraint field="importid" exp="" desc=""/>
-    <constraint field="importtable" exp="" desc=""/>
-    <constraint field="lid_actor_creator" exp="" desc=""/>
+    <constraint exp="" desc="" field="pk_equipment"/>
+    <constraint exp="" desc="" field="id_equipment"/>
+    <constraint exp="" desc="" field="lpk_descriptionsystem"/>
+    <constraint exp="" desc="" field="equipmentcategory"/>
+    <constraint exp="" desc="" field="lid_resource_1"/>
+    <constraint exp="" desc="" field="lid_descriptionsystem_1"/>
+    <constraint exp="" desc="" field="equipmenttype"/>
+    <constraint exp="" desc="" field="equipmentsubtype"/>
+    <constraint exp="" desc="" field="location"/>
+    <constraint exp="" desc="" field="flowtype"/>
+    <constraint exp="" desc="" field="usage"/>
+    <constraint exp="" desc="" field="height"/>
+    <constraint exp="" desc="" field="width"/>
+    <constraint exp="" desc="" field="invert"/>
+    <constraint exp="" desc="" field="safety"/>
+    <constraint exp="" desc="" field="side"/>
+    <constraint exp="" desc="" field="position"/>
+    <constraint exp="" desc="" field="pk_descriptionsystem"/>
+    <constraint exp="" desc="" field="id_descriptionsystem"/>
+    <constraint exp="" desc="" field="lpk_object"/>
+    <constraint exp="" desc="" field="strategicvalue"/>
+    <constraint exp="" desc="" field="operational"/>
+    <constraint exp="" desc="" field="structuralstate"/>
+    <constraint exp="" desc="" field="operationalstate"/>
+    <constraint exp="" desc="" field="dateoperationalcreation"/>
+    <constraint exp="" desc="" field="dateoperationalcreationupper"/>
+    <constraint exp="" desc="" field="operationaldatecreationaccuracy"/>
+    <constraint exp="" desc="" field="datetimeoperationaldestruction"/>
+    <constraint exp="" desc="" field="geotrackingxyquality"/>
+    <constraint exp="" desc="" field="geotrackingzquality"/>
+    <constraint exp="" desc="" field="geotrackingdate"/>
+    <constraint exp="" desc="" field="geotrackingsource"/>
+    <constraint exp="" desc="" field="parameters"/>
+    <constraint exp="" desc="" field="parameterslist"/>
+    <constraint exp="" desc="" field="city"/>
+    <constraint exp="" desc="" field="streetname"/>
+    <constraint exp="" desc="" field="streetupname"/>
+    <constraint exp="" desc="" field="streetdownname"/>
+    <constraint exp="" desc="" field="streetcomment"/>
+    <constraint exp="" desc="" field="lid_actor_1"/>
+    <constraint exp="" desc="" field="lid_actor_2"/>
+    <constraint exp="" desc="" field="lid_actor_3"/>
+    <constraint exp="" desc="" field="lid_facility"/>
+    <constraint exp="" desc="" field="float_1"/>
+    <constraint exp="" desc="" field="float_2"/>
+    <constraint exp="" desc="" field="float_3"/>
+    <constraint exp="" desc="" field="float_4"/>
+    <constraint exp="" desc="" field="float_5"/>
+    <constraint exp="" desc="" field="float_6"/>
+    <constraint exp="" desc="" field="float_7"/>
+    <constraint exp="" desc="" field="float_8"/>
+    <constraint exp="" desc="" field="float_9"/>
+    <constraint exp="" desc="" field="float_10"/>
+    <constraint exp="" desc="" field="string_1"/>
+    <constraint exp="" desc="" field="string_2"/>
+    <constraint exp="" desc="" field="string_3"/>
+    <constraint exp="" desc="" field="string_4"/>
+    <constraint exp="" desc="" field="string_5"/>
+    <constraint exp="" desc="" field="string_6"/>
+    <constraint exp="" desc="" field="string_7"/>
+    <constraint exp="" desc="" field="string_8"/>
+    <constraint exp="" desc="" field="string_9"/>
+    <constraint exp="" desc="" field="string_10"/>
+    <constraint exp="" desc="" field="fonctionnalcondition"/>
+    <constraint exp="" desc="" field="pk_object"/>
+    <constraint exp="" desc="" field="id_object"/>
+    <constraint exp="" desc="" field="lpk_revision_begin"/>
+    <constraint exp="" desc="" field="lpk_revision_end"/>
+    <constraint exp="" desc="" field="datetimecreation"/>
+    <constraint exp="" desc="" field="datetimemodification"/>
+    <constraint exp="" desc="" field="datetimedestruction"/>
+    <constraint exp="" desc="" field="comment"/>
+    <constraint exp="" desc="" field="name"/>
+    <constraint exp="" desc="" field="importid"/>
+    <constraint exp="" desc="" field="importtable"/>
+    <constraint exp="" desc="" field="lid_actor_creator"/>
+    <constraint exp="" desc="" field="sirsid"/>
   </constraintExpressions>
   <expressionfields/>
   <attributeactions>
     <defaultAction key="Canvas" value="{00000000-0000-0000-0000-000000000000}"/>
   </attributeactions>
-  <attributetableconfig sortExpression="" sortOrder="0" actionWidgetStyle="dropDown">
+  <attributetableconfig sortExpression="" actionWidgetStyle="dropDown" sortOrder="0">
     <columns>
-      <column name="pk_equipment" width="-1" hidden="0" type="field"/>
-      <column name="id_equipment" width="-1" hidden="0" type="field"/>
-      <column name="lpk_descriptionsystem" width="-1" hidden="0" type="field"/>
-      <column name="equipmentcategory" width="-1" hidden="0" type="field"/>
-      <column name="lid_resource_1" width="-1" hidden="0" type="field"/>
-      <column name="lid_descriptionsystem_1" width="-1" hidden="0" type="field"/>
-      <column name="equipmenttype" width="-1" hidden="0" type="field"/>
-      <column name="equipmentsubtype" width="-1" hidden="0" type="field"/>
-      <column name="location" width="-1" hidden="0" type="field"/>
-      <column name="flowtype" width="-1" hidden="0" type="field"/>
-      <column name="usage" width="-1" hidden="0" type="field"/>
-      <column name="height" width="-1" hidden="0" type="field"/>
-      <column name="width" width="-1" hidden="0" type="field"/>
-      <column name="invert" width="-1" hidden="0" type="field"/>
-      <column name="safety" width="-1" hidden="0" type="field"/>
-      <column name="side" width="-1" hidden="0" type="field"/>
-      <column name="position" width="-1" hidden="0" type="field"/>
-      <column name="pk_descriptionsystem" width="-1" hidden="0" type="field"/>
-      <column name="id_descriptionsystem" width="-1" hidden="0" type="field"/>
-      <column name="lpk_object" width="-1" hidden="0" type="field"/>
-      <column name="strategicvalue" width="-1" hidden="0" type="field"/>
-      <column name="operational" width="-1" hidden="0" type="field"/>
-      <column name="structuralstate" width="-1" hidden="0" type="field"/>
-      <column name="operationalstate" width="-1" hidden="0" type="field"/>
-      <column name="dateoperationalcreation" width="-1" hidden="0" type="field"/>
-      <column name="dateoperationalcreationupper" width="-1" hidden="0" type="field"/>
-      <column name="operationaldatecreationaccuracy" width="-1" hidden="0" type="field"/>
-      <column name="datetimeoperationaldestruction" width="-1" hidden="0" type="field"/>
-      <column name="geotrackingxyquality" width="-1" hidden="0" type="field"/>
-      <column name="geotrackingzquality" width="-1" hidden="0" type="field"/>
-      <column name="geotrackingdate" width="-1" hidden="0" type="field"/>
-      <column name="geotrackingsource" width="-1" hidden="0" type="field"/>
-      <column name="parameters" width="-1" hidden="0" type="field"/>
-      <column name="parameterslist" width="-1" hidden="0" type="field"/>
-      <column name="city" width="-1" hidden="0" type="field"/>
-      <column name="streetname" width="-1" hidden="0" type="field"/>
-      <column name="streetupname" width="-1" hidden="0" type="field"/>
-      <column name="streetdownname" width="-1" hidden="0" type="field"/>
-      <column name="streetcomment" width="-1" hidden="0" type="field"/>
-      <column name="lid_actor_1" width="-1" hidden="0" type="field"/>
-      <column name="lid_actor_2" width="-1" hidden="0" type="field"/>
-      <column name="lid_actor_3" width="-1" hidden="0" type="field"/>
-      <column name="lid_facility" width="-1" hidden="0" type="field"/>
-      <column name="float_1" width="-1" hidden="0" type="field"/>
-      <column name="float_2" width="-1" hidden="0" type="field"/>
-      <column name="float_3" width="-1" hidden="0" type="field"/>
-      <column name="float_4" width="-1" hidden="0" type="field"/>
-      <column name="float_5" width="-1" hidden="0" type="field"/>
-      <column name="float_6" width="-1" hidden="0" type="field"/>
-      <column name="float_7" width="-1" hidden="0" type="field"/>
-      <column name="float_8" width="-1" hidden="0" type="field"/>
-      <column name="float_9" width="-1" hidden="0" type="field"/>
-      <column name="float_10" width="-1" hidden="0" type="field"/>
-      <column name="string_1" width="-1" hidden="0" type="field"/>
-      <column name="string_2" width="-1" hidden="0" type="field"/>
-      <column name="string_3" width="-1" hidden="0" type="field"/>
-      <column name="string_4" width="-1" hidden="0" type="field"/>
-      <column name="string_5" width="-1" hidden="0" type="field"/>
-      <column name="string_6" width="-1" hidden="0" type="field"/>
-      <column name="string_7" width="-1" hidden="0" type="field"/>
-      <column name="string_8" width="-1" hidden="0" type="field"/>
-      <column name="string_9" width="-1" hidden="0" type="field"/>
-      <column name="string_10" width="-1" hidden="0" type="field"/>
-      <column name="fonctionnalcondition" width="-1" hidden="0" type="field"/>
-      <column name="pk_object" width="-1" hidden="0" type="field"/>
-      <column name="id_object" width="-1" hidden="0" type="field"/>
-      <column name="lpk_revision_begin" width="-1" hidden="0" type="field"/>
-      <column name="lpk_revision_end" width="-1" hidden="0" type="field"/>
-      <column name="datetimecreation" width="-1" hidden="0" type="field"/>
-      <column name="datetimemodification" width="-1" hidden="0" type="field"/>
-      <column name="datetimedestruction" width="-1" hidden="0" type="field"/>
-      <column name="comment" width="-1" hidden="0" type="field"/>
-      <column name="name" width="-1" hidden="0" type="field"/>
-      <column name="importid" width="-1" hidden="0" type="field"/>
-      <column name="importtable" width="-1" hidden="0" type="field"/>
-      <column name="lid_actor_creator" width="-1" hidden="0" type="field"/>
-      <column width="-1" hidden="1" type="actions"/>
+      <column width="-1" type="field" hidden="0" name="pk_equipment"/>
+      <column width="-1" type="field" hidden="0" name="id_equipment"/>
+      <column width="-1" type="field" hidden="0" name="lpk_descriptionsystem"/>
+      <column width="-1" type="field" hidden="0" name="equipmentcategory"/>
+      <column width="-1" type="field" hidden="0" name="lid_resource_1"/>
+      <column width="-1" type="field" hidden="0" name="lid_descriptionsystem_1"/>
+      <column width="-1" type="field" hidden="0" name="equipmenttype"/>
+      <column width="-1" type="field" hidden="0" name="equipmentsubtype"/>
+      <column width="-1" type="field" hidden="0" name="location"/>
+      <column width="-1" type="field" hidden="0" name="flowtype"/>
+      <column width="-1" type="field" hidden="0" name="usage"/>
+      <column width="-1" type="field" hidden="0" name="height"/>
+      <column width="-1" type="field" hidden="0" name="width"/>
+      <column width="-1" type="field" hidden="0" name="invert"/>
+      <column width="-1" type="field" hidden="0" name="safety"/>
+      <column width="-1" type="field" hidden="0" name="side"/>
+      <column width="-1" type="field" hidden="0" name="position"/>
+      <column width="-1" type="field" hidden="0" name="pk_descriptionsystem"/>
+      <column width="-1" type="field" hidden="0" name="id_descriptionsystem"/>
+      <column width="-1" type="field" hidden="0" name="lpk_object"/>
+      <column width="-1" type="field" hidden="0" name="strategicvalue"/>
+      <column width="-1" type="field" hidden="0" name="operational"/>
+      <column width="-1" type="field" hidden="0" name="structuralstate"/>
+      <column width="-1" type="field" hidden="0" name="operationalstate"/>
+      <column width="-1" type="field" hidden="0" name="dateoperationalcreation"/>
+      <column width="-1" type="field" hidden="0" name="dateoperationalcreationupper"/>
+      <column width="-1" type="field" hidden="0" name="operationaldatecreationaccuracy"/>
+      <column width="-1" type="field" hidden="0" name="datetimeoperationaldestruction"/>
+      <column width="-1" type="field" hidden="0" name="geotrackingxyquality"/>
+      <column width="-1" type="field" hidden="0" name="geotrackingzquality"/>
+      <column width="-1" type="field" hidden="0" name="geotrackingdate"/>
+      <column width="-1" type="field" hidden="0" name="geotrackingsource"/>
+      <column width="-1" type="field" hidden="0" name="parameters"/>
+      <column width="-1" type="field" hidden="0" name="parameterslist"/>
+      <column width="-1" type="field" hidden="0" name="city"/>
+      <column width="-1" type="field" hidden="0" name="streetname"/>
+      <column width="-1" type="field" hidden="0" name="streetupname"/>
+      <column width="-1" type="field" hidden="0" name="streetdownname"/>
+      <column width="-1" type="field" hidden="0" name="streetcomment"/>
+      <column width="-1" type="field" hidden="0" name="lid_actor_1"/>
+      <column width="-1" type="field" hidden="0" name="lid_actor_2"/>
+      <column width="-1" type="field" hidden="0" name="lid_actor_3"/>
+      <column width="-1" type="field" hidden="0" name="lid_facility"/>
+      <column width="-1" type="field" hidden="0" name="float_1"/>
+      <column width="-1" type="field" hidden="0" name="float_2"/>
+      <column width="-1" type="field" hidden="0" name="float_3"/>
+      <column width="-1" type="field" hidden="0" name="float_4"/>
+      <column width="-1" type="field" hidden="0" name="float_5"/>
+      <column width="-1" type="field" hidden="0" name="float_6"/>
+      <column width="-1" type="field" hidden="0" name="float_7"/>
+      <column width="-1" type="field" hidden="0" name="float_8"/>
+      <column width="-1" type="field" hidden="0" name="float_9"/>
+      <column width="-1" type="field" hidden="0" name="float_10"/>
+      <column width="-1" type="field" hidden="0" name="string_1"/>
+      <column width="-1" type="field" hidden="0" name="string_2"/>
+      <column width="-1" type="field" hidden="0" name="string_3"/>
+      <column width="-1" type="field" hidden="0" name="string_4"/>
+      <column width="-1" type="field" hidden="0" name="string_5"/>
+      <column width="-1" type="field" hidden="0" name="string_6"/>
+      <column width="-1" type="field" hidden="0" name="string_7"/>
+      <column width="-1" type="field" hidden="0" name="string_8"/>
+      <column width="-1" type="field" hidden="0" name="string_9"/>
+      <column width="-1" type="field" hidden="0" name="string_10"/>
+      <column width="-1" type="field" hidden="0" name="fonctionnalcondition"/>
+      <column width="-1" type="field" hidden="0" name="pk_object"/>
+      <column width="-1" type="field" hidden="0" name="id_object"/>
+      <column width="-1" type="field" hidden="0" name="lpk_revision_begin"/>
+      <column width="-1" type="field" hidden="0" name="lpk_revision_end"/>
+      <column width="-1" type="field" hidden="0" name="datetimecreation"/>
+      <column width="-1" type="field" hidden="0" name="datetimemodification"/>
+      <column width="-1" type="field" hidden="0" name="datetimedestruction"/>
+      <column width="-1" type="field" hidden="0" name="comment"/>
+      <column width="-1" type="field" hidden="0" name="name"/>
+      <column width="-1" type="field" hidden="0" name="importid"/>
+      <column width="-1" type="field" hidden="0" name="importtable"/>
+      <column width="-1" type="field" hidden="0" name="lid_actor_creator"/>
+      <column width="-1" type="actions" hidden="1"/>
+      <column width="-1" type="field" hidden="0" name="sirsid"/>
     </columns>
   </attributetableconfig>
   <conditionalstyles>
@@ -1770,160 +1864,162 @@ def my_form_open(dialog, layer, feature):
   <featformsuppress>0</featformsuppress>
   <editorlayout>generatedlayout</editorlayout>
   <editable>
-    <field name="city" editable="1"/>
-    <field name="comment" editable="1"/>
-    <field name="dateoperationalcreation" editable="1"/>
-    <field name="dateoperationalcreationupper" editable="1"/>
-    <field name="datetimecreation" editable="1"/>
-    <field name="datetimedestruction" editable="1"/>
-    <field name="datetimemodification" editable="1"/>
-    <field name="datetimeoperationaldestruction" editable="1"/>
-    <field name="equipmentcategory" editable="1"/>
-    <field name="equipmentsubtype" editable="1"/>
-    <field name="equipmenttype" editable="1"/>
-    <field name="float_1" editable="1"/>
-    <field name="float_10" editable="1"/>
-    <field name="float_2" editable="1"/>
-    <field name="float_3" editable="1"/>
-    <field name="float_4" editable="1"/>
-    <field name="float_5" editable="1"/>
-    <field name="float_6" editable="1"/>
-    <field name="float_7" editable="1"/>
-    <field name="float_8" editable="1"/>
-    <field name="float_9" editable="1"/>
-    <field name="flowtype" editable="1"/>
-    <field name="fonctionnalcondition" editable="1"/>
-    <field name="geotrackingdate" editable="1"/>
-    <field name="geotrackingsource" editable="1"/>
-    <field name="geotrackingxyquality" editable="1"/>
-    <field name="geotrackingzquality" editable="1"/>
-    <field name="height" editable="1"/>
-    <field name="id_descriptionsystem" editable="1"/>
-    <field name="id_equipment" editable="1"/>
-    <field name="id_object" editable="1"/>
-    <field name="importid" editable="1"/>
-    <field name="importtable" editable="1"/>
-    <field name="invert" editable="1"/>
-    <field name="lid_actor_1" editable="1"/>
-    <field name="lid_actor_2" editable="1"/>
-    <field name="lid_actor_3" editable="1"/>
-    <field name="lid_actor_creator" editable="1"/>
-    <field name="lid_descriptionsystem_1" editable="1"/>
-    <field name="lid_facility" editable="1"/>
-    <field name="lid_resource_1" editable="1"/>
-    <field name="location" editable="1"/>
-    <field name="lpk_descriptionsystem" editable="1"/>
-    <field name="lpk_object" editable="1"/>
-    <field name="lpk_revision_begin" editable="1"/>
-    <field name="lpk_revision_end" editable="1"/>
-    <field name="name" editable="1"/>
-    <field name="operational" editable="1"/>
-    <field name="operationaldatecreationaccuracy" editable="1"/>
-    <field name="operationalstate" editable="1"/>
-    <field name="parameters" editable="1"/>
-    <field name="parameterslist" editable="1"/>
-    <field name="pk_descriptionsystem" editable="1"/>
-    <field name="pk_equipment" editable="1"/>
-    <field name="pk_object" editable="1"/>
-    <field name="position" editable="1"/>
-    <field name="safety" editable="1"/>
-    <field name="side" editable="1"/>
-    <field name="strategicvalue" editable="1"/>
-    <field name="streetcomment" editable="1"/>
-    <field name="streetdownname" editable="1"/>
-    <field name="streetname" editable="1"/>
-    <field name="streetupname" editable="1"/>
-    <field name="string_1" editable="1"/>
-    <field name="string_10" editable="1"/>
-    <field name="string_2" editable="1"/>
-    <field name="string_3" editable="1"/>
-    <field name="string_4" editable="1"/>
-    <field name="string_5" editable="1"/>
-    <field name="string_6" editable="1"/>
-    <field name="string_7" editable="1"/>
-    <field name="string_8" editable="1"/>
-    <field name="string_9" editable="1"/>
-    <field name="structuralstate" editable="1"/>
-    <field name="usage" editable="1"/>
-    <field name="width" editable="1"/>
+    <field editable="1" name="city"/>
+    <field editable="1" name="comment"/>
+    <field editable="1" name="dateoperationalcreation"/>
+    <field editable="1" name="dateoperationalcreationupper"/>
+    <field editable="1" name="datetimecreation"/>
+    <field editable="1" name="datetimedestruction"/>
+    <field editable="1" name="datetimemodification"/>
+    <field editable="1" name="datetimeoperationaldestruction"/>
+    <field editable="1" name="equipmentcategory"/>
+    <field editable="1" name="equipmentsubtype"/>
+    <field editable="1" name="equipmenttype"/>
+    <field editable="1" name="float_1"/>
+    <field editable="1" name="float_10"/>
+    <field editable="1" name="float_2"/>
+    <field editable="1" name="float_3"/>
+    <field editable="1" name="float_4"/>
+    <field editable="1" name="float_5"/>
+    <field editable="1" name="float_6"/>
+    <field editable="1" name="float_7"/>
+    <field editable="1" name="float_8"/>
+    <field editable="1" name="float_9"/>
+    <field editable="1" name="flowtype"/>
+    <field editable="1" name="fonctionnalcondition"/>
+    <field editable="1" name="geotrackingdate"/>
+    <field editable="1" name="geotrackingsource"/>
+    <field editable="1" name="geotrackingxyquality"/>
+    <field editable="1" name="geotrackingzquality"/>
+    <field editable="1" name="height"/>
+    <field editable="1" name="id_descriptionsystem"/>
+    <field editable="1" name="id_equipment"/>
+    <field editable="1" name="id_object"/>
+    <field editable="1" name="importid"/>
+    <field editable="1" name="importtable"/>
+    <field editable="1" name="invert"/>
+    <field editable="1" name="lid_actor_1"/>
+    <field editable="1" name="lid_actor_2"/>
+    <field editable="1" name="lid_actor_3"/>
+    <field editable="1" name="lid_actor_creator"/>
+    <field editable="1" name="lid_descriptionsystem_1"/>
+    <field editable="1" name="lid_facility"/>
+    <field editable="1" name="lid_resource_1"/>
+    <field editable="1" name="location"/>
+    <field editable="1" name="lpk_descriptionsystem"/>
+    <field editable="1" name="lpk_object"/>
+    <field editable="1" name="lpk_revision_begin"/>
+    <field editable="1" name="lpk_revision_end"/>
+    <field editable="1" name="name"/>
+    <field editable="1" name="operational"/>
+    <field editable="1" name="operationaldatecreationaccuracy"/>
+    <field editable="1" name="operationalstate"/>
+    <field editable="1" name="parameters"/>
+    <field editable="1" name="parameterslist"/>
+    <field editable="1" name="pk_descriptionsystem"/>
+    <field editable="1" name="pk_equipment"/>
+    <field editable="1" name="pk_object"/>
+    <field editable="1" name="position"/>
+    <field editable="1" name="safety"/>
+    <field editable="1" name="side"/>
+    <field editable="1" name="sirsid"/>
+    <field editable="1" name="strategicvalue"/>
+    <field editable="1" name="streetcomment"/>
+    <field editable="1" name="streetdownname"/>
+    <field editable="1" name="streetname"/>
+    <field editable="1" name="streetupname"/>
+    <field editable="1" name="string_1"/>
+    <field editable="1" name="string_10"/>
+    <field editable="1" name="string_2"/>
+    <field editable="1" name="string_3"/>
+    <field editable="1" name="string_4"/>
+    <field editable="1" name="string_5"/>
+    <field editable="1" name="string_6"/>
+    <field editable="1" name="string_7"/>
+    <field editable="1" name="string_8"/>
+    <field editable="1" name="string_9"/>
+    <field editable="1" name="structuralstate"/>
+    <field editable="1" name="usage"/>
+    <field editable="1" name="width"/>
   </editable>
   <labelOnTop>
-    <field name="city" labelOnTop="0"/>
-    <field name="comment" labelOnTop="0"/>
-    <field name="dateoperationalcreation" labelOnTop="0"/>
-    <field name="dateoperationalcreationupper" labelOnTop="0"/>
-    <field name="datetimecreation" labelOnTop="0"/>
-    <field name="datetimedestruction" labelOnTop="0"/>
-    <field name="datetimemodification" labelOnTop="0"/>
-    <field name="datetimeoperationaldestruction" labelOnTop="0"/>
-    <field name="equipmentcategory" labelOnTop="0"/>
-    <field name="equipmentsubtype" labelOnTop="0"/>
-    <field name="equipmenttype" labelOnTop="0"/>
-    <field name="float_1" labelOnTop="0"/>
-    <field name="float_10" labelOnTop="0"/>
-    <field name="float_2" labelOnTop="0"/>
-    <field name="float_3" labelOnTop="0"/>
-    <field name="float_4" labelOnTop="0"/>
-    <field name="float_5" labelOnTop="0"/>
-    <field name="float_6" labelOnTop="0"/>
-    <field name="float_7" labelOnTop="0"/>
-    <field name="float_8" labelOnTop="0"/>
-    <field name="float_9" labelOnTop="0"/>
-    <field name="flowtype" labelOnTop="0"/>
-    <field name="fonctionnalcondition" labelOnTop="0"/>
-    <field name="geotrackingdate" labelOnTop="0"/>
-    <field name="geotrackingsource" labelOnTop="0"/>
-    <field name="geotrackingxyquality" labelOnTop="0"/>
-    <field name="geotrackingzquality" labelOnTop="0"/>
-    <field name="height" labelOnTop="0"/>
-    <field name="id_descriptionsystem" labelOnTop="0"/>
-    <field name="id_equipment" labelOnTop="0"/>
-    <field name="id_object" labelOnTop="0"/>
-    <field name="importid" labelOnTop="0"/>
-    <field name="importtable" labelOnTop="0"/>
-    <field name="invert" labelOnTop="0"/>
-    <field name="lid_actor_1" labelOnTop="0"/>
-    <field name="lid_actor_2" labelOnTop="0"/>
-    <field name="lid_actor_3" labelOnTop="0"/>
-    <field name="lid_actor_creator" labelOnTop="0"/>
-    <field name="lid_descriptionsystem_1" labelOnTop="0"/>
-    <field name="lid_facility" labelOnTop="0"/>
-    <field name="lid_resource_1" labelOnTop="0"/>
-    <field name="location" labelOnTop="0"/>
-    <field name="lpk_descriptionsystem" labelOnTop="0"/>
-    <field name="lpk_object" labelOnTop="0"/>
-    <field name="lpk_revision_begin" labelOnTop="0"/>
-    <field name="lpk_revision_end" labelOnTop="0"/>
-    <field name="name" labelOnTop="0"/>
-    <field name="operational" labelOnTop="0"/>
-    <field name="operationaldatecreationaccuracy" labelOnTop="0"/>
-    <field name="operationalstate" labelOnTop="0"/>
-    <field name="parameters" labelOnTop="0"/>
-    <field name="parameterslist" labelOnTop="0"/>
-    <field name="pk_descriptionsystem" labelOnTop="0"/>
-    <field name="pk_equipment" labelOnTop="0"/>
-    <field name="pk_object" labelOnTop="0"/>
-    <field name="position" labelOnTop="0"/>
-    <field name="safety" labelOnTop="0"/>
-    <field name="side" labelOnTop="0"/>
-    <field name="strategicvalue" labelOnTop="0"/>
-    <field name="streetcomment" labelOnTop="0"/>
-    <field name="streetdownname" labelOnTop="0"/>
-    <field name="streetname" labelOnTop="0"/>
-    <field name="streetupname" labelOnTop="0"/>
-    <field name="string_1" labelOnTop="0"/>
-    <field name="string_10" labelOnTop="0"/>
-    <field name="string_2" labelOnTop="0"/>
-    <field name="string_3" labelOnTop="0"/>
-    <field name="string_4" labelOnTop="0"/>
-    <field name="string_5" labelOnTop="0"/>
-    <field name="string_6" labelOnTop="0"/>
-    <field name="string_7" labelOnTop="0"/>
-    <field name="string_8" labelOnTop="0"/>
-    <field name="string_9" labelOnTop="0"/>
-    <field name="structuralstate" labelOnTop="0"/>
-    <field name="usage" labelOnTop="0"/>
-    <field name="width" labelOnTop="0"/>
+    <field labelOnTop="0" name="city"/>
+    <field labelOnTop="0" name="comment"/>
+    <field labelOnTop="0" name="dateoperationalcreation"/>
+    <field labelOnTop="0" name="dateoperationalcreationupper"/>
+    <field labelOnTop="0" name="datetimecreation"/>
+    <field labelOnTop="0" name="datetimedestruction"/>
+    <field labelOnTop="0" name="datetimemodification"/>
+    <field labelOnTop="0" name="datetimeoperationaldestruction"/>
+    <field labelOnTop="0" name="equipmentcategory"/>
+    <field labelOnTop="0" name="equipmentsubtype"/>
+    <field labelOnTop="0" name="equipmenttype"/>
+    <field labelOnTop="0" name="float_1"/>
+    <field labelOnTop="0" name="float_10"/>
+    <field labelOnTop="0" name="float_2"/>
+    <field labelOnTop="0" name="float_3"/>
+    <field labelOnTop="0" name="float_4"/>
+    <field labelOnTop="0" name="float_5"/>
+    <field labelOnTop="0" name="float_6"/>
+    <field labelOnTop="0" name="float_7"/>
+    <field labelOnTop="0" name="float_8"/>
+    <field labelOnTop="0" name="float_9"/>
+    <field labelOnTop="0" name="flowtype"/>
+    <field labelOnTop="0" name="fonctionnalcondition"/>
+    <field labelOnTop="0" name="geotrackingdate"/>
+    <field labelOnTop="0" name="geotrackingsource"/>
+    <field labelOnTop="0" name="geotrackingxyquality"/>
+    <field labelOnTop="0" name="geotrackingzquality"/>
+    <field labelOnTop="0" name="height"/>
+    <field labelOnTop="0" name="id_descriptionsystem"/>
+    <field labelOnTop="0" name="id_equipment"/>
+    <field labelOnTop="0" name="id_object"/>
+    <field labelOnTop="0" name="importid"/>
+    <field labelOnTop="0" name="importtable"/>
+    <field labelOnTop="0" name="invert"/>
+    <field labelOnTop="0" name="lid_actor_1"/>
+    <field labelOnTop="0" name="lid_actor_2"/>
+    <field labelOnTop="0" name="lid_actor_3"/>
+    <field labelOnTop="0" name="lid_actor_creator"/>
+    <field labelOnTop="0" name="lid_descriptionsystem_1"/>
+    <field labelOnTop="0" name="lid_facility"/>
+    <field labelOnTop="0" name="lid_resource_1"/>
+    <field labelOnTop="0" name="location"/>
+    <field labelOnTop="0" name="lpk_descriptionsystem"/>
+    <field labelOnTop="0" name="lpk_object"/>
+    <field labelOnTop="0" name="lpk_revision_begin"/>
+    <field labelOnTop="0" name="lpk_revision_end"/>
+    <field labelOnTop="0" name="name"/>
+    <field labelOnTop="0" name="operational"/>
+    <field labelOnTop="0" name="operationaldatecreationaccuracy"/>
+    <field labelOnTop="0" name="operationalstate"/>
+    <field labelOnTop="0" name="parameters"/>
+    <field labelOnTop="0" name="parameterslist"/>
+    <field labelOnTop="0" name="pk_descriptionsystem"/>
+    <field labelOnTop="0" name="pk_equipment"/>
+    <field labelOnTop="0" name="pk_object"/>
+    <field labelOnTop="0" name="position"/>
+    <field labelOnTop="0" name="safety"/>
+    <field labelOnTop="0" name="side"/>
+    <field labelOnTop="0" name="sirsid"/>
+    <field labelOnTop="0" name="strategicvalue"/>
+    <field labelOnTop="0" name="streetcomment"/>
+    <field labelOnTop="0" name="streetdownname"/>
+    <field labelOnTop="0" name="streetname"/>
+    <field labelOnTop="0" name="streetupname"/>
+    <field labelOnTop="0" name="string_1"/>
+    <field labelOnTop="0" name="string_10"/>
+    <field labelOnTop="0" name="string_2"/>
+    <field labelOnTop="0" name="string_3"/>
+    <field labelOnTop="0" name="string_4"/>
+    <field labelOnTop="0" name="string_5"/>
+    <field labelOnTop="0" name="string_6"/>
+    <field labelOnTop="0" name="string_7"/>
+    <field labelOnTop="0" name="string_8"/>
+    <field labelOnTop="0" name="string_9"/>
+    <field labelOnTop="0" name="structuralstate"/>
+    <field labelOnTop="0" name="usage"/>
+    <field labelOnTop="0" name="width"/>
   </labelOnTop>
   <widgets/>
   <previewExpression>streetname</previewExpression>

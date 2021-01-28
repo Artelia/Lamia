@@ -1,3 +1,6 @@
+C:\01_WORKINGDIR\aaaa\test6.sqlite
+C:/01_WORKINGDIR/aaaa/test6.sqlite
+C:\01_WORKINGDIR\fauna\test.sqlite
+C:\01_WORKINGDIR\bm\BD_totale_ind15.sqlite
 C:\Users\Public\Documents\lamia\GPMB_Bacalan_offline\GPMB_Bacalan_offline.sqlite
 C:\01_WORKINGDIR\BACALAN\GPMB_Bacalan.sqlite
-C:\01_WORKINGDIR\bm\BD_totale_ind15.sqlite

@@ -112,6 +112,7 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
     """
 
     closingPlugin = pyqtSignal()
+    closingProject = pyqtSignal()
 
     def __init__(self, canvas=None, dockwgt=None, parent=None):
         """
@@ -434,6 +435,8 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
 
         if self.parent():
             self.parent().setWindowTitle(f"Lamia")
+
+        self.closingProject.emit()
 
         QApplication.processEvents()
 

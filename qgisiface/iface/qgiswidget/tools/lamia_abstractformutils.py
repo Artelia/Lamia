@@ -611,6 +611,8 @@ class FormToolUtils(QtCore.QObject):
         self._reinitAfterSaving()
 
         self.formtoolwidget.selectFeature(pk=savedfeaturepk)
+        self._updateQgisLayerForSnapping()
+
 
     def setGeometryToFeature(self, featurepk=None):
 
@@ -693,6 +695,12 @@ class FormToolUtils(QtCore.QObject):
         self.formtoolwidget.dbase.lamiaorm[self.formtoolwidget.DBASETABLENAME].update(
             featurepk, {"geom": sqlqgsgeom},
         )
+
+    def _updateQgisLayerForSnapping(self):
+        dbasetablename = self.formtoolwidget.DBASETABLENAME
+        if dbasetablename in self.formtoolwidget.mainifacewidget.qgiscanvas.layers.keys():
+            layer  = self.formtoolwidget.mainifacewidget.qgiscanvas.layers[dbasetablename]['layerqgis']
+            layer.reload()
 
     def updateDateModification_old(self, featurepk):
         if "Objet" in self.formtoolwidget.dbase.getParentTable(

@@ -94,6 +94,8 @@ lid_actor_creator   ;Int                 ;                    ;edge_now.lid_acto
 
 ###Infralineaire1
 #nom              type               cst               valeur  
+id_nodup   ;Int                 ;                    ;upstream_node.id_node
+id_noddo   ;Int                 ;                    ;downstream_node.id_node
 z_up;        Double;                             ; CASE WHEN edge_now.depthup is NULL THEN (upstream_node.z - upstream_node.depthinvert) ELSE (upstream_node.z - edge_now.depthup) END 
 z_down;        Double;                             ; CASE WHEN edge_now.depthdown is NULL THEN (downstream_node.z - downstream_node.depthinvert) ELSE (downstream_node.z - edge_now.depthdown) END
 depth_up;        Double;                             ; CASE WHEN edge_now.depthup is NULL THEN upstream_node.depthinvert ELSE edge_now.depthup END 

@@ -72,7 +72,7 @@ class BaseFaunafloraFLOSurfaceTool(BaseSurfaceTool):
             "surface": {
                 "linkfield": "id_surface",
                 "widgets": {
-                    "surfacecategory": self.toolwidgetmain.comboBox_category,
+                    "surfacecategory": self.toolwidgetmain.surfacecategory,
                     "number": self.toolwidgetmain.spinBox_number,
                     "florainvasive": self.toolwidgetmain.checkBox_florainvasive,
                     "floraprotected": self.toolwidgetmain.checkBox_floraprotected,
@@ -80,7 +80,7 @@ class BaseFaunafloraFLOSurfaceTool(BaseSurfaceTool):
             },
             "object": {
                 "linkfield": "id_object",
-                "widgets": {"comment": self.toolwidgetmain.textBrowser_comment,},
+                "widgets": {"comment": self.toolwidgetmain.comment,},
             },
             "descriptionsystem": {
                 "linkfield": "id_descriptionsystem",
@@ -91,7 +91,7 @@ class BaseFaunafloraFLOSurfaceTool(BaseSurfaceTool):
                 },
             },
         }
-        self.toolwidgetmain.comboBox_category.currentIndexChanged.connect(
+        self.toolwidgetmain.surfacecategory.currentIndexChanged.connect(
             self.changeCategory
         )
         self.toolwidgetmain.toolButton_number.clicked.connect(

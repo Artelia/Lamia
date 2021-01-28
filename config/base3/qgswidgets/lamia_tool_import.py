@@ -102,7 +102,7 @@ class ImportTool(AbstractLamiaTool):
         self.toolwidgetmain = UserUI()
         self.toolwidgetmain.toolButton_update.clicked.connect(self._updateFromTables)
 
-        items = ["edge", "node", "equipment", "media", "actor"]
+        items = ["edge", "node", "equipment", "deficiency", "media", "actor"]
         self.toolwidgetmain.comboBox_typeimport.addItems(items)
 
         # methode 1

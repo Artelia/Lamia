@@ -31,44 +31,49 @@ from collections import OrderedDict
 
 from qgis.PyQt import uic, QtCore, QtGui
 from qgis.PyQt.QtWidgets import QWidget, QPushButton
-from qgis.PyQt.QtWidgets import QWidget, QPushButton
-from ...base3.qgswidgets.lamia_form_surface import BaseSurfaceTool
+from ...base3.qgswidgets.lamia_form_edge import BaseEdgeTool
 
 from .lamia_form_camera import BaseFaunafloraCameraTool
 from .lamia_form_sketch import BaseFaunafloraSketchTool
+from .lamia_form_surface_flo import BaseFaunafloraFLOSurfaceTool
+from .lamia_form_node_fau import BaseFaunafloraFaunaNodeTool
 
 from Lamia.qgisiface.iface.qgiswidget.tools.form_subwidgets.subwidget_getfromcatalog import (
     CatalogWidget,
 )
 
 
-class BaseFaunafloraHABSurfaceTool(BaseSurfaceTool):
+class BaseFaunafloraEdgeHABTool(BaseEdgeTool):
 
-    PREPROTOOLNAME = "surface_habitat"
+    PREPROTOOLNAME = "edge_habitat"
     tooltreewidgetCAT = QtCore.QCoreApplication.translate("base3", "Inventory")
     tooltreewidgetSUBCAT = QtCore.QCoreApplication.translate("base3", "Habitat")
-    TABLEFILTERFIELD = {"surfacecategory": "HAB"}
+    TABLEFILTERFIELD = {"edgecategory": "HAB"}
     tooltreewidgetICONPATH = os.path.join(os.path.dirname(__file__), "habitat.png")
 
     def __init__(self, **kwargs):
-        super(BaseFaunafloraHABSurfaceTool, self).__init__(**kwargs)
+        super(BaseFaunafloraEdgeHABTool, self).__init__(**kwargs)
 
     def initMainToolWidget(self):
         self.toolwidgetmain = UserUI()
         self.formtoolwidgetconfdictmain = {
-            "surface": {
-                "linkfield": "id_surface",
+            "edge": {
+                "linkfield": "id_edge",
                 "widgets": {
-                    "surfacecategory": self.toolwidgetmain.comboBox_category,
-                    "habitatrepository": self.toolwidgetmain.lineEdit_habrepository,
-                    "habitatname": self.toolwidgetmain.lineEdit_habname,
-                    "habitatcode": self.toolwidgetmain.lineEdit_habcode,
-                    "habitatwetland": self.toolwidgetmain.checkBox_wetland,
+                    "edgecategory": self.toolwidgetmain.edgecategory,
+                    "habitatrepository": self.toolwidgetmain.habitatrepository,
+                    "habitatname": self.toolwidgetmain.habitatname,
+                    "habitatcode": self.toolwidgetmain.habitatcode,
+                    "habitatwetland": self.toolwidgetmain.habitatwetland,
+                    "habitat2repository": self.toolwidgetmain.habitat2repository,
+                    "habitat2name": self.toolwidgetmain.habitat2name,
+                    "habitat2code": self.toolwidgetmain.habitat2code,
+                    "habitat2wetland": self.toolwidgetmain.habitat2wetland,
                 },
             },
             "object": {
                 "linkfield": "id_object",
-                "widgets": {"comment": self.toolwidgetmain.textBrowser_comment,},
+                "widgets": {"comment": self.toolwidgetmain.comment,},
             },
             "descriptionsystem": {
                 "linkfield": "id_descriptionsystem",
@@ -79,7 +84,7 @@ class BaseFaunafloraHABSurfaceTool(BaseSurfaceTool):
                 },
             },
         }
-        self.toolwidgetmain.comboBox_category.currentIndexChanged.connect(
+        self.toolwidgetmain.edgecategory.currentIndexChanged.connect(
             self.changeCategory
         )
         # self.toolwidgetmain.toolButton_number.clicked.connect(
@@ -104,15 +109,31 @@ class BaseFaunafloraHABSurfaceTool(BaseSurfaceTool):
         )
         self.lamiawidgets.append(self.catalogfinder)
 
+        self.catalogfinder2 = CatalogWidget(
+            parentwdg=self,
+            parentframe=self.toolwidgetmain.frame_catalog_hab_2,
+            catalogtype="base3_faunaflora",
+            catalogname="habitats_EUNIS_et_CORINE",
+            catalogsheet=None,
+            coltoshow=["LB_CODE", "LB_HAB_FR"],
+            sheetfield="habitat2repository",
+            valuefield=["habitat2code", "habitat2name"],
+        )
+        self.lamiawidgets.append(self.catalogfinder2)
+
     def _widgetClicked_manageToolBar(self):
         super()._widgetClicked_manageToolBar()
+        self.mainifacewidget.actiontoobargeomnewpolygon.setEnabled(True)
 
     def postSaveFeature(self, savedfeaturepk=None):
         super().postSaveFeature(savedfeaturepk)
+       
+
+
 
 
 class UserUI(QWidget):
     def __init__(self, parent=None):
         super(UserUI, self).__init__(parent=parent)
-        uipath = os.path.join(os.path.dirname(__file__), "lamia_form_surface_ui.ui")
+        uipath = os.path.join(os.path.dirname(__file__), "lamia_form_edge_ui.ui")
         uic.loadUi(uipath, self)
