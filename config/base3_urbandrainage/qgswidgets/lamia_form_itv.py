@@ -107,7 +107,9 @@ class UrbandrainageITVTool(AbstractLamiaFormTool):
         itvfiles = self.toolwidgetmain.file.text().split(";")
         itvfiles = [self.dbase.completePathOfFile(fl.strip()) for fl in itvfiles]
 
-        csvfile = self.itvcore.getCsvFile(itvfiles)
+        csvfile = self.itvcore.getITVCsvFile(itvfiles)
+
+        print('**', csvfile)
 
         if platform.system() == "Linux":
             pass

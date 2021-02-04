@@ -57,7 +57,7 @@ numpy.seterr(all="ignore")
 
 from Lamia.qgisiface.iface.qgsconnector.ifaceloggingconnector import LoggingConnector
 
-INTERFACEINDEX = 4
+INTERFACEINDEX = 1
 PROFILING = False
 
 
@@ -111,7 +111,8 @@ def launchIface():
     # SLFILE = r"C:\01_WORKINGDIR\aaa\VTA_2020_Baie-Aiguillon.sqlite"
 
     # SLFILE = "/usr/src/Lamia/testfiles/BACALAN/GPMB Bacalan.sqlite"
-    SLFILE = r"C:\01_WORKINGDIR\aaaa\tete\toto.sqlite"
+    # mettre ici le chemin vers mon fichier sqlite pour les tests
+    SLFILE = r"/usr/src/Lamia/work_jb/GPMB_Bacalan.sqlite"
 
     print(f"{bcolors.OKGREEN}Opening: {os.path.abspath(SLFILE)} {bcolors.ENDC}")
 
@@ -141,8 +142,12 @@ def launchIface():
     if PROFILING:
         pr.enable()
     #   toolpostpro     toolprepro
-    # wdg = lamiawidget.toolwidgets["lamiamca"]
-    # wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
+    wdg = lamiawidget.toolwidgets["itv"]
+    wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
+
+    wdg.viewAsCsv()
+
+
     # wdg.editAMC()
     # wdg.analyseSubdomains()
     # wdg.mcacore.mcavirtualayerFactory.setConfName("_test")

@@ -729,6 +729,13 @@ class ITVImportCore(AbstractLibsLamia):
 
     def getCsvFile(self, dataframeres, destdir=None):
         # dataframeres = self.readITVs(itvfiles)
+        print("dataframeres")
+        print(dataframeres)
+        print(type(dataframeres))
+        print("destdir")
+        print(destdir)
+        print(destdir)
+        print(type(destdir))
         currentdate = (
             self.dbase.utils.getCurrentDateTime()
             .replace("-", "")

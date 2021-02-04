@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "c:\\OSGeo4W64\\apps\\Python37\\python.exe",
+    "python.pythonPath": "/bin/python3",
     "python.linting.enabled": false,
     "gitlab.instanceUrl": "http://gitlab.arteliagroup.com/",
     "git.ignoreLimitWarning": true,

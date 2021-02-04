@@ -4,8 +4,8 @@ FROM ubuntu:focal
 ARG work_dir="/usr/src/dev_env/"
 
 # uncomment for install behind artelias proxy
-# ARG http_proxy=http://10.1.3.48:3128
-# ARG https_proxy=http://10.1.3.48:3128
+ARG http_proxy=http://10.1.3.48:3128
+ARG https_proxy=http://10.1.3.48:3128
 
 # general dependancies
 RUN apt-get update && apt-get install apt-utils sudo dialog dos2unix wget -y
