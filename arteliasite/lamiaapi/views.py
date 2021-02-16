@@ -7,6 +7,7 @@ import qwc2.scripts.themesConfig as themesConfig
 
 from rest_framework import views
 from rest_framework.response import Response
+from django.http import HttpResponse, FileResponse
 from rest_framework.renderers import JSONRenderer
 from django.views.generic import View, TemplateView
 from django.contrib.auth import authenticate, login, logout
@@ -19,10 +20,11 @@ from artelialogin.views import BaseView
 from .lamiaforsession import LamiaSession
 import logging
 import qgis.core
-
+import requests
 import threading
 from functools import wraps
 import boto3
+from urllib.parse import urlparse, urlunsplit, urlsplit
 
 # Create your views here.
 
@@ -68,6 +70,35 @@ class APIFactory:
         elif tablename == "styles":
             stylesconf = LamiaSession.getInstance(projectid).getStyles()
             return stylesconf
+
+
+
+@method_decorator(userCanAccessProject, name="dispatch")
+class LamiaGeoServer(views.APIView):
+    def get(self, request, **kwargs):
+        project_id = kwargs.get("project_id", None)
+        queryset = Project.objects.filter(id_project=project_id)
+        qgisserverurl = queryset.values("qgisserverurl")[0]["qgisserverurl"]
+
+        if settings.PROXY_ARTELIA:
+            pass
+        else:
+            os.environ["HTTP_PROXY"] = ""
+            os.environ["HTTPS_PROXY"] = ""
+
+        if 'restrequest' in kwargs.keys():  #case rest request
+            parsed_geoserverurl = urlparse(qgisserverurl)
+            qgisserverurl  = parsed_geoserverurl._replace(path='qgisserver/' + kwargs['restrequest']).geturl()
+            print('***', qgisserverurl)
+            response = requests.get(qgisserverurl)
+            return HttpResponse(response)
+        else:   #case wms request
+            parsed_lamiaurl = urlparse(request.get_full_path())
+            parsed_geoserverurl = urlparse(qgisserverurl)
+            qgisserverurl  = parsed_geoserverurl._replace(query=parsed_lamiaurl.query).geturl()
+            response = requests.get(qgisserverurl)
+            return FileResponse(response, content_type="image/png")
+
 
 
 @method_decorator(userCanAccessProject, name="dispatch")
@@ -142,7 +173,7 @@ class LamiaApiView(views.APIView):
                 res = LamiaSession.getInstance(projectid).getPksFromBBox(
                     tablename, bbox
                 )
-                print("**", res)
+                # print("**", res)
                 return Response(res)
 
 

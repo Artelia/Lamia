@@ -1,0 +1,4351 @@
+{
+  "database": {
+    "order": 0,
+    "fields": {
+      "pk_database": {
+        "PGtype": "SERIAL PRIMARY KEY"
+      },
+      "businessline": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "resourcesdirectory": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "crs": {
+        "PGtype": "INT"
+      },
+      "baseversion": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "workversion": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "variant": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "synchronizing": {
+        "PGtype": "INT"
+      }
+    },
+    "showinqgis": false,
+    "widget": [],
+    "row_variantes": 4,
+    "row_locale": 5,
+    "djangoviewsql": "",
+    "qgisviewsql": "  "
+  },
+  "revision": {
+    "order": 0,
+    "fields": {
+      "pk_revision": {
+        "PGtype": "SERIAL PRIMARY KEY"
+      },
+      "datetimerevision": {
+        "PGtype": "TIMESTAMP"
+      },
+      "comment": {
+        "PGtype": "VARCHAR(255)"
+      }
+    },
+    "showinqgis": false,
+    "widget": [],
+    "row_variantes": 4,
+    "row_locale": 5,
+    "djangoviewsql": "",
+    "qgisviewsql": "  "
+  },
+  "object": {
+    "order": 1,
+    "fields": {
+      "pk_object": {
+        "PGtype": "SERIAL PRIMARY KEY"
+      },
+      "id_object": {
+        "PGtype": "INT"
+      },
+      "lpk_revision_begin": {
+        "PGtype": "INT",
+        "FK": "revision(pk_revision)"
+      },
+      "lpk_revision_end": {
+        "PGtype": "INT",
+        "FK": "revision(pk_revision)"
+      },
+      "datetimecreation": {
+        "PGtype": "TIMESTAMP"
+      },
+      "datetimemodification": {
+        "PGtype": "TIMESTAMP"
+      },
+      "datetimedestruction": {
+        "PGtype": "TIMESTAMP"
+      },
+      "comment": {
+        "PGtype": "VARCHAR(500)"
+      },
+      "name": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "importid": {
+        "PGtype": "INT"
+      },
+      "importtable": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "lid_actor": {
+        "PGtype": "INT"
+      }
+    },
+    "showinqgis": false,
+    "widget": [],
+    "row_variantes": 4,
+    "row_locale": 5,
+    "djangoviewsql": "SELECT * FROM object WHERE object.lpk_revision_end IS NULL AND object.datetimedestruction IS NULL",
+    "qgisviewsql": " SELECT * FROM object "
+  },
+  "comment": {
+    "order": 2,
+    "fields": {
+      "pk_comment": {
+        "PGtype": "SERIAL PRIMARY KEY"
+      },
+      "id_comment": {
+        "PGtype": "INT"
+      },
+      "lpk_object": {
+        "PGtype": "INT",
+        "FK": "object(pk_object)"
+      }
+    },
+    "showinqgis": false,
+    "widget": [],
+    "row_variantes": 4,
+    "row_locale": 5,
+    "djangoviewsql": "SELECT comment.*, object.* FROM comment INNER JOIN object ON comment.lpk_object = object.pk_object WHERE object.lpk_revision_end IS NULL AND object.datetimedestruction IS NULL",
+    "qgisviewsql": " SELECT comment.*, object.* FROM comment INNER JOIN object ON comment.lpk_object = object.pk_object ",
+    "geom": "LINESTRING"
+  },
+  "descriptionsystem": {
+    "order": 2,
+    "fields": {
+      "pk_descriptionsystem": {
+        "PGtype": "SERIAL PRIMARY KEY"
+      },
+      "id_descriptionsystem": {
+        "PGtype": "INT"
+      },
+      "lpk_object": {
+        "PGtype": "INT",
+        "FK": "object(pk_object)"
+      },
+      "strategicvalue": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "operational": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Oui",
+            "1",
+            null
+          ],
+          [
+            "Non",
+            "0",
+            null
+          ]
+        ]
+      },
+      "structuralstate": {
+        "PGtype": "VARCHAR"
+      },
+      "operationalstate": {
+        "PGtype": "VARCHAR"
+      },
+      "dateoperationalcreation": {
+        "PGtype": "TIMESTAMP"
+      },
+      "dateoperationalcreationupper": {
+        "PGtype": "TIMESTAMP"
+      },
+      "operationaldatecreationaccuracy": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "A",
+            "A",
+            null
+          ],
+          [
+            "B",
+            "B",
+            null
+          ],
+          [
+            "C",
+            "C",
+            null
+          ],
+          [
+            "NC",
+            "NC",
+            null
+          ]
+        ]
+      },
+      "datetimeoperationaldestruction": {
+        "PGtype": "TIMESTAMP"
+      },
+      "geotrackingxyquality": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Classe A",
+            "1",
+            null
+          ],
+          [
+            "Classe B",
+            "2",
+            null
+          ],
+          [
+            "Classe C",
+            "3",
+            null
+          ]
+        ]
+      },
+      "geotrackingzquality": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Classe A",
+            "1",
+            null
+          ],
+          [
+            "Classe B",
+            "2",
+            null
+          ],
+          [
+            "Classe C",
+            "3",
+            null
+          ]
+        ]
+      },
+      "geotrackingdate": {
+        "PGtype": "TIMESTAMP"
+      },
+      "geotrackingsource": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "parameters": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "parameterslist": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "city": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "streetname": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "streetupname": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "streetdownname": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "streetcomment": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "lid_actor_1": {
+        "PGtype": "INT"
+      },
+      "lid_actor_2": {
+        "PGtype": "INT"
+      },
+      "lid_actor_3": {
+        "PGtype": "INT"
+      },
+      "lid_facility": {
+        "PGtype": "INT"
+      },
+      "float_1": {
+        "PGtype": "REAL"
+      },
+      "float_2": {
+        "PGtype": "REAL"
+      },
+      "float_3": {
+        "PGtype": "REAL"
+      },
+      "float_4": {
+        "PGtype": "REAL"
+      },
+      "float_5": {
+        "PGtype": "REAL"
+      },
+      "float_6": {
+        "PGtype": "REAL"
+      },
+      "float_7": {
+        "PGtype": "REAL"
+      },
+      "float_8": {
+        "PGtype": "REAL"
+      },
+      "float_9": {
+        "PGtype": "REAL"
+      },
+      "float_10": {
+        "PGtype": "REAL"
+      },
+      "string_1": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "string_2": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "string_3": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "string_4": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "string_5": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "string_6": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "string_7": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "string_8": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "string_9": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "string_10": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "networktype": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Pluvial",
+            "PLU",
+            null
+          ],
+          [
+            "Eaux usees",
+            "USE",
+            null
+          ],
+          [
+            "Unitaire",
+            "UNI",
+            null
+          ],
+          [
+            "Industriel",
+            "IND",
+            null
+          ]
+        ]
+      },
+      "flowconditionupstream": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Gravitaire",
+            "GRA",
+            null
+          ],
+          [
+            "Ruissellement diffus",
+            "DIF",
+            null
+          ],
+          [
+            "En chute",
+            "CHU",
+            null
+          ],
+          [
+            "R\u00e9gul\u00e9",
+            "REG",
+            null
+          ],
+          [
+            "Sous-pression",
+            "PRE",
+            null
+          ]
+        ]
+      },
+      "flowconditiondownstream": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Gravitaire",
+            "GRA",
+            null
+          ],
+          [
+            "R\u00e9gul\u00e9",
+            "REG",
+            null
+          ],
+          [
+            "Infiltration",
+            "INF",
+            null
+          ],
+          [
+            "Sous pressions",
+            "PRE",
+            null
+          ]
+        ]
+      },
+      "systemfunction": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Transport",
+            "1",
+            null
+          ],
+          [
+            "Collecte",
+            "2",
+            null
+          ],
+          [
+            "Stockage",
+            "3",
+            null
+          ],
+          [
+            "R\u00e9gulation",
+            "4",
+            null
+          ],
+          [
+            "Traitement",
+            "5",
+            null
+          ],
+          [
+            "Autre",
+            "0",
+            null
+          ],
+          [
+            "Indetermine",
+            "99",
+            null
+          ]
+        ]
+      }
+    },
+    "showinqgis": false,
+    "widget": [],
+    "row_variantes": 0,
+    "row_locale": 1,
+    "djangoviewsql": "SELECT descriptionsystem.*, object.* FROM descriptionsystem INNER JOIN object ON descriptionsystem.lpk_object = object.pk_object WHERE object.lpk_revision_end IS NULL AND object.datetimedestruction IS NULL",
+    "qgisviewsql": " SELECT descriptionsystem.*, object.* FROM descriptionsystem INNER JOIN object ON descriptionsystem.lpk_object = object.pk_object "
+  },
+  "event": {
+    "order": 2,
+    "fields": {
+      "pk_event": {
+        "PGtype": "SERIAL PRIMARY KEY"
+      },
+      "id_event": {
+        "PGtype": "INT"
+      },
+      "lpk_object": {
+        "PGtype": "INT",
+        "FK": "object(pk_object)"
+      },
+      "description": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "severity": {
+        "PGtype": "INT"
+      },
+      "ref": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "parameters": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "parameterslist": {
+        "PGtype": "VARCHAR(255)"
+      }
+    },
+    "showinqgis": false,
+    "widget": [],
+    "row_variantes": 4,
+    "row_locale": 5,
+    "djangoviewsql": "SELECT event.*, object.* FROM event INNER JOIN object ON event.lpk_object = object.pk_object WHERE object.lpk_revision_end IS NULL AND object.datetimedestruction IS NULL",
+    "qgisviewsql": " SELECT event.*, object.* FROM event INNER JOIN object ON event.lpk_object = object.pk_object "
+  },
+  "actor": {
+    "order": 2,
+    "fields": {
+      "pk_actor": {
+        "PGtype": "SERIAL PRIMARY KEY"
+      },
+      "id_actor": {
+        "PGtype": "INT"
+      },
+      "lpk_object": {
+        "PGtype": "INT",
+        "FK": "object(pk_object)"
+      },
+      "actorname": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "society": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "adress": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "fax": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "phone": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "function": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "mail": {
+        "PGtype": "VARCHAR(255)"
+      }
+    },
+    "showinqgis": false,
+    "widget": [],
+    "row_variantes": 4,
+    "row_locale": 5,
+    "djangoviewsql": "SELECT actor.*, object.* FROM actor INNER JOIN object ON actor.lpk_object = object.pk_object WHERE object.lpk_revision_end IS NULL AND object.datetimedestruction IS NULL",
+    "qgisviewsql": " SELECT actor.*, object.* FROM actor INNER JOIN object ON actor.lpk_object = object.pk_object "
+  },
+  "delivery": {
+    "order": 2,
+    "fields": {
+      "pk_delivery": {
+        "PGtype": "SERIAL PRIMARY KEY"
+      },
+      "id_delivery": {
+        "PGtype": "INT"
+      },
+      "lpk_object": {
+        "PGtype": "INT",
+        "FK": "object(pk_object)"
+      },
+      "deliverycategory": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "Contrat principal",
+            "MAI",
+            null
+          ],
+          [
+            "Phases du contrat principal",
+            "SMA",
+            null
+          ],
+          [
+            "Intervention tiers",
+            "TDL",
+            null
+          ],
+          [
+            "Travaux",
+            "WOR",
+            null
+          ]
+        ]
+      },
+      "projectowner": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "contractor": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "datecontract": {
+        "PGtype": "TIMESTAMP"
+      },
+      "contractref": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "urgency": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "estimatedcost": {
+        "PGtype": "NUMERIC"
+      },
+      "estimatedduration": {
+        "PGtype": "NUMERIC"
+      },
+      "dateestimatedenddelivery": {
+        "PGtype": "TIMESTAMP"
+      },
+      "subdeliverystage": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Non programme",
+            "NON",
+            null
+          ],
+          [
+            "Programme",
+            "PRO",
+            null
+          ],
+          [
+            "Conception",
+            "ETU",
+            null
+          ],
+          [
+            "Realisation",
+            "REA",
+            null
+          ],
+          [
+            "Receptionne",
+            "REC",
+            null
+          ]
+        ]
+      },
+      "datedeliverystarting": {
+        "PGtype": "TIMESTAMP"
+      },
+      "datedeliveryending": {
+        "PGtype": "TIMESTAMP"
+      },
+      "deliverylocationcity": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "deliverylocationstreetname": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "lid_delivery": {
+        "PGtype": "INT"
+      }
+    },
+    "showinqgis": false,
+    "widget": [],
+    "row_variantes": 4,
+    "row_locale": 5,
+    "djangoviewsql": "SELECT delivery.*, object.* FROM delivery INNER JOIN object ON delivery.lpk_object = object.pk_object WHERE object.lpk_revision_end IS NULL AND object.datetimedestruction IS NULL",
+    "qgisviewsql": " SELECT delivery.*, object.* FROM delivery INNER JOIN object ON delivery.lpk_object = object.pk_object "
+  },
+  "geoarea": {
+    "order": 2,
+    "fields": {
+      "pk_geoarea": {
+        "PGtype": "SERIAL PRIMARY KEY"
+      },
+      "id_geoarea": {
+        "PGtype": "INT"
+      },
+      "lpk_object": {
+        "PGtype": "INT",
+        "FK": "object(pk_object)"
+      },
+      "country": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "region": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "city": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "population": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "contextesocioeco": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "importancesociale": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "importanceindustrielle": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "geoareatype": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "Commune",
+            "COM",
+            null
+          ],
+          [
+            "Systeme de collecte",
+            "COL",
+            null
+          ],
+          [
+            "Gestion",
+            "GES",
+            null
+          ]
+        ]
+      }
+    },
+    "showinqgis": true,
+    "widget": [],
+    "row_variantes": 0,
+    "row_locale": 1,
+    "djangoviewsql": "SELECT geoarea.* , object.* FROM geoarea INNER JOIN object ON geoarea.lpk_object = object.pk_object WHERE object.lpk_revision_end IS NULL AND object.datetimedestruction IS NULL",
+    "qgisviewsql": " SELECT geoarea.* , object.* FROM geoarea INNER JOIN object ON geoarea.lpk_object = object.pk_object ",
+    "geom": "MULTIPOLYGON"
+  },
+  "deficiency": {
+    "order": 3,
+    "fields": {
+      "pk_deficiency": {
+        "PGtype": "SERIAL PRIMARY KEY"
+      },
+      "id_deficiency": {
+        "PGtype": "INT"
+      },
+      "lpk_object": {
+        "PGtype": "INT",
+        "FK": "object(pk_object)"
+      },
+      "deficiencycategory": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "Infralineaire",
+            "INF",
+            null
+          ],
+          [
+            "Noeud",
+            "NOD",
+            null
+          ],
+          [
+            "Equipement",
+            "EQP",
+            null
+          ],
+          [
+            "Surface",
+            "SUR",
+            null
+          ]
+        ]
+      },
+      "impact": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "priority": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "risks": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "sector1": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "sector2": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "sector3": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "lid_descriptionsystem": {
+        "PGtype": "INT"
+      }
+    },
+    "showinqgis": true,
+    "widget": [],
+    "row_variantes": 4,
+    "row_locale": 5,
+    "djangoviewsql": "SELECT deficiency.* , object.* FROM deficiency INNER JOIN object ON deficiency.lpk_object = object.pk_object WHERE object.lpk_revision_end IS NULL AND object.datetimedestruction IS NULL",
+    "qgisviewsql": " SELECT deficiency.* , object.* FROM deficiency INNER JOIN object ON deficiency.lpk_object = object.pk_object ",
+    "geom": "LINESTRING"
+  },
+  "resource": {
+    "order": 3,
+    "fields": {
+      "pk_resource": {
+        "PGtype": "SERIAL PRIMARY KEY"
+      },
+      "id_resource": {
+        "PGtype": "INT"
+      },
+      "lpk_object": {
+        "PGtype": "INT",
+        "FK": "object(pk_object)"
+      },
+      "productor": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "datetimeresource": {
+        "PGtype": "TIMESTAMP"
+      },
+      "produceradress": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "producername": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "producermail": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "producerphone1": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "producerphone2": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "file": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "thumbnail": {
+        "PGtype": "BYTEA"
+      },
+      "description": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "resourceindex": {
+        "PGtype": "INT"
+      },
+      "lid_delivery": {
+        "PGtype": "INT"
+      }
+    },
+    "showinqgis": false,
+    "widget": [],
+    "row_variantes": 4,
+    "row_locale": 5,
+    "djangoviewsql": "SELECT resource.*, object.* FROM resource INNER JOIN object ON resource.lpk_object = object.pk_object WHERE object.lpk_revision_end IS NULL AND object.datetimedestruction IS NULL",
+    "qgisviewsql": " SELECT resource.*, object.* FROM resource INNER JOIN object ON resource.lpk_object = object.pk_object "
+  },
+  "edge": {
+    "order": 4,
+    "fields": {
+      "pk_edge": {
+        "PGtype": "SERIAL PRIMARY KEY"
+      },
+      "id_edge": {
+        "PGtype": "INT"
+      },
+      "lpk_descriptionsystem": {
+        "PGtype": "INT",
+        "FK": "descriptionsystem(pk_descriptionsystem)"
+      },
+      "lid_resource_1": {
+        "PGtype": "INT"
+      },
+      "lid_descriptionsystem_1": {
+        "PGtype": "INT"
+      },
+      "lid_descriptionsystem_2": {
+        "PGtype": "INT"
+      },
+      "material": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Acier",
+            "01",
+            null
+          ],
+          [
+            "Amiante-ciment",
+            "02",
+            null
+          ],
+          [
+            "B\u00e9ton arme tole",
+            "03",
+            null
+          ],
+          [
+            "Beton arme",
+            "04",
+            null
+          ],
+          [
+            "Beton fibre",
+            "05",
+            null
+          ],
+          [
+            "Beton non arme",
+            "06",
+            null
+          ],
+          [
+            "Cuivre",
+            "07",
+            null
+          ],
+          [
+            "Fibre ciment",
+            "08",
+            null
+          ],
+          [
+            "Fibre de verre",
+            "09",
+            null
+          ],
+          [
+            "Fibrociment",
+            "10",
+            null
+          ],
+          [
+            "Fonte ductile",
+            "11",
+            null
+          ],
+          [
+            "Fonte grise",
+            "12",
+            null
+          ],
+          [
+            "Gres",
+            "13",
+            null
+          ],
+          [
+            "Maconnerie",
+            "14",
+            null
+          ],
+          [
+            "Meuliere",
+            "15",
+            null
+          ],
+          [
+            "PEBD",
+            "16",
+            null
+          ],
+          [
+            "PEHD annele",
+            "17",
+            null
+          ],
+          [
+            "PEHD lisse",
+            "18",
+            null
+          ],
+          [
+            "Plomb",
+            "19",
+            null
+          ],
+          [
+            "PP annele",
+            "20",
+            null
+          ],
+          [
+            "PP lisse",
+            "21",
+            null
+          ],
+          [
+            "PRV A",
+            "22",
+            null
+          ],
+          [
+            "PRV B",
+            "23",
+            null
+          ],
+          [
+            "PVC ancien",
+            "24",
+            null
+          ],
+          [
+            "PVC BO",
+            "25",
+            null
+          ],
+          [
+            "PVC U annele",
+            "26",
+            null
+          ],
+          [
+            "PVC U lisse",
+            "27",
+            null
+          ],
+          [
+            "Tole galvanisee",
+            "28",
+            null
+          ],
+          [
+            "Autre",
+            "00",
+            null
+          ],
+          [
+            "Indetermine",
+            "99",
+            null
+          ]
+        ]
+      },
+      "nominaldiameter": {
+        "PGtype": "INT"
+      },
+      "pipetype": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "Collecteur enterr\u00e9",
+            "COL",
+            null
+          ],
+          [
+            "Foss\u00e9",
+            "FOS",
+            null
+          ],
+          [
+            "Tranch\u00e9e",
+            "TRA",
+            null
+          ],
+          [
+            "Chemin agricole",
+            "CHE",
+            null
+          ],
+          [
+            "Noue",
+            "NOU",
+            null
+          ],
+          [
+            "Caniveau",
+            "CAN",
+            null
+          ],
+          [
+            "Haie",
+            "HAI",
+            null
+          ],
+          [
+            "Fascine",
+            "FAS",
+            null
+          ],
+          [
+            "Chevets",
+            "CHV",
+            null
+          ]
+        ]
+      },
+      "pipesubtype": {
+        "PGtype": "VARCHAR(255)",
+        "ParFldCst": "pipetype",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "B\u00e9tonn\u00e9",
+            "BET",
+            [
+              "CHE",
+              "FOS",
+              "CAN"
+            ]
+          ],
+          [
+            "Rev\u00eatu",
+            "REV",
+            [
+              "CHE",
+              "FOS",
+              "CAN"
+            ]
+          ],
+          [
+            "Enherb\u00e9",
+            "ENH",
+            [
+              "CHE",
+              "FOS",
+              "CAN"
+            ]
+          ],
+          [
+            "Terre \u00e0 nue",
+            "NUE",
+            [
+              "CHE",
+              "FOS",
+              "CAN"
+            ]
+          ],
+          [
+            "Tranch\u00e9e simple \u00e0 double vidange",
+            "TSD",
+            [
+              "TRA"
+            ]
+          ],
+          [
+            "Tranch\u00e9e compose \u00e0 double vidange",
+            "TCD",
+            [
+              "TRA"
+            ]
+          ],
+          [
+            "Tranch\u00e9e compos\u00e9e stockante",
+            "TCS",
+            [
+              "TRA"
+            ]
+          ],
+          [
+            "Tranch\u00e9e infiltrante",
+            "TIN",
+            [
+              "TRA"
+            ]
+          ],
+          [
+            "Tranch\u00e9e compos\u00e9e infiltrante",
+            "TCI",
+            [
+              "TRA"
+            ]
+          ],
+          [
+            "Noue d'infiltration",
+            "NIN",
+            [
+              "NOU"
+            ]
+          ],
+          [
+            "Noue stockante",
+            "NST",
+            [
+              "NOU"
+            ]
+          ],
+          [
+            "Noue \u00e0 double vidange",
+            "NDV",
+            [
+              "NOU"
+            ]
+          ],
+          [
+            "Circulaire",
+            "CIR",
+            [
+              "COL"
+            ]
+          ],
+          [
+            "Aqueduc",
+            "AQU",
+            [
+              "COL"
+            ]
+          ],
+          [
+            "Ovoide",
+            "OVO",
+            [
+              "COL"
+            ]
+          ]
+        ]
+      },
+      "pipeshape": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "height": {
+        "PGtype": "REAL"
+      },
+      "laterals": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "Non",
+            "0",
+            null
+          ],
+          [
+            "Oui",
+            "1",
+            null
+          ]
+        ]
+      },
+      "flowtype": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Gravitaire",
+            "1",
+            null
+          ],
+          [
+            "Force",
+            "2",
+            null
+          ],
+          [
+            "Sous-vide",
+            "3",
+            null
+          ],
+          [
+            "Autre",
+            "0",
+            null
+          ],
+          [
+            "Indetermine",
+            "99",
+            null
+          ]
+        ]
+      },
+      "elevationup": {
+        "PGtype": "REAL"
+      },
+      "elevationdown": {
+        "PGtype": "REAL"
+      },
+      "depthup": {
+        "PGtype": "REAL"
+      },
+      "depthdown": {
+        "PGtype": "REAL"
+      },
+      "domain": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "location": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "accessibility": {
+        "PGtype": "INT"
+      },
+      "beddingmaterial": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "soiltype": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "soilmoisture": {
+        "PGtype": "VARCHAR(255)"
+      }
+    },
+    "showinqgis": true,
+    "widget": [],
+    "row_variantes": 0,
+    "row_locale": 1,
+    "djangoviewsql": "SELECT edge.*,descriptionsystem.*, object.* FROM edge INNER JOIN descriptionsystem ON edge.lpk_descriptionsystem = descriptionsystem.pk_descriptionsystem INNER JOIN object ON descriptionsystem.lpk_object = object.pk_object WHERE object.lpk_revision_end IS NULL AND object.datetimedestruction IS NULL",
+    "qgisviewsql": " SELECT edge.*,descriptionsystem.*, object.* FROM edge INNER JOIN descriptionsystem ON edge.lpk_descriptionsystem = descriptionsystem.pk_descriptionsystem INNER JOIN object ON descriptionsystem.lpk_object = object.pk_object ",
+    "geom": "LINESTRING"
+  },
+  "node": {
+    "order": 4,
+    "fields": {
+      "pk_node": {
+        "PGtype": "SERIAL PRIMARY KEY"
+      },
+      "id_node": {
+        "PGtype": "INT"
+      },
+      "lpk_descriptionsystem": {
+        "PGtype": "INT",
+        "FK": "descriptionsystem(pk_descriptionsystem)"
+      },
+      "lid_descriptionsystem_1": {
+        "PGtype": "INT"
+      },
+      "elevationinvert": {
+        "PGtype": "REAL"
+      },
+      "elevationcover": {
+        "PGtype": "REAL"
+      },
+      "depthinvert": {
+        "PGtype": "REAL"
+      },
+      "altitude1": {
+        "PGtype": "REAL"
+      },
+      "depth1": {
+        "PGtype": "REAL"
+      },
+      "nodetype": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Regard",
+            "60",
+            null
+          ],
+          [
+            "Branchement",
+            "61",
+            null
+          ],
+          [
+            "Regard mixte EP EU",
+            "62",
+            null
+          ],
+          [
+            "Avaloir",
+            "70",
+            null
+          ],
+          [
+            "Grille",
+            "71",
+            null
+          ],
+          [
+            "Grille avaloir",
+            "72",
+            null
+          ],
+          [
+            "Tete de buse",
+            "73",
+            null
+          ],
+          [
+            "Goutti\u00e8re",
+            "74",
+            null
+          ],
+          [
+            "Poste de refoulement",
+            "10",
+            null
+          ],
+          [
+            "Station d epuration",
+            "20",
+            null
+          ],
+          [
+            "D\u00e9bourbeur/d\u00e9shuileur",
+            "21",
+            null
+          ],
+          [
+            "Dessableur",
+            "22",
+            null
+          ],
+          [
+            "Depierreur",
+            "23",
+            null
+          ],
+          [
+            "Fosse septique",
+            "24",
+            null
+          ],
+          [
+            "Bassin de stockage",
+            "30",
+            null
+          ],
+          [
+            "Puit",
+            "31",
+            null
+          ],
+          [
+            "Cuve",
+            "32",
+            null
+          ],
+          [
+            "Deversoir d orage",
+            "40",
+            null
+          ],
+          [
+            "R\u00e9gulateur de d\u00e9bit",
+            "41",
+            null
+          ],
+          [
+            "Rejet",
+            "50",
+            null
+          ],
+          [
+            "Puisard",
+            "51",
+            null
+          ],
+          [
+            "Autre",
+            "00",
+            null
+          ],
+          [
+            "Indetermine",
+            "99",
+            null
+          ]
+        ]
+      },
+      "nodesubtype": {
+        "PGtype": "VARCHAR(255)",
+        "ParFldCst": "nodetype",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Carr\u00e9",
+            "6001",
+            [
+              "60"
+            ]
+          ],
+          [
+            "Rond",
+            "6002",
+            [
+              "60"
+            ]
+          ],
+          [
+            "Passage direct",
+            "6101",
+            [
+              "61"
+            ]
+          ],
+          [
+            "Passage sipho\u00efde",
+            "6102",
+            [
+              "61"
+            ]
+          ],
+          [
+            "Trop-plein de poste",
+            "4001",
+            [
+              "40"
+            ]
+          ],
+          [
+            "D\u00e9versoir d'orage",
+            "4002",
+            [
+              "40"
+            ]
+          ],
+          [
+            "DO Frontal",
+            "4005",
+            [
+              "40"
+            ]
+          ],
+          [
+            "DO Lat\u00e9ral",
+            "4006",
+            [
+              "40"
+            ]
+          ],
+          [
+            "DO Leaping weir",
+            "4007",
+            [
+              "40"
+            ]
+          ],
+          [
+            "DO Orifice",
+            "4008",
+            [
+              "40"
+            ]
+          ],
+          [
+            "DO Complexe",
+            "4009",
+            [
+              "40"
+            ]
+          ],
+          [
+            "DO D\u00e9lestage",
+            "4003",
+            [
+              "40"
+            ]
+          ],
+          [
+            "Ouvrage de reprise de temps sec",
+            "4004",
+            [
+              "40"
+            ]
+          ],
+          [
+            "Aspiration",
+            "1001",
+            [
+              "10"
+            ]
+          ],
+          [
+            "Refoulement",
+            "1002",
+            [
+              "10"
+            ]
+          ],
+          [
+            "Rel\u00e8vement",
+            "1003",
+            [
+              "10"
+            ]
+          ],
+          [
+            "Simple",
+            "7001",
+            [
+              "70"
+            ]
+          ],
+          [
+            "A grille",
+            "7002",
+            [
+              "70"
+            ]
+          ],
+          [
+            "Tampon",
+            "7003",
+            [
+              "70"
+            ]
+          ],
+          [
+            "Autre",
+            "00",
+            [
+              "40",
+              "70"
+            ]
+          ],
+          [
+            "Indetermine",
+            "99",
+            [
+              "40",
+              "70"
+            ]
+          ],
+          [
+            "Cuve infiltrante",
+            "3201",
+            [
+              "32"
+            ]
+          ],
+          [
+            "Cuve stockante",
+            "3202",
+            [
+              "32"
+            ]
+          ],
+          [
+            "Puits combl\u00e9 stockant",
+            "3101",
+            [
+              "31"
+            ]
+          ],
+          [
+            "Puits compos\u00e9 stockant",
+            "3102",
+            [
+              "31"
+            ]
+          ],
+          [
+            "Puits pr\u00e9fabriqu\u00e9 stockant",
+            "3103",
+            [
+              "31"
+            ]
+          ],
+          [
+            "Puits pr\u00e9fabriqu\u00e9 \u00e0 double vidange",
+            "3104",
+            [
+              "31"
+            ]
+          ],
+          [
+            "Puits combl\u00e9 \u00e0 double vidange",
+            "3105",
+            [
+              "31"
+            ]
+          ],
+          [
+            "Puits compos\u00e9 \u00e0 double vidange",
+            "3106",
+            [
+              "31"
+            ]
+          ]
+        ]
+      },
+      "accessibility": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Ouvrable",
+            "OUV",
+            null
+          ],
+          [
+            "Ouvrable non visitable",
+            "OUN",
+            null
+          ],
+          [
+            "En priv\u00e9",
+            "PRI",
+            null
+          ],
+          [
+            "Non ouvrable",
+            "NOU",
+            null
+          ],
+          [
+            "Non vu",
+            "NVU",
+            null
+          ],
+          [
+            "Recouvert",
+            "REC",
+            null
+          ]
+        ]
+      },
+      "domain": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "location": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Route carrossable",
+            "RCA",
+            null
+          ],
+          [
+            "Herbe/TN",
+            "HER",
+            null
+          ],
+          [
+            "Trottoir",
+            "TRO",
+            null
+          ],
+          [
+            "Parking",
+            "PAR",
+            null
+          ],
+          [
+            "B\u00e2timent",
+            "BAT",
+            null
+          ],
+          [
+            "Chemin pi\u00e9ton",
+            "CHE",
+            null
+          ],
+          [
+            "Voie ferr\u00e9es",
+            "VFE",
+            null
+          ],
+          [
+            "Voirie",
+            "VOI",
+            null
+          ],
+          [
+            "Accotement",
+            "COT",
+            null
+          ]
+        ]
+      },
+      "width": {
+        "PGtype": "REAL"
+      },
+      "lenght": {
+        "PGtype": "REAL"
+      },
+      "thickness": {
+        "PGtype": "REAL"
+      },
+      "lid_resource_1": {
+        "PGtype": "INT"
+      },
+      "lid_resource_2": {
+        "PGtype": "INT"
+      },
+      "lid_resource_3": {
+        "PGtype": "INT"
+      },
+      "lid_resource_4": {
+        "PGtype": "INT"
+      },
+      "lid_resource_5": {
+        "PGtype": "INT"
+      },
+      "lid_resource_6": {
+        "PGtype": "INT"
+      },
+      "manholecovershape": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Carre",
+            "CAR",
+            null
+          ],
+          [
+            "Circulaire",
+            "CIR",
+            null
+          ]
+        ]
+      },
+      "manholecovertype": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "manholecoverdiameter": {
+        "PGtype": "REAL"
+      },
+      "manholematerial": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "B\u00e9ton pr\u00e9fabriqu\u00e9",
+            "01",
+            null
+          ],
+          [
+            "PE",
+            "02",
+            null
+          ],
+          [
+            "Chemisage",
+            "03",
+            null
+          ],
+          [
+            "Autre",
+            "00",
+            null
+          ],
+          [
+            "Inconnu",
+            "99",
+            null
+          ]
+        ]
+      },
+      "manholeshape": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Carre",
+            "CAR",
+            null
+          ],
+          [
+            "Circulaire",
+            "CIR",
+            null
+          ]
+        ]
+      },
+      "presencesteps": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Non",
+            "0",
+            null
+          ],
+          [
+            "Oui",
+            "1",
+            null
+          ]
+        ]
+      },
+      "presencehandle": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Non",
+            "0",
+            null
+          ],
+          [
+            "Oui",
+            "1",
+            null
+          ]
+        ]
+      },
+      "presencelowflowchannel": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Non",
+            "0",
+            null
+          ],
+          [
+            "Oui",
+            "1",
+            null
+          ]
+        ]
+      },
+      "presencesiphoidpartition": {
+        "PGtype": "INT",
+        "ParFldCst": "nodetype",
+        "Cst": [
+          [
+            "Non",
+            "0",
+            [
+              "61"
+            ]
+          ],
+          [
+            "Oui",
+            "1",
+            [
+              "61"
+            ]
+          ]
+        ]
+      },
+      "presencelid": {
+        "PGtype": "INT",
+        "ParFldCst": "nodetype",
+        "Cst": [
+          [
+            "Non",
+            "0",
+            [
+              "61"
+            ]
+          ],
+          [
+            "Oui",
+            "1",
+            [
+              "61"
+            ]
+          ]
+        ]
+      },
+      "psnominalcapacity": {
+        "PGtype": "REAL"
+      },
+      "pspumphead": {
+        "PGtype": "REAL"
+      },
+      "psfence": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Non",
+            "0",
+            null
+          ],
+          [
+            "Oui",
+            "1",
+            null
+          ]
+        ]
+      },
+      "psstormwaterinlet": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Non",
+            "0",
+            null
+          ],
+          [
+            "Oui",
+            "1",
+            null
+          ]
+        ]
+      },
+      "pslocked": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Non",
+            "0",
+            null
+          ],
+          [
+            "Oui",
+            "1",
+            null
+          ]
+        ]
+      },
+      "psh2streatment": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Non",
+            "0",
+            null
+          ],
+          [
+            "Oui",
+            "1",
+            null
+          ]
+        ]
+      },
+      "pseleccabinet": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Non",
+            "0",
+            null
+          ],
+          [
+            "Oui",
+            "1",
+            null
+          ]
+        ]
+      },
+      "pseleccabinetlocked": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Non",
+            "0",
+            null
+          ],
+          [
+            "Oui",
+            "1",
+            null
+          ]
+        ]
+      },
+      "psremotemonitoring": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Non",
+            "0",
+            null
+          ],
+          [
+            "Oui",
+            "1",
+            null
+          ]
+        ]
+      },
+      "psremotemonitoringcomment": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "pspumpswitchingcontroller": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Non",
+            "0",
+            null
+          ],
+          [
+            "Oui",
+            "1",
+            null
+          ]
+        ]
+      },
+      "pspumpswitchingcontrollertype": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Sonde de niveau",
+            "SNV",
+            null
+          ],
+          [
+            "Sonde Piezo",
+            "PIE",
+            null
+          ],
+          [
+            "Sonde ultrason",
+            "SOS",
+            null
+          ],
+          [
+            "Autre",
+            "AUT",
+            null
+          ]
+        ]
+      },
+      "psfloatnumber": {
+        "PGtype": "INT"
+      },
+      "psfailurecontrollertype": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Non",
+            "NON",
+            null
+          ],
+          [
+            "Sonde de niveau",
+            "SNV",
+            null
+          ],
+          [
+            "Sonde Piezo",
+            "PIE",
+            null
+          ],
+          [
+            "Sonde ultrason",
+            "SOS",
+            null
+          ],
+          [
+            "Autre",
+            "AUT",
+            null
+          ]
+        ]
+      },
+      "psmaterial": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "B\u00e9ton",
+            "BET",
+            null
+          ],
+          [
+            "B\u00e9ton rev\u00eatu",
+            "BER",
+            null
+          ],
+          [
+            "Polyester",
+            "POL",
+            null
+          ]
+        ]
+      },
+      "psfallprotectiongratings": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Non",
+            "0",
+            null
+          ],
+          [
+            "Oui",
+            "1",
+            null
+          ]
+        ]
+      },
+      "psoverflow": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Non",
+            "0",
+            null
+          ],
+          [
+            "Oui",
+            "1",
+            null
+          ]
+        ]
+      },
+      "psinletscreen": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Non",
+            "0",
+            null
+          ],
+          [
+            "Oui",
+            "1",
+            null
+          ]
+        ]
+      },
+      "pspumpnumber": {
+        "PGtype": "INT"
+      },
+      "psguiderail": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Non",
+            "0",
+            null
+          ],
+          [
+            "Oui",
+            "1",
+            null
+          ]
+        ]
+      },
+      "pspumpliftingchain": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Non",
+            "0",
+            null
+          ],
+          [
+            "Oui",
+            "1",
+            null
+          ]
+        ]
+      },
+      "psdrawdownheight": {
+        "PGtype": "REAL"
+      },
+      "psdrawdownvolume": {
+        "PGtype": "REAL"
+      },
+      "pscheckvalve": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Non",
+            "0",
+            null
+          ],
+          [
+            "Oui",
+            "1",
+            null
+          ]
+        ]
+      },
+      "psgatevalve": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Non",
+            "0",
+            null
+          ],
+          [
+            "Oui",
+            "1",
+            null
+          ]
+        ]
+      },
+      "pspressureport": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Non",
+            "0",
+            null
+          ],
+          [
+            "Oui",
+            "1",
+            null
+          ]
+        ]
+      },
+      "DSHroleouvrage": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "brandname": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "brandref": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "airing": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Non",
+            "0",
+            null
+          ],
+          [
+            "Oui",
+            "1",
+            null
+          ]
+        ]
+      },
+      "inletdiameter": {
+        "PGtype": "REAL"
+      },
+      "outletdiameter": {
+        "PGtype": "REAL"
+      },
+      "nodetechclass": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "0",
+            "Inconnu",
+            null
+          ],
+          [
+            "1",
+            "Class I",
+            null
+          ],
+          [
+            "2",
+            "Class II",
+            null
+          ]
+        ]
+      },
+      "lateralusercategory": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "dommestique",
+            "DOM",
+            null
+          ],
+          [
+            "industriel",
+            "IND",
+            null
+          ],
+          [
+            "collectif",
+            "COL",
+            null
+          ],
+          [
+            "agricole",
+            "AGR",
+            null
+          ]
+        ]
+      },
+      "csoweirheight": {
+        "PGtype": "REAL"
+      },
+      "scoweirlenght": {
+        "PGtype": "REAL"
+      },
+      "scoweirthickness": {
+        "PGtype": "REAL"
+      },
+      "presencealarm": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Non",
+            "0",
+            null
+          ],
+          [
+            "Oui",
+            "1",
+            null
+          ]
+        ]
+      },
+      "presencecontroller": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Non",
+            "0",
+            null
+          ],
+          [
+            "Oui",
+            "1",
+            null
+          ]
+        ]
+      },
+      "sedimenttrap": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Non",
+            "0",
+            null
+          ],
+          [
+            "Oui",
+            "1",
+            null
+          ]
+        ]
+      },
+      "receivingenvironment": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Reseau pluvial",
+            "EPL",
+            null
+          ],
+          [
+            "R\u00e9seau eau us\u00e9es",
+            "EUS",
+            null
+          ],
+          [
+            "R\u00e9seau eaux unitaires",
+            "UNI",
+            null
+          ],
+          [
+            "Infiltration",
+            "INF",
+            null
+          ],
+          [
+            "Foss\u00e9",
+            "FOS",
+            null
+          ],
+          [
+            "Cours d'eau",
+            "COU",
+            null
+          ],
+          [
+            "Autre",
+            "AUT",
+            null
+          ]
+        ]
+      },
+      "receivingenvironmentcomment": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "x": {
+        "PGtype": "REAL"
+      },
+      "dx": {
+        "PGtype": "REAL"
+      },
+      "y": {
+        "PGtype": "REAL"
+      },
+      "dy": {
+        "PGtype": "REAL"
+      },
+      "z": {
+        "PGtype": "REAL"
+      },
+      "dz": {
+        "PGtype": "REAL"
+      }
+    },
+    "showinqgis": true,
+    "widget": [],
+    "row_variantes": 0,
+    "row_locale": 1,
+    "djangoviewsql": "SELECT node.*,descriptionsystem.*, object.* FROM node INNER JOIN descriptionsystem ON node.lpk_descriptionsystem = descriptionsystem.pk_descriptionsystem INNER JOIN object ON Descriptionsystem.lpk_object = object.pk_object WHERE object.lpk_revision_end IS NULL AND object.datetimedestruction IS NULL",
+    "qgisviewsql": " SELECT node.*, descriptionsystem.*, object.* FROM node INNER JOIN descriptionsystem ON node.lpk_descriptionsystem = descriptionsystem.pk_descriptionsystem INNER JOIN object ON descriptionsystem.lpk_object = object.pk_object ",
+    "geom": "POINT"
+  },
+  "surface": {
+    "order": 4,
+    "fields": {
+      "pk_surface": {
+        "PGtype": "SERIAL PRIMARY KEY"
+      },
+      "id_surface": {
+        "PGtype": "INT"
+      },
+      "surfacetype": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Bassin d\u2019infiltration",
+            "BIF",
+            null
+          ],
+          [
+            "Bassin de r\u00e9tention",
+            "BRE",
+            null
+          ],
+          [
+            "Bassin de stockage",
+            "BSE",
+            null
+          ],
+          [
+            "D\u00e9pression",
+            "DEP",
+            null
+          ],
+          [
+            "Toiture stockante",
+            "TOI",
+            null
+          ],
+          [
+            "Chauss\u00e9e \u00e0 structure r\u00e9servoir",
+            "CHA",
+            null
+          ],
+          [
+            "Massif",
+            "MAS",
+            null
+          ],
+          [
+            "Structure r\u00e9servoir",
+            "RES",
+            null
+          ]
+        ]
+      },
+      "lpk_descriptionsystem": {
+        "PGtype": "INT",
+        "FK": "descriptionsystem(pk_descriptionsystem)"
+      },
+      "lid_descriptionsystem_1": {
+        "PGtype": "INT"
+      },
+      "lid_descriptionsystem_2": {
+        "PGtype": "INT"
+      },
+      "lid_descriptionsystem_3": {
+        "PGtype": "INT"
+      },
+      "lid_descriptionsystem_4": {
+        "PGtype": "INT"
+      },
+      "lid_descriptionsystem_5": {
+        "PGtype": "INT"
+      },
+      "lid_descriptionsystem_6": {
+        "PGtype": "INT"
+      },
+      "lid_descriptionsystem_7": {
+        "PGtype": "INT"
+      },
+      "lid_descriptionsystem_8": {
+        "PGtype": "INT"
+      },
+      "lid_descriptionsystem_9": {
+        "PGtype": "INT"
+      },
+      "lid_descriptionsystem_10": {
+        "PGtype": "INT"
+      },
+      "surfacesubtype": {
+        "PGtype": "VARCHAR(255)",
+        "ParFldCst": "surfacetype",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Bassin d\u2019infiltration en eau",
+            "BIE",
+            [
+              "BIF"
+            ]
+          ],
+          [
+            "Bassin d\u2019infiltration sec",
+            "BIS",
+            [
+              "BIF"
+            ]
+          ],
+          [
+            "Bassin de stockage en eau",
+            "BSE",
+            [
+              "BSE"
+            ]
+          ],
+          [
+            "Bassin de stockage sec",
+            "BSS",
+            [
+              "BSE"
+            ]
+          ],
+          [
+            "Depression de stockage",
+            "DST",
+            [
+              "DEP"
+            ]
+          ],
+          [
+            "D\u00e9pression d\u2019infiltration",
+            "DIN",
+            [
+              "DEP"
+            ]
+          ],
+          [
+            "D\u00e9pression \u00e0 double vidange",
+            "DDV",
+            [
+              "DEP"
+            ]
+          ],
+          [
+            "Chauss\u00e9e \u00e0 structure r\u00e9servoir stockante",
+            "CRS",
+            [
+              "CHA"
+            ]
+          ],
+          [
+            "Chauss\u00e9e \u00e0 structure r\u00e9servoir infiltrante",
+            "CRI",
+            [
+              "CHA"
+            ]
+          ],
+          [
+            "Massif stockant",
+            "MST",
+            [
+              "MAS"
+            ]
+          ],
+          [
+            "Massif infiltrant",
+            "MIN",
+            [
+              "MAS"
+            ]
+          ],
+          [
+            "Massif \u00e0 double vidange",
+            "MDV",
+            [
+              "MAS"
+            ]
+          ]
+        ]
+      },
+      "surfacefunction": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Transport",
+            "1",
+            null
+          ],
+          [
+            "Collecte",
+            "2",
+            null
+          ],
+          [
+            "Stockage",
+            "3",
+            null
+          ],
+          [
+            "R\u00e9gulation",
+            "4",
+            null
+          ],
+          [
+            "Traitement",
+            "5",
+            null
+          ],
+          [
+            "Autre",
+            "0",
+            null
+          ],
+          [
+            "Indetermine",
+            "99",
+            null
+          ]
+        ]
+      },
+      "width": {
+        "PGtype": "REAL"
+      },
+      "lenght": {
+        "PGtype": "REAL"
+      },
+      "depth": {
+        "PGtype": "REAL"
+      },
+      "volume": {
+        "PGtype": "REAL"
+      },
+      "receivingenvironment": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "flowcontrol": {
+        "PGtype": "VARCHAR(255)"
+      }
+    },
+    "showinqgis": true,
+    "widget": [],
+    "row_variantes": 0,
+    "row_locale": 1,
+    "djangoviewsql": "SELECT surface.*,descriptionsystem.*, object.* FROM surface INNER JOIN descriptionsystem ON surface.lpk_descriptionsystem = descriptionsystem.pk_descriptionsystem INNER JOIN object ON Descriptionsystem.lpk_object = object.pk_object WHERE object.lpk_revision_end IS NULL AND object.datetimedestruction IS NULL",
+    "qgisviewsql": " SELECT surface.*, descriptionsystem.*, object.* FROM surface INNER JOIN descriptionsystem ON surface.lpk_descriptionsystem = descriptionsystem.pk_descriptionsystem INNER JOIN object ON descriptionsystem.lpk_object = object.pk_object ",
+    "geom": "POLYGON"
+  },
+  "facility": {
+    "order": 4,
+    "fields": {
+      "pk_facility": {
+        "PGtype": "SERIAL PRIMARY KEY"
+      },
+      "id_facility": {
+        "PGtype": "INT"
+      },
+      "lpk_descriptionsystem": {
+        "PGtype": "INT",
+        "FK": "descriptionsystem(pk_descriptionsystem)"
+      },
+      "facilitytype": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "Cat1",
+            "CA1",
+            null
+          ],
+          [
+            "Cat2",
+            "CA2",
+            null
+          ]
+        ]
+      },
+      "lid_resource_1": {
+        "PGtype": "INT"
+      },
+      "lid_descriptionsystem_1": {
+        "PGtype": "INT"
+      },
+      "facilityfunction": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "Gestion des eaux urbaines",
+            "GEPU",
+            null
+          ],
+          [
+            "Gestion des eaux non urbaines",
+            "GEPNU",
+            null
+          ]
+        ]
+      }
+    },
+    "showinqgis": true,
+    "widget": [],
+    "row_variantes": 0,
+    "row_locale": 1,
+    "djangoviewsql": "SELECT facility.*, descriptionsystem.*,object.* FROM facility INNER JOIN descriptionsystem ON facility.lpk_descriptionsystem = descriptionsystem.pk_descriptionsystem INNER JOIN object ON descriptionsystem.lpk_object = object.pk_object WHERE object.lpk_revision_end IS NULL AND object.datetimedestruction IS NULL",
+    "qgisviewsql": " SELECT facility.*, descriptionsystem.*, object.* FROM facility INNER JOIN descriptionsystem ON facility.lpk_descriptionsystem = descriptionsystem.pk_descriptionsystem INNER JOIN object ON descriptionsystem.lpk_object = object.pk_object ",
+    "geom": "POLYGON"
+  },
+  "equipment": {
+    "order": 4,
+    "fields": {
+      "pk_equipment": {
+        "PGtype": "SERIAL PRIMARY KEY"
+      },
+      "id_equipment": {
+        "PGtype": "INT"
+      },
+      "lpk_descriptionsystem": {
+        "PGtype": "INT",
+        "FK": "descriptionsystem(pk_descriptionsystem)"
+      },
+      "equipmentcategory": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "Noeud",
+            "NOD",
+            null
+          ]
+        ]
+      },
+      "lid_resource_1": {
+        "PGtype": "INT"
+      },
+      "lid_descriptionsystem_1": {
+        "PGtype": "INT"
+      },
+      "domain": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ]
+        ]
+      },
+      "location": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Parking",
+            "PAR",
+            null
+          ],
+          [
+            "Herbe",
+            "HER",
+            null
+          ],
+          [
+            "B\u00e2timent",
+            "BAT",
+            null
+          ],
+          [
+            "Chemin pi\u00e9ton",
+            "CHE",
+            null
+          ],
+          [
+            "Route carrossable",
+            "RCA",
+            null
+          ],
+          [
+            "Voie ferr\u00e9es",
+            "VFE",
+            null
+          ]
+        ]
+      },
+      "equipmenttype": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Point de branchement",
+            "1",
+            null
+          ],
+          [
+            "Ventouse",
+            "2",
+            null
+          ],
+          [
+            "Vanne",
+            "3",
+            null
+          ],
+          [
+            "Debitmetre",
+            "4",
+            null
+          ],
+          [
+            "Chasse d eau",
+            "5",
+            null
+          ],
+          [
+            "Dessableur",
+            "6",
+            null
+          ],
+          [
+            "Deversoir",
+            "7",
+            null
+          ],
+          [
+            "Siphon",
+            "8",
+            null
+          ],
+          [
+            "Autre",
+            "0",
+            null
+          ],
+          [
+            "Clapet anti-odeur",
+            "10",
+            null
+          ],
+          [
+            "Puits d'infiltration",
+            "20",
+            null
+          ],
+          [
+            "Indetermine",
+            "99",
+            null
+          ]
+        ]
+      },
+      "accessibility": {
+        "PGtype": "VARCHAR(255)"
+      }
+    },
+    "showinqgis": true,
+    "widget": [],
+    "row_variantes": 0,
+    "row_locale": 1,
+    "djangoviewsql": "SELECT equipment.*, descriptionsystem.*,object.* FROM equipment INNER JOIN descriptionsystem ON equipment.lpk_descriptionsystem = descriptionsystem.pk_descriptionsystem INNER JOIN object ON descriptionsystem.lpk_object = object.pk_object WHERE object.lpk_revision_end IS NULL AND object.datetimedestruction IS NULL",
+    "qgisviewsql": " SELECT equipment.*, descriptionsystem.*, object.* FROM equipment INNER JOIN descriptionsystem ON equipment.lpk_descriptionsystem = descriptionsystem.pk_descriptionsystem INNER JOIN object ON descriptionsystem.lpk_object = object.pk_object ",
+    "geom": "LINESTRING"
+  },
+  "environment": {
+    "order": 4,
+    "fields": {
+      "pk_environment": {
+        "PGtype": "SERIAL PRIMARY KEY"
+      },
+      "id_environment": {
+        "PGtype": "INT"
+      },
+      "lpk_descriptionsystem": {
+        "PGtype": "INT",
+        "FK": "descriptionsystem(pk_descriptionsystem)"
+      },
+      "lid_descriptionsystem": {
+        "PGtype": "INT"
+      }
+    },
+    "showinqgis": true,
+    "widget": [],
+    "row_variantes": 4,
+    "row_locale": 5,
+    "djangoviewsql": "SELECT environment.*, descriptionsystem.*, object.* FROM environment INNER JOIN descriptionsystem ON environment.lpk_descriptionsystem = descriptionsystem.pk_descriptionsystem INNER JOIN object ON descriptionsystem.lpk_object = object.pk_object WHERE object.lpk_revision_end IS NULL AND object.datetimedestruction IS NULL",
+    "qgisviewsql": " SELECT environment.*, descriptionsystem.*, object.* FROM environment INNER JOIN descriptionsystem ON environment.lpk_descriptionsystem = descriptionsystem.pk_descriptionsystem INNER JOIN object ON descriptionsystem.lpk_object = object.pk_object ",
+    "geom": "LINESTRING"
+  },
+  "observation": {
+    "order": 4,
+    "fields": {
+      "pk_observation": {
+        "PGtype": "SERIAL PRIMARY KEY"
+      },
+      "id_observation": {
+        "PGtype": "INT"
+      },
+      "lpk_object": {
+        "PGtype": "INT",
+        "FK": "object(pk_object)"
+      },
+      "datetimeobservation": {
+        "PGtype": "TIMESTAMP"
+      },
+      "source": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "number": {
+        "PGtype": "INT"
+      },
+      "conditionglobal": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Mauvais",
+            "0",
+            null
+          ],
+          [
+            "Moyen",
+            "1",
+            null
+          ],
+          [
+            "Bon",
+            "2",
+            null
+          ]
+        ]
+      },
+      "gravity": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "0 : faible urgence",
+            "0",
+            null
+          ],
+          [
+            "1 : pas de grande urgence",
+            "1",
+            null
+          ],
+          [
+            "2 : urgence moyen terme",
+            "2",
+            null
+          ],
+          [
+            "3 : urgent",
+            "3",
+            null
+          ]
+        ]
+      },
+      "progression": {
+        "PGtype": "VARCHAR(500)"
+      },
+      "nextactiontype": {
+        "PGtype": "VARCHAR(500)",
+        "Cst": [
+          [
+            "Aucune",
+            "AUC",
+            null
+          ],
+          [
+            "Surveillance",
+            "SUR",
+            null
+          ],
+          [
+            "Entretien",
+            "ENT",
+            null
+          ],
+          [
+            "Etudes",
+            "ETU",
+            null
+          ],
+          [
+            "Travaux",
+            "TVX",
+            null
+          ],
+          [
+            "Travaux d\u00e9j\u00e0 r\u00e9alis\u00e9s",
+            "TRE",
+            null
+          ]
+        ]
+      },
+      "nextactioncomment": {
+        "PGtype": "VARCHAR(500)"
+      },
+      "nextactiontypecomment": {
+        "PGtype": "VARCHAR(500)"
+      },
+      "lid_delivery": {
+        "PGtype": "INT"
+      },
+      "lid_deficiency": {
+        "PGtype": "INT"
+      },
+      "nextactionsubtype": {
+        "PGtype": "VARCHAR(255)",
+        "ParFldCst": "nextactiontype",
+        "Cst": [
+          [
+            "/",
+            "",
+            [
+              "AUC"
+            ]
+          ],
+          [
+            "Regard a rehausser",
+            "REH",
+            [
+              "TVX"
+            ]
+          ],
+          [
+            "Remplacement tampon fonte",
+            "RTF",
+            [
+              "TVX"
+            ]
+          ],
+          [
+            "Rehabilitation complete",
+            "RCO",
+            [
+              "TVX"
+            ]
+          ],
+          [
+            "Scellement tampon",
+            "SCT",
+            [
+              "TVX"
+            ]
+          ],
+          [
+            "Etancheification branchement",
+            "ETB",
+            [
+              "TVX"
+            ]
+          ],
+          [
+            "Etancheification regard",
+            "ETR",
+            [
+              "TVX"
+            ]
+          ]
+        ]
+      },
+      "conditioncover": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Mauvais",
+            "0",
+            null
+          ],
+          [
+            "Moyen",
+            "1",
+            null
+          ],
+          [
+            "Bon",
+            "2",
+            null
+          ]
+        ]
+      },
+      "conditionstep": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Mauvais",
+            "0",
+            null
+          ],
+          [
+            "Moyen",
+            "1",
+            null
+          ],
+          [
+            "Bon",
+            "2",
+            null
+          ]
+        ]
+      },
+      "conditionmanhole": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Mauvais",
+            "0",
+            null
+          ],
+          [
+            "Moyen",
+            "1",
+            null
+          ],
+          [
+            "Bon",
+            "2",
+            null
+          ]
+        ]
+      },
+      "conditionculvert": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Non visible",
+            "0",
+            null
+          ],
+          [
+            "Mauvais",
+            "1",
+            null
+          ],
+          [
+            "Moyen",
+            "2",
+            null
+          ],
+          [
+            "Bon",
+            "3",
+            null
+          ]
+        ]
+      },
+      "conditioncontroller": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Mauvais",
+            "0",
+            null
+          ],
+          [
+            "Moyen",
+            "1",
+            null
+          ],
+          [
+            "Bon",
+            "2",
+            null
+          ]
+        ]
+      },
+      "presenceh2s": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Non",
+            "0",
+            null
+          ],
+          [
+            "Oui",
+            "1",
+            null
+          ]
+        ]
+      },
+      "presencepressurizedflow": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Non",
+            "0",
+            null
+          ],
+          [
+            "Traces-suspicion",
+            "1",
+            null
+          ],
+          [
+            "Oui",
+            "2",
+            null
+          ]
+        ]
+      },
+      "presencesediments": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Aucun",
+            "0",
+            null
+          ],
+          [
+            "Leger",
+            "1",
+            null
+          ],
+          [
+            "Moyen",
+            "2",
+            null
+          ],
+          [
+            "Fort",
+            "3",
+            null
+          ]
+        ]
+      },
+      "presenceinfiltrationtosewer": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Non",
+            "0",
+            null
+          ],
+          [
+            "Oui",
+            "1",
+            null
+          ]
+        ]
+      },
+      "presenceinfiltration": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Non",
+            "0",
+            null
+          ],
+          [
+            "Oui",
+            "1",
+            null
+          ]
+        ]
+      },
+      "presenceroots": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Non",
+            "0",
+            null
+          ],
+          [
+            "Oui",
+            "1",
+            null
+          ]
+        ]
+      },
+      "maintenanceopinion": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Mauvais",
+            "1",
+            null
+          ],
+          [
+            "Moyen",
+            "2",
+            null
+          ],
+          [
+            "Bon",
+            "3",
+            null
+          ]
+        ]
+      },
+      "equipmentopenclose": {
+        "PGtype": "INT",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Ferm\u00e9",
+            "1",
+            null
+          ],
+          [
+            "Ouvert",
+            "2",
+            null
+          ],
+          [
+            "Inconnu",
+            "99",
+            null
+          ]
+        ]
+      }
+    },
+    "showinqgis": false,
+    "widget": [],
+    "row_variantes": 0,
+    "row_locale": 1,
+    "djangoviewsql": "SELECT observation.* , object.* FROM observation INNER JOIN object ON observation.lpk_object = object.pk_object WHERE object.lpk_revision_end IS NULL AND object.datetimedestruction IS NULL",
+    "qgisviewsql": " SELECT observation.* , object.* FROM observation INNER JOIN object ON observation.lpk_object = object.pk_object "
+  },
+  "profile": {
+    "order": 4,
+    "fields": {
+      "pk_profile": {
+        "PGtype": "SERIAL PRIMARY KEY"
+      },
+      "id_profile": {
+        "PGtype": "INT"
+      },
+      "lpk_descriptionsystem": {
+        "PGtype": "INT",
+        "FK": "descriptionsystem(pk_descriptionsystem)"
+      },
+      "dateprofile": {
+        "PGtype": "TIMESTAMP"
+      },
+      "profiletype": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "Graphique",
+            "GRA",
+            null
+          ],
+          [
+            "Croquis",
+            "CRO",
+            null
+          ],
+          [
+            "Image",
+            "PHO",
+            null
+          ]
+        ]
+      },
+      "lid_descriptionsystem": {
+        "PGtype": "INT"
+      }
+    },
+    "showinqgis": true,
+    "widget": [],
+    "row_variantes": 4,
+    "row_locale": 5,
+    "djangoviewsql": "SELECT profile.*, descriptionsystem.*, object.* FROM profile INNER JOIN descriptionsystem ON profile.lpk_descriptionsystem = descriptionsystem.pk_descriptionsystem INNER JOIN object ON descriptionsystem.lpk_object = object.pk_object WHERE object.lpk_revision_end IS NULL AND object.datetimedestruction IS NULL",
+    "qgisviewsql": " SELECT profile.*, descriptionsystem.*, object.* FROM profile INNER JOIN Descriptionsystem ON profile.lpk_descriptionsystem = descriptionsystem.pk_descriptionsystem INNER JOIN object ON descriptionsystem.lpk_object = object.pk_object ",
+    "geom": "LINESTRING"
+  },
+  "graph": {
+    "order": 5,
+    "fields": {
+      "pk_graph": {
+        "PGtype": "SERIAL PRIMARY KEY"
+      },
+      "id_graph": {
+        "PGtype": "INT"
+      },
+      "lpk_resource": {
+        "PGtype": "INT",
+        "FK": "resource(pk_resource)"
+      },
+      "graphtype": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "Table",
+            "TAB",
+            null
+          ],
+          [
+            "csv",
+            "CSV",
+            null
+          ]
+        ]
+      },
+      "graphsubtype": {
+        "PGtype": "VARCHAR(4)",
+        "Cst": [
+          [
+            "Simple",
+            "SIM",
+            null
+          ],
+          [
+            "Patrimoine pluvial",
+            "SAS",
+            null
+          ]
+        ]
+      }
+    },
+    "showinqgis": false,
+    "widget": [],
+    "row_variantes": 4,
+    "row_locale": 5,
+    "djangoviewsql": "SELECT graph.*, resource.*, object.* FROM graph INNER JOIN resource ON graph.lpk_resource = resource.pk_resource INNER JOIN object ON resource.lpk_object = object.pk_object WHERE object.lpk_revision_end IS NULL AND object.datetimedestruction IS NULL",
+    "qgisviewsql": " SELECT graph.*, resource.*, object.* FROM graph INNER JOIN resource ON graph.lpk_resource = resource.pk_resource INNER JOIN object ON resource.lpk_object = object.pk_object "
+  },
+  "model": {
+    "order": 5,
+    "fields": {
+      "pk_model": {
+        "PGtype": "SERIAL PRIMARY KEY"
+      },
+      "id_model": {
+        "PGtype": "INT"
+      },
+      "lpk_resource": {
+        "PGtype": "INT",
+        "FK": "resource(pk_resource)"
+      },
+      "software": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "scenario": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "conclusions": {
+        "PGtype": "VARCHAR(500)"
+      }
+    },
+    "showinqgis": false,
+    "widget": [],
+    "row_variantes": 4,
+    "row_locale": 5,
+    "djangoviewsql": "SELECT model.* ,resource.*, object.* FROM model INNER JOIN resource ON model.lpk_resource = resource.pk_resource INNER JOIN object ON resource.lpk_object = object.pk_object WHERE object.lpk_revision_end IS NULL AND object.datetimedestruction IS NULL",
+    "qgisviewsql": " SELECT model.* ,resource.*, object.* FROM model INNER JOIN resource ON model.lpk_resource = resource.pk_resource INNER JOIN object ON resource.lpk_object = object.pk_object "
+  },
+  "report": {
+    "order": 5,
+    "fields": {
+      "pk_report": {
+        "PGtype": "SERIAL PRIMARY KEY"
+      },
+      "id_report": {
+        "PGtype": "INT"
+      },
+      "lpk_resource": {
+        "PGtype": "INT",
+        "FK": "resource(pk_resource)"
+      }
+    },
+    "showinqgis": true,
+    "widget": [],
+    "row_variantes": 4,
+    "row_locale": 5,
+    "djangoviewsql": "SELECT report.*, resource.*, object.* FROM report INNER JOIN resource ON report.lpk_resource = resource.pk_resource INNER JOIN object ON resource.lpk_object = object.pk_object WHERE object.lpk_revision_end IS NULL AND object.datetimedestruction IS NULL",
+    "qgisviewsql": " SELECT report.*, resource.*, object.* FROM report INNER JOIN resource ON report.lpk_resource = resource.pk_resource INNER JOIN object ON resource.lpk_object = object.pk_object ",
+    "geom": "MULTIPOLYGON"
+  },
+  "media": {
+    "order": 5,
+    "fields": {
+      "pk_media": {
+        "PGtype": "SERIAL PRIMARY KEY"
+      },
+      "id_media": {
+        "PGtype": "INT"
+      },
+      "lpk_resource": {
+        "PGtype": "INT",
+        "FK": "resource(pk_resource)"
+      },
+      "typemedia": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "Image",
+            "PHO",
+            null
+          ],
+          [
+            "Croquis",
+            "CRO",
+            null
+          ],
+          [
+            "Video",
+            "VID",
+            null
+          ]
+        ]
+      }
+    },
+    "showinqgis": true,
+    "widget": [],
+    "row_variantes": 4,
+    "row_locale": 5,
+    "djangoviewsql": "SELECT media.*, resource.*, object.* FROM media INNER JOIN resource ON media.lpk_resource = resource.pk_resource INNER JOIN object ON resource.lpk_object = object.pk_object WHERE object.lpk_revision_end IS NULL AND object.datetimedestruction IS NULL",
+    "qgisviewsql": " SELECT media.*, resource.*, object.* FROM media INNER JOIN resource ON media.lpk_resource = resource.pk_resource INNER JOIN object ON resource.lpk_object = object.pk_object ",
+    "geom": "POINT"
+  },
+  "rasters": {
+    "order": 5,
+    "fields": {
+      "pk_rasters": {
+        "PGtype": "SERIAL PRIMARY KEY"
+      },
+      "id_rasters": {
+        "PGtype": "INT"
+      },
+      "lpk_resource": {
+        "PGtype": "INT",
+        "FK": "resource(pk_resource)"
+      },
+      "rastertype": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Raster-Orthophoto de reference",
+            "ORF",
+            null
+          ],
+          [
+            "Raster-IGN25k de reference",
+            "IRF",
+            null
+          ],
+          [
+            "Raster-Lidar de reference",
+            "LRF",
+            null
+          ],
+          [
+            "Raster-Lidar",
+            "LID",
+            null
+          ],
+          [
+            "Raster-Orthophoto",
+            "ORT",
+            null
+          ],
+          [
+            "Raster-IGN25k",
+            "IGN",
+            null
+          ],
+          [
+            "Raster-Autre",
+            "AUT",
+            null
+          ],
+          [
+            "Vecteur-Shapefile",
+            "SHP",
+            null
+          ]
+        ]
+      }
+    },
+    "showinqgis": false,
+    "widget": [],
+    "row_variantes": 4,
+    "row_locale": 5,
+    "djangoviewsql": "SELECT rasters.*, resource.*, object.* FROM rasters INNER JOIN resource ON rasters.lpk_resource = resource.pk_resource INNER JOIN object ON resource.lpk_object = object.pk_object WHERE object.lpk_revision_end IS NULL AND object.datetimedestruction IS NULL",
+    "qgisviewsql": " SELECT rasters.*, resource.*, object.*FROM rasters INNER JOIN resource ON rasters.lpk_resource = resource.pk_resource INNER JOIN object ON resource.lpk_object = object.pk_object "
+  },
+  "topography": {
+    "order": 5,
+    "fields": {
+      "pk_topography": {
+        "PGtype": "SERIAL PRIMARY KEY"
+      },
+      "id_topography": {
+        "PGtype": "INT"
+      },
+      "lpk_resource": {
+        "PGtype": "INT",
+        "FK": "resource(pk_resource)"
+      }
+    },
+    "showinqgis": false,
+    "widget": [],
+    "row_variantes": 4,
+    "row_locale": 5,
+    "djangoviewsql": "SELECT topography.*, resource.*, object.* FROM topography INNER JOIN resource ON topography.lpk_resource = resource.pk_resource INNER JOIN object ON resource.lpk_object = object.pk_object WHERE object.lpk_revision_end IS NULL AND object.datetimedestruction IS NULL",
+    "qgisviewsql": " SELECT topography.*, resource.*, object.* FROM topography INNER JOIN resource ON topography.lpk_resource = resource.pk_resource INNER JOIN object ON resource.lpk_object = object.pk_object "
+  },
+  "graphdata": {
+    "order": 6,
+    "fields": {
+      "pk_graphdata": {
+        "PGtype": "SERIAL PRIMARY KEY"
+      },
+      "lpk_graph": {
+        "PGtype": "INT",
+        "FK": "graph(pk_graph)"
+      },
+      "graphnum1": {
+        "PGtype": "NUMERIC"
+      },
+      "graphnum2": {
+        "PGtype": "NUMERIC"
+      },
+      "graphchar1": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "graphchar2": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "graphnum3": {
+        "PGtype": "NUMERIC"
+      },
+      "graphnum4": {
+        "PGtype": "NUMERIC"
+      },
+      "graphnum5": {
+        "PGtype": "NUMERIC"
+      },
+      "graphnum6": {
+        "PGtype": "NUMERIC"
+      },
+      "graphnum7": {
+        "PGtype": "NUMERIC"
+      },
+      "graphnum8": {
+        "PGtype": "NUMERIC"
+      },
+      "graphnum9": {
+        "PGtype": "NUMERIC"
+      },
+      "graphnum10": {
+        "PGtype": "NUMERIC"
+      },
+      "graphnum11": {
+        "PGtype": "NUMERIC"
+      },
+      "graphnum12": {
+        "PGtype": "NUMERIC"
+      },
+      "graphnum13": {
+        "PGtype": "NUMERIC"
+      },
+      "graphnum14": {
+        "PGtype": "NUMERIC"
+      },
+      "graphnum15": {
+        "PGtype": "NUMERIC"
+      },
+      "graphnum16": {
+        "PGtype": "NUMERIC"
+      },
+      "graphnum17": {
+        "PGtype": "NUMERIC"
+      },
+      "graphnum18": {
+        "PGtype": "NUMERIC"
+      },
+      "graphnum19": {
+        "PGtype": "NUMERIC"
+      },
+      "graphnum20": {
+        "PGtype": "NUMERIC"
+      }
+    },
+    "showinqgis": false,
+    "widget": [],
+    "row_variantes": 0,
+    "row_locale": 1,
+    "djangoviewsql": "SELECT graphdata.* FROM graphdata",
+    "qgisviewsql": " SELECT graphdata.* FROM graphdata "
+  },
+  "topographydata": {
+    "order": 6,
+    "fields": {
+      "pk_topographydata": {
+        "PGtype": "SERIAL PRIMARY KEY"
+      },
+      "lpk_topography": {
+        "PGtype": "INT",
+        "FK": "topography(pk_topography)"
+      },
+      "topographydatatype": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "Autre",
+            "AUT",
+            null
+          ],
+          [
+            "Type1",
+            "TP1",
+            null
+          ]
+        ]
+      },
+      "x": {
+        "PGtype": "NUMERIC"
+      },
+      "y": {
+        "PGtype": "NUMERIC"
+      },
+      "zgps": {
+        "PGtype": "NUMERIC"
+      },
+      "zwgs84": {
+        "PGtype": "NUMERIC"
+      },
+      "raf09": {
+        "PGtype": "NUMERIC"
+      },
+      "zmngf": {
+        "PGtype": "NUMERIC"
+      },
+      "accuracy": {
+        "PGtype": "VARCHAR(255)"
+      },
+      "dx": {
+        "PGtype": "NUMERIC"
+      },
+      "dy": {
+        "PGtype": "NUMERIC"
+      },
+      "dz": {
+        "PGtype": "NUMERIC"
+      },
+      "rodheight": {
+        "PGtype": "NUMERIC"
+      },
+      "value1": {
+        "PGtype": "NUMERIC"
+      },
+      "value2": {
+        "PGtype": "NUMERIC"
+      }
+    },
+    "showinqgis": true,
+    "widget": [],
+    "row_variantes": 4,
+    "row_locale": 5,
+    "djangoviewsql": "SELECT topographydata.* FROM topographydata",
+    "qgisviewsql": " SELECT topographydata.* FROM topographydata ",
+    "geom": "POINT"
+  },
+  "tcobjectactor": {
+    "order": 6,
+    "fields": {
+      "pk_tcobjectactor": {
+        "PGtype": "SERIAL PRIMARY KEY"
+      },
+      "lpk_revision_begin": {
+        "PGtype": "INT",
+        "FK": "revision(pk_revision)"
+      },
+      "lpk_revision_end": {
+        "PGtype": "INT",
+        "FK": "revision(pk_revision)"
+      },
+      "lid_actor": {
+        "PGtype": "INT"
+      },
+      "lid_object": {
+        "PGtype": "INT"
+      },
+      "role": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "/",
+            "",
+            null
+          ],
+          [
+            "Maitre d ouvrage",
+            "MOA",
+            null
+          ],
+          [
+            "Maitre d oeuvre",
+            "MOE",
+            null
+          ],
+          [
+            "Gestionnaire",
+            "GES",
+            null
+          ],
+          [
+            "Proprietaire",
+            "PRO",
+            null
+          ],
+          [
+            "Prestataire",
+            "PRE",
+            null
+          ],
+          [
+            "Sous traitant",
+            "STT",
+            null
+          ]
+        ]
+      }
+    },
+    "showinqgis": false,
+    "widget": [],
+    "row_variantes": 4,
+    "row_locale": 5,
+    "djangoviewsql": "SELECT * FROM tcobjectactor WHERE lpk_revision_end IS NULL",
+    "qgisviewsql": " SELECT * FROM tcobjectactor "
+  },
+  "tcobjectresource": {
+    "order": 6,
+    "fields": {
+      "pk_tcobjectresource": {
+        "PGtype": "SERIAL PRIMARY KEY"
+      },
+      "lpk_revision_begin": {
+        "PGtype": "INT",
+        "FK": "revision(pk_revision)"
+      },
+      "lpk_revision_end": {
+        "PGtype": "INT",
+        "FK": "revision(pk_revision)"
+      },
+      "lid_resource": {
+        "PGtype": "INT"
+      },
+      "lid_object": {
+        "PGtype": "INT"
+      }
+    },
+    "showinqgis": false,
+    "widget": [],
+    "row_variantes": 4,
+    "row_locale": 5,
+    "djangoviewsql": "SELECT * FROM tcobjectresource WHERE lpk_revision_end IS NULL",
+    "qgisviewsql": " SELECT * FROM tcobjectresource "
+  },
+  "tcobjectgeoarea": {
+    "order": 6,
+    "fields": {
+      "pk_tcobjectgeoarea": {
+        "PGtype": "SERIAL PRIMARY KEY"
+      },
+      "lpk_revision_begin": {
+        "PGtype": "INT",
+        "FK": "revision(pk_revision)"
+      },
+      "lpk_revision_end": {
+        "PGtype": "INT",
+        "FK": "revision(pk_revision)"
+      },
+      "lid_geoarea": {
+        "PGtype": "INT"
+      },
+      "lid_object": {
+        "PGtype": "INT"
+      }
+    },
+    "showinqgis": false,
+    "widget": [],
+    "row_variantes": 4,
+    "row_locale": 5,
+    "djangoviewsql": "SELECT * FROM tcobjectgeoarea WHERE lpk_revision_end IS NULL",
+    "qgisviewsql": " SELECT * FROM tcobjectgeoarea "
+  },
+  "tcdeliveryobject": {
+    "order": 6,
+    "fields": {
+      "pk_tcdeliveryobject": {
+        "PGtype": "SERIAL PRIMARY KEY"
+      },
+      "lpk_revision_begin": {
+        "PGtype": "INT",
+        "FK": "revision(pk_revision)"
+      },
+      "lpk_revision_end": {
+        "PGtype": "INT",
+        "FK": "revision(pk_revision)"
+      },
+      "lid_delivery": {
+        "PGtype": "INT"
+      },
+      "lid_object": {
+        "PGtype": "INT"
+      }
+    },
+    "showinqgis": false,
+    "widget": [],
+    "row_variantes": 4,
+    "row_locale": 5,
+    "djangoviewsql": "SELECT * FROM tcdeliveryobject WHERE lpk_revision_end IS NULL",
+    "qgisviewsql": " SELECT * FROM tcdeliveryobject "
+  },
+  "tcsurfacedescriptionsystem": {
+    "order": 6,
+    "fields": {
+      "pk_tcsurfacedescriptionsystem": {
+        "PGtype": "SERIAL PRIMARY KEY"
+      },
+      "lpk_revision_begin": {
+        "PGtype": "INT",
+        "FK": "revision(pk_revision)"
+      },
+      "lpk_revision_end": {
+        "PGtype": "INT",
+        "FK": "revision(pk_revision)"
+      },
+      "lid_surface": {
+        "PGtype": "INT"
+      },
+      "lid_descriptionsystem": {
+        "PGtype": "INT"
+      }
+    },
+    "showinqgis": false,
+    "widget": [],
+    "row_variantes": 4,
+    "row_locale": 5,
+    "djangoviewsql": "SELECT * FROM tcsurfacedescriptionsystem WHERE lpk_revision_end IS NULL",
+    "qgisviewsql": " SELECT * FROM tcsurfacedescriptionsystem "
+  },
+  "itv": {
+    "order": 5,
+    "fields": {
+      "pk_itv": {
+        "PGtype": "SERIAL PRIMARY KEY"
+      },
+      "id_itv": {
+        "PGtype": "INT"
+      },
+      "lpk_resource": {
+        "PGtype": "INT",
+        "FK": "resource(pk_resource)"
+      },
+      "typeitv": {
+        "PGtype": "VARCHAR(255)",
+        "Cst": [
+          [
+            "Image",
+            "PHO",
+            null
+          ]
+        ]
+      }
+    },
+    "showinqgis": true,
+    "widget": [],
+    "row_variantes": 4,
+    "row_locale": 5,
+    "djangoviewsql": "SELECT itv.*, resource.*, object.* FROM itv INNER JOIN resource ON itv.lpk_resource = resource.pk_resource INNER JOIN object ON resource.lpk_object = object.pk_object WHERE object.lpk_revision_end IS NULL AND object.datetimedestruction IS NULL",
+    "qgisviewsql": " SELECT itv.*, resource.*, object.* FROM itv INNER JOIN resource ON itv.lpk_resource = resource.pk_resource INNER JOIN object ON resource.lpk_object = object.pk_object "
+  }
+}

@@ -49,7 +49,10 @@
     </widget>
    </item>
    <item>
-    <widget class="QStackedWidget" name="stackedWidget_category">
+    <widget class="QStackedWidget" name="stackedWidget_surfcategory">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
      <widget class="QWidget" name="page"/>
      <widget class="QWidget" name="page_2"/>
     </widget>

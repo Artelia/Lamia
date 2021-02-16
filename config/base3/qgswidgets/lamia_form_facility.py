@@ -78,15 +78,15 @@ class BaseFacilityTool(AbstractLamiaFormTool):
             "facility": {
                 "linkfield": "id_facility",
                 "widgets": {
-                    "facilitytype": self.toolwidgetmain.comboBox_type,
+                    "facilitytype": self.toolwidgetmain.facilitytype,
                     "facilityfunction": self.toolwidgetmain.facilityfunction,
                 },
             },
             "object": {
                 "linkfield": "id_object",
                 "widgets": {
-                    "name": self.toolwidgetmain.lineEdit_name,
-                    "comment": self.toolwidgetmain.textBrowser_comm,
+                    "name": self.toolwidgetmain.name,
+                    "comment": self.toolwidgetmain.comment,
                 },
             },
             "descriptionsystem": {

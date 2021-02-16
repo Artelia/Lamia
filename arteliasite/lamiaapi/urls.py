@@ -15,7 +15,12 @@ urlpatterns = [
         name="lamiaapi",
     ),
     path("media/<path:mediafile>", views.LamiaMedia.as_view(), name="lamiamedia",),
+    path("qgisserver/<int:project_id>", views.LamiaGeoServer.as_view(), name="lamiaqgisserver",),
+    path("qgisserver/<int:project_id>/<path:restrequest>", views.LamiaGeoServer.as_view(), name="lamiaqgisserver",),
 ]
+
+
+
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

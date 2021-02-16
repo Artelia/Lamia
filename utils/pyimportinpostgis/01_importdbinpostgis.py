@@ -4,7 +4,7 @@ lamiapath = os.path.join(os.path.join(os.path.dirname(__file__)), "..", "..")
 sys.path.append(lamiapath)
 from test.test_utils import *
 import Lamia
-from Lamia.secrets import postgis_aws
+from Lamia.secrets import postgis_aws_secrets
 
 import qgis, qgis.core, qgis.gui
 
@@ -26,16 +26,16 @@ def importInPostGis():
     # pwd = "pvr"
     # postgisresourcedir = os.path.join(os.path.dirname(__file__), dbname + "_" + schema)
 
-    host = postgis_aws.host
-    port = postgis_aws.port
-    dbname = postgis_aws.dbname
-    schema = "importgpmb"
-    user = postgis_aws.user
-    pwd = postgis_aws.password
+    host = postgis_aws_secrets.host
+    port = postgis_aws_secrets.port
+    dbname = postgis_aws_secrets.dbname
+    schema = "reims"
+    user = postgis_aws_secrets.user
+    pwd = postgis_aws_secrets.password
     postgisresourcedir = os.path.join(os.path.dirname(__file__), dbname + "_" + schema)
 
     # sqlite from db
-    slfile = r"C:\01_WORKINGDIR\GPMB\final_ass\mergeddbase.sqlite"
+    slfile = r"C:\111_GitProjects\Lamia\utils\pyimportinpostgis\4633319 - BDD LAMIA CUGR - BER - 20201214_PVR.sqlite"
 
     # * script
 
@@ -45,7 +45,7 @@ def importInPostGis():
     worktype = sldbase.worktype
     variante = sldbase.variante
     # create pgdbase
-    dbaseressourcesdirectory = os.path.join(os.path.dirname(__file__), "importBM_pg")
+    # dbaseressourcesdirectory = os.path.join(os.path.dirname(__file__), "reims")
     pgdbase.createDBase(
         crs=str(crs),
         worktype=worktype,
@@ -67,18 +67,27 @@ def importInPostGis():
         password=pwd,
     )
 
+    # pgdbase.printsql = True
     pgdbase.dbaseofflinemanager.addDBase(**{"slfile": slfile})
 
 
 def createProject():
     pgdbase = DBaseParserFactory("postgis").getDbaseParser()
+
+    host = postgis_aws_secrets.host
+    port = postgis_aws_secrets.port
+    dbname = postgis_aws_secrets.dbname
+    schema = "reims"
+    user = postgis_aws_secrets.user
+    pwd = postgis_aws_secrets.password
+
     pgdbase.loadDBase(
-        host="localhost",
+        host=host,
         port="5432",
-        dbname="lamiaunittest",
-        schema="importgpmb",
-        user="pvr",
-        password="pvr",
+        dbname="lamia",
+        schema="reims",
+        user=user,
+        password=pwd,
     )
     canvas = qgis.gui.QgsMapCanvas()
     canvas.enableAntiAliasing(True)
@@ -87,6 +96,8 @@ def createProject():
     canvas.setDestinationCrs(canvascrs)
     qgscanvas = QgisCanvas(canvas)
     qgscanvas.createLayersForQgisServer(pgdbase)
+
+    print('ok')
 
 
 def main():
@@ -98,10 +109,10 @@ def main():
     logging.getLogger("Lamia_unittest").setLevel(logging.DEBUG)
 
     # import in postgis
-    importInPostGis()
+    # importInPostGis()
 
     # create project for qgisserver
-    # createProject()
+    createProject()
 
     exitQGis()
 

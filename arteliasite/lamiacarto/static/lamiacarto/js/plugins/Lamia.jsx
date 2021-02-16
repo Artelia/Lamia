@@ -41,11 +41,14 @@ class Lamia extends React.Component {
     }
 
     async getDBaseWorktype() {
-        let qgisserverurl = this.projectdata.qgisserverurl.split('?')[0]
-        let qgisserverquery
-        this.projectdata.qgisserverurl.split('?').length > 1 ? qgisserverquery = this.projectdata.qgisserverurl.split('?')[1] : qgisserverquery = null
-        let databaseurl = qgisserverurl + '/wfs3/collections/database_qgis/items/1.json'
-        qgisserverquery ? databaseurl = databaseurl + '?' + qgisserverquery : null
+        // let qgisserverurl = this.projectdata.qgisserverurl.split('?')[0]
+        // let qgisserverquery
+        // this.projectdata.qgisserverurl.split('?').length > 1 ? qgisserverquery = this.projectdata.qgisserverurl.split('?')[1] : qgisserverquery = null
+
+        // let qgisserverurl = 'http://' + window.location.host + '/lamiaapi/' + this.projectdata.id_project + '/styles'
+        let qgisserverurl = 'http://' + window.location.host 
+        let databaseurl = qgisserverurl + '/qgisserver/' + this.projectdata.id_project + '/wfs3/collections/database_qgis/items/1.json'
+        // qgisserverquery ? databaseurl = databaseurl + '?' + qgisserverquery : null
         let feat = await axios.get(databaseurl)
         let worktype = feat.data.properties.businessline
         this.dbaseworktypeloaded = true
@@ -70,11 +73,12 @@ class Lamia extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
 
         let returnvalue = false
-
-        if (!this.defaultstyleloaded && this.state.styles) {
+        if (!this.defaultstyleloaded && Object.keys(this.state.styles).length !== 0) {
+            
             if (this.getLamiaLayer() !== null) {
                 this.changeStyle("_default")
                 this.defaultstyleloaded = true
+                returnvalue = true
             }
         }
 

@@ -134,9 +134,14 @@ class LamiaORM(object):
                 #     # print("***", sql)
                 #     self.dbase.query(sql)
                 if filtereddict:
+                    if self.dbase.TYPE == "spatialite" :
+                        unknowvalue = ' ? '
+                    elif self.dbase.TYPE in ["postgis","django"]:
+                        unknowvalue = r' %s '
+
                     setstring = ", ".join(
                         [
-                            k + " = ?" if k != "geom" else k + " =" + v
+                            k + " = " + unknowvalue if k != "geom" else k + " =" + v
                             for k, v in filtereddict.items()
                         ]
                     )

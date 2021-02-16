@@ -195,7 +195,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
         # print(project.dataDefinedServerProperties().referencedFields())
 
-        return
+        # return
 
         for rawtablename, rawdict in dbaseparser.dbasetables.items():
             # if 'geom' not in rawdict:
@@ -236,6 +236,8 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                         qgsgeomtype = qgis.core.QgsWkbTypes.Point
                     elif geomtype == "LINESTRING":
                         qgsgeomtype = qgis.core.QgsWkbTypes.LineString
+                    elif geomtype == "POLYGON":
+                        qgsgeomtype = qgis.core.QgsWkbTypes.Polygon
                     elif geomtype == "MULTIPOLYGON":
                         qgsgeomtype = qgis.core.QgsWkbTypes.MultiPolygon
                     # print(geomtype)
@@ -267,8 +269,8 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             if (
                 "layerqgis"
                 in layers[tablename].keys()
-                # and layers[tablename]["layerqgis"].geometryType()
-                != qgis.core.QgsWkbTypes.NullGeometry
+                # and layers[tablename]["layerqgis"].geometryType() != qgis.core.QgsWkbTypes.NullGeometry
+                
             ):
                 stylesdir = [
                     os.path.basename(f.path)

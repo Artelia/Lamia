@@ -331,7 +331,7 @@ class PostGisDBaseParser(AbstractDBaseParser):
             self.PGiscursor = self.connPGis.cursor()
         try:
             if self.printsql:
-                logging.getLogger("Lamia_unittest").debug("%s", sql)
+                logging.getLogger("Lamia_unittest").debug("%s %s", sql,arguments)
             self.PGiscursor.execute(sql, arguments)
             # print(self.PGiscursor.statusmessage )
             if self.PGiscursor.statusmessage.split(" ")[0] not in [
@@ -389,6 +389,10 @@ class PostGisDBaseParser(AbstractDBaseParser):
         return [elem[0] for elem in result]
 
     def getColumns(self, tablename):
+
+        if tablename in self.columnsnames.keys():
+            return self.columnsnames[tablename]
+
         sql = (
             "SELECT column_name FROM information_schema.columns "
             "WHERE table_name  = '{}' AND table_schema = '{}'".format(
@@ -397,6 +401,7 @@ class PostGisDBaseParser(AbstractDBaseParser):
         )
         query = self.query(sql)
         result = [row[0] for row in query]
+        self.columnsnames[tablename] = result
         return result
 
     def getFirstIdColumn(self, tablename):

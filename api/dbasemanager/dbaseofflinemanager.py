@@ -286,6 +286,10 @@ class DBaseOfflineManager:
                         )
                     self.dbase.messageinstance.updateProgressBar(counter)
 
+                    # if tablename in ['object', 'descriptionsystem','deficiency', 'node', 'resource','edge','surface']:
+                    #     continue
+
+
                     # if tablename == "graphdata":
                     #     print("ok")
 
@@ -321,6 +325,11 @@ class DBaseOfflineManager:
                     self.dbase.beginTransaction()
 
                     for i, pkidresult in enumerate(pkidresults):
+
+                        if i % 100 == 0:
+                            logging.getLogger("Lamia_unittest").debug(f"{tablename} - {i}")
+                
+
                         noncriticalresult = noncriticalresults[i]
 
                         if tablename[0:2].lower() != "tc":
@@ -823,6 +832,8 @@ class DBaseOfflineManager:
         dbconfdatas = confdatas[tablename.lower()]
         pkidfields = dbconfdatas.get("pkidfields", None)
         noncriticalfields = dbconfdatas.get("noncriticalfields", None)
+
+
         # pkidresult = dbconfdatas.get('pkidresult', None)
         # noncriticalresult = dbconfdatas.get('noncriticalresult', None)
 
@@ -894,10 +905,26 @@ class DBaseOfflineManager:
                     )
 
             # copy values
+            if self.dbase.TYPE == 'spatialite':
+                sqlarg = '?'
+            elif self.dbase.TYPE in ['postgis','django']:
+                sqlarg = r'%s'
+                # if 'geom' in noncriticalfields:
+                #     idx = noncriticalfields.index('geom')
+                #     import psycopg2
+                #     finalnoncriticalvalues[idx] = psycopg2.Binary(finalnoncriticalvalues[idx])
             sql = f"INSERT INTO {tablename} ( {', '.join(noncriticalfields)} ) "
-            inter = ["?"] * len(finalnoncriticalvalues)
+            inter = [sqlarg] * len(finalnoncriticalvalues)
+            if "geom" in noncriticalfields:
+                idx = noncriticalfields.index("geom")
+                inter[idx] = f"ST_GeomFromText({inter[idx]}, {self.dbase.crsnumber})"
+
             sql += f" VALUES({', '.join(inter)})"
             argts = finalnoncriticalvalues
+
+            # print('sql',sql )
+            # print('argts',argts )
+
             toparser.query(sql, arguments=argts, docommit=False)
 
         else:
@@ -1027,6 +1054,8 @@ class DBaseOfflineManager:
         dbconfdatas["importdictid"] = importdictid
         dbconfdatas["importdictdeletedpk"] = importdictdeletedpk
 
+
+
     def _getCriticalandNonCriticalFields(self, dbname):
 
         # * get non critical fields (not pk and non id)
@@ -1085,7 +1114,7 @@ class DBaseOfflineManager:
 
         # noncriticalfield.insert(-1, 'ST_AsText(ST_Transform(geom,' + str(self.dbase.crsnumber) + '))')
         noncriticalfieldtemp = list(noncriticalfield)
-        if False:
+        if True:
             if "geom" in noncriticalfieldtemp:
                 noncriticalfieldtemp[noncriticalfieldtemp.index("geom")] = (
                     "ST_AsText(ST_Transform(geom," + str(self.dbase.crsnumber) + "))"
@@ -1150,7 +1179,10 @@ class DBaseOfflineManager:
                 sqlpk = "SELECT " + ",".join(pkidfields) + " FROM " + dbname.lower()
         results = dbaseparserfrom.query(sql)
         resultpk = dbaseparserfrom.query(sqlpk)
+
         return results, resultpk
+
+
 
     def isInConflict(self, dbaseparserfrom, conflictobjetid):
         """

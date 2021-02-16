@@ -15,7 +15,7 @@ from django.utils.decorators import method_decorator
 from artelialogin.models import User, Project
 from artelialogin.views import BaseView
 import logging, pprint
-
+from urllib.parse import urlparse, urlunsplit, urlsplit
 
 # Create your views here.
 
@@ -71,12 +71,18 @@ class LamiaCartoAPIView(views.APIView):
             with open(conffile) as f:
                 themesdata = json.load(f)
 
+            # print('***PROXY***', os.environ["HTTP_PROXY"], os.environ["HTTPS_PROXY"])
+
             queryset = Project.objects.filter(id_project=projectid)
             qgisserverurl = queryset.values("qgisserverurl")[0]["qgisserverurl"]
             themesdata["themes"]["items"][0]["url"] = qgisserverurl
             themesConfig.qwc2_path = "./lamiacarto/static"
+
+            # print('gentehems')
             datab = themesConfig.genThemes(themesdata)
-            # pprint.pprint(datab)
+            # print(datab)
+            datab = self.replaceURLinGenThemes(datab,qgisserverurl,projectid)
+            # print('response',datab)
             return Response(datab)
 
         elif tablename.split("/")[0] == "translations":
@@ -88,6 +94,25 @@ class LamiaCartoAPIView(views.APIView):
     def post(self, request, **kwargs):
         pass
 
+
+
+    def replaceURLinGenThemes(self,genthemes,qgisserverurl,projectid):
+        websiteurl = os.getenv('LAMIA_URL',"http://localhost:8000/qgisserver")
+        websiteurl += '/' + str(projectid)
+        parsed_qgisserverurl = urlparse(qgisserverurl)
+        parsed_qgisserverurl = parsed_qgisserverurl._replace(query="")
+        qgisserverurl = parsed_qgisserverurl.geturl()
+
+        if isinstance(genthemes, dict):
+            for k, v in genthemes.items():
+                genthemes[k] = self.replaceURLinGenThemes(v,qgisserverurl,projectid)
+        elif isinstance(genthemes, list):
+            for i, e in enumerate(genthemes) :
+                genthemes[i] = self.replaceURLinGenThemes(e,qgisserverurl,projectid)
+        elif isinstance(genthemes, str):
+            if qgisserverurl in genthemes:
+                genthemes = genthemes.replace(qgisserverurl, websiteurl)
+        return genthemes
 
 # * ******************************************************************************
 # * ************************** View ***********************************
@@ -144,6 +169,6 @@ class LamiaProjectView(BaseView):
             return redirect("/static/" + url1)
 
         else:
-            print("*", url1)
+            # print("*", url1)
             return redirect("lamiaprojectgis")
 

@@ -18,6 +18,16 @@ class EdgeEditingFormReact extends EditingFormReact {
             ...this.state
         }
 
+        this.PARENTJOIN = {
+            "facility": {
+                "colparent": "id_facility",
+                "colthistable": "lid_facility",
+                "tctable": null,
+                "tctablecolparent": null,
+                "tctablecolthistable": null,
+            }
+        }
+
     }
 
 

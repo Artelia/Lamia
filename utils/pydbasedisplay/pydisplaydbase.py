@@ -94,7 +94,7 @@ def launchIface():
     # SLFILE = r"C:\01_WORKINGDIR\reims\testast\mergeddbase.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\alban\lamia\test_alban.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\sebastien\VTA_2020_Noailles.sqlite"
-    # SLFILE = r"C:\01_WORKINGDIR\bm\BD_totale_ind15.sqlite"
+    SLFILE = r"C:\01_WORKINGDIR\bm\BD_totale_ind15.sqlite"
     # SLFILE = r"C:\Users\Public\Documents\lamia\BD_totale_ind15\BD_totale_ind15.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\sebastien\VTA_2020_Noailles.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\herve\fusion\mergeddbase.sqlite"
@@ -116,7 +116,7 @@ def launchIface():
     # SLFILE = r"C:\01_WORKINGDIR\aaa\base\vide.sqlite"
     # SLFILE = r"C:\Users\Public\Documents\lamia\GPMB_Bacalan_offline\GPMB_Bacalan_offline.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\fauna\test.sqlite"
-    SLFILE = r"C:\01_WORKINGDIR\aaaa\test6.sqlite"
+    # SLFILE = r"C:\01_WORKINGDIR\aaaa\test6.sqlite"
 
     print(f"{bcolors.OKGREEN}Opening: {os.path.abspath(SLFILE)} {bcolors.ENDC}")
 
@@ -131,6 +131,17 @@ def launchIface():
     #     schema="importgpmb",
     #     user="pvr",
     #     password="pvr",
+    # )
+    # lamiawidget.loadDBase(
+    #     dbtype="Postgis",
+    #     host="lamia-test.cnku0apmx0rg.eu-west-3.rds.amazonaws.com",
+    #     # host="localhost",
+    #     port=5432,
+    #     dbname="lamia",
+    #     # schema="base3_urbandrainage_lamia",
+    #     schema="reims",
+    #     user="reims",
+    #     password="reims",
     # )
 
     # lamiawidget.qgiscanvas.unloadLayersInCanvas()
@@ -162,7 +173,7 @@ def launchIface():
 
     lamiawidget.setVisualMode(visualmode=INTERFACEINDEX)
     lamiawidget.dbase.raiseexceptions = False  # False True
-    lamiawidget.dbase.printsql = False  # False True
+    lamiawidget.dbase.printsql = True  # False True
     lamiawidget.dbase.printorm = True  # False True
 
     if PROFILING:
@@ -211,6 +222,7 @@ def main():
         datefmt="%H:%M:%S",
     )
     logging.getLogger("Lamia").setLevel(logging.DEBUG)
+    logging.getLogger("Lamia_unittest").setLevel(logging.DEBUG)
     logging.getLogger("Lamia.iface.qgscanvas.ifaceqgiscanvas").setLevel(logging.DEBUG)
     # logging.getLogger("Lamia").setLevel(logging.DEBUG)
 

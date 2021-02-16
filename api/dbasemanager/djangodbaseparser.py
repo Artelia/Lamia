@@ -31,12 +31,12 @@ import os, sys, shutil, datetime, time
 from .postgisdbaseparser import *
 
 
-class DjangoDBaseParser(PostGisDBaseParser):
+# class DjangoDBaseParser(PostGisDBaseParser):
 
-    TYPE = "django"
+#     TYPE = "django"
 
-    def __init__(self, parserfactory, messageinstance):
-        super(PostGisDBaseParser, self).__init__(parserfactory, messageinstance)
+#     def __init__(self, parserfactory, messageinstance):
+#         super(PostGisDBaseParser, self).__init__(parserfactory, messageinstance)
 
 
 class DjangoDBaseParser(PostGisDBaseParser):
