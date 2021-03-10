@@ -89,10 +89,10 @@ class DBaseOfflineManager:
         else:
             self.dbase.disconnect()
 
-        os.rename(
-            os.path.dirname(initialofflinedbpath),
-            os.path.dirname(initialofflinedbpath) + "_" + currentdatetime,
-        )
+        # os.rename(
+        #     os.path.dirname(initialofflinedbpath),
+        #     os.path.dirname(initialofflinedbpath) + "_" + currentdatetime,
+        # )
 
         self.dbase.messageinstance.showNormalMessage(f"Pulling datas  ...")
         self.dbase.messageinstance.stopdisplaymessage = True
@@ -724,7 +724,7 @@ class DBaseOfflineManager:
 
         # * conflicts are those updated in main and deleted in import #case1
         # ** and those archived in main and created in import   #case2
-        # and those updated in both     #case3
+        #*  and those updated in both     #case3
         # * and those deleted in main and created in import    #case4
 
         case1 = list(set(importedobjetidsdeleted) & set(mainobjetidsupdated))
@@ -759,7 +759,10 @@ class DBaseOfflineManager:
                     "valueimport": listvalueimport,
                     "case": 3,
                 }
-        case4 = list(set(importedobjetids) - set(mainobjetstillthere))
+        case4 = list(set(importedobjetids) & set(importedobjetidsupdated))
+        case4 = list(set(case4) - set(mainobjetstillthere))
+        # case4 = list(set(importedobjetids) - set(mainobjetstillthere))
+        # case4 = list(set(importedobjetidsupdated) - set(mainobjetstillthere))
         case4 = list(set(case4) - set(importedobjetidsdeleted))
         for id in case4:
             dictconflicts[id] = {

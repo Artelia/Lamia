@@ -1,0 +1,25 @@
+
+###HABITATS_Z
+#nom              type          cst               valeur
+ID      ;        Int;            ;    edge_qgis.id_edge
+code1  ;       String;          ;    edge_qgis.habitatcode
+code2  ;       String;          ;    edge_qgis.habitat2code 
+leg1 ;       String;          ;    edge_qgis.habitatname
+leg2 ;       String;          ;    edge_qgis.habitat2name
+codeEunis; String;            ; CASE WHEN edge_qgis.habitat2code is NULL THEN edge_qgis.habitatcode ELSE  edge_qgis.habitatcode + ' x ' + edge_qgis.habitat2code END
+legende; String;              ; CASE WHEN edge_qgis.habitat2name is NULL THEN edge_qgis.habitatname ELSE  edge_qgis.habitatname + ' x ' +  edge_qgis.habitat2name END
+codeGroup; String;             ;  IF edge_qgis.habitat2code is NULL THEN LEFT(edge_qgis.habitatcode,1) ELSE 'Habitat mosaique'  END     
+dateObs;           String;          ;   edge_qgis.datetimecreation
+obsNomOrg;      String;	         ; 'ARTELIA'
+obsId; 		String;	         ; actor_qgis.actorname
+comment;	String;	         ; edge_qgis.comment
+numMission;     String;       	 ; NULL
+
+
+
+
+###geom
+geom  ;     Int   ;            ;ST_AsText(edge_qgis.geom)
+
+###main
+FROM edge_qgis LEFT JOIN actor_qgis ON actor_qgis.id_actor = edge_qgis.lid_actor_1 WHERE  "edgecategory"  =  'HAB' 

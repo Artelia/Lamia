@@ -208,7 +208,7 @@ def schema_node(self):
                 initialangle = angle
             resultlinesout.append([id, angle - initialangle])
         else :
-            self.windowdialog.errorMessage('schema error - pk infra : ' + str(fetinfra.id()) + ' - polyline trop courte...')
+            self.errorMessage('schema error - pk infra : ' + str(fetinfra.id()) + ' - polyline trop courte...')
 
     sql = "SELECT pk_edge, id_edge FROM edge WHERE lid_descriptionsystem_2 = "
     sql += str(iddessys)
@@ -237,7 +237,7 @@ def schema_node(self):
             angle = py_ang(lastlinevector, np.array([1, 0]))
             resultlinesin.append([id, angle - initialangle])
         else :
-            self.windowdialog.errorMessage('schema error - pk infra : ' + str( fetinfra.id()) +  ' - polyline trop courte...')
+            self.errorMessage('schema error - pk infra : ' + str( fetinfra.id()) +  ' - polyline trop courte...')
 
 
     if debug: logging.getLogger("Lamia").debug('resultlinesout : %s', str(resultlinesout))

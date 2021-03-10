@@ -117,6 +117,8 @@ def launchIface():
     # SLFILE = r"C:\Users\Public\Documents\lamia\GPMB_Bacalan_offline\GPMB_Bacalan_offline.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\fauna\test.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\aaaa\test6.sqlite"
+    # SLFILE = r"C:\Users\Public\Documents\lamia\spatialite2743_NewVersion_offline\spatialite2743_NewVersion_offline.sqlite"
+    SLFILE = r"C:\01_WORKINGDIR\00_test\Spatialite_Test.sqlite"
 
     print(f"{bcolors.OKGREEN}Opening: {os.path.abspath(SLFILE)} {bcolors.ENDC}")
 

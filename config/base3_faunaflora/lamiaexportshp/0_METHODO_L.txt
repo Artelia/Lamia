@@ -1,0 +1,20 @@
+
+###METHODO_L
+#nom              type          cst               valeur
+ID      ;        Int;            ;    edge_qgis.id_edge
+nature  ;       String;          ;    edge_qgis.edgetype
+nomPoint;       String;          ;   NULL  
+date;           String;          ;   edge_qgis.datetimecreation
+obsNomOrg;      String;	         ; 'ARTELIA'
+obsId; 		String;	         ; actor_qgis.actorname
+comment;	String;	         ; edge_qgis.comment
+numMission;     String;       	 ; NULL
+
+
+
+
+###geom
+geom  ;     Int   ;            ;ST_AsText(edge_qgis.geom)
+
+###main
+FROM edge_qgis LEFT JOIN actor_qgis ON actor_qgis.id_actor = edge_qgis.lid_actor WHERE  "edgecategory"  =  'PRO'  AND ST_Length(edge_qgis.geom) >1

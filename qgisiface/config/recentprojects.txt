@@ -1,8 +1,8 @@
+C:\01_WORKINGDIR\00_test\Spatialite_Test.sqlite
+C:\01_WORKINGDIR\fauna\test.sqlite
 C:\01_WORKINGDIR\bm\BD_totale_ind15.sqlite
+C:\01_WORKINGDIR\BACALAN\GPMB_Bacalan.sqlite
+C:\Users\Public\Documents\lamia\spatialite2743_NewVersion_offline\spatialite2743_NewVersion_offline.sqlite
 lamia.reims@lamia-test.cnku0apmx0rg.eu-west-3.rds.amazonaws.com:5432;reims;reims
 lamia.importgpmb@lamia-test.cnku0apmx0rg.eu-west-3.rds.amazonaws.com:5432;postgrespvr;9TZyMXXEJCiS9YY8ooMg
-C:\01_WORKINGDIR\aaaa\test6.sqlite
-C:/01_WORKINGDIR/aaaa/test6.sqlite
-C:\01_WORKINGDIR\fauna\test.sqlite
 C:\Users\Public\Documents\lamia\GPMB_Bacalan_offline\GPMB_Bacalan_offline.sqlite
-C:\01_WORKINGDIR\BACALAN\GPMB_Bacalan.sqlite

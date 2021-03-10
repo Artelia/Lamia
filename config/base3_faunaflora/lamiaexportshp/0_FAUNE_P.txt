@@ -1,0 +1,29 @@
+
+###FAUNE_P
+#nom              type       cst               valeur
+ID      ;        Int;           ;      node_qgis.id_node
+statObs ;      String;          ;           'Pr'
+nomCite;       String;         ;   node_qgis.scientificname   
+dateDebut;     String;      ;    node_qgis.datetimecreation
+datefin;        String;     ;node_qgis.datetimemodification
+dsPublique;     String;      ;     'Ac'
+orgGestDat;     String;     ;     'ARTELIA'
+statSource;     String;   ;     'Te'
+obsNomOrg;      String;	  ;	    'ARTELIA'
+obsId; 		String;	 ; actor_qgis.actorname
+natObjGeo;      String;  ;		 'In'
+comment;	String;	 ;	node_qgis.comment
+nomFrancai;    String;	 ;		node_qgis.commonname
+orderclass;    String;   ; node_qgis.orderclass
+statut;        String;    ;  CASE WHEN faunainvasive=1 THEN 'Invasive' ELSE 'Protegee et ou patrimoniale' END
+nombre;		Int;	; node_qgis.number
+numMission; String; 	; NULL
+
+
+
+
+###geom
+geom      ;Int       ;  ;ST_AsText(node_qgis.geom)
+
+###main
+FROM node_qgis LEFT JOIN actor_qgis ON actor_qgis.id_actor = node_qgis.lid_actor WHERE  "nodecategory"  = 'FAU' 

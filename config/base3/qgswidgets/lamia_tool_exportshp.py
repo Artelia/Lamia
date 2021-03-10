@@ -114,6 +114,7 @@ class ExportShapefileTool(AbstractLamiaTool):
             filetoload = shpfile
         elif os.path.isfile(filepathwithoutext + ".dbf"):
             filetoload = filepathwithoutext + ".dbf"
+            
         vectorlay = qgis.core.QgsVectorLayer(
             filetoload, os.path.basename(shpfile), "ogr"
         )

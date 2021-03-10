@@ -1,0 +1,28 @@
+
+###FLORE_Z
+#nom              type        cst               valeur
+ID      ;        Int;           ;      surface_qgis.id_surface
+statObs ;      String;          ;           'Pr'
+nomCite;       String;         ;   surface_qgis.scientificname   
+dateDebut;     String;      ;    surface_qgis.datetimecreation
+datefin;        String;     ;surface_qgis.datetimemodification
+dsPublique;     String;       ;     'Ac'
+orgGestDat;     String;        ;     'ARTELIA'
+statSource;     String;         ;     'Te'
+obsNomOrg;      String;	   ;	    'ARTELIA'
+obsId; 		String;	 ; actor_qgis.actorname
+natObjGeo;      String; 	;		 'In'
+comment;		String;	;	surface_qgis.comment
+nomFrancai;    String;	;		surface_qgis.commonname
+statut; 		String;    ;  CASE WHEN florainvasive=1 THEN 'Invasive' WHEN floraprotected =1 THEN 'Protegee' ELSE '?' END
+nombre;		Int;		;	 surface_qgis.number
+numMission; String; 			; NULL
+
+
+
+
+###geom
+geom          ;Int       ;  ;ST_AsText(surface_qgis.geom)
+
+###main
+FROM surface_qgis LEFT JOIN actor_qgis ON actor_qgis.id_actor = surface_qgis.lid_actor WHERE ST_Area(surface_qgis.geom)>5 AND  "surfacecategory" ='FLO'
