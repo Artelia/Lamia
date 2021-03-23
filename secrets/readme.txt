@@ -28,7 +28,7 @@ pg_service_aws_secret.conf
 [qgisserver]
 host=lamia-test.cnku0apmx0rg.eu-west-3.rds.amazonaws.com
 port=5432
-user=postgrespvr
-password=9TZyMXXEJCiS9YY8ooMg
+user=user
+password=passwd
 dbname=lamia
 
