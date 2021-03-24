@@ -322,11 +322,14 @@ class printPDFBaseWorker(QtCore.QObject):
             self.qgiscanvas.createLayers(self.dbase)
             if self.dbase.base3version:
                 try:
-                    self.qgiscanvas.applyStyle(self.dbase.worktype, "0_default")
+                    # self.qgiscanvas.applyStyle(self.dbase.worktype, "0_default")
+                    self.qgiscanvas.applyStyle(self.dbase, "0_default")
                 except:
-                    self.qgiscanvas.applyStyle(self.dbase.worktype, "_default")
+                    # self.qgiscanvas.applyStyle(self.dbase.worktype, "_default")
+                    self.qgiscanvas.applyStyle(self.dbase, "_default")
             else:
-                self.qgiscanvas.applyStyle(self.dbase.worktype, "0_Defaut")
+                # self.qgiscanvas.applyStyle(self.dbase.worktype, "0_Defaut")
+                self.qgiscanvas.applyStyle(self.dbase, "0_Defaut")
 
             if self.dbase.base3version:
                 strtoexec = f"Lamia.config.{self.dbase.worktype.lower()}.lamiareport.lamiareportworktypefunc"

@@ -667,11 +667,14 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
             pass
         self.comboBox_style.clear()
 
-        stylepath = self.qgiscanvas._getStyleDirectory(self.dbase.worktype)
+        # stylepath = self.qgiscanvas._getStyleDirectory(self.dbase.worktype)
+        # stylepath = self.qgiscanvas._getStyleDirectory(self.dbase)
+        stylesdict = self.qgiscanvas._getStyleDirectory(self.dbase)
+        # styledirs = [x[1] for x in os.walk(stylepath) if len(x[1]) > 0]
+        styledirs = list(stylesdict.keys())
 
-        styledirs = [x[1] for x in os.walk(stylepath) if len(x[1]) > 0]
         if len(styledirs) > 0:
-            styledirs = styledirs[0]
+            # styledirs = styledirs[0]
             self.comboBox_style.addItems(styledirs)
             self.comboBox_style.currentIndexChanged.connect(self.comboStyleChanged)
             self.comboBox_style.currentIndexChanged.emit(0)
@@ -684,7 +687,8 @@ class LamiaWindowWidget(QMainWindow, LamiaIFaceAbstractWidget):
         """
         styledir = self.comboBox_style.currentText()
         # stylerep = os.path.join(os.path.dirname(Lamia.__file__), 'DBASE', 'style', self.dbase.worktype, styledir )
-        self.qgiscanvas.applyStyle(self.dbase.worktype, styledir)
+        # self.qgiscanvas.applyStyle(self.dbase.worktype, styledir)
+        self.qgiscanvas.applyStyle(self.dbase, styledir)
 
     # ***********************************************************
     # **************** Interface mode actions ***********************

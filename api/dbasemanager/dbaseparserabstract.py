@@ -337,9 +337,9 @@ class AbstractDBaseParser:
         ][0]
 
         if resdir[0] == "." and hasattr(self, "spatialitefile"):
-            self.dbaseressourcesdirectory = os.path.join(
+            self.dbaseressourcesdirectory = os.path.normpath(os.path.join(
                 os.path.dirname(self.spatialitefile), resdir
-            )
+            ))
         else:
             self.dbaseressourcesdirectory = os.path.normpath(resdir)
         self.crsnumber = crs
