@@ -74,20 +74,20 @@ class WidgetGroup(QtCore.QObject):
     ## Custom widgets not in this list can be made to work with WidgetGroup by giving them a 'widgetGroupInterface' method
     ##   which returns the tuple.
     classes = {
-        QtGui.QSpinBox: 
+        QtGui.QSpinBox:
             (lambda w: w.valueChanged, 
             QtGui.QSpinBox.value, 
             QtGui.QSpinBox.setValue),
-        QtGui.QDoubleSpinBox: 
+        QtGui.QDoubleSpinBox:
             (lambda w: w.valueChanged, 
             QtGui.QDoubleSpinBox.value, 
             QtGui.QDoubleSpinBox.setValue),
-        QtGui.QSplitter: 
+        QtGui.QSplitter:
             (None, 
             splitterState,
             restoreSplitter,
             True),
-        QtGui.QCheckBox: 
+        QtGui.QCheckBox:
             (lambda w: w.stateChanged,
             QtGui.QCheckBox.isChecked,
             QtGui.QCheckBox.setChecked),

@@ -33,3 +33,8 @@ arteliasitev3/node_modules
 *.cprof
 *.exe
 Lamia_*.zip
+.devcontainer/devcontainer.json
+.gitignore
+.devcontainer/devcontainer.json
+.vscode/settings.json
+utils/pydbasedisplay/pydisplaydbase.py
