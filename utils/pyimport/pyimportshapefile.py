@@ -16,10 +16,10 @@ def launchIface():
 
     lamiawidget.connector = LoggingConnector()
 
-    SLFILE = r"C:\01_WORKINGDIR\bm\BD_totale_ind15.sqlite"
+    SLFILE = r"C:\01_WORKINGDIR\aaaa\variante_lamia.sqlite"
     # SHPFILE = r"C:\01_WORKINGDIR\alban\data\ART_RegardsEU.shp"
-    SHPFILE = r"C:\Users\Public\Documents\temp\Ouverture_SEP.shp"
-    IMPORTTYPE = "equipment"
+    SHPFILE = r"C:\01_WORKINGDIR\aaaa\Troncons_SBY_L93_3.shp"
+    IMPORTTYPE = "edge"
 
     lamiawidget.loadDBase(dbtype="Spatialite", slfile=SLFILE)
 

@@ -1,4 +1,5 @@
 import unittest, os, logging, sys, shutil, logging, time, glob, json, datetime
+import cProfile
 from pprint import pprint
 
 sys.path.append(os.path.join(os.path.join(os.path.dirname(__file__)), "..", ".."))
@@ -27,6 +28,8 @@ Y_BEGIN = 6000000.0
 RESOLVECONFLICT = "auto"  #  auto manual
 RESOLVECONFLICTCH = "main"  # main import
 
+PROFILINGpull = True
+PROFILINGpush = True
 
 class DBaseTest(unittest.TestCase):
 
@@ -45,6 +48,12 @@ class DBaseTest(unittest.TestCase):
         self.filephoto = os.path.join(
             os.path.dirname(__file__), "datas", "logo_artelia.jpg"
         )
+
+        if PROFILINGpull:
+            self.prpull = cProfile.Profile()
+        if PROFILINGpush:
+            self.prpush = cProfile.Profile()
+
 
     def test_a_testoffline(self):
         self._createWin()
@@ -74,6 +83,7 @@ class DBaseTest(unittest.TestCase):
                 sqlitedbase.disconnect()
 
                 self.wind.loadDBase(dbtype="Spatialite", slfile=offlinepath)
+
                 self.createInitialFeatures()
 
                 copyfile = os.path.join(
@@ -86,9 +96,20 @@ class DBaseTest(unittest.TestCase):
                 # * pull child db
                 logging.getLogger("Lamia_unittest").debug("pull child db ")
 
+
+                if PROFILINGpull:
+                    self.prpull.enable()
+
                 if not os.path.isdir(os.path.dirname(childofflinepath)):
                     os.mkdir(os.path.dirname(childofflinepath))
                 self.wind.pullDBase(exportfilepath=childofflinepath)
+
+
+                if PROFILINGpull:
+                    self.prpull.disable()
+                    cprofilepath = os.path.join(os.path.dirname(__file__), "offfline_pull.cprof")
+                    self.prpull.dump_stats(cprofilepath)
+                    # REm : run     python -m snakeviz offfline_pull.cprof       for viz
 
                 # * make changes in child db
                 logging.getLogger("Lamia_unittest").debug(
@@ -123,7 +144,16 @@ class DBaseTest(unittest.TestCase):
 
                 # print(self.wind.dbase.dbaseofflinemanager.__class__.RESOLVECONFLICTTYPE)
                 # print(self.wind.dbase.dbaseofflinemanager.RESOLVECONFLICTTYPE)
+                if PROFILINGpush:
+                    self.prpush.enable()
+
                 self.wind.pushDBase()
+
+                if PROFILINGpush:
+                    self.prpush.disable()
+                    cprofilepath = os.path.join(os.path.dirname(__file__), "offfline_pull2.cprof")
+                    self.prpush.dump_stats(cprofilepath)
+                    # REm : run     python -m snakeviz offfline_pull2.cprof       for viz
 
             if True:
                 # * finaly open parentdb
@@ -502,6 +532,9 @@ def main():
     )
     # logging.getLogger("Lamia_unittest").setLevel(logging.DEBUG)
     logging.getLogger("Lamiaoffline").setLevel(logging.DEBUG)
+
+
+
     unittest.main()
     exitQGis()
     sys.exit()

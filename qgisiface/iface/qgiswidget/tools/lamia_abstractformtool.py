@@ -29,7 +29,7 @@ This file is part of LAMIA.
 import qgis
 import qgis.utils
 from qgis.PyQt import uic, QtCore, QtGui
-
+import logging
 """
 try:
     from qgis.PyQt.QtGui import (QWidget, QTreeWidgetItem, QMessageBox, QFileDialog, QTableWidget,
@@ -381,7 +381,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                 "tablename : %s, kwargs : %s", self.DBASETABLENAME, kwargs
             )
 
-        if (
+        if (self.mainifacewidget.currenttoolwidget and 
             self.mainifacewidget.currenttoolwidget.DBASETABLENAME
             in self.mainifacewidget.qgiscanvas.layers.keys()
         ):
@@ -908,7 +908,12 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         pointslayer = []
 
         #* Define maptoolcapturetype : the geomtypecaptured & capturetype : geomtype of layer
-        maptoolcapturetype = int(self.sender().mode())     #1 point 2 line 3 polygon
+        try:
+            maptoolcapturetype = int(self.sender().mode())     #1 point 2 line 3 polygon
+        except AttributeError:  #no sender - debug mode
+            maptoolcapturetype = self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME]["layer"].geometryType()
+            # logging.getLogger("Lamiaoffline").debug(maptoolcapturetypestring)
+
         capturetype = self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME][
             "layer"
         ].geometryType()        # 0 point 1 line 2 polygone 3 unknow 4 null geom
