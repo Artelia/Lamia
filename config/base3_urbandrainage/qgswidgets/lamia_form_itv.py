@@ -29,7 +29,7 @@ import sys, inspect, logging, textwrap, platform, subprocess
 
 import qgis
 from qgis.PyQt import QtGui, uic, QtCore, QtXml
-from qgis.PyQt.QtWidgets import QAction, QWidget
+from qgis.PyQt.QtWidgets import QAction, QWidget, QMessageBox
 
 from Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstractformtool import (
     AbstractLamiaFormTool,
@@ -82,7 +82,6 @@ class UrbandrainageITVTool(AbstractLamiaFormTool):
         self.toolwidgetmain.pushButton_check.clicked.connect(self.checkAllNodesFound)
         self.toolwidgetmain.pushButton_viewcsv.clicked.connect(self.viewAsCsv)
         self.toolwidgetmain.pushButton_viewaslayer.clicked.connect(self.viewAsLayer)
-        self.toolwidgetmain.pushButton_import.clicked.connect(self.runImport)
 
     def chooseFile(self):
         itvfile = self.qfiledlg.getOpenFileNames(
@@ -98,6 +97,12 @@ class UrbandrainageITVTool(AbstractLamiaFormTool):
         itvfiles = [self.dbase.completePathOfFile(fl.strip()) for fl in itvfiles]
 
         noidinlamia, totalnode = self.itvcore.checkNodesExistInLamia(itvfiles)
+        if len(noidinlamia) > 0:
+            listnode = "Missing nodes : "
+            for node in list(noidinlamia):
+                listnode = listnode + node + ", "
+            listnode = listnode[:-2] + "."
+            QMessageBox.about(self, "Missing nodes", listnode)
         self.toolwidgetmain.label_nonodeinlamia.setText(
             f"Nodes not found : {len(noidinlamia)} / {totalnode}"
         )
@@ -122,9 +127,6 @@ class UrbandrainageITVTool(AbstractLamiaFormTool):
         project = qgis.core.QgsProject.instance()
         root = project.layerTreeRoot()
         project.addMapLayer(layer, True)
-
-    def runImport(self):
-        pass
 
 
 class UserUI(QWidget):

@@ -43,3 +43,8 @@ work_jb/DBspatialite/itv/20210202/VU-5024-0418.csv
 work_jb/DBspatialite/result_computation/itv1_20210415_205013.gpkg
 work_jb/DBspatialite/result_computation/itv1_20210415_205933.gpkg
 autre_dossier/GPMB_Bacalan.sqlite
+.devcontainer/devcontainer.json
+.gitignore
+.devcontainer/devcontainer.json
+.vscode/settings.json
+utils/pydbasedisplay/pydisplaydbase.py

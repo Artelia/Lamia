@@ -25,6 +25,7 @@ This file is part of LAMIA.
  """
 
 
+from pathlib import Path
 import os, importlib, tempfile, pprint, shutil
 from collections import OrderedDict
 import sys, glob, inspect, logging, textwrap
@@ -33,6 +34,13 @@ from ..abstractlibslamia import AbstractLibsLamia
 
 import qgis
 from qgis.PyQt import QtGui, uic, QtCore, QtXml
+
+from .exfiltration_indicators import all_exfiltration_indicators
+from .infiltration_indicators import all_infiltration_indicators
+from .ensablement_indicators import all_ensablement_indicators
+# from .effondrement_indicators import all_effondrement_indicators
+# from .bouchage_indicators import all_bouchage_indicators
+from .red_cap_hydraulique_indicators import all_red_cap_hyfraulique_indicators
 
 import pandas as pd
 import numpy as np
@@ -110,11 +118,6 @@ class ITVImportCore(AbstractLibsLamia):
 
     def __init__(self, dbaseparser, messageinstance=None):
         super(ITVImportCore, self).__init__(dbaseparser, messageinstance)
-
-    def newNotation(self, destfile):
-
-        originalfile = os.path.join(self.confdatadirplugin, "rereau_base.csv")
-        shutil.copy(originalfile, destfile)
 
     def computeNotation(self, conffile, itvpks):
         # * prepare source df : pdnotation as notation   and resdf as sourcedata
@@ -720,7 +723,6 @@ class ITVImportCore(AbstractLibsLamia):
 
         noidinlamia = itvids.difference(lamiaids)
         totalid = len(resdataframe["reg_depart"].unique())
-
         return noidinlamia, totalid
 
     def getITVCsvFile(self, itvfiles):
@@ -1015,6 +1017,9 @@ class ITVImportCore(AbstractLibsLamia):
             # avancement = (((countline * 100) / total) * 0.9) + 10
             # self.dlg.progress.setProperty("value", avancement)
 
+        # change style TODO JB, relative path to .qml in config, urbanD ?
+        path_file = os.path.join(Path(__file__).parent.parent.parent.parent, "config/base3_urbandrainage/lamiaITVimport/Anomalies ITV.qml")
+        temp_layer.loadNamedStyle(path_file)
         # Sortir du mode édition
         temp_layer.commitChanges()
 
@@ -1115,6 +1120,111 @@ class ITVImportCore(AbstractLibsLamia):
         # self.dlg.ok.hide()
         # self.dlg.cancel.hide()
 
+    def setQgsEgde(self, dataframe, itv_name):
+        """create or update edges with rereau indicators values
+
+        Args:
+            dataframe with indications about regard, indicators, and localisation
+        """
+
+        # ******************************************************************************************************************************************************
+        # Traitement GEO
+        # ******************************************************************************************************************************************************
+
+        indicators_list = []
+        # result_df = pd.DataFrame(index=dataframe.index, columns=["id_edge"])
+        for indicator in all_exfiltration_indicators.keys():
+            indicators_list.append(indicator)
+            indicators_list.append('result_' + indicator)
+            # result_df[indicator] = np.nan
+        for indicator in all_infiltration_indicators:
+            indicators_list.append(indicator)
+            indicators_list.append('result_' + indicator)
+            # result_df[indicator] = np.nan
+        for indicator in all_ensablement_indicators:
+            indicators_list.append(indicator)
+            indicators_list.append('result_' + indicator)
+            # result_df[indicator] = np.nan
+        for indicator in all_red_cap_hyfraulique_indicators:
+            indicators_list.append(indicator)
+            indicators_list.append('result_' + indicator)
+            # result_df[indicator] = np.nan
+
+        # create qgis layer to put ITV result
+        temp_layer = qgis.core.QgsVectorLayer(
+            f"NoGeometry?crs=epsg:{self.dbase.crsnumber}", "result_" + itv_name, "memory"
+        )
+
+        pr = temp_layer.dataProvider()
+
+        # open editing mode
+        temp_layer.startEditing()
+
+        qgsfields = qgis.core.QgsFields()
+
+        qgsfields.append(qgis.core.QgsField("id_edge", QtCore.QVariant.String))
+        for ind in indicators_list:
+            qgsfields.append(qgis.core.QgsField(ind, QtCore.QVariant.Double))
+        pr.addAttributes(qgsfields)
+
+
+        edges = self.getAllEdges()
+        # for each edges in dataframe,
+        for i, row in dataframe.iterrows():
+            edge_is_find = 0
+            insert_feat = qgis.core.QgsFeature(qgsfields)
+            element_list = []
+            # we look for asociated points,
+            for id_edge, id_reg_1, id_reg_2 in edges:
+
+                # if we find the edge, we add informations
+                if (str(row["k_reg_1"]) == id_reg_1 and str(row["k_reg_2"]) == id_reg_2) or (str(row["k_reg_1"]) == id_reg_2 and str(row["k_reg_2"]) == id_reg_1):
+                    element_list.append(id_edge)
+                    edge_is_find = 1
+                    for ind in indicators_list:
+                        ind_value = row[ind]
+                        if row["length"] > 0:
+                            element_list.append(ind_value)
+                        else:
+                            element_list.append(float(None))
+                            self.dbase.lamiaorm['edge'].update(
+                                pkedge,
+                                {
+                                    ind:ind_value
+                                }
+                            )
+                    insert_feat.setAttributes(element_list)
+                    pr.addFeatures([insert_feat])
+                    break
+            if edge_is_find == 0 and row["k_reg_1"] != np.nan and row["k_reg_2"] != np.nan:
+                X1 = row["X1"]
+                Y1 = row["Y1"]
+                X2 = row["X2"]
+                Y2 = row["Y2"]
+                pkedge = self.dbase.lamiaorm['edge'].create()
+                self.dbase.lamiaorm['edge'].update(
+                    pkedge,
+                    {
+                        "lid_descriptionsystem_1":row["k_reg_1"],
+                        "lid_descriptionsystem_2":row["k_reg_2"],
+                        "geom":f"LINESTRING({X1} {Y1},{X2} {Y2})"
+                    }
+                )
+                element_list.append(self.dbase.query(f'SELECT id_edge FROM edge_qgis WHERE pk_edge IS {pkedge}')[0][0])
+                for ind in indicators_list:
+                    ind_value = row[ind]
+                    if row["length"] > 0:
+                        element_list.append(ind_value)
+                    else:
+                        element_list.append(None)
+                insert_feat.setAttributes(element_list)
+                pr.addFeatures([insert_feat])
+
+        temp_layer.commitChanges()
+
+        return temp_layer
+
+
     def getUniquesValuesbyEdge(self, itvfiles):
         resdataframe = self.readITVs(itvfiles)
 
@@ -1179,3 +1289,112 @@ class ITVImportCore(AbstractLibsLamia):
             finaldf = finaldf.append(res, ignore_index=True)
 
         return finaldf
+
+    def getAllPoints(self):
+        """return for all Points : name, id_point, x coordinate, y coordinates
+        """
+        nodes = self.dbase.query('SELECT name, id_descriptionsystem, ST_X(geom), ST_Y(geom) FROM node_qgis WHERE lpk_revision_end IS NULL')
+        return nodes
+
+    def getAllEdges(self):
+        """return for all Edges : id_edge, id_point_1, id_point_2
+        """
+        edges = self.dbase.query('SELECT id_edge, lid_descriptionsystem_1, lid_descriptionsystem_2 FROM edge_qgis WHERE lpk_revision_end IS NULL')
+        return edges
+
+    def computeOneIndicator(self, result_df, indicator, alpha, P, dict_of_indictors):
+        """return result_df with a new column indicator, with the grade of the edge for that indicator
+        """
+        result_df[indicator] = 0.
+        for col in result_df.columns:
+            # if a defaut is in this indicator and in this edge:
+            if col in dict_of_indictors[indicator].keys():
+                # if it depends of P:
+                if dict_of_indictors[indicator][col][1] is "P":
+                    # if it is not a treshold
+                    if type(dict_of_indictors[indicator][col][0]) == type(1):
+                        result_df[indicator] = result_df[indicator].values + result_df[col].values * (alpha ** dict_of_indictors[indicator][col][0]) * P
+                    else:
+                        under_limit = 0.
+                        for treshold in dict_of_indictors[indicator][col][0]:
+                            result_df[indicator][np.logical_and(under_limit <= result_df[indicator].values, result_df[indicator].values < treshold[0])] = result_df[indicator][np.logical_and(under_limit <= result_df[indicator].values, result_df[indicator].values < treshold[0])].values + result_df[col][np.logical_and(under_limit <= result_df[indicator].values, result_df[indicator].values < treshold[0])].values * (alpha ** treshold[1]) * P
+                            under_limit = treshold[0]
+                # if depend of observated length:
+                elif dict_of_indictors[indicator][col][1] is "L":
+                    if type(dict_of_indictors[indicator][col][0]) == type(1):
+                        result_df[indicator] = result_df[indicator].values + result_df[col].values * (alpha ** dict_of_indictors[indicator][col][0])
+                    else:
+                        under_limit = 0.
+                        for treshold in dict_of_indictors[indicator][col][0]:
+                            result_df[indicator][np.logical_and(under_limit <= result_df[indicator].values, result_df[indicator].values < treshold[0])] = result_df[indicator][np.logical_and(under_limit <= result_df[indicator].values, result_df[indicator].values < treshold[0])].values + result_df[col][np.logical_and(under_limit <= result_df[indicator].values, result_df[indicator].values < treshold[0])].values * (alpha ** treshold[1])
+                            under_limit = treshold[0]
+        # we divide total score by total length of the edge
+        result_df[indicator] = result_df[indicator] / result_df["length"]
+        result_df['result_' + indicator] = result_df[indicator]
+        # result_df[indicator] = result_df[indicator].fillna(np.inf)
+        threshold_result = [1., 2., 3., 4.]
+        if indicator in ["EXF4", "INF4"]:
+            # under_limit = 0.
+            for i, treshold in enumerate([0.5, 2., 7., np.inf]):
+                result_df.loc[result_df['result_' + indicator] >= treshold, indicator] = threshold_result[i]
+                # if 0 < len(result_df[indicator][np.logical_and(under_limit <= result_df[indicator].values, result_df[indicator].values < treshold)]):
+                    # result_df[indicator][np.logical_and(under_limit <= result_df[indicator].values, result_df[indicator].values < treshold)] = threshold_result[i]
+                # under_limit = treshold
+        elif indicator in ["HYD3", "ENS4"]:
+            # under_limit = 0.
+            for i, treshold in enumerate([1., 4., 14., np.inf]):
+                result_df.loc[result_df['result_' + indicator] >= treshold, indicator] = threshold_result[i]
+                # if 0 < len(result_df[indicator][np.logical_and(under_limit <= result_df[indicator].values, result_df[indicator].values < treshold)]):
+                #     result_df[indicator][np.logical_and(under_limit <= result_df[indicator].values, result_df[indicator].values < treshold)] = threshold_result[i]
+                # under_limit = treshold
+        # result_df[indicator][result_df[indicator] == np.inf] = None
+        return result_df
+
+    def computeIndicators(self, pks, alpha=2, P=5, itv_name="ITV"):
+        """compute all available indicators on those edge
+
+        Args:
+            pks (list): [itv path]
+            alpha (int, optional). Defaults to 2.
+            P (int, optional):. Defaults to 5.
+
+        Returns:
+            dataframe (DataFrame): [itv files with indicator grades]
+        """
+        # take for all nodes name, id, and coordinates
+        nodes = self.getAllPoints()
+        # ETL for itv
+        dataframe = self.getUniquesValuesbyEdge(pks)
+        # dataframe["length"] = 0
+        dataframe["k_reg_1"] = ""
+        dataframe["k_reg_2"] = ""
+        dataframe["X1"] = np.nan
+        dataframe["Y1"] = np.nan
+        dataframe["X2"] = np.nan
+        dataframe["Y2"] = np.nan
+        # find points in nodes and compute length of the edge
+        for i, row in dataframe.iterrows():
+            for name, id_point, X, Y in nodes:
+                if str(row["regard_1"]) == name:
+                    dataframe["k_reg_1"][i] = id_point
+                    dataframe["X1"][i] = X
+                    dataframe["Y1"][i] = Y
+                elif str(row["regard_2"]) == name:
+                    dataframe["k_reg_2"][i] = id_point
+                    dataframe["X2"][i] = X
+                    dataframe["Y2"][i] = Y
+                if dataframe["k_reg_1"][i] != "" and dataframe["k_reg_2"][i] != "":
+                    break
+        dataframe["length"] = ((dataframe["X1"] - dataframe["X2"]) ** 2 + (dataframe["Y1"] - dataframe["Y2"]) ** 2) ** 0.5
+        dataframe = dataframe.fillna(0)
+        # add one column for each indicator
+        for indicator in all_exfiltration_indicators.keys():
+            dataframe = self.computeOneIndicator(dataframe, indicator, alpha, P, all_exfiltration_indicators)
+        for indicator in all_infiltration_indicators:
+            dataframe = self.computeOneIndicator(dataframe, indicator, alpha, P, all_infiltration_indicators)
+        for indicator in all_ensablement_indicators:
+            dataframe = self.computeOneIndicator(dataframe, indicator, alpha, P, all_ensablement_indicators)
+        for indicator in all_red_cap_hyfraulique_indicators:
+            dataframe = self.computeOneIndicator(dataframe, indicator, alpha, P, all_red_cap_hyfraulique_indicators)
+        self.getQgsLayer(pks)
+        return self.setQgsEgde(dataframe, itv_name)
